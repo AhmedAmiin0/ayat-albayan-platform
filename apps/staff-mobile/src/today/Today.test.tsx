@@ -11,6 +11,8 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
+// «طلبات الأسر» reads its own route (FamilyRequests.test.tsx): out of this day's mock.
+jest.mock('@/today/requests/FamilyRequests', () => ({ FamilyRequests: () => null }));
 // The greeting's first name reads /me/profile (TodayHeader.test); here it would take the day's mocked answers.
 jest.mock('@ab/mobile-kit/lib/profile/my-profile', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/profile/my-profile'),

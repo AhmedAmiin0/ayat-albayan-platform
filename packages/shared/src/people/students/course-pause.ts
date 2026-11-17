@@ -59,6 +59,10 @@ export interface CoursePausePreview {
   from_date: string;
   until_date: string | null;
   lessons: number;
+  /** The instants of those lessons, earliest first (owner 2026-11-17; absent in an old answer). */
+  starts?: string[];
+  /** The days a resume moves the package forward; null = until «استئناف» (counted then). */
+  extend_days?: number | null;
 }
 
 /** A start, an until change or a resume; `conflicts`: clashes of the lessons booked again on resume. */

@@ -54,8 +54,9 @@ export class PortalReportsService {
   /** 404 recording_not_found unless it belongs to one of this student's sent reports and is visible. */
   async recordingUrl(call: FileCall): Promise<PortalFileUrl> {
     await this.scopes.student(call.user, call.studentId);
-    const rows = await this.queries.sent(call.studentId);
-    const visible = await this.queries.visibleRecordings(rows.map((r) => r.lesson_id));
+    // Every sent report, not the list's newest 60: an old recording still opens.
+    const sent = await this.queries.sentLessons(call.studentId);
+    const visible = await this.queries.visibleRecordings([...sent.keys()]);
     const row = visible.find((r) => r.id === call.id);
     if (!row) throw notFound('recording_not_found');
     // A video player keeps range-requesting the same URL while it plays: the UI lifetime (an hour).

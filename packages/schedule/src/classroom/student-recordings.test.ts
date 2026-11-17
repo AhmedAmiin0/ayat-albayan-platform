@@ -42,3 +42,10 @@ describe('mediaOfPath / durationSeconds', () => {
     expect(durationSeconds('2026-10-05T17:00:00.000Z', '2026-10-05T16:00:00.000Z')).toBeNull();
   });
 });
+
+describe('studentRecordingsQuerySchema status filter', () => {
+  it('keeps a known state and refuses another', () => {
+    expect(studentRecordingsQuerySchema.parse({ status: 'failed' }).status).toBe('failed');
+    expect(studentRecordingsQuerySchema.safeParse({ status: 'lost' }).success).toBe(false);
+  });
+});

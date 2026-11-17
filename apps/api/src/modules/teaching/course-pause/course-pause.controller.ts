@@ -6,13 +6,15 @@ import {
   type CoursePausePreview,
   type CoursePauseResult,
   type CoursePauseState,
+  type CourseResumePreview,
 } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
+import { CoursePausePreviews } from './preview/course-pause.preview';
 import { CoursePauseService } from './course-pause.service';
 
 /**
@@ -25,7 +27,10 @@ import { CoursePauseService } from './course-pause.service';
 @ApiBearerAuth()
 @Controller('students/:id/course-pause')
 export class CoursePauseController {
-  constructor(private readonly pauses: CoursePauseService) {}
+  constructor(
+    private readonly pauses: CoursePauseService,
+    private readonly previews: CoursePausePreviews,
+  ) {}
 
   /** The open pause (banner) and the past ones. */
   @Get()
@@ -41,7 +46,14 @@ export class CoursePauseController {
     @Param('id', ParseUUIDPipe) id: string,
     @ZodQuery(coursePausePreviewQuery) query: z.output<typeof coursePausePreviewQuery>,
   ): Promise<CoursePausePreview> {
-    return this.pauses.preview(id, query);
+    return this.previews.preview(id, query);
+  }
+
+  /** What «استئناف الدورة» does now: the lessons booked back, the days the package moves. */
+  @Get('resume-preview')
+  @Permissions('courses.pause')
+  resumePreview(@ZodParam('id', z.uuid()) id: string): Promise<CourseResumePreview> {
+    return this.previews.resume(id);
   }
 
   /** `{ fromDate?, untilDate?, reason? }` (Riyadh dates; from defaults to today, until null = until «استئناف»). */

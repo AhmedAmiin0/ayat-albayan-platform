@@ -1,22 +1,26 @@
-import { courseStopLessonsText } from '@ab/client-core';
+import { courseStopLessonsText, datesText } from '@ab/client-core';
 import { COURSE_STOP_REASON_MAX, type CourseStopPreview } from '@ab/shared';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { Amount } from '@/features/finance/subscriptions';
-import { dateLabel } from '@/features/teaching/schedule';
+import { dateLabel, dayIn } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { StopMoneyChoice } from './refund/StopMoneyChoice';
 import type { StopMoneyView } from './refund/use-stop-money';
 
 /** What a stop does: N future lessons cancelled, the schedule ends, the money and history kept. */
 function StopSummary({ preview, keeps }: { preview: CourseStopPreview; keeps: boolean }) {
   const words = t.courseActions.stop;
+  const day = dayIn(useViewerTz());
+  const starts = preview.futureStarts ?? [];
   const [before, after = ''] = words.money.split('{amount}');
   return (
     <div className="grid gap-2">
       <p className="text-sm text-ink-2">{words.intro}</p>
       <ul role="status" className="grid list-disc gap-1 rounded-md bg-sunk px-7 py-2.5 text-sm">
         <li className="font-semibold">{courseStopLessonsText(words.lessons, preview)}</li>
+        {starts.length > 0 && <li>{words.cancelsOn.replace('{dates}', datesText(starts, day))}</li>}
         <li>{words.schedule}</li>
         {keeps && (
           <li>
@@ -28,6 +32,7 @@ function StopSummary({ preview, keeps }: { preview: CourseStopPreview; keeps: bo
         <li>{words.history}</li>
         <li>{words.status}</li>
       </ul>
+      <p className="text-sm text-ink-2">{t.courseCard.notifyNone}</p>
     </div>
   );
 }
@@ -49,28 +54,32 @@ function StoppedLine({ stopped }: { stopped: NonNullable<CourseStopPreview['stop
 
 interface BodyProps {
   preview: CourseStopPreview;
-  reason: string;
-  onReason: (v: string) => void;
+  /** The reason typed; `missing`: «هذه الخانة مطلوبة» (after «تأكيد الإلغاء»). */
+  reason: { value: string; onChange: (v: string) => void; missing: boolean };
   /** The money choice (owner 2026-11-06). */
   money: StopMoneyView;
 }
 
 /** The preview, or «أُلغي الاشتراك في …» when it is already cancelled; then the reason. */
-export function StopBody({ preview, reason, onReason, money }: BodyProps) {
+export function StopBody({ preview, reason, money }: BodyProps) {
   const words = t.courseActions.stop;
   if (preview.stopped) return <StoppedLine stopped={preview.stopped} />;
   return (
     <>
       <StopSummary preview={preview} keeps={money.state.mode !== 'refund'} />
       {money.money && <StopMoneyChoice preview={preview} view={money} money={money.money} />}
-      <Field label={words.reason} hint={words.reasonHint}>
+      <Field
+        label={words.reason}
+        hint={words.reasonHint}
+        error={reason.missing ? words.reasonRequired : undefined}
+      >
         {(p) => (
           <Input
             {...p}
-            value={reason}
+            value={reason.value}
             required
             maxLength={COURSE_STOP_REASON_MAX}
-            onChange={(e) => onReason(e.target.value)}
+            onChange={(e) => reason.onChange(e.target.value)}
           />
         )}
       </Field>

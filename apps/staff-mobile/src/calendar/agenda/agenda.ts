@@ -1,8 +1,7 @@
 import { sameClockAt, type ClockCycle, type LessonView } from '@ab/shared';
 import { clockIn, type ViewerClock } from '@/core/lib/clock';
-import { cityOf } from '@/booking/shared/slots';
 import { clockAt } from '@/inbox/shared/format';
-import { t } from '@ab/mobile-kit';
+import { t, cityOf } from '@ab/mobile-kit';
 import { gridTz, slotRange } from '@/more/schedule';
 import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { localDate, visibleLessons } from '@/today/lib/timeline';

@@ -38,6 +38,7 @@ describe('sales «لم تنعقد؟» (11-02) and «تصحيح حالة الحل
     expect(within(drawer).queryByText(t.lessons.sheet.readOnly)).toBeNull();
     expect(within(drawer).queryByRole('button', { name: c.to.completed })).toBeNull();
     fireEvent.click(within(drawer).getByRole('button', { name: c.to.no_show }));
+    fireEvent.click(within(drawer).getByRole('button', { name: c.confirm }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/correct', { to: 'no_show' }));
     expect(await within(drawer).findByText(c.done)).toBeTruthy();
   });
@@ -55,6 +56,7 @@ describe('sales «لم تنعقد؟» (11-02) and «تصحيح حالة الحل
     apiSend.mockRejectedValue(new ApiError(409, { code: 'not_auto_held' }));
     const drawer = open(AUTO_HELD);
     fireEvent.click(within(drawer).getByRole('button', { name: c.to.excused }));
+    fireEvent.click(within(drawer).getByRole('button', { name: c.confirm }));
     expect(await within(drawer).findByText(t.lessons.error.not_auto_held)).toBeTruthy();
   });
 

@@ -28,11 +28,12 @@ const ROUTES = {
 };
 // docs/36 «Stays exempt»: the local file:// reads call fetch (H-1; the HTTP client's own reads
 // are in @ab/mobile-kit). docs/38: the shared files' cached copies (file://) are read as pickPdf
-// reads its copy.
+// reads its copy, and the lesson file pickers (pick-file.ts) read the picked asset's.
 const FETCH = [
   'src/inbox/composer/send-file.ts',
   'src/inbox/thread/share/shared-file.ts',
   'src/inbox/composer/voice/send-voice.ts',
+  'src/teaching/lesson-files/pick-file.ts',
   'src/student-file/channel/media/channel-voice.ts',
 ];
 // apiFetch / apiSend come from the shared kit (@ab/mobile-kit) or its http/api module.

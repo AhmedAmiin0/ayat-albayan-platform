@@ -6653,11 +6653,6 @@
       "count": 2
     }
   },
-  "src/modules/people/portal/reports/portal-reports.repo.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
   "src/modules/people/portal/reports/portal-reports.service.ts": {
     "max-len": {
       "count": 6
@@ -9492,7 +9487,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/teaching/booking/core/booking.course-label.ts": {
@@ -11264,7 +11259,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/teaching/course-pause/course-pause.service.test.ts": {
@@ -11277,7 +11272,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 16
+      "count": 13
     }
   },
   "src/modules/teaching/course-stop/course-stop.controller.ts": {
@@ -11581,7 +11576,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/lessons/lessons.module.ts": {
@@ -12171,9 +12166,6 @@
   "src/modules/teaching/scheduling/scheduling.module.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/scheduling/scheduling.repo.test.ts": {
@@ -12366,9 +12358,6 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.repo.ts": {
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }

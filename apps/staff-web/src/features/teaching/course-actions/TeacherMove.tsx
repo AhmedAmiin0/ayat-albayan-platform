@@ -21,9 +21,23 @@ export interface TeacherMoveProps {
 
 /**
  * «تغيير المعلم», step 2: the same days and times from «من تاريخ» straight to the review, or the
- * course-days picker on the new teacher's free slots. One idempotency key per step (rule 8).
+ * course-days picker on the new teacher's free slots, under «المعلم الجديد: …» (owner
+ * 2026-11-17). One idempotency key per step (rule 8).
  */
-export function TeacherMove({ view, teacher, draft, onBack, onDone }: TeacherMoveProps) {
+export function TeacherMove(props: TeacherMoveProps) {
+  const { teacher } = props;
+  return (
+    <div className="grid gap-3">
+      <p className="text-sm font-semibold text-ink">
+        {t.courseActions.teacher.reviewNew.replace('{name}', teacher.display_name_ar)}
+      </p>
+      <TeacherMoveStep {...props} />
+    </div>
+  );
+}
+
+/** The days picker (new days) or straight to the review (the same days). */
+function TeacherMoveStep({ view, teacher, draft, onBack, onDone }: TeacherMoveProps) {
   const [requestId] = useState(() => crypto.randomUUID());
   const moved = fromNextLesson(view, draft.from);
   const course = { ...moved.course, teacherId: teacher.id, teacherTz: teacher.tz };

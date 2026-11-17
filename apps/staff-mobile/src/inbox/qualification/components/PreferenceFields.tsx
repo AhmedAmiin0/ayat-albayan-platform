@@ -1,9 +1,7 @@
 import { GROUP_KINDS, tzChoices, type GroupKind } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { cityOf } from '@/booking';
-import { t, FilterPills, type FilterPill, ErrorLine } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, FilterPills, type FilterPill, ErrorLine, cityOf, FormLabel } from '@ab/mobile-kit';
 import { DayChips } from './DayChips';
 import { timeOptions } from '@/inbox/qualification/lib/qualification-form';
 import type { QualFieldsProps } from './QualificationFields';

@@ -102,7 +102,9 @@ describe('system-role parity with the old @Roles table', () => {
   // Owner 2026-10-28 «إيقاف الدورة مؤقتًا» (docs/16 row 37c): its own routes only, admin and sales (never a teacher).
   it('courses.pause gates exactly the course pause routes, for admin and sales', () => {
     const keys = routes.filter((r) => r.permission === 'courses.pause').map((r) => r.key).sort();
-    expect(keys).toEqual(['preview', 'resume', 'start', 'state', 'until'].map((h) => `CoursePauseController.${h}`));
+    // owner 2026-11-17: «استئناف الدورة الآن؟» previews what it does (resumePreview).
+    const handlers = ['preview', 'resume', 'resumePreview', 'start', 'state', 'until'];
+    expect(keys).toEqual(handlers.map((h) => `CoursePauseController.${h}`));
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('courses.pause'))).toEqual(['admin', 'sales']);
   });
 

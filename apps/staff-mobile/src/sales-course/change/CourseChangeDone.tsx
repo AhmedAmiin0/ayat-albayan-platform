@@ -4,7 +4,14 @@ import { t, AppText, Button, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 
 /** After POST …/course/change 201: «تغيّرت أيام الحلقات», the course's new last day, and the way out. */
-export function CourseChangeDone({ result, onDone }: { result: CourseChangeResult; onDone: () => void }) {
+interface CourseChangeDoneProps {
+  result: CourseChangeResult;
+  onDone: () => void;
+  /** The target's lines («المعلم الجديد: …», owner 2026-11-17). */
+  lines?: readonly string[] | undefined;
+}
+
+export function CourseChangeDone({ result, onDone, lines = [] }: CourseChangeDoneProps) {
   const { color } = useTheme();
   const line = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   return (
@@ -18,6 +25,11 @@ export function CourseChangeDone({ result, onDone }: { result: CourseChangeResul
           {t.booking.courseChange.done}
         </AppText>
       </View>
+      {lines.map((text) => (
+        <AppText key={text} style={line}>
+          {text}
+        </AppText>
+      ))}
       {result.endsOn ? <AppText style={line}>{t.booking.courseChange.newEnd.replace('{date}', localDay(result.endsOn))}</AppText> : null}
       <Button label={t.salesMoney.done} onPress={onDone} />
     </View>

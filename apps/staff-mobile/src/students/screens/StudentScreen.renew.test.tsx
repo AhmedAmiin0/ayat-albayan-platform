@@ -45,20 +45,25 @@ test.each(['pending_renewal', 'expired'] as const)('%s: «جدّد الاشتر�
   });
 });
 
-test('off until the last package loads, so it never opens on the defaults', async () => {
+test('hidden until the last package loads, so it never opens on the defaults', async () => {
   mockApiFetch.mockImplementation(async (path: string) =>
     path === '/students/s1' ? { ...profile, status: 'expired' } : new Promise(() => undefined),
   );
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
-  const button = await screen.findByRole('button', { name: t.students.renew });
-  expect(button.props.accessibilityState).toMatchObject({ disabled: true });
-  await fireEvent.press(button);
-  expect(mockPush).not.toHaveBeenCalled();
+  expect(renew()).toBeNull();
 });
 
-test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)('%s: no «جدّد الاشتراك»', async (status) => {
+// owner 2026-11-17: the admin renews ANY time; the start day is picked on the subscribe screen.
+test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)('%s with a package: «جدّد الاشتراك»', async (status) => {
   serve(status, balanceOf(subscription()));
+  await renderWithQuery(<StudentScreen />);
+  await screen.findByRole('header', { name: 'هدى' });
+  expect(await screen.findByRole('button', { name: t.students.renew })).toBeTruthy();
+});
+
+test('no package at all and not package-ended: no «جدّد الاشتراك»', async () => {
+  serve('active', balanceOf());
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
   await screen.findByText(t.subscriptions.balance);

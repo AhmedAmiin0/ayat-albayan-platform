@@ -1,11 +1,13 @@
 import { coursePausePreviewText } from '@ab/client-core';
+import type { CoursePausePreview } from '@ab/shared';
 import { COURSE_PAUSE_REASON_MAX } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Field } from '@/components/ui/form/field';
 import { Input } from '@/components/ui/form/input';
 import { t } from '@/lib/i18n/i18n';
+import { useViewerTz } from '@/lib/viewer-tz';
 import { coursePausePreviewQuery } from './api';
-import { draftProblem, type PauseDraft } from './pause-form';
+import { draftProblem, pauseLines, type PauseDraft } from './pause-form';
 
 interface PauseFieldsProps {
   studentId: string;
@@ -46,14 +48,22 @@ interface PausePreviewLineProps {
   until: string | null;
 }
 
-/** «ستُلغى N حلقات، وتُمدَّد الباقة بعدد أيام الإيقاف», re-read as the dates change (only for valid dates). */
+/** The answer's lines: the dates and the extension (owner 2026-11-17), else its one count line. */
+const linesOf = (data: CoursePausePreview, tz: string): string[] =>
+  data.starts ? pauseLines(data, tz) : [coursePausePreviewText(t.coursePause.preview, data.lessons)];
+
+/** «ما سيحدث»: the lessons cancelled and the extension, re-read as the dates change (valid dates only). */
 function PausePreviewLine({ studentId, from, until }: PausePreviewLineProps) {
+  const tz = useViewerTz();
   const preview = useQuery(coursePausePreviewQuery({ studentId, from, until }));
   if (preview.isError) return null;
-  const text = preview.data ? coursePausePreviewText(t.coursePause.preview, preview.data.lessons) : t.coursePause.previewLoading;
+  const lines = preview.data ? linesOf(preview.data, tz) : [t.coursePause.previewLoading];
   return (
-    <p aria-live="polite" aria-busy={preview.isFetching} className="text-sm font-semibold text-ink">
-      {text}
-    </p>
+    <div aria-live="polite" aria-busy={preview.isFetching} className="grid gap-1 text-sm font-semibold text-ink">
+      <p className="text-xs text-ink-3">{t.courseCard.whatHappens}</p>
+      {lines.map((line) => (
+        <p key={line}>{line}</p>
+      ))}
+    </div>
   );
 }

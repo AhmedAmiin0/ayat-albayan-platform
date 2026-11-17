@@ -69,7 +69,11 @@ function mocks() {
     cancelPush: { notify: vi.fn() },
     unpaid: { studentIds: vi.fn() },
     photos: fakePhotos().photos,
-    proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
+    proposals: {
+      create: vi.fn(), get: vi.fn(), decide: vi.fn(async () => true),
+      release: vi.fn(), link: vi.fn(),
+      pendingLessonIds: vi.fn(),
+    },
     autoHeld: { openEnded: vi.fn(), packages: vi.fn(), correctable: vi.fn() },
     // ScheduleNotices' reads and queue (no DB here); a lesson read as null notifies nobody.
     notices: {

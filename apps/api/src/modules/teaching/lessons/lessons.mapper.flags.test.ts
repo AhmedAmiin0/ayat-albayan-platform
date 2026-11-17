@@ -30,6 +30,7 @@ describe('toLessonView — generation clashes and the pending proposal (R-SCH-04
       proposed_starts_at: '2026-10-05T15:00:00.000Z',
       note: 'عندي ظرف',
       created_at: '2026-10-02T08:00:00.000Z',
+      requested_by: 'teacher',
     });
     expect(toLessonView(lessonRow({ proposals: [proposal('approved')] }), ctx).pending_proposal).toBeNull();
   });

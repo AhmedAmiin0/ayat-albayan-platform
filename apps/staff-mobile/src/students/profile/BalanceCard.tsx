@@ -1,5 +1,4 @@
 import { cancelOffered, subscriptionStatusStyle } from '@ab/shared';
-import { router } from 'expo-router';
 import { View } from 'react-native';
 import {
   apiSend,
@@ -9,10 +8,8 @@ import {
   type,
   useTheme,
   AppText,
-  Button,
   StatusChip,
 } from '@ab/mobile-kit';
-import { useStudentHref } from '@/core/nav/tree-base';
 import { CancelPackage } from '@/payments';
 import { StartDateEdit, UsedBeforeEdit } from '@/subscribe';
 import { packageName, paidLine, usedOf } from '@/core/lib/money/format';
@@ -23,9 +20,9 @@ import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 
 /**
  * «رصيد الحلقات» (R-SUB-01/03, R-MOB-02): what is left (shared packageProgress; saffron only when
- * the renewal alert is due), the current package and what is paid of it, «سجّل دفعة» («إلغاء الباقة» while
- * nothing is paid; owner 2026-10-28), «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), then the
- * latest payments. Secondary button: the guardian card already holds the screen's one filled one.
+ * the renewal alert is due), the current package and what is paid of it, «إلغاء الباقة» while
+ * nothing is paid (owner 2026-10-28), «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), then the
+ * latest payments. «سجّل دفعة» moved to «الدورة والباقة» (PayRow, owner 2026-11-17).
  * Nothing while the balance is unknown; a student without a package says so.
  */
 export function BalanceCard({ studentId }: { studentId: string }) {
@@ -33,7 +30,6 @@ export function BalanceCard({ studentId }: { studentId: string }) {
   const balance = useStudentBalance(studentId).data;
   const line = packageLine(balance, useRenewalThreshold());
   const current = balance?.current;
-  const to = useStudentHref();
   const small = {
     fontFamily: type.ui[500],
     fontSize: type.size.xs,
@@ -78,13 +74,6 @@ export function BalanceCard({ studentId }: { studentId: string }) {
             </AppText>
             <AppText style={small}>{`${packageName(current)} · ${usedOf(current)}`}</AppText>
             <AppText style={small}>{paidLine(current)}</AppText>
-            <View style={{ marginTop: 6 }}>
-              <Button
-                variant="secondary"
-                label={t.payments.mobile.record}
-                onPress={() => router.push(to(`/students/payment/${studentId}`))}
-              />
-            </View>
             {cancelOffered(current) ? (
               <CancelPackage
                 cancel={(body) => apiSend('POST', `/subscriptions/${current.id}/cancel`, body)}

@@ -32,7 +32,7 @@ test('an English run reads en.json: title, count, English teacher name, status, 
   expect(await screen.findByRole('header', { name: 'Lesson recordings · 1' })).toBeTruthy();
   expect(screen.getByText('Teacher: Abrar')).toBeTruthy();
   expect(screen.getByText('Size: 48 MB')).toBeTruthy();
-  expect(screen.getByText('Ready')).toBeTruthy();
+  expect(screen.getAllByText('Ready')).toHaveLength(2); // the state pill and the chip
   expect(screen.getByRole('button', { name: /Play the recording of lesson/ })).toBeTruthy();
   expect(screen.getByRole('tab', { name: 'Last 7 days' })).toBeTruthy();
   expect(screen.getByText('Delete recording')).toBeTruthy();

@@ -1,11 +1,10 @@
 import type { SalesChatReceipt } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, Button, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { AttachmentRow } from '@/payments/receipts/AttachmentRow';
 import { attachmentsFull, withAttachment, withoutAttachment } from '@/payments/receipts/attachments';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PhotoButtons } from '@/payments/receipts/PhotoButtons';
 import { ChatReceiptList } from '@/sales-subscribe/receipts/ChatReceiptList';
 import { useCopyChatReceipt } from '@/sales-subscribe/receipts/chat-receipts';

@@ -15,7 +15,8 @@ import type {
   ProfileCourseView,
 } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { useState } from 'react';
+import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // The student profile's «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» (owner
 // 2026-10-30): the same routes in the admin and the sales trees (their own keys); paths and key
@@ -43,23 +44,56 @@ function currentPath(studentId: string, keys: Keys): string | null {
 const idOf = (data: CourseStopPreview | ProfileCourseView): string =>
   'course' in data ? data.course.subscriptionId : data.subscriptionId;
 
+/** The current package: its id, null = none (404, or no key to ask), undefined = not known yet. */
+type CurrentPackage = string | null | undefined;
+
+/** A 404 (subscription_not_found) answers «no package»; any other failure leaves it unknown. */
+const noPackage = (error: unknown): boolean => error instanceof ApiError && error.status === 404;
+
 /**
  * The package the actions are about: the one the screen passes, else the student's current one
- * as the first allowed GET answers it. null = none yet, or none (404 subscription_not_found).
+ * as the first allowed GET answers it. `id` is undefined while loading or after a failure (never
+ * «no package»); `settle` asks again and answers the same three ways.
  */
-export function useCurrentSubscription(input: {
+export function useCurrentPackage(input: {
   studentId: string;
   given: string | null | undefined;
   keys: Keys;
-}): string | null {
+}) {
   const path = input.given ? null : currentPath(input.studentId, input.keys);
   const current = useQuery({
     queryKey: [...courseActionsKey(input.studentId), 'current', path],
     queryFn: () => apiFetch<CourseStopPreview | ProfileCourseView>(path ?? ''),
     enabled: path !== null,
   });
-  if (input.given) return input.given;
-  return current.data ? idOf(current.data) : null;
+  const idOfAnswer = (data: typeof current.data, error: unknown): CurrentPackage => {
+    if (input.given || path === null) return input.given ?? null;
+    if (data) return idOf(data);
+    return noPackage(error) ? null : undefined;
+  };
+  const settle = async (): Promise<CurrentPackage> => {
+    if (path === null) return idOfAnswer(undefined, null);
+    const answer = await current.refetch();
+    return idOfAnswer(answer.data, answer.error);
+  };
+  return { id: idOfAnswer(current.data, current.error), settle };
+}
+
+/** The package's id; null = none yet, or none (see useCurrentPackage). */
+export function useCurrentSubscription(
+  input: Parameters<typeof useCurrentPackage>[0],
+): string | null {
+  return useCurrentPackage(input).id ?? null;
+}
+
+/**
+ * A stop cancels the package, so the re-read finds none: while `keep` (its sheet is open) the last
+ * package seen stays, and the sheet can say what it did.
+ */
+export function useHeldPackage(current: string | null, keep: boolean): string | null {
+  const [held, setHeld] = useState<string | null>(null);
+  if (current && current !== held) setHeld(current);
+  return current ?? (keep ? held : null);
 }
 
 /** GET …/course-stop?subscriptionId=: the stop sheet's lines. */

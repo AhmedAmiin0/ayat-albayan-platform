@@ -65,6 +65,8 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
             <Stack.Screen name="chat/[id]" />
             <Stack.Screen name="report/[id]" />
             <Stack.Screen name="package/[id]" />
+            <Stack.Screen name="recordings/[id]" />
+            <Stack.Screen name="lesson/[id]" />
             <Stack.Screen name="alerts" />
             <Stack.Screen name="profile" />
             <Stack.Screen name="pick-child" />

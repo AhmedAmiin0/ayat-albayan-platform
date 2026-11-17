@@ -5,14 +5,13 @@ import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { slotLines, slotMeta, weeklyLine } from './schedule-text';
-import { UpcomingLessons } from './UpcomingLessons';
 
 /**
  * «الجدول» (owner 2026-10-27: «As an assistant i want to see the student schedule»): each weekly slot
- * in one short line (Riyadh, the phone's 12 / 24 h) with the student's own clock (students.tz) when it differs, then
- * the next lessons. No link: the API never sends one here. An old cache without it shows nothing.
+ * in one short line (Riyadh, the phone's 12 / 24 h) with the student's own clock (students.tz) when it differs; the
+ * next lessons are in «الدورة والباقة» (owner 2026-11-17). No link: the API never sends one here. An old cache without it shows nothing.
  */
-export function ScheduleSection({ schedule, studentId }: { schedule: SalesStudentSchedule | undefined; studentId: string }) {
+export function ScheduleSection({ schedule }: { schedule: SalesStudentSchedule | undefined }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -35,7 +34,6 @@ export function ScheduleSection({ schedule, studentId }: { schedule: SalesStuden
           </View>
         );
       })}
-      <UpcomingLessons lessons={schedule.upcoming} studentId={studentId} />
     </View>
   );
 }

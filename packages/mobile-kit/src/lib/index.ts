@@ -36,4 +36,14 @@ export { usePullRefresh } from './query/pull-refresh';
 export { persistOptions, queryClient } from './query/query-client';
 export { listKey, type ListParams, pathKey } from './query/query-keys';
 export { signOutDevice } from './session/sign-out';
+export {
+  cityOf,
+  dayLabel as slotDayLabel,
+  freeSlotDays,
+  slotTimes,
+  type ViewerClock,
+  whenText,
+  zoneNote,
+} from './time/slots/slot-text';
+export { weekLabel } from './time/slots/week';
 export { useNow } from './time/use-now';

@@ -85,22 +85,22 @@ test('a guardian who studies, on their own page: own words and the package (canv
 test.each([
   ['unset', { custom: {} }],
   ['off', config({ family_chat_enabled: false })],
-])('the family chat %s: four pills, no «المحادثة», no channel request', async (_, answer) => {
+])('the family chat %s: five pills, no «المحادثة», no channel request', async (_, answer) => {
   settings = answer;
   await body('guardian');
-  expect(screen.getAllByRole('tab')).toHaveLength(4);
+  expect(screen.getAllByRole('tab')).toHaveLength(5);
   expect(screen.queryByRole('tab', { name: chatTab })).toBeNull();
   expect(channelReads()).toEqual([]);
 });
 
-test("the family chat on: a guardian's fifth pill «المحادثة 3» opens chat/[id]", async () => {
+test("the family chat on: a guardian's last pill «المحادثة 3» opens chat/[id]", async () => {
   settings = config({ family_chat_enabled: true });
   await body('guardian');
   const chat = await screen.findByRole('tab', { name: chatPill });
   expect(chat).toHaveTextContent(`${chatTab}3`);
   await fireEvent.press(chat);
   expect(router.push).toHaveBeenCalledWith(`/chat/${student().id}`);
-  expect(screen.getAllByRole('tab')).toHaveLength(5);
+  expect(screen.getAllByRole('tab')).toHaveLength(6);
   expect(channelReads()).toEqual(unreadOnly());
 });
 
@@ -109,6 +109,12 @@ test("the family chat on: a child's own login chats too (owner 2026-11-16)", asy
   await body('student');
   await fireEvent.press(await screen.findByRole('tab', { name: chatPill }));
   expect(router.push).toHaveBeenCalledWith(`/chat/${student().id}`);
-  expect(screen.getAllByRole('tab')).toHaveLength(4);
+  expect(screen.getAllByRole('tab')).toHaveLength(5);
   expect(channelReads()).toEqual(unreadOnly());
+});
+
+test('«التسجيلات» opens the child\'s recordings screen (owner 2026-11-17)', async () => {
+  await body('guardian');
+  await fireEvent.press(screen.getByRole('tab', { name: t.lessonFiles.recordings }));
+  expect(router.push).toHaveBeenCalledWith(`/recordings/${student().id}`);
 });

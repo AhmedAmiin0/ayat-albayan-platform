@@ -1,7 +1,6 @@
 import { FILLED_BY, type FilledBy } from '@ab/shared';
 import { View } from 'react-native';
-import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, FilterPills, type FilterPill, FormLabel } from '@ab/mobile-kit';
 import { CLEAR } from './PreferenceFields';
 import type { QualFieldsProps } from './QualificationFields';
 import { QualText } from './QualText';

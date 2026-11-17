@@ -13,6 +13,7 @@ import { StudentLinkService } from '@/modules/teaching/classroom';
 import { withRoom } from '@/modules/teaching/lessons';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { PortalLessonExtras } from './portal-lesson-extras';
+import { familyOf } from './portal-lesson-family';
 import { toPortalLesson, wayIn } from './portal-lessons.mapper';
 import { PortalLessonsRepo } from './portal-lessons.repo';
 
@@ -65,8 +66,14 @@ export class PortalLessonsService {
     ]);
     const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
     const rooms = await this.extras.rooms(rows, { now, family });
-    const lesson = (row: (typeof rows)[number]) =>
-      withRoom(toPortalLesson(row, ctx), rooms);
+    const lessonIds = rows.map((r) => r.id);
+    const requests = await this.queries.requests({ lessonIds, userId: call.user.id });
+    const lateCancelHours = values.late_cancel_hours ?? null;
+    const fam = { studentId: call.studentId, now, lateCancelHours, requests };
+    const lesson = (row: (typeof rows)[number]) => ({
+      ...withRoom(toPortalLesson(row, ctx), rooms),
+      family: familyOf(row, fam),
+    });
     return { lessons: rows.map(lesson), ...extras };
   }
 

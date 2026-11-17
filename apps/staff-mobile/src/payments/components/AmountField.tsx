@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, ErrorLine, currencyName } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, shape, type, useTheme, AppText, ErrorLine, currencyName, FormLabel } from '@ab/mobile-kit';
 
 interface AmountFieldProps {
   /** Raw text; parseAmount reads it (Arabic digits and «٫» too). */

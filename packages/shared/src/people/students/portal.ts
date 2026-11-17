@@ -2,6 +2,7 @@ import { LESSON_STATUSES } from '@ab/catalog';
 import { LOCALES } from '@ab/core';
 import { lessonRoomStateSchema } from '@ab/schedule';
 import { z } from 'zod';
+import { portalLessonFamilySchema } from './family/portal-actions.js';
 
 // The family portal (/portal, docs/31, docs/50): what a guardian or student login reads. Whitelists
 // only: no teacher phone or email, no note or internal reason, no other family. Money only on the
@@ -65,6 +66,8 @@ export const portalLessonSchema = z.object({
   /** Only for `external`, and only while the window is open. */
   meeting_url: z.string().nullable(),
   window: joinWindowSchema,
+  /** «خيارات الحلقة» (owner 2026-11-17); absent from an older API. */
+  family: portalLessonFamilySchema.optional(),
   /** Who is in the room now / «انتهت الحلقة» (lessonRoomStateSchema). Absent: an older API. */
   room: lessonRoomStateSchema.nullable().optional(),
 });

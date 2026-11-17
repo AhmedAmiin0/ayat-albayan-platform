@@ -2,9 +2,8 @@ import type { BookingResult } from '@ab/shared';
 import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';
-import { t, AppText, Button, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, Button, NuqtaGlyph, type, useTheme, whenText } from '@ab/mobile-kit';
 import { viewerToday } from '@/calendar';
-import { whenText } from './slots';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 export interface BookedPanelProps {

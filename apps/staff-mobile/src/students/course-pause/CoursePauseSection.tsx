@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { useHolds, t, Button } from '@ab/mobile-kit';
+import { useHolds, t } from '@ab/mobile-kit';
 import { Note } from '@/more';
+import { ActionRow } from '@/students/course-card/ActionRow';
 import { useCoursePause } from './course-pause-api';
 import { CoursePauseBanner } from './CoursePauseBanner';
 import { CoursePauseForm } from './CoursePauseForm';
@@ -26,9 +27,9 @@ export function CoursePauseSection({ studentId }: { studentId: string }) {
       {notice ? <Note>{notice}</Note> : null}
       {open ? <CoursePauseBanner studentId={studentId} pause={open} canChange={holds} onNotice={setNotice} /> : null}
       {!open && holds ? (
-        <Button
-          variant="secondary"
-          label={c.action}
+        <ActionRow
+          title={c.action}
+          hint={t.courseCard.hints.pause}
           onPress={() => {
             setNotice(null);
             setStarting(true);

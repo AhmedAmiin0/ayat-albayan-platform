@@ -7,6 +7,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { useResumePause } from './course-pause-api';
 import { bannerLines, pauseErrorText, resumedText } from './course-pause-text';
 import { ChangeUntilSheet } from './ChangeUntilSheet';
+import { useResumeAsk } from '@/students/course-card/use-resume-ask';
 
 interface CoursePauseBannerProps {
   studentId: string;
@@ -29,6 +30,7 @@ export function CoursePauseBanner({ studentId, pause, canChange, onNotice }: Cou
   const c = t.coursePause;
   // academy day (docs/34 b): a pause cuts at the academy's today.
   const lines = bannerLines(pause, riyadhToday());
+  const ask = useResumeAsk({ studentId, asking });
   const confirm = () =>
     resume.isPending ? undefined : resume.mutate(undefined, { onSuccess: (result) => onNotice(resumedText(result)) });
   return (
@@ -41,7 +43,7 @@ export function CoursePauseBanner({ studentId, pause, canChange, onNotice }: Cou
       {resume.isError ? <ErrorLine message={pauseErrorText(resume.error)} /> : null}
       {canChange && asking ? (
         <InlineConfirm
-          message={`${c.resumeTitle} ${c.resumeBody}`}
+          message={ask}
           confirmLabel={resume.isPending ? t.common.saving : c.resumeConfirm}
           cancelLabel={t.common.back}
           busy={resume.isPending}

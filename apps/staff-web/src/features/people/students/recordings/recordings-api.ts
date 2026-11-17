@@ -1,21 +1,22 @@
-import type { StudentRecordingsPage } from '@ab/shared';
+import type { StudentRecordingStatus, StudentRecordingsPage } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 
 export const RECORDINGS_KEY = ['student-recordings'] as const;
 
-/** The list's filters: lesson day range (yyyy-mm-dd) and teacher; empty = no filter. */
+/** The list's filters: lesson day range (yyyy-mm-dd), teacher and state; empty = no filter. */
 export interface RecordingFilters {
   from?: string | undefined;
   to?: string | undefined;
   teacherId?: string | undefined;
+  status?: StudentRecordingStatus | undefined;
 }
 
 export const RECORDINGS_PAGE_SIZE = 10;
 
 function queryString(filters: RecordingFilters, page: number, pageSize: number): string {
   const q = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
-  for (const key of ['from', 'to', 'teacherId'] as const) if (filters[key]) q.set(key, filters[key]);
+  for (const key of ['from', 'to', 'teacherId', 'status'] as const) if (filters[key]) q.set(key, filters[key]);
   return q.toString();
 }
 

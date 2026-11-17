@@ -1,7 +1,6 @@
 import { GENDERS, type Gender } from '@ab/shared';
 import { View } from 'react-native';
-import { t, Field, FilterPills, type FilterPill, ErrorLine } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, Field, FilterPills, type FilterPill, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { FamilyFields } from './FamilyFields';
 import { CLEAR } from './PreferenceFields';
 import type { QualErrors, QualForm, TextField } from '@/inbox/qualification/lib/qualification-form';

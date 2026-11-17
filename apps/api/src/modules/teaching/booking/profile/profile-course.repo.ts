@@ -9,6 +9,7 @@ import { dbError } from '@/common/http/http';
 interface PickedTeacher {
   id: string;
   status: 'active' | 'inactive';
+  display_name_ar: string;
 }
 
 interface Assign {
@@ -55,11 +56,11 @@ export class ProfileCourseRepo {
     return current.id;
   }
 
-  /** The teacher, or null when unknown. */
+  /** The teacher (with its Arabic name, «الدورة والباقة»), or null when unknown. */
   async teacher(id: string): Promise<PickedTeacher | null> {
     const { data, error } = await this.db
       .from('teachers')
-      .select('id, status')
+      .select('id, status, display_name_ar')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);
@@ -68,20 +69,21 @@ export class ProfileCourseRepo {
 
   /**
    * The next open lesson of the course's rules (course_rules_of, migration 991: also a rule without
-   * subscription_id) from now on: «من تاريخ»'s default.
+   * subscription_id) from now on: «من تاريخ»'s default; `limit` of them for «الحلقات القادمة».
    */
   async upcoming(
     ruleIds: readonly string[],
-  ): Promise<{ status: LessonStatus; starts_at: string }[]> {
+    limit = 1,
+  ): Promise<{ id: string; status: LessonStatus; starts_at: string }[]> {
     if (ruleIds.length === 0) return [];
     const { data, error } = await this.db
       .from('lessons')
-      .select('status, starts_at')
+      .select('id, status, starts_at')
       .in('rule_id', [...ruleIds])
       .in('status', [...OPEN_LESSON_STATUSES])
       .gte('starts_at', new Date().toISOString())
       .order('starts_at')
-      .limit(1);
+      .limit(limit);
     if (error) throw dbError(error);
     return data;
   }

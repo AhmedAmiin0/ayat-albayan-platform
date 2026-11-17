@@ -1,8 +1,7 @@
 import { counted, type BookingRequest, type SalesCourseView } from '@ab/shared';
 import type { SummaryRow } from '@/booking/trial/lib/confirm-summary';
-import { whenText } from '@/booking/shared/slots';
 import type { ViewerClock } from '@/core/lib/clock';
-import { t } from '@ab/mobile-kit';
+import { t, whenText } from '@ab/mobile-kit';
 
 const durations: Record<string, string | undefined> = t.enums.duration;
 

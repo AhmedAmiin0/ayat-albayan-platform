@@ -38,13 +38,18 @@ export interface StudentRecordingsPage {
 
 const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
-/** ?page&pageSize and the filters: lesson day range (UTC dates, both ends included) and teacher. */
+/**
+ * ?page&pageSize and the filters: lesson day range (UTC dates, both ends included), teacher and
+ * state.
+ */
 export const studentRecordingsQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(10),
   from: day.optional(),
   to: day.optional(),
   teacherId: z.string().uuid().optional(),
+  /** Only rows in this state («جاهز», «فشل التسجيل», …); absent = every state. */
+  status: z.enum(STUDENT_RECORDING_STATUSES).optional(),
 });
 export type StudentRecordingsQuery = z.output<typeof studentRecordingsQuerySchema>;
 

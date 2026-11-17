@@ -36,13 +36,13 @@ describe('contact_is_self first (owner 2026-11-16, canvas Adult)', () => {
 
 describe('childTabs', () => {
   it('a child: no package; the chat while the setting is on (owner 2026-11-16)', () => {
-    const base = ['upcoming', 'attended', 'absent'];
+    const base = ['upcoming', 'attended', 'absent', 'recordings'];
     expect(childTabs({ kind: 'student', student: child, chatOn: false })).toEqual(base);
     expect(childTabs({ kind: 'student', student: child, chatOn: true })).toEqual([...base, 'chat']);
   });
 
   it('a guardian: the package; the chat only while the setting is on', () => {
-    const base = ['upcoming', 'attended', 'absent', 'package'];
+    const base = ['upcoming', 'attended', 'absent', 'recordings', 'package'];
     expect(childTabs({ kind: 'guardian', student: child, chatOn: false })).toEqual(base);
     expect(childTabs({ kind: 'guardian', student: child, chatOn: true })).toEqual([...base, 'chat']);
     expect(childTabs({ kind: 'student', student: self, chatOn: true })).toEqual([...base, 'chat']);

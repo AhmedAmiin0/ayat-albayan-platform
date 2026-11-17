@@ -1,7 +1,6 @@
 import { durationText, type ClockCycle, type LessonView } from '@ab/shared';
 import { clockIn, whenIn, type ViewerClock } from '@/core/lib/clock';
-import { cityOf } from '@/booking/shared/slots';
-import { t } from '@ab/mobile-kit';
+import { t, cityOf } from '@ab/mobile-kit';
 import { chosenStart, lengthOf, type EditState } from './edit-time-body';
 
 const lengths: Record<string, string | undefined> = t.enums.duration;

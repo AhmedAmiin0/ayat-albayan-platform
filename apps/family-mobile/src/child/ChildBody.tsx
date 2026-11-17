@@ -7,6 +7,7 @@ import { type FilterPill, FilterPills, t, usePublicConfig } from '@ab/mobile-kit
 import { chatHref } from '@/nav';
 import { PackageBody } from '@/package';
 import { useChildUnread } from '@/portal';
+import { recordingsHref } from '@/recordings';
 import { HistoryPanel } from './HistoryPanel';
 import { tabWord } from './tab-words';
 import { UpcomingPanel } from './UpcomingPanel';
@@ -17,12 +18,13 @@ interface ChildBodyProps {
   kind: PortalKind;
 }
 
-/** Each tab's panel; «المحادثة» has none: it opens its own screen (chat/[id]). */
+/** Each tab's panel; «التسجيلات» and «المحادثة» have none: each opens its own screen. */
 const PANEL: Record<ChildTab, (p: ChildBodyProps & { own: boolean }) => ReactNode> = {
   upcoming: (p) => <UpcomingPanel student={p.student} own={p.own} />,
   attended: (p) => <HistoryPanel student={p.student} status="attended" />,
   absent: (p) => <HistoryPanel student={p.student} status="absent" />,
   package: (p) => <PackageBody student={p.student} />,
+  recordings: () => null,
   chat: () => null,
 };
 
@@ -38,8 +40,8 @@ function pill(value: ChildTab, own: boolean, unread: number): FilterPill<ChildTa
  * One child's page body (docs/50 §6, canvas Child): «القادمة» · «حضرها» · «غاب عنها» · «الباقة»
  * (the last only for a viewer who sees money: @ab/client-core childTabs). The panel animates in.
  * «المحادثة» only while settings.family_chat_enabled is on (off while the settings load or fail),
- * for every login, a child's own too (owner 2026-11-16), as the fifth pill with its unread count;
- * the five fit one row (canvas ChatXFamilyEntry).
+ * for every login, a child's own too (owner 2026-11-16), as the last pill with its unread count;
+ * the pills fit one row (canvas ChatXFamilyEntry). «التسجيلات» opens the child's recordings.
  */
 export function ChildBody({ student, kind }: ChildBodyProps) {
   const chatOn = familyChatOn(usePublicConfig());
@@ -52,12 +54,13 @@ export function ChildBody({ student, kind }: ChildBodyProps) {
     setTab(next);
     motion.play();
   };
-  // A pill swaps the panel; «المحادثة» pushes the chat screen above the child's page.
+  // A pill swaps the panel; «التسجيلات» and «المحادثة» push their screen above the child's page.
   const pick: Record<ChildTab, (next: ChildTab) => void> = {
     upcoming: show,
     attended: show,
     absent: show,
     package: show,
+    recordings: () => router.push(recordingsHref(student.id)),
     chat: () => router.push(chatHref(student.id)),
   };
   return (

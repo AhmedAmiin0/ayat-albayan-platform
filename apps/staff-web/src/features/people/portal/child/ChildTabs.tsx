@@ -10,6 +10,7 @@ const LABEL: Record<ChildTab, () => string> = {
   upcoming: () => t.portal.upcomingTab,
   attended: () => t.portal.attendedTab,
   absent: () => t.portal.absentTab,
+  recordings: () => t.lessonFiles.recordings,
   package: () => t.portal.packageTab,
   chat: () => t.studentChannel.portalTab,
 };

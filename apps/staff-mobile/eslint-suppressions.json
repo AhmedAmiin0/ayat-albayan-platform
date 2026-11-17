@@ -815,9 +815,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -957,7 +954,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     },
     "max-len": {
       "count": 1
@@ -1051,14 +1048,6 @@
       "count": 1
     }
   },
-  "src/calendar/overview/PeriodSwitcher.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/calendar/overview/TeacherHeader.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -1066,7 +1055,7 @@
   },
   "src/calendar/overview/overview-text.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 2
@@ -1654,11 +1643,6 @@
       "count": 1
     }
   },
-  "src/core/ui/form/FormLabel.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/core/ui/form/SearchField.tsx": {
     "max-len": {
       "count": 3
@@ -1872,9 +1856,6 @@
     }
   },
   "src/edit-time/components/CorrectTimes.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -1965,9 +1946,6 @@
     }
   },
   "src/edit-time/lib/edit-time-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -4758,9 +4736,6 @@
     }
   },
   "src/meetings/invite/invite-text.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -6140,7 +6115,7 @@
   },
   "src/sales-course/change/CourseChangeDone.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales-course/change/CourseChangeFlow.tsx": {
@@ -6342,7 +6317,7 @@
   },
   "src/sales-course/lib/course-summary.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 3
@@ -7657,7 +7632,7 @@
   },
   "src/student-file/recordings/RecordingFiltersBar.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/student-file/recordings/RecordingPlay.tsx": {
@@ -7670,7 +7645,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-restricted-syntax": {
       "count": 2
@@ -7694,7 +7669,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/student-file/recordings/recording-format.ts": {
@@ -7838,9 +7813,6 @@
   },
   "src/students/course-pause/PausePreviewLine.tsx": {
     "max-len": {
-      "count": 3
-    },
-    "no-nested-ternary": {
       "count": 1
     }
   },
@@ -7972,9 +7944,6 @@
     "complexity": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -7987,14 +7956,6 @@
   "src/students/profile/GuardianCard.tsx": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/students/profile/RenewButton.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/students/profile/SecondPhone.test.tsx": {
@@ -8024,11 +7985,6 @@
   "src/students/profile/StatusChanger.test.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/students/profile/StatusChanger.tsx": {
-    "max-len": {
-      "count": 3
     }
   },
   "src/students/profile/StudentFacts.tsx": {
@@ -8574,32 +8530,10 @@
   },
   "src/teaching/reschedule/RescheduleSheet.tsx": {
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/teaching/reschedule/SlotButton.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/teaching/reschedule/SlotPicker.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
       "count": 1
     }
   },
   "src/teaching/reschedule/queries.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 2
     },
@@ -8850,15 +8784,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/today/screens/TodayScreen.tsx": {
-    "ab/module-boundaries": {
-      "count": 3
-    },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/today/testing/today-sheet.tsx": {

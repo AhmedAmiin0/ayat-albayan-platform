@@ -1,7 +1,6 @@
 import { ASSISTANT_COMMISSION_TYPES, type AssistantCommissionType } from '@ab/shared';
 import { View } from 'react-native';
-import { t, Field, FilterPills, ErrorLine, Section } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, Field, FilterPills, ErrorLine, Section, FormLabel } from '@ab/mobile-kit';
 import { CurrencyPills } from '@/assistants/list/CurrencyPills';
 import { fieldError } from '@/assistants/api/errors';
 import type { TermsFieldsProps } from '@/assistants/terms/SalaryFields';

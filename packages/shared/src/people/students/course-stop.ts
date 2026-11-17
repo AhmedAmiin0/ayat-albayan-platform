@@ -46,6 +46,8 @@ export interface CourseStopPreview {
   subscriptionId: string;
   /** Open lessons of the course still to come: all of them are cancelled. */
   futureLessons: number;
+  /** Their instants, earliest first (owner 2026-11-17; absent in an old answer). */
+  futureStarts?: string[];
   /** Weekly rules of the course that still run: each ends on the cancel date. */
   activeRules: number;
   /** Net paid, kept as it is with «إلغاء فقط». */

@@ -54,7 +54,7 @@ test('«إلغاء فقط» by default, attended × rate owed: nothing more due 
   expect(screen.getByText(summary(0, 0))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await sent({ owe: { choice: 'attended' } });
-  expect(await screen.findByText(s.done)).toBeTruthy();
+  expect(await screen.findByText(s.done, { exact: false })).toBeTruthy();
 });
 
 test('«إلغاء فقط» with a custom owed amount: 0 .. the price', async () => {
@@ -81,7 +81,10 @@ test('«إلغاء مع استرداد»: unattended by default, everything paid
   expect(screen.getByText(summary(300, 0))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await sent({ refund: { choice: 'paid' } });
+  // owner 2026-11-17 (CourseXStopDone): the transfer is «الخطوة التالية» in its own block.
   expect(await screen.findByText(s.doneRefund.replace('{amount}', sar(300)))).toBeTruthy();
+  expect(screen.getByText(s.next.replace('{amount}', sar(300)))).toBeTruthy();
+  expect(screen.getByText(s.notifiedAdmins)).toBeTruthy();
 });
 
 test('without subscriptions.refund (sales by default): never below attended × rate', async () => {

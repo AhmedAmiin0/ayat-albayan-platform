@@ -62,13 +62,15 @@ export class CourseStop {
     if (stopped === null && plan.unattributed) throw conflict('course_unattributed');
     const live = stopped === null;
     const subRef = { id: sub.id, studentId, currency: sub.currency };
-    const [refund, owe] = await Promise.all([
+    const [refund, owe, starts] = await Promise.all([
       this.refunds.preview(input.user, subRef),
       this.refunds.owe(subRef),
+      this.repo.starts(plan.lessons.map((l) => l.id)),
     ]);
     return {
       subscriptionId: sub.id,
       futureLessons: live ? plan.lessons.length : 0,
+      futureStarts: starts,
       activeRules: live ? plan.rule_ids.length : 0,
       paid,
       currency: sub.currency,

@@ -8,6 +8,8 @@ import { SheetLines } from './SheetLines';
 export interface TeacherPick {
   teacherId: string;
   keep: boolean;
+  /** «المعلم الحالي: …» / «المعلم الجديد: …»: the review names both (owner 2026-11-17). */
+  lines: string[];
 }
 
 interface TeacherStepProps {
@@ -15,6 +17,18 @@ interface TeacherStepProps {
   /** The course's teacher: named as the current one, never offered. */
   currentId: string;
   onPick: (pick: TeacherPick) => void;
+}
+
+interface Option {
+  id: string;
+  display_name_ar: string;
+}
+
+/** «المعلم الحالي: …» (when known) and «المعلم الجديد: …» of the pick. */
+function pickLines(current: Option | undefined, picked: Option | undefined): string[] {
+  const c = t.courseActions.teacher;
+  const now = current ? [c.reviewCurrent.replace('{name}', current.display_name_ar)] : [];
+  return [...now, c.reviewNew.replace('{name}', picked?.display_name_ar ?? '')];
 }
 
 /** «تغيير المعلم»'s first step (owner 2026-10-30): the new teacher, then same or new days. */
@@ -28,6 +42,8 @@ export function TeacherStep({ studentId, currentId, onPick }: TeacherStepProps) 
   }
   const current = options.data.find((o) => o.id === currentId);
   const others = options.data.filter((o) => o.id !== currentId);
+  const lines = pickLines(current, others.find((o) => o.id === picked));
+  const pick = (keep: boolean) => (picked ? onPick({ teacherId: picked, keep, lines }) : undefined);
   const head = [
     ...(current ? [`${c.current}: ${current.display_name_ar}`] : []),
     c.pick,
@@ -46,12 +62,8 @@ export function TeacherStep({ studentId, currentId, onPick }: TeacherStepProps) 
       ))}
       {picked ? (
         <View style={{ gap: 8 }}>
-          <Button label={c.keepDays} onPress={() => onPick({ teacherId: picked, keep: true })} />
-          <Button
-            variant="secondary"
-            label={c.changeDays}
-            onPress={() => onPick({ teacherId: picked, keep: false })}
-          />
+          <Button label={c.keepDays} onPress={() => pick(true)} />
+          <Button variant="secondary" label={c.changeDays} onPress={() => pick(false)} />
         </View>
       ) : null}
     </View>

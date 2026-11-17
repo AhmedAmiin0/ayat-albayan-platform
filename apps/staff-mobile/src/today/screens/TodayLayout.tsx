@@ -29,6 +29,8 @@ interface TodayLayoutProps<L extends TodayLesson> {
   sheet: (details: OpenDetails<L>) => ReactNode;
   /** Said once a lesson change lands (the admin's تأكيد / إلغاء). */
   notice?: string;
+  /** «طلبات الأسر» (owner 2026-11-17): the families' requests this tree answers. */
+  requests?: ReactNode;
 }
 
 /**
@@ -37,7 +39,8 @@ interface TodayLayoutProps<L extends TodayLesson> {
  * away; a quiet day once all is done. A tap on any lesson opens the tree's sheet. Pull to refresh;
  * offline the saved day stays with its «آخر تحديث».
  */
-export function TodayLayout<L extends TodayLesson>({ source, hero: heroCard, sheet, notice }: TodayLayoutProps<L>) {
+export function TodayLayout<L extends TodayLesson>(props: TodayLayoutProps<L>) {
+  const { source, hero: heroCard, sheet, notice, requests } = props;
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const now = useNow();
@@ -69,6 +72,7 @@ export function TodayLayout<L extends TodayLesson>({ source, hero: heroCard, she
             <TodayHeader now={now} tree={source.tree} stale={stale} />
             {loaded && lessons.length > 0 ? <SummaryCard counts={filterCounts(lessons)} filter={filter} onFilter={setFilter} /> : null}
             {notice ? <Notice message={notice} /> : null}
+            {requests}
             {hero ? heroCard(hero, () => details.open(hero.lesson)) : null}
             {plan.quiet && filter === 'all' ? <QuietDay now={now} source={source} /> : null}
             <RestSection lessons={plan.rest} onOpen={details.open} onShowAll={() => setFilter('all')} />

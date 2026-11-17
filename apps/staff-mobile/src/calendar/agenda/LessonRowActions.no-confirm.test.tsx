@@ -41,8 +41,11 @@ test('settled by the job: the three other statuses, each sent through action.cor
   await show({ status: 'completed', auto_held: true, ends_at: ENDED }, createTestQueryClient());
   expect(screen.getByText(t.lessons.correct.outcomeTitle)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.lessons.correct.to.completed })).toBeNull();
+  // owner 2026-11-17: each choice asks first (and says whether the lesson counts).
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.to.no_show }));
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.confirm }));
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.to.cancelled_by_teacher }));
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.confirm }));
   expect(action.correct.mock.calls).toEqual([
     ['l-pending', 'no_show'],
     ['l-pending', 'cancelled_by_teacher'],

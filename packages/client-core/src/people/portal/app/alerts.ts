@@ -52,6 +52,7 @@ const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
   lesson_starting: toStudent('child'),
   // Owner 2026-11-16: the teacher is in; the tap goes straight to the lesson.
   lesson_live: toLive,
+  lesson_request_declined: toStudent('child'),
   lesson_rescheduled: toStudent('child'),
   lesson_cancelled: toStudent('child'),
   course_paused: toStudent('child'),

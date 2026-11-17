@@ -1,7 +1,9 @@
 import type { CourseMoveKind } from '@ab/client-core';
-import { useHolds, t, Button } from '@ab/mobile-kit';
+import type { ReactNode } from 'react';
+import { useHolds, t } from '@ab/mobile-kit';
+import { ActionRow } from '@/students/course-card/ActionRow';
 
-export type Open = 'stop' | CourseMoveKind | null;
+export type Open = 'stop' | 'extend' | CourseMoveKind | null;
 
 interface ActionKeys {
   stop: boolean;
@@ -18,25 +20,54 @@ export function useActionKeys(): ActionKeys {
   return { stop, teacher, times, any: stop || teacher || times };
 }
 
-/** One button per key held; «إلغاء الاشتراك» last, as the destructive one. */
-export function ActionButtons({
-  keys,
-  onOpen,
-}: {
+interface ActionRowsProps {
   keys: ActionKeys;
+  /** «مدّ الجدول»: lessons of the package have no date (courses.reschedule, like the times). */
+  extend?: boolean | undefined;
   onOpen: (next: Open) => void;
-}) {
+  /** The package's rows («جدّد الاشتراك», «سجّل دفعة»), before the destructive one. */
+  extra?: ReactNode;
+}
+
+interface Row {
+  open: Exclude<Open, null>;
+  title: string;
+  hint: string;
+  on: boolean;
+}
+
+/** The rows before the package's ones, in the board's order (owner 2026-11-17). */
+function moveRows(keys: ActionKeys, extend: boolean): Row[] {
   const c = t.courseActions;
+  const hints = t.courseCard.hints;
+  return [
+    { open: 'teacher', title: c.teacher.action, hint: hints.teacher, on: keys.teacher },
+    { open: 'times', title: c.times.action, hint: hints.times, on: keys.times },
+    { open: 'extend', title: t.courseCard.extend.action, hint: hints.extend, on: keys.times && extend },
+  ];
+}
+
+/**
+ * «إجراءات الدورة» (owner 2026-11-17): one row per key held, each with what it does; «إلغاء
+ * الاشتراك» last, as the destructive one.
+ */
+export function ActionButtons({ keys, extend = false, onOpen, extra }: ActionRowsProps) {
+  const stop = t.courseActions.stop;
   return (
     <>
-      {keys.teacher ? (
-        <Button variant="secondary" label={c.teacher.action} onPress={() => onOpen('teacher')} />
-      ) : null}
-      {keys.times ? (
-        <Button variant="secondary" label={c.times.action} onPress={() => onOpen('times')} />
-      ) : null}
+      {moveRows(keys, extend)
+        .filter((r) => r.on)
+        .map((r) => (
+          <ActionRow key={r.open} title={r.title} hint={r.hint} onPress={() => onOpen(r.open)} />
+        ))}
+      {extra}
       {keys.stop ? (
-        <Button variant="danger" label={c.stop.action} onPress={() => onOpen('stop')} />
+        <ActionRow
+          title={stop.action}
+          hint={t.courseCard.hints.stop}
+          onPress={() => onOpen('stop')}
+          danger
+        />
       ) : null}
     </>
   );

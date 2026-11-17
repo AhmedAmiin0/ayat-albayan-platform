@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, palette } from '@ab/mobile-kit';
 import { balanceOf, page, payment, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
@@ -9,8 +9,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-const mockPush = jest.fn();
-jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 const left = (remaining: number) =>
   balanceOf(
@@ -38,7 +37,7 @@ const colorOf = (text: string) => {
   return (Array.isArray(style) ? Object.assign({}, ...style) : style).color as string;
 };
 
-test('3 left: ink, the package, what is used and paid, the status, «سجّل دفعة»', async () => {
+test('3 left: ink, the package, what is used and paid, the status («سجّل دفعة» moved)', async () => {
   serve(left(3));
   await renderWithQuery(<BalanceCard studentId="s1" />);
   expect(await screen.findByText('بقيت 3 حلقات')).toBeTruthy();
@@ -46,8 +45,8 @@ test('3 left: ink, the package, what is used and paid, the status, «سجّل د
   expect(screen.getByText(`${t.enums.packageSize['4']} · 1 من 4 حلقة`)).toBeTruthy();
   expect(screen.getByText(/دُفع /)).toBeTruthy();
   expect(screen.getByText(t.enums.subscriptionStatus.active)).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.record }));
-  expect(mockPush).toHaveBeenCalledWith('/students/payment/s1');
+  // owner 2026-11-17: «سجّل دفعة» is a row of «الدورة والباقة» now (PayRow).
+  expect(screen.queryByRole('button', { name: t.payments.mobile.record })).toBeNull();
 });
 
 test('2 left (the renewal threshold): saffron «بقيت حلقتان»', async () => {

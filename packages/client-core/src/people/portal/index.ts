@@ -29,4 +29,5 @@ export {
   lessonClockText, type CountdownWords,
 } from './countdown-text.js';
 export { lessonWaitText, type WaitTextInput, type WaitWords } from './wait-text.js';
+export * from './actions/index.js';
 export * from './app/index.js';

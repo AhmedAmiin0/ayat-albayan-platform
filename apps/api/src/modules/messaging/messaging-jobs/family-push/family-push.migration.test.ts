@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 300 and 310 (docs/50 §5 item 6). No database runs in unit tests: this pins them.
+// Migrations 300 and 310 (docs/50 §5 item 6), and the family-request kind added by 20261117150100.
+// No database runs in unit tests: this pins them.
 const code = (file: string) =>
   readFileSync(join(MIGRATIONS_DIR, file), 'utf8')
     .split('\n')
@@ -38,5 +39,14 @@ describe('migration 20261117100130: «بدأت الحلقة»', () => {
   it('adds lesson_live alone, re-runnably, granting nothing', () => {
     const sql = code('20261117100130_lesson_live_push_kind.sql');
     expect(sql.trim()).toBe("alter type public.push_kind add value if not exists 'lesson_live';");
+  });
+});
+
+describe('migration 20261117150100: «اعتذرت الأكاديمية عن الطلب»', () => {
+  it('adds lesson_request_declined re-runnably', () => {
+    const sql = code('20261117150100_family_lesson_requests.sql');
+    expect(sql).toContain(
+      "alter type public.push_kind add value if not exists 'lesson_request_declined';",
+    );
   });
 });

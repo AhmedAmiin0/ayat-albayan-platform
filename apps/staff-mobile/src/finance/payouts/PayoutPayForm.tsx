@@ -1,9 +1,17 @@
 import { PAYMENT_METHODS, type PayoutView, type PaymentMethod } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, Button, Field, FilterPills, type FilterPill, ErrorLine, useNow } from '@ab/mobile-kit';
+import {
+  t,
+  Button,
+  Field,
+  FilterPills,
+  type FilterPill,
+  ErrorLine,
+  useNow,
+  FormLabel,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import { PaidDayPicker } from '@/core/ui/form/PaidDayPicker';
 import { ReceiptPicker } from '@/core/ui/form/ReceiptPicker';
 import { financeErrorText } from '@/finance/shared/errors';

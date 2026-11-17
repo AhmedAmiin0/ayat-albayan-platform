@@ -14,6 +14,16 @@ interface RecordingsPageInput {
   query: StudentRecordingsQuery;
 }
 
+/** The equality filters of a page that are set: the teacher scope, the teacher, the state. */
+function pageFilters(input: RecordingsPageInput): [string, string][] {
+  const all: [string, string | null | undefined][] = [
+    ['lessons.teacher_id', input.onlyTeacherId],
+    ['lessons.teacher_id', input.query.teacherId],
+    ['status', input.query.status],
+  ];
+  return all.flatMap(([column, value]) => (value ? [[column, value]] : []));
+}
+
 /** The student file's recordings (service role; the services guard who may ask). */
 @Injectable()
 export class StudentRecordingRepo {
@@ -73,8 +83,7 @@ export class StudentRecordingRepo {
       .from('lesson_recordings')
       .select(SELECT, { count: 'exact' })
       .eq('lessons.lesson_students.student_id', input.studentId);
-    if (input.onlyTeacherId) q = q.eq('lessons.teacher_id', input.onlyTeacherId);
-    if (query.teacherId) q = q.eq('lessons.teacher_id', query.teacherId);
+    for (const [column, value] of pageFilters(input)) q = q.eq(column, value);
     if (gte) q = q.gte('lessons.starts_at', gte);
     if (lt) q = q.lt('lessons.starts_at', lt);
     const { data, error, count } = await q

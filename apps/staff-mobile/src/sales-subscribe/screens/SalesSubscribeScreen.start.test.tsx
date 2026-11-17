@@ -1,6 +1,5 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { dayLabel } from '@/booking/shared/slots';
-import { t, money } from '@ab/mobile-kit';
+import { t, money, slotDayLabel } from '@ab/mobile-kit';
 import { dayOf, dialogProps, pickDay } from '@/test/pickers/native-picker';
 import { localDay } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -46,7 +45,7 @@ afterEach(() => jest.useRealTimers());
 test('without subscriptions.set_start_date: no day picker, «تبدأ الباقة اليوم», the body has no startsOn', async () => {
   asSales();
   await open();
-  const today = dayLabel(new Date('2026-10-12T12:00:00Z'), 'UTC');
+  const today = slotDayLabel(new Date('2026-10-12T12:00:00Z'), 'UTC');
   expect(screen.getByText(m.startsOnDefault.replace('{date}', today))).toBeTruthy();
   expect(screen.queryByTestId('start-day-open')).toBeNull();
   expect(screen.queryByRole('switch', { name: m.alreadyStarted })).toBeNull();

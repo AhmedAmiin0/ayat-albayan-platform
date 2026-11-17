@@ -20,3 +20,9 @@ export function dayMonthLabel(date: string): string {
 export function dateLabel(date: string): string {
   return date ? dateText(atUtcMidnight(date), UTC_DAY, DAY_MONTH_YEAR) : '';
 }
+
+const WEEKDAY_DAY_MONTH = { weekday: 'long', day: 'numeric', month: 'long' } as const;
+
+/** «الأحد 22 نوفمبر» of an instant in `tz` («الدورة والباقة»'s lessons, owner 2026-11-17). */
+export const dayIn = (tz: string) => (instant: string): string =>
+  dateText(new Date(instant), { tz, locale }, WEEKDAY_DAY_MONTH).replace(/[،,]\s*/, ' ');

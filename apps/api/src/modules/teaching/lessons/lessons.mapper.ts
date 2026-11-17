@@ -7,7 +7,6 @@ import {
   usesPlatform,
   type Conflict,
   type LessonEvent,
-  type LessonProposalView,
   timeEditMode,
   type LessonStudentView,
   type LessonTimeEditView,
@@ -18,6 +17,7 @@ import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './store/lesson-row';
 import { lessonReport, readerWindow } from './store/lesson-report';
 import type { SeqMap } from './lessons.repo';
+import { iso, pendingProposal } from './proposals/proposal-view';
 
 /** What a teacher may do to their own lesson (docs/10 §3 Guards); the rest is admin-only. */
 const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
@@ -139,11 +139,3 @@ export function storedConflicts(value: unknown): Conflict[] {
   const parsed = conflictList.safeParse(value);
   return parsed.success ? parsed.data : [];
 }
-
-function pendingProposal(rows: LessonRow['proposals'] | undefined): LessonProposalView | null {
-  const p = rows?.find((r) => r.status === 'pending');
-  return p ? { id: p.id, proposed_starts_at: iso(p.proposed_starts_at), note: p.note, created_at: iso(p.created_at) } : null;
-}
-
-/** Postgres "2026-10-04 14:00:00+00" / "+00:00" → "2026-10-04T14:00:00.000Z". */
-const iso = (value: string): string => new Date(value).toISOString();

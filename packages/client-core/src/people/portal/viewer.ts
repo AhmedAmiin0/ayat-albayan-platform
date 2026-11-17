@@ -62,8 +62,8 @@ export const FAMILY_MEETINGS_SETTING = 'family_meetings_in_app';
 /** settings.family_meetings_in_app; off (the browser) while unknown. */
 export const familyMeetingsOn = publicFlag(FAMILY_MEETINGS_SETTING);
 
-/** The child screen's tabs, in order (docs/50 §6). */
-export const CHILD_TABS = ['upcoming', 'attended', 'absent', 'package', 'chat'] as const;
+/** The child screen's tabs, in order (docs/50 §6; «التسجيلات» owner 2026-11-17). */
+export const CHILD_TABS = ['upcoming', 'attended', 'absent', 'recordings', 'package', 'chat'] as const;
 export type ChildTab = (typeof CHILD_TABS)[number];
 
 export interface ChildTabsInput {
@@ -79,6 +79,7 @@ export function childTabs({ kind, student, chatOn }: ChildTabsInput): ChildTab[]
     upcoming: true,
     attended: true,
     absent: true,
+    recordings: true,
     package: seesMoney(portalViewer(kind, student)),
     chat: chatOn,
   };

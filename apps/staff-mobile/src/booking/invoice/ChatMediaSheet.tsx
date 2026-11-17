@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { t, Button, ErrorState } from '@ab/mobile-kit';
+import { t, Button, ErrorState, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { FormLabel } from '@/core/ui/form/FormLabel';
 import type { ThreadMediaItem } from '@/booking/shared/contract';
 import { useThreadMedia } from './invoice-queries';
 import { MediaCard } from './MediaCard';

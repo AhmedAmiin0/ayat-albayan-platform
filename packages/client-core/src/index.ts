@@ -29,4 +29,6 @@ export * from './messaging/templates/index.js';
 export * from './teaching/teacher-home/index.js';
 export * from './teaching/room-host/index.js';
 export * from './people/portal/index.js';
+export * from './teaching/audio-player/index.js';
+export * from './teaching/lesson-files/index.js';
 export * from './teaching/lesson-room/index.js';

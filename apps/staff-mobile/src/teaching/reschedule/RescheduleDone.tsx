@@ -1,7 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { whenText } from '@/booking';
-import { t, type, useTheme, AppText, Button, NuqtaGlyph } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, NuqtaGlyph, whenText } from '@ab/mobile-kit';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import type { Scope } from './reschedule-body';
 import { useViewerClock } from '@/core/lib/clock';

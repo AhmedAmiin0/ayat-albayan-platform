@@ -17,7 +17,10 @@ import { MessageActions } from './MessageActions';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn() }));
-vi.mock('@/features/people/auth', () => ({ usePermissions: () => ({ can: () => true }) }));
+vi.mock('@/features/people/auth', async (orig) => ({
+  ...(await orig<object>()),
+  usePermissions: () => ({ can: () => true }),
+}));
 vi.mock('@/features/messaging/inbox/messages/reply-actions/RescheduleLessonDrawer', () => ({
   RescheduleLessonDrawer: ({ onMoved }: { onMoved: () => void }) => (
     <button type="button" onClick={onMoved}>

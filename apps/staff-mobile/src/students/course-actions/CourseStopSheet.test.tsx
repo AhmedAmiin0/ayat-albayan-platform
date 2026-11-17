@@ -11,6 +11,8 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
+const mockPush = jest.fn();
+jest.mock('expo-router', () => ({ router: { push: (mockHref: unknown) => mockPush(mockHref) } }));
 
 const s = t.courseActions.stop;
 
@@ -19,13 +21,16 @@ beforeEach(() => {
   mockApiSend.mockReset();
 });
 
+const PHONE = '+201000000000';
 const openSheet = async () => {
-  await renderWithQuery(<CourseActionsSection studentId="s1" subscriptionId={SUB} />);
+  await renderWithQuery(
+    <CourseActionsSection studentId="s1" subscriptionId={SUB} chatPhone={PHONE} />,
+  );
   await fireEvent.press(await screen.findByRole('button', { name: s.action }));
   await screen.findByRole('header', { name: s.title });
 };
 
-test('the sheet says what happens: 3 lessons, the schedule, money kept, history, «توقف»', async () => {
+test('the sheet says what happens: 3 lessons, the schedule, money kept, history, «متوقف»', async () => {
   await openSheet();
   expect(await screen.findByText(s.lessons.few.replace('{n}', '3'))).toBeTruthy();
   expect(screen.getByText(s.schedule)).toBeTruthy();
@@ -34,11 +39,13 @@ test('the sheet says what happens: 3 lessons, the schedule, money kept, history,
   expect(mockApiFetch).toHaveBeenCalledWith(`${BASE}/course-stop?subscriptionId=${SUB}`);
 });
 
-test('the reason is required; the stop sends it trimmed with one request id, then the notice', async () => {
+test('the reason is required; sent trimmed with one request id, then the done block', async () => {
   mockApiSend.mockResolvedValue({ subscriptionId: SUB, cancelledLessons: 3, endedRules: 1, studentStatus: 'churned', stoppedAt: 'x' });
   await openSheet();
   await fireEvent.press(await screen.findByRole('button', { name: s.confirm }));
   expect(mockApiSend).not.toHaveBeenCalled();
+  // owner 2026-11-17: a clear error under the empty reason, only once «تأكيد الإلغاء» was pressed.
+  expect(screen.getByText(s.reasonRequired)).toBeTruthy();
   await fireEvent.changeText(screen.getByPlaceholderText(s.reasonHint), '  سفر  ');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await waitFor(() =>
@@ -49,7 +56,24 @@ test('the reason is required; the stop sends it trimmed with one request id, the
       owe: { choice: 'attended' },
     }),
   );
+  // owner 2026-11-17 (CourseXStopDone): the status now, the next step, who was told, «تم».
   expect(await screen.findByText(s.done)).toBeTruthy();
+  const status = s.doneStatus.replace('{status}', t.enums.studentStatus.churned);
+  for (const line of [status, s.nextTitle, s.nextTell, s.notifiedFamily, s.notifiedTeacher])
+    expect(screen.getByText(line)).toBeTruthy();
+  expect(screen.queryByText(s.notifiedAdmins)).toBeNull();
+  await fireEvent.press(screen.getByRole('button', { name: s.close }));
+  await waitFor(() => expect(screen.queryByRole('header', { name: s.title })).toBeNull());
+  expect(screen.getByText(s.done)).toBeTruthy();
+});
+
+test('the done block opens the guardian\'s chat (the sheet closes first)', async () => {
+  mockApiSend.mockResolvedValue({ subscriptionId: SUB, studentStatus: 'churned', refund: null });
+  await openSheet();
+  await fireEvent.changeText(await screen.findByPlaceholderText(s.reasonHint), 'سفر');
+  await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
+  await fireEvent.press(await screen.findByRole('button', { name: t.students.family.openChat }));
+  expect(mockPush).toHaveBeenCalledWith(`/inbox/thread/${encodeURIComponent(PHONE)}`);
 });
 
 test('a refused stop says why and keeps the sheet', async () => {

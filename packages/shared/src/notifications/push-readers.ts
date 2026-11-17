@@ -11,6 +11,7 @@ const LESSON_PUSH_KINDS = [
   'lesson_starting',
   'lesson_live',
   'report_sent',
+  'lesson_request_declined',
   'lesson_rescheduled',
   'lesson_cancelled',
   'course_paused',

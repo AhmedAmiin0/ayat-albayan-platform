@@ -51,6 +51,7 @@ const BELL_SHOWN: Readonly<Record<AnyPushKind, boolean>> = {
   lesson_starting: false,
   lesson_live: false,
   report_sent: false,
+  lesson_request_declined: false,
 };
 
 const until = (l: LessonView, now: Date) => Date.parse(l.starts_at) - now.getTime();

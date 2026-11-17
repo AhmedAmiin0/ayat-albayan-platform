@@ -1,10 +1,8 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { dayLabel } from '@/calendar';
-import { useViewerTz, zoneNote } from '@/core/lib/clock';
-import { t, type, useTheme, AppText } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
-import { SlotButton } from '@/teaching/reschedule/SlotButton';
+import { useViewerClock, zoneNote } from '@/core/lib/clock';
+import { t, type, useTheme, AppText, SlotButton, FormLabel } from '@ab/mobile-kit';
 import { localDate } from '@/today';
 import { correctStarts } from '@/edit-time/lib/edit-time-body';
 
@@ -25,7 +23,8 @@ interface CorrectTimesProps {
  * is typed (rule 6). The recorded start shows picked until another one is.
  */
 export function CorrectTimes({ lesson, durationMin, tz, now, value, onPick }: CorrectTimesProps) {
-  const viewerZone = useViewerTz();
+  const viewer = useViewerClock();
+  const viewerZone = viewer.tz;
   const { color } = useTheme();
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   const starts = correctStarts(lesson, durationMin, now);
@@ -49,6 +48,7 @@ export function CorrectTimes({ lesson, durationMin, tz, now, value, onPick }: Co
               key={startsAt}
               startsAt={startsAt}
               tz={tz}
+              viewer={viewer}
               selected={Date.parse(startsAt) === Date.parse(current)}
               onPick={onPick}
             />

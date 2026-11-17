@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, FormLabel } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
-import { FormLabel } from './FormLabel';
 import { paidDayLabel } from '@/core/lib/money/paid-day';
 
 interface PaidDayPickerProps {

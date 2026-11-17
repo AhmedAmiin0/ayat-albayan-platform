@@ -90,6 +90,8 @@ test('a held lesson: «تصحيح حالة الحلقة» posts { to }, then say
   expect(screen.getByText(c.outcomeTitle)).toBeTruthy();
   expect(screen.queryByRole('button', { name: c.to.completed })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: c.to.no_show }));
+  expect(screen.getByText(`${c.ask.replace('{to}', c.to.no_show)} ${c.counts.no_show}`)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: c.confirm }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l9/correct', { to: 'no_show' }));
   expect(await screen.findByText(c.done)).toBeTruthy();
 });
@@ -98,6 +100,7 @@ test('a lesson not settled by the job answers 409 not_auto_held, said in words',
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'not_auto_held' }));
   await open('هند');
   await fireEvent.press(screen.getByRole('button', { name: c.to.excused }));
+  await fireEvent.press(screen.getByRole('button', { name: c.confirm }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l9/correct', { to: 'excused' }));
   expect(await screen.findByText(t.lessons.error.not_auto_held)).toBeTruthy();
 });

@@ -1,5 +1,4 @@
-import { Modal, ScrollView } from 'react-native';
-import { t, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { t, RescheduleFrame } from '@ab/mobile-kit';
 import { EditTimeForm } from './EditTimeForm';
 import { editMode, type EditableLesson } from '@/edit-time/lib/types';
 
@@ -17,21 +16,12 @@ interface EditTimeSheetProps {
 export function EditTimeSheet({ lesson, onClose }: EditTimeSheetProps) {
   const correcting = lesson !== null && editMode(lesson) === 'correct';
   return (
-    <Modal visible={lesson !== null} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <Screen sheet>
-        <ScreenHeader
-          size="h2"
-          title={correcting ? t.editTime.correctTitle : t.editTime.title}
-          trailing={<Button variant="ghost" label={t.common.close} onPress={onClose} />}
-        />
-        <ScrollView
-          style={{ flex: 1, marginHorizontal: -16 }}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          {lesson ? <EditTimeForm key={lesson.id} lesson={lesson} onClose={onClose} /> : null}
-        </ScrollView>
-      </Screen>
-    </Modal>
+    <RescheduleFrame
+      open={lesson !== null}
+      onClose={onClose}
+      title={correcting ? t.editTime.correctTitle : t.editTime.title}
+    >
+      {lesson ? <EditTimeForm key={lesson.id} lesson={lesson} onClose={onClose} /> : null}
+    </RescheduleFrame>
   );
 }

@@ -2115,6 +2115,60 @@ export type Database = {
           },
         ];
       };
+      lesson_files: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          kind: string;
+          lesson_id: string;
+          mime: string;
+          size: number;
+          storage_path: string;
+          title: string | null;
+          visible_to_family: boolean;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind: string;
+          lesson_id: string;
+          mime: string;
+          size: number;
+          storage_path: string;
+          title?: string | null;
+          visible_to_family?: boolean;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind?: string;
+          lesson_id?: string;
+          mime?: string;
+          size?: number;
+          storage_path?: string;
+          title?: string | null;
+          visible_to_family?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_files_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_files_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       lesson_join_links: {
         Row: {
           created_at: string;
@@ -2179,11 +2233,13 @@ export type Database = {
           created_by: string | null;
           decided_at: string | null;
           decided_by: string | null;
+          decision_note: string | null;
           id: string;
           lesson_id: string;
           new_lesson_id: string | null;
           note: string | null;
           proposed_starts_at: string;
+          requested_by: string;
           status: Database['public']['Enums']['proposal_status'];
           teacher_id: string;
         };
@@ -2192,11 +2248,13 @@ export type Database = {
           created_by?: string | null;
           decided_at?: string | null;
           decided_by?: string | null;
+          decision_note?: string | null;
           id?: string;
           lesson_id: string;
           new_lesson_id?: string | null;
           note?: string | null;
           proposed_starts_at: string;
+          requested_by?: string;
           status?: Database['public']['Enums']['proposal_status'];
           teacher_id: string;
         };
@@ -2205,11 +2263,13 @@ export type Database = {
           created_by?: string | null;
           decided_at?: string | null;
           decided_by?: string | null;
+          decision_note?: string | null;
           id?: string;
           lesson_id?: string;
           new_lesson_id?: string | null;
           note?: string | null;
           proposed_starts_at?: string;
+          requested_by?: string;
           status?: Database['public']['Enums']['proposal_status'];
           teacher_id?: string;
         };
@@ -6431,7 +6491,7 @@ export type Database = {
       payout_status: 'draft' | 'approved' | 'paid';
       pdf_status: 'pending' | 'rendering' | 'ready' | 'failed';
       program: 'quran' | 'arabic' | 'islamic_studies';
-      proposal_status: 'pending' | 'approved' | 'rejected';
+      proposal_status: 'pending' | 'approved' | 'rejected' | 'withdrawn';
       push_kind:
         | 'new_lead'
         | 'new_message'
@@ -6451,7 +6511,8 @@ export type Database = {
         | 'payment_received'
         | 'lesson_starting'
         | 'report_sent'
-        | 'lesson_live';
+        | 'lesson_live'
+        | 'lesson_request_declined';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status:
@@ -6636,7 +6697,7 @@ export const Constants = {
       payout_status: ['draft', 'approved', 'paid'],
       pdf_status: ['pending', 'rendering', 'ready', 'failed'],
       program: ['quran', 'arabic', 'islamic_studies'],
-      proposal_status: ['pending', 'approved', 'rejected'],
+      proposal_status: ['pending', 'approved', 'rejected', 'withdrawn'],
       push_kind: [
         'new_lead',
         'new_message',
@@ -6657,6 +6718,7 @@ export const Constants = {
         'lesson_starting',
         'report_sent',
         'lesson_live',
+        'lesson_request_declined',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

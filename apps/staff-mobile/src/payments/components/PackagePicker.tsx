@@ -1,7 +1,6 @@
 import type { SubscriptionView } from '@ab/shared';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, FilterPills } from '@ab/mobile-kit';
-import { FormLabel } from '@/core/ui/form/FormLabel';
+import { t, type, useTheme, AppText, FilterPills, FormLabel } from '@ab/mobile-kit';
 import { packageFrom, paidOf } from '@/core/lib/money/format';
 
 interface PackagePickerProps {

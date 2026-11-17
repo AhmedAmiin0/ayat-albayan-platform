@@ -2676,9 +2676,6 @@
     "ab/forbidden-imports": {
       "count": 1
     },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -5126,11 +5123,8 @@
     }
   },
   "src/features/people/students/profile/StudentProfileForm.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "max-len": {
-      "count": 6
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -5155,7 +5149,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "max-lines-per-function": {
       "count": 1
@@ -9973,7 +9967,7 @@
   },
   "src/features/teaching/course-actions/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 4
     }
   },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {
@@ -10817,14 +10811,6 @@
   },
   "src/features/teaching/schedule/reschedule/MakeupAction.tsx": {
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/schedule/reschedule/ProposalBox.tsx": {
-    "max-len": {
-      "count": 1
-    },
-    "max-lines-per-function": {
       "count": 1
     }
   },

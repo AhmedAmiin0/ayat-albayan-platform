@@ -1,9 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@ab/mobile-kit';
+import { t, whenText } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
 import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
-import { whenText } from '@/booking/shared/slots';
 import { fakeBookingApi, LEADS_KEY, seededClient, walkToConfirm } from '@/booking/testing/test-utils';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
