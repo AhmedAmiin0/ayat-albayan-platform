@@ -87,6 +87,7 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   // The family app's kinds (docs/50 §5.6) reach only portal logins (their home, '/portal'); a
   // staff area never gets them, so it opens its home.
   lesson_starting: (area) => HOME_BY_ROLE[area],
+  lesson_live: (area) => HOME_BY_ROLE[area],
   report_sent: (area) => HOME_BY_ROLE[area],
 };
 

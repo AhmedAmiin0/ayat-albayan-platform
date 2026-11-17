@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SubscriptionsModule } from '@/modules/finance/subscriptions';
 import { ClassroomModule } from '@/modules/teaching/classroom';
+import { LessonsModule } from '@/modules/teaching/lessons';
 import { ChatNumber } from './home/chat-number';
 import { PortalHistoryRepo } from './history/portal-history.repo';
 import { PortalHistoryService } from './history/portal-history.service';
@@ -19,7 +20,7 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
 
 /** The family portal's API (docs/31): /portal/*, guardian and student logins only. */
 @Module({
-  imports: [ClassroomModule, SubscriptionsModule],
+  imports: [ClassroomModule, LessonsModule, SubscriptionsModule],
   controllers: [PortalController, PortalRecordsController],
   providers: [
     PortalScopeRepo,

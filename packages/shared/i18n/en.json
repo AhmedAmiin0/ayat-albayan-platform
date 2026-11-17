@@ -63,7 +63,7 @@
     },
     "cancelled": "This lesson was cancelled",
     "remainingHint": "across all of the student’s packages",
-    "upcomingTab": "Upcoming",
+    "upcomingTab": "Next",
     "attendedTab": "Attended",
     "absentTab": "Missed",
     "childTabs": "Student sections",
@@ -127,6 +127,7 @@
         "minutes": "{n} min",
         "teacher": "Teacher: {name}",
         "roomNote": "The lesson opens in the academy's room in your browser, with no second sign-in.",
+        "roomNoteLive": "You enter the room directly, microphone on and camera off.",
         "joinShort": "Join",
         "joinFailed": "Could not open the lesson. Please try again.",
         "upcoming": "Upcoming lessons",
@@ -212,12 +213,46 @@
       "child": {
         "attendedSelf": "Attended",
         "absentSelf": "Missed",
-        "chat": "Chat"
+        "chat": "Chat",
+        "chatUnread": "Chat, {n} unread"
       },
       "pick": {
         "title": "Choose a student",
-        "hint": "You can switch the student later from “Account”.",
-        "switch": "Switch student"
+        "hint": "You can switch the student later from their name at the top of any page.",
+        "switch": "Switch student",
+        "open": "Switch student: {name}",
+        "shown": "Now showing {name}’s page",
+        "shownSelf": "Now showing your page",
+        "next": "Next lesson · {when}",
+        "me": "Me"
+      },
+      "live": {
+        "justNow": "Started just now",
+        "since": {
+          "one": "Started a minute ago",
+          "two": "Started 2 minutes ago",
+          "few": "Started {n} minutes ago",
+          "other": "Started {n} minutes ago"
+        },
+        "teacherIn": "The teacher is in the room now",
+        "othersIn": "In the room now",
+        "roles": {
+          "teacher": "{name}",
+          "student": "{name}",
+          "guardian": "{name}",
+          "staff": "{name} (lesson assistant)",
+          "guest": "{name} (guest)"
+        },
+        "unnamed": {
+          "teacher": "The teacher",
+          "student": "A student",
+          "guardian": "A guardian",
+          "staff": "Lesson assistant",
+          "guest": "Guest"
+        },
+        "row": "Live now",
+        "rowTeacher": "Live now · the teacher is in",
+        "join": "Join now"
       }
     }
   },
@@ -1446,9 +1481,28 @@
     "back": "Back",
     "count": "Participants: {n}",
     "connecting": "Connecting…",
-    "ended": "You left the room",
     "duplicate": "You joined from another device or window, so the room closed here",
     "missing": "Your entry expired; join again from the list",
+    "sdkFailed": "The lesson cannot run inside the app on this device; open it in the browser",
+    "left": {
+      "title": "You left the lesson",
+      "body": "The lesson is still running, and you can go back in now."
+    },
+    "leaveAsk": {
+      "title": "Leave the lesson?",
+      "body": "You can join again while the lesson is running.",
+      "stay": "Stay in the lesson"
+    },
+    "remember": "We keep this choice, so next time you join straight away.",
+    "dropped": "The connection to the lesson was lost",
+    "mutedHint": "You can turn the microphone back on with the «Mute» button.",
+    "host": {
+      "endAll": "End the lesson for everyone",
+      "endConfirm": "The lesson will end for everyone. End it?",
+      "endAction": "End now",
+      "ending": "Ending…",
+      "keep": "Go back"
+    },
     "permission": {
       "title": "Camera and microphone",
       "body": "The app needs the microphone so others can hear you, and the camera so they can see you. You can turn either off at any time.",
@@ -1469,6 +1523,11 @@
       "switchCamera": "Switch camera",
       "speaker": "Speaker",
       "earpiece": "Earpiece",
+      "headset": "Headset",
+      "bluetooth": "Bluetooth",
+      "audio": "Audio",
+      "output": "Audio output: {name}",
+      "chat": "Chat",
       "leave": "Leave"
     },
     "native": {
@@ -4222,6 +4281,10 @@
     "report_sent": {
       "title": "Lesson report received",
       "body": "{student}'s lesson report for {when} is ready"
+    },
+    "lesson_live": {
+      "title": "Lesson started",
+      "body": "Tap to join {student}'s lesson now, with your microphone on."
     }
   },
   "bell": {
@@ -4453,7 +4516,8 @@
       "course_resumed": "Lessons resumed",
       "payment_received": "Payment received",
       "lesson_starting": "Lesson starting soon",
-      "report_sent": "Lesson report received"
+      "report_sent": "Lesson report received",
+      "lesson_live": "Lesson started"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -4540,6 +4604,9 @@
       "lessonConfirmationRequired": "When on (the default) a lesson shows \"Needs confirmation\" until the family replies \"Yes\" or the admin team confirms it. Every lesson that has ended is deducted from the package, confirmed or not. After the grace period a confirmed lesson is recorded as held; an unconfirmed one is recorded as absent when the platform sent the family's reminder and no reply came, and otherwise stays \"Needs confirmation\" for an assistant to resolve. When off, no lesson shows \"Needs confirmation\" and a lesson counts as held after the grace period unless another status was recorded.",
       "lessonOutcomeGraceMinutes": "Minutes after a lesson's end before its status is recorded automatically (held or absent). Default: 30 minutes.",
       "shortLinkBase": "The address the platform's short links start with, e.g. https://example.com/r/ (must start with https:// and end with /). Empty = the platform API's address followed by /r/.",
+      "shortLinkDefaultDays": "How many days a short link made by the admin or sales team stays valid when no expiry is given. Default: 7 days.",
+      "shortLinkPurgeDays": "This many days after a short link expires, it is deleted with its user list and visits. Default: 30 days.",
+      "shortLinkExtraHosts": "Other hosts a short link may open besides the platform and Google Meet, comma separated, e.g. forms.example.com. The link must be https.",
       "teacherChatsEnabled": "When on, teachers who hold the chats permission see the «Chats» page on the website and its tab in the mobile app. When off, the page is hidden and teachers cannot open it; the chats and their data do not change. Admins, sales and assistants are not affected.",
       "teacherStudentMessagesEnabled": "When on, teachers see the «Student messages» page. When off, it is hidden on the website and under «More» in the mobile app and teachers cannot open it; the messages stay saved.",
       "teacherEarningsEnabled": "When on, teachers see the «My earnings» page. When off, it is hidden on the website and in the mobile app and teachers cannot open it; earnings and their calculation do not change.",
@@ -4579,6 +4646,9 @@
     "lessonConfirmationRequired": "Require the family or the admin team to confirm each lesson",
     "lessonOutcomeGraceMinutes": "Grace after a lesson ends before its status is recorded (minutes)",
     "shortLinkBase": "Short links base",
+    "shortLinkDefaultDays": "Short link lifetime (days)",
+    "shortLinkPurgeDays": "Delete short links after expiry (days)",
+    "shortLinkExtraHosts": "Extra hosts for short links",
     "teacherChatsEnabled": "Teacher «Chats» page",
     "teacherStudentMessagesEnabled": "Teacher «Student messages» page",
     "teacherEarningsEnabled": "Teacher «My earnings» page",
@@ -4946,7 +5016,11 @@
     "nextLesson": "Your next lesson: {when} · {names}",
     "noneSoon": "No lessons in the next two weeks",
     "openSchedule": "Open my schedule",
-    "noOther": "No other lessons today"
+    "noOther": "No other lessons today",
+    "waiting": "Your student is waiting",
+    "waitingLine": "{name} is waiting for you in the room",
+    "waitingSince": "Came in {age}",
+    "liveNow": "The lesson is running now"
   },
   "live": {
     "now": "Live now"
@@ -4986,6 +5060,7 @@
     "guest": {
       "title": "Join the lesson",
       "intro": "Type your name and join right away, no sign-up.",
+      "introKnown": "Join the lesson right away, no sign-up.",
       "name": "Your name",
       "namePlaceholder": "e.g. Suhaila",
       "join": "Join the lesson"
@@ -5012,6 +5087,8 @@
       "join_not_open_yet": "The room is not open yet; it opens 15 minutes before the lesson",
       "join_closed": "The lesson time is over",
       "link_invalid": "This link is not valid",
+      "lesson_ended": "This lesson has ended and cannot be joined again",
+      "lesson_not_live": "The lesson cannot be ended now: its time has not started and nobody is in the room",
       "link_expired": "This link has expired",
       "too_many_requests": "Too many attempts, try again in a moment",
       "template_not_approved": "Meta has not approved the lesson link template yet",
@@ -6122,7 +6199,9 @@
       "people.edit": "Edit students' and families' details",
       "students.attach_guardian": "Link a student to another guardian",
       "people.switch_role": "Convert between student and guardian",
-      "templates.author": "Write chat templates"
+      "templates.author": "Write chat templates",
+      "short_links.manage": "Short links",
+      "short_links.all": "All short links"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
@@ -6143,7 +6222,9 @@
       "people.edit": "Edit any student's name, age, gender, level, time zone and notes, and the family's details and numbers. Never deletes or merges, never changes the status, program or teacher.",
       "students.attach_guardian": "Move the student to another family or to a new guardian by number. Packages, lessons and payments stay with the student; the old family stays. Also needs «Edit students' and families' details».",
       "people.switch_role": "«The student is the guardian», converting a guardian into a student of their family, and converting a student record with no history into the family's guardian. Also needs «Edit students' and families' details».",
-      "templates.author": "Create new templates sent to Meta from the chat number (they join the allowed list once approved) and edit that list's templates the platform does not send by itself. Does not grant managing every template."
+      "templates.author": "Create new templates sent to Meta from the chat number (they join the allowed list once approved) and edit that list's templates the platform does not send by itself. Does not grant managing every template.",
+      "short_links.manage": "Create short links to platform pages, Google Meet or allowed hosts, choose who may open them, how many users and for how long, and send them by WhatsApp. Without «All short links» a user sees only their own links.",
+      "short_links.all": "See, edit and revoke the short links the whole team made, not only one's own."
     },
     "page": {
       "title": "Roles and permissions",
@@ -7071,6 +7152,10 @@
       "report_sent": {
         "name": "Lesson report received",
         "trigger": "When the lesson report is sent to the family, to the guardian and the student in the family app"
+      },
+      "lesson_live": {
+        "name": "Lesson started",
+        "trigger": "When the teacher enters the lesson room, to the guardian and the student in the family app"
       }
     }
   },
@@ -8352,7 +8437,8 @@
       "teacher": "Teacher",
       "guardian": "Guardian",
       "student": "Student",
-      "sales": "Follow-up owner"
+      "sales": "Follow-up owner",
+      "unknown": "Chat member"
     },
     "listEmpty": "No current students yet",
     "listEmptyHint": "The chat of every student you teach now appears here.",
@@ -8365,6 +8451,54 @@
     "hide": "Hide the chat",
     "closed": "The chat with the teacher opens after the subscription",
     "closedMonitor": "The chat is closed to the teacher and the family until the student subscribes and has a teacher.",
+    "closedReasons": {
+      "not_subscribed": "The chat with the teacher opens after the subscription",
+      "no_teacher": "The chat opens once the student has a teacher.",
+      "family_chat_off": "The chat with the teacher is not available right now."
+    },
+    "kinds": {
+      "text": "Message",
+      "photo": "Photo",
+      "pdf": "PDF file",
+      "voice": "Voice message"
+    },
+    "media": {
+      "attach": "Attach a photo or a PDF",
+      "photo": "Photo",
+      "pdf": "PDF file",
+      "record": "Record a voice message",
+      "recording": "Recording…",
+      "stop": "Stop recording",
+      "cancel": "Cancel",
+      "uploading": "Uploading the file…",
+      "open": "Open the file",
+      "play": "Play",
+      "pause": "Pause",
+      "tooLarge": "The file is larger than the limit ({n} MB).",
+      "badType": "This file type is not supported. Send a photo, a PDF or a voice message.",
+      "failed": "Couldn't upload the file. Try again.",
+      "gallery": "Gallery",
+      "camera": "Camera",
+      "document": "Document",
+      "hint": "You can send JPG or PNG photos or PDF files only"
+    },
+    "reply": {
+      "action": "Reply",
+      "replyingTo": "Replying to {name}",
+      "cancel": "Cancel the reply",
+      "deleted": "Deleted message"
+    },
+    "reads": {
+      "action": "Message info",
+      "title": "Who read the message",
+      "read": "Read",
+      "unread": "Not read yet",
+      "none": "Nobody yet",
+      "failed": "Couldn't load who read it."
+    },
+    "sent": "Sent",
+    "readByAll": "Read by everyone",
+    "pending": "Sending",
     "seat": {
       "take": "Take this chat",
       "taking": "Taking…",
@@ -8393,9 +8527,37 @@
         "edit_window_closed": "The 15-minute edit window has passed.",
         "delete_window_closed": "The 48-hour delete window has passed.",
         "not_your_message": "You can only edit or delete your own messages.",
-        "message_deleted": "This message was already deleted."
+        "message_deleted": "This message was already deleted.",
+        "channel_read_only": "You can only view this chat.",
+        "channel_not_open": "The chat is closed now, so messages cannot be edited or deleted.",
+        "family_chat_off": "The chat with the teacher is not available right now.",
+        "attachment_path": "Couldn't find the uploaded file. Send it again.",
+        "reply_not_found": "Couldn't find the message you are replying to.",
+        "not_a_text_message": "Only a message's text can be edited, not files."
+      },
+      "menuHint": "Long press for the message options."
+    },
+    "closedWho": "Here the teacher and the follow-up owner talk with the student and the guardian. The chat opens here by itself, with nothing more to do.",
+    "namesJoin": ", ",
+    "emoji": "Emoji",
+    "closedCard": {
+      "title": "The chat opens after the subscription and the teacher’s assignment",
+      "body": "Here the teacher and the follow-up owner talk with the student and the guardian. This is what is left before it opens:",
+      "current": "Current step",
+      "done": "Done.",
+      "steps": {
+        "subscribe": "Subscribe to a package",
+        "teacher": "Assign the teacher",
+        "open": "Open the chat"
+      },
+      "notes": {
+        "subscribe": "The student subscribes to one of the academy’s packages.",
+        "teacher": "The academy chooses the student’s teacher.",
+        "open": "It opens here by itself, with nothing more to do."
       }
-    }
+    },
+    "keyboard": "Keyboard",
+    "closeChat": "Close the chat"
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",

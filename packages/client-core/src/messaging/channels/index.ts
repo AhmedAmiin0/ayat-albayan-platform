@@ -9,6 +9,7 @@ export {
   channelMessagesPath,
   channelPresencePath,
   channelReadPath,
+  channelUploadPath,
   channelTimeText,
   olderCursor,
   portalUnreadPath,
@@ -17,6 +18,7 @@ export {
 } from './channels.js';
 export {
   CHANNEL_LIVE_FALLBACK_MS,
+  type ChannelMode,
   type ChannelRealtimeLike,
   channelMode,
   channelPollMs,
@@ -37,6 +39,7 @@ export {
   channelBubbleActions,
   channelEditError,
   channelMessagePath,
+  channelReadsPath,
   threadHidePath,
 } from './channel-edits.js';
 export {
@@ -52,3 +55,5 @@ export {
   trackSelf,
 } from './presence-live.js';
 export { presenceWatchKey, watchPresence } from './presence-watch.js';
+export { newClientId, remainingDraft, type SendAttempt, sendIdFor } from './channel-draft.js';
+export { closedReasonKey } from './channel-closed.js';

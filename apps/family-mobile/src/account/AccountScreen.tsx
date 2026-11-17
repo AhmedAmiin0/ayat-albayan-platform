@@ -9,11 +9,10 @@ import {
   useTheme,
 } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
-import { ownStudent, usePortalMe } from '@/portal';
+import { ownStudent, usePickedChild, usePortalMe } from '@/portal';
 import { accountCard } from './account-card';
 import { AccountSettings } from './AccountSettings';
 import { ProfileCard } from './ProfileCard';
-import { SwitchChildRow } from './SwitchChildRow';
 
 /** «الإصدار 1.0.0». */
 const versionLine = (): string =>
@@ -21,7 +20,7 @@ const versionLine = (): string =>
 
 /**
  * «حسابي» (docs/50 §6, canvas Account / StudentAccount): the card that opens the profile (where a
- * guardian's children are), «تبديل الطالب» for a guardian of several, this phone's
+ * guardian's children are; a guardian of several switches from the header), this phone's
  * notifications, the appearance; a student also changes their password. Sign out last.
  */
 export function AccountScreen() {
@@ -29,13 +28,13 @@ export function AccountScreen() {
   const profile = useMyProfile();
   const me = usePortalMe().data;
   const own = me ? ownStudent(me) : null;
+  const child = usePickedChild();
   return (
     <FamilyPage
-      header={<FamilyHeader title={t.portal.app.tabs.account} />}
+      header={<FamilyHeader title={t.portal.app.tabs.account} child={child} />}
       onRefresh={() => profile.refetch()}
     >
       <ProfileCard {...accountCard(profile.data, own)} />
-      <SwitchChildRow />
       <AccountSettings student={own !== null} />
       {own ? <PasswordSection /> : null}
       <SignOutButton />

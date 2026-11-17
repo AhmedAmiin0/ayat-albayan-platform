@@ -22,7 +22,7 @@ export interface UserRow {
   /** profiles.is_test (docs/56); absent = a real login. */
   is_test?: boolean;
   /** Detail only (the list RPC does not return them). */
-  locale?: string;
+  locale?: string | null;
   tz?: string;
   disabled_reason?: string | null;
 }
@@ -38,7 +38,8 @@ export interface NewProfile {
   role_id: string | null;
   full_name: string;
   phone_e164: string | null;
-  locale: string;
+  /** null: never chosen (the app keeps its own, migration 20261117100140). */
+  locale: string | null;
   tz: string;
 }
 

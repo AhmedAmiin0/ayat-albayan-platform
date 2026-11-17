@@ -1,3 +1,4 @@
+import type { Locale } from '@ab/shared';
 import { Controller, Get, Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -20,22 +21,25 @@ export class AuthController {
   constructor(private readonly zones: MeZoneRepo) {}
 
   /**
-   * Who am I — used by web/mobile after login to route by role and gate pages by permission, and
-   * `tz`: the zone their screens read times in (docs/34 §2; null → the device's). `is_test`: a
-   * test account (docs/56), for the «تجريبي» chip and the client-side checks it may skip.
+   * Who am I — used by web/mobile after login to route by role and gate pages by permission,
+   * `tz`: the zone their screens read times in (docs/34 §2; null → the device's), `locale`:
+   * their language (profiles.locale; null → the app keeps its own), and `is_test`: a test
+   * account (docs/56), for the «تجريبي» chip and the client-side checks it may skip.
    */
   @Get('me')
   @SignedIn()
   async me(@CurrentUser() user: AuthUser): Promise<AuthMe> {
     const { isTest = false, ...me } = user;
-    const tz = await this.zones.zoneOf(user.id);
-    return { ...me, permissions: user.permissions ?? [], tz, is_test: isTest };
+    const reads = [this.zones.zoneOf(user.id), this.zones.localeOf(user.id)] as const;
+    const [tz, locale] = await Promise.all(reads);
+    return { ...me, permissions: user.permissions ?? [], tz, locale, is_test: isTest };
   }
 }
 
 type AuthMe = Omit<AuthUser, 'isTest'> & {
   permissions: readonly string[];
   tz: string | null;
+  locale: Locale | null;
   is_test: boolean;
 };
 
@@ -75,6 +79,6 @@ type AuthMe = Omit<AuthUser, 'isTest'> & {
     { provide: APP_GUARD, useClass: AuthGuard },
     MeZoneRepo,
   ],
-  exports: [PermissionCache, PERMISSION_RESOLVER, TestFlagReader],
+  exports: [PermissionCache, PERMISSION_RESOLVER, MeZoneRepo, TestFlagReader],
 })
 export class AuthModule {}

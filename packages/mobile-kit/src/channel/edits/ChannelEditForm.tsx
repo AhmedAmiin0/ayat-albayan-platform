@@ -6,7 +6,7 @@ import { type, useTheme } from '../../theme';
 import { ButtonRow } from '../../ui/layout/ButtonRow';
 import { AppText } from '../../ui/primitives/AppText';
 import { Button } from '../../ui/primitives/Button';
-import { channelInputStyle } from '../channel-input-style';
+import { channelInputStyle } from './channel-input-style';
 
 interface ChannelEditFormProps {
   initial: string;

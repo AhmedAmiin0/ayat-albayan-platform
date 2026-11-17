@@ -12,17 +12,22 @@ vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch
 const rt = vi.hoisted(() => {
   const fired: { status?: (s: string) => void; insert?: () => void; filter?: unknown } = {};
   const ch = {
-    on: (_t: string, filter: unknown, cb: () => void) => Object.assign(fired, { filter, insert: cb }) && ch,
+    on: (_t: string, filter: unknown, cb: () => void) =>
+      Object.assign(fired, { filter, insert: cb }) && ch,
     subscribe: (cb: (s: string) => void) => Object.assign(fired, { status: cb }) && ch,
   };
   return { fired, channel: vi.fn(() => ch), removeChannel: vi.fn(async () => 'ok') };
 });
-vi.mock('@/lib/http/supabase', () => ({ supabase: { channel: rt.channel, removeChannel: rt.removeChannel } }));
+vi.mock('@/lib/http/supabase', () => ({
+  supabase: { channel: rt.channel, removeChannel: rt.removeChannel },
+}));
 
 const c = t.studentChannel;
 const show = (audience: 'teacher' | 'portal' | 'admin') =>
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <ChannelThread refs={{ audience, studentId: 's1' }} tz="Asia/Riyadh" />
     </QueryClientProvider>,
   );
@@ -34,10 +39,12 @@ describe('ChannelThread: closed until the subscription, live over the socket (ow
     rt.channel.mockClear();
   });
 
-  it('closed: only «تُفتح المحادثة مع المعلم بعد الاشتراك», no composer, no socket, nothing marked read', async () => {
+  it('closed: only the subscription line, no composer, no socket, nothing marked read', async () => {
     apiFetch.mockResolvedValue(channelPage({ open: false, messages: [], channel_id: 'c1' }));
     show('portal');
-    expect((await screen.findByText(c.closed)).getAttribute('role')).toBe('status');
+    expect((await screen.findByText(c.closedReasons.not_subscribed)).getAttribute('role')).toBe(
+      'status',
+    );
     expect(screen.queryByLabelText(c.messageLabel)).toBeNull();
     expect(rt.channel).not.toHaveBeenCalled();
     expect(apiSend).not.toHaveBeenCalled();
@@ -49,7 +56,10 @@ describe('ChannelThread: closed until the subscription, live over the socket (ow
     show('teacher');
     expect(await screen.findByLabelText(c.messageLabel)).toBeTruthy();
     await waitFor(() => expect(rt.channel).toHaveBeenCalled());
-    expect(rt.fired.filter).toMatchObject({ table: 'channel_messages', filter: 'channel_id=eq.c1' });
+    expect(rt.fired.filter).toMatchObject({
+      table: 'channel_messages',
+      filter: 'channel_id=eq.c1',
+    });
     rt.fired.status?.('SUBSCRIBED');
     const before = apiFetch.mock.calls.length;
     rt.fired.insert?.();

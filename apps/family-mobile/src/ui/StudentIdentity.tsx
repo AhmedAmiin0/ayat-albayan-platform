@@ -7,10 +7,12 @@ interface StudentIdentityProps {
   student: PortalStudent;
   /** A line under the code (the last report). */
   children?: ReactNode;
+  /** In place of the name: «أنا» on a guardian's own row. */
+  name?: string;
 }
 
 /** A child's avatar, name and code (the «اختر الطالب» cards). */
-export function StudentIdentity({ student, children }: StudentIdentityProps) {
+export function StudentIdentity({ student, children, name }: StudentIdentityProps) {
   const { color } = useTheme();
   return (
     <>
@@ -20,7 +22,7 @@ export function StudentIdentity({ student, children }: StudentIdentityProps) {
           numberOfLines={1}
           style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}
         >
-          {student.name}
+          {name ?? student.name}
         </AppText>
         <Ltr style={{ fontSize: type.size.xs, color: color.ink2 }}>{student.code}</Ltr>
         {children}

@@ -43,7 +43,7 @@ export class PortalChannelController {
     @ZodBody(channelPostSchema) body: z.output<typeof channelPostSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
-    return this.channels.post(await this.access.family(user, studentId), body.body);
+    return this.channels.post(await this.access.family(user, studentId), body);
   }
 
   @Post('read')

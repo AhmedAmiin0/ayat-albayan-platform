@@ -1,7 +1,14 @@
-import type { LessonPlan, PlanAction, WayIn } from '@ab/client-core';
-import type { ClockCycle, joinWindow } from '@ab/shared';
+import {
+  isRoomLive,
+  type Hero,
+  type LessonPlan,
+  type PlanAction,
+  type WayIn,
+} from '@ab/client-core';
+import type { ClockCycle, joinWindow, LessonView } from '@ab/shared';
 import { opensAtLine } from '@/classroom';
 import type { LeadAction } from '@/teacher/lessons/TeacherRowAction';
+import { teacherWord } from '@/teacher/lessons/teacher-word';
 
 // What the teacher's hero shows besides its frame (docs/48). Pure.
 
@@ -32,3 +39,10 @@ export function earlyLine({ win, way, clock }: EarlyInput): string | null {
   if (way !== 'room' || win?.state !== 'early') return null;
   return opensAtLine(win.opens_at, clock.cycle, clock.tz);
 }
+
+/**
+ * Her word on the hero: on a next lesson, and on a running one whose room is live («الطالب
+ * ينتظرك» / «الحلقة جارية الآن», canvas RoomXTeacherToday); null otherwise.
+ */
+export const heroWord = (hero: Hero<LessonView>, now: Date) =>
+  hero.kind === 'next' || isRoomLive(hero.lesson.room) ? teacherWord(hero.lesson, now) : null;

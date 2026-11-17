@@ -1,5 +1,8 @@
+import { LOCALES, type Locale } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
 import { personZone } from './me-zone';
 
 type TzRead = PromiseLike<{ data: { tz: string | null } | null; error: unknown }>;
@@ -9,7 +12,13 @@ const tzOf = async (read: TzRead): Promise<string | null> => {
   return error ? null : (data?.tz ?? null);
 };
 
-/** Reads the signed-in person's zone for GET /auth/me (docs/34 §2). */
+/** profiles.locale is free text in the DB: only a language the apps speak counts. */
+const localeRow = z.object({ locale: z.enum(LOCALES) });
+
+/**
+ * The signed-in person's zone and language for GET /auth/me and GET /portal/me (docs/34 §2; owner
+ * 2026-11-16: the language comes from the API), and «اللغة»'s write (PATCH /me/locale).
+ */
 @Injectable()
 export class MeZoneRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -26,5 +35,22 @@ export class MeZoneRepo {
     } catch {
       return null;
     }
+  }
+
+  /** profiles.locale ('ar' | 'en'); null when unknown or unreadable (the app keeps its own). */
+  async localeOf(profileId: string): Promise<Locale | null> {
+    try {
+      const { data } = await this.db.from('profiles').select('locale').eq('id', profileId).maybeSingle();
+      const parsed = localeRow.safeParse(data);
+      return parsed.success ? parsed.data.locale : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /** Writes the login's own language. */
+  async setLocale(profileId: string, locale: Locale): Promise<void> {
+    const { error } = await this.db.from('profiles').update({ locale }).eq('id', profileId);
+    if (error) throw dbError(error);
   }
 }

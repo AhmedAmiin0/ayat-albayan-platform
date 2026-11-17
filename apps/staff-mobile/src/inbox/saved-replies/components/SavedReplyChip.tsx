@@ -1,7 +1,7 @@
 import type { SavedReplyAttachment } from '@ab/shared';
 import { Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
-import { AttachIcon, CrossIcon } from '@/inbox/shared/chat-icons';
+import { t, shape, type, useTheme, AppText, AttachIcon } from '@ab/mobile-kit';
+import { CrossIcon } from '@/inbox/shared/chat-icons';
 
 /** The remove button is drawn dense (32pt) and stretched to the 44pt touch floor by hitSlop. */
 const SLOP = (shape.control.touch - shape.control.dense) / 2;

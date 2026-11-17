@@ -18,7 +18,7 @@ export {
 } from './package-view.js';
 export {
   CHILD_TABS, FAMILY_CHAT_SETTING, FAMILY_MEETINGS_SETTING, childTabs, familyChatOn,
-  familyMeetingsOn, portalViewer, seesMoney,
+  familyMeetingsOn, portalViewer, readsOwn, seesMoney,
   type ChildTab, type ChildTabsInput, type PortalViewer,
 } from './viewer.js';
 export { prepareCard, type PrepareCard } from './prepare.js';

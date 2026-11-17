@@ -10,12 +10,14 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { StudentLinkService } from '@/modules/teaching/classroom';
+import { withRoom } from '@/modules/teaching/lessons';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { PortalLessonExtras } from './portal-lesson-extras';
 import { toPortalLesson, wayIn } from './portal-lessons.mapper';
 import { PortalLessonsRepo } from './portal-lessons.repo';
 
 const DAY_MS = 86_400_000;
+
 const MIN_MS = 60_000;
 
 interface LessonCall {
@@ -51,7 +53,7 @@ export class PortalLessonsService {
   ) {}
 
   async upcoming(call: LessonCall, now = new Date()): Promise<PortalLessons> {
-    const student = await this.scopes.student(call.user, call.studentId);
+    const { student, family } = await this.scopes.withFamily(call.user, call.studentId);
     const values = await this.queries.readSettings();
     const win = joinWindowConfig(values);
     const since = new Date(now.getTime() - win.closesAfterMin * MIN_MS).toISOString();
@@ -62,7 +64,10 @@ export class PortalLessonsService {
       this.extras.of(student, now),
     ]);
     const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
-    return { lessons: rows.map((row) => toPortalLesson(row, ctx)), ...extras };
+    const rooms = await this.extras.rooms(rows, { now, family });
+    const lesson = (row: (typeof rows)[number]) =>
+      withRoom(toPortalLesson(row, ctx), rooms);
+    return { lessons: rows.map(lesson), ...extras };
   }
 
   /**

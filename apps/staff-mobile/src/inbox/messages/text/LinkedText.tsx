@@ -1,11 +1,10 @@
 import { splitLinks } from '@ab/shared';
 import { Fragment, useState } from 'react';
 import { Linking } from 'react-native';
-import { t, type, useTheme, AppText } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, useSmallText } from '@ab/mobile-kit';
 import { appOpenUrl, STRIPE_FEATURE } from '@/core/lib/stripe-flag';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import type { BubbleActions } from '@/inbox/messages/hooks/bubble-actions';
-import { useSmall } from '@/inbox/messages/components/MessageMeta';
 import { useHoldPress } from './use-hold-press';
 import { SearchMarks, useChatSearch } from '@/inbox/thread/search';
 
@@ -59,7 +58,7 @@ interface LinkedTextProps {
  */
 export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
   const { color } = useTheme();
-  const small = useSmall();
+  const small = useSmallText();
   const [failed, setFailed] = useState(false);
   const onHold = touch.has ? touch.openMenu : undefined;
   const parts = splitLinks(text);

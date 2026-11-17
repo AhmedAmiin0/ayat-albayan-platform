@@ -12238,11 +12238,6 @@
       "count": 4
     }
   },
-  "src/modules/teaching/classroom/join/join-gate.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/classroom/join/join-limit.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -12302,7 +12297,7 @@
   },
   "src/modules/teaching/classroom/join/join-link.token.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/join/join.block.test.ts": {
@@ -12452,7 +12447,7 @@
   },
   "src/modules/teaching/classroom/livekit/livekit-webhook.room.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -12810,12 +12805,6 @@
   "src/modules/teaching/classroom/moderation/kick.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 3
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/modules/teaching/classroom/moderation/moderation.controller.ts": {
@@ -13957,7 +13946,7 @@
   },
   "src/modules/teaching/lessons/store/lesson-views.ts": {
     "typescript/consistent-type-imports": {
-      "count": 4
+      "count": 3
     },
     "stylistic/max-len": {
       "count": 1
@@ -14294,14 +14283,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/channel-edits.service.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 4
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/student-channels/channel-open.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -14330,15 +14311,15 @@
   },
   "src/modules/teaching/student-channels/channel.repo.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/modules/teaching/student-channels/channel.service.ts": {
     "typescript/consistent-type-imports": {
-      "count": 4
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 1
     }
   },
   "src/modules/teaching/student-channels/controllers/channel-page.ts": {

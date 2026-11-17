@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import type { ViewToken } from 'react-native';
 import { messageGap } from '@/inbox/messages/hooks/list-gap';
 import { dayLabel, hasDayChip } from './day-label';
-import { CHIP_MARGIN, type Separator } from './top-band';
+import { CHIP_MARGIN, type Separator } from '@ab/mobile-kit';
 
 /** A row of the thread's list: a message, or a call merged in by its time (docs/28 §5). */
 export type DayRow = Pick<MessageView, 'id' | 'created_at' | 'direction'>;

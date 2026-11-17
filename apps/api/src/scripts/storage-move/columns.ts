@@ -27,6 +27,7 @@ export const MOVED_COLUMNS: readonly PathColumn[] = [
   { table: 'messages', column: 'media_path', bucket: BUCKETS.waMedia },
   { table: 'profiles', column: 'avatar_path', bucket: BUCKETS.avatars },
   { table: 'teachers', column: 'avatar_path', bucket: BUCKETS.avatars },
+  { table: 'channel_messages', column: 'attachment_path', bucket: BUCKETS.channelMedia },
   {
     table: 'lesson_recordings',
     column: 'file_path',

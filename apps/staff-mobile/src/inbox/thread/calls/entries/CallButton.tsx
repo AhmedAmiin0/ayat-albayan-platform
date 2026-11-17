@@ -1,5 +1,4 @@
-import { useHolds, t, useTheme, IconButton } from '@ab/mobile-kit';
-import { PhoneIcon } from '@/inbox/thread/calls/screen/call-icons';
+import { useHolds, t, useTheme, IconButton, PhoneIcon } from '@ab/mobile-kit';
 import { useCalls } from '@/inbox/thread/calls/state/call-context';
 
 interface CallButtonProps {

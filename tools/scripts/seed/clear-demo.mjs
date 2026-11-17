@@ -28,6 +28,9 @@ const DEMO_IDS = {
   teachers: (tx, s) => tx`
     select id from public.teachers
     where phone_e164 = any(${tx.array(s.teacherPhones)}) and display_name_en like ${`%${s.teacherNameSuffix}`}`,
+  // The demo channels' messages: a reply (reply_to_id) only ever quotes its own channel.
+  channel_messages: (tx, s) => tx`
+    select id from public.channel_messages where channel_id in (${demoChannels(tx, s)})`,
 };
 
 /** The demo students' channels (migration 800): matched like every demo student row. */
@@ -88,7 +91,8 @@ async function refuseDetaching(tx, table, s) {
   for (const d of SET_NULL_DEPENDENTS.filter((x) => x.parent === table)) {
     const [{ n }] = await tx`
       select count(*)::int as n from ${tx(`public.${d.table}`)}
-      where ${tx(d.column)} in (${DEMO_IDS[table](tx, s)})`;
+      where ${tx(d.column)} in (${DEMO_IDS[table](tx, s)})
+        ${d.table === table ? tx`and id not in (${DEMO_IDS[table](tx, s)})` : tx``}`;
     if (n > 0)
       throw new Error(
         `${n} ${d.table}.${d.column} row(s) point at demo ${table} and would be detached`,

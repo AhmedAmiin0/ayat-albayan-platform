@@ -1,6 +1,6 @@
 import type { Tx } from '../core/rls';
 
-// Helpers of the test-accounts SQL spec (migration 20261117120100). Written as the owner role
+// Helpers of the test-accounts SQL spec (migration 20261117140100). Written as the owner role
 // inside the spec's rolled-back transaction, so the triggers run as in production.
 
 /** 'ok', else the SQLSTATE. */

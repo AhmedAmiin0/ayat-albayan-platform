@@ -43,6 +43,12 @@ test('failed: the saffron «!» with its word and why, and the bubble still rend
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
 });
 
+test('a send that may have gone: «لم يتأكد الإرسال بعد», never «لم تُرسل» (docs/19)', async () => {
+  await show({ ...failed, error_code: 'uncertain' });
+  expect(screen.getByText(t.messages.unconfirmedTick)).toBeTruthy();
+  expect(screen.queryByText(word.failed)).toBeNull();
+});
+
 test('a long press shows the times on their own line under the meta row, and hides them again', async () => {
   await show(delivered);
   const ticks = screen.getByLabelText(ticksLabel(word.delivered));

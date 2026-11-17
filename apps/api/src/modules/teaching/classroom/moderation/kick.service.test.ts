@@ -4,23 +4,26 @@ import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '@/modules
 import { KickService } from './kick.service';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
-import { http, moderation, participantRow, rolesOf } from './moderation.fakes';
+import { http, moderation, participantRow, roomPersons, rolesOf } from './moderation.fakes';
 import type { ModerationRepo } from './moderation.repo';
+import type { RoomPersonRepo } from './room-person.repo';
 
 let mod: ReturnType<typeof moderation>;
 let h: ReturnType<typeof http>;
+let persons: ReturnType<typeof roomPersons>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationRepo, new LivekitApi(config, h));
+  new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationRepo, new LivekitApi(config, h), persons as unknown as RoomPersonRepo);
 const kick = (user = ADMIN, identity = 'guest-0123456789ab', svc = service()) => svc.remove({ user, lessonId: LESSON_ID, identity });
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
   mod = moderation();
   h = http();
+  persons = roomPersons();
 });
 
 describe('removing someone from the room', () => {
-  it('the admin removes a guest: the link is blocked, then LiveKit disconnects the identity', async () => {
+  it('the admin removes a guest: the link is blocked, then LiveKit revokes and disconnects the identity', async () => {
     await kick();
     expect(mod.participant).toHaveBeenCalledWith(LESSON_ID, 'guest-0123456789ab');
     expect(mod.block).toHaveBeenCalledWith({
@@ -29,7 +32,10 @@ describe('removing someone from the room', () => {
       blockedBy: ADMIN.id,
       target: { identity: 'guest-0123456789ab', role: 'guest', name: 'سهيلة' },
     });
-    const [url, init] = h.mock.calls[0] ?? [];
+    const [revoke, revokeInit] = h.mock.calls[0] ?? [];
+    expect(revoke).toMatch(/\/twirp\/livekit\.RoomService\/UpdateParticipant$/);
+    expect(sentBody(revokeInit)).toMatchObject({ identity: 'guest-0123456789ab', permission: { can_subscribe: false, can_publish: false } });
+    const [url, init] = h.mock.calls[1] ?? [];
     expect(url).toMatch(/\/twirp\/livekit\.RoomService\/RemoveParticipant$/);
     expect(sentBody(init)).toEqual({ room: `lesson-${LESSON_ID}`, identity: 'guest-0123456789ab' });
   });
@@ -71,7 +77,7 @@ describe('removing someone from the room', () => {
     mod.participant.mockResolvedValue(participantRow({ role: 'assistant', user_id: null, join_link_id: null }));
     await kick();
     expect(mod.block).not.toHaveBeenCalled();
-    expect(h).toHaveBeenCalledTimes(1);
+    expect(h).toHaveBeenCalledTimes(2);
   });
 
   it('someone already gone from LiveKit: done (the block stays)', async () => {

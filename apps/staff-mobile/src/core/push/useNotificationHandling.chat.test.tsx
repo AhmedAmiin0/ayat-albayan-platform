@@ -10,12 +10,17 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mob
 const mockPush = jest.fn();
 const mockDismissTo = jest.fn();
 const mockTop = { name: '(admin-chat)' };
+const mockState: { listener?: () => void } = {};
 jest.mock('expo-router', () => ({
   router: { push: (h: string) => mockPush(h), dismissTo: (h: string) => mockDismissTo(h) },
   useNavigationContainerRef: () => ({
     isReady: () => true,
     // expo-router's own '__root' slot holds the root layout's stack: the tree, then the chat group.
     getRootState: () => ({ routes: [{ name: '__root', state: { routes: [{ name: '(tabs)' }, mockTop] } }] }),
+    addListener: (_type: string, fn: () => void) => {
+      mockState.listener = fn;
+      return () => undefined;
+    },
   }),
 }));
 
@@ -73,3 +78,20 @@ test('with the tabs on top (no chat open), a tap is a push, as before', async ()
   expect(mockPush).toHaveBeenCalledWith('/students/s9');
   expect(mockDismissTo).not.toHaveBeenCalled();
 });
+
+test.each(['room/[kind]/[id]', 'room-chat/[studentId]'])(
+  'in the live room (%s), a tap waits (#bug: tabs stacked over it) and opens once it is left',
+  async (top) => {
+    mockTop.name = top;
+    await tapIn('admin', { kind: 'payment_due', studentId: 's9' });
+    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockDismissTo).not.toHaveBeenCalled();
+    await act(async () => mockState.listener?.());
+    expect(mockPush).not.toHaveBeenCalled();
+    mockTop.name = '(tabs)';
+    await act(async () => mockState.listener?.());
+    expect(mockPush).toHaveBeenCalledWith('/students/s9');
+    await act(async () => mockState.listener?.());
+    expect(mockPush).toHaveBeenCalledTimes(1);
+  },
+);

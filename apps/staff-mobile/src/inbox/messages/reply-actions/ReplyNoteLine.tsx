@@ -1,8 +1,7 @@
 import { type MessageView, replyLesson, replyNote, type ReplyNote } from '@ab/shared';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { t, locale, type, AppText, Button, useNow } from '@ab/mobile-kit';
-import { useSmall } from '@/inbox/messages/components/MessageMeta';
+import { t, locale, type, AppText, Button, useNow, useSmallText } from '@ab/mobile-kit';
 import { useReplyActions } from './reply-actions-context';
 import { ReplyConfirmButton } from './ReplyConfirmButton';
 
@@ -26,7 +25,7 @@ function Action({ message: m, note }: { message: MessageView; note: ReplyNote })
  */
 export function ReplyNoteLine({ message: m }: { message: MessageView }) {
   const actions = useReplyActions();
-  const small = useSmall();
+  const small = useSmallText();
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const now = useNow();

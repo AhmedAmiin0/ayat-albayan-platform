@@ -2,12 +2,11 @@ import type { MessageView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from 'react-native';
-import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
+import { t, shape, type, useTheme, AppText, PhotoViewer } from '@ab/mobile-kit';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { threadFileQuery } from '@/inbox/messages/hooks/thread-file';
 import { MediaNote, problemText } from './MediaNote';
 import { mediaProblem, type PhotoBox } from './media-problem';
-import { PhotoViewer } from './PhotoViewer';
 
 interface PhotoPreviewProps {
   message: MessageView;
@@ -101,7 +100,7 @@ export function PhotoPreview({ message: m, phone, box, kind, onLongPress }: Phot
       </Pressable>
       {box.download ? <DownloadLink message={m} phone={phone} /> : null}
       {open && uri ? (
-        <PhotoViewer uri={uri} label={m.body ? `${kind} · ${m.body}` : kind} message={m} phone={phone} onClose={() => setOpen(false)} />
+        <PhotoViewer uri={uri} label={m.body ? `${kind} · ${m.body}` : kind} footer={<DownloadLink message={m} phone={phone} />} onClose={() => setOpen(false)} />
       ) : null}
     </View>
   );

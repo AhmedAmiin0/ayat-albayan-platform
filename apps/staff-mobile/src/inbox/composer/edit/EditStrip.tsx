@@ -1,8 +1,7 @@
 import { View } from 'react-native';
-import { t, AppText, IconButton, shape, type, useTheme } from '@ab/mobile-kit';
+import { t, AppText, IconButton, shape, type, useTheme, CloseIcon } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ContentText } from '@/core/ui/primitives/ContentText';
-import { CloseIcon } from '@/inbox/shared/chat-icons';
 import { quoteOf, quoteText } from '@/inbox/messages/hooks/quote-text';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 

@@ -4,6 +4,7 @@ import { t } from '../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../testing/query';
 import type { ChannelRef } from './channel-api';
 import { ChannelThread } from './ChannelThread';
+import { channelMessage, channelPage } from './testing/channel-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -40,20 +41,12 @@ jest.mock('../lib/http/supabase', () => {
 });
 
 const c = t.studentChannel;
-const page = (over: Partial<ChannelPage> = {}): ChannelPage => ({
-  student_name: 'سلمى',
-  messages: [
-    {
-      ...{ id: 'm1', body: 'السلام عليكم', sender_role: 'guardian', sender_name: 'أم سلمى' },
-      ...{ mine: false, created_at: '2026-10-27T10:00:00.000Z', edited: false, deleted: false },
-    },
-  ],
-  has_more: false,
-  read_only: false,
-  open: true,
-  channel_id: 'c1',
-  ...over,
-});
+const page = (over: Partial<ChannelPage> = {}): ChannelPage =>
+  channelPage({
+    messages: [channelMessage({ body: 'السلام عليكم' })],
+    channel_id: 'c1',
+    ...over,
+  });
 const thread = (refs: ChannelRef) =>
   renderWithQuery(<ChannelThread refs={refs} />, freshQueryClient());
 
@@ -66,7 +59,13 @@ beforeEach(() => {
 test('closed (no subscription or teacher yet): the closed line and no socket', async () => {
   mockApiFetch.mockResolvedValue(page({ open: false, messages: [] }));
   await thread({ audience: 'teacher', studentId: 's1' });
-  expect(await screen.findByText(c.closed)).toBeTruthy();
+  expect(await screen.findByText(c.closedCard.title)).toBeTruthy();
+  expect(screen.getByText(c.closedCard.body)).toBeTruthy();
+  expect(
+    screen.getByLabelText(
+      `${c.closedCard.steps.subscribe}، ${c.closedCard.current}، ${c.closedCard.notes.subscribe}`,
+    ),
+  ).toBeTruthy();
   expect(screen.queryByLabelText(c.messageLabel)).toBeNull();
   expect(mockRt.channel).not.toHaveBeenCalled();
   expect(mockApiSend).not.toHaveBeenCalled();
@@ -90,4 +89,22 @@ test('a monitor of a closed channel still reads, told why the others cannot writ
   await thread({ audience: 'admin', studentId: 's1' });
   expect(await screen.findByText(`${c.readOnly} ${c.closedMonitor}`)).toBeTruthy();
   expect(screen.getByText('السلام عليكم')).toBeTruthy();
+});
+
+test('the closed card follows the reason: no teacher yet → subscribed, the teacher is next', async () => {
+  const closed = page({ open: false, messages: [], closed_reason: 'no_teacher' });
+  mockApiFetch.mockResolvedValue(closed);
+  await thread({ audience: 'portal', studentId: 's1' });
+  const steps = c.closedCard.steps;
+  expect(await screen.findByLabelText(`${steps.subscribe}، ${c.closedCard.done}`)).toBeTruthy();
+  const teacher = `${steps.teacher}، ${c.closedCard.current}، ${c.closedCard.notes.teacher}`;
+  expect(screen.getByLabelText(teacher)).toBeTruthy();
+});
+
+test('the chat switched off for the family: the title only, no steps', async () => {
+  const closed = page({ open: false, messages: [], closed_reason: 'family_chat_off' });
+  mockApiFetch.mockResolvedValue(closed);
+  await thread({ audience: 'portal', studentId: 's1' });
+  expect(await screen.findByText(c.closedReasons.family_chat_off)).toBeTruthy();
+  expect(screen.queryByText(c.closedCard.body)).toBeNull();
 });

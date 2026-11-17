@@ -42,3 +42,18 @@ export { Section } from './surface/Section';
 export { hairline, raisedCard } from './surface/surface';
 export { AppNativeTabs, type TabItem } from './tabs/AppNativeTabs';
 export type { TabIconName } from './tabs/tab-icons';
+// The calls' round controls and line icons (the staff app's calls and the lesson room). Mic and
+// camera carry a Call prefix: chat-ui exports its own composer MicIcon / CameraIcon.
+export { RoundButton } from './call/RoundButton';
+export {
+  CallArrowIcon,
+  CameraIcon as CallCameraIcon,
+  CameraOffIcon,
+  ChevronDownIcon,
+  HangUpIcon,
+  MicIcon as CallMicIcon,
+  MicOffIcon,
+  PhoneIcon,
+  SpeakerIcon,
+  SwitchCameraIcon,
+} from './call/call-icons';

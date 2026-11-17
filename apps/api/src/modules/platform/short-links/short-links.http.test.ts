@@ -3,18 +3,27 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ShortLinksController } from './short-links.controller';
 import { ShortLinksLimit } from './short-links.limit';
+import { linkRow } from './short-links.fakes';
+import type { ShortLinkRow } from './short-links.repo';
 import { ShortLinks } from './short-links.service';
 
 const NOW = Date.now();
-const rows: Record<string, { target_url: string; expires_at: string | null }> = {
-  Ab12Cd34Ef: { target_url: 'https://app.example.com/teacher-report/t', expires_at: null },
-  Old12Cd34Ef: {
-    target_url: 'https://app.example.com/x',
-    expires_at: new Date(NOW - 1000).toISOString(),
-  },
+const LATER = new Date(NOW + 86_400_000).toISOString();
+const rows: Record<string, ShortLinkRow> = {
+  Ab12Cd34Ef: linkRow(),
+  Old12Cd34Ef: linkRow({ code: 'Old12Cd34Ef', expires_at: new Date(NOW - 1000).toISOString() }),
+  Mg12Cd34Ef: linkRow({ code: 'Mg12Cd34Ef', kind: 'managed', expires_at: LATER }),
+  Rv12Cd34Ef: linkRow({
+    code: 'Rv12Cd34Ef',
+    kind: 'managed',
+    expires_at: LATER,
+    status: 'revoked',
+  }),
 };
 
 describe('GET /r/:code (public)', () => {
+  beforeAll(() => vi.stubEnv('WEB_ORIGIN', 'https://app.example.com,https://admin.example.com'));
+  afterAll(() => vi.unstubAllEnvs());
   let app: NestFastifyApplication;
   const limit = { check: vi.fn(async () => undefined) };
   beforeAll(async () => {
@@ -47,11 +56,19 @@ describe('GET /r/:code (public)', () => {
   });
 
   it('unknown, malformed or expired → 404 with a short Arabic text, no Location', async () => {
-    for (const code of ['Zz99Zz99Zz', 'Old12Cd34Ef', 'bad']) {
+    for (const code of ['Zz99Zz99Zz', 'Old12Cd34Ef', 'Rv12Cd34Ef', 'bad']) {
       const res = await app.inject({ method: 'GET', url: `/r/${code}` });
       expect([res.statusCode, res.headers.location]).toEqual([404, undefined]);
       expect(res.body).toBe('هذا الرابط غير صالح أو انتهت صلاحيته.');
     }
+  });
+
+  it('a managed link → 302 to the web gate /l/<code>, never its target', async () => {
+    const res = await app.inject({ method: 'GET', url: '/r/Mg12Cd34Ef' });
+    expect([res.statusCode, res.headers.location]).toEqual([
+      302,
+      'https://app.example.com/l/Mg12Cd34Ef',
+    ]);
   });
 
   it('429 when the limit is full', async () => {

@@ -6,8 +6,11 @@ import { ClassroomSettings } from './classroom.settings';
 import { isSalesLesson } from '@/modules/sales/sales/schedule/sales-lessons';
 import { dbError } from '@/common/http/http';
 
-export type JoinLesson = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at' | 'status' | 'room_opened_at'>;
-const JOIN_COLUMNS = 'id, teacher_id, starts_at, ends_at, status, room_opened_at';
+export type JoinLesson = Pick<
+  Tables<'lessons'>,
+  'id' | 'teacher_id' | 'starts_at' | 'ends_at' | 'status' | 'room_opened_at' | 'room_ended_at'
+>;
+const JOIN_COLUMNS = 'id, teacher_id, starts_at, ends_at, status, room_opened_at, room_ended_at';
 export type JoinLinkRow = Tables<'lesson_join_links'>;
 
 /** Who the family's link goes to: the student's guardian. */

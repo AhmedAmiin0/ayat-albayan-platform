@@ -8,11 +8,12 @@ import {
   useMeReady,
   RootFrame,
   RootProviders,
+  useProfileLocaleSync,
   useRootBoot,
   useTheme,
 } from '@ab/mobile-kit';
 import { usePresenceSelf } from '@/core/lib/presence';
-import { ROOM_SCREEN } from '@/core/root';
+import { ROOM_CHAT_SCREEN, ROOM_SCREEN } from '@/core/root';
 import { clearInboxOnSignOut, StaffCalls } from '@/inbox';
 
 /**
@@ -57,6 +58,8 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
   const ready = settled && meReady;
   // Online now for the others (docs/33 §1.1), in every tree, while the app is open.
   usePresenceSelf(useMeId(ready && signedIn));
+  // The login's language (/auth/me `locale`) wins over this phone's copy: a switch reloads.
+  useProfileLocaleSync(signedIn);
   return (
     <RootFrame ready={ready} fontsLoaded={fontsLoaded}>
       {/* «الدخول بالبصمة»: off by default, nothing changes until the user turns it on. */}
@@ -86,6 +89,7 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
             </Stack.Protected>
             <Stack.Protected guard={signedIn}>
               <Stack.Screen name="room/[kind]/[id]" options={ROOM_SCREEN} />
+              <Stack.Screen name="room-chat/[studentId]" options={ROOM_CHAT_SCREEN} />
               <Stack.Screen name="share" />
             </Stack.Protected>
             <Stack.Protected guard={gate === 'out'}>

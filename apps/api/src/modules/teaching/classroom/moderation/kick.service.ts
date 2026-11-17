@@ -1,13 +1,20 @@
 import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/shared';
-import { BadGatewayException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadGatewayException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { ModerationRepo, principalOf } from './moderation.repo';
+import { ModerationRepo, principalOf, type ParticipantRow } from './moderation.repo';
+import { RoomPersonRepo } from './room-person.repo';
 
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
+
+interface BlockInput {
+  lessonId: string;
+  target: ParticipantRow;
+  blockedBy: string;
+}
 
 interface KickInput {
   user: AuthUser;
@@ -17,9 +24,10 @@ interface KickInput {
 
 /**
  * «إخراج من الحلقة» (POST /lessons/:id/room/participants/:identity/remove). The remover's role
- * in this lesson is computed like a join's; canRemove (@ab/shared) decides. The removed login or
- * guest link is blocked first (every later join of this lesson: 403 removed_from_room), then
- * LiveKit disconnects the identity now. Audited (participant_removed).
+ * in this lesson is computed like a join's; canRemove (@ab/shared) decides. The removed PERSON is
+ * blocked first: every link of theirs in this lesson, or their login (RoomPersonRepo; every later
+ * join: 403 removed_from_room), then each identity they hold now loses every permission and is
+ * disconnected. Audited (participant_removed), once per blocked link or login.
  */
 @Injectable()
 export class KickService {
@@ -27,9 +35,10 @@ export class KickService {
     private readonly roles: LessonRoleService,
     private readonly moderation: ModerationRepo,
     private readonly livekit: LivekitApi,
+    @Inject(RoomPersonRepo) private readonly persons: RoomPersonRepo,
   ) {}
 
-  /** 404 participant_not_found, 403 cannot_remove, 503 classroom_not_configured, 502 LiveKit refused. */
+  /** 404 participant_not_found, 403 cannot_remove, 503 classroom_not_configured, 502 LiveKit. */
   async remove(input: KickInput): Promise<void> {
     if (!this.livekit.configured) throw notConfigured();
     const { lesson, role } = await this.roles.resolve(input.user, input.lessonId);
@@ -39,17 +48,28 @@ export class KickService {
     if (!targetRole || !canRemove(role, targetRole)) {
       throw new HttpException({ code: 'cannot_remove', message: 'cannot_remove' }, HttpStatus.FORBIDDEN);
     }
+    const identities = await this.block({ lessonId: lesson.id, target, blockedBy: input.user.id });
+    await this.disconnect(lessonRoomName(lesson.id), identities);
+  }
+
+  /** Blocks the person's every principal; answers every identity of theirs (the target's first). */
+  private async block(input: BlockInput): Promise<string[]> {
+    const { lessonId, target } = input;
     const principal = principalOf(target);
-    if (principal) {
-      await this.moderation.block({
-        lessonId: lesson.id,
-        principal,
-        blockedBy: input.user.id,
-        target: { identity: target.identity, role: target.role, name: target.name },
-      });
+    if (!principal) return [target.identity];
+    const principals = await this.persons.principalsOf(lessonId, principal);
+    const who = { identity: target.identity, role: target.role, name: target.name };
+    for (const p of principals) {
+      const blockedBy = input.blockedBy;
+      await this.moderation.block({ lessonId, principal: p, blockedBy, target: who });
     }
+    const others = await this.persons.identitiesOf(lessonId, principals);
+    return [...new Set([target.identity, ...others])];
+  }
+
+  private async disconnect(room: string, identities: readonly string[]): Promise<void> {
     try {
-      await this.livekit.removeParticipant({ room: lessonRoomName(lesson.id), identity: target.identity });
+      for (const identity of identities) await this.livekit.revokeAndRemove({ room, identity });
     } catch (e) {
       if (e instanceof LivekitError) throw new BadGatewayException({ code: 'livekit_error', message: e.message });
       throw e;

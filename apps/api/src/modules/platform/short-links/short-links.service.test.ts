@@ -1,19 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { ShortLinksRepo, ShortLinkRow } from './short-links.repo';
+import { linkRow } from './short-links.fakes';
 import { ShortLinks } from './short-links.service';
 import { ShortLinksSettings } from './short-links.settings';
 
 const NOW = new Date('2026-11-05T12:00:00Z');
-const row = (over: Partial<ShortLinkRow> = {}): ShortLinkRow => ({
-  code: 'Ab12Cd34Ef',
-  target_url: 'https://app.example.com/teacher-report/t',
-  kind: 'teacher_report',
-  subject: 'l1',
-  created_at: NOW.toISOString(),
-  expires_at: null,
-  ...over,
-});
+const row = (over: Partial<ShortLinkRow> = {}): ShortLinkRow =>
+  linkRow({ created_at: NOW.toISOString(), ...over });
 
 function setup(base = '') {
   vi.stubEnv('WEB_ORIGIN', 'https://app.example.com,https://admin.example.com');

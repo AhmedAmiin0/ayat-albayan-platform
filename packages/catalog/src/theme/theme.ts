@@ -19,6 +19,8 @@ const light = {
   inverse: '#17201c', onInverse: '#f5f8f6', inverseGold: '#e4c97e', cover: '#ecfdf5', leather: '#ecfdf5',
   leatherDeep: '#d1fae5', leatherLift: '#f0fdf8', goldOnCover: '#064e3b', coverInk: '#064e3b',
   scrim: 'rgba(15, 30, 22, 0.42)', read: '#0284c7', tick: '#55615b',
+  // The family app's tile and icon ground (owner 2026-11-16, LogoGreen): one green in both themes.
+  brandTile: '#064e3b',
 };
 
 export type Palette = Record<keyof typeof light, string>;
@@ -32,6 +34,7 @@ const dark: Palette = {
   inverse: '#e2ebe5', onInverse: '#1e2623', inverseGold: '#8a6a1c', cover: '#18201d', leather: '#18201d',
   leatherDeep: '#141b18', leatherLift: '#26302c', goldOnCover: '#ecd18c', coverInk: '#e9efec',
   scrim: 'rgba(10, 16, 13, 0.5)', read: '#53bdeb', tick: '#7f8e88',
+  brandTile: '#064e3b',
 };
 
 export const palette: Record<ThemeName, Palette> = { light, dark };

@@ -385,6 +385,87 @@ a short domain later is that one value (it must serve `/r/<code>` from the API).
 (subject = lesson id), `classroom` (lesson id), `feedback` (`<lesson id>:<student id>`). Code:
 `apps/api/src/modules/platform/short-links/`.
 
+#### Managed links for the admin and sales (owner 2026-11-17)
+
+«a url shortener that saves the code in the db and the target url and the number of allowed users and if it is
+user specified or not and if it should be sent via whatsapp … if they are system users show me who they are, if not
+we will require whatsapp otp», «link is many to many with the users». Server only in this round (the screens are being
+designed). Code: `apps/api/src/modules/platform/short-links-admin/`; bodies and views: `packages/shared/src/short-links/`.
+
+**Tables** (migrations `20261117130100`–`130300`; RLS on, no client policy, no grant to anon / authenticated: the
+API's service role only; times UTC):
+- `short_links` gains `id` (uuid, the audit rows' entity id), `created_by` (profile), `title`, `max_users` (null =
+  unlimited, distinct visitors), `audience` (`anyone` | `listed`), `send_whatsapp`, `status` (`active` | `expired`
+  | `revoked`). A managed link is `kind = 'managed'`, `subject = code`, always with a title and an expiry. System
+  links keep the new columns' defaults (active, anyone) and work exactly as before.
+- `short_link_users`: the many-to-many link ↔ user list: `code` (fk, on delete cascade), `profile_id` and/or
+  `phone_e164` (E.164, at least one), unique per link and profile and per link and phone, `added_by`, and the
+  WhatsApp state `send_status` (`not_sent` | `queued` | `failed`), `send_error`, `send_attempts`, `sent_at`.
+- `short_link_visits`: one row per DISTINCT visitor per link: a signed-in `profile_id` OR a verified `phone_e164`
+  (exactly one), `matched_profile_id` / `matched_guardian_id` when a verified phone belongs to a known login or
+  family number, `first_at`, `last_at`, `opens`. `short_link_record_visit()` writes it under a lock on the link
+  row, so max_users holds under parallel opens.
+- `login_codes` takes purpose and subject kind `short_link`.
+
+**Permissions**: `short_links.manage` (system admin and sales) on every admin route; `short_links.all` (admin) sees
+and changes every link, without it a user sees only the links they made (others' answer the same 404).
+
+**Admin routes** (zod bodies in `@ab/shared`):
+`GET /short-links` (paged; `status`, `owner`, `search` on the title) · `GET /short-links/people?search=` (the
+picker: enabled profiles by name or phone; the existing `/users` search needs `users.read`, which sales lack) ·
+`POST /short-links` (`title`, `targetUrl`, `expiresAt` default now + `short_link_default_days`, `maxUsers`,
+`audience`, `profileIds[]`, `phones[]` E.164, `sendWhatsapp`) · `GET /short-links/:code` (the link, its users with
+their send state, its visitors: system users by name and role, verified phones with the matched person and family)
+· `PATCH /short-links/:code` (title, expiry: a new one reactivates an expired link, max users, the user list
+which replaces the old one; kept rows keep their send state) · `POST /short-links/:code/revoke` ·
+`POST /short-links/:code/resend`. Targets: https on our web / API origins, Google Meet, or a host of
+`short_link_extra_hosts` (400 `target_not_allowed`). Audit rows (entity `short_links`): `short_link_create`,
+`short_link_revoke`, `short_link_resend`.
+
+**Gate flow**: `GET /r/<code>` of a managed link answers 302 to the web gate `<WEB_ORIGIN>/l/<code>` (system links
+keep the direct 302; an expired or revoked link is the usual 404). The gate's public API (60 a minute per IP, 20 per
+IP and code; never cached; unknown and system codes are the same 404 `short_link_not_found`):
+`GET /public/short-links/:code` (title, `state` open | gone, `needs: sign_in_or_code`, `codesAvailable`; never the
+target) · `POST …/open` with the caller's JWT (a signed-in user: the visit by profile) · `POST …/otp/start`
+`{ phone }` (any country; always 202; a code goes out only while the link is live and, for a listed link, only to
+a listed phone) · `POST …/otp/verify` `{ phone, code }` (401 `invalid_code`). The codes are the family sign-in's
+(`SHORT_LINK_CODES` port on `CodeIssuer`: HMAC, TTL and attempts from the settings, per-phone limits, the
+site-wide breaker, `account_code` on the chat line), bound to (link, phone). `open` and `verify` answer
+`{ outcome: 'open', target }` or `{ outcome: 'gone' | 'not_allowed' | 'limit_reached' }`.
+
+**Decision table** (`gate.decision.ts`, first row wins):
+
+| # | condition | outcome |
+|---|---|---|
+| 1 | revoked, expired, or past `expires_at` | `gone` |
+| 2 | audience `listed` and the visitor is not a listed user (by profile, by phone, by its matched login, or as a listed profile's phone on file) | `not_allowed` |
+| 3 | `max_users` distinct visitors already, and the visitor is NEW | `limit_reached` |
+| 4 | otherwise | record / increment the visit, `open` with the target |
+
+**WhatsApp send** (on create when `sendWhatsapp`, and on resend): to every listed user's phone (a profile's phone
+from its login, else its teacher row, its family row, its student's family) through the Outbox, ALWAYS the
+template `short_link` on the NOTIFICATIONS line; dedup key `short_link:<code>:<user row>:<attempt>`. Until the
+template is approved every row is recorded `failed` / `template_not_approved`: never free text, never another line.
+
+**Template the owner creates in Meta** (seeded `not_submitted` in «القوالب»): name `short_link`, language `ar`,
+category UTILITY, body:
+
+```
+السلام عليكم ورحمة الله وبركاته
+أرسلت إليكم أكاديمية آيات البيان رابطًا بعنوان: {{1}}
+يمكنكم فتحه من الرابط {{2}} أو من الزر أدناه.
+```
+
+footer «أكاديمية آيات البيان», one URL button «فتح الرابط» → `https://app.ayatalbayan.com/l/{{1}}` (the button's
+`{{1}}` is the link's code). `{{1}}` = the title, `{{2}}` = the short URL.
+
+**Cron** (`LinkExpiryJob`, in-process Ticker on the worker; pg_cron is not enabled): every 15 minutes active managed
+links past `expires_at` become `expired`; once a day managed links whose `expires_at` is older than
+`short_link_purge_days` are deleted with their users and visits. Both by cutoff: a second pass changes nothing.
+
+**Settings** («القيم» → التقارير, config-in-db, seeded by the registry): `short_link_default_days` (7),
+`short_link_purge_days` (30), `short_link_extra_hosts` (empty; comma separated hosts, e.g. `forms.example.org`).
+
 ### Teacher report link (owner 2026-11-05: «activate reports from teacher»)
 
 9 of 11 teachers have no platform account, so the reminder's report link needs no login. The token is

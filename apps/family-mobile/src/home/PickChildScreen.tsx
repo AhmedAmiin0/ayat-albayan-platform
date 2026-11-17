@@ -1,3 +1,4 @@
+import { familyChildren } from '@ab/client-core';
 import type { PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -23,7 +24,9 @@ export function PickChildScreen() {
   const pickChild = usePickChild();
   const refresh = useRefreshPortal();
   const still = useA11yPref('reduceMotion');
-  const students = me.data?.students ?? [];
+  // A guardian who also studies: their own row first, as «أنا» (canvas Adult).
+  const data = me.data && { ...me.data, students: familyChildren(me.data) };
+  const students = data?.students ?? [];
   const kind = me.data?.kind ?? 'guardian';
   const choose = (student: PortalStudent) => () => {
     pickChild(student.id);
@@ -36,7 +39,7 @@ export function PickChildScreen() {
       onRefresh={refresh}
     >
       <StudentsBody
-        data={me.data}
+        data={data}
         isError={me.isError}
         onRetry={() => void me.refetch()}
         card={(student) => (

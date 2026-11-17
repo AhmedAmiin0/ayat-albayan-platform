@@ -40,6 +40,7 @@ jobs:
       actions: read
     outputs:
       e2e: ${{ steps.move.outputs.e2e || steps.diff.outputs.e2e }}
+      image: ${{ steps.diff.outputs.image }}
       code: ${{ steps.diff.outputs.code }}
       e2e_matrix: ${{ steps.e2e.outputs.e2e_matrix }}
       e2e_specs: ${{ steps.e2e.outputs.e2e_specs }}
@@ -58,7 +59,7 @@ jobs:
         run: |
           # The checked-out tree (on a PR: the merge commit's), the key of the «verified» skip below.
           echo "tree=$(git rev-parse 'HEAD^{tree}')" | tee -a "$GITHUB_OUTPUT"
-          full() { printf 'e2e=true\ncode=true\n' >> "$GITHUB_OUTPUT"; echo "::notice::$1: everything runs"; exit 0; }
+          full() { printf 'e2e=true\ncode=true\nimage=true\n' >> "$GITHUB_OUTPUT"; echo "::notice::$1: everything runs"; exit 0; }
           case "$EVENT" in
             pull_request)
               files=$(git diff --name-only "origin/$BASE_REF...HEAD") || full "diff against $BASE_REF failed" ;;
@@ -79,7 +80,12 @@ jobs:
             || grep -qE '^tools/scripts/(ci-checks/e2e-shards|env/write-local-env)\.mjs$' <<< "$files"; then e2e=true; fi
           if grep -qvE '^docs/|\.md$' <<< "$files" || grep -qx 'docs/09-deployment.md' <<< "$files" \
             || grep -q '^docs/design/brand/tools/' <<< "$files"; then code=true; fi
-          printf 'e2e=%s\ncode=%s\n' "$e2e" "$code" | tee -a "$GITHUB_OUTPUT"
+          # Job «image»: what apps/api/Dockerfile reads to install (the lockfile, the workspace manifests, .npmrc,
+          # patches/), the Dockerfile and .dockerignore themselves, and deploy/ (the compose files that run it).
+          IMAGE_PATHS='^(apps/api/Dockerfile|\.dockerignore|\.npmrc|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|(apps|packages|tools)/[^/]+/package\.json|e2e/package\.json|docs/design/brand/tools/package\.json|patches/.+|deploy/.+)$'
+          image=false
+          if grep -qE "$IMAGE_PATHS" <<< "$files"; then image=true; fi
+          printf 'e2e=%s\ncode=%s\nimage=%s\n' "$e2e" "$code" "$image" | tee -a "$GITHUB_OUTPUT"
       - if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
         uses: actions/setup-node@v4
         with:
@@ -441,13 +447,71 @@ jobs:
           git push "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:develop \
             || echo "::warning::develop moved: the next push prunes the lists"
 
+  # The API image as the VPS builds it (deploy/staging/roll.sh: `docker compose build`, apps/api/Dockerfile), on
+  # a change to what the Dockerfile installs or to deploy/ (job «changes», IMAGE_PATHS). Layers come from the
+  # GitHub Actions cache (scope api-image; a PR reads develop's and writes its own), so a warm run rebuilds only
+  # what changed. Then the container itself: the report PDF through its Chromium, the chat PDF sandbox listening
+  # as ayat-pdf runs it (no network, read-only, no capabilities), and /health with stub env (no database).
+  image:
+    name: api image
+    needs: changes
+    if: needs.changes.outputs.image == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - name: Build the API image
+        id: build
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          tags: ayat-api:ci
+          load: true
+          cache-from: type=gha,scope=api-image
+          cache-to: type=gha,mode=max,scope=api-image
+      - name: Report PDF (Chromium of the image)
+        run: |
+          docker run --rm ayat-api:ci node -e "
+            const { chromium } = require('playwright-core');
+            (async () => {
+              const b = await chromium.launch();
+              const p = await b.newPage();
+              await p.setContent('<p dir=rtl>تقرير الحلقة</p>');
+              const pdf = await p.pdf();
+              await b.close();
+              if (pdf.length < 500) throw new Error('empty pdf');
+              console.log('report pdf bytes', pdf.length);
+            })().catch((e) => { console.error(e); process.exit(1); });"
+      - name: PDF sandbox listens (as ayat-pdf)
+        run: |
+          docker run -d --name pdf --init --user node --network none --read-only --cap-drop ALL \
+            --security-opt no-new-privileges:true --tmpfs /tmp:size=64m \
+            --tmpfs /run/pdf:size=64k,uid=1000,gid=1000,mode=0700 \
+            ayat-api:ci node dist/modules/messaging/inbox/files/pdf/pdf-sandbox.js
+          for i in $(seq 30); do docker exec pdf test -S /run/pdf/pdf.sock && { echo listening; exit 0; }; sleep 1; done
+          docker logs pdf; exit 1
+      - name: /health with stub env
+        run: |
+          docker run -d --name api -p 127.0.0.1:3000:3000 -e APP_ROLE=api \
+            -e SUPABASE_URL=http://127.0.0.1:54321 -e SUPABASE_SERVICE_ROLE_KEY=stub ayat-api:ci
+          curl -fsS --retry 30 --retry-delay 2 --retry-all-errors http://127.0.0.1:3000/health && echo
+          for i in $(seq 30); do
+            s=$(docker inspect -f '{{.State.Health.Status}}' api)
+            [ "$s" = starting ] || break; sleep 2
+          done
+          echo "docker health: $s"
+      - if: failure()
+        run: docker logs api || true
+
   # The required aggregate for branch protection: every verify job (lint parity is in the lint row) and the guards passed, or a docs-only change
   # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.
   # A develop push whose tree a green PR run already checked (changes said verified=true) passes with verify and the
   # guards skipped. Anything else (a failed or cancelled job, a failed changes job) is red.
   # A green PR run (code, verify, guards and refactor all passed) leaves ci-green-tree-<tree> for that skip.
   check:
-    needs: [changes, verify, guards, refactor]
+    needs: [changes, verify, guards, refactor, image]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -459,8 +523,11 @@ jobs:
           GUARDS: ${{ needs.guards.result }}
           REFACTOR: ${{ needs.refactor.result }}
           VERIFIED: ${{ needs.changes.outputs.verified }}
+          IMAGE: ${{ needs.image.result }}
         run: |
           test "$CHANGES" = success
+          # The API image job runs only when its inputs changed (changes said image=true): skipped = ok.
+          test "$IMAGE" = success || test "$IMAGE" = skipped
           test "$REFACTOR" = success || { [ "$GITHUB_EVENT_NAME" != pull_request ] && [ "$REFACTOR" = skipped ]; }
           if [ "$VERIFIED" = true ] && [ "$GITHUB_EVENT_NAME" = push ] && [ "$VERIFY" = skipped ] && [ "$GUARDS" = skipped ]; then
             echo "same tree passed verify and guards on a PR: skipped"; exit 0

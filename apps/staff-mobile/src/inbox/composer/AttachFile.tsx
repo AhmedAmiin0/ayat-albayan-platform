@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { t, useTheme, IconButton } from '@ab/mobile-kit';
-import { AttachIcon } from '@/inbox/shared/chat-icons';
+import { t, useTheme, IconButton, AttachIcon } from '@ab/mobile-kit';
 import { AttachSheet } from './attach/AttachSheet';
 import { usePickSend } from './attach/use-pick-send';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';

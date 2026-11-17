@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
+import { SheetLeave } from '@/classroom';
 import { t, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { DetailsAbout } from './DetailsAbout';
@@ -60,7 +61,12 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
               <>
                 <DetailsHead lesson={lesson} />
                 {/* The row's actions right under the status: in view without scrolling a group lesson. */}
-                {actions ? <View style={{ gap: 8 }}>{actions(lesson)}</View> : null}
+                {/* «ادخل الحلقة» closes this sheet before the room opens (Android's Modal). */}
+                {actions ? (
+                  <SheetLeave value={onClose}>
+                    <View style={{ gap: 8 }}>{actions(lesson)}</View>
+                  </SheetLeave>
+                ) : null}
                 {readOnly ? <Note>{t.lessons.sheet.readOnly}</Note> : null}
                 <DetailsWhen lesson={lesson} />
                 <DetailsStudents

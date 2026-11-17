@@ -24,7 +24,7 @@ account would see. WhatsApp sends from a test account still go only to the allow
 
 ## Where the flags live
 
-- `profiles.is_test` and `students.is_test` (migration `20261117120100_test_accounts`), not null,
+- `profiles.is_test` and `students.is_test` (migration `20261117140100_test_accounts`), not null,
   default false.
 - Only the API (service role) writes them. UPDATE (is_test) is revoked from anon / authenticated at
   column level, and a guard trigger refuses any client-session change too.

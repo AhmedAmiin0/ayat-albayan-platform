@@ -23,7 +23,7 @@ type Flipped = NonNullable<z.infer<typeof flippedSchema>>;
 const MISMATCH = '23514';
 
 /**
- * set_test_flag (migration 20261117120100, service role): flips the family with its audit row in
+ * set_test_flag (migration 20261117140100, service role): flips the family with its audit row in
  * one transaction. null = no such student / profile.
  */
 @Injectable()

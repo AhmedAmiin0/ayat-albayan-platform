@@ -5,7 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 const flagRow = z.object({ is_test: z.boolean() }).nullable();
 
 /**
- * profiles.is_test / students.is_test (migration 20261117120100, docs/56): read by the server,
+ * profiles.is_test / students.is_test (migration 20261117140100, docs/56): read by the server,
  * never sent by a client.
  */
 @Injectable()

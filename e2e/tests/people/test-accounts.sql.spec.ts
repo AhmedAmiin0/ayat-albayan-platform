@@ -3,10 +3,10 @@ import { as, rolledBack, userId } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 import { code, flagOf, flip, household, login } from '../../support/people/test-accounts';
 
-// Test accounts (migration 20261117120100, docs/56): only the API writes is_test, and a test family
+// Test accounts (migration 20261117140100, docs/56): only the API writes is_test, and a test family
 // login links only to test students (a real one only to real students). Rolled back.
 
-test.describe('test accounts (20261117120100)', () => {
+test.describe('test accounts (20261117140100)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('a signed-in user cannot set is_test, on itself or on a student', async () => {

@@ -2,10 +2,10 @@ import type { MessageView } from '@ab/shared';
 import { View } from 'react-native';
 import { DownloadLink } from '@/inbox/messages/copy-download/DownloadLink';
 import { MediaNote, problemText, RetryLine } from '@/inbox/messages/photo/MediaNote';
-import { ensureAudioMode } from './playback';
+import { ensureAudioMode } from '@/core/lib/audio';
 import { useFileOnTap } from './use-file-on-tap';
 import { VoicePlayback } from './VoicePlayback';
-import { VoiceRow } from './VoiceRow';
+import { VoiceRow } from '@ab/mobile-kit';
 
 interface VoiceNoteProps {
   message: MessageView;

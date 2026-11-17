@@ -49,6 +49,7 @@ const BELL_SHOWN: Readonly<Record<AnyPushKind, boolean>> = {
   payment_received: false,
   // The family app's kinds never reach a teacher (they need the portal scope).
   lesson_starting: false,
+  lesson_live: false,
   report_sent: false,
 };
 

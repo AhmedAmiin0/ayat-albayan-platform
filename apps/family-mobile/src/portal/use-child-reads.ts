@@ -23,6 +23,15 @@ export function useChildPackage(studentId: string, money: boolean) {
   });
 }
 
+/** «المحادثة»'s unread badge: only while the family chat is on (off: no channel read at all). */
+export function useChildUnread(studentId: string, chatOn: boolean) {
+  return useQuery({
+    ...portal.portalUnreadQuery(studentId),
+    enabled: chatOn,
+    subscribed: useScreenFocused(),
+  });
+}
+
 /** «حضرها» / «غاب عنها»: the pages of past lessons, newest first. */
 export function useChildHistory(studentId: string, status: PortalHistoryStatus) {
   return useInfiniteQuery({

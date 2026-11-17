@@ -9,7 +9,11 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({}),
 }));
-const mockNav = { isReady: () => true, getRootState: () => undefined };
+const mockNav = {
+  isReady: () => true,
+  getRootState: () => undefined,
+  addListener: () => () => undefined,
+};
 jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   useNavigationContainerRef: () => mockNav,

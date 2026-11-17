@@ -12,9 +12,10 @@ const NAMED_PACKAGE_BUILD = /--filter\s+@ab\/[\w-]+(?:\s+--filter\s+@ab\/[\w-]+)
 
 test('api image: installs api..., builds api^... before the api itself', () => {
   const dockerfile = read('apps/api/Dockerfile');
-  const start = dockerfile.indexOf('RUN pnpm install');
+  // The install (stage deps, before the source) and the build (stage build) are separate layers.
+  assert.match(dockerfile, /pnpm install --offline --frozen-lockfile --store-dir \/pnpm\/store --filter "api\.\.\."/);
+  const start = dockerfile.indexOf('AS build\n');
   const run = dockerfile.slice(start, dockerfile.indexOf('\nFROM', start));
-  assert.match(run, /pnpm install --frozen-lockfile --filter "api\.\.\."/);
   const deps = run.indexOf('pnpm --filter "api^..." build');
   const api = run.indexOf('pnpm --filter api build');
   assert.ok(deps > 0, 'builds every workspace dependency of the api');
