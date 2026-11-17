@@ -38,6 +38,7 @@ const endedForAll = (e: unknown): boolean => apiErrorCode(e) === 'lesson_ended';
 export function useRoomJoin(input: JoinInput) {
   const { client, platform, target, dispatch, fetchJoin } = input;
   const [joined, setJoined] = useState<JoinedAs | null>(null);
+  const [joinedAt, setJoinedAt] = useState<number | null>(null);
   const join = async (answer: CamMicAnswer, wanted: MediaWish) => {
     dispatch({ type: 'join' });
     input.onJoining();
@@ -47,6 +48,7 @@ export function useRoomJoin(input: JoinInput) {
       await platform.audio.start();
       await client.connect(creds, mediaWish(answer, wanted));
       dispatch({ type: 'joined' });
+      setJoinedAt(Date.now());
       input.onJoined();
     } catch (e) {
       client.disconnect();
@@ -59,5 +61,5 @@ export function useRoomJoin(input: JoinInput) {
     client.disconnect();
     void platform.audio.stop();
   };
-  return { joined, join, leave };
+  return { joined, joinedAt, join, leave };
 }

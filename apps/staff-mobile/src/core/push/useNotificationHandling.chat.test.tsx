@@ -6,10 +6,7 @@ import { useNotificationHandling } from './useNotificationHandling';
 
 // A tap while a chat is open (its group on top of the root stack, above the tabs): a tab's screen pops
 // back to the tabs (dismissTo), since a push would stack a second tab host; another chat is a push.
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({
-  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({}),
-}));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => ({}) }));
 const mockPush = jest.fn();
 const mockDismissTo = jest.fn();
 const mockTop = { name: '(admin-chat)' };
@@ -19,9 +16,7 @@ jest.mock('expo-router', () => ({
   useNavigationContainerRef: () => ({
     isReady: () => true,
     // expo-router's own '__root' slot holds the root layout's stack: the tree, then the chat group.
-    getRootState: () => ({
-      routes: [{ name: '__root', state: { routes: [{ name: '(tabs)' }, mockTop] } }],
-    }),
+    getRootState: () => ({ routes: [{ name: '__root', state: { routes: [{ name: '(tabs)' }, mockTop] } }] }),
     addListener: (_type: string, fn: () => void) => {
       mockState.listener = fn;
       return () => undefined;
@@ -43,14 +38,10 @@ jest.mock('expo-notifications', () => ({
 }));
 
 const PHONE = '+966552147730';
-const tap = (data: Record<string, unknown>) => ({
-  notification: { request: { content: { data } } },
-});
+const tap = (data: Record<string, unknown>) => ({ notification: { request: { content: { data } } } });
 
 async function tapIn(tree: PushTree, data: Record<string, unknown>) {
-  await renderHook(() => useNotificationHandling(tree), {
-    wrapper: queryWrapper(createTestQueryClient()),
-  });
+  await renderHook(() => useNotificationHandling(tree), { wrapper: queryWrapper(createTestQueryClient()) });
   await act(async () => mockListeners.response?.(tap(data)));
 }
 
@@ -72,27 +63,14 @@ test('over a chat, a message push opens that chat inside the group (a push)', as
 });
 
 test.each([
-  {
-    tree: 'sales',
-    group: '(sales-chat)',
-    data: { kind: 'meeting_invite' },
-    href: '/sales/more/meetings',
-  },
-  {
-    tree: 'teacher',
-    group: '(teacher-chat)',
-    data: { kind: 'report_submitted' },
-    href: '/teacher/reports',
-  },
-])(
-  'over the $tree chat, a tab screen pops back to its tabs',
-  async ({ tree, group, data, href }) => {
-    mockTop.name = group;
-    await tapIn(tree as PushTree, data);
-    expect(mockDismissTo).toHaveBeenCalledWith(href);
-    expect(mockPush).not.toHaveBeenCalled();
-  },
-);
+  { tree: 'sales', group: '(sales-chat)', data: { kind: 'meeting_invite' }, href: '/sales/more/meetings' },
+  { tree: 'teacher', group: '(teacher-chat)', data: { kind: 'report_submitted' }, href: '/teacher/reports' },
+])('over the $tree chat, a tab screen pops back to its tabs', async ({ tree, group, data, href }) => {
+  mockTop.name = group;
+  await tapIn(tree as PushTree, data);
+  expect(mockDismissTo).toHaveBeenCalledWith(href);
+  expect(mockPush).not.toHaveBeenCalled();
+});
 
 test('with the tabs on top (no chat open), a tap is a push, as before', async () => {
   mockTop.name = '(tabs)';

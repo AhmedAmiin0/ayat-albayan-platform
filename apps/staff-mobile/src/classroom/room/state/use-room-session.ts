@@ -32,7 +32,6 @@ export function useRoomSession(input: RoomSessionInput) {
   const [phase, dispatch] = useReducer(nextPhase, START);
   const snap = useSyncExternalStore(client.subscribe, client.snapshot);
   const preview = useRoomPreview(platform, phase.step === 'preview');
-  const [joinedAt, setJoinedAt] = useState<number | null>(null);
   const controls = useRoomControls(client, platform.audio, snap);
   useRoomLifecycle({ client, platform, dispatch, onChecked: preview.setAnswer });
   const room = useRoomJoin({
@@ -42,10 +41,7 @@ export function useRoomSession(input: RoomSessionInput) {
     dispatch,
     fetchJoin,
     onJoining: controls.reset,
-    onJoined: () => {
-      setJoinedAt(Date.now());
-      void controls.syncOutput();
-    },
+    onJoined: () => void controls.syncOutput(),
   });
   const joinWith = (wish: MediaWish) => room.join(preview.answer, wish);
   useAutoJoin({
@@ -68,7 +64,7 @@ export function useRoomSession(input: RoomSessionInput) {
     controls,
     joined: room.joined,
     /** When this join went live (epoch ms): the recording pill's timer. */
-    joinedAt,
+    joinedAt: room.joinedAt,
     allow: () => answer(true),
     skip: () => answer(false),
     /** «انضم الآن»: the preview's choice is kept for the next joins (the push reads it too). */

@@ -6,7 +6,7 @@ import {
   teacherLessonState,
   type TeacherLessonState,
 } from '@ab/client-core';
-import { counted, type Glyph, type LessonView, type Tone } from '@ab/shared';
+import { counted, type Glyph, type LessonView, type RoomPresence, type Tone } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
 // The teacher's own word for a lesson (docs/48 «State word lookup»): one per state, the same on
@@ -79,15 +79,25 @@ export interface Waiting {
   since: string;
 }
 
+type FamilyPresence = RoomPresence & { role: 'student' | 'guardian' };
+const isFamily = (p: RoomPresence): p is FamilyPresence =>
+  p.role === 'student' || p.role === 'guardian';
+
+/** The family member waiting inside without her, by name (a name kept back reads as the role). */
+function waiterName(room: LessonView['room']): string | null {
+  const who = studentWaiting(room) ? room?.inRoom.find(isFamily) : undefined;
+  return who ? (who.name ?? t.studentChannel.roles[who.role]) : null;
+}
+
 /** Who waits for her in the room and since when (the hero's strip); null when nobody does. */
 export function waiting(lesson: Pick<LessonView, 'room'>, now: Date): Waiting | null {
   const minutes = roomLiveMinutes(lesson.room, now);
-  const who = lesson.room?.inRoom.find((p) => p.role === 'student' || p.role === 'guardian');
-  if (!studentWaiting(lesson.room) || !who || minutes === null) return null;
+  const name = waiterName(lesson.room);
+  if (name === null || minutes === null) return null;
   const age = minutes < 1 ? t.mobile.age.now : counted(t.mobile.age.minutes, minutes);
   return {
-    name: who.name,
-    line: t.teacherToday.waitingLine.replace('{name}', who.name),
+    name,
+    line: t.teacherToday.waitingLine.replace('{name}', name),
     since: t.teacherToday.waitingSince.replace('{age}', age),
   };
 }

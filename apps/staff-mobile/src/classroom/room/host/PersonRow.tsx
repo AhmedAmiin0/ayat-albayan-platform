@@ -47,7 +47,9 @@ function StateIcons({ person }: Pick<PersonRowProps, 'person'>) {
   return (
     <>
       {person.speaking ? (
-        <AppText style={{ fontSize: type.size.xs, color: color.ok }}>{t.classroom.speaking}</AppText>
+        <AppText style={{ fontSize: type.size.xs, color: color.ok }}>
+          {t.classroom.speaking}
+        </AppText>
       ) : null}
       {person.micOn ? null : <MicOffIcon color={color.ink3} size={18} />}
       {person.camOn ? null : <CameraOffIcon color={color.ink3} size={18} />}
@@ -70,7 +72,9 @@ export function PersonRow({ person, panel, presence }: PersonRowProps) {
         <AppText numberOfLines={1} style={{ fontSize: type.size.sm, color: color.ink }}>
           {name}
         </AppText>
-        {role ? <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{role}</AppText> : null}
+        {role ? (
+          <AppText style={{ fontSize: type.size.xs, color: color.ink3 }}>{role}</AppText>
+        ) : null}
       </View>
       <StateIcons person={person} />
       <HostActions person={person} panel={panel} />

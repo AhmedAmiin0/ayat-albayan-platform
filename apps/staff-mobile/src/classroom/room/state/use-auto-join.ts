@@ -31,9 +31,10 @@ const quietPreview = (phase: RoomPhase): boolean =>
 
 /**
  * The family's preview the first time only (canvas RoomXPreview): later joins reuse the last
- * device choice and go straight in, and the «بدأت الحلقة» push joins with the microphone on. Only a missing
- * permission is asked first; a refused one still shows the preview with its notice. Each entry
- * into the preview (the first check, a pressed «حاول مرة أخرى») joins at most once.
+ * device choice and go straight in, and the «بدأت الحلقة» push joins with the microphone on.
+ * Only a missing permission is asked first; a refused one still shows the preview with its
+ * notice. Each entry into the preview (the first check, a pressed «حاول مرة أخرى») joins at most
+ * once.
  */
 export function useAutoJoin({ phase, devices, direct, remember, join }: AutoJoinInput) {
   const [remembered, setRemembered] = useState<MediaWish | null | undefined>(undefined);

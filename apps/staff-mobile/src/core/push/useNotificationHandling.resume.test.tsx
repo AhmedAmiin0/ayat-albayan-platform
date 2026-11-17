@@ -52,17 +52,14 @@ async function stuckReads(tree: PushTree) {
   return { client, reads };
 }
 
-test.each(['teacher', 'admin', 'sales'] as const)(
-  '%s: return to the app cancels every stuck chat read',
-  async (tree) => {
-    const { client } = await stuckReads(tree);
-    expect(client.isFetching({ queryKey: ['threads'] })).toBe(2);
-    await act(async () => change?.('active'));
-    expect(client.isFetching({ queryKey: ['threads'] })).toBe(0);
-    expect(client.getQueryState(LIST)?.isInvalidated).toBe(true);
-    expect(client.getQueryState(CHAT)?.isInvalidated).toBe(true);
-  },
-);
+test.each(['teacher', 'admin', 'sales'] as const)('%s: return to the app cancels every stuck chat read', async (tree) => {
+  const { client } = await stuckReads(tree);
+  expect(client.isFetching({ queryKey: ['threads'] })).toBe(2);
+  await act(async () => change?.('active'));
+  expect(client.isFetching({ queryKey: ['threads'] })).toBe(0);
+  expect(client.getQueryState(LIST)?.isInvalidated).toBe(true);
+  expect(client.getQueryState(CHAT)?.isInvalidated).toBe(true);
+});
 
 test('going to the background touches nothing', async () => {
   const { client } = await stuckReads('teacher');

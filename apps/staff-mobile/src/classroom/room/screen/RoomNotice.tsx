@@ -31,7 +31,7 @@ interface RoomNoticeProps {
  * opened elsewhere). The title is a 20pt bold header, announced on iOS.
  */
 export function RoomNotice(props: RoomNoticeProps) {
-  const { testID, message, detail, busy, again, browser, onBack } = props;
+  const { testID, message, detail, busy } = props;
   const { color } = useTheme();
   useAnnounce(message);
   const line = { textAlign: 'center', fontSize: type.size.sm, color: color.coverInk } as const;
@@ -47,21 +47,38 @@ export function RoomNotice(props: RoomNoticeProps) {
       }}
     >
       {busy ? <ActivityIndicator color={color.coverInk} /> : null}
-      {props.icon ? <View style={{ alignItems: 'center' }}>{props.icon(color.coverInk)}</View> : null}
+      {props.icon ? (
+        <View style={{ alignItems: 'center' }}>{props.icon(color.coverInk)}</View>
+      ) : null}
       <AppText
         accessibilityRole="header"
         accessibilityLiveRegion="polite"
-        style={{ textAlign: 'center', fontFamily: type.ui[700], fontSize: 20, color: color.coverInk }}
+        style={{
+          textAlign: 'center',
+          fontFamily: type.ui[700],
+          fontSize: 20,
+          color: color.coverInk,
+        }}
       >
         {message}
       </AppText>
       {detail ? <AppText style={line}>{detail}</AppText> : null}
       {props.presence ? <AppText style={line}>{props.presence}</AppText> : null}
-      {again ? <Button label={again.label} onPress={again.onPress} /> : null}
-      {browser ? <Button label={browser.label} variant="secondary" onPress={browser.onPress} /> : null}
-      {onBack && !busy ? (
-        <Button label={t.mobileRoom.back} variant="secondary" onPress={onBack} />
-      ) : null}
+      {busy ? null : <NoticeActions {...props} />}
     </View>
+  );
+}
+
+/** «حاول مرة أخرى» / «ادخل مرة أخرى», «فتح في المتصفح» and «رجوع», where each applies. */
+function NoticeActions(p: Pick<RoomNoticeProps, 'again' | 'browser' | 'onBack'>) {
+  const { again, browser, onBack } = p;
+  return (
+    <>
+      {again ? <Button label={again.label} onPress={again.onPress} /> : null}
+      {browser ? (
+        <Button label={browser.label} variant="secondary" onPress={browser.onPress} />
+      ) : null}
+      {onBack ? <Button label={t.mobileRoom.back} variant="secondary" onPress={onBack} /> : null}
+    </>
   );
 }

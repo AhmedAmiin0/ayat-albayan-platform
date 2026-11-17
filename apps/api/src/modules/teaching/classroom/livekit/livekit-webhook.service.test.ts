@@ -41,10 +41,10 @@ describe('LivekitWebhookService', () => {
   it('a participant joining or leaving is who is inside now; joining never stops a recording', async () => {
     const room = { name: 'lesson-1' };
     await service().handle(post({ event: 'participant_joined', room, participant: { identity: 'teacher-1' } }), NOW);
-    expect(presence.record).toHaveBeenCalledWith({ kind: 'joined', room: 'lesson-1', identity: 'teacher-1' }, NOW);
+    expect(presence.record).toHaveBeenCalledWith({ kind: 'joined', room: 'lesson-1', identity: 'teacher-1', at: null }, NOW);
     expect(life.afterLeft).not.toHaveBeenCalled();
     await service().handle(post({ event: 'participant_left', room, participant: { identity: 'guest-1' } }), NOW);
-    expect(presence.record).toHaveBeenLastCalledWith({ kind: 'left', room: 'lesson-1', identity: 'guest-1' }, NOW);
+    expect(presence.record).toHaveBeenLastCalledWith({ kind: 'left', room: 'lesson-1', identity: 'guest-1', at: null }, NOW);
   });
 
   it('other events are acknowledged and change nothing', async () => {

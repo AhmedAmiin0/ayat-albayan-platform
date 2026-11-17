@@ -26,9 +26,9 @@ function familyOf(studentId: string, students: readonly LessonStudentRow[]): Set
 }
 
 /**
- * Every link of the person behind `ownId`: the links of their family's students (sent for them, or
- * their portal row); a link naming no student is the family's only in a one-student lesson (where
- * every link is theirs). Always the own link.
+ * Every link of the person behind `ownId`: in a one-student lesson every link of the lesson (all
+ * that family's); else the links of their family's students (sent for them, or their portal row),
+ * and only the own link when it names no student. Always the own link.
  */
 export function personLinkIds(
   ownId: string,
@@ -40,7 +40,7 @@ export function personLinkIds(
   const family = student ? familyOf(student, input.students) : new Set<string>();
   const theirs = (l: LinkRow): boolean => {
     const of = studentOf(l);
-    return of === null ? solo : family.has(of);
+    return solo || (of !== null && family.has(of));
   };
   return [...new Set([ownId, ...input.links.filter(theirs).map((l) => l.id)])];
 }

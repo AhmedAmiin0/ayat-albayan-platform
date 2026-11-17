@@ -42,7 +42,8 @@ function chatControl(chat: RoomChat | null, locked: boolean, explain: () => void
  * the guarded leave (back asks first; «غادر» stays on the screen as RoomXLeft, only «رجوع»
  * exits), «فتح في المتصفح» and the chat control.
  */
-export function useRoomScreen({ onExit, host, chat, presence, backSource, ...input }: RoomScreenInput) {
+export function useRoomScreen(props: RoomScreenInput) {
+  const { onExit, host, chat, presence, backSource, ...input } = props;
   const session = useRoomSession(input);
   const [sheet, setSheet] = useState<SheetName | null>(null);
   const live = session.phase.step === 'live';
