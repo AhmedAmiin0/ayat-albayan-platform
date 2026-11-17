@@ -138,9 +138,8 @@ jobs:
           echo "develop run: $run"
           gh run download "$run" -R "$GITHUB_REPOSITORY" -p 'e2e-durations-push-*' -D "$RUNNER_TEMP/dur"
           ls "$RUNNER_TEMP"/dur/*/
-          echo "DURATIONS-BEGIN"
-          node tools/scripts/ci-checks/e2e-shards.mjs merge "$RUNNER_TEMP"/dur/*/e2e-durations.json | jq -c .
-          echo "DURATIONS-END"
+          node tools/scripts/ci-checks/e2e-shards.mjs merge "$RUNNER_TEMP"/dur/*/e2e-durations.json | jq -c . | sha256sum
+          jq -c . e2e/shard-durations.json | sha256sum
       # PRs only. Any failure leaves the selection out: plan.mjs (or the e2e job's fallback) = full suite.
       - name: e2e specs
         id: e2e
