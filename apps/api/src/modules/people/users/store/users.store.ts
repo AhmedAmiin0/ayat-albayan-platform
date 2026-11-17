@@ -20,7 +20,7 @@ export interface UserRow {
   /** A teacher's sign-in username (docs/30). */
   username?: string | null;
   /** Detail only (the list RPC does not return them). */
-  locale?: string;
+  locale?: string | null;
   tz?: string;
   disabled_reason?: string | null;
 }
@@ -36,7 +36,8 @@ export interface NewProfile {
   role_id: string | null;
   full_name: string;
   phone_e164: string | null;
-  locale: string;
+  /** null: never chosen (the app keeps its own, migration 20261117000140). */
+  locale: string | null;
   tz: string;
 }
 

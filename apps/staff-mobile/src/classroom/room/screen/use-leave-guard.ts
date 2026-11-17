@@ -1,26 +1,30 @@
-import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
-import { use, useEffect, useEffectEvent, useRef } from 'react';
+import { useEffect, useEffectEvent } from 'react';
+
+/** What the guard reads of react-navigation's `beforeRemove` event. */
+export interface BeforeRemove {
+  preventDefault: () => void;
+  data: { action: { type: string } };
+}
+
+/** The app's navigator, as a `beforeRemove` subscription (navigation.addListener). */
+export type BackSource = (listener: (e: BeforeRemove) => void) => () => void;
+
+/** Only a step back is held: a sign-out (reset) or a replace still navigates away. */
+const BACK: readonly string[] = ['GO_BACK', 'POP'];
 
 /**
- * While in the room, Android's back (and any other pop of this screen) asks «تغادر الحلقة؟» first
- * instead of dropping the lesson (canvas RoomXLeave). `release` lets the screen's own exit through.
- * Outside a navigator (tests of the bare screen) it does nothing.
+ * While in the room, Android's back (a GO_BACK / POP of this screen) asks «تغادر الحلقة؟» first
+ * instead of dropping the lesson (canvas RoomXLeave). Without a navigator source (a test of the
+ * bare screen) it does nothing.
  */
-export function useLeaveGuard(active: boolean, onAsk: () => void) {
-  const navigation = use(NavigationContext);
-  const released = useRef(false);
+export function useLeaveGuard(source: BackSource | undefined, active: boolean, onAsk: () => void) {
   const ask = useEffectEvent(onAsk);
   useEffect(() => {
-    if (!navigation || !active) return undefined;
-    return navigation.addListener('beforeRemove', (e) => {
-      if (released.current) return;
+    if (!source || !active) return undefined;
+    return source((e) => {
+      if (!BACK.includes(e.data.action.type)) return;
       e.preventDefault();
       ask();
     });
-  }, [navigation, active]);
-  return {
-    release: () => {
-      released.current = true;
-    },
-  };
+  }, [source, active]);
 }

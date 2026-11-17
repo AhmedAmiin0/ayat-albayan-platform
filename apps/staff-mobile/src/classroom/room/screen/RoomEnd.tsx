@@ -1,53 +1,90 @@
+import type { RoomPresence } from '@ab/shared';
+import type { ReactNode } from 'react';
+import { AlertIcon, RemoveIcon } from '@/classroom/room/live/room-icons';
 import type { ClosedWhy, RoomPhase } from '@/classroom/room/model/room-phase';
+import type { RoomKind } from '@/classroom/room/model/room-types';
 import { t } from '@ab/mobile-kit';
+import { HangUpIcon, PhoneIcon } from '@/inbox';
 import { RoomNotice } from './RoomNotice';
 
 interface ClosedLook {
-  message: string;
+  message: (kind: RoomKind) => string;
   detail?: string;
-  /** «ادخل مرة أخرى» is offered: the lesson still runs and they may come back. */
+  /** «ادخل مرة أخرى» is offered: they may come back (a rejoin learns a final end: 410). */
   again: boolean;
+  icon: (ink: string) => ReactNode;
 }
 
-const LEFT: ClosedLook = {
-  message: t.mobileRoom.left.title,
-  detail: t.mobileRoom.left.body,
-  again: true,
+const ENDED: Record<RoomKind, string> = {
+  lesson: t.classroom.closedHint,
+  meeting: t.classroom.error.meeting_ended,
 };
+const hangUp = (ink: string) => <HangUpIcon color={ink} size={40} />;
+const fixed = (line: string) => () => line;
 
 /**
- * Left on one's own or dropped (canvas RoomXLeft) may come back; ended for everyone (RoomXEnded:
- * the host, the server, a 410 lesson_ended) and removed may not.
+ * Left on one's own (canvas RoomXLeft), dropped, closed by the server (the max-duration closer
+ * too) and opened elsewhere may come back; ended for everyone for certain (RoomXEnded) and
+ * removed may not.
  */
 const CLOSED: Record<ClosedWhy, ClosedLook> = {
-  left: LEFT,
-  dropped: LEFT,
-  ended: { message: t.classroom.closedHint, again: false },
-  removed: { message: t.classroom.error.removed_from_room, again: false },
-  duplicate: { message: t.mobileRoom.duplicate, again: true },
+  left: {
+    message: fixed(t.mobileRoom.left.title),
+    detail: t.mobileRoom.left.body,
+    again: true,
+    icon: hangUp,
+  },
+  dropped: { message: fixed(t.mobileRoom.dropped), again: true, icon: hangUp },
+  ended: { message: (kind) => ENDED[kind], again: true, icon: hangUp },
+  endedAll: { message: (kind) => ENDED[kind], again: false, icon: hangUp },
+  removed: {
+    message: fixed(t.classroom.error.removed_from_room),
+    again: false,
+    icon: (ink) => <RemoveIcon color={ink} size={40} />,
+  },
+  duplicate: {
+    message: fixed(t.mobileRoom.duplicate),
+    again: true,
+    icon: (ink) => <PhoneIcon color={ink} size={40} />,
+  },
 };
 
-interface RoomEndProps {
+export interface RoomEndProps {
   phase: Extract<RoomPhase, { step: 'failed' | 'closed' }>;
+  kind: RoomKind;
+  presence: readonly RoomPresence[];
   /** «حاول مرة أخرى» / «ادخل مرة أخرى»: back to the preview, with a fresh token. */
   onAgain: () => void;
   onBack: () => void;
+  onBrowser: () => void;
 }
 
+/** «المعلم/ة في الغرفة الآن» on RoomXLeft, when the lesson says so. */
+const teacherIn = (presence: readonly RoomPresence[]): string | null =>
+  presence.some((p) => p.role === 'teacher') ? t.portal.app.live.teacherIn : null;
+
 /** A failed join, or the room closed: why, a way back in where there is one, and «رجوع». */
-export function RoomEnd({ phase, onAgain, onBack }: RoomEndProps) {
+export function RoomEnd({ phase, kind, presence, onAgain, onBack, onBrowser }: RoomEndProps) {
   if (phase.step === 'failed') {
-    const again = { label: t.classroom.retry, onPress: onAgain };
     return (
-      <RoomNotice testID="room-failed" message={phase.message} again={again} onBack={onBack} />
+      <RoomNotice
+        testID="room-failed"
+        message={phase.message}
+        icon={(ink) => <AlertIcon color={ink} size={40} />}
+        again={{ label: t.classroom.retry, onPress: onAgain }}
+        browser={{ label: t.mobileRoom.openInBrowser, onPress: onBrowser }}
+        onBack={onBack}
+      />
     );
   }
   const look = CLOSED[phase.why];
   return (
     <RoomNotice
       testID={`room-closed-${phase.why}`}
-      message={look.message}
+      message={look.message(kind)}
       detail={look.detail}
+      presence={phase.why === 'left' ? teacherIn(presence) : null}
+      icon={look.icon}
       again={look.again ? { label: t.classroom.rejoin, onPress: onAgain } : undefined}
       onBack={onBack}
     />

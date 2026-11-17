@@ -1,3 +1,4 @@
+import type { RoomPresence } from '@ab/shared';
 import { useState } from 'react';
 import { Linking } from 'react-native';
 import type { RoomHost } from '@/classroom/room/host/host-types';
@@ -5,7 +6,7 @@ import { useHostPanel } from '@/classroom/room/host/use-host-panel';
 import type { SheetName } from '@/classroom/room/live/LiveSheet';
 import { roomWebUrl } from '@/classroom/room/model/join-target';
 import { useRoomSession, type RoomSessionInput } from '@/classroom/room/state/use-room-session';
-import { useLeaveGuard } from './use-leave-guard';
+import { useLeaveGuard, type BackSource } from './use-leave-guard';
 
 /** The in-room «المحادثة»: the student channel, opened by the app as a sheet over the room. */
 export interface RoomChat {
@@ -19,6 +20,10 @@ export interface RoomScreenInput extends RoomSessionInput {
   onExit: () => void;
   host?: RoomHost | null | undefined;
   chat?: RoomChat | null | undefined;
+  /** Who the lesson says is inside (its `room.inRoom`), where the app knows it. */
+  presence?: readonly RoomPresence[] | undefined;
+  /** The navigator's `beforeRemove`: Android's back asks first while in the room. */
+  backSource?: BackSource | undefined;
 }
 
 type Joined = ReturnType<typeof useRoomSession>['joined'];
@@ -34,9 +39,10 @@ function chatControl(chat: RoomChat | null, locked: boolean, explain: () => void
 
 /**
  * The room screen's state over the session: the one panel open at its foot, the host's panel,
- * the guarded leave (back asks first while in the room), «فتح في المتصفح» and the chat control.
+ * the guarded leave (back asks first; «غادر» stays on the screen as RoomXLeft, only «رجوع»
+ * exits), «فتح في المتصفح» and the chat control.
  */
-export function useRoomScreen({ onExit, host, chat, ...input }: RoomScreenInput) {
+export function useRoomScreen({ onExit, host, chat, presence, backSource, ...input }: RoomScreenInput) {
   const session = useRoomSession(input);
   const [sheet, setSheet] = useState<SheetName | null>(null);
   const live = session.phase.step === 'live';
@@ -46,27 +52,24 @@ export function useRoomScreen({ onExit, host, chat, ...input }: RoomScreenInput)
     tiles: session.snap.tiles,
     onEnded: session.endedForAll,
   });
-  const guard = useLeaveGuard(live, () => setSheet('leave'));
+  useLeaveGuard(backSource, live, () => setSheet('leave'));
   const leave = () => {
-    guard.release();
     setSheet(null);
     session.leave();
-    onExit();
   };
   return {
     session,
     live,
     panel,
+    presence: presence ?? [],
     sheet: live ? sheet : null,
     openSheet: setSheet,
     closeSheet: () => setSheet(null),
     leave,
-    back: () => {
-      guard.release();
-      onExit();
-    },
+    back: onExit,
     browser: () => {
       leave();
+      onExit();
       void Linking.openURL(roomWebUrl(input.target));
     },
     chat: chatControl(chat ?? null, lockedChat(session.joined), () => setSheet('chatLocked')),

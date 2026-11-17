@@ -17,7 +17,7 @@ export interface Me {
   /** The person's own IANA zone (docs/34 §2); null → this browser's zone. */
   tz?: string | null;
   /** The login's UI language (profiles.locale); read through meLocaleOf (zod). */
-  locale?: string;
+  locale?: string | null;
 }
 
 /** 403 account_disabled: the profile was disabled while the token was still valid (checked structurally, no import of ApiError). */

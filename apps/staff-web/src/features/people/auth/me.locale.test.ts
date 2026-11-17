@@ -23,6 +23,12 @@ describe('meQuery and the login language', () => {
   it('an answer without a valid locale (an older API) follows nothing', async () => {
     apiFetch.mockResolvedValue({ id: 'u1', role: 'admin', permissions: [], locale: 'fr' });
     await new QueryClient().query(meQuery);
+    expect(followProfileLocale).toHaveBeenCalledWith(undefined);
+  });
+
+  it('a login that never chose: null (it learns this browser’s choice)', async () => {
+    apiFetch.mockResolvedValue({ id: 'u1', role: 'admin', permissions: [], locale: null });
+    await new QueryClient().query(meQuery);
     expect(followProfileLocale).toHaveBeenCalledWith(null);
   });
 });

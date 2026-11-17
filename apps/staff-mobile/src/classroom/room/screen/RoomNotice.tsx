@@ -1,24 +1,40 @@
+import type { ReactNode } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
+import { useAnnounce } from './use-announce';
+
+interface NoticeAction {
+  label: string;
+  onPress: () => void;
+}
 
 interface RoomNoticeProps {
   testID: string;
   message: string;
   /** A second, quieter line under the message. */
   detail?: string | undefined;
+  /** A third line: who is in the room now («المعلم/ة في الغرفة الآن»), when known. */
+  presence?: string | null | undefined;
+  /** A 40pt icon over the title (ink is the cover's). */
+  icon?: ((ink: string) => ReactNode) | undefined;
   /** A wait (checking, joining): a spinner and no buttons. */
   busy?: boolean;
-  /** «حاول مرة أخرى» / «ادخل مرة أخرى»; absent when there is no way back in (removed). */
-  again?: { label: string; onPress: () => void };
+  /** «حاول مرة أخرى» / «ادخل مرة أخرى»; absent when there is no way back in. */
+  again?: NoticeAction | undefined;
+  /** «فتح في المتصفح» where the app cannot go on (a failure, no LiveKit). */
+  browser?: NoticeAction | undefined;
   onBack?: () => void;
 }
 
 /**
- * A step with one line: connecting, a failure, or the room closed (ended, removed, opened
- * elsewhere).
+ * A step with one line: connecting, a failure, or the room closed (ended, left, dropped, removed,
+ * opened elsewhere). The title is a 20pt bold header, announced on iOS.
  */
-export function RoomNotice({ testID, message, detail, busy, again, onBack }: RoomNoticeProps) {
+export function RoomNotice(props: RoomNoticeProps) {
+  const { testID, message, detail, busy, again, browser, onBack } = props;
   const { color } = useTheme();
+  useAnnounce(message);
+  const line = { textAlign: 'center', fontSize: type.size.sm, color: color.coverInk } as const;
   return (
     <View
       testID={testID}
@@ -31,18 +47,18 @@ export function RoomNotice({ testID, message, detail, busy, again, onBack }: Roo
       }}
     >
       {busy ? <ActivityIndicator color={color.coverInk} /> : null}
+      {props.icon ? <View style={{ alignItems: 'center' }}>{props.icon(color.coverInk)}</View> : null}
       <AppText
+        accessibilityRole="header"
         accessibilityLiveRegion="polite"
-        style={{ textAlign: 'center', fontSize: type.size.base, color: color.coverInk }}
+        style={{ textAlign: 'center', fontFamily: type.ui[700], fontSize: 20, color: color.coverInk }}
       >
         {message}
       </AppText>
-      {detail ? (
-        <AppText style={{ textAlign: 'center', fontSize: type.size.sm, color: color.coverInk }}>
-          {detail}
-        </AppText>
-      ) : null}
+      {detail ? <AppText style={line}>{detail}</AppText> : null}
+      {props.presence ? <AppText style={line}>{props.presence}</AppText> : null}
       {again ? <Button label={again.label} onPress={again.onPress} /> : null}
+      {browser ? <Button label={browser.label} variant="secondary" onPress={browser.onPress} /> : null}
       {onBack && !busy ? (
         <Button label={t.mobileRoom.back} variant="secondary" onPress={onBack} />
       ) : null}

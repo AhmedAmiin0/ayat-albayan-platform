@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 // After sign-in the login's language (GET /auth/me `locale`) wins over the browser's copy.
 vi.mock('@/lib/http/supabase', () => ({ supabase: { auth: {} } }));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/http/api', () => ({ apiFetch: vi.fn(), apiSend }));
 
 async function fresh() {
   vi.resetModules();
@@ -15,6 +17,7 @@ const stubReload = () => {
 };
 
 afterEach(() => {
+  apiSend.mockReset();
   localStorage.clear();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
@@ -32,7 +35,7 @@ describe('followProfileLocale (this load: Arabic, nothing saved)', () => {
     const reload = stubReload();
     const { followProfileLocale } = await fresh();
     expect(followProfileLocale('ar')).toBe(false);
-    expect(followProfileLocale(null)).toBe(false);
+    expect(followProfileLocale(undefined)).toBe(false);
     expect(reload).not.toHaveBeenCalled();
   });
 
@@ -43,5 +46,24 @@ describe('followProfileLocale (this load: Arabic, nothing saved)', () => {
     });
     expect((await fresh()).followProfileLocale('en')).toBe(false);
     expect(reload).not.toHaveBeenCalled();
+  });
+});
+
+describe('followProfileLocale: a login that never chose (null)', () => {
+  it('learns this browser’s saved choice once per load, and nothing reloads', async () => {
+    const reload = stubReload();
+    localStorage.setItem(LOCALE_STORAGE_KEY, 'en');
+    apiSend.mockResolvedValue({ locale: 'en' });
+    const { followProfileLocale } = await fresh();
+    expect(followProfileLocale(null)).toBe(false);
+    expect(followProfileLocale(null)).toBe(false); // a refetch: not again
+    expect(apiSend).toHaveBeenCalledExactlyOnceWith('PATCH', '/me/locale', { locale: 'en' });
+    expect(reload).not.toHaveBeenCalled();
+  });
+
+  it('nothing saved: the profile stays unset', async () => {
+    const { followProfileLocale } = await fresh();
+    expect(followProfileLocale(null)).toBe(false);
+    expect(apiSend).not.toHaveBeenCalled();
   });
 });

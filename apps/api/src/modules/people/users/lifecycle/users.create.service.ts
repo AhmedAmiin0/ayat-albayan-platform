@@ -19,7 +19,7 @@ const LINK_KIND: Partial<Record<UserCreate['role'], LinkKind>> = {
 const profileDefaults = (input: UserCreate) => ({
   full_name: input.full_name,
   phone_e164: input.phone_e164 ?? null,
-  locale: input.locale ?? 'ar',
+  locale: input.locale ?? null,
   tz: input.tz ?? 'Asia/Riyadh',
 });
 

@@ -46,6 +46,7 @@ export const linkRow = (over: Partial<JoinLinkRow> = {}): JoinLinkRow => ({
   created_by: ADMIN.id,
   created_at: '2026-10-05T09:00:00.000Z',
   student_id: null,
+  sent_for_student_id: null,
   ...over,
 });
 

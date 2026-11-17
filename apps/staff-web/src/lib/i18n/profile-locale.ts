@@ -1,5 +1,6 @@
 import { meLocaleSend } from '@ab/client-core';
-import type { Locale } from '@ab/shared';
+import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/shared';
+import { z } from 'zod';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { supabase } from '@/lib/http/supabase';
 import { locale, saveLocale, setLocale } from './locale';
@@ -11,12 +12,36 @@ import { locale, saveLocale, setLocale } from './locale';
 /** PATCH /me/locale. Built per call: the client's helpers are read when used, never at import. */
 const sendLocale = (next: Locale) => meLocaleSend({ apiFetch, apiSend })(next);
 
+const savedSchema = z.enum(LOCALES).nullable().catch(null);
+
+/** This browser's saved «اللغة» choice; null when none (Arabic by default) or storage is blocked. */
+function savedChoice(): Locale | null {
+  try {
+    return savedSchema.parse(localStorage.getItem(LOCALE_STORAGE_KEY));
+  } catch {
+    return null;
+  }
+}
+
+/** Sent once per load: the profile learns the choice, a failure waits for the next load. */
+let taught = false;
+
+/** A login that never chose (null) learns this browser's saved choice, once. Never switches. */
+function teachProfile(): false {
+  const choice = taught ? null : savedChoice();
+  taught = true;
+  if (choice !== null) void sendLocale(choice).catch(() => undefined);
+  return false;
+}
+
 /**
- * The login's language when this load shows another: saved, then a reload. Not when storage is
- * blocked: the reload would come back in this language and ask again, forever. True when reloading.
+ * The login's language (null: never chosen, undefined: the answer has none). A choice this load
+ * does not show: saved, then a reload; not when storage is blocked (the reload would come back in
+ * this language and ask again, forever). No choice yet: teachProfile. True when reloading.
  */
-export function followProfileLocale(profile: Locale | null): boolean {
-  const differs = profile !== null && profile !== locale;
+export function followProfileLocale(profile: Locale | null | undefined): boolean {
+  if (profile === null) return teachProfile();
+  const differs = profile !== undefined && profile !== locale;
   const switching = differs && saveLocale(profile);
   if (switching) location.reload();
   return switching;
