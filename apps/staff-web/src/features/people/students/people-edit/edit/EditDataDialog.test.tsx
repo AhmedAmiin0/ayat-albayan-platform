@@ -53,6 +53,26 @@ describe('«تعديل البيانات»', () => {
     expect(await screen.findByText(E.errors.phone_taken)).toBeTruthy();
   });
 
+  it("saves the student's own number as E.164", async () => {
+    apiSend.mockResolvedValue({ id: 'x' });
+    await open();
+    const own = screen.getByLabelText(F.studentPhone);
+    fireEvent.change(own, { target: { value: '+966 50 000 0007' } });
+    fireEvent.click(screen.getByRole('button', { name: E.save }));
+    expect(await screen.findByText(E.saved)).toBeTruthy();
+    expect(apiSend).toHaveBeenCalledWith('PATCH', '/people/students/s1', {
+      phone_e164: '+966500000007',
+    });
+  });
+
+  it('a refused student number reads in MSA', async () => {
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'student_login_phone' }));
+    await open();
+    fireEvent.change(screen.getByLabelText(F.studentPhone), { target: { value: '+966500000007' } });
+    fireEvent.click(screen.getByRole('button', { name: E.save }));
+    expect(await screen.findByText(E.errors.student_login_phone)).toBeTruthy();
+  });
+
   it('removes the second number after a confirm', async () => {
     apiSend.mockResolvedValue(undefined);
     await open();

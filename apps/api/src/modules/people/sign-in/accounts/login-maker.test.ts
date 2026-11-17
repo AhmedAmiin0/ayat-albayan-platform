@@ -52,4 +52,17 @@ describe('LoginMaker adopts only a login nobody else owns (review item 2)', () =
     subjects.profiles.push({ id: 'u-half', role: 'teacher', disabled: false, phone: null });
     await expect(provision.teacher(newTeacher(subjects))).resolves.toBe('u-half');
   });
+
+  it('a user it made that another call linked meanwhile is kept, never removed', async () => {
+    const { subjects, auth, provision } = setup();
+    const child = subjects.students[0];
+    if (!child) throw new Error('fixture');
+    // A WhatsApp code adopted and linked the user this first password made, before its own link.
+    subjects.link = ({ profileId }) => {
+      child.profileId = profileId;
+      return Promise.resolve(false);
+    };
+    await expect(provision.student(child, 'Child-pass-1')).resolves.toBeNull();
+    expect(auth.users.map((u) => u.id)).toContain(child.profileId);
+  });
 });

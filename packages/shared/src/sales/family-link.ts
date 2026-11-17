@@ -14,7 +14,10 @@ export type LeadFamilyLink = z.output<typeof leadFamilyLinkSchema>;
 /** true = the number was added now; false = it already was a number of that family (main or second). */
 export type LeadFamilyLinked = { linked: boolean };
 
-/** The error codes of POST /leads/:id/link-family (404: the first two; 409: the rest). */
+/**
+ * The error codes of POST /leads/:id/link-family (404: the first two; 409: the rest).
+ * guardian_has_login: a non-admin, once the family has a login (a second number signs in to it).
+ */
 export const LEAD_FAMILY_LINK_ERRORS = [
   'lead_not_found',
   'student_not_found',
@@ -22,6 +25,7 @@ export const LEAD_FAMILY_LINK_ERRORS = [
   'family_has_second_number',
   'teacher_number',
   'lead_has_family',
+  'guardian_has_login',
 ] as const;
 export type LeadFamilyLinkError = (typeof LEAD_FAMILY_LINK_ERRORS)[number];
 

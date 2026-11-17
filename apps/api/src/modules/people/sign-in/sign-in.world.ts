@@ -1,5 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
 import { Provisioner } from './accounts/provision';
+import { StudentLogins } from './accounts/student-login';
 import { CodeIssuer } from './codes/code-issuer';
 import { SignInLimits } from './codes/code-limits';
 import { MemoryLimitStore } from './codes/limit-store';
@@ -30,7 +31,8 @@ export function signInWorld(opts: WorldOptions = {}) {
   const issuer = new CodeIssuer(codes, send.asPort(), settings, limits);
   const kit = new SignInKit(issuer, limits, audit.asPort());
   const provision = new Provisioner(subjects, auth, audit.asPort());
-  const accounts = new SignInAccounts(subjects, auth, provision);
+  const students = new StudentLogins(subjects, auth, audit.asPort());
+  const accounts = new SignInAccounts(subjects, auth, provision, students);
   const family = new FamilyCodeService(kit, accounts);
   const passwords = new PasswordService(kit, accounts, new PasswordTargets(subjects, auth));
   const teachers = new TeacherCodeService(kit, accounts);

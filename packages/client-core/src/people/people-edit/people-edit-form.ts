@@ -21,7 +21,8 @@ export type StudentForm = Record<
   | 'riwaya'
   | 'tz'
   | 'notes'
-  | 'teacher_gender_pref',
+  | 'teacher_gender_pref'
+  | 'phone_e164',
   string
 >;
 export type FamilyForm = Record<'name' | 'phone_e164' | 'country' | 'tz' | 'notes', string>;
@@ -43,6 +44,8 @@ export function studentFormOf(s: PeopleEditView['student']): StudentForm {
     tz: s.tz,
     notes: text(s.notes ?? null),
     teacher_gender_pref: text(s.teacher_gender_pref),
+    /** The student's own WhatsApp (sign-in, owner 2026-11-17); blank = none. */
+    phone_e164: text(s.phone_e164),
   };
 }
 

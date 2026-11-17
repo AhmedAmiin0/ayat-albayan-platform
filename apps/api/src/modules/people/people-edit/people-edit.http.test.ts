@@ -76,6 +76,7 @@ describe('/people/* (people.edit, students.attach_guardian, people.switch_role)'
       id: S,
       patch: { name: 'سهيلة', notes: null },
       actorId: 'admin-1',
+      admin: true,
     });
     await call(app, {
       method: 'POST',
