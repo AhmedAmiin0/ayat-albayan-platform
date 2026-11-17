@@ -13,14 +13,16 @@ import {
 } from '@ab/mobile-kit';
 import { useFamilyCodes } from '@/sign-in';
 import { isFamilySignedIn } from './family-gate';
+import { ROOM_CHAT_SCREEN, ROOM_SCREEN } from './room-screen';
 import { screenAnimation } from './screen-animation';
 import { useFamilyPush } from './use-family-push';
 
 /**
  * The family app's root (app/_layout, docs/50 §7): the shared boot, providers and frame
  * (@ab/mobile-kit), one stack. A guardian or a student gets the tabs (home, schedule, reports,
- * account), the pushed child, chat, report, package and alerts, and «اختر الطالب» (pick-child)
- * for a guardian of several children; everyone else the sign-in.
+ * account), the pushed child, chat, report, package and alerts, «اختر الطالب» (pick-child)
+ * for a guardian of several children, and a lesson's room with its channel sheet; everyone
+ * else the sign-in.
  * Staff are signed out by the gate with the inverted «wrongApp» notice
  * (role-claim / login-notice follow the app's audience, set in index.ts).
  */
@@ -66,6 +68,8 @@ function FamilyStack({ gate, boot }: { gate: GateStatus; boot: RootBoot }) {
             <Stack.Screen name="alerts" />
             <Stack.Screen name="profile" />
             <Stack.Screen name="pick-child" />
+            <Stack.Screen name="room/[id]" options={ROOM_SCREEN} />
+            <Stack.Screen name="room-chat/[id]" options={ROOM_CHAT_SCREEN} />
           </Stack.Protected>
           <Stack.Protected guard={gate === 'out'}>
             <Stack.Screen name="login" />

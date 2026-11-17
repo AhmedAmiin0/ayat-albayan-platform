@@ -1,5 +1,4 @@
 import {
-  familyMeetingsOn,
   isLessonNow,
   lessonMinutes,
   liveRoom,
@@ -7,8 +6,9 @@ import {
 } from '@ab/client-core';
 import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
-import { AppText, t, type, useNow, usePublicConfig, useTheme } from '@ab/mobile-kit';
+import { AppText, t, type, useNow, useTheme } from '@ab/mobile-kit';
 import { useFamilyClock } from '@/portal';
+import { useRoomsInApp } from '@/room';
 import { Countdown } from './Countdown';
 import { JoinAction } from './JoinAction';
 import { LiveStrip, LiveTop } from './live';
@@ -21,7 +21,7 @@ const TICK_MS = 1000;
 const SOFT_INK = 0.92;
 
 /**
- * Under the button: a live room the app opens itself (family_meetings_in_app) goes straight in
+ * Under the button: a live room the app opens itself (useRoomsInApp) goes straight in
  * with the mic on (canvas RoomXLiveHome); otherwise the browser room.
  */
 const noteOf = (live: boolean, inApp: boolean): string =>
@@ -90,7 +90,7 @@ export function NextLessonCard(props: NextLessonCardProps) {
   const now = useNow(TICK_MS);
   const clock = { ...useFamilyClock(), tz: student.tz };
   const live = liveRoom(lesson, now);
-  const inApp = familyMeetingsOn(usePublicConfig());
+  const inApp = useRoomsInApp();
   const roomNote = full && lesson.way_in === 'classroom';
   const note = { color: color.onLapis, fontSize: type.size.xs, opacity: SOFT_INK };
   return (

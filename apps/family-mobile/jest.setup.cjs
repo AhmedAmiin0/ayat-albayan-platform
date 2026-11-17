@@ -7,13 +7,3 @@ jest.mock('@ab/mobile-kit/auth/audience', () => ({
   setAudience: jest.fn(),
 }));
 
-// @expo/ui's BottomSheet is a native sheet (SwiftUI / Jetpack Compose) with no jest module: a
-// stand-in View that shows its children only while presented and carries its props, so a test
-// reads it and dismisses it (props.onDismiss) the way a swipe would.
-jest.mock('@expo/ui', () => {
-  const { createElement } = require('react');
-  const { View } = require('react-native');
-  const BottomSheet = ({ isPresented, children, ...props }) =>
-    isPresented ? createElement(View, props, children) : null;
-  return { __esModule: true, BottomSheet };
-});
