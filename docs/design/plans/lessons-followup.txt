@@ -71,6 +71,26 @@ C1. Setting recording_media 'audio' | 'video', default 'audio' (today's behaviou
 C2. The stream route serves video/mp4 too (A1 is media-agnostic).
     Do NOT build the video player screens yet. Boards RecXFamilyVideoPlayer(+Dark), RecXFamilyListMixed, RecXWebFamilyVideo, RecXWebAdminRecordingMedia and RecXStaffAdminRecordingMedia are under owner review on the design canvas.
 
+E. WEB PLAYER = VIDSTACK (owner 2026-11-17: «Vidstack»)
+E1. Add @vidstack/react, pinned exactly at 1.15.7 (peer react ^18 || ^19), to apps/staff-web only. One RecordingPlayer component replaces the hand-built <audio> player (features/teaching/lesson-files/player/AudioPlayer.tsx and its PlayerButtons/SeekBar) in the portal recordings, the portal lesson page and the staff lists.
+    The same component plays audio now and video later.
+E2. Use a CUSTOM layout from Vidstack's headless components (Controls, PlayButton, SeekButton ±10 s, TimeSlider, time, playback rate 1×/1.5×/2×, FullscreenButton for video), styled with our Tailwind tokens:
+    - RTL-correct;
+    - times as LTR islands;
+    - Arabic labels from packages/shared i18n (ar.json + en.json).
+    Do NOT use DefaultLayout. It must have:
+    - no download item;
+    - no PiP button: disablePictureInPicture and controlsList="nodownload noplaybackrate" on the provider's media element;
+    - the context menu prevented;
+    - playsInline.
+    Keep the resume line «من حيث توقفت / ابدأ من البداية» on the existing client-core ListenState.
+E3. Source = the stream ticket URL from A2, given as { src, type } with type audio/mpeg or video/mp4 from the recording's media field (the URL has no extension).
+    A ticket that expires mid-play is renewed through a new ticket on the next play/seek error, without losing the position.
+    The video watermark (D) is an overlay child inside the MediaPlayer, so it stays on top in fullscreen.
+E4. Lazy-load the player (dynamic import at the lesson/recordings panels) so the portal's first bundle does not grow. React Compiler idioms: no useMemo/useCallback; effects only in named hooks; ≤ 150 lines per file.
+E5. No HLS now. Vidstack loads hls.js only for an HLS source, so there is no cost today. Encrypted HLS (AES-128 segments + per-viewer key route + ffmpeg packaging) is a separate step, only on the owner's go.
+    Phones keep expo-audio / expo-video (web libraries do not run natively).
+
 D. THE LANE'S SECURITY PLAN ITEMS STILL OPEN
 Read docs/design/plans/security-lessons-course-recordings.txt on this branch: git show origin/design/family-canvas:docs/design/plans/security-lessons-course-recordings.txt. Notably:
 - FLAG_SECURE via expo-screen-capture on the recording, lesson and lesson-file screens (family APK 0.3.0 has it), and iOS capture pause;
