@@ -16,4 +16,12 @@ describe('ThemeToggle', () => {
     expect(localStorage.getItem(THEME_KEY)).toBe('dark');
     expect(screen.getByRole('button', { name: t.theme.dark }).getAttribute('aria-pressed')).toBe('true');
   });
+
+  it('pill (opt-in, family): round segments; the default stays the plain track', () => {
+    const { unmount } = render(<ThemeToggle />);
+    expect(screen.getByRole('group').className).not.toContain('rounded-full');
+    unmount();
+    render(<ThemeToggle pill />);
+    expect(screen.getByRole('group').className).toContain('rounded-full');
+  });
 });

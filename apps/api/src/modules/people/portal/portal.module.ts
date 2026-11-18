@@ -9,6 +9,7 @@ import { PortalSlotsService } from './actions/portal-slots.service';
 import { ChatNumber } from './home/chat-number';
 import { PortalHistoryRepo } from './history/portal-history.repo';
 import { PortalHistoryService } from './history/portal-history.service';
+import { PortalGuardianRepo } from './home/portal-guardian.repo';
 import { PortalHomeService } from './home/portal-home.service';
 import { PortalLessonExtras } from './lessons/portal-lesson-extras';
 import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
@@ -34,6 +35,7 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
     PortalScopes,
     PortalSettings,
     ChatNumber,
+    PortalGuardianRepo,
     PortalHomeService,
     PortalLessonsRepo,
     PortalLessonsService,

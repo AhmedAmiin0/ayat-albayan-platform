@@ -1,11 +1,10 @@
 import type { Locale } from '@ab/shared';
-import { useState } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { chooseLocale } from '@ab/web-kit/lib/i18n/profile-locale';
 import { cn } from '@ab/web-kit/lib/utils';
+import { useChooseLocale } from './use-choose-locale';
 
 const other: Locale = locale === 'ar' ? 'en' : 'ar';
 
@@ -16,20 +15,12 @@ const other: Locale = locale === 'ar' ? 'en' : 'ar';
  * language first (chooseLocale), then saves and reloads; a write that failed says so and stays.
  */
 export function LanguageSwitch({ className }: { className?: string }) {
-  const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const choose = () => {
-    setBusy(true);
-    void chooseLocale(other).then((ok) => {
-      setBusy(false);
-      setFailed(!ok);
-    });
-  };
+  const { busy, failed, choose, dismiss } = useChooseLocale();
   return (
     <>
       <button
         type="button"
-        onClick={choose}
+        onClick={() => choose(other)}
         disabled={busy}
         className={cn(
           'inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-ink-2 transition-colors duration-[120ms] hover:bg-sunk hover:text-ink sm:min-h-[34px]',
@@ -40,7 +31,7 @@ export function LanguageSwitch({ className }: { className?: string }) {
         <span className="sr-only">{t.language.label}</span>{' '}
         <span lang={other}>{t.language[other]}</span>
       </button>
-      {failed ? <Toast message={t.common.error} tone="error" onDismiss={() => setFailed(false)} /> : null}
+      {failed ? <Toast message={t.common.error} tone="error" onDismiss={dismiss} /> : null}
     </>
   );
 }
