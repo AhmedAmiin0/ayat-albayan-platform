@@ -9280,6 +9280,7 @@
     },
     "gate": {
       "fromAcademy": "A link from Ayat Al-Bayan Academy",
+      "linkFrom": "A link from the academy",
       "continueAs": "Continue as",
       "notYou": "Not you?",
       "signOut": "Sign out",

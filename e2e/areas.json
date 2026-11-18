@@ -514,6 +514,17 @@
         "apps/api/src/modules/platform/translations/"
       ],
       "specs": ["platform/locale.spec.ts", "platform/translations.spec.ts"]
+    },
+    "shortLinkGate": {
+      "about": "the public short-link gate /l/<code> (docs/19 «Gate flow») and its API",
+      "paths": [
+        "apps/staff-web/src/routes/(public)/l.$code.tsx",
+        "apps/api/src/modules/platform/short-links-admin/gate/"
+      ],
+      "specs": [
+        "platform/short-link-gate.spec.ts",
+        "platform/short-link-gate-code.spec.ts"
+      ]
     }
   },
   "developOnly": [

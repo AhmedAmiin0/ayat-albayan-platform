@@ -1,17 +1,15 @@
-import { checkPhone, type Country, defaultCountry, splitInternational } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { codeOf, emptyCode } from '@ab/web-kit/auth/code/code-boxes';
 import { type CodeFlow, useCodeFlow } from '@ab/web-kit/auth/code/use-code-flow';
 import { authApi } from '@ab/web-kit/auth/login/auth-api';
+import { usePhoneEntry } from '@ab/web-kit/auth/phone/use-phone-entry';
 import { signInWithCode } from '@ab/web-kit/auth/sign-in';
 import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { browserRegion } from './phone/browser-country';
 
 const F = t.familyAuth;
 const sameCode = (a: readonly string[], b: readonly string[]) => a.join('') === b.join('');
-const firstCountry = () => defaultCountry(browserRegion(navigator.language));
 
 /**
  * «الدخول برقم الواتساب» (docs/50 §4), as the family app: the number (country + national,
@@ -22,18 +20,11 @@ const firstCountry = () => defaultCountry(browserRegion(navigator.language));
 export function useWhatsAppSignIn() {
   const queryClient = useQueryClient();
   const land = useLandAfterSignIn();
-  const [country, setCountry] = useState<Country>(firstCountry);
-  const [typed, setTyped] = useState('');
+  const entry = usePhoneEntry();
   const [refusals, setRefusals] = useState(0);
-  const check = checkPhone(country, typed);
+  const { check } = entry;
   const flow = useCodeFlow((e164) => authApi.familyCodes.request(e164));
 
-  // A whole number pasted or autofilled («+44 7700…», «0044…»): its country, then the rest.
-  const onTyped = (text: string) => {
-    const split = splitInternational(text, country);
-    setCountry(split?.country ?? country);
-    setTyped(split?.national ?? text);
-  };
   const send = () => {
     if (check.e164 === null) flow.setError(F.errors.invalid_phone);
     else void flow.request(check.e164);
@@ -63,9 +54,7 @@ export function useWhatsAppSignIn() {
     if (Array.isArray(next) && isNewWhole(next)) void verify(next);
   };
   const code = { ...flow, setDigits };
-  return {
-    country, setCountry, typed, setTyped: onTyped, check, flow: code, refusals, send, verify,
-  };
+  return { entry, check, flow: code, refusals, send, verify };
 }
 
 export type WhatsAppSignIn = ReturnType<typeof useWhatsAppSignIn>;
