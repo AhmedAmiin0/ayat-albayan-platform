@@ -1,14 +1,4 @@
-export {
-  availabilityQuery,
-  type AvailabilityRow,
-  PAGE_SIZE,
-  type Teacher,
-  type TeacherListRow,
-  teacherQuery,
-  teachersPageQuery,
-  type TimeOff,
-  timeOffQuery,
-} from './api';
+export { availabilityQuery, PAGE_SIZE, teacherQuery, teachersPageQuery, timeOffQuery } from './api';
 export { AvailabilityGrid } from './availability/AvailabilityGrid';
 export { DayTrack, hatchStyle } from './availability/DayTrack';
 export {

@@ -1,7 +1,6 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView, AvailabilityRow, Teacher } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
-import type { AvailabilityRow, Teacher } from '@/core/lib/staff/types';
 
 // Calendar reads. Keys are the API path's segments (lib/query-keys), so a lesson change that
 // invalidates ['lessons'] refreshes the week, and the app's persisted cache keeps the last week

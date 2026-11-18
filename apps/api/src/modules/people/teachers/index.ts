@@ -1,8 +1,4 @@
-export {
-  AvailabilityRepo,
-  type AvailabilityRow,
-  type TimeOff,
-} from './availability/availability.repo';
+export { AvailabilityRepo, type TimeOff } from './availability/availability.repo';
 export { AvailabilityQuery, type FreeSlotsQuery } from './availability/availability.query';
 export { type MeetingFields, withMeeting } from './meeting-view';
 export { TeachersModule } from './teachers.module';

@@ -1,10 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, ltr } from '@ab/mobile-kit';
-import type { AvailabilityRow, Teacher } from '@/core/lib/staff/types';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
 import { TeacherCalendarScreen } from './TeacherCalendarScreen';
+import type { AvailabilityRow, Teacher } from '@ab/shared';
+import { teacherFixture } from '@ab/shared/testing';
 
 // The first render in this file pays the cold transform of the whole calendar tree, which exceeded the
 // 30 s default on the CI runner (develop's own runs too); the later tests take well under a second.
@@ -20,7 +21,7 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 't1' }),
 }));
 
-const TEACHER: Teacher = { id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' };
+const TEACHER: Teacher = teacherFixture({ id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' });
 const GRID: AvailabilityRow[] = [{ id: 'a', weekday: 4, start_time: '16:00', end_time: '18:00', tz: 'Africa/Cairo' }];
 /** Saturday 26 Sep 13:00 Riyadh, the week's first day. */
 const saturday = lesson({ id: 'sat', starts_at: '2026-09-26T10:00:00.000Z', ends_at: '2026-09-26T10:30:00.000Z' });

@@ -4,7 +4,7 @@ import { apiFetch, t, pathKey, ErrorState, InsetGroup, Section } from '@ab/mobil
 import { Note } from '@/core/ui/feedback/Note';
 import { upcomingTimeOff } from '@/more/schedule';
 import { TimeOffRow } from './TimeOffRow';
-import type { TimeOff } from '@/core/lib/staff/types';
+import type { TimeOff } from '@ab/shared';
 
 /** «الإجازات», read-only: only time-off that has not ended, soonest first, in one inset card. R-TCH-02. */
 export function UpcomingTimeOff({ teacherId }: { teacherId: string }) {

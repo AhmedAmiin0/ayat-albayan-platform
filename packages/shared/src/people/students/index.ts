@@ -9,3 +9,4 @@ export * from './stop-refund.js';
 export * from './stop-choices.js';
 export * from './board-students.js';
 export type * from './student-views.js';
+export type { TeacherStudentCounts } from './student-lists.js';

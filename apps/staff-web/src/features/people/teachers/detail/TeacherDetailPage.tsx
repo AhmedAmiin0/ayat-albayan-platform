@@ -12,7 +12,7 @@ import { StaffPhotoControl } from '@/features/people/staff-photo';
 import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
 import { TeacherCalendarOwner } from '@/features/platform/google-sync';
 import { t } from '@/lib/i18n/i18n';
-import { availabilityQuery, teacherQuery, type Teacher } from '@/features/people/teachers/api';
+import { availabilityQuery, teacherQuery } from '@/features/people/teachers/api';
 import { AvailabilityGrid } from '@/features/people/teachers/availability/AvailabilityGrid';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { ListSkeleton } from '@/components/ui/display/skeleton';
@@ -25,6 +25,7 @@ import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from '@/features/people/teachers/time-off/TimeOffList';
 import { HeadActions } from '@/components/ui/layout/head-actions';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
+import type { Teacher } from '@ab/shared';
 
 type Tab = 'data' | 'availability' | 'students' | 'activity';
 // «المستحقات» is its own page (the earnings button in the head).
