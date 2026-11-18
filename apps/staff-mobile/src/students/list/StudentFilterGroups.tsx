@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t, FilterPills, locale } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { SORT_CHOICES, type FilterKey, type StudentFilters } from './student-filters';
-import type { TeacherOption } from './use-student-list-data';
+import type { TeacherOption } from '@ab/shared';
 
 const S = t.students;
 const L = t.mobileStudentFile.list;

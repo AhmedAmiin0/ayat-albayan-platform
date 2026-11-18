@@ -3,12 +3,12 @@ import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { JobApplicantsList } from './JobApplicantsList';
-import type { JobApplicantRow } from './types';
+import type { JobApplicantView } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend: vi.fn() }));
 
-const row = (over: Partial<JobApplicantRow>): JobApplicantRow => ({
+const row = (over: Partial<JobApplicantView>): JobApplicantView => ({
   id: 'a1',
   phone_e164: '+201001234567',
   name: 'أ. منى',
@@ -20,7 +20,7 @@ const row = (over: Partial<JobApplicantRow>): JobApplicantRow => ({
   ...over,
 });
 
-function renderList(items: JobApplicantRow[]) {
+function renderList(items: JobApplicantView[]) {
   apiFetch.mockResolvedValue({ items, total: items.length, page: 1, pageSize: 25 });
   render(
     <QueryClientProvider client={new QueryClient()}>

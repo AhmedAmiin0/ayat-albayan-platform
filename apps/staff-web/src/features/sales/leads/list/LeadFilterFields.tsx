@@ -1,7 +1,8 @@
 import { LEAD_SOURCES, NO_ASSIGNEE } from '@ab/shared';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
+import { leadSortFromValue, leadSortValue } from '@ab/client-core';
+import { leadSortChoices } from './lead-sort';
 import type { LeadChipsOptions } from './lead-filters';
 
 /**

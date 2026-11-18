@@ -12,7 +12,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow, sentOnly, type Page } from '@/common/http/http';
+import { parseOrThrow, sentOnly } from '@/common/http/http';
 import { SubscriptionCancel } from './cancel/subscription-cancel.service';
 import { toTeacherBalance } from './money/balance.teacher';
 import { PackagesService } from './money/packages.service';
@@ -21,6 +21,7 @@ import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.
 import { SubscriptionCreator } from './subscription-creator';
 import { SubscriptionsService } from './subscriptions.service';
 import { assertUsedBefore } from './used-before';
+import type { Page } from '@ab/shared';
 
 /** Packages (S1–S5, R-SUB-01). Admin only; the price comes from the catalog, never the body. */
 @ApiTags('subscriptions')

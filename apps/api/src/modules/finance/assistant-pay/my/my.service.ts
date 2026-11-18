@@ -1,8 +1,8 @@
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow, Page } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { Page, PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
 import { toMyCommission } from './my.commissions.mapper';
 import { buildEarnings, frozenLines } from './my.earnings';
 import { toMyPayment, toMyStudent } from './my.mapper';

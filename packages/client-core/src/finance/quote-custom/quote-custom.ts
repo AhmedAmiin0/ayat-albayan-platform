@@ -7,6 +7,9 @@ export interface QuotedTotal {
   currency: string;
 }
 
+/** The price «مبلغ مخصص» starts from: the admin's and the sales quote both carry these. */
+export type QuotedPrice = Pick<QuotedTotal, 'afterDiscount' | 'currency'>;
+
 /** The «مبلغ مخصص» toggle and its text (the app's useCustomPrice). */
 interface Typed {
   on: boolean;

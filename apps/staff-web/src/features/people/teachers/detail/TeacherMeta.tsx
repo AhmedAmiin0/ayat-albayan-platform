@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Teacher } from '@/features/people/teachers/api';
+import type { Teacher } from '@ab/shared';
 
 function Item({ icon, children }: { icon: IconName; children: ReactNode }) {
   return (
@@ -30,7 +30,7 @@ export function TeacherMeta({ teacher }: { teacher: Teacher }) {
           <Ltr>{formatPhone(teacher.phone_e164)}</Ltr>
         </Item>
       )}
-      {teacher.max_students !== null && teacher.max_students !== undefined && (
+      {teacher.max_students !== null && (
         <Item icon="users">
           <span>
             {t.teachers.maxStudents} <span className="tabular-nums">{teacher.max_students}</span>

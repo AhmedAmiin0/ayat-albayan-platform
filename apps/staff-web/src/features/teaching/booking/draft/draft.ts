@@ -1,3 +1,4 @@
+import type { BookingRequest } from '@ab/shared';
 import {
   ACADEMY_TZ,
   type BookingTeacherOption,
@@ -8,7 +9,7 @@ import {
   type Program,
   zonedPartsIn,
 } from '@ab/shared';
-import type { BookingBody, BookingKind } from './contract';
+import type { BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
 import { pickedRule } from './draft.days';
 import type { CourseDraft, TrialDateDraft } from './draft.flows';
@@ -107,7 +108,7 @@ const packageField = (d: Pick<BookingDraft, 'pkg' | 'course'>): { package: Packa
 });
 
 /** POST /booking body; `override` = the reason to book over conflicts (R-SCH-04). */
-export function toBookingRequest(d: BookingDraft, override?: string): BookingBody | null {
+export function toBookingRequest(d: BookingDraft, override?: string): BookingRequest | null {
   if (!d.teacher || !d.startsAt) return null;
   if (d.kind === 'makeup' && !d.missed) return null;
   // A trial or a makeup is exactly one lesson: one pick, on the first slot's day (docs/10 invariant 4).

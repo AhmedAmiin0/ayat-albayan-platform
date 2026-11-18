@@ -7,7 +7,6 @@ export {
   type PaymentPatch,
   paymentsQuery,
   type PaymentView,
-  type PeriodTotal,
   receiptUrl,
   recordPayment,
   type RecordPaymentBody,

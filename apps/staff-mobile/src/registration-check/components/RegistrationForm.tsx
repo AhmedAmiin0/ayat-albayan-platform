@@ -1,11 +1,11 @@
 import { View } from 'react-native';
 import { t, Button, Field, FilterPills, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import type { CheckBy } from '@/registration-check/lib/registration-check';
+import type { RegistrationCheckBy } from '@ab/shared';
 
 interface RegistrationFormProps {
-  by: CheckBy;
-  onBy: (by: CheckBy) => void;
+  by: RegistrationCheckBy;
+  onBy: (by: RegistrationCheckBy) => void;
   text: string;
   onText: (text: string) => void;
   onSubmit: () => void;
@@ -13,7 +13,7 @@ interface RegistrationFormProps {
   error: string | undefined;
 }
 
-const MODES = (): { value: CheckBy; label: string }[] => [
+const MODES = (): { value: RegistrationCheckBy; label: string }[] => [
   { value: 'phone', label: t.registrationCheck.byPhone },
   { value: 'name', label: t.registrationCheck.byName },
 ];

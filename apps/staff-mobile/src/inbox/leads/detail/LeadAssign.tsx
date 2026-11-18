@@ -13,8 +13,8 @@ import {
   type FilterPill,
   ErrorLine,
 } from '@ab/mobile-kit';
-import type { Lead } from '@/inbox/shared/types';
 import { useSalesPeople } from './use-sales-people';
+import type { LeadView } from '@ab/shared';
 
 const NONE = '';
 
@@ -22,7 +22,7 @@ const NONE = '';
  * «مسؤول المبيعات» of one lead (admin, leads.assign): POST /leads/:id/assign with a salesperson from
  * GET /sales/people, or none to take it back. The detail shows the new owner at once; the lists refetch.
  */
-export function LeadAssign({ lead }: { lead: Lead }) {
+export function LeadAssign({ lead }: { lead: LeadView }) {
   const can = usePermissions();
   const client = useQueryClient();
   const allowed = can('leads.assign');
@@ -31,7 +31,7 @@ export function LeadAssign({ lead }: { lead: Lead }) {
     mutationFn: (profileId: string | null) => apiSend<unknown>('POST', `/leads/${lead.id}/assign`, { profileId }),
     onSuccess: (_done, profileId) => {
       const name = people.find((p) => p.id === profileId)?.name ?? null;
-      client.setQueryData<Lead>(pathKey(`/leads/${lead.id}`), { ...lead, assigned_to: profileId, assigned_to_name: name });
+      client.setQueryData<LeadView>(pathKey(`/leads/${lead.id}`), { ...lead, assigned_to: profileId, assigned_to_name: name });
       void client.invalidateQueries({ queryKey: ['leads', 'list'] });
       void client.invalidateQueries({ queryKey: pathKey('/sales/people') });
     },

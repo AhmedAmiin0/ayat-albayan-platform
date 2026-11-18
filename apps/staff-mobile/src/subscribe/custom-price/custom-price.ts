@@ -1,11 +1,5 @@
 import { parseAmount } from '@ab/shared';
 
-/** The quote's price and its currency (POST /subscriptions/quote or /sales/subscriptions/quote). */
-export interface QuotedPrice {
-  afterDiscount: number;
-  currency: string;
-}
-
 /** What the save adds: nothing while «مبلغ مخصص» is off, else the typed `customPrice`. */
 interface CustomPriceBody {
   customPrice?: number;

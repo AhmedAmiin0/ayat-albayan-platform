@@ -1,6 +1,6 @@
+import type { BookingMode } from '@ab/client-core';
 import { useState } from 'react';
 import { usePermissions } from '@/features/people/auth';
-import type { BookingMode } from '@/features/teaching/booking';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ActionItem } from './card/ActionItem';
 import { ExtendDialog } from './card/ExtendDialog';

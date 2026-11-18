@@ -4,9 +4,9 @@ import { render } from '@testing-library/react';
 import { useState } from 'react';
 import type { Mock } from 'vitest';
 import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
-import type { Teacher } from '@/features/people/teachers/api';
 import { emptyTeacherForm, type SetField, type TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
+import type { Teacher } from '@ab/shared';
 
 /** Test-only: the meeting mode field in a form of its own, its API answered by `apiFetch`. */
 function Harness({ start, teacher }: { start: Partial<TeacherForm>; teacher: Teacher | null }) {

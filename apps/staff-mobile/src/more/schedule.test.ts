@@ -8,7 +8,8 @@ import {
   upcomingTimeOff,
   weekdayName,
 } from './schedule';
-import type { AvailabilityRow } from '@/core/lib/staff/types';
+import type { AvailabilityRow } from '@ab/shared';
+import { timeOffFixture } from '@ab/shared/testing';
 
 const slot = (id: string, weekday: number, start_time: string): AvailabilityRow => ({
   id,
@@ -49,7 +50,7 @@ test('slotRange: the stored «HH:MM» pair as an isolated range, 24 h or 12 h', 
 
 test('upcomingTimeOff: drops what has ended, soonest first (the API sends newest first)', () => {
   const now = new Date('2026-10-10T12:00:00Z');
-  const off = (id: string, starts_at: string, ends_at: string) => ({ id, starts_at, ends_at, reason: null });
+  const off = (id: string, starts_at: string, ends_at: string) => timeOffFixture({ id, starts_at, ends_at });
   const list = [
     off('later', '2026-11-01T00:00:00Z', '2026-11-03T00:00:00Z'),
     off('ongoing', '2026-10-09T00:00:00Z', '2026-10-11T00:00:00Z'),

@@ -7,11 +7,12 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { ASSISTANT_COMMISSION_STATUSES, sumByCurrency } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { commissionsQuery, type AssistantCommissionView, type AssistantRow } from '@/features/people/assistants/api';
+import { commissionsQuery, type AssistantCommissionView } from '@/features/people/assistants/api';
 import { commissionColumns } from './commission-columns';
 import { CurrencyList } from './CurrencyList';
 import { FilterBar, type Filter } from '@/features/people/assistants/students/FilterBar';
 import { VoidCommissionDialog } from './VoidCommissionDialog';
+import type { AssistantRow } from '@ab/client-core';
 
 type Props = {
   /** The list for the filter; omit on one assistant's page and pass `assistantId`. */

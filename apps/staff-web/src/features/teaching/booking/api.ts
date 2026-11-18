@@ -1,3 +1,5 @@
+import type { BookingRequest } from '@ab/shared';
+import type { BookingMode } from '@ab/client-core';
 import {
   courseDraftSavedSchema,
   PACKAGE_SIZES,
@@ -10,8 +12,8 @@ import {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { BOOKING_KINDS, type BookingBody, type BookingKind } from './draft/contract';
-import { bookingBase, type BookingMode } from './mode';
+import { BOOKING_KINDS, type BookingKind } from './draft/contract';
+import { bookingBase } from './mode';
 
 // Booking routes (docs/10 §5, rows 12–14) + the guardian row for the quote currency.
 
@@ -38,7 +40,7 @@ export const guardianQuery = (id: string) =>
 const put: (method: 'PUT', path: string, body: unknown) => Promise<unknown> = apiSend;
 
 /** PUT /sales/booking/course/draft (owner 2026-11-06): null = kept until the payment. */
-async function saveCourseDraft(body: BookingBody): Promise<BookingResult | null> {
+async function saveCourseDraft(body: BookingRequest): Promise<BookingResult | null> {
   const saved = courseDraftSavedSchema.parse(await put('PUT', '/sales/booking/course/draft', body));
   return saved.state === 'booked' ? saved.booking : null;
 }
@@ -47,7 +49,7 @@ async function saveCourseDraft(body: BookingBody): Promise<BookingResult | null>
  * POST /booking: one transaction (rule + lessons + queued confirmations). 409 = conflicts. A held
  * course (`hold`) is saved as a draft instead: null.
  */
-export const createBooking = (body: BookingBody, mode: BookingMode = 'admin', hold = false) =>
+export const createBooking = (body: BookingRequest, mode: BookingMode = 'admin', hold = false) =>
   hold ? saveCourseDraft(body) : apiSend<BookingResult>('POST', bookingBase(mode), body);
 
 /**
@@ -55,8 +57,8 @@ export const createBooking = (body: BookingBody, mode: BookingMode = 'admin', ho
  * including the weeks after a coming DST change. Keyed by the body minus its idempotency key,
  * invoice and meeting link.
  */
-export const bookingCheckQuery = (body: BookingBody, mode: BookingMode = 'admin') => {
-  const key: Partial<BookingBody> = { ...body };
+export const bookingCheckQuery = (body: BookingRequest, mode: BookingMode = 'admin') => {
+  const key: Partial<BookingRequest> = { ...body };
   delete key.clientRequestId;
   delete key.invoice; // the check never needs the proof
   delete key.meetingLink; // nor the link: typing it never re-checks

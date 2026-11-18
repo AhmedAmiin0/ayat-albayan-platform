@@ -1,4 +1,5 @@
-import { normalizePhone, type LeadSource, type LeadStatus } from '@ab/shared';
+import { canTransitionLead, normalizePhone } from '@ab/shared';
+import type { LeadSource, LeadStatus, LeadView, Page } from '@ab/shared';
 import {
   BadRequestException,
   ConflictException,
@@ -9,9 +10,10 @@ import {
 } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { SalesAssignService } from '@/modules/sales/sales/assign/sales-assign.service';
-import { JobApplicantsRepo, type JobApplicantRow } from '@/modules/sales/job-applicants/job-applicants.repo';
-import type { Page } from './http';
-import { canTransitionLead } from './lead-state-machine';
+import {
+  JobApplicantsRepo,
+  type JobApplicantRow,
+} from '@/modules/sales/job-applicants/job-applicants.repo';
 import { LeadsRepo, type LeadListFilter, type LeadRow } from './leads.repo';
 
 export interface InboundContact {
@@ -29,9 +31,6 @@ export interface LeadAction {
   id: string;
   actorId: string | null;
 }
-
-/** A lead row with its salesperson's name (the admin's list). */
-export type LeadView = LeadRow & { assigned_to_name: string | null };
 
 export const invalidTransition = (from: string, to: string) =>
   new ConflictException({ code: 'invalid_transition', from, to });

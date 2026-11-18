@@ -5,10 +5,7 @@ export {
   myPaymentsQuery,
   myStudentsQuery,
   salesPeopleQuery,
-  type SalesPerson,
-  type SalesSubscription,
   salesSubscriptionsQuery,
-  type SubscriptionKind,
 } from './api';
 export {
   RegistrationCheckButton,

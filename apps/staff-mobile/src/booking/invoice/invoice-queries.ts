@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
-import type { MediaUrl, ThreadMediaItem } from '@/booking/shared/contract';
+import type { ThreadFile } from '@ab/shared';
+import type { ThreadMediaItem } from '@/booking/shared/contract';
 
 // Admin-only (a teacher gets 403). Signed URLs expire, so `noPersist` keeps these off the disk
 // cache (lib/query-client): a restart would show a dead thumbnail.
@@ -25,7 +26,7 @@ export function useMediaUrl(phone: string, messageId: string, enabled: boolean) 
   const path = `${threadPath(phone)}/media/${messageId}`;
   return useQuery({
     queryKey: pathKey(path),
-    queryFn: () => apiFetch<MediaUrl>(path),
+    queryFn: () => apiFetch<ThreadFile>(path),
     enabled,
     meta,
     staleTime: 5 * 60_000,

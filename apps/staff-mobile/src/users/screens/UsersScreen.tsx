@@ -16,11 +16,12 @@ import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { FIRST_VIEW, USERS_PAGE_SIZE, type UsersView } from '@/users/shared/api';
+import { FIRST_VIEW, USERS_PAGE_SIZE } from '@/users/shared/api';
 import { backToMore } from '@/users/shared/nav';
 import { UserItem } from '@/users/list/UserItem';
 import { UsersFilters } from '@/users/list/UsersFilters';
 import { StaffPresenceSection } from '@/users/presence/StaffPresenceSection';
+import type { UsersView } from '@ab/client-core';
 
 const keyOf = (u: UserView) => u.id;
 const openUser = (id: string) => router.push(`/more/users/${id}`);

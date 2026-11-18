@@ -9,7 +9,8 @@ import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-contr
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { SortSearch } from '@/lib/list/list-search';
-import { sessionsQuery, type Scope, type SessionFilter } from './api';
+import type { SessionFilter } from '@ab/client-core';
+import { sessionsQuery, type Scope } from './api';
 import { PickContext, sessionColumns, type Pick } from './session-columns';
 
 type Props = {

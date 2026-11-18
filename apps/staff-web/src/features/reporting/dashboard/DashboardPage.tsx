@@ -18,7 +18,7 @@ import { periodOf, riyadhToday, thisWeek, type DashboardSearch } from './search'
 import { todayCounts } from './today/today';
 import { TodayKpis } from './today/TodayKpis';
 import { TodayLessons } from './today/TodayLessons';
-import type { DayRange } from './types';
+import type { DayRange } from './search';
 import { WeekSection } from './today/WeekSection';
 import { WorkPanel } from './work/WorkPanel';
 

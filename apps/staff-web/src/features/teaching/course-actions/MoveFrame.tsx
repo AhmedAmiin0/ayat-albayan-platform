@@ -1,10 +1,6 @@
-import type { CourseMoveKind } from '@ab/client-core';
+import type { BookingMode, CourseMoveKind } from '@ab/client-core';
 import type { ReactNode } from 'react';
-import {
-  BookingModeContext,
-  CourseChangeTargetContext,
-  type BookingMode,
-} from '@/features/teaching/booking';
+import { BookingModeContext, CourseChangeTargetContext } from '@/features/teaching/booking';
 import { moveTarget } from './api';
 
 export interface MoveFrameProps {

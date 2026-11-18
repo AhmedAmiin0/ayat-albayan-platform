@@ -5,7 +5,8 @@ import { t, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { PaymentItem } from './PaymentItem';
-import { useEarningsPayments, useEarningsSessions, type SessionFilter } from '@/earnings/hooks/queries';
+import type { SessionFilter } from '@ab/client-core';
+import { useEarningsPayments, useEarningsSessions } from '@/earnings/hooks/queries';
 import type { EarningsScope } from '@/earnings/lib/scope';
 import { SessionItem } from './SessionItem';
 

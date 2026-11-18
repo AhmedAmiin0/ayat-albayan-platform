@@ -6,7 +6,7 @@ import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { nameMatch, textMatch } from './compare';
 import type { CreateStudentValues } from '@/features/people/students/create/create-student';
 import { CompareRow, cell } from './CompareRow';
-import type { StudentProfile, StudentRef } from '@/features/people/students/types';
+import type { StudentProfile, StudentRef } from '@ab/shared';
 
 type DuplicateCompareProps = {
   typed: CreateStudentValues;

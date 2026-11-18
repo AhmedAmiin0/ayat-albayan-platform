@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions, apiSend, t, Field, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import type { Teacher } from '@/core/lib/staff/types';
+import type { Teacher } from '@ab/shared';
 
 /**
  * «اسم المستخدم» of the teacher's login (docs/30 §7), for teachers.write: LTR, lower-cased on blur and save,

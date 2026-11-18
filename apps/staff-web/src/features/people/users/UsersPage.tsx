@@ -10,14 +10,14 @@ import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import { StaffPresencePanel } from '@/features/platform/presence';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { userListQuery, type UsersView } from './api';
+import { userListQuery, type UsersPageView } from './api';
 import { CreateUserDialog } from './create/CreateUserDialog';
 import { UserDetailDialog } from './edit/UserDetailDialog';
 import { usersColumns } from './usersColumns';
 import { UsersSearch } from './UsersSearch';
 import { usersFilters } from './use-users-filters';
 
-const FIRST: UsersView = { q: '', role: '', status: '', page: 1 };
+const FIRST: UsersPageView = { q: '', role: '', status: '', page: 1 };
 
 /**
  * «المستخدمون» (users.read): every login with its role, linked record and status; search, role and
@@ -26,7 +26,7 @@ const FIRST: UsersView = { q: '', role: '', status: '', page: 1 };
 export function UsersPage() {
   const { can } = usePermissions();
   const canWrite = can('users.write');
-  const [view, setView] = useState<UsersView>(FIRST);
+  const [view, setView] = useState<UsersPageView>(FIRST);
   const [opened, setOpened] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);

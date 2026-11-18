@@ -15,8 +15,8 @@ import { PROFILE_LABELS, toProfileValues, type ProfileValues } from './profile-f
 import { saveProfile } from './save-profile';
 import { SavedNote } from './SavedNote';
 import { ContactIsSelfField } from './FactFields';
-import type { StudentProfile } from '@/features/people/students/types';
 import { StatusRouteDialogs, useStatusPick } from '@/features/teaching/course-actions';
+import type { StudentProfile } from '@ab/shared';
 
 type SelectName = 'gender' | 'program' | 'status' | 'teacher_id';
 type FieldName = Exclude<keyof ProfileValues, 'contact_is_self'>;

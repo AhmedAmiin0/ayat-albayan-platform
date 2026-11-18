@@ -1,14 +1,14 @@
-import type { Lead } from '@/inbox/shared/types';
 import { huda, unnamed } from '@/inbox/shared/fixtures';
 import { FakeBackend } from '@/test/fake-backend';
 import { booked, SUN_17 } from './fixtures';
 import { fakeBookingApi } from './test-utils';
+import type { LeadView } from '@ab/shared';
 
 // The leads + booking API for the lead → quick-book flow. POST /booking moves the lead to
 // trial_booked, like the API's lead funnel does, so a refetch shows the truth.
 
 export function bookingBackend() {
-  const state: { leads: Lead[] } = { leads: [huda, unnamed] };
+  const state: { leads: LeadView[] } = { leads: [huda, unnamed] };
   const booking = fakeBookingApi();
   const backend = new FakeBackend()
     .on('GET /leads', ({ query }) => {

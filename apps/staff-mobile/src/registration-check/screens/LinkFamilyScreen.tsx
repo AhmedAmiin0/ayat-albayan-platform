@@ -23,7 +23,8 @@ import { SearchField } from '@/core/ui/form/SearchField';
 import { Note } from '@/more';
 import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 import { linkFamilyErrorText, useLinkFamily } from '@/registration-check/lib/link-family';
-import { type CheckSearch, checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
+import type { RegistrationCheckQuery } from '@ab/shared';
+import { checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
 
 /** The chat's number and its lead (ThreadView.lead_id), from the chat's «⋮» menu. */
 type Params = { phone?: string; leadId?: string };
@@ -59,7 +60,7 @@ export function LinkFamilyScreen() {
   const can = usePermissions();
   const base = useTreeBase();
   const [query, setQuery] = useState('');
-  const [search, setSearch] = useState<CheckSearch | null>(null);
+  const [search, setSearch] = useState<RegistrationCheckQuery | null>(null);
   const [picked, setPicked] = useState<RegistrationMatch | null>(null);
   const check = useRegistrationCheck(search);
   const link = useLinkFamily(leadId);

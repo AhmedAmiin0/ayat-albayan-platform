@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import type { SubscriptionKind } from '@/features/sales/sales/api';
+import type { SalesSubscriptionKind } from '@ab/shared';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
@@ -13,7 +13,7 @@ vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>())
 
 /** The route's `kind` as local state, so the tabs swap the list as they do on /sales/subscriptions. */
 function Harness() {
-  const [kind, setKind] = useState<SubscriptionKind>('pending');
+  const [kind, setKind] = useState<SalesSubscriptionKind>('pending');
   return <SalesSubscriptions kind={kind} onKind={setKind} />;
 }
 

@@ -12,15 +12,15 @@ import {
   type Program,
 } from '@ab/shared';
 import { qualForm } from '@/inbox/qualification/lib/qualification-form';
-import type { Lead } from '@/inbox/shared/types';
 import type { BookingKind, InvoiceDraft } from '@/booking/shared/contract';
 import { DEFAULT_MINUTES } from './package-choice';
+import type { LeadView } from '@ab/shared';
 
 // «حجز حلقة تجريبية» (or a package, from the chat's «اشترك») for a lead (R-MOB-02, R-LEAD-06):
 // the wizard's state. Pure; the screens only edit a TrialDraft (booking-body.ts sends it).
 
 /** What the wizard needs of the lead: a cached GET /leads row (with its answers), or the chat's lead. */
-export type BookingLead = Pick<Lead, 'id' | 'name' | 'phone_e164'> & {
+export type BookingLead = Pick<LeadView, 'id' | 'name' | 'phone_e164'> & {
   source?: LeadSource;
   /** leads.qualification (jsonb): «بيانات الطالب» prefill the child (R-LEAD-03). */
   qualification?: unknown;

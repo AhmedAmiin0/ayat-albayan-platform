@@ -5,9 +5,9 @@ import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { NO_FILTERS } from '@/students/list/student-filters';
 import { KIND_EMPTY, kindCounts, kindPills, presetKind } from '@/students/list/student-kinds';
 import { StudentRow } from '@/students/list/StudentRow';
-import type { StudentListItem } from '@/students/shared/types';
 import { useStatusCounts } from '@/students/list/use-student-list-data';
 import { Note } from '@/core/ui/feedback/Note';
+import type { StudentListItem } from '@ab/shared';
 
 const L = t.studentLists;
 

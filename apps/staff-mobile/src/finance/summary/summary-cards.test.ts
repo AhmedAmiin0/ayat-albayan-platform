@@ -1,9 +1,8 @@
-import type { ReceivablesView, TeacherEarningsSummaryView } from '@ab/shared';
+import type { DashboardResponse, ReceivablesView, TeacherEarningsSummaryView } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 import { summaryCards } from './summary-cards';
-import type { FinanceSummary } from './summary-types';
 
-const finance = { currency: 'EGP', revenue: 5000, teacher_cost: 2000.4, expenses: 500, gross_margin: -1500 } as FinanceSummary['finance'];
+const finance = { currency: 'EGP', revenue: 5000, teacher_cost: 2000.4, expenses: 500, gross_margin: -1500 } as DashboardResponse['finance'];
 const dues = { totals: { owed: 750 } } as TeacherEarningsSummaryView;
 const owed = { total: 20, currency: 'SAR' } as ReceivablesView;
 
@@ -16,7 +15,7 @@ test('before anything loads every card is a dash; a loss is marked', () => {
 });
 
 test('the totals use the API reporting currency, not a hard-coded one; receivables carry their own', () => {
-  const sar = { ...finance, currency: 'SAR' } as FinanceSummary['finance'];
+  const sar = { ...finance, currency: 'SAR' } as DashboardResponse['finance'];
   expect(summaryCards(sar, undefined, undefined).slice(0, 4).every((c) => c.value.endsWith('ر.س'))).toBe(true);
   expect(summaryCards(undefined, undefined, owed).map((c) => c.value)).toEqual([...Array(5).fill('—'), '⁦20⁩ ر.س']);
 });

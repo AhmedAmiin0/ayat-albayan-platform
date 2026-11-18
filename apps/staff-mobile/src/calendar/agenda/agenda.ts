@@ -3,9 +3,9 @@ import { clockIn, type ViewerClock } from '@/core/lib/clock';
 import { clockAt } from '@/inbox/shared/format';
 import { t, cityOf } from '@ab/mobile-kit';
 import { gridTz, slotRange } from '@/more/schedule';
-import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
 import { addDays, weekdayOf } from '@/calendar/lib/week';
+import type { AvailabilityRow } from '@ab/shared';
 
 // What the agenda lays out (R-SCH-01, R-TCH-02): lessons by the viewer's day or by teacher, the
 // teacher's own clock beside the viewer's, a day's availability. Closed lessons (cancelled,

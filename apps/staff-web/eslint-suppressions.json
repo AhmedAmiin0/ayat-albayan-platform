@@ -674,7 +674,7 @@
   },
   "src/features/finance/payments/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 4
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1119,7 +1119,7 @@
   },
   "src/features/finance/subscriptions/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 3
+      "count": 2
     },
     "ab/no-untyped-api-calls": {
       "count": 8
@@ -1642,9 +1642,6 @@
     }
   },
   "src/features/messaging/inbox/api/api.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 14
     },
@@ -3164,7 +3161,7 @@
   },
   "src/features/messaging/notification-rules/RulesSection.tsx": {
     "ab/module-boundaries": {
-      "count": 4
+      "count": 3
     },
     "complexity": {
       "count": 1
@@ -3952,7 +3949,7 @@
   },
   "src/features/people/assistants/api.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 5
+      "count": 2
     },
     "ab/no-untyped-api-calls": {
       "count": 11
@@ -4180,9 +4177,6 @@
     }
   },
   "src/features/people/assistants/students/pick-column.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 1
     }
@@ -4755,14 +4749,6 @@
       "count": 1
     }
   },
-  "src/features/people/students/types.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/people/teachers/TeachersPage.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -4775,14 +4761,8 @@
     }
   },
   "src/features/people/teachers/api.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
     "ab/no-untyped-api-calls": {
       "count": 4
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/features/people/teachers/availability/AvailabilityDay.tsx": {
@@ -4930,9 +4910,6 @@
     }
   },
   "src/features/people/teachers/detail/teacher-student-columns.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 2
     }
@@ -6698,14 +6675,6 @@
       "count": 2
     }
   },
-  "src/features/reporting/dashboard/types.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 6
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/reporting/dashboard/work/QuickActions.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -7194,14 +7163,9 @@
       "count": 1
     }
   },
-  "src/features/sales/leads/list/lead-sort.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/features/sales/leads/types.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 4
+      "count": 1
     },
     "@typescript-eslint/dot-notation": {
       "count": 9
@@ -8216,9 +8180,6 @@
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -8233,9 +8194,6 @@
     }
   },
   "src/features/teaching/booking/WizardBody.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -8273,7 +8231,7 @@
   },
   "src/features/teaching/booking/booking-entries.tsx": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "max-len": {
       "count": 5
@@ -8360,11 +8318,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/features/teaching/booking/draft/contract.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/teaching/booking/draft/draft.days.test.ts": {
@@ -8563,11 +8516,6 @@
       "count": 2
     }
   },
-  "src/features/teaching/booking/steps/review/DuplicateNotice.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/features/teaching/booking/steps/review/ReviewDays.tsx": {
     "max-len": {
       "count": 1
@@ -8707,7 +8655,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "complexity": {
       "count": 1
@@ -8737,9 +8685,6 @@
     }
   },
   "src/features/teaching/booking/trial-date/TrialDatesSection.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }

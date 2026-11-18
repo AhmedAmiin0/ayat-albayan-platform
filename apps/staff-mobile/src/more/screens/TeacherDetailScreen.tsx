@@ -21,10 +21,10 @@ import { TeacherContact } from '@/more/teachers/TeacherContact';
 import { TeacherUsername } from '@/more/teachers/TeacherUsername';
 import { TeacherCalendarOwner } from '@/more/teachers/TeacherCalendarOwner';
 import { TeacherStudentsSection } from '@/more/sections/TeacherStudentsSection';
-import type { Teacher } from '@/core/lib/staff/types';
 import { UpcomingTimeOff } from '@/more/availability/UpcomingTimeOff';
 import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
 import { StaffPhotoControl } from '@/account';
+import type { Teacher } from '@ab/shared';
 
 /** The teacher's page and lists, and sales' «المعلمون»: where a new photo must show. */
 const TEACHER_KEYS = [pathKey('/teachers'), pathKey('/sales/teachers')];

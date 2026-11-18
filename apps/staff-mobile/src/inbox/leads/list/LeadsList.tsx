@@ -1,6 +1,7 @@
 import { LEAD_STATUSES, type LeadStatus, leadStatusStyle } from '@ab/shared';
 import { type ReactNode, useCallback, useState } from 'react';
 import { View } from 'react-native';
+import type { LeadView } from '@ab/shared';
 
 import {
   t,
@@ -17,12 +18,11 @@ import { clockAt } from '@/inbox/shared/format';
 import { activeFilterCount, leadListParams, NO_FILTERS, type LeadFilters } from './lead-filters';
 import { LeadsFilterBar } from './LeadsFilterBar';
 import { LeadRow } from './LeadRow';
-import type { Lead } from '@/inbox/shared/types';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 type Filter = 'all' | LeadStatus;
 
-const keyOf = (lead: Lead) => lead.id;
+const keyOf = (lead: LeadView) => lead.id;
 
 const filterPills = (): FilterPill<Filter>[] => [
   { value: 'all', label: t.leads.filterAll },
@@ -41,12 +41,12 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<Filter>('all');
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
-  const list = usePagedList<Lead>({ path: '/leads', params: leadListParams({ q, status, filters }) });
+  const list = usePagedList<LeadView>({ path: '/leads', params: leadListParams({ q, status, filters }) });
   // The rows' clock: moves on every fetch (a refresh, a refocus), so «منذ دقيقة» does not stay forever.
   // Never before the list opened (a saved page's fetch time can be old); read once, render stays pure.
   const [opened] = useState(() => Date.now());
   const now = Math.max(opened, list.dataUpdatedAt);
-  const renderRow = useCallback(({ item }: { item: Lead }) => <LeadRow lead={item} now={now} />, [now]);
+  const renderRow = useCallback(({ item }: { item: LeadView }) => <LeadRow lead={item} now={now} />, [now]);
   const filtersOn = q !== '' || status !== 'all' || activeFilterCount(filters) > 0;
   const loaded = list.data !== undefined;
   const pills = filterPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));

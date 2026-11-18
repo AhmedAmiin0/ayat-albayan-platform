@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 import { addDays, riyadhToday, weekStart } from '@/calendar/lib/week';
-import type { DashboardWork, Summary } from './dashboard-types';
+import type { DashboardCounts, DashboardWork } from '@ab/shared';
 
 /** The Riyadh week (Saturday → Friday) holding `now`: the range of the web's KPI strip. */
 export function weekRange(now: Date): { from: string; to: string } {
@@ -15,7 +15,7 @@ export function useSummary(range: { from: string; to: string }) {
   const path = `/dashboard/summary${toQueryString(range)}`;
   return useQuery({
     queryKey: [...pathKey('/dashboard/summary'), range],
-    queryFn: () => apiFetch<Summary>(path),
+    queryFn: () => apiFetch<DashboardCounts>(path),
   });
 }
 

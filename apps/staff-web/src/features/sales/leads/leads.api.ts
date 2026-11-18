@@ -2,7 +2,8 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ListUrlState } from '@/lib/list/list-url';
-import type { JobApplicantRow, LeadRow, LeadSearch, Page } from './types';
+import type { LeadSearch } from './types';
+import type { JobApplicantView, LeadView, Page } from '@ab/shared';
 
 export const PAGE_SIZE = 25;
 
@@ -17,7 +18,7 @@ export const leadsQuery = (s: LeadSearch) =>
       if (s.assignee) params.set('assignee', s.assignee);
       if (s.sort) params.set('sort', s.sort);
       if (s.sort && s.dir) params.set('dir', s.dir);
-      return apiFetch<Page<LeadRow>>(`/leads?${params}`);
+      return apiFetch<Page<LeadView>>(`/leads?${params}`);
     },
     // A filter/page switch keeps the old rows (dimmed, aria-busy) until the new page lands.
     placeholderData: keepPreviousData,
@@ -29,11 +30,11 @@ export const jobApplicantsQuery = (s: ListUrlState) =>
     queryKey: ['job-applicants', s],
     queryFn: () => {
       const qs = new URLSearchParams([['page', String(s.page)], ['pageSize', String(PAGE_SIZE)], ...sortFilterParams(s.sort, s.filters)]);
-      return apiFetch<Page<JobApplicantRow>>(`/job-applicants?${qs}`);
+      return apiFetch<Page<JobApplicantView>>(`/job-applicants?${qs}`);
     },
     placeholderData: keepPreviousData,
   });
 
 /** R-LEAD-04: one-click move of a lead into job applicants. */
 export const reclassifyLead = (id: string) =>
-  apiSend<JobApplicantRow>('POST', `/leads/${id}/reclassify`);
+  apiSend<JobApplicantView>('POST', `/leads/${id}/reclassify`);

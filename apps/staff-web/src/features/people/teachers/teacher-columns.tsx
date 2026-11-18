@@ -8,9 +8,9 @@ import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Teacher, TeacherListRow } from './api';
 import { StudentCountLink } from './detail/StudentCountLink';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import type { Teacher, TeacherListRow } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, TeacherListRow>();
 

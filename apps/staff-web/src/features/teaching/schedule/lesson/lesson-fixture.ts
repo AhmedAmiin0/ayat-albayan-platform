@@ -1,5 +1,5 @@
+import type { LessonTimeEditView, TimeEditMode } from '@ab/shared';
 import { allowedLessonEvents, type LessonStatus, type LessonView } from '@ab/shared';
-import type { EditableLesson, TimeEditInfo, TimeEditMode } from '@/features/teaching/schedule/edit-time/edit-time.contract';
 
 // Test data only (imported by *.test.tsx): LessonView rows shaped like GET /lessons responses.
 
@@ -33,11 +33,11 @@ export interface LessonOverrides {
   platform_classroom?: boolean | undefined;
   /** R-SCH-11: what the admin may do to the time (the API sends it for admins only). */
   time_edit_mode?: TimeEditMode | null;
-  time_edit?: TimeEditInfo | null;
+  time_edit?: LessonTimeEditView | null;
 }
 
 export function lesson(o: LessonOverrides = {}): LessonView {
-  const edit: Pick<EditableLesson, 'time_edit_mode' | 'time_edit'> = {
+  const edit: Pick<LessonView, 'time_edit_mode' | 'time_edit'> = {
     ...(o.time_edit_mode !== undefined && { time_edit_mode: o.time_edit_mode }),
     ...(o.time_edit !== undefined && { time_edit: o.time_edit }),
   };

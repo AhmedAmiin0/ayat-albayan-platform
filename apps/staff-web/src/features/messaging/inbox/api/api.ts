@@ -1,7 +1,6 @@
 import {
   normaliseTemplateParams,
   type FollowUpNote,
-  type SignedDownload,
   type LeadQualification,
   type LeadStatus,
   type MessageView,
@@ -9,15 +8,16 @@ import {
   type ThreadRating,
   type ThreadTemplate,
   type ThreadText,
+  type ThreadFile,
   type ThreadView,
 } from '@ab/shared';
 import { liveInterval, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import type { LeadRow, Page } from '@/features/sales/leads/types';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { inboxLive } from './live';
+import type { LeadView, Page } from '@ab/shared';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
@@ -51,8 +51,6 @@ export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phon
 export const threadPage = (path: string, init?: RequestInit) => apiFetch<ThreadDetail>(path, init);
 
 /** A file in a chat bubble as a signed URL of our own copy (ThreadMediaService.file). */
-export type ThreadFile = SignedDownload & { mime: string };
-
 /**
  * GET /threads/:phone/messages/:messageId/file: an inbound image or PDF, downloaded from WhatsApp on
  * first use; 410 media_expired when it is gone. Asked only after a click; fresh for half the URL's hour.
@@ -101,7 +99,7 @@ export const markSentManually = (id: string) =>
   apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
 
 /** GET /leads returns every column; the inbox panel needs these beyond the list row. */
-export type InboxLead = LeadRow & {
+export type InboxLead = LeadView & {
   qualification: LeadQualification;
   tz: string | null;
   follow_up_paused: boolean;

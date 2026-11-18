@@ -1,5 +1,5 @@
 import { t, FilterPills } from '@ab/mobile-kit';
-import type { AssistantRow } from '@/assistants/api/api';
+import type { AssistantRow } from '@ab/client-core';
 
 /** «كل مسؤولي المبيعات» or one of them (web FilterBar's assistant select); '' is all. */
 export function AssistantPills({ assistants, value, onChange }: { assistants: readonly AssistantRow[]; value: string; onChange: (id: string) => void }) {

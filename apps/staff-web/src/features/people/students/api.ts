@@ -1,16 +1,9 @@
-import type { Gender, LeadSource, StudentStatus } from '@ab/shared';
+import type { Gender, LeadSource, Page, StudentStatus } from '@ab/shared';
+import type { DuplicateStudentBody, StudentListItem, StudentProfile, StudentRef, TeacherOption } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { filterParams, type StudentsFilters } from './list/filters';
-import type {
-  DuplicateBody,
-  Page,
-  StudentListItem,
-  StudentProfile,
-  StudentRef,
-  TeacherOption,
-} from './types';
 
 export const PAGE_SIZE = 20;
 
@@ -86,7 +79,7 @@ export const mergeStudents = ({ keptId, mergedId }: { keptId: string; mergedId: 
 /** Duplicate candidates from a 409 on create, else null. */
 export function duplicateCandidates(error: unknown): StudentRef[] | null {
   if (!(error instanceof ApiError) || error.status !== 409) return null;
-  const body = error.body as Partial<DuplicateBody> | null;
+  const body = error.body as Partial<DuplicateStudentBody> | null;
   return body?.message === 'duplicate_student' && body.candidates ? body.candidates : null;
 }
 

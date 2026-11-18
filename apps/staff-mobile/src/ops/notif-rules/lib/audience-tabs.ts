@@ -1,10 +1,8 @@
-import { NOTIFICATION_AUDIENCES, type NotificationAudience, type NotificationEntryView } from '@ab/shared';
+import { NOTIFICATION_AUDIENCES, type AudienceTab, type NotificationEntryView } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
 // «الإشعارات» one audience at a time on the phone (docs/26b §6 1.10), in the web's order:
 // ولي الأمر · المعلم/ة · العميل · فريق الأكاديمية, then «يدوي» (the messages a person sends) when any.
-
-export type AudienceTab = NotificationAudience | 'manual';
 
 /** The rows of one pill: an audience's automatic/event rows, or every manual row. */
 export function rowsOf(entries: readonly NotificationEntryView[], tab: AudienceTab): NotificationEntryView[] {

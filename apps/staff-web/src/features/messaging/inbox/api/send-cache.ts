@@ -6,9 +6,8 @@ import {
   replaceMessage,
   touchedThread,
 } from '@ab/client-core';
-import type { MessageView, ThreadView } from '@ab/shared';
+import type { MessageView, Page, ThreadView } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import type { Page } from '@/features/sales/leads';
 import { threadPage, threadPath } from './api';
 import { threadQuery } from './thread-query';
 

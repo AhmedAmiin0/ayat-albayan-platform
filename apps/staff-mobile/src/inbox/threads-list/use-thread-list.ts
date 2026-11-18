@@ -1,9 +1,9 @@
 import { INBOX_LIST_REFRESH_MS, liveInterval } from '@ab/client-core';
-import type { LeadStatus, ThreadView } from '@ab/shared';
+import type { LeadStatus, Page, ThreadView } from '@ab/shared';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { apiFetch, toQueryString, useScreenFocused } from '@ab/mobile-kit';
-import { nextPageParam, type Page } from '@/core/lib/query/paging';
+import { nextPageParam } from '@/core/lib/query/paging';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
 import { useStoredThreads } from '@/inbox/thread/local';

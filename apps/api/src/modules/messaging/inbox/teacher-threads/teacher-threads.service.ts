@@ -1,7 +1,6 @@
-import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { Page, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { ReopenPick } from '@/modules/messaging/whatsapp';
-import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { assertPhone, type TeacherScope } from './teacher-scope';
 import { forTeacher, teacherPeople } from './teacher-threads';

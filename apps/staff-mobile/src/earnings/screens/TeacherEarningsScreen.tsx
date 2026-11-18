@@ -8,7 +8,8 @@ import { Note } from '@/core/ui/feedback/Note';
 import { EarningsHeader, type Tab } from '@/earnings/components/EarningsHeader';
 import { PaymentsList, SessionsList } from '@/earnings/components/EarningsList';
 import { PayForm } from '@/earnings/components/PayForm';
-import { useEarningsBalance, type SessionFilter } from '@/earnings/hooks/queries';
+import type { SessionFilter } from '@ab/client-core';
+import { useEarningsBalance } from '@/earnings/hooks/queries';
 
 /**
  * «مستحقات» of a teacher (admin: More > المعلمين > teacher): the balance, the sessions with ticks,

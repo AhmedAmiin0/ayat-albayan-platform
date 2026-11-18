@@ -1,13 +1,14 @@
 import { t } from '@ab/mobile-kit';
 import { activeMonths, summaryWarnings } from './summary-lines';
-import type { FinanceSummary } from './summary-types';
+import type { DashboardResponse } from '@ab/shared';
 
 const month = (m: string, revenue: number, extra: { cost?: number; expenses?: number } = {}) => {
   const { cost = 0, expenses = 0 } = extra;
   return { month: m, revenue, teacher_cost: cost, expenses, gross_margin: revenue - cost - expenses };
 };
-const finance = (patch: Partial<FinanceSummary['finance']> = {}): FinanceSummary['finance'] => ({
-  currency: 'EGP', revenue: 0, teacher_cost: 0, expenses: 0, gross_margin: 0, by_source: [], fx_date: null, fx_missing: [], by_month: [], unrated_lessons: 0, ...patch,
+const finance = (patch: Partial<DashboardResponse['finance']> = {}): DashboardResponse['finance'] => ({
+  currency: 'EGP', revenue: 0, teacher_cost: 0, expenses: 0, gross_margin: 0, by_source: [], fx_date: null, fx_missing: [], by_month: [], unrated_lessons: 0,
+  expenses_by_category: {}, fx_rates: {}, ...patch,
 });
 
 test('months without money are dropped and the rest run newest first', () => {

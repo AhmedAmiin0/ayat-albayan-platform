@@ -1,14 +1,13 @@
-import type { StudentListKind } from '@ab/shared';
+import type { StudentListKind, TeacherListRow } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { KIND_LABEL } from '@/students/list/student-kinds';
-import type { TeacherListItem } from '@/core/lib/staff/types';
 
 const L = t.studentLists;
 
 interface TeacherCountLinksProps {
-  teacher: TeacherListItem;
+  teacher: TeacherListRow;
   /** The teacher's name as the row shows it, for the spoken label of each count. */
   name: string;
 }

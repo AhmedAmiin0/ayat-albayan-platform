@@ -1,11 +1,10 @@
-import type { PaymentKind, SubscriptionStatus } from '@ab/shared';
+import type { PaymentKind } from '@ab/shared';
+import type { SubscriptionFilter } from '@ab/client-core';
 import { monthRange } from '@/money/shared/months';
-
-export type SubscriptionFilter = SubscriptionStatus | 'partial' | 'all';
 
 /** GET /subscriptions query: «مدفوعة جزئيًا» is `paid=partial`, a status is `status=`, `student` is the name search. */
 export function subscriptionParams(
-  filter: SubscriptionFilter,
+  filter: SubscriptionFilter | 'all',
   student: string,
 ): Record<string, string | undefined> {
   return {

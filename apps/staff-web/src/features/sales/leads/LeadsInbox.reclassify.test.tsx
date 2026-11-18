@@ -4,14 +4,14 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LeadsInbox } from './LeadsInbox';
-import type { LeadRow } from './types';
+import type { LeadView } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({ Link: ({ children }: { children: ReactNode }) => <a href="/admin/book">{children}</a> }));
 
-const ROW: LeadRow = {
+const ROW: LeadView = {
   id: 'l1',
   phone_e164: '+966501234567',
   name: 'أم سهيلة',
@@ -21,9 +21,9 @@ const ROW: LeadRow = {
   last_outbound_at: null,
   created_at: '2026-09-28T10:00:00+00:00',
 };
-const askLabel = (row: LeadRow) => t.leads.reclassifyRow.replace('{name}', row.name ?? row.phone_e164);
+const askLabel = (row: LeadView) => t.leads.reclassifyRow.replace('{name}', row.name ?? row.phone_e164);
 
-async function openConfirm(row: LeadRow = ROW) {
+async function openConfirm(row: LeadView = ROW) {
   apiFetch.mockResolvedValue({ items: [row], total: 1, page: 1, pageSize: 25 });
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>

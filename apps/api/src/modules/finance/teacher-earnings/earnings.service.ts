@@ -13,10 +13,10 @@ import {
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import type { Page } from '@/common/http/http';
 import { toEarningView, toPaymentView } from './earnings.mapper';
 import { EarningsRepo, type PaymentRow } from './earnings.repo';
 import { EarningsReceipts } from './earnings.receipts';
+import type { Page } from '@ab/shared';
 
 type Pay = { teacherId: string; actorId: string };
 

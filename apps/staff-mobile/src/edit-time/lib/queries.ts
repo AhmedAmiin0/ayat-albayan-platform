@@ -1,7 +1,7 @@
+import type { LessonTimeEdit, TimeEditResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend, pathKey } from '@ab/mobile-kit';
 import { isStale } from './edit-time-errors';
-import type { LessonTimeEditBody, TimeEditResult } from './types';
 
 /**
  * PATCH /lessons/:id/time (R-SCH-11): the same lesson, a new start and length. On success every
@@ -12,7 +12,7 @@ export function useEditTime(lessonId: string) {
   const client = useQueryClient();
   const refresh = () => client.invalidateQueries({ queryKey: pathKey('/lessons') });
   return useMutation({
-    mutationFn: (body: LessonTimeEditBody) => apiSend<TimeEditResult>('PATCH', `/lessons/${lessonId}/time`, body),
+    mutationFn: (body: LessonTimeEdit) => apiSend<TimeEditResult>('PATCH', `/lessons/${lessonId}/time`, body),
     onSuccess: refresh,
     onError: (error) => (isStale(error) ? refresh() : undefined),
   });

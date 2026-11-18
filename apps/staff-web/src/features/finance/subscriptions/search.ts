@@ -1,11 +1,10 @@
-import { PACKAGE_SIZES, SUBSCRIPTION_SORT_KEYS, SUBSCRIPTION_STATUSES, type PackageSize, type SubscriptionStatus } from '@ab/shared';
+import { PACKAGE_SIZES, SUBSCRIPTION_SORT_KEYS, SUBSCRIPTION_STATUSES, type PackageSize } from '@ab/shared';
+import type { SubscriptionFilter } from '@ab/client-core';
 import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
 
 // URL search of the money pages; defaults (no filter, page 1, this month) stay out of the URL.
 
 export type PagedUrlSearch = { page?: number };
-/** `partial` is the derived «مدفوع جزئيًا» filter, not a stored status. */
-export type SubscriptionFilter = SubscriptionStatus | 'partial';
 /** `sort`/`dir` and the column filters `f_student` (name contains) and `f_package` (R-NFR-08). */
 export type SubscriptionsUrlSearch = PagedUrlSearch & {
   status?: SubscriptionFilter;

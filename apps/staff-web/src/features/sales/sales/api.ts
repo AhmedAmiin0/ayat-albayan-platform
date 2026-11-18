@@ -1,31 +1,13 @@
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow, Page } from '@ab/shared';
+import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import type { Page } from '@/features/finance/subscriptions';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
-export type SubscriptionKind = 'pending' | 'confirmed';
-
-/** One of my subscriptions. Never carries a price or a payment (the salesperson sees no money). */
-export interface SalesSubscription {
-  id: string;
-  student: { id: string; code: string; name: string };
-  package: string;
-  status: string;
-  starts_on: string | null;
-  lessons_total: number;
-}
-
-export interface SalesPerson {
-  id: string;
-  name: string;
-  open_leads: number;
-}
-
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
-export const salesSubscriptionsQuery = (kind: SubscriptionKind) =>
+export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
   queryOptions({
     queryKey: ['sales', 'subscriptions', kind],
-    queryFn: () => apiFetch<SalesSubscription[]>(`/sales/subscriptions?kind=${kind}`),
+    queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
   });
 
 // The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,
@@ -68,7 +50,7 @@ export const updateMyPaymentAmount = (id: string, amount: number) =>
 /** GET /sales/people (admin):the salespeople with their open-lead counts. */
 export const salesPeopleQuery = queryOptions({
   queryKey: ['sales', 'people'],
-  queryFn: () => apiFetch<SalesPerson[]>('/sales/people'),
+  queryFn: () => apiFetch<SalesPersonView[]>('/sales/people'),
 });
 
 /** POST /leads/:id/assign (admin): hand a lead to a salesperson, or null to take it back. */

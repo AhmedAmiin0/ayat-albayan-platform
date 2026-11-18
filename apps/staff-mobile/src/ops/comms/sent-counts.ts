@@ -1,5 +1,5 @@
-import type { NotificationAudience, NotificationEntryView } from '@ab/shared';
-import { audienceTabs, rowsOf, type AudienceTab } from '@/ops/notif-rules/lib/audience-tabs';
+import type { AudienceTab, NotificationAudience, NotificationEntryView } from '@ab/shared';
+import { audienceTabs, rowsOf } from '@/ops/notif-rules/lib/audience-tabs';
 import { nameOf } from '@/ops/notif-rules/lib/rule-words';
 
 // «ماذا يُرسل الآن» on the overview: per audience, how many of its notifications go out now and how

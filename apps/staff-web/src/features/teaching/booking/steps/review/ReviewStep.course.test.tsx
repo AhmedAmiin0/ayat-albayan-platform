@@ -1,3 +1,4 @@
+import type { BookingMode } from '@ab/client-core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
@@ -5,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { emptyDraft, withPicks, type BookingDraft } from '@/features/teaching/booking/draft/draft';
-import { BookingModeContext, type BookingMode } from '@/features/teaching/booking/mode';
+import { BookingModeContext } from '@/features/teaching/booking/mode';
 import { ReviewStep } from './ReviewStep';
 import { ABRAR, SLOT, STUDENT_ID, WED_SLOT } from '@/features/teaching/booking/wizard-fixture';
 

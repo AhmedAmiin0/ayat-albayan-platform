@@ -4,7 +4,8 @@ import { Linking } from 'react-native';
 import { ApiError, t, ltr } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { TeacherDetailScreen } from './TeacherDetailScreen';
-import type { AvailabilityRow, Teacher, TimeOff } from '@/core/lib/staff/types';
+import type { AvailabilityRow, Teacher, TimeOff } from '@ab/shared';
+import { teacherFixture, timeOffFixture } from '@ab/shared/testing';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -19,13 +20,13 @@ jest.mock('expo-router', () => ({
 
 const DAY = 86_400_000;
 const iso = (offsetDays: number) => new Date(Date.now() + offsetDays * DAY).toISOString();
-const TEACHER: Teacher = {
+const TEACHER: Teacher = teacherFixture({
   id: 't1',
   display_name_ar: 'أ. فاطمة الزهراء',
   phone_e164: '+966552147730',
   status: 'active',
   tz: 'Asia/Riyadh',
-};
+});
 /** `range` is «HH:MM-HH:MM». */
 const slot = (id: string, weekday: number, range: string): AvailabilityRow => {
   const [start_time = '', end_time = ''] = range.split('-');
@@ -33,8 +34,8 @@ const slot = (id: string, weekday: number, range: string): AvailabilityRow => {
 };
 const GRID = [slot('a', 1, '16:00-18:00'), slot('b', 1, '09:00-11:00'), slot('c', 4, '20:00-22:00')];
 const TIME_OFF: TimeOff[] = [
-  { id: 'next', starts_at: iso(3), ends_at: iso(5), reason: 'سفر' },
-  { id: 'old', starts_at: iso(-20), ends_at: iso(-18), reason: 'عيد' },
+  timeOffFixture({ id: 'next', starts_at: iso(3), ends_at: iso(5), reason: 'سفر' }),
+  timeOffFixture({ id: 'old', starts_at: iso(-20), ends_at: iso(-18), reason: 'عيد' }),
 ];
 
 function serve(routes: Record<string, unknown>) {

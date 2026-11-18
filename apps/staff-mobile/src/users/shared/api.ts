@@ -8,6 +8,7 @@ import type {
   UserUpdate,
   UserWithCredential,
 } from '@ab/shared';
+import type { UsersView } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 
@@ -15,13 +16,6 @@ import { apiFetch, apiSend } from '@ab/mobile-kit';
 // users.write does the rest. Every key sits under ['users'], so one invalidation reaches them all.
 export const USERS_KEY = ['users'] as const;
 export const USERS_PAGE_SIZE = 20;
-
-/** The list's filters; usePagedList adds page + pageSize (GET /users?q=&role=&status=&page=&pageSize=20). */
-export interface UsersView {
-  q: string;
-  role: string;
-  status: string;
-}
 
 export const FIRST_VIEW: UsersView = { q: '', role: '', status: '' };
 

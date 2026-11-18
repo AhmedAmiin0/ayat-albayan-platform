@@ -1,7 +1,8 @@
-import { useEffect, useId, useRef, type ClipboardEvent, type KeyboardEvent } from 'react';
+import { useId, useRef, type ClipboardEvent, type KeyboardEvent } from 'react';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { keyStep, typeInto, type BoxesState } from './code-boxes';
+import { useFirstBoxFocus } from './use-first-box-focus';
 
 interface Props {
   digits: string[];
@@ -17,8 +18,7 @@ interface Props {
 export function CodeBoxes({ digits, onDigits, invalid }: Props) {
   const labelId = useId();
   const refs = useRef<(HTMLInputElement | null)[]>([]);
-  // The step replaced the form that had the focus: start in the first box (and its autofill).
-  useEffect(() => refs.current[0]?.focus(), []);
+  useFirstBoxFocus(refs);
   const apply = (next: BoxesState) => {
     onDigits(next.boxes);
     refs.current[next.focus]?.focus();
