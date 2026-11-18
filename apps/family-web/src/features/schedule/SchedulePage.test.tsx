@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { kid, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
@@ -9,6 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const S = t.portal.app.schedule;
+const P = t.familyLook.pages.schedule;
 
 beforeEach(() => apiFetch.mockReset());
 
@@ -18,6 +19,24 @@ describe('«الجدول» of the student in view (owner 2026-11-16)', () => {
     renderAt(<SchedulePage student={kid()} kind="guardian" />);
     expect(await screen.findAllByRole('listitem')).toHaveLength(1);
     expect(screen.getByRole('heading', { name: S.title })).toBeTruthy();
+    expect(screen.getByText(P.line.replace('{name}', kid().name))).toBeTruthy();
+    expect(screen.getByText(t.portal.app.lesson.openNow)).toBeTruthy();
+  });
+
+  it('the week pill steps forward to the last week the API covers, and back', async () => {
+    apiFetch.mockResolvedValue({ lessons: [soonLesson()] });
+    renderAt(<SchedulePage student={kid()} kind="guardian" />);
+    await screen.findAllByRole('listitem');
+    const prev = screen.getByRole('button', { name: S.prev });
+    const next = screen.getByRole('button', { name: S.next });
+    expect(prev).toHaveProperty('disabled', true);
+    fireEvent.click(next);
+    expect(screen.getByText(S.nextWeek)).toBeTruthy();
+    fireEvent.click(next);
+    expect(screen.getByText(S.laterWeek)).toBeTruthy();
+    expect(next).toHaveProperty('disabled', true);
+    fireEvent.click(prev);
+    expect(screen.getByText(S.nextWeek)).toBeTruthy();
   });
 
   it('a student: «جدولي» and the empty week', async () => {
@@ -25,5 +44,6 @@ describe('«الجدول» of the student in view (owner 2026-11-16)', () => {
     renderAt(<SchedulePage student={kid()} kind="student" />);
     expect(await screen.findByText(S.empty)).toBeTruthy();
     expect(screen.getByRole('heading', { name: S.mine })).toBeTruthy();
+    expect(screen.getByText(P.lineOwn)).toBeTruthy();
   });
 });

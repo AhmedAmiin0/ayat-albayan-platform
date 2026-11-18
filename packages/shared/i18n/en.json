@@ -9619,7 +9619,30 @@
       "more": "More"
     },
     "pages": {
-      "empty": "Nothing here yet"
+      "empty": "Nothing here yet",
+      "reports": {
+        "line": "Reports of {name}'s lessons, newest first.",
+        "lineOwn": "Reports of your lessons, newest first.",
+        "count": "{n} · newest first",
+        "recording": "With recording"
+      },
+      "report": {
+        "line": "{student} · {date}",
+        "content": "Lesson content",
+        "todo": "For the next lesson",
+        "notes": "Teacher's notes",
+        "files": "Files and recording"
+      },
+      "schedule": {
+        "line": "{name}'s lessons in the chosen week, on your clock.",
+        "lineOwn": "Your lessons in the chosen week, on your clock.",
+        "range": "{from} – {to}",
+        "noLessons": "No lessons"
+      },
+      "alerts": {
+        "line": "Lesson times, new reports and package notices in one place.",
+        "unread": "Unread: {n}"
+      }
     },
     "account": {
       "children": "Children"
