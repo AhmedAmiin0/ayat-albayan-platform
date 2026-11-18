@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
-import { StarPattern } from '@ab/web-kit/family/ornament/StarPattern';
+import { StarPattern } from '@ab/web-kit/components/family/ornament/StarPattern';
 
 interface Props {
   children: ReactNode;

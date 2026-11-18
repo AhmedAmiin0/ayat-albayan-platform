@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { MeTestChip } from '@ab/web-kit/auth/MeTestChip';
-import { FamilyBrand } from '@ab/web-kit/family/brand/FamilyBrand';
+import { FamilyBrand } from '@ab/web-kit/components/family/brand/FamilyBrand';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Bell } from './Bell';
 import { ChildSwitch } from './ChildSwitch';

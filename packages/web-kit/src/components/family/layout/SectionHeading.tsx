@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { DiamondRule } from '@ab/web-kit/family/ornament/Diamond';
+import { DiamondRule } from '@ab/web-kit/components/family/ornament/Diamond';
 
 interface Props {
   id: string;

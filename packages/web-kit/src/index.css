@@ -9,7 +9,7 @@
 /* Emerald Mint (docs/07, owner 2026-10-05): simple, flat, green acts. RTL: logical utilities only.
    `dark:` follows <html data-theme>, which the boot script in index.html always sets. */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-/* The family look only (family/theme/family.css): <html data-skin="family">, never on staff pages. */
+/* The family look only (components/family/theme/family.css): <html data-skin="family">, never on staff pages. */
 @custom-variant family (&:where([data-skin=family], [data-skin=family] *));
 
 /* ---------- theme-independent tokens ---------- */
@@ -115,7 +115,7 @@
   --shadow-page: var(--elev-page);
   --shadow-pop: var(--elev-pop);
   --shadow-toast: var(--elev-toast);
-  /* the family look's own (family/theme/family.css); unset, so inert, outside it */
+  /* the family look's own (components/family/theme/family.css); unset, so inert, outside it */
   --color-fam-mint: var(--fam-mint);
   --color-fam-mint-rule: var(--fam-mint-rule);
   --color-fam-mint-ink: var(--fam-mint-ink);

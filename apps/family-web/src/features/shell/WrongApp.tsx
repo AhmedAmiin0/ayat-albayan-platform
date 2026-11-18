@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
-import { FamilyBrand } from '@ab/web-kit/family/brand/FamilyBrand';
-import { pill } from '@ab/web-kit/family/brand/pill';
+import { FamilyBrand } from '@ab/web-kit/components/family/brand/FamilyBrand';
+import { pill } from '@ab/web-kit/components/family/brand/pill';
 import { env } from '@ab/web-kit/lib/http/env';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
