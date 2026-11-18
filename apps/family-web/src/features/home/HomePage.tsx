@@ -1,7 +1,7 @@
 import { portalViewer, readsOwn, type ChildTab } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { ChildBody, ChildHead } from '@/features/children';
-import { PageBody } from '@ab/web-kit/family/layout/PageBody';
+import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
 
 interface Props {
   /** The student in view: a student's own, an only child, or the child a guardian picked. */

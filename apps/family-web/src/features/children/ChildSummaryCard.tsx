@@ -1,10 +1,10 @@
 import { isSelfChild, reportAt, type ChildSummary } from '@ab/client-core';
 import { counted, dateText, type PortalKind, type PortalStudent } from '@ab/shared';
-import { Initial } from '@ab/web-kit/family/brand/Initial';
-import { pill } from '@ab/web-kit/family/brand/pill';
-import { StudentCode } from '@ab/web-kit/family/child/StudentCode';
-import { FamilyCard, type CardTone } from '@ab/web-kit/family/layout/FamilyCard';
-import { IconTile } from '@ab/web-kit/family/layout/IconTile';
+import { Initial } from '@ab/web-kit/components/family/brand/Initial';
+import { pill } from '@ab/web-kit/components/family/brand/pill';
+import { StudentCode } from '@ab/web-kit/components/family/child/StudentCode';
+import { FamilyCard, type CardTone } from '@ab/web-kit/components/family/layout/FamilyCard';
+import { IconTile } from '@ab/web-kit/components/family/layout/IconTile';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';

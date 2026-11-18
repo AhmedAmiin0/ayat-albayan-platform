@@ -3,7 +3,7 @@ import type { PortalHome, PortalStudent } from '@ab/shared';
 import { Fragment, type ReactNode } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { PageBody } from '@ab/web-kit/family/layout/PageBody';
+import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useFamilyPick, WithHome } from '@/features/shell';
 import { PickChildPage } from './PickChildPage';

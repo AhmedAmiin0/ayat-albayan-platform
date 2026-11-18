@@ -2,7 +2,7 @@ import { nextLesson } from '@ab/client-core';
 import type { PortalLessons, PortalStudent } from '@ab/shared';
 import { useId } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { SectionHeading } from '@ab/web-kit/family/layout/SectionHeading';
+import { SectionHeading } from '@ab/web-kit/components/family/layout/SectionHeading';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { cn } from '@ab/web-kit/lib/utils';

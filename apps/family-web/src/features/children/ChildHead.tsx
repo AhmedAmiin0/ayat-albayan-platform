@@ -1,11 +1,11 @@
 import type { PortalStudent } from '@ab/shared';
 import { useId, type ReactNode } from 'react';
-import { Initial } from '@ab/web-kit/family/brand/Initial';
-import { HeroDate } from '@ab/web-kit/family/child/HeroDate';
-import { StudentCode } from '@ab/web-kit/family/child/StudentCode';
-import { useHeroTeacher } from '@ab/web-kit/family/child/use-hero-teacher';
-import { Hero } from '@ab/web-kit/family/layout/Hero';
-import { VerseArch } from '@ab/web-kit/family/ornament/VerseArch';
+import { Initial } from '@ab/web-kit/components/family/brand/Initial';
+import { HeroDate } from '@ab/web-kit/components/family/child/HeroDate';
+import { StudentCode } from '@ab/web-kit/components/family/child/StudentCode';
+import { useHeroTeacher } from '@ab/web-kit/components/family/child/use-hero-teacher';
+import { Hero } from '@ab/web-kit/components/family/layout/Hero';
+import { VerseArch } from '@ab/web-kit/components/family/ornament/VerseArch';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChildName } from './ChildName';
 

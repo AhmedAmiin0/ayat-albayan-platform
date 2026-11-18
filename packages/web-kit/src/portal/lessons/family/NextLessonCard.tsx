@@ -1,7 +1,7 @@
 import { isLessonNow, windowStateAt } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { useId } from 'react';
-import { StarPattern } from '@ab/web-kit/family/ornament/StarPattern';
+import { StarPattern } from '@ab/web-kit/components/family/ornament/StarPattern';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useNow } from '@ab/web-kit/lib/time/use-now';

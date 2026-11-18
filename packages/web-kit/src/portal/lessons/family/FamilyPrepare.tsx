@@ -2,7 +2,7 @@ import { prepareCard } from '@ab/client-core';
 import { dateText, type PortalLessons, type PortalStudent } from '@ab/shared';
 import { useId } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconTile } from '@ab/web-kit/family/layout/IconTile';
+import { IconTile } from '@ab/web-kit/components/family/layout/IconTile';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import type { UpcomingLook } from './upcoming-look';

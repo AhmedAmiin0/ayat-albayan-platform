@@ -1,9 +1,9 @@
 import { familyChildren } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
-import { Hero, HeroTitle } from '@ab/web-kit/family/layout/Hero';
-import { PageBody } from '@ab/web-kit/family/layout/PageBody';
-import { DiamondRule } from '@ab/web-kit/family/ornament/Diamond';
+import { Hero, HeroTitle } from '@ab/web-kit/components/family/layout/Hero';
+import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
+import { DiamondRule } from '@ab/web-kit/components/family/ornament/Diamond';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useFamilyPick, usePickChild } from '@/features/shell';
 import { ChildSummaryCard } from './ChildSummaryCard';
