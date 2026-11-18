@@ -10,12 +10,12 @@ import {
 } from '@ab/client-core';
 import type { ChannelMessageView, ChannelPage, ChannelUnread, TeacherChannelRow } from '@ab/shared';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
-import { INBOX_REFRESH_MS } from '@/features/messaging/inbox';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { env } from '@ab/web-kit/lib/http/env';
 
 // The student channel (docs/31 §2). Lists and badges poll while the window has focus; the thread has its
 // socket (use-channel-live) and polls only as the fallback.
-const poll = () => (document.hasFocus() ? INBOX_REFRESH_MS : false);
+const poll = () => (document.hasFocus() ? env.inboxRefreshMs : false);
 
 export interface ChannelRef {
   audience: ChannelAudience;

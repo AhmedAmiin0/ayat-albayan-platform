@@ -5,6 +5,7 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { dateAndClock } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
+import { useFamilyChatOn } from '@ab/web-kit/portal/use-family-chat';
 import { alertLink } from './alert-link';
 import type { FamilyAlerts } from './alerts-api';
 
@@ -21,11 +22,12 @@ interface Props {
 export function AlertRow({ alert, kind, tz, onRead }: Props) {
   const navigate = useNavigate();
   const clock = useClock();
+  const chatOn = useFamilyChatOn();
   const target = alertTarget(alert);
   const when = dateAndClock(new Date(alert.created_at), { ...clock, tz }, DAY);
   const open = () => {
     if (!alert.read_at) onRead(alert.id);
-    if (target) void navigate(alertLink(target, kind));
+    if (target) void navigate(alertLink(target, { kind, chatOn }));
   };
   return (
     <li>

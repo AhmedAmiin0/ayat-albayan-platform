@@ -7,8 +7,8 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { teacherChannelsQuery } from './api';
-import { ChannelThread } from './ChannelThread';
+import { teacherChannelsQuery } from '@ab/web-kit/components/channel/api';
+import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';
 import { TeacherChannelList } from './TeacherChannelList';
 
 interface Props {

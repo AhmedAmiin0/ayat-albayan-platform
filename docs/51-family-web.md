@@ -24,7 +24,7 @@ Names (rename #735): `apps/staff-web` (package `staff-web`), `apps/staff-mobile`
    - One bar for every login (develop #746, owner 2026-11-16): الرئيسية · الجدول · التقارير · حسابي, all of the student in view (`familyTabs(familyPick(…))`); «التقارير» waits until that student is known.
    - A guardian of several children picks one on «اختر الطالب» (shown in place of the home until then, saved per profile in this browser: `pickStore`) and switches from the child's name on top of every page. A student never sees money or the package.
    - A bell with an unread badge at the top → الإشعارات.
-   - Chat stays hidden while `family_chat_enabled` is off. Open item: the web has no chat tab even when it is on (the thread lives in apps/staff-web `student-channel`); a «chat» alert opens the child's page.
+   - Chat (done): while `family_chat_enabled` is on, the child's page has «المحادثة» last, with its unread count (`childTabPill`, shared with the family app), and the thread of the student in view (`ChannelThread`, refs `portal` + student, from the kit). Off: no tab, no channel read. A «chat» alert opens `?tab=chat` while it is on, else the child's page.
    - Wide screens: a side rail or top nav; phones: a bottom bar.
 3. **No biometric on the web.**
 4. **Join inside the page:** the classroom room is in the kit (§2); a Meet lesson opens its Meet URL.
@@ -42,6 +42,7 @@ Names (rename #735): `apps/staff-web` (package `staff-web`), `apps/staff-mobile`
   - `report/` (`ReportPage`, one component mounted by both apps) and `portal/` (the portal's lessons with the family's lesson options, history, report, recordings, package and home cards);
   - `schedule/` (the week slot grid, `WeekSlotsFrame`, `MoveReason`, slots and date labels: staff rescheduling and the family's «اطلب موعدًا آخر») and `lesson-files/` (the audio player and file words: staff «ملفات الحلقة» and the family's «التسجيلات»);
   - `classroom/`: the LiveKit room (room, board, mute, kick, share, recordings, stage and their API) — families join inside the page.
+  - `components/channel/`: the student channel thread (`ChannelThread`, bubbles, composer, edits, live socket, its API and the chat header's presence line); staff-only parts (teacher messages, monitor, seats) stay in apps/staff-web `student-channel`.
 - **apps/staff-web imports these from the kit:** a move, no copies. `@ab/config` has the shared configs: `@ab/config/vite` (`webConfig`), `@ab/config/eslint-web` (`webReactConfig`) and `webBlocks` in `@ab/config/lint`, so the three web workspaces' configs are not clones.
 - **jscpd** cross-app clones: zero.
 - **CI coverage.**

@@ -1,4 +1,4 @@
-import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 interface Props {

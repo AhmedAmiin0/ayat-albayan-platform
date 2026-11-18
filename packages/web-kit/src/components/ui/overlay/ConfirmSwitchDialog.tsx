@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Dialog } from './dialog';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

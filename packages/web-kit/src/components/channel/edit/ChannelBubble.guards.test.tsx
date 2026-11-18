@@ -2,7 +2,7 @@ import { ApiError } from '@ab/client-core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ChannelBubble } from '@/features/teaching/student-channel/ChannelBubble';
+import { ChannelBubble } from '@ab/web-kit/components/channel/ChannelBubble';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { msg, showBubble } from './bubble.testing';
 

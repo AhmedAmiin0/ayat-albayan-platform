@@ -2,7 +2,7 @@ import { presenceLine } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { channelPresenceQuery, type PresenceChat } from './api';
+import { channelPresenceQuery, type PresenceChat } from './channel-presence-api';
 import { bestPeer, withOnline } from './presence-pick';
 import { PresenceStatus } from './PresenceStatus';
 import { usePresenceWatch } from './use-presence-watch';
