@@ -11,9 +11,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
-import { parseOrThrow, type Page } from '@/common/http/http';
+import { parseOrThrow } from '@/common/http/http';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { EarningsService } from './earnings.service';
+import type { Page } from '@ab/shared';
 
 /**
  * The signed-in teacher's own earnings (read only). The teacher id always comes from the token

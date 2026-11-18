@@ -3,8 +3,8 @@ import { t } from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { useStudentBalance } from '@/payments';
 import { renewHref } from '@/students/profile/renew';
-import type { StudentRef } from '@/students/shared/types';
 import { ActionRow } from './ActionRow';
+import type { StudentRef } from '@ab/shared';
 
 /**
  * «جدّد الاشتراك» in the admin's «إجراءات الدورة» (owner 2026-11-17: ANY time): the subscribe

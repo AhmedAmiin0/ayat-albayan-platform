@@ -1,10 +1,11 @@
+import type { BookingMode } from '@ab/client-core';
 import { courseMoveErrorCode } from '@ab/client-core';
 import type { ProfileCourseView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { CourseChangeForm, type BookingMode } from '@/features/teaching/booking';
-import { t } from '@/lib/i18n/i18n';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { CourseChangeForm } from '@/features/teaching/booking';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { profileCourseQuery, useInvalidateCourseActions } from './api';
 import { MoveFrame } from './MoveFrame';
 import type { CourseActionDialogProps } from './StopCourseDialog';

@@ -1,4 +1,4 @@
-import type { StudentListItem, StudentProfile } from './types';
+import type { StudentListItem, StudentProfile } from '@ab/shared';
 
 // Test-only API responses for src/students/*.test.tsx.
 
@@ -7,12 +7,18 @@ export const profile: StudentProfile = {
   code: 'AB-0183',
   name: 'هدى',
   status: 'active',
+  guardian_id: 'g1',
+  age: null,
+  gender: null,
   program: 'quran',
   level: null,
   memorized: null,
   goal: null,
   riwaya: null,
   tz: 'Asia/Riyadh',
+  teacher_id: null,
+  meeting_link_override: null,
+  notes: null,
   guardian: { id: 'g1', name: 'أم هدى', phone_e164: '+966552147730' },
   teacher: null,
   meeting_link: null,
@@ -26,6 +32,7 @@ export const listItem = (over: Partial<StudentListItem> = {}): StudentListItem =
   status: 'active',
   program: 'quran',
   tz: 'Asia/Riyadh',
+  created_at: '2026-09-01T09:00:00Z',
   guardian_name: 'أم هدى',
   guardian_phone: '+966552147730',
   teacher_name: null,

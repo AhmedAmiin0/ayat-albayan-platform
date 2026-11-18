@@ -9,8 +9,6 @@ export {
   rangeError,
   riyadhToday,
   thisWeek,
-  WORK_TABS,
-  type WorkTab,
 } from './search';
 export { Bar, sectionTitle } from './shared/Bar';
 export { loadLabel, TeacherLoad } from './today/TeacherLoad';

@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import type { AssistantRow } from '@/assistants/api/api';
 import { CommissionFields } from '@/assistants/commission/CommissionFields';
 import { assistantsErrorText } from '@/assistants/api/errors';
 import { useSaveTerms } from '@/assistants/api/mutations';
 import { SalaryFields } from './SalaryFields';
 import { formOf, startMins, todayDay, toInput, type TermsErrors, type TermsForm } from './terms-form';
+import type { AssistantRow } from '@ab/client-core';
 
 /**
  * The admin's terms of one salesperson (web TermsEditor, R-ASST-02/03): monthly salary and the

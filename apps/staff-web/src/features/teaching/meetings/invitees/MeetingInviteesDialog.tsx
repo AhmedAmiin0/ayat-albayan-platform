@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { InviteeViewRow } from './InviteeViewRow';
 import { meetingInviteesQuery } from './meeting-invites-api';
 import { useMayInvitePhones } from './use-may-invite-phones';

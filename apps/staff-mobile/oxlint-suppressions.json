@@ -266,9 +266,6 @@
     }
   },
   "src/assistants/api/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 3
-    },
     "stylistic/max-len": {
       "count": 4
     },
@@ -868,7 +865,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -888,9 +885,6 @@
     }
   },
   "src/booking/trial/lib/use-book-trial.ts": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
     }
@@ -1464,11 +1458,6 @@
       "count": 1
     }
   },
-  "src/core/lib/staff/types.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/core/lib/stripe-flag.ts": {
     "stylistic/max-len": {
       "count": 6
@@ -1903,7 +1892,7 @@
   },
   "src/edit-time/lib/edit-time-body.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1924,7 +1913,7 @@
   },
   "src/edit-time/lib/edit-time-lock.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -2280,14 +2269,6 @@
   "src/finance/summary/summary-lines.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/finance/summary/summary-types.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/fonts.test.tsx": {
@@ -2772,11 +2753,6 @@
   },
   "src/inbox/leads/list/lead-row.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/leads/list/lead-sort.ts": {
-    "typescript/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -5192,7 +5168,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 5
+      "count": 4
     }
   },
   "src/more/teachers/TeacherCalendarOwner.test.tsx": {
@@ -5441,11 +5417,6 @@
     },
     "ab/no-untyped-api-calls": {
       "count": 2
-    }
-  },
-  "src/ops/dashboard/dashboard-types.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/ops/google-sync/GoogleSyncCard.test.tsx": {
@@ -7615,7 +7586,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/student-file/money/StudentInvoiceRow.tsx": {
@@ -7944,11 +7915,8 @@
     }
   },
   "src/students/list/use-student-list-data.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-untyped-api-calls": {
       "count": 2
@@ -8085,14 +8053,6 @@
       "count": 1
     }
   },
-  "src/students/shared/types.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/subscribe/NoCommissionNote.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -8120,9 +8080,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/subscribe/SubscribeScreen.tsx": {
@@ -8136,9 +8093,6 @@
       "count": 3
     },
     "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     },
     "ab/no-untyped-api-calls": {
@@ -8877,9 +8831,6 @@
   "src/trial-date/components/TrialDateSection.tsx": {
     "stylistic/max-len": {
       "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/trial-date/components/TrialDateWarn.tsx": {
@@ -9142,7 +9093,7 @@
   },
   "src/users/shared/api.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-untyped-api-calls": {
       "count": 8

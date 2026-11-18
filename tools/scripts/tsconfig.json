@@ -7,5 +7,5 @@
     "allowImportingTsExtensions": true,
     "types": ["node"]
   },
-  "include": ["ci-checks/move-module.ts", "ci-checks/move-module/**/*.ts"]
+  "include": ["ci-checks/move-module.ts", "ci-checks/move-module/**/*.ts", "ci-checks/deploy/**/*.ts"]
 }

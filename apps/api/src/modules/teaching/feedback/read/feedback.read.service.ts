@@ -1,15 +1,22 @@
 import type {
   FeedbackQuery,
   FeedbackRowView,
+  Page,
   TeacherFeedbackSummary,
   TeacherFeedbackView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
-import type { Page, PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { peopleOf, toRowView, toSummary, toTeacherRowView, type People } from '@/modules/teaching/feedback/feedback.mapper';
+import {
+  peopleOf,
+  toRowView,
+  toSummary,
+  toTeacherRowView,
+  type People,
+} from '@/modules/teaching/feedback/feedback.mapper';
 import { FeedbackReadRepo, type FeedbackListRow } from './feedback.read.repo';
 
 /** The lists behind «رأيك يهمّنا»: the admin sees everything, a teacher only their own rows (rule 9). */

@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The answer box's words: the teacher's proposal, or the family's request (owner 2026-11-17). */
 export interface ProposalWords {

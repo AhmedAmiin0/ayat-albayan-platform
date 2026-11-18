@@ -1,8 +1,8 @@
 import { GRADES, gradeStyle, type Grade } from '@ab/shared';
-import { RequiredMark } from '@/components/ui/form/label';
-import { GradePips } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
+import { GradePips } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface GradePickerProps {
   /** Radio group name, unique on the page (report id + rubric). */

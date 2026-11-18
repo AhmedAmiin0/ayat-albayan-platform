@@ -2,27 +2,27 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LeadsInbox } from './LeadsInbox';
-import type { LeadRow } from './types';
+import type { LeadView } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children, ...rest }: { to: string; search: Record<string, string>; children: ReactNode }) => (
     <a href={`${to}?${new URLSearchParams(search)}`} {...rest}>{children}</a>
   ),
 }));
 
-const ROW: LeadRow = {
+const ROW: LeadView = {
   id: 'l1', phone_e164: '+966501234567', name: 'أم سهيلة', source: 'facebook_ad', status: 'new',
   last_inbound_at: null, last_outbound_at: null, created_at: '2026-09-28T10:00:00+00:00',
   assigned_to: null, assigned_to_name: null,
 };
 const PEOPLE = [{ id: 'p1', name: 'منى', open_leads: 2 }, { id: 'p2', name: 'خالد', open_leads: 0 }];
 
-function open(row: LeadRow = ROW) {
+function open(row: LeadView = ROW) {
   apiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/sales/people') ? PEOPLE : { items: [row], total: 1, page: 1, pageSize: 25 });
   render(

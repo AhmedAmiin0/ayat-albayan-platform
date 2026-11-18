@@ -1,9 +1,9 @@
 import { lessonWhenAt, type ReportView } from '@ab/shared';
 import { editableNow, reportSendState, sendLines, type SendState, type SendWords } from '@ab/client-core';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { useClock } from '@/lib/clock';
-import { t } from '@/lib/i18n/i18n';
-import { useNow } from '@/lib/time/use-now';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { ReportLink } from '@/features/reporting/reports/history/ReportLink';
 
 /** The countdown is in whole minutes: a 15 s tick keeps it within a quarter of one. */

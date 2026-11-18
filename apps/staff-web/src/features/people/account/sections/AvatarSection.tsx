@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent } from 'react';
-import { Avatar } from '@/components/ui/display/avatar';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AccountSection } from './AccountSection';
 import { removeAvatar, uploadAvatar } from '@/features/people/account/api';
 import { AvatarActions } from './AvatarActions';

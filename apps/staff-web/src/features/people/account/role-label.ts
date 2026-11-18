@@ -1,6 +1,6 @@
 import type { AccountRole } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 const BASE: Record<string, string | undefined> = t.activity.roles;
 

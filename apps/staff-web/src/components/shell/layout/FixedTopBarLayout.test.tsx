@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { FixedTopBarLayout } from './FixedTopBarLayout';
 
 const path = vi.hoisted(() => ({ current: '/sales/inbox' }));
@@ -11,7 +11,7 @@ vi.mock('@tanstack/react-router', async () => ({
     select({ resolvedLocation: { pathname: path.current } }),
   useNavigate: () => vi.fn(),
 }));
-vi.mock('@/features/people/auth/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: async () => null } }));
+vi.mock('@ab/web-kit/auth/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: async () => null } }));
 vi.mock('@/components/shell/header/MenuBar', () => ({ MenuBar: () => null }));
 vi.mock('@/features/messaging/notifications/NotificationBell', () => ({
   NotificationBell: () => <button type="button">{t.bell.open}</button>,

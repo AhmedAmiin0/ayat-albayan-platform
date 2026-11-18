@@ -7,7 +7,7 @@ import {
 } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useSyncExternalStore } from 'react';
-import { supabase } from '@/lib/http/supabase';
+import { supabase } from '@ab/web-kit/lib/http/supabase';
 import { patchLiveCaches } from './live-patch';
 import { rereadChat, rereadList } from './reread';
 

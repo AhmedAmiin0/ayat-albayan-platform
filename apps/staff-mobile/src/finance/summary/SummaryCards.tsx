@@ -6,10 +6,10 @@ import { KpiCard } from './KpiCard';
 import { useTeacherDues } from '@/finance/shared/queries';
 import { summaryCards } from './summary-cards';
 import { summaryWarnings } from './summary-lines';
-import type { FinanceSummary } from './summary-types';
+import type { DashboardResponse } from '@ab/shared';
 
 /** The year's four totals (reporting currency) and the two balances: owed to teachers, owed by students. */
-export function SummaryCards({ finance }: { finance: FinanceSummary['finance'] | undefined }) {
+export function SummaryCards({ finance }: { finance: DashboardResponse['finance'] | undefined }) {
   const dues = useTeacherDues();
   const owed = useReceivables();
   const missing = owed.data?.fx_missing ?? [];

@@ -2,9 +2,9 @@ import { isEditableValueKey, VALUE_CONFIRM, type SettingKey } from '@ab/shared';
 import { useEffect, useState } from 'react';
 import { DiscardDialog } from '@/components/settings/dialogs/DiscardDialog';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { defaultForm, isModified } from '@/features/platform/settings/registry-form/row-form';
 import { lastChangeText } from '@/features/platform/settings/values/cells/InfoCells';
 import { useRowIds } from '@/features/platform/settings/values/editors/editor-props';
@@ -14,7 +14,7 @@ import { ImpactNote } from './ImpactNote';
 import { useSheetDescription } from '@/features/platform/settings/values/description/use-sheet-description';
 import { boundsText, defaultText, valueText } from '@/features/platform/settings/values/lib/value-format';
 import { useValues } from '@/features/platform/settings/values/values-context';
-import { useClock } from '@/lib/clock';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 const v = t.settingsValues;
 

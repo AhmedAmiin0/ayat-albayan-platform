@@ -26,12 +26,6 @@ export interface PageQuery {
   q?: string;
 }
 
-export interface Page<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
 
 /** Strip PostgREST `or()` syntax characters so free text cannot break or widen the filter. */
 export function searchTerm(q: string): string {

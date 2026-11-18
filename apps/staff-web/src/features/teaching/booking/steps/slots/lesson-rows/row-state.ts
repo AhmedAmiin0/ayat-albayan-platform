@@ -10,7 +10,7 @@ import {
   repeatedDays,
 } from '@ab/client-core';
 import type { SlotsResponse } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { farRows } from './row-window';
 
 // Each row's date error and what the slot data says of its time. Pure.

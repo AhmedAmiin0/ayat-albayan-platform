@@ -1,18 +1,19 @@
 import { clockOf, type LessonView } from '@ab/shared';
+import type { SessionGroup } from '@ab/client-core';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Icon } from '@/components/ui/display/icon';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { CopyLinkButton } from '@/features/teaching/classroom/join/CopyLinkButton';
 import { SendLinkButton } from '@/features/teaching/classroom/join/SendLinkButton';
-import { sessionChip, type SessionGroup } from './sessions';
+import { sessionChip } from './sessions';
 import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { useClock } from '@/lib/clock';
-import { clockDir, viewerZone } from '@/lib/clock-text';
-import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
+import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /**
  * One session on /admin/classrooms: time range, students, teacher, a status chip and a live dot

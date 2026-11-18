@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
-import type { Teacher } from '@/features/people/teachers/api';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { apiErrorMessage, emptyTeacherForm, toTeacherForm, validateTeacher } from './teacher-form';
+import type { Teacher } from '@ab/shared';
+import { teacherFixture } from '@ab/shared/testing';
 
 const filled = { ...emptyTeacherForm(), display_name_ar: 'أ. سارة', phone_e164: '01001234567', rate_60: '120' };
 
@@ -38,7 +39,7 @@ describe('teacher form (R-TCH-01)', () => {
   });
 
   it('fills the form from a teacher row (nulls → empty inputs)', () => {
-    const teacher: Teacher = {
+    const teacher: Teacher = teacherFixture({
       id: 't1',
       display_name_ar: 'أ. محمد',
       display_name_en: null,
@@ -53,7 +54,7 @@ describe('teacher form (R-TCH-01)', () => {
       max_students: 10,
       status: 'inactive',
       tz: 'Asia/Riyadh',
-    };
+    });
     expect(toTeacherForm(teacher)).toMatchObject({
       display_name_en: '',
       meeting_link: '',

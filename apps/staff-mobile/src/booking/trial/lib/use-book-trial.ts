@@ -1,12 +1,11 @@
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult, LeadView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { allowedNextStatuses } from '@/inbox/leads/detail/allowed-next-statuses';
-import type { Lead } from '@/inbox/shared/types';
 import { apiSend, pathKey } from '@ab/mobile-kit';
 import { patchCached } from '@/core/lib/query/paging';
 import { toBookingRequest } from './booking-body';
 import { bookingPath, useBookingMode } from '@/booking/shared/booking-mode';
 import type { StudentChoice, TrialDraft } from './draft';
+import { allowedNextStatuses } from '@ab/shared';
 
 interface BookTrialInput {
   draft: TrialDraft;
@@ -36,7 +35,7 @@ export function useBookTrial(requestId: string) {
     // Not awaited: the booked panel shows as soon as the API answers.
     onSuccess: (_result, input) => {
       const id = input.draft.leadId;
-      const lead = client.getQueryData<Lead>(pathKey(`/leads/${id}`));
+      const lead = client.getQueryData<LeadView>(pathKey(`/leads/${id}`));
       const status = input.draft.pkg === 'trial' ? 'trial_booked' : 'converted';
       if (lead && allowedNextStatuses(lead.status).includes(status)) {
         const patch = { id, status };

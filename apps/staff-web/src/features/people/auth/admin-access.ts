@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/shared';
-import { canDo, type Me } from './me';
+import { canDo, type Me } from '@ab/web-kit/auth/me';
 
 // Which permission each /admin page needs (dynamic roles, 2026-10-05). The base role still decides
 // who gets /admin at all (requireRole('admin')); inside, a custom role (e.g. «محاسب» with
@@ -7,6 +7,7 @@ import { canDo, type Me } from './me';
 export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permission])[] = [
   ['/admin/leads', 'leads.read'],
   ['/admin/inbox', 'inbox.read'],
+  ['/admin/short-links', 'short_links.manage'],
   ['/admin/job-applicants', 'applicants.read'],
   ['/admin/students', 'students.read'],
   ['/admin/teachers', 'teachers.read'],

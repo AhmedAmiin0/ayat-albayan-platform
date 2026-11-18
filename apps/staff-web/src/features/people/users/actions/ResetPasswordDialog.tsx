@@ -1,10 +1,10 @@
 import type { CredentialMode, IssuedCredential, UserDetail } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { resetPassword } from '@/features/people/users/api';
 import { CredentialPicker } from '@/features/people/users/create/CredentialPicker';
 import { CredentialResult } from '@/features/people/users/create/CredentialResult';

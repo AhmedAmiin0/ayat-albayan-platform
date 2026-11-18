@@ -3,6 +3,7 @@
 // line of the same file under the same rule (complexity on a decorated method, an attribute of a
 // multi-line JSX element) pairs up as `moved`; one with no partner left is `missing`, and an
 // Oxlint finding with none is `extra` (a stricter port: reported, never a failure here).
+import { parseScope } from '../oxlint/scope.mjs';
 
 const key = ({ file, line, rule }) => `${file}\0${line}\0${rule}`;
 const group = ({ file, rule }) => `${file}\0${rule}`;
@@ -57,14 +58,23 @@ export function perRule(findings) {
   return Object.fromEntries(Object.entries(counts).sort(([a], [b]) => (a < b ? -1 : 1)));
 }
 
+/** A gap's reviewed count inside a LINT_SCOPE: all of it, a package's share, or the rest. */
+const SHARES = {
+  all: (gap) => gap.missed,
+  only: (gap, name) => gap.scopes?.[name] ?? 0,
+  except: (gap, name) => gap.missed - (gap.scopes?.[name] ?? 0),
+};
+
 /**
  * The failures: more missing findings of a rule than gaps.json allows it (docs/31b §3.1: rules
  * that cannot move yet, each with its reviewed count; none listed: 0), and a gap whose count is
- * above what it misses now (lower it in gaps.json: the list only shrinks).
+ * above what it misses now (lower it in gaps.json: the list only shrinks). Under a LINT_SCOPE
+ * (ci's two lint rows) each row holds its own share, so both rows together check the whole count.
  */
-export function failures(missing, gaps) {
+export function failures(missing, gaps, scope = '') {
   const counts = perRule(missing);
-  const allowed = (rule) => gaps[rule]?.missed ?? 0;
+  const { kind, name } = parseScope(scope);
+  const allowed = (rule) => (gaps[rule] ? SHARES[kind](gaps[rule], name) : 0);
   const lost = Object.entries(counts)
     .filter(([rule, n]) => n > allowed(rule))
     .map(([rule, n]) => `missing: ${rule} ×${n}, allowed ${allowed(rule)} (Oxlint misses it)`);

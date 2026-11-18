@@ -1,8 +1,8 @@
 import { freeTextRoom, normaliseTemplateParam, type BodySlot } from '@ab/shared';
-import { Field } from '@/components/ui/form/field';
-import { controlClass } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { controlClass } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface FreeTextFieldProps {
   /** The template's body: what is left of the 1024 characters for the text. */

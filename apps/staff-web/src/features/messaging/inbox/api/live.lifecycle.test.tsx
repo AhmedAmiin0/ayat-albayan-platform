@@ -25,7 +25,7 @@ const rt = vi.hoisted(() => {
   };
   return { state, supabase };
 });
-vi.mock('@/lib/http/supabase', () => ({ supabase: rt.supabase }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: rt.supabase }));
 
 let visibility: DocumentVisibilityState = 'visible';
 const handlers = new Set<EventListenerOrEventListenerObject>();

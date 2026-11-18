@@ -1,9 +1,7 @@
+import type { QuotedPrice } from '@ab/client-core';
 import { parseAmount } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/lib/i18n/i18n';
-
-/** The quote the price starts from: the admin's and the sales quote both carry these. */
-export interface QuotedPrice { afterDiscount: number; currency: string }
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The create body's extra: `customPrice` only with «مبلغ مخصص» on (off = today's body). */
 export interface CustomPriceBody { customPrice?: number }

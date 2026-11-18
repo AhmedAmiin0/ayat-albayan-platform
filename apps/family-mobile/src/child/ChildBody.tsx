@@ -1,15 +1,21 @@
-import { childTabs, familyChatOn, portalViewer, readsOwn, type ChildTab } from '@ab/client-core';
+import {
+  childTabPill,
+  childTabs,
+  familyChatOn,
+  portalViewer,
+  readsOwn,
+  type ChildTab,
+} from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Animated, View } from 'react-native';
-import { type FilterPill, FilterPills, t, usePublicConfig } from '@ab/mobile-kit';
+import { FilterPills, t, usePublicConfig } from '@ab/mobile-kit';
 import { chatHref } from '@/nav';
 import { PackageBody } from '@/package';
 import { useChildUnread } from '@/portal';
 import { recordingsHref } from '@/recordings';
 import { HistoryPanel } from './HistoryPanel';
-import { tabWord } from './tab-words';
 import { UpcomingPanel } from './UpcomingPanel';
 import { useTabMotion } from './use-tab-motion';
 
@@ -27,14 +33,6 @@ const PANEL: Record<ChildTab, (p: ChildBodyProps & { own: boolean }) => ReactNod
   recordings: () => null,
   chat: () => null,
 };
-
-/** A tab's pill; «المحادثة» carries its unread badge (canvas ChatXFamilyEntry). */
-function pill(value: ChildTab, own: boolean, unread: number): FilterPill<ChildTab> {
-  const label = tabWord(value, own);
-  if (value !== 'chat') return { value, label };
-  const named = t.portal.app.child.chatUnread.replace('{n}', String(unread));
-  return { value, label, badge: { count: unread, label: named } };
-}
 
 /**
  * One child's page body (docs/50 §6, canvas Child): «القادمة» · «حضرها» · «غاب عنها» · «الباقة»
@@ -67,7 +65,7 @@ export function ChildBody({ student, kind }: ChildBodyProps) {
     <View style={{ gap: 16 }}>
       <FilterPills
         fit
-        items={tabs.map((value) => pill(value, own, unread))}
+        items={tabs.map((value) => childTabPill(value, { own, unread }, t))}
         value={tab}
         onChange={(next) => pick[next](next)}
         accessibilityLabel={t.portal.childTabs}

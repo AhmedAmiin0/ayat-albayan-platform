@@ -1,10 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 import { existsSync } from 'node:fs';
+import { FAMILY_URL, familyWebServer } from './support/core/family-host';
 import { AR_LOCALE } from './support/core/locale';
-
 // Written by `pnpm env:local` (local) or the CI step after `supabase start`.
 if (existsSync('.env')) process.loadEnvFile('.env');
-
 // Dedicated ports so e2e never talks to a dev server (or anything else) on 3000/5173.
 const [API_PORT, WEB_PORT] = [3100, 5180];
 const WEB_URL = `http://localhost:${WEB_PORT}`;
@@ -114,7 +113,7 @@ export default defineConfig({
       // default) until a journey turns it on (support/wa-stub.ts), so queued rows stay queued.
       env: {
         PORT: String(API_PORT),
-        WEB_ORIGIN: WEB_URL,
+        WEB_ORIGIN: `${WEB_URL},${FAMILY_URL}`, // staff app first (its links), docs/51 §4
         FX_API_URL: 'http://127.0.0.1:9/',
         ...E2E_WA,
         ...E2E_WA_CHAT,
@@ -146,5 +145,6 @@ export default defineConfig({
       env: { VITE_API_URL: `http://localhost:${API_PORT}`, VITE_INBOX_REFRESH_MS: '1000' },
       reuseExistingServer: !process.env['CI'],
     },
+    familyWebServer({ apiUrl: `http://localhost:${API_PORT}`, staffUrl: WEB_URL, reuse: !process.env.CI }),
   ],
 });

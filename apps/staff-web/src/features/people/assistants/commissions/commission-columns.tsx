@@ -2,12 +2,12 @@ import { formatAmount } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { AssistantCommissionView } from '@/features/people/assistants/api';
 import { commissionStatusStyle } from '@/features/people/assistants/status';
 

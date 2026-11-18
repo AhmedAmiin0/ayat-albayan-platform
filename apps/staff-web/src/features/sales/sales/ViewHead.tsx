@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { PageHead } from '@/components/ui/layout/page';
-import { SegmentedControl, type SegmentedControlProps } from '@/components/ui/form/segmented-control';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { SegmentedControl, type SegmentedControlProps } from '@ab/web-kit/components/ui/form/segmented-control';
 
 /**
  * A page title with its view filter beside it (owner 2026-10-12: «طلابي» and «مدفوعاتي» are filters, not

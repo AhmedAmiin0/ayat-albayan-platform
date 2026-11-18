@@ -1,18 +1,17 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
-import { env } from '@/lib/http/env';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { env } from '@ab/web-kit/lib/http/env';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ServerListState } from '@/lib/list/server-list-search';
 import {
   FEEDBACK_KINDS,
   type FeedbackFormView,
-  type FeedbackPage,
-  type FeedbackSubmitBody,
   type TeacherFeedbackSummary,
   type TeacherFeedbackView,
 } from './types';
+import type { FeedbackRowView, FeedbackSubmit, Page } from '@ab/shared';
 
 export const FEEDBACK_KEY = ['feedback'] as const;
 export const FEEDBACK_PAGE_SIZE = 20;
@@ -57,7 +56,7 @@ export const publicFeedbackQuery = (token: string) =>
   });
 
 /** POST /public/feedback/:token (the unique row is the hard guard: a second send is 409). */
-export const submitFeedback = ({ token, body }: { token: string; body: FeedbackSubmitBody }) =>
+export const submitFeedback = ({ token, body }: { token: string; body: FeedbackSubmit }) =>
   publicFetch<undefined>(`/public/feedback/${encodeURIComponent(token)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -85,7 +84,7 @@ const listParams = (s: ServerListState): URLSearchParams =>
 export const feedbackListQuery = (s: ServerListState) =>
   queryOptions({
     queryKey: [...FEEDBACK_KEY, 'list', s],
-    queryFn: () => apiFetch<FeedbackPage>(`/feedback?${listParams(s)}`),
+    queryFn: () => apiFetch<Page<FeedbackRowView>>(`/feedback?${listParams(s)}`),
     placeholderData: keepPreviousData,
   });
 

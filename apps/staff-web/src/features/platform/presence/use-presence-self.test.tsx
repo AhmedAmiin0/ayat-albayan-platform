@@ -6,8 +6,8 @@ import { type Me, meQuery } from '@/features/people/auth';
 import { usePresenceSelf } from './use-presence-self';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/lib/http/supabase', () => ({ supabase: {} }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 const track = vi.hoisted(() => ({ calls: [] as string[], leaves: 0 }));
 vi.mock('@ab/client-core', async (orig) => ({
   ...(await orig<object>()),

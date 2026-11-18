@@ -1,6 +1,6 @@
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@/lib/i18n/i18n';
-import type { PeriodTotal } from './api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { PeriodTotal } from '@ab/shared';
 
 /** The filter's totals per currency: net (payments − refunds), and the refunds when there are any. */
 export function PeriodTotals({ totals }: { totals: readonly PeriodTotal[] }) {

@@ -1,8 +1,8 @@
 import { intlLocale } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { locale } from '@/lib/i18n/locale';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { fullTime, listTime, stampText, timesInText } from './format';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The date-fns facade swap (docs/34 §7) keeps the exact Intl strings the inbox showed before.
 const L = intlLocale(locale);

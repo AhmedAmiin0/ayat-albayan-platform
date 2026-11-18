@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { type BoxLook, CodeBox } from './CodeBox';
-import { CODE_LENGTH, codeDigits } from './code-digits';
+import { CODE_LENGTH, codeDigits } from '@ab/client-core';
 
 interface CodeBoxesProps {
   value: string;

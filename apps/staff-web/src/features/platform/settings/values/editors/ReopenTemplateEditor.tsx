@@ -6,8 +6,8 @@ import {
   type ReopenChoice,
 } from '@ab/shared';
 import { z } from 'zod';
-import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n/i18n';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { str } from '@/features/platform/settings/registry-form/settings-form';
 import { useValues } from '@/features/platform/settings/values/values-context';
 import { denseClass, describedBy, type EditorProps } from './editor-props';

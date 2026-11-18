@@ -1,7 +1,6 @@
 import { touchedThread } from '@ab/client-core';
-import type { MessageView, ThreadView } from '@ab/shared';
+import type { MessageView, Page, ThreadView } from '@ab/shared';
 import type { InfiniteData } from '@tanstack/react-query';
-import type { Page } from '@/core/lib/query/paging';
 import type { ThreadCache } from './thread-cache';
 
 // The cache edits the chats list makes while a refetch confirms them (owner 2026-10-27): a send moves

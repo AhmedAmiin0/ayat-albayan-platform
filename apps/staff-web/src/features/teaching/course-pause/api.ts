@@ -11,7 +11,7 @@ import {
 } from '@ab/client-core';
 import type { CoursePausePreview, CoursePauseResult, CoursePauseStart, CoursePauseState } from '@ab/shared';
 import { keepPreviousData, queryOptions, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
 // «إيقاف الدورة مؤقتًا» (owner 2026-10-28): apps/api/src/modules/teaching/course-pause. Paths and the key
 // come from @ab/client-core (the same as mobile).

@@ -4,18 +4,18 @@ import {
   type InfiniteData,
   type QueryClient,
 } from '@tanstack/react-query';
-import { flattenPages, type Page } from '@/core/lib/query/paging';
+import { flattenPages } from '@/core/lib/query/paging';
 import { pathKey } from '@ab/mobile-kit';
-import type { Lead } from '@/inbox/shared/types';
+import type { LeadView, Page } from '@ab/shared';
 
 /** The lead with this id in any cached inbox list, freshest list first; undefined if none has it. */
-export function findCachedLead(client: QueryClient, id: string): Lead | undefined {
+export function findCachedLead(client: QueryClient, id: string): LeadView | undefined {
   const lists = client
     .getQueryCache()
     .findAll({ queryKey: ['leads', 'list'] })
     .sort((a, b) => b.state.dataUpdatedAt - a.state.dataUpdatedAt);
   for (const list of lists) {
-    const data = list.state.data as InfiniteData<Page<Lead>> | undefined;
+    const data = list.state.data as InfiniteData<Page<LeadView>> | undefined;
     const lead = flattenPages(data?.pages ?? []).find((l) => l.id === id);
     if (lead) return lead;
   }

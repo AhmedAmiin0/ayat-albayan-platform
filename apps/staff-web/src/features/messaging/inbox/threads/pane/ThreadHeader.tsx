@@ -1,12 +1,12 @@
 import { formatPhone, type ChatListRef, type SubscriptionBadge, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Avatar } from '@/components/ui/display/avatar';
-import { Icon } from '@/components/ui/display/icon';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { LastMessageLine } from '@/features/platform/presence';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadKind, threadTitle, timesInText } from '@/features/messaging/inbox/format';
 import { inboxBase, showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';

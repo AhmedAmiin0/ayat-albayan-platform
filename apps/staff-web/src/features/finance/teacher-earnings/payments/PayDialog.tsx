@@ -1,15 +1,15 @@
 import { amountProblem, earningIdsOf, parseAmount, payCeiling, type TeacherEarningView } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { PaymentFields, type PaymentForm } from '@/features/finance/payments/record/PaymentFields';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { usePayTeacher } from './use-pay-teacher';
-import { useUploadMaxBytes } from '@/lib/settings/public-config';
+import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 
 type Props = {
   teacher: { id: string; name: string };

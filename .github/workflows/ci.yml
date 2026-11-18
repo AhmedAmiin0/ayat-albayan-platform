@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # Which parts changed. e2e drives apps/staff-web against the API and database, so a change that only
+  # Which parts changed. e2e drives both web apps (apps/staff-web, apps/family-web) against the API and database, so a change that only
   # touches the mobile apps (apps/staff-mobile, apps/family-mobile and their shared packages/mobile-kit,
   # which apps/staff-web never imports), docs, the migration tool or other scripts skips the e2e machines; a docs-only change
   # (docs/**, *.md; not docs/09, which workflows.test.mjs reads, nor the linted docs/design/brand/tools) also
@@ -31,7 +31,7 @@ jobs:
   # FAIL SAFE: a manual run, a new branch, an unknown previous commit, an API or git error = everything runs.
   # On a PR, step «e2e specs» also picks the e2e specs the change can reach (e2e/areas.json, through the
   # import graph: tools/scripts/ci-checks/e2e-areas/select.mjs) and how many shards they need; anything it
-  # does not understand, and every push, = the full suite on 8 shards.
+  # does not understand, and every push, = the full suite on 10 shards.
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -150,7 +150,7 @@ jobs:
 
   # Lint, typecheck and the unit tests on parallel machines. The tests used to be one 13-minute job where
   # web (13 min), api (9.5 min) and mobile (5 min) fought over 4 CPUs; each now has its own machine(s),
-  # web in quarters and api in thirds (vitest --shard). Vitest's persistent transform cache (fsModuleCache:
+  # web and api in quarters (vitest --shard). Vitest's persistent transform cache (fsModuleCache:
   # <repo>/node_modules/.vitest-cache) is restored per shard (`vcache`): vitest keys every entry by the module's
   # path, its content, the config files' content and its own version, and empties the folder when pnpm-lock.yaml
   # changes; it holds transformed code only, never a test result, so every test still runs. Turborepo's remote
@@ -173,11 +173,25 @@ jobs:
           # Type-aware lint (docs/31a): more heap, fewer packages at once. Every package is linted (--continue)
           # and saves its findings, bulk-suppressed ones included (eslint-findings.mjs, a turbo output), so the
           # Oxlint parity steps below compare against this ESLint run instead of running ESLint a second time.
+          # Two rows (11-18): api alone took 7.5 of the 13 min, so it has its own machine and lints on two
+          # threads (ESLint --concurrency=2: the same findings, half the time; 4 threads run out of memory).
+          # `scope` (LINT_SCOPE) gives each row's Oxlint, its baselines and the parity the same packages:
+          # `apps/api` and `!apps/api` are complementary (ci-lint-row.test.mjs), so every package is still
+          # held to ESLint, Oxlint's baselines and the parity, exactly once.
           - name: lint + parity (oxlint)
             task: lint
+            filter: --filter=!api
+            scope: '!apps/api'
             opts: --concurrency=3 --continue --log-prefix=task
             heap: --max-old-space-size=6144
             args: '-- -f "$GITHUB_WORKSPACE/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs"'
+          - name: lint + parity (oxlint api)
+            task: lint
+            filter: --filter=api
+            scope: apps/api
+            opts: --continue --log-prefix=task
+            heap: --max-old-space-size=6144
+            args: '-- -f "$GITHUB_WORKSPACE/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs" --concurrency=2'
           # Every typecheck and both Metro bundles (only the two Expo apps have a bundle task) in one turbo graph;
           # a red row's log names the failing task. Metro bundle of each mobile app (docs/32 x0, critic correction
           # 11): the same Babel config as an OTA, so React Compiler output, Metro resolution errors and barrel
@@ -187,14 +201,19 @@ jobs:
           - { name: test web 2/4, task: test, filter: --filter=staff-web, args: '-- --shard=2/4', vcache: web-2-4 }
           - { name: test web 3/4, task: test, filter: --filter=staff-web, args: '-- --shard=3/4', vcache: web-3-4 }
           - { name: test web 4/4, task: test, filter: --filter=staff-web, args: '-- --shard=4/4', vcache: web-4-4 }
-          - { name: test api 1/3, task: test, filter: --filter=api, args: '-- --shard=1/3', vcache: api-1-3 }
-          - { name: test api 2/3, task: test, filter: --filter=api, args: '-- --shard=2/3', vcache: api-2-3 }
-          - { name: test api 3/3, task: test, filter: --filter=api, args: '-- --shard=3/3', vcache: api-3-3 }
+          # api in quarters (11-18): each third took 7-9.5 min, 92 % of it module import (vitest's own summary),
+          # with equal file counts and a different slowest third on every run, so no rebalancing helps.
+          - { name: test api 1/4, task: test, filter: --filter=api, args: '-- --shard=1/4', vcache: api-1-4 }
+          - { name: test api 2/4, task: test, filter: --filter=api, args: '-- --shard=2/4', vcache: api-2-4 }
+          - { name: test api 3/4, task: test, filter: --filter=api, args: '-- --shard=3/4', vcache: api-3-4 }
+          - { name: test api 4/4, task: test, filter: --filter=api, args: '-- --shard=4/4', vcache: api-4-4 }
           # jest-expo by file path (--shard), its transform cache kept like vitest's (`jcache`).
           - { name: test mobile 1/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=1/2', jcache: mobile-1-2 }
           - { name: test mobile 2/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=2/2', jcache: mobile-2-2 }
+          # The family web app and the web kit both web apps build from source (docs/51 §2), on their own machine.
+          - { name: test family web, task: test, filter: --filter=family-web --filter=@ab/web-kit, vcache: family-web }
           # Every other package, the family app (docs/50 §7) and the source package both apps share included.
-          - { name: test others, task: test, filter: '--filter=!staff-web --filter=!api --filter=!staff-mobile', vcache: others }
+          - { name: test others, task: test, filter: '--filter=!staff-web --filter=!api --filter=!staff-mobile --filter=!family-web --filter=!@ab/web-kit', vcache: others }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -217,7 +236,7 @@ jobs:
         env:
           LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
           CONF: >-
-            ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', 'apps/staff-web/vite.config.ts', 'tsconfig*.json',
+            ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', '*/*/vite.config.ts', 'packages/config/vite.js', 'tsconfig*.json',
             '*/*/tsconfig*.json', 'packages/config/tsconfig/**') || hashFiles('*/*/babel.config.cjs',
             '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/mobile-kit/jest.base.cjs', 'packages/mobile-kit/babel.cjs') }}
           KIND: ${{ matrix.vcache && 'vitest' || 'jest' }}
@@ -296,17 +315,22 @@ jobs:
       - name: Oxlint (every rule)
         id: oxfull
         if: ${{ !cancelled() && matrix.task == 'lint' && steps.turbo.outcome != 'skipped' }}
+        env:
+          LINT_SCOPE: ${{ matrix.scope }}
         run: pnpm lint:oxfull
       - name: Parity with ESLint
         if: ${{ !cancelled() && matrix.task == 'lint' && steps.oxfull.outcome != 'skipped' }}
         env:
           LINT_PARITY_ESLINT: ${{ github.workspace }}
           LINT_PARITY_OXLINT: oxlint-report.json
+          LINT_SCOPE: ${{ matrix.scope }}
           NODE_OPTIONS: ${{ matrix.heap }}
         run: pnpm lint:parity
       # A count below the baseline fails until pruned: the log shows the pruned files to commit.
       - name: Oxlint baselines to prune (commit this diff)
         if: failure() && steps.oxfull.outcome == 'failure'
+        env:
+          LINT_SCOPE: ${{ matrix.scope }}
         run: |
           pnpm lint:oxfull -- --prune > /dev/null 2>&1 || true
           git --no-pager diff -- '*oxlint-suppressions.json'
@@ -314,7 +338,7 @@ jobs:
         if: failure() && matrix.task == 'lint'
         uses: actions/upload-artifact@v4
         with:
-          name: lint-parity-report
+          name: lint-parity-report${{ matrix.scope == 'apps/api' && '-api' || '' }}
           path: lint-parity-report.json
           if-no-files-found: ignore
 
@@ -555,7 +579,7 @@ jobs:
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
-  # A PR runs only the specs its change can reach (job «changes», e2e/areas.json) on 1-8 shards; pushes to
+  # A PR runs only the specs its change can reach (job «changes», e2e/areas.json) on 1-10 shards; pushes to
   # develop/main run every spec on both projects, the safety net for anything a PR selection missed.
   # Shards 1-8 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
   # e2e/shard-durations.json from the «e2e-durations-*» artifacts of a push run). «single line» is the production
@@ -577,7 +601,7 @@ jobs:
     # «single line» (the smoke set) always; the fallback below is the full matrix (pushes, any failure).
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.changes.outputs.e2e_matrix || '{"include":[{"name":"e2e (1)","shard":"1","total":8},{"name":"e2e (2)","shard":"2","total":8},{"name":"e2e (3)","shard":"3","total":8},{"name":"e2e (4)","shard":"4","total":8},{"name":"e2e (5)","shard":"5","total":8},{"name":"e2e (6)","shard":"6","total":8},{"name":"e2e (7)","shard":"7","total":8},{"name":"e2e (8)","shard":"8","total":8},{"name":"e2e (single line)","shard":"single","total":8}]}') }}
+      matrix: ${{ fromJSON(needs.changes.outputs.e2e_matrix || '{"include":[{"name":"e2e (1)","shard":"1","total":10},{"name":"e2e (2)","shard":"2","total":10},{"name":"e2e (3)","shard":"3","total":10},{"name":"e2e (4)","shard":"4","total":10},{"name":"e2e (5)","shard":"5","total":10},{"name":"e2e (6)","shard":"6","total":10},{"name":"e2e (7)","shard":"7","total":10},{"name":"e2e (8)","shard":"8","total":10},{"name":"e2e (9)","shard":"9","total":10},{"name":"e2e (10)","shard":"10","total":10},{"name":"e2e (single line)","shard":"single","total":10}]}') }}
     env:
       SHARDS: ${{ matrix.total }}
       # The PR's selected spec files (empty = all of them).
@@ -703,6 +727,9 @@ jobs:
           fi
       # PRs run the desktop project only (half the specs); pushes to main/develop also run the phone-size
       # project, so a mobile layout regression is still caught before a release.
+      # --only: the servers were built by «Build what the e2e servers run» above. Without it turbo hashed the
+      # Playwright arguments (--shard=n/10) into every dependency's build, so each shard built api and web a
+      # second time (~60 s, 11-18). Same task, same strict env; only its dependencies are not run again.
       - name: e2e
         env:
           CI: 'true'
@@ -713,13 +740,13 @@ jobs:
           E2E_DURATIONS_FILE: ${{ matrix.shard != 'single' && format('{0}/e2e-durations.json', runner.temp) || '' }}
         run: |
           if [ "$SHARD" = single ]; then
-            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --project=desktop \
+            pnpm turbo e2e --filter=e2e --only --cache-dir=.turbo/cache -- --project=desktop \
               journey-1-lead-to-trial.spec.ts journey-2-report.spec.ts \
               journey-3-payment-renewal.spec.ts journey-4-reschedule-conflict.spec.ts \
               journey-5-availability-wizard.spec.ts journey-6-duplicate-student.spec.ts \
               inbox-template-status.spec.ts settings-switches.spec.ts
           else
-            pnpm turbo e2e --filter=e2e --cache-dir=.turbo/cache -- --shard="$SHARD/$SHARDS" $PROJECT $SPECS
+            pnpm turbo e2e --filter=e2e --only --cache-dir=.turbo/cache -- --shard="$SHARD/$SHARDS" $PROJECT $SPECS
           fi
       - uses: actions/upload-artifact@v4
         if: failure()
@@ -730,6 +757,12 @@ jobs:
             e2e/test-results
           retention-days: 7
       # Per-file durations of this shard, to refresh e2e/shard-durations.json (tools/scripts/ci-checks/e2e-shards.mjs merge).
+      # Also printed on one line: the job log outlives the 14-day artifact and needs no download.
+      - name: e2e durations (one line)
+        if: always() && matrix.shard != 'single'
+        run: |
+          f="$RUNNER_TEMP/e2e-durations.json"
+          if [ -s "$f" ]; then echo "e2e-durations $(jq -c . "$f")"; fi
       - uses: actions/upload-artifact@v4
         if: always() && matrix.shard != 'single'
         with:

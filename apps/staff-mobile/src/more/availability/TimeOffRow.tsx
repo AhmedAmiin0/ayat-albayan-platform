@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { formatTimeOff } from '@/more/schedule';
-import type { TimeOff } from '@/core/lib/staff/types';
+import type { TimeOff } from '@ab/shared';
 
 /** One time-off: the span (device zone), and the reason when there is one. */
 export function TimeOffRow({ off }: { off: TimeOff }) {

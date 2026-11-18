@@ -1,16 +1,16 @@
 import { lessonWhenAt, type ClockCycle, type StudentLinkLesson } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
-import { classroomErrorText, opensAtOf } from '@/features/teaching/classroom/room/livekit/errors';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { classroomErrorText, opensAtOf } from '@ab/web-kit/classroom/room/livekit/errors';
 import { isLessonNow, windowStateAt } from '@ab/client-core';
-import { RecordedNotice } from '@/features/teaching/classroom/recordings/RecordedNotice';
-import { opensAtText } from '@/features/teaching/classroom/room/livekit/window-hint';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { RecordedNotice } from '@ab/web-kit/classroom/recordings/RecordedNotice';
+import { opensAtText } from '@ab/web-kit/classroom/room/livekit/window-hint';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 interface Props {
   lesson: StudentLinkLesson;

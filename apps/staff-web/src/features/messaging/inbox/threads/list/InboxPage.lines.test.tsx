@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ComposerPhone } from '@/features/messaging/inbox/composer/components/ComposerPhone';
 import { InboxPage } from './InboxPage';
 import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
@@ -10,7 +10,7 @@ import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane';
 import { windowText } from '@/features/messaging/inbox/threads/pane/window-state';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const CHAT = thread({ last_inbound_line: 'chat' });

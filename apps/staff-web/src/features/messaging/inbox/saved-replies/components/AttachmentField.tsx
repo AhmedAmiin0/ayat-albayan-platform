@@ -1,12 +1,12 @@
 import { chatFileProblem, CHAT_SEND_MIMES } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Icon } from '@/components/ui/display/icon';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { sizeText } from '@/features/people/students/recordings/recording-format';
-import { t } from '@/lib/i18n/i18n';
-import { useUploadMaxBytes } from '@/lib/settings/public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 import { chatSendMime } from '@/features/messaging/inbox/api/api.files';
 import { replyErrorText, uploadReplyFile } from '@/features/messaging/inbox/saved-replies/lib/api';
 import { fileName, type DraftFile } from '@/features/messaging/inbox/saved-replies/lib/reply-draft';

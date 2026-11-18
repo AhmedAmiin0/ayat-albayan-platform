@@ -1,6 +1,6 @@
 import { FEEDBACK_KINDS, FEEDBACK_RATINGS, FEEDBACK_RECOMMEND, LESSON_RATINGS } from '@ab/shared';
 import type { FilterOption } from '@/components/data-table/DataTable';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The select filters of the feedback table (values are the GET /feedback params).
 

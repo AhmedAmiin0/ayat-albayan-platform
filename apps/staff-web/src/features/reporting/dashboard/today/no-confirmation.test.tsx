@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { configWrapper } from '@/lib/settings/confirmation-testing';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
 import { KpiStrip } from '@/features/reporting/dashboard/funnel/KpiStrip';
 import { SUMMARY } from '@/features/reporting/dashboard/dashboard-fixture';
 import { LessonsByStatus } from './LessonsByStatus';
@@ -9,7 +9,7 @@ import { lessonAt } from './today-fixture';
 import { TodayKpis } from './TodayKpis';
 import { TodayLessons } from './TodayLessons';
 
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));

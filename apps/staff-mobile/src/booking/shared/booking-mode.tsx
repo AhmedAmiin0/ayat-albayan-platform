@@ -1,3 +1,4 @@
+import type { BookingMode } from '@ab/client-core';
 import { createContext, type ReactNode, useContext } from 'react';
 
 /**
@@ -6,8 +7,6 @@ import { createContext, type ReactNode, useContext } from 'react';
  * same bodies and answers the same shapes, scoped to her own leads: a trial only, no price, no
  * invoice, and the new student is credited to her (brought_by). Admin is the default.
  */
-export type BookingMode = 'admin' | 'sales';
-
 const BookingModeContext = createContext<BookingMode>('admin');
 
 export function BookingModeProvider({ value, children }: { value: BookingMode; children: ReactNode }) {

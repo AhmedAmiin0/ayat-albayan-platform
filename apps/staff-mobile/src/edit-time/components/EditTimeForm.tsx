@@ -1,3 +1,4 @@
+import type { LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking';
@@ -13,10 +14,10 @@ import { EditTimeFields } from './EditTimeFields';
 import { EditTimeHeader } from './EditTimeHeader';
 import { PayoutLockNotice } from './PayoutLockNotice';
 import { useEditTime } from '@/edit-time/lib/queries';
-import { editMode, type EditableLesson } from '@/edit-time/lib/types';
+import { editMode } from '@/edit-time/lib/types';
 
 export interface EditTimeFormProps {
-  lesson: EditableLesson;
+  lesson: LessonView;
   onClose: () => void;
 }
 

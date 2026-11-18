@@ -1,14 +1,14 @@
 import { addCalendarMonths } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { PageHead } from '@/components/ui/layout/page';
-import { adminDayQuery, dayAround } from '@/features/teaching/classroom/api/api';
-import { useNow } from '@/lib/time/use-now';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { adminDayQuery, dayAround } from '@ab/web-kit/classroom/api/api';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { ExportsPanel } from '@/features/reporting/exports/ExportsPanel';
 import { MoneyKpis } from '@/features/finance/finance/MoneyKpis';
-import { t } from '@/lib/i18n/i18n';
-import { useJoinWindow } from '@/lib/settings/public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';
 import { summaryQuery, workQuery } from './api';
 import { KpiStrip } from './funnel/KpiStrip';
 import { PeriodSection } from './PeriodSection';
@@ -18,7 +18,7 @@ import { periodOf, riyadhToday, thisWeek, type DashboardSearch } from './search'
 import { todayCounts } from './today/today';
 import { TodayKpis } from './today/TodayKpis';
 import { TodayLessons } from './today/TodayLessons';
-import type { DayRange } from './types';
+import type { DayRange } from './search';
 import { WeekSection } from './today/WeekSection';
 import { WorkPanel } from './work/WorkPanel';
 

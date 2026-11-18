@@ -1,7 +1,7 @@
 import type { CourseChangeView } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { useFocusOnChange } from '@/components/ui/overlay/use-focus-on-change';
-import { t } from '@/lib/i18n/i18n';
+import { useFocusOnChange } from '@ab/web-kit/components/ui/overlay/use-focus-on-change';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { changeBody, currentPicks } from './change-body';
 import { ChangePicker } from './ChangePicker';
 import { ChangeReview } from './ChangeReview';

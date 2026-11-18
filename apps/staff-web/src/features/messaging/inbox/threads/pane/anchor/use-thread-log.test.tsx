@@ -7,12 +7,12 @@ import { clearOwnSends, recordOwnSend } from '@/features/messaging/inbox/compose
 import { detail, message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { AnchorHarness } from '@/features/messaging/inbox/testing/anchor-harness';
 import { useChatAnchor } from '@/features/messaging/inbox/shared/chat-anchor';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useThreadLog } from './use-thread-log';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 const jump = vi.hoisted(() => vi.fn());
 vi.mock('@/features/messaging/inbox/messages/lib/jump-to-message', () => ({ jumpToMessage: jump }));
 

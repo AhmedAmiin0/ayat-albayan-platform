@@ -1,9 +1,9 @@
-import type { AssistantRow } from '@/assistants/api/api';
 import { CommissionLedger } from '@/assistants/commission/CommissionLedger';
 import type { StatementCan } from '@/assistants/statements/hooks/statement-can';
 import { StatementsPanel } from '@/assistants/statements/components/StatementsPanel';
 import { TermsEditor } from '@/assistants/terms/TermsEditor';
 import { TermsView } from '@/assistants/terms/TermsView';
+import type { AssistantRow } from '@ab/client-core';
 
 export type AssistantTab = 'terms' | 'commissions' | 'statements';
 

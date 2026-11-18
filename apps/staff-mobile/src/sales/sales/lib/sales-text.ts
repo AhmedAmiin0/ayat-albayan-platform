@@ -9,7 +9,7 @@ import {
 } from '@ab/shared';
 import { whenIn } from '@/core/lib/clock';
 import { t, locale, ltr, money } from '@ab/mobile-kit';
-import type { SalesSubscription } from './sales-api';
+import type { SalesSubscriptionView } from '@ab/shared';
 
 // Row lines of the salesperson's pages (docs/16), same words as the web. Western digits; dates and
 // codes are LTR islands. Never a price or link: the API does not send them (the guardian's phone, owner
@@ -39,13 +39,13 @@ export function packageLabel(size: string | null): string {
 }
 
 /** «الباقة · الحالة · 8 حلقة» under the student's name. */
-export function subscriptionSubtitle(sub: SalesSubscription): string {
+export function subscriptionSubtitle(sub: SalesSubscriptionView): string {
   const lessons = t.sales.subscriptions.lessons.replace('{n}', String(sub.lessons_total));
   return [packageLabel(sub.package), statusLabel(sub.status), lessons].join(' · ');
 }
 
 /** «تبدأ 2026-10-01», or nothing without a start day. */
-export function startsLine(sub: SalesSubscription): string | undefined {
+export function startsLine(sub: SalesSubscriptionView): string | undefined {
   return sub.starts_on ? t.sales.subscriptions.startsOn.replace('{date}', ltr(sub.starts_on)) : undefined;
 }
 

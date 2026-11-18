@@ -1,15 +1,15 @@
 import { pdfMetaLine, type MessageView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MessageMedia } from '@/features/messaging/inbox/messages/components/MessageMedia';
 import { Content } from '@/features/messaging/inbox/messages/components/MessageContent';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // A chat PDF like WhatsApp's on the web (owner 2026-10-29, 2026-11-01): page 1 as a card, no click
 // first.

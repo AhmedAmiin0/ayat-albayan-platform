@@ -1,9 +1,9 @@
 import type { ChannelAudience } from '@ab/client-core';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { ChannelThread } from './ChannelThread';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';
 
 /**
  * A monitor's way into a student's channel (the admin's student page, the assistant's «طلابي»): closed

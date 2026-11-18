@@ -1,18 +1,18 @@
 import { formatPhone, studentStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import { hamishMeta, type DataTableFeatures } from '@/components/data-table/DataTable';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { pickColumn } from '@/features/people/assistants/students/pick-column';
 import type { PickColumn } from '@/features/people/assistants/students/use-student-pick';
 import { TestChip } from '@/features/people/test-accounts';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { stacked } from './stacked-rows';
 import { studentNote } from '@/features/people/students/profile/student-note';
 import { StudentNote } from '@/features/people/students/profile/StudentNote';
 import { StudentRowActions } from './StudentRowActions';
 import { TeacherCell } from './TeacherCell';
-import type { StudentListItem } from '@/features/people/students/types';
+import type { StudentListItem } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, StudentListItem>();
 const quiet = (phone: string) => `text-xs text-ink-2 ${phone}`;

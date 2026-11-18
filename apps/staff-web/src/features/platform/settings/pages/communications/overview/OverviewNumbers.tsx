@@ -1,12 +1,12 @@
 import { formatPhone, type NumberView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { Ltr } from '@/components/ui/display/ltr';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { Skeleton } from '@/components/ui/display/skeleton';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { CELL, LINK, TH } from './overview-table';
 
 const h = t.communicationsHub;

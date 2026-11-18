@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { DASHBOARD_KEY, markTaskDone } from '@/features/reporting/dashboard/api';
 import { workItem, workLink } from '@/features/reporting/dashboard/today/PendingReportsList';
-import type { TaskRow } from '@/features/reporting/dashboard/types';
 import { taskText } from './work-text';
+import type { TaskRow } from '@ab/shared';
 
 /** Open admin tasks (renewal due, unpaid) with «خلصت» (POST /admin-tasks/:id/done, docs/11 S8). */
 export function TasksList({ items }: { items: readonly TaskRow[] }) {

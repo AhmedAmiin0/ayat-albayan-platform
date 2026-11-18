@@ -1,7 +1,7 @@
 import { useId } from 'react';
-import { IconButton } from '@/components/ui/form/icon-button';
-import { Icon } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n/i18n';
+import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useCalls } from '@/features/messaging/calls/state/call-context';
 
 export interface CallButtonProps {

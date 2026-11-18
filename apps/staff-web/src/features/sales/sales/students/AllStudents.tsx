@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Pager } from '@/components/ui/layout/pager';
-import { SearchInput } from '@/components/ui/form/search-input';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Pager } from '@ab/web-kit/components/ui/layout/pager';
+import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ALL_STUDENTS_PAGE_SIZE, salesAllStudentsQuery } from '@/features/sales/sales/academy-api';
 import { usePermissions } from '@/features/people/auth';
 import { allStudentColumns, peopleEditColumn } from './all-student-columns';

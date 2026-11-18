@@ -1,7 +1,7 @@
 import type { PaymentLinkQuoteView } from '@ab/shared';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { fillText, moneySlots, paymentLinkErrorText } from '@/features/sales/payment-links';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 type Props = {
   quote: PaymentLinkQuoteView | undefined;

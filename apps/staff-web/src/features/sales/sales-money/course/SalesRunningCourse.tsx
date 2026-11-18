@@ -1,9 +1,9 @@
 import { type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/button';
 import { CourseChangeForm } from '@/features/teaching/booking/course-change/CourseChangeForm';
 import { BookingModeContext } from '@/features/teaching/booking/mode';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SalesCourseActions } from './SalesCourseActions';
 
 export interface SalesRunningCourseProps {

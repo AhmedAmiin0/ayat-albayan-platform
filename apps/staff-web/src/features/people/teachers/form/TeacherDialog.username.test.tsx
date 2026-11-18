@@ -3,23 +3,24 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { publicConfigQuery } from '@/lib/settings/public-config';
-import type { Teacher } from '@/features/people/teachers/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { TeacherDialog } from './TeacherDialog';
+import type { Teacher } from '@ab/shared';
+import { teacherFixture } from '@ab/shared/testing';
 
 // «اسم المستخدم» of the teacher's login (docs/30 §7).
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const U = t.familyAuth.teacherUsername;
-const OMAR: Teacher = {
+const OMAR: Teacher = teacherFixture({
   id: 't1', display_name_ar: 'أ. عمر', display_name_en: null, gender: 'male', programs: ['quran'], phone_e164: null,
   meeting_link: null, meeting_mode: null, platform_classroom: false, rate_30: null, rate_45: null, rate_60: null,
   rate_90: null, max_students: null, status: 'active', tz: 'Africa/Cairo', profile_id: 'p1', username: 'omar',
-};
+});
 
 function show(teacher: Teacher | null) {
   apiFetch.mockResolvedValue([]);

@@ -317,7 +317,8 @@
         "apps/api/src/modules/people/me/",
         "apps/api/src/modules/people/portal/",
         "apps/api/src/modules/people/presence/",
-        "apps/staff-web/src/routes/portal.tsx"
+        "apps/staff-web/src/routes/portal.tsx",
+        "apps/family-web/src/routes/"
       ],
       "specs": [
         "people/account.api.spec.ts",
@@ -506,6 +507,15 @@
         "messaging/wa-lines-check.spec.ts"
       ]
     },
+    "shortLinks": {
+      "about": "managed short links: the admin and sales list, create and detail pages and their API",
+      "paths": [
+        "apps/staff-web/src/routes/admin/short-links/",
+        "apps/staff-web/src/routes/sales/short-links/",
+        "apps/api/src/modules/platform/short-links-admin/"
+      ],
+      "specs": ["platform/short-links-admin.spec.ts"]
+    },
     "translations": {
       "about": "the translations page and the catalogue of every UI string (any ar.json/en.json key change runs it)",
       "paths": [
@@ -513,6 +523,17 @@
         "apps/api/src/modules/platform/translations/"
       ],
       "specs": ["platform/locale.spec.ts", "platform/translations.spec.ts"]
+    },
+    "shortLinkGate": {
+      "about": "the public short-link gate /l/<code> (docs/19 «Gate flow») and its API",
+      "paths": [
+        "apps/staff-web/src/routes/(public)/l.$code.tsx",
+        "apps/api/src/modules/platform/short-links-admin/gate/"
+      ],
+      "specs": [
+        "platform/short-link-gate.spec.ts",
+        "platform/short-link-gate-code.spec.ts"
+      ]
     }
   },
   "developOnly": [

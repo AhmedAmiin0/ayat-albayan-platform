@@ -1,9 +1,9 @@
 import { studentStatusStyle } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
-import type { StudentRef } from '@/features/people/students/types';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { StudentRef } from '@ab/shared';
 
 export interface StudentFamilyProps {
   siblings: StudentRef[];

@@ -3,10 +3,10 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { usePermissions, t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
-import type { StudentProfile } from '@/students/shared/types';
 import { useTrialHistory } from '@/trial-date/lib/queries';
 import { studentFileTrialHref } from '@/trial-date/lib/trial-href';
 import { TrialHistoryList } from './TrialHistoryList';
+import type { StudentProfile } from '@ab/shared';
 
 /**
  * The admin student file's «مواعيد الحلقة التجريبية» (R-STU-05): «موعد تجريبي جديد» while the

@@ -4,7 +4,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SEND_UNCONFIRMED } from '@ab/client-core';
-import { ApiError } from '@/lib/http/api';
+import { ApiError } from '@ab/web-kit/lib/http/api';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { clearAllDrafts, draftGeneration, getDraft } from './draft-store';
@@ -16,7 +16,7 @@ import { type Sent, useTextSend } from './use-text-send';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const PATH = '/threads/%2B966501234567';
 const ID = 'c0000000-0000-4000-8000-0000000000a1';

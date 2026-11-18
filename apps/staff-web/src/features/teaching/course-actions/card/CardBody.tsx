@@ -1,7 +1,7 @@
 import { subscriptionStatusStyle, type CourseCardView } from '@ab/shared';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { CardLessons } from './CardLessons';
 import { CardSummary } from './CardSummary';
 import { packageLines } from './card-text';

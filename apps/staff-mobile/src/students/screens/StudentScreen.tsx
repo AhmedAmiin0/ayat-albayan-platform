@@ -28,7 +28,7 @@ import { GuardianCard } from '@/students/profile/GuardianCard';
 import { SiblingsList } from '@/students/profile/SiblingsList';
 import { StatusChanger } from '@/students/profile/StatusChanger';
 import { StudentFacts } from '@/students/profile/StudentFacts';
-import type { StudentProfile } from '@/students/shared/types';
+import type { StudentProfile } from '@ab/shared';
 
 const back = () => backWithin('/students');
 

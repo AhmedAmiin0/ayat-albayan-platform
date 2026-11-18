@@ -30,6 +30,13 @@ test('apt + Chromium first, then the manifests, pnpm fetch, and only then the so
   assert.match(dockerfile, /pnpm install --prefer-offline --frozen-lockfile --prod --store-dir \/pnpm\/store --filter "api\.\.\."/);
 });
 
+test('the build stage never reinstalls: pnpm\'s pre-run install check is off before the source', () => {
+  const build = dockerfile.slice(dockerfile.indexOf('AS build\n'), dockerfile.indexOf('\nCOPY . .'));
+  assert.match(build, /\nENV pnpm_config_verify_deps_before_run=false$/);
+  const final = dockerfile.slice(dockerfile.lastIndexOf('\nFROM '));
+  assert.doesNotMatch(final, /verify_deps/, 'the runtime image keeps pnpm\'s defaults');
+});
+
 test('the runtime keeps its user, workdir, port, health check and command', () => {
   const final = dockerfile.slice(dockerfile.lastIndexOf('\nFROM '));
   assert.match(final, /^FROM runtime-base$/m);

@@ -13,10 +13,11 @@ import {
   useTabBarInset,
 } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
-import { type SalesSubscription, type SubscriptionKind, useSalesSubscriptions } from '@/sales/sales/lib/sales-api';
+import type { SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
+import { useSalesSubscriptions } from '@/sales/sales/lib/sales-api';
 import { SalesSubscriptionRow } from '@/sales/sales/components/SalesSubscriptionRow';
 
-const KINDS = (): { value: SubscriptionKind; label: string }[] => [
+const KINDS = (): { value: SalesSubscriptionKind; label: string }[] => [
   { value: 'pending', label: t.sales.subscriptions.pending },
   { value: 'confirmed', label: t.sales.subscriptions.confirmed },
 ];
@@ -29,11 +30,11 @@ const KINDS = (): { value: SubscriptionKind; label: string }[] => [
  */
 export function SalesSubscriptionsScreen() {
   const { color } = useTheme();
-  const [kind, setKind] = useState<SubscriptionKind>('pending');
+  const [kind, setKind] = useState<SalesSubscriptionKind>('pending');
   const list = useSalesSubscriptions(kind);
   const inset = useTabBarInset();
   const confirmed = kind === 'confirmed';
-  const row = useCallback(({ item }: ListRenderItemInfo<SalesSubscription>) => <SalesSubscriptionRow sub={item} withHistory={confirmed} />, [confirmed]);
+  const row = useCallback(({ item }: ListRenderItemInfo<SalesSubscriptionView>) => <SalesSubscriptionRow sub={item} withHistory={confirmed} />, [confirmed]);
   const cells = useInsetRows(row, list.data?.length ?? 0);
   const empty = kind === 'pending' ? t.sales.subscriptions.emptyPending : t.sales.subscriptions.emptyConfirmed;
   return (

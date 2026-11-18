@@ -1,12 +1,12 @@
 import { formatPhone, normalizePhone } from '@ab/shared';
-import { HighlightDiff } from '@/components/ui/display/highlight-diff';
-import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { HighlightDiff } from '@ab/web-kit/components/ui/display/highlight-diff';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { nameMatch, textMatch } from './compare';
 import type { CreateStudentValues } from '@/features/people/students/create/create-student';
 import { CompareRow, cell } from './CompareRow';
-import type { StudentProfile, StudentRef } from '@/features/people/students/types';
+import type { StudentProfile, StudentRef } from '@ab/shared';
 
 type DuplicateCompareProps = {
   typed: CreateStudentValues;

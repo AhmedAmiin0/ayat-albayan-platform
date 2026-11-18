@@ -1,13 +1,13 @@
 import type { BookingTeacherOption, ProfileCourseView } from '@ab/shared';
 import { useState } from 'react';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import {
   ChangeReview,
   changeBody,
   CourseChangeForm,
   currentPicks,
 } from '@/features/teaching/booking';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { fromNextLesson } from './ChangeTimesDialog';
 import type { TeacherDraft } from './TeacherPickStep';
 

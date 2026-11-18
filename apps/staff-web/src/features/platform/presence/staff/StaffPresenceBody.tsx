@@ -1,8 +1,8 @@
 import type { StaffPresence, StaffPresenceRow } from '@ab/shared';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import type { Clock } from '@/lib/clock';
-import { t } from '@/lib/i18n/i18n';
-import type { WithOnline } from '@/features/platform/presence/presence-pick';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import type { Clock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { WithOnline } from '@ab/web-kit/components/channel/presence/presence-pick';
 import { StaffPresenceRows } from './StaffPresenceRows';
 
 const NOTE = 'text-sm text-ink-3';

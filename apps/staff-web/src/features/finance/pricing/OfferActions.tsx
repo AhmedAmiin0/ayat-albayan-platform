@@ -1,10 +1,10 @@
 import { offerText, type Quote } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Icon } from '@/components/ui/display/icon';
-import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { waLink } from './format';
 
 type Outcome = 'copied' | 'failed' | null;

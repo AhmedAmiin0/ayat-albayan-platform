@@ -41,7 +41,7 @@ test('a subscription row reads package · status · lessons and its start day', 
     `${t.enums.packageSize['8']} · ${t.enums.subscriptionStatus.active} · ${t.sales.subscriptions.lessons.replace('{n}', '8')}`,
   );
   expect(startsLine(sub)).toBe(t.sales.subscriptions.startsOn.replace('{date}', ltr('2026-10-01')));
-  expect(startsLine(subscription({ starts_on: null }))).toBeUndefined();
+  expect(startsLine(subscription({ starts_on: '' }))).toBeUndefined();
 });
 
 test('a teacher reads gender · programs; no programs leaves the gender alone', () => {

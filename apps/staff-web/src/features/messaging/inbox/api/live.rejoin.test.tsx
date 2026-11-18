@@ -25,7 +25,7 @@ const rt = vi.hoisted(() => {
   };
   return { joins, supabase };
 });
-vi.mock('@/lib/http/supabase', () => ({ supabase: rt.supabase }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: rt.supabase }));
 
 const settle = () => act(async () => undefined);
 const status = (s: string) => act(async () => rt.joins.at(-1)?.status?.(s));

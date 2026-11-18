@@ -1,12 +1,12 @@
 import { counted, pickProgress } from '@ab/shared';
 import { useId } from 'react';
-import { RequiredMark } from '@/components/ui/form/label';
-import { t } from '@/lib/i18n/i18n';
+import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { dayPicks } from '@/features/teaching/booking/draft/draft.days';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { dayAtText } from './DayTimesList';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { PACKAGE_NOTE_CLASS, packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 
 export interface SlotDaysProps {

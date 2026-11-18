@@ -1,8 +1,8 @@
 import { fillSlots } from '@ab/client-core';
 import { ayahCount, juzOf, searchSurahs, surahName } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface SurahListProps {
   query: string;

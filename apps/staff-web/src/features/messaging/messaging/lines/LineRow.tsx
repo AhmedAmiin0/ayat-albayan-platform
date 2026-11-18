@@ -1,15 +1,15 @@
 import type { LineCheckView, Tone, WaLine } from '@ab/shared';
-import { Ltr } from '@/components/ui/display/ltr';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { StatusChip, toneClass } from '@/components/ui/display/status-chip';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { StatusChip, toneClass } from '@ab/web-kit/components/ui/display/status-chip';
 import { fullTime } from '@/features/messaging/inbox/format';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { LineDriver } from './LineDriver';
 import { MetaReady } from './MetaReady';
 import { LineFacts } from './LineFacts';
 import { webhookState, type WebhookState } from './line-status';
-import { useClock } from '@/lib/clock';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 type Shown = Exclude<WebhookState, 'unknown'>;
 type Label = keyof typeof t.templates.settings.lines;

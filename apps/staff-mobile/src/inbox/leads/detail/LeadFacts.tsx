@@ -3,10 +3,10 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, Ltr, StatusChip, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { leadAge } from '@/inbox/shared/format';
-import type { Lead } from '@/inbox/shared/types';
+import type { LeadView } from '@ab/shared';
 
 /** Label/value card of the lead row; its qualification and follow-up sit below (qualification/). */
-export function LeadFacts({ lead }: { lead: Lead }) {
+export function LeadFacts({ lead }: { lead: LeadView }) {
   const { color } = useTheme();
   const valueStyle = {
     fontFamily: type.ui[500],

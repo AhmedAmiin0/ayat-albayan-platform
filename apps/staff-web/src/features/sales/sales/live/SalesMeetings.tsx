@@ -1,8 +1,8 @@
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { PageHead } from '@/components/ui/layout/page';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { InternalMeetingButton } from '@/features/teaching/meetings/internal/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/teaching/meetings/internal/InternalMeetingsList';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * /sales/meetings «الاجتماعات» (owner 2026-10-12: back for sales): «اجتماع داخلي» now or «اجتماع

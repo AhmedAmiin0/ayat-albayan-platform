@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { scheduleLesson } from '@/features/sales/sales/academy.fixtures';
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLessonDrawer } from '@/features/sales/sales/schedule/SalesLessonDrawer';
@@ -8,8 +8,8 @@ import { SalesLessonDrawer } from '@/features/sales/sales/schedule/SalesLessonDr
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ keys: [] as string[] }));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch }));
-vi.mock('@/features/people/auth/use-permissions', () => ({
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({
     permissions: granted.keys,
     can: (p: string) => granted.keys.includes(p),

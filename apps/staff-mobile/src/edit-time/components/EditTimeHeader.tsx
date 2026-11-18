@@ -1,13 +1,13 @@
+import type { LessonView, TimeEditMode } from '@ab/shared';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, whenText } from '@ab/mobile-kit';
 import { studentNames } from '@/today';
 import { lengthOf } from '@/edit-time/lib/edit-time-body';
 import { lengthText } from '@/edit-time/lib/edit-time-text';
-import type { EditableLesson, TimeEditMode } from '@/edit-time/lib/types';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface EditTimeHeaderProps {
-  lesson: EditableLesson;
+  lesson: LessonView;
   mode: TimeEditMode;
   /** The family's zone, for the student's clock. */
   tz: string;

@@ -1,5 +1,5 @@
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
 import { fullTime } from '@/features/messaging/inbox';
 import type { EditStage, EditState } from './edit-state';
 

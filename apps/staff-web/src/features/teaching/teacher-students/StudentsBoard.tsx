@@ -1,11 +1,11 @@
 import { zonedPartsIn, type TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { LoadRetry, myLessonsQuery } from '@/features/teaching/teacher';
 import { boardWindow, TeacherBoard } from '@/features/teaching/teacher-board';
-import { useNow } from '@/lib/time/use-now';
-import { cn } from '@/lib/utils';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { cn } from '@ab/web-kit/lib/utils';
 import { loadState, type LoadState } from './load-state';
 
 /**

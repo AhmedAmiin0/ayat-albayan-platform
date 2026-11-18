@@ -1,9 +1,9 @@
 import type { MouseEvent } from 'react';
 import { clickToChatLink } from '@ab/shared';
-import { Icon } from '@/components/ui/display/icon';
-import { IconButton, iconButtonClass } from '@/components/ui/form/icon-button';
-import { t } from '@/lib/i18n/i18n';
-import type { StudentListItem } from '@/features/people/students/types';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { IconButton, iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { StudentListItem } from '@ab/shared';
 
 type StudentRowActionsProps = { row: StudentListItem; onOpen: (studentId: string) => void };
 

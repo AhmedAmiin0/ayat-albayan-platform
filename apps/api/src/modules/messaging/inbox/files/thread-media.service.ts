@@ -1,4 +1,4 @@
-import type { SignedDownload, ThreadMediaItem } from '@ab/shared';
+import type { ThreadFile, ThreadMediaItem } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -13,7 +13,6 @@ const DAY_MS = 86_400_000;
 const LOOKBACK_DAYS = 30;
 const PICKER_SIZE = 12;
 
-export type ThreadFile = SignedDownload & { mime: string };
 /** A picker file: its message and our stored object (bucket, path, the mime it is served as). */
 interface PickedFile {
   msg: MediaMessage;

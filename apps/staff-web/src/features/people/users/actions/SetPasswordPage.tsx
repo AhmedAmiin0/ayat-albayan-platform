@@ -1,12 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState, type SubmitEvent } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { PasswordInput } from '@/features/people/auth/PasswordInput';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { hasRecoverySession, savePassword, setPasswordError } from './set-password';
 
 const S = t.users.setPassword;

@@ -1,9 +1,9 @@
 import type { NumberView } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { numberErrorText } from '@/features/messaging/numbers/form/number-errors';
 import { deleteNumber, updateNumber } from '@/features/messaging/numbers/numbers-api';
 import { NumberFormDialog } from '@/features/messaging/numbers/form/NumberFormDialog';

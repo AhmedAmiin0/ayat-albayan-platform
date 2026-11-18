@@ -1,6 +1,6 @@
 import type { TemplateLineView, WaLine } from '@ab/shared';
-import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n/i18n';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { optionText } from '@/features/platform/integrations/integrations-form';
 
 export interface SubmitTargetProps {

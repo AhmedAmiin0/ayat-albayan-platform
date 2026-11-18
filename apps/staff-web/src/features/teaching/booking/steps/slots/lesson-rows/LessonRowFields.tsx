@@ -1,9 +1,9 @@
 import type { LessonRow } from '@ab/client-core';
-import { Icon } from '@/components/ui/display/icon';
-import { Field } from '@/components/ui/form/field';
-import { IconButton } from '@/components/ui/form/icon-button';
-import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RowBounds } from './row-window';
 
 export interface LessonRowFieldsProps {

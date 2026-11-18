@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** «حفظ» of one section: secondary (no filled primary on this screen), «جاري الحفظ…» while pending. */
 export function SaveButton({ pending, disabled }: { pending: boolean; disabled?: boolean }) {

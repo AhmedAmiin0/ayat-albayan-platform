@@ -77,7 +77,10 @@ async function main() {
   const oxlint = findingsOf(ox.value);
   const result = compareFindings(es.value, oxlint);
   const gaps = readJson(fileURLToPath(new URL('./gaps.json', import.meta.url)), gapsFile);
-  const lines = [...failures(result.missing, gaps), ...(await configLines(root, dirs))];
+  const lines = [
+    ...failures(result.missing, gaps, process.env.LINT_SCOPE),
+    ...(await configLines(root, dirs)),
+  ];
   const details = JSON.stringify({ ...result, lines }, null, 1);
   writeFileSync(join(root, 'lint-parity-report.json'), details);
   const summary = [

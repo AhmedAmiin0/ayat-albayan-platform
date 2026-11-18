@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { fullTime } from '@/features/messaging/inbox/format';
-import { useClock, type Clock } from '@/lib/clock';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { useClock, type Clock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { threadMediaQuery, threadMediaUrl } from './api.invoice';
 import type { ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';

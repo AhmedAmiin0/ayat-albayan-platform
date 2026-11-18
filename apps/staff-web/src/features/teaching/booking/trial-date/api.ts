@@ -1,10 +1,10 @@
-import type { Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
+import type { BookingMode } from '@ab/client-core';
+import type { BookingRequest, Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { STUDENTS_KEY } from '@/features/people/students/api';
-import { apiFetch, apiSend } from '@/lib/http/api';
-import type { BookingBody } from '@/features/teaching/booking/draft/contract';
-import { bookingBase, type BookingMode } from '@/features/teaching/booking/mode';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { bookingBase } from '@/features/teaching/booking/mode';
 
 // «موعد تجريبي جديد» routes (owner 2026-10-25, R-SCH-06, R-ASST-01) under the booking base of each
 // mode: /booking (admin) or /sales/booking (the assistant, her students only).
@@ -23,8 +23,8 @@ export const trialHistoryQuery = (studentId: string, mode: BookingMode = 'admin'
  * POST {base}/trial-date/check — the new date's clashes, the moved trial left out server-side. The
  * same body as the booking check; keyed without its idempotency key and meeting link.
  */
-export const trialDateCheckQuery = (body: BookingBody, mode: BookingMode = 'admin') => {
-  const probe: Partial<BookingBody> = { ...body };
+export const trialDateCheckQuery = (body: BookingRequest, mode: BookingMode = 'admin') => {
+  const probe: Partial<BookingRequest> = { ...body };
   delete probe.meetingLink; // never sent: the link is validated on the booking itself
   const key = { ...probe };
   delete key.clientRequestId;
@@ -40,7 +40,7 @@ export const trialDateCheckQuery = (body: BookingBody, mode: BookingMode = 'admi
  * resend with `override`), 409 trial_date_subscribed, 400 trial_date_invalid / date_in_past. The
  * body's clientRequestId makes a retry book once.
  */
-export const createTrialDate = (body: BookingBody, mode: BookingMode = 'admin') =>
+export const createTrialDate = (body: BookingRequest, mode: BookingMode = 'admin') =>
   apiSend<TrialDateResult>('POST', `${bookingBase(mode)}/trial-date`, body);
 
 /** After a new trial date: lessons (the history and calendars are under it), students, chats and sales views. */

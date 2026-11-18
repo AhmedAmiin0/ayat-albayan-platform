@@ -1,9 +1,9 @@
 import type { AccountProfile } from '@ab/shared';
-import { Avatar } from '@/components/ui/display/avatar';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { Ltr } from '@/components/ui/display/ltr';
-import { PageHead } from '@/components/ui/layout/page';
-import { t } from '@/lib/i18n/i18n';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { avatarSeed } from './avatar-file';
 import { roleLabel } from './role-label';
 

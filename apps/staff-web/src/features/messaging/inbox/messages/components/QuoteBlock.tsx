@@ -1,7 +1,7 @@
 import { isUnavailableQuote, quoteIcon, type MessageQuote, type ReplyQuote } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { jumpToMessage } from '@/features/messaging/inbox/messages/lib/jump-to-message';
 import { quoteSender, quoteText } from '@/features/messaging/inbox/messages/lib/quote';

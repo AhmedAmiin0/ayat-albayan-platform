@@ -1,5 +1,5 @@
-import { RadioChips } from '@/components/ui/form/radio-chips';
-import { t } from '@/lib/i18n/i18n';
+import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { BOOKING_KINDS } from '@/features/teaching/booking/draft/contract';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { kindPatch } from '@/features/teaching/booking/draft/draft.kind';

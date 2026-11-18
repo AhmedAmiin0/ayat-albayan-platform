@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
 import { AppText, locale, shape, t, type, useTheme } from '@ab/mobile-kit';
-import { type Country, phoneRegion } from './countries';
+import { type Country, orderCountries, searchCountries } from '@ab/client-core';
+import { phoneRegion } from './countries';
 import { CountryList } from './CountryList';
-import { orderCountries, searchCountries } from './country-search';
 import { CountrySearch } from './CountrySearch';
 
 interface CountryPickerProps {

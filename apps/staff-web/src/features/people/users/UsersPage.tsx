@@ -1,23 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { Icon } from '@/components/ui/display/icon';
-import { PageHead } from '@/components/ui/layout/page';
-import { Pager } from '@/components/ui/layout/pager';
-import { Toast } from '@/components/ui/overlay/toast';
-import { usePermissions } from '@/features/people/auth/use-permissions';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Pager } from '@ab/web-kit/components/ui/layout/pager';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import { StaffPresencePanel } from '@/features/platform/presence';
-import { t } from '@/lib/i18n/i18n';
-import { userListQuery, type UsersView } from './api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { userListQuery, type UsersPageView } from './api';
 import { CreateUserDialog } from './create/CreateUserDialog';
 import { UserDetailDialog } from './edit/UserDetailDialog';
 import { usersColumns } from './usersColumns';
 import { UsersSearch } from './UsersSearch';
 import { usersFilters } from './use-users-filters';
 
-const FIRST: UsersView = { q: '', role: '', status: '', page: 1 };
+const FIRST: UsersPageView = { q: '', role: '', status: '', page: 1 };
 
 /**
  * «المستخدمون» (users.read): every login with its role, linked record and status; search, role and
@@ -26,7 +26,7 @@ const FIRST: UsersView = { q: '', role: '', status: '', page: 1 };
 export function UsersPage() {
   const { can } = usePermissions();
   const canWrite = can('users.write');
-  const [view, setView] = useState<UsersView>(FIRST);
+  const [view, setView] = useState<UsersPageView>(FIRST);
   const [opened, setOpened] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);

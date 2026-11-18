@@ -6,8 +6,8 @@ import type {
   StudentJoinLinkUrl,
   StudentLinkView,
 } from '@ab/shared';
-import { ApiError, apiSend } from '@/lib/http/api';
-import { env } from '@/lib/http/env';
+import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
+import { env } from '@ab/web-kit/lib/http/env';
 
 /** POST /lessons/:id/room/open «افتح الحلقة الآن» (admin or the lesson's teacher). */
 export const openRoom = (lessonId: string) => apiSend<RoomOpenResult>('POST', `/lessons/${lessonId}/room/open`);

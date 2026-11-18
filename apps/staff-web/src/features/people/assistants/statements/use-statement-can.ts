@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { usePermissions } from '@/features/people/auth/use-permissions';
+import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import type { StatementCan } from './StatementActions';
 
 /** What this admin may do on a statement (a stable object, so the columns are not rebuilt each render). */

@@ -1,6 +1,6 @@
 import { ApiError } from '@ab/client-core';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { setupErrorText, setupFormProblem } from './setup-errors';
 
 const S = t.teacherAuth.setup;

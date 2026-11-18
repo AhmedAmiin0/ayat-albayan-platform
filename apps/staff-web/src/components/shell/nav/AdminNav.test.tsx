@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AdminNav } from './AdminNav';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -26,6 +26,7 @@ describe('AdminNav', () => {
     [t.assistants.nav, '/admin/assistants'],
     [t.nav.expenses, '/admin/expenses'],
     [t.nav.inbox, '/admin/inbox'],
+    [t.nav.shortLinks, '/admin/short-links'],
     [t.nav.feedback, '/admin/feedback'],
     [t.classroom.admin.nav, '/admin/classrooms'],
     [t.settings.title, '/admin/settings'],
@@ -40,9 +41,9 @@ describe('AdminNav', () => {
     expect(screen.getByRole('link', { name: label }).getAttribute('href')).toBe(href);
   });
 
-  it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox, settings, translations, activity and roles', () => {
+  it('links only the routes that exist (Phase 1 screens, money, inbox, short links, admin)', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(22);
+    expect(screen.getAllByRole('link')).toHaveLength(23);
   });
 
   it('groups the money pages under «المالية»', () => {

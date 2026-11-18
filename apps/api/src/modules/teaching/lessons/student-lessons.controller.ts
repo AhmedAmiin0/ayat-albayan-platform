@@ -1,9 +1,9 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView, Page } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Permissions } from '@/common/auth/decorators';
-import { pageQuerySchema, type Page } from '@/common/http/http';
+import { pageQuerySchema } from '@/common/http/http';
 import { ZodQuery } from '@/common/http/zod-inputs';
 import { LessonViews } from './store/lesson-views';
 

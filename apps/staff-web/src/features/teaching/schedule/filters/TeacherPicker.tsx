@@ -1,8 +1,8 @@
 import { counted } from '@ab/shared';
-import { controlClass } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { cn } from '@/lib/utils';
+import { controlClass } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface TeacherPickerProps {
   /** Every teacher in the overview (before the other filters). */

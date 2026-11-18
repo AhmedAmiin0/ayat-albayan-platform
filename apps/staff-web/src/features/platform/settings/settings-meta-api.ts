@@ -1,6 +1,6 @@
 import type { SettingsMetaResponse } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 /** GET /config/meta (admin): who last changed each stored setting, and when. */

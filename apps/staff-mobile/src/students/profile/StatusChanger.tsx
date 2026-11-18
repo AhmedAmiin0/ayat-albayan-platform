@@ -11,8 +11,8 @@ import {
 import { Note } from '@/more';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { StatusSheets } from '@/students/course-card/StatusSheets';
-import type { StudentRef } from '@/students/shared/types';
 import { useStatusPick } from './use-status-pick';
+import type { StudentRef } from '@ab/shared';
 
 /** No /status route: PATCH /students/:id, a compare-and-set on the status shown (R-STU-05). */
 type StudentStatusChange = StatusChange<StudentStatus> & { expected: StudentStatus };

@@ -6,7 +6,7 @@ import {
   type SalesScheduleLesson,
 } from '@ab/shared';
 import { usePermissions } from '@/features/people/auth';
-import { usePublicConfig } from '@/lib/settings/public-config';
+import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 import { canSalesCorrect } from './correct/correctable';
 
 /**

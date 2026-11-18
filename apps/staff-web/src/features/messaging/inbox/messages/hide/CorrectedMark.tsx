@@ -1,4 +1,4 @@
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { jumpToMessage } from '@/features/messaging/inbox/messages/lib/jump-to-message';
 

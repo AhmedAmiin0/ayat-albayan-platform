@@ -8,7 +8,7 @@ import {
   type NumberView,
   type WaProvider,
 } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The add / edit dialog's fields as typed (ids trimmed on submit; empty optional ids are null). */
 export interface NumberDraft {

@@ -2,7 +2,7 @@ import type { LessonView, PayoutView, PendingReportView, TeacherMe } from '@ab/s
 import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
-import type { AvailabilityRow } from '@/core/lib/staff/types';
+import type { AvailabilityRow } from '@ab/shared';
 
 // The signed-in teacher's own reads (R-TCH-03, R-TCH-04). Every route is scoped by the session on
 // the API (no teacher id to tamper with); the persisted cache keeps them for an offline start.

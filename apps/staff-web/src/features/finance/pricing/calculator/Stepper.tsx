@@ -1,8 +1,8 @@
-import { Field } from '@/components/ui/form/field';
-import { Icon } from '@/components/ui/display/icon';
-import { IconButton } from '@/components/ui/form/icon-button';
-import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface StepperProps {
   label: string;
