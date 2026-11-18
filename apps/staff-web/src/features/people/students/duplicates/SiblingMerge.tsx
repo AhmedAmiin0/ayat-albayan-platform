@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n/i18n';
 import { mergeStudents, STUDENTS_KEY } from '@/features/people/students/api';
 import { MergeDialog } from './MergeDialog';
 import { SavedNote } from '@/features/people/students/profile/SavedNote';
-import type { StudentRef } from '@/features/people/students/types';
+import type { StudentRef } from '@ab/shared';
 
 type SiblingMergeProps = { student: StudentRef; siblings: StudentRef[] };
 

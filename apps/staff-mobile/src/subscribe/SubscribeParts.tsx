@@ -1,4 +1,4 @@
-import type { QuoteResponse } from '@ab/shared';
+import type { QuoteResponse, StudentRef } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
 import {
@@ -13,7 +13,6 @@ import {
   Section,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import type { StudentRef } from '@/students/shared/types';
 import { DatePickerField } from '@/core/ui/form/date-picker';
 import { QuotePreview } from './QuotePreview';
 import { subscribeErrorText } from './subscribe-form';

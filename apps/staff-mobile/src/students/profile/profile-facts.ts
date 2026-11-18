@@ -1,6 +1,6 @@
 import { teacherName } from '@ab/shared';
 import { t, locale } from '@ab/mobile-kit';
-import type { StudentProfile } from '@/students/shared/types';
+import type { StudentProfile } from '@ab/shared';
 
 interface Fact {
   label: string;

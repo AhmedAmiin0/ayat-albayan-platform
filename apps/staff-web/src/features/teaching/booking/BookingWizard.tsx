@@ -1,8 +1,7 @@
-import type { BookingResult, TrialDateResult } from '@ab/shared';
+import type { BookingResult, StudentRef, TrialDateResult } from '@ab/shared';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/form/button';
 import { useFocusOnChange } from '@/components/ui/overlay/use-focus-on-change';
-import type { StudentRef } from '@/features/people/students/types';
 import { t } from '@/lib/i18n/i18n';
 import { chatPhone, subscribeTarget } from './steps/review/booked';
 import { BookedPanel } from './steps/review/BookedPanel';

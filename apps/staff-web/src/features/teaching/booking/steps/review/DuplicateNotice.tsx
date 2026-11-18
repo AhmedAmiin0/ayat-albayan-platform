@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/form/button';
 import { Ltr } from '@/components/ui/display/ltr';
-import type { StudentRef } from '@/features/people/students/types';
 import { t } from '@/lib/i18n/i18n';
+import type { StudentRef } from '@ab/shared';
 
 export interface DuplicateNoticeProps {
   candidates: readonly StudentRef[];

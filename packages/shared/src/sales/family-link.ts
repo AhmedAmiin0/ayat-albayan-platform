@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { ThreadView } from '../messaging/index.js';
+import type { FamilyPhone } from '../people/students/index.js';
 
 // «ربط بطالب موجود» (owner 2026-10-29): a lead chat's number becomes the SECOND number of an existing student's
 // family (public.guardian_phones). POST /leads/:id/link-family { code } → 200 { linked }, behind leads.link_family.
@@ -33,9 +34,6 @@ export type LeadFamilyLinkError = (typeof LEAD_FAMILY_LINK_ERRORS)[number];
 export function canLinkFamily(th: Pick<ThreadView, 'lead_id' | 'guardian_id' | 'teacher_id'>): boolean {
   return Boolean(th.lead_id) && !th.guardian_id && !th.teacher_id;
 }
-
-/** One number of a family: GET /guardians/:id `phones`, the student profile's `guardian.phones`. */
-export type FamilyPhone = { phone_e164: string; is_primary: boolean };
 
 /** The family's second number, or null (none, or an old API without `phones`). */
 export function secondPhoneOf(phones?: readonly FamilyPhone[] | null): string | null {

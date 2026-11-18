@@ -12,7 +12,7 @@ import { studentNote } from '@/features/people/students/profile/student-note';
 import { StudentNote } from '@/features/people/students/profile/StudentNote';
 import { StudentRowActions } from './StudentRowActions';
 import { TeacherCell } from './TeacherCell';
-import type { StudentListItem } from '@/features/people/students/types';
+import type { StudentListItem } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, StudentListItem>();
 const quiet = (phone: string) => `text-xs text-ink-2 ${phone}`;

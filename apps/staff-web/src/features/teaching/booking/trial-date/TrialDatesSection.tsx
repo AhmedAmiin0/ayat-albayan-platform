@@ -2,11 +2,11 @@ import { canPickTrialDate, type Gender } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { usePermissions } from '@/features/people/auth/use-permissions';
-import type { StudentProfile } from '@/features/people/students/types';
 import { trialHistoryQuery } from './api';
 import { TrialDateButton } from './TrialDateButton';
 import { TrialDateDialog } from './dialog/TrialDateDialog';
 import { TrialHistoryBody, TrialHistoryTitle } from './history/TrialHistoryBody';
+import type { StudentProfile } from '@ab/shared';
 
 /** GET /students/:id returns every column; the teacher preference is one of them (migration 070). */
 type Profile = StudentProfile & { teacher_gender_pref?: Gender | null };

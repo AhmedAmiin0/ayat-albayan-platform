@@ -6,7 +6,7 @@ import { toCreateBody, type CreateStudentValues } from './create-student';
 import { CreateStudentForm } from './CreateStudentForm';
 import { DuplicateDialog } from '@/features/people/students/duplicates/DuplicateDialog';
 import { MergeDialog } from '@/features/people/students/duplicates/MergeDialog';
-import type { StudentRef } from '@/features/people/students/types';
+import type { StudentRef } from '@ab/shared';
 
 type CreateStudentDialogProps = {
   onClose: () => void;

@@ -48,11 +48,4 @@ export {
   setRecordingVisible,
   studentRecordingsQuery,
 } from './recordings/recordings-api';
-export {
-  type DuplicateBody,
-  type StudentListItem,
-  type StudentProfile,
-  type StudentRef,
-  type TeacherOption,
-} from './types';
 export { PeopleEditActions } from './people-edit';

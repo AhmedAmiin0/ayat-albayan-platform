@@ -1,4 +1,5 @@
 import { STUDENT_STATUSES, searchDigits, type StudentListFilters, type StudentStatus } from '@ab/shared';
+import type { TeacherOption } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
 import { dbError, pageRange, type ListQuery } from '@/modules/people/guardians/http';
@@ -99,7 +100,6 @@ export async function getStudentProfile(db: Db, id: string): Promise<StudentProf
   return toProfile(data);
 }
 
-export type TeacherOption = { id: string; display_name_ar: string; meeting_link: string | null };
 
 /** Active teachers for the profile's teacher picker. ponytail: move to teachers module later. */
 export async function listTeacherOptions(db: Db): Promise<TeacherOption[]> {

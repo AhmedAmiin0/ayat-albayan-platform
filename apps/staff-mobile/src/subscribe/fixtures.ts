@@ -1,6 +1,6 @@
 import type { QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
+import type { StudentProfile } from '@ab/shared';
 import { subscription } from '@/payments/fixtures';
-import type { StudentProfile } from '@/students/shared/types';
 
 // Invented API answers for the subscribe screen tests (no real people).
 
@@ -12,12 +12,18 @@ export const profile: StudentProfile = {
   code: 'AB-0183',
   name: 'يوسف',
   status: 'active',
+  guardian_id: 'g-1',
+  age: null,
+  gender: null,
   program: 'quran',
   level: null,
   memorized: null,
   goal: null,
   riwaya: null,
   tz: 'Asia/Riyadh',
+  teacher_id: null,
+  meeting_link_override: null,
+  notes: null,
   guardian: { id: 'g-1', name: 'أم يوسف', phone_e164: '+966552147730' },
   teacher: null,
   meeting_link: null,
