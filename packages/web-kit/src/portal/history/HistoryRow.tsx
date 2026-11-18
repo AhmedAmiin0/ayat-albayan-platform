@@ -1,7 +1,7 @@
 import { isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
 import { Button } from '@ab/web-kit/components/ui/form/button';
-import { DateTile } from '@ab/web-kit/family/panels/DateTile';
+import { DateTile } from '@ab/web-kit/components/family/panels/DateTile';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { LessonWhen } from '@ab/web-kit/portal/lessons/LessonWhen';

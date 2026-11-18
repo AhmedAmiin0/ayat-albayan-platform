@@ -1,7 +1,7 @@
 import { listenState, listenText } from '@ab/client-core';
 import type { PortalRecording, PortalStudent } from '@ab/shared';
-import { DateTile } from '@ab/web-kit/family/panels/DateTile';
-import { PlayGlyph } from '@ab/web-kit/family/panels/PlayGlyph';
+import { DateTile } from '@ab/web-kit/components/family/panels/DateTile';
+import { PlayGlyph } from '@ab/web-kit/components/family/panels/PlayGlyph';
 import { useResumeMap } from '@ab/web-kit/lesson-files/use-resume';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -1,8 +1,8 @@
 import { packageSummary, type PackageSummary } from '@ab/client-core';
 import { subscriptionStatusStyle, type PortalPackage } from '@ab/shared';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { IconTile } from '@ab/web-kit/family/layout/IconTile';
-import { FAM_CARD } from '@ab/web-kit/family/panels/panel-look';
+import { IconTile } from '@ab/web-kit/components/family/layout/IconTile';
+import { FAM_CARD } from '@ab/web-kit/components/family/panels/panel-look';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { amountText, usedOfText } from './package-text';

@@ -1,7 +1,7 @@
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FAM_CARD } from '@ab/web-kit/family/panels/panel-look';
+import { FAM_CARD } from '@ab/web-kit/components/family/panels/panel-look';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';

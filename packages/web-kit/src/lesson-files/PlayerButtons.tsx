@@ -4,7 +4,7 @@ import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { PlayGlyph } from '@ab/web-kit/family/panels/PlayGlyph';
+import { PlayGlyph } from '@ab/web-kit/components/family/panels/PlayGlyph';
 import { cn } from '@ab/web-kit/lib/utils';
 import type { HtmlAudio } from './use-html-audio';
 

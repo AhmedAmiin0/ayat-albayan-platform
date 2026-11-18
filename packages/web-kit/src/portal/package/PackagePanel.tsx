@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import {
   FAM_CARD, FAM_CARD_TITLE, FAM_EMPTY, FAM_SIDE, FAM_SPLIT,
-} from '@ab/web-kit/family/panels/panel-look';
+} from '@ab/web-kit/components/family/panels/panel-look';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { portalPackageQuery } from '@ab/web-kit/portal/api';
