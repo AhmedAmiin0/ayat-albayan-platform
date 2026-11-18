@@ -1,5 +1,5 @@
 import { useNavigate, useRouter } from '@tanstack/react-router';
-import { FamilyReportView } from '@ab/web-kit/family/pages/report/FamilyReportView';
+import { FamilyReportView } from '@ab/web-kit/components/family/pages/report/FamilyReportView';
 import type { ReportSearch } from './report-search';
 
 /**

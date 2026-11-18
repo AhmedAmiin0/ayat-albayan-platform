@@ -1,8 +1,8 @@
 import type { ReportPageView } from '@ab/shared';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { pill } from '@ab/web-kit/family/brand/pill';
-import { FamilyCard } from '@ab/web-kit/family/layout/FamilyCard';
-import { CardHead } from '@ab/web-kit/family/pages/CardHead';
+import { pill } from '@ab/web-kit/components/family/brand/pill';
+import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
+import { CardHead } from '@ab/web-kit/components/family/pages/CardHead';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { FileButtons, type PortalFile } from '@ab/web-kit/portal/report/FileButtons';
 

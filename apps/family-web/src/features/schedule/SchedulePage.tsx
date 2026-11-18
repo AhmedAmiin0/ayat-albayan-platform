@@ -1,8 +1,8 @@
 import { portalViewer, readsOwn, type WeekDay } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Hero, HeroTitle } from '@ab/web-kit/family/layout/Hero';
-import { PageBody } from '@ab/web-kit/family/layout/PageBody';
+import { Hero, HeroTitle } from '@ab/web-kit/components/family/layout/Hero';
+import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LoadState } from '@ab/web-kit/portal/LoadState';
 import { DayColumn } from './DayColumn';

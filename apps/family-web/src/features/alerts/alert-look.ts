@@ -1,7 +1,7 @@
 import type { AlertGroup, AlertTarget } from '@ab/client-core';
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
-import type { CardTone } from '@ab/web-kit/family/layout/FamilyCard';
-import type { TileTone } from '@ab/web-kit/family/layout/IconTile';
+import type { CardTone } from '@ab/web-kit/components/family/layout/FamilyCard';
+import type { TileTone } from '@ab/web-kit/components/family/layout/IconTile';
 
 /** A bell row's icon tile (boards: PortalWebAlerts): what the row opens decides it. */
 interface AlertTile {

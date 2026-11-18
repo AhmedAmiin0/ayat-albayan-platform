@@ -1,8 +1,8 @@
 import type { ReportPageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { FamilyCard } from '@ab/web-kit/family/layout/FamilyCard';
-import { PageBody } from '@ab/web-kit/family/layout/PageBody';
+import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
+import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { FileButtons, type PortalFile } from '@ab/web-kit/portal/report/FileButtons';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';

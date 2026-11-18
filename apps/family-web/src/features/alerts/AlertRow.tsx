@@ -2,7 +2,7 @@ import { alertTarget } from '@ab/client-core';
 import type { PortalKind } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconTile } from '@ab/web-kit/family/layout/IconTile';
+import { IconTile } from '@ab/web-kit/components/family/layout/IconTile';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { dateAndClock } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -2,7 +2,7 @@ import { isNewReport, reportAt } from '@ab/client-core';
 import type { PortalReport, PortalStudent } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { DateTile } from '@ab/web-kit/family/pages/DateTile';
+import { DateTile } from '@ab/web-kit/components/family/pages/DateTile';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { cn } from '@ab/web-kit/lib/utils';

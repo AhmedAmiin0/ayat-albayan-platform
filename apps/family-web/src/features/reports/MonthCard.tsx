@@ -1,5 +1,5 @@
 import { dateText, type PortalReport, type PortalStudent } from '@ab/shared';
-import { FamilyCard } from '@ab/web-kit/family/layout/FamilyCard';
+import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { ReportRow } from './ReportRow';

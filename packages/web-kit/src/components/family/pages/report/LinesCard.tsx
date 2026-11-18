@@ -1,7 +1,7 @@
 import type { ReportLine } from '@ab/client-core';
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
-import { FamilyCard, type CardTone } from '@ab/web-kit/family/layout/FamilyCard';
-import { CardHead } from '@ab/web-kit/family/pages/CardHead';
+import { FamilyCard, type CardTone } from '@ab/web-kit/components/family/layout/FamilyCard';
+import { CardHead } from '@ab/web-kit/components/family/pages/CardHead';
 import { cn } from '@ab/web-kit/lib/utils';
 import { LineTile, type LineEdge } from './LineTile';
 

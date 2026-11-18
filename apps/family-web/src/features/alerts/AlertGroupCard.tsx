@@ -1,6 +1,6 @@
 import type { AlertGroup, AlertSection } from '@ab/client-core';
 import type { PortalKind } from '@ab/shared';
-import { FamilyCard } from '@ab/web-kit/family/layout/FamilyCard';
+import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { GROUP_TONE } from './alert-look';
 import { AlertRow } from './AlertRow';
