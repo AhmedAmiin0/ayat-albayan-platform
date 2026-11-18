@@ -9616,7 +9616,10 @@
       "or": "or"
     },
     "child": {
-      "today": "Today"
+      "today": "Today",
+      "greeting": "Welcome, {name}",
+      "upcomingLabel": "The next 14 days",
+      "pickLine": "Choose a child to follow their lessons, reports and package."
     },
     "panels": {
       "more": "More"
