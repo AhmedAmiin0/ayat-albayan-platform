@@ -1,5 +1,7 @@
 // ci «verify (lint + parity (oxlint))» (2026-11-17): Oxlint parity reads the lint row's own ESLint
 // run (eslint-findings.mjs) and Oxlint report instead of a second job running both again.
+// 11-18: two lint rows, api alone (two ESLint threads) and every other package, each with the
+// same LINT_SCOPE for Oxlint, its baselines and the parity; the scopes are complementary.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -11,14 +13,15 @@ const readRoot = (path) =>
   readFileSync(fileURLToPath(new URL(`../../../../../${path}`, import.meta.url)), 'utf8');
 const ci = parse(readRoot('.github/workflows/ci.yml'));
 const FORMATTER = 'tools/scripts/ci-checks/lint/parity/eslint-findings.mjs';
+const rows = ci.jobs.verify.strategy.matrix.include.filter((r) => r.task === 'lint');
+const step = (name) => ci.jobs.verify.steps.find((s) => s.name === name);
 
 test('ci: lint parity reads the lint row\'s own ESLint run and Oxlint report, and still gates', () => {
   assert.equal(ci.jobs['lint-parity'], undefined, 'no second ESLint job');
-  const row = ci.jobs.verify.strategy.matrix.include.find((r) => r.task === 'lint');
-  assert.equal(row.name, 'lint + parity (oxlint)');
-  assert.match(row.opts, /--continue/, 'every package saves its findings');
-  assert.equal(row.args, `-- -f "$GITHUB_WORKSPACE/${FORMATTER}"`);
-  const step = (name) => ci.jobs.verify.steps.find((s) => s.name === name);
+  for (const row of rows) {
+    assert.match(row.opts, /--continue/, 'every package saves its findings');
+    assert.ok(row.args.startsWith(`-- -f "$GITHUB_WORKSPACE/${FORMATTER}"`), row.name);
+  }
   assert.equal(step('Oxlint (every rule)').run, 'pnpm lint:oxfull');
   const parity = step('Parity with ESLint');
   assert.equal(parity.run, 'pnpm lint:parity');
@@ -33,4 +36,19 @@ test('ci: lint parity reads the lint row\'s own ESLint run and Oxlint report, an
   const turbo = JSON.parse(readRoot('turbo.json'));
   assert.deepEqual(turbo.tasks.lint.outputs, ['.lint/**']);
   assert.ok(turbo.tasks.lint.inputs.includes(`$TURBO_ROOT$/${FORMATTER}`));
+});
+
+test('ci: two lint rows, api and every other package, with complementary scopes', () => {
+  assert.deepEqual(
+    rows.map((r) => [r.name, r.filter, r.scope]),
+    [
+      ['lint + parity (oxlint)', '--filter=!api', '!apps/api'],
+      ['lint + parity (oxlint api)', '--filter=api', 'apps/api'],
+    ],
+  );
+  assert.match(rows[1].args, / --concurrency=2$/, 'api on two ESLint threads');
+  assert.doesNotMatch(rows[0].args, /--concurrency/, 'the others stay one thread each');
+  const scoped = ['Oxlint (every rule)', 'Parity with ESLint'];
+  for (const name of [...scoped, 'Oxlint baselines to prune (commit this diff)'])
+    assert.equal(step(name).env.LINT_SCOPE, '${{ matrix.scope }}', name);
 });

@@ -6,7 +6,20 @@ import { isDeepStrictEqual } from 'node:util';
 import { matchesGlob } from 'node:path';
 import { oxlintName } from '@ab/config/oxlint';
 
-const matchesAny = (file, globs = []) => globs.some((glob) => matchesGlob(file, glob));
+// The glob's leading literal folders (`apps/api/src/` of `apps/api/src/**/*.ts`): a file outside
+// them can never match, so matchesGlob (slow: it compiles the glob each call, 60 of parity's 70 s)
+// runs only for files inside. Whole plain segments only (no glob character, none starting with a
+// dot); a leading `/`, `./` or `**`, or a `.`/`..` segment anywhere: no prefix, matchesGlob alone.
+const PLAIN = /^(?:[\w-][\w.-]*\/)+/;
+const DOTS = /(?:^|\/)\.+(?:\/|$)/;
+const dirs = new Map();
+const literalDir = (glob) => {
+  if (!dirs.has(glob)) dirs.set(glob, DOTS.test(glob) ? '' : (PLAIN.exec(glob)?.[0] ?? ''));
+  return dirs.get(glob);
+};
+export const matchesFast = (file, glob) =>
+  file.startsWith(literalDir(glob)) && matchesGlob(file, glob);
+const matchesAny = (file, globs = []) => globs.some((glob) => matchesFast(file, glob));
 
 /** An ESLint or Oxlint rule value → its options (`[2, {}]`, `'error'` and `[2]`: none). */
 export function optionsOf(value) {
