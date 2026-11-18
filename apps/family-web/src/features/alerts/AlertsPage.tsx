@@ -1,20 +1,16 @@
-import { alertSections, type AlertGroup } from '@ab/client-core';
+import { alertSections } from '@ab/client-core';
 import type { PortalKind } from '@ab/shared';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { pill } from '@ab/web-kit/family/brand/pill';
+import { Hero, HeroTitle } from '@ab/web-kit/family/layout/Hero';
+import { PageBody } from '@ab/web-kit/family/layout/PageBody';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { LoadState } from '@ab/web-kit/portal/LoadState';
-import { AlertRow } from './AlertRow';
+import { AlertGroupCard } from './AlertGroupCard';
 import { useAlerts, useMarkAlertsRead, type FamilyAlerts } from './alerts-api';
-
-const GROUP_TITLE: Readonly<Record<AlertGroup, () => string>> = {
-  today: () => t.portal.app.alerts.today,
-  yesterday: () => t.portal.app.alerts.yesterday,
-  week: () => t.portal.app.alerts.week,
-  older: () => t.portal.app.alerts.older,
-};
 
 interface ListProps {
   page: FamilyAlerts;
@@ -26,43 +22,48 @@ function AlertList({ page, kind, onRead }: ListProps) {
   const tz = useViewerTz();
   const sections = alertSections(page.items, useNow(), tz);
   if (sections.length === 0) return <EmptyState title={t.bell.empty} />;
+  return sections.map((section) => (
+    <AlertGroupCard key={section.group} section={section} row={{ kind, tz, onRead }} />
+  ));
+}
+
+/** The unread count and «تعليم الكل كمقروء» (boards: the mint pill and the outline pill). */
+function Toolbar({ unread, onMarkAll }: { unread: number; onMarkAll: () => void }) {
+  if (unread === 0) return null;
   return (
-    <>
-      {sections.map((section) => (
-        <section key={section.group} aria-label={GROUP_TITLE[section.group]()} className="grid gap-2">
-          <h2 className="text-sm font-semibold text-ink-2">{GROUP_TITLE[section.group]()}</h2>
-          <ul className="grid gap-2">
-            {section.items.map((alert) => (
-              <AlertRow key={alert.id} alert={alert} kind={kind} tz={tz} onRead={onRead} />
-            ))}
-          </ul>
-        </section>
-      ))}
-    </>
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <span className="inline-flex min-h-8 items-center gap-2 rounded-full border
+        border-fam-mint-rule bg-fam-mint px-3 text-sm font-bold text-fam-mint-ink">
+        <span aria-hidden="true" className="size-2 rounded-full bg-lapis" />
+        {t.familyLook.pages.alerts.unread.replace('{n}', String(unread))}
+      </span>
+      <button type="button" className={pill({ tone: 'outline' })} onClick={onMarkAll}>
+        <Icon name="check" />
+        {t.portal.app.alerts.markAll}
+      </button>
+    </div>
   );
 }
 
 /**
- * «الإشعارات» (canvas Alerts): the rows under اليوم / أمس / هذا الأسبوع / أقدم; a tap marks the
- * row read and opens its report, child or package; «تعليم الكل كمقروء» while any is unread.
+ * «الإشعارات» (boards PortalWebAlerts / PortalWebStudentAlerts): the rows under اليوم / أمس /
+ * هذا الأسبوع / أقدم as cards; a tap marks the row read and opens its report, child or package;
+ * «تعليم الكل كمقروء» while any is unread.
  */
 export function AlertsPage({ kind }: { kind: PortalKind }) {
   const alerts = useAlerts();
   const markRead = useMarkAlertsRead();
-  const unread = (alerts.data?.unread ?? 0) > 0;
   return (
-    <section aria-labelledby="alerts-title" className="grid gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 id="alerts-title" className="font-display text-h2 font-bold">{t.bell.title}</h1>
-        {unread && (
-          <Button type="button" variant="ghost" size="sm" onClick={() => markRead.mutate(undefined)}>
-            {t.portal.app.alerts.markAll}
-          </Button>
-        )}
-      </div>
-      <LoadState query={alerts}>
-        {(page) => <AlertList page={page} kind={kind} onRead={(id) => markRead.mutate([id])} />}
-      </LoadState>
-    </section>
+    <>
+      <Hero labelledBy="alerts-title">
+        <HeroTitle id="alerts-title" title={t.bell.title} line={t.familyLook.pages.alerts.line} />
+      </Hero>
+      <PageBody>
+        <Toolbar unread={alerts.data?.unread ?? 0} onMarkAll={() => markRead.mutate(undefined)} />
+        <LoadState query={alerts}>
+          {(page) => <AlertList page={page} kind={kind} onRead={(id) => markRead.mutate([id])} />}
+        </LoadState>
+      </PageBody>
+    </>
   );
 }

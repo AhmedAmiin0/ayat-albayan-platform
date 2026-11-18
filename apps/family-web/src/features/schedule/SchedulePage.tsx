@@ -1,39 +1,27 @@
 import { portalViewer, readsOwn, type WeekDay } from '@ab/client-core';
-import { dateText, localDateIn, type PortalKind, type PortalStudent } from '@ab/shared';
+import type { PortalKind, PortalStudent } from '@ab/shared';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { Hero, HeroTitle } from '@ab/web-kit/family/layout/Hero';
+import { PageBody } from '@ab/web-kit/family/layout/PageBody';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { LoadState } from '@ab/web-kit/portal/LoadState';
-import { ScheduleRow } from './ScheduleRow';
+import { DayColumn } from './DayColumn';
 import { useWeek, type Week } from './use-week';
+import { weekTiles } from './week-days';
 import { WeekBar } from './WeekBar';
 
-const DAY = { weekday: 'long', day: 'numeric', month: 'long' } as const;
+const P = t.familyLook.pages.schedule;
 
-/** A day's heading: «اليوم · الأحد 16 نوفمبر» for today, else the day itself. */
-function DayHead({ day, tz }: { day: string; tz: string }) {
-  const text = dateText(new Date(`${day}T12:00:00Z`), { tz: 'UTC', locale }, DAY);
-  const today = localDateIn(useNow(), tz) === day;
-  return (
-    <h2 className="text-sm font-semibold text-ink-2">
-      {today ? t.portal.app.schedule.today.replace('{day}', text) : text}
-    </h2>
-  );
-}
-
-function DayList({ days, tz }: { days: WeekDay[]; tz: string }) {
+/** The seven day tiles (a phone shows only the days with lessons, one under another). */
+function DayGrid({ days, week }: { days: WeekDay[]; week: Week }) {
   if (days.length === 0) return <EmptyState title={t.portal.app.schedule.empty} />;
-  return days.map((d) => (
-    <section key={d.day} className="grid gap-2">
-      <DayHead day={d.day} tz={tz} />
-      <ul className="grid gap-2">
-        {d.lessons.map((entry) => (
-          <ScheduleRow key={entry.lesson.id} entry={entry} />
-        ))}
-      </ul>
-    </section>
-  ));
+  return (
+    <div className="grid gap-3 lg:flex lg:items-stretch">
+      {weekTiles(week.range.from, days).map((d) => (
+        <DayColumn key={d.day} day={d} today={week.today} />
+      ))}
+    </div>
+  );
 }
 
 /** The week once the lessons are in (the kit's skeleton and retry until then). */
@@ -45,25 +33,30 @@ function Days({ week }: { week: Week }) {
   };
   return (
     <LoadState query={query} rows={3}>
-      {(days) => <DayList days={days} tz={week.tz} />}
+      {(days) => <DayGrid days={days} week={week} />}
     </LoadState>
   );
 }
 
 /**
- * «الجدول» (canvas StudentSchedule): the week of the student in view on the viewer's clock;
- * «جدولي» for a student's or an adult's own (a guardian of several switches the child on top).
+ * «الجدول» (boards PortalWebSchedule / PortalWebStudentSchedule): the week of the student in view
+ * on the viewer's clock, as seven day tiles under the week pill; «جدولي» for a student's or an
+ * adult's own (a guardian of several switches the child on top).
  */
 export function SchedulePage({ student, kind }: { student: PortalStudent; kind: PortalKind }) {
   const week = useWeek(student);
   const own = readsOwn(portalViewer(kind, student));
+  const title = own ? t.portal.app.schedule.mine : t.portal.app.schedule.title;
+  const line = own ? P.lineOwn : P.line.replace('{name}', student.name);
   return (
-    <section aria-labelledby="schedule-title" className="grid gap-4">
-      <h1 id="schedule-title" className="font-display text-h2 font-bold">
-        {own ? t.portal.app.schedule.mine : t.portal.app.schedule.title}
-      </h1>
-      <WeekBar week={week} />
-      <Days week={week} />
-    </section>
+    <>
+      <Hero labelledBy="schedule-title">
+        <HeroTitle id="schedule-title" title={title} line={line} />
+      </Hero>
+      <PageBody>
+        <WeekBar week={week} />
+        <Days week={week} />
+      </PageBody>
+    </>
   );
 }

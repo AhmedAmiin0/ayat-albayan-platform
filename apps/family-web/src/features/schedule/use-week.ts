@@ -1,5 +1,5 @@
-import { weekSchedule } from '@ab/client-core';
-import type { PortalStudent } from '@ab/shared';
+import { scheduleWeek, weekSchedule } from '@ab/client-core';
+import { localDateIn, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
@@ -18,11 +18,15 @@ export function useWeek(student: PortalStudent) {
   const tz = useViewerTz();
   const read = useQuery(portalLessonsQuery(student.id));
   const children = [{ student, lessons: read.data?.lessons ?? [] }];
-  const days = weekSchedule({ children, tz, offset }, useNow());
+  const now = useNow();
+  const days = weekSchedule({ children, tz, offset }, now);
   return {
     days,
     tz,
     offset,
+    /** The week's first and last day, and today, on the viewer's clock («YYYY-MM-DD»). */
+    range: scheduleWeek(now, tz, offset),
+    today: localDateIn(now, tz),
     setOffset,
     loading: read.isPending,
     failed: read.isError,

@@ -34,6 +34,10 @@ describe('«الإشعارات» of the family pages', () => {
     renderAt(<AlertsPage kind="guardian" />);
     expect(await screen.findByRole('region', { name: t.portal.app.alerts.today })).toBeTruthy();
     expect(screen.getByRole('region', { name: t.portal.app.alerts.older })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: t.bell.title })).toBeTruthy();
+    expect(screen.getByText(t.familyLook.pages.alerts.line)).toBeTruthy();
+    expect(screen.getByText(t.familyLook.pages.alerts.unread.replace('{n}', '1'))).toBeTruthy();
+    expect(screen.getAllByLabelText(t.bell.unread)).toHaveLength(1);
     fireEvent.click(screen.getByRole('button', { name: t.portal.app.alerts.markAll }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', {}));
   });
