@@ -86,6 +86,7 @@ jobs:
     outputs:
       migrations: ${{ steps.migrations.outputs.migrations }}
       ota: ${{ steps.ota.outputs.ota }}
+      api_base: ${{ steps.api.outputs.api_base }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -136,6 +137,16 @@ jobs:
             echo "::warning::native change since the last APK ($NATIVE_BASE): no automatic OTA. Build an APK by hand (mobile → build-android-apk), then set OTA_BASELINE_SHA."
           else ota=true; echo "mobile JS changed since ${BASE:0:7} and no native change: OTA to preview after the deploy"; fi
           echo "ota=$ota" >> "$GITHUB_OUTPUT"
+      # Did anything the API image depends on change since the last code deploy (tools/scripts/ci-checks/deploy:
+      # apps/api, its workspace packages, the Dockerfile, the lockfile, deploy/staging/, the PDF logo)? api_base = that
+      # deploy's commit when nothing did, else empty. «deploy» keeps the running image only when the server says it was
+      # built from exactly that commit. FAIL SAFE: unknown, a git or script error = empty = build, as before.
+      - id: api
+        if: ${{ !inputs.env_only }}
+        continue-on-error: true
+        env:
+          BASE: ${{ steps.base.outputs.code_base }}
+        run: node tools/scripts/ci-checks/deploy/api-changed.ts "$BASE" | tee -a "$GITHUB_OUTPUT"
 
   # Database first (environment staging-db: the owner's required reviewer gates it), then the API.
   # Automatic runs skip it only when «plan» proved no migration changed (any other plan result, a failed
@@ -215,7 +226,7 @@ jobs:
           retention-days: 1
 
   deploy:
-    needs: [preflight, migrate, web]
+    needs: [preflight, plan, migrate, web]
     # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy. The web build
     # must pass (skipped only on an env-only run).
     if: >-
@@ -285,6 +296,7 @@ jobs:
           ssh target "test -d $DEST" || { echo "::error::$DEST missing on the server"; exit 1; }
 
       - name: Merge the server .env (key names only are logged)
+        id: env
         # API .env keys (apps/api/src/config/env/env.ts), scoped to this step only. The WhatsApp phone number id and
         # the messaging switch are deliberately NOT here: they stay whatever the server has.
         env:
@@ -325,9 +337,9 @@ jobs:
             RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL
             MINIO_EGRESS_ACCESS_KEY MINIO_EGRESS_SECRET_KEY"
           node tools/scripts/env/env-merge.mjs current.env $keys > new.env
-          if cmp -s current.env new.env; then echo "server .env unchanged"; else
+          if cmp -s current.env new.env; then echo "server .env unchanged"; echo "changed=false" >> "$GITHUB_OUTPUT"; else
             ssh target "cp $DEST/.env $DEST/.env.bak-\$(date +%F-%H%M%S) 2>/dev/null || true; umask 077; cat > $DEST/.env.new && mv $DEST/.env.new $DEST/.env" < new.env
-            echo "server .env updated (backup kept next to it)"; fi
+            echo "server .env updated (backup kept next to it)"; echo "changed=true" >> "$GITHUB_OUTPUT"; fi
           rm -f current.env new.env
 
       # docs/09 «Two API copies + one worker»: the code, the compose file, roll.sh, rollback.sh and the load balancer
@@ -337,12 +349,36 @@ jobs:
       # ayat-pdf only warns), reloads ayat-lb only when its validated config changed and prunes this project's old
       # images only (no global prune; the build cache is shared with the CRM and cannot be scoped to one project, so it
       # is left alone).
+      # Build the API image or keep it: «plan» gives api_base (the last code deploy's commit, when nothing the image
+      # depends on changed since); the image is kept only when the server's .api.sha (roll.sh writes it after a good roll
+      # and removes it before any roll or rollback) is that very commit. Kept: --env-only when the .env merge wrote a new
+      # .env (every container recreated, one at a time, each healthy first), else --no-build (compose recreates only what
+      # changed). Anything else (no file, another commit, plan failed) = build and roll everything, as before.
+      - name: Roll mode
+        id: mode
+        if: ${{ !inputs.env_only }}
+        env:
+          API_BASE: ${{ needs.plan.outputs.api_base }}
+          ENV_CHANGED: ${{ steps.env.outputs.changed }}
+        run: |
+          image=$(ssh target "cat $DEST/.api.sha 2>/dev/null" || true)
+          same=no; [ -z "$API_BASE" ] || [ "$image" != "$API_BASE" ] || same=yes
+          case "$same:$ENV_CHANGED" in
+            yes:false) args=--no-build ;;
+            yes:true) args=--env-only ;;
+            *) args= ;;
+          esac
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+          echo "::notice::API: ${args:-build} (image ${image:0:7}, unchanged since ${API_BASE:0:7}, .env changed ${ENV_CHANGED:-?})"
+
       - name: Ship the API code and the compose files
         id: ship
         if: ${{ !inputs.env_only }}
         run: |
           ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new $DEST/lb"
           git archive --format=tar HEAD | ssh target "tar --no-same-owner -x -C $DEST/src.new"
+          # The commit this src is; roll.sh copies it to .api.sha after a good roll (src.old keeps its own for a rollback).
+          git rev-parse HEAD | ssh target "cat > $DEST/src.new/.release-sha"
           scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml.new"
           scp -q deploy/staging/roll.sh "target:$DEST/roll.sh.new"
           scp -q deploy/staging/rollback.sh "target:$DEST/rollback.sh.new"
@@ -357,13 +393,15 @@ jobs:
       - name: Swap in and roll the API (one build, one container at a time)
         id: roll
         if: ${{ !inputs.env_only }}
+        env:
+          ROLL_ARGS: ${{ steps.mode.outputs.args }}
         run: |
           ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh -c '
             for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f ] || cp \$f \$f.old; done &&
             rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src &&
             mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh && mv rollback.sh.new rollback.sh &&
             cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new || exit 4
-            { sh roll.sh || { sh rollback.sh || exit 3; exit 1; }; }' > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc" || {
+            { sh roll.sh $ROLL_ARGS || { sh rollback.sh || exit 3; exit 1; }; }' > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc" || {
             rc=$?
             case "$rc" in
               75) echo "::error::another deploy holds $DEST/.deploy.lock: nothing was changed" ;;

@@ -31,7 +31,12 @@ export const eslintReport = z.array(
 /** parity/gaps.json: rule → its reviewed missed count and why Oxlint cannot report it yet. */
 export const gapsFile = z.record(
   z.string(),
-  z.object({ missed: z.number().int().positive(), why: z.string() }),
+  z.object({
+    missed: z.number().int().positive(),
+    why: z.string(),
+    // A package's share of `missed` (its LINT_SCOPE row checks that; the other row the rest).
+    scopes: z.record(z.string(), z.number().int().nonnegative()).optional(),
+  }),
 );
 
 const ruleMap = z.record(z.string(), z.unknown());

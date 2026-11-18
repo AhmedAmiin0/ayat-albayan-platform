@@ -10,6 +10,8 @@ PROJECT=ayat-albayan-staging
 dc() { docker compose -p "$PROJECT" "$@"; }
 
 [ -d src.old ] || { echo '::error::no src.old: nothing to roll back to'; exit 1; }
+# The image is about to change: unknown until a roll that ends well writes it again (roll.sh).
+rm -f .api.sha
 rm -rf src.bad && mv src src.bad && mv src.old src
 for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f "$f.old" ] || cat "$f.old" > "$f"; done
 

@@ -75,6 +75,12 @@ RUN --mount=type=cache,id=ayat-pnpm-store,target=/pnpm/store \
  && pnpm install --offline --frozen-lockfile --store-dir /pnpm/store --filter "api..."
 
 FROM deps AS build
+# pnpm 11 checks the install before a run and reinstalls when a package.json is newer than it. The VPS
+# copies the source from `git archive` (commit-time mtimes) onto a «deps» layer cached from an earlier
+# deploy, so every build reinstalled all 1510 packages from the network, with no store mount (~105 of
+# the build's 181 s, deploy 44059967409). «deps» is the exact install (frozen lockfile, «manifests»
+# only) and nothing below may change it, so the check is off here.
+ENV pnpm_config_verify_deps_before_run=false
 COPY . .
 RUN pnpm --filter "api^..." build \
  && pnpm --filter api build

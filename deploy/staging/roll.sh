@@ -3,13 +3,21 @@
 #   sh roll.sh             build the image once, roll ayat-worker → ayat-pdf → ayat-api-a → ayat-api-b (each healthy
 #                          before the next; ayat-lb keeps serving from the other copy), reload ayat-lb if its config changed
 #   sh roll.sh --env-only  no build: recreate the same way so every container reads the new .env
+#   sh roll.sh --no-build  no build: the same roll, recreating only what compose sees changed (deploy-staging, when
+#                          nothing the image depends on changed since the commit in .api.sha and the .env did not)
+# .api.sha: the commit the running image was built from (src/.release-sha, shipped by the workflow). Removed before
+# anything changes, written again only after a good roll: a failed or interrupted one leaves it unknown (= build next).
 # Touches only this compose project (ayat-albayan-staging): never another container, image, the host Caddy or /opt/wacrm.
 set -eu
 cd "$(dirname "$0")"
 PROJECT=ayat-albayan-staging
 MODE="${1:-}"
-RECREATE=""
-[ "$MODE" = "--env-only" ] && RECREATE="--force-recreate"
+case "$MODE" in
+  '') BUILD=yes RECREATE='' ;;
+  --env-only) BUILD=no RECREATE=--force-recreate ;;
+  --no-build) BUILD=no RECREATE='' ;;
+  *) echo "roll.sh: unknown mode $MODE"; exit 2 ;;
+esac
 dc() { docker compose -p "$PROJECT" "$@"; }
 # The load balancer's image, as pinned in docker-compose.yml (compose.test.mjs keeps them equal).
 LB_IMAGE=caddy:2.10.2-alpine
@@ -20,6 +28,7 @@ LB_IMAGE=caddy:2.10.2-alpine
   echo 'src predates APP_ROLE: restore docker-compose.yml.old (single container)'
   exit 1
 }
+rm -f .api.sha
 
 # Waits for the service's Docker health check (up to ~3 minutes).
 healthy() {
@@ -73,7 +82,7 @@ lb() {
   echo
 }
 
-[ "$MODE" = "--env-only" ] || dc build ayat-worker
+[ "$BUILD" = no ] || dc build ayat-worker
 # The shared cache first (docs/09 «Shared cache»): every copy and the worker find it as they start.
 dc up -d --no-deps ayat-redis
 
@@ -106,4 +115,5 @@ fi
 # Anything left from an older layout of THIS project; old images of THIS project only.
 dc up -d --no-recreate --remove-orphans
 docker image prune -f --filter "label=com.docker.compose.project=$PROJECT" >/dev/null
+[ ! -f src/.release-sha ] || cp src/.release-sha .api.sha
 echo "staging rolled: $(dc ps --format '{{.Service}}={{.Status}}' | tr '\n' ' ')"

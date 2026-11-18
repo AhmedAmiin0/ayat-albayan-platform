@@ -39,3 +39,24 @@ test('failures: misses above a gap\'s count (0 unlisted) fail; a gap above its m
     'stale gap: gap misses 2 < 3 (gaps.json)',
   ]);
 });
+
+test('failures under a scope: a package holds its share of a gap, the other row the rest', () => {
+  const gap = { missed: 5, why: 'tsgolint', scopes: { 'apps/api': 2 } };
+  const miss = (n) => Array.from({ length: n }, (_, i) => f(`a${String(i)}.ts`, 1, 'gap'));
+  assert.deepEqual(failures(miss(2), { gap }, 'apps/api'), []);
+  assert.deepEqual(failures(miss(3), { gap }, '!apps/api'), []);
+  assert.deepEqual(failures(miss(5), { gap }), [], 'no scope: the whole count');
+  assert.deepEqual(failures(miss(3), { gap }, 'apps/api'), [
+    'missing: gap ×3, allowed 2 (Oxlint misses it)',
+  ]);
+  assert.deepEqual(failures(miss(2), { gap }, '!apps/api'), [
+    'stale gap: gap misses 2 < 3 (gaps.json)',
+  ]);
+  // No share listed: the package is allowed none, the other row all of it.
+  const plain = { plain: { missed: 4, why: 'tsgolint' } };
+  const as = (rule, n) => miss(n).map((x) => ({ ...x, rule }));
+  assert.deepEqual(failures(as('plain', 1), plain, 'apps/api'), [
+    'missing: plain ×1, allowed 0 (Oxlint misses it)',
+  ]);
+  assert.deepEqual(failures(as('plain', 4), plain, '!apps/api'), []);
+});
