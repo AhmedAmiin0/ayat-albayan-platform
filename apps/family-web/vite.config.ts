@@ -5,5 +5,6 @@ import { webConfig } from '@ab/config/vite';
 export default webConfig({
   dir: import.meta.dirname,
   port: 5174,
+  icons: 'family',
   cacheDir: process.env.FAMILY_WEB_CACHE,
 });
