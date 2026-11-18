@@ -3,11 +3,10 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
-import { salesPriceFloor } from '@ab/shared';
 
-// «مبلغ مخصص» (owner 2026-11-05 review): the assistant's custom price has the pills' floor
-// (the weekly SA quote is 145: at least round(145 × 0.85) = 123); the admin's POST /subscriptions
-// has none.
+// «مبلغ مخصص»: any amount > 0 for the assistant too (owner 2026-11-18: «i want to enter any
+// custom amount»; the 2026-11-05 floor at the deepest pill's price is gone), like the admin's
+// POST /subscriptions. The weekly SA quote is 145.
 const post = (customPrice: number) => ({
   method: 'POST' as const,
   url: '/sales/subscriptions',
@@ -15,7 +14,7 @@ const post = (customPrice: number) => ({
   body: { ...CREATE, customPrice },
 });
 
-describe('the custom price floor', () => {
+describe('the custom price has no sales floor', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];
@@ -27,26 +26,15 @@ describe('the custom price floor', () => {
     salesDefaults(m);
   });
 
-  it('is the deepest pill’s price (15 %, rounded like the quote)', () => {
-    expect([145, 1000, 0].map(salesPriceFloor)).toEqual([123, 850, 0]);
-  });
-
-  it('the assistant below it: 403 discount_not_allowed, the lowest price, nothing stored', async () => {
-    for (const amount of [1, 122.99]) {
-      const res = await call(post(amount));
-      expect(res.statusCode).toBe(403);
-      expect(res.json()).toMatchObject({ code: 'discount_not_allowed', min: 123, currency: 'SAR' });
+  it('the assistant, far under the deepest pill’s price (123): created at her price', async () => {
+    for (const price of [1, 100]) {
+      m.subs.insert.mockResolvedValue(subRow({ price }));
+      expect((await call(post(price))).statusCode).toBe(201);
+      expect(m.subs.insert).toHaveBeenLastCalledWith(expect.objectContaining({ price }));
     }
-    expect(m.subs.insert).not.toHaveBeenCalled();
   });
 
-  it('the assistant at the floor: created at her price', async () => {
-    m.subs.insert.mockResolvedValue(subRow({ price: 123 }));
-    expect((await call(post(123))).statusCode).toBe(201);
-    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ price: 123 }));
-  });
-
-  it('the admin below it (POST /subscriptions): created, no floor', async () => {
+  it('the admin (POST /subscriptions): created at any amount too', async () => {
     const pricing = { tier: 'weekly' };
     const body = { studentId: STUDENT_ID, startsOn: '2026-10-01', pricing, customPrice: 1 };
     expect((await call({ method: 'POST', url: '/subscriptions', body })).statusCode).toBe(201);

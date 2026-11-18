@@ -2,12 +2,7 @@ import { isLinkCurrency, linkAmountProblem, minLinkAmount, type PaymentLinkCreat
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import {
-  assertSalesDiscount,
-  assertSalesPrice,
-  salesStartsOn,
-  toSalesQuote,
-} from '@/modules/sales/sales-money';
+import { assertSalesDiscount, salesStartsOn, toSalesQuote } from '@/modules/sales/sales-money';
 import { SubscriptionCreator } from '@/modules/finance/subscriptions';
 import { loadEnv } from '@/config/env/env';
 import { newLinkToken } from './link-ids';
@@ -54,9 +49,8 @@ export class LinkCreate {
     if (input.currency !== quote.currency) throw badRequest('currency_mismatch', { currency: quote.currency });
     const reference = quote.afterDiscount;
     const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct });
+    // Any agreed amount > 0 (owner 2026-11-18, no sales floor): only the admin's cap applies.
     if (problem) throw badRequest(problem, { min: min_amount, currency: quote.currency });
-    // The pills' floor (review 2026-11-05): never a 1 SAR package she then marks paid herself.
-    assertSalesPrice({ amount: input.amount, total: quote.total, currency: quote.currency });
     const { studentId, pricing, clientRequestId, lessonsUsedBefore, teacherId } = input;
     if (teacherId) await this.extra.sales.teachers.ensureActive(teacherId);
     const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
