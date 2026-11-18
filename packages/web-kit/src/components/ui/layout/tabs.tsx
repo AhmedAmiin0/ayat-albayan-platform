@@ -1,7 +1,7 @@
 import { Fragment, useSyncExternalStore, type KeyboardEvent } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 import type { SegmentOption } from '@ab/web-kit/components/ui/form/segmented-control';
-import { keepInStrip, TabBadge } from './tab-parts';
+import { keepInStrip, TabBadge } from './tab-parts/tab-parts';
 
 export interface TabOption<V extends string> extends SegmentOption<V> {
   /** Vertical fihris only: a hairline before this tab to group it (docs/07 §9). */

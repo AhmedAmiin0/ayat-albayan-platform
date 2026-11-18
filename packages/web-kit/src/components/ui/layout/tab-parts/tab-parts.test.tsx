@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { keepInStrip } from './tab-parts';
-import { Tabs } from './tabs';
+import { Tabs } from '@ab/web-kit/components/ui/layout/tabs';
 
 const TABS = [
   { value: 'a', label: 'أ' },
