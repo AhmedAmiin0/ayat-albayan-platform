@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
-import { IconTile, type TileTone } from '@ab/web-kit/family/layout/IconTile';
+import { IconTile, type TileTone } from '@ab/web-kit/components/family/layout/IconTile';
 
 interface Props {
   icon: IconName;

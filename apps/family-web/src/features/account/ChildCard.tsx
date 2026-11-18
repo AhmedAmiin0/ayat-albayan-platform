@@ -1,5 +1,5 @@
 import type { PortalStudent } from '@ab/shared';
-import { Initial } from '@ab/web-kit/family/brand/Initial';
+import { Initial } from '@ab/web-kit/components/family/brand/Initial';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { useChildTeacher } from './use-child-teacher';

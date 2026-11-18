@@ -1,6 +1,6 @@
 import type { PortalHome } from '@ab/shared';
-import { Initial } from '@ab/web-kit/family/brand/Initial';
-import { FamilyCard } from '@ab/web-kit/family/layout/FamilyCard';
+import { Initial } from '@ab/web-kit/components/family/brand/Initial';
+import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** A student login's card on «حسابي» (board PortalWebStudentAccount): initial, name and code. */

@@ -1,9 +1,9 @@
 import type { PortalKind } from '@ab/shared';
 import { LanguageSegments } from '@ab/web-kit/components/shell/LanguageSegments';
 import { ThemeToggle } from '@ab/web-kit/components/ui/layout/theme-toggle';
-import { FamilyCard } from '@ab/web-kit/family/layout/FamilyCard';
-import { PushRow } from '@ab/web-kit/family/settings/PushRow';
-import { SettingRow } from '@ab/web-kit/family/settings/SettingRow';
+import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
+import { PushRow } from '@ab/web-kit/components/family/settings/PushRow';
+import { SettingRow } from '@ab/web-kit/components/family/settings/SettingRow';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const PUSH_HINT: Record<PortalKind, string> = {
