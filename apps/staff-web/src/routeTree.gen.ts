@@ -50,6 +50,7 @@ import { Route as TeacherMessagesRouteImport } from './routes/teacher/messages'
 import { Route as TeacherPayoutsRouteImport } from './routes/teacher/payouts'
 import { Route as publicFeedbackTokenRouteImport } from './routes/(public)/feedback.$token'
 import { Route as publicJoinLinkTokenRouteImport } from './routes/(public)/join.$linkToken'
+import { Route as publicLCodeRouteImport } from './routes/(public)/l.$code'
 import { Route as publicMTokenRouteImport } from './routes/(public)/m.$token'
 import { Route as publicPayTokenRouteImport } from './routes/(public)/pay.$token'
 import { Route as publicReportPublicIdRouteImport } from './routes/(public)/report.$publicId'
@@ -296,6 +297,11 @@ const publicFeedbackTokenRoute = publicFeedbackTokenRouteImport.update({
 const publicJoinLinkTokenRoute = publicJoinLinkTokenRouteImport.update({
   id: '/(public)/join/$linkToken',
   path: '/join/$linkToken',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicLCodeRoute = publicLCodeRouteImport.update({
+  id: '/(public)/l/$code',
+  path: '/l/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
 const publicMTokenRoute = publicMTokenRouteImport.update({
@@ -562,6 +568,7 @@ export interface FileRoutesByFullPath {
   '/teacher/': typeof TeacherIndexRoute
   '/feedback/$token': typeof publicFeedbackTokenRoute
   '/join/$linkToken': typeof publicJoinLinkTokenRoute
+  '/l/$code': typeof publicLCodeRoute
   '/m/$token': typeof publicMTokenRoute
   '/pay/$token': typeof publicPayTokenRoute
   '/report/$publicId': typeof publicReportPublicIdRoute
@@ -642,6 +649,7 @@ export interface FileRoutesByTo {
   '/teacher': typeof TeacherIndexRoute
   '/feedback/$token': typeof publicFeedbackTokenRoute
   '/join/$linkToken': typeof publicJoinLinkTokenRoute
+  '/l/$code': typeof publicLCodeRoute
   '/m/$token': typeof publicMTokenRoute
   '/pay/$token': typeof publicPayTokenRoute
   '/report/$publicId': typeof publicReportPublicIdRoute
@@ -728,6 +736,7 @@ export interface FileRoutesById {
   '/teacher/': typeof TeacherIndexRoute
   '/(public)/feedback/$token': typeof publicFeedbackTokenRoute
   '/(public)/join/$linkToken': typeof publicJoinLinkTokenRoute
+  '/(public)/l/$code': typeof publicLCodeRoute
   '/(public)/m/$token': typeof publicMTokenRoute
   '/(public)/pay/$token': typeof publicPayTokenRoute
   '/(public)/report/$publicId': typeof publicReportPublicIdRoute
@@ -815,6 +824,7 @@ export interface FileRouteTypes {
     | '/teacher/'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/l/$code'
     | '/m/$token'
     | '/pay/$token'
     | '/report/$publicId'
@@ -895,6 +905,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/l/$code'
     | '/m/$token'
     | '/pay/$token'
     | '/report/$publicId'
@@ -980,6 +991,7 @@ export interface FileRouteTypes {
     | '/teacher/'
     | '/(public)/feedback/$token'
     | '/(public)/join/$linkToken'
+    | '/(public)/l/$code'
     | '/(public)/m/$token'
     | '/(public)/pay/$token'
     | '/(public)/report/$publicId'
@@ -1039,6 +1051,7 @@ export interface RootRouteChildren {
   AccountSetupIndexRoute: typeof AccountSetupIndexRoute
   publicFeedbackTokenRoute: typeof publicFeedbackTokenRoute
   publicJoinLinkTokenRoute: typeof publicJoinLinkTokenRoute
+  publicLCodeRoute: typeof publicLCodeRoute
   publicMTokenRoute: typeof publicMTokenRoute
   publicPayTokenRoute: typeof publicPayTokenRoute
   publicReportPublicIdRoute: typeof publicReportPublicIdRoute
@@ -1333,6 +1346,13 @@ declare module '@tanstack/react-router' {
       path: '/join/$linkToken'
       fullPath: '/join/$linkToken'
       preLoaderRoute: typeof publicJoinLinkTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/l/$code': {
+      id: '/(public)/l/$code'
+      path: '/l/$code'
+      fullPath: '/l/$code'
+      preLoaderRoute: typeof publicLCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/m/$token': {
@@ -1870,6 +1890,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountSetupIndexRoute: AccountSetupIndexRoute,
   publicFeedbackTokenRoute: publicFeedbackTokenRoute,
   publicJoinLinkTokenRoute: publicJoinLinkTokenRoute,
+  publicLCodeRoute: publicLCodeRoute,
   publicMTokenRoute: publicMTokenRoute,
   publicPayTokenRoute: publicPayTokenRoute,
   publicReportPublicIdRoute: publicReportPublicIdRoute,
