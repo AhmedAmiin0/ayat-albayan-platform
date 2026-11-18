@@ -3,12 +3,14 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import type { SalesSubscription } from '@/features/sales/sales/api';
+import type { SalesSubscriptionView } from '@ab/shared';
 
-const col = createColumnHelper<DataTableFeatures, SalesSubscription>();
+const col = createColumnHelper<DataTableFeatures, SalesSubscriptionView>();
 
 /** «السجل» on a confirmed subscription: opens its history (GET /sales/subscriptions/:id/history). */
-export function historyColumn(onOpen: (id: string) => void): DataTableColumn<SalesSubscription> {
+export function historyColumn(
+  onOpen: (id: string) => void,
+): DataTableColumn<SalesSubscriptionView> {
   return col.display({
     id: 'history',
     header: () => t.sales.history.open,

@@ -1,8 +1,4 @@
-import { LEAD_SORT_KEYS, type LeadSortKey } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
-
-/** A lead list order (R-NFR-08), as the web inbox: no key = latest inbound message first. */
-export type LeadSort = { sort?: LeadSortKey; dir?: 'desc' };
 
 /** The «الترتيب» choices: `key` (asc) or `key:desc`; '' = the default order. */
 export const leadSortChoices = (): { value: string; label: string }[] => [
@@ -14,16 +10,3 @@ export const leadSortChoices = (): { value: string; label: string }[] => [
   { value: 'status', label: t.leads.sort.status },
   { value: 'source', label: t.leads.sort.source },
 ];
-
-/** A select value → a sort; an unknown key falls back to the default order. */
-export function leadSortFromValue(value: string): LeadSort {
-  const [key, dir] = value.split(':');
-  const sort = LEAD_SORT_KEYS.find((k) => k === key);
-  if (!sort) return {};
-  return dir === 'desc' ? { sort, dir: 'desc' } : { sort };
-}
-
-export function leadSortValue({ sort, dir }: LeadSort): string {
-  if (!sort) return '';
-  return dir === 'desc' ? `${sort}:desc` : sort;
-}

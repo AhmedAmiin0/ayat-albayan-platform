@@ -1,5 +1,5 @@
 import { LEAD_SOURCES, LEAD_STATUSES, NO_ASSIGNEE, type LeadSource, type LeadStatus } from '@ab/shared';
-import { parseLeadSort, type LeadSort } from './list/lead-sort';
+import { parseLeadSort, type LeadSort } from '@ab/client-core';
 
 /**
  * Inbox URL state: status tab, source and «مسؤول المبيعات» filters, name/phone search, order and

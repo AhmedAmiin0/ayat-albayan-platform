@@ -2,6 +2,8 @@ import {
   type AssistantLessonView,
   riyadhToday,
   type SalesScheduleDay,
+  type SalesSubscriptionKind,
+  type SalesSubscriptionView,
   type SalesSubscriptionHistory,
   type SalesTeacherView,
 } from '@ab/shared';
@@ -10,18 +12,6 @@ import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 // The salesperson's pages (docs/16, web parity with apps/staff-web/src/features/sales): read-only, no money.
 
-export type SubscriptionKind = 'pending' | 'confirmed';
-
-/** One of my subscriptions (GET /sales/subscriptions?kind=). Never a price or a payment. */
-export interface SalesSubscription {
-  id: string;
-  student: { id: string; code: string; name: string };
-  package: string | null;
-  status: string;
-  starts_on: string | null;
-  lessons_total: number;
-}
-
 /** The running lessons are re-read every minute: one ends, another starts (same as the web). */
 const LIVE_REFRESH_MS = 60_000;
 
@@ -29,10 +19,10 @@ const LIVE_REFRESH_MS = 60_000;
 const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
-export const useSalesSubscriptions = (kind: SubscriptionKind) =>
+export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
   useQuery({
     queryKey: [...pathKey('/sales/subscriptions'), kind],
-    queryFn: () => apiFetch<SalesSubscription[]>(`/sales/subscriptions?kind=${kind}`),
+    queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
     select: asList,
   });
 

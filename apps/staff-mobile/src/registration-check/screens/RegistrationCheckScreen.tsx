@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { usePermissions, t, BackButton, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { type CheckBy, type CheckSearch, checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
+import type { RegistrationCheckBy, RegistrationCheckQuery } from '@ab/shared';
+import { checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
 import { RegistrationForm } from '@/registration-check/components/RegistrationForm';
 import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 
@@ -22,9 +23,9 @@ export function RegistrationCheckScreen() {
   const first = searchOf('phone', params.phone ?? '');
   const can = usePermissions();
   const base = useTreeBase();
-  const [by, setBy] = useState<CheckBy>(params.phone ? 'phone' : 'name');
+  const [by, setBy] = useState<RegistrationCheckBy>(params.phone ? 'phone' : 'name');
   const [text, setText] = useState({ phone: params.phone ? formatPhone(params.phone) : '', name: '' });
-  const [search, setSearch] = useState<CheckSearch | null>('search' in first ? first.search : null);
+  const [search, setSearch] = useState<RegistrationCheckQuery | null>('search' in first ? first.search : null);
   const [invalid, setInvalid] = useState<string>();
   const check = useRegistrationCheck(search);
   const back = () => backWithin(inTree(base, '/inbox'));
@@ -39,7 +40,7 @@ export function RegistrationCheckScreen() {
     if (JSON.stringify(next.search) === JSON.stringify(search)) void check.refetch();
     else setSearch(next.search);
   };
-  const pick = (mode: CheckBy) => {
+  const pick = (mode: RegistrationCheckBy) => {
     setBy(mode);
     setInvalid(undefined);
     setSearch(null);

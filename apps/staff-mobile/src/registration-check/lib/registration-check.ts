@@ -1,4 +1,5 @@
 import { normalizePhone, REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
+import type { RegistrationCheckBy, RegistrationCheckQuery } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString, t } from '@ab/mobile-kit';
 
@@ -6,13 +7,11 @@ import { ApiError, apiFetch, toQueryString, t } from '@ab/mobile-kit';
 // GET /sales/registration-check by the guardian's phone (E.164) or a name / code. The checks the API
 // makes (one_of, invalid_phone, query_too_short) run here first so a short name never leaves the phone.
 
-export type CheckBy = 'phone' | 'name';
-export type CheckSearch = { by: 'phone'; phone: string } | { by: 'name'; q: string };
 export type CheckErrorCode = keyof typeof t.registrationCheck.error;
-type SearchResult = { search: CheckSearch } | { error: CheckErrorCode };
+type SearchResult = { search: RegistrationCheckQuery } | { error: CheckErrorCode };
 
 /** What she typed as the API's query, or the reason it is not one yet. */
-export function searchOf(by: CheckBy, text: string): SearchResult {
+export function searchOf(by: RegistrationCheckBy, text: string): SearchResult {
   const value = text.trim();
   if (value === '') return { error: 'one_of' };
   if (by === 'name') return searchChars(value) < REGISTRATION_NAME_MIN ? { error: 'query_too_short' } : { search: { by, q: value } };
@@ -20,7 +19,7 @@ export function searchOf(by: CheckBy, text: string): SearchResult {
   return phone.ok ? { search: { by, phone: phone.e164 } } : { error: 'invalid_phone' };
 }
 
-function checkPath(search: CheckSearch): string {
+function checkPath(search: RegistrationCheckQuery): string {
   const params = search.by === 'phone' ? { phone: search.phone } : { q: search.q };
   return `/sales/registration-check${toQueryString(params)}`;
 }
@@ -41,7 +40,7 @@ export function checkErrorText(error: unknown): string {
 }
 
 /** The answer for the submitted search; nothing is fetched until there is one. */
-export function useRegistrationCheck(search: CheckSearch | null) {
+export function useRegistrationCheck(search: RegistrationCheckQuery | null) {
   return useQuery({
     queryKey: ['sales', 'registration-check', search],
     queryFn: () => apiFetch<RegistrationCheckView>(search ? checkPath(search) : ''),

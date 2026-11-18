@@ -3,16 +3,16 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n/i18n';
-import type { SalesSubscription, SubscriptionKind } from '@/features/sales/sales/api';
+import type { SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-const sub = (over: Partial<SalesSubscription>): SalesSubscription => ({
+const sub = (over: Partial<SalesSubscriptionView>): SalesSubscriptionView => ({
   id: 'p1',
   student: { id: 's1', code: 'AB-0183', name: 'سهيلة' },
-  package: 'باقة 8 حلقات',
+  package: '8',
   status: 'unpaid',
   starts_on: '2026-10-05',
   lessons_total: 8,
@@ -23,11 +23,11 @@ const CONFIRMED = [sub({ id: 'p2', student: { id: 's2', code: 'AB-0190', name: '
 
 /** The route's `kind` as local state, so the tabs swap the list as they do on /sales/subscriptions. */
 function Harness() {
-  const [kind, setKind] = useState<SubscriptionKind>('pending');
+  const [kind, setKind] = useState<SalesSubscriptionKind>('pending');
   return <SalesSubscriptions kind={kind} onKind={setKind} />;
 }
 
-function open(rows: Record<string, SalesSubscription[]> = { pending: PENDING, confirmed: CONFIRMED }) {
+function open(rows: Record<string, SalesSubscriptionView[]> = { pending: PENDING, confirmed: CONFIRMED }) {
   apiFetch.mockImplementation(async (path: string) => rows[path.split('kind=')[1] ?? ''] ?? []);
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
@@ -56,7 +56,7 @@ describe('SalesSubscriptions «الاشتراكات»', () => {
     open();
     await screen.findByText('سهيلة');
     expect(screen.getByText('AB-0183')).toBeTruthy();
-    expect(screen.getByText(/باقة 8 حلقات/)).toBeTruthy();
+    expect(screen.getByText('8')).toBeTruthy();
     expect(screen.getByText(/8 حلقة/)).toBeTruthy();
     expect(document.body.textContent).not.toMatch(/SAR|EGP|ريال|جنيه|سعر|\$/);
   });

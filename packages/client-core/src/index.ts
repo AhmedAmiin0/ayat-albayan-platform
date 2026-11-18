@@ -8,6 +8,7 @@ export * from './people/family-auth/index.js';
 export * from './finance/payments/index.js';
 export * from './finance/quote-custom/index.js';
 export type * from './finance/list-filters/index.js';
+export * from './sales/lead-sort/index.js';
 export * from './people/assistants/index.js';
 export * from './teaching/reports/index.js';
 export * from './teaching/booking/index.js';

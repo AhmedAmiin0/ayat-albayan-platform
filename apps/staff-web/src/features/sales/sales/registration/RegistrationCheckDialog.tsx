@@ -10,7 +10,8 @@ import { SegmentedControl } from '@/components/ui/form/segmented-control';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { apiFetch } from '@/lib/http/api';
 import { t } from '@/lib/i18n/i18n';
-import { checkRequest, type CheckBy, type CheckErrorCode } from './registration-check';
+import type { RegistrationCheckBy, RegistrationCheckCode } from '@ab/shared';
+import { checkRequest } from './registration-check';
 import { RegistrationMatches } from './RegistrationMatches';
 
 const R = t.registrationCheck;
@@ -21,7 +22,7 @@ export interface RegistrationCheckDialogProps {
   onClose: () => void;
 }
 
-type Asked = { by: CheckBy; path: string } | null;
+type Asked = { by: RegistrationCheckBy; path: string } | null;
 
 function firstAsk(phone: string | undefined): Asked {
   const r = phone ? checkRequest('phone', phone) : null;
@@ -39,9 +40,9 @@ function serverError(error: unknown): string {
  */
 export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDialogProps) {
   const formId = useId();
-  const [by, setBy] = useState<CheckBy>(phone ? 'phone' : 'name');
+  const [by, setBy] = useState<RegistrationCheckBy>(phone ? 'phone' : 'name');
   const [value, setValue] = useState({ phone: phone ?? '', name: '' });
-  const [invalid, setInvalid] = useState<CheckErrorCode | null>(null);
+  const [invalid, setInvalid] = useState<RegistrationCheckCode | null>(null);
   const [asked, setAsked] = useState<Asked>(() => firstAsk(phone));
   const answer = useQuery({
     queryKey: ['sales', 'registration-check', asked?.path ?? ''],
@@ -55,7 +56,7 @@ export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDia
     setInvalid(r.ok ? null : r.code);
     setAsked(r.ok ? { by: r.by, path: r.path } : null);
   };
-  const pick = (next: CheckBy) => {
+  const pick = (next: RegistrationCheckBy) => {
     setBy(next);
     setInvalid(null);
     setAsked(null);
