@@ -1,6 +1,6 @@
 import { appSendRefusal } from '@ab/shared';
-import { ApiError, apiSend } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * «أرسل عبر واتساب» (docs/19): the platform keeps off the row for 10 minutes (app_send_until);

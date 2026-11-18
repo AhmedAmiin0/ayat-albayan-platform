@@ -1,11 +1,11 @@
 import { childTabs, type ChildTab } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { tabIds } from '@/components/ui/layout/tabs';
-import { t } from '@/lib/i18n/i18n';
-import { ReportView, type OpenReport } from '@/features/people/portal/report/ReportView';
-import { useFamilyChatOn } from '@/features/people/portal/use-family-chat';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { tabIds } from '@ab/web-kit/components/ui/layout/tabs';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ReportView, type OpenReport } from '@ab/web-kit/portal/report/ReportView';
+import { useFamilyChatOn } from '@ab/web-kit/portal/use-family-chat';
 import { ChildPanel } from './ChildPanel';
 import { CHILD_TABS_PREFIX, ChildTabs } from './ChildTabs';
 

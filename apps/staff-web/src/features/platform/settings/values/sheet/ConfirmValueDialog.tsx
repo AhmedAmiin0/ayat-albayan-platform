@@ -2,10 +2,10 @@ import { counted, westernDigits, type SettingKey } from '@ab/shared';
 import { useId, useState } from 'react';
 import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PendingConfirm } from '@/features/platform/settings/values/hooks/use-values-controller';
 
 const v = t.settingsValues;

@@ -2,7 +2,7 @@ import { USER_ROLES, USER_STATUSES } from '@ab/shared';
 import type { FilterOption } from '@/components/data-table/data-table-features';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
 import type { ExtraFilters, FilterChip } from '@/components/table-toolbar/types';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { UsersPageView } from './api';
 
 const F = t.users.filters;

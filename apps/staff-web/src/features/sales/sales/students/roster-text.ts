@@ -8,9 +8,9 @@ import {
   type PackageWords,
   type SalesStudentView,
 } from '@ab/shared';
-import type { Clock } from '@/lib/clock';
-import { hhmmText } from '@/lib/clock-text';
-import { t } from '@/lib/i18n/i18n';
+import type { Clock } from '@ab/web-kit/lib/clock';
+import { hhmmText } from '@ab/web-kit/lib/clock-text';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // «كل الطلاب»'s schedule, attendance and package cells (owner 2026-10-30), the phone's words
 // through the shared rosterScheduleText / rosterAttendanceText / packageSummaryText.

@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { PendingReports } from '@/features/reporting/reports';
 import { teacherMeQuery, TrialChatNote } from '@/features/teaching/teacher';
 import { AttendanceLog } from '@/features/teaching/teacher-board';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { teacherStudentHeadQuery } from './api';
 import { CourseLine } from './CourseLine';
 import { FileHead } from './FileHead';

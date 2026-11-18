@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { useState } from 'react';
 import type { Mock } from 'vitest';
-import { publicConfigQuery } from '@/lib/settings/public-config';
+import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { emptyTeacherForm, type SetField, type TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 import type { Teacher } from '@ab/shared';

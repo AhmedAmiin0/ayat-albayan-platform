@@ -1,10 +1,10 @@
 import { threadMessages } from '@ab/client-core';
 import type { ChannelPage } from '@ab/shared';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { Button } from '@/components/ui/form/button';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { Button } from '@ab/web-kit/components/ui/form/button';
 import type { ChannelRef } from '@/features/teaching/student-channel/api';
 import { ChannelBubble } from '@/features/teaching/student-channel/ChannelBubble';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 interface Props {
   pages: readonly ChannelPage[];

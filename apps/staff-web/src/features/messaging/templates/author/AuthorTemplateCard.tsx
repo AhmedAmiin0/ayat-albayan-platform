@@ -1,9 +1,9 @@
 import type { AuthorTemplate } from '@ab/client-core';
 import { authorMayEdit, isCodeBound } from '@ab/shared';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AUTHOR_STATUS_STYLE, authorStatus } from './author-status';
 
 const S = t.templates.author;

@@ -1,6 +1,6 @@
 import { closedReasonKey } from '@ab/client-core';
 import type { ChannelClosedReason } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const NOTE = 'rounded-md border border-rule bg-sunk px-3 py-2 text-sm text-ink-2';
 

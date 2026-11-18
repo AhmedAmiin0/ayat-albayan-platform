@@ -2,18 +2,18 @@ import { wallInstant, zonedPartsIn } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Input } from '@/components/ui/form/input';
-import { Select } from '@/components/ui/form/select';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule';
 import { timeOptions } from '@/features/people/teachers/availability/grid';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { proposeLesson } from '@/features/teaching/teacher/api';
-import { ClockOptions } from '@/lib/clock-options';
-import { clockDir } from '@/lib/clock-text';
-import { useClock } from '@/lib/clock';
+import { ClockOptions } from '@ab/web-kit/lib/clock-options';
+import { clockDir } from '@ab/web-kit/lib/clock-text';
+import { useClock } from '@ab/web-kit/lib/clock';
 import { focusOnMount } from '@/lib/dom/mount-refs';
 
 export interface ProposeFormProps {

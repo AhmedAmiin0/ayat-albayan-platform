@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { MoreMenu } from '@/components/ui/overlay/more-menu';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { MoreMenu } from '@ab/web-kit/components/ui/overlay/more-menu';
 import { classroomErrorText, copyStudentLink } from '@/features/teaching/classroom';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * «المزيد» → «انسخ رابط الطالب» (docs/48, room mode only). The menu closes on the pick, so the

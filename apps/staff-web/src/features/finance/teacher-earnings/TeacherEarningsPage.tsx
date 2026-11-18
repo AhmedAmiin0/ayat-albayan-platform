@@ -2,22 +2,22 @@ import type { TeacherEarningView } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Icon } from '@/components/ui/display/icon';
-import { PageHead } from '@/components/ui/layout/page';
-import { Toast } from '@/components/ui/overlay/toast';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { downloadCsv } from '@/features/reporting/exports/api';
 import { currentMonth } from '@/features/finance/payouts/api';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n/i18n';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';
 import { PayDialog } from './payments/PayDialog';
 import { PaymentsHistory } from './payments/PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
 /**
  * /admin/teachers/:teacherId/earnings «مستحقات المعلم»: balance cards, the sessions with ticks, a

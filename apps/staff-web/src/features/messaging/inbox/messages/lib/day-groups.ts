@@ -6,9 +6,9 @@ import {
   type CallView,
   type MessageView,
 } from '@ab/shared';
-import { viewerZone } from '@/lib/clock-text';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import { viewerZone } from '@ab/web-kit/lib/clock-text';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // Date separators in the chat log (phones, owner 2026-10-05): «اليوم», «أمس», else the date.
 // Days are the viewer's local days, like every time on the page.

@@ -1,0 +1,40 @@
+import { screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
+import { renderAt } from '@/test/render-at';
+import { TabBar } from './TabBar';
+
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+
+const TABS = t.portal.app.tabs;
+const names = () => screen.getAllByRole('link').map((link) => link.textContent);
+
+beforeEach(() => {
+  apiFetch.mockReset();
+});
+
+describe('the family bar (owner 2026-11-16)', () => {
+  it('a student: الرئيسية · الجدول · التقارير · حسابي', async () => {
+    apiFetch.mockResolvedValue(home({ kind: 'student', students: [kid()] }));
+    renderAt(<TabBar />, '/portal');
+    const reports = await screen.findByRole('link', { name: TABS.reports });
+    expect(reports.getAttribute('href')).toBe('/reports');
+    expect(names()).toEqual([TABS.home, TABS.schedule, TABS.reports, TABS.account]);
+  });
+
+  it('a guardian of one child works as that child: «التقارير» too', async () => {
+    apiFetch.mockResolvedValue(home({ kind: 'guardian', students: [kid()] }));
+    renderAt(<TabBar />, '/portal');
+    await screen.findByRole('link', { name: TABS.reports });
+    expect(names()).toEqual([TABS.home, TABS.schedule, TABS.reports, TABS.account]);
+  });
+
+  it('until the student in view is known, no «التقارير»', async () => {
+    apiFetch.mockReturnValue(new Promise(() => undefined));
+    renderAt(<TabBar />, '/portal');
+    await screen.findByRole('link', { name: TABS.home });
+    expect(names()).toEqual([TABS.home, TABS.schedule, TABS.account]);
+  });
+});

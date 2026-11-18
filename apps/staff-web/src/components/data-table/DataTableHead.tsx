@@ -1,9 +1,9 @@
 import type { Header, ReactTable, RowData } from '@tanstack/react-table';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { nextSortDir } from './client-sort';
 import type { DataTableFeatures, DataTableSort, SortDir } from './data-table-features';
-import { Icon } from '@/components/ui/display/icon';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
 
 const ARIA_SORT = { asc: 'ascending', desc: 'descending', none: 'none' } as const;
 const HINT = { asc: t.table.sortAsc, desc: t.table.sortDesc, none: t.table.sortNone };

@@ -1,6 +1,6 @@
 import { isGifMessage, isStickerMessage, STICKER_SIZE, type MessageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadFileQuery } from '@/features/messaging/inbox/api/api';
 
 // Stickers and GIFs in the chat (owner 2026-11-01), signed as the bubble renders (not on a click:

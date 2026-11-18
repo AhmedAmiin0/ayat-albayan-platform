@@ -1,6 +1,6 @@
 import type { CorrectTo, LessonStatus } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@/lib/http/api';
+import { apiSend } from '@ab/web-kit/lib/http/api';
 import { LESSONS_KEY } from '@/features/teaching/schedule/api';
 
 /** Whose route: the admin's (lessons.write) or sales' (lessons.cancel). */

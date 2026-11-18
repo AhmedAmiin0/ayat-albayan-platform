@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { AppText, locale, Ltr, type, useTheme } from '@ab/mobile-kit';
-import { type Country, nameOf } from './countries';
+import { type Country, nameOf } from '@ab/client-core';
 
 interface CountryRowProps {
   country: Country;

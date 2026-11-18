@@ -1,4 +1,11 @@
-import { childTabs, familyChatOn, portalViewer, readsOwn, type ChildTab } from '@ab/client-core';
+import {
+  childTabs,
+  childTabWord,
+  familyChatOn,
+  portalViewer,
+  readsOwn,
+  type ChildTab,
+} from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
@@ -9,7 +16,6 @@ import { PackageBody } from '@/package';
 import { useChildUnread } from '@/portal';
 import { recordingsHref } from '@/recordings';
 import { HistoryPanel } from './HistoryPanel';
-import { tabWord } from './tab-words';
 import { UpcomingPanel } from './UpcomingPanel';
 import { useTabMotion } from './use-tab-motion';
 
@@ -30,7 +36,7 @@ const PANEL: Record<ChildTab, (p: ChildBodyProps & { own: boolean }) => ReactNod
 
 /** A tab's pill; «المحادثة» carries its unread badge (canvas ChatXFamilyEntry). */
 function pill(value: ChildTab, own: boolean, unread: number): FilterPill<ChildTab> {
-  const label = tabWord(value, own);
+  const label = childTabWord(value, own, t);
   if (value !== 'chat') return { value, label };
   const named = t.portal.app.child.chatUnread.replace('{n}', String(unread));
   return { value, label, badge: { count: unread, label: named } };

@@ -1,13 +1,13 @@
 import { FOLLOW_UP_STATUSES } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
 import { setFollowUpPaused, type InboxLead } from '@/features/messaging/inbox/api/api';
 import { fullTime } from '@/features/messaging/inbox/format';
-import { useClock, type Clock } from '@/lib/clock';
+import { useClock, type Clock } from '@ab/web-kit/lib/clock';
 
 export interface FollowUpLineProps {
   lead: InboxLead;

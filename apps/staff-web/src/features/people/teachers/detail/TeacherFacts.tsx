@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n/i18n';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { meetingModeText } from '@/features/people/teachers/form/meeting-mode-text';
 import type { Teacher } from '@ab/shared';
 

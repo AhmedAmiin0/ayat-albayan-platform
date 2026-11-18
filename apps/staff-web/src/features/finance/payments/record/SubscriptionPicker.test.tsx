@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { moneyText } from '@/features/finance/subscriptions';
 import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SubscriptionPicker } from './SubscriptionPicker';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 
 // «إلغاء الاشتراك» keeps the money (migration 991): a stopped package still owes, so a payment can
 // go to it; an unused cancel never takes one.

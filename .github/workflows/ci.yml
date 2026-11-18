@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # Which parts changed. e2e drives apps/staff-web against the API and database, so a change that only
+  # Which parts changed. e2e drives both web apps (apps/staff-web, apps/family-web) against the API and database, so a change that only
   # touches the mobile apps (apps/staff-mobile, apps/family-mobile and their shared packages/mobile-kit,
   # which apps/staff-web never imports), docs, the migration tool or other scripts skips the e2e machines; a docs-only change
   # (docs/**, *.md; not docs/09, which workflows.test.mjs reads, nor the linted docs/design/brand/tools) also
@@ -193,8 +193,10 @@ jobs:
           # jest-expo by file path (--shard), its transform cache kept like vitest's (`jcache`).
           - { name: test mobile 1/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=1/2', jcache: mobile-1-2 }
           - { name: test mobile 2/2, task: test, filter: --filter=staff-mobile, args: '-- --shard=2/2', jcache: mobile-2-2 }
+          # The family web app and the web kit both web apps build from source (docs/51 §2), on their own machine.
+          - { name: test family web, task: test, filter: --filter=family-web --filter=@ab/web-kit, vcache: family-web }
           # Every other package, the family app (docs/50 §7) and the source package both apps share included.
-          - { name: test others, task: test, filter: '--filter=!staff-web --filter=!api --filter=!staff-mobile', vcache: others }
+          - { name: test others, task: test, filter: '--filter=!staff-web --filter=!api --filter=!staff-mobile --filter=!family-web --filter=!@ab/web-kit', vcache: others }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -217,7 +219,7 @@ jobs:
         env:
           LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
           CONF: >-
-            ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', 'apps/staff-web/vite.config.ts', 'tsconfig*.json',
+            ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', '*/*/vite.config.ts', 'packages/config/vite.js', 'tsconfig*.json',
             '*/*/tsconfig*.json', 'packages/config/tsconfig/**') || hashFiles('*/*/babel.config.cjs',
             '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/mobile-kit/jest.base.cjs', 'packages/mobile-kit/babel.cjs') }}
           KIND: ${{ matrix.vcache && 'vitest' || 'jest' }}

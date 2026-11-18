@@ -1,6 +1,6 @@
 import { lastMessageLine } from '@ab/shared';
-import { viewerZone } from '@/lib/clock-text';
-import { t } from '@/lib/i18n/i18n';
+import { viewerZone } from '@ab/web-kit/lib/clock-text';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PresenceStatus } from './PresenceStatus';
 import { usePresenceClock } from './use-presence-clock';
 

@@ -1,9 +1,9 @@
 import { remainingDraft } from '@ab/client-core';
 import { CHANNEL_BODY_MAX } from '@ab/shared';
 import type { KeyboardEvent, SubmitEvent } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useChannelDraft } from './use-channel-draft';
 
 interface Props {

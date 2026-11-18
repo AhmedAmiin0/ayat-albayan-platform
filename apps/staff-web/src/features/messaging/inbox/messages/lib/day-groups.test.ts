@@ -1,6 +1,6 @@
 import type { CallView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { dayLabel, withDays } from './day-groups';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 

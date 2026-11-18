@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { Me } from '@/features/people/auth/me';
+import type { Me } from '@ab/web-kit/auth/me';
 import { isStaffRole } from './staff-link';
 import { StaffLinkGate } from './StaffLinkGate';
 
-vi.mock('@/lib/http/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
 
 const me = (role: Me['role']): Me => ({ id: 'u1', email: null, role, permissions: [] });
 

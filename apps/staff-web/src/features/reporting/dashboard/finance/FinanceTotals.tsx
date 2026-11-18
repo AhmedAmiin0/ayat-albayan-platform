@@ -1,7 +1,7 @@
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { financeNotes, rateLines } from './finance-notes';
 import { amount, currencyLabel } from '@/features/reporting/dashboard/shared/format';
 import type { DashboardResponse } from '@ab/shared';

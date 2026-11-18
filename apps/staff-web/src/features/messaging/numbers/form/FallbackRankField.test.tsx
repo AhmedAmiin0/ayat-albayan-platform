@@ -1,6 +1,6 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { numberView } from '@/features/messaging/numbers/numbers.fixture';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
 import { renderPanel } from '@/features/messaging/numbers/numbers-test-kit';
@@ -8,8 +8,8 @@ import { renderPanel } from '@/features/messaging/numbers/numbers-test-kit';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const can = vi.hoisted(() => ({ manage: true }));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@/features/people/auth/use-permissions', () => ({
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => p !== 'numbers.manage' || can.manage }),
 }));
 

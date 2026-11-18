@@ -6,8 +6,8 @@ import {
 } from '@ab/client-core';
 import type { ReactionResult, ThreadDetail } from '@ab/shared';
 import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { ApiError, apiSend } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 
 /** The 409 of a chat on the CRM line (no reaction call there) in words; anything else: try again. */

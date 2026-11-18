@@ -3,11 +3,11 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LessonRows } from './LessonRows';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 // Sunday 4 October, Riyadh: 17:00 free, 17:45 busy (another lesson), 18:30 free; 45-min grid.
 const slot = (at: string, busy = false) => ({

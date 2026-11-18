@@ -1,16 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/form/button';
-import { RequiredMark } from '@/components/ui/form/label';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
 import { lessonErrorText } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { uploadInvoiceFile } from './api.invoice';
 import { ChatMediaPicker } from './ChatMediaPicker';
 import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceChosen } from './InvoiceChosen';
 import { canShow, invoiceMime, invoiceProblem } from './invoice-file';
-import { useUploadMaxBytes } from '@/lib/settings/public-config';
+import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 
 export interface InvoiceFieldProps {
   value: InvoiceDraft | null;

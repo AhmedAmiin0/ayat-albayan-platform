@@ -1,10 +1,10 @@
 import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/http/supabase';
-import { authApi } from '@/features/people/auth/login/auth-api';
-import { meQuery } from '@/features/people/auth/me';
-import { useLandAfterSignIn } from '@/features/people/auth/use-return-to';
+import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { authApi } from '@ab/web-kit/auth/login/auth-api';
+import { meQuery } from '@ab/web-kit/auth/me';
+import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
 import { setupErrorText, setupFormProblem, type SetupForm } from './setup-errors';
 
 /**

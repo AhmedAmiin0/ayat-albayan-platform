@@ -1,6 +1,6 @@
 import { VALUE_CONFIRM, type SettingKey } from '@ab/shared';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Tag } from '@/features/platform/settings/values/cells/NameCell';
 
 const v = t.settingsValues;

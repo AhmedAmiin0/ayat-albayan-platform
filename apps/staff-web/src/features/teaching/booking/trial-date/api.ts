@@ -3,7 +3,7 @@ import type { BookingRequest, Conflict, TrialDateResult, TrialHistory } from '@a
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { STUDENTS_KEY } from '@/features/people/students/api';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { bookingBase } from '@/features/teaching/booking/mode';
 
 // «موعد تجريبي جديد» routes (owner 2026-10-25, R-SCH-06, R-ASST-01) under the booking base of each

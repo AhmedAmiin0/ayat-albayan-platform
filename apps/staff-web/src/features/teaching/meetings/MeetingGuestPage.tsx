@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Logo } from '@/components/ui/display/mark';
+import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Logo } from '@ab/web-kit/components/ui/display/mark';
 import { GuestJoinPage } from '@/features/teaching/classroom/join/GuestJoinPage';
-import type { RoomClient } from '@/features/teaching/classroom/room/components/room-types';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import type { RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { joinMeetingAsGuest, publicMeetingQuery } from './internal/internal-api';
 import { meetingJoinProblem } from './rows/meeting-join-errors';
 import { guestScheduleText } from './scheduled/meeting-when';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 const L = t.meetings.internal.guest;
 

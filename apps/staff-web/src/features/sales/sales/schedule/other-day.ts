@@ -1,5 +1,5 @@
 import { ACADEMY_TZ, wallParts, weekdayOf } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const weekday: Record<string, string | undefined> = t.enums.weekday;
 

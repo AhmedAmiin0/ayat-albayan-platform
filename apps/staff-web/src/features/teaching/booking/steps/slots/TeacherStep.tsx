@@ -1,9 +1,9 @@
 import { GENDERS, PROGRAMS, type BookingTeacherOption, type Gender, type Program } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { t } from '@/lib/i18n/i18n';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { bookingTeachersQuery } from '@/features/teaching/booking/api';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { TeacherOption } from './TeacherOption';

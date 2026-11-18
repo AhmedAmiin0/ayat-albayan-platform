@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { PageHead } from '@/components/ui/layout/page';
-import { Select } from '@/components/ui/form/select';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { summaryQuery } from '@/features/reporting/dashboard/api';
 import { FinanceByMonth } from '@/features/reporting/dashboard/finance/FinanceByMonth';
 import { FinanceTotals } from '@/features/reporting/dashboard/finance/FinanceTotals';
 import { riyadhToday } from '@/features/reporting/dashboard/search';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { yearRange } from './api';
 import { MoneyKpis } from './MoneyKpis';
 

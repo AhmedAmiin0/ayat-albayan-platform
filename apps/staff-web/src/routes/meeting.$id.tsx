@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { requireRole } from '@/features/people/auth/me';
+import { requireRole } from '@ab/web-kit/auth/me';
 import { StaffClassroomPage } from '@/features/teaching/classroom/join/StaffClassroomPage';
 import { joinMeeting } from '@/features/teaching/meetings/internal/internal-api';
 import { meetingJoinProblem } from '@/features/teaching/meetings/rows/meeting-join-errors';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /**
  * /meeting/:id: an internal meeting's room («اجتماع داخلي») for any staff login, the classroom room UI

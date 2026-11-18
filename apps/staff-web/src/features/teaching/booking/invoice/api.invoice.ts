@@ -1,6 +1,6 @@
 import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import type { InvoiceView, MakeupCandidate, ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 import { invoiceMime } from './invoice-file';

@@ -1,5 +1,5 @@
-import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { t } from '@/lib/i18n/i18n';
+import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useCallsEnabled } from '@/features/messaging/calls/state/call-context';
 
 /** «المحادثات» | «المكالمات» above the list, only while calls are on (docs/28 §5). */

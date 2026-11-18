@@ -7,7 +7,7 @@ import {
 } from '@ab/client-core';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import type { CancelBody } from '@/features/finance/subscriptions';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
 
 // «إلغاء الباقة» of the assistant (owner 2026-11-02): ANY student, subscriptions.stop.
 

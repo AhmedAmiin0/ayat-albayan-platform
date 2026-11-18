@@ -1,6 +1,6 @@
 import type { ChannelMessageView } from '@ab/shared';
-import { LinkedBody } from '@/components/ui/display/linked-body';
-import { t } from '@/lib/i18n/i18n';
+import { LinkedBody } from '@ab/web-kit/components/ui/display/linked-body';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChannelEditForm } from './ChannelEditForm';
 import type { useBubbleEditing } from './use-bubble-editing';
 

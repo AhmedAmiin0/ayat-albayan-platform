@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CreateStudentDialog } from './CreateStudentDialog';
 
 // «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1) on «إضافة طالب».

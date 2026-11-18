@@ -21,7 +21,7 @@ const rt = vi.hoisted(() => {
   };
   return { hooks, channel, supabase };
 });
-vi.mock('@/lib/http/supabase', () => ({ supabase: rt.supabase }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: rt.supabase }));
 
 const OPEN = '+966500000001';
 const OTHER = '+966500000002';

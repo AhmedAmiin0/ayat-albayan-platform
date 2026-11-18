@@ -1,9 +1,9 @@
 import { GENDERS, type Gender } from '@ab/shared';
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { RadioChips } from '@/components/ui/form/radio-chips';
-import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n/i18n';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // «سن الطالب» and «النوع» as the registration form asks them (research-forms item 1): both
 // optional; the age is a whole number 3–99 (ageError has the form's message).

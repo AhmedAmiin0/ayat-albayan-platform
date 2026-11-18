@@ -1,6 +1,6 @@
 import { accountMessage } from '@/features/people/account';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const OWN: Record<string, string | undefined> = t.staffPhoto.errors;
 /** The file checks shared with «حسابي» (account.errors.*). */

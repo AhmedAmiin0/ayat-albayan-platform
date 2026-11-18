@@ -1,5 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { tagsOf } from '@/features/messaging/notification-catalogue/catalogue-text';
 
 /** A row's name and its tags («رسالة تلقائية», «أساسي»), then its trigger in a line. */

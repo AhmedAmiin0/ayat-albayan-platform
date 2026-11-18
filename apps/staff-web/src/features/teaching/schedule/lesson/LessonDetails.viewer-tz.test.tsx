@@ -3,12 +3,12 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { publicConfigQuery } from '@/lib/settings/public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { ABRAR, JOUD, lesson } from './lesson-fixture';
 import { LessonChip } from './LessonChip';
 import { LessonDetails } from './LessonDetails';
-import { configWrapper } from '@/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
 
 // docs/34: every time reads in the viewer's zone; a Riyadh family's clock is added only when it
 // reads differently at that instant (Cairo is UTC+2 in winter, UTC+3 in summer until 2026-10-29).

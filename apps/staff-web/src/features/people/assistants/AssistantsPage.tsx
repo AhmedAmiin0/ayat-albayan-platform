@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { PageHead } from '@/components/ui/layout/page';
-import { Tabs } from '@/components/ui/layout/tabs';
-import { t } from '@/lib/i18n/i18n';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Tabs } from '@ab/web-kit/components/ui/layout/tabs';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { assistantsQuery } from './api';
 import { AssistantsList } from './AssistantsList';
 import { CommissionLedger } from './commissions/CommissionLedger';

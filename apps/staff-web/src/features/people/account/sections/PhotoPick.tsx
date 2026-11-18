@@ -1,6 +1,6 @@
 import { useId, type ChangeEvent, type Ref } from 'react';
-import { buttonVariants } from '@/components/ui/form/button';
-import { cn } from '@/lib/utils';
+import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { cn } from '@ab/web-kit/lib/utils';
 import { AVATAR_ACCEPT } from '@/features/people/account/avatar-file';
 
 export interface PhotoPickProps {

@@ -1,6 +1,6 @@
-import { Icon } from '@/components/ui/display/icon';
-import { IconButton } from '@/components/ui/form/icon-button';
-import { t } from '@/lib/i18n/i18n';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useChatSearch } from './search-context';
 import { SEARCH_BAR_ID, SEARCH_TOGGLE_ID } from './to-newest';
 

@@ -2,7 +2,7 @@ import type { Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { unreadCountQuery, useInboxLive } from '@/features/messaging/inbox';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The tab title with the count while there is something unread: «(3) أكاديمية آيات البيان». */
 export function unreadTitle(n: number): string {

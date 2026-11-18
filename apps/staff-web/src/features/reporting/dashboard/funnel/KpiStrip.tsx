@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { kpisOf, type Kpi } from './kpis';
 import type { DashboardResponse, WorkTab } from '@ab/shared';
-import { usePublicConfig } from '@/lib/settings/public-config';
+import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 
 export interface KpiStripProps {
   /** undefined while loading: the tiles show a dash, never a made-up number. */

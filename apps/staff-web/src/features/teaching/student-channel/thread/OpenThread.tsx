@@ -3,7 +3,7 @@ import { ChannelPresenceLine } from '@/features/platform/presence';
 import type { ChannelRef } from '@/features/teaching/student-channel/api';
 import { ChannelComposer } from '@/features/teaching/student-channel/composer/ChannelComposer';
 import { draftKey } from '@/features/teaching/student-channel/composer/draft-store';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChannelLoadFailed } from './ChannelLoadFailed';
 import { ChannelMessages } from './ChannelMessages';
 import type { useChannelThread } from './use-channel-thread';

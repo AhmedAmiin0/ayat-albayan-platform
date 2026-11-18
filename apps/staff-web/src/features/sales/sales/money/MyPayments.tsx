@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AttachmentsDialog } from '@/features/finance/payments/attachments/AttachmentsDialog';
 import { studentLabel } from '@/features/finance/subscriptions';
 import { usePermissions } from '@/features/people/auth';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { myPaymentsQuery } from '@/features/sales/sales/api';
 import { MyPaymentAmount } from './MyPaymentAmount';
 import { myPaymentColumns } from './my-payment-columns';

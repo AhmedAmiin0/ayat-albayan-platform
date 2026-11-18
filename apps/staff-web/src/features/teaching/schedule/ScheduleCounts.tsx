@@ -1,6 +1,6 @@
 import { counted, type LessonView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 import { needsConfirmCount } from './lesson/lessons';
 
 /**

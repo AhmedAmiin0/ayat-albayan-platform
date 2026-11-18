@@ -1,11 +1,11 @@
 import type { ChatListRef } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Icon } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { chatListsQuery } from '@/features/messaging/inbox/lists/lib/api';
 import { AutoListChip } from './AutoListNote';
 import { CreateListDialog } from './CreateListDialog';

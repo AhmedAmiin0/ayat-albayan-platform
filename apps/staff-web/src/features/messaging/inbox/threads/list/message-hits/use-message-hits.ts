@@ -1,7 +1,7 @@
 import { messageHits, messageSearchPages } from '@ab/client-core';
 import { searchesMessages } from '@ab/shared';
 import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
 
 /** «الرسائل» (docs/37): client-core's pages over this app's fetch; ['threads'] refreshes it. */
 const messageSearchQuery = (q: string) =>

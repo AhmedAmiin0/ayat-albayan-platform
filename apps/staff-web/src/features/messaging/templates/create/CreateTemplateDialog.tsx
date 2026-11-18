@@ -1,9 +1,9 @@
 import { templateCreateSchema, type TemplateView, type WaLine } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { templateErrorText } from '@/features/messaging/templates/api';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ButtonFields } from './ButtonFields';
 import { SaveActions } from './SaveActions';
 import { emptyDraft, toInput, type TemplateDraft } from './template-draft';

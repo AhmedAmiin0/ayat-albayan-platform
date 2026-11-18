@@ -1,0 +1,43 @@
+{
+  "name": "@ab/web-kit",
+  "private": true,
+  "type": "module",
+  "description": "Shared React DOM code of the staff web app (apps/staff-web) and the family web app (apps/family-web), docs/51 §2: SOURCE, built by each app's Vite (aliased @ab/web-kit/* → src/*).",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsgo --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@ab/client-core": "workspace:*",
+    "@ab/shared": "workspace:*",
+    "@fontsource/noto-sans-arabic": "^5.3.0",
+    "@radix-ui/react-label": "^2.1.15",
+    "@radix-ui/react-slot": "^1.3.3",
+    "@supabase/supabase-js": "^2.117.2",
+    "@tanstack/react-form": "^1.33.5",
+    "@tanstack/react-query": "^5.104.0",
+    "@tanstack/react-router": "^1.170.41",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "livekit-client": "^2.22.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "~19.2.18",
+    "@types/react-dom": "~19.2.3",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "eslint": "^10.0.0",
+    "jsdom": "^30.1.1",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}

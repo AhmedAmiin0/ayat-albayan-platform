@@ -2,10 +2,10 @@ import { SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
 import { useId } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
 import type { RowExtras } from '@/components/settings/fields/SettingRow';
-import { controlClass, Input } from '@/components/ui/form/input';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { controlClass, Input } from '@ab/web-kit/components/ui/form/input';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { str, shapeId } from './settings-form';
 import type { SettingsFormState } from './use-settings-form';
 

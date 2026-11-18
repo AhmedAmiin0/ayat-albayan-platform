@@ -2,12 +2,12 @@ import type { MeetingCreateResult } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { meQuery, type Me } from '@/features/people/auth/me';
-import { t } from '@/lib/i18n/i18n';
+import { meQuery, type Me } from '@ab/web-kit/auth/me';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ScheduledMeetingDialog } from './ScheduledMeetingDialog';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
 
 const L = t.meetingInvites;
 const STUDENT_ID = '22222222-2222-4222-8222-222222222222';

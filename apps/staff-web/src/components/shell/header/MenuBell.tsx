@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
-import { Icon } from '@/components/ui/display/icon';
-import { usePermissions } from '@/features/people/auth/use-permissions';
-import { notificationsQuery } from '@/features/messaging/notifications/api';
-import { t } from '@/lib/i18n/i18n';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { notificationsQuery } from '@ab/web-kit/push/notifications-api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface MenuBellProps {
   open: boolean;

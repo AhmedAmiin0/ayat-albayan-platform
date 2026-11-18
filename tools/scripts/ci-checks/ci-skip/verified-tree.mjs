@@ -21,7 +21,8 @@ const CACHE_KEYS = [
   /^[^/]+\/[^/]+\/(babel\.config|jest\.config|jest\.setup)\.cjs$/,
   /^packages\/mobile-kit\/(jest\.base|babel)\.cjs$/,
   /^[^/]+\/[^/]+\/vitest\.config\.mts$/,
-  /^apps\/staff-web\/vite\.config\.ts$/,
+  /^[^/]+\/[^/]+\/vite\.config\.ts$/,
+  /^packages\/config\/vite\.js$/,
   /^([^/]+\/[^/]+\/)?tsconfig[^/]*\.json$/,
   /^packages\/config\/tsconfig\//,
 ];

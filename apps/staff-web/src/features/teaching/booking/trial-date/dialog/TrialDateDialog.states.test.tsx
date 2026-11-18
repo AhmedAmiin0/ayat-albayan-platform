@@ -1,15 +1,15 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ABRAR, next, NOOR, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 import { TrialDateDialog } from './TrialDateDialog';
 import { history, routeTrialFetch, routeTrialSend, row } from '@/features/teaching/booking/trial-date/trial-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const STUDENT = { id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' };
 const historyCalls = () => apiFetch.mock.calls.filter(([p]) => String(p).startsWith('/booking/trial-dates')).length;

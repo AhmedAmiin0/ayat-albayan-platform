@@ -2,10 +2,10 @@ import { coursePausePreviewText } from '@ab/client-core';
 import type { CoursePausePreview } from '@ab/shared';
 import { COURSE_PAUSE_REASON_MAX } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { t } from '@/lib/i18n/i18n';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { coursePausePreviewQuery } from './api';
 import { draftProblem, pauseLines, type PauseDraft } from './pause-form';
 

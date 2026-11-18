@@ -1,6 +1,6 @@
-import { RequiredMark } from '@/components/ui/form/label';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { RATINGS } from '@/features/teaching/feedback/types';
 import type { FeedbackRating } from '@ab/shared';
 

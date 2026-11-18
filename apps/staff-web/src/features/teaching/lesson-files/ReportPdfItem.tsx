@@ -1,7 +1,7 @@
 import type { LessonAssets } from '@ab/shared';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useOpenReportPdf } from './use-lesson-files';
 
 const F = t.lessonFiles;

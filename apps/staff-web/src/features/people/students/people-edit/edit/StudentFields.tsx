@@ -1,9 +1,9 @@
 import { notesFilter, type StudentForm } from '@ab/client-core';
 import { GENDERS } from '@ab/shared';
-import { Field } from '@/components/ui/form/field';
-import { Select } from '@/components/ui/form/select';
-import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n/i18n';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TextField } from '@/features/people/students/people-edit/TextField';
 import { StudentPhoneField } from './StudentPhoneField';
 

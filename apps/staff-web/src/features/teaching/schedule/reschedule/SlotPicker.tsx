@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { slotsQuery } from '@/features/teaching/schedule/api';
-import { bookableWindow, currentWeekStart, openingWeek } from './slots';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { WeekSlotsFrame } from './WeekSlotsFrame';
+import { bookableWindow, currentWeekStart, openingWeek } from '@ab/web-kit/schedule/slots';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { WeekSlotsFrame } from '@ab/web-kit/schedule/WeekSlotsFrame';
 
 export interface SlotPickerProps {
   teacherId: string;

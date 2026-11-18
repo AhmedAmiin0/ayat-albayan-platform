@@ -1,7 +1,7 @@
 import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, type JoinWindowConfig, type LessonView } from '@ab/shared';
 import type { SessionGroup } from '@ab/client-core';
-import { t } from '@/lib/i18n/i18n';
-import { lessonStatusText, type LessonStatusChip } from '@/lib/settings/lesson-status-text';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { lessonStatusText, type LessonStatusChip } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /** Which group a lesson is in at `now`: its room is open, still to open, or closed. */
 export function groupOf(lesson: LessonView, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): SessionGroup {

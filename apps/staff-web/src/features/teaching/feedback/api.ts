@@ -1,8 +1,8 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
-import { env } from '@/lib/http/env';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { env } from '@ab/web-kit/lib/http/env';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ServerListState } from '@/lib/list/server-list-search';
 import {

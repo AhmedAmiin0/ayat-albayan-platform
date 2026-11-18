@@ -1,5 +1,5 @@
 import { formatAmount, partPaidOf, type OwedPackage } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { currencySymbol } from './format';
 
 // The part-paid wording (owner 2026-10-28, «Why is this unpaid»): a package stays 'unpaid' until the

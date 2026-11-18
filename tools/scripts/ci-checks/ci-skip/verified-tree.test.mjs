@@ -32,6 +32,8 @@ test('a push that changes a cache key file runs everything (develop writes the c
     'pnpm-lock.yaml',
     'apps/api/vitest.config.mts',
     'apps/staff-web/vite.config.ts',
+    'apps/family-web/vite.config.ts',
+    'packages/config/vite.js',
     'tsconfig.base.json',
     'apps/api/tsconfig.json',
     'packages/config/tsconfig/base.json',

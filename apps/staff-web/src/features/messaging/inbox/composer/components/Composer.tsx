@@ -1,9 +1,9 @@
 import type { ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { meQuery } from '@/features/people/auth/me';
+import { meQuery } from '@ab/web-kit/auth/me';
 import { sendGateQuery } from '@/features/messaging/messaging/api';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useReadsMessaging } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { ComposerPhone, type ComposerMode as Mode } from './ComposerPhone';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';

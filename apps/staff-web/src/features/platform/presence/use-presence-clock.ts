@@ -1,5 +1,5 @@
-import { useClock, type Clock } from '@/lib/clock';
-import { useNow } from '@/lib/time/use-now';
+import { useClock, type Clock } from '@ab/web-kit/lib/clock';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 
 /** Relative presence text («منذ 5 دقائق») stays fresh: re-read the time every 30 seconds. */
 export const PRESENCE_TICK_MS = 30_000;

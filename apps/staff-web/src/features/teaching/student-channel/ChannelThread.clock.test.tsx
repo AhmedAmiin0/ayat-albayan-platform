@@ -5,7 +5,7 @@ import { channelPage } from './channel.fixtures';
 import { ChannelThread } from './ChannelThread';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn(() => Promise.resolve({})) }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn(() => Promise.resolve({})) }));
 
 // 23:59 in Riyadh on the 27th; the fixture's messages are at 13:00 and 13:05 that day.
 beforeEach(() => vi.useFakeTimers({ now: new Date('2026-10-27T20:59:00Z'), toFake: ['Date', 'setInterval', 'clearInterval'] }));

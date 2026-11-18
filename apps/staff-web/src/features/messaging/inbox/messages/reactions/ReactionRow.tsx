@@ -1,7 +1,7 @@
 import { reactionName, tappedReaction } from '@ab/client-core';
 import { REACTION_EMOJIS, type MessageView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 /** «تفاعل بـإعجاب»; an emoji without a name says itself. */
 export function emojiLabel(emoji: string): string {

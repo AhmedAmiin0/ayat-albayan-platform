@@ -1,10 +1,10 @@
 import { counted } from '@ab/shared';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { Icon } from '@/components/ui/display/icon';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { PageHead } from '@/components/ui/layout/page';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Tag } from './cells/NameCell';
 
 const v = t.settingsValues;

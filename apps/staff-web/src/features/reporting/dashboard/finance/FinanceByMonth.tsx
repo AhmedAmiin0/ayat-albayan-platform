@@ -1,5 +1,5 @@
-import { ScrollX } from '@/components/ui/layout/scroll-x';
-import { t } from '@/lib/i18n/i18n';
+import { ScrollX } from '@ab/web-kit/components/ui/layout/scroll-x';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';
 import { amount, monthLabel } from '@/features/reporting/dashboard/shared/format';
 import { useHandSort } from '@/features/reporting/dashboard/shared/hand-sort';

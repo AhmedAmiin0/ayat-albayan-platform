@@ -1,13 +1,13 @@
 import { QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, apiFetch } from '@/lib/http/api';
+import { ApiError, apiFetch } from '@ab/web-kit/lib/http/api';
 import { ChatUploadError, chatSendMime, sendFile, threadPdfPageQuery, uploadChatFile } from './api.files';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 const from = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
-vi.mock('@/lib/http/supabase', () => ({ supabase: { storage: { from } } }));
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from } } }));
 
 const PHONE = '+966501234567';
 const SIGNED = { bucket: 'wa-media', path: 'out/u-1/req-1/abc.png', token: 'tok', signed_url: 'https://x' };

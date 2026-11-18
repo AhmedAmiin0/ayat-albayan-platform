@@ -7,8 +7,8 @@ import type {
   SubscriptionPricing,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
-import { env } from '@/lib/http/env';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { env } from '@ab/web-kit/lib/http/env';
 
 // «رابط دفع» (docs/30, with FEATURE_STRIPE test or live): /stripe/feature, /sales/payment-links
 // and /pay/:token (the switch and the keys are integration keys, «التكاملات»). Each read is

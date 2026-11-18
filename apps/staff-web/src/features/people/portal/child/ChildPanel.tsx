@@ -2,11 +2,11 @@ import type { ChildTab } from '@ab/client-core';
 import type { PortalStudent } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { ChannelThread } from '@/features/teaching/student-channel';
-import { HistoryPanel } from '@/features/people/portal/history/HistoryPanel';
-import { LessonsPanel } from '@/features/people/portal/lessons/LessonsPanel';
-import { PackagePanel } from '@/features/people/portal/package/PackagePanel';
-import { RecordingsPanel } from '@/features/people/portal/recordings/RecordingsPanel';
-import type { OpenReport } from '@/features/people/portal/report/ReportView';
+import { HistoryPanel } from '@ab/web-kit/portal/history/HistoryPanel';
+import { LessonsPanel } from '@ab/web-kit/portal/lessons/LessonsPanel';
+import { PackagePanel } from '@ab/web-kit/portal/package/PackagePanel';
+import { RecordingsPanel } from '@ab/web-kit/portal/recordings/RecordingsPanel';
+import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 
 interface PanelProps {
   student: PortalStudent;

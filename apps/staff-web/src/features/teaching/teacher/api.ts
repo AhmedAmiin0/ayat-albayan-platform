@@ -3,7 +3,7 @@ import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { LESSONS_KEY, type Window } from '@/features/teaching/schedule';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
 // Teacher self-service routes (docs/10 §5 rows 3–4; R-TCH-03, R-SCH-08).
 

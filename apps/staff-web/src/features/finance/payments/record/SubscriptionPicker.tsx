@@ -1,12 +1,12 @@
 import { countsForMoney, dueOf, owedFor } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { Field } from '@/components/ui/form/field';
-import { Select } from '@/components/ui/form/select';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { studentSubscriptionsQuery, type SubscriptionView } from '@/features/finance/subscriptions/api';
 import { moneyText, packageName } from '@/features/finance/subscriptions';
 import { StudentPicker, type PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 type Props = {
   student: PickedStudent | null;

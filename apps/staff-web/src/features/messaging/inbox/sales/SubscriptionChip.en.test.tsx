@@ -7,9 +7,9 @@ import { SubscriptionChip } from './SubscriptionChip';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 // The chat's subscription in English (LTR): the same chips and buttons, en.json words.
-vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
-vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 
 describe('subscription in the chat, English', () => {
   it('each badge is an en.json word with its nuqta tone', () => {

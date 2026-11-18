@@ -1,6 +1,6 @@
 import { isIntegrationPlainKey, type IntegrationConfigItem, type IntegrationGroup as Group } from '@ab/shared';
 import type { ComponentType } from 'react';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { IntegrationDraft } from '@/features/platform/integrations/integrations-form';
 import { PlainIntegrationRow } from './PlainIntegrationRow';
 import { SecretIntegrationRow } from './SecretIntegrationRow';

@@ -2,9 +2,9 @@ import { boardStudents, countByKind, type LessonView, type TeacherMe } from '@ab
 import { useNavigate } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { BoardHead } from './BoardHead';
 import { DEFAULT_SEGMENT, EMPTY_TITLE, type BoardSegment } from './board-segments';
 import { boardRows, searchRows, type BoardRow } from './board-rows';

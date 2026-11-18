@@ -1,6 +1,6 @@
-import { ScrollX } from '@/components/ui/layout/scroll-x';
+import { ScrollX } from '@ab/web-kit/components/ui/layout/scroll-x';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { LessonsByStatus } from './LessonsByStatus';
 import { TeacherLoad } from './TeacherLoad';

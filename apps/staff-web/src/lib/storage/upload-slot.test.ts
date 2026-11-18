@@ -3,7 +3,7 @@ import { uploadSigned } from './upload-slot';
 
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 const from = vi.hoisted(() => vi.fn(() => ({ uploadToSignedUrl })));
-vi.mock('@/lib/http/supabase', () => ({ supabase: { storage: { from } } }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from } } }));
 
 const OLD = { bucket: 'receipts', path: 'sub-1/a.jpg', token: 'tok', signed_url: 'https://sb/x' };
 const MINIO = { ...OLD, path: 'minio:sub-1/a.jpg', signed_url: 'https://files.test/put?sig=1' };

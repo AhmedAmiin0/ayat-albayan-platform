@@ -1,13 +1,13 @@
 import { Link } from '@tanstack/react-router';
-import { Ltr } from '@/components/ui/display/ltr';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { whenViewer } from '@/features/reporting/dashboard/shared/format';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 import type { PendingReportRow } from '@ab/shared';
 
 export const workItem = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2.5 last:border-b-0';
