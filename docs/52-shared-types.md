@@ -22,9 +22,10 @@ apps/family-mobile (apps/family-web has its own routine). Branch `refactor/share
 | | Declarations |
 |---|---|
 | Exported type / interface / enum / class in the four apps (tests excluded) | 3545 |
-| Moved in this PR (package names; app declarations deleted: 93) | 39 |
-| Kept in the app (§3) | 3191 |
-| Move in a later slice (§4) | 297 |
+| Moved out of staff-web by develop #740 (@ab/web-kit), not counted below | 126 |
+| Moved in this PR (package names; app declarations deleted: 113) | 39 |
+| Kept in the app (§3) | 3073 |
+| Move in a later slice (§4) | 233 |
 
 ## 2. Moved in this PR
 
@@ -83,12 +84,12 @@ apps/family-mobile (apps/family-web has its own routine). Branch `refactor/share
 | Reason | api | staff-web | staff-mobile | family-mobile | Examples |
 |---|---|---|---|---|---|
 | NestJS provider, module or implementation class | 1154 | 0 | 0 | 0 | `AppModule`, `AuditService`, `AuditModule` |
-| API-internal: service / planner / rule types of one module | 541 | 0 | 0 | 0 | `AuditEntry`, `PermissionResolver`, `Role` |
-| API-internal: repo rows, ports, stores, jobs, settings readers, fakes | 342 | 0 | 0 | 0 | `TokenVerifier`, `FakeQueries`, `PlainRow` |
-| Kept after review in this PR (see the §2 notes) | 5 | 1 | 0 | 0 | `StudentListItem`, `StudentProfile`, `SourceKey` |
-| Component props | 0 | 452 | 46 | 0 | `ColumnFilterTextProps`, `DataTableProps`, `DataTableHeadProps` |
-| Feature-local UI state, hook or search type of one app | 0 | 374 | 159 | 10 | `FilterKind`, `SortDir`, `FilterOption` |
-| Component-local type (one component file) | 0 | 69 | 28 | 3 | `DiscardWords`, `RowExtras`, `SettingsView` |
+| API-internal: service / planner / rule types of one module | 538 | 0 | 0 | 0 | `AuditEntry`, `PermissionResolver`, `Role` |
+| API-internal: repo rows, ports, stores, jobs, settings readers, fakes | 340 | 0 | 0 | 0 | `TokenVerifier`, `FakeQueries`, `PlainRow` |
+| Kept after review in this PR (see the §2 notes) | 5 | 0 | 0 | 0 | `StudentListItem`, `StudentProfile`, `SourceKey` |
+| Component props | 0 | 422 | 46 | 0 | `ColumnFilterTextProps`, `DataTableProps`, `DataTableHeadProps` |
+| Feature-local UI state, hook or search type of one app | 0 | 305 | 158 | 7 | `FilterKind`, `SortDir`, `FilterOption` |
+| Component-local type (one component file) | 0 | 60 | 28 | 3 | `DiscardWords`, `RowExtras`, `SettingsView` |
 | Error / implementation class | 0 | 2 | 5 | 0 | `ChatUploadError`, `ReplayedSend`, `AvatarUploadError` |
 
 ## 4. Move in a later slice (decision: move; not in this PR)
@@ -105,40 +106,31 @@ took the duplicated ones first (§2). Each later slice: one domain, same rules, 
 | api/src/modules/messaging | `CallPermissionFacts`, `PermissionRequest`, `CallsApi`, `PeopleStudentRow`, `FamilyTag`, `ThreadRow`, `SavedReplyRow`, `CrmEndpoint`, `CrmCreated`, `CrmWebhookResult`, `KapsoMessage`, `Contact`, `OutboundRow`, `StatusMove`, `ReplyWindow`, `CrmMessage`, `CrmConversation`, `CrmContact`, `MessageRow`, `ThreadMessageRow`, `MessageViewInput`, `RelayRequest`, `RelayType`, `RelayOf`, `TemplateRow`, `WaSent`, `SentFile`, `VoiceUpload`, `MetaTemplate`, `TemplateSend`, `SampleFile`, `MediaSend`, `ReactionSend`, `WhatsappClient`, `WhatsappLines` | API request/response shape | @ab/shared (domain folder) |
 | api/src/modules/people | `ListQuery`, `PastLesson`, `StudentCreateRequest`, `StudentListRow`, `StudentProfileRow` | API request/response shape | @ab/shared (domain folder) |
 | api/src/modules/platform | `RecentRow`, `Stored`, `Session`, `PartPlan`, `People` | API request/response shape | @ab/shared (domain folder) |
-| api/src/modules/reporting | `DashboardResponse`, `PaymentIn`, `CostLessonIn`, `LessonSourceIn`, `ExpenseIn`, `PendingIn`, `TaskIn`, `PageUrls`, `PageKey`, `PageFileRow`, `PageReportRow`, `PageFacts`, `ViewContext`, `FormColumns`, `TeacherReportParts` | API request/response shape | @ab/shared (domain folder) |
+| api/src/modules/reporting | `PaymentIn`, `CostLessonIn`, `LessonSourceIn`, `ExpenseIn`, `PendingIn`, `TaskIn`, `PageUrls`, `PageKey`, `PageFileRow`, `PageReportRow`, `PageFacts`, `ViewContext`, `FormColumns`, `TeacherReportParts` | API request/response shape | @ab/shared (domain folder) |
 | api/src/modules/sales | `PageQuery`, `RosterFacts`, `AssignedLead`, `TeacherDayFacts` | API request/response shape | @ab/shared (domain folder) |
 | api/src/modules/teaching | `TeacherOptionsQuery`, `SlotsQuery`, `LessonRow`, `RuleRow`, `SiblingRow`, `NewStudentRow`, `InvoiceRow`, `BookingPayload`, `InviteeRow`, `LinkRow`, `LessonStudentRow`, `PauseRow`, `RpcOut`, `StopPlan`, `StopRow`, `People`, `Named`, `OverviewParts`, `NoticeKey`, `NoticeTeacher`, `NoticeGuardian`, `NoticeStudent`, `Notice`, `RecordingJoinRow`, `ManageRule` | API request/response shape | @ab/shared (domain folder) |
-| staff-mobile/src/assistants/api | `AssistantRow`, `LedgerFilter`, `StatementFilter` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/booking/lesson-times | `RowCheck` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/booking/shared | `InvoiceDraft`, `BookingExtras`, `MakeupRequest`, `BookingBody`, `MediaUrl` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
+| staff-mobile/src/booking/shared | `InvoiceDraft` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/booking/trial | `SummaryRow` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/calendar/overview | `TeacherFilter` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/classroom/links | `JoinableLesson` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/classroom/recordings | `RecordingSource` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/classroom/sessions | `SessionGroup` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/core/lib | `TeacherListItem`, `JobApplicant` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
+| staff-mobile/src/core/lib | `JobApplicant` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/core/ui | `LessonStatusText` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/earnings/hooks | `SessionFilter` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/earnings/lib | `PayInput` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/edit-time/lib | `EditState`, `TimeEditInfo`, `EditableLesson`, `LessonTimeEditBody` | Same client logic in web + mobile | @ab/client-core |
+| staff-mobile/src/edit-time/lib | `EditState` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/feedback | `FeedbackAverage` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/finance/pricing | `Selection` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/finance/summary | `FinanceSummary` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/inbox/composer | `PanelMedia`, `Draft` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-mobile/src/inbox/leads | `LeadSort` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/inbox/messages | `BubbleOffers`, `ThreadFile` | Same client logic in web + mobile | @ab/client-core |
+| staff-mobile/src/inbox/messages | `BubbleOffers` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/inbox/saved-replies | `ReplySave` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-mobile/src/inbox/shared | `Lead` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/inbox/thread | `RtcDeps`, `CallSessionApi`, `ChatActions`, `ChatSearchValue` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/inbox/threads-list | `MessageHitsState` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/money/payments | `SubscriptionFilter` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/money/shared | `PeriodTotal`, `PaymentsPage` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-mobile/src/ops/dashboard | `WorkTab`, `Kpi` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
+| staff-mobile/src/ops/dashboard | `Kpi` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/ops/values | `Draft` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/registration-check/lib | `CheckBy`, `CheckErrorCode` | Same client logic in web + mobile | @ab/client-core |
+| staff-mobile/src/registration-check/lib | `CheckErrorCode` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/sales-subscribe/lib | `ReceiptChoice`, `TransferInput` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/sales-subscribe/payment-link | `LinkPay` | Same client logic in web + mobile | @ab/client-core |
-| staff-mobile/src/sales/sales | `SubscriptionKind`, `SalesSubscription` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/student-file/channel | `ChannelSeatApi` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/student-file/recordings | `RecordingFilters` | Same client logic in web + mobile | @ab/client-core |
 | staff-mobile/src/students/course-actions | `SubRef` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
@@ -151,14 +143,13 @@ took the duplicated ones first (§2). Each later slice: one domain, same rules, 
 | staff-mobile/src/today/requests | `Answer` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-mobile/src/trial-date/lib | `TrialDateDraft` | Same client logic in web + mobile | @ab/client-core |
 | staff-web/src/components/table-toolbar | `ColumnFilterControl`, `FilterChip`, `ExtraFilters`, `TableToolbarOptions` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-web/src/features/finance | `ExpenseBody`, `PaymentFilters`, `PeriodTotal`, `PaymentPatch`, `RecordPaymentBody`, `PayPayoutBody`, `Selection`, `CreateSubscriptionBody`, `CustomPrice`, `SubscriptionFilter`, `Scope`, `SessionFilter`, `PaymentsList`, `PayBody`, `PayInput` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-web/src/features/messaging | `RtcDeps`, `CallSessionApi`, `ThreadFile`, `InboxLead`, `Draft`, `SummaryRow`, `BubbleOffers`, `ChatSearchValue`, `ChatActions`, `MessageHitsState`, `GateChange`, `RuleFailure`, `EvolutionStateAnswer`, `EvolutionQrAnswer`, `ShownState`, `CrmTemplateStatus`, `EditMode`, `EditCall`, `EditState` | Same client logic in web + mobile | @ab/client-core |
-| staff-web/src/features/people | `AssistantRow`, `LedgerFilter`, `StatementFilter`, `PayStatementBody`, `BroughtBy`, `GuardianDetail`, `StaffPhotoKind`, `StaffPhotoTarget`, `StudentListView`, `StatusCounts`, `CreateStudentBody`, `TeacherListRow` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
+| staff-web/src/features/finance | `ExpenseBody`, `PaymentFilters`, `PaymentPatch`, `RecordPaymentBody`, `PayPayoutBody`, `Selection`, `CreateSubscriptionBody`, `CustomPrice`, `Scope`, `PaymentsList`, `PayBody`, `PayInput` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
+| staff-web/src/features/messaging | `RtcDeps`, `CallSessionApi`, `InboxLead`, `Draft`, `SummaryRow`, `BubbleOffers`, `ChatSearchValue`, `ChatActions`, `MessageHitsState`, `GateChange`, `RuleFailure`, `EvolutionStateAnswer`, `EvolutionQrAnswer`, `ShownState`, `CrmTemplateStatus`, `EditMode`, `EditCall`, `EditState` | Same client logic in web + mobile | @ab/client-core |
+| staff-web/src/features/people | `PayStatementBody`, `BroughtBy`, `GuardianDetail`, `StaffPhotoKind`, `StaffPhotoTarget`, `StudentListView`, `StatusCounts`, `CreateStudentBody` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-web/src/features/platform | `PresenceChat` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-web/src/features/reporting | `Kpi`, `WorkTab`, `DashboardData`, `ExportKind`, `ExportRequest`, `GateProblem`, `SaveState`, `ReportEntryState`, `LinkProblem`, `AttachmentCalls`, `ReportApi` | Same client logic in web + mobile | @ab/client-core |
-| staff-web/src/features/sales | `LeadSort`, `LeadRow`, `LeadSearch`, `PageSearch`, `Bind`, `SalesQuoteBody`, `SalesSubscriptionBody`, `SalesPaymentBody`, `LinkPay`, `ReceiptChoice`, `TransferInput`, `Paged`, `SubscriptionKind`, `SalesSubscription`, `SalesPerson`, `CheckBy`, `CheckErrorCode`, `SalesMoveInput`, `TeacherFilter` | Same client logic in web + mobile | @ab/client-core |
-| staff-web/src/features/teaching | `GuardianRow`, `BookSearch`, `CourseChangeTarget`, `CourseChangeBody`, `BookingBody`, `TrialDateDraft`, `InvoiceDraft`, `RowCheck`, `RecordingSource`, `MuteCall`, `RoomStatus`, `TileView`, `RoomSnapshot`, `MediaDevice`, `MediaFailure`, `RoomClient`, `ModeratedEvent`, `DataSendOptions`, `DataPacketIn`, `SessionGroup`, `GrantShare`, `StatusAsk`, `PublicProblem`, `Rating`, `FeedbackSubmitBody`, `FeedbackPage`, `Window`, `SlotsParams`, `CorrectArea`, `CorrectLesson`, `TimeEditInfo`, `EditableLesson`, `TeacherFilter`, `DayInput`, `ChannelRef`, `ChannelSeatApi`, `AlertRowView` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-web/src/lib/settings | `LessonStatusText` | Same client logic in web + mobile | @ab/client-core |
+| staff-web/src/features/reporting | `Kpi`, `ExportKind`, `ExportRequest`, `SaveState`, `ReportEntryState`, `LinkProblem`, `AttachmentCalls`, `ReportApi` | Same client logic in web + mobile | @ab/client-core |
+| staff-web/src/features/sales | `LeadSearch`, `PageSearch`, `Bind`, `SalesQuoteBody`, `SalesSubscriptionBody`, `SalesPaymentBody`, `LinkPay`, `ReceiptChoice`, `TransferInput`, `Paged`, `SalesMoveInput`, `TeacherFilter` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
+| staff-web/src/features/teaching | `GuardianRow`, `BookSearch`, `CourseChangeTarget`, `CourseChangeBody`, `TrialDateDraft`, `InvoiceDraft`, `RowCheck`, `StatusAsk`, `PublicProblem`, `SlotsParams`, `CorrectArea`, `CorrectLesson`, `TeacherFilter`, `DayInput`, `ChannelRef`, `ChannelSeatApi`, `AlertRowView` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 
 ## 5. Doubtful cases for the owner
 
@@ -174,3 +165,5 @@ took the duplicated ones first (§2). Each later slice: one domain, same rules, 
 | D8 | Mobile `FeedbackAverage` allows nulls the package type does not | Kept in mobile: switching would remove null checks (runtime code) | Confirm the API never sends null, then drop it |
 | D9 | Same small helpers still copied in web and mobile (`groupOf`/`groupSessions`, `timeEditMode`/`editMode`, `bookingBase`/`bookingPath`) | Kept: logic, not types; the session ones need an if-free rewrite | A logic slice into `@ab/client-core` |
 | D10 | Re-exports of package names left in web `booking/draft/contract.ts` and mobile `booking/shared/contract.ts` (`BOOKING_KINDS`, `InvoiceInput`, …) and in web/mobile `feedback/types.ts` (`FeedbackRowView`) | Left: they predate this PR | Next slice removes them |
+| D11 | Mobile `JobApplicant` (`core/lib/staff/types.ts`) vs package `JobApplicantView` | Kept: web types `status` as `string` and tests an unknown status; mobile indexes its style maps by `JobApplicantStatus`. One type needs a runtime fallback in one app | Pick `string` + a mobile fallback, or `JobApplicantStatus` + drop the web test |
+| D12 | Mobile `CheckErrorCode` (`registration-check.ts`) | Kept: it is `keyof` the i18n error strings (adds `too_many_requests`, `generic`), not the API's 400 codes (`RegistrationCheckCode`) | — |

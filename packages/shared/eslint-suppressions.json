@@ -770,7 +770,7 @@
   },
   "src/sales/family-link.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 5
