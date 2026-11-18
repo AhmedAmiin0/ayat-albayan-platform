@@ -42,7 +42,6 @@ export { LessonRecording } from './recordings/LessonRecording';
 export {
   deleteRecording,
   recordedLessonIdsQuery,
-  type RecordingFilters,
   RECORDINGS_KEY,
   RECORDINGS_PAGE_SIZE,
   setRecordingVisible,

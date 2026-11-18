@@ -1,4 +1,5 @@
 import { dateText, type LessonView } from '@ab/shared';
+import { SESSION_GROUPS, type SessionGroup } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { TableBox } from '@/components/data-table/TableBox';
@@ -16,7 +17,7 @@ import { locale } from '@/lib/i18n/locale';
 import { useJoinWindow } from '@/lib/settings/public-config';
 import { adminDayQuery, dayAround } from '@/features/teaching/classroom/api/api';
 import { SessionCard } from './SessionCard';
-import { groupSessions, SESSION_GROUPS, type SessionGroup } from './sessions';
+import { groupSessions } from './sessions';
 import { useNow } from '@/lib/time/use-now';
 import { viewerZone } from '@/lib/clock-text';
 

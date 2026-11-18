@@ -52,6 +52,11 @@ export const studentRecordingsQuerySchema = z.object({
   status: z.enum(STUDENT_RECORDING_STATUSES).optional(),
 });
 export type StudentRecordingsQuery = z.output<typeof studentRecordingsQuerySchema>;
+/** The list's filters as a client sends them (no page): empty = no filter. */
+export type StudentRecordingFilters = Omit<
+  z.input<typeof studentRecordingsQuerySchema>,
+  'page' | 'pageSize'
+>;
 
 /** PATCH /recordings/:id/visibility: show (true) or hide (false) a recording from the student. */
 export const recordingVisibilitySchema = z.object({ visible: z.boolean() });

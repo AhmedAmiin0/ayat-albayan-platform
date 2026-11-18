@@ -1,8 +1,8 @@
+import type { StudentRecordingFilters } from '@ab/shared';
 import { STUDENT_RECORDING_STATUSES, type StudentRecordingStatus } from '@ab/shared';
 import { DateFilterField, SelectFilterField, chipIfSet } from '@/components/table-toolbar/fields';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { t } from '@/lib/i18n/i18n';
-import type { RecordingFilters } from './recordings-api';
 
 const F = t.studentRecordings.filters;
 
@@ -12,8 +12,8 @@ export interface TeacherChoice {
 }
 
 export interface RecordingFiltersBarProps {
-  value: RecordingFilters;
-  onChange: (next: RecordingFilters) => void;
+  value: StudentRecordingFilters;
+  onChange: (next: StudentRecordingFilters) => void;
   teachers: TeacherChoice[];
 }
 
@@ -34,7 +34,7 @@ const asStatus = (v: string | undefined): StudentRecordingStatus | undefined =>
  * a choice.
  */
 export function RecordingFiltersBar({ value, onChange, teachers }: RecordingFiltersBarProps) {
-  const set = (patch: RecordingFilters) => onChange({ ...value, ...patch });
+  const set = (patch: StudentRecordingFilters) => onChange({ ...value, ...patch });
   const teacherName = teachers.find((x) => x.id === value.teacherId)?.name;
   const chips = [
     ...chipIfSet({ id: 'from', label: F.from, value: value.from, onRemove: () => set({ from: undefined }) }),

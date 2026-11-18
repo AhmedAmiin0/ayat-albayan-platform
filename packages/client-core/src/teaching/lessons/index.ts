@@ -33,3 +33,4 @@ export {
 } from './teacher-lesson-plan.js';
 export { nextOpenLesson, pickHero, type Hero, type HeroLesson } from './pick-hero.js';
 export { teacherStudentHeadSchema } from './teacher-student-head-schema.js';
+export { SESSION_GROUPS, type SessionGroup } from './session-groups.js';
