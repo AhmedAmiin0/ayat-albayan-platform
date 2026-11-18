@@ -55,6 +55,15 @@ describe('HistoryPanel «حضرها» / «غاب عنها»', () => {
     expect(screen.queryByRole('button', { name: t.portal.openReport })).toBeNull();
   });
 
+  it('each row card carries the date tile, hidden from screen readers (family look only)', async () => {
+    apiFetch.mockImplementation(portalApi({ absent: { rows: [historyRow({ outcome: 'absent' })], next_cursor: null } }));
+    renderPortal(<HistoryPanel student={kid()} status="absent" onOpenReport={onOpenReport} />);
+    const row = await screen.findByRole('listitem');
+    const tile = row.querySelector('[aria-hidden="true"]');
+    expect(tile?.className).toContain('family:flex');
+    expect(row.textContent).toContain(t.portal.withTeacher.replace('{teacher}', 'أبرار'));
+  });
+
   it('nothing yet: the list’s own empty state', async () => {
     apiFetch.mockImplementation(portalApi());
     renderPortal(<HistoryPanel student={kid()} status="absent" onOpenReport={onOpenReport} />);

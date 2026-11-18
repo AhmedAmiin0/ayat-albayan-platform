@@ -32,6 +32,16 @@ describe('PackagePanel «الباقة» (guardian / adult)', () => {
     expect(screen.queryByRole('link')).toBeNull();
   });
 
+  it('the used share as a bar (shown by the family look only): 8 of 12', async () => {
+    apiFetch.mockResolvedValue(packageView());
+    renderPortal(<PackagePanel student={kid()} />);
+    const bar = await screen.findByRole('progressbar', { hidden: true });
+    expect(bar.getAttribute('aria-label')).toBe(t.portal.usedOfHint);
+    expect([bar.getAttribute('aria-valuenow'), bar.getAttribute('aria-valuemax')]).toEqual(['8', '12']);
+    expect(bar.className).toContain('family:block');
+    expect((bar.firstElementChild as HTMLElement).style.width).toBe(`${String((8 / 12) * 100)}%`);
+  });
+
   it('nothing owed, no payments, empty instructions: those parts are hidden', async () => {
     const base = packageView();
     const pkg = base.package && { ...base.package, amount_due: null, renews_on: null };

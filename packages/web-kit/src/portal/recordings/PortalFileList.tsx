@@ -9,6 +9,9 @@ import { useOpenLessonFile } from './use-recordings';
 
 const F = t.lessonFiles;
 
+/** One file; the family look sets it on a cream panel. */
+const ITEM = 'grid gap-1 family:rounded-[14px] family:border family:border-rule family:bg-sunk family:p-3.5';
+
 interface Props {
   studentId: string;
   /** The sent report: its PDF is the list's first file. */
@@ -26,16 +29,18 @@ export function PortalFileList({ studentId, reportId, files }: Props) {
   if (count === 0) return null;
   return (
     <section aria-label={F.title} className="grid gap-2">
-      <h3 className="text-sm font-bold">{F.header.replace('{n}', String(count))}</h3>
+      <h3 className="text-sm font-bold family:text-body family:font-extrabold">
+        {F.header.replace('{n}', String(count))}
+      </h3>
       <ul className="grid gap-3">
         {reportId && (
-          <li className="grid gap-1">
+          <li className={ITEM}>
             <p className="text-sm font-semibold">{F.reportPdf}</p>
             <FileButtons studentId={studentId} files={[{ kind: 'reports', id: reportId }]} />
           </li>
         )}
         {files.map((file) => (
-          <li key={file.id} className="grid gap-1">
+          <li key={file.id} className={ITEM}>
             <p className="text-sm font-semibold">{fileTitle(file)}</p>
             <p className="text-xs text-ink-3">{fileLine(file)}</p>
             {file.media === 'audio' ? (

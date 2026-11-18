@@ -20,9 +20,28 @@ function pointAt(e: PointerEvent<HTMLDivElement>, duration: number): number {
   return seekAtPoint({ ...point, rtl: isRtl(e.currentTarget) });
 }
 
+/** The bar: the heard share filled (the family look adds the gold thumb at its end). */
+function SeekTrack({ share }: { share: number }) {
+  return (
+    <div className="h-1.5 w-full rounded-full bg-sunk family:relative family:h-2 family:bg-white/20">
+      <div
+        className="h-1.5 rounded-full bg-lapis family:h-2 family:bg-[image:var(--fam-gold-fill)]"
+        style={{ width: `${share}%` }}
+      />
+      <span
+        aria-hidden="true"
+        className="absolute top-1/2 hidden size-[18px] -translate-y-1/2 rounded-full bg-[#e9c45a]
+          shadow-[0_0_0_4px_rgba(233,196,90,0.25)] family:block"
+        style={{ insetInlineStart: `calc(${share}% - 9px)` }}
+      />
+    </div>
+  );
+}
+
 /**
  * «موضع التشغيل»: a slider over the heard share (arrows ±10 s, Home/End, tap or drag), the clock
- * under it «12:40 … 45:20», each time an LTR island in the RTL row.
+ * under it «12:40 … 45:20», each time an LTR island in the RTL row. The family look: a gold fill
+ * and thumb on the emerald band.
  */
 export function SeekBar({ position, duration, seek }: Props) {
   const share = Math.round(progressOf(position, duration) * 100);
@@ -42,7 +61,7 @@ export function SeekBar({ position, duration, seek }: Props) {
     if (e.currentTarget.hasPointerCapture(e.pointerId)) seek(pointAt(e, duration));
   };
   return (
-    <div className="grid gap-1.5">
+    <div className="grid gap-1.5 family:col-span-2 family:col-start-2 family:row-start-1 family:gap-0.5">
       <div
         role="slider"
         tabIndex={0}
@@ -54,13 +73,14 @@ export function SeekBar({ position, duration, seek }: Props) {
         onKeyDown={onKeyDown}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        className="flex h-6 cursor-pointer touch-none items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring"
+        className="flex h-6 cursor-pointer touch-none items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring family:h-11"
       >
-        <div className="h-1.5 w-full rounded-full bg-sunk">
-          <div className="h-1.5 rounded-full bg-lapis" style={{ width: `${share}%` }} />
-        </div>
+        <SeekTrack share={share} />
       </div>
-      <p className="flex justify-between text-xs text-ink-3">
+      <p
+        className="flex justify-between text-xs text-ink-3 family:font-latin family:text-[13px]
+          family:font-semibold family:text-fam-hero-ink-2"
+      >
         <Ltr>{at}</Ltr>
         <Ltr>{total}</Ltr>
       </p>
