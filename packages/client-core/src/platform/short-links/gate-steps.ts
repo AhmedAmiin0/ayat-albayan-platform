@@ -46,11 +46,12 @@ export function codeStepError(e: unknown): GateCodeError {
   return CODE_BY_STATUS[statusOf(e)] ?? 'generic';
 }
 
-/** Whole seconds before the code can be sent again (0 = «أعد إرسال الرمز» shows now). */
+/**
+ * Whole seconds before the code can be sent again (0 = «أعد إرسال الرمز» shows now). Whether the
+ * button is on is the family sign-in's own canResend({ left, busy }) (people/family-auth), not a
+ * second helper of the same name (the two clashed in client-core's index on 2026-11-18).
+ */
 export function resendSecondsLeft(sentAt: number, now: number): number {
   const left = Math.ceil(RESEND_SECONDS - (now - sentAt) / 1000);
   return Math.min(RESEND_SECONDS, Math.max(0, left));
 }
-
-export const gateCanResend = (sentAt: number, now: number): boolean =>
-  resendSecondsLeft(sentAt, now) === 0;

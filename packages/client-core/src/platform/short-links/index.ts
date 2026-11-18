@@ -12,7 +12,7 @@ export {
   type GateScreen, type GateState, type GateStep,
 } from './gate-screen.js';
 export {
-  gateCanResend, codeStepError, GATE_CODE_ERRORS, GATE_PHONE_ERRORS, phoneStepError,
+  codeStepError, GATE_CODE_ERRORS, GATE_PHONE_ERRORS, phoneStepError,
   resendSecondsLeft, type GateCodeError, type GatePhoneError,
 } from './gate-steps.js';
 export {
