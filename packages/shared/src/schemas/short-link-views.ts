@@ -74,7 +74,7 @@ export type ShortLinkPerson = z.infer<typeof shortLinkPersonSchema>;
 export const shortLinkGateViewSchema = z.object({
   title: z.string().nullable(),
   state: z.enum(['open', 'gone']),
-  /** Why a gone link is gone (the gate shows «انتهت الصلاحية» or «أُلغي الرابط»); null while open. */
+  /** Why a gone link is gone (the gate shows expired or revoked); null while open. */
   goneReason: z.enum(['expired', 'revoked']).nullable(),
   /** A managed link always needs a signed-in user or a phone verified by a WhatsApp code. */
   needs: z.literal('sign_in_or_code'),
