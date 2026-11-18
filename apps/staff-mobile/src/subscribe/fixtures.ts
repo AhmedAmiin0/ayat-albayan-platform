@@ -1,6 +1,7 @@
 import type { QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
 import type { StudentProfile } from '@ab/shared';
 import { subscription } from '@/payments/fixtures';
+import { profile as student } from '@/students/shared/test-data';
 
 // Invented API answers for the subscribe screen tests (no real people).
 
@@ -8,25 +9,11 @@ export const CHILD = '44444444-4444-4444-8444-444444444444';
 export const SISTER = '55555555-5555-4555-8555-555555555555';
 
 export const profile: StudentProfile = {
+  ...student,
   id: CHILD,
-  code: 'AB-0183',
-  name: 'يوسف',
-  status: 'active',
   guardian_id: 'g-1',
-  age: null,
-  gender: null,
-  program: 'quran',
-  level: null,
-  memorized: null,
-  goal: null,
-  riwaya: null,
-  tz: 'Asia/Riyadh',
-  teacher_id: null,
-  meeting_link_override: null,
-  notes: null,
+  name: 'يوسف',
   guardian: { id: 'g-1', name: 'أم يوسف', phone_e164: '+966552147730' },
-  teacher: null,
-  meeting_link: null,
   siblings: [{ id: SISTER, code: 'AB-0184', name: 'سارة', status: 'active' }],
 };
 
