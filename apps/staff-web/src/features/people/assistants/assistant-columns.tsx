@@ -3,8 +3,8 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { buttonVariants } from '@/components/ui/form/button';
 import { t } from '@/lib/i18n/i18n';
-import type { AssistantRow } from './api';
 import { commissionText, dayText, salaryText } from './terms/terms-summary';
+import type { AssistantRow } from '@ab/client-core';
 
 const col = createColumnHelper<DataTableFeatures, AssistantRow>();
 const since = (day: string | undefined) => (day ? t.assistants.startsOn.replace('{date}', dayText(day)) : null);

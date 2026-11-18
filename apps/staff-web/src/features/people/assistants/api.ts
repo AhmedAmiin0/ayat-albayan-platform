@@ -7,10 +7,10 @@ import {
   type AssistantTermsView,
   type BroughtByInput,
   type PaymentMethod,
-  type PayoutStatus,
   type SignedDownload,
   type SignedUpload,
 } from '@ab/shared';
+import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -20,9 +20,6 @@ import { uploadSigned } from '@/lib/storage/upload-slot';
 export type { AssistantCommissionView, AssistantStatementView, AssistantTermsView } from '@ab/shared';
 
 export const ASSISTANTS_KEY = ['assistant-pay'] as const;
-
-/** One assistant of the list: the profile and its terms (null parts are not set yet). */
-export type AssistantRow = { id: string; name: string; terms: AssistantTermsView };
 
 /** GET /assistant-pay/terms: every assistant (base role sales) with their terms, reshaped to the list's row. */
 export const assistantsQuery = queryOptions({
@@ -35,8 +32,6 @@ export const assistantsQuery = queryOptions({
 
 export const saveTerms = (input: { assistantId: string; body: AssistantTermsInput }) =>
   apiSend<AssistantTermsView>('PUT', `/assistant-pay/terms/${input.assistantId}`, input.body);
-
-export type LedgerFilter = { assistantId: string; month: string; status: '' | 'earned' | 'voided' };
 
 const qs = (params: Record<string, string>) => {
   const q = new URLSearchParams(Object.entries(params).filter(([, v]) => v !== ''));
@@ -60,12 +55,10 @@ export const commissionsQuery = (f: LedgerFilter) =>
 export const voidCommission = (input: { id: string; reason: string }) =>
   apiSend<{ id: string }>('POST', `/assistant-pay/commissions/${input.id}/void`, { reason: input.reason });
 
-export type StatementFilter = { assistantId: string; month: string; status: '' | PayoutStatus };
-
 export const statementsQuery = (f: StatementFilter) =>
   queryOptions({
     queryKey: [...ASSISTANTS_KEY, 'statements', f],
-    queryFn: () => apiFetch<AssistantStatementView[]>(`/assistant-pay/statements${qs(f)}`),
+    queryFn: () => apiFetch<AssistantStatementView[]>(`/assistant-pay/statements${qs({ ...f })}`),
   });
 
 /** Builds or rebuilds the DRAFT of one assistant's month (idempotent; a frozen one answers invalid_transition). */
