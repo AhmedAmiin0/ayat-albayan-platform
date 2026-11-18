@@ -1,19 +1,11 @@
 import type { PortalLesson, PortalStudent } from '@ab/shared';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { LessonAction } from '@ab/web-kit/portal/lessons/LessonAction';
-import { LessonCountdown } from '@ab/web-kit/portal/lessons/LessonCountdown';
+import { DateTile } from '@ab/web-kit/components/family/layout/DateTile';
 import { FamilyChip } from '@ab/web-kit/portal/lessons/options/FamilyChip';
-import { FamilyLine } from '@ab/web-kit/portal/lessons/options/FamilyLine';
-import { LessonOptionsBar } from '@ab/web-kit/portal/lessons/options/LessonOptionsBar';
-import { DateTile } from './DateTile';
-import { dayName, spanText, tileOf, viewerLine, withLine } from './lesson-text';
+import { LessonActs } from '@ab/web-kit/portal/lessons/LessonActs';
+import { WithRoom } from '@ab/web-kit/portal/lessons/WithRoom';
+import { dayName, spanText, withLine } from './lesson-text';
 import { rowShowsTimer } from './row-clock';
-import { WithRoom } from './WithRoom';
-
-/** The countdown ticks every second; the join button turns on by itself at the window. */
-const TICK_MS = 1_000;
+import { useCardClock } from './use-card-clock';
 
 interface Props {
   lesson: PortalLesson;
@@ -27,15 +19,13 @@ interface Props {
  * row-clock.ts), the way in and «خيارات الحلقة» as pills.
  */
 export function FamilyLessonCard({ lesson, student }: Props) {
-  const now = useNow(TICK_MS);
-  const clock = { ...useClock(), tz: student.tz };
-  const viewer = viewerLine(lesson.starts_at, clock, useViewerTz());
+  const { now, clock, viewer } = useCardClock(lesson, student);
   return (
     <WithRoom>
       {(onJoined) => (
         <div className="grid gap-3">
           <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2">
-            <DateTile {...tileOf(lesson, clock)} />
+            <DateTile at={lesson.starts_at} tz={student.tz} />
             <div className="grid min-w-0 flex-1 basis-40 gap-0.5">
               <h3 className="whitespace-nowrap text-[17px] font-extrabold leading-normal text-ink">
                 <span className="sr-only">{`${dayName(lesson, clock, now)} `}</span>
@@ -46,11 +36,8 @@ export function FamilyLessonCard({ lesson, student }: Props) {
             </div>
             <FamilyChip lesson={lesson} />
           </div>
-          <FamilyLine lesson={lesson} student={student} now={now} />
-          {rowShowsTimer(lesson, now) && <LessonCountdown lesson={lesson} now={now} />}
-          <LessonAction lesson={lesson} studentId={student.id} tz={student.tz} now={now}
-            onJoined={onJoined} />
-          <LessonOptionsBar lesson={lesson} student={student} now={now} />
+          <LessonActs lesson={lesson} student={student} now={now} onJoined={onJoined}
+            timer={rowShowsTimer(lesson, now)} />
         </div>
       )}
     </WithRoom>

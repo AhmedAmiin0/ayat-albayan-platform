@@ -1,8 +1,7 @@
 import { familyChildren } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
-import { Hero, HeroTitle } from '@ab/web-kit/components/family/layout/Hero';
-import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
+import { TitledPage } from '@ab/web-kit/components/family/layout/TitledPage';
 import { DiamondRule } from '@ab/web-kit/components/family/ornament/Diamond';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useFamilyPick, usePickChild } from '@/features/shell';
@@ -26,29 +25,24 @@ export function PickChildPage({ home }: { home: PortalHome }) {
     void navigate({ to: '/portal' });
   };
   return (
-    <>
-      <Hero labelledBy="pick-title">
-        <HeroTitle id="pick-title" title={t.portal.app.pick.title} line={t.familyLook.child.pickLine} />
-      </Hero>
-      <PageBody>
-        <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-8">
-          {familyChildren(home).map((student, i) => (
-            <ChildSummaryCard
-              key={student.id}
-              student={student}
-              kind={home.kind}
-              tone={TONES[i % TONES.length]}
-              onChoose={() => choose(student.id)}
-            />
-          ))}
+    <TitledPage id="pick-title" title={t.portal.app.pick.title} line={t.familyLook.child.pickLine}>
+      <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-8">
+        {familyChildren(home).map((student, i) => (
+          <ChildSummaryCard
+            key={student.id}
+            student={student}
+            kind={home.kind}
+            tone={TONES[i % TONES.length]}
+            onChoose={() => choose(student.id)}
+          />
+        ))}
+      </div>
+      {first && (
+        <div className="grid justify-items-center gap-3">
+          <DiamondRule />
+          <p className="text-center text-sm text-ink-3">{t.portal.app.pick.hint}</p>
         </div>
-        {first && (
-          <div className="grid justify-items-center gap-3">
-            <DiamondRule />
-            <p className="text-center text-sm text-ink-3">{t.portal.app.pick.hint}</p>
-          </div>
-        )}
-      </PageBody>
-    </>
+      )}
+    </TitledPage>
   );
 }

@@ -5,8 +5,8 @@ import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRo
 type Card = (onJoined: (room: RoomJoinResult) => void) => ReactNode;
 
 /**
- * A family lesson card until the classroom admits the student; then the room covers the page
- * (as the plain LessonCard does), and «إعادة الدخول» brings the card back.
+ * A lesson card (plain or family) until the classroom admits the student; then the room covers
+ * the page, and «إعادة الدخول» brings the card back.
  */
 export function WithRoom({ children }: { children: Card }) {
   const [room, setRoom] = useState<RoomJoinResult | null>(null);

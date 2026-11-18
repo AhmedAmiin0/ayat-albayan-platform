@@ -1,10 +1,9 @@
-import type { DayWord, WeekDay } from '@ab/client-core';
+import { dayWordOf, type DayWord, type WeekDay } from '@ab/client-core';
 import { dateText } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { cn } from '@ab/web-kit/lib/utils';
 import { ScheduleRow } from './ScheduleRow';
-import { dayBadge } from './week-days';
 
 const WEEKDAY = { weekday: 'long' } as const;
 const DAY = { day: 'numeric' } as const;
@@ -23,7 +22,7 @@ const BADGE: Record<DayWord, string> = {
 
 /** A day of the week (boards: the seven tiles): its name and number, then its lessons. */
 export function DayColumn({ day, today }: { day: WeekDay; today: string }) {
-  const word = dayBadge(day.day, today);
+  const word = dayWordOf(day.day, today);
   const id = `day-${day.day}`;
   const empty = day.lessons.length === 0;
   return (

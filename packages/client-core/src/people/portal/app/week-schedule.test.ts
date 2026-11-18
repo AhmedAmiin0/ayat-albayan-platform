@@ -1,6 +1,6 @@
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { scheduleWeek, weekSchedule } from './week-schedule.js';
+import { scheduleWeek, weekSchedule, weekTiles } from './week-schedule.js';
 
 const student = (id: string): PortalStudent => ({
   id, code: `AB-${id}`, name: id, tz: 'Asia/Riyadh', contact_is_self: false,
@@ -53,5 +53,18 @@ describe('weekSchedule', () => {
     const next = weekSchedule({ children, tz, offset: 1 }, now);
     expect(next.map((d) => d.day)).toEqual(['2026-11-15']);
     expect(weekSchedule({ children: [], tz, offset: 0 }, now)).toEqual([]);
+  });
+});
+
+describe('weekTiles (the schedule page\'s seven day tiles)', () => {
+  it('every day from the first, across a month end; the days with lessons keep them', () => {
+    const entry = { student: student('a'), lesson: lesson('l1', '2026-11-02T10:00:00Z') };
+    const tiles = weekTiles('2026-10-31', [{ day: '2026-11-02', lessons: [entry] }]);
+    expect(tiles.map((d) => d.day)).toEqual([
+      '2026-10-31', '2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05',
+      '2026-11-06',
+    ]);
+    expect(tiles[2]).toEqual({ day: '2026-11-02', lessons: [entry] });
+    expect(tiles.filter((d) => d.lessons.length === 0)).toHaveLength(6);
   });
 });

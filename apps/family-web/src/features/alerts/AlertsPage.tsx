@@ -3,8 +3,7 @@ import type { PortalKind } from '@ab/shared';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { pill } from '@ab/web-kit/components/family/brand/pill';
-import { Hero, HeroTitle } from '@ab/web-kit/components/family/layout/Hero';
-import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
+import { TitledPage } from '@ab/web-kit/components/family/layout/TitledPage';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
@@ -54,16 +53,11 @@ export function AlertsPage({ kind }: { kind: PortalKind }) {
   const alerts = useAlerts();
   const markRead = useMarkAlertsRead();
   return (
-    <>
-      <Hero labelledBy="alerts-title">
-        <HeroTitle id="alerts-title" title={t.bell.title} line={t.familyLook.pages.alerts.line} />
-      </Hero>
-      <PageBody>
-        <Toolbar unread={alerts.data?.unread ?? 0} onMarkAll={() => markRead.mutate(undefined)} />
-        <LoadState query={alerts}>
-          {(page) => <AlertList page={page} kind={kind} onRead={(id) => markRead.mutate([id])} />}
-        </LoadState>
-      </PageBody>
-    </>
+    <TitledPage id="alerts-title" title={t.bell.title} line={t.familyLook.pages.alerts.line}>
+      <Toolbar unread={alerts.data?.unread ?? 0} onMarkAll={() => markRead.mutate(undefined)} />
+      <LoadState query={alerts}>
+        {(page) => <AlertList page={page} kind={kind} onRead={(id) => markRead.mutate([id])} />}
+      </LoadState>
+    </TitledPage>
   );
 }

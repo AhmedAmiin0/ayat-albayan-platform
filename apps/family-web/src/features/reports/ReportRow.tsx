@@ -2,7 +2,7 @@ import { isNewReport, reportAt } from '@ab/client-core';
 import type { PortalReport, PortalStudent } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { DateTile } from '@ab/web-kit/components/family/pages/DateTile';
+import { DateTile } from '@ab/web-kit/components/family/layout/DateTile';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { cn } from '@ab/web-kit/lib/utils';
@@ -32,7 +32,7 @@ export function ReportRow({ report, student }: { report: PortalReport; student: 
   return (
     <li className={cn('relative flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[18px]',
       'border px-4 py-2.5 transition-colors', fresh ? FRESH : SEEN)}>
-      <DateTile at={new Date(at)} tz={student.tz} />
+      <DateTile at={at} tz={student.tz} />
       <div className="grid min-w-[10rem] flex-1 gap-0.5">
         <div className="flex flex-wrap items-center gap-2">
           <LessonWhen startsAt={at} tz={student.tz} />

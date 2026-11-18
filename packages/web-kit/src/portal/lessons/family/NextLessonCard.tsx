@@ -2,21 +2,16 @@ import { isLessonNow, windowStateAt } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { useId } from 'react';
 import { StarPattern } from '@ab/web-kit/components/family/ornament/StarPattern';
-import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { LessonAction } from '@ab/web-kit/portal/lessons/LessonAction';
 import { LessonCountdown } from '@ab/web-kit/portal/lessons/LessonCountdown';
 import { FamilyChip } from '@ab/web-kit/portal/lessons/options/FamilyChip';
 import { FamilyLine } from '@ab/web-kit/portal/lessons/options/FamilyLine';
 import { LessonOptionsBar } from '@ab/web-kit/portal/lessons/options/LessonOptionsBar';
-import { dayName, spanText, viewerLine, withLine } from './lesson-text';
+import { WithRoom } from '@ab/web-kit/portal/lessons/WithRoom';
+import { dayName, spanText, withLine } from './lesson-text';
 import { OpenPill } from './OpenPill';
-import { WithRoom } from './WithRoom';
-
-/** The countdown ticks every second; the join button turns on by itself at the window. */
-const TICK_MS = 1_000;
+import { useCardClock } from './use-card-clock';
 
 const TIMER =
   'justify-self-start rounded-full bg-white/10 px-3 font-latin text-base font-bold text-fam-gold sm:text-lg';
@@ -36,9 +31,7 @@ interface Props {
  */
 export function NextLessonCard({ lesson, student, own }: Props) {
   const id = useId();
-  const now = useNow(TICK_MS);
-  const clock = { ...useClock(), tz: student.tz };
-  const viewer = viewerLine(lesson.starts_at, clock, useViewerTz());
+  const { now, clock, viewer } = useCardClock(lesson, student);
   const open = windowStateAt(lesson.window, now) === 'open' || isLessonNow(lesson, now);
   const title = own ? t.portal.app.lesson.nextLessonSelf : t.portal.nextLesson;
   return (

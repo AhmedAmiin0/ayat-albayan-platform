@@ -1,5 +1,6 @@
 import type { AlertGroup, AlertSection } from '@ab/client-core';
 import type { PortalKind } from '@ab/shared';
+import { Diamond } from '@ab/web-kit/components/family/ornament/Diamond';
 import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { GROUP_TONE } from './alert-look';
@@ -27,7 +28,7 @@ export function AlertGroupCard({ section, row }: Props) {
   return (
     <section aria-label={title} className="grid gap-3">
       <h2 className="flex items-center gap-3 text-[20px] font-extrabold text-ink">
-        <span aria-hidden="true" className="size-2 shrink-0 rotate-45 bg-gold" />
+        <Diamond />
         {title}
         <span aria-hidden="true" className="h-px flex-1 bg-rule" />
       </h2>

@@ -9606,9 +9606,6 @@
       "text": "﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾",
       "ref": "Surat Al-Muzzammil · verse 4"
     },
-    "shell": {
-      "home": "Back to home"
-    },
     "signIn": {
       "welcome": "Welcome to Ayat Al-Bayan Academy",
       "title": "Ayat Al-Bayan..",
@@ -9616,16 +9613,11 @@
       "or": "or"
     },
     "child": {
-      "today": "Today",
       "greeting": "Welcome, {name}",
       "upcomingLabel": "The next 14 days",
       "pickLine": "Choose a child to follow their lessons, reports and package."
     },
-    "panels": {
-      "more": "More"
-    },
     "pages": {
-      "empty": "Nothing here yet",
       "reports": {
         "line": "Reports of {name}'s lessons, newest first.",
         "lineOwn": "Reports of your lessons, newest first.",

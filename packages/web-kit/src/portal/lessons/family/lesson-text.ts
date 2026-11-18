@@ -32,15 +32,6 @@ export function dayName(lesson: Span, clock: ClockOptions, now: Date): string {
   return dateText(at, clock, { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
-/** The date tile's two lines: «الأحد» over «16». */
-export const tileOf = (lesson: Span, clock: ClockOptions) => {
-  const at = new Date(lesson.starts_at);
-  return {
-    weekday: dateText(at, clock, { weekday: 'long' }),
-    day: dateText(at, clock, { day: 'numeric' }),
-  };
-};
-
 /** «مع أ. فاطمة · 45 دقيقة» (the teacher only when the lesson names one). */
 export function withLine(lesson: PortalLesson): string {
   const minutes = t.portal.app.lesson.minutes.replace('{n}', String(lessonMinutes(lesson)));

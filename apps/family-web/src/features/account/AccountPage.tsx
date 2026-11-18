@@ -1,8 +1,7 @@
 import type { PortalHome, PortalKind } from '@ab/shared';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { pill } from '@ab/web-kit/components/family/brand/pill';
-import { Hero, HeroTitle } from '@ab/web-kit/components/family/layout/Hero';
-import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
+import { TitledPage } from '@ab/web-kit/components/family/layout/TitledPage';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { GuardianCard } from './GuardianCard';
 import { SettingsCard } from './SettingsCard';
@@ -27,27 +26,22 @@ export function AccountPage({ home }: { home: PortalHome }) {
   const out = useSignOut();
   const Who = WHO[home.kind];
   return (
-    <>
-      <Hero labelledBy="account-title">
-        <HeroTitle id="account-title" title={t.portal.app.tabs.account} line={LINE[home.kind]} />
-      </Hero>
-      <PageBody>
-        <div className="grid items-start gap-6 lg:grid-cols-2">
-          <Who home={home} />
-          <div className="grid gap-5">
-            <SettingsCard kind={home.kind} />
-            <button
-              type="button"
-              className={pill({ tone: 'outline', className: 'min-w-[170px] justify-self-start' })}
-              disabled={out.isPending}
-              onClick={() => out.mutate()}
-            >
-              <Icon name="logout" />
-              {t.auth.logout}
-            </button>
-          </div>
+    <TitledPage id="account-title" title={t.portal.app.tabs.account} line={LINE[home.kind]}>
+      <div className="grid items-start gap-6 lg:grid-cols-2">
+        <Who home={home} />
+        <div className="grid gap-5">
+          <SettingsCard kind={home.kind} />
+          <button
+            type="button"
+            className={pill({ tone: 'outline', className: 'min-w-[170px] justify-self-start' })}
+            disabled={out.isPending}
+            onClick={() => out.mutate()}
+          >
+            <Icon name="logout" />
+            {t.auth.logout}
+          </button>
         </div>
-      </PageBody>
-    </>
+      </div>
+    </TitledPage>
   );
 }

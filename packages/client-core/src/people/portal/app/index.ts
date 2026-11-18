@@ -1,7 +1,7 @@
 // The family app's own rules (docs/50 §6), shared with the family web pages.
 export { FAMILY_TABS, familyTabs, hasFamilyTab, type FamilyTab } from './family-tabs.js';
 export {
-  scheduleWeek, weekSchedule,
+  scheduleWeek, weekSchedule, weekTiles,
   type ChildLessons, type WeekDay, type WeekInput, type WeekLesson,
 } from './week-schedule.js';
 export {
@@ -20,7 +20,7 @@ export {
 export {
   PICKED_CHILD_KEY, pickStore, savedFor, type PickStore, type PickStoreState, type SavedPick,
 } from './pick-store.js';
-export { dayWord, lessonMinutes, type DayWord } from './day-word.js';
+export { dayWord, dayWordOf, lessonMinutes, type DayWord } from './day-word.js';
 export {
   childTabPill, childTabWord, type ChildTabPill, type ChildTabWords,
 } from './tab-word.js';

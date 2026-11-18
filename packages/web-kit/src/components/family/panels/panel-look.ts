@@ -25,11 +25,14 @@ export const FAM_SIDE = 'contents family:grid family:content-start family:gap-6'
 
 type PanelEdge = 'green' | 'gold' | 'teal';
 
+const CARD =
+  'family:rounded-[22px] family:border family:border-rule family:border-t-4 family:bg-raised family:p-5 family:shadow-fam-lift family:sm:p-6';
+
 /** A panel card: 22 px corners, the cream hairline, a lifted shadow, the coloured top edge. */
 export const FAM_CARD: Record<PanelEdge, string> = {
-  green: 'family:rounded-[22px] family:border family:border-rule family:border-t-4 family:border-t-[var(--fam-edge-green)] family:bg-raised family:p-5 family:shadow-fam-lift family:sm:p-6',
-  gold: 'family:rounded-[22px] family:border family:border-rule family:border-t-4 family:border-t-[var(--fam-edge-gold)] family:bg-raised family:p-5 family:shadow-fam-lift family:sm:p-6',
-  teal: 'family:rounded-[22px] family:border family:border-rule family:border-t-4 family:border-t-[var(--fam-edge-teal)] family:bg-raised family:p-5 family:shadow-fam-lift family:sm:p-6',
+  green: `${CARD} family:border-t-[var(--fam-edge-green)]`,
+  gold: `${CARD} family:border-t-[var(--fam-edge-gold)]`,
+  teal: `${CARD} family:border-t-[var(--fam-edge-teal)]`,
 };
 
 /** A card's own title (boards: «سجل المدفوعات», 19 px extra-bold ink). */

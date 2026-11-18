@@ -15,8 +15,10 @@ describe('portalHomeSchema guardian', () => {
     expect(portalHomeSchema.parse(base).guardian).toBeUndefined();
   });
 
-  it('rejects a guardian without a number', () => {
+  it('rejects a guardian without a number, or with one not in E.164', () => {
     const res = portalHomeSchema.safeParse({ ...base, guardian: { name: 'أحمد' } });
     expect(res.success).toBe(false);
+    const local = { name: 'أحمد', phone: '01001234567' };
+    expect(portalHomeSchema.safeParse({ ...base, guardian: local }).success).toBe(false);
   });
 });

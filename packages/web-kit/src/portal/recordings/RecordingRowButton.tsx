@@ -1,6 +1,6 @@
 import { listenState, listenText } from '@ab/client-core';
 import type { PortalRecording, PortalStudent } from '@ab/shared';
-import { DateTile } from '@ab/web-kit/components/family/panels/DateTile';
+import { DateTile } from '@ab/web-kit/components/family/layout/DateTile';
 import { PlayGlyph } from '@ab/web-kit/components/family/panels/PlayGlyph';
 import { useResumeMap } from '@ab/web-kit/lesson-files/use-resume';
 import { useClock } from '@ab/web-kit/lib/clock';
@@ -30,7 +30,7 @@ export function RecordingRowButton({ row, student, parts, picked, onPick }: Prop
       onClick={onPick}
       className="grid w-full min-w-0 gap-0.5 rounded-md border border-rule bg-raised p-3 text-start hover:bg-sunk aria-pressed:border-primary aria-pressed:bg-lapis-wash family:flex family:min-h-[76px] family:items-center family:gap-3.5 family:rounded-[18px] family:px-4 family:py-2 family:aria-pressed:border-gold family:aria-pressed:bg-[#fbf1d6] family:dark:aria-pressed:bg-gold-wash"
     >
-      <DateTile at={row.lesson_starts_at} tz={student.tz} />
+      <DateTile at={row.lesson_starts_at} tz={student.tz} familyOnly />
       <span className="contents family:grid family:min-w-0 family:flex-1 family:gap-0.5">
         <span className="text-sm font-semibold text-ink family:text-body family:font-extrabold">
           {lessonTitle(row.lesson_starts_at, clock)}

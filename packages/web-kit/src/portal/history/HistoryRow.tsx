@@ -1,7 +1,7 @@
 import { isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
 import { Button } from '@ab/web-kit/components/ui/form/button';
-import { DateTile } from '@ab/web-kit/components/family/panels/DateTile';
+import { DateTile } from '@ab/web-kit/components/family/layout/DateTile';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { LessonWhen } from '@ab/web-kit/portal/lessons/LessonWhen';
@@ -80,7 +80,7 @@ export function HistoryRow({ row, student, onOpenReport }: Props) {
         family:min-h-[84px] family:flex-wrap family:items-center family:gap-3.5 family:rounded-[18px]
         family:px-4 family:py-3 family:shadow-fam-card family:has-data-new:border-gold"
     >
-      <DateTile at={row.starts_at} tz={student.tz} />
+      <DateTile at={row.starts_at} tz={student.tz} familyOnly />
       <div className="contents family:grid family:min-w-0 family:flex-[1_1_12rem] family:gap-0.5">
         <LessonWhen startsAt={row.starts_at} tz={student.tz} />
         <p className="text-sm text-ink-2 family:text-ink-3">

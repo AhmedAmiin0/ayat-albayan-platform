@@ -2,8 +2,7 @@ import { portalViewer, readsOwn, reportMonths } from '@ab/client-core';
 import { localDateIn, type PortalKind, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Hero, HeroTitle } from '@ab/web-kit/components/family/layout/Hero';
-import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
+import { TitledPage } from '@ab/web-kit/components/family/layout/TitledPage';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { portalReportsQuery } from '@ab/web-kit/portal/api';
@@ -60,13 +59,8 @@ export function StudentReportsPage({ student, kind }: Props) {
   const title = own ? t.portal.app.reports.title : t.portal.app.tabs.reports;
   const line = own ? P.lineOwn : P.line.replace('{name}', student.name);
   return (
-    <>
-      <Hero labelledBy="reports-title">
-        <HeroTitle id="reports-title" title={title} line={line} />
-      </Hero>
-      <PageBody>
-        <Reports student={student} />
-      </PageBody>
-    </>
+    <TitledPage id="reports-title" title={title} line={line}>
+      <Reports student={student} />
+    </TitledPage>
   );
 }

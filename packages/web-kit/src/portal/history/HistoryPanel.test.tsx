@@ -60,7 +60,7 @@ describe('HistoryPanel «حضرها» / «غاب عنها»', () => {
     renderPortal(<HistoryPanel student={kid()} status="absent" onOpenReport={onOpenReport} />);
     const row = await screen.findByRole('listitem');
     const tile = row.querySelector('[aria-hidden="true"]');
-    expect(tile?.className).toContain('family:flex');
+    expect(tile?.className).toContain('family:grid');
     expect(row.textContent).toContain(t.portal.withTeacher.replace('{teacher}', 'أبرار'));
   });
 

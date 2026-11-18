@@ -1,13 +1,11 @@
-import { portalViewer, readsOwn, type WeekDay } from '@ab/client-core';
+import { portalViewer, readsOwn, weekTiles, type WeekDay } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Hero, HeroTitle } from '@ab/web-kit/components/family/layout/Hero';
-import { PageBody } from '@ab/web-kit/components/family/layout/PageBody';
+import { TitledPage } from '@ab/web-kit/components/family/layout/TitledPage';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LoadState } from '@ab/web-kit/portal/LoadState';
 import { DayColumn } from './DayColumn';
 import { useWeek, type Week } from './use-week';
-import { weekTiles } from './week-days';
 import { WeekBar } from './WeekBar';
 
 const P = t.familyLook.pages.schedule;
@@ -49,14 +47,9 @@ export function SchedulePage({ student, kind }: { student: PortalStudent; kind: 
   const title = own ? t.portal.app.schedule.mine : t.portal.app.schedule.title;
   const line = own ? P.lineOwn : P.line.replace('{name}', student.name);
   return (
-    <>
-      <Hero labelledBy="schedule-title">
-        <HeroTitle id="schedule-title" title={title} line={line} />
-      </Hero>
-      <PageBody>
-        <WeekBar week={week} />
-        <Days week={week} />
-      </PageBody>
-    </>
+    <TitledPage id="schedule-title" title={title} line={line}>
+      <WeekBar week={week} />
+      <Days week={week} />
+    </TitledPage>
   );
 }

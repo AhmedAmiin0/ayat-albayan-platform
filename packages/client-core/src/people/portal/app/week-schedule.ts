@@ -2,6 +2,7 @@ import {
   addDaysIn,
   localDateIn,
   startOfWeekIn,
+  weekDates,
   type PortalLesson,
   type PortalStudent,
 } from '@ab/shared';
@@ -58,4 +59,10 @@ export function weekSchedule(input: WeekInput, now: Date): WeekDay[] {
     .filter(({ day }) => day >= from && day <= to);
   for (const { entry, day } of dated) days.set(day, [...(days.get(day) ?? []), entry]);
   return [...days].map(([day, lessons]) => ({ day, lessons }));
+}
+
+/** Every day of the week from `from` (boards: seven tiles), each with its lessons (none: empty). */
+export function weekTiles(from: string, days: readonly WeekDay[]): WeekDay[] {
+  const byDay = new Map(days.map((d) => [d.day, d.lessons]));
+  return weekDates(from).map((day) => ({ day, lessons: byDay.get(day) ?? [] }));
 }

@@ -1,5 +1,5 @@
 import { LESSON_STATUSES } from '@ab/catalog';
-import { LOCALES } from '@ab/core';
+import { E164_RE, LOCALES } from '@ab/core';
 import { lessonRoomStateSchema } from '@ab/schedule';
 import { z } from 'zod';
 import { portalLessonFamilySchema } from './family/portal-actions.js';
@@ -33,7 +33,10 @@ export const portalHomeSchema = z.object({
   /** The login's own language (profiles.locale): the app switches to it. null: never chosen. */
   locale: z.enum(LOCALES).nullable().optional(),
   /** A guardian login's own name and WhatsApp (E.164) for «حسابي»; null for a student login. */
-  guardian: z.object({ name: z.string(), phone: z.string() }).nullable().optional(),
+  guardian: z
+    .object({ name: z.string(), phone: z.string().regex(E164_RE) })
+    .nullable()
+    .optional(),
 });
 export type PortalHome = z.infer<typeof portalHomeSchema>;
 export type PortalKind = PortalHome['kind'];
