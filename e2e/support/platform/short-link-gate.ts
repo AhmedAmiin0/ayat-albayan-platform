@@ -1,12 +1,21 @@
+import type { Page } from '@playwright/test';
 import { withSql } from '../core/schedule';
 
 // The short-link gate /l/<code> (docs/19 «Gate flow»): managed links written straight into the
 // database (the admin screens are another spec's), each with a fresh code, so the desktop and
 // mobile runs never share one. Example data only.
 
+/** Every seeded link's target: https (the table's check), answered by the page itself. */
+export const GATE_TARGET = 'https://gate-target.example.test/landing?from=gate';
+
+/** The target host answered in the browser, so the jump is seen without the internet. */
+export async function catchGateTarget(page: Page): Promise<void> {
+  await page.route('https://gate-target.example.test/**', (route) =>
+    route.fulfill({ contentType: 'text/html', body: '<p>target</p>' }),
+  );
+}
+
 interface GateLinkSeed {
-  /** Where «open» goes (http(s); the API answers it only with outcome open). */
-  target: string;
   title?: string;
   status?: 'active' | 'expired' | 'revoked';
   audience?: 'anyone' | 'listed';
@@ -18,9 +27,9 @@ interface GateLinkSeed {
 }
 
 const DEFAULTS = {
-  title: 'رابط اللقاء التعريفي', status: 'active', audience: 'anyone', maxUsers: null,
-  phones: [], visitors: [],
-} as const satisfies Omit<GateLinkSeed, 'target'>;
+  target: GATE_TARGET, title: 'رابط اللقاء التعريفي', status: 'active', audience: 'anyone',
+  maxUsers: null, phones: [], visitors: [],
+} as const satisfies GateLinkSeed & { target: string };
 
 let made = 0;
 
@@ -31,7 +40,7 @@ export function freshLinkCode(): string {
 }
 
 /** A managed link as the admin would have made it (7 days left); returns its code. */
-export async function seedGateLink(seed: GateLinkSeed): Promise<string> {
+export async function seedGateLink(seed: GateLinkSeed = {}): Promise<string> {
   const code = freshLinkCode();
   const s = { ...DEFAULTS, ...seed };
   await withSql(async (sql) => {
