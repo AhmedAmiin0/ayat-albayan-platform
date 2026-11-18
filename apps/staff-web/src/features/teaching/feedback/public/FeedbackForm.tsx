@@ -12,7 +12,8 @@ import { cn } from '@/lib/utils';
 import { publicProblem, submitFeedback, type PublicProblem } from '@/features/teaching/feedback/api';
 import { RatingScale } from './RatingScale';
 import { KindLine } from './KindLine';
-import { FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend, type Rating } from '@/features/teaching/feedback/types';
+import { FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend } from '@/features/teaching/feedback/types';
+import type { FeedbackRating } from '@ab/shared';
 
 const RECOMMEND = FEEDBACK_RECOMMEND.map((r) => ({ value: r, label: t.enums.feedbackRecommend[r] }));
 const PROBLEM_TEXT: Record<PublicProblem, string> = {
@@ -37,7 +38,7 @@ export interface FeedbackFormProps {
  * kind and teacher; only rating, recommend, note and phone are sent.
  */
 export function FeedbackForm({ token, form, onDone }: FeedbackFormProps) {
-  const [rating, setRating] = useState<Rating | null>(null);
+  const [rating, setRating] = useState<FeedbackRating | null>(null);
   const [recommend, setRecommend] = useState<FeedbackRecommend | null>(null);
   const [note, setNote] = useState('');
   const [phone, setPhone] = useState(form.contactPhone ?? '');

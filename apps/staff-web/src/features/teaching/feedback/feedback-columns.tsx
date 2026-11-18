@@ -6,7 +6,7 @@ import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { feedbackDate } from './format';
 import { kindOptions, quickRatingOptions, ratingOptions, recommendOptions } from './filter-options';
-import type { FeedbackListRow } from './types';
+import type { FeedbackListRow } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, FeedbackListRow>();
 

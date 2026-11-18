@@ -1,11 +1,12 @@
 import { RequiredMark } from '@/components/ui/form/label';
 import { t } from '@/lib/i18n/i18n';
 import { cn } from '@/lib/utils';
-import { RATINGS, type Rating } from '@/features/teaching/feedback/types';
+import { RATINGS } from '@/features/teaching/feedback/types';
+import type { FeedbackRating } from '@ab/shared';
 
 export interface RatingScaleProps {
-  value: Rating | null;
-  onChange: (value: Rating) => void;
+  value: FeedbackRating | null;
+  onChange: (value: FeedbackRating) => void;
   /** The last send found it empty. */
   invalid?: boolean;
 }
