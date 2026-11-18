@@ -3,6 +3,9 @@ import { isolateLtr } from '@ab/web-kit/components/ui/display/ltr';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { cn } from '@ab/web-kit/lib/utils';
 
+/** The family look only (boards PortalWebSignInCodeError): a 14 px-round, red-lettered line. */
+const FAMILY = 'family:rounded-[14px] family:px-4 family:py-3 family:font-semibold family:text-danger';
+
 /** Form-level inline alert (docs/07 §10): danger-soft, inset danger ring, struck glyph. */
 export function FormAlert({ children, className }: { children: ReactNode; className?: string }) {
   return (
@@ -10,6 +13,7 @@ export function FormAlert({ children, className }: { children: ReactNode; classN
       role="alert"
       className={cn(
         'flex items-start gap-2 rounded-md bg-danger-soft px-3 py-2.5 text-sm text-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_35%,transparent)]',
+        FAMILY,
         className,
       )}
     >

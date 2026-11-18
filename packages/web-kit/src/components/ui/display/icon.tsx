@@ -56,6 +56,8 @@ const PATHS = {
   // The password toggle: an open eye while the text is hidden, struck through once it shows.
   eye: 'M2.5 10S5.3 4.5 10 4.5s7.5 5.5 7.5 5.5-2.8 5.5-7.5 5.5S2.5 10 2.5 10ZM12.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z',
   'eye-off': 'M2.5 10S5.3 4.5 10 4.5s7.5 5.5 7.5 5.5-2.8 5.5-7.5 5.5S2.5 10 2.5 10ZM12.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM4 4l12 12',
+  // A padlock: the family sign-in's «الدخول برمز الطالب وكلمة المرور».
+  lock: 'M5 9.5h10v7.5H5V9.5ZM7.5 9.5V7a2.5 2.5 0 0 1 5 0v2.5',
   sliders:
     'M3.5 6h8M14.5 6h2M13 4.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM3.5 14h2M8.5 14h8M7 12.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z',
   // WhatsApp voice calls (docs/28): the handset, with the out / in arrow of a call entry, and the mic.

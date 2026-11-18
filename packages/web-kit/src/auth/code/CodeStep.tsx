@@ -22,6 +22,12 @@ interface Props {
 
 const BOX_ERRORS = new Set([t.familyAuth.errors.invalid_code, t.familyAuth.errors.code_incomplete]);
 
+/** The submit; in the family look (boards PortalWebSignInCode*) the 52 px gold pill. */
+const SUBMIT = 'min-h-11 w-full family:min-h-[52px] family:sm:min-h-[52px] family:text-body ' +
+  'family:font-extrabold family:border-transparent family:bg-[image:var(--fam-gold-fill)] ' +
+  'family:text-fam-on-gold family:shadow-[0_8px_20px_rgba(212,165,55,0.35)] ' +
+  'family:hover:not-disabled:brightness-105';
+
 /** «أعد إرسال الرمز» then «غيّر الرقم», in the order every code step uses (client-core). */
 const ACTIONS: Record<CodeStepAction, (props: Props) => ReactNode> = {
   resend: ({ flow }) => (
@@ -29,6 +35,7 @@ const ACTIONS: Record<CodeStepAction, (props: Props) => ReactNode> = {
       type="button"
       variant="ghost"
       disabled={!canResend(flow)}
+      className="family:disabled:text-ink-2 family:disabled:opacity-100"
       onClick={() => void flow.resend()}
     >
       {resendLabel(flow.left, t.familyAuth)}
@@ -64,7 +71,7 @@ export function CodeStep(props: Props) {
       />
       {children}
       {flow.error && <FormAlert>{flow.error}</FormAlert>}
-      <Button type="submit" disabled={flow.busy} className="min-h-11 w-full">
+      <Button type="submit" disabled={flow.busy} className={SUBMIT}>
         {flow.busy && !flow.resending ? busyLabel : submitLabel}
       </Button>
       <div className="grid justify-items-center">
