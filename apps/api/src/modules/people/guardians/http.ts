@@ -28,7 +28,6 @@ export const listQuerySchema = z.object({
 });
 export type ListQuery = z.infer<typeof listQuerySchema>;
 
-export type Page<T> = { items: T[]; total: number; page: number; pageSize: number };
 
 /** Inclusive row range for supabase-js `.range(from, to)`. */
 export function pageRange(q: ListQuery): [number, number] {

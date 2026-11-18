@@ -14,12 +14,13 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { orNotFound, pageQuerySchema, type Page } from '@/common/http/http';
+import { orNotFound, pageQuerySchema } from '@/common/http/http';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { withMeeting, type MeetingFields } from './meeting-view';
 import { TeachersRepo, withoutPath, type Teacher, type TeacherListRow } from './teachers.repo';
 import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
+import type { Page } from '@ab/shared';
 
 /** A teacher as the API returns it: meeting_mode raw and platform_classroom effective (migration 490). */
 type TeacherView = Omit<Teacher, 'meeting_mode' | 'avatar_path'> &

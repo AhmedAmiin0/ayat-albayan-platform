@@ -1,10 +1,4 @@
-/** Every list endpoint answers this shape (apps/api `Page<T>`, R-NFR-08). */
-export interface Page<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
+import type { Page } from '@ab/shared';
 
 export interface WithId {
   id: string;

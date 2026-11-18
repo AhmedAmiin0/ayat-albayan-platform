@@ -13,11 +13,11 @@ import {
 } from '@ab/shared';
 import { liveInterval, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import type { LeadRow, Page } from '@/features/sales/leads/types';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { env } from '@/lib/http/env';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { inboxLive } from './live';
+import type { LeadView, Page } from '@ab/shared';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
@@ -101,7 +101,7 @@ export const markSentManually = (id: string) =>
   apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
 
 /** GET /leads returns every column; the inbox panel needs these beyond the list row. */
-export type InboxLead = LeadRow & {
+export type InboxLead = LeadView & {
   qualification: LeadQualification;
   tz: string | null;
   follow_up_paused: boolean;

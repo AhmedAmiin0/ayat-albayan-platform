@@ -11,10 +11,11 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow, type Page } from '@/common/http/http';
+import { pageQuerySchema, parseOrThrow } from '@/common/http/http';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { FeedbackReadService } from './read/feedback.read.service';
 import { FeedbackRequestService } from './request/feedback.request.service';
+import type { Page } from '@ab/shared';
 
 type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
 type PageQuery = z.output<typeof pageQuerySchema>;

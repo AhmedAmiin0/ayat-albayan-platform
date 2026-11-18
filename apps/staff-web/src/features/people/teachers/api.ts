@@ -1,4 +1,10 @@
-import type { AvailabilitySlot, TeacherCreate, TeacherMeetingMode, TeacherStudentCounts } from '@ab/shared';
+import type {
+  AvailabilitySlot,
+  Page,
+  TeacherCreate,
+  TeacherMeetingMode,
+  TeacherStudentCounts,
+} from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/http/api';
 import { sortFilterParams } from '@/lib/list/list-search';
@@ -21,7 +27,6 @@ export type Teacher = Omit<TeacherCreate, 'meeting_mode'> & {
 };
 /** A row of GET /teachers: the teacher and their current students by kind («مشترك · تجريبي»). */
 export type TeacherListRow = Teacher & TeacherStudentCounts;
-export type Page<T> = { items: T[]; total: number; page: number; pageSize: number };
 export type AvailabilityRow = AvailabilitySlot & { id: string };
 export type TimeOff = { id: string; starts_at: string; ends_at: string; reason: string | null };
 

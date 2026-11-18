@@ -2,7 +2,6 @@ import type { FamilyPhone, Gender, Program, StudentStatus } from '@ab/shared';
 
 // Response shapes of apps/api/src/modules/students (students.mapper.ts).
 
-export type Page<T> = { items: T[]; total: number; page: number; pageSize: number };
 
 export type StudentRef = { id: string; code: string | null; name: string; status: StudentStatus };
 

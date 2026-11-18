@@ -13,7 +13,8 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/http/api';
 import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { MONEY_KEY, PAGE_SIZE, type Page } from '@/features/finance/subscriptions/api';
+import { MONEY_KEY, PAGE_SIZE } from '@/features/finance/subscriptions/api';
+import type { Page } from '@ab/shared';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
 export type { PaymentView } from '@ab/shared';

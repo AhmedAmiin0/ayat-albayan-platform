@@ -13,7 +13,6 @@ export {
   type ListQuery,
   listQuerySchema,
   orSafe,
-  type Page,
   pageRange,
 } from './http';
 export { GuardianPhonesService } from './guardian-phones.service';

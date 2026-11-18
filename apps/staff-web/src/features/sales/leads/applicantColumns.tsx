@@ -5,9 +5,9 @@ import { Ltr } from '@/components/ui/display/ltr';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { formatDate } from './format';
-import type { JobApplicantRow } from './types';
+import type { JobApplicantView } from '@ab/shared';
 
-const col = createColumnHelper<DataTableFeatures, JobApplicantRow>();
+const col = createColumnHelper<DataTableFeatures, JobApplicantView>();
 
 // A status without an ar.json label / style (e.g. a newer DB value) shows its raw value, neutral.
 const statusLabel = (s: string) =>

@@ -1,15 +1,14 @@
-import type { AcademySettings, FollowUpNote } from '@ab/shared';
+import type { AcademySettings, FollowUpNote, LeadView, Page } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey, t } from '@ab/mobile-kit';
-import { patchCached, type Page } from '@/core/lib/query/paging';
+import { patchCached } from '@/core/lib/query/paging';
 import { isOffline } from '@/core/lib/money/payment-errors';
-import type { Lead } from '@/inbox/shared/types';
 
 /**
  * GET /leads returns every column (apps/api LeadRow); the profile reads these beyond the list row.
  * Optional: a list cached by an older build may not carry them.
  */
-export type LeadProfile = Lead & {
+export type LeadProfile = LeadView & {
   /** jsonb, any shape: qualForm() reads it. */
   qualification?: unknown;
   follow_up_paused?: boolean;

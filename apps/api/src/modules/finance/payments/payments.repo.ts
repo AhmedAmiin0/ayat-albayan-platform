@@ -6,8 +6,9 @@ import { applySort } from '@/common/db/list-sort';
 import type { StudentRef } from '@/modules/finance/subscriptions/subscriptions.repo';
 import { readAll } from '@/common/db/read-all';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { dbError, type Page } from '@/common/http/http';
+import { dbError } from '@/common/http/http';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
+import type { Page } from '@ab/shared';
 
 export type { PaymentFilter } from './payments.list-query';
 

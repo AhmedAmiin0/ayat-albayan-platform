@@ -12,12 +12,13 @@ import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, P
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow, sentOnly, type Page } from '@/common/http/http';
+import { parseOrThrow, sentOnly } from '@/common/http/http';
 import { paymentFilter, paymentListQuery } from './payments.dto';
 import type { PeriodTotal } from './payments.repo';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
 import { ReceiptsService } from './attachments/receipts.service';
+import type { Page } from '@ab/shared';
 
 /** Payments + receipts (P1–P7, R-PAY-01, R-MOB-02). Admin only. */
 @ApiTags('payments')

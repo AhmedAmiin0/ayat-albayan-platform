@@ -1,8 +1,9 @@
-import type { ThreadView } from '@ab/shared';
+import type { Page, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { Page } from '@/common/http/http';
 import { SalesThreadsService } from '@/modules/messaging/inbox/sales-threads/sales-threads.service';
-import { TeacherThreadsService } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.service';
+import {
+  TeacherThreadsService,
+} from '@/modules/messaging/inbox/teacher-threads/teacher-threads.service';
 import type { ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadsService } from '@/modules/messaging/inbox/threads/threads.service';
 import type { DeltaCaller } from './thread-delta.service';

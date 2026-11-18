@@ -50,7 +50,6 @@ export {
 } from './recordings/recordings-api';
 export {
   type DuplicateBody,
-  type Page,
   type StudentListItem,
   type StudentProfile,
   type StudentRef,

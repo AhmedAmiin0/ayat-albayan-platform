@@ -1,19 +1,30 @@
-import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
+import type { MessageView, Page, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
 import { OwnNumbers } from '@/modules/messaging/numbers';
-import type { Page } from '@/common/http/http';
 import { SalesScopes, type SalesScope } from '@/modules/sales/sales/sales-scope';
 import { listFilter, withLists } from '@/modules/messaging/inbox/threads/chat-list-filter';
 import { SalesThreadsService } from '@/modules/messaging/inbox/sales-threads/sales-threads.service';
-import { ThreadDeltaService, type DeltaCaller, type ThreadDeltaQuery } from '@/modules/messaging/inbox/delta/thread-delta.service';
-import { TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
-import { TeacherThreadsService } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.service';
+import {
+  ThreadDeltaService,
+  type DeltaCaller,
+  type ThreadDeltaQuery,
+} from '@/modules/messaging/inbox/delta/thread-delta.service';
+import {
+  TeacherScopes,
+  type TeacherScope,
+} from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import {
+  TeacherThreadsService,
+} from '@/modules/messaging/inbox/teacher-threads/teacher-threads.service';
 import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
 import { threadReactable } from '@/modules/messaging/inbox/reactions/reaction-line';
-import { ThreadsService, type ThreadPageQuery } from '@/modules/messaging/inbox/threads/threads.service';
+import {
+  ThreadsService,
+  type ThreadPageQuery,
+} from '@/modules/messaging/inbox/threads/threads.service';
 import { isFirstPage } from '@/modules/messaging/inbox/reads/thread-page';
 
 /**

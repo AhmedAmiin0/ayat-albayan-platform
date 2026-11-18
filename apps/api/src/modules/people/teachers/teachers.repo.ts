@@ -4,10 +4,16 @@ import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
 import { applySort } from '@/common/db/list-sort';
 import { readAll } from '@/common/db/read-all';
-import { dbError, type Page } from '@/common/http/http';
+import { dbError } from '@/common/http/http';
 import { CURRENT_STUDENT_STATUSES, NOT_SUBSCRIBED_STATUSES, type TeacherStudentCounts } from '@ab/shared';
-import { applyTeacherFilters, TEACHER_SORT, tallyKinds, type TeacherListQuery } from './teachers.list';
+import {
+  applyTeacherFilters,
+  TEACHER_SORT,
+  tallyKinds,
+  type TeacherListQuery,
+} from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';
+import type { Page } from '@ab/shared';
 
 export type Teacher = Tables<'teachers'>;
 /** A row of GET /teachers: the teacher and her «مشترك / تجريبي» counts (R-TCH-03, owner 2026-10-12). */

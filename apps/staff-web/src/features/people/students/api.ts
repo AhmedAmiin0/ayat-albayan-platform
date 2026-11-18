@@ -1,11 +1,10 @@
-import type { Gender, LeadSource, StudentStatus } from '@ab/shared';
+import type { Gender, LeadSource, Page, StudentStatus } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { filterParams, type StudentsFilters } from './list/filters';
 import type {
   DuplicateBody,
-  Page,
   StudentListItem,
   StudentProfile,
   StudentRef,

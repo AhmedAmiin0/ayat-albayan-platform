@@ -3,7 +3,8 @@ import { searchDigits, type GuardianCreate, type GuardianUpdate } from '@ab/shar
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { guardianSearchFilter, toGuardianInsert, toGuardianPatch } from './guardians.mapper';
-import { dbError, pageRange, type ListQuery, type Page } from './http';
+import { dbError, pageRange, type ListQuery } from './http';
+import type { Page } from '@ab/shared';
 
 export type Guardian = Tables<'guardians'>;
 type Sibling = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;

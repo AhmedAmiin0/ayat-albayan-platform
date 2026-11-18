@@ -1,7 +1,6 @@
 export {
   availabilityQuery,
   type AvailabilityRow,
-  type Page,
   PAGE_SIZE,
   type Teacher,
   type TeacherListRow,
