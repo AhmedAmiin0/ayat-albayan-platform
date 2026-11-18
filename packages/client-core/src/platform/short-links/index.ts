@@ -38,3 +38,7 @@ export {
   type PersonLook, type RoleKey, type VisitorLook, type VisitorVia,
 } from './link-people.js';
 export { QR_QUIET_ZONE, qrMatrix, qrPath, qrSide, type QrEcc } from './qr.js';
+export {
+  dayExpiry, editOf, expiryChip, expiryDay, inPeopleFilter, PEOPLE_FILTERS, toUpdateBody,
+  type ExpiryChip, type LinkEdit, type LinkEditCheck, type PeopleFilter,
+} from './edit/index.js';

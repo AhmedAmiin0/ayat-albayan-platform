@@ -1,0 +1,43 @@
+import type { ShortLinkDetail } from '@ab/shared';
+import { useState } from 'react';
+import { View } from 'react-native';
+import { t, Button, ButtonRow, ErrorLine, InlineConfirm, Note } from '@ab/mobile-kit';
+import { useRevokeLink } from '@/short-links/api/link-hooks';
+import { EditSheet } from './EditSheet';
+
+const D = () => t.shortLinks.detail;
+
+type Step = 'idle' | 'confirm' | 'edit';
+
+/**
+ * «تعديل» (title, limit, a new lifetime) and «إيقاف الرابط» behind its confirm: the link stops
+ * at once for everyone and cannot run again (POST …/revoke). None on a revoked link.
+ */
+export function LinkActions({ link }: { link: ShortLinkDetail }) {
+  const [step, setStep] = useState<Step>('idle');
+  const revoke = useRevokeLink();
+  const idle = () => setStep('idle');
+  const confirm = () => revoke.mutate(link.code, { onSuccess: idle });
+  if (link.status === 'revoked') return revoke.isSuccess ? <Note alert>{D().revoked}</Note> : null;
+  return (
+    <View style={{ gap: 8 }}>
+      {step === 'confirm' ? (
+        <InlineConfirm
+          message={`${D().revokeTitle} ${D().revokeBody}`}
+          confirmLabel={D().revokeConfirm}
+          tone="danger"
+          busy={revoke.isPending}
+          onConfirm={confirm}
+          onCancel={idle}
+        />
+      ) : (
+        <ButtonRow>
+          <Button variant="secondary" label={t.common.edit} onPress={() => setStep('edit')} />
+          <Button variant="danger" label={D().revoke} onPress={() => setStep('confirm')} />
+        </ButtonRow>
+      )}
+      {revoke.isError ? <ErrorLine message={D().errors.generic} /> : null}
+      {step === 'edit' ? <EditSheet link={link} onClose={idle} /> : null}
+    </View>
+  );
+}

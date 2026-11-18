@@ -37,6 +37,8 @@ export const ROUTE_PERMISSION = {
   meetings: 'meetings.read',
   // «القوالب» (owner 2026-11-14): write and edit allow-list templates; sales by default, the admin.
   templates: 'templates.author',
+  // «الروابط المختصرة» (owner 2026-11-17, docs/19): sales and the admin; short_links.all shows all.
+  shortLinks: 'short_links.manage',
 } as const satisfies Record<string, Permission>;
 
 export type RouteKey = keyof typeof ROUTE_PERMISSION;
