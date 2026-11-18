@@ -4,7 +4,9 @@ Owner 2026-11-18: «apps are not allowed to import from each other any shared co
 shared package» and «move any types classes enums or interfaces to a shared package and use it from
 there if it doesn't have its own package; if the interface already lies under a specific package keep
 it, if not move it to a shared package». Scope: apps/api, apps/staff-web, apps/staff-mobile,
-apps/family-mobile (apps/family-web has its own routine). Branch `refactor/shared-types`.
+apps/family-mobile (apps/family-web has its own routine). Branch `types/shared-types` (was
+`refactor/shared-types`, PR #767; renamed out of `refactor/*`, see D7), merged with develop after
+#766, #768 and #770.
 
 ## 0. Rules applied (agreed reading)
 
@@ -21,11 +23,11 @@ apps/family-mobile (apps/family-web has its own routine). Branch `refactor/share
 
 | | Declarations |
 |---|---|
-| Exported type / interface / enum / class in the four apps (tests excluded) | 3545 |
-| Moved out of staff-web by develop #740 (@ab/web-kit), not counted below | 126 |
+| Exported type / interface / enum / class in the four apps (tests excluded) | 3563 |
+| Moved out of the apps by develop #740, #766, #768 (@ab/web-kit, @ab/shared), not counted below | 131 |
 | Moved in this PR (package names; app declarations deleted: 113) | 39 |
-| Kept in the app (§3) | 3073 |
-| Move in a later slice (§4) | 233 |
+| Kept in the app (§3) | 3088 |
+| Move in a later slice (§4) | 231 |
 
 ## 2. Moved in this PR
 
@@ -78,18 +80,26 @@ apps/family-mobile (apps/family-web has its own routine). Branch `refactor/share
 - **people / teachers, assistants, users, feedback**: Teacher wire shapes join `@ab/shared` people/teachers (the api controller types its responses with them; the repo keeps its `Tables<>` rows). Test fixtures for them live in `@ab/shared/testing`. List filters that only the clients use go to `@ab/client-core`. Feedback rows join the feedback schemas; web's `FeedbackPage`, `FeedbackSubmitBody` and `Rating` become the existing `Page<FeedbackRowView>`, `FeedbackSubmit` and `FeedbackRating`. Mobile's `FeedbackAverage` is kept: it allows nulls the package type does not.
 - **finance and sales**: Payment totals and the payments page join the ledger (`@ab/money` ledger/payments/). Client list filters, the custom-price quote and the lead sort (with its pure parser and test) go to `@ab/client-core`. Sales subscription and registration-check names become the package types and zod outputs that already existed. Kept: `CustomPrice` (each app's hook return), `TransferInput` and `ReceiptChoice` (different shapes, DOM File vs RN uri), mobile `CheckErrorCode` (i18n keys), api `SessionFilter` (the whole query, not the client filter).
 - **teaching and messaging**: Edit-time and booking aliases give way to the package names they wrapped (`LessonTimeEditView`, `LessonView`, `LessonTimeEdit`, `BookingRequest`). Kept: `InvoiceDraft` (web file name + preview vs mobile uri), `LessonStatusText` (each app builds its own words), mobile `RecordingFilters` (screen state, not the API query). The session-grouping functions are still copied in web and mobile (only the constant and type moved; the functions need an if-free rewrite first).
+- **merge with develop (#766, #768, #770)**: #766 moved `ChannelRef`, `PresenceChat`,
+  `WithOnline` and `ConfirmSwitchProps` into `@ab/web-kit` and #768 replaced the api's `SentDetail`
+  with `ShortLinkSentDetail` in `@ab/shared` (counted in §1, gone from §4). The 18 names #768 added
+  in the apps are kept: component props (`ShortLinksPageProps`, `PeoplePicked`, …), hook returns
+  (`LinkFormState`, `Gate`, `GatePhone`, `LinkDates`), route/search state (`LinkSection`,
+  `LinkListSearch`, mobile `ListView`), component-local (`StatusKind`, `GateIconName`) and the
+  gate test kit (`Call`, `Routes`). #766 and #768 each exported a `canResend` from
+  `@ab/client-core`; the short-link gate's one (used only by its test) is now `gateCanResend`.
 
 ## 3. Kept in the app
 
 | Reason | api | staff-web | staff-mobile | family-mobile | Examples |
 |---|---|---|---|---|---|
 | NestJS provider, module or implementation class | 1154 | 0 | 0 | 0 | `AppModule`, `AuditService`, `AuditModule` |
-| API-internal: service / planner / rule types of one module | 538 | 0 | 0 | 0 | `AuditEntry`, `PermissionResolver`, `Role` |
+| API-internal: service / planner / rule types of one module | 537 | 0 | 0 | 0 | `AuditEntry`, `PermissionResolver`, `Role` |
 | API-internal: repo rows, ports, stores, jobs, settings readers, fakes | 340 | 0 | 0 | 0 | `TokenVerifier`, `FakeQueries`, `PlainRow` |
 | Kept after review in this PR (see the §2 notes) | 5 | 0 | 0 | 0 | `StudentListItem`, `StudentProfile`, `SourceKey` |
-| Component props | 0 | 422 | 46 | 0 | `ColumnFilterTextProps`, `DataTableProps`, `DataTableHeadProps` |
-| Feature-local UI state, hook or search type of one app | 0 | 305 | 158 | 7 | `FilterKind`, `SortDir`, `FilterOption` |
-| Component-local type (one component file) | 0 | 60 | 28 | 3 | `DiscardWords`, `RowExtras`, `SettingsView` |
+| Component props | 0 | 423 | 47 | 0 | `ColumnFilterTextProps`, `DataTableProps`, `DataTableHeadProps` |
+| Feature-local UI state, hook or search type of one app | 0 | 315 | 160 | 7 | `FilterKind`, `SortDir`, `FilterOption` |
+| Component-local type (one component file) | 0 | 62 | 28 | 3 | `DiscardWords`, `RowExtras`, `SettingsView` |
 | Error / implementation class | 0 | 2 | 5 | 0 | `ChatUploadError`, `ReplayedSend`, `AvatarUploadError` |
 
 ## 4. Move in a later slice (decision: move; not in this PR)
@@ -146,10 +156,9 @@ took the duplicated ones first (§2). Each later slice: one domain, same rules, 
 | staff-web/src/features/finance | `ExpenseBody`, `PaymentFilters`, `PaymentPatch`, `RecordPaymentBody`, `PayPayoutBody`, `Selection`, `CreateSubscriptionBody`, `CustomPrice`, `Scope`, `PaymentsList`, `PayBody`, `PayInput` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-web/src/features/messaging | `RtcDeps`, `CallSessionApi`, `InboxLead`, `Draft`, `SummaryRow`, `BubbleOffers`, `ChatSearchValue`, `ChatActions`, `MessageHitsState`, `GateChange`, `RuleFailure`, `EvolutionStateAnswer`, `EvolutionQrAnswer`, `ShownState`, `CrmTemplateStatus`, `EditMode`, `EditCall`, `EditState` | Same client logic in web + mobile | @ab/client-core |
 | staff-web/src/features/people | `PayStatementBody`, `BroughtBy`, `GuardianDetail`, `StaffPhotoKind`, `StaffPhotoTarget`, `StudentListView`, `StatusCounts`, `CreateStudentBody` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-web/src/features/platform | `PresenceChat` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 | staff-web/src/features/reporting | `Kpi`, `ExportKind`, `ExportRequest`, `SaveState`, `ReportEntryState`, `LinkProblem`, `AttachmentCalls`, `ReportApi` | Same client logic in web + mobile | @ab/client-core |
 | staff-web/src/features/sales | `LeadSearch`, `PageSearch`, `Bind`, `SalesQuoteBody`, `SalesSubscriptionBody`, `SalesPaymentBody`, `LinkPay`, `ReceiptChoice`, `TransferInput`, `Paged`, `SalesMoveInput`, `TeacherFilter` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
-| staff-web/src/features/teaching | `GuardianRow`, `BookSearch`, `CourseChangeTarget`, `CourseChangeBody`, `TrialDateDraft`, `InvoiceDraft`, `RowCheck`, `StatusAsk`, `PublicProblem`, `SlotsParams`, `CorrectArea`, `CorrectLesson`, `TeacherFilter`, `DayInput`, `ChannelRef`, `ChannelSeatApi`, `AlertRowView` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
+| staff-web/src/features/teaching | `GuardianRow`, `BookSearch`, `CourseChangeTarget`, `CourseChangeBody`, `TrialDateDraft`, `InvoiceDraft`, `RowCheck`, `StatusAsk`, `PublicProblem`, `SlotsParams`, `CorrectArea`, `CorrectLesson`, `TeacherFilter`, `DayInput`, `ChannelSeatApi`, `AlertRowView` | Client copy of an API shape | @ab/shared (or the api type it mirrors) |
 
 ## 5. Doubtful cases for the owner
 

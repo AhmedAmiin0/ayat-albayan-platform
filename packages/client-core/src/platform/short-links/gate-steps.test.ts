@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { RESEND_SECONDS } from '../../core/auth/index.js';
 import { ApiError } from '../../core/http/index.js';
-import { canResend, codeStepError, phoneStepError, resendSecondsLeft } from './gate-steps.js';
+import { gateCanResend, codeStepError, phoneStepError, resendSecondsLeft } from './gate-steps.js';
 
 describe('phone step errors', () => {
   it('maps the API answers to keys', () => {
@@ -44,7 +44,7 @@ describe('resend countdown', () => {
   });
 
   it('allows a resend once the wait is over', () => {
-    expect(canResend(sentAt, sentAt + 1000)).toBe(false);
-    expect(canResend(sentAt, sentAt + RESEND_SECONDS * 1000)).toBe(true);
+    expect(gateCanResend(sentAt, sentAt + 1000)).toBe(false);
+    expect(gateCanResend(sentAt, sentAt + RESEND_SECONDS * 1000)).toBe(true);
   });
 });

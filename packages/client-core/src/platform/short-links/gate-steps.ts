@@ -52,5 +52,5 @@ export function resendSecondsLeft(sentAt: number, now: number): number {
   return Math.min(RESEND_SECONDS, Math.max(0, left));
 }
 
-export const canResend = (sentAt: number, now: number): boolean =>
+export const gateCanResend = (sentAt: number, now: number): boolean =>
   resendSecondsLeft(sentAt, now) === 0;
