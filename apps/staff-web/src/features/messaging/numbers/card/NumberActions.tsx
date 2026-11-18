@@ -1,6 +1,6 @@
 import type { NumberView } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

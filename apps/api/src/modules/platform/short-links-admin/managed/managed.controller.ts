@@ -10,6 +10,7 @@ import {
   type ShortLinkPage,
   type ShortLinkPeopleQuery,
   type ShortLinkPerson,
+  type ShortLinkSentDetail,
   type ShortLinkUpdate,
 } from '@ab/shared';
 import { Controller, Get, Patch, Post, Inject } from '@nestjs/common';
@@ -18,7 +19,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
-import { ShortLinksAdmin, type SentDetail } from './short-links-admin';
+import { ShortLinksAdmin } from './short-links-admin';
 
 const code = () => ZodParam('code', shortCodeSchema, () => notFound('short_link_not_found'));
 
@@ -53,7 +54,7 @@ export class ManagedLinksController {
   create(
     @ZodBody(shortLinkCreateSchema) body: ShortLinkCreate,
     @CurrentUser() user: AuthUser,
-  ): Promise<SentDetail> {
+  ): Promise<ShortLinkSentDetail> {
     return this.admin.create(body, user);
   }
 
@@ -77,7 +78,7 @@ export class ManagedLinksController {
   }
 
   @Post(':code/resend')
-  resend(@code() c: string, @CurrentUser() user: AuthUser): Promise<SentDetail> {
+  resend(@code() c: string, @CurrentUser() user: AuthUser): Promise<ShortLinkSentDetail> {
     return this.admin.resend(c, user);
   }
 }

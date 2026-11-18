@@ -39,3 +39,19 @@ it('the code step: the number, the sixth digit signs in, a refused code empties'
   expect(box(6)).toHaveProperty('value', '');
   expect(document.activeElement).toBe(box(1));
 });
+
+// As the family app: the resend (counting down, disabled) then «غيّر الرقم», back to the number.
+it('the code step: resend waits for its countdown, «غيّر الرقم» goes back', async () => {
+  renderAt(<WhatsAppSignIn />);
+  const phone = await screen.findByLabelText(t.familyAuth.phone);
+  fireEvent.change(phone, { target: { value: '0500000005' } });
+  fireEvent.click(screen.getByRole('button', { name: t.familyAuth.sendCode }));
+  await screen.findByRole('heading', { name: t.familyApp.signIn.codeTitle });
+  expect(request).toHaveBeenLastCalledWith(PHONE);
+  const counting = t.familyAuth.resendIn.replace('{seconds}', '60');
+  const names = screen.getAllByRole('button').map((b) => b.textContent);
+  expect(names.slice(-2)).toEqual([counting, t.familyAuth.changePhone]);
+  expect(screen.getByRole('button', { name: counting })).toHaveProperty('disabled', true);
+  fireEvent.click(screen.getByRole('button', { name: t.familyAuth.changePhone }));
+  expect(await screen.findByLabelText(t.familyAuth.phone)).toBeTruthy();
+});

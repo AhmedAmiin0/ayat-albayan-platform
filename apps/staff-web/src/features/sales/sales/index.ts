@@ -18,3 +18,4 @@ export {
 export { checkRequest } from './registration/registration-check';
 export { RegistrationMatches } from './registration/RegistrationMatches';
 export { confirmErrorText } from './schedule/SalesConfirmLesson';
+export { firstSalesRoute } from './first-sales-route';

@@ -1,18 +1,13 @@
 import { quoteCustom, type QuotedTotal } from '@ab/client-core';
-import { currencySymbol, useCustomPrice } from '@/features/finance/subscriptions';
-import { usePermissions } from '@/features/people/auth';
+import { useCustomPrice } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-
-const LABELS = { ...t.subscriptions.customPrice, currency: currencySymbol };
 
 /**
  * «مبلغ مخصص» on the chat's «عرض سعر» (owner 2026-11-15): the package form's field
- * (useCustomPrice) with quoteCustom's floor and live error; subscriptions.write has no floor.
+ * (useCustomPrice) with quoteCustom's live error; any positive amount for every role (2026-11-18).
  */
 export function useQuoteCustom(quote: QuotedTotal | undefined) {
-  const { can } = usePermissions();
   const custom = useCustomPrice({ quote, active: true });
-  const admin = can('subscriptions.write');
-  const state = quoteCustom({ quote, typed: custom, admin, labels: LABELS });
+  const state = quoteCustom(custom, t.subscriptions.customPrice.invalid);
   return { price: { ...custom, error: state.error }, total: state.total, valid: state.valid };
 }

@@ -40,12 +40,13 @@ function setup(row: ShortLinkRow | null, users: Partial<LinkUserRow>[] = []) {
 }
 
 describe('the short-link gate (docs/19)', () => {
-  it('the view: title and state, never the target; unknown and system codes are the same 404', async () => {
+  it('the view: title and state, never the target; unknown and system codes: one 404', async () => {
     const { gate } = setup(managedRow({ expires_at: FUTURE }));
     const view = await gate.view('Mg12Cd34Ef');
     expect(view).toEqual({
       title: 'رابط التسجيل',
       state: 'open',
+      goneReason: null,
       needs: 'sign_in_or_code',
       codesAvailable: true,
     });
@@ -55,7 +56,20 @@ describe('the short-link gate (docs/19)', () => {
     await expect(setup(system).gate.view('x')).rejects.toThrow(/short_link_not_found/);
   });
 
-  it('a signed-in user opens: the visit is recorded by profile and the target answered', async () => {
+  it('the view of a gone link says why: revoked by an admin, else expired', async () => {
+    const revoked = setup(managedRow({ status: 'revoked', expires_at: FUTURE }));
+    expect(await revoked.gate.view('Mg12Cd34Ef')).toMatchObject({
+      state: 'gone',
+      goneReason: 'revoked',
+    });
+    const past = setup(managedRow({ expires_at: '2020-01-01T00:00:00Z' }));
+    expect(await past.gate.view('Mg12Cd34Ef')).toMatchObject({
+      state: 'gone',
+      goneReason: 'expired',
+    });
+  });
+
+  it('a signed-in user opens: the visit is kept by profile, the target answered', async () => {
     const { gate, repo } = setup(managedRow({ expires_at: FUTURE }));
     expect(await gate.openAs('Mg12Cd34Ef', P1)).toEqual({
       outcome: 'open',
@@ -93,7 +107,7 @@ describe('the short-link gate (docs/19)', () => {
     });
   });
 
-  it('otp/verify: a wrong code is 401 invalid_code; a right one records the phone visit', async () => {
+  it('otp/verify: a wrong code is 401 invalid_code; a right one keeps the visit', async () => {
     const { gate, codes, repo } = setup(managedRow({ expires_at: FUTURE }));
     codes.check.mockResolvedValueOnce(false);
     await expect(gate.verify({ ...call, otp: '000000' })).rejects.toThrow(/invalid_code/);

@@ -112,11 +112,6 @@
       "count": 2
     }
   },
-  "src/components/settings/dialogs/ConfirmSwitchDialog.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/components/settings/fields/CheckField.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -5532,7 +5527,7 @@
   },
   "src/features/platform/presence/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/platform/settings/SaveBar.tsx": {
@@ -9780,19 +9775,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/student-channel/ChannelThread.live.test.tsx": {
-    "typescript/no-unnecessary-condition": {
-      "count": 2
-    }
-  },
-  "src/features/teaching/student-channel/ChannelThread.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
   "src/features/teaching/student-channel/MonitorChannel.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -9809,24 +9791,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/features/teaching/student-channel/api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 5
-    }
-  },
-  "src/features/teaching/student-channel/edit/edit-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
-  "src/features/teaching/student-channel/use-channel-live.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/teaching/teacher/MyPayouts.test.tsx": {

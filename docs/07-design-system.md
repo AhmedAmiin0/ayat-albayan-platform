@@ -721,9 +721,10 @@ Derived by `node docs/design/brand/tools/build.mjs` (no dependencies: a node:zli
 |---|---|
 | `docs/design/brand/logo-mark-transparent.png` | Master: the emblem on transparency, cropped tight. The paper **outside** the emblem is removed by a flood fill from the border (plus the two pockets the swirl ornaments enclose), and the band where strokes meet paper is un-blended, so the anti-aliasing is kept. The emblem keeps its own ivory (star field, pages), because it is the same colour as the paper and a colour key would hollow out the Mushaf |
 | `docs/design/brand/logo-mushaf-transparent.png` | The Mushaf on its rahle alone, star field cleared above the pages: the mark for small sizes |
-| `apps/staff-web/public/brand/mark.png`, `mark-small.png` | What `<Mark>` shows (192px tall / 96px wide) |
-| `apps/staff-web/public/favicon.ico` (16, 32, 48), `favicon-16.png`, `favicon-32.png` | Tab icons: the Mushaf crop at 16 and 32, the full emblem at 48 |
-| `apps/staff-web/public/apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` | The emblem on brand paper `#FDF8F0`, 80% of the square |
+| `packages/web-kit/public/brand/mark.png`, `mark-small.png` (both web apps, `/brand/`) | What `<Mark>` shows (192px tall / 96px wide) |
+| `packages/web-kit/icons/staff/favicon.ico` (16, 32, 48), `favicon-16.png`, `favicon-32.png` | Tab icons: the Mushaf crop at 16 and 32, the full emblem at 48 |
+| `packages/web-kit/icons/staff/apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` | The emblem on brand paper `#FDF8F0`, 80% of the square |
+| `packages/web-kit/icons/family/*` (same names + `icon-maskable-512.png`) | The family web set: the same emblem on the brand-green tile `#064E3B` (rounded tab tiles; 66% of the square like the app icon; maskable at 62%) |
 | `apps/staff-mobile/assets/icon.png` | 1024² app icon: emblem on brand paper, opaque (iOS refuses alpha) |
 | `apps/staff-mobile/assets/android-icon-foreground.png` / `-background.png` / `-monochrome.png` | Adaptive icon: the emblem at 50% (inside the 66dp safe circle) over solid paper; the monochrome is its line art for Android 13 themed icons |
 | `apps/staff-mobile/assets/splash-icon.png` | The emblem on transparency, 1024², for the splash on `#FDF8F0` |

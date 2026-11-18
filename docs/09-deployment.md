@@ -138,7 +138,7 @@ Lesson report PDFs (R-REP-03) are rendered by the job runner (`ayat-worker` on s
 - **API image** (`apps/api/Dockerfile`): the runtime stage sets `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright` and runs `playwright-core/cli.js install --with-deps --only-shell chromium` (headless shell + system libraries), plus `fonts-hosny-amiri` as a fallback font. The PDF embeds its own Amiri and IBM Plex Sans Arabic, so the container needs no other fonts.
 - **e2e (CI runner)**: leave `PLAYWRIGHT_BROWSERS_PATH` unset; playwright-core uses the default cache (`~/.cache/ms-playwright` on the Linux runner), filled by ci.yml's «Install the browser (only on a cache miss)» step (`pnpm --filter e2e exec playwright install chromium`). Never on the owner's PC.
 - **Bumping playwright-core**: bump `apps/api` and `e2e` together, rebuild the image. A browser mismatch shows as `pdf_status = 'failed'` with "Executable doesn't exist" in `lesson_reports.pdf_error`; the admin retry (R12) re-queues it once fixed.
-- The logo is read at runtime from `apps/staff-web/public/brand/mark.png`, so the image keeps the whole repo (`COPY . .`); don't move that file without updating `report-pdf/pdf-assets.ts`.
+- The logo is read at runtime from `packages/web-kit/public/brand/mark.png`, so the image keeps the whole repo (`COPY . .`); don't move that file without updating `report-pdf/pdf-assets.ts`.
 
 ## Stripe payment links — with FEATURE_STRIPE test or live (docs/30)
 
