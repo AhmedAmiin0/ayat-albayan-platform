@@ -4,18 +4,22 @@ import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { portalLessonsQuery } from '@ab/web-kit/portal/api';
 import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { FamilyLessons } from './family/FamilyLessons';
+import { useUpcomingLook } from './family/upcoming-look';
 import { LessonCard } from './LessonCard';
 import { PrepareCard } from './PrepareCard';
 
 /**
  * «القادمة»: «ما المطلوب» first, then the next 14 days, one card per lesson, re-read every 30
- * seconds and when the family comes back to the page.
+ * seconds and when the family comes back to the page. Inside the family app's look
+ * (UpcomingLookContext) the boards' two columns instead (FamilyLessons).
  */
 export function LessonsPanel({ student }: { student: PortalStudent }) {
   const query = useQuery(portalLessonsQuery(student.id));
+  const look = useUpcomingLook();
   return (
     <LoadState query={query}>
-      {(lessons) => (
+      {(lessons) => look ? <FamilyLessons lessons={lessons} student={student} look={look} /> : (
         <div className="grid gap-3">
           <PrepareCard lessons={lessons} />
           {lessons.lessons.length === 0 ? (

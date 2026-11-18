@@ -3,6 +3,7 @@ import type { PortalHome, PortalStudent } from '@ab/shared';
 import { Fragment, type ReactNode } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { PageBody } from '@ab/web-kit/family/layout/PageBody';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useFamilyPick, WithHome } from '@/features/shell';
 import { PickChildPage } from './PickChildPage';
@@ -12,9 +13,13 @@ type Waiting = Exclude<FamilyPick['state'], 'one'>;
 
 /** No student in view yet: the saved pick loading, «اختر الطالب», or no student linked. */
 const WAITING: Readonly<Record<Waiting, (home: PortalHome) => ReactNode>> = {
-  loading: () => <ListSkeleton rows={3} />,
+  loading: () => <PageBody><ListSkeleton rows={3} /></PageBody>,
   choose: (home) => <PickChildPage home={home} />,
-  empty: () => <EmptyState title={t.portal.noStudents}>{t.portal.noStudentsHint}</EmptyState>,
+  empty: () => (
+    <PageBody>
+      <EmptyState title={t.portal.noStudents}>{t.portal.noStudentsHint}</EmptyState>
+    </PageBody>
+  ),
 };
 
 function Picked({ home, page }: { home: PortalHome; page: Page }) {

@@ -17,11 +17,16 @@ interface LessonOptionsBarProps {
 }
 
 const A = t.portal.actions;
-const VARIANT: Readonly<Record<LessonOption, 'primary' | 'secondary' | 'ghost'>> = {
-  confirm: 'primary',
-  request: 'secondary',
-  withdraw: 'secondary',
-  decline: 'ghost',
+type Variant = 'primary' | 'secondary' | 'ghost';
+const button = (variant: Variant, family: string) => ({ variant, className: family });
+const PEER = 'family:min-h-11 family:border-rule family:bg-raised family:text-lapis';
+
+/** Each option's button; the family look's pills (boards): green, white outlined peers, cream. */
+const BUTTON: Readonly<Record<LessonOption, { variant: Variant; className: string }>> = {
+  confirm: button('primary', 'family:min-h-11 family:shadow-[0_8px_18px_rgba(4,120,87,0.22)]'),
+  request: button('secondary', PEER),
+  withdraw: button('secondary', PEER),
+  decline: button('ghost', 'family:min-h-11 family:bg-sunk family:text-ink-2'),
 };
 
 /**
@@ -59,7 +64,7 @@ export function LessonOptionsBar({ lesson, student, now }: LessonOptionsBarProps
       ) : (
         <div className="flex flex-wrap gap-2">
           {options.map((o) => (
-            <Button key={o} type="button" variant={VARIANT[o]} disabled={action.busy} onClick={pick[o]}>
+            <Button key={o} type="button" {...BUTTON[o]} disabled={action.busy} onClick={pick[o]}>
               {A[o]}
             </Button>
           ))}

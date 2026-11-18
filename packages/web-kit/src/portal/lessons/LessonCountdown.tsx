@@ -11,11 +11,18 @@ const TONE: Record<Shown, string> = {
   startsIn: 'bg-act-soft text-act',
 };
 
+interface Props {
+  lesson: PortalLesson;
+  now: Date;
+  /** The family's emerald card restyles the timer (merged over the tone). */
+  className?: string;
+}
+
 /**
  * The live countdown to the window, then to the start; «الحلقة جارية الآن» while it runs. A timer,
  * not a live region: it is never read out every second.
  */
-export function LessonCountdown({ lesson, now }: { lesson: PortalLesson; now: Date }) {
+export function LessonCountdown({ lesson, now, className }: Props) {
   const clock = lessonClock(lesson, now);
   if (!clock) return null;
   return (
@@ -24,6 +31,7 @@ export function LessonCountdown({ lesson, now }: { lesson: PortalLesson; now: Da
       className={cn(
         'justify-self-start rounded-sm px-2 py-1 text-sm font-semibold tabular-nums',
         TONE[clock.kind],
+        className,
       )}
     >
       {lessonClockText(clock, t.portal)}
