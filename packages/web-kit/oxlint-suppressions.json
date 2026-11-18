@@ -16,9 +16,6 @@
     }
   },
   "src/auth/code/CodeBoxes.tsx": {
-    "ab/no-restricted-syntax": {
-      "count": 1
-    },
     "typescript/prefer-nullish-coalescing": {
       "count": 1
     }
