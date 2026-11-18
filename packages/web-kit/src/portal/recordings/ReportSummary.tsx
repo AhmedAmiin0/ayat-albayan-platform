@@ -5,15 +5,21 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 /** How many of the report's lines the lesson page shows before «اقرأ التقرير كاملًا». */
 const SUMMARY_LINES = 5;
 
-/** «من تقرير هذه الحلقة»: the report's first filled lines (attendance, memorization, grade…). */
+/**
+ * «من تقرير هذه الحلقة»: the report's first filled lines (attendance, memorization, grade…); the
+ * family look sets them on a cream panel.
+ */
 export function ReportSummary({ reportId }: { reportId: string }) {
   const page = useQuery(reportPageByIdQuery(reportId));
   if (!page.data) return null;
   const lines = reportLines(page.data.report).filter((l) => l.value).slice(0, SUMMARY_LINES);
   return (
     <section aria-label={t.lessonFiles.reportSummary} className="grid gap-2">
-      <h3 className="text-sm font-bold">{t.lessonFiles.reportSummary}</h3>
-      <dl className="grid gap-2">
+      <h3 className="text-sm font-bold family:text-body family:font-extrabold">
+        {t.lessonFiles.reportSummary}
+      </h3>
+      <dl className="grid gap-2 family:rounded-[14px] family:border family:border-rule family:bg-sunk
+        family:px-4 family:py-3">
         {lines.map((l) => (
           <div key={l.key} className="grid gap-0.5">
             <dt className="text-xs text-ink-3">{l.label}</dt>
