@@ -1,8 +1,7 @@
-import type { StopDone } from '@ab/client-core';
+import type { BookingMode, StopDone } from '@ab/client-core';
 import { Link } from '@tanstack/react-router';
 import { Button, buttonVariants } from '@/components/ui/form/button';
 import { Dialog } from '@/components/ui/overlay/dialog';
-import type { BookingMode } from '@/features/teaching/booking';
 import { t } from '@/lib/i18n/i18n';
 
 /** The guardian's chat in the viewer's own inbox. */

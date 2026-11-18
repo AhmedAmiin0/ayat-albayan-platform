@@ -23,7 +23,6 @@ export { daysText as courseDaysText } from './course-change/change-text';
 export { ChangeReview, type ChangeReviewProps } from './course-change/ChangeReview';
 export {
   type BOOKING_KINDS,
-  type BookingBody,
   type BookingKind,
   type INVOICE_MAX_BYTES,
   type INVOICE_MIMES,
@@ -66,7 +65,6 @@ export {
 } from './invoice/api.invoice';
 export {
   bookingBase,
-  type BookingMode,
   BookingModeContext,
   ChatReturnContext,
   useBookingMode,

@@ -1,3 +1,4 @@
+import type { BookingMode } from '@ab/client-core';
 import type { TrialHistory } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -8,7 +9,7 @@ import { t } from '@/lib/i18n/i18n';
 import { BookingWizard } from '@/features/teaching/booking/BookingWizard';
 import type { BookingDraft, PickedStudent } from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
-import { BookingModeContext, ChatReturnContext, type BookingMode } from '@/features/teaching/booking/mode';
+import { BookingModeContext, ChatReturnContext } from '@/features/teaching/booking/mode';
 import { trialHistoryQuery } from '@/features/teaching/booking/trial-date/api';
 import { trialDateDraft, trialHint, type TrialStudentFacts } from './draft';
 import { TrialHistoryBody, TrialHistoryTitle } from '@/features/teaching/booking/trial-date/history/TrialHistoryBody';

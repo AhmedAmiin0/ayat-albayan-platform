@@ -1,8 +1,9 @@
+import type { BookingMode } from '@ab/client-core';
 import type { LessonTimeEdit, TimeEditResult } from '@ab/shared';
 import type { CancelRequest, Conflict, LessonView, RescheduleRequest, SlotsResponse, StatusRouteEvent, ScheduleOverview } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
-import { bookingBase, type BookingMode } from '@/features/teaching/booking/mode';
+import { bookingBase } from '@/features/teaching/booking/mode';
 import { t } from '@/lib/i18n/i18n';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.

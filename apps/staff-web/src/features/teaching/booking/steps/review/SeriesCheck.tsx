@@ -1,3 +1,4 @@
+import type { BookingRequest } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form/form-alert';
 import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
@@ -6,7 +7,6 @@ import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNo
 import { t } from '@/lib/i18n/i18n';
 import { bookingCheckQuery } from '@/features/teaching/booking/api';
 import { takenTexts } from './course-taken';
-import type { BookingBody } from '@/features/teaching/booking/draft/contract';
 import { days, toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { trialDateCheckQuery } from '@/features/teaching/booking/trial-date/api';
@@ -84,7 +84,7 @@ export function SeriesCheck({ draft }: { draft: BookingDraft }) {
 }
 
 // Only to keep the hook call unconditional; a disabled query never runs.
-const emptyBody: BookingBody = {
+const emptyBody: BookingRequest = {
   teacherId: '',
   byday: [0],
   startTimeLocal: '00:00',

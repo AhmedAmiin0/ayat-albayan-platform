@@ -1,5 +1,5 @@
+import type { BookingRequest } from '@ab/shared';
 import { toInvoiceInput } from '@/booking/trial/lib/booking-body';
-import type { MakeupRequest } from '@/booking/shared/contract';
 import type { MakeupDraft } from './makeup-draft';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
@@ -8,7 +8,7 @@ import { ruleFromSlot } from '@/booking/shared/slots';
  * package, lead or new child; one-lesson rule like a trial (its weekday, ending that day). The
  * invoice rides along (the API answers 400 invoice_required without it).
  */
-export function makeupRequest(d: MakeupDraft, requestId: string): MakeupRequest | null {
+export function makeupRequest(d: MakeupDraft, requestId: string): BookingRequest | null {
   if (!d.startsAt) return null;
   const { source } = d;
   const rule = ruleFromSlot(d.startsAt, source.tz);
