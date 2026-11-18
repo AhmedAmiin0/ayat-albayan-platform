@@ -31,6 +31,15 @@ describe('the family bar (owner 2026-11-16)', () => {
     expect(names()).toEqual([TABS.home, TABS.schedule, TABS.reports, TABS.account]);
   });
 
+  it('a report keeps «التقارير» current (board PortalWebReport), and only it', async () => {
+    apiFetch.mockResolvedValue(home({ kind: 'student', students: [kid()] }));
+    renderAt(<TabBar />, '/report/r1');
+    const reports = await screen.findByRole('link', { name: TABS.reports });
+    expect(reports.getAttribute('aria-current')).toBe('page');
+    const homeLink = screen.getByRole('link', { name: TABS.home });
+    expect(homeLink.getAttribute('aria-current')).toBeNull();
+  });
+
   it('until the student in view is known, no «التقارير»', async () => {
     apiFetch.mockReturnValue(new Promise(() => undefined));
     renderAt(<TabBar />, '/portal');

@@ -15,7 +15,9 @@ export function Bell() {
       to="/alerts"
       aria-label={label}
       className="relative grid size-11 shrink-0 place-items-center rounded-full border
-        border-white/25 bg-white/5 text-white transition-colors hover:bg-white/15"
+        border-white/25 bg-white/5 text-white transition-colors hover:bg-white/15
+        aria-[current=page]:border-fam-gold/55 aria-[current=page]:bg-fam-gold/12
+        aria-[current=page]:text-fam-gold"
     >
       <Icon name="bell" className="size-5" aria-hidden="true" />
       {unread > 0 && (

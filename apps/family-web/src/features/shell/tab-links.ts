@@ -15,3 +15,15 @@ export const TAB_ICON: Readonly<Record<FamilyTab, IconName>> = {
   reports: 'template',
   account: 'person',
 };
+
+/** A tab's pages outside its own path: a report opened from «التقارير» keeps that pill lit. */
+const ALSO_UNDER: Readonly<Record<FamilyTab, readonly string[]>> = {
+  home: [],
+  schedule: [],
+  reports: ['/report/'],
+  account: [],
+};
+
+/** True on one of the tab's pages outside its path (boards PortalWebReport: «التقارير» lit). */
+export const litFrom = (tab: FamilyTab, pathname: string): boolean =>
+  ALSO_UNDER[tab].some((prefix) => pathname.startsWith(prefix));

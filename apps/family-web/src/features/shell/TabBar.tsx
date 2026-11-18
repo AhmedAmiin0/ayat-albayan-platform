@@ -1,8 +1,8 @@
 import { familyTabs, type FamilyTab } from '@ab/client-core';
-import { Link } from '@tanstack/react-router';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { TAB_ICON, TAB_PATH } from './tab-links';
+import { litFrom, TAB_ICON, TAB_PATH } from './tab-links';
 import { useFamilyPick } from './use-family-pick';
 
 /** Where the bar sits: the bottom bar on phones, the pill row in the dark header when wide. */
@@ -39,9 +39,12 @@ const TOP: PlaceLook = {
 
 const LOOK: Readonly<Record<TabPlace, PlaceLook>> = { bottom: BOTTOM, top: TOP };
 
+/** One pill; current on its page, and on its pages elsewhere (a report under «التقارير»). */
 function TabLink({ tab, look }: { tab: FamilyTab; look: PlaceLook }) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   return (
-    <Link to={TAB_PATH[tab]} className={look.item} activeOptions={{ includeSearch: false }}>
+    <Link to={TAB_PATH[tab]} className={look.item} activeOptions={{ includeSearch: false }}
+      aria-current={litFrom(tab, pathname) ? 'page' : undefined}>
       <Icon name={TAB_ICON[tab]} className={look.icon} aria-hidden="true" />
       <span>{t.portal.app.tabs[tab]}</span>
     </Link>

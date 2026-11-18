@@ -9,6 +9,7 @@ import { FamilyLine } from '@ab/web-kit/portal/lessons/options/FamilyLine';
 import { LessonOptionsBar } from '@ab/web-kit/portal/lessons/options/LessonOptionsBar';
 import { DateTile } from './DateTile';
 import { dayName, spanText, tileOf, viewerLine, withLine } from './lesson-text';
+import { rowShowsTimer } from './row-clock';
 import { WithRoom } from './WithRoom';
 
 /** The countdown ticks every second; the join button turns on by itself at the window. */
@@ -22,8 +23,8 @@ interface Props {
 /**
  * A later lesson in the family look (boards PortalWebHome «الحلقات القادمة»): the date tile, the
  * time span as its heading (the full day said to screen readers), «مع … · 45 دقيقة», the chip;
- * then the plain card's parts as they are: what the family asked, the countdown, the way in and
- * «خيارات الحلقة» as pills.
+ * then the plain card's parts: what the family asked, the countdown (only once the way in is open:
+ * row-clock.ts), the way in and «خيارات الحلقة» as pills.
  */
 export function FamilyLessonCard({ lesson, student }: Props) {
   const now = useNow(TICK_MS);
@@ -46,7 +47,7 @@ export function FamilyLessonCard({ lesson, student }: Props) {
             <FamilyChip lesson={lesson} />
           </div>
           <FamilyLine lesson={lesson} student={student} now={now} />
-          <LessonCountdown lesson={lesson} now={now} />
+          {rowShowsTimer(lesson, now) && <LessonCountdown lesson={lesson} now={now} />}
           <LessonAction lesson={lesson} studentId={student.id} tz={student.tz} now={now}
             onJoined={onJoined} />
           <LessonOptionsBar lesson={lesson} student={student} now={now} />

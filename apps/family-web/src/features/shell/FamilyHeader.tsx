@@ -15,8 +15,8 @@ export function FamilyHeader() {
   return (
     <header className="sticky top-0 z-20 border-b border-fam-gold/20 bg-[image:var(--fam-header)]
       shadow-[0_6px_20px_rgba(12,42,30,0.18)]">
-      <div className="mx-auto flex h-16 max-w-[1168px] items-center justify-between gap-2 px-4
-        shell:h-20 shell:gap-4 shell:px-6">
+      <div className="mx-auto flex min-h-16 max-w-[1168px] items-center justify-between gap-2 px-4
+        py-1 shell:h-20 shell:gap-4 shell:px-6 shell:py-0">
         <Link to="/portal" aria-label={t.familyLook.brand.name}
           className="flex min-h-11 min-w-0 items-center rounded-xl">
           <span className="flex min-w-0 shell:hidden"><FamilyBrand compact /></span>
