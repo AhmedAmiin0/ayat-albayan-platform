@@ -14,6 +14,7 @@ export const {
   portalReportsQuery,
   portalPackageQuery,
   portalHistoryQuery,
+  portalUnreadQuery,
 } = portalQueries(client);
 
 export const portalApi = portalSends(client);

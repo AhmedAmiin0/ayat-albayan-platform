@@ -43,7 +43,7 @@ export function OpenThread({ thread, pages, refs, tz, head }: Props) {
       {mode === 'read' && <p className={NOTE}>{readOnlyText(first?.open)}</p>}
       {query.isError && <ChannelLoadFailed onRetry={() => void query.refetch()} inline />}
       <ChannelMessages {...{ pages, refs, tz, now, mode, older }} />
-      <div ref={end} />
+      <div ref={end} className="scroll-mb-[var(--chat-end-gap,0px)]" />
       {mode === 'write' && (
         <ChannelComposer
           key={draftKey(refs)}

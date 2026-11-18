@@ -80,6 +80,9 @@ describe('CodeStep resend timer', () => {
     await act(async () => Promise.resolve());
     expect(button(F.resend).disabled).toBe(true);
     expect(button(F.changePhone).disabled).toBe(false);
+    // Resending is not verifying: the submit keeps its word (disabled meanwhile).
+    expect(button('ok').disabled).toBe(true);
+    expect(screen.queryByRole('button', { name: '…' })).toBeNull();
   });
 
   it('«غيّر الرقم» goes back to the first step', async () => {

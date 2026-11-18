@@ -28,10 +28,10 @@ const NO_CHAT: ChatTab = { on: false, unread: 0 };
 const shownBadge = (pill: ChildTabPill) =>
   pill.badge && pill.badge.count > 0 ? pill.badge : undefined;
 
-/** A pill as a web tab: the count after the word, the tab named with it. */
+/** A pill as a web tab: the unread badge after the word, the tab named with it. */
 function tabOption(pill: ChildTabPill): TabOption<ChildTab> {
   const badge = shownBadge(pill);
-  return { value: pill.value, label: pill.label, count: badge?.count, ariaLabel: badge?.label };
+  return { value: pill.value, label: pill.label, badge: badge?.count, ariaLabel: badge?.label };
 }
 
 /** The page's tabs for this login with their words; «المحادثة» last while the chat is on. */

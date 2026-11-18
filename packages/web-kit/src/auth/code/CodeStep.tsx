@@ -65,7 +65,7 @@ export function CodeStep(props: Props) {
       {children}
       {flow.error && <FormAlert>{flow.error}</FormAlert>}
       <Button type="submit" disabled={flow.busy} className="min-h-11 w-full">
-        {flow.busy ? busyLabel : submitLabel}
+        {flow.busy && !flow.resending ? busyLabel : submitLabel}
       </Button>
       <div className="grid justify-items-center">
         {CODE_STEP_ACTIONS.map((action) => (

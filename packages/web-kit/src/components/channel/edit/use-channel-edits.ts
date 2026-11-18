@@ -1,6 +1,6 @@
 import { channelKey } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CHANNEL_COUNT_KEYS, type ChannelRef } from '@ab/web-kit/components/channel/api';
+import { channelCountKeys, type ChannelRef } from '@ab/web-kit/components/channel/api';
 import { deleteChannelMessage, editChannelMessage, editProblem } from './edit-api';
 
 /**
@@ -11,7 +11,7 @@ export function useChannelEdits(ref: ChannelRef & { messageId: string }) {
   const refresh = () =>
     Promise.all([
       client.invalidateQueries({ queryKey: channelKey(ref.audience, ref.studentId) }),
-      ...CHANNEL_COUNT_KEYS.map((queryKey) => client.invalidateQueries({ queryKey })),
+      ...channelCountKeys(ref.studentId).map((queryKey) => client.invalidateQueries({ queryKey })),
     ]);
   const edit = useMutation({
     mutationFn: (body: string) => editChannelMessage({ ...ref, body }),

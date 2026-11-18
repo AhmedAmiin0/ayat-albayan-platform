@@ -4,11 +4,12 @@ import {
   channelMessagesPath,
   channelReadPath,
   olderCursor,
+  pathKey,
   portalUnreadPath,
   TEACHER_CHANNELS_PATH,
   type ChannelAudience,
 } from '@ab/client-core';
-import type { ChannelMessageView, ChannelPage, ChannelUnread, TeacherChannelRow } from '@ab/shared';
+import type { ChannelMessageView, ChannelPage, TeacherChannelRow } from '@ab/shared';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
@@ -46,21 +47,17 @@ export const sendChannelMessage = (ref: ChannelRef & { body: string; clientId: s
 export const markChannelRead = ({ audience, studentId, at }: ChannelRef & { at: string }) =>
   apiSend<unknown>('POST', channelReadPath(audience, studentId), { at });
 
-/** The list and badge keys a read or a send changes (never the open thread itself). */
-export const CHANNEL_COUNT_KEYS = [
+/**
+ * The list and badge keys a read or a send in this student's channel changes: the teacher's list
+ * and the family's «المحادثة» badge (client-core portalUnreadQuery), never the open thread itself.
+ */
+export const channelCountKeys = (studentId: string): readonly (readonly string[])[] => [
   ['channel', 'teacher', 'list'],
-  ['channel', 'portal'],
-] as const;
+  pathKey(portalUnreadPath(studentId)),
+];
 
 export const teacherChannelsQuery = queryOptions({
   queryKey: ['channel', 'teacher', 'list'],
   queryFn: () => apiFetch<TeacherChannelRow[]>(TEACHER_CHANNELS_PATH),
   refetchInterval: poll,
 });
-
-export const portalUnreadQuery = (studentId: string) =>
-  queryOptions({
-    queryKey: ['channel', 'portal', studentId, 'unread'],
-    queryFn: () => apiFetch<ChannelUnread>(portalUnreadPath(studentId)),
-    refetchInterval: poll,
-  });

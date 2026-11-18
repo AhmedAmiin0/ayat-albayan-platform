@@ -1,8 +1,8 @@
-import type { AlertTarget } from '@ab/client-core';
+import type { AlertTarget, ChildTab } from '@ab/client-core';
 import type { PortalKind } from '@ab/shared';
 
 /** A child page's tab an alert opens; none = «القادمة». */
-type AlertTab = 'package' | 'chat';
+type AlertTab = Extract<ChildTab, 'package' | 'chat'>;
 
 /** Where a bell row opens on the family pages: a TanStack `to` with its params and search. */
 type AlertLink =

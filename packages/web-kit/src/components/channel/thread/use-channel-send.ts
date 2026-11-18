@@ -2,7 +2,7 @@ import { channelKey, channelSeatKey, sendIdFor, type SendAttempt } from '@ab/cli
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import {
-  CHANNEL_COUNT_KEYS,
+  channelCountKeys,
   sendChannelMessage,
   type ChannelRef,
 } from '@ab/web-kit/components/channel/api';
@@ -26,12 +26,14 @@ export function useChannelSend(refs: ChannelRef) {
     onSuccess: () => {
       last.current = null;
     },
-    onSettled: () =>
-      Promise.all(
-        [channelKey(audience, studentId), channelSeatKey(studentId), ...CHANNEL_COUNT_KEYS].map(
-          (queryKey) => client.invalidateQueries({ queryKey }),
+    onSettled: () => {
+      const keys = [channelKey(audience, studentId), channelSeatKey(studentId)];
+      return Promise.all(
+        [...keys, ...channelCountKeys(studentId)].map((queryKey) =>
+          client.invalidateQueries({ queryKey }),
         ),
-      ),
+      );
+    },
   });
   const send = (body: string) => {
     const chat = draftKey(refs);

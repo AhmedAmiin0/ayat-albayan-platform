@@ -13,7 +13,12 @@ interface PanelProps {
   onOpenReport: (report: OpenReport) => void;
 }
 
-/** Each tab's panel; only the shown one mounts, so the package is never asked for a child. */
+/**
+ * Each child tab's panel (docs/50 §6), mounted by the family web app and the staff portal pages:
+ * only the shown one mounts, so the package is never asked for a child. «المحادثة» is the
+ * student's thread (refs portal + the student in view, docs/31 §2); the API refuses it while
+ * family_chat_enabled is off (403 family_chat_off), shown as the thread's load error.
+ */
 const PANELS: Record<ChildTab, (props: PanelProps) => ReactNode> = {
   upcoming: ({ student }) => <LessonsPanel student={student} />,
   attended: (props) => <HistoryPanel {...props} status="attended" />,

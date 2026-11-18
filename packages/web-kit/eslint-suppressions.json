@@ -560,7 +560,7 @@
   },
   "src/components/channel/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     },
     "max-len": {
       "count": 1

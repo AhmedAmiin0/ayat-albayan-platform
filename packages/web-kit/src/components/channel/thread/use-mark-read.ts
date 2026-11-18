@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import {
-  CHANNEL_COUNT_KEYS,
+  channelCountKeys,
   markChannelRead,
   type ChannelRef,
 } from '@ab/web-kit/components/channel/api';
@@ -24,8 +24,9 @@ export function useMarkRead(ref: ChannelRef, { enabled, at }: Mark): void {
   const { audience, studentId } = ref;
   useEffect(() => {
     if (!enabled || !visible || !at) return;
+    const keys = channelCountKeys(studentId);
     const refresh = () =>
-      Promise.all(CHANNEL_COUNT_KEYS.map((queryKey) => client.invalidateQueries({ queryKey })));
+      Promise.all(keys.map((queryKey) => client.invalidateQueries({ queryKey })));
     void markChannelRead({ audience, studentId, at }).then(refresh, () => undefined);
   }, [enabled, visible, at, audience, studentId, client]);
 }

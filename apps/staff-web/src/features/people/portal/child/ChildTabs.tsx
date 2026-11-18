@@ -1,7 +1,7 @@
 import type { ChildTab } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, type TabOption } from '@ab/web-kit/components/ui/layout/tabs';
-import { portalUnreadQuery } from '@ab/web-kit/components/channel/api';
+import { portalUnreadQuery } from '@ab/web-kit/portal/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export const CHILD_TABS_PREFIX = 'portal';

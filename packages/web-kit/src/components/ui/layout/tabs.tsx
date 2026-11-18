@@ -1,12 +1,15 @@
 import { Fragment, useSyncExternalStore, type KeyboardEvent } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 import type { SegmentOption } from '@ab/web-kit/components/ui/form/segmented-control';
+import { keepInStrip, TabBadge } from './tab-parts';
 
 export interface TabOption<V extends string> extends SegmentOption<V> {
   /** Vertical fihris only: a hairline before this tab to group it (docs/07 §9). */
   separatorBefore?: boolean;
   /** The tab's spoken name when the word and count say less (an unread badge, «المحادثة، 3 …»). */
   ariaLabel?: string;
+  /** An unread count drawn as a green badge (none = no badge); `count` stays a neutral total. */
+  badge?: number;
 }
 
 export interface TabsProps<V extends string> {
@@ -26,6 +29,8 @@ export interface TabsProps<V extends string> {
    * `aria-labelledby` its tab. Without it the tabs carry no ids (as before).
    */
   idPrefix?: string;
+  /** A sideways-scrolling strip keeps its selected tab in view (keepInStrip). */
+  followSelected?: boolean;
 }
 
 /** The ids of one tab and its panel under an `idPrefix` (the panel: `id={panel} aria-labelledby={tab}`). */
@@ -66,6 +71,7 @@ export function Tabs<V extends string>({
   orientation = 'horizontal',
   className,
   idPrefix,
+  followSelected = false,
 }: TabsProps<V>) {
   const vertical = orientation === 'vertical';
   const wide = useSyncExternalStore(subscribe, isWide);
@@ -102,6 +108,7 @@ export function Tabs<V extends string>({
           <button
             type="button"
             role="tab"
+            ref={followSelected && tab.value === value ? keepInStrip : undefined}
             aria-label={tab.ariaLabel}
             id={idPrefix === undefined ? undefined : tabIds(idPrefix, tab.value).tab}
             aria-controls={idPrefix === undefined || tab.value !== value ? undefined : tabIds(idPrefix, tab.value).panel}
@@ -111,6 +118,7 @@ export function Tabs<V extends string>({
             className={tabClass[orientation]}
           >
             {tab.label}
+            {tab.badge !== undefined && <TabBadge count={tab.badge} />}
             {tab.count !== undefined && (
               <>
                 {/* The dotted leader points at a count; without one there is nothing to lead to. */}

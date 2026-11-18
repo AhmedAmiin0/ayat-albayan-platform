@@ -39,6 +39,10 @@ function rounded(img, r) {
   return img;
 }
 
+// The emblem's share of a Home Screen icon: the family mobile app icon's (assets/icon.png), so
+// the web and app icons are the same size side by side.
+const APP = 0.66;
+
 /** A green tab tile: the mark at `fill` on the tile, corners rounded (opaque files cannot be). */
 const tab = (mark, w, fill) => encode(rounded(place(mark, { w, fill, bg: TILE }), 0.2));
 
@@ -52,8 +56,8 @@ export function familyIcons({ master, mushaf }, write) {
   ]));
   write(`${dir}/favicon-16.png`, fav16);
   write(`${dir}/favicon-32.png`, fav32);
-  write(`${dir}/apple-touch-icon.png`, square(180, 0.8));
-  write(`${dir}/icon-192.png`, square(192, 0.8));
-  write(`${dir}/icon-512.png`, square(512, 0.8));
+  write(`${dir}/apple-touch-icon.png`, square(180, APP));
+  write(`${dir}/icon-192.png`, square(192, APP));
+  write(`${dir}/icon-512.png`, square(512, APP));
   write(`${dir}/icon-maskable-512.png`, square(512, 0.62));
 }

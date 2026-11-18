@@ -557,7 +557,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     }
   },
   "src/components/channel/edit/edit-api.ts": {
