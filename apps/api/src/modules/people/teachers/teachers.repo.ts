@@ -17,7 +17,7 @@ import type { Page } from '@ab/shared';
 
 export type Teacher = Tables<'teachers'>;
 /** A row of GET /teachers: the teacher and her «مشترك / تجريبي» counts (R-TCH-03, owner 2026-10-12). */
-export type TeacherListRow = Omit<Teacher, 'avatar_path'> & TeacherStudentCounts & { avatar_url: string | null };
+type TeacherListRow = Omit<Teacher, 'avatar_path'> & TeacherStudentCounts & { avatar_url: string | null };
 
 /** The stored path never leaves the API: views carry a signed avatar_url instead. */
 export function withoutPath<T extends { avatar_path?: string | null }>(row: T): Omit<T, 'avatar_path'> {
