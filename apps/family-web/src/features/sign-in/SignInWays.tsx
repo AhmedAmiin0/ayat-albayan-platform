@@ -1,8 +1,8 @@
 import { firstWay, OTHER_WAY, type SignInWay } from '@ab/client-core';
 import { useState, type ReactNode } from 'react';
 import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
-import { pill } from '@ab/web-kit/family/brand/pill';
-import { OrDivider } from '@ab/web-kit/family/sign-in/OrDivider';
+import { pill } from '@ab/web-kit/components/family/brand/pill';
+import { OrDivider } from '@ab/web-kit/components/family/sign-in/OrDivider';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { StudentSignIn } from './StudentSignIn';

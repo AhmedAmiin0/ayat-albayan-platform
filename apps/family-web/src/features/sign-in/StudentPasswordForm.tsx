@@ -3,7 +3,7 @@ import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Input } from '@ab/web-kit/components/ui/form/input';
-import { pill } from '@ab/web-kit/family/brand/pill';
+import { pill } from '@ab/web-kit/components/family/brand/pill';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { useStudentSignIn } from './use-student-sign-in';

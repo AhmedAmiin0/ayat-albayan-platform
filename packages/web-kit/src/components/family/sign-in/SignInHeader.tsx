@@ -1,4 +1,4 @@
-import { FamilyBrand } from '@ab/web-kit/family/brand/FamilyBrand';
+import { FamilyBrand } from '@ab/web-kit/components/family/brand/FamilyBrand';
 
 /**
  * The signed-out header (boards PortalWebSignIn / PortalPhoneSignIn): the deep-green bar with the

@@ -1,9 +1,9 @@
 import { useCodesOpen } from '@ab/web-kit/auth/login/CodesGate';
 import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { FamilyCard } from '@ab/web-kit/family/layout/FamilyCard';
-import { SignInHeader } from '@ab/web-kit/family/sign-in/SignInHeader';
-import { SignInPanel } from '@ab/web-kit/family/sign-in/SignInPanel';
+import { FamilyCard } from '@ab/web-kit/components/family/layout/FamilyCard';
+import { SignInHeader } from '@ab/web-kit/components/family/sign-in/SignInHeader';
+import { SignInPanel } from '@ab/web-kit/components/family/sign-in/SignInPanel';
 import { SignInWays } from './SignInWays';
 
 /**

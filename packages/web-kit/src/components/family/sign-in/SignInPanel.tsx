@@ -1,6 +1,6 @@
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { StarPattern } from '@ab/web-kit/family/ornament/StarPattern';
-import { VerseArch } from '@ab/web-kit/family/ornament/VerseArch';
+import { StarPattern } from '@ab/web-kit/components/family/ornament/StarPattern';
+import { VerseArch } from '@ab/web-kit/components/family/ornament/VerseArch';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const L = t.familyLook;

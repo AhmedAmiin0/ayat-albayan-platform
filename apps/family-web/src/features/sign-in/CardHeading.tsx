@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import { SectionHeading } from '@ab/web-kit/family/layout/SectionHeading';
+import { SectionHeading } from '@ab/web-kit/components/family/layout/SectionHeading';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
