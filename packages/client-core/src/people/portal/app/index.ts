@@ -21,4 +21,6 @@ export {
   PICKED_CHILD_KEY, pickStore, savedFor, type PickStore, type PickStoreState, type SavedPick,
 } from './pick-store.js';
 export { dayWord, lessonMinutes, type DayWord } from './day-word.js';
-export { childTabWord, type ChildTabWords } from './tab-word.js';
+export {
+  childTabPill, childTabWord, type ChildTabPill, type ChildTabWords,
+} from './tab-word.js';

@@ -23,19 +23,6 @@
       "count": 1
     }
   },
-  "src/auth/code/CodeStep.test.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    }
-  },
-  "src/auth/code/CodeStep.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/auth/code/RequestStep.tsx": {
     "max-len": {
       "count": 1
@@ -52,11 +39,6 @@
     },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/auth/code/use-code-flow.ts": {
-    "max-len": {
-      "count": 3
     }
   },
   "src/auth/login/PasswordForm.tsx": {
@@ -563,6 +545,37 @@
       "count": 1
     }
   },
+  "src/components/channel/ChannelThread.live.test.tsx": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
+    }
+  },
+  "src/components/channel/ChannelThread.test.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/components/channel/api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 4
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/components/channel/edit/edit-api.ts": {
+    "ab/no-untyped-api-calls": {
+      "count": 2
+    }
+  },
+  "src/components/channel/use-channel-live.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
   "src/components/ui/display/avatar.tsx": {
     "max-len": {
       "count": 2
@@ -717,6 +730,11 @@
       "count": 2
     },
     "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/components/ui/overlay/ConfirmSwitchDialog.tsx": {
+    "max-len": {
       "count": 1
     }
   },

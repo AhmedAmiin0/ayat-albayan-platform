@@ -1,6 +1,6 @@
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { ChannelThread } from '@/features/teaching/student-channel/ChannelThread';
+import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { useSeatWatch, type ChannelSeatApi } from './use-channel-seat';

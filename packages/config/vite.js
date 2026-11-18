@@ -5,27 +5,12 @@ import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
-import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
+import { kitPublic } from './vite-public.js';
 
 const KIT = fileURLToPath(new URL('../web-kit/src', import.meta.url));
-const SW = fileURLToPath(new URL('../web-kit/public/sw.js', import.meta.url));
 const STYLESHEET = /\.css($|\?)/;
-// The web-push service worker (packages/web-kit/public/sw.js) at /sw.js of every app: served as is
-// by the dev server, emitted beside index.html by the build (a worker's scope is its own path).
-const serviceWorker = {
-  name: 'ab:service-worker',
-  configureServer(server) {
-    server.middlewares.use('/sw.js', (_req, res) => {
-      res.setHeader('Content-Type', 'text/javascript');
-      res.end(readFileSync(SW));
-    });
-  },
-  generateBundle() {
-    this.emitFile({ type: 'asset', fileName: 'sw.js', source: readFileSync(SW, 'utf8') });
-  },
-};
 // fsModuleCache keys a module by its own content; Tailwind builds a stylesheet from every source
 // file, so stylesheets are always transformed afresh, never read from the cache.
 const noStylesheetCache = {
@@ -44,8 +29,9 @@ const TEST_ENV = {
 /**
  * `dir`: the workspace folder (import.meta.dirname). `port`: the dev server's. `routes`: the app
  * has TanStack file routes (src/routes). `cacheDir`: a second dev server's own Vite cache.
+ * `icons`: the app's icon set in @ab/web-kit (icons/<name>), served at its root (vite-public.js).
  */
-export function webConfig({ dir, port, routes = true, cacheDir }) {
+export function webConfig({ dir, port, routes = true, cacheDir, icons }) {
   return defineConfig({
     plugins: [
       ...(routes ? [tanstackRouter({ target: 'react', autoCodeSplitting: true })] : []),
@@ -55,7 +41,7 @@ export function webConfig({ dir, port, routes = true, cacheDir }) {
       babel({ presets: [reactCompilerPreset()] }),
       tailwindcss(),
       noStylesheetCache,
-      serviceWorker,
+      kitPublic(icons),
     ],
     ...(cacheDir ? { cacheDir } : {}),
     resolve: {

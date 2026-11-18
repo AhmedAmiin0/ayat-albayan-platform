@@ -2,7 +2,7 @@ import type { AcademySettings } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';

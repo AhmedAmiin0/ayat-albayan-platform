@@ -14,7 +14,7 @@ export const WEB_PUSH_TRANSPORT = Symbol('WEB_PUSH_TRANSPORT');
 export const WEB_PUSH_KEYS = Symbol('WEB_PUSH_KEYS');
 export type WebPushKeysSource = () => VapidKeys | null;
 
-/** What apps/staff-web/public/sw.js shows: a same-origin `url` opened on click; `tag` folds. */
+/** What packages/web-kit/public/sw.js shows: a same-origin `url` opened on click; `tag` folds. */
 export interface WebPushPayload {
   title: string;
   body: string;

@@ -9,6 +9,8 @@ export interface WebConfigOptions {
   routes?: boolean;
   /** A second dev server's own Vite cache. */
   cacheDir?: string;
+  /** The app's icon set in @ab/web-kit (icons/<name>), served at its root with the kit's public. */
+  icons?: 'staff' | 'family';
 }
 
 /** The Vite + Vitest config of a web workspace (docs/51 §2). */
