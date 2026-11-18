@@ -1,8 +1,8 @@
-import type { NotificationsOverview } from '@ab/shared';
+import type { AudienceTab, NotificationsOverview } from '@ab/shared';
 import { useState } from 'react';
 import { t, FilterPills, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { audienceTabs, rowsOf, type AudienceTab } from '@/ops/notif-rules/lib/audience-tabs';
+import { audienceTabs, rowsOf } from '@/ops/notif-rules/lib/audience-tabs';
 import { CatalogueRow } from './CatalogueRow';
 import type { CatalogueToggles } from '@/ops/notif-rules/hooks/use-catalogue-toggles';
 

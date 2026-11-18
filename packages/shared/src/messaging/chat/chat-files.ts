@@ -77,6 +77,9 @@ export const PDF_PREVIEW_PAGES = 30;
  */
 export type ThreadPdfPage = SignedDownload & { page: number; pages: number; bytes: number };
 
+/** GET /threads/:phone/messages/:id/file and …/media/:id: the file signed, and its type. */
+export type ThreadFile = SignedDownload & { mime: string };
+
 /** The strings of inbox.pdf (ar.json / en.json) the meta line reads. */
 export type PdfMetaStrings = { type: string; pages: Readonly<Record<PluralForm, string>>; kb: string; mb: string };
 

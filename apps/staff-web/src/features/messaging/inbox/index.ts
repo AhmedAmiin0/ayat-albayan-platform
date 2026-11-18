@@ -11,7 +11,6 @@ export {
   sendTemplate,
   sendText,
   setFollowUpPaused,
-  type ThreadFile,
   threadFileQuery,
   THREADS_PAGE_SIZE,
   threadsQuery,

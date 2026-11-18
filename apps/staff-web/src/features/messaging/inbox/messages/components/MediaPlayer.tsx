@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { t } from '@/lib/i18n/i18n';
-import type { ThreadFile } from '@/features/messaging/inbox/api/api';
+import type { ThreadFile } from '@ab/shared';
 
 const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4';
 

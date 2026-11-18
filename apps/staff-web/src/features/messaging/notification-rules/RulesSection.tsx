@@ -1,4 +1,4 @@
-import type { NotificationAudience } from '@ab/shared';
+import type { AudienceTab, NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -7,7 +7,6 @@ import { Skeleton } from '@/components/ui/display/skeleton';
 import { usePermissions } from '@/features/people/auth/use-permissions';
 import { t } from '@/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
-import type { AudienceTab } from '@/features/messaging/notification-catalogue/catalogue-tabs';
 import { NumbersLine } from '@/features/messaging/notification-catalogue/NumbersLine';
 import { useCatalogue } from '@/features/messaging/notification-catalogue/use-catalogue';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';

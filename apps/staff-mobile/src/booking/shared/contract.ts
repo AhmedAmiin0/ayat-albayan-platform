@@ -33,10 +33,3 @@ export interface MakeupRequest extends BookingExtras {
 }
 
 export type BookingBody = (BookingRequest & BookingExtras) | MakeupRequest;
-
-/** GET /threads/:phone/media/:messageId: the cached file, signed. */
-export interface MediaUrl {
-  url: string;
-  mime: string;
-  expires_at: string;
-}

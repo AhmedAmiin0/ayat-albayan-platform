@@ -1,4 +1,4 @@
-import { PDF_PREVIEW_PAGES, type ThreadPdfPage } from '@ab/shared';
+import { PDF_PREVIEW_PAGES, type ThreadFile, type ThreadPdfPage } from '@ab/shared';
 import { Controller, Get, HttpStatus, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -8,7 +8,7 @@ import { parseOrThrow } from '@/common/http/http';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
 import { PdfPreviewService } from './pdf/pdf-preview.service';
-import { ThreadMediaService, type ThreadFile } from './thread-media.service';
+import { ThreadMediaService } from './thread-media.service';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 
 const uuid = new ParseUUIDPipe();

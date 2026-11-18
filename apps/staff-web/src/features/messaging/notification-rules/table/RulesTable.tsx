@@ -1,10 +1,10 @@
-import type { LineHealthView, NotificationEntryView } from '@ab/shared';
+import type { AudienceTab, LineHealthView, NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollX } from '@/components/ui/layout/scroll-x';
 import { Tabs, tabIds } from '@/components/ui/layout/tabs';
 import { usePhone } from '@/components/ui/layout/use-narrow';
 import { t } from '@/lib/i18n/i18n';
-import { audienceTabs, rowsOf, type AudienceTab } from '@/features/messaging/notification-catalogue/catalogue-tabs';
+import { audienceTabs, rowsOf } from '@/features/messaging/notification-catalogue/catalogue-tabs';
 import { ManualTable } from './ManualTable';
 import { RulePhoneRow } from '@/features/messaging/notification-rules/phone/RulePhoneRow';
 import { RuleSheet } from '@/features/messaging/notification-rules/phone/RuleSheet';
