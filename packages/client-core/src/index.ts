@@ -16,6 +16,7 @@ export * from './messaging/calls/index.js';
 export * from './messaging/inbox/index.js';
 export * from './messaging/live-rejoin/index.js';
 export * from './platform/settings/index.js';
+export * from './platform/short-links/index.js';
 export * from './messaging/chat-send/index.js';
 export * from './people/people-edit/index.js';
 export * from './teaching/lessons/index.js';

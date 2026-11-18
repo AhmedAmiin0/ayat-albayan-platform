@@ -1,4 +1,4 @@
-import { DISCOUNTS, salesPriceFloor } from '@ab/shared';
+import { DISCOUNTS } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -20,18 +20,6 @@ export function assertOwnStudent(own: Pick<SalesOwnership, 'studentIds'>, studen
 export function assertSalesDiscount(pricing: { discount?: number }): void {
   const discount = pricing.discount ?? 0;
   if (!DISCOUNTS.some((d) => d === discount)) throw forbidden('discount_not_allowed');
-}
-
-/**
- * «مبلغ مخصص» on her path (owner 2026-11-05): the same floor as the pills (salesPriceFloor in
- * @ab/shared), or a 1 SAR package plus her own recorded transfer would earn the commission:
- * 403 discount_not_allowed with the lowest price. The admin's POST /subscriptions never calls it
- * (unrestricted).
- */
-export function assertSalesPrice(price: { amount: number; total: number; currency: string }): void {
-  const min = salesPriceFloor(price.total);
-  const details = { min, currency: price.currency };
-  if (price.amount < min) throw forbidden('discount_not_allowed', details);
 }
 
 /** sales.renew_any (owner 2026-10-29/11-01, docs/16 row 38): the renew flow for ANY student, not only hers. */

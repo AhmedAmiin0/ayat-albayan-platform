@@ -1,4 +1,4 @@
-import { formatAmount, offerText } from '@ab/shared';
+import { offerText } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { currencyName, t, pathKey } from '@ab/mobile-kit';
@@ -21,7 +21,7 @@ const field = () => screen.getByLabelText(c.label.replace('{currency}', SAR));
 const disabled = (name: string) =>
   screen.getByRole('button', { name }).props.accessibilityState?.disabled;
 
-/** bulkSa: total 770, after the 10 % pill 693; the sales floor is round(770 × 0.85) = 655. */
+/** bulkSa: total 770, after the 10 % pill 693; sales floor 770 × 0.85 = 654.5 → 650. */
 async function sheet(permissions: string[] = ['pricing.read']) {
   const me = { role: 'sales', permissions };
   const answer = async (p: string) => (p === '/auth/me' ? me : bulkSa);
@@ -53,13 +53,12 @@ test('on: starts from the price after discount; the typed amount is the total', 
   expect(disabled(q.send)).toBeFalsy();
 });
 
-test('sales: under the deepest pill’s price says the minimum, nothing may leave', async () => {
+test('sales: any amount, even under the deepest pill’s price (owner 2026-11-18), may leave', async () => {
   await sheet();
   await fireEvent.press(pill());
   await fireEvent.changeText(field(), '600');
-  const min = c.min.replace('{amount}', formatAmount(655)).replace('{currency}', SAR);
-  expect(screen.getByText(min)).toBeTruthy();
-  for (const name of [q.send, q.edit, q.copy]) expect(disabled(name)).toBe(true);
+  expect(preview()).toBe(offerText(bulkSa, ar.pricing, 600));
+  expect(disabled(q.send)).toBeFalsy();
 });
 
 test('not an amount: the field’s error, nothing may leave', async () => {
@@ -70,7 +69,7 @@ test('not an amount: the field’s error, nothing may leave', async () => {
   for (const name of [q.send, q.edit, q.copy]) expect(disabled(name)).toBe(true);
 });
 
-test('the admin (subscriptions.write) has no floor', async () => {
+test('the admin (subscriptions.write): any amount too', async () => {
   await sheet(['pricing.read', 'subscriptions.write']);
   await fireEvent.press(pill());
   await fireEvent.changeText(field(), '600');

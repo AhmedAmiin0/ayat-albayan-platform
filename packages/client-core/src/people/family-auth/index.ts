@@ -5,6 +5,10 @@ export { splitInternational } from './country-dial.js';
 export { orderCountries, searchCountries } from './country-search.js';
 export { checkPhone, type PhoneCheck, type PhoneState } from './phone-check.js';
 export {
+  CODE_STEP_ACTIONS, canResend, type CodeStepAction, countdownTick, resendLabel,
+  type ResendState, type ResendWords,
+} from './resend.js';
+export {
   firstWay, OTHER_WAY, WAY_DIRECTION, type SignInWay, type StepDirection,
 } from './sign-in-way.js';
 export { studentCodeOnTrack } from './student-code.js';

@@ -1,6 +1,5 @@
 export * from './catalog.js';
 export * from './currency.js';
-export * from './custom-total.js';
 export * from './offer-text.js';
 export * from './price.js';
 export * from './quote.js';

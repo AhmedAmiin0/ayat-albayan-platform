@@ -7,7 +7,7 @@
     }
   },
   "typescript/no-unnecessary-type-assertion": {
-    "missed": 45,
+    "missed": 43,
     "why": "tsgolint does not report an assertion to the contextual or a widened type (`{} as Record<string, number>` in a typed slot, `tz as string` on a string-literal union, `jest.requireMock(...) as {…}`), which typescript-eslint 8.71 does; type-aware, no JS-plugin fallback (docs/31b §3).",
     "scopes": {
       "apps/api": 1

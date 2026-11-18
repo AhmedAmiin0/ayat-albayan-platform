@@ -53,7 +53,7 @@ export function fontCss(): string {
  * The emblem on transparency, 192px tall: docs/design/brand/tools/build.mjs derives it from the
  * academy's logo for the web <Mark>. Same depth from src/ and dist/, so one relative path works.
  */
-export const LOGO_PATH = join(resolve(__dirname, '../../../../../..'), 'apps/staff-web/public/brand/mark.png');
+export const LOGO_PATH = join(resolve(__dirname, '../../../../../..'), 'packages/web-kit/public/brand/mark.png');
 
 export function logoDataUri(): string {
   return `data:image/png;base64,${readFileSync(LOGO_PATH).toString('base64')}`;

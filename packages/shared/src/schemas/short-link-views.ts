@@ -61,6 +61,12 @@ export const shortLinkDetailSchema = shortLinkRowSchema.extend({
 });
 export type ShortLinkDetail = z.infer<typeof shortLinkDetailSchema>;
 
+/** POST /short-links and …/resend: the detail and, when a WhatsApp send ran, its counts. */
+export const shortLinkSentDetailSchema = shortLinkDetailSchema.extend({
+  send: z.object({ queued: z.number(), failed: z.number() }).nullable(),
+});
+export type ShortLinkSentDetail = z.infer<typeof shortLinkSentDetailSchema>;
+
 export const shortLinkPersonSchema = person.extend({ phone: z.string().nullable() });
 export type ShortLinkPerson = z.infer<typeof shortLinkPersonSchema>;
 
@@ -68,6 +74,8 @@ export type ShortLinkPerson = z.infer<typeof shortLinkPersonSchema>;
 export const shortLinkGateViewSchema = z.object({
   title: z.string().nullable(),
   state: z.enum(['open', 'gone']),
+  /** Why a gone link is gone (the gate shows expired or revoked); null while open. */
+  goneReason: z.enum(['expired', 'revoked']).nullable(),
   /** A managed link always needs a signed-in user or a phone verified by a WhatsApp code. */
   needs: z.literal('sign_in_or_code'),
   codesAvailable: z.boolean(),
