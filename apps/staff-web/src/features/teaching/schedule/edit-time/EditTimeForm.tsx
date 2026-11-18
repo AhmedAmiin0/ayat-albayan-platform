@@ -1,5 +1,5 @@
 import { zonedPartsIn } from '@ab/shared';
-import type { LessonView } from '@ab/shared';
+import type { LessonView, TimeEditResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/form/button';
@@ -10,7 +10,7 @@ import { conflictsOf, editLessonTime, errorCode, lessonErrorText, LESSONS_KEY } 
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { changeOf, editBody, moveDays, startsAtOf, timesFor, validLength, willNotify } from './edit-time';
 import { lengthText, lockedText, payoutLock } from './edit-time-text';
-import { timeEditMode, type TimeEditResult } from './edit-time.contract';
+import { timeEditMode } from './edit-time.contract';
 import { EditTimeConfirm } from './EditTimeConfirm';
 import { EditTimeDone, needsFollowUp, savedMessage } from './EditTimeDone';
 import { EditTimeFields, type FieldState } from './EditTimeFields';

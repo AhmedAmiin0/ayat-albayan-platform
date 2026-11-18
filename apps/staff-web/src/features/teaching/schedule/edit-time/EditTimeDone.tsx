@@ -1,3 +1,4 @@
+import type { TimeEditResult } from '@ab/shared';
 import { zonedPartsIn } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
@@ -7,7 +8,6 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { t } from '@/lib/i18n/i18n';
 import { LESSONS_KEY } from '@/features/teaching/schedule/api';
 import { whenWithLength } from './edit-time-text';
-import type { TimeEditResult } from './edit-time.contract';
 import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';

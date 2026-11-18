@@ -1,6 +1,7 @@
+import type { LessonTimeEdit } from '@ab/shared';
 import { DURATIONS, lessonDuration, type LessonView } from '@ab/shared';
 import { localDate } from '@/today/lib/timeline';
-import { editMode, type EditableLesson, type LessonTimeEditBody } from './types';
+import { editMode } from './types';
 
 // PATCH /lessons/:id/time bodies and the pure rules behind the sheet (R-SCH-11, docs/10 §10), the
 // same ones the API enforces: a move starts in the future, a correction stays on its own day and
@@ -57,7 +58,7 @@ export function isChanged(lesson: LessonView, s: EditState): boolean {
 }
 
 /** A move to a later start sends the guardian the new time; a length-only change or a correction does not. */
-export function willNotify(lesson: EditableLesson, s: EditState, now: Date): boolean {
+export function willNotify(lesson: LessonView, s: EditState, now: Date): boolean {
   const start = Date.parse(chosenStart(lesson, s.picked));
   return editMode(lesson) === 'move' && start !== Date.parse(lesson.starts_at) && start > now.getTime();
 }
@@ -66,7 +67,7 @@ export function willNotify(lesson: EditableLesson, s: EditState, now: Date): boo
 export const isBookable = (durationMin: number): boolean => DURATIONS.some((d) => d === durationMin);
 
 /** The submit is ready: a bookable length, something changed, a move starts ahead, a correction says why. */
-export function canSubmit(lesson: EditableLesson, s: EditState, now: Date): boolean {
+export function canSubmit(lesson: LessonView, s: EditState, now: Date): boolean {
   const mode = editMode(lesson);
   if (mode === null || !isBookable(s.durationMin) || !isChanged(lesson, s)) return false;
   const start = Date.parse(chosenStart(lesson, s.picked));
@@ -75,7 +76,7 @@ export function canSubmit(lesson: EditableLesson, s: EditState, now: Date): bool
 }
 
 /** The PATCH body; null while the form cannot be submitted. */
-export function editBody(lesson: EditableLesson, s: EditState, now: Date): LessonTimeEditBody | null {
+export function editBody(lesson: LessonView, s: EditState, now: Date): LessonTimeEdit | null {
   const mode = editMode(lesson);
   const length = lessonDuration.safeParse(s.durationMin);
   if (mode === null || !length.success || !canSubmit(lesson, s, now)) return null;

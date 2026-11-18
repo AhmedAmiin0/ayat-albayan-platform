@@ -1,3 +1,4 @@
+import type { TimeEditMode } from '@ab/shared';
 import { DURATIONS, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Field, FilterPills, FormLabel } from '@ab/mobile-kit';
@@ -5,7 +6,6 @@ import { LessonSlotPicker } from '@/teaching/reschedule/LessonSlotPicker';
 import { CorrectTimes } from './CorrectTimes';
 import { isBookable, REASON_MAX, type EditState } from '@/edit-time/lib/edit-time-body';
 import { lengthText } from '@/edit-time/lib/edit-time-text';
-import type { TimeEditMode } from '@/edit-time/lib/types';
 
 const pills = DURATIONS.map((d) => ({ value: String(d), label: lengthText(d) }));
 
