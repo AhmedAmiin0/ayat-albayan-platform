@@ -9615,6 +9615,9 @@
     "child": {
       "today": "Today"
     },
+    "panels": {
+      "more": "More"
+    },
     "pages": {
       "empty": "Nothing here yet"
     },
