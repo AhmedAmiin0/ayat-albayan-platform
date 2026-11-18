@@ -7,6 +7,7 @@ import { canDo, type Me } from '@ab/web-kit/auth/me';
 export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permission])[] = [
   ['/admin/leads', 'leads.read'],
   ['/admin/inbox', 'inbox.read'],
+  ['/admin/short-links', 'short_links.manage'],
   ['/admin/job-applicants', 'applicants.read'],
   ['/admin/students', 'students.read'],
   ['/admin/teachers', 'teachers.read'],
