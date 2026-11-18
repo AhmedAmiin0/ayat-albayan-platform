@@ -9622,7 +9622,10 @@
       "empty": "Nothing here yet"
     },
     "account": {
-      "children": "Children"
+      "children": "Children",
+      "lineGuardian": "Your children and this browser's settings.",
+      "lineStudent": "Your details and this browser's settings.",
+      "phone": "WhatsApp number"
     }
   }
 }

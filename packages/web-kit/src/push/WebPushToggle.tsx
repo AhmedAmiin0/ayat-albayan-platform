@@ -1,17 +1,8 @@
 import { useId } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useWebPush, type WebPushView } from './use-web-push';
-
-const MESSAGE: Record<WebPushView, string> = {
-  unsupported: t.bell.push.unsupported,
-  'ios-install': t.bell.push.iosInstall,
-  denied: t.bell.push.denied,
-  'not-configured': t.bell.push.notConfigured,
-  loading: t.bell.push.off,
-  on: t.bell.push.on,
-  off: t.bell.push.off,
-};
+import { PUSH_MESSAGE } from './web-push-message';
+import { useWebPush } from './use-web-push';
 
 /**
  * Foot of the bell panel: browser push on this device. The button is the only way to the
@@ -26,7 +17,7 @@ export function WebPushToggle() {
       <h3 id={titleId} className="text-xs font-semibold text-ink-2">
         {t.bell.push.title}
       </h3>
-      <p className="text-xs text-pretty text-ink-3">{MESSAGE[push.view]}</p>
+      <p className="text-xs text-pretty text-ink-3">{PUSH_MESSAGE[push.view]}</p>
       {push.failed && (
         <p role="alert" className="text-xs text-danger">
           {t.bell.push.failed}

@@ -9,8 +9,11 @@ const OPTIONS: { value: ThemePref; label: string }[] = [
   { value: 'dark', label: t.theme.dark },
 ];
 
-/** المظهر: تلقائي / فاتح / ليلي. Saved per browser; «تلقائي» follows the OS. */
-export function ThemeToggle({ className }: { className?: string }) {
+/**
+ * المظهر: تلقائي / فاتح / ليلي. Saved per browser; «تلقائي» follows the OS. `pill`: the family
+ * look's round segments (opt-in; staff keep the default).
+ */
+export function ThemeToggle({ className, pill }: { className?: string; pill?: boolean }) {
   const [pref, setPref] = useState<ThemePref>(readThemePref);
   return (
     <SegmentedControl
@@ -22,6 +25,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         setPref(next);
       }}
       className={className}
+      pill={pill}
     />
   );
 }

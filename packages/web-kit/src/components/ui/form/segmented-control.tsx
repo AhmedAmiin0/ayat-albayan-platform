@@ -5,6 +5,8 @@ export interface SegmentOption<V extends string> {
   label: string;
   /** Optional real count shown after the label (tabular, ink-3). */
   count?: number;
+  /** The label's own language when it differs from the page's («English» in the Arabic UI). */
+  lang?: string;
 }
 
 export interface SegmentedControlProps<V extends string> {
@@ -15,7 +17,24 @@ export interface SegmentedControlProps<V extends string> {
   value: V | null;
   onChange: (value: V) => void;
   className?: string;
+  /** Opt-in round pills with a green pressed segment (family look); off keeps the default. */
+  pill?: boolean;
 }
+
+type Look = 'pill' | 'plain';
+
+const TRACK: Record<Look, string> = { pill: 'rounded-full p-1', plain: '' };
+
+const SEGMENT: Record<Look, Record<'on' | 'off', string>> = {
+  plain: {
+    on: 'bg-raised font-semibold text-ink shadow-[0_0_0_1px_var(--rule-strong)]',
+    off: 'font-medium text-ink-2 hover:text-ink',
+  },
+  pill: {
+    on: 'rounded-full bg-lapis-fill px-5 text-sm font-bold text-white shadow-fam-card sm:min-h-10',
+    off: 'rounded-full px-5 text-sm font-medium text-ink-2 hover:text-ink sm:min-h-10',
+  },
+};
 
 /** Pressed-button group on a sunk track (docs/07 seg): filters, «بتوقيتها | بتوقيت الرياض», theme. */
 export function SegmentedControl<V extends string>({
@@ -24,24 +43,25 @@ export function SegmentedControl<V extends string>({
   value,
   onChange,
   className,
+  pill = false,
 }: SegmentedControlProps<V>) {
+  const look: Look = pill ? 'pill' : 'plain';
   return (
     <div
       role="group"
       aria-label={label}
-      className={cn('inline-flex max-w-full gap-0.5 overflow-x-auto rounded-md border border-rule bg-sunk p-[3px]', className)}
+      className={cn('inline-flex max-w-full gap-0.5 overflow-x-auto rounded-md border border-rule bg-sunk p-[3px]', TRACK[look], className)}
     >
       {options.map((o) => (
         <button
           key={o.value}
           type="button"
+          lang={o.lang}
           aria-pressed={o.value === value}
           onClick={() => onChange(o.value)}
           className={cn(
             'inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-sm px-3 py-1 text-xs sm:min-h-[30px]',
-            o.value === value
-              ? 'bg-raised font-semibold text-ink shadow-[0_0_0_1px_var(--rule-strong)]'
-              : 'font-medium text-ink-2 hover:text-ink',
+            SEGMENT[look][o.value === value ? 'on' : 'off'],
           )}
         >
           {o.label}
