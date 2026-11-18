@@ -1,11 +1,10 @@
 import type { TablesUpdate } from '@ab/db';
-import type { PaymentAttachmentView, PaymentWrite, PaymentUpdate, PaymentView } from '@ab/shared';
-import type { Page } from '@ab/shared';
+import type { PaymentAttachmentView, PaymentsPage, PaymentWrite, PaymentUpdate, PaymentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
 import { toPaymentView } from './payments.mapper';
-import { PaymentsRepo, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.repo';
+import { PaymentsRepo, type PaymentFilter, type PaymentRow } from './payments.repo';
 import { PaymentInputs } from './payment-inputs';
 import { notCancelled, precheckPayment, type Prechecked } from './payment-precheck';
 import { amountChange, writePayment } from './payment-amount-edit';
@@ -25,7 +24,7 @@ export class PaymentsService {
   ) {}
 
   /** P1 plus the filter's totals per currency (net of refunds). */
-  async list(f: PaymentFilter): Promise<Page<PaymentView> & { totals: PeriodTotal[] }> {
+  async list(f: PaymentFilter): Promise<PaymentsPage> {
     const [page, totals] = await Promise.all([this.payments.list(f), this.payments.totals(f)]);
     return { ...page, items: await this.views(page.items), totals };
   }

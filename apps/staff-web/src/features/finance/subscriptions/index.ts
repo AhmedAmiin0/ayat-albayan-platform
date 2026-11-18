@@ -52,7 +52,6 @@ export {
   parseMonthSearch,
   parsePage,
   parseSubscriptionsSearch,
-  type SubscriptionFilter,
   subscriptionsTable,
   type SubscriptionsUrlSearch,
 } from './search';

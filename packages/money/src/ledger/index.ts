@@ -22,5 +22,6 @@ export * from './dashboard-work.js';
 export type * from './earnings/earnings-views.js';
 export type * from './expense-views.js';
 export type * from './views.js';
+export type * from './payments/payments-page.js';
 export type * from './family-views.js';
 export * from './edit/payment-amount.js';

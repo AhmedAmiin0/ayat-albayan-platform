@@ -19,7 +19,6 @@ export {
   type PaymentRow,
   PaymentsRepo,
   type PaymentSubscription,
-  type PeriodTotal,
 } from './payments.repo';
 export { PaymentsService } from './payments.service';
 export { PaymentsSettings, type PaymentsSettingsValues } from './payments.settings';

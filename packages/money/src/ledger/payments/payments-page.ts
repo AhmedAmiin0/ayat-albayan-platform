@@ -1,6 +1,7 @@
-import type { Page, PaymentView } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { PaymentView } from '../views.js';
 
-/** One currency's net on GET /payments (payments minus refunds), as apps/api returns it. */
+/** One currency's net on GET /payments (payments minus refunds). */
 export interface PeriodTotal {
   currency: string;
   net: number;

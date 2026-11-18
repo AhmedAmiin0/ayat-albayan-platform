@@ -4,6 +4,7 @@ import {
   receiptUploadSchema,
   uploadMaxBytes,
   type PaymentAttachmentView,
+  type PaymentsPage,
   type PaymentView,
   type SignedDownload,
   type SignedUpload,
@@ -14,11 +15,9 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow, sentOnly } from '@/common/http/http';
 import { paymentFilter, paymentListQuery } from './payments.dto';
-import type { PeriodTotal } from './payments.repo';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
 import { ReceiptsService } from './attachments/receipts.service';
-import type { Page } from '@ab/shared';
 
 /** Payments + receipts (P1–P7, R-PAY-01, R-MOB-02). Admin only. */
 @ApiTags('payments')
@@ -34,7 +33,7 @@ export class PaymentsController {
 
   @Get()
   @Permissions('payments.read')
-  async list(@Query() query: unknown): Promise<Page<PaymentView> & { totals: PeriodTotal[] }> {
+  async list(@Query() query: unknown): Promise<PaymentsPage> {
     const { academy_timezone: tz } = await this.settings.read();
     return this.payments.list(paymentFilter(parseOrThrow(paymentListQuery, query), tz));
   }

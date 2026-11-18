@@ -1,4 +1,5 @@
 import type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/shared';
+import type { SessionFilter } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -6,8 +7,6 @@ import { earningsBase, type EarningsScope } from '@/earnings/lib/scope';
 
 // Per-session teacher earnings reads (docs/11 §10). Keys are the API path's segments, so
 // ['teacher-earnings', teacherId] reaches the balance, the sessions and the payments of a teacher.
-
-export type SessionFilter = 'all' | 'unpaid' | 'paid';
 
 export function useEarningsBalance(scope: EarningsScope) {
   const path = earningsBase(scope);
