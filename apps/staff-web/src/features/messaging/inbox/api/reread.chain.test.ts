@@ -10,7 +10,7 @@ import { threadQuery } from './thread-query';
 // stamps read_at and sends Meta a read receipt).
 
 const mockApiFetch = vi.fn();
-vi.mock('@/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args) as unknown,
 }));

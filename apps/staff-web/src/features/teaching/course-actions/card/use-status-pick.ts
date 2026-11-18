@@ -2,7 +2,7 @@ import { statusRoute, type StatusRoute } from '@ab/client-core';
 import type { CourseCardView, StudentStatus } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { courseCardQuery } from './api';
 
 /** The dialog a status pick opens: the pause, or the stop of the current package. */

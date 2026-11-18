@@ -1,7 +1,7 @@
 import { formatPhone, type NumberView } from '@ab/shared';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { EvolutionStatus } from '@/features/messaging/numbers/evolution/EvolutionStatus';
 import { FallbackRankField } from '@/features/messaging/numbers/form/FallbackRankField';
 import { NumberActions } from './NumberActions';

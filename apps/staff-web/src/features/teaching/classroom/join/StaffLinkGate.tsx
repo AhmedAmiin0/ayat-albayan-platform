@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, type ReactNode } from 'react';
-import { meQuery, type Me } from '@/features/people/auth/me';
-import { t } from '@/lib/i18n/i18n';
+import { meQuery, type Me } from '@ab/web-kit/auth/me';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { isStaffRole } from './staff-link';
 
 interface Props {

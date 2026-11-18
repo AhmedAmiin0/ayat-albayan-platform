@@ -1,5 +1,5 @@
 import { amountFromStripe, parseAmount, type PaymentKind, type PaymentMethod } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** What the dialog says of the payment: its amount, currency and student. */
 export interface AmountTarget {

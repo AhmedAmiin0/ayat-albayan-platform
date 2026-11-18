@@ -1,8 +1,8 @@
 import { lessonWhenAt } from '@ab/shared';
-import { Icon } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** «حجز من فجوة فاضية · السبت 15:00»: the gap clicked on the calendar, kept in sight on every step. */
 export function GapChip({ startsAt }: { startsAt: string }) {

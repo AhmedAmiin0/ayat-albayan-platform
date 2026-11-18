@@ -1,12 +1,12 @@
 import type { SavedReply } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Icon } from '@/components/ui/display/icon';
-import { IconButton } from '@/components/ui/form/icon-button';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
 import { moveReply, refreshReplies, replyErrorText, SAVED_REPLIES_KEY } from '@/features/messaging/inbox/saved-replies/lib/api';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { CELL, TH } from '@/features/platform/settings/pages/communications/overview/overview-table';
 
 const S = t.savedReplies;

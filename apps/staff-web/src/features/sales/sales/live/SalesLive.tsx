@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { PageHead } from '@/components/ui/layout/page';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { AssistantLessonRow } from '@/features/teaching/classroom/sessions/AssistantLessonRow';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
 /**

@@ -1,7 +1,7 @@
 import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { Page } from '@/features/finance/subscriptions';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
 export type SubscriptionKind = 'pending' | 'confirmed';
 

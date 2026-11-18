@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { AnchorHarness } from '@/features/messaging/inbox/testing/anchor-harness';
@@ -8,7 +8,7 @@ import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane';
 import { id, NEW, OLD, PATH, routeChat, stubLayout } from '@/features/messaging/inbox/testing/chat-search-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
 }));

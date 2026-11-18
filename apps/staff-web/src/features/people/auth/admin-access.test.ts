@@ -1,7 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { adminRedirect, firstAllowedPage, pagePermission } from './admin-access';
-import { canDo, type Me } from './me';
+import { canDo, type Me } from '@ab/web-kit/auth/me';
 
 const me = (...permissions: Permission[]): Me => ({ id: 'u1', email: null, role: 'admin', permissions });
 

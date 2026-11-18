@@ -1,6 +1,6 @@
 import { reportStage } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
-import { useNow } from '@/lib/time/use-now';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { REPORT_STAGE_LABEL, reportFormHref } from '@/features/reporting/reports/paths';
 import { ReportLink } from './ReportLink';
 

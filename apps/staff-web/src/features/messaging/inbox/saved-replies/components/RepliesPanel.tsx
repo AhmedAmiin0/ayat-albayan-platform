@@ -1,7 +1,7 @@
 import type { SavedReply } from '@ab/shared';
 import { useRef } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MineActions } from './MineActions';
 import { PanelHead } from '@/features/messaging/inbox/saved-replies/panel/PanelHead';
 import { ReplyOptions } from './ReplyOptions';

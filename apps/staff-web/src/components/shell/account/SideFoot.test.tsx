@@ -6,11 +6,11 @@ import { SideFoot } from './SideFoot';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn(() => Promise.reject(new Error('offline'))));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 vi.mock('./LogoutButton', () => ({ LogoutButton: () => <button type="button">out</button> }));
-vi.mock('./LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));
-vi.mock('@/components/ui/layout/theme-toggle', () => ({ ThemeToggle: () => <button type="button">theme</button> }));
+vi.mock('@ab/web-kit/components/shell/LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));
+vi.mock('@ab/web-kit/components/ui/layout/theme-toggle', () => ({ ThemeToggle: () => <button type="button">theme</button> }));
 
 // The «حسابي» chip reads ['me','profile']; here it fails, and the foot still shows the email.
 const render = (ui: ReactElement) =>

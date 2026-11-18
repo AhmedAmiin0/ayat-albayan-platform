@@ -1,6 +1,6 @@
 import { safeHttpUrl, type SalesScheduleLesson } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { usePlatformClassroom } from '@/lib/settings/public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
 import { LinkActions } from './LinkActions';
 
 /**

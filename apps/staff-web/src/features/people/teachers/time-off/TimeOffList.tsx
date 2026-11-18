@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Icon } from '@/components/ui/display/icon';
-import { IconButton } from '@/components/ui/form/icon-button';
-import { apiSend } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { apiSend } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { timeOffQuery } from '@/features/people/teachers/api';
 import { TimeOffDialog } from './TimeOffDialog';
 import { formatTimeOff } from './time-off';
-import { useClock } from '@/lib/clock';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 /**
  * «الإجازات» panel (docs/07 §8): date span, reason, delete; add opens a dialog. R-TCH-02.

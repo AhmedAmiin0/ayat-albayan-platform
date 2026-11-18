@@ -1,5 +1,5 @@
 import type { StudentListKind } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The board's segments (docs/46 D4, docs/48). docs/47 PR2 adds «موقوفون مؤقتًا» as a fourth
 // segment: widen BoardSegment and add one entry to each lookup below.

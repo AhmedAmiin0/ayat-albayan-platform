@@ -1,6 +1,6 @@
 import type { SettingKey } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useValues } from '@/features/platform/settings/values/values-context';
 import type { RowIds } from './editor-props';
 

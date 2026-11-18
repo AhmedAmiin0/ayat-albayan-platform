@@ -1,6 +1,6 @@
 import type { SubscriptionBadge } from '@ab/shared';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { badgeStyle } from './subscription';
 
 /** «مشترك» / «اشتراكه خلص» / «مش مشترك» (docs/07 §6 nuqta chip). */

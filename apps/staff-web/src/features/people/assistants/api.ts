@@ -12,7 +12,7 @@ import {
   type SignedUpload,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // apps/api assistant-pay module (owner, 2026-10-06; the salesperson, «مسؤول/ة المبيعات», is the base role sales). Reads need

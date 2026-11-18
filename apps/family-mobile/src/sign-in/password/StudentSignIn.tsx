@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, ForgotPassword, PasswordSignIn, t } from '@ab/mobile-kit';
 import { feel } from '@/sign-in/feedback';
-import { checkStudentCode } from './student-code';
+import { studentCodeOnTrack } from '@ab/client-core';
 
 /** password: student code + password; family (forgot) / firstTime: a code to the guardian. */
 type StudentView = 'password' | 'family' | 'firstTime';
@@ -21,7 +21,7 @@ export function StudentSignIn({ codes }: { codes: boolean }) {
       <PasswordSignIn
         label={t.familyApp.signIn.studentCode}
         hint={t.familyAuth.studentUsernameHint}
-        check={checkStudentCode}
+        check={(typed) => (studentCodeOnTrack(typed) ? null : t.familyApp.signIn.studentCodeBad)}
         onResult={(ok) => feel(ok ? null : 'refused')}
       >
         {codes ? (

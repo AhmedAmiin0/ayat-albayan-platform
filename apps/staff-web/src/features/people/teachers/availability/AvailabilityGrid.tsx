@@ -1,9 +1,9 @@
 import type { AvailabilitySlot } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Toast } from '@/components/ui/overlay/toast';
-import { apiSend } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { apiSend } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { availabilityQuery, type AvailabilityRow } from '@/features/people/teachers/api';
 import { AvailabilityFoot } from './AvailabilityFoot';
 import { AvailabilityHead } from './AvailabilityHead';

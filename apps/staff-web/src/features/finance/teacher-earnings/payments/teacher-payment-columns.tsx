@@ -1,10 +1,10 @@
 import { PAYMENT_METHODS, type TeacherPaymentView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/button';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const col = createColumnHelper<DataTableFeatures, TeacherPaymentView>();
 

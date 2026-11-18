@@ -4,12 +4,12 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { ApiError } from '@/lib/http/api';
+import { ApiError } from '@ab/web-kit/lib/http/api';
 import { useTeacherCancel } from './use-teacher-cancel';
 import { useTeacherConfirm } from './use-teacher-confirm';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiSend,
 }));

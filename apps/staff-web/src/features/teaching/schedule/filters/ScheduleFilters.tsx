@@ -1,8 +1,8 @@
 import { GENDERS, LESSON_STATUSES, PROGRAMS, type OverviewTeacher } from '@ab/shared';
 import { CheckboxFilterField, SelectFilterField } from '@/components/table-toolbar/fields';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
-import { t } from '@/lib/i18n/i18n';
-import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 import { CLEAR_SCHEDULE_FILTERS, scheduleChips } from './schedule-filters';
 import type { ScheduleSearch } from './search';
 import { TeacherPicker } from './TeacherPicker';

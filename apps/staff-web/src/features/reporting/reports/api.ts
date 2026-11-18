@@ -13,8 +13,8 @@ import type {
 } from '@ab/shared';
 import { reportErrorWords, TEACHER_REFRESH_MS } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // Report routes (docs/11 §4 R1–R12). Commands camelCase, responses snake_case.

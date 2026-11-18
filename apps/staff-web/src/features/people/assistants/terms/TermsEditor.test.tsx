@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ASSISTANT } from '@/features/people/assistants/fixtures';
 import { TermsEditor } from './TermsEditor';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
 const T = t.assistants.terms;
 const empty = { ...ASSISTANT, terms: { assistant_id: 'a1', salary: null, commission: null, renewal_share_percent: 50 } };

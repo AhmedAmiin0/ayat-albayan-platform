@@ -1,9 +1,9 @@
 import { ATTACHMENT_MIMES, attachmentUploadSchema, type ReportAttachmentView } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { reportErrorText } from '@/features/reporting/reports/api';
 import { useReportApi } from '@/features/reporting/reports/report-api';
 

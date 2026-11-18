@@ -3,7 +3,7 @@ import { formatDate } from '@/features/sales/leads';
 import { paymentsQuery } from '@/features/finance/payments/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * «المدفوعات» on the student's profile: every payment and refund of the student's packages, newest

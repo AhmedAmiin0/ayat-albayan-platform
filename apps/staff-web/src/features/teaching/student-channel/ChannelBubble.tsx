@@ -1,8 +1,8 @@
 import { channelTimeText } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { cn } from '@ab/web-kit/lib/utils';
 import type { ChannelRef } from './api';
 import { ChannelBubbleMenu } from './edit/ChannelBubbleMenu';
 import { ChannelDeleteDialog } from './edit/ChannelDeleteDialog';

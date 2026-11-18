@@ -1,9 +1,9 @@
 import type { StopDone } from '@ab/client-core';
 import { Link } from '@tanstack/react-router';
-import { Button, buttonVariants } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import type { BookingMode } from '@/features/teaching/booking';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The guardian's chat in the viewer's own inbox. */
 export interface StopChat {

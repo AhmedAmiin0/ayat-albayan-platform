@@ -7,7 +7,7 @@ import {
   type TeacherCourseView,
 } from '@ab/shared';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // What «ملف الطالب» says about the course (docs/47 owner call 1): its start, how it ends, and the
 // lessons used. Dates only, never money; the word is «الدورة», never «الباقة».

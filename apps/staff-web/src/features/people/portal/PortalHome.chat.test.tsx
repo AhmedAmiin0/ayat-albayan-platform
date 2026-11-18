@@ -1,13 +1,13 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { home, kid } from './portal.fixtures';
-import { portalApi, type Answers } from './portal.api-fixture';
-import { renderPortal } from './portal.render';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
+import { portalApi, type Answers } from '@ab/web-kit/portal/portal.api-fixture';
+import { renderPortal } from '@ab/web-kit/portal/portal.render';
 import { PortalHome } from './PortalHome';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const ON: Answers = { settings: { family_chat_enabled: true }, unread: { unread: 3 } };
 const self = home({ kind: 'student', students: [kid({ contact_is_self: true })] });

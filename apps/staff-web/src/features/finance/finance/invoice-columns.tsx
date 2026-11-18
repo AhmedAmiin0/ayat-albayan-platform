@@ -1,8 +1,8 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/button';
 import { formatDate } from '@/features/sales/leads';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InvoiceView } from './api';
 
 const col = createColumnHelper<DataTableFeatures, InvoiceView>();

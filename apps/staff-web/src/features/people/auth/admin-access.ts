@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/shared';
-import { canDo, type Me } from './me';
+import { canDo, type Me } from '@ab/web-kit/auth/me';
 
 // Which permission each /admin page needs (dynamic roles, 2026-10-05). The base role still decides
 // who gets /admin at all (requireRole('admin')); inside, a custom role (e.g. «محاسب» with

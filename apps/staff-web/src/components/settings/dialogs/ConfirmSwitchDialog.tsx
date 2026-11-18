@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface ConfirmSwitchProps {
   title: string;

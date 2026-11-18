@@ -1,5 +1,5 @@
 import type { UserRole } from '@ab/shared';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
 
 const STAFF: ReadonlySet<UserRole> = new Set<UserRole>(['admin', 'teacher', 'assistant', 'sales']);
 

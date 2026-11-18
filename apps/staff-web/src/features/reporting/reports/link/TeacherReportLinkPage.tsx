@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { Logo } from '@/components/ui/display/mark';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n/i18n';
+import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Logo } from '@ab/web-kit/components/ui/display/mark';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { linkProblem, linkReportFormQuery } from './link-api';
 import { LinkProblemAlert } from './LinkProblemAlert';
 import { LinkReportEntries } from './LinkReportEntries';

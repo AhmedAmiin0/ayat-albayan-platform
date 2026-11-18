@@ -9,7 +9,7 @@ import {
   type Program,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { BOOKING_KINDS, type BookingBody, type BookingKind } from './draft/contract';
 import { bookingBase, type BookingMode } from './mode';
 

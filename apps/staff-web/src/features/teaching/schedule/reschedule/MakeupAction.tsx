@@ -1,11 +1,11 @@
 import { type LessonView, lessonWhenAt, makeupOffer } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@/components/ui/form/button';
-import { ButtonRow } from '@/components/ui/layout/button-row';
-import { t } from '@/lib/i18n/i18n';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { usePublicConfig } from '@/lib/settings/public-config';
-import { useClock } from '@/lib/clock';
+import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 /**
  * «حجز تعويضي» on a missed lesson (R-SCH-10): opens the booking wizard for that student with the

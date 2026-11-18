@@ -176,6 +176,9 @@ jobs:
           node-version-file: .nvmrc
       - uses: ./.github/actions/pnpm-store
 
+      # Both web apps (docs/51): the staff app (app.) and the family app (family.), same VITE_* values.
+      # VITE_FAMILY_ORIGIN (a repository variable, unset until the owner's go-live) turns on the staff app's
+      # redirect of families to the family host; unset = no redirect, so this deploys before the host exists.
       - name: Build the web app
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
@@ -186,15 +189,27 @@ jobs:
           # when GET /stripe/feature says so («الدفع الإلكتروني» on and both keys saved); without the API's
           # FEATURE_STRIPE that route is 404 and nothing shows.
           VITE_FEATURE_STRIPE: "1"
+          VITE_FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
+          # The family app's «wrongApp» link for a staff account.
+          VITE_STAFF_ORIGIN: ${{ vars.VITE_STAFF_ORIGIN || 'https://app.ayatalbayan.com' }}
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
+          # family-web's workspace dependencies are a subset of staff-web's (client-core, shared, web-kit).
           pnpm --filter "staff-web^..." build >/dev/null
           pnpm --filter staff-web build
+          pnpm --filter family-web build
       - uses: actions/upload-artifact@v4
         with:
           name: staff-web-dist
           path: apps/staff-web/dist
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: family-web-dist
+          path: apps/family-web/dist
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 1
@@ -243,6 +258,12 @@ jobs:
         with:
           name: staff-web-dist
           path: apps/staff-web/dist
+      - name: The family web app built by job «web»
+        if: ${{ !inputs.env_only }}
+        uses: actions/download-artifact@v4
+        with:
+          name: family-web-dist
+          path: apps/family-web/dist
 
       - name: SSH key
         env:
@@ -363,6 +384,38 @@ jobs:
           ssh target "cd $DEST && flock -n -E 75 .deploy.lock sh -c 'if [ -f roll.sh ] && grep -q ayat-lb roll.sh && grep -q \"^  ayat-lb:\" docker-compose.yml; then sh roll.sh --env-only; \
             else docker compose up -d --force-recreate --remove-orphans; fi'"
 
+      # The family app first (docs/51 §4): $DEST/family, its own atomic swap and family.old for the roll back. The
+      # host's Caddy serves it once the owner adds the family site. Nothing is uploaded before go-live
+      # (VITE_FAMILY_ORIGIN unset), so the server is untouched until then.
+      - name: Upload the family web app (atomic swap)
+        id: family
+        if: ${{ !inputs.env_only && vars.VITE_FAMILY_ORIGIN != '' }}
+        run: |
+          ssh target "rm -rf $DEST/family.new && mkdir -p $DEST/family.new"
+          tar -C apps/family-web/dist -cf - . | ssh target "tar --no-same-owner -x -C $DEST/family.new && chmod -R o+rX $DEST/family.new \
+            && rm -rf $DEST/family.old && { [ ! -d $DEST/family ] || mv $DEST/family $DEST/family.old; } && mv $DEST/family.new $DEST/family"
+
+      # Only once VITE_FAMILY_ORIGIN is set (the go-live): the family host answers, and the server's WEB_ORIGIN
+      # lists it (its API calls pass CORS), BEFORE the staff build that redirects families there goes live. Unset:
+      # skipped, so every deploy stays green without the family site.
+      - name: Family host check
+        id: family_check
+        if: ${{ !inputs.env_only && vars.VITE_FAMILY_ORIGIN != '' }}
+        env:
+          FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
+        run: |
+          origin="${FAMILY_ORIGIN%/}"
+          curl -fsS --retry 10 --retry-delay 5 --retry-all-errors -o /dev/null "$origin/portal"
+          ssh target "grep -E '^WEB_ORIGIN=' $DEST/.env" | grep -qF "$origin" \
+            || { echo "::error::the server WEB_ORIGIN does not list $origin: add it (app. first) before setting VITE_FAMILY_ORIGIN"; exit 1; }
+          echo "family host is up"
+
+      - name: Put the previous family web app back
+        if: ${{ failure() && steps.family_check.outcome == 'failure' }}
+        run: |
+          ssh target "cd $DEST && { [ ! -d family.old ] || { rm -rf family.bad && mv family family.bad && mv family.old family; }; }"
+          echo "::error::the family host check failed: the previous family build is back (bad one in family.bad); the staff app was not swapped"
+
       - name: Upload the web app (atomic swap)
         id: web
         if: ${{ !inputs.env_only }}
@@ -389,11 +442,15 @@ jobs:
         if: ${{ failure() && steps.roll.outcome == 'success' && steps.health.outcome == 'failure' && !inputs.env_only }}
         env:
           WEB_SWAPPED: ${{ steps.web.outcome == 'success' || steps.web.outcome == 'failure' }}
+          FAMILY_SWAPPED: ${{ steps.family.outcome == 'success' || steps.family.outcome == 'failure' }}
         run: |
           # Detached like the roll (setsid, output in .deploy.log): an ssh drop or a cancel never stops it halfway.
           ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh rollback.sh > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc"
           if [ "$WEB_SWAPPED" = "true" ]; then
             ssh target "cd $DEST && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; }"
+          fi
+          if [ "$FAMILY_SWAPPED" = "true" ]; then
+            ssh target "cd $DEST && { [ ! -d family.old ] || { rm -rf family.bad && mv family family.bad && mv family.old family; }; }"
           fi
           echo "::error::staging failed its health check: rolled back to the previous version (bad build kept in src.bad / web.bad)"
 
@@ -401,6 +458,7 @@ jobs:
         if: always()
         env:
           API_URL: ${{ vars.API_URL }}
+          FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
         run: |
           {
             echo "### Staging deploy: ${{ job.status }}"
@@ -410,6 +468,7 @@ jobs:
             echo "| Commit | \`$(git rev-parse --short HEAD)\` $(git log -1 --format=%s | head -c 90) |"
             echo "| Trigger | ${{ github.event_name }} |"
             echo "| Web | https://app.ayatalbayan.com |"
+            echo "| Family web | ${FAMILY_ORIGIN:-not live yet (\`$DEST/family\`)} |"
             echo "| API | ${API_URL:-https://api.ayatalbayan.com}/health |"
           } >> "$GITHUB_STEP_SUMMARY"
 

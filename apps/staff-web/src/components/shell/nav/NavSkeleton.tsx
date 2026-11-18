@@ -1,6 +1,6 @@
-import { Skeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface NavSkeletonProps {
   /** `column`: the admin sidebar; `row`: the teacher and sales top bar. */

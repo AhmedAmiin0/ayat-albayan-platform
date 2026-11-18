@@ -1,6 +1,6 @@
 import { teacherPageOn, withPublicDefaults, type TeacherPage } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { publicConfigQuery, usePublicConfig } from './public-config';
+import { publicConfigQuery, usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 
 // The teacher page switches (owner 2026-11-13, settings «صفحات المعلم»): UI only; admin, sales and
 // assistant screens never read them.

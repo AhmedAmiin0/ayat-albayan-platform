@@ -1,10 +1,10 @@
 import { normalizePhone, type Gender } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { leadByPhoneQuery, type InboxLead } from '@/features/messaging/inbox/api/api';
 import { studentQuery } from '@/features/people/students/api';
 import type { StudentProfile } from '@/features/people/students/types';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { guardianQuery, type BookSearch, type GuardianRow } from './api';
 import { BookingWizard, type BookingWizardProps } from './BookingWizard';
 import { emptyDraft, type BookingDraft } from './draft/draft';

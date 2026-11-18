@@ -9,11 +9,11 @@ import {
   type SignedUpload,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // apps/api/src/modules/expenses (docs/11 §9 + §13, R-RPT-02, issue E4).
 export type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/shared';

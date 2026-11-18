@@ -67,7 +67,7 @@ export {
   uploadReplyFile,
 } from './saved-replies/lib/api';
 export { useReplyDialogs } from './saved-replies/hooks/use-reply-dialogs';
-export { clearTabMemories } from './shared/tab-memory';
+export { clearTabMemories, rememberUntilSessionEnd } from './shared/tab-memory';
 export { BUBBLE_ROW } from './messages/lib/bubble-side';
 export { getDraft, keptFailed, setDraft } from './composer/lib/draft-store';
 export { fillComposer } from './saved-replies/lib/filter';

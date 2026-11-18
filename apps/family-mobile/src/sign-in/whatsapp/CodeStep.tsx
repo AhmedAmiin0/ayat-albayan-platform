@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { AppText, AuthAlert, Button, ltr, ResendButton, t, type, useTheme } from '@ab/mobile-kit';
 import { progressIcon } from '@/sign-in/progress';
 import { CodeBoxes } from './CodeBoxes';
-import { isWholeCode } from './code-digits';
+import { isWholeCode } from '@ab/client-core';
 import type { WhatsAppSignIn } from './use-whatsapp-sign-in';
 
 /**

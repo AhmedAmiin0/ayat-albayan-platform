@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Icon } from '@/components/ui/display/icon';
-import { Button, buttonVariants } from '@/components/ui/form/button';
-import { ButtonRow } from '@/components/ui/layout/button-row';
-import { t } from '@/lib/i18n/i18n';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const L = t.studentLists;
 

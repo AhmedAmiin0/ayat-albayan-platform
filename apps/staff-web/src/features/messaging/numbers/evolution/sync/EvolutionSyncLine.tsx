@@ -1,8 +1,8 @@
 import type { EvolutionSyncView } from '@ab/shared';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads';
-import { useClock } from '@/lib/clock';
-import { t } from '@/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SYNC_STATE_STYLE, SYNC_WORD_STYLE, syncPartsOf, syncWordOf } from './sync-words';
 
 const s = t.numbers.evolution.sync;

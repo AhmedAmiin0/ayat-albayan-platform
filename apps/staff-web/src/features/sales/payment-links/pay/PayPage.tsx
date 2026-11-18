@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { Logo } from '@/components/ui/display/mark';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Logo } from '@ab/web-kit/components/ui/display/mark';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { publicLinkQuery } from '@/features/sales/payment-links/api';
 import { PayDetails } from './PayDetails';
 import { PayTestNotice } from './PayTestNotice';

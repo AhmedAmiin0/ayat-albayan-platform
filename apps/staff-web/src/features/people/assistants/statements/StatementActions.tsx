@@ -1,6 +1,6 @@
 import { statementActions, type StatementAction, type StatementCan } from '@ab/client-core';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 
 export type { StatementAction, StatementCan };

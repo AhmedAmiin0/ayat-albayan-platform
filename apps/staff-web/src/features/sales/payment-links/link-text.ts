@@ -1,6 +1,6 @@
 import { formatAmount, type PaymentLinkView } from '@ab/shared';
 import { currencySymbol } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** A paymentLinks string with its `{name}` slots filled. */
 export function fillText(template: string, values: Record<string, string | number>): string {

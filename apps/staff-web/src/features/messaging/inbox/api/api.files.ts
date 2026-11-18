@@ -10,7 +10,7 @@ import {
 } from '@ab/shared';
 import { pdfPageRetryable } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // D2 (owner 2026-10-19 #2): staff send an image or PDF inside the 24 h window. The file goes to

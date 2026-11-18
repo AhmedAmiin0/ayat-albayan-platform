@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/form/button';
-import { HeadActions } from '@/components/ui/layout/head-actions';
-import { Icon } from '@/components/ui/display/icon';
-import { Toast } from '@/components/ui/overlay/toast';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * The dashboard's quick actions (owner, 2026-10-05): «اجتماع جديد» (the one primary), «إضافة طالب»

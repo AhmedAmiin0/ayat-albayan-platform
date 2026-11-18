@@ -1,6 +1,6 @@
 import type { ChannelPage } from '@ab/shared';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n/i18n';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { ChannelRef } from './api';
 import { ChannelLoadFailed } from './thread/ChannelLoadFailed';
 import { ClosedChannel } from './thread/ClosedChannel';

@@ -1,12 +1,12 @@
 import { effectiveLinkStatus, PAYMENT_LINK_KINDS, type Glyph, type PaymentLinkStatus, type PaymentLinkView, type Tone } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { Button } from '@/components/ui/form/button';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Amount } from '@/features/finance/subscriptions';
 import { formatDate } from '@/features/sales/leads';
 import { fillText } from '@/features/sales/payment-links';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StudentCell } from '@/features/sales/sales/money/StudentCell';
 
 const P = t.paymentLinks;

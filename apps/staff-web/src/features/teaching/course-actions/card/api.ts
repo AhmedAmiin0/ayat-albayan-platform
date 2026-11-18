@@ -10,7 +10,7 @@ import {
 } from '@ab/client-core';
 import type { CourseCardLesson, CourseExtendResult, LessonView } from '@ab/shared';
 import { queryOptions, useMutation } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';
 
 // «الدورة والباقة» (owner 2026-11-17): the card, «مدّ الجدول» and the resume's preview. Paths, keys

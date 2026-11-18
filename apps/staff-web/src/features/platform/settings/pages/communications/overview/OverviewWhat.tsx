@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router';
-import { Skeleton } from '@/components/ui/display/skeleton';
+import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { useCatalogue } from '@/features/messaging/notification-catalogue/use-catalogue';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { communicationsSearch } from '@/features/platform/settings/pages/page-search';
 import { audienceCounts } from './overview-counts';
 import { CELL, LINK, TH } from './overview-table';

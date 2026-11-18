@@ -6,7 +6,7 @@ import type {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { createContext, useContext } from 'react';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import type { BookingMode } from '@/features/teaching/booking/mode';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): the admin's /booking/course/change* and the assistant's

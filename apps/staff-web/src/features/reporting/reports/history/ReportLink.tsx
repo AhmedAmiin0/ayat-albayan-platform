@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router';
 import type { MouseEvent, ReactNode } from 'react';
-import { buttonVariants } from '@/components/ui/form/button';
-import { cn } from '@/lib/utils';
+import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface ReportLinkProps {
   href: string;

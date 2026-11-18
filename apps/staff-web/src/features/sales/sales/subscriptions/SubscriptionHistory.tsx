@@ -1,10 +1,10 @@
 import { currentPackage, type SalesHistoryEntry } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { EditStartDateAction, EditUsedBeforeAction } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { subscriptionHistoryQuery } from '@/features/sales/sales/academy-api';
 import { HistoryEntryCard } from './HistoryEntryCard';
 

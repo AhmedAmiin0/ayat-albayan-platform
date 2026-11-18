@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { GROUP_IDS, groupLabel, isOwnedGroup, type ValuesGroupId } from './lib/value-groups-view';
 
 const v = t.settingsValues;

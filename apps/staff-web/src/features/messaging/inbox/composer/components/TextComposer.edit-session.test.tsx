@@ -1,12 +1,12 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { clearTabMemories } from '@/features/messaging/inbox/shared/tab-memory';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { box, editBar, OWN, pickEdit, showChat } from '@/features/messaging/inbox/testing/correction-harness';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 // Follow-up to #694 (items 4, 6): a sent correction ends only the «تعديل» tap it came from, and
 // gives the box back the draft it held before that tap.

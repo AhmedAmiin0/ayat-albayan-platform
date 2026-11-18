@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@ab/web-kit/lib/utils';
 
 // One look for every row of «القيم» (about 52px, two lines at most; docs/26b §2).
 

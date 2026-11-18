@@ -1,5 +1,5 @@
 import { studentUpdateSchema, type Gender, type Program, type StudentStatus, type StudentUpdate } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { parseAge } from '@/features/people/students/create/create-student';
 import type { StudentProfile } from '@/features/people/students/types';
 

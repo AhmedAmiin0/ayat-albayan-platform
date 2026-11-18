@@ -4,11 +4,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@/lib/i18n/i18n';
-import { publicConfigQuery, usePublicConfig } from './public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { publicConfigQuery, usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 afterEach(() => apiFetch.mockReset());
 

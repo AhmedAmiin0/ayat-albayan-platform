@@ -1,9 +1,9 @@
 import type { ChatList } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { listErrorText, refreshLists, renameList } from '@/features/messaging/inbox/lists/lib/api';
 import { AutoListNote } from './AutoListNote';
 import { DeleteListDialog } from './DeleteListDialog';

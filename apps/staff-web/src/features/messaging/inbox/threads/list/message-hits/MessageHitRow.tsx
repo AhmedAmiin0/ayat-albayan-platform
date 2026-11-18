@@ -1,9 +1,9 @@
 import { formatPhone, type MessageSearchHit } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Avatar } from '@/components/ui/display/avatar';
-import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
 import { fullTime, listTime } from '@/features/messaging/inbox/format';
 import { showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { SearchMarks } from '@/features/messaging/inbox/search/SearchMarks';

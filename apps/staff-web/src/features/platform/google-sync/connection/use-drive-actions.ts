@@ -1,6 +1,6 @@
 import type { GoogleStatusView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { discoverGoogle, googleStatusQuery, putGoogleDrive } from '@/features/platform/google-sync/google-api';
 
 /** «ابحث في Google» and «تأكيد المجلد والجدول»: both answer the new status (teacher and student suggestions may change). */

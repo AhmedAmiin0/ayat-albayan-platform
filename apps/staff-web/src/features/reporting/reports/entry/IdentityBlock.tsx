@@ -1,10 +1,10 @@
 import { lessonWhenAt, packageProgress, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Ltr } from '@/components/ui/display/ltr';
-import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
-import { useClock } from '@/lib/clock';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (

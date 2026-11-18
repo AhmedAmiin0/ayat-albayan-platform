@@ -1,13 +1,13 @@
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { RequiredLegend } from '@/components/ui/form/label';
-import { PhonePreview } from '@/components/ui/form/phone-preview';
-import { TimeZoneSelect } from '@/components/ui/form/time-zone-select';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { RequiredLegend } from '@ab/web-kit/components/ui/form/label';
+import { PhonePreview } from '@ab/web-kit/components/ui/form/phone-preview';
+import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { SourceField } from '@/features/people/guardians/SourceField';
 import { ageError, phoneError } from '@/features/people/students/create/create-student';
 import { AgeField, GenderField } from '@/features/people/students/profile/FactFields';
 import { ContactIsSelfField } from '@/features/people/students';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { NewStudentDraft } from '@/features/teaching/booking/draft/draft';
 
 export interface LeadStudentStepProps {

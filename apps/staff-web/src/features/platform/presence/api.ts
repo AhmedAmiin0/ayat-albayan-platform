@@ -9,7 +9,7 @@ import {
 } from '@ab/client-core';
 import type { ChannelPresence, PresenceSelf, StaffPresence } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
 
 // Presence (docs/33): last seen from the API, online now from the socket (use-presence-watch).
 const MINUTE_MS = 60_000;

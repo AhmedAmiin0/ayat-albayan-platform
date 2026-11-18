@@ -1,11 +1,11 @@
 import { isOpenLesson, type LessonStatus } from '@ab/shared';
-import { Button, buttonVariants } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
-import { useJoinWindow } from '@/lib/settings/public-config';
-import { cn } from '@/lib/utils';
-import { useNow } from '@/lib/time/use-now';
-import { joinHint } from '@/features/teaching/classroom/room/livekit/window-hint';
-import { useClock } from '@/lib/clock';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';
+import { cn } from '@ab/web-kit/lib/utils';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { joinHint } from '@ab/web-kit/classroom/room/livekit/window-hint';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 export interface JoinableLesson {
   id: string;

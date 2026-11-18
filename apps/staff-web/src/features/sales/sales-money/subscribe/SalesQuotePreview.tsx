@@ -1,8 +1,8 @@
 import type { SubscriptionPricing } from '@ab/shared';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Bind } from '@/features/sales/sales-money/api';
 import { salesErrorText } from '@/features/sales/sales-money/errors';
 import { useSalesQuote } from './use-sales-quote';

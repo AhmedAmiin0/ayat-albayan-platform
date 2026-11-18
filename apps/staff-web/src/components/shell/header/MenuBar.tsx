@@ -1,9 +1,9 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { useState, type MouseEvent, type ReactNode } from 'react';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { Mark } from '@/components/ui/display/mark';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Mark } from '@ab/web-kit/components/ui/display/mark';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 import { MenuBell } from './MenuBell';
 import { MenuFoot } from '@/components/shell/account/MenuFoot';
 import { SheetBell } from './SheetBell';

@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { channelQuery, type ChannelRef } from '@/features/teaching/student-channel/api';
 import { useChannelLive } from '@/features/teaching/student-channel/use-channel-live';
-import { useNow } from '@/lib/time/use-now';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { useChannelSend } from './use-channel-send';
 import { useMarkRead } from './use-mark-read';
 

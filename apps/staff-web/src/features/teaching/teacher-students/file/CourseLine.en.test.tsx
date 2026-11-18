@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { CourseLine } from './CourseLine';
 import { COURSE } from './file-data';
 
-vi.mock('@/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
+vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 
 describe('CourseLine, English (docs/47)', () => {
   it('start, lessons left, the count and the every-teacher hint', () => {

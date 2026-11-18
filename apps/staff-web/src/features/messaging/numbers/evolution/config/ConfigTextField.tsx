@@ -1,5 +1,5 @@
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
 
 export interface ConfigTextFieldProps {
   label: string;

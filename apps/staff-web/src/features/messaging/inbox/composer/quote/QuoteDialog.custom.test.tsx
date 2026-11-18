@@ -4,15 +4,15 @@ import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
 import { currencySymbol } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { QuoteDialog } from './QuoteDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => new Set<string>());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/features/people/auth/use-permissions', () => ({
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [...granted], can: (p: string) => granted.has(p) }),
 }));
 

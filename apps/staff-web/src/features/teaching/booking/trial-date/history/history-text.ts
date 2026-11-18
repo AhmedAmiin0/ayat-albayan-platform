@@ -1,7 +1,7 @@
 import { lessonWhenAt, type TrialDateRow, zonedPartsIn } from '@ab/shared';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import type { Clock } from '@/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { Clock } from '@ab/web-kit/lib/clock';
 
 // The texts of one «مواعيد الحلقة التجريبية» row. The viewer reads their own clock (docs/34, as
 // pickedText and the calendar do); the family's own clock is added when it differs. Pure.

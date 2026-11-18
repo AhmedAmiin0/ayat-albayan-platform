@@ -1,8 +1,8 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { Icon } from '@/components/ui/display/icon';
-import { iconButtonClass } from '@/components/ui/form/icon-button';
-import { useDismiss } from '@/components/ui/overlay/use-dismiss';
-import { cn } from '@/lib/utils';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
+import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface RowMenuItem {
   id: string;

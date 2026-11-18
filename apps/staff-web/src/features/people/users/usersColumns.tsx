@@ -1,14 +1,14 @@
 import type { UserView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import { memo } from 'react';
-import { Avatar } from '@/components/ui/display/avatar';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads';
 import { TestChip } from '@/features/people/test-accounts';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, UserView>();
 

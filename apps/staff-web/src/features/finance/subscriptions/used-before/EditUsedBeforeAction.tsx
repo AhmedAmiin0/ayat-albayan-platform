@@ -1,9 +1,9 @@
 import { riyadhToday, usedBeforeEditOffered, type SubscriptionStatus } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Toast } from '@/components/ui/overlay/toast';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { usePermissions } from '@/features/people/auth';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { EditUsedBeforeDialog } from './EditUsedBeforeDialog';
 
 /** What the card knows of the package: enough to offer the edit (the dialog reads the rest). */

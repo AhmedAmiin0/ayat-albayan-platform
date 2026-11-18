@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Select } from '@/components/ui/form/select';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { assignRole, roleName, ROLES_KEY, type RoleView, type StaffUserView } from './api';
 
 const P = t.permissions.page;

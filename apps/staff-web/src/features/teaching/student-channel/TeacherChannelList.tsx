@@ -1,6 +1,6 @@
 import type { TeacherChannelRow } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
 
 interface Props {
   rows: TeacherChannelRow[];

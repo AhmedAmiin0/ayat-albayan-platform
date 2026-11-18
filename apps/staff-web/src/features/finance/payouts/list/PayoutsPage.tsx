@@ -2,17 +2,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { PageHead } from '@/components/ui/layout/page';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { downloadCsv } from '@/features/reporting/exports/api';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import {
   approvePayout,
   currentMonth,

@@ -1,12 +1,12 @@
 import { type LessonView, lessonWhenAt } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { proposalsQuery } from '@/features/teaching/schedule/api';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
-import { type Clock, useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { type Clock, useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { RequesterTag } from './RequesterTag';
 
 /** The viewer's time; `clock.tz` is the viewer's zone (useViewerTz()). */

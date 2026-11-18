@@ -34,7 +34,7 @@ const rt = vi.hoisted(() => {
   };
   return { hooks, supabase };
 });
-vi.mock('@/lib/http/supabase', () => ({ supabase: rt.supabase }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: rt.supabase }));
 
 const ids = Array.from({ length: 20 }, (_, i) => `m${i}`);
 /** GET /threads: a slow server (1 s per read), every row's last message still ✓. */

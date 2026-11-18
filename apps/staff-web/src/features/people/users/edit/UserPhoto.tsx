@@ -1,5 +1,5 @@
 import type { UserDetail } from '@ab/shared';
-import { Avatar } from '@/components/ui/display/avatar';
+import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { StaffPhotoControl } from '@/features/people/staff-photo';
 
 /** Students and guardians never get a photo (owner 2026-10-28: initials only; the API says avatar_not_staff). */

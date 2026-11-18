@@ -1,7 +1,7 @@
 import { canPickTrialDate, type Gender } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { usePermissions } from '@/features/people/auth/use-permissions';
+import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import type { StudentProfile } from '@/features/people/students/types';
 import { trialHistoryQuery } from './api';
 import { TrialDateButton } from './TrialDateButton';

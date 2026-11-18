@@ -12,7 +12,7 @@ import type {
   SubscriptionView,
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 
 // apps/api/src/modules/subscriptions (docs/11 §6). The client never prices: the price shown and

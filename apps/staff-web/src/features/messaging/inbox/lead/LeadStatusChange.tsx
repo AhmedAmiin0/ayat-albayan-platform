@@ -1,10 +1,10 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Select } from '@/components/ui/form/select';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { errorCode } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { changeLeadStatus, type InboxLead } from '@/features/messaging/inbox/api/api';
 
 export interface LeadStatusChangeProps {

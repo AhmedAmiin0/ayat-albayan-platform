@@ -15,8 +15,8 @@ import {
 } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { meQuery } from '@/features/people/auth';
-import { apiFetch, apiSend, type SendMethod } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { apiFetch, apiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // /people/* (owner 2026-11-02): «تعديل البيانات», «ربط بولي أمر آخر» and «تحويل», for the assistant
 // and the admin (people.edit, students.attach_guardian, people.switch_role).

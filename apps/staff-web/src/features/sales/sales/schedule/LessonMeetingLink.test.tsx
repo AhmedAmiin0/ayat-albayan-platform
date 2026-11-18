@@ -2,13 +2,13 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import { publicConfigQuery } from '@/lib/settings/public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { scheduleLesson } from '@/features/sales/sales/academy.fixtures';
 import { LessonMeetingLink } from './LessonMeetingLink';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const LINK = 'https://meet.example.org/room-with-a-long-name?pwd=abc';
 const L = t.studentLists;

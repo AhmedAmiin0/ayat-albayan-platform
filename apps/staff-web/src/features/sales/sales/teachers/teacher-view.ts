@@ -1,6 +1,6 @@
 import { zonedWhenText, type ClockCycle, type SalesTeacherFilter, type SalesTeacherView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // «المعلمون» (sales, owner report 2026-10-12). The filter rules live in @ab/shared (the mobile screen
 // uses the same ones); here: the web's names for them and the viewer's time of a next lesson.

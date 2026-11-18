@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Select } from '@/components/ui/form/select';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { assignLead, salesPeopleQuery } from '@/features/sales/sales/api';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { LeadRow } from '@/features/sales/leads/types';
 
 /** «مسؤول المبيعات» of one lead: the salespeople from GET /sales/people, or «من غير مسؤول». */

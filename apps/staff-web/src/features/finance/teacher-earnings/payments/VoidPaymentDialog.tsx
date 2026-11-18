@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { voidTeacherPayment, type TeacherPaymentView } from '@/features/finance/teacher-earnings/api';
 
 /**

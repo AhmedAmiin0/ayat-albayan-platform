@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@ab/web-kit/lib/utils';
 
 interface Props {
   online: boolean;

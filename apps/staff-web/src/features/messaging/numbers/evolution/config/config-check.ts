@@ -1,6 +1,6 @@
 import { evolutionConfigSchema, type EvolutionConfig, type EvolutionMode } from '@ab/shared';
 import { z } from 'zod';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { ConfigDraft, ConfigErrors } from './config-draft';
 
 const c = t.numbers.evolution.config;

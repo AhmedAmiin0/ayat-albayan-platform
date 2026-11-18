@@ -1,0 +1,54 @@
+import type { ReactNode } from 'react';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusNote } from '@ab/web-kit/auth/login/StatusNote';
+import { CodeBoxes } from './CodeBoxes';
+import type { CodeFlow } from './use-code-flow';
+
+interface Props {
+  flow: CodeFlow;
+  submitLabel: string;
+  busyLabel: string;
+  onSubmit: () => void;
+  /** «غيّر الرقم» / «رجوع»: back to the first step. */
+  backLabel: string;
+  /** Fields between the code and the submit button (the new password). */
+  children?: ReactNode;
+  /** Above the boxes instead of «إن كان الحساب موجودًا…» (the family sign-in names the number). */
+  note?: ReactNode;
+}
+
+/** The code sent on WhatsApp: «إن كان الحساب موجودًا…», the six boxes, resend after a countdown. */
+export function CodeStep(props: Props) {
+  const { flow, submitLabel, busyLabel, onSubmit, backLabel, children, note } = props;
+  const resend = () => {
+    if (flow.target !== null) void flow.request(flow.target);
+  };
+  return (
+    <form
+      noValidate
+      className="grid gap-[22px]"
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
+      {note ?? <StatusNote>{t.familyAuth.codeSent}</StatusNote>}
+      <CodeBoxes digits={flow.digits} onDigits={flow.setDigits} invalid={flow.error === t.familyAuth.errors.invalid_code || flow.error === t.familyAuth.errors.code_incomplete} />
+      {children}
+      {flow.error && <FormAlert>{flow.error}</FormAlert>}
+      <Button type="submit" disabled={flow.busy} className="min-h-11 w-full">
+        {flow.busy ? busyLabel : submitLabel}
+      </Button>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Button type="button" variant="ghost" size="sm" disabled={flow.left > 0 || flow.busy} onClick={resend}>
+          {flow.left > 0 ? t.familyAuth.resendIn.replace('{seconds}', String(flow.left)) : t.familyAuth.resend}
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={flow.back}>
+          {backLabel}
+        </Button>
+      </div>
+    </form>
+  );
+}

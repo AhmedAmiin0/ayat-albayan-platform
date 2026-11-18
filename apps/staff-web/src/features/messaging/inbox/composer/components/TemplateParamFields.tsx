@@ -1,9 +1,9 @@
 import { renderTemplateBody, templateBlock, type TemplateView } from '@ab/shared';
-import { Field } from '@/components/ui/form/field';
-import { Input } from '@/components/ui/form/input';
-import { Ltr } from '@/components/ui/display/ltr';
-import { cn } from '@/lib/utils';
-import { t } from '@/lib/i18n/i18n';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { freeTextField, paramFields, toParamsInput, urlButton, type ParamSlot, type ParamValues } from '@/features/messaging/inbox/composer/lib/template-params';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 import { TemplateFrame } from '@/features/messaging/inbox/messages/template/TemplateFrame';

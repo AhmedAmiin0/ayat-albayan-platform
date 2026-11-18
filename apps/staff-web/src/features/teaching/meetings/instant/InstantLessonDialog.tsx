@@ -1,22 +1,22 @@
 import { DURATIONS, type Duration } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Input } from '@/components/ui/form/input';
-import { Select } from '@/components/ui/form/select';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Select } from '@ab/web-kit/components/ui/form/select';
 import { bookingTeachersQuery } from '@/features/teaching/booking/api';
 import { startInstant } from '@/features/teaching/classroom/api/meetings-api';
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { conflictsOf } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { DEFAULT_DURATION, draftProblem, instantBody, type InstantDraft } from './instant-form';
 import { MeetingStudentPicker } from '@/features/teaching/meetings/MeetingStudentPicker';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 interface Props {
   onClose: () => void;

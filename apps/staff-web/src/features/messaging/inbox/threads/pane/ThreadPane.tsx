@@ -1,12 +1,12 @@
 import { threadBadge } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useId, useState, type ReactNode } from 'react';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Toast } from '@/components/ui/overlay/toast';
-import { useBelowShell } from '@/components/ui/layout/use-narrow';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { useBelowShell } from '@ab/web-kit/components/ui/layout/use-narrow';
 import { teacherMeQuery } from '@/features/teaching/teacher/api';
 import { templatesQuery } from '@/features/messaging/templates/api';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { leadByPhoneQuery } from '@/features/messaging/inbox/api/api';
 import { useLiveThread } from '@/features/messaging/inbox/api/thread-delta';
 import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActionsProvider';

@@ -2,16 +2,16 @@ import { AVATAR_MAX_BYTES } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StaffPhotoControl, type StaffPhotoControlProps } from './StaffPhotoControl';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => new Set<string>());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
-vi.mock('@/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
-vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ can: (p: string) => granted.has(p) }) }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ can: (p: string) => granted.has(p) }) }));
 
 const P = t.staffPhoto;
 const SIGNED = { bucket: 'avatars', path: 't1/avatar-1.png', token: 'tok', signed_url: 'https://sb.test/up' };

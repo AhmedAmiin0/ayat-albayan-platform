@@ -2,8 +2,8 @@ import { type TemplateLineView, type TemplateView, type WaLine } from '@ab/share
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { fullTime } from '@/features/messaging/inbox/format';
-import { useClock } from '@/lib/clock';
-import { t } from '@/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CrmNameButton } from './crm/CrmNameButton';
 import { CrmStatusActions, type CrmStatusActionsProps } from './crm/CrmStatusActions';
 import { SendFromCell, type SendFromCellProps } from './lines/SendFromCell';

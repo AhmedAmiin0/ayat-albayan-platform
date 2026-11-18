@@ -1,5 +1,5 @@
 import { counted } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { currencyLabel, rateDate } from '@/features/reporting/dashboard/shared/format';
 import type { DashboardData } from '@/features/reporting/dashboard/types';
 

@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { earningsSummaryQuery } from '@/features/finance/payouts/api';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
 /**
  * «مستحقات المعلمين» overview (ledger, all months): the total still owed, then per teacher what

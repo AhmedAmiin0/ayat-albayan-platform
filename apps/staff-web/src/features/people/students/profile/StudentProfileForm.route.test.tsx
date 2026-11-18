@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { StudentProfile } from '@/features/people/students/types';
 import { StudentProfileForm } from './StudentProfileForm';
 
 const api = vi.hoisted(() => ({ apiFetch: vi.fn(), apiSend: vi.fn() }));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), ...api }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), ...api }));
 
 // owner 2026-11-17: «موقوف مؤقتًا» / «متوقف» open the pause / the stop, never a bare status change.
 const STUDENT = {

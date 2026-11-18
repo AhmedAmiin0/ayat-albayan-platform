@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { templateName } from '@/features/messaging/templates/template-cells';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CrmTemplateCheck } from './CrmTemplateCheck';
 
 // «تحقق من القالب» (owner 2026-10-31): a crm number lists the templates Meta refused with #132001.

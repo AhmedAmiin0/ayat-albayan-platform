@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { mediaCardLabel } from './invoice/ChatMediaPicker';
 import type { BookSearch } from './api';
 import { BookingPage } from './BookingPage';
@@ -18,14 +18,14 @@ import {
   SLOT,
   STUDENT_ID,
 } from './wizard-fixture';
-import { locale } from '@/lib/i18n/locale';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
     <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>

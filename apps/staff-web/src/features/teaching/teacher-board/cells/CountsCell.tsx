@@ -1,5 +1,5 @@
 import type { BoardRow } from '@/features/teaching/teacher-board/board-rows';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** «حضر n · غاب n» in the window, then «نسبة الحضور n%» once something was marked. */
 export function CountsCell({ row }: { row: BoardRow }) {

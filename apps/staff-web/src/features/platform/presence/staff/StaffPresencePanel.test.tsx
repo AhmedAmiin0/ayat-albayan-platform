@@ -3,12 +3,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { type Me, meQuery } from '@/features/people/auth';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StaffPresencePanel } from './StaffPresencePanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/lib/http/supabase', () => ({ supabase: {} }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 /** No Realtime (as CI's e2e stack): online comes from a recent last seen. */
 vi.mock('@ab/client-core', async (orig) => ({ ...(await orig<object>()), watchPresence: () => () => undefined }));
 

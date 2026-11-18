@@ -6,12 +6,12 @@ import {
   type StatusRouteEvent,
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { ButtonRow } from '@/components/ui/layout/button-row';
-import { useJoinWindow, usePublicConfig } from '@/lib/settings/public-config';
-import { useNow } from '@/lib/time/use-now';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { useJoinWindow, usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { confirmLesson, lessonErrorText, LESSONS_KEY, setLessonStatus } from '@/features/teaching/schedule/api';
 import { AdminButtons } from './AdminButtons';
 

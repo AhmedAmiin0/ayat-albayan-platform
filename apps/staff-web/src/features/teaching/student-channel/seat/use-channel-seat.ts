@@ -1,6 +1,6 @@
 import { CHANNEL_REFRESH_MS, channelSeatKey, channelSeats } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
 // The assistant seat of a student chat (owner 2026-11-16 «any assistant can subscribe to the
 // chating channel but only 1»): its read and its two writes live in @ab/client-core, the same as

@@ -1,7 +1,7 @@
 import { deltaSearch, mergeDelta, needsFullRead } from '@ab/client-core';
 import type { ThreadDelta } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/http/api';
+import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { inboxPollMs, threadPath } from './api';
 import { useTicksInLists } from './list-ticks';
 import { threadQuery } from './thread-query';

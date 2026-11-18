@@ -1,7 +1,7 @@
 import { type LessonView, lessonWhenAt } from '@ab/shared';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
 import { ProposeForm } from './ProposeForm';
 
 export interface TeacherProposalProps {

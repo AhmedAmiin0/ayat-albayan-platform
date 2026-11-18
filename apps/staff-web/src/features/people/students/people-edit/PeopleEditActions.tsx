@@ -1,10 +1,10 @@
 import { allowedPeopleActions, type PeopleActionKind } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ComponentType } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { usePermissions } from '@/features/people/auth';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { peopleEditQuery } from './api';
 import { AttachDialog } from './attach/AttachDialog';
 import { ConvertDialog } from './convert/ConvertDialog';

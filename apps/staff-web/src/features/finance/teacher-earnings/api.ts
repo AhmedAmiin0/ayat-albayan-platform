@@ -9,7 +9,7 @@ import type {
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { MONEY_KEY, type Page } from '@/features/finance/subscriptions/api';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
