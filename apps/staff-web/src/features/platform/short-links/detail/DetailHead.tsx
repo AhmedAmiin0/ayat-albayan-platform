@@ -1,0 +1,51 @@
+import { fillSlots, sendCounts } from '@ab/client-core';
+import type { ShortLinkDetail } from '@ab/shared';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StateChip } from '@/features/platform/short-links/shared/LinkChips';
+import type { LinkDialog } from '@/features/platform/short-links/edit/use-link-actions';
+
+const D = t.shortLinks.detail;
+
+interface DetailHeadProps {
+  link: ShortLinkDetail;
+  onDialog: (dialog: LinkDialog) => void;
+  onResend: () => void;
+  pending: boolean;
+}
+
+/** The title with its state, and «تمديد», «أعد الإرسال لمن فشل», «تعديل», «إيقاف الرابط». */
+export function DetailHead({ link, onDialog, onResend, pending }: DetailHeadProps) {
+  const live = link.status !== 'revoked';
+  const failed = sendCounts(link.userList).failed;
+  return (
+    <PageHead className="mb-3">
+      <Cartouche>{link.title}</Cartouche>
+      <StateChip row={link} size="md" />
+      {live && (
+        <div className="flex flex-wrap gap-2 sm:ms-auto">
+          <Button variant="secondary" size="sm" onClick={() => onDialog('extend')}>
+            <Icon name="calendar" />
+            {D.extend}
+          </Button>
+          {failed > 0 && (
+            <Button variant="secondary" size="sm" disabled={pending} onClick={onResend}>
+              <Icon name="send" />
+              {fillSlots(D.resendFailed, { n: failed })}
+            </Button>
+          )}
+          <Button variant="secondary" size="sm" onClick={() => onDialog('edit')}>
+            {t.common.edit}
+          </Button>
+          <Button variant="danger-quiet" size="sm" onClick={() => onDialog('revoke')}>
+            <Icon name="x" />
+            {D.revoke}
+          </Button>
+        </div>
+      )}
+    </PageHead>
+  );
+}

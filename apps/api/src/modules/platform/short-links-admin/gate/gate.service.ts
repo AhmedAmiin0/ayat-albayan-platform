@@ -17,6 +17,12 @@ const missing = () => notFound('short_link_not_found');
 const invalidCode = () =>
   new UnauthorizedException({ code: 'invalid_code', message: 'invalid_code' });
 const bucket = (code: string): string => `short-link:${code}`;
+type GoneReason = NonNullable<ShortLinkGateView['goneReason']>;
+/** A gone link is revoked by an admin, else expired (by the cron or past its expiry). */
+function goneReasonOf(row: ShortLinkRow, now: Date): GoneReason | null {
+  if (isLive(row, now)) return null;
+  return row.status === 'revoked' ? 'revoked' : 'expired';
+}
 
 interface PhoneCall {
   code: string;
@@ -43,10 +49,11 @@ export class GateService {
 
   async view(code: string, now = new Date()): Promise<ShortLinkGateView> {
     const row = await this.find(code);
-    const state = isLive(row, now) ? 'open' : 'gone';
+    const goneReason = goneReasonOf(row, now);
     return {
       title: row.title,
-      state,
+      state: goneReason === null ? 'open' : 'gone',
+      goneReason,
       needs: 'sign_in_or_code',
       codesAvailable: await this.codes.sendable(),
     };

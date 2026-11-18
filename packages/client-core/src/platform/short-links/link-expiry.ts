@@ -1,0 +1,92 @@
+import {
+  addDaysIn,
+  calendarDaysBetween,
+  counted,
+  localDateIn,
+  SETTING_DEFAULTS,
+  type PluralForm,
+  type ShortLinkRow,
+} from '@ab/shared';
+import { fillSlots } from '../../teaching/reports/index.js';
+
+// When a link ends, in the list's and the detail's words: «بعد 3 أيام», «غدًا», «اليوم» while
+// it runs, «انتهى الثلاثاء 10 نوفمبر · يُحذف 10 ديسمبر» once it ended (deleted with its visits
+// short_link_purge_days after its expiry, docs/19 «Cron»). Calendar days in the viewer's zone.
+
+/** «القيم» → short_link_purge_days as seeded (30). */
+export const SHORT_LINK_PURGE_DAYS = SETTING_DEFAULTS.short_link_purge_days;
+
+export interface ExpiryClock {
+  now: Date;
+  /** The viewer's zone (calendar days and dates). */
+  tz: string;
+  /** short_link_purge_days; SHORT_LINK_PURGE_DAYS unless the app read the setting. */
+  purgeDays: number;
+}
+
+export type ExpiryKind = 'today' | 'tomorrow' | 'in_days' | 'ended' | 'revoked';
+
+export interface ExpiryParts {
+  kind: ExpiryKind;
+  /** The expiry (ISO). */
+  at: string;
+  /** Calendar days from today to the expiry in the viewer's zone (negative once past). */
+  days: number;
+  /** When the link and its visits are deleted (ISO). */
+  purgeAt: string;
+}
+
+type Row = Pick<ShortLinkRow, 'status' | 'expiresAt'>;
+
+const RUNNING: Readonly<Record<number, 'today' | 'tomorrow'>> = { 0: 'today', 1: 'tomorrow' };
+
+const dayOf = (at: Date | number, tz: string): string => localDateIn(at, tz);
+
+const runningKind = (days: number): ExpiryKind => RUNNING[Math.max(0, days)] ?? 'in_days';
+
+const hasEnded = (row: Row, now: Date): boolean =>
+  row.status === 'expired' || Date.parse(row.expiresAt) <= now.getTime();
+
+/** What the expiry column says, as parts (the apps write the dates in their own format). */
+export function expiryParts(row: Row, clock: ExpiryClock): ExpiryParts {
+  const at = row.expiresAt;
+  const end = Date.parse(at);
+  const days = calendarDaysBetween(dayOf(clock.now, clock.tz), dayOf(end, clock.tz));
+  const purgeAt = addDaysIn(end, clock.purgeDays, clock.tz).toISOString();
+  const ended: ExpiryKind = row.status === 'revoked' ? 'revoked' : 'ended';
+  const kind = hasEnded(row, clock.now) || row.status === 'revoked' ? ended : runningKind(days);
+  return { kind, at, days, purgeAt };
+}
+
+/** shortLinks.expiry: one line per kind, `{date}` / `{purge}` slots, inDays per count form. */
+export interface ExpiryWords {
+  today: string;
+  tomorrow: string;
+  inDays: Readonly<Record<PluralForm, string>>;
+  ended: string;
+  revoked: string;
+}
+
+type ExpiryLine = (p: ExpiryParts, words: ExpiryWords, date: (iso: string) => string) => string;
+
+const ended = (key: 'ended' | 'revoked'): ExpiryLine => (p, w, date) =>
+  fillSlots(w[key], { date: date(p.at), purge: date(p.purgeAt) });
+
+const LINES: Readonly<Record<ExpiryKind, ExpiryLine>> = {
+  today: (_p, w) => w.today,
+  tomorrow: (_p, w) => w.tomorrow,
+  in_days: (p, w) => counted(w.inDays, p.days),
+  ended: ended('ended'),
+  revoked: ended('revoked'),
+};
+
+export interface ExpiryTextOptions {
+  words: ExpiryWords;
+  /** «الثلاثاء 10 نوفمبر»: the app's date format in the viewer's zone. */
+  date: (iso: string) => string;
+}
+
+/** «بعد 3 أيام», «غدًا», «انتهى الثلاثاء 10 نوفمبر · يُحذف 10 ديسمبر», «أُوقف · يُحذف …». */
+export function expiryText(parts: ExpiryParts, opts: ExpiryTextOptions): string {
+  return LINES[parts.kind](parts, opts.words, opts.date);
+}
