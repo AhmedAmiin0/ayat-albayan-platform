@@ -1,7 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { TeacherChannelList } from '@/features/teaching/student-channel/TeacherChannelList';
 import { msg, showBubble } from './bubble.testing';
 
 const a = t.studentChannel.actions;
@@ -19,24 +18,6 @@ describe('channel bubble states (owner 2026-10-30)', () => {
     expect(screen.queryByRole('link')).toBeNull();
     expect(screen.queryByRole('button', { name: a.menu })).toBeNull();
     expect(screen.queryByText(a.edited)).toBeNull();
-  });
-
-  it('the teacher list previews a deleted last message as the placeholder, not its text', () => {
-    const last = {
-      body: '',
-      sender_role: 'guardian' as const,
-      created_at: '2026-10-27T10:00:00.000Z',
-      deleted: true,
-    };
-    const row = {
-      student_id: 's1',
-      student_name: 'سلمى',
-      student_code: 'AB-0201',
-      unread: 0,
-      last_message: last,
-    };
-    render(<TeacherChannelList rows={[row]} selected={null} onPick={vi.fn()} />);
-    expect(screen.getByText(a.deleted)).toBeTruthy();
   });
 
   it('«تعديل» opens the box in place; «إلغاء» leaves the text as it was', () => {

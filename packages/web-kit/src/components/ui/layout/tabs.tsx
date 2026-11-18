@@ -5,6 +5,8 @@ import type { SegmentOption } from '@ab/web-kit/components/ui/form/segmented-con
 export interface TabOption<V extends string> extends SegmentOption<V> {
   /** Vertical fihris only: a hairline before this tab to group it (docs/07 §9). */
   separatorBefore?: boolean;
+  /** The tab's spoken name when the word and count say less (an unread badge, «المحادثة، 3 …»). */
+  ariaLabel?: string;
 }
 
 export interface TabsProps<V extends string> {
@@ -100,6 +102,7 @@ export function Tabs<V extends string>({
           <button
             type="button"
             role="tab"
+            aria-label={tab.ariaLabel}
             id={idPrefix === undefined ? undefined : tabIds(idPrefix, tab.value).tab}
             aria-controls={idPrefix === undefined || tab.value !== value ? undefined : tabIds(idPrefix, tab.value).panel}
             aria-selected={tab.value === value}

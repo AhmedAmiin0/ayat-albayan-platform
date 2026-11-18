@@ -5,8 +5,8 @@ import {
   CHANNEL_COUNT_KEYS,
   sendChannelMessage,
   type ChannelRef,
-} from '@/features/teaching/student-channel/api';
-import { draftKey } from '@/features/teaching/student-channel/composer/draft-store';
+} from '@ab/web-kit/components/channel/api';
+import { draftKey } from '@ab/web-kit/components/channel/composer/draft-store';
 
 /** The last attempt and the chat it was for: another student's chat never reuses its id. */
 type LastAttempt = SendAttempt & { chat: string };

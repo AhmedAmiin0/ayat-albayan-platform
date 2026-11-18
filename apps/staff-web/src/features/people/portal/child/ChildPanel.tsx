@@ -1,7 +1,7 @@
 import type { ChildTab } from '@ab/client-core';
 import type { PortalStudent } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { ChannelThread } from '@/features/teaching/student-channel';
+import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';
 import { HistoryPanel } from '@ab/web-kit/portal/history/HistoryPanel';
 import { LessonsPanel } from '@ab/web-kit/portal/lessons/LessonsPanel';
 import { PackagePanel } from '@ab/web-kit/portal/package/PackagePanel';

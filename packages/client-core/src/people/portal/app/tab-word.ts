@@ -10,7 +10,9 @@ export interface ChildTabWords {
     attendedTab: string;
     absentTab: string;
     packageTab: string;
-    app: { child: { attendedSelf: string; absentSelf: string; chat: string } };
+    app: {
+      child: { attendedSelf: string; absentSelf: string; chat: string; chatUnread: string };
+    };
   };
   lessonFiles: { recordings: string };
 }
@@ -29,3 +31,25 @@ const WORD: Readonly<Record<ChildTab, Word>> = {
 /** The child tab's word; `own`: readsOwn(portalViewer(kind, student)). */
 export const childTabWord = (tab: ChildTab, own: boolean, words: ChildTabWords): string =>
   WORD[tab](words, own);
+
+/** A child tab's pill: its word, and on «المحادثة» the unread badge with its spoken name. */
+export interface ChildTabPill {
+  value: ChildTab;
+  label: string;
+  badge?: { count: number; label: string };
+}
+
+/**
+ * The pill of a child tab (the family app's FilterPills, the family web's Tabs): «المحادثة»
+ * carries its unread count, named «المحادثة، n غير مقروءة» for a screen reader.
+ */
+export function childTabPill(
+  tab: ChildTab,
+  at: { own: boolean; unread: number },
+  words: ChildTabWords,
+): ChildTabPill {
+  const label = childTabWord(tab, at.own, words);
+  if (tab !== 'chat') return { value: tab, label };
+  const named = words.portal.app.child.chatUnread.replace('{n}', String(at.unread));
+  return { value: tab, label, badge: { count: at.unread, label: named } };
+}

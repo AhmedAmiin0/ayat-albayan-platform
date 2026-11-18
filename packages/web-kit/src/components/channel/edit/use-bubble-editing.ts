@@ -1,7 +1,7 @@
 import { channelBubbleActions } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { useState } from 'react';
-import type { ChannelRef } from '@/features/teaching/student-channel/api';
+import type { ChannelRef } from '@ab/web-kit/components/channel/api';
 import { useChannelEdits } from './use-channel-edits';
 
 type Mode = 'view' | 'edit' | 'delete';

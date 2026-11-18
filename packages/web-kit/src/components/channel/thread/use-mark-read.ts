@@ -4,7 +4,7 @@ import {
   CHANNEL_COUNT_KEYS,
   markChannelRead,
   type ChannelRef,
-} from '@/features/teaching/student-channel/api';
+} from '@ab/web-kit/components/channel/api';
 import { usePageVisible } from './use-page-visible';
 
 interface Mark {

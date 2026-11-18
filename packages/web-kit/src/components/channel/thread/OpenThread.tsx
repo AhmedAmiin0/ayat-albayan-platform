@@ -1,8 +1,8 @@
 import type { ChannelPage } from '@ab/shared';
-import { ChannelPresenceLine } from '@/features/platform/presence';
-import type { ChannelRef } from '@/features/teaching/student-channel/api';
-import { ChannelComposer } from '@/features/teaching/student-channel/composer/ChannelComposer';
-import { draftKey } from '@/features/teaching/student-channel/composer/draft-store';
+import { ChannelPresenceLine } from '@ab/web-kit/components/channel/presence/ChannelPresenceLine';
+import type { ChannelRef } from '@ab/web-kit/components/channel/api';
+import { ChannelComposer } from '@ab/web-kit/components/channel/composer/ChannelComposer';
+import { draftKey } from '@ab/web-kit/components/channel/composer/draft-store';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChannelLoadFailed } from './ChannelLoadFailed';
 import { ChannelMessages } from './ChannelMessages';

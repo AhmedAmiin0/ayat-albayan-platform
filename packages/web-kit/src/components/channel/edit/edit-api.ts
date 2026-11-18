@@ -3,7 +3,7 @@ import type { ChannelMessageView } from '@ab/shared';
 import { z } from 'zod';
 import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { ChannelRef } from '@/features/teaching/student-channel/api';
+import type { ChannelRef } from '@ab/web-kit/components/channel/api';
 
 // «تعديل» / «حذف للجميع» (owner 2026-10-30): PATCH / DELETE …/messages/:id (the API checks every
 // rule).

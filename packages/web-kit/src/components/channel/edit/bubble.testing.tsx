@@ -3,8 +3,8 @@ import type { ChannelAudience } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
-import { ChannelBubble } from '@/features/teaching/student-channel/ChannelBubble';
-import { channelMessage } from '@/features/teaching/student-channel/channel.fixtures';
+import { ChannelBubble } from '@ab/web-kit/components/channel/ChannelBubble';
+import { channelMessage } from '@ab/web-kit/components/channel/channel.fixtures';
 
 const MIN = 60_000;
 

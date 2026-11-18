@@ -1,6 +1,6 @@
 import { channelKey } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CHANNEL_COUNT_KEYS, type ChannelRef } from '@/features/teaching/student-channel/api';
+import { CHANNEL_COUNT_KEYS, type ChannelRef } from '@ab/web-kit/components/channel/api';
 import { deleteChannelMessage, editChannelMessage, editProblem } from './edit-api';
 
 /**
