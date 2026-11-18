@@ -4,6 +4,7 @@ import type {
   ShortLinkListQuery,
   ShortLinkPage,
   ShortLinkPerson,
+  ShortLinkSentDetail,
   ShortLinkUpdate,
 } from '@ab/shared';
 import { Injectable, Inject } from '@nestjs/common';
@@ -16,7 +17,7 @@ import { managedOrThrow } from './managed.access';
 import { ManagedLinks } from './managed-links.service';
 import { ManagedReads } from './managed-reads';
 
-export type SentDetail = ShortLinkDetail & { send: SendSummary | null };
+export type SentDetail = ShortLinkSentDetail;
 
 /**
  * The admin / sales side of the managed links (docs/19): the writes, the WhatsApp send (on create

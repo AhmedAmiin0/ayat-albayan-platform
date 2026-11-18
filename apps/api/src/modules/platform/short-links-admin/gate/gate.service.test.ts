@@ -46,6 +46,7 @@ describe('the short-link gate (docs/19)', () => {
     expect(view).toEqual({
       title: 'رابط التسجيل',
       state: 'open',
+      goneReason: null,
       needs: 'sign_in_or_code',
       codesAvailable: true,
     });
@@ -53,6 +54,19 @@ describe('the short-link gate (docs/19)', () => {
     await expect(setup(null).gate.view('x')).rejects.toThrow(/short_link_not_found/);
     const system = managedRow({ kind: 'teacher_report' });
     await expect(setup(system).gate.view('x')).rejects.toThrow(/short_link_not_found/);
+  });
+
+  it('the view of a gone link says why: revoked by an admin, else expired', async () => {
+    const revoked = setup(managedRow({ status: 'revoked', expires_at: FUTURE }));
+    expect(await revoked.gate.view('Mg12Cd34Ef')).toMatchObject({
+      state: 'gone',
+      goneReason: 'revoked',
+    });
+    const past = setup(managedRow({ expires_at: '2020-01-01T00:00:00Z' }));
+    expect(await past.gate.view('Mg12Cd34Ef')).toMatchObject({
+      state: 'gone',
+      goneReason: 'expired',
+    });
   });
 
   it('a signed-in user opens: the visit is recorded by profile and the target answered', async () => {
