@@ -6,7 +6,7 @@
 import { encode } from './png.mjs';
 import { place } from './resample.mjs';
 
-export const TILE = [0x06, 0x4e, 0x3b].map((v) => v / 255); // theme.ts brandTile #064E3B
+const TILE = [0x06, 0x4e, 0x3b].map((v) => v / 255); // theme.ts brandTile #064E3B
 
 /** ICO holding PNG frames (Vista+ format): what browsers fetch at /favicon.ico. */
 export function ico(frames) {
