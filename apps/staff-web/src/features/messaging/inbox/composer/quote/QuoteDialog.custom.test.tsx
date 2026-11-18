@@ -1,4 +1,4 @@
-import { formatAmount, offerText, type Quote } from '@ab/shared';
+import { offerText, type Quote } from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -60,13 +60,12 @@ it('on: starts from the quote’s price; the typed amount is the offer’s total
   expect(off(q.send)).toBe(false);
 });
 
-it('sales: under the deepest pill’s price says the minimum, nothing may leave', async () => {
+it('sales: any amount, even under the deepest pill’s price (owner 2026-11-18), is the total', async () => {
   await show();
   fireEvent.click(toggle());
   type('100');
-  const min = T.min.replace('{amount}', formatAmount(150)).replace('{currency}', SAR);
-  expect(screen.getByText(min)).toBeTruthy();
-  for (const name of [q.send, q.edit, q.copy]) expect(off(name)).toBe(true);
+  expect(text()).toBe(offerText(QUOTE, ar.pricing, 100));
+  expect(off(q.send)).toBe(false);
 });
 
 it('not an amount: the field’s error, nothing may leave', async () => {
@@ -77,7 +76,7 @@ it('not an amount: the field’s error, nothing may leave', async () => {
   for (const name of [q.send, q.edit, q.copy]) expect(off(name)).toBe(true);
 });
 
-it('the admin (subscriptions.write) has no floor', async () => {
+it('the admin (subscriptions.write): any amount too', async () => {
   await show(true);
   fireEvent.click(toggle());
   type('100');

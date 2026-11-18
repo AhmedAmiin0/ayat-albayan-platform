@@ -16,20 +16,6 @@ export type PackageId = (typeof PACKAGE_IDS)[number];
 export const DISCOUNTS = [0, 5, 10, 15] as const;
 export const DISCOUNT_MAX = 100;
 
-/** The sales floor is rounded down to this many currency units (owner 2026-11-18: 153 → 150). */
-const FLOOR_STEP = 5;
-
-/**
- * The deepest pill's price (total × 0.85) rounded DOWN to a multiple of FLOOR_STEP: the lowest
- * «مبلغ مخصص» on the sales path (owner 2026-11-05; 2026-11-18: an agreed 150 on a 153 price). The
- * API's assertSalesPrice and both apps' quote field use it; the admin has no floor. Worked in
- * hundredths so a float like 152.999… never drops a whole step.
- */
-export function salesPriceFloor(total: number): number {
-  const hundredths = Math.round(total * (100 - Math.max(...DISCOUNTS)));
-  return Math.floor(hundredths / (100 * FLOOR_STEP)) * FLOOR_STEP;
-}
-
 export interface Tier {
   id: 'starter' | 'standard' | 'premium' | 'bulk';
   lessons: number;
