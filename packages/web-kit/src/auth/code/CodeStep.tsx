@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import { CODE_STEP_ACTIONS, type CodeStepAction, canResend, resendLabel } from '@ab/client-core';
+import { Fragment, type ReactNode } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -19,12 +20,33 @@ interface Props {
   note?: ReactNode;
 }
 
-/** The code sent on WhatsApp: «إن كان الحساب موجودًا…», the six boxes, resend after a countdown. */
+const BOX_ERRORS = new Set([t.familyAuth.errors.invalid_code, t.familyAuth.errors.code_incomplete]);
+
+/** «أعد إرسال الرمز» then «غيّر الرقم», in the order every code step uses (client-core). */
+const ACTIONS: Record<CodeStepAction, (props: Props) => ReactNode> = {
+  resend: ({ flow }) => (
+    <Button
+      type="button"
+      variant="ghost"
+      disabled={!canResend(flow)}
+      onClick={() => void flow.resend()}
+    >
+      {resendLabel(flow.left, t.familyAuth)}
+    </Button>
+  ),
+  back: ({ flow, backLabel }) => (
+    <Button type="button" variant="ghost" onClick={flow.back}>
+      {backLabel}
+    </Button>
+  ),
+};
+
+/**
+ * The code sent on WhatsApp, as the family app: the note, the six boxes, the submit, then one
+ * centred column of «أعد إرسال الرمز» (after a countdown) and «غيّر الرقم».
+ */
 export function CodeStep(props: Props) {
-  const { flow, submitLabel, busyLabel, onSubmit, backLabel, children, note } = props;
-  const resend = () => {
-    if (flow.target !== null) void flow.request(flow.target);
-  };
+  const { flow, submitLabel, busyLabel, onSubmit, children, note } = props;
   return (
     <form
       noValidate
@@ -35,19 +57,20 @@ export function CodeStep(props: Props) {
       }}
     >
       {note ?? <StatusNote>{t.familyAuth.codeSent}</StatusNote>}
-      <CodeBoxes digits={flow.digits} onDigits={flow.setDigits} invalid={flow.error === t.familyAuth.errors.invalid_code || flow.error === t.familyAuth.errors.code_incomplete} />
+      <CodeBoxes
+        digits={flow.digits}
+        onDigits={flow.setDigits}
+        invalid={flow.error !== undefined && BOX_ERRORS.has(flow.error)}
+      />
       {children}
       {flow.error && <FormAlert>{flow.error}</FormAlert>}
       <Button type="submit" disabled={flow.busy} className="min-h-11 w-full">
         {flow.busy ? busyLabel : submitLabel}
       </Button>
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <Button type="button" variant="ghost" size="sm" disabled={flow.left > 0 || flow.busy} onClick={resend}>
-          {flow.left > 0 ? t.familyAuth.resendIn.replace('{seconds}', String(flow.left)) : t.familyAuth.resend}
-        </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={flow.back}>
-          {backLabel}
-        </Button>
+      <div className="grid justify-items-center">
+        {CODE_STEP_ACTIONS.map((action) => (
+          <Fragment key={action}>{ACTIONS[action](props)}</Fragment>
+        ))}
       </div>
     </form>
   );

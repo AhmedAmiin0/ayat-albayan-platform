@@ -1,3 +1,4 @@
+import { canResend } from '@ab/client-core';
 import { useState } from 'react';
 import { signInErrorText } from '@ab/web-kit/auth/login/auth-api';
 import { emptyCode } from './code-boxes';
@@ -7,9 +8,9 @@ import { useCountdown } from './use-countdown';
 type Task = () => Promise<string | undefined>;
 
 /**
- * «أرسل الرمز» then the code (docs/30 §7), shared by the family phone sign-in and the password reset.
- * `target` is what the code was sent for (null = still asking for it). The API answers 202 whether or
- * not the account exists, so the code step always follows a request that did not fail.
+ * «أرسل الرمز» then the code (docs/30 §7), shared by the family phone sign-in and the password
+ * reset. `target` is what the code was sent for (null = still asking for it). The API answers 202
+ * whether or not the account exists, so the code step always follows a request that did not fail.
  */
 export function useCodeFlow(send: (target: string) => Promise<void>) {
   const [target, setTarget] = useState<string | null>(null);
@@ -33,11 +34,21 @@ export function useCodeFlow(send: (target: string) => Promise<void>) {
       countdown.restart();
       return undefined;
     });
+  // As the family app: the same target again, the digits typed meanwhile stay.
+  const resend = async (): Promise<void> => {
+    if (target === null || !canResend({ left: countdown.left, busy })) return;
+    await guard(async () => {
+      await send(target);
+      countdown.restart();
+      return undefined;
+    });
+  };
   const back = () => {
     setTarget(null);
     setError(undefined);
   };
-  return { target, digits, setDigits, error, setError, busy, left: countdown.left, guard, request, back };
+  const left = countdown.left;
+  return { target, digits, setDigits, error, setError, busy, left, guard, request, resend, back };
 }
 
 export type CodeFlow = ReturnType<typeof useCodeFlow>;
