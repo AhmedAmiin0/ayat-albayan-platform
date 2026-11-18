@@ -10,4 +10,5 @@ it('a staff login: the notice, the family sign-in, no staff link without its ori
   const signIn = screen.getByRole('link', { name: t.familyWeb.familySignIn });
   expect(signIn.getAttribute('href')).toBe('/login');
   expect(screen.queryByRole('link', { name: t.familyWeb.toStaffApp })).toBeNull();
+  expect(screen.getByRole('main').textContent).toContain(t.familyLook.brand.name);
 });
