@@ -10,6 +10,14 @@ interface Props {
   invalid?: boolean;
 }
 
+/** One box; the family look (boards PortalWebSignInCode*): 52 px, rounded, bold Latin digits. */
+const BOX = 'h-12 min-w-0 flex-1 px-0 text-center text-lg tabular-nums sm:h-12 ' +
+  'family:h-[52px] family:sm:h-[52px] family:rounded-[14px] family:font-latin ' +
+  'family:text-xl family:sm:text-xl family:font-bold family:aria-invalid:ring-0 ' +
+  'family:focus:border-lapis family:focus:outline-none! ' +
+  'family:focus:shadow-[0_0_0_4px_rgba(4,120,87,0.12)] ' +
+  'family:aria-invalid:shadow-[0_0_0_3px_rgba(220,38,38,0.1)]';
+
 /**
  * The 6-digit code as one box per digit (docs/30 §7). The boxes read left to right in Arabic too
  * (dir="ltr"), the first one offers the SMS / WhatsApp autofill (`one-time-code`), and a whole code
@@ -57,7 +65,7 @@ export function CodeBoxes({ digits, onDigits, invalid }: Props) {
             onKeyDown={(e) => onKeyDown(i, e)}
             onPaste={(e) => onPaste(i, e)}
             onFocus={(e) => e.currentTarget.select()}
-            className="h-12 min-w-0 flex-1 px-0 text-center text-lg tabular-nums sm:h-12"
+            className={BOX}
           />
         ))}
       </div>

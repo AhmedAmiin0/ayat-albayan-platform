@@ -19,6 +19,17 @@ interface Props {
   onEnter?: () => void;
 }
 
+/** The family look only (boards PortalWebSignIn*): country and number in one 52 px box. */
+const FAMILY_BOX = 'family:gap-0 family:overflow-hidden family:rounded-[14px] ' +
+  'family:border-[1.5px] family:border-input family:bg-raised ' +
+  'family:focus-within:border-lapis family:focus-within:shadow-[0_0_0_4px_rgba(4,120,87,0.12)] ' +
+  'family:has-aria-invalid:border-danger ' +
+  'family:has-aria-invalid:shadow-[0_0_0_4px_rgba(220,38,38,0.12)]';
+const FAMILY_INPUT = 'family:min-h-[49px] family:sm:min-h-[49px] family:rounded-none ' +
+  'family:border-0 family:bg-transparent family:px-4 family:font-latin family:text-lg ' +
+  'family:sm:text-lg family:font-semibold family:tracking-[0.5px] family:tabular-nums ' +
+  'family:focus:outline-none! family:aria-invalid:ring-0';
+
 /** Enter runs `onEnter` instead of submitting the form around the field. */
 const enterKey = (onEnter: () => void) => (e: KeyboardEvent<HTMLInputElement>) => {
   if (e.key !== 'Enter') return;
@@ -45,11 +56,11 @@ export function PhoneNumberField({ entry, hint, error, ...more }: Props) {
         {(p) => (
           <div className="flex gap-2">
             {/* The input takes the wrapper's LTR: digits start next to the calling code. */}
-            <div dir="ltr" className="flex min-w-0 flex-1 gap-2">
+            <div dir="ltr" className={`flex min-w-0 flex-1 gap-2 ${FAMILY_BOX}`}>
               <CountryButton country={entry.country} onClick={() => setPicking(true)} />
               <Input {...p} type="tel" autoComplete="tel" inputMode="tel"
                 value={entry.typed} onChange={(e) => entry.setTyped(e.target.value)}
-                {...enter} />
+                className={FAMILY_INPUT} {...enter} />
             </div>
             {more.action}
           </div>

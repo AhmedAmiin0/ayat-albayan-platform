@@ -9610,7 +9610,10 @@
       "home": "Back to home"
     },
     "signIn": {
-      "welcome": "Welcome to Ayat Al-Bayan Academy"
+      "welcome": "Welcome to Ayat Al-Bayan Academy",
+      "title": "Ayat Al-Bayan..",
+      "audience": "For guardians and students",
+      "or": "or"
     },
     "child": {
       "today": "Today"

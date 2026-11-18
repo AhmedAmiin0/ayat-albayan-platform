@@ -11,6 +11,9 @@ type Props = FieldControlProps & {
   autoComplete?: 'current-password' | 'new-password';
 };
 
+/** The family look only (boards PortalWebSignInPassword): 52 px, 14 px corners. */
+const FAMILY = 'family:min-h-[52px] family:sm:min-h-[52px] family:rounded-[14px] family:ps-4';
+
 /**
  * Password with an eye at the inline-end (docs/design login, .pw): a toggle button named «إظهار»
  * (aria-pressed) that shows the typed text, which matters most on touch keyboards. The name must
@@ -27,7 +30,7 @@ export function PasswordInput({ value, onValue, autoComplete = 'current-password
         type={shown ? 'text' : 'password'}
         autoComplete={autoComplete}
         required
-        className="pe-12"
+        className={`pe-12 ${FAMILY}`}
         value={value}
         onChange={(e) => onValue(e.target.value)}
       />
