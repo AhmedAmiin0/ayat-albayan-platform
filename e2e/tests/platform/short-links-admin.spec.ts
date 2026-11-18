@@ -61,7 +61,7 @@ test.describe('short links («الروابط المختصرة»)', () => {
     expect(await failedSends(title)).toEqual(failed);
 
     // The list has it, active, opening the same page.
-    await page.getByRole('link', { name: S.detail.back }).click();
+    await page.getByRole('main').getByRole('link', { name: S.detail.back }).click();
     await page.getByRole('searchbox', { name: S.list.search }).fill(title);
     const row = page.getByRole('row').filter({ hasText: title });
     await expect(row).toContainText(S.state.active);
