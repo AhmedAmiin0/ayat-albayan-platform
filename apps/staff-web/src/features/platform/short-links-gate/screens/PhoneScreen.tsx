@@ -41,7 +41,10 @@ export function PhoneScreen({ gate }: { gate: Gate }) {
             {phone.sending ? G.sending : G.sendCode}
           </Button>
         </form>
-        <a href={loginHref(gate.code)} className={buttonVariants({ variant: 'ghost', className: GATE_ACTION })}>
+        <a
+          href={loginHref(gate.code)}
+          className={buttonVariants({ variant: 'ghost', className: GATE_ACTION })}
+        >
           {G.haveAccount} {G.signIn}
         </a>
       </div>

@@ -16,7 +16,9 @@ interface RevokeDialogProps {
 export function RevokeDialog({ onConfirm, onClose, pending, failure }: RevokeDialogProps) {
   const actions = (
     <>
-      <Button type="button" variant="secondary" onClick={onClose}>{t.shortLinks.form.cancel}</Button>
+      <Button type="button" variant="secondary" onClick={onClose}>
+        {t.shortLinks.form.cancel}
+      </Button>
       <Button type="button" variant="danger" disabled={pending} onClick={onConfirm}>
         {D.revokeConfirm}
       </Button>

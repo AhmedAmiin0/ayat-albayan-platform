@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { clientWithMe, ME, row } from '@/short-links/testing/link-fixtures';
+import { clientWithMe, ME, OTHER, row } from '@/short-links/testing/link-fixtures';
 import { ShortLinksScreen } from './ShortLinksScreen';
 
 const mockApiFetch = jest.fn();
@@ -28,7 +28,7 @@ beforeEach(() => {
   mockApiFetch.mockResolvedValue({ rows, total: 3 });
 });
 
-test('the admin: every link with its state, short URL, use, owner, and the owner pills', async () => {
+test('the admin: every link with state, short URL, use, owner, and the owner pills', async () => {
   await renderWithQuery(<ShortLinksScreen can={all} base="/more/short-links" />, clientWithMe());
   expect(await screen.findByText('نموذج تسجيل')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/short-links?pageSize=100');
@@ -41,6 +41,14 @@ test('the admin: every link with its state, short URL, use, owner, and the owner
   await fireEvent.press(screen.getByRole('tab', { name: L.mine }));
   await waitFor(() =>
     expect(mockApiFetch).toHaveBeenCalledWith(`/short-links?owner=${ME}&pageSize=100`),
+  );
+});
+
+test('the admin: one owner pill per other owner on the rows filters by that owner', async () => {
+  await renderWithQuery(<ShortLinksScreen can={all} base="/more/short-links" />, clientWithMe());
+  await fireEvent.press(await screen.findByRole('tab', { name: 'الزهراء' }));
+  await waitFor(() =>
+    expect(mockApiFetch).toHaveBeenCalledWith(`/short-links?owner=${OTHER}&pageSize=100`),
   );
 });
 

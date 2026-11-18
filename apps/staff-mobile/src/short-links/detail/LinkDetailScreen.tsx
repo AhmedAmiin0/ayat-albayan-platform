@@ -48,7 +48,7 @@ function LinkPage({ link, base }: { link: ShortLinkDetail; base: string }) {
         subtitle={ownerLine}
         leading={<BackButton onPress={() => backToList(base)} />}
       />
-      <LinkChip tone={look.tone} label={t.shortLinks.state[look.key]} />
+      <LinkChip look={look} label={t.shortLinks.state[look.key]} />
       <QrCard link={link} />
       <FactsCard link={link} />
       <LinkActions link={link} />

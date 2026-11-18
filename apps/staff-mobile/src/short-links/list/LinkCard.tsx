@@ -36,7 +36,7 @@ export function LinkCard({ row, viewer, me, onOpen }: LinkCardProps) {
     <ListRow
       title={row.title}
       subtitle={ltr(bareUrl(row.shortUrl))}
-      trailing={<LinkChip tone={look.tone} label={t.shortLinks.state[look.key]} />}
+      trailing={<LinkChip look={look} label={t.shortLinks.state[look.key]} />}
       tags={
         <View style={{ gap: 2 }}>
           <Note>{usage}</Note>

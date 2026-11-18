@@ -41,7 +41,7 @@ describe('AdminNav', () => {
     expect(screen.getByRole('link', { name: label }).getAttribute('href')).toBe(href);
   });
 
-  it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox, short links, settings, translations, activity and roles', () => {
+  it('links only the routes that exist (Phase 1 screens, money, inbox, short links, admin)', () => {
     render(<AdminNav />);
     expect(screen.getAllByRole('link')).toHaveLength(23);
   });

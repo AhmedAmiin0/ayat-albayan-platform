@@ -41,7 +41,9 @@ test.describe('short links («الروابط المختصرة»)', () => {
     await form.getByLabel(S.form.target).fill(TARGET);
     await form.getByText(S.audience.listed, { exact: true }).click();
     await form.getByLabel(S.form.addPeople).fill('أبرار');
-    const match = form.getByRole('listitem').filter({ hasText: 'أبرار' }).first();
+    // The search results only: once picked, the name also shows as a pill in «المحددون».
+    const results = form.getByRole('list', { name: S.people.results });
+    const match = results.getByRole('listitem').filter({ hasText: 'أبرار' }).first();
     await match.getByRole('button', { name: S.form.add }).click();
     await expect(match.getByRole('button', { name: S.people.picked })).toBeVisible();
     await form.getByRole('switch', { name: S.form.sendWhatsapp }).check();
@@ -55,7 +57,8 @@ test.describe('short links («الروابط المختصرة»)', () => {
     await expect(users).toContainText('أبرار');
     await expect(users).toContainText(S.send.failed);
     await expect(users).toContainText(S.detail.sendErrors.template_not_approved);
-    expect(await failedSends(title)).toEqual([{ status: 'failed', error: 'template_not_approved' }]);
+    const failed = [{ status: 'failed', error: 'template_not_approved' }];
+    expect(await failedSends(title)).toEqual(failed);
 
     // The list has it, active, opening the same page.
     await page.getByRole('link', { name: S.detail.back }).click();

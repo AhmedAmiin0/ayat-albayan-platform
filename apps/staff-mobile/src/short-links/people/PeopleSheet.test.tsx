@@ -20,7 +20,7 @@ beforeEach(() => {
   mockApiFetch.mockResolvedValue(people);
 });
 
-test('picked people show first; a search lists users by name and role, the chips filter', async () => {
+test('picked people first; a search lists users by name and role, the chips filter', async () => {
   const onDone = jest.fn();
   await renderWithQuery(
     <PeopleSheet
@@ -61,10 +61,10 @@ test('a free number: E.164 checked, listed as «رقم غير مسجّل», remo
   const field = screen.getByLabelText(P.notOnPlatform);
   await fireEvent.changeText(field, '12');
   await fireEvent.press(screen.getByRole('button', { name: F.add }));
-  expect(screen.getByText(F.errors.phone_invalid)).toBeTruthy();
+  expect(screen.getByText(t.shortLinks.gate.errors.invalid_phone)).toBeTruthy();
   await fireEvent.changeText(field, '+20 100 000 0001');
   await fireEvent.press(screen.getByRole('button', { name: F.add }));
-  expect(screen.queryByText(F.errors.phone_invalid)).toBeNull();
+  expect(screen.queryByText(t.shortLinks.gate.errors.invalid_phone)).toBeNull();
   expect(screen.getByText(F.unregistered)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: P.done.replace('{n}', '1') }));
   expect(onDone).toHaveBeenLastCalledWith({ people: [], phones: ['+201000000001'] });

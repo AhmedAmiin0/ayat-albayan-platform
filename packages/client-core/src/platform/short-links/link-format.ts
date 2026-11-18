@@ -1,10 +1,10 @@
-import type { ShortLinkRow, ShortLinkSendStatus, ShortLinkUser } from '@ab/shared';
+import type { Glyph, ShortLinkRow, ShortLinkSendStatus, ShortLinkUser } from '@ab/shared';
 import { fillSlots } from '../../teaching/reports/index.js';
 
 // The words around a link in the list and the detail (boards LinkXWebList, LinkXWebDetail,
 // LinkXStaffList, LinkXStaffDetail): its state chip, the WhatsApp send chips and «7 من 12».
 // Keys index shortLinks.state / shortLinks.send (ar.json / en.json); tones are the apps' chip
-// colours.
+// colours and glyphs their shapes (never colour alone).
 
 export type LinkTone = 'success' | 'warning' | 'neutral' | 'danger';
 
@@ -14,15 +14,20 @@ export type LinkState = 'active' | 'full' | 'expired' | 'revoked';
 export interface LinkLook<K extends string> {
   key: K;
   tone: LinkTone;
+  /** fill = running or sent, half = full, hollow = ended or waiting, struck = stopped or failed. */
+  glyph: Glyph;
 }
+
+type Look = Pick<LinkLook<string>, 'tone' | 'glyph'>;
 
 type Usage = Pick<ShortLinkRow, 'status' | 'maxUsers' | 'visitors'>;
 
-const STATE_TONE: Readonly<Record<LinkState, LinkTone>> = {
-  active: 'success',
-  full: 'warning',
-  expired: 'neutral',
-  revoked: 'danger',
+/** Boards LinkXWebList / LinkXStaffList: expired is amber and hollow, revoked grey and struck. */
+const STATE_LOOK: Readonly<Record<LinkState, Look>> = {
+  active: { tone: 'success', glyph: 'fill' },
+  full: { tone: 'warning', glyph: 'half' },
+  expired: { tone: 'warning', glyph: 'hollow' },
+  revoked: { tone: 'neutral', glyph: 'struck' },
 };
 
 /** Has the link as many distinct visitors as it allows? */
@@ -33,27 +38,27 @@ export function linkState(row: Usage): LinkState {
   return row.status === 'active' && isFull(row) ? 'full' : row.status;
 }
 
-/** shortLinks.state.<key> and its chip tone. */
+/** shortLinks.state.<key> and its chip tone and glyph. */
 export function linkStateLook(row: Usage): LinkLook<LinkState> {
   const key = linkState(row);
-  return { key, tone: STATE_TONE[key] };
+  return { key, ...STATE_LOOK[key] };
 }
 
-const SEND_TONE: Readonly<Record<ShortLinkSendStatus, LinkTone>> = {
-  queued: 'success',
-  failed: 'danger',
-  not_sent: 'neutral',
+const SEND_LOOK: Readonly<Record<ShortLinkSendStatus, Look>> = {
+  queued: { tone: 'success', glyph: 'fill' },
+  failed: { tone: 'danger', glyph: 'struck' },
+  not_sent: { tone: 'neutral', glyph: 'hollow' },
 };
 
-/** shortLinks.send.<key> («أُرسل», «فشل», «لم يُرسل بعد») and its tone. */
+/** shortLinks.send.<key> («قيد الإرسال», «فشل», «لم يُرسل بعد») and its tone and glyph. */
 export const sendLook = (status: ShortLinkSendStatus): LinkLook<ShortLinkSendStatus> => ({
   key: status,
-  tone: SEND_TONE[status],
+  ...SEND_LOOK[status],
 });
 
 export type SendCounts = Readonly<Record<ShortLinkSendStatus, number>>;
 
-/** «أُرسل 9 · فشل 1 · لم يُرسل 2», and the count «أعد الإرسال لمن فشل (1)» shows. */
+/** «قيد الإرسال 9 · فشل 1 · لم يُرسل 2», and the count «أعد الإرسال لمن فشل (1)» shows. */
 export function sendCounts(users: readonly Pick<ShortLinkUser, 'sendStatus'>[]): SendCounts {
   const out: Record<ShortLinkSendStatus, number> = { queued: 0, failed: 0, not_sent: 0 };
   for (const u of users) out[u.sendStatus] += 1;

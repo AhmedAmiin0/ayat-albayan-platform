@@ -19,7 +19,9 @@ export const OPEN_VIEW: ShortLinkGateView = {
   title: TITLE, state: 'open', goneReason: null, needs: 'sign_in_or_code', codesAvailable: true,
 };
 
-export const GUARDIAN: Me = { id: 'g-1', email: 'g@example.com', role: 'guardian', permissions: [] };
+export const GUARDIAN: Me = {
+  id: 'g-1', email: 'g@example.com', role: 'guardian', permissions: [],
+};
 
 export const json = (status: number, body: unknown): Response =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });

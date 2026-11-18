@@ -14,7 +14,9 @@ function VisitorCell({ visitor }: { visitor: ShortLinkVisitor }) {
     <span className="grid gap-0.5">
       <PersonLine look={look} />
       <span className="text-xs text-ink-3">{D.via[look.via]}</span>
-      {look.family && <span className="text-xs text-ink-3">{fillSlots(D.family, { name: look.family })}</span>}
+      {look.family && (
+        <span className="text-xs text-ink-3">{fillSlots(D.family, { name: look.family })}</span>
+      )}
     </span>
   );
 }

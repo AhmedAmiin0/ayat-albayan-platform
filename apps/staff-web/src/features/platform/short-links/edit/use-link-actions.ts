@@ -1,5 +1,5 @@
 import {
-  fillSlots, linkServerErrors, toUpdateBody, type LinkEdit, type LinkFieldErrors,
+  fillSlots, linkServerErrors, splitLinkCheck, toUpdateBody, type LinkEdit, type LinkFieldErrors,
 } from '@ab/client-core';
 import type { ShortLinkDetail } from '@ab/shared';
 import { useState } from 'react';
@@ -45,16 +45,13 @@ export function useLinkActions(code: string) {
   };
 }
 
-/** Both sides of the check's answer, so neither needs a shape test. */
-const NONE: { body: null; errors: LinkFieldErrors } = { body: null, errors: {} };
-
 /** «تعديل» / «تمديد»: the form check, then PATCH; each field's refusal for the dialog. */
 export function usePatchLink(link: Pick<ShortLinkDetail, 'code'>, onSaved: () => void) {
   const tz = useViewerTz();
   const [errors, setErrors] = useState<LinkFieldErrors>({});
   const update = useUpdateLink(onSaved);
   const save = (edit: LinkEdit) => {
-    const { body, errors: found } = { ...NONE, ...toUpdateBody(edit, { now: new Date(), tz }) };
+    const { body, errors: found } = splitLinkCheck(toUpdateBody(edit, { now: new Date(), tz }));
     setErrors(found);
     if (body === null) return;
     update.mutate({ code: link.code, body }, { onError: (e) => setErrors(linkServerErrors(e)) });

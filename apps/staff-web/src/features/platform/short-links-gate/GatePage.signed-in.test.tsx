@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('the gate for a signed-in visitor (board LinkXGateSignedIn)', () => {
-  it('shows the title, «متابعة باسم <name>» and «لست أنت؟ تسجيل الخروج»; no language switch', async () => {
+  it('the title, «متابعة باسم <name>», «لست أنت؟ تسجيل الخروج»; no language switch', async () => {
     stubApi(viewed);
     showGate(GUARDIAN);
     expect(await continueButton()).toBeTruthy();
@@ -28,7 +28,8 @@ describe('the gate for a signed-in visitor (board LinkXGateSignedIn)', () => {
   });
 
   it('«متابعة» opens with the session and goes to the target', async () => {
-    const calls = stubApi({ ...viewed, [OPEN]: () => json(200, { outcome: 'open', target: TARGET }) });
+    const open = { outcome: 'open', target: TARGET };
+    const calls = stubApi({ ...viewed, [OPEN]: () => json(200, open) });
     const { go } = showGate(GUARDIAN);
     fireEvent.click(await continueButton());
     await waitFor(() => expect(go).toHaveBeenCalledWith(TARGET));
@@ -37,11 +38,13 @@ describe('the gate for a signed-in visitor (board LinkXGateSignedIn)', () => {
     expect(screen.getByRole('link', { name: G.openManually }).getAttribute('href')).toBe(TARGET);
   });
 
-  it('never navigates to a target that is not an http(s) URL', async () => {
-    stubApi({ ...viewed, [OPEN]: () => json(200, { outcome: 'open', target: 'javascript:alert(1)' }) });
+  it('a target that is not http(s) is a dead end, never a navigation', async () => {
+    const unsafe = { outcome: 'open', target: 'javascript:alert(1)' };
+    stubApi({ ...viewed, [OPEN]: () => json(200, unsafe) });
     const { go } = showGate(GUARDIAN);
     fireEvent.click(await continueButton());
-    expect(await screen.findByText(G.opening)).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: G.notFoundTitle })).toBeTruthy();
+    expect(screen.queryByText(G.opening)).toBeNull();
     expect(go).not.toHaveBeenCalled();
     expect(screen.queryByRole('link', { name: G.openManually })).toBeNull();
   });
@@ -55,7 +58,7 @@ describe('the gate for a signed-in visitor (board LinkXGateSignedIn)', () => {
     expect(screen.queryByRole('button', { name: G.otherPhone })).toBeNull();
   });
 
-  it('not_allowed: restricted, with «أكّد رقمًا آخر» and sign-out (board LinkXGateRestricted)', async () => {
+  it('not_allowed: restricted, «أكّد رقمًا آخر» and sign-out (LinkXGateRestricted)', async () => {
     stubApi({ ...viewed, [OPEN]: () => json(200, { outcome: 'not_allowed' }) });
     showGate(GUARDIAN);
     fireEvent.click(await continueButton());

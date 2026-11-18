@@ -7,7 +7,7 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { errorText } from '@/features/platform/short-links/create/form-errors';
+import { errorText } from '@/features/platform/short-links/shared/link-errors';
 import { MaxUsersField } from '@/features/platform/short-links/create/MaxUsersField';
 import { UsersPanel } from '@/features/platform/short-links/create/UsersPanel';
 import { usePatchLink } from './use-link-actions';
@@ -34,7 +34,9 @@ export function EditLinkDialog({ link, onClose, onSaved }: EditLinkDialogProps) 
   const actions = (
     <>
       <Button type="button" variant="secondary" onClick={onClose}>{F.cancel}</Button>
-      <Button type="submit" form={formId} disabled={patch.pending}>{t.shortLinks.detail.save}</Button>
+      <Button type="submit" form={formId} disabled={patch.pending}>
+        {t.shortLinks.detail.save}
+      </Button>
     </>
   );
   return (

@@ -23,17 +23,19 @@ interface Run {
   length: number;
 }
 
-/** The dark runs of one row: start column and length. */
-function darkRuns(row: readonly boolean[]): Run[] {
-  const runs: Run[] = [];
-  row.forEach((dark, x) => {
-    const last = runs.at(-1);
-    const grows = dark && last !== undefined && last.x + last.length === x;
-    if (grows) last.length += 1;
-    else if (dark) runs.push({ x, length: 1 });
-  });
-  return runs;
+/** Does a dark run start at column x (dark, after a light module or the edge)? */
+const startsRun = (row: readonly boolean[], x: number): boolean =>
+  row[x] === true && row[x - 1] !== true;
+
+/** How many dark modules run from column x to the next light one (or the edge). */
+function runLength(row: readonly boolean[], x: number): number {
+  const end = row.indexOf(false, x);
+  return (end === -1 ? row.length : end) - x;
 }
+
+/** The dark runs of one row: start column and length. */
+const darkRuns = (row: readonly boolean[]): Run[] =>
+  row.flatMap((_, x) => (startsRun(row, x) ? [{ x, length: runLength(row, x) }] : []));
 
 /**
  * The `d` of one path covering every dark module, one rectangle per horizontal run, shifted by

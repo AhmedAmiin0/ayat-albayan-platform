@@ -16,7 +16,9 @@ export function LinkCard({ title }: { title: string | null }) {
       aria-labelledby={id}
       className="flex items-center gap-3 rounded-[20px] border border-rule bg-raised px-4 py-3.5"
     >
-      <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-lapis-wash text-lapis">
+      <span
+        className="grid size-11 shrink-0 place-items-center rounded-lg bg-lapis-wash text-lapis"
+      >
         <GateIcon name="link" />
       </span>
       <span className="flex min-w-0 flex-col">

@@ -19,7 +19,9 @@ vi.mock('@tanstack/react-router', async () => ({
 const L = t.shortLinks.list;
 const ROWS = [
   linkRow(),
-  linkRow({ code: 'R4tX8bWe', title: 'نموذج التسجيل', audience: 'anyone', maxUsers: null, visitors: 23 }),
+  linkRow({
+    code: 'R4tX8bWe', title: 'نموذج التسجيل', audience: 'anyone', maxUsers: null, visitors: 23,
+  }),
 ];
 
 function serve(rows = ROWS) {
@@ -67,7 +69,8 @@ describe('ShortLinksPage', () => {
     const chips = screen.getByRole('group', { name: L.status });
     fireEvent.click(await within(chips).findByRole('button', { name: /فعّال/ }));
     expect(onSearch).toHaveBeenCalledWith({ status: 'active', page: 1 });
-    const statuses = apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.includes('status='));
+    const paths = apiFetch.mock.calls.map(([p]) => String(p));
+    const statuses = paths.filter((p) => p.includes('status='));
     expect(statuses.length).toBe(3);
   });
 

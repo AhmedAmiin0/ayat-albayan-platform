@@ -21,7 +21,7 @@ function UserRow({ user, opened }: { user: ShortLinkUser; opened: boolean }) {
   return (
     <PersonRow look={userLook(user)} id={user.person?.id}>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
-        <LinkChip tone={look.tone} label={t.shortLinks.send[look.key]} />
+        <LinkChip look={look} label={t.shortLinks.send[look.key]} />
         {opened ? null : <Note>{D().notOpenedYet}</Note>}
       </View>
       {user.sendError ? <ErrorLine message={sendErrorText(user.sendError)} /> : null}
@@ -40,7 +40,7 @@ export function UsersList({ link }: { link: ShortLinkDetail }) {
   if (users.length === 0) return <Note>{D().noUsers}</Note>;
   return (
     <Section title={title}>
-      {waiting > 0 ? <Note>{D().notOpened.replace('{n}', String(waiting))}</Note> : null}
+      {waiting > 0 ? <Note>{counted(D().notOpened, waiting)}</Note> : null}
       <InsetGroup testID="link-users">
         {users.map((u) => (
           <UserRow key={u.id} user={u} opened={visitOf(u, link.visitorList) !== null} />

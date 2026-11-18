@@ -50,6 +50,20 @@ describe('outcomes', () => {
     expect(openTarget(null)).toBeNull();
   });
 
+  it('never gives a target that is not http(s)', () => {
+    expect(openTarget({ outcome: 'open', target: 'javascript:alert(1)' })).toBeNull();
+    expect(openTarget({ outcome: 'open', target: 'data:text/html,x' })).toBeNull();
+    expect(openTarget({ outcome: 'open', target: 'not a url' })).toBeNull();
+    expect(openTarget({ outcome: 'open', target: 'http://x.test/a' })).toBe('http://x.test/a');
+  });
+
+  it('turns an open answer with an unsafe target into a dead end', () => {
+    const unsafe = { outcome: 'open', target: 'javascript:alert(1)' } as const;
+    expect(outcomeScreen(unsafe, null)).toBe('not_found');
+    expect(gateScreen({ ...base, step: 'code', result: unsafe })).toBe('not_found');
+    expect(isDeadEnd(outcomeScreen(unsafe, null))).toBe(true);
+  });
+
   it('marks the screens with nothing left to do', () => {
     expect(isDeadEnd('full')).toBe(true);
     expect(isDeadEnd('not_found')).toBe(true);

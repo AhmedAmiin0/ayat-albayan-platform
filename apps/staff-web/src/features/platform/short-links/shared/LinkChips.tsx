@@ -1,23 +1,17 @@
 import { linkStateLook, sendLook, type LinkTone } from '@ab/client-core';
-import type { Glyph, ShortLinkRow, ShortLinkSendStatus, Tone } from '@ab/shared';
+import type { ShortLinkRow, ShortLinkSendStatus, Tone } from '@ab/shared';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The chips of the short-link screens: a link's state («فعّال», «اكتمل العدد», «منتهٍ», «موقوف»)
-// and a WhatsApp send («أُرسل», «فشل», «لم يُرسل بعد»), in the shared status-chip colours.
+// and a WhatsApp send («قيد الإرسال», «فشل», «لم يُرسل بعد»), in the shared status-chip colours
+// and client-core's glyphs.
 
 const TONE: Readonly<Record<LinkTone, Tone>> = {
   success: 'ok',
   warning: 'act',
   neutral: 'neutral',
   danger: 'bad',
-};
-
-const GLYPH: Readonly<Record<LinkTone, Glyph>> = {
-  success: 'fill',
-  warning: 'half',
-  neutral: 'hollow',
-  danger: 'struck',
 };
 
 interface StateChipProps {
@@ -28,7 +22,7 @@ interface StateChipProps {
 export function StateChip({ row, size = 'sm' }: StateChipProps) {
   const look = linkStateLook(row);
   const label = t.shortLinks.state[look.key];
-  return <StatusChip tone={TONE[look.tone]} glyph={GLYPH[look.tone]} label={label} size={size} />;
+  return <StatusChip tone={TONE[look.tone]} glyph={look.glyph} label={label} size={size} />;
 }
 
 interface SendChipProps {
@@ -41,5 +35,5 @@ export function SendChip({ status, count }: SendChipProps) {
   const look = sendLook(status);
   const word = t.shortLinks.send[look.key];
   const label = count === undefined ? word : `${word} ${count}`;
-  return <StatusChip tone={TONE[look.tone]} glyph={GLYPH[look.tone]} label={label} size="sm" />;
+  return <StatusChip tone={TONE[look.tone]} glyph={look.glyph} label={label} size="sm" />;
 }

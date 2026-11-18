@@ -17,8 +17,6 @@ import { managedOrThrow } from './managed.access';
 import { ManagedLinks } from './managed-links.service';
 import { ManagedReads } from './managed-reads';
 
-export type SentDetail = ShortLinkSentDetail;
-
 /**
  * The admin / sales side of the managed links (docs/19): the writes, the WhatsApp send (on create
  * when send_whatsapp is on, and «إعادة الإرسال»), and the reads. An audit row per resend.
@@ -32,7 +30,7 @@ export class ShortLinksAdmin {
     @Inject(LinkTargets) private readonly targets: LinkTargets,
   ) {}
 
-  async create(body: ShortLinkCreate, user: AuthUser): Promise<SentDetail> {
+  async create(body: ShortLinkCreate, user: AuthUser): Promise<ShortLinkSentDetail> {
     const row = await this.writes.create(body, user);
     const send = row.send_whatsapp ? await this.sendNow(row, user) : null;
     return { ...(await this.reads.view(row)), send };
@@ -47,7 +45,7 @@ export class ShortLinksAdmin {
   }
 
   /** 409 short_link_not_active for an expired or revoked link (nothing to open). */
-  async resend(code: string, user: AuthUser): Promise<SentDetail> {
+  async resend(code: string, user: AuthUser): Promise<ShortLinkSentDetail> {
     const row = managedOrThrow(user, await this.reads.row(code));
     if (row.status !== 'active') throw conflict('short_link_not_active');
     const send = await this.sendNow(row, user);

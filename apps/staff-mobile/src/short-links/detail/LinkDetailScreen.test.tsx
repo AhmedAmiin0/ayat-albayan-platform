@@ -86,6 +86,22 @@ test('edit: PATCH the title, the limit and a new lifetime', async () => {
   await waitFor(() => expect(screen.queryByTestId('edit-sheet')).toBeNull());
 });
 
+test('extend: «تمديد» opens a lifetime sheet and PATCHes only the expiry', async () => {
+  mockApiSend.mockResolvedValue(link);
+  await render();
+  await fireEvent.press(await screen.findByRole('button', { name: D.extend }));
+  expect(screen.getByTestId('extend-sheet')).toBeTruthy();
+  await fireEvent.press(
+    screen.getByRole('radio', { name: t.shortLinks.form.days.other.replace('{n}', '30') }),
+  );
+  await fireEvent.press(screen.getByRole('button', { name: D.save }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalled());
+  const [method, path, body] = mockApiSend.mock.calls[0] ?? [];
+  expect([method, path]).toEqual(['PATCH', '/short-links/K7q2M9xT']);
+  expect(Object.keys(body)).toEqual(['expiresAt']);
+  await waitFor(() => expect(screen.queryByTestId('extend-sheet')).toBeNull());
+});
+
 test('a link that is gone says so', async () => {
   mockApiFetch.mockRejectedValue(new ApiError(404, { code: 'short_link_not_found' }));
   await render();

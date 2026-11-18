@@ -2,6 +2,7 @@ import {
   emptyLinkForm,
   linkServerErrors,
   SHORT_LINK_DEFAULT_DAYS,
+  splitLinkCheck,
   toCreateBody,
   type LinkFieldErrors,
   type LinkForm,
@@ -9,7 +10,6 @@ import {
 import { useState } from 'react';
 import { useViewerTz } from '@/core/lib/clock';
 import { useCreateLink } from '@/short-links/api/link-hooks';
-import { splitCheck } from '@/short-links/ui/link-words';
 
 /**
  * «رابط جديد»: the form (client-core's LinkForm), its field errors, and the submit that checks it
@@ -22,9 +22,9 @@ export function useLinkForm(onCreated: (code: string) => void) {
   const create = useCreateLink();
   const set = (patch: Partial<LinkForm>) => setForm((f) => ({ ...f, ...patch }));
   const submit = () => {
-    const { body, errors: wrong } = splitCheck(toCreateBody(form, { now: new Date(), tz }));
+    const { body, errors: wrong } = splitLinkCheck(toCreateBody(form, { now: new Date(), tz }));
     setErrors(wrong);
-    if (body === undefined) return;
+    if (body === null) return;
     create.mutate(body, {
       onSuccess: (link) => onCreated(link.code),
       onError: (e) => setErrors(linkServerErrors(e)),

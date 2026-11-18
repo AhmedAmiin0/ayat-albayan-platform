@@ -1,4 +1,4 @@
-import { calendarDaysBetween, localDateIn } from '@ab/shared';
+import { addDaysIn, localDateIn, SHORT_LINK_MAX_DAYS, zonedInstant } from '@ab/shared';
 import { roleKey, type RoleKey } from '../link-people.js';
 import {
   EXPIRY_DAY_CHOICES, expiresAtOf, type LinkClock, type LinkExpiry,
@@ -34,10 +34,26 @@ export function expiryChip(expiry: LinkExpiry): ExpiryChip {
   return EXPIRY_DAY_CHOICES.find((d) => d === days) ?? 'date';
 }
 
-/** A day picked on the calendar (YYYY-MM-DD, the viewer's zone): that many days from now. */
-export const dayExpiry = (day: string, clock: LinkClock): LinkExpiry => ({
-  kind: 'days',
-  days: calendarDaysBetween(localDateIn(clock.now, clock.tz), day),
+/** «تاريخ آخر» ends at the close of the picked day, in the viewer's zone. */
+const DAY_END = '23:59';
+
+/** A day picked on the calendar (YYYY-MM-DD, the viewer's zone): its 23:59 there. */
+export const dayEndExpiry = (day: string, tz: string): LinkExpiry => ({
+  kind: 'date',
+  at: zonedInstant(day, DAY_END, tz),
+});
+
+export interface ExpiryDayRange {
+  /** Today: its 23:59 is still ahead. */
+  min: string;
+  /** The last day whose 23:59 stays within SHORT_LINK_MAX_DAYS of now (the API's limit). */
+  max: string;
+}
+
+/** The days the calendar of «تاريخ آخر» offers (YYYY-MM-DD in the viewer's zone). */
+export const expiryDayRange = (clock: LinkClock): ExpiryDayRange => ({
+  min: localDateIn(clock.now, clock.tz),
+  max: localDateIn(addDaysIn(clock.now, SHORT_LINK_MAX_DAYS - 1, clock.tz), clock.tz),
 });
 
 /** The calendar's day of the expiry (YYYY-MM-DD in the viewer's zone). */

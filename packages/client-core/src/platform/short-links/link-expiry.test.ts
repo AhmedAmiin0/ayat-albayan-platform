@@ -32,7 +32,8 @@ describe('expiry', () => {
   });
 
   it('gives the parts', () => {
-    expect(expiryParts({ status: 'active', expiresAt: '2026-11-20T11:06:00.000Z' }, clock)).toEqual({
+    const row = { status: 'active', expiresAt: '2026-11-20T11:06:00.000Z' } as const;
+    expect(expiryParts(row, clock)).toEqual({
       kind: 'in_days', at: '2026-11-20T11:06:00.000Z', days: 3,
       purgeAt: '2026-12-20T11:06:00.000Z',
     });

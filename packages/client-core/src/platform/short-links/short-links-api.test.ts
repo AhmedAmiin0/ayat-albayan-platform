@@ -10,7 +10,8 @@ describe('short link reads', () => {
   it('lists with the filters in the key and the query string', async () => {
     const client = clientAnswering(async () => ({ rows: [detail], total: 1 }));
     const q = shortLinkQueries(client).listQuery({ status: 'active', search: 'لقاء', page: 2 });
-    expect(q.queryKey).toEqual(['short-links', 'list', { status: 'active', search: 'لقاء', page: 2 }]);
+    const filter = { status: 'active', search: 'لقاء', page: 2 };
+    expect(q.queryKey).toEqual(['short-links', 'list', filter]);
     expect(q.queryKey.slice(0, 1)).toEqual(SHORT_LINKS_KEY);
     await expect(q.queryFn()).resolves.toMatchObject({ total: 1 });
     expect(client.apiFetch).toHaveBeenCalledWith(

@@ -1,4 +1,5 @@
 import { roleKey, type PersonLook } from '@ab/client-core';
+import { formatPhone } from '@ab/shared';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
@@ -37,7 +38,7 @@ export function PersonLine({ look }: { look: PersonLook }) {
     <span className="font-semibold"><NameAndRole look={look} /></span>
   ) : (
     <span className="grid gap-0.5">
-      <Ltr className="font-semibold">{look.phone}</Ltr>
+      <Ltr className="font-semibold">{formatPhone(look.phone)}</Ltr>
       <PhoneSub look={look} />
     </span>
   );

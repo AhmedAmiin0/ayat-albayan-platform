@@ -19,7 +19,8 @@ const box = (n: number) => screen.getByLabelText(t.familyAuth.codeDigit.replace(
 async function toCode(routes: Routes) {
   const calls = stubApi({ ...base, ...routes });
   const shown = showGate();
-  fireEvent.change(await screen.findByLabelText(t.familyAuth.phone), { target: { value: '0500000004' } });
+  const field = await screen.findByLabelText(t.familyAuth.phone);
+  fireEvent.change(field, { target: { value: '0500000004' } });
   fireEvent.click(screen.getByRole('button', { name: G.sendCode }));
   expect(await screen.findByText(G.codeTitle)).toBeTruthy();
   return { calls, ...shown };

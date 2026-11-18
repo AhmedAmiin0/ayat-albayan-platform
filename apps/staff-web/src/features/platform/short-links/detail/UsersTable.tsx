@@ -24,12 +24,16 @@ interface UsersTableProps {
   pending: boolean;
 }
 
-function SendCell({ user, onResend, pending }: { user: ShortLinkUser } & Omit<UsersTableProps, 'link'>) {
+type SendCellProps = { user: ShortLinkUser } & Omit<UsersTableProps, 'link'>;
+
+function SendCell({ user, onResend, pending }: SendCellProps) {
   const failed = user.sendStatus === 'failed';
   return (
     <span className="grid justify-items-start gap-1">
       <SendChip status={user.sendStatus} />
-      {user.sendError && <span className="text-xs text-ink-3">{sendErrorText(user.sendError)}</span>}
+      {user.sendError && (
+        <span className="text-xs text-ink-3">{sendErrorText(user.sendError)}</span>
+      )}
       {failed && onResend && (
         <Button type="button" variant="secondary" size="sm" disabled={pending} onClick={onResend}>
           {D.resend}

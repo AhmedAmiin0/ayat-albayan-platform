@@ -56,5 +56,14 @@ export async function seedGateLink(seed: GateLinkSeed = {}): Promise<string> {
   return code;
 }
 
-/** A fresh Saudi number in E.164 (never a seeded family's). */
-export const freshGatePhone = (): string => `+9665${String(Date.now()).slice(-8)}`;
+let phones = 0;
+
+/**
+ * A fresh Saudi number in E.164 (never a seeded family's): +9665 and 8 digits from the clock,
+ * plus a module counter, so calls in the same millisecond never collide.
+ */
+export function freshGatePhone(): string {
+  phones += 1;
+  const digits = (Date.now() + phones) % 100_000_000;
+  return `+9665${String(digits).padStart(8, '0')}`;
+}

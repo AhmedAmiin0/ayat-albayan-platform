@@ -19,7 +19,10 @@ export function QrCard({ link }: { link: Pick<ShortLinkDetail, 'code' | 'shortUr
     if (svg.current) void downloadQrPng(svg.current, link.code);
   };
   return (
-    <section aria-labelledby="link-qr" className="grid content-start gap-3 rounded-md border border-rule p-4">
+    <section
+      aria-labelledby="link-qr"
+      className="grid content-start gap-3 rounded-md border border-rule p-4"
+    >
       <h2 id="link-qr" className="text-base font-bold">{D.qr}</h2>
       <div className="rounded-md border border-rule bg-white p-3">
         <svg

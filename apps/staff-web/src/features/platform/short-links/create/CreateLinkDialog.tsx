@@ -9,8 +9,8 @@ import { Input } from '@ab/web-kit/components/ui/form/input';
 import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { errorText } from '@/features/platform/short-links/shared/link-errors';
 import { ExpiryField } from './ExpiryField';
-import { errorText } from './form-errors';
 import { MaxUsersField } from './MaxUsersField';
 import { useLinkForm, type LinkFormState } from './use-link-form';
 import { UsersPanel } from './UsersPanel';
@@ -111,7 +111,7 @@ export function CreateLinkDialog({ onClose, onCreated }: CreateLinkDialogProps) 
         className="grid gap-5"
         onSubmit={(e) => {
           e.preventDefault();
-          state.submit();
+          state.submit(e.currentTarget);
         }}
       >
         <TextFields state={state} />

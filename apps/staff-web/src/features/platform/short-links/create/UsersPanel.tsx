@@ -4,7 +4,7 @@ import {
 } from '@ab/client-core';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { errorText } from './form-errors';
+import { errorText } from '@/features/platform/short-links/shared/link-errors';
 import { PeoplePicker } from './PeoplePicker';
 import { PhoneAdd } from './PhoneAdd';
 import { PickedList } from './PickedList';

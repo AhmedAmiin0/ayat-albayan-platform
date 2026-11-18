@@ -1,7 +1,8 @@
 import {
-  EXPIRY_DAY_CHOICES, expiresAtOf, fillSlots, SHORT_LINK_PURGE_DAYS, type LinkExpiry,
+  dayEndExpiry, EXPIRY_DAY_CHOICES, expiresAtOf, expiryDayRange, fillSlots,
+  SHORT_LINK_PURGE_DAYS, type LinkExpiry,
 } from '@ab/client-core';
-import { counted, localDateIn, zonedInstant } from '@ab/shared';
+import { counted, localDateIn } from '@ab/shared';
 import { useId } from 'react';
 import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
 import { Input } from '@ab/web-kit/components/ui/form/input';
@@ -11,8 +12,6 @@ import { useLinkDates } from '@/features/platform/short-links/shared/use-link-da
 
 const F = t.shortLinks.form;
 const OTHER = 'date';
-/** «تاريخ آخر» ends at the close of the picked day, in the viewer's zone. */
-const DAY_END = '23:59';
 
 interface ExpiryFieldProps {
   expiry: LinkExpiry;
@@ -38,27 +37,37 @@ export function ExpiryField({ expiry, onChange, error }: ExpiryFieldProps) {
   const clock = { now: dates.now, tz: dates.tz };
   const at = expiresAtOf(expiry, clock);
   const day = at ? localDateIn(Date.parse(at), dates.tz) : '';
+  const range = expiryDayRange(clock);
   const pickDay = (value: string) => {
     if (value === '') return;
-    onChange({ kind: 'date', at: zonedInstant(value, DAY_END, dates.tz) });
+    onChange(dayEndExpiry(value, dates.tz));
   };
   const pick = (value: string) =>
-    onChange(value === OTHER ? { kind: 'date', at } : { kind: 'days', days: Number(value) });
+    onChange(value === OTHER ? dayEndExpiry(day, dates.tz) : { kind: 'days', days: Number(value) });
   return (
     <div className="grid gap-2">
-      <RadioChips name="expiry" legend={F.expiry} options={OPTIONS} value={chipOf(expiry)} onChange={pick} />
+      <RadioChips
+        name="expiry"
+        legend={F.expiry}
+        options={OPTIONS}
+        value={chipOf(expiry)}
+        onChange={pick}
+      />
       {expiry.kind === 'date' && (
         <Input
           id={dateId}
           type="date"
           aria-label={F.otherDate}
           className="max-w-[220px]"
-          min={localDateIn(dates.now, dates.tz)}
+          min={range.min}
+          max={range.max}
           value={day}
           onChange={(e) => pickDay(e.target.value)}
         />
       )}
-      {at && <p className="text-sm font-semibold">{fillSlots(F.endsAt, { date: dates.dayClock(at) })}</p>}
+      {at && (
+        <p className="text-sm font-semibold">{fillSlots(F.endsAt, { date: dates.dayClock(at) })}</p>
+      )}
       <p className="text-xs text-ink-3">
         {fillSlots(F.purgeNote, { days: counted(F.days, SHORT_LINK_PURGE_DAYS) })}
       </p>

@@ -1,4 +1,4 @@
-import { fillSlots, targetHost } from '@ab/client-core';
+import { fillSlots, targetHost, usageText } from '@ab/client-core';
 import { SHORT_LINK_GATE_PATH, type ShortLinkRow } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
@@ -13,6 +13,9 @@ import { useLinkDates } from '@/features/platform/short-links/shared/use-link-da
 // and the host it opens, the expiry with its countdown, and the owner with their role.
 
 const L = t.shortLinks.list;
+const TITLE_LINK =
+  'inline-flex max-w-[260px] items-center gap-1 font-semibold whitespace-normal text-ink ' +
+  'hover:underline';
 
 interface RowProps {
   row: ShortLinkRow;
@@ -23,7 +26,7 @@ export function TitleCell({ row, section }: RowProps & { section: LinkSection })
     <Link
       to={LINK_ROUTES[section].detail}
       params={{ code: row.code }}
-      className="inline-flex max-w-[260px] items-center gap-1 font-semibold whitespace-normal text-ink hover:underline"
+      className={TITLE_LINK}
     >
       {row.title}
       <Icon name="chevron-left" className="shrink-0 text-ink-3" />
@@ -45,16 +48,25 @@ export function ShortUrlCell({ row }: RowProps) {
   );
 }
 
+/** The date in bold, then the countdown, «يُحذف …» once ended, or «أُوقف · يُحذف …». */
 export function ExpiryCell({ row }: RowProps) {
   const dates = useLinkDates();
   const { parts, text } = dates.expiry(row);
-  const running = parts.kind !== 'ended' && parts.kind !== 'revoked';
+  const purge = fillSlots(t.shortLinks.expiry.purgeOn, { date: dates.day(parts.purgeAt) });
   return (
     <span className="grid gap-0.5">
-      {running && <span className="font-semibold">{dates.day(row.expiresAt)}</span>}
-      <span className={running ? 'text-xs text-ink-3' : 'text-xs font-semibold text-ink-2'}>
-        {text}
-      </span>
+      <span className="font-semibold">{dates.day(row.expiresAt)}</span>
+      <span className="text-xs text-ink-3">{parts.kind === 'ended' ? purge : text}</span>
+    </span>
+  );
+}
+
+/** «7 من 12»; on a phone's stacked card «الزيارات 7 من 12» (no column header there). */
+export function UsageCell({ row }: RowProps) {
+  return (
+    <span className="tabular-nums">
+      <span className="text-ink-3 sm:hidden">{`${L.visits} `}</span>
+      {usageText(row, L)}
     </span>
   );
 }
@@ -64,7 +76,8 @@ export function OwnerCell({ row }: RowProps) {
   if (owner === null) return <span className="text-ink-3">—</span>;
   return (
     <span className="grid justify-items-start gap-0.5">
-      <span>{owner.name}</span>
+      <span className="max-sm:hidden">{owner.name}</span>
+      <span className="sm:hidden">{fillSlots(L.ownerLine, { name: owner.name })}</span>
       <RoleTag role={owner.role} />
     </span>
   );

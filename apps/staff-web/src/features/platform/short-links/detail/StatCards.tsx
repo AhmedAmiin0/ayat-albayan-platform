@@ -37,8 +37,11 @@ function UsersStat({ link }: { link: ShortLinkDetail }) {
   return (
     <Stat label={D.users} value={value}>
       {waiting > 0 && (
-        <a href="#link-users" className="text-xs font-semibold text-lapis underline underline-offset-4">
-          {fillSlots(D.notOpened, { n: waiting })}
+        <a
+          href="#link-users"
+          className="text-xs font-semibold text-lapis underline underline-offset-4"
+        >
+          {counted(D.notOpened, waiting)}
         </a>
       )}
     </Stat>
@@ -51,7 +54,9 @@ function RemainingStat({ link }: { link: ShortLinkDetail }) {
   const value = parts.kind === 'in_days' ? counted(t.shortLinks.form.days, parts.days) : text;
   return (
     <Stat label={D.remaining} value={value}>
-      <span className="text-xs text-ink-3">{fillSlots(D.until, { date: dates.weekday(link.expiresAt) })}</span>
+      <span className="text-xs text-ink-3">
+        {fillSlots(D.until, { date: dates.weekday(link.expiresAt) })}
+      </span>
     </Stat>
   );
 }

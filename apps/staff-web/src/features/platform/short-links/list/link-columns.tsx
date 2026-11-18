@@ -1,14 +1,14 @@
-import { usageText } from '@ab/client-core';
 import type { ShortLinkRow } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableColumn, DataTableFeatures } from '@/components/data-table/DataTable';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StateChip } from '@/features/platform/short-links/shared/LinkChips';
 import type { LinkSection } from '@/features/platform/short-links/shared/link-routes';
-import { ExpiryCell, OwnerCell, ShortUrlCell, TitleCell } from './LinkCells';
+import { ExpiryCell, OwnerCell, ShortUrlCell, TitleCell, UsageCell } from './LinkCells';
 
 // The list's columns (board LinkXWebList): title, short link, users, visitors / limit, expiry,
-// state, and the owner for whoever sees every link (short_links.all). Phones stack each row.
+// state, and the owner for whoever sees every link (short_links.all). Phones stack each row as a
+// card, where the use and the owner carry a short label («الزيارات 7 من 12», «المالك: …»).
 
 const C = t.shortLinks.list.columns;
 const col = createColumnHelper<DataTableFeatures, ShortLinkRow>();
@@ -39,7 +39,7 @@ function baseColumns(section: LinkSection) {
     col.display({
       id: 'visitors',
       header: () => C.visitors,
-      cell: (c) => <span className="tabular-nums">{usageText(c.row.original, t.shortLinks.list)}</span>,
+      cell: (c) => <UsageCell row={c.row.original} />,
       meta: { className: 'max-sm:order-4' },
     }),
     col.display({

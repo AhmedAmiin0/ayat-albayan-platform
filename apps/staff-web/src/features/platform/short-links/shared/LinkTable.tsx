@@ -13,10 +13,16 @@ interface LinkTableProps {
   keys: string[];
 }
 
+const HEAD_CELL = 'border-b border-rule px-2 py-2 text-start text-xs font-semibold text-ink-2';
+const BODY_CELL = 'border-b border-rule px-2 py-2.5 align-middle';
+
 /** A titled card with a small table (the detail's users and visitors, board LinkXWebDetail). */
 export function LinkTable({ id, title, count, hint, head, rows, keys }: LinkTableProps) {
   return (
-    <section aria-labelledby={id} className="grid min-w-0 content-start gap-3 rounded-md border border-rule p-4">
+    <section
+      aria-labelledby={id}
+      className="grid min-w-0 content-start gap-3 rounded-md border border-rule p-4"
+    >
       <div className="flex flex-wrap items-baseline gap-2">
         <h2 id={id} className="text-base font-bold">{title}</h2>
         <span className="text-sm text-ink-3 tabular-nums">{count}</span>
@@ -28,7 +34,7 @@ export function LinkTable({ id, title, count, hint, head, rows, keys }: LinkTabl
             <thead>
               <tr>
                 {head.map((h) => (
-                  <th key={h} scope="col" className="border-b border-rule px-2 py-2 text-start text-xs font-semibold text-ink-2">
+                  <th key={h} scope="col" className={HEAD_CELL}>
                     {h}
                   </th>
                 ))}
@@ -38,7 +44,7 @@ export function LinkTable({ id, title, count, hint, head, rows, keys }: LinkTabl
               {rows.map((cells, i) => (
                 <tr key={keys[i] ?? i}>
                   {cells.map((cell, j) => (
-                    <td key={head[j] ?? j} className="border-b border-rule px-2 py-2.5 align-middle">
+                    <td key={head[j] ?? j} className={BODY_CELL}>
                       {cell}
                     </td>
                   ))}

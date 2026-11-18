@@ -9065,7 +9065,7 @@
       "revoked": "Stopped"
     },
     "send": {
-      "queued": "Sent",
+      "queued": "Sending",
       "failed": "Failed",
       "not_sent": "Not sent yet"
     },
@@ -9123,7 +9123,8 @@
         "other": "In {n} days"
       },
       "ended": "Ended {date} · deleted {purge}",
-      "revoked": "Stopped · deleted {purge}"
+      "revoked": "Stopped · deleted {purge}",
+      "purgeOn": "Deleted {date}"
     },
     "form": {
       "title": "New link",
@@ -9206,7 +9207,8 @@
       "notOnPlatform": "A WhatsApp number not on the platform",
       "picked": "Selected",
       "done": "Done · {n}",
-      "doneOf": "Done · {n} of {max} allowed"
+      "doneOf": "Done · {n} of {max} allowed",
+      "results": "Search results"
     },
     "detail": {
       "back": "Short links",
@@ -9234,7 +9236,12 @@
       "copied": "Link copied.",
       "visitors": "Visitors",
       "users": "People",
-      "notOpened": "{n} have not opened the link yet",
+      "notOpened": {
+        "one": "1 person has not opened the link yet",
+        "two": "2 people have not opened the link yet",
+        "few": "{n} people have not opened the link yet",
+        "other": "{n} people have not opened the link yet"
+      },
       "remaining": "Remaining",
       "until": "Until {date}",
       "target": "Original link",

@@ -1,3 +1,4 @@
+import { ownerChoices } from '@ab/client-core';
 import type { ShortLinkPage } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -14,7 +15,7 @@ import { ListPager } from './ListPager';
 
 /** The owner filter's people (everyone on the page), for short_links.all only. */
 const ownersOf = (page: ShortLinkPage | undefined, showOwner: boolean) =>
-  showOwner ? (page?.rows ?? []).map((r) => r.createdBy) : null;
+  showOwner ? ownerChoices(page?.rows ?? []) : null;
 
 export interface ShortLinksPageProps {
   section: LinkSection;

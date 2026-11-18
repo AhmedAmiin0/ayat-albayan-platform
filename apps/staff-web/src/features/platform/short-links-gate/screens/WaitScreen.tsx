@@ -26,7 +26,10 @@ export function OpeningScreen({ gate }: { gate: Gate }) {
       <LinkCard title={gate.title} />
       <p role="status" className="text-center text-sm text-ink-2">{G.opening}</p>
       {gate.target !== null && (
-        <a href={gate.target} className="justify-self-center text-sm font-semibold text-lapis underline">
+        <a
+          href={gate.target}
+          className="justify-self-center text-sm font-semibold text-lapis underline"
+        >
           {G.openManually}
         </a>
       )}

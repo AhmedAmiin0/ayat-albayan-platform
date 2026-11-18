@@ -39,6 +39,12 @@ export {
 } from './link-people.js';
 export { QR_QUIET_ZONE, qrMatrix, qrPath, qrSide, type QrEcc } from './qr.js';
 export {
-  dayExpiry, editOf, expiryChip, expiryDay, inPeopleFilter, PEOPLE_FILTERS, toUpdateBody,
-  type ExpiryChip, type LinkEdit, type LinkEditCheck, type PeopleFilter,
+  dayEndExpiry, editOf, expiryChip, expiryDay, expiryDayRange, inPeopleFilter, linkErrorText,
+  PEOPLE_FILTERS, splitLinkCheck, toUpdateBody,
+  type ExpiryChip, type ExpiryDayRange, type LinkEdit, type LinkEditCheck, type PeopleFilter,
+  type SplitLinkCheck,
 } from './edit/index.js';
+export {
+  isListFiltered, listFilterOf, ownerChoices, ownerIdOf, LINK_STATUS_TABS, linkStatusOf,
+  type LinkListView, type LinkOwner, type OwnerPick, type LinkStatusTab,
+} from './list/index.js';

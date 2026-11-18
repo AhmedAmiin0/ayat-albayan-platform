@@ -1,4 +1,5 @@
 import type { ShortLinkGateView, ShortLinkOpenResult, ShortLinkOutcome } from '@ab/shared';
+import { z } from 'zod';
 import type { GateViewResult } from './short-links-api.js';
 
 // The web gate /l/<code> of a managed link (docs/19 «Gate»; boards docs/design/short-links/
@@ -46,8 +47,21 @@ export const goneScreen = (view: ShortLinkGateView | null): GoneScreen =>
 const viewOf = (s: GateState): ShortLinkGateView | null =>
   s.view?.kind === 'view' ? s.view.view : null;
 
-const OUTCOME_SCREEN: Record<ShortLinkOutcome, (view: ShortLinkGateView | null) => GateScreen> = {
-  open: () => 'opening',
+/** Only an http(s) URL is ever navigated to (never javascript:, data:, …). */
+const webUrl = z.url({ protocol: /^https?$/ });
+
+/** The target to navigate to once the outcome is open and it is http(s), else null. */
+export function openTarget(result: ShortLinkOpenResult | null): string | null {
+  const target = result?.outcome === 'open' ? result.target : null;
+  const parsed = webUrl.safeParse(target);
+  return parsed.success ? parsed.data : null;
+}
+
+type OutcomeRule = (view: ShortLinkGateView | null, result: ShortLinkOpenResult) => GateScreen;
+
+const OUTCOME_SCREEN: Record<ShortLinkOutcome, OutcomeRule> = {
+  /** An open answer with a target that is not http(s) is a dead end, never a navigation. */
+  open: (_view, result) => (openTarget(result) === null ? 'not_found' : 'opening'),
   gone: goneScreen,
   not_allowed: () => 'restricted',
   limit_reached: () => 'full',
@@ -58,12 +72,8 @@ export function outcomeScreen(
   result: ShortLinkOpenResult,
   view: ShortLinkGateView | null,
 ): GateScreen {
-  return OUTCOME_SCREEN[result.outcome](view);
+  return OUTCOME_SCREEN[result.outcome](view, result);
 }
-
-/** The target to navigate to once the outcome is open, else null. */
-export const openTarget = (result: ShortLinkOpenResult | null): string | null =>
-  result?.outcome === 'open' ? result.target : null;
 
 type Rule = readonly [(s: GateState) => boolean, (s: GateState) => GateScreen];
 

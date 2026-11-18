@@ -4,14 +4,16 @@ import { View } from 'react-native';
 import { t, Button, ButtonRow, ErrorLine, InlineConfirm, Note } from '@ab/mobile-kit';
 import { useRevokeLink } from '@/short-links/api/link-hooks';
 import { EditSheet } from './EditSheet';
+import { ExtendSheet } from './ExtendSheet';
 
 const D = () => t.shortLinks.detail;
 
-type Step = 'idle' | 'confirm' | 'edit';
+type Step = 'idle' | 'confirm' | 'edit' | 'extend';
 
 /**
- * «تعديل» (title, limit, a new lifetime) and «إيقاف الرابط» behind its confirm: the link stops
- * at once for everyone and cannot run again (POST …/revoke). None on a revoked link.
+ * «تمديد» (a new lifetime), «تعديل» (title, limit, lifetime) and «إيقاف الرابط» behind its
+ * confirm: the link stops at once for everyone and cannot run again (POST …/revoke). None on a
+ * revoked link.
  */
 export function LinkActions({ link }: { link: ShortLinkDetail }) {
   const [step, setStep] = useState<Step>('idle');
@@ -32,12 +34,14 @@ export function LinkActions({ link }: { link: ShortLinkDetail }) {
         />
       ) : (
         <ButtonRow>
+          <Button variant="secondary" label={D().extend} onPress={() => setStep('extend')} />
           <Button variant="secondary" label={t.common.edit} onPress={() => setStep('edit')} />
           <Button variant="danger" label={D().revoke} onPress={() => setStep('confirm')} />
         </ButtonRow>
       )}
       {revoke.isError ? <ErrorLine message={D().errors.generic} /> : null}
       {step === 'edit' ? <EditSheet link={link} onClose={idle} /> : null}
+      {step === 'extend' ? <ExtendSheet link={link} onClose={idle} /> : null}
     </View>
   );
 }

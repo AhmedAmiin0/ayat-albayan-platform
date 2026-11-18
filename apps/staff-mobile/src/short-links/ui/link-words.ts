@@ -1,24 +1,25 @@
 import {
   expiryParts,
   expiryText,
+  linkErrorText,
   SHORT_LINK_PURGE_DAYS,
   usageText,
   type LinkField,
   type LinkFieldErrors,
   type LinkTone,
 } from '@ab/client-core';
-import { weekdayDayMonth, type ClockCycle, type ShortLinkRow, type StatusStyle } from '@ab/shared';
+import { weekdayDayMonth, type ClockCycle, type ShortLinkRow, type Tone } from '@ab/shared';
 import { locale, t } from '@ab/mobile-kit';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 
 // The words a link's card and page share, in this run's language and the viewer's zone.
 
-/** The chip of a link's state and of a WhatsApp send (never colour alone: glyph + word). */
-export const TONE_STYLE: Readonly<Record<LinkTone, StatusStyle>> = {
-  success: { tone: 'ok', glyph: 'fill' },
-  warning: { tone: 'act', glyph: 'half' },
-  neutral: { tone: 'neutral', glyph: 'hollow' },
-  danger: { tone: 'bad', glyph: 'struck' },
+/** The chip colour of a link's state and of a WhatsApp send (its glyph is client-core's). */
+export const TONE: Readonly<Record<LinkTone, Tone>> = {
+  success: 'ok',
+  warning: 'act',
+  neutral: 'neutral',
+  danger: 'bad',
 };
 
 /** «الثلاثاء 24 نوفمبر» in the viewer's zone. */
@@ -48,15 +49,5 @@ export function expiryLine(row: Pick<ShortLinkRow, 'status' | 'expiresAt'>, view
 }
 
 /** A field's words from shortLinks.form.errors, or undefined. */
-export const errorText = (errors: LinkFieldErrors, field: LinkField): string | undefined => {
-  const key = errors[field];
-  return key === undefined ? undefined : t.shortLinks.form.errors[key];
-};
-
-/** A form check as its body (absent while a field is wrong) and its errors (none if it passed). */
-export function splitCheck<B>(check: { body: B } | { errors: LinkFieldErrors }): {
-  body?: B;
-  errors: LinkFieldErrors;
-} {
-  return { errors: {}, ...check };
-}
+export const errorText = (errors: LinkFieldErrors, field: LinkField): string | undefined =>
+  linkErrorText(errors, field, t.shortLinks.form.errors);

@@ -9,7 +9,11 @@ import { ShortLinkDetailPage } from './ShortLinkDetailPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
@@ -27,7 +31,8 @@ afterEach(() => vi.clearAllMocks());
 describe('ShortLinkDetailPage', () => {
   it('shows the QR, the short URL, the users with their sends and the visitors', async () => {
     await open();
-    expect(screen.getByRole('link', { name: D.back }).getAttribute('href')).toBe('/admin/short-links');
+    const back = screen.getByRole('link', { name: D.back });
+    expect(back.getAttribute('href')).toBe('/admin/short-links');
     const qr = screen.getByRole('img', { name: D.qr });
     expect(qr.querySelector('path')?.getAttribute('d')).toMatch(/^M\d/);
     expect(qr.getAttribute('viewBox')).toMatch(/^0 0 \d+ \d+$/);
@@ -44,7 +49,9 @@ describe('ShortLinkDetailPage', () => {
     apiSend.mockResolvedValue({ ...linkDetail(), send: { queued: 0, failed: 1 } });
     await open();
     fireEvent.click(screen.getByRole('button', { name: fillSlots(D.resendFailed, { n: 1 }) }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/resend', undefined));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/resend', undefined),
+    );
     expect(await screen.findByText(fillSlots(D.sendResult, { queued: 0, failed: 1 }))).toBeTruthy();
   });
 
@@ -55,7 +62,9 @@ describe('ShortLinkDetailPage', () => {
     const dialog = screen.getByRole('dialog', { name: D.revokeTitle });
     expect(within(dialog).getByText(D.revokeBody)).toBeTruthy();
     fireEvent.click(within(dialog).getByRole('button', { name: D.revokeConfirm }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/revoke', undefined));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/revoke', undefined),
+    );
     expect(await screen.findByText(D.revoked)).toBeTruthy();
   });
 

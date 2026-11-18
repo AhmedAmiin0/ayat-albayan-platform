@@ -1,5 +1,5 @@
 import { PEOPLE_SEARCH_MIN, type LinkPick } from '@ab/client-core';
-import type { ShortLinkPerson } from '@ab/shared';
+import { formatPhone, type ShortLinkPerson } from '@ab/shared';
 import { useId, useState } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
@@ -26,7 +26,7 @@ function Match({ person, picked, onPick }: { person: ShortLinkPerson } & PeopleP
           {person.name}
           <RoleTag role={person.role} />
         </span>
-        {person.phone && <Ltr className="text-xs text-ink-3">{person.phone}</Ltr>}
+        {person.phone && <Ltr className="text-xs text-ink-3">{formatPhone(person.phone)}</Ltr>}
       </span>
       <Button type="button" variant="ghost" size="sm" disabled={has} onClick={pick}>
         {has ? <Icon name="check" /> : <Icon name="plus" />}
@@ -44,7 +44,10 @@ function Matches({ search, ...props }: { search: string } & PeoplePickerProps) {
   if (!people.data) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
   if (people.data.length === 0) return <p className="text-xs text-ink-3">{P.empty}</p>;
   return (
-    <ul className="grid gap-0.5 rounded-md border border-rule bg-card p-1 shadow-pop">
+    <ul
+      aria-label={P.results}
+      className="grid gap-0.5 rounded-md border border-rule bg-card p-1 shadow-pop"
+    >
       {people.data.map((person) => (
         <Match key={person.id} person={person} {...props} />
       ))}

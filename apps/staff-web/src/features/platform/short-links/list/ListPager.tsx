@@ -27,7 +27,12 @@ export function ListPager({ page = 1, pageSize, total = 0, onPage }: ListPagerPr
         <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => onPage(page - 1)}>
           {L.previous}
         </Button>
-        <Button variant="secondary" size="sm" disabled={to >= total} onClick={() => onPage(page + 1)}>
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled={to >= total}
+          onClick={() => onPage(page + 1)}
+        >
           {L.next}
         </Button>
       </div>

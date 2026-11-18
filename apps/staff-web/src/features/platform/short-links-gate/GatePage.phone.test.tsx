@@ -33,7 +33,7 @@ describe('the gate for a visitor who is not signed in (board LinkXGatePhone)', (
     expect(screen.getByRole('button', { name: /English/ })).toBeTruthy();
   });
 
-  it('a number that cannot be one: «اكتب رقم واتساب صحيحًا…», nothing sent (PhoneError)', async () => {
+  it('a number that cannot be one: «اكتب رقم واتساب صحيحًا…», nothing sent', async () => {
     const calls = stubApi(viewed());
     showGate();
     fireEvent.change(await phoneField(), { target: { value: '50123' } });

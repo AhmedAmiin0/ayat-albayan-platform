@@ -1,5 +1,6 @@
-import type { ShortLinkListFilter } from '@ab/client-core';
-import { SHORT_LINK_STATUSES } from '@ab/shared';
+import {
+  LINK_STATUS_TABS, linkStatusOf, type LinkStatusTab, type ShortLinkListFilter,
+} from '@ab/client-core';
 import {
   keepPreviousData, useMutation, useQueries, useQuery, useQueryClient,
 } from '@tanstack/react-query';
@@ -9,23 +10,19 @@ import { detailQuery, linkSends, listQuery, peopleQuery, SHORT_LINKS_KEY } from 
 // The hooks the short-link screens call: one page of the list, the status counts of the chips,
 // a link, the people picker, and the writes (each one reads every list and detail again).
 
-/** «الكل» and each server status: the list's status chips. */
-export const STATUS_TABS = ['all', ...SHORT_LINK_STATUSES] as const;
-export type StatusTab = (typeof STATUS_TABS)[number];
-
 export const useLinkList = (filter: ShortLinkListFilter) =>
   useQuery({ ...listQuery(filter), placeholderData: keepPreviousData });
 
-const statusOf = (tab: StatusTab) => (tab === 'all' ? {} : { status: tab });
-
 /** Each chip's count under the other filters (one row per read: only `total` is used). */
-export function useStatusCounts(filter: ShortLinkListFilter): Partial<Record<StatusTab, number>> {
+export function useStatusCounts(
+  filter: ShortLinkListFilter,
+): Partial<Record<LinkStatusTab, number>> {
   const reads = useQueries({
-    queries: STATUS_TABS.map((tab) =>
-      listQuery({ ...filter, ...statusOf(tab), page: 1, pageSize: 1 }),
+    queries: LINK_STATUS_TABS.map((tab) =>
+      listQuery({ ...filter, ...linkStatusOf(tab), page: 1, pageSize: 1 }),
     ),
   });
-  return Object.fromEntries(STATUS_TABS.map((tab, i) => [tab, reads[i]?.data?.total]));
+  return Object.fromEntries(LINK_STATUS_TABS.map((tab, i) => [tab, reads[i]?.data?.total]));
 }
 
 export const useLinkDetail = (code: string) => useQuery(detailQuery(code));

@@ -40,7 +40,7 @@ function setup(row: ShortLinkRow | null, users: Partial<LinkUserRow>[] = []) {
 }
 
 describe('the short-link gate (docs/19)', () => {
-  it('the view: title and state, never the target; unknown and system codes are the same 404', async () => {
+  it('the view: title and state, never the target; unknown and system codes: one 404', async () => {
     const { gate } = setup(managedRow({ expires_at: FUTURE }));
     const view = await gate.view('Mg12Cd34Ef');
     expect(view).toEqual({
@@ -69,7 +69,7 @@ describe('the short-link gate (docs/19)', () => {
     });
   });
 
-  it('a signed-in user opens: the visit is recorded by profile and the target answered', async () => {
+  it('a signed-in user opens: the visit is kept by profile, the target answered', async () => {
     const { gate, repo } = setup(managedRow({ expires_at: FUTURE }));
     expect(await gate.openAs('Mg12Cd34Ef', P1)).toEqual({
       outcome: 'open',
@@ -107,7 +107,7 @@ describe('the short-link gate (docs/19)', () => {
     });
   });
 
-  it('otp/verify: a wrong code is 401 invalid_code; a right one records the phone visit', async () => {
+  it('otp/verify: a wrong code is 401 invalid_code; a right one keeps the visit', async () => {
     const { gate, codes, repo } = setup(managedRow({ expires_at: FUTURE }));
     codes.check.mockResolvedValueOnce(false);
     await expect(gate.verify({ ...call, otp: '000000' })).rejects.toThrow(/invalid_code/);

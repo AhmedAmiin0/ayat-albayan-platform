@@ -1,4 +1,6 @@
-import type { ShortLinkListFilter } from '@ab/client-core';
+import {
+  isListFiltered, listFilterOf, type LinkListView, type ShortLinkListFilter,
+} from '@ab/client-core';
 import { SHORT_LINK_STATUSES } from '@ab/shared';
 import { z } from 'zod';
 
@@ -24,18 +26,19 @@ export type LinkListSearch = z.infer<typeof linkListSearch>;
 /** Links per page (the API's own default). */
 export const LIST_PAGE_SIZE = 20;
 
-/** The API's filter for the URL (an empty search is no search). */
-export function filterOf(search: LinkListSearch): ShortLinkListFilter {
-  const q = search.q?.trim();
-  return {
-    ...(search.status ? { status: search.status } : {}),
-    ...(search.owner ? { owner: search.owner } : {}),
-    ...(q ? { search: q } : {}),
-    page: search.page ?? 1,
-    pageSize: LIST_PAGE_SIZE,
-  };
-}
+/** The URL's filters as client-core's list view. */
+const viewOf = (search: LinkListSearch): LinkListView => ({
+  tab: search.status,
+  owner: search.owner,
+  search: search.q,
+});
+
+/** The API's filter for the URL (a blank search is no search). */
+export const filterOf = (search: LinkListSearch): ShortLinkListFilter => ({
+  ...listFilterOf(viewOf(search)),
+  page: search.page ?? 1,
+  pageSize: LIST_PAGE_SIZE,
+});
 
 /** Any filter set (the «مسح التصفية» link and the empty state's words). */
-export const isFiltered = (search: LinkListSearch): boolean =>
-  Boolean(search.status ?? search.owner ?? search.q?.trim());
+export const isFiltered = (search: LinkListSearch): boolean => isListFiltered(viewOf(search));

@@ -21,7 +21,9 @@ interface ListBodyProps {
 }
 
 /** Nothing made yet: the invitation to make the first link. */
-function Empty({ filtered, onNew, onClear }: Omit<ListBodyProps, 'section' | 'showOwner' | 'list'>) {
+type EmptyProps = Omit<ListBodyProps, 'section' | 'showOwner' | 'list'>;
+
+function Empty({ filtered, onNew, onClear }: EmptyProps) {
   const action = filtered ? (
     <Button variant="secondary" onClick={onClear}>{L.clearFilters}</Button>
   ) : (
@@ -41,7 +43,9 @@ export function ListBody({ section, showOwner, list, filtered, onNew, onClear }:
       <FormAlert>
         <span className="flex flex-wrap items-center gap-3">
           {L.loadError}
-          <Button variant="secondary" size="sm" onClick={() => void list.refetch()}>{L.retry}</Button>
+          <Button variant="secondary" size="sm" onClick={() => void list.refetch()}>
+            {L.retry}
+          </Button>
         </span>
       </FormAlert>
     );

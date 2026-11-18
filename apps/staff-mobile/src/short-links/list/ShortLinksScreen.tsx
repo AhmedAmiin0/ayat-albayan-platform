@@ -1,4 +1,6 @@
-import type { ShortLinkListFilter } from '@ab/client-core';
+import {
+  isListFiltered, listFilterOf, ownerChoices, ownerIdOf, type LinkListView,
+} from '@ab/client-core';
 import { router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { ActivityIndicator } from 'react-native';
@@ -33,10 +35,10 @@ interface ShortLinksScreenProps {
 
 const L = () => t.shortLinks.list;
 
-/** The pills as the list's query: «روابطي» is the viewer's own id. */
-const filterOf = (view: ListView, me: string): ShortLinkListFilter => ({
-  status: view.status === 'all' ? undefined : view.status,
-  owner: view.owner === 'mine' && me !== '' ? me : undefined,
+/** The pills and the search as client-core's list view: «روابطي» is the viewer's own id. */
+const viewOf = (view: ListView, me: string): LinkListView => ({
+  tab: view.status,
+  owner: ownerIdOf(view.owner, me),
   search: view.search,
 });
 
@@ -53,9 +55,6 @@ function Loading() {
   return <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />;
 }
 
-const isFiltered = (view: ListView): boolean =>
-  view.status !== 'all' || view.owner !== 'all' || view.search !== '';
-
 /**
  * «الروابط المختصرة» (board LinkXStaffList, docs/19) for the admin and sales: their links (every
  * link with short_links.all, then the owner pills), search, state pills, «رابط جديد».
@@ -64,11 +63,11 @@ export function ShortLinksScreen({ can, base }: ShortLinksScreenProps) {
   const [view, setView] = useState<ListView>(FIRST_VIEW);
   const me = useMeId(true);
   const owners = can('short_links.all');
-  const list = useShortLinks(filterOf(view, me));
+  const list = useShortLinks(listFilterOf(viewOf(view, me)));
   const viewer = { now: useNow(), tz: useViewerTz() };
   const rows = list.data?.rows ?? [];
   const open = (code: string) => router.push(linkHref(base, code));
-  const empty = isFiltered(view) ? L().emptyFiltered : L().empty;
+  const empty = isListFiltered(viewOf(view, me)) ? L().emptyFiltered : L().empty;
   const phases: Record<Phase, () => ReactNode> = {
     loading: () => <Loading />,
     error: () => <ErrorState message={L().loadError} onRetry={() => void list.refetch()} />,
@@ -90,7 +89,11 @@ export function ShortLinksScreen({ can, base }: ShortLinksScreenProps) {
         label={L().searchPlaceholder}
         onSearch={(search) => setView((v) => ({ ...v, search }))}
       />
-      <ListFilters view={view} onChange={setView} owners={owners} />
+      <ListFilters
+        view={view}
+        onChange={setView}
+        owners={owners ? ownerChoices(rows).filter((o) => o.id !== me) : null}
+      />
       {phases[phaseOf(list, rows.length)]()}
       <InsetGroup testID="short-links-list">
         {rows.map((row) => (

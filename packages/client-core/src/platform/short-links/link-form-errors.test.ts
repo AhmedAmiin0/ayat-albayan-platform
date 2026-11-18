@@ -12,7 +12,9 @@ describe('issueErrors', () => {
         { path: ['title'], message: 'Too big' },
         { path: [], message: 'x' },
       ]),
-    ).toEqual({ title: 'title_invalid', phones: 'phone_invalid', people: 'users_required', form: 'generic' });
+    ).toEqual({
+      title: 'title_invalid', phones: 'phone_invalid', people: 'users_required', form: 'generic',
+    });
   });
 });
 

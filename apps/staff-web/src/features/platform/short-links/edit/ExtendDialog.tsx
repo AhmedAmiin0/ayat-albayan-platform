@@ -6,7 +6,7 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ExpiryField } from '@/features/platform/short-links/create/ExpiryField';
-import { errorText } from '@/features/platform/short-links/create/form-errors';
+import { errorText } from '@/features/platform/short-links/shared/link-errors';
 import { usePatchLink } from './use-link-actions';
 
 const D = t.shortLinks.detail;
@@ -25,12 +25,20 @@ export function ExtendDialog({ link, onClose, onSaved }: ExtendDialogProps) {
   const formError = errorText(patch.errors, 'form');
   const actions = (
     <>
-      <Button type="button" variant="secondary" onClick={onClose}>{t.shortLinks.form.cancel}</Button>
+      <Button type="button" variant="secondary" onClick={onClose}>
+        {t.shortLinks.form.cancel}
+      </Button>
       <Button type="submit" form={formId} disabled={patch.pending}>{D.save}</Button>
     </>
   );
   return (
-    <Dialog title={D.extendTitle} description={D.extendHint} layout="sheet" onClose={onClose} actions={actions}>
+    <Dialog
+      title={D.extendTitle}
+      description={D.extendHint}
+      layout="sheet"
+      onClose={onClose}
+      actions={actions}
+    >
       <form
         id={formId}
         noValidate
@@ -40,7 +48,11 @@ export function ExtendDialog({ link, onClose, onSaved }: ExtendDialogProps) {
           patch.save({ expiry });
         }}
       >
-        <ExpiryField expiry={expiry} onChange={setExpiry} error={errorText(patch.errors, 'expiresAt')} />
+        <ExpiryField
+          expiry={expiry}
+          onChange={setExpiry}
+          error={errorText(patch.errors, 'expiresAt')}
+        />
         {formError && <FormAlert>{formError}</FormAlert>}
       </form>
     </Dialog>

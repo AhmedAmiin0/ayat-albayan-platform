@@ -56,7 +56,7 @@ function SendFacts({ link }: { link: ShortLinkDetail }) {
         {shown.map((s) => (
           <LinkChip
             key={s}
-            tone={sendLook(s).tone}
+            look={sendLook(s)}
             label={`${t.shortLinks.send[s]} ${counts[s]}`}
           />
         ))}

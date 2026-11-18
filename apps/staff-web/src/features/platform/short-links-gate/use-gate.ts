@@ -4,7 +4,6 @@ import {
 import type { AccountProfile, ShortLinkGateView, ShortLinkOpenResult } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { z } from 'zod';
 import { signOut } from '@ab/web-kit/auth/sign-in';
 import { profileQuery } from '@/features/people/account';
 import { type Me, meQuery } from '@/features/people/auth';
@@ -36,13 +35,6 @@ export interface Gate {
   phone: GatePhone;
 }
 
-/** Only an http(s) URL is navigated to (the API's target is already zod-parsed as a string). */
-const webUrl = z.url({ protocol: /^https?$/ });
-const safeTarget = (result: ShortLinkOpenResult | null): string | null => {
-  const parsed = webUrl.safeParse(openTarget(result));
-  return parsed.success ? parsed.data : null;
-};
-
 const viewOf = (data: GateViewResult | undefined): ShortLinkGateView | null =>
   data?.kind === 'view' ? data.view : null;
 
@@ -71,7 +63,7 @@ export function useGate(code: string, go: Go): Gate {
   const [result, setResult] = useState<ShortLinkOpenResult | null>(null);
   const settle = (answer: ShortLinkOpenResult) => {
     setResult(answer);
-    const target = safeTarget(answer);
+    const target = openTarget(answer);
     if (target !== null) go(target);
   };
   const phone = useGatePhone({ code, onStep: setStep, onResult: settle });
@@ -86,7 +78,7 @@ export function useGate(code: string, go: Go): Gate {
     ...shownOf(view.data),
     failed: view.isError,
     name: nameOf(profile.data, me.data),
-    target: safeTarget(result),
+    target: openTarget(result),
     opening: opener.isPending,
     openFailed: opener.isError,
     open: () => opener.mutate(code),

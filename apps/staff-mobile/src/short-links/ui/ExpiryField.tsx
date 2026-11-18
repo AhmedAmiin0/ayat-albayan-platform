@@ -1,13 +1,15 @@
 import {
-  dayExpiry,
+  dayEndExpiry,
   expiresAtOf,
   expiryChip,
   expiryDay,
+  expiryDayRange,
   EXPIRY_DAY_CHOICES,
+  fillSlots,
   SHORT_LINK_PURGE_DAYS,
   type LinkExpiry,
 } from '@ab/client-core';
-import { counted, SHORT_LINK_MAX_DAYS } from '@ab/shared';
+import { counted } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import {
@@ -50,7 +52,7 @@ function EndsAt({ expiry }: { expiry: LinkExpiry }) {
   const { color } = useTheme();
   const when = whenText(expiresAtOf(expiry, clock), clock.tz, cycle);
   const style = { fontFamily: type.ui[700], fontSize: type.size.sm, color: color.ink };
-  return <AppText style={style}>{F().endsAt.replace('{date}', when)}</AppText>;
+  return <AppText style={style}>{fillSlots(F().endsAt, { date: when })}</AppText>;
 }
 
 /**
@@ -64,10 +66,7 @@ export function ExpiryField({ expiry, onChange, error }: ExpiryFieldProps) {
     setCustom(value === DATE);
     if (value !== DATE) onChange({ kind: 'days', days: Number(value) });
   };
-  const range = {
-    min: expiryDay({ kind: 'days', days: 1 }, clock),
-    max: expiryDay({ kind: 'days', days: SHORT_LINK_MAX_DAYS }, clock),
-  };
+  const range = expiryDayRange(clock);
   const day = expiry === null ? '' : expiryDay(expiry, clock);
   return (
     <View style={{ gap: 8 }}>
@@ -85,12 +84,12 @@ export function ExpiryField({ expiry, onChange, error }: ExpiryFieldProps) {
           day={day}
           range={range}
           note={null}
-          onChange={(d) => onChange(dayExpiry(d, clock))}
+          onChange={(d) => onChange(dayEndExpiry(d, clock.tz))}
         />
       ) : null}
       {expiry ? <EndsAt expiry={expiry} /> : null}
       {error ? <ErrorLine message={error} /> : null}
-      <Note>{F().purgeNote.replace('{days}', counted(F().days, SHORT_LINK_PURGE_DAYS))}</Note>
+      <Note>{fillSlots(F().purgeNote, { days: counted(F().days, SHORT_LINK_PURGE_DAYS) })}</Note>
     </View>
   );
 }

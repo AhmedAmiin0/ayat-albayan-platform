@@ -1,16 +1,19 @@
-import type { ShortLinkRow } from '@ab/shared';
+import {
+  LINK_STATUS_TABS, linkStatusOf, type LinkOwner, type LinkStatusTab,
+} from '@ab/client-core';
 import { useId } from 'react';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { STATUS_TABS, type StatusTab } from '@/features/platform/short-links/api/use-short-links';
-import { isFiltered, type LinkListSearch } from '@/features/platform/short-links/shared/link-routes';
+import {
+  isFiltered, type LinkListSearch,
+} from '@/features/platform/short-links/shared/link-routes';
 
 const L = t.shortLinks.list;
 
-const TAB_LABEL: Readonly<Record<StatusTab, string>> = {
+const TAB_LABEL: Readonly<Record<LinkStatusTab, string>> = {
   all: L.all,
   active: t.shortLinks.state.active,
   expired: t.shortLinks.state.expired,
@@ -20,15 +23,9 @@ const TAB_LABEL: Readonly<Record<StatusTab, string>> = {
 interface ListFiltersProps {
   search: LinkListSearch;
   onSearch: (next: LinkListSearch) => void;
-  counts: Partial<Record<StatusTab, number>>;
-  /** The owner filter's people (short_links.all); null hides it. */
-  owners: ShortLinkRow['createdBy'][] | null;
-}
-
-/** The owners the select offers: everyone on the page, each once. */
-function ownerOptions(owners: ShortLinkRow['createdBy'][]) {
-  const byId = new Map(owners.flatMap((o) => (o ? [[o.id, o.name] as const] : [])));
-  return [...byId].map(([id, name]) => ({ id, name }));
+  counts: Partial<Record<LinkStatusTab, number>>;
+  /** The owner filter's people (client-core ownerChoices, short_links.all); null hides it. */
+  owners: LinkOwner[] | null;
 }
 
 function OwnerSelect({ search, onSearch, owners }: Omit<ListFiltersProps, 'counts'>) {
@@ -43,7 +40,7 @@ function OwnerSelect({ search, onSearch, owners }: Omit<ListFiltersProps, 'count
         onChange={(e) => onSearch({ ...search, owner: e.target.value || undefined, page: 1 })}
       >
         <option value="">{L.allOwners}</option>
-        {ownerOptions(owners).map((o) => (
+        {owners.map((o) => (
           <option key={o.id} value={o.id}>{o.name}</option>
         ))}
       </Select>
@@ -53,14 +50,14 @@ function OwnerSelect({ search, onSearch, owners }: Omit<ListFiltersProps, 'count
 
 /** «بحث», «المالك» (the admin), «مسح التصفية» and the status chips with their counts. */
 export function ListFilters({ search, onSearch, counts, owners }: ListFiltersProps) {
-  const tab: StatusTab = search.status ?? 'all';
-  const options = STATUS_TABS.map((value) => ({
+  const tab: LinkStatusTab = search.status ?? 'all';
+  const options = LINK_STATUS_TABS.map((value) => ({
     value,
     label: TAB_LABEL[value],
     count: counts[value],
   }));
-  const pick = (next: StatusTab) =>
-    onSearch({ ...search, status: next === 'all' ? undefined : next, page: 1 });
+  const pick = (next: LinkStatusTab) =>
+    onSearch({ ...search, status: linkStatusOf(next).status, page: 1 });
   return (
     <div className="grid gap-4">
       <div className="flex flex-wrap items-end gap-3">

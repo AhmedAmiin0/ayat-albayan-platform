@@ -35,7 +35,7 @@ export function PhoneAdder({ onAdd }: { onAdd: (e164: string) => void }) {
         </View>
         <Button variant="secondary" label={F().add} onPress={add} />
       </View>
-      {bad ? <ErrorLine message={F().errors.phone_invalid} /> : null}
+      {bad ? <ErrorLine message={t.shortLinks.gate.errors.invalid_phone} /> : null}
       <Note>{F().phoneHint}</Note>
     </View>
   );
