@@ -31,7 +31,7 @@ jobs:
   # FAIL SAFE: a manual run, a new branch, an unknown previous commit, an API or git error = everything runs.
   # On a PR, step «e2e specs» also picks the e2e specs the change can reach (e2e/areas.json, through the
   # import graph: tools/scripts/ci-checks/e2e-areas/select.mjs) and how many shards they need; anything it
-  # does not understand, and every push, = the full suite on 8 shards.
+  # does not understand, and every push, = the full suite on 10 shards.
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -579,7 +579,7 @@ jobs:
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
-  # A PR runs only the specs its change can reach (job «changes», e2e/areas.json) on 1-8 shards; pushes to
+  # A PR runs only the specs its change can reach (job «changes», e2e/areas.json) on 1-10 shards; pushes to
   # develop/main run every spec on both projects, the safety net for anything a PR selection missed.
   # Shards 1-8 are Playwright's own --shard, sized on measured durations (step «Shard sizes»; refresh
   # e2e/shard-durations.json from the «e2e-durations-*» artifacts of a push run). «single line» is the production
@@ -601,7 +601,7 @@ jobs:
     # «single line» (the smoke set) always; the fallback below is the full matrix (pushes, any failure).
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.changes.outputs.e2e_matrix || '{"include":[{"name":"e2e (1)","shard":"1","total":8},{"name":"e2e (2)","shard":"2","total":8},{"name":"e2e (3)","shard":"3","total":8},{"name":"e2e (4)","shard":"4","total":8},{"name":"e2e (5)","shard":"5","total":8},{"name":"e2e (6)","shard":"6","total":8},{"name":"e2e (7)","shard":"7","total":8},{"name":"e2e (8)","shard":"8","total":8},{"name":"e2e (single line)","shard":"single","total":8}]}') }}
+      matrix: ${{ fromJSON(needs.changes.outputs.e2e_matrix || '{"include":[{"name":"e2e (1)","shard":"1","total":10},{"name":"e2e (2)","shard":"2","total":10},{"name":"e2e (3)","shard":"3","total":10},{"name":"e2e (4)","shard":"4","total":10},{"name":"e2e (5)","shard":"5","total":10},{"name":"e2e (6)","shard":"6","total":10},{"name":"e2e (7)","shard":"7","total":10},{"name":"e2e (8)","shard":"8","total":10},{"name":"e2e (9)","shard":"9","total":10},{"name":"e2e (10)","shard":"10","total":10},{"name":"e2e (single line)","shard":"single","total":10}]}') }}
     env:
       SHARDS: ${{ matrix.total }}
       # The PR's selected spec files (empty = all of them).
@@ -728,7 +728,7 @@ jobs:
       # PRs run the desktop project only (half the specs); pushes to main/develop also run the phone-size
       # project, so a mobile layout regression is still caught before a release.
       # --only: the servers were built by «Build what the e2e servers run» above. Without it turbo hashed the
-      # Playwright arguments (--shard=n/8) into every dependency's build, so each shard built api and web a
+      # Playwright arguments (--shard=n/10) into every dependency's build, so each shard built api and web a
       # second time (~60 s, 11-18). Same task, same strict env; only its dependencies are not run again.
       - name: e2e
         env:
