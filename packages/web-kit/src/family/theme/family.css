@@ -1,0 +1,106 @@
+/* The family look (family.ayatalbayan.com, docs/51 §7): the academy's public site ayatalbayan.com
+   (boards docs/design/family-portal-web). SCOPED: every rule sits under <html data-skin="family">,
+   which only apps/family-web sets, and only that app loads this file, so the staff look never
+   changes. It re-points the kit's semantic tokens (tokens.css) and adds the family's own (--fam-*),
+   read by the `fam-*` utilities and the `family:` variant (index.css). */
+
+[data-skin='family'] {
+  --font-sans: 'Cairo', 'Poppins', 'Noto Sans Arabic', system-ui, sans-serif;
+  --font-display: 'Cairo', 'Poppins', 'Noto Sans Arabic', system-ui, sans-serif;
+  --fam-font-verse: 'Amiri', 'Noto Naskh Arabic', serif;
+  --fam-font-latin: 'Poppins', 'Cairo', system-ui, sans-serif;
+}
+[data-skin='family']:lang(en) {
+  --font-sans: 'Poppins', 'Cairo', system-ui, sans-serif;
+  --font-display: 'Poppins', 'Cairo', system-ui, sans-serif;
+}
+
+/* ---------- light: cream page, dark-green ink, white cards ---------- */
+[data-skin='family']:not([data-theme='dark']) {
+  --margin: #fdfbf3;
+  --page: #ffffff;
+  --raised: #ffffff;
+  --sunk: #faf5e6;
+  --ink: #0c2a1e;
+  --ink-2: #2c4237;
+  --ink-3: #5b6b63;
+  --rule: #ebe3c9;
+  --rule-strong: #d9cfae;
+  --rule-input: #7a8a80;
+  --gold: #d4a537;
+  --gold-soft: #e9c45a;
+  --gold-wash: #faf5e6;
+  --lapis: #047857;
+  --lapis-fill: #047857;
+  --lapis-hover: #065f46;
+  --lapis-wash: #e6f6ef;
+  --fam-mint: #e6f6ef;
+  --fam-mint-rule: #c9ead9;
+  --fam-mint-ink: #047857;
+  --fam-title: linear-gradient(90deg, #194131, #047857 55%, #0e7490);
+  --fam-card-shadow: 0 6px 16px rgba(12, 42, 30, 0.05);
+  --fam-lift-shadow: 0 12px 32px rgba(12, 42, 30, 0.08), 0 2px 6px rgba(12, 42, 30, 0.05);
+  --fam-header: linear-gradient(90deg, rgba(17, 41, 31, 0.97), rgba(22, 58, 44, 0.97),
+    rgba(27, 70, 54, 0.97));
+  --fam-bar: rgba(255, 255, 255, 0.96);
+  --fam-wash: linear-gradient(135deg, #fffdf6, #faf5e6);
+  --fam-focus: #a47a12;
+}
+
+/* ---------- dark: the boards' night green ---------- */
+[data-skin='family'][data-theme='dark'] {
+  --margin: #0b1712;
+  --page: #11221a;
+  --raised: #162b21;
+  --sunk: #13271e;
+  --ink: #f3ecd6;
+  --ink-2: #d9d2bd;
+  --ink-3: #a7b5ac;
+  --rule: #26402f;
+  --rule-strong: #33543f;
+  --rule-input: #6f8578;
+  --gold: #e9c45a;
+  --gold-soft: #d4a537;
+  --gold-wash: #1c2f23;
+  --lapis: #6ee7b7;
+  --lapis-fill: #047857;
+  --lapis-hover: #065f46;
+  --lapis-wash: #123628;
+  --fam-mint: #123628;
+  --fam-mint-rule: #1f5a43;
+  --fam-mint-ink: #6ee7b7;
+  --fam-title: linear-gradient(90deg, #f3ecd6, #6ee7b7 55%, #67c6d8);
+  --fam-card-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  --fam-lift-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  --fam-header: linear-gradient(90deg, rgba(10, 26, 19, 0.97), rgba(15, 37, 28, 0.97),
+    rgba(20, 50, 38, 0.97));
+  --fam-bar: rgba(17, 34, 26, 0.96);
+  --fam-wash: linear-gradient(135deg, #162b21, #13271e);
+  --fam-focus: #e9c45a;
+}
+
+/* Theme-independent: the emerald hero, the gold button, the gradient icon tiles. */
+[data-skin='family'] {
+  --fam-hero: linear-gradient(135deg, #0b6b4f 0%, #0e4a37 100%);
+  --fam-hero-ink: #ffffff;
+  --fam-hero-ink-2: #d5e8df;
+  --fam-on-dark-gold: #e9c45a;
+  --fam-gold-fill: linear-gradient(135deg, #e9c45a, #d4a537);
+  --fam-on-gold: #0c2a1e;
+  --fam-tile-green: linear-gradient(135deg, #10b981, #047857);
+  --fam-tile-gold: linear-gradient(135deg, #d4a537, #a47a12);
+  --fam-tile-teal: linear-gradient(135deg, #0e7490, #155e75);
+  --fam-tile-rose: linear-gradient(135deg, #e11d48, #9f1239);
+  --fam-edge-green: #059669;
+  --fam-edge-gold: #d4a537;
+  --fam-edge-teal: #0e7490;
+  --fam-edge-rose: #be123c;
+}
+
+[data-skin='family'] body {
+  background: var(--margin);
+}
+[data-skin='family'] :focus-visible {
+  outline: 3px solid var(--fam-focus);
+  outline-offset: 2px;
+}

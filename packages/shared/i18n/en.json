@@ -9596,5 +9596,30 @@
     "cancel": "Cancel",
     "mismatch": "A family cannot mix a test account with a real student.",
     "failed": "The change could not be saved. Try again."
+  },
+  "familyLook": {
+    "brand": {
+      "name": "Ayat Al-Bayan Academy",
+      "tagline": "Recite with awareness, memorize with mastery"
+    },
+    "verse": {
+      "text": "﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾",
+      "ref": "Surat Al-Muzzammil · verse 4"
+    },
+    "shell": {
+      "home": "Back to home"
+    },
+    "signIn": {
+      "welcome": "Welcome to Ayat Al-Bayan Academy"
+    },
+    "child": {
+      "today": "Today"
+    },
+    "pages": {
+      "empty": "Nothing here yet"
+    },
+    "account": {
+      "children": "Children"
+    }
   }
 }
