@@ -5,8 +5,8 @@ import { dayMonthLabel } from '@/features/teaching/schedule';
 import { t } from '@/lib/i18n/i18n';
 import { amount, currencyLabel } from '@/features/reporting/dashboard/shared/format';
 import { workItem, workLink } from './PendingReportsList';
-import type { UnpaidRow } from '@/features/reporting/dashboard/types';
 import { packageText } from '@/features/reporting/dashboard/work/work-text';
+import type { UnpaidRow } from '@ab/shared';
 
 /**
  * Packages with status «مش مدفوع» (R-SUB-02), oldest first; each opens the student's file. A row

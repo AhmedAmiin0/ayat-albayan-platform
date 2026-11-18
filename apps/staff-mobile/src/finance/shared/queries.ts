@@ -1,8 +1,14 @@
-import type { ExpenseCategoryView, ExpenseView, InvoiceView, PayoutView, TeacherEarningsSummaryView } from '@ab/shared';
+import type {
+  DashboardResponse,
+  ExpenseCategoryView,
+  ExpenseView,
+  InvoiceView,
+  PayoutView,
+  TeacherEarningsSummaryView,
+} from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, listKey, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import type { FinanceSummary } from '@/finance/summary/summary-types';
 
 // Admin finance reads. Keys are the API path's segments, so invalidating ['payouts'] reaches a month.
 
@@ -26,7 +32,7 @@ export const useFinanceSummary = (range: { from: string; to: string }) =>
   useQuery({
     // 'finance': its own cache entry (other staleTime and projection than the dashboard's useSummary).
     queryKey: [...pathKey('/dashboard/summary'), 'finance', range],
-    queryFn: () => apiFetch<FinanceSummary>(`/dashboard/summary?from=${range.from}&to=${range.to}`),
+    queryFn: () => apiFetch<DashboardResponse>(`/dashboard/summary?from=${range.from}&to=${range.to}`),
     staleTime: 60_000,
   });
 

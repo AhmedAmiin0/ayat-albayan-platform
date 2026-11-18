@@ -4,11 +4,11 @@ import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
 import { StatusChip } from '@/components/ui/display/status-chip';
 import { t } from '@/lib/i18n/i18n';
 import { whenViewer } from '@/features/reporting/dashboard/shared/format';
-import type { PendingReportRow } from '@/features/reporting/dashboard/types';
 import { teacherLabel } from '@/lib/i18n/teacher-label';
 import { useClock } from '@/lib/clock';
 import { useViewerTz } from '@/lib/viewer-tz';
 import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import type { PendingReportRow } from '@ab/shared';
 
 export const workItem = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2.5 last:border-b-0';
 export const workLink = 'ms-auto text-xs font-semibold text-lapis underline-offset-4 hover:underline';

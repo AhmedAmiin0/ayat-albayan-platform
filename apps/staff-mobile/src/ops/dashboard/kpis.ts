@@ -1,5 +1,5 @@
 import { t } from '@ab/mobile-kit';
-import type { Summary, WorkTab } from './dashboard-types';
+import type { DashboardCounts, WorkTab } from '@ab/shared';
 
 export interface Kpi {
   key: 'activeStudents' | 'needsConfirm' | WorkTab;
@@ -12,14 +12,14 @@ export interface Kpi {
 }
 
 /** «يحتاج تأكيد» exists only while the academy requires a confirmation (no 0 tile otherwise). */
-const confirmTile = (s: Summary, required: boolean): Omit<Kpi, 'act'>[] =>
+const confirmTile = (s: DashboardCounts, required: boolean): Omit<Kpi, 'act'>[] =>
   required ? [{ key: 'needsConfirm', value: s.needs_confirmation, label: t.enums.lessonStatus.scheduled }] : [];
 
 /**
  * The web's KPI strip (reports, unpaid, tasks, «يحتاج تأكيد» when `required`, settings
  * .lesson_confirmation_required) plus the active students.
  */
-export function kpisOf(s: Summary, required: boolean): Kpi[] {
+export function kpisOf(s: DashboardCounts, required: boolean): Kpi[] {
   const rows: Omit<Kpi, 'act'>[] = [
     ...confirmTile(s, required),
     { key: 'reports', value: s.pending_reports, label: t.dashboard.pendingReports, tab: 'reports' },

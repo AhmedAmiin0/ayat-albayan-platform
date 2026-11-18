@@ -1,9 +1,9 @@
 import { counted } from '@ab/shared';
 import { t } from '@/lib/i18n/i18n';
 import { currencyLabel, rateDate } from '@/features/reporting/dashboard/shared/format';
-import type { DashboardData } from '@/features/reporting/dashboard/types';
+import type { DashboardResponse } from '@ab/shared';
 
-type Finance = DashboardData['finance'];
+type Finance = DashboardResponse['finance'];
 
 /** «1 ر.س = 13.2 EGP» per converted currency: which rate the totals used (R-RPT-02). */
 export function rateLines(f: Pick<Finance, 'currency' | 'fx_rates'>): string[] {

@@ -2,10 +2,10 @@ import { t, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { MonthRow } from './MonthRow';
 import { activeMonths } from './summary-lines';
-import type { FinanceSummary } from './summary-types';
+import type { DashboardResponse } from '@ab/shared';
 
 /** «الإيرادات والتكلفة حسب الشهر»: months with money, newest first; «لا توجد بيانات» for a quiet year. */
-export function SummaryMonths({ finance }: { finance: FinanceSummary['finance'] }) {
+export function SummaryMonths({ finance }: { finance: DashboardResponse['finance'] }) {
   const months = activeMonths(finance.by_month);
   return (
     <Section title={t.dashboard.byMonth}>

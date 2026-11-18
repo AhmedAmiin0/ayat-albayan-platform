@@ -7,12 +7,13 @@ import { FinanceTotals } from './finance/FinanceTotals';
 import { FunnelChart } from './funnel/FunnelChart';
 import { PeriodFilter } from './PeriodFilter';
 import { SourceTable } from './funnel/SourceTable';
-import type { DashboardData, DayRange } from './types';
+import type { DayRange } from './search';
+import type { DashboardResponse } from '@ab/shared';
 
 export interface PeriodSectionProps {
   period: DayRange;
   onPeriod: (next: DayRange) => void;
-  data: DashboardData | undefined;
+  data: DashboardResponse | undefined;
   /** A refetch for a new period: keep the old numbers, dimmed (no flash, no layout jump). */
   stale: boolean;
 }
