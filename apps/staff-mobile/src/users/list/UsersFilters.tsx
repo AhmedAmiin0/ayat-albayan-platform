@@ -1,7 +1,7 @@
 import { USER_ROLES, USER_STATUSES } from '@ab/shared';
 import { t, FilterPills } from '@ab/mobile-kit';
-import type { UsersView } from '@/users/shared/api';
 import { roleText, statusStyle } from '@/users/shared/format';
+import type { UsersView } from '@ab/client-core';
 
 interface UsersFiltersProps {
   view: UsersView;
