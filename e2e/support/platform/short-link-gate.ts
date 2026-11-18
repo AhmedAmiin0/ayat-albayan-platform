@@ -6,7 +6,7 @@ import { withSql } from '../core/schedule';
 // mobile runs never share one. Example data only.
 
 /** Every seeded link's target: https (the table's check), answered by the page itself. */
-export const GATE_TARGET = 'https://gate-target.example.test/landing?from=gate';
+const GATE_TARGET = 'https://gate-target.example.test/landing?from=gate';
 
 /** The target host answered in the browser, so the jump is seen without the internet. */
 export async function catchGateTarget(page: Page): Promise<void> {
