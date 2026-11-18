@@ -18,7 +18,7 @@ import { MaxUsersField } from '@/short-links/ui/MaxUsersField';
 import { Sheet } from '@/short-links/ui/Sheet';
 
 interface EditSheetProps {
-  link: Pick<ShortLinkDetail, 'code' | 'title' | 'maxUsers' | 'status'>;
+  link: ShortLinkDetail;
   onClose: () => void;
 }
 
@@ -55,20 +55,20 @@ export function EditSheet({ link, onClose }: EditSheetProps) {
     >
       <FormField
         label={F().titleLabel}
-        value={edit.title}
+        value={edit.title ?? ''}
         onChangeText={(title) => set({ title })}
         error={err('title')}
       />
       <Section title={D().extendTitle}>
         {link.status === 'expired' ? <Note>{D().extendHint}</Note> : null}
         <ExpiryField
-          expiry={edit.expiry}
+          expiry={edit.expiry ?? null}
           onChange={(expiry) => set({ expiry })}
           error={err('expiresAt')}
         />
       </Section>
       <MaxUsersField
-        value={edit.maxUsers}
+        value={edit.maxUsers ?? ''}
         onChange={(maxUsers) => set({ maxUsers })}
         error={err('maxUsers')}
       />

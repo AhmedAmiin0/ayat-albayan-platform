@@ -38,6 +38,7 @@ import { Route as SalesMeetingsRouteImport } from './routes/sales/meetings'
 import { Route as SalesPaymentsRouteImport } from './routes/sales/payments'
 import { Route as SalesRegisterRouteImport } from './routes/sales/register'
 import { Route as SalesScheduleRouteImport } from './routes/sales/schedule'
+import { Route as SalesShortLinksRouteRouteImport } from './routes/sales/short-links/route'
 import { Route as SalesStudentsRouteImport } from './routes/sales/students'
 import { Route as SalesSubscriptionsRouteImport } from './routes/sales/subscriptions'
 import { Route as SalesTeachersRouteImport } from './routes/sales/teachers'
@@ -81,8 +82,12 @@ import { Route as AdminSettingsCommunicationsRouteImport } from './routes/admin/
 import { Route as AdminSettingsGoogleRouteImport } from './routes/admin/settings.google'
 import { Route as AdminSettingsIntegrationsRouteImport } from './routes/admin/settings.integrations'
 import { Route as AdminSettingsValuesRouteImport } from './routes/admin/settings.values'
+import { Route as AdminShortLinksIndexRouteImport } from './routes/admin/short-links/index'
+import { Route as AdminShortLinksCodeRouteImport } from './routes/admin/short-links/$code'
 import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students/$studentId'
 import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teachers/$teacherId'
+import { Route as SalesShortLinksIndexRouteImport } from './routes/sales/short-links/index'
+import { Route as SalesShortLinksCodeRouteImport } from './routes/sales/short-links/$code'
 import { Route as SalesTemplatesIndexRouteImport } from './routes/sales/templates/index'
 import { Route as TeacherAvailabilityIndexRouteImport } from './routes/teacher/availability/index'
 import { Route as TeacherReportLessonIdRouteImport } from './routes/teacher/report.$lessonId'
@@ -237,6 +242,11 @@ const SalesRegisterRoute = SalesRegisterRouteImport.update({
 const SalesScheduleRoute = SalesScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
+  getParentRoute: () => SalesRoute,
+} as any)
+const SalesShortLinksRouteRoute = SalesShortLinksRouteRouteImport.update({
+  id: '/short-links',
+  path: '/short-links',
   getParentRoute: () => SalesRoute,
 } as any)
 const SalesStudentsRoute = SalesStudentsRouteImport.update({
@@ -460,6 +470,16 @@ const AdminSettingsValuesRoute = AdminSettingsValuesRouteImport.update({
   path: '/values',
   getParentRoute: () => AdminSettingsRoute,
 } as any)
+const AdminShortLinksIndexRoute = AdminShortLinksIndexRouteImport.update({
+  id: '/short-links/',
+  path: '/short-links/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminShortLinksCodeRoute = AdminShortLinksCodeRouteImport.update({
+  id: '/short-links/$code',
+  path: '/short-links/$code',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminStudentsStudentIdRoute = AdminStudentsStudentIdRouteImport.update({
   id: '/$studentId',
   path: '/$studentId',
@@ -469,6 +489,16 @@ const AdminTeachersTeacherIdRoute = AdminTeachersTeacherIdRouteImport.update({
   id: '/$teacherId',
   path: '/$teacherId',
   getParentRoute: () => AdminTeachersRouteRoute,
+} as any)
+const SalesShortLinksIndexRoute = SalesShortLinksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SalesShortLinksRouteRoute,
+} as any)
+const SalesShortLinksCodeRoute = SalesShortLinksCodeRouteImport.update({
+  id: '/$code',
+  path: '/$code',
+  getParentRoute: () => SalesShortLinksRouteRoute,
 } as any)
 const SalesTemplatesIndexRoute = SalesTemplatesIndexRouteImport.update({
   id: '/templates/',
@@ -539,6 +569,7 @@ export interface FileRoutesByFullPath {
   '/admin/assistants': typeof AdminAssistantsRouteRouteWithChildren
   '/admin/students': typeof AdminStudentsRouteRouteWithChildren
   '/admin/teachers': typeof AdminTeachersRouteRouteWithChildren
+  '/sales/short-links': typeof SalesShortLinksRouteRouteWithChildren
   '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
@@ -599,11 +630,15 @@ export interface FileRoutesByFullPath {
   '/admin/settings/google': typeof AdminSettingsGoogleRoute
   '/admin/settings/integrations': typeof AdminSettingsIntegrationsRoute
   '/admin/settings/values': typeof AdminSettingsValuesRoute
+  '/admin/short-links/$code': typeof AdminShortLinksCodeRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
+  '/sales/short-links/$code': typeof SalesShortLinksCodeRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/admin/short-links/': typeof AdminShortLinksIndexRoute
+  '/sales/short-links/': typeof SalesShortLinksIndexRoute
   '/sales/templates/': typeof SalesTemplatesIndexRoute
   '/teacher/availability/': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
@@ -680,11 +715,15 @@ export interface FileRoutesByTo {
   '/admin/settings/google': typeof AdminSettingsGoogleRoute
   '/admin/settings/integrations': typeof AdminSettingsIntegrationsRoute
   '/admin/settings/values': typeof AdminSettingsValuesRoute
+  '/admin/short-links/$code': typeof AdminShortLinksCodeRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
+  '/sales/short-links/$code': typeof SalesShortLinksCodeRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/admin/short-links': typeof AdminShortLinksIndexRoute
+  '/sales/short-links': typeof SalesShortLinksIndexRoute
   '/sales/templates': typeof SalesTemplatesIndexRoute
   '/teacher/availability': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports': typeof TeacherReportsIndexRoute
@@ -707,6 +746,7 @@ export interface FileRoutesById {
   '/admin/assistants': typeof AdminAssistantsRouteRouteWithChildren
   '/admin/students': typeof AdminStudentsRouteRouteWithChildren
   '/admin/teachers': typeof AdminTeachersRouteRouteWithChildren
+  '/sales/short-links': typeof SalesShortLinksRouteRouteWithChildren
   '/admin/communications': typeof AdminCommunicationsRoute
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
@@ -767,11 +807,15 @@ export interface FileRoutesById {
   '/admin/settings/google': typeof AdminSettingsGoogleRoute
   '/admin/settings/integrations': typeof AdminSettingsIntegrationsRoute
   '/admin/settings/values': typeof AdminSettingsValuesRoute
+  '/admin/short-links/$code': typeof AdminShortLinksCodeRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
+  '/sales/short-links/$code': typeof SalesShortLinksCodeRoute
   '/teacher/report/$lessonId': typeof TeacherReportLessonIdRoute
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
+  '/admin/short-links/': typeof AdminShortLinksIndexRoute
+  '/sales/short-links/': typeof SalesShortLinksIndexRoute
   '/sales/templates/': typeof SalesTemplatesIndexRoute
   '/teacher/availability/': typeof TeacherAvailabilityIndexRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
@@ -795,6 +839,7 @@ export interface FileRouteTypes {
     | '/admin/assistants'
     | '/admin/students'
     | '/admin/teachers'
+    | '/sales/short-links'
     | '/admin/communications'
     | '/admin/settings'
     | '/classroom/$lessonId'
@@ -855,11 +900,15 @@ export interface FileRouteTypes {
     | '/admin/settings/google'
     | '/admin/settings/integrations'
     | '/admin/settings/values'
+    | '/admin/short-links/$code'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
+    | '/sales/short-links/$code'
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/admin/short-links/'
+    | '/sales/short-links/'
     | '/sales/templates/'
     | '/teacher/availability/'
     | '/teacher/reports/'
@@ -936,11 +985,15 @@ export interface FileRouteTypes {
     | '/admin/settings/google'
     | '/admin/settings/integrations'
     | '/admin/settings/values'
+    | '/admin/short-links/$code'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
+    | '/sales/short-links/$code'
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/admin/short-links'
+    | '/sales/short-links'
     | '/sales/templates'
     | '/teacher/availability'
     | '/teacher/reports'
@@ -962,6 +1015,7 @@ export interface FileRouteTypes {
     | '/admin/assistants'
     | '/admin/students'
     | '/admin/teachers'
+    | '/sales/short-links'
     | '/admin/communications'
     | '/admin/settings'
     | '/classroom/$lessonId'
@@ -1022,11 +1076,15 @@ export interface FileRouteTypes {
     | '/admin/settings/google'
     | '/admin/settings/integrations'
     | '/admin/settings/values'
+    | '/admin/short-links/$code'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
+    | '/sales/short-links/$code'
     | '/teacher/report/$lessonId'
     | '/teacher/reports/$studentId'
     | '/teacher/students/$studentId'
+    | '/admin/short-links/'
+    | '/sales/short-links/'
     | '/sales/templates/'
     | '/teacher/availability/'
     | '/teacher/reports/'
@@ -1262,6 +1320,13 @@ declare module '@tanstack/react-router' {
       path: '/schedule'
       fullPath: '/sales/schedule'
       preLoaderRoute: typeof SalesScheduleRouteImport
+      parentRoute: typeof SalesRoute
+    }
+    '/sales/short-links': {
+      id: '/sales/short-links'
+      path: '/short-links'
+      fullPath: '/sales/short-links'
+      preLoaderRoute: typeof SalesShortLinksRouteRouteImport
       parentRoute: typeof SalesRoute
     }
     '/sales/students': {
@@ -1565,6 +1630,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsValuesRouteImport
       parentRoute: typeof AdminSettingsRoute
     }
+    '/admin/short-links/': {
+      id: '/admin/short-links/'
+      path: '/short-links'
+      fullPath: '/admin/short-links/'
+      preLoaderRoute: typeof AdminShortLinksIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/short-links/$code': {
+      id: '/admin/short-links/$code'
+      path: '/short-links/$code'
+      fullPath: '/admin/short-links/$code'
+      preLoaderRoute: typeof AdminShortLinksCodeRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/students/$studentId': {
       id: '/admin/students/$studentId'
       path: '/$studentId'
@@ -1578,6 +1657,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/teachers/$teacherId'
       preLoaderRoute: typeof AdminTeachersTeacherIdRouteImport
       parentRoute: typeof AdminTeachersRouteRoute
+    }
+    '/sales/short-links/': {
+      id: '/sales/short-links/'
+      path: '/'
+      fullPath: '/sales/short-links/'
+      preLoaderRoute: typeof SalesShortLinksIndexRouteImport
+      parentRoute: typeof SalesShortLinksRouteRoute
+    }
+    '/sales/short-links/$code': {
+      id: '/sales/short-links/$code'
+      path: '/$code'
+      fullPath: '/sales/short-links/$code'
+      preLoaderRoute: typeof SalesShortLinksCodeRouteImport
+      parentRoute: typeof SalesShortLinksRouteRoute
     }
     '/sales/templates/': {
       id: '/sales/templates/'
@@ -1762,6 +1855,8 @@ interface AdminRouteChildren {
   AdminpeopleLeadsRoute: typeof AdminpeopleLeadsRoute
   AdminpeopleRolesRoute: typeof AdminpeopleRolesRoute
   AdminpeopleUsersRoute: typeof AdminpeopleUsersRoute
+  AdminShortLinksCodeRoute: typeof AdminShortLinksCodeRoute
+  AdminShortLinksIndexRoute: typeof AdminShortLinksIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -1790,6 +1885,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminpeopleLeadsRoute: AdminpeopleLeadsRoute,
   AdminpeopleRolesRoute: AdminpeopleRolesRoute,
   AdminpeopleUsersRoute: AdminpeopleUsersRoute,
+  AdminShortLinksCodeRoute: AdminShortLinksCodeRoute,
+  AdminShortLinksIndexRoute: AdminShortLinksIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -1806,7 +1903,21 @@ const AssistantRouteWithChildren = AssistantRoute._addFileChildren(
   AssistantRouteChildren,
 )
 
+interface SalesShortLinksRouteRouteChildren {
+  SalesShortLinksCodeRoute: typeof SalesShortLinksCodeRoute
+  SalesShortLinksIndexRoute: typeof SalesShortLinksIndexRoute
+}
+
+const SalesShortLinksRouteRouteChildren: SalesShortLinksRouteRouteChildren = {
+  SalesShortLinksCodeRoute: SalesShortLinksCodeRoute,
+  SalesShortLinksIndexRoute: SalesShortLinksIndexRoute,
+}
+
+const SalesShortLinksRouteRouteWithChildren =
+  SalesShortLinksRouteRoute._addFileChildren(SalesShortLinksRouteRouteChildren)
+
 interface SalesRouteChildren {
+  SalesShortLinksRouteRoute: typeof SalesShortLinksRouteRouteWithChildren
   SalesAllStudentsRoute: typeof SalesAllStudentsRoute
   SalesEarningsRoute: typeof SalesEarningsRoute
   SalesInboxRoute: typeof SalesInboxRoute
@@ -1823,6 +1934,7 @@ interface SalesRouteChildren {
 }
 
 const SalesRouteChildren: SalesRouteChildren = {
+  SalesShortLinksRouteRoute: SalesShortLinksRouteRouteWithChildren,
   SalesAllStudentsRoute: SalesAllStudentsRoute,
   SalesEarningsRoute: SalesEarningsRoute,
   SalesInboxRoute: SalesInboxRoute,

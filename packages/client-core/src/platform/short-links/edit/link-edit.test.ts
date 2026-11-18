@@ -1,33 +1,60 @@
 import { describe, expect, it } from 'vitest';
+import { detail } from '../short-links.test-util.js';
 import { editOf, toUpdateBody } from './link-edit.js';
 
 const clock = { now: new Date('2026-11-17T11:06:00.000Z'), tz: 'Asia/Riyadh' };
+const ID = '11111111-1111-4111-8111-111111111111';
 
 describe('editOf', () => {
-  it('starts from the link, keeping its expiry', () => {
-    expect(editOf({ title: 'لقاء', maxUsers: 5 })).toEqual({ title: 'لقاء', maxUsers: '5', expiry: null });
-    expect(editOf({ title: 'لقاء', maxUsers: null }).maxUsers).toBe('');
+  it('takes the title, the limit and the listed people and typed numbers', () => {
+    expect(editOf(detail)).toEqual({
+      title: 'لقاء أولياء الأمور',
+      maxUsers: '12',
+      people: [{ id: ID, name: 'أحمد علي', role: 'guardian' }],
+      phones: ['+201120000003'],
+    });
+  });
+
+  it('an unlimited link has an empty limit', () => {
+    expect(editOf({ ...detail, maxUsers: null, userList: [] })).toMatchObject({
+      maxUsers: '',
+      people: [],
+      phones: [],
+    });
   });
 });
 
 describe('toUpdateBody', () => {
-  it('sends the title and the limit, and no expiry while it is kept', () => {
-    expect(toUpdateBody({ title: ' لقاء ', maxUsers: '', expiry: null }, clock)).toEqual({
-      body: { title: 'لقاء', maxUsers: null },
-    });
+  it('sends only the fields given', () => {
+    expect(toUpdateBody({ title: ' لقاء ' }, clock)).toEqual({ body: { title: 'لقاء' } });
   });
 
-  it('moves the expiry from now', () => {
-    const edit = { title: 'لقاء', maxUsers: '١٢', expiry: { kind: 'days', days: 3 } } as const;
+  it('a whole edit: limit, users and no expiry change', () => {
+    const edit = { ...editOf(detail), maxUsers: '' };
     expect(toUpdateBody(edit, clock)).toEqual({
-      body: { title: 'لقاء', maxUsers: 12, expiresAt: '2026-11-20T11:06:00.000Z' },
+      body: {
+        title: 'لقاء أولياء الأمور',
+        maxUsers: null,
+        profileIds: [ID],
+        phones: ['+201120000003'],
+      },
     });
   });
 
-  it('names each bad field', () => {
-    const past = { kind: 'date', at: '2026-11-01T00:00:00.000Z' } as const;
-    expect(toUpdateBody({ title: ' ', maxUsers: 'x', expiry: past }, clock)).toEqual({
-      errors: { title: 'title_invalid', maxUsers: 'max_users_invalid', expiresAt: 'expiry_past' },
+  it('an extension: the new expiry instant', () => {
+    expect(toUpdateBody({ expiry: { kind: 'days', days: 3 } }, clock)).toEqual({
+      body: { expiresAt: '2026-11-20T11:06:00.000Z' },
     });
+  });
+
+  it('a past date and a bad limit are field errors', () => {
+    const at = '2026-11-01T00:00:00.000Z';
+    expect(toUpdateBody({ expiry: { kind: 'date', at }, maxUsers: '0' }, clock)).toEqual({
+      errors: { expiresAt: 'expiry_past', maxUsers: 'max_users_invalid' },
+    });
+  });
+
+  it('an empty title is refused', () => {
+    expect(toUpdateBody({ title: '  ' }, clock)).toEqual({ errors: { title: 'title_invalid' } });
   });
 });

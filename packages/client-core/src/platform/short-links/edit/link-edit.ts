@@ -1,40 +1,61 @@
-import { shortLinkUpdateSchema, type ShortLinkRow, type ShortLinkUpdate } from '@ab/shared';
+import { shortLinkUpdateSchema, type ShortLinkDetail, type ShortLinkUpdate } from '@ab/shared';
+import {
+  expiresAtOf,
+  maxUsersOf,
+  type LinkClock,
+  type LinkExpiry,
+  type LinkPick,
+} from '../link-form.js';
 import { issueErrors, type LinkFieldErrors } from '../link-form-errors.js';
-import { expiresAtOf, maxUsersOf, type LinkClock, type LinkExpiry } from '../link-form.js';
 
-// «تعديل» / «تمديد» of a link (boards LinkXWebDetail, LinkXStaffDetail): the title, the allowed
-// users and a new lifetime, as the PATCH /short-links/:code body (a new expiry reactivates an
-// expired link, docs/19), checked by the API's own schema.
+// «تعديل» and «تمديد» of a link (board LinkXWebDetail): the PATCH body from the fields the screen
+// shows. A field left out stays as it is on the server; a given user list replaces the old one.
 
 export interface LinkEdit {
-  title: string;
+  title?: string;
   /** Digits as typed; empty = «بلا حد». */
-  maxUsers: string;
-  /** null keeps the expiry; a choice moves it from now. */
-  expiry: LinkExpiry | null;
+  maxUsers?: string;
+  people?: LinkPick[];
+  phones?: string[];
+  /** A new expiry (an expired link runs again until it). */
+  expiry?: LinkExpiry;
 }
 
-export const editOf = (link: Pick<ShortLinkRow, 'title' | 'maxUsers'>): LinkEdit => ({
-  title: link.title,
-  maxUsers: link.maxUsers === null ? '' : String(link.maxUsers),
-  expiry: null,
+/** The edit form of a link as it is: its title, limit and listed users (no expiry change). */
+export function editOf(link: ShortLinkDetail): Required<Omit<LinkEdit, 'expiry'>> {
+  const people = link.userList.flatMap((u) => (u.person ? [u.person] : []));
+  const phones = link.userList.flatMap((u) => (u.person === null && u.phone ? [u.phone] : []));
+  return {
+    title: link.title,
+    maxUsers: link.maxUsers === null ? '' : String(link.maxUsers),
+    people: people.map(({ id, name, role }) => ({ id, name, role })),
+    phones,
+  };
+}
+
+const usersOf = (edit: LinkEdit): object => ({
+  ...(edit.people ? { profileIds: edit.people.map((p) => p.id) } : {}),
+  ...(edit.phones ? { phones: edit.phones } : {}),
 });
+
+const bodyOf = (edit: LinkEdit, expiresAt: string | null): object => ({
+  ...(edit.title === undefined ? {} : { title: edit.title }),
+  ...(edit.maxUsers === undefined ? {} : { maxUsers: maxUsersOf(edit.maxUsers) }),
+  ...(expiresAt === null ? {} : { expiresAt }),
+  ...usersOf(edit),
+});
+
+const isPast = (at: string | null, now: Date): boolean =>
+  at !== null && !(Date.parse(at) > now.getTime());
 
 export type LinkEditCheck = { body: ShortLinkUpdate } | { errors: LinkFieldErrors };
 
-const expiryOf = (edit: LinkEdit, clock: LinkClock): { expiresAt?: string } =>
-  edit.expiry === null ? {} : { expiresAt: expiresAtOf(edit.expiry, clock) };
-
-const isPast = (at: string | undefined, now: Date): boolean =>
-  at !== undefined && !(Date.parse(at) > now.getTime());
-
-/** The PATCH body, or each field's shortLinks.form.errors key. */
+/** The PATCH /short-links/:code body, or each field's shortLinks.form.errors key. */
 export function toUpdateBody(edit: LinkEdit, clock: LinkClock): LinkEditCheck {
-  const expiry = expiryOf(edit, clock);
-  const body = { title: edit.title, maxUsers: maxUsersOf(edit.maxUsers), ...expiry };
-  const parsed = shortLinkUpdateSchema.safeParse(body);
+  const expiresAt = edit.expiry ? expiresAtOf(edit.expiry, clock) : null;
+  const parsed = shortLinkUpdateSchema.safeParse(bodyOf(edit, expiresAt));
   const errors: LinkFieldErrors = parsed.success ? {} : issueErrors(parsed.error.issues);
-  const past = isPast(expiry.expiresAt, clock.now) ? { expiresAt: 'expiry_past' as const } : {};
+  const past = isPast(expiresAt, clock.now) ? { expiresAt: 'expiry_past' as const } : {};
   const all: LinkFieldErrors = { ...past, ...errors };
   return parsed.success && Object.keys(all).length === 0 ? { body: parsed.data } : { errors: all };
 }

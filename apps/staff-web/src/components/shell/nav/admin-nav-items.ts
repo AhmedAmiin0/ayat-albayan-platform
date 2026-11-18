@@ -9,6 +9,7 @@ export const ADMIN_NAV_GROUPS = [
   [
     { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'phone', permission: 'leads.read' },
     { key: 'inbox', to: '/admin/inbox', label: t.nav.inbox, icon: 'chat', permission: 'inbox.read' },
+    { key: 'shortLinks', to: '/admin/short-links', label: t.nav.shortLinks, icon: 'link', permission: 'short_links.manage' },
     { key: 'jobApplicants', to: '/admin/job-applicants', label: t.nav.jobApplicants, icon: 'brief', permission: 'applicants.read' },
   ],
   [
