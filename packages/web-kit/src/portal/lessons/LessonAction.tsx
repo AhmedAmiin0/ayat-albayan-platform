@@ -30,10 +30,13 @@ const LOOK: Record<Tone, { hint: string; button: string; box: string }> = {
   plain: { hint: 'text-sm text-ink-2', button: '', box: 'grid gap-2' },
   hero: {
     hint: 'text-sm text-fam-hero-ink-2',
-    button: ` ${GOLD}`,
+    button: GOLD,
     box: 'grid gap-2 [&>p:not([role=alert])]:text-fam-hero-ink-2',
   },
 };
+
+/** The tone's extras after the base classes; `plain` adds nothing, so its output stays as is. */
+const withLook = (base: string, extra: string): string => (extra ? `${base} ${extra}` : base);
 
 /**
  * «ادخل الحلقة», only inside the join window: our classroom admits the student through the API and
@@ -56,7 +59,7 @@ export function LessonAction({ lesson, studentId, tz, now, onJoined, tone = 'pla
         href={lesson.meeting_url}
         target="_blank"
         rel="noopener noreferrer"
-        className={buttonVariants({ size: 'lg' }) + look.button}
+        className={withLook(buttonVariants({ size: 'lg' }), look.button)}
       >
         {t.portal.join}
       </a>
@@ -69,7 +72,7 @@ export function LessonAction({ lesson, studentId, tz, now, onJoined, tone = 'pla
       <Button
         type="button"
         size="lg"
-        className={`transition-transform active:scale-[0.98]${look.button}`}
+        className={withLook('transition-transform active:scale-[0.98]', look.button)}
         disabled={join.isPending}
         onClick={() => join.mutate()}
       >
