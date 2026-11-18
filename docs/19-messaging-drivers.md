@@ -425,7 +425,8 @@ which replaces the old one; kept rows keep their send state) · `POST /short-lin
 **Gate flow**: `GET /r/<code>` of a managed link answers 302 to the web gate `<WEB_ORIGIN>/l/<code>` (system links
 keep the direct 302; an expired or revoked link is the usual 404). The gate's public API (60 a minute per IP, 20 per
 IP and code; never cached; unknown and system codes are the same 404 `short_link_not_found`):
-`GET /public/short-links/:code` (title, `state` open | gone, `needs: sign_in_or_code`, `codesAvailable`; never the
+`GET /public/short-links/:code` (title, `state` open | gone, `goneReason` expired | revoked | null,
+`needs: sign_in_or_code`, `codesAvailable`; never the
 target) · `POST …/open` with the caller's JWT (a signed-in user: the visit by profile) · `POST …/otp/start`
 `{ phone }` (any country; always 202; a code goes out only while the link is live and, for a listed link, only to
 a listed phone) · `POST …/otp/verify` `{ phone, code }` (401 `invalid_code`). The codes are the family sign-in's
