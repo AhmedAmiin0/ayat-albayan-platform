@@ -1,6 +1,6 @@
 import type { GoogleEnv } from '@/config/env/env';
 import type { EventRef, GoogleClient, GoogleClientFactory, GoogleEventBody, GoogleOAuth, Rows, ValueRender, CellValue } from '@/modules/platform/google-sync/google-client.port';
-import { GoogleHttp } from './google-http';
+import { GoogleHttp, type GoogleHttpOptions } from './google-http';
 import { CalendarApi } from './google-http.calendar';
 import { DriveApi } from './google-http.drive';
 import { GoogleOAuthApi, oauthClient } from './google-http.oauth';
@@ -12,10 +12,11 @@ export class GoogleHttpClient implements GoogleClient {
   private readonly drive: DriveApi;
   private readonly sheets: SheetsApi;
 
-  constructor(env: GoogleEnv, refreshToken: string) {
+  /** `opts` is the tests' deadline seam; the app passes none (30 s). */
+  constructor(env: GoogleEnv, refreshToken: string, opts?: GoogleHttpOptions) {
     const auth = oauthClient(env);
     auth.setCredentials({ refresh_token: refreshToken });
-    const http = new GoogleHttp(auth, env.endpoints);
+    const http = new GoogleHttp(auth, env.endpoints, opts);
     this.cal = new CalendarApi(http);
     this.drive = new DriveApi(http);
     this.sheets = new SheetsApi(http);

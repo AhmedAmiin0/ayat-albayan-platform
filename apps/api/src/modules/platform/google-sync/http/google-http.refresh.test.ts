@@ -12,9 +12,11 @@ import { GoogleHttpClient } from './google-http.client';
 interface Answer {
   status: number;
   body: string;
+  delayMs?: number;
 }
 
-const state = { refreshes: 0, expiresIn: 3600, bearers: [] as string[] };
+const DEADLINE = { timeoutMs: 200 };
+const state = { refreshes: 0, expiresIn: 3600, tokenDelayMs: 0, bearers: [] as string[] };
 let answer: (path: string) => Answer = () => ({ status: 200, body: '{}' });
 let server: Server;
 let env: GoogleEnv;
@@ -25,7 +27,7 @@ function tokenAnswer(form: string): Answer {
   if (form.includes('refresh_token=dead')) return json(400, { error: 'invalid_grant' });
   state.refreshes += 1;
   const token = { access_token: `tok-${state.refreshes}`, expires_in: state.expiresIn };
-  return json(200, { ...token, token_type: 'Bearer' });
+  return { ...json(200, { ...token, token_type: 'Bearer' }), delayMs: state.tokenDelayMs };
 }
 
 beforeAll(async () => {
@@ -37,7 +39,8 @@ beforeAll(async () => {
       const isToken = path === '/token';
       if (!isToken) state.bearers.push(req.headers.authorization ?? '');
       const a = isToken ? tokenAnswer(Buffer.concat(chunks).toString()) : answer(path);
-      res.writeHead(a.status, { 'content-type': 'application/json' }).end(a.body);
+      const reply = () => res.writeHead(a.status, { 'content-type': 'application/json' }).end(a.body);
+      setTimeout(reply, a.delayMs ?? 0);
     });
   });
   await new Promise<void>((done) => server.listen(0, done));
@@ -48,7 +51,7 @@ beforeAll(async () => {
 });
 afterAll(() => server.close());
 beforeEach(() => {
-  Object.assign(state, { refreshes: 0, expiresIn: 3600, bearers: [] });
+  Object.assign(state, { refreshes: 0, expiresIn: 3600, tokenDelayMs: 0, bearers: [] });
   answer = () => json(200, {});
 });
 
@@ -77,6 +80,22 @@ describe('GoogleHttpClient token refresh', () => {
     expect(err).toEqual(new GoogleApiError(400, 'invalid_grant'));
     expect(classify(err)).toBe('auth');
     expect(state.bearers).toEqual([]);
+  });
+});
+
+describe('GoogleHttpClient deadline (the API call only)', () => {
+  it('a token refresh slower than the deadline still ends in the call, new bearer', async () => {
+    state.tokenDelayMs = DEADLINE.timeoutMs * 2;
+    await new GoogleHttpClient(env, 'slow', DEADLINE).deleteEvent(ref);
+    expect(state.refreshes).toBe(1);
+    expect(state.bearers).toEqual(['Bearer tok-1']);
+  });
+
+  it('an API answer slower than the deadline is still GoogleApiError(0, network)', async () => {
+    answer = () => ({ ...json(200, {}), delayMs: DEADLINE.timeoutMs * 2 });
+    const c = new GoogleHttpClient(env, 'r', DEADLINE);
+    const err = await c.deleteEvent(ref).catch((e: unknown) => e);
+    expect(err).toEqual(new GoogleApiError(0, 'network'));
   });
 });
 
