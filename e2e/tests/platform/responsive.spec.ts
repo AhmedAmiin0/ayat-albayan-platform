@@ -18,8 +18,10 @@ async function settle(page: Page, path: string): Promise<void> {
   await page.waitForLoadState('networkidle');
 }
 
-test.describe('no horizontal overflow on the main screens', () => {
-  test('admin, teacher and public pages at 390px and 768px', async ({ asRole, browser }) => {
+// One test per width (2026-11-18): both widths in one 240 s test ran past the budget on slow shared
+// runners (a flaky timeout on several branches and on develop). Each width seeds its own scene.
+for (const width of [390, 768]) {
+  test(`no horizontal overflow: admin, teacher and public pages at ${width}px`, async ({ asRole, browser }) => {
     test.skip(test.info().project.name !== 'desktop', 'sizes its own viewport; once is enough');
     test.setTimeout(240_000);
     await stubReset();
@@ -56,36 +58,34 @@ test.describe('no horizontal overflow on the main screens', () => {
       '/admin/settings/appearance',
       '/admin/book',
     ];
-    for (const width of [390, 768]) {
-      for (const page of [admin, teacher, guest]) await page.setViewportSize({ width, height: 844 });
-      for (const path of adminPaths) {
-        await settle(admin, path);
-        expect.soft(await overflow(admin), `${path} @${width}px`).toBeLessThanOrEqual(0);
-      }
-      // The inbox with a conversation and its lead panel open.
-      await settle(admin, '/admin/inbox');
-      await admin.getByRole('link', { name: ar.inbox.openThread.replace('{name}', guardian) }).click();
-      await expect(admin.getByRole('log', { name: ar.messages.log })).toBeVisible();
-      expect.soft(await overflow(admin), `inbox thread @${width}px`).toBeLessThanOrEqual(0);
-      // A dialog never runs off the screen: its body scrolls inside the panel.
-      await settle(admin, `/admin/students/${studentId}`);
-      await admin.getByRole('button', { name: ar.subscriptions.new }).first().click();
-      const dialog = admin.getByRole('dialog', { name: ar.subscriptions.new });
-      const box = await restingBox(dialog);
-      // Polled: a slow runner can still be easing the sheet in (845.6 once on CI, at rest 844).
-      const bottom = async () => {
-        const b = await dialog.boundingBox();
-        return (b?.y ?? 0) + (b?.height ?? 0);
-      };
-      await expect.soft.poll(bottom, { message: `dialog bottom @${width}px` }).toBeLessThanOrEqual(844.5);
-      expect.soft((box?.x ?? 0) + (box?.width ?? 0), `dialog right @${width}px`).toBeLessThanOrEqual(width);
+    for (const page of [admin, teacher, guest]) await page.setViewportSize({ width, height: 844 });
+    for (const path of adminPaths) {
+      await settle(admin, path);
+      expect.soft(await overflow(admin), `${path} @${width}px`).toBeLessThanOrEqual(0);
+    }
+    // The inbox with a conversation and its lead panel open.
+    await settle(admin, '/admin/inbox');
+    await admin.getByRole('link', { name: ar.inbox.openThread.replace('{name}', guardian) }).click();
+    await expect(admin.getByRole('log', { name: ar.messages.log })).toBeVisible();
+    expect.soft(await overflow(admin), `inbox thread @${width}px`).toBeLessThanOrEqual(0);
+    // A dialog never runs off the screen: its body scrolls inside the panel.
+    await settle(admin, `/admin/students/${studentId}`);
+    await admin.getByRole('button', { name: ar.subscriptions.new }).first().click();
+    const dialog = admin.getByRole('dialog', { name: ar.subscriptions.new });
+    const box = await restingBox(dialog);
+    // Polled: a slow runner can still be easing the sheet in (845.6 once on CI, at rest 844).
+    const bottom = async () => {
+      const b = await dialog.boundingBox();
+      return (b?.y ?? 0) + (b?.height ?? 0);
+    };
+    await expect.soft.poll(bottom, { message: `dialog bottom @${width}px` }).toBeLessThanOrEqual(844.5);
+    expect.soft((box?.x ?? 0) + (box?.width ?? 0), `dialog right @${width}px`).toBeLessThanOrEqual(width);
 
-      await settle(teacher, '/teacher');
-      expect.soft(await overflow(teacher), `/teacher @${width}px`).toBeLessThanOrEqual(0);
-      for (const path of [studentLink, '/join/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ', '/login']) {
-        await settle(guest, path);
-        expect.soft(await overflow(guest), `${path} @${width}px`).toBeLessThanOrEqual(0);
-      }
+    await settle(teacher, '/teacher');
+    expect.soft(await overflow(teacher), `/teacher @${width}px`).toBeLessThanOrEqual(0);
+    for (const path of [studentLink, '/join/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ', '/login']) {
+      await settle(guest, path);
+      expect.soft(await overflow(guest), `${path} @${width}px`).toBeLessThanOrEqual(0);
     }
   });
-});
+}
