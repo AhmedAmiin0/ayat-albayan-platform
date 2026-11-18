@@ -3,8 +3,9 @@ import { salesPriceFloor } from './catalog.js';
 import { customTotal } from './custom-total.js';
 
 describe('salesPriceFloor (the deepest pill, owner 2026-11-05)', () => {
-  it('is round(total × 0.85)', () => {
-    expect([145, 1000, 0, 180].map(salesPriceFloor)).toEqual([123, 850, 0, 153]);
+  it('is total × 0.85 rounded down to a multiple of 5 (owner 2026-11-18: 153 → 150)', () => {
+    const totals = [145, 1000, 0, 180, 770, 48.5];
+    expect(totals.map(salesPriceFloor)).toEqual([120, 850, 0, 150, 650, 40]);
   });
 });
 

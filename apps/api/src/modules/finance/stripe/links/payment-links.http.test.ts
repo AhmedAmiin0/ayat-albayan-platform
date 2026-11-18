@@ -47,12 +47,12 @@ describe('POST /sales/payment-links: the package as «اشتراك جديد» ma
     expect(m.subs.insert).not.toHaveBeenCalled();
   });
 
-  it('the pills’ floor without any cap: below 123 (145 × 0.85) is 403, 123 makes the link', async () => {
+  it('the pills’ floor without any cap: below 120 (145 × 0.85, down to 5) is 403, 120 makes the link', async () => {
     const url = '/sales/payment-links';
     const low = await call({ method: 'POST', url, token: 'salesA', body: { ...BODY, amount: 1 } });
-    expect([low.statusCode, low.json().code, low.json().min]).toEqual([403, 'discount_not_allowed', 123]);
+    expect([low.statusCode, low.json().code, low.json().min]).toEqual([403, 'discount_not_allowed', 120]);
     expect(m.subs.insert).not.toHaveBeenCalled();
-    const ok = await call({ method: 'POST', url, token: 'salesA', body: { ...BODY, amount: 123 } });
+    const ok = await call({ method: 'POST', url, token: 'salesA', body: { ...BODY, amount: 120 } });
     expect(ok.statusCode).toBe(201);
   });
 

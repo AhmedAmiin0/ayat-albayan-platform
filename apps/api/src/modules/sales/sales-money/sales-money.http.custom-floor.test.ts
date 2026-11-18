@@ -6,8 +6,8 @@ import { CREATE, salesDefaults } from './sales-money.fakes';
 import { salesPriceFloor } from '@ab/shared';
 
 // «مبلغ مخصص» (owner 2026-11-05 review): the assistant's custom price has the pills' floor
-// (the weekly SA quote is 145: at least round(145 × 0.85) = 123); the admin's POST /subscriptions
-// has none.
+// (the weekly SA quote is 145: 145 × 0.85 = 123.25, down to a multiple of 5 = 120); the admin's
+// POST /subscriptions has none.
 const post = (customPrice: number) => ({
   method: 'POST' as const,
   url: '/sales/subscriptions',
@@ -27,23 +27,23 @@ describe('the custom price floor', () => {
     salesDefaults(m);
   });
 
-  it('is the deepest pill’s price (15 %, rounded like the quote)', () => {
-    expect([145, 1000, 0].map(salesPriceFloor)).toEqual([123, 850, 0]);
+  it('is the deepest pill’s price (15 %), rounded down to a multiple of 5', () => {
+    expect([145, 1000, 0].map(salesPriceFloor)).toEqual([120, 850, 0]);
   });
 
   it('the assistant below it: 403 discount_not_allowed, the lowest price, nothing stored', async () => {
-    for (const amount of [1, 122.99]) {
+    for (const amount of [1, 119.99]) {
       const res = await call(post(amount));
       expect(res.statusCode).toBe(403);
-      expect(res.json()).toMatchObject({ code: 'discount_not_allowed', min: 123, currency: 'SAR' });
+      expect(res.json()).toMatchObject({ code: 'discount_not_allowed', min: 120, currency: 'SAR' });
     }
     expect(m.subs.insert).not.toHaveBeenCalled();
   });
 
   it('the assistant at the floor: created at her price', async () => {
-    m.subs.insert.mockResolvedValue(subRow({ price: 123 }));
-    expect((await call(post(123))).statusCode).toBe(201);
-    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ price: 123 }));
+    m.subs.insert.mockResolvedValue(subRow({ price: 120 }));
+    expect((await call(post(120))).statusCode).toBe(201);
+    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ price: 120 }));
   });
 
   it('the admin below it (POST /subscriptions): created, no floor', async () => {

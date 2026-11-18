@@ -21,7 +21,7 @@ const field = () => screen.getByLabelText(c.label.replace('{currency}', SAR));
 const disabled = (name: string) =>
   screen.getByRole('button', { name }).props.accessibilityState?.disabled;
 
-/** bulkSa: total 770, after the 10 % pill 693; the sales floor is round(770 × 0.85) = 655. */
+/** bulkSa: total 770, after the 10 % pill 693; sales floor 770 × 0.85 = 654.5 → 650. */
 async function sheet(permissions: string[] = ['pricing.read']) {
   const me = { role: 'sales', permissions };
   const answer = async (p: string) => (p === '/auth/me' ? me : bulkSa);
@@ -57,7 +57,7 @@ test('sales: under the deepest pill’s price says the minimum, nothing may leav
   await sheet();
   await fireEvent.press(pill());
   await fireEvent.changeText(field(), '600');
-  const min = c.min.replace('{amount}', formatAmount(655)).replace('{currency}', SAR);
+  const min = c.min.replace('{amount}', formatAmount(650)).replace('{currency}', SAR);
   expect(screen.getByText(min)).toBeTruthy();
   for (const name of [q.send, q.edit, q.copy]) expect(disabled(name)).toBe(true);
 });

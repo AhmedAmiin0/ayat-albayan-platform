@@ -16,7 +16,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [...granted], can: (p: string) => granted.has(p) }),
 }));
 
-/** Standard, SA, 45 min, 1 student: 180 ر.س; the sales floor is round(180 × 0.85) = 153. */
+/** Standard, SA, 45 min, 1 student: 180 ر.س; sales floor 180 × 0.85 = 153 → 150. */
 const SA = '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=0';
 const QUOTE = fakePricingApi(SA) as Quote;
 const T = t.subscriptions.customPrice;
@@ -64,7 +64,7 @@ it('sales: under the deepest pill’s price says the minimum, nothing may leave'
   await show();
   fireEvent.click(toggle());
   type('100');
-  const min = T.min.replace('{amount}', formatAmount(153)).replace('{currency}', SAR);
+  const min = T.min.replace('{amount}', formatAmount(150)).replace('{currency}', SAR);
   expect(screen.getByText(min)).toBeTruthy();
   for (const name of [q.send, q.edit, q.copy]) expect(off(name)).toBe(true);
 });

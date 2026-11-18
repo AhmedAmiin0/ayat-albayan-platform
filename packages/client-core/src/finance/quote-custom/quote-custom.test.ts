@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { quoteCustom } from '../../index.js';
 
-/** Standard SA: 180 ر.س, the sales floor round(180 × 0.85) = 153. */
+/** Standard SA: 180 ر.س, the sales floor 180 × 0.85 = 153, down to a multiple of 5 = 150. */
 const quote = { total: 180, afterDiscount: 180, currency: 'SAR' };
 const labels = { min: 'min {amount} {currency}', invalid: 'invalid', currency: () => 'ر.س' };
 const run = (on: boolean, text: string, admin = false) =>
@@ -17,8 +17,8 @@ describe('quoteCustom («مبلغ مخصص» on the chat quote)', () => {
   });
 
   it('sales: the floor itself is allowed, under it says the minimum', () => {
-    expect(run(true, '153').total).toBe(153);
-    expect(run(true, '152')).toEqual({ total: undefined, valid: false, error: 'min 153 ر.س' });
+    expect(run(true, '150').total).toBe(150);
+    expect(run(true, '149')).toEqual({ total: undefined, valid: false, error: 'min 150 ر.س' });
   });
 
   it('not an amount is invalid', () => {
