@@ -42,6 +42,10 @@ export const registrationCheckQuerySchema = z
     return z.NEVER;
   });
 export type RegistrationCheckQuery = z.output<typeof registrationCheckQuerySchema>;
+/** «بالهاتف» or «بالاسم أو الكود». */
+export type RegistrationCheckBy = RegistrationCheckQuery['by'];
+/** The 400 codes the query schema answers with. */
+export type RegistrationCheckCode = 'query_too_short' | 'invalid_phone' | 'one_of';
 
 /** One registered child: exactly these four keys. */
 export interface RegistrationMatch {

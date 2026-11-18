@@ -3,7 +3,8 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { seedFullAccess } from '@/test/staff-me';
 import { TeacherDetailScreen } from './TeacherDetailScreen';
-import type { Teacher } from '@/core/lib/staff/types';
+import type { Teacher } from '@ab/shared';
+import { teacherFixture } from '@ab/shared/testing';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -12,14 +13,14 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() }, useLocalSearchParams: () => ({ id: 't1' }) }));
 
-const TEACHER: Teacher = {
+const TEACHER: Teacher = teacherFixture({
   id: 't1',
   display_name_ar: 'هدى سالم',
   phone_e164: null,
   status: 'active',
   tz: 'Asia/Riyadh',
   avatar_url: 'https://cdn/t1.jpg',
-};
+});
 
 const photo = () => screen.getByTestId('avatar-photo', { includeHiddenElements: true });
 

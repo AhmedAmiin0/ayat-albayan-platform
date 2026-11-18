@@ -1,5 +1,6 @@
+import { leadSortFromValue, leadSortValue } from '@ab/client-core';
 import { t } from '@ab/mobile-kit';
-import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
+import { leadSortChoices } from './lead-sort';
 
 test('every choice round-trips through its select value', () => {
   for (const { value } of leadSortChoices()) {
@@ -7,13 +8,6 @@ test('every choice round-trips through its select value', () => {
   }
 });
 
-test('«الأحدث إضافةً» is created_at descending, «الأقدم» ascending', () => {
-  expect(leadSortFromValue('created_at:desc')).toEqual({ sort: 'created_at', dir: 'desc' });
-  expect(leadSortFromValue('created_at')).toEqual({ sort: 'created_at' });
+test('«الأحدث إضافةً» is a choice', () => {
   expect(leadSortChoices().map((c) => c.label)).toContain(t.leads.sort.newest);
-});
-
-test('an unknown key or an empty value is the default order', () => {
-  expect(leadSortFromValue('')).toEqual({});
-  expect(leadSortFromValue('password:desc')).toEqual({});
 });

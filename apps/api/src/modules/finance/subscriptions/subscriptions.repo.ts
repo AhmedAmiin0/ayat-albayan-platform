@@ -3,9 +3,10 @@ import { round2 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains } from '@/common/db/list-sort';
-import { dbError, type Page } from '@/common/http/http';
+import { dbError } from '@/common/http/http';
 import { readChunked } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './list/subscriptions.list-query';
+import type { Page } from '@ab/shared';
 
 export type { SubListQuery } from './list/subscriptions.list-query';
 

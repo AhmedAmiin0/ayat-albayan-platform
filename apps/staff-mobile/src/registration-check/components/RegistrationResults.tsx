@@ -1,7 +1,7 @@
 import { studentStatusStyle, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
 import { t, EmptyState, ListRow, StatusChip, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import type { CheckBy } from '@/registration-check/lib/registration-check';
+import type { RegistrationCheckBy } from '@ab/shared';
 
 /**
  * The answer: «مسجّل: n طالب» and each child (name, code, status — any of the eight, expired and churned
@@ -10,7 +10,7 @@ import type { CheckBy } from '@/registration-check/lib/registration-check';
  */
 export function RegistrationResults({ view, by, onPick }: {
   view: RegistrationCheckView;
-  by: CheckBy;
+  by: RegistrationCheckBy;
   onPick?: (m: RegistrationMatch) => void;
 }) {
   const rc = t.registrationCheck;

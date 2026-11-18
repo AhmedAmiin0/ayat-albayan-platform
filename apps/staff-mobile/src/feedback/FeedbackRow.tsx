@@ -7,7 +7,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { localDate } from '@/today';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { answerLine } from './feedback-text';
-import type { FeedbackListRow } from './types';
+import type { FeedbackListRow } from '@ab/shared';
 
 const text = t.mobile.feedback;
 

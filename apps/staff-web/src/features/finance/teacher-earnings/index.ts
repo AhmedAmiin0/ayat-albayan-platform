@@ -8,7 +8,6 @@ export {
   payTeacher,
   receiptUrl,
   type Scope,
-  type SessionFilter,
   sessionsQuery,
   type TeacherEarningsBalanceView,
   type TeacherEarningView,

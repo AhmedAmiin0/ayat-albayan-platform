@@ -1,11 +1,11 @@
-import type { AdminTaskView } from '@ab/shared';
+import type { AdminTaskView, Page } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
-import { parseOrThrow, type Page } from '@/common/http/http';
+import { parseOrThrow } from '@/common/http/http';
 import { AdminTasksRepo } from './admin-tasks.repo';
 import { adminTaskListQuery } from '@/modules/finance/subscriptions/subscriptions.dto';
 

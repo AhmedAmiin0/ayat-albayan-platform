@@ -96,6 +96,12 @@ export interface FeedbackRowView {
 /** A teacher's own rows: the student's name stays, contact phone and guardian are omitted. */
 export type TeacherFeedbackRowView = Omit<FeedbackRowView, 'contact_phone' | 'teacher'>;
 
+/** A row of either list: the teacher's own rows have no teacher block and no contact phone. */
+export type FeedbackListRow = TeacherFeedbackRowView & {
+  teacher?: FeedbackRowView['teacher'];
+  contact_phone?: string | null;
+};
+
 export interface FeedbackAverage {
   avg_rating: number;
   n: number;

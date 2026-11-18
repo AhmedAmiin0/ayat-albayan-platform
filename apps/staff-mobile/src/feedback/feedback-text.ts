@@ -1,6 +1,7 @@
 import { feedbackEligible, type LessonView } from '@ab/shared';
 import { ApiError, t } from '@ab/mobile-kit';
-import type { FeedbackAverage, FeedbackListRow } from './types';
+import type { FeedbackListRow } from '@ab/shared';
+import type { FeedbackAverage } from './types';
 
 const text = t.mobile.feedback;
 const errors: Record<string, string | undefined> = text.error;

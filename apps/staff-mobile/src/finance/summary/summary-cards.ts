@@ -1,7 +1,6 @@
-import type { ReceivablesView, TeacherEarningsSummaryView } from '@ab/shared';
+import type { DashboardResponse, ReceivablesView, TeacherEarningsSummaryView } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 import { wholeText } from '@/finance/shared/format';
-import type { FinanceSummary } from './summary-types';
 
 interface Card {
   label: string;
@@ -14,11 +13,11 @@ const money = (n: number | undefined, currency?: string) => (n === undefined ? D
 
 /** The six cards: the year's four totals (reporting currency), owed to teachers (EGP), owed by students. */
 export function summaryCards(
-  finance: FinanceSummary['finance'] | undefined,
+  finance: DashboardResponse['finance'] | undefined,
   dues: TeacherEarningsSummaryView | undefined,
   owed: ReceivablesView | undefined,
 ): Card[] {
-  const f: Partial<FinanceSummary['finance']> = finance ?? {};
+  const f: Partial<DashboardResponse['finance']> = finance ?? {};
   const cur = f.currency ?? owed?.currency; // a figure shows only once its currency came with it
   const loss = (f.gross_margin ?? 0) < 0;
   return [

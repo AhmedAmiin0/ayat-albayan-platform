@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import type { PendingReportRow, UnpaidRow } from './dashboard-types';
+import type { PendingReportRow, UnpaidRow } from '@ab/shared';
 import { PendingRow, UnpaidListRow } from './WorkRows';
 
 let mockHeld: string[] = [];
@@ -17,7 +17,10 @@ const pending: PendingReportRow = {
   teacher: { id: 't1', display_name_ar: 'أبرار' },
   student,
 };
-const unpaid: UnpaidRow = { id: 'u1', student, package: null, lessons_total: 8, owed: 100, reason: 'owes', currency: 'SAR' };
+const unpaid: UnpaidRow = {
+  id: 'u1', student, package: null, lessons_total: 8, price: 100, paid: 0, owed: 100,
+  reason: 'owes', currency: 'SAR', starts_on: '2026-09-01',
+};
 
 async function show(ui: React.ReactElement, held: string[]) {
   mockHeld = held;

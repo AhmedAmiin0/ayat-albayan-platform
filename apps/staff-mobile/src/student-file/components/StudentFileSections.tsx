@@ -2,11 +2,11 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { usePermissions, t, Button } from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
-import type { StudentProfile } from '@/students/shared/types';
 import { CreateAccountButton } from '@/users/create/CreateAccountButton';
 import { ContactIsSelfCard } from './ContactIsSelfCard';
 import { JoinLinkCard } from './JoinLinkCard';
 import { RecordingsButton } from '@/student-file/recordings/RecordingsButton';
+import type { StudentProfile } from '@ab/shared';
 
 /**
  * What the web student file has beyond the quick view: «تسجيلات الحلقات», «المدفوعات والفواتير»

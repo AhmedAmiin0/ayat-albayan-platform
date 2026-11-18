@@ -1,8 +1,7 @@
 import type { TablesUpdate } from '@ab/db';
-import type { JobApplicantCreate } from '@ab/shared';
+import type { JobApplicantCreate, Page } from '@ab/shared';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
-import type { Page } from '@/modules/sales/leads/http';
 import { canTransitionApplicant, type ApplicantStatus } from './applicant-state-machine';
 import {
   JobApplicantsRepo,

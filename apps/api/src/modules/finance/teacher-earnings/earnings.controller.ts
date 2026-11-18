@@ -17,11 +17,12 @@ import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } fr
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow, type Page } from '@/common/http/http';
+import { parseOrThrow } from '@/common/http/http';
 import { CorrectionsRepo } from './summary/corrections.repo';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';
 import { toSummaryView } from './summary/earnings.summary';
+import type { Page } from '@ab/shared';
 
 /** Admin: a teacher's balance, sessions and payments; record a payment (docs/11 §10). */
 @ApiTags('teacher-earnings')

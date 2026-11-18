@@ -2,14 +2,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Teacher } from '@/features/people/teachers/api';
 import { TeacherDetailPage } from './TeacherDetailPage';
+import type { Teacher } from '@ab/shared';
+import { teacherFixture } from '@ab/shared/testing';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const FATMA: Teacher = {
+const FATMA: Teacher = teacherFixture({
   id: 't1',
   display_name_ar: 'فاطمة الزهراء',
   display_name_en: 'Fatma',
@@ -26,7 +27,7 @@ const FATMA: Teacher = {
   rate_60: null,
   rate_90: null,
   max_students: 12,
-};
+});
 const RESPONSES: Record<string, unknown> = {
   '/teachers/t1': FATMA,
   '/teachers/t1/availability': [{ id: 'a1', weekday: 6, start_time: '15:00', end_time: '18:00', tz: 'Africa/Cairo' }],

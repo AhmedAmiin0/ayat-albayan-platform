@@ -11,14 +11,14 @@ import { cn } from '@ab/web-kit/lib/utils';
 import { formatAge, formatDateTime } from '@/features/sales/leads/format';
 import { LeadAssignSelect } from './LeadAssignSelect';
 import { ReclassifyConfirm } from './ReclassifyConfirm';
-import type { LeadRow } from '@/features/sales/leads/types';
 import { useClock } from '@ab/web-kit/lib/clock';
+import type { LeadView } from '@ab/shared';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */
 export const leadGridClass = 'sm:grid-cols-[36px_minmax(0,1fr)_156px_168px_120px]';
 
 export interface LeadListItemProps {
-  lead: LeadRow;
+  lead: LeadView;
   /** The inline reclassify confirm is open on this row. */
   confirming: boolean;
   busy: boolean;

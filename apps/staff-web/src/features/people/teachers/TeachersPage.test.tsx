@@ -3,14 +3,15 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { ListUrlState } from '@/lib/list/list-url';
-import type { TeacherListRow } from './api';
 import { TeachersPage } from './TeachersPage';
+import type { TeacherListRow } from '@ab/shared';
+import { teacherRowFixture } from '@ab/shared/testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
-const FATMA: TeacherListRow = {
+const FATMA: TeacherListRow = teacherRowFixture({
   id: 't1',
   display_name_ar: 'فاطمة الزهراء',
   display_name_en: null,
@@ -29,7 +30,7 @@ const FATMA: TeacherListRow = {
   max_students: 12,
   active_count: 0,
   trial_count: 0,
-};
+});
 
 const LIST: ListUrlState = { page: 1, sort: {}, filters: {} };
 

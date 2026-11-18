@@ -1,7 +1,7 @@
 import { catalogueViews, SETTING_DEFAULTS, type AcademySettings, type ActivityView, type NotificationsOverview, type ReportView } from '@ab/shared';
-import type { DashboardWork, Summary } from '@/ops/dashboard/dashboard-types';
+import type { DashboardCounts, DashboardWork } from '@ab/shared';
 
-export const summary: Summary = {
+export const summary: DashboardCounts = {
   active_students: 41,
   needs_confirmation: 3,
   pending_reports: 2,
@@ -32,9 +32,12 @@ export const work: DashboardWork = {
         student: { id: 's2', code: 'AB-0190', name: 'يوسف' },
         package: null,
         lessons_total: 6,
+        price: 1200.4,
+        paid: 0,
         owed: 1200.4,
         reason: 'owes',
         currency: 'SAR',
+        starts_on: '2026-09-01',
       },
     ],
   },

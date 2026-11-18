@@ -1,9 +1,9 @@
+import type { TimeEditMode } from '@ab/shared';
 import { sameClockAt, type LessonView } from '@ab/shared';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Change } from './edit-time';
 import { whenWithLength } from './edit-time-text';
-import type { TimeEditMode } from './edit-time.contract';
 import { durationMin, studentTimes, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';

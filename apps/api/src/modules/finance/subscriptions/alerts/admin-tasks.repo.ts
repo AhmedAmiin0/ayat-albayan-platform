@@ -1,8 +1,8 @@
 import type { Tables } from '@ab/db';
-import type { AdminTaskView } from '@ab/shared';
+import type { AdminTaskView, Page } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError, type Page, type PageQuery } from '@/common/http/http';
+import { dbError, type PageQuery } from '@/common/http/http';
 import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import type { StudentRef } from '@/modules/finance/subscriptions/subscriptions.repo';
 

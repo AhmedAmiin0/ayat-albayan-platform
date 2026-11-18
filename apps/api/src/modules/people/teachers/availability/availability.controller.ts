@@ -18,7 +18,8 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { orNotFound } from '@/common/http/http';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { OwnTeacherGuard } from '@/modules/people/teachers/own-teacher.guard';
-import { AvailabilityRepo, type AvailabilityRow, type TimeOff } from './availability.repo';
+import { AvailabilityRepo, type TimeOff } from './availability.repo';
+import type { AvailabilityRow } from '@ab/shared';
 
 const uuid = new ParseUUIDPipe();
 

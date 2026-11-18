@@ -1,9 +1,14 @@
-import type { AssistantLessonView, SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory } from '@ab/shared';
+import type {
+  AssistantLessonView,
+  Page,
+  SalesStudentsQuery,
+  SalesStudentView,
+  SalesSubscriptionHistory,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { chatPhone } from '@/common/auth/chat-phone';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
-import type { Page } from '@/common/http/http';
 import { toSalesLive, toSalesStudent } from './sales-academy.mapper';
 import { SalesAcademyRepo } from './sales-academy.repo';
 import { packageSummaries } from './sales-package.mapper';

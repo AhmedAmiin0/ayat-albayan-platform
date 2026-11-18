@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { signedStaleTime, type ThreadFile, useThreadFile } from '@/inbox/messages/hooks/thread-file';
+import type { ThreadFile } from '@ab/shared';
+import { signedStaleTime, useThreadFile } from '@/inbox/messages/hooks/thread-file';
 import { mediaProblem, type MediaProblem } from '@/inbox/messages/photo/media-problem';
 
 type TapFile =

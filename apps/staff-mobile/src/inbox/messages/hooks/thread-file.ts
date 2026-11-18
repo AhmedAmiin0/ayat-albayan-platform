@@ -1,16 +1,9 @@
-import type { ThreadPdfPage } from '@ab/shared';
+import type { ThreadFile, ThreadPdfPage } from '@ab/shared';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { pdfPageRetryable } from '@ab/client-core';
 import { ApiError, apiFetch } from '@ab/mobile-kit';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
-
-/** W6's answer: a signed URL of our own copy of the file, and its type. */
-export interface ThreadFile {
-  url: string;
-  mime: string;
-  expires_at: string;
-}
 
 /** GET /threads/:phone/messages/:id/file (W6, docs/20). */
 export const threadFilePath = (phone: string, messageId: string): string =>

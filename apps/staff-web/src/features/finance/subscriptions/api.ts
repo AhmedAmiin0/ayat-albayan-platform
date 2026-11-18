@@ -1,15 +1,16 @@
-import {
-  startDateEditResultSchema,
-  usedBeforeEditResultSchema,
-  usedBeforeStateSchema,
-} from '@ab/shared';
 import type {
   AdminTaskView,
+  Page,
   QuoteResponse,
   StudentBalanceView,
   SubscriptionPricing,
   SubscriptionStatus,
   SubscriptionView,
+} from '@ab/shared';
+import {
+  startDateEditResultSchema,
+  usedBeforeEditResultSchema,
+  usedBeforeStateSchema,
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
@@ -18,7 +19,6 @@ import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list
 // apps/api/src/modules/subscriptions (docs/11 §6). The client never prices: the price shown and
 // stored both come from the API's catalog quote.
 export type { AdminTaskView, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
-export type Page<T> = { items: T[]; total: number; page: number; pageSize: number };
 
 /** Every money write invalidates this (subscriptions, balances, payments, tasks). */
 export const MONEY_KEY = ['money'] as const;

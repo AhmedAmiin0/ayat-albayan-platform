@@ -16,7 +16,8 @@ import { useJoinWindow } from '@/core/lib/query/public-config';
 import { useDayLessons } from '@/today/lib/use-day-lessons';
 import { DaySwitcher } from './DaySwitcher';
 import { SessionGroupList } from './SessionGroupList';
-import { groupSessions, SESSION_GROUPS } from './sessions';
+import { SESSION_GROUPS } from '@ab/client-core';
+import { groupSessions } from './sessions';
 
 /**
  * «الحلقات المباشرة» (admin): every teacher's lessons of a Riyadh day in three groups (now,

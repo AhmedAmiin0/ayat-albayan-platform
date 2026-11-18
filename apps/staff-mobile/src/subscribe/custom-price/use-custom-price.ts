@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { t } from '@ab/mobile-kit';
-import { checkCustomPrice, type QuotedPrice } from './custom-price';
+import type { QuotedPrice } from '@ab/client-core';
+import { checkCustomPrice } from './custom-price';
 
 /**
  * «مبلغ مخصص» on the package price (owner 2026-11-02), admin and assistant alike. On, the field

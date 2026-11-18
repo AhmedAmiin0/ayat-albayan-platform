@@ -2,9 +2,8 @@ import type { ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { PendingReportsList } from '@/features/reporting/dashboard/today/PendingReportsList';
-import type { WorkTab } from '@/features/reporting/dashboard/search';
+import type { DashboardWork, WorkList, WorkTab } from '@ab/shared';
 import { TasksList } from './TasksList';
-import type { DashboardWork, WorkList } from '@/features/reporting/dashboard/types';
 import { UnpaidList } from '@/features/reporting/dashboard/today/UnpaidList';
 
 const TABS: Record<WorkTab, { title: string; list: (w: DashboardWork) => WorkList<unknown>; view: (w: DashboardWork) => ReactNode }> = {

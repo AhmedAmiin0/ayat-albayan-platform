@@ -4,10 +4,10 @@ import { cn } from '@ab/web-kit/lib/utils';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { financeNotes, rateLines } from './finance-notes';
 import { amount, currencyLabel } from '@/features/reporting/dashboard/shared/format';
-import type { DashboardData } from '@/features/reporting/dashboard/types';
+import type { DashboardResponse } from '@ab/shared';
 
 /** The period's four money totals (Plex, not the KPI Amiri: these are data) and the FX notes. */
-export function FinanceTotals({ finance }: { finance: DashboardData['finance'] }) {
+export function FinanceTotals({ finance }: { finance: DashboardResponse['finance'] }) {
   const tz = useViewerTz();
   const cur = currencyLabel(finance.currency);
   const items = [

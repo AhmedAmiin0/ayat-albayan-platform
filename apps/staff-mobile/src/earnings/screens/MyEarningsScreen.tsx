@@ -5,7 +5,8 @@ import { t, Button, BackButton, ErrorState, Screen, ScreenHeader } from '@ab/mob
 import { usePublicConfig } from '@/core/lib/query/public-config';
 import { EarningsHeader, type Tab } from '@/earnings/components/EarningsHeader';
 import { PaymentsList, SessionsList } from '@/earnings/components/EarningsList';
-import { useEarningsBalance, type SessionFilter } from '@/earnings/hooks/queries';
+import type { SessionFilter } from '@ab/client-core';
+import { useEarningsBalance } from '@/earnings/hooks/queries';
 
 const MINE = {};
 

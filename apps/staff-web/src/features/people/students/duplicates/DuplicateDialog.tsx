@@ -9,7 +9,7 @@ import type { CreateStudentValues } from '@/features/people/students/create/crea
 import { DuplicateCompare } from './DuplicateCompare';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { SiblingsStrip } from './SiblingsStrip';
-import type { StudentRef } from '@/features/people/students/types';
+import type { StudentRef } from '@ab/shared';
 
 export type DuplicateDialogProps = {
   typed: CreateStudentValues;

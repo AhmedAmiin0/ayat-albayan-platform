@@ -5,6 +5,7 @@ import {
   type PaymentAttachmentView,
   type PaymentKind,
   type PaymentMethod,
+  type PaymentsPage,
   type PaymentView,
   type SignedDownload,
   type SignedUpload,
@@ -13,14 +14,13 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { MONEY_KEY, PAGE_SIZE, type Page } from '@/features/finance/subscriptions/api';
+import { MONEY_KEY, PAGE_SIZE } from '@/features/finance/subscriptions/api';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
 export type { PaymentView } from '@ab/shared';
 
 /** The payments page filters (all optional); from/to are Riyadh days, inclusive. */
 export type PaymentFilters = { studentId?: string; from?: string; to?: string; method?: PaymentMethod; kind?: PaymentKind };
-export type PeriodTotal = { currency: string; net: number; payments: number; refunds: number };
 
 /** Only the set filters, as query parameters (shared by the list and its CSV). */
 export function filterParams(f: PaymentFilters): Record<string, string> {
@@ -35,7 +35,7 @@ export const paymentsQuery = (page: number, filters: PaymentFilters = {}, sort: 
       const qs = new URLSearchParams([...Object.entries(filterParams(filters)), ...sortFilterParams(sort)]);
       qs.set('page', String(page));
       qs.set('pageSize', String(PAGE_SIZE));
-      return apiFetch<Page<PaymentView> & { totals: PeriodTotal[] }>(`/payments?${qs}`);
+      return apiFetch<PaymentsPage>(`/payments?${qs}`);
     },
     placeholderData: keepPreviousData,
   });

@@ -8,7 +8,7 @@ import {
 } from '@ab/shared';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Teacher } from '@/features/people/teachers/api';
+import type { Teacher } from '@ab/shared';
 
 /** Rate column per lesson duration (EGP). R-TCH-01. */
 export const RATE_FIELDS = [

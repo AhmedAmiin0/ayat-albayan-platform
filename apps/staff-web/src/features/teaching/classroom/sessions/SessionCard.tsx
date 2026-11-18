@@ -1,4 +1,5 @@
 import { clockOf, type LessonView } from '@ab/shared';
+import type { SessionGroup } from '@ab/client-core';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
@@ -7,7 +8,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { CopyLinkButton } from '@/features/teaching/classroom/join/CopyLinkButton';
 import { SendLinkButton } from '@/features/teaching/classroom/join/SendLinkButton';
-import { sessionChip, type SessionGroup } from './sessions';
+import { sessionChip } from './sessions';
 import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { useClock } from '@ab/web-kit/lib/clock';

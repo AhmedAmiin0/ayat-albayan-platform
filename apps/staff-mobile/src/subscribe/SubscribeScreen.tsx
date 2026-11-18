@@ -16,7 +16,6 @@ import {
   ScreenHeader,
   ErrorLine,
 } from '@ab/mobile-kit';
-import type { StudentProfile, StudentRef } from '@/students/shared/types';
 import { localDate } from '@/today';
 import { CustomAmountPill } from '@/payments';
 import { CustomPriceField } from './custom-price/CustomPriceField';
@@ -28,6 +27,7 @@ import { pricingOf, startDays, subscribeErrorText } from './subscribe-form';
 import { PriceSection, SavedPanel, StartDayField, StudentPills } from './SubscribeParts';
 import { useCreateSubscription, useSubscriptionQuote } from './use-subscribe';
 import { usePastUsedBefore } from './UsedBeforeField';
+import type { StudentProfile, StudentRef } from '@ab/shared';
 
 /** studentId, the form's prefill (form-prefill) and, after a booking, the first lesson's day; renew from «جدّد الاشتراك». */
 type Params = FormPrefill & { studentId?: string; startsOn?: string; renew?: string };

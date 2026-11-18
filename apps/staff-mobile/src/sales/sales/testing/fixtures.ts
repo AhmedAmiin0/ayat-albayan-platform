@@ -4,13 +4,13 @@ import type {
   SalesScheduleLesson,
   SalesStudentView,
   SalesSubscriptionHistory,
+  SalesSubscriptionView,
   SalesTeacherView,
 } from '@ab/shared';
-import type { SalesSubscription } from '@/sales/sales/lib/sales-api';
 
 // Test data shaped like the sales API (docs/16): no price; the guardian's (fake) phone only on a student row; a teacher's fixed link only where a test sets one.
 
-export const subscription = (over: Partial<SalesSubscription> = {}): SalesSubscription => ({
+export const subscription = (over: Partial<SalesSubscriptionView> = {}): SalesSubscriptionView => ({
   id: 's1',
   student: { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد' },
   package: '8',

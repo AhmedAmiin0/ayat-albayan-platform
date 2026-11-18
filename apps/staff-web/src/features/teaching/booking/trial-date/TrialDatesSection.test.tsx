@@ -1,8 +1,7 @@
-import type { StudentStatus } from '@ab/shared';
+import type { StudentProfile, StudentStatus } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import type { StudentProfile } from '@/features/people/students/types';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 import { TrialDatesSection } from './TrialDatesSection';

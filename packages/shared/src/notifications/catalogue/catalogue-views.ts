@@ -9,6 +9,9 @@ import type { NotificationRuleView } from '../rules.types.js';
 /** on = goes out when its trigger happens; off = held by the first blocker; manual = a person sends it. */
 export type NotificationState = 'on' | 'off' | 'manual';
 
+/** The catalogue's tabs in web and mobile: one audience, or «يدوي» (every manual row). */
+export type AudienceTab = NotificationAudience | 'manual';
+
 /** Why a row would not go out now, in the order they are checked (the first one is shown). */
 export const NOTIFICATION_BLOCKERS = [
   'not_configured',

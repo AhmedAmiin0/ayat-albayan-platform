@@ -1,16 +1,16 @@
 import { View } from 'react-native';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';
-import type { Lead } from '@/inbox/shared/types';
 import { FollowUpCard } from './FollowUpCard';
 import { QualificationForm } from './QualificationForm';
 import { readIsOffline, useFreshLead, type LeadProfile } from '@/inbox/qualification/lib/queries';
+import type { LeadView } from '@ab/shared';
 
 /**
  * The lead's follow-up and qualification on the lead screen (R-LEAD-03/05, mobile parity with the
  * web's lead panel). It shows the cached row at once and the fresh one when it arrives. Offline it
  * says so once, keeps both readable and offers no save or pause until a retry gets an answer.
  */
-export function LeadProfileSection({ lead }: { lead: Lead }) {
+export function LeadProfileSection({ lead }: { lead: LeadView }) {
   const fresh = useFreshLead(lead.phone_e164);
   const row: LeadProfile = fresh.data ?? lead;
   const offline = readIsOffline(fresh);

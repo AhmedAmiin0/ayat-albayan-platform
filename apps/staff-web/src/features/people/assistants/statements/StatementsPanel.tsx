@@ -9,13 +9,14 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { currentMonth } from '@/features/finance/payouts/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery, type AssistantRow, type StatementFilter } from '@/features/people/assistants/api';
+import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery } from '@/features/people/assistants/api';
 import { FilterBar } from '@/features/people/assistants/students/FilterBar';
 import { generateTargets } from './generate-targets';
 import { statementColumns } from './statement-columns';
 import type { StatementCan } from './StatementActions';
 import { StatementDialogs, type StatementDialog } from './StatementDialogs';
 import { errorText } from '@/features/people/assistants/status';
+import type { AssistantRow, StatementFilter } from '@ab/client-core';
 
 type Props = {
   assistants: readonly AssistantRow[];

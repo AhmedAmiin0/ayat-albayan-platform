@@ -1,9 +1,16 @@
-import { addCalendarMonths, addDays, dateRangeQuery, riyadhToday, weekStart } from '@ab/shared';
-import type { DayRange } from './types';
+import {
+  addCalendarMonths,
+  addDays,
+  dateRangeQuery,
+  type DashboardSummary,
+  riyadhToday,
+  weekStart,
+  WORK_TABS,
+  type WorkTab,
+} from '@ab/shared';
 
-/** The admin's queue under the KPI strip. */
-export const WORK_TABS = ['reports', 'unpaid', 'tasks'] as const;
-export type WorkTab = (typeof WORK_TABS)[number];
+/** Local Riyadh days, inclusive (the summary's `range`). */
+export type DayRange = DashboardSummary['range'];
 
 /** /admin URL state; defaults (the last 6 months, the reports queue) stay out of the URL. */
 export type DashboardSearch = { from?: string; to?: string; work?: WorkTab };

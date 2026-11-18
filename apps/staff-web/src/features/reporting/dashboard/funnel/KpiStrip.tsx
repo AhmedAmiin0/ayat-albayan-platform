@@ -3,13 +3,12 @@ import type { ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { kpisOf, type Kpi } from './kpis';
-import type { WorkTab } from '@/features/reporting/dashboard/search';
-import type { DashboardData } from '@/features/reporting/dashboard/types';
+import type { DashboardResponse, WorkTab } from '@ab/shared';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 
 export interface KpiStripProps {
   /** undefined while loading: the tiles show a dash, never a made-up number. */
-  summary: DashboardData | undefined;
+  summary: DashboardResponse | undefined;
   /** The queue shown under the strip (aria-current on its tile). */
   work: WorkTab;
 }

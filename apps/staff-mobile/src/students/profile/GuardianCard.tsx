@@ -6,8 +6,8 @@ import { threadHref } from '@/inbox';
 import { t, shape, type, useTheme, Button, Ltr, AppText } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import type { StudentProfile } from '@/students/shared/types';
 import { SecondPhone } from './SecondPhone';
+import type { StudentProfile } from '@ab/shared';
 
 /**
  * ولي الأمر: name, LTR phone, then ONE ButtonRow (docs/07 §6 «الأزرار»): «اتصال» (tel:, outlined) |

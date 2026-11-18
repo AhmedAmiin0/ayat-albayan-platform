@@ -1,8 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Teacher } from '@/features/people/teachers/api';
 import { settle, showMeetingMode } from './meeting-mode-test-utils';
+import type { Teacher } from '@ab/shared';
+import { teacherFixture } from '@ab/shared/testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -11,11 +12,11 @@ const T = t.teachers;
 const LINK = 'https://meet.google.com/xqa-ngdu-fpe';
 const academyLabel = (now: 'platform' | 'static') => `${T.meetingModeOption.academy} ${T.meetingModeResolves[now]}`;
 const notes = () => screen.getByRole('status');
-const SARA: Teacher = {
+const SARA: Teacher = teacherFixture({
   id: 't1', display_name_ar: 'أ. سارة', display_name_en: null, gender: 'female', programs: ['quran'], phone_e164: null,
   meeting_link: null, meeting_mode: null, platform_classroom: true,
   rate_30: null, rate_45: null, rate_60: null, rate_90: null, max_students: null, status: 'active', tz: 'Africa/Cairo',
-};
+});
 
 describe('«طريقة حضور الحلقات» in the teacher form (owner 2026-10-19)', () => {
   afterEach(() => apiFetch.mockReset());

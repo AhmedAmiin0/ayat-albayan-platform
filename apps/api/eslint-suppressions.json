@@ -453,9 +453,6 @@
     }
   },
   "src/common/http/http.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -1844,7 +1841,7 @@
   },
   "src/modules/finance/payments/payments.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 2
@@ -2475,9 +2472,6 @@
     },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "max-len": {
       "count": 2
@@ -6471,7 +6465,7 @@
   },
   "src/modules/people/guardians/http.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -6817,7 +6811,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/students/merge.service.test.ts": {
@@ -6893,9 +6887,6 @@
     }
   },
   "src/modules/people/students/students.repo.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
@@ -7034,7 +7025,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/teachers/own-teacher.guard.ts": {
@@ -7066,7 +7057,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/people/teachers/teachers.counts.test.ts": {
@@ -8721,11 +8712,6 @@
       "count": 1
     }
   },
-  "src/modules/sales/job-applicants/job-applicants.service.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/modules/sales/leads/lead-family.controller.ts": {
     "ab/zod-inputs": {
       "count": 2
@@ -9533,9 +9519,6 @@
     },
     "@typescript-eslint/consistent-type-definitions": {
       "count": 6
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "max-len": {
       "count": 4

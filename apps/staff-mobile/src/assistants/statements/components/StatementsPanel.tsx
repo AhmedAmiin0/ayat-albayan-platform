@@ -5,7 +5,7 @@ import { currentMonth } from '@/finance/shared/month';
 import { MonthPicker } from '@/finance/shared/MonthPicker';
 import { t } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
-import { useStatements, type AssistantRow, type StatementFilter } from '@/assistants/api/api';
+import { useStatements } from '@/assistants/api/api';
 import { AssistantPills } from '@/assistants/list/AssistantPills';
 import { GenerateBar } from './GenerateBar';
 import { generateTargets } from '@/assistants/statements/hooks/generate-targets';
@@ -13,6 +13,7 @@ import { PayStatementForm } from './PayStatementForm';
 import type { StatementCan } from '@/assistants/statements/hooks/statement-can';
 import { StatementItem } from './StatementItem';
 import { StatusPills } from '@/assistants/list/StatusPills';
+import type { AssistantRow, StatementFilter } from '@ab/client-core';
 
 interface StatementsPanelProps {
   assistants: readonly AssistantRow[];

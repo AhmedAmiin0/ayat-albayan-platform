@@ -13,3 +13,4 @@ export {
   type StatementAction,
   type StatementCan,
 } from './statement-actions.js';
+export type * from './assistant-list.js';

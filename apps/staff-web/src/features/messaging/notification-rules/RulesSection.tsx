@@ -1,4 +1,4 @@
-import type { NotificationAudience } from '@ab/shared';
+import type { AudienceTab, NotificationAudience } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
@@ -7,7 +7,6 @@ import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
-import type { AudienceTab } from '@/features/messaging/notification-catalogue/catalogue-tabs';
 import { NumbersLine } from '@/features/messaging/notification-catalogue/NumbersLine';
 import { useCatalogue } from '@/features/messaging/notification-catalogue/use-catalogue';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';

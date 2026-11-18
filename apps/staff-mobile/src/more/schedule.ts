@@ -1,7 +1,7 @@
 import { CAIRO_TZ, dateText, RIYADH_TZ, zonedFieldsIn, type ClockCycle } from '@ab/shared';
 import { clockIn, hhmm, phoneTz, rangeOf } from '@/core/lib/clock';
 import { t, locale, ltr } from '@ab/mobile-kit';
-import type { AvailabilityRow, TimeOff } from '@/core/lib/staff/types';
+import type { AvailabilityRow, TimeOff } from '@ab/shared';
 
 // Read-only teacher schedule helpers (R-TCH-02). Pure, so they are unit-tested.
 

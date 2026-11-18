@@ -1,8 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import type { Teacher } from '@/core/lib/staff/types';
 import { TeacherUsername } from './TeacherUsername';
+import type { Teacher } from '@ab/shared';
+import { teacherFixture } from '@ab/shared/testing';
 
 // «اسم المستخدم» of the teacher's login (docs/30 §7).
 
@@ -13,7 +14,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const U = t.familyAuth.teacherUsername;
-const OMAR: Teacher = { id: 't1', display_name_ar: 'أ. عمر', phone_e164: null, status: 'active', tz: 'Africa/Cairo', profile_id: 'p1', username: 'omar' };
+const OMAR: Teacher = teacherFixture({ id: 't1', display_name_ar: 'أ. عمر', phone_e164: null, status: 'active', tz: 'Africa/Cairo', profile_id: 'p1', username: 'omar' });
 const input = () => screen.getByLabelText(U.label);
 const save = () => fireEvent.press(screen.getByRole('button', { name: t.common.save }));
 

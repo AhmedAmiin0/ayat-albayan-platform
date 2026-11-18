@@ -1,9 +1,9 @@
 import type { LessonView } from '@ab/shared';
+import { SESSION_GROUPS, type SessionGroup } from '@ab/client-core';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { SessionCard } from './SessionCard';
-import { SESSION_GROUPS, type SessionGroup } from './sessions';
 
 /** The three groups, each with its count; an empty group says why in one line. */
 export function SessionGroupList({ groups }: { groups: Record<SessionGroup, LessonView[]> }) {

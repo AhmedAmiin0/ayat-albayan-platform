@@ -2,10 +2,10 @@ import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { leadGridClass, LeadListItem } from './LeadListItem';
-import type { LeadRow } from '@/features/sales/leads/types';
+import type { LeadView } from '@ab/shared';
 
 export interface LeadListProps {
-  leads: LeadRow[];
+  leads: LeadView[];
   /** Row whose reclassify confirm is open (one at a time: one primary button per screen). */
   confirmId: string | null;
   busy: boolean;

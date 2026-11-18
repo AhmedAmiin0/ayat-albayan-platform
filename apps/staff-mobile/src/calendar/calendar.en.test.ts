@@ -1,10 +1,10 @@
-import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { lesson } from '@/today/testing/fixtures';
 import { ltr } from '@ab/mobile-kit';
 import { availabilityLine, teacherClock } from './agenda/agenda';
 import { abrar, omar } from './overview/overview-fixtures';
 import { freeLabel, teacherMeta, windowsLine } from './overview/overview-text';
 import { dayLabel, weekLabel } from './lib/week';
+import type { AvailabilityRow } from '@ab/shared';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {

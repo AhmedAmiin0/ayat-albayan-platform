@@ -1,12 +1,12 @@
+import type { LessonView, TimeEditMode } from '@ab/shared';
 import { Switch, View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { chosenStart, isBookable, isChanged, lengthOf, willNotify, type EditState } from '@/edit-time/lib/edit-time-body';
 import { changeLine, teacherLine } from '@/edit-time/lib/edit-time-text';
-import type { EditableLesson, TimeEditMode } from '@/edit-time/lib/types';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 export interface EditTimeConfirmProps {
-  lesson: EditableLesson;
+  lesson: LessonView;
   mode: TimeEditMode;
   state: EditState;
   now: Date;

@@ -1,10 +1,11 @@
+import type { LessonView } from '@ab/shared';
 import { t, RescheduleFrame } from '@ab/mobile-kit';
 import { EditTimeForm } from './EditTimeForm';
-import { editMode, type EditableLesson } from '@/edit-time/lib/types';
+import { editMode } from '@/edit-time/lib/types';
 
 interface EditTimeSheetProps {
   /** The lesson to edit; null = closed. */
-  lesson: EditableLesson | null;
+  lesson: LessonView | null;
   onClose: () => void;
 }
 

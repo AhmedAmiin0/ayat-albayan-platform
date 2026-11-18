@@ -2,10 +2,11 @@ import { meetingModeOf, OPEN_LESSON_STATUSES, usesPlatform, type LessonStatus } 
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
-import { dbError, type Page, type PageQuery } from '@/common/http/http';
+import { dbError, type PageQuery } from '@/common/http/http';
 import type { Contact } from './status/confirmation-messages';
 import { LESSON_SELECT, type LessonRow } from './store/lesson-row';
 import { LessonsSettings } from './lessons.settings';
+import type { Page } from '@ab/shared';
 
 export type LessonWindow = { from: Date; to: Date; teacherId?: string };
 type OpenLesson = { id: string; status: LessonStatus; starts_at: string };

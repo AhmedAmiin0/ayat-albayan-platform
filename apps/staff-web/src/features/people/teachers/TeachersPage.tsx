@@ -9,11 +9,12 @@ import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { Pager } from '@ab/web-kit/components/ui/layout/pager';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list/list-url';
-import { teachersPageQuery, type Page, type Teacher, type TeacherListRow } from './api';
+import { teachersPageQuery } from './api';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { teacherColumns } from './teacher-columns';
 import { TeacherDialog } from './form/TeacherDialog';
+import type { Page, Teacher, TeacherListRow } from '@ab/shared';
 
 type Props = {
   /** Page, column sort and filters, kept in the route search (R-NFR-08). */

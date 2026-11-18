@@ -2,7 +2,7 @@ import type { TeacherEarningsBalanceView } from '@ab/shared';
 import { View } from 'react-native';
 import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
 import { EarningsSummary } from './EarningsSummary';
-import type { SessionFilter } from '@/earnings/hooks/queries';
+import type { SessionFilter } from '@ab/client-core';
 
 export type Tab = 'sessions' | 'payments';
 

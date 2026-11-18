@@ -2,7 +2,7 @@ import { Linking, Pressable, View } from 'react-native';
 import { t, shape, type, useTheme, Ltr, AppText } from '@ab/mobile-kit';
 import { profileFacts } from './profile-facts';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import type { StudentProfile } from '@/students/shared/types';
+import type { StudentProfile } from '@ab/shared';
 
 /** Program, level…, tz, teacher, then the effective meeting link, which opens in the browser/app. */
 export function StudentFacts({ student }: { student: StudentProfile }) {

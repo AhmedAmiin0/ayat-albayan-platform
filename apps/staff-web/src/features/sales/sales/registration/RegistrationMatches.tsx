@@ -1,13 +1,13 @@
 import type { RegistrationCheckView, RegistrationMatch } from '@ab/shared';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { CheckBy } from './registration-check';
+import type { RegistrationCheckBy } from '@ab/shared';
 
 const R = t.registrationCheck;
 
 interface RegistrationMatchesProps {
   view: RegistrationCheckView;
-  by: CheckBy;
+  by: RegistrationCheckBy;
   /** «ربط بطالب موجود»: each child becomes a button that picks it; `picked` is the chosen code. */
   onPick?: (m: RegistrationMatch) => void;
   picked?: string | null;
