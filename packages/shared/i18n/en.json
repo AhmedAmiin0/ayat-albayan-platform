@@ -300,7 +300,8 @@
         "date_in_past": "That time has passed; pick another one.",
         "group_lesson": "This is a group lesson; contact the academy to change it."
       }
-    }
+    },
+    "roomTitle": "Lesson room"
   },
   "mobile": {
     "pushTitle": "Turn on notifications",

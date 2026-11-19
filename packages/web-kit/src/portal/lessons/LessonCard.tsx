@@ -1,12 +1,12 @@
 import type { PortalLesson, PortalStudent, RoomJoinResult } from '@ab/shared';
 import { useState } from 'react';
-import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { LessonAction } from './LessonAction';
 import { LessonCountdown } from './LessonCountdown';
 import { LessonWhen } from './LessonWhen';
+import { RoomOverlay } from './RoomOverlay';
 import { FamilyChip } from './options/FamilyChip';
 import { FamilyLine } from './options/FamilyLine';
 import { LessonOptionsBar } from './options/LessonOptionsBar';
@@ -28,11 +28,7 @@ export function LessonCard({ lesson, student }: Props) {
   const now = useNow(TICK_MS);
   const [room, setRoom] = useState<RoomJoinResult | null>(null);
   if (room) {
-    return (
-      <div className="fixed inset-0 z-50 overflow-auto bg-page">
-        <ClassroomRoom join={room} onRejoin={() => setRoom(null)} />
-      </div>
-    );
+    return <RoomOverlay join={room} onRejoin={() => setRoom(null)} />;
   }
   return (
     <div className="grid gap-3">

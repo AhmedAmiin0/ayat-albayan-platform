@@ -1,6 +1,6 @@
 import type { PortalLesson, PortalStudent, RoomJoinResult } from '@ab/shared';
 import { useState } from 'react';
-import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
+import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
 import { Dot } from '@ab/web-kit/components/ui/surface/pill';
 import { StatusMark } from '@ab/web-kit/components/ui/surface/status-mark';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -29,11 +29,7 @@ export function NextLessonDetails({ lesson, student, now, open, full = false }: 
   const [room, setRoom] = useState<RoomJoinResult | null>(null);
   const chip = useLessonStatusText().chip(lesson.status);
   if (room) {
-    return (
-      <div className="fixed inset-0 z-50 overflow-auto bg-page">
-        <ClassroomRoom join={room} onRejoin={() => setRoom(null)} />
-      </div>
-    );
+    return <RoomOverlay join={room} onRejoin={() => setRoom(null)} />;
   }
   return (
     <div className="grid gap-3">
