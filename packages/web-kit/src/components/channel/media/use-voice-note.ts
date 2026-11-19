@@ -1,5 +1,6 @@
 import { initialPlayer, playerReducer, type PlayerState } from '@ab/client-core';
-import { useReducer, useRef, type RefObject, type SyntheticEvent } from 'react';
+import { useEffect, useId, useReducer, useRef, type RefObject, type SyntheticEvent } from 'react';
+import { nowPlaying } from '@ab/web-kit/lesson-files/use-now-playing';
 
 type AudioEvent = SyntheticEvent<HTMLAudioElement>;
 
@@ -28,11 +29,18 @@ export interface VoiceNote {
 /**
  * One voice note over an <audio> element (the shared player reducer): play and pause, a seek on
  * the waveform; the next play after the end starts over. The element's own events drive the
- * state, so another page's pause or the end is never missed.
+ * state, so another page's pause or the end is never missed. It joins the page's one sounding
+ * player (nowPlaying): a note that starts stops a recording or another note, and the other way round.
  */
 export function useVoiceNote(knownMs: number | null): VoiceNote {
   const [state, dispatch] = useReducer(playerReducer, initialPlayer(0));
   const ref = useRef<HTMLAudioElement>(null);
+  const id = useId();
+  useEffect(() => () => nowPlaying.release(id), [id]);
+  const quiet = (type: 'pause' | 'ended' | 'failed') => {
+    nowPlaying.release(id);
+    dispatch({ type });
+  };
   const duration = state.duration || (knownMs ?? 0) / 1000;
   const start = (el: HTMLAudioElement) => {
     if (state.status === 'ended') el.currentTime = 0;
@@ -46,10 +54,13 @@ export function useVoiceNote(knownMs: number | null): VoiceNote {
       ref,
       onLoadedMetadata: (e) => dispatch({ type: 'loaded', duration: lengthOf(e.currentTarget) }),
       onTimeUpdate: (e) => dispatch({ type: 'time', position: e.currentTarget.currentTime }),
-      onPlay: () => dispatch({ type: 'play' }),
-      onPause: () => dispatch({ type: 'pause' }),
-      onEnded: () => dispatch({ type: 'ended' }),
-      onError: () => dispatch({ type: 'failed' }),
+      onPlay: () => {
+        nowPlaying.claim({ id, stop: () => ref.current?.pause() });
+        dispatch({ type: 'play' });
+      },
+      onPause: () => quiet('pause'),
+      onEnded: () => quiet('ended'),
+      onError: () => quiet('failed'),
     },
     toggle: () => {
       const el = ref.current;
