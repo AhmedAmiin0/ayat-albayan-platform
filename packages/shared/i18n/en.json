@@ -171,8 +171,7 @@
         "awaiting": "Awaiting your confirmation",
         "teachers": "Teacher",
         "tzNote": "All times are on your clock ({zone}).",
-        "joinNote": "Joining opens shortly before the lesson starts.",
-        "room": "Lesson room"
+        "joinNote": "Joining opens shortly before the lesson starts."
       },
       "children": {
         "lastReport": "Last report · {date}",

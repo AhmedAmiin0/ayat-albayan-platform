@@ -10,8 +10,8 @@ import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { LessonAction } from '@ab/web-kit/portal/lessons/LessonAction';
 import { LessonOptionsBar } from '@ab/web-kit/portal/lessons/options/LessonOptionsBar';
+import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
 import { LessonMark } from './LessonMark';
-import { LessonRoom } from './LessonRoom';
 
 /** The join button lights up by itself at the window (canvas Schedule «ادخل»). */
 const TICK_MS = 1_000;
@@ -60,7 +60,7 @@ export function AgendaLesson({ entry, guardian }: AgendaLessonProps) {
           />
         )}
         {guardian && <LessonOptionsBar lesson={lesson} student={student} now={now} />}
-        {room && <LessonRoom join={room} onClose={() => setRoom(null)} />}
+        {room && <RoomOverlay join={room} onRejoin={() => setRoom(null)} />}
       </li>
     </Card>
   );
