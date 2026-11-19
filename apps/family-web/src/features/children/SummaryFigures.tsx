@@ -1,28 +1,67 @@
-import type { ChildSummary } from '@ab/client-core';
+import { packageSummary, reportAt, type ChildSummary } from '@ab/client-core';
+import { dateText, type PortalMonth, type PortalPackage } from '@ab/shared';
+import { Dot, Pill } from '@ab/web-kit/components/ui/surface/pill';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { amountText, usedOfText } from '@ab/web-kit/portal/package/package-text';
 
-interface Figure {
-  label: string;
-  value: number | null;
+const DAY = { day: 'numeric', month: 'long' } as const;
+const LINE = 'flex flex-wrap items-center gap-x-3 gap-y-1';
+const LABEL = 'text-xs text-ink-3';
+
+/** «آخر تقرير · 12 نوفمبر» on the family's clock, or «لم يصل تقرير بعد». */
+const lastLine = (summary: ChildSummary, tz: string): string => {
+  const last = summary.lastReport;
+  if (!last) return t.portal.app.children.noReport;
+  const day = dateText(new Date(reportAt(last)), { tz, locale }, DAY);
+  return t.portal.app.children.lastReport.replace('{date}', day);
+};
+
+/** «هذا الشهر · حضر 6 · غاب 1» as two dots (data, not boxes). */
+function MonthDots({ month }: { month: PortalMonth }) {
+  return (
+    <p className={LINE}>
+      <span className={LABEL}>{t.portal.thisMonth}</span>
+      <Dot tone="ok" className="tabular-nums">
+        {t.portal.monthAttended.replace('{n}', String(month.attended))}
+      </Dot>
+      <Dot tone="neutral" className="tabular-nums">
+        {t.portal.monthAbsent.replace('{n}', String(month.absent))}
+      </Dot>
+    </p>
+  );
 }
 
-const figuresOf = (summary: ChildSummary, money: boolean): Figure[] => [
-  { label: t.portal.app.children.upcoming, value: summary.upcoming },
-  { label: t.portal.app.children.attended, value: summary.month?.attended ?? null },
-  { label: t.portal.app.children.absent, value: summary.month?.absent ?? null },
-  ...(money ? [{ label: t.portal.app.children.left, value: summary.remaining }] : []),
-];
-
-/** The card's numbers: upcoming, this month's attended / absent, lessons left (money only). */
-export function SummaryFigures({ summary, money }: { summary: ChildSummary; money: boolean }) {
+/** «الباقة · 8 من 12» and the amount due as the one pill that asks the family to act. */
+function PackageFigure({ pkg }: { pkg: PortalPackage }) {
+  const summary = packageSummary(pkg);
   return (
-    <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-      {figuresOf(summary, money).map((figure) => (
-        <div key={figure.label} className="grid gap-0.5 rounded-md bg-sunk px-3 py-2">
-          <dt className="text-2xs text-ink-3">{figure.label}</dt>
-          <dd className="text-h4 font-bold tabular-nums">{figure.value ?? '–'}</dd>
-        </div>
-      ))}
-    </dl>
+    <p className={LINE}>
+      <span className={LABEL}>{t.portal.packageTab}</span>
+      <span className="text-sm font-semibold tabular-nums">{usedOfText(summary)}</span>
+      {summary.amountDue && (
+        <Pill tone="act">
+          {`${t.portal.amountDue}: ${amountText(summary.amountDue)}`}
+        </Pill>
+      )}
+    </p>
+  );
+}
+
+interface Props {
+  summary: ChildSummary;
+  /** A guardian's (seesMoney) live package; null for a child's own login or without one. */
+  pkg: PortalPackage | null;
+  tz: string;
+}
+
+/** The card's quiet lines under the next lesson: the last report, this month, the package. */
+export function SummaryFigures({ summary, pkg, tz }: Props) {
+  return (
+    <div className="grid gap-2 border-t border-rule pt-3">
+      <p className="text-sm text-ink-2">{lastLine(summary, tz)}</p>
+      {summary.month && <MonthDots month={summary.month} />}
+      {pkg && <PackageFigure pkg={pkg} />}
+    </div>
   );
 }

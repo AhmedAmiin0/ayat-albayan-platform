@@ -32,6 +32,8 @@ export function useChildSummary(student: PortalStudent, kind: PortalKind) {
   return {
     summary: childSummary(input, useNow()),
     lessons: lessons.data,
+    /** The live package, for a viewer who sees money only (null otherwise or without one). */
+    pkg: money ? (pkg.data?.package ?? null) : null,
     loading: reads.some((read) => read.isPending),
     failed: reads.some((read) => read.isError),
     retry: () => Promise.all(reads.filter((read) => read.isError).map((read) => read.refetch())),

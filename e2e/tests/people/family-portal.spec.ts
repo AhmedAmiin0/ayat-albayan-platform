@@ -43,7 +43,8 @@ test.describe('family pages on the family host', () => {
     const nav = page.getByRole('navigation', { name: ar.familyWeb.nav });
     await expect(nav.getByRole('link', { name: P.app.tabs.reports })).toHaveCount(0);
 
-    await first.getByRole('button', { name: P.openChild }).click();
+    const open = P.app.home.open.replace('{name}', family.first.name);
+    await first.getByRole('button', { name: open }).click();
     await expect(page.getByRole('heading', { name: family.first.name })).toBeVisible();
     await expect(page.getByText(family.first.code)).toBeVisible();
     await expect(nav.getByRole('link', { name: P.app.tabs.reports })).toBeVisible();
