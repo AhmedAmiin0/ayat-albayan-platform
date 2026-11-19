@@ -17,7 +17,10 @@ export function useRoomChat(
   const chatOn = useFamilyChatOn();
   const locked = !chatOpen(join);
   const counted = chatOn && !locked;
-  const unread = useQuery({ ...portalUnreadQuery(student?.id ?? ''), enabled: counted });
+  const unread = useQuery({
+    ...portalUnreadQuery(student?.id ?? ''),
+    enabled: counted && student !== null,
+  });
   if (!chatOn || student === null) return null;
   return {
     unread: unread.data?.unread ?? 0,
