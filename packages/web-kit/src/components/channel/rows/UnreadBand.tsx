@@ -7,8 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 export function UnreadBand({ count }: { count: number }) {
   return (
     <li
-      role="separator"
-      className="-mx-3 border-y border-lapis/25 bg-accent py-1 text-center text-2xs font-bold text-lapis sm:-mx-4"
+      className="border-y border-lapis/25 bg-accent py-1 text-center text-2xs font-bold text-lapis"
     >
       {t.studentChannel.unread.replace('{n}', String(count))}
     </li>

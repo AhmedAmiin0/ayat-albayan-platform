@@ -10,9 +10,8 @@ interface Props {
   onCancel: () => void;
 }
 
-/** Who wrote it: «أنت» for mine, else the name, else the role's word. */
-const writer = (m: ChannelMessageView): string =>
-  m.mine ? c.you : m.sender_name || c.roles[m.sender_role];
+/** Who wrote it: the name (mine too: «ردًّا على أنت» reads wrong), else the role's word. */
+const writer = (m: ChannelMessageView): string => m.sender_name || c.roles[m.sender_role];
 
 /**
  * «ردًّا على أ. فاطمة» above the composer (FamChatWebVoice, S7): the brand edge, the first words

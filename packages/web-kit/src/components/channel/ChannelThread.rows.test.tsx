@@ -34,7 +34,7 @@ describe('ChannelThread rows (FamChatWebThread)', () => {
     showThread('portal');
     expect(await screen.findByText('الثالثة')).toBeTruthy();
     expect(screen.getByText(t.inbox.dayToday)).toBeTruthy();
-    expect(screen.getByRole('separator').textContent).toBe(c.unread.replace('{n}', '2'));
+    expect(screen.getByText(c.unread.replace('{n}', '2'))).toBeTruthy();
     // «أمسية» opens yesterday, «الأولى» today, «الثانية» follows the band: three name lines.
     expect(screen.getAllByText('أ. فاطمة')).toHaveLength(3);
   });
