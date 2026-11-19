@@ -38,7 +38,7 @@ describe('ChannelThread send: client_id and the draft per chat (review 2026-11-1
 
   it('a retry of the failed text reuses its client_id; the next text gets a new one', async () => {
     apiFetch.mockResolvedValue(channelPage());
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     render(<QueryClientProvider client={client()}>{thread('s1')}</QueryClientProvider>);
     await screen.findByLabelText(c.messageLabel);
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
@@ -56,10 +56,10 @@ describe('ChannelThread send: client_id and the draft per chat (review 2026-11-1
     expect(next).not.toBe(first);
   });
 
-  it('a failed send takes away only its own row: a message that arrived meanwhile stays', async () => {
+  it('a failed send takes away only its own row: one that arrived meanwhile stays', async () => {
     apiFetch.mockResolvedValue(channelPage());
     const send: { fail?: (e: Error) => void } = {};
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     const qc = client();
     render(<QueryClientProvider client={qc}>{thread('s1')}</QueryClientProvider>);
     await screen.findByLabelText(c.messageLabel);
@@ -69,8 +69,10 @@ describe('ChannelThread send: client_id and the draft per chat (review 2026-11-1
     typeAndSend('شكرًا');
     expect(await screen.findByText('شكرًا')).toBeTruthy();
     const live = channelMessage({ id: 'live', body: 'وصلت الآن' });
+    const withLive = (p: ChannelPage, i: number) =>
+      i ? p : { ...p, messages: [...p.messages, live] };
     qc.setQueryData<InfiniteData<ChannelPage>>(channelKey('portal', 's1'), (d) =>
-      d && { ...d, pages: d.pages.map((p, i) => (i ? p : { ...p, messages: [...p.messages, live] })) },
+      d && { ...d, pages: d.pages.map(withLive) },
     );
     await waitFor(() => expect(send.fail).toBeDefined());
     send.fail?.(new Error('offline'));
@@ -85,7 +87,7 @@ describe('ChannelThread send: client_id and the draft per chat (review 2026-11-1
 
   it('switching the student never carries one chat’s text to another', async () => {
     apiFetch.mockResolvedValue(channelPage());
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     const qc = client();
     const view = render(<QueryClientProvider client={qc}>{thread('s1')}</QueryClientProvider>);
     fireEvent.change(await screen.findByLabelText(c.messageLabel), {

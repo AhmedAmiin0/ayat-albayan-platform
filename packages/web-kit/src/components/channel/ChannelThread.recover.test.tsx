@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { channelPage } from './channel.fixtures';
+import { channelMessage, channelPage } from './channel.fixtures';
 import { showThread } from './thread.testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -21,7 +21,7 @@ afterEach(() => {
 describe('ChannelThread keeps what is on screen', () => {
   it('a failed re-read keeps the thread and the draft, with one inline line and «حاول مرة أخرى»', async () => {
     apiFetch.mockResolvedValue(channelPage());
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     const { client } = showThread('teacher');
     fireEvent.change(await screen.findByLabelText(c.messageLabel), { target: { value: 'مسودة' } });
     apiFetch.mockRejectedValue(new Error('down'));
@@ -54,14 +54,14 @@ describe('ChannelThread keeps what is on screen', () => {
     // My pending row shows at once, «جارٍ الإرسال…» under it.
     expect(await screen.findByText(c.sending)).toBeTruthy();
     fireEvent.change(box(), { target: { value: 'السلام عليكم' } });
-    await act(async () => stored({}));
+    await act(async () => stored(channelMessage({ body: 'السلام', mine: true })));
     await waitFor(() => expect(box().value).toBe('عليكم'));
   });
 
   it('a hidden tab does not mark read; shown again, it marks', async () => {
     const state = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
     apiFetch.mockResolvedValue(channelPage());
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     showThread('portal');
     await screen.findByText('غدًا إن شاء الله');
     expect(apiSend).not.toHaveBeenCalled();

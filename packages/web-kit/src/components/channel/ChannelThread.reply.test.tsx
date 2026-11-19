@@ -36,7 +36,7 @@ afterEach(() => {
 describe('ChannelThread: «ردّ» and «معلومات الرسالة» (the app parity)', () => {
   it("someone else's message offers «ردّ» only; the reply bar names her and the send quotes it", async () => {
     apiFetch.mockImplementation(answer);
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     showThread('portal');
     await screen.findByText(theirs.body);
     fireEvent.click(menuOf(theirs.body));
@@ -52,7 +52,7 @@ describe('ChannelThread: «ردّ» and «معلومات الرسالة» (the a
 
   it('«إلغاء الرد» drops the quote', async () => {
     apiFetch.mockImplementation(answer);
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     showThread('teacher');
     await screen.findByText(theirs.body);
     fireEvent.click(menuOf(theirs.body));
@@ -63,7 +63,7 @@ describe('ChannelThread: «ردّ» and «معلومات الرسالة» (the a
 
   it('my message: blue ✓✓ «قرأها الجميع», and «معلومات الرسالة» lists who read it', async () => {
     apiFetch.mockImplementation(answer);
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     showThread('portal');
     await screen.findByText(mine.body);
     expect(screen.getByRole('img', { name: c.readByAll })).toBeTruthy();
@@ -86,7 +86,7 @@ describe('ChannelThread: «ردّ» and «معلومات الرسالة» (the a
     apiFetch.mockImplementation((path: string) =>
       path.endsWith('/presence') ? answer(path) : Promise.resolve(channelPage({ messages: [theirs, reply] })),
     );
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     showThread('portal');
     const quote = await screen.findByRole('button', { name: `${t.inbox.reply.jump}: أ. فاطمة` });
     fireEvent.click(quote);
