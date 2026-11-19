@@ -34,12 +34,6 @@ export const whenText = (at: Date, clock: ClockOptions, now: Date): string =>
 export const rangeText = (l: Pick<PortalLesson, 'starts_at' | 'ends_at'>, clock: ClockOptions) =>
   `${clockOf(new Date(l.starts_at), clock)} – ${clockOf(new Date(l.ends_at), clock)}`;
 
-/** The date tile: «الأحد» over «16». */
-export const dayTile = (at: Date, clock: ClockOptions): { weekday: string; day: string } => ({
-  weekday: dateText(at, clock, { weekday: 'long' }),
-  day: dateText(at, clock, { day: 'numeric' }),
-});
-
 /** «الخميس 13 نوفمبر». */
 export const dateLine = (at: Date, clock: ClockOptions): string =>
   dateText(at, clock, { weekday: 'long', day: 'numeric', month: 'long' });

@@ -156,7 +156,23 @@
         "prev": "Previous week",
         "next": "Next week",
         "today": "Today · {day}",
-        "empty": "No lessons this week."
+        "empty": "No lessons this week.",
+        "days": "Days of the week",
+        "dayLabel": "{date}: {count}",
+        "noLessons": "No lessons",
+        "lessonCount": {
+          "one": "1 lesson",
+          "two": "2 lessons",
+          "few": "{n} lessons",
+          "other": "{n} lessons"
+        },
+        "summary": "Week summary",
+        "lessons": "Lessons",
+        "awaiting": "Awaiting your confirmation",
+        "teachers": "Teacher",
+        "tzNote": "All times are on your clock ({zone}).",
+        "joinNote": "Joining opens shortly before the lesson starts.",
+        "room": "Lesson room"
       },
       "children": {
         "lastReport": "Last report · {date}",

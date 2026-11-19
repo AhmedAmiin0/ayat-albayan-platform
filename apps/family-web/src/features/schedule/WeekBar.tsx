@@ -1,14 +1,23 @@
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { rangeOf } from './day-text';
 import { MAX_OFFSET, type Week } from './use-week';
 
+const S = t.portal.app.schedule;
+
 const WEEK_WORD: readonly (() => string)[] = [
-  () => t.portal.app.schedule.thisWeek,
-  () => t.portal.app.schedule.nextWeek,
-  () => t.portal.app.schedule.laterWeek,
+  () => S.thisWeek,
+  () => S.nextWeek,
+  () => S.laterWeek,
 ];
 
-/** «الأسبوع السابق» · the week's name · «الأسبوع التالي», within the lessons the API sends. */
+const STEP = 'min-w-11 px-0 sm:min-h-11';
+
+/**
+ * «الأسبوع السابق» · the week's name and its dates («15 – 21 نوفمبر») · «الأسبوع التالي», within
+ * the lessons the API sends. The chevrons follow the reading direction (Icon's MIRROR).
+ */
 export function WeekBar({ week }: { week: Week }) {
   const word = WEEK_WORD[week.offset] ?? WEEK_WORD[0];
   return (
@@ -17,20 +26,27 @@ export function WeekBar({ week }: { week: Week }) {
         type="button"
         variant="ghost"
         size="sm"
+        className={STEP}
+        aria-label={S.prev}
         disabled={week.offset === 0}
         onClick={() => week.setOffset(week.offset - 1)}
       >
-        {t.portal.app.schedule.prev}
+        <Icon name="chevron-right" />
       </Button>
-      <p aria-live="polite" className="text-sm font-semibold">{word?.()}</p>
+      <p aria-live="polite" className="grid text-center">
+        <span className="text-sm font-semibold">{word?.()}</span>
+        <span className="text-xs text-ink-2 tabular-nums">{rangeOf(week.range)}</span>
+      </p>
       <Button
         type="button"
         variant="ghost"
         size="sm"
+        className={STEP}
+        aria-label={S.next}
         disabled={week.offset >= MAX_OFFSET}
         onClick={() => week.setOffset(week.offset + 1)}
       >
-        {t.portal.app.schedule.next}
+        <Icon name="chevron-left" />
       </Button>
     </div>
   );

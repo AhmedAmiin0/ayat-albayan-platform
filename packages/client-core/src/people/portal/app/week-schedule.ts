@@ -4,7 +4,9 @@ import {
   startOfWeekIn,
   type PortalLesson,
   type PortalStudent,
+  type PortalTeacher,
 } from '@ab/shared';
+import { lessonOptions } from '../actions/lesson-options.js';
 import { isAhead } from '../lesson-window.js';
 
 // «الجدول» (docs/50 §6, the canvas's Schedule): one academy week (السبت → الجمعة) of the lessons
@@ -37,10 +39,18 @@ export interface WeekInput {
   offset: number;
 }
 
+const WEEK_DAYS = 7;
+
+/** The week's seven days («YYYY-MM-DD», Saturday first), `offset` weeks from the one of `now`. */
+function weekDays(now: Date, tz: string, offset: number): string[] {
+  const start = addDaysIn(startOfWeekIn(now, tz), offset * WEEK_DAYS, tz);
+  return Array.from({ length: WEEK_DAYS }, (_, i) => localDateIn(addDaysIn(start, i, tz), tz));
+}
+
 /** The week's first and last day («YYYY-MM-DD»), `offset` weeks from the one holding `now`. */
 export function scheduleWeek(now: Date, tz: string, offset: number): { from: string; to: string } {
-  const start = addDaysIn(startOfWeekIn(now, tz), offset * 7, tz);
-  return { from: localDateIn(start, tz), to: localDateIn(addDaysIn(start, 6, tz), tz) };
+  const days = weekDays(now, tz, offset);
+  return { from: days[0] ?? '', to: days[WEEK_DAYS - 1] ?? '' };
 }
 
 const byStart = (a: WeekLesson, b: WeekLesson): number =>
@@ -58,4 +68,46 @@ export function weekSchedule(input: WeekInput, now: Date): WeekDay[] {
     .filter(({ day }) => day >= from && day <= to);
   for (const { entry, day } of dated) days.set(day, [...(days.get(day) ?? []), entry]);
   return [...days].map(([day, lessons]) => ({ day, lessons }));
+}
+
+/** One day of the week strip: its date, whether it is today, and its lessons ahead. */
+export interface StripDay {
+  day: string;
+  today: boolean;
+  count: number;
+}
+
+/** The week strip: all seven days of the week (Saturday first), each with its lesson count. */
+export function weekStrip(input: WeekInput, now: Date): StripDay[] {
+  const counts = new Map(weekSchedule(input, now).map((d) => [d.day, d.lessons.length]));
+  const today = localDateIn(now, input.tz);
+  return weekDays(now, input.tz, input.offset).map((day) => ({
+    day,
+    today: day === today,
+    count: counts.get(day) ?? 0,
+  }));
+}
+
+/** «ملخص الأسبوع»: its lessons, those still awaiting the family's «سأحضر», and the teachers. */
+export interface WeekSummary {
+  lessons: number;
+  awaiting: number;
+  teachers: PortalTeacher[];
+}
+
+/** A lesson awaits the family while «سأحضر» is still among its options (lessonOptions). */
+const awaits = (now: Date) => (entry: WeekLesson): boolean =>
+  lessonOptions(entry.lesson, now).includes('confirm');
+
+/** The summary of the week's days (weekSchedule); each teacher once, by Arabic name. */
+export function weekSummary(days: readonly WeekDay[], now: Date): WeekSummary {
+  const entries = days.flatMap((d) => d.lessons);
+  const teachers = new Map(
+    entries.map(({ lesson }) => [lesson.teacher.display_name_ar, lesson.teacher]),
+  );
+  return {
+    lessons: entries.length,
+    awaiting: entries.filter(awaits(now)).length,
+    teachers: [...teachers.values()],
+  };
 }

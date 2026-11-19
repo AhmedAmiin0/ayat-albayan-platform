@@ -1,4 +1,4 @@
-import { listenState, recordingMinutes } from '@ab/client-core';
+import { dayTile, listenState, recordingMinutes } from '@ab/client-core';
 import {
   clockOf, counted, teacherName, type PortalRecording, type PortalStudent,
 } from '@ab/shared';
@@ -6,7 +6,6 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { locale, t, useResumeMap } from '@ab/mobile-kit';
 import { DateTile, PressCard, RowText, type RowNote } from '@/ui';
-import { dayTile } from '@/lessons';
 import { useFamilyClock } from '@/portal';
 import { lessonHref } from './hrefs';
 import { listenNote } from './listen-note';
