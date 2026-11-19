@@ -21,7 +21,7 @@ vi.mock('livekit-client', () => {
     }
   }
   const RoomEvent = new Proxy({}, { get: (_t, k) => String(k) });
-  return { Room, RoomEvent, DisconnectReason: { DUPLICATE_IDENTITY: 'dup', CLIENT_INITIATED: 'client', ROOM_DELETED: 'deleted' }, Track: { Source: {} } };
+  return { Room, RoomEvent, DisconnectReason: { DUPLICATE_IDENTITY: 'dup', CLIENT_INITIATED: 'client', ROOM_DELETED: 'deleted', ROOM_CLOSED: 'closed' }, Track: { Source: {} } };
 });
 
 describe('createLivekitRoom', () => {
@@ -53,6 +53,12 @@ describe('createLivekitRoom', () => {
   it('maps a room ended for everyone (ROOM_DELETED) to closed', () => {
     const c = createLivekitRoom();
     fake.handlers.get('Disconnected')?.('deleted');
+    expect(c.snapshot().status).toBe('closed');
+  });
+
+  it('maps the server closing the room (ROOM_CLOSED) to closed too', () => {
+    const c = createLivekitRoom();
+    fake.handlers.get('Disconnected')?.('closed');
     expect(c.snapshot().status).toBe('closed');
   });
 

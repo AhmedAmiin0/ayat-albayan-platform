@@ -32,6 +32,7 @@ const CLOSING: Partial<Record<DisconnectReason, RoomStatus>> = {
   [DisconnectReason.DUPLICATE_IDENTITY]: 'duplicate',
   [DisconnectReason.PARTICIPANT_REMOVED]: 'removed',
   [DisconnectReason.ROOM_DELETED]: 'closed',
+  [DisconnectReason.ROOM_CLOSED]: 'closed',
 };
 const closingStatus = (reason: DisconnectReason | undefined): RoomStatus =>
   (reason === undefined ? undefined : CLOSING[reason]) ?? 'ended';
