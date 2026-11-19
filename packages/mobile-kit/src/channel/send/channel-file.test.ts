@@ -1,5 +1,6 @@
 import { fileSizeText } from '@ab/shared';
-import { ChannelFileError, fileErrorText, fileProblem } from './channel-file';
+import { ChannelFileError, channelFileProblem as fileProblem } from '@ab/client-core';
+import { fileErrorText } from './channel-file';
 import { t } from '../../lib/i18n/i18n';
 
 const pick = (mime: string, size: number) => ({ mime, size, name: 'f', bytes: new ArrayBuffer(1) });

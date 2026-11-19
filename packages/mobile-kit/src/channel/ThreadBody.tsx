@@ -7,7 +7,7 @@ import { KeyboardFrame } from '../ui/layout/KeyboardFrame';
 import type { ChannelRef, useChannel } from './channel-api';
 import { ChannelComposer } from './compose/ChannelComposer';
 import { ChannelMessageMenu } from './edits/ChannelMessageMenu';
-import type { MenuOffers } from './edits/menu-offers';
+import type { MenuOffers } from '@ab/client-core';
 import { ChannelList } from './list/ChannelList';
 import { ReadsSheet } from './reads/ReadsSheet';
 

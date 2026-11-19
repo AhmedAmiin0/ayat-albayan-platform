@@ -1,10 +1,14 @@
-import type { ChannelAudience } from '@ab/client-core';
+import {
+  menuOffers,
+  offersAny,
+  type ChannelAudience,
+  type ChannelRow,
+  type MenuOffers,
+} from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { View } from 'react-native';
 import { DayChip } from '../../chat-ui/days/DayChip';
 import { ChannelBubble } from '../bubble/ChannelBubble';
-import { menuOffers, offersAny, type MenuOffers } from '../edits/menu-offers';
-import type { ChannelRow } from './list-rows';
 import { UnreadBand } from './UnreadBand';
 
 /** What a row's gestures open in the thread. */

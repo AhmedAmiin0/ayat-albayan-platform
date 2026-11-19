@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
 import { channelMessage } from '../testing/channel-fixtures';
-import type { ChannelRow } from './list-rows';
+import type { ChannelRow } from '@ab/client-core';
 import { useFloatingDay } from './use-floating-day';
 
 const row = (dayText: string, index: number, opensDay = false) => ({

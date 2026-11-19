@@ -7,7 +7,7 @@ import type { ChannelRef } from '../channel-api';
 import { ChannelDeleteStep } from './ChannelDeleteStep';
 import { ChannelEditForm } from './ChannelEditForm';
 import { EditIcon, InfoIcon, TrashIcon } from './menu-icons';
-import type { MenuOffers } from './menu-offers';
+import type { MenuOffers } from '@ab/client-core';
 import { MenuRow } from './MenuRow';
 import { channelChangeError, useChannelChange } from './use-channel-change';
 

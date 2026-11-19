@@ -1,3 +1,4 @@
+import { ticksOf } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { BubbleMeta } from '../../chat-ui/bubble/BubbleMeta';
 import { BubbleShell } from '../../chat-ui/bubble/BubbleShell';
@@ -6,7 +7,7 @@ import { useClockCycle } from '../../lib/clock/clock-store';
 import { AttachmentBody } from '../attach/AttachmentBody';
 import { BubbleContent } from './BubbleContent';
 import { bubbleLabel, speaksAsOne } from './bubble-label';
-import { metaText, ticksOf } from './bubble-meta';
+import { metaText } from './bubble-meta';
 import { ChannelQuote } from './ChannelQuote';
 import { menuA11y } from './menu-a11y';
 import { SenderLine } from './SenderLine';

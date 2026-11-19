@@ -4,7 +4,7 @@ import { t } from '../../lib/i18n/i18n';
 import { MenuSheet } from '../../ui/feedback/MenuSheet';
 import type { ChannelRef } from '../channel-api';
 import { ChannelMenuSteps, type MenuExits } from './ChannelMenuSteps';
-import type { MenuOffers } from './menu-offers';
+import type { MenuOffers } from '@ab/client-core';
 import { useKeyboardInset } from './use-keyboard-inset';
 
 interface ChannelMessageMenuProps extends MenuExits {
