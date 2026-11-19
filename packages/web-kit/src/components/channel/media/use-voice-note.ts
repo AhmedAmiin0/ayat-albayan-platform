@@ -30,7 +30,7 @@ export interface VoiceNote {
  * One voice note over an <audio> element (the shared player reducer): play and pause, a seek on
  * the waveform; the next play after the end starts over. The element's own events drive the
  * state, so another page's pause or the end is never missed. It joins the page's one sounding
- * player (nowPlaying): a note that starts stops a recording or another note, and the other way round.
+ * player (nowPlaying): a note that starts stops a recording or another note, and vice versa.
  */
 export function useVoiceNote(knownMs: number | null): VoiceNote {
   const [state, dispatch] = useReducer(playerReducer, initialPlayer(0));

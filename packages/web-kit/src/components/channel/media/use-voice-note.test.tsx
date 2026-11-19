@@ -6,7 +6,11 @@ import { useVoiceNote } from './use-voice-note';
 /** One note's <audio> with the hook's handlers (jsdom does not play: the events are fired). */
 function Note({ label }: { label: string }) {
   const note = useVoiceNote(4000);
-  return <audio aria-label={label} {...note.media} />;
+  return (
+    <audio aria-label={label} {...note.media}>
+      <track kind="captions" />
+    </audio>
+  );
 }
 
 const audio = (label: string) => document.querySelector<HTMLAudioElement>(`[aria-label="${label}"]`);
