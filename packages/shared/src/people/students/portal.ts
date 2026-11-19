@@ -32,9 +32,12 @@ export const portalHomeSchema = z.object({
   renew_url: z.string().nullable(),
   /** The login's own language (profiles.locale): the app switches to it. null: never chosen. */
   locale: z.enum(LOCALES).nullable().optional(),
+  /** A guardian login's own name and WhatsApp (E.164) for «حسابي»; null for a student login. */
+  guardian: z.object({ name: z.string(), phone: z.string() }).nullable().optional(),
 });
 export type PortalHome = z.infer<typeof portalHomeSchema>;
 export type PortalKind = PortalHome['kind'];
+export type PortalGuardian = NonNullable<PortalHome['guardian']>;
 
 export const portalTeacherSchema = z.object({
   display_name_ar: z.string(),
