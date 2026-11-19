@@ -11,6 +11,8 @@ import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 interface PanelProps {
   student: PortalStudent;
   onOpenReport: (report: OpenReport) => void;
+  /** The family web's own lesson page (files without a recording); the staff pages pass none. */
+  onOpenLesson?: (lessonId: string) => void;
   /** «القادمة» leaves out the next lesson, shown above the tabs (the family home). */
   exceptNext?: boolean;
 }
@@ -25,7 +27,9 @@ const PANELS: Record<ChildTab, (props: PanelProps) => ReactNode> = {
   upcoming: ({ student, exceptNext }) => <LessonsPanel student={student} exceptNext={exceptNext} />,
   attended: (props) => <HistoryPanel {...props} status="attended" />,
   absent: (props) => <HistoryPanel {...props} status="absent" />,
-  recordings: (props) => <RecordingsPanel {...props} />,
+  recordings: ({ student, onOpenReport }) => (
+    <RecordingsPanel student={student} onOpenReport={onOpenReport} />
+  ),
   package: ({ student }) => <PackagePanel student={student} />,
   chat: ({ student }) => (
     <ChannelThread refs={{ audience: 'portal', studentId: student.id }} tz={student.tz} />

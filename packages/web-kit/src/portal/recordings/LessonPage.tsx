@@ -1,0 +1,70 @@
+import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Card } from '@ab/web-kit/components/ui/surface/card';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { LoadState } from '@ab/web-kit/portal/LoadState';
+import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
+import { usePortalLesson } from './use-recordings';
+import { LessonHead, ReportBlock } from './LessonHead';
+import { PortalFileList } from './PortalFileList';
+import { LessonParts } from './LessonParts';
+
+interface Props {
+  student: PortalStudent;
+  lessonId: string;
+  onOpenReport: (report: OpenReport) => void;
+  onBack: () => void;
+}
+
+const CARD = 'grid content-start gap-4 p-5';
+
+function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId' | 'onBack'> & {
+  view: PortalLessonAssets;
+}) {
+  const reportId = view.report_id;
+  return (
+    <>
+      <LessonHead view={view} student={student} level={1} />
+      <div className="grid items-start gap-4 @2xl:grid-cols-2">
+        <div className="grid gap-4">
+          {view.recordings.length > 0 && (
+            <Card className={CARD}>
+              <LessonParts student={student} recordings={view.recordings} />
+            </Card>
+          )}
+          {reportId && (
+            <Card className={CARD}>
+              <ReportBlock reportId={reportId} onOpenReport={onOpenReport} />
+            </Card>
+          )}
+        </div>
+        <Card className={CARD}>
+          <PortalFileList studentId={student.id} reportId={reportId} files={view.files} />
+        </Card>
+      </div>
+    </>
+  );
+}
+
+/**
+ * A lesson's own page (`/lesson/<id>`, the app's lesson screen; boards FamFilesWebNoRec,
+ * FamFilesWebAttended): reached from a «حضرها» row's «ملفات الحلقة» even when nothing was
+ * recorded. Its recording (if any), the report's first lines and «ملفات الحلقة». While loading
+ * or after an error the page is «صفحة الحلقة».
+ */
+export function LessonPage({ student, lessonId, onOpenReport, onBack }: Props) {
+  const query = usePortalLesson({ studentId: student.id, lessonId });
+  return (
+    <section aria-label={t.lessonFiles.lessonPage} className="@container grid animate-fade-up gap-4">
+      <Button type="button" variant="secondary" size="sm" className="justify-self-start" onClick={onBack}>
+        <Icon name="chevron-right" />
+        {t.portal.backToLessons}
+      </Button>
+      {!query.data && <h1 className="font-display text-h2 font-bold">{t.lessonFiles.lessonPage}</h1>}
+      <LoadState query={query} rows={3}>
+        {(view) => <Body view={view} student={student} onOpenReport={onOpenReport} />}
+      </LoadState>
+    </section>
+  );
+}

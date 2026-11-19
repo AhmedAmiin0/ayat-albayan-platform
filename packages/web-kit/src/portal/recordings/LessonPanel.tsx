@@ -1,13 +1,11 @@
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { useClock } from '@ab/web-kit/lib/clock';
+import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LoadState } from '@ab/web-kit/portal/LoadState';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
+import { LessonHead, ReportBlock } from './LessonHead';
 import { LessonParts } from './LessonParts';
-import { lessonLine, lessonTitle } from './lesson-words';
 import { PortalFileList } from './PortalFileList';
-import { ReportSummary } from './ReportSummary';
 import { usePortalLesson } from './use-recordings';
 
 interface Props {
@@ -17,39 +15,42 @@ interface Props {
 }
 
 function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId'> & { view: PortalLessonAssets }) {
-  const clock = { ...useClock(), tz: student.tz };
   const reportId = view.report_id;
   return (
     <div className="grid gap-4">
-      <div className="grid gap-0.5">
-        <h2 className="text-body font-bold">{lessonTitle(view.lesson_starts_at, clock)}</h2>
-        <p className="text-sm text-ink-3">{lessonLine(view, { name: student.name, clock })}</p>
+      <LessonHead view={view} student={student} level={2} />
+      {/* Narrow: recording, report, files (the app's order). Wide: the recording over its files
+          at the start, the report's lines beside them at the end. */}
+      <div className="grid content-start items-start gap-5 @xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div className="empty:hidden @xl:col-start-1">
+          <LessonParts student={student} recordings={view.recordings} />
+        </div>
+        {reportId && (
+          <div className="grid gap-4 @xl:col-start-2 @xl:row-span-2 @xl:row-start-1">
+            <ReportBlock reportId={reportId} onOpenReport={onOpenReport} />
+          </div>
+        )}
+        <div className="@xl:col-start-1">
+          <PortalFileList studentId={student.id} reportId={reportId} files={view.files} />
+        </div>
       </div>
-      <LessonParts studentId={student.id} recordings={view.recordings} />
-      {reportId && <ReportSummary reportId={reportId} />}
-      {reportId && (
-        <Button
-          type="button"
-          variant="secondary"
-          className="justify-self-start"
-          onClick={() => onOpenReport({ reportId, recordingId: null })}
-        >
-          {t.lessonFiles.openReport}
-        </Button>
-      )}
-      <PortalFileList studentId={student.id} reportId={reportId} files={view.files} />
     </div>
   );
 }
 
-/** The family's lesson page (canvas RecXWebFamilyLesson): the recording, the report, the files. */
+/**
+ * The picked lesson in «التسجيلات» (boards FamRecWebList, FamRecWebParts): the recording, its
+ * files and the report's first lines. A new pick mounts a new panel, which fades up in place.
+ */
 export function LessonPanel({ student, lessonId, onOpenReport }: Props) {
   const query = usePortalLesson({ studentId: student.id, lessonId });
   return (
-    <section aria-label={t.lessonFiles.lessonPage} className="rounded-lg border border-rule bg-raised p-4">
-      <LoadState query={query} rows={2}>
-        {(view) => <Body view={view} student={student} onOpenReport={onOpenReport} />}
-      </LoadState>
-    </section>
+    <Card asChild className="@container animate-fade-up p-5">
+      <section aria-label={t.lessonFiles.lessonPage}>
+        <LoadState query={query} rows={2}>
+          {(view) => <Body view={view} student={student} onOpenReport={onOpenReport} />}
+        </LoadState>
+      </section>
+    </Card>
   );
 }
