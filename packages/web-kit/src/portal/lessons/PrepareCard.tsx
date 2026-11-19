@@ -25,7 +25,7 @@ export function PrepareCard({ lessons }: { lessons: Pick<PortalLessons, 'prepare
           text ? (
             <div key={label} className="grid gap-0.5">
               <dt className="text-xs text-ink-3">{label}</dt>
-              <dd className="whitespace-pre-line text-sm text-ink">{text}</dd>
+              <dd dir="auto" className="whitespace-pre-line text-sm text-ink">{text}</dd>
             </div>
           ) : null,
         )}

@@ -36,7 +36,7 @@ describe('LessonPage (`/lesson/<id>`, board FamFilesWebNoRec)', () => {
     expect(screen.queryByLabelText(F.recording, { selector: 'audio' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: F.openReport }));
     expect(onOpenReport).toHaveBeenCalledWith({ reportId: 'r-L1', recordingId: null });
-    fireEvent.click(screen.getByRole('button', { name: t.portal.backToLessons }));
+    fireEvent.click(screen.getByRole('button', { name: t.common.back }));
     expect(onBack).toHaveBeenCalled();
   });
 

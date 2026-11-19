@@ -18,7 +18,7 @@ export function FamilyRecordingsPage({ studentId }: { studentId: string }) {
           <Button type="button" variant="secondary" size="sm" className="justify-self-start"
             onClick={nav.back}>
             <Icon name="chevron-right" />
-            {t.portal.backToLessons}
+            {t.common.back}
           </Button>
           <div className="grid gap-0.5">
             <h1 id="recordings-title" className="font-display text-h2 font-bold">

@@ -61,7 +61,7 @@ test.describe('family pages on the family host', () => {
     await page.getByRole('tab', { name: P.attendedTab }).click();
     await page.getByRole('button', { name: P.openReport }).first().click();
     await expect(page.getByRole('heading', { name: P.reportTitle })).toBeVisible();
-    await page.getByRole('button', { name: P.backToLessons }).click();
+    await page.getByRole('button', { name: ar.common.back, exact: true }).click();
 
     await page.getByRole('tab', { name: P.absentTab }).click();
     const panel = page.getByRole('tabpanel');

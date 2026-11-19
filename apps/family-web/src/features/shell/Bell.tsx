@@ -21,7 +21,7 @@ export function Bell() {
       {unread > 0 && (
         <span
           aria-hidden="true"
-          className="absolute end-1 top-1 grid min-w-5 animate-pop-in place-items-center
+          className="absolute end-0 top-0 grid min-w-5 animate-pop-in place-items-center
             rounded-full bg-destructive-solid px-1 text-2xs font-semibold
             text-destructive-foreground tabular-nums"
         >
