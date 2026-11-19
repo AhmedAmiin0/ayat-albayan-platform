@@ -7,7 +7,7 @@ export function TabBadge({ count }: { count: number }) {
     <span
       aria-hidden="true"
       className="ms-1.5 inline-grid h-4 min-w-4 place-items-center rounded-full bg-lapis-fill
-        px-1 text-[11px] font-bold leading-none text-on-lapis tabular-nums"
+        px-1 text-[11px] font-bold leading-none text-primary-foreground tabular-nums"
     >
       {count}
     </span>

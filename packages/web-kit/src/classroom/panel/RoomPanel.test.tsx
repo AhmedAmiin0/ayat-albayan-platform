@@ -23,6 +23,12 @@ describe('«المحادثة» in the family room (boards FamRoomWebLive / FamRo
     expect(screen.queryByText('thread')).toBeNull();
   });
 
+  it('its scroller leaves room for the composer under the newest message (--chat-end-gap)', () => {
+    openFamilyRoom(fakeClient({ tiles }), { chat: chat() });
+    fireEvent.click(screen.getByRole('button', { name: unreadName }));
+    expect(screen.getByText('thread').parentElement?.className).toContain('[--chat-end-gap:');
+  });
+
   it('switches between the chat and the people in the same panel', () => {
     openFamilyRoom(fakeClient({ tiles }), { chat: chat() });
     fireEvent.click(screen.getByRole('button', { name: unreadName }));

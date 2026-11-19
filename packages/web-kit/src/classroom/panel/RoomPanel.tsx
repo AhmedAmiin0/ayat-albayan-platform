@@ -46,10 +46,18 @@ function Tabs({ tab, onTab, chat, count }: RoomPanelProps) {
   );
 }
 
+/**
+ * The chat's scroller. The thread keeps its newest message in view by scrolling an end marker in;
+ * the gap (the kit thread's --chat-end-gap) leaves its composer under it in view too, so the reply
+ * box is never below the panel's fold.
+ */
+const CHAT_BODY =
+  'flex min-h-[50dvh] flex-1 flex-col overflow-y-auto [--chat-end-gap:7.5rem] lg:min-h-0';
+
 function Body({ tab, chat, people }: RoomPanelProps) {
   if (tab === 'people' || !chat) return <div className="min-h-0 flex-1 overflow-y-auto">{people}</div>;
   if (chat.locked) return <p className="p-4 text-sm text-ink-2">{t.studentChannel.closed}</p>;
-  return <div className="flex min-h-[50dvh] flex-1 flex-col overflow-y-auto lg:min-h-0">{chat.body}</div>;
+  return <div className={CHAT_BODY}>{chat.body}</div>;
 }
 
 /**
