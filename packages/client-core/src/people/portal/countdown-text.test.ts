@@ -9,6 +9,6 @@ describe('lessonClockText', () => {
     expect(lessonClockText({ kind: 'now' }, ar.portal)).toBe(ar.portal.now);
     expect(lessonClockText({ kind: 'startsIn', parts }, ar.portal)).toBe('تبدأ الحلقة بعد 00:08:12');
     const two = { kind: 'opensIn' as const, parts: { ...parts, days: 2 } };
-    expect(lessonClockText(two, ar.portal)).toBe('يُتاح الدخول بعد يومان 00:08:12');
+    expect(lessonClockText(two, ar.portal)).toBe('يُتاح الدخول بعد يومين 00:08:12');
   });
 });

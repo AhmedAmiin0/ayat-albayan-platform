@@ -9623,5 +9623,30 @@
     "cancel": "Cancel",
     "mismatch": "A family cannot mix a test account with a real student.",
     "failed": "The change could not be saved. Try again."
+  },
+  "roomFlow": {
+    "title": "{student}'s lesson with {teacher}",
+    "check": {
+      "title": "Before you join",
+      "hint": "Try your camera and microphone, then join.",
+      "starting": "Starting the camera and microphone…",
+      "camDenied": "Camera not allowed",
+      "micPick": "Microphone",
+      "camPick": "Camera",
+      "micOn": "We can hear you",
+      "micOff": "Microphone off"
+    },
+    "waiting": {
+      "title": "Waiting for the teacher…",
+      "body": "The teacher's camera will show here when they join."
+    },
+    "panel": {
+      "people": "Participants · {n}",
+      "close": "Close the panel"
+    },
+    "ended": {
+      "body": "It can't be joined again.",
+      "card": "The lesson ended at {time} and can't be joined again."
+    }
   }
 }
