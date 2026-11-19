@@ -37,7 +37,7 @@ test.describe('lesson files and recordings on the family host', () => {
     await expect(page.getByText(F.reportPdf)).toBeVisible();
     await expect(page.getByRole('button', { name: P.openPdf })).toBeVisible();
     await expect(page.locator('audio, video')).toHaveCount(0);
-    await page.getByRole('button', { name: P.backToLessons }).click();
+    await page.getByRole('button', { name: ar.common.back, exact: true }).click();
     await expect(page).toHaveURL(/\/portal/);
 
     await page.goto(`${FAMILY_URL}/recordings/${family.first.id}`);

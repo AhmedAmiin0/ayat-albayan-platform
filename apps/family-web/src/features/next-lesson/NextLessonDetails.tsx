@@ -76,6 +76,7 @@ export function NextLessonDetails({ lesson, student, now, open, full = false }: 
           now={now}
           onJoined={setRoom}
           label={joinLabel(state.kind)}
+          counted={full && state.kind === 'none'}
         />
       )}
     </div>

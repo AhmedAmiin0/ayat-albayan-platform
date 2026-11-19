@@ -26,8 +26,8 @@ function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId' | 'onBack'
   return (
     <>
       <LessonHead view={view} student={student} level={1} />
-      <div className="grid items-start gap-4 @2xl:grid-cols-2">
-        <div className="grid gap-4">
+      <div className="grid grid-cols-1 items-start gap-4 @3xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4">
           {view.recordings.length > 0 && (
             <Card className={CARD}>
               <LessonParts student={student} recordings={view.recordings} />
@@ -56,10 +56,13 @@ function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId' | 'onBack'
 export function LessonPage({ student, lessonId, onOpenReport, onBack }: Props) {
   const query = usePortalLesson({ studentId: student.id, lessonId });
   return (
-    <section aria-label={t.lessonFiles.lessonPage} className="@container grid animate-fade-up gap-4">
+    <section
+      aria-label={t.lessonFiles.lessonPage}
+      className="@container grid grid-cols-1 animate-fade-up gap-4"
+    >
       <Button type="button" variant="secondary" size="sm" className="justify-self-start" onClick={onBack}>
         <Icon name="chevron-right" />
-        {t.portal.backToLessons}
+        {t.common.back}
       </Button>
       {!query.data && <h1 className="font-display text-h2 font-bold">{t.lessonFiles.lessonPage}</h1>}
       <LoadState query={query} rows={3}>

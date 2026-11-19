@@ -54,6 +54,20 @@ describe('LessonAction «ادخل الحلقة»', () => {
     expect(screen.getByText(t.portal.opensAt.replace('{time}', '18:50'))).toBeTruthy();
   });
 
+  it('before the window on a card that counts down to it: no second «يُتاح الدخول…» line', () => {
+    const early = new Date('2026-10-27T15:00:00.000Z');
+    const { container } = renderPortal(
+      <LessonAction lesson={lesson({})} studentId="s1" tz="Africa/Cairo" now={early} onJoined={onJoined} counted />,
+    );
+    expect(container.textContent).toBe('');
+  });
+
+  it('a counting card still says why there is no button once the window is over', () => {
+    const late = new Date('2026-10-27T17:00:00.000Z');
+    renderPortal(<LessonAction lesson={lesson({})} studentId="s1" tz="Africa/Cairo" now={late} onJoined={onJoined} counted />);
+    expect(screen.getByText(t.portal.closed)).toBeTruthy();
+  });
+
   it('after the window: «انتهى وقت الدخول»', () => {
     show({}, new Date('2026-10-27T17:00:00.000Z'));
     expect(screen.getByText(t.portal.closed)).toBeTruthy();

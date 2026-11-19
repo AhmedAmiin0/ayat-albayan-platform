@@ -1,3 +1,4 @@
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { LessonReportView } from '@ab/web-kit/report';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -12,6 +13,8 @@ interface Props {
   studentId: string;
   report: OpenReport;
   onBack: () => void;
+  /** The back button's words; «العودة إلى الحلقات» (the staff child page) by default. */
+  backLabel?: string;
 }
 
 /**
@@ -19,7 +22,7 @@ interface Props {
  * (with its PDF and the teacher's files), then the recording when staff made it visible. When the
  * page cannot be read, the PDF still opens by the portal's own signed link.
  */
-export function ReportView({ studentId, report, onBack }: Props) {
+export function ReportView({ studentId, report, onBack, backLabel }: Props) {
   const recording: PortalFile[] = report.recordingId
     ? [{ kind: 'recordings', id: report.recordingId }]
     : [];
@@ -32,7 +35,8 @@ export function ReportView({ studentId, report, onBack }: Props) {
   return (
     <section aria-label={t.portal.reportTitle} className="grid animate-fade-up gap-4">
       <Button type="button" variant="secondary" size="sm" className="justify-self-start" onClick={onBack}>
-        {t.portal.backToLessons}
+        <Icon name="chevron-right" />
+        {backLabel ?? t.portal.backToLessons}
       </Button>
       <h2 className="font-display text-h3 font-bold">{t.portal.reportTitle}</h2>
       <LessonReportView reportId={report.reportId} head fallback={fallback} />

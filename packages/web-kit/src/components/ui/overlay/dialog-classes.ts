@@ -61,7 +61,7 @@ export const asideLayout: DialogLayout = {
  */
 export const bottomSheetLayout: DialogLayout = {
   ...sheetLayout,
-  overlay: 'fixed inset-0 z-50 flex animate-fade-in flex-col justify-end bg-scrim sm:grid sm:place-items-center sm:overflow-y-auto sm:p-6',
+  overlay: 'fixed inset-0 z-50 flex animate-fade-in flex-col justify-end bg-scrim sm:grid sm:place-items-center sm:justify-center sm:overflow-y-auto sm:p-6',
   phone: 'max-sm:max-h-[85dvh] max-sm:max-w-none max-sm:animate-fade-up max-sm:rounded-t-lg max-sm:rounded-b-none max-sm:border-x-0 max-sm:border-b-0',
   header: 'max-sm:border-b max-sm:border-rule max-sm:bg-card max-sm:px-4 max-sm:pt-4 max-sm:pb-3',
 };
