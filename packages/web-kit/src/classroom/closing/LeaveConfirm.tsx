@@ -19,7 +19,6 @@ export function LeaveConfirm({ onLeave, onStay }: Props) {
   return (
     <Dialog
       title={A.title}
-      description={A.body}
       onClose={onStay}
       layout="sheet"
       actions={
@@ -34,7 +33,7 @@ export function LeaveConfirm({ onLeave, onStay }: Props) {
         </>
       }
     >
-      {null}
+      <p className="text-sm text-ink-2">{A.body}</p>
     </Dialog>
   );
 }

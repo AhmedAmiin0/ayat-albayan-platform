@@ -51,7 +51,7 @@ export function RoomStage({ stage, board, strip, attach, actionFor }: Props) {
                 tile={tile}
                 attach={attach}
                 action={actionFor(tile)}
-                className="aspect-video min-h-0 w-32 shrink-0 sm:w-40 lg:w-full"
+                className="aspect-video min-h-0 w-40 shrink-0 lg:w-full"
               />
             ))}
           </ul>
