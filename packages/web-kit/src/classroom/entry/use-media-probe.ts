@@ -14,13 +14,23 @@ export interface ProbeInput {
 const OFF: ProbeState = { status: 'off' };
 const STARTING: ProbeState = { status: 'starting' };
 
+/** The opened stream with the device list; a failed listing frees the device before failing. */
+async function withDevices(device: MediaDevice, stream: MediaStream): Promise<ProbeState> {
+  try {
+    const devices = inputsOf(device, await navigator.mediaDevices.enumerateDevices());
+    const track = stream.getTracks()[0];
+    return track ? { status: 'on', track, devices } : { status: 'missing' };
+  } catch (error) {
+    stream.getTracks().forEach((t) => t.stop());
+    throw error;
+  }
+}
+
 async function start(device: MediaDevice, deviceId: string | undefined): Promise<ProbeState> {
   if (!canProbe()) return { status: 'missing' };
   try {
     const stream = await navigator.mediaDevices.getUserMedia(constraintsOf(device, deviceId));
-    const devices = inputsOf(device, await navigator.mediaDevices.enumerateDevices());
-    const track = stream.getTracks()[0];
-    return track ? { status: 'on', track, devices } : { status: 'missing' };
+    return await withDevices(device, stream);
   } catch (error) {
     return { status: problemOf(error) };
   }

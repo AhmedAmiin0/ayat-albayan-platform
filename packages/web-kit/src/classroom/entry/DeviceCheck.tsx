@@ -10,12 +10,13 @@ import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
 import type { MediaChoice } from '@ab/web-kit/classroom/room/components/room-types';
 import { CheckControls } from './CheckControls';
 import { CheckPreview } from './CheckPreview';
+import type { JoinPick } from './saved-choice';
 import { useDeviceCheck, type DeviceCheckController } from './use-device-check';
 
 interface Props {
   join: RoomJoinResult;
   context: RoomContext | null;
-  onJoin: (media: MediaChoice) => void;
+  onJoin: (pick: JoinPick) => void;
   /** «رجوع»: back to the page, without joining. */
   onBack?: (() => void) | undefined;
 }

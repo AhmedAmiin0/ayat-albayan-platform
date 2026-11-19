@@ -39,24 +39,24 @@ test.describe('the family room on the family host', () => {
     await page.getByRole('article', { name: family.first.name }).getByRole('button', { name: open }).click();
 
     await page.getByRole('button', { name: ar.portal.join }).first().click();
-    await expect(page.getByRole('heading', { name: R.check.title })).toBeVisible();
+    await expect(page.getByRole('heading', { name: R.check.title, exact: true })).toBeVisible();
     await shot(page, 'family-check');
-    await page.getByRole('button', { name: M.preview.join }).click();
+    await page.getByRole('button', { name: M.preview.join, exact: true }).click();
 
     await expect(page.getByText(R.waiting.title)).toBeVisible({ timeout: 20_000 });
     await expect(page.getByText(ar.classroom.error.classroom_not_configured)).toHaveCount(0);
     await shot(page, 'family-waiting');
 
-    await page.getByRole('button', { name: ar.classroom.leave }).click();
+    await page.getByRole('button', { name: ar.classroom.leave, exact: true }).click();
     const ask = page.getByRole('dialog', { name: M.leaveAsk.title });
-    await ask.getByRole('button', { name: M.leaveAsk.stay }).click();
+    await ask.getByRole('button', { name: M.leaveAsk.stay, exact: true }).click();
     await expect(ask).toHaveCount(0);
-    await page.getByRole('button', { name: ar.classroom.leave }).click();
+    await page.getByRole('button', { name: ar.classroom.leave, exact: true }).click();
     await page.getByRole('dialog', { name: M.leaveAsk.title }).getByRole('button', { name: M.controls.leave }).click();
     await expect(page.getByText(ar.classroom.ended)).toBeVisible();
     await shot(page, 'family-left');
 
-    await page.getByRole('button', { name: M.back }).click();
+    await page.getByRole('button', { name: M.back, exact: true }).click();
     await expect(page.getByRole('button', { name: ar.portal.join }).first()).toBeVisible();
     await page.context().close();
   });

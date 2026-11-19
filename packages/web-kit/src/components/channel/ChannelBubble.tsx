@@ -4,7 +4,7 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { cn } from '@ab/web-kit/lib/utils';
 import type { ChannelRef } from './api';
 import { BubbleCard } from './bubble/BubbleCard';
-import { messageDomId } from './bubble/jump';
+import { rowAttrs } from './bubble/jump';
 import { ChannelBubbleMenu } from './edit/ChannelBubbleMenu';
 import { ChannelDeleteDialog } from './edit/ChannelDeleteDialog';
 import { useBubbleEditing } from './edit/use-bubble-editing';
@@ -42,7 +42,7 @@ export function ChannelBubble({ message: m, tz, refs, now, mode, followUp, arriv
   const time = channelTimeText({ iso: m.created_at, tz, now, ...clock });
   const menu = <ChannelBubbleMenu offers={tools.offers} mine={m.mine} onPick={tools.pick} />;
   return (
-    <li id={messageDomId(m.id)} className={rowClass(m.mine, arrived === true)}>
+    <li {...rowAttrs(m.id)} className={rowClass(m.mine, arrived === true)}>
       {m.mine && menu}
       <BubbleCard message={m} followUp={followUp === true} tools={tools} time={time} />
       {!m.mine && menu}

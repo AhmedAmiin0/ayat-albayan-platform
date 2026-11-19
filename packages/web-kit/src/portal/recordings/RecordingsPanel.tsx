@@ -6,6 +6,7 @@ import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header'
 import { useNowPlaying } from '@ab/web-kit/lesson-files/use-now-playing';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { scrollBehavior } from '@ab/web-kit/lib/motion/reduced-motion';
 import { LoadState } from '@ab/web-kit/portal/LoadState';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 import { LessonPanel } from './LessonPanel';
@@ -30,15 +31,13 @@ const monthName = (month: string): string =>
 const firstParts = (rows: readonly PortalRecording[]): PortalRecording[] =>
   rows.filter((r, i, all) => all.findIndex((x) => x.lesson_id === r.lesson_id) === i);
 
-const reduced = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 /**
  * A row far down picks a lesson whose card sits above it: the card comes into view (smoothly,
  * unless motion is reduced) so the family sees what changed. A card in view stays still.
  */
 function bringIntoView(el: HTMLElement | null): void {
   if (!el || el.getBoundingClientRect().top >= 0) return;
-  el.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' });
+  el.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
 }
 
 function List({ data, student, onOpenReport }: Props & { data: PortalRecordings }) {

@@ -30,18 +30,18 @@ test.describe('lesson files and recordings on the family host', () => {
     await studentSignIn(page, family);
 
     await page.getByRole('tab', { name: P.app.child.attendedSelf }).click();
-    await page.getByRole('button', { name: F.title }).first().click();
+    await page.getByRole('button', { name: F.title, exact: true }).first().click();
     await expect(page).toHaveURL(/\/lesson\/[^/?]+\?studentId=/);
     await expect(page.getByRole('heading', { level: 1, name: /^حلقة / })).toBeVisible();
     await expect(page.getByText(F.header.replace('{n}', '1'))).toBeVisible();
     await expect(page.getByText(F.reportPdf)).toBeVisible();
-    await expect(page.getByRole('button', { name: P.openPdf })).toBeVisible();
+    await expect(page.getByRole('button', { name: P.openPdf, exact: true })).toBeVisible();
     await expect(page.locator('audio, video')).toHaveCount(0);
     await page.getByRole('button', { name: ar.common.back, exact: true }).click();
     await expect(page).toHaveURL(/\/portal/);
 
     await page.goto(`${FAMILY_URL}/recordings/${family.first.id}`);
-    await expect(page.getByRole('heading', { name: F.recordings })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: F.recordings, exact: true })).toBeVisible();
     await expect(page.getByText(F.empty)).toBeVisible();
     await page.context().close();
   });

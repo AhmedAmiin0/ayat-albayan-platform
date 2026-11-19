@@ -45,6 +45,7 @@ function Call({ join, make = createLivekitRoom, kit, media, onRejoin, onBack, re
   return (
     <RoomClosing
       kind={kind}
+      variant={kit.variant}
       failure={kind === 'failed' ? room.failure : null}
       context={kit.context}
       onRejoin={onRejoin}

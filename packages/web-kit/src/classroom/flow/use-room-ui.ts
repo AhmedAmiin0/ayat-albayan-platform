@@ -9,6 +9,8 @@ export interface RoomUi {
   open: (panel: RoomPanelName) => void;
   /** The same button again closes its panel (the chat). */
   toggle: (panel: RoomPanelName) => void;
+  /** «المشاركون»: opens the staff drawer; the family's side panel closes on the same button. */
+  people: () => void;
   close: () => void;
   /** «تغادر الحلقة؟» is on screen. */
   asking: boolean;
@@ -22,10 +24,12 @@ export interface RoomUi {
 export function useRoomUi(features: RoomFeatures, leaveNow: () => void): RoomUi {
   const [panel, setPanel] = useState<RoomPanelName | null>(null);
   const [asking, setAsking] = useState(false);
+  const toggle = (next: RoomPanelName) => setPanel((cur) => (cur === next ? null : next));
   return {
     panel,
     open: setPanel,
-    toggle: (next) => setPanel((cur) => (cur === next ? null : next)),
+    toggle,
+    people: () => (features.sidePanel ? toggle : setPanel)('people'),
     close: () => setPanel(null),
     asking,
     leave: features.confirmLeave ? () => setAsking(true) : leaveNow,

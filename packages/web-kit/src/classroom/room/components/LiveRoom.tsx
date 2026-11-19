@@ -56,6 +56,7 @@ export function LiveRoom({ room, join, kit = STAFF_KIT }: Props) {
             slots={tools.slots}
             board={<BoardStage board={board} room={room} requests={share} />}
             waiting={{ on: waiting, note: kit.context?.waiting }}
+            wideStrip={kit.features.wideStrip}
           />
         </div>
         {kit.features.sidePanel && tab && (
@@ -74,7 +75,7 @@ export function LiveRoom({ room, join, kit = STAFF_KIT }: Props) {
         board={board}
         role={join.role}
         share={share}
-        onPeople={() => ui.toggle('people')}
+        onPeople={ui.people}
         onRecordings={tools.recordingsFor === null ? undefined : () => ui.open('recordings')}
         chat={chatControl(kit, ui)}
         onLeave={ui.leave}

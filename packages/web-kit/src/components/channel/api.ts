@@ -10,9 +10,9 @@ import {
   type ChannelAudience,
 } from '@ab/client-core';
 import {
+  channelMessageViewSchema,
   channelPageSchema,
   type ChannelAttachmentInput,
-  type ChannelMessageView,
   type TeacherChannelRow,
 } from '@ab/shared';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
@@ -52,14 +52,16 @@ export interface ChannelSend {
   attachment?: ChannelAttachmentInput | undefined;
 }
 
-/** POST …/messages (channelPostSchema): the optional fields only when set. */
+const storedMessage = (r: unknown) => channelMessageViewSchema.parse(r);
+
+/** POST …/messages (channelPostSchema): the optional fields only when set; the stored message. */
 export const sendChannelMessage = (ref: ChannelRef, send: ChannelSend) =>
-  apiSend<ChannelMessageView>('POST', channelMessagesPath(ref), {
+  apiSend('POST', channelMessagesPath(ref), {
     body: send.body,
     client_id: send.clientId,
     ...(send.replyToId ? { reply_to_id: send.replyToId } : {}),
     ...(send.attachment ? { attachment: send.attachment } : {}),
-  });
+  }).then(storedMessage);
 
 /** Read up to the newest message shown (the API never moves the mark past now). */
 export const markChannelRead = ({ audience, studentId, at }: ChannelRef & { at: string }) =>
