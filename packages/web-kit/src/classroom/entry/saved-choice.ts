@@ -29,6 +29,15 @@ export function readSavedChoice(): MediaChoice | null {
   }
 }
 
+/**
+ * What «انضم الآن» joins with, and whether to remember it: a device that was refused or missing
+ * is never remembered as «off», so the check shows again next time (after allowing it).
+ */
+export interface JoinPick {
+  media: MediaChoice;
+  remember: boolean;
+}
+
 export function saveChoice(choice: MediaChoice): void {
   try {
     localStorage.setItem(MEDIA_CHOICE_KEY, JSON.stringify(choice));

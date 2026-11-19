@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { BOTH_ON, type MediaChoice } from '@ab/web-kit/classroom/room/components/room-types';
-import { readSavedChoice, saveChoice } from './saved-choice';
+import { readSavedChoice, saveChoice, type JoinPick } from './saved-choice';
 
 export interface RoomEntry {
   /** What the room connects with; null while «قبل الدخول» is still on screen. */
   media: MediaChoice | null;
-  /** «انضم الآن»: remembered, so the next join (and «ادخل مرة أخرى») goes straight in. */
-  choose: (media: MediaChoice) => void;
+  /**
+   * «انضم الآن»: remembered (unless a device had a problem), so the next join (and «ادخل مرة
+   * أخرى») goes straight in.
+   */
+  choose: (pick: JoinPick) => void;
 }
 
 /**
@@ -19,8 +22,8 @@ export function useRoomEntry(deviceCheck: boolean): RoomEntry {
   );
   return {
     media,
-    choose: (next) => {
-      saveChoice(next);
+    choose: ({ media: next, remember }) => {
+      if (remember) saveChoice(next);
       setMedia(next);
     },
   };

@@ -41,6 +41,8 @@ describe('«قبل الدخول» (the family room, board FamRoomWebCheck)', () 
     await screen.findByText(t.classroom.error.cam_denied);
     fireEvent.click(join());
     expect(c.connect).toHaveBeenCalledWith('wss://lk.test', 'tok', expect.objectContaining({ mic: true, cam: false }));
+    // Never remembered as «off»: the check shows again next time, after allowing the camera.
+    expect(localStorage.getItem(MEDIA_CHOICE_KEY)).toBeNull();
   });
 
   it('a browser without camera or microphone says so', async () => {
