@@ -11,7 +11,7 @@ import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { LessonAction } from '@ab/web-kit/portal/lessons/LessonAction';
 import { LessonOptionsBar } from '@ab/web-kit/portal/lessons/options/LessonOptionsBar';
 import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
-import { LessonMark } from './LessonMark';
+import { FamilyChip } from '@ab/web-kit/portal/lessons/options/FamilyChip';
 
 /** The join button lights up by itself at the window (canvas Schedule «ادخل»). */
 const TICK_MS = 1_000;
@@ -42,7 +42,7 @@ export function AgendaLesson({ entry, guardian }: AgendaLessonProps) {
       <li>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-body font-semibold tabular-nums">{range}</p>
-          <LessonMark lesson={lesson} />
+          <FamilyChip lesson={lesson} />
         </div>
         <p className="text-sm text-ink-2">
           {L.teacher.replace('{name}', teacherLabel(lesson.teacher))}

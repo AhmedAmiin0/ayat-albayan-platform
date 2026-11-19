@@ -25,7 +25,7 @@ export function HomePage({ student, kind, tab, onTab }: Props) {
     <div className="grid gap-4">
       <ChildHead student={student} over={own ? t.portal.app.home.greeting : undefined} />
       <NextLessonCard student={student} own={own} />
-      <ChildBody student={student} kind={kind} tab={tab} onTab={onTab} />
+      <ChildBody student={student} kind={kind} tab={tab} onTab={onTab} exceptNext />
     </div>
   );
 }

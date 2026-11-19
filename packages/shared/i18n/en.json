@@ -118,7 +118,8 @@
       },
       "home": {
         "greeting": "Welcome",
-        "open": "Open {name}'s page"
+        "open": "Open {name}'s page",
+        "noMore": "No other lessons in the coming days."
       },
       "lesson": {
         "today": "Today",

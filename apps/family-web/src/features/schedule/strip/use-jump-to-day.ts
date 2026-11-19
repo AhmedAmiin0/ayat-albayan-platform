@@ -28,6 +28,8 @@ function scrollToDay(day: string): void {
   const section = document.getElementById(dayId(day));
   if (!section) return;
   section.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
+  // Keyboard and screen-reader users land on the day too (it is tabIndex -1).
+  section.focus({ preventScroll: true });
   flash(section);
 }
 

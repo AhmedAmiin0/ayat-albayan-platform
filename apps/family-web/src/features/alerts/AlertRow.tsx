@@ -42,7 +42,7 @@ export function AlertRow({ alert, kind, tz, onRead }: Props) {
             'relative grid w-full gap-1 p-3 ps-4',
             // Unread: a lapis bar at the inline-start and the title in semibold ink (not a tint
             // alone, audit 2026-11-19: read vs unread was 1.00:1); read: the title in ink-2.
-            'before:absolute before:inset-y-3 before:start-0 before:w-1 before:rounded-full',
+            'before:absolute before:inset-y-3 before:start-1 before:w-1 before:rounded-full',
             unread && 'before:bg-lapis',
           )}
         >

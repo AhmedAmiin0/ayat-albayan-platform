@@ -11,7 +11,7 @@ export const cardClass = 'rounded-lg border border-rule bg-raised shadow-page';
 /** A card the whole of which is one tap: pressed feedback (motion.css) and a hover edge. */
 export const pressableClass =
   'ab-press cursor-pointer text-start hover:border-rule-strong hover:bg-sunk/60 ' +
-  'transition-[transform,background-color,border-color]';
+  'transition-[transform,background-color,border-color] duration-(--duration-press) ease-ink';
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
   /** Render the child element (an <li>, <article>, <Link>, <button>) with the card's look. */

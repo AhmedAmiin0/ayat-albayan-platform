@@ -18,7 +18,12 @@ export function AgendaDay({ day, today, guardian }: AgendaDayProps) {
   const text = longDay(day.day);
   const id = dayId(day.day);
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="relative grid scroll-mt-20 gap-2">
+    <section
+      id={id}
+      tabIndex={-1}
+      aria-labelledby={`${id}-title`}
+      className="relative grid scroll-mt-20 gap-2 focus:outline-none"
+    >
       <span
         data-flash
         aria-hidden="true"

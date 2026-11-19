@@ -19,8 +19,8 @@ export function placeIndicator(indicator: HTMLElement, target: HTMLElement): voi
 }
 
 /**
- * The selected choice's ref: moves its host's indicator onto it, and again whenever the host
- * resizes (a rotated phone, a longer label). A ref callback's cleanup stops the watching.
+ * The selected choice's ref: moves its host's indicator onto it, and again whenever the host or
+ * the choice resizes or the choices change. A ref callback's cleanup stops the watching.
  */
 export function followSelected(el: HTMLElement | null): (() => void) | undefined {
   const placing = el ? placingOf(el) : null;
@@ -42,7 +42,15 @@ function placingOf(el: HTMLElement): Placing | null {
 function watchHost({ el, host, bar }: Placing): () => void {
   const place = () => placeIndicator(bar, el);
   place();
-  const watch = typeof ResizeObserver === 'function' ? new ResizeObserver(place) : null;
-  watch?.observe(host);
-  return () => watch?.disconnect();
+  // A resize of the host or the choice (a bold label), or a choice added before it (the bar's
+  // «التقارير» arriving), moves it: place it again.
+  const resized = typeof ResizeObserver === 'function' ? new ResizeObserver(place) : null;
+  const moved = typeof MutationObserver === 'function' ? new MutationObserver(place) : null;
+  resized?.observe(host);
+  resized?.observe(el);
+  moved?.observe(host, { childList: true, subtree: true });
+  return () => {
+    resized?.disconnect();
+    moved?.disconnect();
+  };
 }
