@@ -9,7 +9,7 @@
     "./auth/use-auth-gate": "./src/auth/use-auth-gate.ts",
     "./auth/use-permissions": "./src/auth/use-permissions.ts",
     "./channel/media": "./src/channel/media/index.ts",
-    "./lib/audio": "./src/lib/audio/index.ts",
+    "./chat-ui/audio": "./src/chat-ui/audio/index.ts",
     "./lib/clock/device-clock": "./src/lib/clock/device-clock.ts",
     "./lib/http/access-token": "./src/lib/http/access-token.ts",
     "./lib/http/api": "./src/lib/http/api.ts",

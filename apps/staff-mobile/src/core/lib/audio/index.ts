@@ -5,4 +5,4 @@ export {
   ensureAudioMode,
   releasePlayback,
   voiceOptions,
-} from '@ab/mobile-kit/lib/audio';
+} from '@ab/mobile-kit/chat-ui/audio';

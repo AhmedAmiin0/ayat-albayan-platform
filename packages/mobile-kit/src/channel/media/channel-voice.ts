@@ -12,8 +12,8 @@ import {
   type AudioRecorder,
   type AudioStatus,
 } from 'expo-audio';
-import { claimPlayback, releasePlayback } from '../../lib/audio/playback';
-import { voiceOptions } from '../../lib/audio/voice-options';
+import { claimPlayback, releasePlayback } from '../../chat-ui/audio/playback';
+import { voiceOptions } from '../../chat-ui/audio/voice-options';
 
 // The student chat's voice notes on both phones (expo-audio 57): the inbox's recording preset
 // (AAC in MP4, mono, 48 kbps), a recorder made on the first tap (never at mount: an older APK

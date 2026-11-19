@@ -25,10 +25,10 @@ const mockPlayer = {
   }),
 };
 const mockClaim = jest.fn();
-jest.mock('../../lib/audio/voice-options', () => ({
+jest.mock('../../chat-ui/audio/voice-options', () => ({
   voiceOptions: () => ({ numberOfChannels: 1 }),
 }));
-jest.mock('../../lib/audio/playback', () => ({
+jest.mock('../../chat-ui/audio/playback', () => ({
   claimPlayback: (...args: unknown[]) => mockClaim(...args),
   releasePlayback: jest.fn(),
 }));
