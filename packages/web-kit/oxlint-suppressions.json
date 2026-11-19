@@ -331,14 +331,6 @@
       "count": 1
     }
   },
-  "src/classroom/room/components/LiveRoom.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/components/ParticipantGrid.tsx": {
     "stylistic/max-len": {
       "count": 1
