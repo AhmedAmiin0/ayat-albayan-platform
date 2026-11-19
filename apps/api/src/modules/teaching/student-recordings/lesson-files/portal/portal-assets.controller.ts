@@ -1,11 +1,16 @@
-import type { PortalFileUrl, PortalLessonAssets, PortalRecordings } from '@ab/shared';
+import {
+  portalLessonFileUrlQuerySchema,
+  type PortalFileUrl, type PortalLessonAssets, type PortalLessonFileUrlQuery, type PortalRecordings,
+} from '@ab/shared';
 import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodParam } from '@/common/http/zod-inputs';
+import { ZodParam, ZodParams, ZodQuery } from '@/common/http/zod-inputs';
 import { PortalAssetsService } from './portal-assets.service';
+
+const fileParams = z.object({ id: z.uuid(), fileId: z.uuid() });
 
 /** «التسجيلات» and «ملفات الحلقة» of the family portal: same scope key as PortalController. */
 @ApiTags('portal')
@@ -33,13 +38,15 @@ export class PortalAssetsController {
     return this.assets.lesson({ user, studentId, lessonId });
   }
 
+  /** `?download=<name>`: the link saves the file under that name («تنزيل»), not shown. */
   @Post('lesson-files/:fileId/url')
   @HttpCode(200)
   fileUrl(
-    @ZodParam('id', z.uuid()) studentId: string,
-    @ZodParam('fileId', z.uuid()) fileId: string,
+    @ZodParams(fileParams) params: z.output<typeof fileParams>,
+    @ZodQuery(portalLessonFileUrlQuerySchema) query: PortalLessonFileUrlQuery,
     @CurrentUser() user: AuthUser,
   ): Promise<PortalFileUrl> {
-    return this.assets.fileUrl({ user, studentId, fileId });
+    const { id: studentId, fileId } = params;
+    return this.assets.fileUrl({ user, studentId, fileId, download: query.download });
   }
 }

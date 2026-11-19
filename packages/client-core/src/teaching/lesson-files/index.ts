@@ -8,3 +8,7 @@ export {
   partChoices, partsByLesson, recordingMinutes, recordingMonths, type PartWords,
 } from './recording-months.js';
 export { fileLineOf, fileTitleOf, megabytes, type FileWords } from './file-size.js';
+export {
+  downloadName, hasVideo, partIdsByLesson, viewableFiles, viewerPage, ZOOM, zoomBy,
+  type ViewerPage,
+} from './file-viewer.js';

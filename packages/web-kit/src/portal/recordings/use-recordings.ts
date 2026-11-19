@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { portalApi, portalAssets } from '@ab/web-kit/portal/api';
-import { openAfter } from '@ab/web-kit/portal/open-file';
 
 /** A signed link lasts an hour; it is minted again after 50 minutes. */
 const LINK_FRESH_MS = 50 * 60_000;
@@ -27,10 +26,16 @@ export const useLessonFileUrl = (input: { studentId: string; fileId: string }) =
     staleTime: LINK_FRESH_MS,
   });
 
-/** A picture or a PDF in a new tab. */
-export function useOpenLessonFile(studentId: string) {
+/**
+ * «تنزيل»: a link that saves the file under `name` (Content-Disposition: attachment), so the page
+ * stays where it is while the browser saves it.
+ */
+export function useSaveLessonFile(studentId: string) {
   return useMutation({
-    mutationFn: (fileId: string) =>
-      openAfter(async () => (await portalAssets.lessonFileUrl({ studentId, fileId })).url),
+    mutationFn: async (input: { fileId: string; name: string }) => {
+      const { fileId, name } = input;
+      const link = await portalAssets.lessonFileUrl({ studentId, fileId, download: name });
+      window.location.assign(link.url);
+    },
   });
 }

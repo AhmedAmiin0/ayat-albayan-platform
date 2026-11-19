@@ -36,7 +36,7 @@ export function ReportView({ studentId, report, onBack }: Props) {
       </Button>
       <h2 className="font-display text-h3 font-bold">{t.portal.reportTitle}</h2>
       <LessonReportView reportId={report.reportId} head fallback={fallback} />
-      <FileButtons studentId={studentId} files={recording} />
+      <FileButtons studentId={studentId} files={recording} icons />
     </section>
   );
 }

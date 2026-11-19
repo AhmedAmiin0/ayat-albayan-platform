@@ -20,7 +20,9 @@ import { Route as FamilyReportsRouteImport } from './routes/_family/reports'
 import { Route as FamilyScheduleRouteImport } from './routes/_family/schedule'
 import { Route as FamilyChildrenIndexRouteImport } from './routes/_family/children/index'
 import { Route as FamilyChildrenStudentIdRouteImport } from './routes/_family/children/$studentId'
+import { Route as FamilyLessonLessonIdRouteImport } from './routes/_family/lesson.$lessonId'
 import { Route as FamilyPackageStudentIdRouteImport } from './routes/_family/package.$studentId'
+import { Route as FamilyRecordingsStudentIdRouteImport } from './routes/_family/recordings.$studentId'
 import { Route as FamilyReportReportIdRouteImport } from './routes/_family/report.$reportId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -77,11 +79,22 @@ const FamilyChildrenStudentIdRoute = FamilyChildrenStudentIdRouteImport.update({
   path: '/children/$studentId',
   getParentRoute: () => FamilyRoute,
 } as any)
+const FamilyLessonLessonIdRoute = FamilyLessonLessonIdRouteImport.update({
+  id: '/lesson/$lessonId',
+  path: '/lesson/$lessonId',
+  getParentRoute: () => FamilyRoute,
+} as any)
 const FamilyPackageStudentIdRoute = FamilyPackageStudentIdRouteImport.update({
   id: '/package/$studentId',
   path: '/package/$studentId',
   getParentRoute: () => FamilyRoute,
 } as any)
+const FamilyRecordingsStudentIdRoute =
+  FamilyRecordingsStudentIdRouteImport.update({
+    id: '/recordings/$studentId',
+    path: '/recordings/$studentId',
+    getParentRoute: () => FamilyRoute,
+  } as any)
 const FamilyReportReportIdRoute = FamilyReportReportIdRouteImport.update({
   id: '/report/$reportId',
   path: '/report/$reportId',
@@ -98,7 +111,9 @@ export interface FileRoutesByFullPath {
   '/reports': typeof FamilyReportsRoute
   '/schedule': typeof FamilyScheduleRoute
   '/children/$studentId': typeof FamilyChildrenStudentIdRoute
+  '/lesson/$lessonId': typeof FamilyLessonLessonIdRoute
   '/package/$studentId': typeof FamilyPackageStudentIdRoute
+  '/recordings/$studentId': typeof FamilyRecordingsStudentIdRoute
   '/report/$reportId': typeof FamilyReportReportIdRoute
   '/children/': typeof FamilyChildrenIndexRoute
 }
@@ -112,7 +127,9 @@ export interface FileRoutesByTo {
   '/reports': typeof FamilyReportsRoute
   '/schedule': typeof FamilyScheduleRoute
   '/children/$studentId': typeof FamilyChildrenStudentIdRoute
+  '/lesson/$lessonId': typeof FamilyLessonLessonIdRoute
   '/package/$studentId': typeof FamilyPackageStudentIdRoute
+  '/recordings/$studentId': typeof FamilyRecordingsStudentIdRoute
   '/report/$reportId': typeof FamilyReportReportIdRoute
   '/children': typeof FamilyChildrenIndexRoute
 }
@@ -128,7 +145,9 @@ export interface FileRoutesById {
   '/_family/reports': typeof FamilyReportsRoute
   '/_family/schedule': typeof FamilyScheduleRoute
   '/_family/children/$studentId': typeof FamilyChildrenStudentIdRoute
+  '/_family/lesson/$lessonId': typeof FamilyLessonLessonIdRoute
   '/_family/package/$studentId': typeof FamilyPackageStudentIdRoute
+  '/_family/recordings/$studentId': typeof FamilyRecordingsStudentIdRoute
   '/_family/report/$reportId': typeof FamilyReportReportIdRoute
   '/_family/children/': typeof FamilyChildrenIndexRoute
 }
@@ -144,7 +163,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schedule'
     | '/children/$studentId'
+    | '/lesson/$lessonId'
     | '/package/$studentId'
+    | '/recordings/$studentId'
     | '/report/$reportId'
     | '/children/'
   fileRoutesByTo: FileRoutesByTo
@@ -158,7 +179,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schedule'
     | '/children/$studentId'
+    | '/lesson/$lessonId'
     | '/package/$studentId'
+    | '/recordings/$studentId'
     | '/report/$reportId'
     | '/children'
   id:
@@ -173,7 +196,9 @@ export interface FileRouteTypes {
     | '/_family/reports'
     | '/_family/schedule'
     | '/_family/children/$studentId'
+    | '/_family/lesson/$lessonId'
     | '/_family/package/$studentId'
+    | '/_family/recordings/$studentId'
     | '/_family/report/$reportId'
     | '/_family/children/'
   fileRoutesById: FileRoutesById
@@ -263,11 +288,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FamilyChildrenStudentIdRouteImport
       parentRoute: typeof FamilyRoute
     }
+    '/_family/lesson/$lessonId': {
+      id: '/_family/lesson/$lessonId'
+      path: '/lesson/$lessonId'
+      fullPath: '/lesson/$lessonId'
+      preLoaderRoute: typeof FamilyLessonLessonIdRouteImport
+      parentRoute: typeof FamilyRoute
+    }
     '/_family/package/$studentId': {
       id: '/_family/package/$studentId'
       path: '/package/$studentId'
       fullPath: '/package/$studentId'
       preLoaderRoute: typeof FamilyPackageStudentIdRouteImport
+      parentRoute: typeof FamilyRoute
+    }
+    '/_family/recordings/$studentId': {
+      id: '/_family/recordings/$studentId'
+      path: '/recordings/$studentId'
+      fullPath: '/recordings/$studentId'
+      preLoaderRoute: typeof FamilyRecordingsStudentIdRouteImport
       parentRoute: typeof FamilyRoute
     }
     '/_family/report/$reportId': {
@@ -288,7 +327,9 @@ interface FamilyRouteChildren {
   FamilyReportsRoute: typeof FamilyReportsRoute
   FamilyScheduleRoute: typeof FamilyScheduleRoute
   FamilyChildrenStudentIdRoute: typeof FamilyChildrenStudentIdRoute
+  FamilyLessonLessonIdRoute: typeof FamilyLessonLessonIdRoute
   FamilyPackageStudentIdRoute: typeof FamilyPackageStudentIdRoute
+  FamilyRecordingsStudentIdRoute: typeof FamilyRecordingsStudentIdRoute
   FamilyReportReportIdRoute: typeof FamilyReportReportIdRoute
   FamilyChildrenIndexRoute: typeof FamilyChildrenIndexRoute
 }
@@ -301,7 +342,9 @@ const FamilyRouteChildren: FamilyRouteChildren = {
   FamilyReportsRoute: FamilyReportsRoute,
   FamilyScheduleRoute: FamilyScheduleRoute,
   FamilyChildrenStudentIdRoute: FamilyChildrenStudentIdRoute,
+  FamilyLessonLessonIdRoute: FamilyLessonLessonIdRoute,
   FamilyPackageStudentIdRoute: FamilyPackageStudentIdRoute,
+  FamilyRecordingsStudentIdRoute: FamilyRecordingsStudentIdRoute,
   FamilyReportReportIdRoute: FamilyReportReportIdRoute,
   FamilyChildrenIndexRoute: FamilyChildrenIndexRoute,
 }

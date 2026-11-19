@@ -13,3 +13,4 @@ export {
 } from './player-state.js';
 export { resumeStore, type ResumeStorage, type ResumeStore } from './resume-store.js';
 export { listenText, type ListenWords } from './listen-text.js';
+export { nowPlayingStore, type NowPlaying } from './now-playing.js';

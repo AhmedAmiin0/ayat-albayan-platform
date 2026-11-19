@@ -9612,6 +9612,24 @@
     "size": "Size: {size}",
     "waiting": "Waiting"
   },
+  "familyFiles": {
+    "download": "Download",
+    "openTab": "Open in a new tab",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomLevel": "{n}%",
+    "prevFile": "Previous file",
+    "nextFile": "Next file",
+    "pageOf": "{n} of {total}",
+    "pdfFrame": "Preview of {title}",
+    "playing": "Playing",
+    "fullscreen": "Full screen",
+    "videoMark": "Video",
+    "audioMark": "Audio",
+    "videoChip": "Video recording · {minutes} min",
+    "watched": "Watched in full",
+    "mixedHint": "Audio and video recordings of lessons held in the academy room. They open in the app and resume where you stopped."
+  },
   "testAccounts": {
     "chip": "Test",
     "userSwitch": "Test account",

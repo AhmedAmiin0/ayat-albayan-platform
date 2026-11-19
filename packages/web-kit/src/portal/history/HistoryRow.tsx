@@ -1,5 +1,6 @@
 import { isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
@@ -11,6 +12,8 @@ interface Props {
   row: PortalHistoryRow;
   student: PortalStudent;
   onOpenReport: (report: OpenReport) => void;
+  /** The lesson's own page (the family web): «ملفات الحلقة» beside the report. */
+  onOpenLesson?: (lessonId: string) => void;
 }
 
 /** «جديد» beside a report not opened in this browser yet. */
@@ -21,7 +24,7 @@ const NewMark = () => (
 );
 
 /** An attended lesson's report (with «جديد» until opened here); the recording rides with it. */
-function ReportAction({ row, onOpenReport }: Omit<Props, 'student'>) {
+function ReportAction({ row, onOpenReport, onOpenLesson }: Omit<Props, 'student'>) {
   const seen = useSeenReports();
   const reportId = row.report_id;
   if (!reportId) return null;
@@ -35,6 +38,12 @@ function ReportAction({ row, onOpenReport }: Omit<Props, 'student'>) {
         {t.portal.openReport}
       </Button>
       {isNewReport(reportId, seen) && <NewMark />}
+      {onOpenLesson && (
+        <Button type="button" variant="ghost" size="sm" onClick={() => onOpenLesson(row.lesson_id)}>
+          <Icon name="template" />
+          {t.lessonFiles.title}
+        </Button>
+      )}
     </div>
   );
 }
@@ -54,7 +63,7 @@ function AbsenceLines({ row }: { row: PortalHistoryRow }) {
 }
 
 /** One past lesson: when, with whom, then its report or its absence. */
-export function HistoryRow({ row, student, onOpenReport }: Props) {
+export function HistoryRow({ row, student, ...open }: Props) {
   return (
     <li className="grid gap-2 rounded-lg border border-rule bg-raised p-4">
       <LessonWhen startsAt={row.starts_at} tz={student.tz} />
@@ -62,7 +71,7 @@ export function HistoryRow({ row, student, onOpenReport }: Props) {
         {t.portal.withTeacher.replace('{teacher}', teacherLabel(row.teacher))}
       </p>
       {row.outcome === 'attended' ? (
-        <ReportAction row={row} onOpenReport={onOpenReport} />
+        <ReportAction row={row} {...open} />
       ) : (
         <AbsenceLines row={row} />
       )}

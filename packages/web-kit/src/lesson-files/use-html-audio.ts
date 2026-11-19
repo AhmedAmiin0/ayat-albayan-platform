@@ -1,7 +1,8 @@
 import {
   initialPlayer, playerReducer, type PlayerEvent, type PlayerSpeed, type PlayerState,
 } from '@ab/client-core';
-import { useReducer, useState, type SyntheticEvent } from 'react';
+import { useEffect, useReducer, useState, type SyntheticEvent } from 'react';
+import { nowPlaying } from './use-now-playing';
 import { saveResume } from './use-resume';
 
 /** Saved at most this often while the file plays. */
@@ -11,12 +12,15 @@ const SAVE_EVERY_SECONDS = 5;
 const crossed = (before: number, now: number): boolean =>
   Math.floor(before / SAVE_EVERY_SECONDS) !== Math.floor(now / SAVE_EVERY_SECONDS);
 
+type MediaEvent = SyntheticEvent<HTMLMediaElement>;
+
 export interface HtmlAudio {
-  /** Spread on the <audio>: its element and the media events that drive the reducer. */
+  /** Spread on the <audio> or <video>: its element and the media events that drive the reducer. */
   media: {
-    ref: (el: HTMLAudioElement | null) => void;
-    onLoadedMetadata: (e: SyntheticEvent<HTMLAudioElement>) => void;
-    onTimeUpdate: (e: SyntheticEvent<HTMLAudioElement>) => void;
+    ref: (el: HTMLMediaElement | null) => void;
+    onLoadedMetadata: (e: MediaEvent) => void;
+    onTimeUpdate: (e: MediaEvent) => void;
+    onPause: (e: MediaEvent) => void;
     onEnded: () => void;
     onError: () => void;
   };
@@ -31,22 +35,27 @@ export interface HtmlAudio {
 }
 
 /**
- * The web player over an <audio> element (owner 2026-11-17): the same reducer as the app's,
- * the stop saved on pause, skip, the end and every few seconds of play.
+ * The web player over an <audio> or <video> element (owner 2026-11-17): the same reducer as the
+ * app's, the stop saved on pause, skip, the end and every few seconds of play. One player sounds
+ * at a time: starting this one stops the page's other player (use-now-playing).
  */
 export function useHtmlAudio(input: { id: string; startAt: number }): HtmlAudio {
+  const { id } = input;
   const [startAt] = useState(input.startAt);
   const [state, dispatch] = useReducer(playerReducer, initialPlayer(startAt));
-  const [element, setElement] = useState<HTMLAudioElement | null>(null);
+  const [element, setElement] = useState<HTMLMediaElement | null>(null);
+  // Leaving the page (or another lesson) takes the player off the stage.
+  useEffect(() => () => nowPlaying.release(id), [id]);
   const save = (s: PlayerState): void =>
-    saveResume({ id: input.id, position: s.position, duration: s.duration });
-  const send = (event: PlayerEvent, effect: (s: PlayerState, media: HTMLAudioElement) => void) => {
+    saveResume({ id, position: s.position, duration: s.duration });
+  const send = (event: PlayerEvent, effect: (s: PlayerState, media: HTMLMediaElement) => void) => {
     const next = playerReducer(state, event);
     dispatch(event);
     if (element) effect(next, element);
   };
   const playing = state.status === 'playing';
   const failed = (): void => dispatch({ type: 'failed' });
+  const stopped = (): void => nowPlaying.release(id);
   return {
     state,
     media: {
@@ -60,26 +69,35 @@ export function useHtmlAudio(input: { id: string; startAt: number }): HtmlAudio 
         dispatch({ type: 'time', position });
         if (crossed(state.position, position)) save({ ...state, position });
       },
+      // Paused from outside (another player started): the button follows, the stop is kept.
+      onPause: (e) => {
+        stopped();
+        if (!playing) return;
+        dispatch({ type: 'pause' });
+        save({ ...state, position: e.currentTarget.currentTime });
+      },
       onEnded: () => send({ type: 'ended' }, save),
       onError: failed,
     },
-    controls: controlsOf({ send, save, playing, failed }),
+    controls: controlsOf({ send, save, playing, failed, id }),
   };
 }
 
 interface ControlDeps {
-  send: (event: PlayerEvent, effect: (s: PlayerState, media: HTMLAudioElement) => void) => void;
+  send: (event: PlayerEvent, effect: (s: PlayerState, media: HTMLMediaElement) => void) => void;
   save: (s: PlayerState) => void;
   playing: boolean;
   failed: () => void;
+  id: string;
 }
 
 /** The buttons: each moves the reducer, then the element. */
-function controlsOf({ send, save, playing, failed }: ControlDeps): HtmlAudio['controls'] {
-  const play = (media: HTMLAudioElement): void => {
+function controlsOf({ send, save, playing, failed, id }: ControlDeps): HtmlAudio['controls'] {
+  const play = (media: HTMLMediaElement): void => {
+    nowPlaying.claim({ id, stop: () => media.pause() });
     media.play().catch(failed);
   };
-  const pause = (media: HTMLAudioElement): void => {
+  const pause = (media: HTMLMediaElement): void => {
     media.pause();
   };
   return {

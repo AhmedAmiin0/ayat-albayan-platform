@@ -1,11 +1,12 @@
 import type { PortalLessonFile } from '@ab/shared';
+import { useState, type ReactNode } from 'react';
+import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
 import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { fileLine, fileTitle } from '@ab/web-kit/lesson-files/file-words';
 import { FileButtons } from '@ab/web-kit/portal/report/FileButtons';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { VoiceNotePlayer } from './RecordingPlayer';
-import { useOpenLessonFile } from './use-recordings';
+import { FileViewer } from './viewer/FileViewer';
 
 const F = t.lessonFiles;
 
@@ -16,45 +17,55 @@ interface Props {
   files: readonly PortalLessonFile[];
 }
 
+/** One item: the name and its line at the start, its button at the end (wraps on a phone). */
+function Item({ title, line, action }: { title: string; line?: string; action: ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+      <div className="grid min-w-0 gap-0.5">
+        <p className="text-sm font-semibold text-ink">{title}</p>
+        {line && <p className="text-xs text-ink-3">{line}</p>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
 /**
- * «ملفات الحلقة · 4» for the family: the report's PDF first, then a voice note plays here and a
- * picture or PDF opens in a new tab.
+ * «ملفات الحلقة · 4» for the family (board FamFilesWebLesson): the report's PDF first, then a
+ * voice note plays here and a picture or a PDF opens in the viewer on the page.
  */
 export function PortalFileList({ studentId, reportId, files }: Props) {
-  const open = useOpenLessonFile(studentId);
+  const [viewing, setViewing] = useState<string | null>(null);
   const count = files.length + (reportId ? 1 : 0);
   if (count === 0) return null;
+  const open = (id: string) => (
+    <Button type="button" variant="secondary" size="sm" onClick={() => setViewing(id)}>
+      {F.open}
+    </Button>
+  );
   return (
     <section aria-label={F.title} className="grid gap-2">
-      <h3 className="text-sm font-bold">{F.header.replace('{n}', String(count))}</h3>
-      <ul className="grid gap-3">
+      <SectionHeader level={3} title={F.header.replace('{n}', String(count))} />
+      <ul className="grid divide-y divide-rule">
         {reportId && (
-          <li className="grid gap-1">
-            <p className="text-sm font-semibold">{F.reportPdf}</p>
-            <FileButtons studentId={studentId} files={[{ kind: 'reports', id: reportId }]} />
+          <li className="py-3 first:pt-0">
+            <Item title={F.reportPdf} action={
+              <FileButtons studentId={studentId} files={[{ kind: 'reports', id: reportId }]} />
+            } />
           </li>
         )}
         {files.map((file) => (
-          <li key={file.id} className="grid gap-1">
-            <p className="text-sm font-semibold">{fileTitle(file)}</p>
-            <p className="text-xs text-ink-3">{fileLine(file)}</p>
-            {file.media === 'audio' ? (
-              <VoiceNotePlayer studentId={studentId} id={file.id} />
-            ) : (
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                className="justify-self-start"
-                onClick={() => open.mutate(file.id)}
-              >
-                {F.open}
-              </Button>
-            )}
+          <li key={file.id} className="grid gap-3 py-3 first:pt-0">
+            <Item title={fileTitle(file)} line={fileLine(file)}
+              action={file.media === 'audio' ? null : open(file.id)} />
+            {file.media === 'audio' && <VoiceNotePlayer studentId={studentId} id={file.id} />}
           </li>
         ))}
       </ul>
-      {open.isError && <FormAlert>{F.fileFailed}</FormAlert>}
+      {viewing && (
+        <FileViewer studentId={studentId} files={files} openId={viewing}
+          onClose={() => setViewing(null)} />
+      )}
     </section>
   );
 }
