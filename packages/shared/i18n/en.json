@@ -8656,7 +8656,14 @@
       }
     },
     "keyboard": "Keyboard",
-    "closeChat": "Close the chat"
+    "closeChat": "Close the chat",
+    "web": {
+      "sendKey": "to send,",
+      "lineKey": "for a new line",
+      "micDenied": "The microphone is not allowed. Allow it in the browser settings, then try again.",
+      "closePhoto": "Close the photo",
+      "download": "Download the file"
+    }
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",

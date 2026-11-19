@@ -3,7 +3,7 @@ import type {
   ChannelRecorder,
   ChannelVoicePlayer,
   ChannelVoiceStatus,
-} from '@ab/mobile-kit';
+} from '../media-port';
 import {
   AudioModule,
   createAudioPlayer,
@@ -12,9 +12,10 @@ import {
   type AudioRecorder,
   type AudioStatus,
 } from 'expo-audio';
-import { claimPlayback, releasePlayback, voiceOptions } from '@/core/lib/audio';
+import { claimPlayback, releasePlayback } from '../../chat-ui/audio/playback';
+import { voiceOptions } from '../../chat-ui/audio/voice-options';
 
-// The student chat's voice notes on the staff phone (expo-audio 57): the inbox's recording preset
+// The student chat's voice notes on both phones (expo-audio 57): the inbox's recording preset
 // (AAC in MP4, mono, 48 kbps), a recorder made on the first tap (never at mount: an older APK
 // without the native recorder only gets «false»), and one player per note, made on its first tap.
 // As in the inbox, one sound at a time (claimPlayback): a note that starts pauses the other.

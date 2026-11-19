@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { EmojiGrid } from './EmojiGrid';
-import { EMOJI } from './emoji-list';
+import { EMOJI } from '@ab/client-core';
 
 test('every curated emoji is a button named by itself; a tap picks it', async () => {
   const onPick = jest.fn();

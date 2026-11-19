@@ -1,66 +1,48 @@
-import { remainingDraft } from '@ab/client-core';
-import { CHANNEL_BODY_MAX } from '@ab/shared';
-import type { KeyboardEvent, SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useChannelDraft } from './use-channel-draft';
-
-interface Props {
-  /**
-   * The chat's draft key (draftKey): the unsent text survives closing the panel. The thread keys
-   * the composer by it too, so switching the student never carries one chat's text to another.
-   */
-  draft: string;
-  pending: boolean;
-  failed: boolean;
-  /** Resolves once the message is stored; only the text that was sent is cleared then. */
-  onSend: (body: string) => Promise<unknown>;
-}
+import type { SubmitEvent } from 'react';
+import { ComposerHint, ComposerNotes, RoundAction } from './ComposerParts';
+import { ComposerPill } from './ComposerPill';
+import { RecordingBar } from './RecordingBar';
+import { ReplyBar } from './ReplyBar';
+import { useComposer, type ComposerInput } from './use-composer';
 
 /**
- * Esc in the box only leaves the box (never closes the panel around the chat): a second Esc
- * does.
+ * The chat's composer (FamChatWebThread): the reply bar, the send and file errors, then the pill
+ * (emoji, the box, attach) beside the round button (the microphone while empty, «أرسل» once
+ * typed); while recording the pill is the recording bar. Text up to CHANNEL_BODY_MAX characters
+ * (the API trims and checks again).
  */
-const leaveBox = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-  if (e.key !== 'Escape') return;
-  e.stopPropagation();
-  e.currentTarget.blur();
-};
-
-/** Text only, up to CHANNEL_BODY_MAX characters (the API trims and checks again). */
-export function ChannelComposer({ draft, pending, failed, onSend }: Props) {
-  const [text, setText] = useChannelDraft(draft);
-  const body = text.trim();
-  const tooLong = body.length > CHANNEL_BODY_MAX;
+export function ChannelComposer(props: ComposerInput) {
+  const s = useComposer(props);
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
-    if (!body || tooLong || pending) return;
-    const sent = text;
-    void onSend(body).then(
-      () => setText((current) => remainingDraft({ current, sent })),
-      () => undefined,
-    );
+    s.sendText();
   };
+  const empty = s.round === 'send' && s.text.trim() === '';
+  const recording = s.mic.state === 'recording';
   return (
     <form onSubmit={submit} className="grid gap-2 border-t border-rule pt-3">
-      {failed && <FormAlert>{t.studentChannel.sendFailed}</FormAlert>}
-      {tooLong && (
-        <FormAlert>{t.studentChannel.tooLong.replace('{n}', String(CHANNEL_BODY_MAX))}</FormAlert>
-      )}
-      <textarea
-        aria-label={t.studentChannel.messageLabel}
-        dir="auto"
-        rows={2}
-        value={text}
-        placeholder={t.studentChannel.placeholder}
-        onKeyDown={leaveBox}
-        onChange={(e) => setText(e.target.value)}
-        className="min-h-11 w-full resize-y rounded-md border border-input bg-raised px-3 py-2 text-body"
+      {props.reply.to && <ReplyBar to={props.reply.to} onCancel={props.reply.cancel} />}
+      <ComposerNotes
+        problem={props.send.problem ?? s.files.problem}
+        tooLong={s.tooLong}
+        denied={s.mic.state === 'denied'}
+        uploading={s.files.uploading}
       />
-      <Button type="submit" disabled={!body || tooLong || pending} className="justify-self-end">
-        {pending ? t.studentChannel.sending : t.studentChannel.send}
-      </Button>
+      <div className="flex items-end gap-2">
+        {recording ? (
+          <RecordingBar seconds={s.mic.seconds} onCancel={s.mic.cancel} />
+        ) : (
+          <ComposerPill s={s} />
+        )}
+        <RoundAction
+          key={s.round}
+          round={s.round}
+          disabled={empty || s.tooLong || props.send.pending}
+          onMic={() => void s.mic.start()}
+          onVoice={s.finishVoice}
+        />
+      </div>
+      <ComposerHint />
     </form>
   );
 }

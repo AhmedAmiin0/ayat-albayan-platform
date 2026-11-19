@@ -10,12 +10,14 @@ const TEXT = {
   importNames: ['Text'],
   message: 'Use AppText (src/ui/primitives/AppText).',
 };
-// docs/36 «Stays exempt»: the reach wrapper and the connectivity probe call fetch (H-1);
+// docs/36 «Stays exempt»: the reach wrapper and the connectivity probe call fetch (H-1), and the
+// chat's recorded voice note is read from its local file:// copy (channel-voice);
 // supabase-js's transport (a kept SDK, docs/36 §3.2) gets the read deadline.
 const FETCH = [
   'src/lib/http/api.ts',
   'src/lib/http/auth-fetch.ts',
   'src/lib/connectivity/probe.ts',
+  'src/channel/media/channel-voice.ts',
 ];
 
 export default {

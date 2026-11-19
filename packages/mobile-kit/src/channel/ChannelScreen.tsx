@@ -1,4 +1,4 @@
-import { threadMessages, type ChannelAudience } from '@ab/client-core';
+import { headerPeople, threadMessages, type ChannelAudience } from '@ab/client-core';
 import type { ChannelPage, ChannelParticipantView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { t } from '../lib/i18n/i18n';
@@ -6,7 +6,6 @@ import { Screen } from '../ui/layout/Screen';
 import { ChannelThread } from './ChannelThread';
 import { useChannel, type ChannelRef } from './channel-api';
 import { ChannelHeader } from './header/ChannelHeader';
-import { headerPeople } from './header/participants';
 import type { ChannelMediaPort } from './media-port';
 
 interface ChannelScreenProps {

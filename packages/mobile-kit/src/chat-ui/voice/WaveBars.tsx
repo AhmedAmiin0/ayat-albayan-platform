@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { shape, useTheme } from '../../theme';
-import { waveBars } from './voice-math';
+import { waveBars } from '@ab/client-core';
 
 const HEIGHT = 28;
 const DOT = 12;

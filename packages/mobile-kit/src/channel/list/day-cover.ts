@@ -1,6 +1,6 @@
 import type { ViewToken } from 'react-native';
 import { CHIP_MARGIN, type Separator } from '../../chat-ui/days/top-band';
-import type { ChannelRow } from './list-rows';
+import type { ChannelRow } from '@ab/client-core';
 
 type Tokens = readonly ViewToken<ChannelRow>[];
 

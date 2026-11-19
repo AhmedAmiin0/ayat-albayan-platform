@@ -2,6 +2,8 @@ import { setAudioModeAsync } from 'expo-audio';
 
 import type * as PlaybackModule from './playback';
 
+jest.mock('expo-audio', () => ({ setAudioModeAsync: jest.fn(async () => undefined) }));
+
 type Playback = typeof PlaybackModule;
 // A fresh module per test: the registry and the audio mode are module state.
 const fresh = (): Playback => {

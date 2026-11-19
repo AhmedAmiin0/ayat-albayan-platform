@@ -1,7 +1,6 @@
-import { remainingDraft, sendIdFor, type SendAttempt } from '@ab/client-core';
+import { insertAt, remainingDraft, sendIdFor, type SendAttempt } from '@ab/client-core';
 import { CHANNEL_BODY_MAX } from '@ab/shared';
 import { useState } from 'react';
-import { insertAt } from '../../chat-ui/emoji/emoji-list';
 import { t } from '../../lib/i18n/i18n';
 import type { ChannelRef } from '../channel-api';
 import { sendErrorText } from '../send/channel-post';

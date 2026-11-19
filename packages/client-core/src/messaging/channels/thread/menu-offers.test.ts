@@ -1,5 +1,6 @@
-import { channelMessage } from '../testing/channel-fixtures';
-import { menuOffers, offersAny } from './menu-offers';
+import { expect, test } from 'vitest';
+import { channelMessage } from './channel.fakes.test-util.js';
+import { menuOffers, offersAny } from './menu-offers.js';
 
 const now = new Date('2026-10-27T10:05:00.000Z');
 const mine = channelMessage({ mine: true, created_at: '2026-10-27T10:00:00.000Z' });

@@ -1,4 +1,5 @@
-import { EMOJI, insertAt } from './emoji-list';
+import { describe, expect, it, test } from 'vitest';
+import { EMOJI, insertAt } from './emoji.js';
 
 test('about 80 emoji, none twice', () => {
   expect(EMOJI.length).toBeGreaterThanOrEqual(75);

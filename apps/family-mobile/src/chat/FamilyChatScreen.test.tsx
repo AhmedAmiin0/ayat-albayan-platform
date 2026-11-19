@@ -1,5 +1,6 @@
 import type { ChannelPage } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import * as DocumentPicker from 'expo-document-picker';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
 import { FamilyChatScreen } from './FamilyChatScreen';
@@ -10,6 +11,8 @@ jest.mock('expo-router', () => ({
   router: { back: jest.fn() },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
+jest.mock('expo-document-picker', () => ({ getDocumentAsync: jest.fn() }));
+jest.mock('expo-image-picker', () => ({}));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (path: string) => mockFetch(path),
@@ -64,9 +67,21 @@ test('refused by the API (the chat off): the load error, no composer', async () 
   expect(screen.queryByLabelText(c.messageLabel)).toBeNull();
 });
 
-test('no media port in the family app yet: no attach and no microphone', async () => {
+test('the phone\'s media: attach and the microphone, a picked PDF goes up on the portal route', async () => {
+  const slot = { bucket: 'channel-media', path: 'ch/1.pdf', token: 'tk', signed_url: 'https://x/u' };
+  mockSend.mockImplementation(async (_m: string, path: string) =>
+    path.endsWith('/upload-url') ? slot : {},
+  );
+  jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValueOnce({
+    canceled: false,
+    assets: [{ name: 'خطة.pdf', uri: 'file:///a.pdf', mimeType: 'application/pdf', lastModified: 0, base64: 'AAEC' }],
+  });
   await renderWithQuery(<FamilyChatScreen />, freshQueryClient());
   expect(await screen.findByText('السلام عليكم')).toBeTruthy();
-  expect(screen.queryByLabelText(c.media.attach)).toBeNull();
-  expect(screen.queryByLabelText(c.media.record)).toBeNull();
+  expect(screen.getByLabelText(c.media.record)).toBeTruthy();
+  await fireEvent.press(screen.getByLabelText(c.media.attach));
+  await fireEvent.press(await screen.findByText(c.media.document));
+  const fields = { mime: 'application/pdf', size: 3, name: 'خطة.pdf' };
+  const upload = '/portal/students/s1/channel/attachments/upload-url';
+  await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', upload, fields));
 });

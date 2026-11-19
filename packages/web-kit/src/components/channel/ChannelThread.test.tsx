@@ -28,8 +28,10 @@ describe('ChannelThread (docs/31 §2)', () => {
     apiSend.mockResolvedValue({});
     show('portal');
     expect(await screen.findByRole('link', { name: 'https://example.org/plan' })).toBeTruthy();
-    expect(screen.getByText(c.you)).toBeTruthy();
-    expect(screen.getByText(`أم سلمى · ${c.roles.guardian}`)).toBeTruthy();
+    // The head names the people, the viewer last as «أنت»; others' bubbles carry name and role.
+    expect(screen.getByTestId('channel-people').textContent).toBe(`أم سلمى${c.namesJoin}${c.you}`);
+    expect(screen.getByText('أم سلمى').parentElement?.textContent).toBe(`أم سلمى · ${c.roles.guardian}`);
+    expect(screen.getByRole('region', { name: `${c.portalTab} · سلمى` })).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/portal/students/s1/channel/messages');
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/channel/read', { at: '2026-10-27T10:05:00.000Z' }));
     fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: '  شكرًا  ' } });
