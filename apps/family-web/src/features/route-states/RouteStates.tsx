@@ -21,7 +21,7 @@ export function RouteError() {
   const router = useRouter();
   const words = t.familyWeb.routeError;
   return (
-    <main className="grid min-h-dvh place-items-center px-4">
+    <div className="grid min-h-[50dvh] place-items-center px-4">
       <Card role="alert" className="grid w-full max-w-md gap-4 p-6 text-center">
         <h1 className="font-display text-h3 font-bold">{words.title}</h1>
         <p className="text-sm text-pretty text-ink-2">{words.body}</p>
@@ -34,6 +34,6 @@ export function RouteError() {
           </Link>
         </div>
       </Card>
-    </main>
+    </div>
   );
 }

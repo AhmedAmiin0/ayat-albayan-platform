@@ -54,7 +54,7 @@ export function TabBar() {
   return (
     <nav aria-label={t.familyWeb.nav} className="shell:contents">
       <ul data-indicator-host className="relative flex gap-1 shell:flex-col">
-        <span data-indicator hidden aria-hidden="true" className={INDICATOR} />
+        {current && <span data-indicator hidden aria-hidden="true" className={INDICATOR} />}
         {tabs.map((tab) => (
           <li key={tab} className="flex flex-1 shell:flex-none">
             <TabLink tab={tab} current={tab === current} />

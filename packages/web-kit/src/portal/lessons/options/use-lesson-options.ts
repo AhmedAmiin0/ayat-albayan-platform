@@ -26,7 +26,8 @@ export function useLessonOptions({ lesson, student }: Of) {
   const ids = { studentId: student.id, lessonId: lesson.id };
   const notice = (a: FamilyAction) => setSaid(A[FAMILY_NOTICE[a.kind]]);
   const send = (a: FamilyAction) => {
-    if (AT_ONCE.has(a.kind)) notice(a);
+    // A one-tap answer is said at once; anything else clears an earlier (maybe refused) line.
+    setSaid(AT_ONCE.has(a.kind) ? A[FAMILY_NOTICE[a.kind]] : null);
     action.send(a, () => {
       setOpen(null);
       notice(a);

@@ -31,7 +31,6 @@ export function useChildSummary(student: PortalStudent, kind: PortalKind) {
   const input = { lessons: lessons.data, reports: reports.data, pkg: pkg.data, seen };
   return {
     summary: childSummary(input, useNow()),
-    lessons: lessons.data,
     /** The live package, for a viewer who sees money only (null otherwise or without one). */
     pkg: money ? (pkg.data?.package ?? null) : null,
     loading: reads.some((read) => read.isPending),
