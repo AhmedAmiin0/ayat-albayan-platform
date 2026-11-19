@@ -45,8 +45,6 @@ export function LiveRoom({ room, join, kit = STAFF_KIT }: Props) {
   const tab = ui.panel === null ? null : PANEL_TAB[ui.panel];
   const people = snap.tiles.filter((x) => x.kind === 'camera').length;
   const waiting = kit.features.waitStage && isAlone(snap.tiles);
-  // «المشاركون» opens the staff drawer; the family's side panel closes on the same button.
-  const peopleButton = kit.features.sidePanel ? ui.toggle : ui.open;
   return (
     <main className="flex h-dvh flex-col gap-2 overflow-hidden bg-page px-3 pt-3 sm:gap-3 sm:px-4 sm:pt-4">
       <RoomTop room={room} join={join} kit={kit} share={share} onPeople={() => ui.open('people')} />
@@ -77,7 +75,7 @@ export function LiveRoom({ room, join, kit = STAFF_KIT }: Props) {
         board={board}
         role={join.role}
         share={share}
-        onPeople={() => peopleButton('people')}
+        onPeople={ui.people}
         onRecordings={tools.recordingsFor === null ? undefined : () => ui.open('recordings')}
         chat={chatControl(kit, ui)}
         onLeave={ui.leave}
