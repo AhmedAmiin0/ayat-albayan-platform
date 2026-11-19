@@ -60,15 +60,17 @@ test.describe('the family chat on the family host', () => {
     await expect(question).toContainText(C.roles.teacher);
 
     await question.getByRole('button', { name: C.actions.menu }).click();
-    await page.getByRole('button', { name: C.reply.action }).click();
+    await page.getByRole('button', { name: C.reply.action, exact: true }).click();
     await expect(chat.getByText(C.reply.replyingTo.replace('{name}', C.roles.teacher))).toBeVisible();
-    await chat.getByLabel(C.messageLabel).fill(ANSWER);
-    await chat.getByRole('button', { name: C.send }).click();
+    // «الرسالة» is also inside «خيارات الرسالة» and the quote's name: the box by role, exactly.
+    const box = chat.getByRole('textbox', { name: C.messageLabel, exact: true });
+    await box.fill(ANSWER);
+    await chat.getByRole('button', { name: C.send, exact: true }).click();
 
     const answer = chat.getByRole('listitem').filter({ hasText: ANSWER });
     await expect(answer.getByRole('button', { name: new RegExp(ar.inbox.reply.jump) })).toBeVisible();
     await expect(answer.getByRole('img', { name: C.sent })).toBeVisible();
-    await expect(chat.getByLabel(C.messageLabel)).toHaveValue('');
+    await expect(box).toHaveValue('');
     await page.context().close();
   });
 });

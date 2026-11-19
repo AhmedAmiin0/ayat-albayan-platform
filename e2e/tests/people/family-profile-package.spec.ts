@@ -49,7 +49,7 @@ test.describe('family profile and package pages', () => {
     await expect(page.getByRole('link', { name: new RegExp(family.second.name) })).toBeVisible();
     await page.getByRole('link', { name: new RegExp(family.first.name) }).click();
     await expect(page).toHaveURL(new RegExp(`/children/${family.first.id}`));
-    await expect(page.getByRole('heading', { name: family.first.name })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: family.first.name })).toBeVisible();
     await page.context().close();
   });
 
