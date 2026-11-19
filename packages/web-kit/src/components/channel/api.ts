@@ -9,13 +9,18 @@ import {
   TEACHER_CHANNELS_PATH,
   type ChannelAudience,
 } from '@ab/client-core';
-import type { ChannelMessageView, ChannelPage, TeacherChannelRow } from '@ab/shared';
+import {
+  channelPageSchema,
+  type ChannelAttachmentInput,
+  type ChannelMessageView,
+  type TeacherChannelRow,
+} from '@ab/shared';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 
-// The student channel (docs/31 §2). Lists and badges poll while the window has focus; the thread has its
-// socket (use-channel-live) and polls only as the fallback.
+// The student channel (docs/31 §2). Lists and badges poll while the window has focus; the thread
+// has its socket (use-channel-live) and polls only as the fallback.
 const poll = () => (document.hasFocus() ? env.inboxRefreshMs : false);
 
 export interface ChannelRef {
@@ -27,20 +32,33 @@ export interface ChannelRef {
 export const channelQuery = ({ audience, studentId }: ChannelRef, live = false) =>
   infiniteQueryOptions({
     queryKey: channelKey(audience, studentId),
-    queryFn: ({ pageParam }) =>
-      apiFetch<ChannelPage>(
-        channelMessagesPath({ audience, studentId, before: pageParam || undefined }),
-      ),
+    queryFn: async ({ pageParam }) => {
+      const before = pageParam || undefined;
+      return channelPageSchema.parse(
+        await apiFetch(channelMessagesPath({ audience, studentId, before })),
+      );
+    },
     initialPageParam: '',
     getNextPageParam: olderCursor,
     refetchInterval: () => (document.hasFocus() ? channelPollMs(live) : false),
   });
 
-/** `clientId` (rule 8): a retry of the same text resends its id and gets the stored message. */
-export const sendChannelMessage = (ref: ChannelRef & { body: string; clientId: string }) =>
+/** One send: the text (a file's caption, '' for none), the message it answers, the file. */
+export interface ChannelSend {
+  body: string;
+  /** Rule 8: a retry of the same text resends its id and gets the stored message. */
+  clientId: string;
+  replyToId?: string | undefined;
+  attachment?: ChannelAttachmentInput | undefined;
+}
+
+/** POST …/messages (channelPostSchema): the optional fields only when set. */
+export const sendChannelMessage = (ref: ChannelRef, send: ChannelSend) =>
   apiSend<ChannelMessageView>('POST', channelMessagesPath(ref), {
-    body: ref.body,
-    client_id: ref.clientId,
+    body: send.body,
+    client_id: send.clientId,
+    ...(send.replyToId ? { reply_to_id: send.replyToId } : {}),
+    ...(send.attachment ? { attachment: send.attachment } : {}),
   });
 
 /** Read up to the newest message shown (the API never moves the mark past now). */

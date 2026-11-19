@@ -1,6 +1,7 @@
 import type { ChannelMessageView } from '@ab/shared';
+import { QuoteBlock } from '@ab/web-kit/components/channel/bubble/QuoteBlock';
+import { AttachmentBody } from '@ab/web-kit/components/channel/media/AttachmentBody';
 import { LinkedBody } from '@ab/web-kit/components/ui/display/linked-body';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChannelEditForm } from './ChannelEditForm';
 import type { useBubbleEditing } from './use-bubble-editing';
 
@@ -10,12 +11,15 @@ interface Props {
 }
 
 /**
- * The text with its links, the edit box while «تعديل» is open, or «تم حذف هذه الرسالة» (no text).
+ * The quote it answers, its photo, PDF or voice note, then the text with its links (a file's
+ * caption), or the edit box while «تعديل» is open; the API's refusal under it. A deleted message
+ * is drawn by the bubble itself.
  */
 export function ChannelBubbleBody({ message: m, tools }: Props) {
-  if (m.deleted) return <p className="italic text-ink-3">{t.studentChannel.actions.deleted}</p>;
   return (
     <>
+      {m.reply_to && <QuoteBlock reply={m.reply_to} />}
+      <AttachmentBody message={m} />
       {tools.mode === 'edit' ? (
         <ChannelEditForm
           initial={m.body}
@@ -24,7 +28,7 @@ export function ChannelBubbleBody({ message: m, tools }: Props) {
           onCancel={tools.close}
         />
       ) : (
-        <LinkedBody text={m.body} />
+        m.body && <LinkedBody text={m.body} />
       )}
       {tools.problem && (
         <p role="alert" className="text-2xs text-destructive">

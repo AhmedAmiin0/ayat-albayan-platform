@@ -23,7 +23,7 @@ it('the bubbles (compiled) share the thread\'s one clock: «13:00» gains its da
     </QueryClientProvider>,
   );
   await screen.findByText('غدًا إن شاء الله');
-  const times = () => [...document.querySelectorAll('ol li p.text-end')].map((p) => p.textContent);
+  const times = () => [...document.querySelectorAll('ol li [data-time]')].map((p) => p.textContent);
   expect(times()).toEqual(['13:00', '13:05']);
   expect(timers.mock.calls.filter((c) => c[1] === 60_000)).toHaveLength(1);
   act(() => {
