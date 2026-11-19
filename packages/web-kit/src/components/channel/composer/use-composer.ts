@@ -1,6 +1,6 @@
 import { insertAt, remainingDraft, type ChannelFileToSend } from '@ab/client-core';
 import { CHANNEL_BODY_MAX, type ChannelMessageView } from '@ab/shared';
-import { useState } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 import type { ChannelRef } from '@ab/web-kit/components/channel/api';
 import type { TextSend } from '@ab/web-kit/components/channel/thread/use-channel-send';
 import { useChannelDraft } from './use-channel-draft';
@@ -21,6 +21,13 @@ export type Panel = 'none' | 'emoji' | 'attach';
 export type Round = 'mic' | 'send' | 'voice';
 
 const ignore = () => undefined;
+
+/** Esc inside a composer panel: closes it only, never the panel or dialog around the chat. */
+export const escapeCloses = (onClose: () => void) => (e: KeyboardEvent) => {
+  if (e.key !== 'Escape') return;
+  e.stopPropagation();
+  onClose();
+};
 
 function roundOf(recording: boolean, typed: boolean): Round {
   if (recording) return 'voice';

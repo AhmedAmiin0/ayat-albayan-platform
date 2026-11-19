@@ -1,6 +1,6 @@
 import { EMOJI } from '@ab/client-core';
-import type { KeyboardEvent } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { escapeCloses } from './use-composer';
 
 interface Props {
   onPick: (emoji: string) => void;
@@ -13,11 +13,7 @@ interface Props {
  * box; a pick goes in at the caret and the grid stays open for another.
  */
 export function EmojiPanel({ onPick, onClose }: Props) {
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape') return;
-    e.stopPropagation();
-    onClose();
-  };
+  const onKeyDown = escapeCloses(onClose);
   return (
     <div
       role="group"

@@ -1,6 +1,7 @@
 import type { ChangeEvent, KeyboardEvent, ReactNode } from 'react';
 import { ChatGlyph } from '@ab/web-kit/components/channel/bubble/ChatGlyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { escapeCloses } from './use-composer';
 
 const m = t.studentChannel.media;
 
@@ -44,11 +45,7 @@ function Source({ accept, label, glyph, onFile, onKeyDown }: SourceProps) {
  * the hint of what the chat takes. It pops in above the composer; Esc closes it.
  */
 export function AttachMenu({ onFile, onClose }: Props) {
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape') return;
-    e.stopPropagation();
-    onClose();
-  };
+  const onKeyDown = escapeCloses(onClose);
   return (
     <div
       role="group"
