@@ -2,7 +2,7 @@ import { chatOpen, dropsChat, type RoomJoinResult } from '@ab/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { connectFailureText } from './connect-failure';
 import { mediaErrorText } from './errors';
-import { EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type ModeratedEvent, type RoomClient, type RoomSnapshot } from '@ab/web-kit/classroom/room/components/room-types';
+import { BOTH_ON, EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type ModeratedEvent, type RoomClient, type RoomSnapshot } from '@ab/web-kit/classroom/room/components/room-types';
 
 export interface RoomController {
   snap: RoomSnapshot;
@@ -25,8 +25,16 @@ export interface RoomController {
   setBoardTrack: (track: MediaStreamTrack | null) => void;
 }
 
-/** Owns one client for the life of the component: connects on mount, disconnects on unmount. */
-export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomController {
+/**
+ * Owns one client for the life of the component: connects on mount (with the device check's
+ * `media` choice; staff: both on), disconnects on unmount.
+ */
+export function useRoom(
+  join: RoomJoinResult,
+  make: () => RoomClient,
+  media = BOTH_ON,
+): RoomController {
+  const { mic, cam, micId, camId } = media;
   const client = useRef<RoomClient | null>(null);
   const [snap, setSnap] = useState<RoomSnapshot>(EMPTY_SNAPSHOT);
   const [notes, setNotes] = useState<string[]>([]);
@@ -45,7 +53,7 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
       if (!dropsChat(chat, packet.topic)) data.current.forEach((l) => l(packet));
     });
     const offModerated = c.onModerated((e) => moderated.current.forEach((l) => l(e)));
-    c.connect(join.url, join.token)
+    c.connect(join.url, join.token, { mic, cam, micId, camId })
       .then((fails) => live && setNotes(fails.map((f) => mediaErrorText(f.device, f.error))))
       .catch((error: unknown) => live && setFailure(connectFailureText({ url: join.url, error, pageProtocol: window.location.protocol })));
     return () => {
@@ -56,7 +64,7 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
       c.disconnect();
       client.current = null;
     };
-  }, [join.url, join.token, chat, make]);
+  }, [join.url, join.token, chat, make, mic, cam, micId, camId]);
 
   const run = useCallback((job: (c: RoomClient) => Promise<void>, device: 'mic' | 'cam' | 'share') => {
     const c = client.current;

@@ -20,7 +20,7 @@ describe('ClassroomRoom', () => {
   it('connects with the url and token, and lists everyone with names', async () => {
     const c = fakeClient({ tiles: TILES });
     open(c);
-    expect(c.connect).toHaveBeenCalledWith('wss://lk.test', 'tok');
+    expect(c.connect).toHaveBeenCalledWith('wss://lk.test', 'tok', { mic: true, cam: true });
     expect(await screen.findByText(`أبرار (${t.classroom.you})`)).toBeTruthy();
     expect(screen.getByText('سهيلة')).toBeTruthy();
     expect(screen.getByText(t.classroom.participants.replace('{n}', '2'))).toBeTruthy();
