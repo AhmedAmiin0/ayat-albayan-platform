@@ -1,85 +1,86 @@
-import { chatOpen, type RoomJoinResult } from '@ab/shared';
-import { useState } from 'react';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { RoomJoinResult } from '@ab/shared';
 import { BoardStage } from '@ab/web-kit/classroom/board/BoardStage';
-import { useBoard } from '@ab/web-kit/classroom/board/use-board';
-import { ControlBar } from './ControlBar';
-import { KickButton } from '@ab/web-kit/classroom/kick/KickButton';
-import { KickDialog } from '@ab/web-kit/classroom/kick/KickDialog';
-import { ParticipantsSheet } from '@ab/web-kit/classroom/kick/ParticipantsSheet';
-import { useKick } from '@ab/web-kit/classroom/kick/use-kick';
-import { kickScope, recordingSourceOf } from '@ab/web-kit/classroom/api/moderation-api';
-import { muteFor } from '@ab/web-kit/classroom/mute/mute-api';
-import { MuteButtons } from '@ab/web-kit/classroom/mute/MuteButtons';
-import { MuteToasts } from '@ab/web-kit/classroom/mute/MuteToasts';
-import { useMute } from '@ab/web-kit/classroom/mute/use-mute';
-import { ParticipantGrid, type TileSlots } from './ParticipantGrid';
-import { RecordingOffAlert, RecordingsPanel } from '@ab/web-kit/classroom/recordings/RecordingsPanel';
-import { RoomHeader } from './RoomHeader';
-import { RoomStage } from './RoomStage';
-import { grantShareFor } from '@ab/web-kit/classroom/share/share-api';
-import { ShareRequestsPanel } from '@ab/web-kit/classroom/share/ShareRequestsPanel';
-import { useShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
-import { layoutOf } from '@ab/web-kit/classroom/room/livekit/stage';
+import { ControlBar, type ChatControl } from './ControlBar';
+import { STAFF_KIT, type RoomKit } from '@ab/web-kit/classroom/flow/room-kit';
+import { RoomMain } from '@ab/web-kit/classroom/flow/RoomMain';
+import { RoomOverlays } from '@ab/web-kit/classroom/flow/RoomOverlays';
+import { isAlone, roomLayout } from '@ab/web-kit/classroom/flow/spotlight';
+import { useRoomTools } from '@ab/web-kit/classroom/flow/use-room-tools';
+import { useRoomUi, type RoomPanelName, type RoomUi } from '@ab/web-kit/classroom/flow/use-room-ui';
+import { PeopleList } from '@ab/web-kit/classroom/panel/PeopleList';
+import { RoomPanel, type PanelTab } from '@ab/web-kit/classroom/panel/RoomPanel';
+import { RoomTop } from './RoomTop';
 import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
 
-type Panel = 'people' | 'recordings' | null;
+interface Props {
+  room: RoomController;
+  join: RoomJoinResult;
+  /** The variant and what the page passed (staff by default). */
+  kit?: RoomKit;
+}
+
+const PANEL_TAB: Readonly<Record<RoomPanelName, PanelTab | null>> = {
+  chat: 'chat',
+  people: 'people',
+  recordings: null,
+};
+
+const chatControl = (kit: RoomKit, ui: RoomUi): ChatControl | undefined =>
+  kit.chat
+    ? { unread: kit.chat.unread, on: ui.panel === 'chat', open: () => ui.toggle('chat') }
+    : undefined;
 
 /**
- * The call itself, one screen tall: header, stage + strip (or the balanced grid), and the control
- * bar pinned at the bottom. The board, «إخراج من الحلقة» and «التسجيلات» hang off it (an internal
- * meeting's room, `meeting-<id>`, has all of them too: its «التسجيلات» are the meeting's). A trial
- * lesson's room says it has no text chat (join.chat false; the data hook drops the chat topic).
+ * The call itself, one screen tall: the top line, the stage (or the grid, or «بانتظار المعلم/ة…»)
+ * with the family's chat / people panel beside it, and the control bar pinned at the bottom. The
+ * board, «إخراج من الحلقة» and «التسجيلات» hang off it by role (an internal meeting's room too). A
+ * trial lesson's room has no text chat (join.chat false; the data hook drops the chat topic).
  */
-export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinResult }) {
+export function LiveRoom({ room, join, kit = STAFF_KIT }: Props) {
   const { snap } = room;
-  const board = useBoard({ room, role: join.role });
-  const kick = useKick({ ...kickScope(join.room), role: join.role });
-  const share = useShareRequests({ room, role: join.role, grant: grantShareFor(join.room), board });
-  const mute = useMute({ role: join.role, tiles: snap.tiles, call: muteFor(join.room) });
-  const [panel, setPanel] = useState<Panel>(null);
-  const close = () => setPanel(null);
-  const recordingsFor = join.role === 'teacher' || join.role === 'admin' ? recordingSourceOf(join.room) : null;
-
-  const layout = layoutOf(snap.tiles, board.visible);
-  const slots: TileSlots = {
-    attach: room.attach,
-    actionFor: (tile) =>
-      !kick.canKick(tile) && !mute.canMute(tile, 'microphone') && !mute.canMute(tile, 'camera') ? null : (
-      <span className="flex gap-1">
-        <MuteButtons tile={tile} mute={mute} />
-        {kick.canKick(tile) && <KickButton tile={tile} onAsk={kick.ask} />}
-      </span>
-    ),
-  };
-
+  const tools = useRoomTools(room, join);
+  const ui = useRoomUi(kit.features, room.leave);
+  const { board, share } = tools;
+  const layout = roomLayout(snap.tiles, board.visible, kit.features.spotlightTeacher);
+  const tab = ui.panel === null ? null : PANEL_TAB[ui.panel];
+  const people = snap.tiles.filter((x) => x.kind === 'camera').length;
+  const waiting = kit.features.waitStage && isAlone(snap.tiles);
   return (
     <main className="flex h-dvh flex-col gap-2 overflow-hidden bg-page px-3 pt-3 sm:gap-3 sm:px-4 sm:pt-4">
-      <RoomHeader snap={snap} />
-      {join.role === 'admin' && join.recording === 'off' && <RecordingOffAlert />}
-      {!chatOpen(join) && <p role="note" className="text-xs text-ink-2">{t.classroom.chatClosedTrial}</p>}
-      {room.notes.map((n) => (
-        <FormAlert key={n}>{n}</FormAlert>
-      ))}
-      <ShareRequestsPanel share={share} />
-      {layout.mode === 'grid' ? (
-        <ParticipantGrid tiles={layout.tiles} {...slots} />
-      ) : (
-        <RoomStage stage={layout.stage} strip={layout.strip} board={<BoardStage board={board} room={room} requests={share} />} {...slots} />
-      )}
+      <RoomTop room={room} join={join} kit={kit} share={share} onPeople={() => ui.open('people')} />
+      <div className="flex min-h-0 flex-1 gap-3">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <RoomMain
+            layout={layout}
+            tiles={snap.tiles}
+            slots={tools.slots}
+            board={<BoardStage board={board} room={room} requests={share} />}
+            waiting={{ on: waiting, note: kit.context?.waiting }}
+          />
+        </div>
+        {kit.features.sidePanel && tab && (
+          <RoomPanel
+            tab={tab}
+            onTab={ui.open}
+            onClose={ui.close}
+            chat={kit.chat}
+            count={people}
+            people={<PeopleList tiles={snap.tiles} variant={kit.variant} />}
+          />
+        )}
+      </div>
       <ControlBar
         room={room}
         board={board}
         role={join.role}
         share={share}
-        onPeople={() => setPanel('people')}
-        onRecordings={recordingsFor === null ? undefined : () => setPanel('recordings')}
+        onPeople={() => ui.toggle('people')}
+        onRecordings={tools.recordingsFor === null ? undefined : () => ui.open('recordings')}
+        chat={chatControl(kit, ui)}
+        onLeave={ui.leave}
+        round={kit.features.roundControls}
       />
-      {panel === 'people' && !kick.target && <ParticipantsSheet tiles={snap.tiles} kick={kick} mute={mute} onClose={close} />}
-      {panel === 'recordings' && recordingsFor !== null && <RecordingsPanel source={recordingsFor} onClose={close} />}
-      <KickDialog kick={kick} />
-      <MuteToasts room={room} mute={mute} />
+      <RoomOverlays room={room} kit={kit} tools={tools} ui={ui} />
     </main>
   );
 }

@@ -21,7 +21,7 @@ vi.mock('livekit-client', () => {
     }
   }
   const RoomEvent = new Proxy({}, { get: (_t, k) => String(k) });
-  return { Room, RoomEvent, DisconnectReason: { DUPLICATE_IDENTITY: 'dup', CLIENT_INITIATED: 'client' }, Track: { Source: {} } };
+  return { Room, RoomEvent, DisconnectReason: { DUPLICATE_IDENTITY: 'dup', CLIENT_INITIATED: 'client', ROOM_DELETED: 'deleted' }, Track: { Source: {} } };
 });
 
 describe('createLivekitRoom', () => {
@@ -40,6 +40,20 @@ describe('createLivekitRoom', () => {
     expect(fake.connect).toHaveBeenCalledWith('wss://x', 'tok');
     expect(failures).toEqual([{ device: 'mic', error: denied }]);
     expect(c.snapshot().status).toBe('connected');
+  });
+
+  it('starts only what the device check left on, on the chosen device', async () => {
+    const c = createLivekitRoom();
+    const failures = await c.connect('wss://x', 'tok', { mic: true, cam: false, micId: 'usb' });
+    expect(fake.mic).toHaveBeenCalledWith(true, { deviceId: 'usb' });
+    expect(fake.cam).not.toHaveBeenCalled();
+    expect(failures).toEqual([]);
+  });
+
+  it('maps a room ended for everyone (ROOM_DELETED) to closed', () => {
+    const c = createLivekitRoom();
+    fake.handlers.get('Disconnected')?.('deleted');
+    expect(c.snapshot().status).toBe('closed');
   });
 
   it('maps DUPLICATE_IDENTITY to its own status, any other disconnect to ended', () => {

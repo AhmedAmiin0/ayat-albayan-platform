@@ -12,7 +12,7 @@ describe('motion.css', () => {
 
   it('defines the entrance animations the UI uses', () => {
     const names = entrances.map((m) => m[1]).sort();
-    expect(names).toEqual(['drawer-in', 'fade-in', 'fade-up', 'pop-in', 'toast-in']);
+    expect(names).toEqual(['drawer-in', 'drop-in', 'fade-in', 'fade-up', 'pop-in', 'toast-in']);
   });
 
   it.each(entrances.map((m) => [m[1], Number(m[2])] as const))('%s lasts 120–220 ms', (_n, ms) => {

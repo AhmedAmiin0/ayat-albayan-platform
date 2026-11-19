@@ -2,7 +2,15 @@ import type { JoinRole, MuteSource } from '@ab/shared';
 
 /** What the room UI knows about a call. livekit-client stays behind RoomClient so tests inject a fake. */
 
-export type RoomStatus = 'connecting' | 'connected' | 'reconnecting' | 'ended' | 'duplicate' | 'removed';
+/** `closed`: the room was ended for everyone («إنهاء الحلقة للجميع», or the server's closer). */
+export type RoomStatus =
+  | 'connecting'
+  | 'connected'
+  | 'reconnecting'
+  | 'ended'
+  | 'closed'
+  | 'duplicate'
+  | 'removed';
 
 /** One square of the grid: a person's camera, or a screen they share. */
 export interface TileView {
@@ -42,14 +50,28 @@ export interface RoomSnapshot {
 }
 
 export type MediaDevice = 'mic' | 'cam';
+
+/** What the device check chose: which of mic / camera start on joining, and on which device. */
+export interface MediaChoice {
+  mic: boolean;
+  cam: boolean;
+  micId?: string | undefined;
+  camId?: string | undefined;
+}
+
+/** No device check (staff): both start, on the browser's default devices. */
+export const BOTH_ON: MediaChoice = { mic: true, cam: true };
 export interface MediaFailure {
   device: MediaDevice;
   error: unknown;
 }
 
 export interface RoomClient {
-  /** Joins; mic and camera that could not start come back as failures (the call still works). */
-  connect(url: string, token: string): Promise<MediaFailure[]>;
+  /**
+   * Joins; mic and camera that could not start come back as failures (the call still works).
+   * `media` (default both on) is the device check's choice.
+   */
+  connect(url: string, token: string, media?: MediaChoice): Promise<MediaFailure[]>;
   disconnect(): void;
   snapshot(): RoomSnapshot;
   subscribe(listener: (snap: RoomSnapshot) => void): () => void;

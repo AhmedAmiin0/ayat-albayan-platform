@@ -33,7 +33,9 @@ export function VideoTile({ tile, attach, action, className }: Props) {
       aria-label={label(tile)}
       className={cn(
         'relative grid min-h-40 place-items-center overflow-hidden rounded-md border border-rule-strong bg-inverse text-on-inverse',
-        tile.speaking && 'outline-3 outline-gold',
+        // The ring fades (.ab-ring, --duration-press) so quick speaker changes never flicker.
+        'ab-ring outline-3 outline-transparent',
+        tile.speaking && 'outline-gold',
         className,
       )}
     >

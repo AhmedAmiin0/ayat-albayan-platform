@@ -27,6 +27,24 @@ export function liveRoom(lesson: { room?: LessonRoomState | null }, now: Date): 
   return { minutes, teacherIn: people.some((p) => p.role === 'teacher'), people };
 }
 
+/**
+ * What the lesson card says about the room: ended for everyone (`room.endedAt`, no way back in),
+ * live (someone inside), or nothing (the clock states only).
+ */
+export type CardRoom =
+  | { kind: 'ended'; endedAt: string }
+  | { kind: 'live'; live: LiveRoom }
+  | { kind: 'none' };
+
+const NO_ROOM: CardRoom = { kind: 'none' };
+
+export function cardRoom(lesson: { room?: LessonRoomState | null }, now: Date): CardRoom {
+  const endedAt = lesson.room?.endedAt;
+  if (typeof endedAt === 'string') return { kind: 'ended', endedAt };
+  const live = liveRoom(lesson, now);
+  return live ? { kind: 'live', live } : NO_ROOM;
+}
+
 /** Each app's `t.portal.app.live` (the same keys in ar.json / en.json). */
 export interface LiveRoomWords {
   /** «بدأت الآن». */
