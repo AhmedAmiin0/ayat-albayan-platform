@@ -32,7 +32,8 @@ export interface ClassroomRoomProps {
 
 interface CallProps extends ClassroomRoomProps {
   kit: RoomKit;
-  media: MediaChoice;
+  /** The device check's choice; none (staff): the client starts both. */
+  media: MediaChoice | undefined;
 }
 
 /** Connected (or connecting) with the chosen devices, until a closing screen takes over. */
@@ -66,5 +67,6 @@ export function ClassroomRoom(props: ClassroomRoomProps) {
     const { join, onBack } = props;
     return <DeviceCheck join={join} context={kit.context} onJoin={entry.choose} onBack={onBack} />;
   }
-  return <Call {...props} kit={kit} media={entry.media} />;
+  const media = kit.features.deviceCheck ? entry.media : undefined;
+  return <Call {...props} kit={kit} media={media} />;
 }
