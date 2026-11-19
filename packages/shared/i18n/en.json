@@ -9480,7 +9480,13 @@
     "loginLinkHint": "Guardians and students sign in on their own pages.",
     "nav": "Family pages sections",
     "toStaffApp": "Open the academy team's platform",
-    "familySignIn": "Family and student sign-in"
+    "familySignIn": "Family and student sign-in",
+    "routeError": {
+      "title": "This page could not be opened",
+      "body": "The connection may have dropped. Try again, or go back to the home page.",
+      "retry": "Try again",
+      "home": "Home page"
+    }
   },
   "audioPlayer": {
     "play": "Play",

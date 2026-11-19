@@ -32,7 +32,7 @@ export function LanguageSwitch({ className }: { className?: string }) {
         onClick={choose}
         disabled={busy}
         className={cn(
-          'inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-ink-2 transition-colors duration-[120ms] hover:bg-sunk hover:text-ink sm:min-h-[34px]',
+          'inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-ink-2 transition-colors duration-(--duration-press) hover:bg-sunk hover:text-ink sm:min-h-[34px]',
           className,
         )}
       >

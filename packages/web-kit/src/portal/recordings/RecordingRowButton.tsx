@@ -25,7 +25,9 @@ export function RecordingRowButton({ row, student, parts, picked, onPick }: Prop
       type="button"
       aria-pressed={picked}
       onClick={onPick}
-      className="grid w-full min-w-0 gap-0.5 rounded-md border border-rule bg-raised p-3 text-start hover:bg-sunk aria-pressed:border-primary aria-pressed:bg-lapis-wash"
+      className="ab-press grid w-full min-w-0 gap-0.5 rounded-md border border-rule bg-raised p-3
+        text-start hover:bg-sunk aria-pressed:border-lapis aria-pressed:bg-lapis-wash
+        aria-pressed:ring-1 aria-pressed:ring-inset aria-pressed:ring-lapis"
     >
       <span className="text-sm font-semibold text-ink">{lessonTitle(row.lesson_starts_at, clock)}</span>
       <span className="text-xs text-ink-2">{rowLine(row, { parts, clock })}</span>

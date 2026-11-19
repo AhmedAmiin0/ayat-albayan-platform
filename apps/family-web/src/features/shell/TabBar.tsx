@@ -1,20 +1,40 @@
 import { familyTabs, type FamilyTab } from '@ab/client-core';
-import { Link } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { TAB_ICON, TAB_PATH } from './tab-links';
+import { followSelected } from '@ab/web-kit/lib/motion/slide-indicator';
+import { cn } from '@ab/web-kit/lib/utils';
+import { TAB_ICON, TAB_PATH, tabOf } from './tab-links';
 import { useFamilyPick } from './use-family-pick';
 
-const ITEM =
-  'flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-md px-1 text-2xs ' +
-  'font-medium text-ink-2 transition-colors hover:bg-sunk aria-[current=page]:text-ink ' +
-  'aria-[current=page]:font-semibold shell:min-h-11 shell:flex-none shell:flex-row ' +
-  'shell:justify-start shell:gap-2.5 shell:px-3 shell:text-sm aria-[current=page]:bg-accent';
+// The staff fihris idiom (apps/staff-web AdminNav): on the rail an item is a 44px row, the current
+// one a page-white tile with a 4px lapis bar at the inline-start; on a phone's bottom bar the
+// current one sits on the green wash. The tile is ONE element that slides to the chosen tab
+// (motion.css `.ab-indicator`, --duration-move): it says where the page went.
+const ITEM = cn(
+  'group ab-press relative z-10 flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5',
+  'rounded-md px-1 text-2xs font-medium text-ink-2 transition-colors duration-(--duration-quick)',
+  'hover:text-ink aria-[current=page]:font-semibold aria-[current=page]:text-ink',
+  'shell:min-h-11 shell:flex-none shell:flex-row shell:justify-start shell:gap-2.5 shell:px-3',
+  'shell:text-sm shell:text-cover-ink',
+);
 
-function TabLink({ tab }: { tab: FamilyTab }) {
+const INDICATOR = cn(
+  'ab-indicator pointer-events-none absolute top-0 left-0 rounded-md bg-accent',
+  'shell:bg-page shell:shadow-page before:absolute before:inset-y-2.5 before:start-0',
+  'before:hidden before:w-1 before:rounded-full before:bg-lapis shell:before:block',
+);
+
+function TabLink({ tab, current }: { tab: FamilyTab; current: boolean }) {
   return (
-    <Link to={TAB_PATH[tab]} className={ITEM} activeOptions={{ includeSearch: false }}>
-      <Icon name={TAB_ICON[tab]} className="size-5" aria-hidden="true" />
+    <Link
+      to={TAB_PATH[tab]}
+      ref={current ? followSelected : undefined}
+      aria-current={current ? 'page' : undefined}
+      activeProps={{}}
+      className={ITEM}
+    >
+      <Icon name={TAB_ICON[tab]} className="size-5 group-aria-[current=page]:text-lapis" />
       <span>{t.portal.app.tabs[tab]}</span>
     </Link>
   );
@@ -22,24 +42,24 @@ function TabLink({ tab }: { tab: FamilyTab }) {
 
 /**
  * The family bar (owner 2026-11-16): the student in view's الرئيسية · الجدول · التقارير · حسابي;
- * no «التقارير» until that student is known (a guardian of several picks one first). A bottom
- * bar on phones, a side rail on wide screens.
+ * no «التقارير» until that student is known (a guardian of several picks one first; its slot is
+ * kept while /portal/me loads, so the bar never jumps). A bottom bar on phones, the rail from
+ * `shell:`.
  */
 export function TabBar() {
-  const tabs = familyTabs(useFamilyPick());
+  const pick = useFamilyPick();
+  const tabs = familyTabs(pick);
+  const current = tabOf(useLocation().pathname);
   return (
-    <nav
-      aria-label={t.familyWeb.nav}
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-raised/95 px-2
-        pb-[env(safe-area-inset-bottom)] backdrop-blur shell:sticky shell:top-0 shell:h-screen
-        shell:border-t-0 shell:border-e shell:bg-raised shell:px-3 shell:py-5"
-    >
-      <ul className="flex gap-1 shell:flex-col">
+    <nav aria-label={t.familyWeb.nav} className="shell:contents">
+      <ul data-indicator-host className="relative flex gap-1 shell:flex-col">
+        <span data-indicator hidden aria-hidden="true" className={INDICATOR} />
         {tabs.map((tab) => (
           <li key={tab} className="flex flex-1 shell:flex-none">
-            <TabLink tab={tab} />
+            <TabLink tab={tab} current={tab === current} />
           </li>
         ))}
+        {pick.state === 'loading' && <li aria-hidden="true" className="flex-1 shell:hidden" />}
       </ul>
     </nav>
   );

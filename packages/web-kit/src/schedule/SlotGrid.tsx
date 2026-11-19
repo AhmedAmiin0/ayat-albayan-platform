@@ -96,7 +96,7 @@ function SlotButton({ slot, studentTz, picked, onPick }: SlotButtonProps) {
       aria-pressed={picked}
       onClick={() => onPick(slot)}
       className={cn(
-        'grid min-h-11 w-full min-w-[76px] content-center justify-items-center rounded-md border px-2 py-1 text-sm tabular-nums transition-colors duration-[120ms] sm:min-h-10',
+        'grid min-h-11 w-full min-w-[76px] content-center justify-items-center rounded-md border px-2 py-1 text-sm tabular-nums transition-colors duration-(--duration-press) sm:min-h-10',
         slotLook(picked, busy),
       )}
     >

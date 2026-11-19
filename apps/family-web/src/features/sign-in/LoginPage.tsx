@@ -1,3 +1,4 @@
+import { cardClass } from '@ab/web-kit/components/ui/surface/card';
 import { useCodesOpen } from '@ab/web-kit/auth/login/CodesGate';
 import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
@@ -13,10 +14,10 @@ import { SignInWays } from './SignInWays';
 export function LoginPage() {
   const codes = useCodesOpen('family');
   return (
-    <main className="grid min-h-dvh items-start justify-items-center bg-page px-4 py-10 sm:py-16">
+    <main className="grid min-h-dvh items-start justify-items-center px-4 py-10 sm:py-16">
       <div className="grid w-full max-w-[400px] gap-6">
         <SignInLockup />
-        <section className="grid gap-4 rounded-lg border border-rule bg-raised p-5">
+        <section className={`${cardClass} grid gap-4 p-5`}>
           {codes === undefined ? (
             <ListSkeleton rows={2} />
           ) : (

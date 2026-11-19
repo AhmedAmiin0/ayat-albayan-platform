@@ -15,3 +15,18 @@ export const TAB_ICON: Readonly<Record<FamilyTab, IconName>> = {
   reports: 'template',
   account: 'person',
 };
+
+/** The pages each tab lights for (its own, a child's page under home, one report under reports). */
+const SECTION: readonly (readonly [string, FamilyTab])[] = [
+  ['/portal', 'home'],
+  ['/children', 'home'],
+  ['/schedule', 'schedule'],
+  ['/reports', 'reports'],
+  ['/report/', 'reports'],
+  ['/account', 'account'],
+];
+
+/** The tab the page at `pathname` belongs to; none for «الإشعارات» (the bell lights then). */
+export function tabOf(pathname: string): FamilyTab | null {
+  return SECTION.find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? null;
+}

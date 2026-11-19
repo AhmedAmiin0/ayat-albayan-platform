@@ -37,4 +37,26 @@ describe('the family bar (owner 2026-11-16)', () => {
     await screen.findByRole('link', { name: TABS.home });
     expect(names()).toEqual([TABS.home, TABS.schedule, TABS.account]);
   });
+
+  it('the current page is aria-current, «التقارير» also on one report; the tile is placed on it', async () => {
+    apiFetch.mockResolvedValue(home({ kind: 'student', students: [kid()] }));
+    const { container } = renderAtWith('/report/r1');
+    const reports = await screen.findByRole('link', { name: TABS.reports });
+    expect(reports.getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('link', { name: TABS.home }).getAttribute('aria-current')).toBeNull();
+    const tile = container.querySelector('.ab-indicator');
+    expect(tile?.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('keeps the fourth slot while /portal/me loads (the bar never jumps)', async () => {
+    apiFetch.mockReturnValue(new Promise(() => undefined));
+    const { container } = renderAtWith('/portal');
+    await screen.findByRole('link', { name: TABS.home });
+    expect(container.querySelectorAll('nav li')).toHaveLength(4);
+  });
 });
+
+function renderAtWith(path: string) {
+  const out = renderAt(<TabBar />, path);
+  return { ...out, container: document.body };
+}

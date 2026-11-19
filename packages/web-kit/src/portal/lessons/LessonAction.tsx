@@ -53,7 +53,6 @@ export function LessonAction({ lesson, studentId, tz, now, onJoined }: Props) {
       <Button
         type="button"
         size="lg"
-        className="transition-transform active:scale-[0.98]"
         disabled={join.isPending}
         onClick={() => join.mutate()}
       >

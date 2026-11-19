@@ -35,7 +35,7 @@
   --radius-md: 8px;  /* buttons, inputs, menus */
   --radius-lg: 12px; /* screens, mobile cards, toasts */
 
-  --ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* The motion curve and durations: styles/motion.css. */
 
   /* theme.ts brandTile: the family sign-in's emblem tile, one deep green in both themes. */
   --color-brand-tile: #064e3b;
