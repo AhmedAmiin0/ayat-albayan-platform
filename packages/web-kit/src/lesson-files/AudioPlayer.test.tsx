@@ -51,6 +51,28 @@ describe('AudioPlayer (web)', () => {
     document.documentElement.dir = '';
   });
 
+  it('«تشغيل» ↔ «إيقاف مؤقت» share one button: the hidden face is aria-hidden', () => {
+    loaded();
+    const button = screen.getByRole('button', { name: P.play });
+    const hidden = button.querySelector(':scope > span > span[aria-hidden="true"]');
+    expect(hidden?.textContent).toBe(P.pause);
+    fireEvent.click(button);
+    expect(screen.getByRole('button', { name: P.pause })).toBe(button);
+  });
+
+  it('one player sounds at a time: starting another pauses the first', () => {
+    const pause = vi.mocked(HTMLMediaElement.prototype.pause);
+    render(<AudioPlayer id="one" url="https://files.example/1.mp3" label="first" />);
+    render(<AudioPlayer id="two" url="https://files.example/2.mp3" label="second" />);
+    const [first, second] = screen.getAllByRole('button', { name: P.play });
+    fireEvent.click(first as HTMLElement);
+    expect(pause).not.toHaveBeenCalled();
+    fireEvent.click(second as HTMLElement);
+    expect(pause).toHaveBeenCalledOnce();
+    fireEvent.pause(screen.getByLabelText('first', { selector: 'audio' }));
+    expect(screen.getAllByRole('button', { name: P.play })).toHaveLength(1);
+  });
+
   it('shows the failure', () => {
     render(<AudioPlayer id="rec-y" url="https://files.example/r.mp3" label="rec" />);
     fireEvent.error(screen.getByLabelText('rec', { selector: 'audio' }));

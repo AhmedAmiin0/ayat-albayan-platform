@@ -56,8 +56,14 @@ export function SeekBar({ position, duration, seek }: Props) {
         onPointerMove={onPointerMove}
         className="flex h-6 cursor-pointer touch-none items-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring"
       >
-        <div className="h-1.5 w-full rounded-full bg-sunk">
+        {/* The fill and the knob follow the play with no easing: a scrub never lags the finger. */}
+        <div className="relative h-1.5 w-full rounded-full bg-sunk">
           <div className="h-1.5 rounded-full bg-lapis" style={{ width: `${share}%` }} />
+          <span
+            aria-hidden="true"
+            className="absolute top-1/2 size-4 -translate-y-1/2 rounded-full bg-lapis ring-4 ring-lapis-wash"
+            style={{ insetInlineStart: `calc(${share}% - 0.5rem)` }}
+          />
         </div>
       </div>
       <p className="flex justify-between text-xs text-ink-3">

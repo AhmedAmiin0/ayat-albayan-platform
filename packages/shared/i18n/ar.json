@@ -9612,6 +9612,24 @@
     "size": "الحجم: {size}",
     "waiting": "في الانتظار"
   },
+  "familyFiles": {
+    "download": "تنزيل",
+    "openTab": "افتح في نافذة جديدة",
+    "zoomIn": "تكبير",
+    "zoomOut": "تصغير",
+    "zoomLevel": "{n}%",
+    "prevFile": "الملف السابق",
+    "nextFile": "الملف التالي",
+    "pageOf": "{n} من {total}",
+    "pdfFrame": "معاينة {title}",
+    "playing": "قيد التشغيل",
+    "fullscreen": "ملء الشاشة",
+    "videoMark": "مرئي",
+    "audioMark": "صوتي",
+    "videoChip": "تسجيل مرئي · {minutes} دقيقة",
+    "watched": "شاهدته كاملًا",
+    "mixedHint": "تسجيلات صوتية ومرئية لحلقات غرفة الأكاديمية. تُفتح داخل التطبيق، وتتابع من حيث توقفت."
+  },
   "testAccounts": {
     "chip": "تجريبي",
     "userSwitch": "حساب تجريبي",
