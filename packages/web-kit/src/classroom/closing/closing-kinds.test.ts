@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { CLOSINGS, closingOf } from './closing-kinds';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { CLOSINGS, closingOf, closingSpec } from './closing-kinds';
 
 const base = { status: 'connected' as const, failure: null, endedForAll: false };
 
@@ -20,6 +21,14 @@ describe('closingOf', () => {
   it('shows a failed connect, and lets the page’s 410 lesson_ended win over everything', () => {
     expect(closingOf({ ...base, failure: 'تعذّر' })).toBe('failed');
     expect(closingOf({ ...base, status: 'ended', endedForAll: true })).toBe('final');
+  });
+
+  it('keeps staff on the plain «خرجت من الحلقة»; the family reads why it ended', () => {
+    expect(closingSpec('closed', 'staff')).toMatchObject({ title: t.classroom.ended, body: null });
+    expect(closingSpec('left', 'staff').body).toBeNull();
+    expect(closingSpec('closed', 'family').title).toBe(t.classroom.closedHint);
+    expect(closingSpec('left', 'family').body).toBe(t.mobileRoom.left.body);
+    expect(closingSpec('removed', 'staff')).toBe(CLOSINGS.removed);
   });
 
   it('offers a rejoin only where one can work', () => {

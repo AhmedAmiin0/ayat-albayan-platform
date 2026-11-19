@@ -20,6 +20,8 @@ export interface RoomFeatures {
   sidePanel: boolean;
   /** Phones: round buttons with their short words under them (the app's look). */
   roundControls: boolean;
+  /** The stage's camera strip: 160px tiles on every width (staff: 128px on phones). */
+  wideStrip: boolean;
 }
 
 export const ROOM_VARIANTS: Readonly<Record<RoomVariant, RoomFeatures>> = {
@@ -30,6 +32,7 @@ export const ROOM_VARIANTS: Readonly<Record<RoomVariant, RoomFeatures>> = {
     spotlightTeacher: false,
     sidePanel: false,
     roundControls: false,
+    wideStrip: false,
   },
   family: {
     deviceCheck: true,
@@ -38,6 +41,7 @@ export const ROOM_VARIANTS: Readonly<Record<RoomVariant, RoomFeatures>> = {
     spotlightTeacher: true,
     sidePanel: true,
     roundControls: true,
+    wideStrip: true,
   },
 };
 

@@ -4,8 +4,9 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ContextHeader } from '@ab/web-kit/classroom/flow/ContextHeader';
 import type { RoomContext } from '@ab/web-kit/classroom/flow/room-kit';
+import type { RoomVariant } from '@ab/web-kit/classroom/flow/room-variant';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
-import { CLOSINGS, type ClosingKind } from './closing-kinds';
+import { closingSpec, type ClosingKind } from './closing-kinds';
 
 /** The page's own rejoin: under way, or refused (its words). */
 export interface RejoinState {
@@ -15,6 +16,8 @@ export interface RejoinState {
 
 export interface RoomClosingProps {
   kind: ClosingKind;
+  /** Staff keep their plain «خرجت من الحلقة» (closing-kinds.ts). */
+  variant: RoomVariant;
   /** A failed connect's own words. */
   failure: string | null;
   context: RoomContext | null;
@@ -50,8 +53,8 @@ function ClosingButtons({ again, onBack, busy }: ButtonsProps) {
 }
 
 /** Why it ended, who is still inside (when it is known), and a refused rejoin's words. */
-function ClosingText({ kind, failure, context, rejoin }: RoomClosingProps) {
-  const spec = CLOSINGS[kind];
+function ClosingText({ kind, variant, failure, context, rejoin }: RoomClosingProps) {
+  const spec = closingSpec(kind, variant);
   return (
     <>
       <h1 role="status" className="text-xl font-bold">{failure ?? spec.title}</h1>
@@ -68,8 +71,8 @@ function ClosingText({ kind, failure, context, rejoin }: RoomClosingProps) {
  * in with fade-up.
  */
 export function RoomClosing(props: RoomClosingProps) {
-  const { kind, context, onRejoin, onBack, rejoin } = props;
-  const spec = CLOSINGS[kind];
+  const { kind, variant, context, onRejoin, onBack, rejoin } = props;
+  const spec = closingSpec(kind, variant);
   const again = spec.rejoin ? onRejoin : undefined;
   const busy = rejoin?.busy ?? false;
   return (

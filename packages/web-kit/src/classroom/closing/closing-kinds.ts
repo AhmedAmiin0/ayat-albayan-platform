@@ -1,5 +1,6 @@
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { RoomVariant } from '@ab/web-kit/classroom/flow/room-variant';
 import type { RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
 
 /**
@@ -31,6 +32,20 @@ export const CLOSINGS: Readonly<Record<ClosingKind, ClosingSpec>> = {
   duplicate: { icon: 'x', title: t.classroom.error.duplicate, body: null, rejoin: false, presence: false },
   failed: { icon: 'x', title: t.classroom.error.connect_failed, body: null, rejoin: true, presence: false },
 };
+
+/**
+ * Staff keep their plain screens: «خرجت من الحلقة» with «ادخل مرة أخرى» after leaving and after
+ * «إنهاء الحلقة للجميع» alike, and never the family's «الحلقة ما زالت جارية…» line.
+ */
+const STAFF_LEFT: ClosingSpec = { ...CLOSINGS.left, body: null, presence: false };
+const BY_VARIANT: Readonly<Record<RoomVariant, Partial<Record<ClosingKind, ClosingSpec>>>> = {
+  staff: { left: STAFF_LEFT, closed: STAFF_LEFT },
+  family: {},
+};
+
+/** The closing screen's look and words for this room's variant. */
+export const closingSpec = (kind: ClosingKind, variant: RoomVariant): ClosingSpec =>
+  BY_VARIANT[variant][kind] ?? CLOSINGS[kind];
 
 const BY_STATUS: Readonly<Partial<Record<RoomStatus, ClosingKind>>> = {
   ended: 'left',
