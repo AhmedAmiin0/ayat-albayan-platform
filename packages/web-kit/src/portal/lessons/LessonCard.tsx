@@ -56,6 +56,7 @@ export function LessonCard({ lesson, student }: Props) {
           now={now}
           onJoined={setRoom}
           label={state.kind === 'live' ? t.portal.app.live.join : undefined}
+          counted={state.kind === 'none'}
         />
       )}
       <LessonOptionsBar lesson={lesson} student={student} now={now} />
