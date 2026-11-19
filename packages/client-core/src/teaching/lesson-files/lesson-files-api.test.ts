@@ -30,6 +30,13 @@ describe('portalAssetsApi', () => {
     await portalAssetsApi(client).lessonFileUrl({ studentId: 'S', fileId: 'F' });
     expect(client.apiSend).toHaveBeenCalledWith('POST', '/portal/students/S/lesson-files/F/url');
   });
+
+  it('asks for a saving link under the file’s name («تنزيل»)', async () => {
+    const client = { apiFetch: vi.fn(), apiSend: vi.fn().mockResolvedValue({ url: 'u', expires_at: 'x' }) };
+    await portalAssetsApi(client).lessonFileUrl({ studentId: 'S', fileId: 'F', download: 'ورقة 1.png' });
+    const path = `/portal/students/S/lesson-files/F/url?download=${encodeURIComponent('ورقة 1.png').replace('%20', '+')}`;
+    expect(client.apiSend).toHaveBeenCalledWith('POST', path);
+  });
 });
 
 describe('recording months and parts', () => {
