@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { rowIn } from './bubble/jump';
 import { channelMessage, channelPage } from './channel.fixtures';
 import { showThread } from './thread.testing';
 
@@ -89,6 +90,6 @@ describe('ChannelThread: «ردّ» and «معلومات الرسالة» (the a
     showThread('portal');
     const quote = await screen.findByRole('button', { name: `${t.inbox.reply.jump}: أ. فاطمة` });
     fireEvent.click(quote);
-    expect(document.getElementById('channel-msg-a1')?.hasAttribute('data-flash')).toBe(true);
+    expect(rowIn(quote, 'a1')?.hasAttribute('data-flash')).toBe(true);
   });
 });

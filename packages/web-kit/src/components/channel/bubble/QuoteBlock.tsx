@@ -29,7 +29,7 @@ export function QuoteBlock({ reply }: { reply: ChannelReplyView }) {
     <button
       type="button"
       aria-label={`${t.inbox.reply.jump}: ${who}`}
-      onClick={() => jumpToMessage(reply.id)}
+      onClick={(e) => jumpToMessage(e.currentTarget, reply.id)}
       className="ab-press grid gap-0.5 rounded-sm border-s-[3px] border-lapis bg-sunk px-2.5 py-1.5 text-start"
     >
       <span className="text-2xs font-bold text-lapis">{who}</span>

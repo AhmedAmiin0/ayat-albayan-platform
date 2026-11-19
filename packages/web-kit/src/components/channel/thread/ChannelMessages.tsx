@@ -4,6 +4,7 @@ import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import type { ChannelRef } from '@ab/web-kit/components/channel/api';
 import { ChannelBubble } from '@ab/web-kit/components/channel/ChannelBubble';
+import { threadAttrs } from '@ab/web-kit/components/channel/bubble/jump';
 import { DayChip } from '@ab/web-kit/components/channel/rows/DayChip';
 import { UnreadBand } from '@ab/web-kit/components/channel/rows/UnreadBand';
 import { useThreadRows } from '@ab/web-kit/components/channel/rows/use-thread-rows';
@@ -45,7 +46,7 @@ export function ChannelMessages({ pages, refs, tz, now, mode, older }: Props) {
           {mode === 'write' ? t.studentChannel.emptyHint : undefined}
         </EmptyState>
       ) : (
-        <ol className="grid gap-1.5">
+        <ol {...threadAttrs} className="grid gap-1.5">
           {rows.map(({ message: m, opensDay, dayText, unread, followUp, arrived }) => (
             <Fragment key={m.client_id ?? m.id}>
               {opensDay && <DayChip text={dayText} />}
