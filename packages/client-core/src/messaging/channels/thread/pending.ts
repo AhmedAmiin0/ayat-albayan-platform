@@ -45,3 +45,17 @@ export function withPending<T extends CachedPages>(
   const messages = [...newest.messages.filter((m) => m.id !== row.id), row];
   return { ...data, pages: [{ ...newest, messages }, ...older] };
 }
+
+/**
+ * The cached thread without the pending row of `clientId` (a failed send), every page searched;
+ * whatever else arrived meanwhile (a live message, an edit) stays. Nothing cached → as it is.
+ */
+export function withoutPending<T extends CachedPages>(
+  data: T | undefined,
+  clientId: string,
+): T | undefined {
+  if (!data) return data;
+  const id = pendingId(clientId);
+  const pages = data.pages.map((p) => ({ ...p, messages: p.messages.filter((m) => m.id !== id) }));
+  return { ...data, pages };
+}

@@ -4,6 +4,7 @@ import {
   pendingMessage,
   sendIdFor,
   withPending,
+  withoutPending,
   type SendAttempt,
 } from '@ab/client-core';
 import type { ChannelPage } from '@ab/shared';
@@ -50,13 +51,13 @@ export function useChannelSend(refs: ChannelRef) {
     mutationFn: (attempt: SendAttempt & TextSend) => sendChannelMessage(refs, attempt),
     onMutate: async (attempt) => {
       await client.cancelQueries({ queryKey: key });
-      const before = client.getQueryData<Pages>(key);
       const { body, clientId } = attempt;
       const row = pendingMessage({ body, clientId, at: new Date() });
-      client.setQueryData(key, withPending(before, row));
-      return { before };
+      client.setQueryData<Pages>(key, (before) => withPending(before, row));
     },
-    onError: (_e, _attempt, context) => client.setQueryData(key, context?.before),
+    // Only this send's row goes: anything that arrived meanwhile (a live message) stays.
+    onError: (_e, { clientId }) =>
+      client.setQueryData<Pages>(key, (now) => withoutPending(now, clientId)),
     onSuccess: () => {
       last.current = null;
     },
