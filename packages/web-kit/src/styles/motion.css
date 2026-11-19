@@ -1,12 +1,27 @@
-/* Motion (owner, 2026-10-05: "add animations"): short (120–220 ms) ease-out entrances, no bounce.
-   `prefers-reduced-motion: reduce` turns all of it off: index.css kills every animation and
-   transition, and the transforms below only apply under `no-preference`. */
+/* Motion (owner, 2026-10-05: "add animations"; 2026-11-19: "dynamic interactive touches"): short
+   ease-out moves on ONE curve (--ease-ink) and the named durations below, no bounce, no loops but
+   the skeleton's sweep. `prefers-reduced-motion: reduce` turns all of it off: index.css kills every
+   animation and transition, and the transforms below only apply under `no-preference`. */
+@theme static {
+  --ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Pressed feedback (buttons, rows, cards). */
+  --duration-press: 120ms;
+  /* Colour and opacity changes: hover, a selected tab, a cross-fade. */
+  --duration-quick: 160ms;
+  /* Entrances: a panel, a card, a line that just appeared. */
+  --duration-enter: 200ms;
+  /* A selection indicator sliding to its new place (tabs, the week strip). */
+  --duration-move: 240ms;
+  /* The agenda's «you are here» ring after a jump: outlasts the scroll so the eye lands on it. */
+  --duration-flash: 700ms;
+}
+
 @theme {
-  --animate-fade-up: ab-fade-up 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  --animate-fade-in: ab-fade-in 160ms ease-out both;
-  --animate-pop-in: ab-pop-in 180ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  --animate-drawer-in: ab-drawer-in 220ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  --animate-toast-in: ab-toast-in 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-fade-up: ab-fade-up 200ms var(--ease-ink) both;
+  --animate-fade-in: ab-fade-in 160ms var(--ease-ink) both;
+  --animate-pop-in: ab-pop-in 180ms var(--ease-ink) both;
+  --animate-drawer-in: ab-drawer-in 220ms var(--ease-ink) both;
+  --animate-toast-in: ab-toast-in 200ms var(--ease-ink) both;
   --animate-shimmer: ab-shimmer 1.2s linear infinite;
 
   @keyframes ab-fade-up {
@@ -47,14 +62,34 @@
   /* Hover lift for clickable cards and rows: a hairline rise and a soft shadow. */
   .ab-lift {
     transition:
-      transform 160ms ease-out,
-      box-shadow 160ms ease-out,
-      background-color 160ms ease-out;
+      transform var(--duration-quick) var(--ease-ink),
+      box-shadow var(--duration-quick) var(--ease-ink),
+      background-color var(--duration-quick) var(--ease-ink);
   }
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .ab-lift:hover {
       transform: translateY(-1px);
       box-shadow: var(--elev-toast);
     }
+  }
+}
+
+@layer components {
+  /* Pressed feedback for a tappable row or card (Button has its own): it sinks a little under the
+     finger. No hover motion, so nothing fires on a touch screen's false hover. */
+  .ab-press {
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform var(--duration-press) var(--ease-ink),
+      background-color var(--duration-quick) var(--ease-ink);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ab-press:active:not(:disabled, [aria-disabled='true']) {
+      transform: scale(0.98);
+    }
+  }
+  /* A selection indicator (slide-indicator.ts): placed at once, then it slides between choices. */
+  .ab-indicator[data-placed] {
+    transition: transform var(--duration-move) var(--ease-ink);
   }
 }

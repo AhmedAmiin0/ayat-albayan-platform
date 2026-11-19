@@ -14,6 +14,8 @@ interface Props {
   /** The `?tab=` asked for; the page's own state otherwise. */
   tab?: ChildTab;
   onTab: (tab: ChildTab) => void;
+  /** The home shows the next lesson above the tabs: «القادمة» lists the rest. */
+  exceptNext?: boolean;
 }
 
 const PREFIX = 'child';
@@ -30,7 +32,7 @@ const END_GAP =
  * its unread count on the tab). A report opens on its own page. Only the shown panel mounts
  * (the kit's ChildPanel, shared with the staff pages).
  */
-export function ChildBody({ student, kind, tab, onTab }: Props) {
+export function ChildBody({ student, kind, tab, onTab, exceptNext }: Props) {
   const navigate = useNavigate();
   const tabs = tabOptions(kind, student, useChatTab(student.id));
   const shown = shownTab(tabs, tab);
@@ -53,7 +55,7 @@ export function ChildBody({ student, kind, tab, onTab }: Props) {
       />
       <div key={shown} role="tabpanel" id={ids.panel} aria-labelledby={ids.tab}
         className={`animate-fade-up ${END_GAP}`}>
-        <ChildPanel tab={shown} student={student} onOpenReport={open} />
+        <ChildPanel tab={shown} student={student} onOpenReport={open} exceptNext={exceptNext} />
       </div>
     </div>
   );

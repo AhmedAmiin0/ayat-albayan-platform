@@ -1,3 +1,4 @@
+import { cardClass } from '@ab/web-kit/components/ui/surface/card';
 import { prepareCard } from '@ab/client-core';
 import type { PortalLessons } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -16,7 +17,7 @@ export function PrepareCard({ lessons }: { lessons: Pick<PortalLessons, 'prepare
   return (
     <section
       aria-label={t.portal.prepareTitle}
-      className="grid gap-2 rounded-lg border border-gold/40 bg-raised p-4"
+      className={`${cardClass} grid gap-2 p-4`}
     >
       <h3 className="font-display text-body font-bold">{t.portal.prepareTitle}</h3>
       <dl className="grid gap-2">

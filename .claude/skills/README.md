@@ -10,3 +10,4 @@ update by copying a newer release from the source. License texts: `LICENSE-THIRD
 | `critique-brand-consistency` | design review: Emerald Mint tokens, voice, brand | designer-skills (visual-critique 1.1.0) | MIT, © MC Dean |
 | `supabase` | any Supabase task | [supabase/agent-skills](https://github.com/supabase/agent-skills) (0.1.2) | MIT, © Supabase |
 | `supabase-postgres-best-practices` | migrations, SQL, RLS, indexes | supabase/agent-skills (1.1.1) | MIT, © Supabase |
+| `animate` | building any animation or interactive motion (web) | [emilkowalski/skills](https://github.com/emilkowalski/skills) | MIT, © Emil Kowalski |

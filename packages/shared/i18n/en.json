@@ -118,7 +118,8 @@
       },
       "home": {
         "greeting": "Welcome",
-        "open": "Open {name}'s page"
+        "open": "Open {name}'s page",
+        "noMore": "No other lessons in the coming days."
       },
       "lesson": {
         "today": "Today",
@@ -156,7 +157,22 @@
         "prev": "Previous week",
         "next": "Next week",
         "today": "Today · {day}",
-        "empty": "No lessons this week."
+        "empty": "No lessons this week.",
+        "days": "Days of the week",
+        "dayLabel": "{date}: {count}",
+        "noLessons": "No lessons",
+        "lessonCount": {
+          "one": "1 lesson",
+          "two": "2 lessons",
+          "few": "{n} lessons",
+          "other": "{n} lessons"
+        },
+        "summary": "Week summary",
+        "lessons": "Lessons",
+        "awaiting": "Awaiting your confirmation",
+        "teachers": "Teacher",
+        "tzNote": "All times are on your clock ({zone}).",
+        "joinNote": "Joining opens shortly before the lesson starts."
       },
       "children": {
         "lastReport": "Last report · {date}",
@@ -198,7 +214,11 @@
         "settings": "Settings",
         "pushGuardian": "Lesson times, new reports and schedule changes",
         "pushStudent": "Lesson times and new reports",
-        "version": "Version {v}"
+        "version": "Version {v}",
+        "roleGuardian": "Guardian",
+        "roleStudent": "Student",
+        "code": "Student code {code}",
+        "inView": "In view"
       },
       "profile": {
         "title": "Profile",
@@ -296,7 +316,8 @@
         "date_in_past": "That time has passed; pick another one.",
         "group_lesson": "This is a group lesson; contact the academy to change it."
       }
-    }
+    },
+    "roomTitle": "Lesson room"
   },
   "mobile": {
     "pushTitle": "Turn on notifications",
@@ -9480,7 +9501,13 @@
     "loginLinkHint": "Guardians and students sign in on their own pages.",
     "nav": "Family pages sections",
     "toStaffApp": "Open the academy team's platform",
-    "familySignIn": "Family and student sign-in"
+    "familySignIn": "Family and student sign-in",
+    "routeError": {
+      "title": "This page could not be opened",
+      "body": "The connection may have dropped. Try again, or go back to the home page.",
+      "retry": "Try again",
+      "home": "Home page"
+    }
   },
   "audioPlayer": {
     "play": "Play",

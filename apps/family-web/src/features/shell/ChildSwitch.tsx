@@ -18,7 +18,7 @@ export function ChildSwitch() {
         text-ink hover:bg-sunk"
     >
       <Icon name="users" className="size-4 shrink-0" aria-hidden="true" />
-      <span className="truncate">{child.name}</span>
+      <span dir="auto" className="truncate">{child.name}</span>
     </Link>
   );
 }

@@ -45,7 +45,10 @@ export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
                 'inline-flex min-h-12 items-center rounded-md border px-4 text-sm font-medium text-ink-2',
                 p.equal && 'max-[480px]:flex max-[480px]:h-full max-[480px]:justify-center max-[480px]:px-2 max-[480px]:py-2 max-[480px]:text-center',
                 p.invalid ? 'border-danger' : 'border-input',
-                'peer-checked:border-primary peer-checked:bg-lapis-wash peer-checked:font-semibold peer-checked:text-ink',
+                // Selected: the lapis edge doubled by an inset ring (≥ 3:1 in both themes, stronger
+                // than the unselected input edge) on the green wash, the label in semibold ink.
+                'peer-checked:border-lapis peer-checked:bg-lapis-wash peer-checked:ring-1 peer-checked:ring-inset',
+                'peer-checked:ring-lapis peer-checked:font-semibold peer-checked:text-ink',
                 'peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',
                 'hover:bg-sunk peer-disabled:cursor-not-allowed peer-disabled:opacity-60',
               )}

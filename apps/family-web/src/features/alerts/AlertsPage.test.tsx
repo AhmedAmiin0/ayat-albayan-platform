@@ -47,6 +47,16 @@ describe('«الإشعارات» of the family pages', () => {
     );
   });
 
+  it('an unread row is told apart by more than a tint: its bar, its dot and a semibold title', async () => {
+    apiFetch.mockResolvedValue({ items: [row('a', 0, false), row('b', 0, true)], unread: 1 });
+    renderAt(<AlertsPage kind="guardian" />);
+    const unread = await screen.findByRole('button', { name: /title a/ });
+    const read = screen.getByRole('button', { name: /title b/ });
+    expect([unread.dataset.unread, read.dataset.unread]).toEqual(['true', undefined]);
+    expect(unread.className).toContain('before:bg-lapis');
+    expect(read.className).not.toContain('before:bg-lapis');
+  });
+
   it('nothing yet: the empty line', async () => {
     apiFetch.mockResolvedValue({ items: [], unread: 0 });
     renderAt(<AlertsPage kind="student" />);

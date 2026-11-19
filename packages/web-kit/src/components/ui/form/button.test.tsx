@@ -46,7 +46,7 @@ describe('Button (docs/07 §6)', () => {
   });
 
   it('presses in by 2% only when motion is welcome and the button is enabled', () => {
-    expect(buttonVariants().split(' ')).toContain('motion-safe:active:not-disabled:scale-[0.98]');
+    expect(buttonVariants().split(' ')).toContain('motion-safe:active:not-disabled:scale-98');
   });
 
   it('ghost uses the link-green text token, not the fill', () => {

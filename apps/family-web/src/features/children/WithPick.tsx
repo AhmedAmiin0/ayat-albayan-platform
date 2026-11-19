@@ -1,6 +1,6 @@
 import type { FamilyPick } from '@ab/client-core';
 import type { PortalHome, PortalStudent } from '@ab/shared';
-import { Fragment, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -20,8 +20,13 @@ const WAITING: Readonly<Record<Waiting, (home: PortalHome) => ReactNode>> = {
 function Picked({ home, page }: { home: PortalHome; page: Page }) {
   const pick = useFamilyPick();
   if (pick.state !== 'one') return <>{WAITING[pick.state](home)}</>;
-  // A new pick starts the page afresh (its first tab).
-  return <Fragment key={pick.student.id}>{page(pick.student, home)}</Fragment>;
+  // A new pick starts the page afresh (its first tab) and fades in: the switch reads as a new
+  // child's page, not a flicker of the old one (--duration-quick, opacity only).
+  return (
+    <div key={pick.student.id} className="grid animate-fade-in gap-5">
+      {page(pick.student, home)}
+    </div>
+  );
 }
 
 /**

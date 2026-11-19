@@ -41,7 +41,7 @@ const PAIRS: [Key, Key][] = [
   // text on fills: the primary (its own fill token) + hover, destructive-solid, the inverse toast
   ['onLapis', 'lapisFill'],
   ['onLapis', 'lapisHover'],
-  ['onBad', 'badSolid'],
+  ['onBad', 'badSolid'], // also the bell's unread badge (audit 2026-11-19: never white on `bad`)
   ['onInverse', 'inverse'],
   // the login binding: wordmark and programme line on every leather tone
   ['goldOnCover', 'leather'],
@@ -57,6 +57,16 @@ const EDGES: [Key, Key][] = [
   ['ruleInput', 'raised'],
   ['ruleInput', 'page'],
   ['inverseGold', 'inverse'],
+  // a selected chip / row / day and an unread alert: the lapis edge on its card and on its wash
+  // (audit 2026-11-19: `primary` as an edge was 2.45:1 in dark, weaker than the unselected edge)
+  ['lapis', 'raised'],
+  ['lapis', 'lapisWash'],
+  ['lapis', 'margin'],
+  // a passive status (Dot): the coloured mark beside its word, on a card
+  ['ok', 'raised'],
+  ['act', 'raised'],
+  ['bad', 'raised'],
+  ['ink3', 'raised'],
   // delivery ticks on our bubble (sunk on desktop, lapisWash on phones) and on a thread row (raised)
   ...(['sunk', 'lapisWash', 'raised'] as Key[]).flatMap((bg): [Key, Key][] => [['read', bg], ['tick', bg], ['act', bg]]),
 ];
@@ -71,6 +81,10 @@ describe.each(['light', 'dark'] as ThemeName[])('%s theme contrast (docs/07 §3)
 
   it.each(EDGES)('%s against %s ≥ 3', (fg, bg) => {
     expect(contrast(c[fg], c[bg])).toBeGreaterThanOrEqual(3);
+  });
+
+  it('a selected edge (lapis) stands out more than an unselected one (rule-input)', () => {
+    expect(contrast(c.lapis, c.raised)).toBeGreaterThan(contrast(c.ruleInput, c.raised));
   });
 
   // Read vs delivered is told by colour alone, as in WhatsApp (docs/07 principle 3 carve-out): keep

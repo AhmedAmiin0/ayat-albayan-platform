@@ -11,6 +11,8 @@ import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 interface PanelProps {
   student: PortalStudent;
   onOpenReport: (report: OpenReport) => void;
+  /** «القادمة» leaves out the next lesson, shown above the tabs (the family home). */
+  exceptNext?: boolean;
 }
 
 /**
@@ -20,7 +22,7 @@ interface PanelProps {
  * family_chat_enabled is off (403 family_chat_off), shown as the thread's load error.
  */
 const PANELS: Record<ChildTab, (props: PanelProps) => ReactNode> = {
-  upcoming: ({ student }) => <LessonsPanel student={student} />,
+  upcoming: ({ student, exceptNext }) => <LessonsPanel student={student} exceptNext={exceptNext} />,
   attended: (props) => <HistoryPanel {...props} status="attended" />,
   absent: (props) => <HistoryPanel {...props} status="absent" />,
   recordings: (props) => <RecordingsPanel {...props} />,

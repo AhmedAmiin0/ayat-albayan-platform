@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { env } from '@ab/web-kit/lib/http/env';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
@@ -9,9 +10,9 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
  */
 export function WrongApp() {
   return (
-    <main className="grid min-h-dvh place-items-center bg-page px-4">
-      <section role="alert" className="grid max-w-[420px] gap-4 rounded-lg border border-rule
-        bg-raised p-6 text-center">
+    <main className="grid min-h-dvh place-items-center px-4">
+      <Card asChild className="grid w-full max-w-md gap-4 p-6 text-center">
+        <section role="alert">
         <p className="text-body text-pretty text-ink">{t.familyApp.wrongApp}</p>
         {env.staffOrigin && (
           <a href={`${env.staffOrigin}/login`} className={buttonVariants({ size: 'lg' })}>
@@ -21,7 +22,8 @@ export function WrongApp() {
         <Link to="/login" className={buttonVariants({ variant: 'ghost' })}>
           {t.familyWeb.familySignIn}
         </Link>
-      </section>
+        </section>
+      </Card>
     </main>
   );
 }

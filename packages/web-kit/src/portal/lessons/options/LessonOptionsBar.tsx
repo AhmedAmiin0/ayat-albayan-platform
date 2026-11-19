@@ -1,14 +1,11 @@
-import { FAMILY_NOTICE, lessonOptions, type FamilyAction, type LessonOption } from '@ab/client-core';
+import { lessonOptions, type LessonOption } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
-import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AskTimeDrawer } from './AskTimeDrawer';
 import { DeclinePanel } from './DeclinePanel';
-import { useFamilyAction } from './use-family-action';
-
-type Open = 'decline' | 'ask' | null;
+import { useLessonOptions } from './use-lesson-options';
 
 interface LessonOptionsBarProps {
   lesson: PortalLesson;
@@ -26,28 +23,17 @@ const VARIANT: Readonly<Record<LessonOption, 'primary' | 'secondary' | 'ghost'>>
 
 /**
  * «خيارات الحلقة» on a web portal lesson (owner 2026-11-17): «سأحضر», «اطلب موعدًا آخر» or
- * «سحب الطلب», «أعتذر عن الحلقة», as the family app; the result said under the card.
+ * «سحب الطلب», «أعتذر عن الحلقة», as the family app; the result said under the card: at once
+ * for a one-tap answer (it fades up while the write lands; a refusal replaces it with the reason).
  */
 export function LessonOptionsBar({ lesson, student, now }: LessonOptionsBarProps) {
-  const [open, setOpen] = useState<Open>(null);
-  const [said, setSaid] = useState<string | null>(null);
-  const action = useFamilyAction();
-  const ids = { studentId: student.id, lessonId: lesson.id };
-  const send = (a: FamilyAction) =>
-    action.send(a, () => {
-      setOpen(null);
-      setSaid(A[FAMILY_NOTICE[a.kind]]);
-    });
-  const pick: Record<LessonOption, () => void> = {
-    confirm: () => send({ kind: 'confirm', ...ids }),
-    withdraw: () => send({ kind: 'withdraw', ...ids }),
-    request: () => setOpen('ask'),
-    decline: () => setOpen('decline'),
-  };
+  const { open, setOpen, said, action, ids, send, pick } = useLessonOptions({ lesson, student });
   const options = lessonOptions(lesson, now);
   return (
     <div className="grid gap-2">
-      {said && <p role="status" className="text-sm font-semibold text-ok">{said}</p>}
+      {said && (
+        <p role="status" className="animate-fade-up text-sm font-semibold text-ok">{said}</p>
+      )}
       {action.error && open !== 'ask' && <FormAlert>{action.error}</FormAlert>}
       {open === 'decline' ? (
         <DeclinePanel

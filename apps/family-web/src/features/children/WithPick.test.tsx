@@ -15,6 +15,7 @@ vi.mock('@ab/web-kit/auth/me', async (orig) => ({
 }));
 
 const P = t.portal.app.pick;
+const openName = (name: string) => t.portal.app.home.open.replace('{name}', name);
 const page = (student: PortalStudent) => <h1>{`page ${student.id}`}</h1>;
 
 /** GET /portal/me answers `me`; the cards' own reads never do (only the picker is tested). */
@@ -41,7 +42,7 @@ describe('«اختر الطالب» (owner 2026-11-16)', () => {
     expect(screen.getAllByRole('article')).toHaveLength(2);
     expect(screen.getByText(P.hint)).toBeTruthy();
     const card = screen.getByRole('article', { name: 'Yusuf' });
-    fireEvent.click(within(card).getByRole('button', { name: t.portal.openChild }));
+    fireEvent.click(within(card).getByRole('button', { name: openName('Yusuf') }));
     expect(await screen.findByRole('heading', { name: 'page s2' })).toBeTruthy();
   });
 });

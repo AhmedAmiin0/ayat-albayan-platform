@@ -1,9 +1,9 @@
-import { isNewReport, reportAt } from '@ab/client-core';
+import { dayTile, isNewReport, reportAt } from '@ab/client-core';
 import type { PortalReport, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { t, } from '@ab/mobile-kit';
 import { DateTile, NewMark, PressCard, RowText } from '@/ui';
-import { dayTile, teacherText } from '@/lessons';
+import { teacherText } from '@/lessons';
 import { openReport } from '@/nav';
 import { useFamilyClock, useSeenReports } from '@/portal';
 

@@ -58,6 +58,18 @@ describe('«خيارات الحلقة» on the web portal (owner 2026-11-17)', (
     expect(screen.getByRole('button', { name: A.send })).toHaveProperty('disabled', true);
   });
 
+  it('«سأحضر» is said at once (optimistic), then taken back if the academy refuses', async () => {
+    const { ApiError } = await import('@ab/client-core');
+    let refuse: (e: unknown) => void = () => undefined;
+    apiSend.mockReturnValue(new Promise((_ok, no) => (refuse = no)));
+    show();
+    fireEvent.click(screen.getByRole('button', { name: A.confirm }));
+    expect(screen.getByRole('status').textContent).toBe(A.confirmedNotice);
+    refuse(new ApiError(409, { code: 'lesson_started' }));
+    expect(await screen.findByText(A.errors.lesson_started)).toBeTruthy();
+    expect(screen.queryByText(A.confirmedNotice)).toBeNull();
+  });
+
   it('a started lesson offers nothing', () => {
     renderPortal(<LessonOptionsBar lesson={needs()} student={kid()} now={new Date('2026-10-27T16:00:00Z')} />);
     expect(screen.queryByRole('button')).toBeNull();
