@@ -63,6 +63,8 @@ export { isPending, pendingMessage, withPending } from './thread/pending.js';
 export { headerPeople } from './thread/people.js';
 export { type ChannelRow, channelRows, unreadBand } from './thread/rows.js';
 export { type ChannelTicks, ticksOf } from './thread/ticks.js';
+export { EMOJI, insertAt } from './thread/emoji.js';
+export { WAVE_BARS, waveBars } from './thread/wave-bars.js';
 export {
   ChannelFileError,
   type ChannelFileFields,
