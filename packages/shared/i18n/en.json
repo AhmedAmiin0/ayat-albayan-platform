@@ -9632,9 +9632,7 @@
       "starting": "Starting the camera and microphone…",
       "camDenied": "Camera not allowed",
       "micPick": "Microphone",
-      "camPick": "Camera",
-      "micOn": "We can hear you",
-      "micOff": "Microphone off"
+      "camPick": "Camera"
     },
     "waiting": {
       "title": "Waiting for the teacher…",
