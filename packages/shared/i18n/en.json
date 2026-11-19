@@ -198,7 +198,11 @@
         "settings": "Settings",
         "pushGuardian": "Lesson times, new reports and schedule changes",
         "pushStudent": "Lesson times and new reports",
-        "version": "Version {v}"
+        "version": "Version {v}",
+        "roleGuardian": "Guardian",
+        "roleStudent": "Student",
+        "code": "Student code {code}",
+        "inView": "In view"
       },
       "profile": {
         "title": "Profile",
