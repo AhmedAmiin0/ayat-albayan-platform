@@ -60,4 +60,11 @@ describe('ReportView «تقرير الحلقة»', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/reports/r1/url');
     expect(tab.close).toHaveBeenCalled();
   });
+
+  it('a page that goes back in history names the button «رجوع»', async () => {
+    apiFetch.mockImplementation(portalApi({ reportPage: pageView() }));
+    renderPortal(<ReportView studentId="s1" report={{ reportId: 'r1', recordingId: null }} onBack={onBack} backLabel={t.common.back} />);
+    fireEvent.click(await screen.findByRole('button', { name: t.common.back }));
+    expect(onBack).toHaveBeenCalled();
+  });
 });

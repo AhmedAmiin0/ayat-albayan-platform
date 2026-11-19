@@ -65,6 +65,14 @@ describe('PortalAssetsService.fileUrl', () => {
     );
   });
 
+  it('«تنزيل»: the same link saving under the asked name', async () => {
+    files.byId.mockResolvedValue(fileRow());
+    await service().fileUrl({ user: GUARDIAN, studentId: S, fileId: FILE, download: 'ورقة.png' });
+    expect(storage.signedDownload).toHaveBeenCalledWith(
+      expect.objectContaining({ path: `${LESSON}/a.png`, download: 'ورقة.png' }),
+    );
+  });
+
   it('hides a file staff kept from the family', async () => {
     files.byId.mockResolvedValue(fileRow({ visible_to_family: false }));
     await expect(service().fileUrl({ user: GUARDIAN, studentId: S, fileId: FILE }))

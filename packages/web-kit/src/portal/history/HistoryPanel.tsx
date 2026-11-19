@@ -14,6 +14,8 @@ interface Props {
   student: PortalStudent;
   status: PortalHistoryStatus;
   onOpenReport: (report: OpenReport) => void;
+  /** The family web's lesson page («ملفات الحلقة» on an attended row); staff pages have none. */
+  onOpenLesson?: (lessonId: string) => void;
 }
 
 const EMPTY: Record<PortalHistoryStatus, () => [string, string]> = {
@@ -26,7 +28,7 @@ const monthName = (month: string): string =>
   dateText(new Date(`${month}-01T00:00:00Z`), { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });
 
 /** «حضرها» / «غاب عنها» (docs/50 §6): past lessons, newest first, by month, a page at a time. */
-export function HistoryPanel({ student, status, onOpenReport }: Props) {
+export function HistoryPanel({ student, status, ...open }: Props) {
   const query = useInfiniteQuery(portalHistoryQuery({ studentId: student.id, status }));
   const [title, hint] = EMPTY[status]();
   return (
@@ -45,7 +47,7 @@ export function HistoryPanel({ student, status, onOpenReport }: Props) {
                       key={row.lesson_id}
                       row={row}
                       student={student}
-                      onOpenReport={onOpenReport}
+                      {...open}
                     />
                   ))}
                 </ul>

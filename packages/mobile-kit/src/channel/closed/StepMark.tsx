@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { IconLine } from '../../chat-ui/icons/icon-line';
 import { type Palette, type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
-import type { StepState } from './closed-steps';
+import type { StepState } from '@ab/client-core';
 
 /** Each state's circle and ink: done green, current brand, pending sunk. */
 const TONE: Readonly<Record<StepState, { fill: keyof Palette; ink: keyof Palette }>> = {

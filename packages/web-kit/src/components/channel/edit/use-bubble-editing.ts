@@ -1,10 +1,14 @@
-import { channelBubbleActions } from '@ab/client-core';
+import { menuOffers, type MenuOffers } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { useState } from 'react';
 import type { ChannelRef } from '@ab/web-kit/components/channel/api';
+import { useBubbleTools } from '@ab/web-kit/components/channel/bubble/bubble-tools';
 import { useChannelEdits } from './use-channel-edits';
 
 type Mode = 'view' | 'edit' | 'delete';
+
+/** A pick in «خيارات الرسالة». */
+export type MenuPick = keyof MenuOffers;
 
 interface Input {
   refs: ChannelRef;
@@ -13,25 +17,34 @@ interface Input {
   at: { now: Date; mode: 'write' | 'read' };
 }
 
-/** One bubble's «تعديل» / «حذف للجميع»: what it offers now, the open step, and the two calls. */
+/**
+ * One bubble's «ردّ», «تعديل», «حذف للجميع» and «معلومات الرسالة»: what it offers now (the shared
+ * menuOffers; reply and info only inside a thread), the open step, and the two calls.
+ */
 export function useBubbleEditing({ refs, message, at }: Input) {
   const [mode, setMode] = useState<Mode>('view');
   const calls = useChannelEdits({ ...refs, messageId: message.id });
-  // Who may change lives in channelBubbleActions: a writer, or the admin's moderation delete.
-  const offers = channelBubbleActions({
-    audience: refs.audience,
-    mode: at.mode,
-    message,
-    now: at.now,
-  });
+  const tools = useBubbleTools();
+  const may = menuOffers({ audience: refs.audience, mode: at.mode, message, now: at.now });
+  const offers: MenuOffers = {
+    ...may,
+    reply: may.reply && tools !== null,
+    reads: may.reads && tools !== null,
+  };
   const done = () => setMode('view');
+  const picks: Readonly<Record<MenuPick, () => void>> = {
+    reply: () => tools?.reply(message),
+    reads: () => tools?.info(message),
+    edit: () => setMode('edit'),
+    delete: () => setMode('delete'),
+  };
   return {
     mode,
     offers,
     problem: calls.problem,
     pending: calls.edit.isPending || calls.remove.isPending,
     moderator: refs.audience === 'admin',
-    open: setMode,
+    pick: (what: MenuPick) => picks[what](),
     close: done,
     save: (body: string) => calls.edit.mutate(body, { onSuccess: done }),
     remove: () => calls.remove.mutate(undefined, { onSettled: done }),

@@ -82,6 +82,21 @@ describe('ClassroomRoom', () => {
     expect(rejoined).toBe(true);
   });
 
+  it('a room ended for everyone shows staff their plain «خرجت من الحلقة», never the family line', () => {
+    open(fakeClient({ tiles: TILES, status: 'closed' }), () => undefined);
+    expect(screen.getByText(t.classroom.ended)).toBeTruthy();
+    expect(screen.queryByText(t.classroom.closedHint)).toBeNull();
+    expect(screen.queryByText(t.mobileRoom.left.body)).toBeNull();
+    expect(screen.getByRole('button', { name: t.classroom.rejoin })).toBeTruthy();
+  });
+
+  it('«المشاركون» opens the staff drawer, and pressing it again keeps it open', () => {
+    open(fakeClient({ tiles: TILES }));
+    fireEvent.click(screen.getByRole('button', { name: t.classroom.people }));
+    fireEvent.click(screen.getByRole('button', { name: t.classroom.people }));
+    expect(screen.getByRole('dialog', { name: t.classroom.people })).toBeTruthy();
+  });
+
   it('shows «بنعيد الاتصال» while reconnecting', () => {
     open(fakeClient({ tiles: TILES, status: 'reconnecting' }));
     expect(screen.getByText(t.classroom.reconnecting)).toBeTruthy();

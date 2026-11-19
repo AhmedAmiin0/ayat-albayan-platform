@@ -9,6 +9,14 @@ describe('lessonClockText', () => {
     expect(lessonClockText({ kind: 'now' }, ar.portal)).toBe(ar.portal.now);
     expect(lessonClockText({ kind: 'startsIn', parts }, ar.portal)).toBe('تبدأ الحلقة بعد 00:08:12');
     const two = { kind: 'opensIn' as const, parts: { ...parts, days: 2 } };
-    expect(lessonClockText(two, ar.portal)).toBe('يُتاح الدخول بعد يومان 00:08:12');
+    expect(lessonClockText(two, ar.portal)).toBe('يُتاح الدخول بعد يومين 00:08:12');
+  });
+
+  it('two days after «بعد» read «يومين» (never «يومان»), one and three days as before', () => {
+    const at = (days: number) => ({ kind: 'startsIn' as const, parts: { ...parts, days } });
+    expect(lessonClockText(at(2), ar.portal)).toBe('تبدأ الحلقة بعد يومين 00:08:12');
+    expect(lessonClockText(at(2), ar.portal)).not.toContain('يومان');
+    expect(lessonClockText(at(1), ar.portal)).toBe('تبدأ الحلقة بعد يوم واحد 00:08:12');
+    expect(lessonClockText(at(3), ar.portal)).toBe('تبدأ الحلقة بعد 3 أيام 00:08:12');
   });
 });

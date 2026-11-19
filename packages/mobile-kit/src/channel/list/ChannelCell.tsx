@@ -1,6 +1,6 @@
 import { createContext, use } from 'react';
 import { type CellRendererProps, type LayoutRectangle, View } from 'react-native';
-import type { ChannelRow } from './list-rows';
+import type { ChannelRow } from '@ab/client-core';
 import { useFrameGone } from './use-day-cover';
 
 /** Where a cell reports its frame (useDayCover's `frame`); the list provides it. */

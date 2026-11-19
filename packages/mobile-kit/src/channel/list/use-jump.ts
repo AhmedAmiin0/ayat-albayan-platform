@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
-import type { ChannelRow } from './list-rows';
+import type { ChannelRow } from '@ab/client-core';
 
 /** FlatList's answer when the row is not laid out yet: scroll near it instead. */
 interface ScrollFailed {

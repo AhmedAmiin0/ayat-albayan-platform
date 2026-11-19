@@ -26,11 +26,21 @@ interface PortalLessonInput {
   lessonId: string;
 }
 
+interface LessonFileInput {
+  studentId: string;
+  fileId: string;
+  download?: string;
+}
+
+/** `?download=<name>` when the link should save the file («تنزيل»). */
+const saveAs = (name?: string): string =>
+  name ? `?${new URLSearchParams({ download: name }).toString()}` : '';
+
 export interface PortalAssetsApi {
   portalRecordingsQuery: (studentId: string) => Read<PortalRecordings>;
   portalLessonAssetsQuery: (input: PortalLessonInput) => Read<PortalLessonAssets>;
-  /** A fresh 1-hour link to one visible lesson file. */
-  lessonFileUrl: (input: { studentId: string; fileId: string }) => Promise<PortalFileUrl>;
+  /** A fresh 1-hour link to one visible lesson file; with `download` it saves under that name. */
+  lessonFileUrl: (input: LessonFileInput) => Promise<PortalFileUrl>;
 }
 
 export function portalAssetsApi(client: ApiClient): PortalAssetsApi {
@@ -44,9 +54,9 @@ export function portalAssetsApi(client: ApiClient): PortalAssetsApi {
       read(`${student(studentId)}/recordings`, portalRecordingsSchema),
     portalLessonAssetsQuery: ({ studentId, lessonId }) =>
       read(`${student(studentId)}/lessons/${enc(lessonId)}/files`, portalLessonAssetsSchema),
-    lessonFileUrl: ({ studentId, fileId }) =>
+    lessonFileUrl: ({ studentId, fileId, download }) =>
       client
-        .apiSend('POST', `${student(studentId)}/lesson-files/${enc(fileId)}/url`)
+        .apiSend('POST', `${student(studentId)}/lesson-files/${enc(fileId)}/url${saveAs(download)}`)
         .then((r: unknown) => portalFileUrlSchema.parse(r)),
   };
 }

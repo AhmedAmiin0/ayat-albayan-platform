@@ -26,5 +26,7 @@ describe('Dialog layout="sheet"', () => {
     expect(screen.getByLabelText(t.students.name).parentElement?.className).toContain('overflow-y-auto');
     // From 640px: the floating card.
     expect(cls).toContain('sm:animate-pop-in');
+    // …centred: the phone's justify-end must not push the grid track to the inline end.
+    expect(dialog.parentElement?.className.split(' ')).toEqual(expect.arrayContaining(['sm:grid', 'sm:justify-center']));
   });
 });

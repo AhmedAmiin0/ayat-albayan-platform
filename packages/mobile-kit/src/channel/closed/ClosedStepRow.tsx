@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
-import type { ClosedStep } from './closed-steps';
+import type { ClosedStep } from '@ab/client-core';
 import { CurrentPill } from './CurrentPill';
 import { StepMark } from './StepMark';
 

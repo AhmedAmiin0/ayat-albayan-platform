@@ -15,7 +15,8 @@ export { seenStore, type SeenStorage, type SeenStore } from './seen-store.js';
 export { familyPick, picksChild, type FamilyPick } from './family-pick.js';
 export { familyChildren, isSelfChild } from './children-list.js';
 export {
-  liveRoom, liveRoomText, type LiveRoom, type LiveRoomText, type LiveRoomWords,
+  cardRoom, liveRoom, liveRoomText,
+  type CardRoom, type LiveRoom, type LiveRoomText, type LiveRoomWords,
 } from './live-room.js';
 export {
   PICKED_CHILD_KEY, pickStore, savedFor, type PickStore, type PickStoreState, type SavedPick,

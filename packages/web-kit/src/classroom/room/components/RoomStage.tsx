@@ -12,6 +12,8 @@ interface Props extends TileSlots {
   stage: TileView | null;
   board: ReactNode;
   strip: TileView[];
+  /** The family's 160px strip tiles on every width (staff: 128px on phones, 160px from `sm`). */
+  wideStrip?: boolean;
 }
 
 /**
@@ -19,7 +21,7 @@ interface Props extends TileSlots {
  * can be hidden: under the stage on phones and narrow windows (scrolls sideways), beside it from
  * `lg` (scrolls down). A shared screen can be maximised to the whole viewport (StageScreen).
  */
-export function RoomStage({ stage, board, strip, attach, actionFor }: Props) {
+export function RoomStage({ stage, board, strip, attach, actionFor, wideStrip = false }: Props) {
   const [stripOpen, setStripOpen] = useState(true);
   const S = t.classroom.stage;
   return (
@@ -51,7 +53,10 @@ export function RoomStage({ stage, board, strip, attach, actionFor }: Props) {
                 tile={tile}
                 attach={attach}
                 action={actionFor(tile)}
-                className="aspect-video min-h-0 w-32 shrink-0 sm:w-40 lg:w-full"
+                className={cn(
+                  'aspect-video min-h-0 shrink-0 lg:w-full',
+                  wideStrip ? 'w-40' : 'w-32 sm:w-40',
+                )}
               />
             ))}
           </ul>

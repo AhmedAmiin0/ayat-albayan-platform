@@ -1,11 +1,10 @@
-import { closedReasonKey } from '@ab/client-core';
+import { closedReasonKey, closedSteps } from '@ab/client-core';
 import type { ChannelClosedReason } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 import { ClosedStepRow } from './ClosedStepRow';
-import { closedSteps } from './closed-steps';
 import { DiamondOrnament } from './DiamondOrnament';
 
 /**

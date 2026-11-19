@@ -78,3 +78,12 @@ export const portalLessonAssetsSchema = z.object({
   files: z.array(portalLessonFileSchema),
 });
 export type PortalLessonAssets = z.output<typeof portalLessonAssetsSchema>;
+
+/**
+ * POST …/lesson-files/:fileId/url?download=<name>: «تنزيل» in the family's viewer. With a name
+ * the link saves the file under it (Content-Disposition: attachment) instead of showing it.
+ */
+export const portalLessonFileUrlQuerySchema = z.object({
+  download: z.string().trim().min(1).max(160).optional(),
+});
+export type PortalLessonFileUrlQuery = z.output<typeof portalLessonFileUrlQuerySchema>;

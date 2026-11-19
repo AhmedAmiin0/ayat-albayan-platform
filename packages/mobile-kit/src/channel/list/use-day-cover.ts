@@ -15,7 +15,7 @@ import {
 } from '../../chat-ui/days/top-band';
 import { type } from '../../theme';
 import { chipSeparators, topDay } from './day-cover';
-import type { ChannelRow } from './list-rows';
+import type { ChannelRow } from '@ab/client-core';
 
 type Scroll = NativeSyntheticEvent<NativeScrollEvent>;
 

@@ -84,6 +84,8 @@ describe('a child on «اختر الطالب» (owner 2026-11-19)', () => {
     expect(due.getAttribute('data-tone')).toBe('act');
     expect(screen.getByText(t.portal.usedOf.replace('{used}', '8').replace('{total}', '12')))
       .toBeTruthy();
+    const open = screen.getByRole('link', { name: new RegExp(t.portal.packageTab) });
+    expect(open.getAttribute('href')).toBe(`/package/${kid().id}`);
   });
 
   it('a child’s own login: no package, never even read', async () => {

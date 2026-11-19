@@ -1,4 +1,4 @@
-import type { ChannelActions } from '@ab/shared';
+import { offersAny, type MenuOffers } from '@ab/client-core';
 import { useRef, useState } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
@@ -6,18 +6,18 @@ import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { ChannelMenuItems } from './ChannelMenuItems';
+import type { MenuPick } from './use-bubble-editing';
 
 interface Props {
-  offers: ChannelActions;
-  /** Mine sits at the inline start: the menu opens toward the middle. */
+  offers: MenuOffers;
+  /** Mine sits at the inline end: the menu opens toward the middle. */
   mine: boolean;
-  onPick: (what: 'edit' | 'delete') => void;
+  onPick: (what: MenuPick) => void;
 }
 
 /**
  * «خيارات الرسالة» beside a bubble (as the inbox's): shown on hover and keyboard focus, always on
- * touch screens; «تعديل» / «حذف للجميع» only where the rule allows now. Esc and a pick put focus
- * back on ⋯.
+ * touch screens; only what is offered now. Esc and a pick put focus back on ⋯.
  */
 export function ChannelBubbleMenu({ offers, mine, onPick }: Props) {
   const [open, setOpen] = useState(false);
@@ -28,7 +28,7 @@ export function ChannelBubbleMenu({ offers, mine, onPick }: Props) {
     setOpen(false);
   };
   useDismiss(box, { open, onDismiss: (how) => close(how === 'escape') });
-  if (!offers.edit && !offers.delete) return null;
+  if (!offersAny(offers)) return null;
   return (
     <div
       ref={box}
@@ -42,7 +42,7 @@ export function ChannelBubbleMenu({ offers, mine, onPick }: Props) {
         ref={trigger}
         label={t.studentChannel.actions.menu}
         aria-expanded={open}
-        className="rounded-full"
+        className="ab-press rounded-full"
         onClick={() => setOpen(!open)}
       >
         <Icon name="more" />

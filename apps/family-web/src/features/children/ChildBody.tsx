@@ -43,6 +43,8 @@ export function ChildBody({ student, kind, tab, onTab, exceptNext }: Props) {
       params: { reportId: report.reportId },
       search: { studentId: student.id, recording: report.recordingId ?? undefined },
     });
+  const openLesson = (lessonId: string) =>
+    void navigate({ to: '/lesson/$lessonId', params: { lessonId }, search: { studentId: student.id } });
   return (
     <div className="grid gap-4">
       <Tabs
@@ -55,7 +57,8 @@ export function ChildBody({ student, kind, tab, onTab, exceptNext }: Props) {
       />
       <div key={shown} role="tabpanel" id={ids.panel} aria-labelledby={ids.tab}
         className={`animate-fade-up ${END_GAP}`}>
-        <ChildPanel tab={shown} student={student} onOpenReport={open} exceptNext={exceptNext} />
+        <ChildPanel tab={shown} student={student} onOpenReport={open} onOpenLesson={openLesson}
+          exceptNext={exceptNext} />
       </div>
     </div>
   );

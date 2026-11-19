@@ -3,7 +3,7 @@ import { boardSharer } from './livekit-board-share';
 import { listenData, sendData } from './livekit-data';
 import { watchModeration } from './livekit-moderated';
 import { attachTrack } from './media-attach';
-import { EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
+import { BOTH_ON, EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
 import { stopRevokedShare } from '@ab/web-kit/classroom/share/stop-revoked';
 import { snapshotOf } from './snapshot';
 
@@ -24,12 +24,18 @@ const REFRESH: readonly RoomEvent[] = [
   RoomEvent.ParticipantPermissionsChanged,
 ];
 
-/** Kicked (RemoveParticipant) and opened elsewhere get their own screens; anything else is «خرجت». */
-function closingStatus(reason: DisconnectReason | undefined): RoomStatus {
-  if (reason === DisconnectReason.DUPLICATE_IDENTITY) return 'duplicate';
-  if (reason === DisconnectReason.PARTICIPANT_REMOVED) return 'removed';
-  return 'ended';
-}
+/**
+ * Kicked (RemoveParticipant), opened elsewhere and ended for everyone (DeleteRoom, or the server's
+ * closer) get their own screens; anything else is «خرجت».
+ */
+const CLOSING: Partial<Record<DisconnectReason, RoomStatus>> = {
+  [DisconnectReason.DUPLICATE_IDENTITY]: 'duplicate',
+  [DisconnectReason.PARTICIPANT_REMOVED]: 'removed',
+  [DisconnectReason.ROOM_DELETED]: 'closed',
+  [DisconnectReason.ROOM_CLOSED]: 'closed',
+};
+const closingStatus = (reason: DisconnectReason | undefined): RoomStatus =>
+  (reason === undefined ? undefined : CLOSING[reason]) ?? 'ended';
 
 /** The real client: one livekit-client Room behind the RoomClient interface (ported from tools/livekit/join.html). */
 export function createLivekitRoom(): RoomClient {
@@ -81,13 +87,16 @@ export function createLivekitRoom(): RoomClient {
   };
 
   return {
-    async connect(url, token) {
+    async connect(url, token, media = BOTH_ON) {
       await room.connect(url, token);
       room.startAudio().catch(() => undefined);
       const me = room.localParticipant;
+      // Only what the device check left on starts (staff: both); a chosen device is asked for by id.
+      const mic = { deviceId: media.micId };
+      const cam = { deviceId: media.camId };
       const failures = [
-        ...(await attempt('mic', () => me.setMicrophoneEnabled(true))),
-        ...(await attempt('cam', () => me.setCameraEnabled(true))),
+        ...(media.mic ? await attempt('mic', () => me.setMicrophoneEnabled(true, mic)) : []),
+        ...(media.cam ? await attempt('cam', () => me.setCameraEnabled(true, cam)) : []),
       ];
       setStatus('connected');
       return failures;

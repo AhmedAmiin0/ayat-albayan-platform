@@ -1,8 +1,10 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { channelKey } from '@ab/client-core';
+import type { ChannelPage } from '@ab/shared';
+import { QueryClient, QueryClientProvider, type InfiniteData } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { channelPage } from './channel.fixtures';
+import { channelMessage, channelPage } from './channel.fixtures';
 import { ChannelThread } from './ChannelThread';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -36,7 +38,7 @@ describe('ChannelThread send: client_id and the draft per chat (review 2026-11-1
 
   it('a retry of the failed text reuses its client_id; the next text gets a new one', async () => {
     apiFetch.mockResolvedValue(channelPage());
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     render(<QueryClientProvider client={client()}>{thread('s1')}</QueryClientProvider>);
     await screen.findByLabelText(c.messageLabel);
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
@@ -54,9 +56,38 @@ describe('ChannelThread send: client_id and the draft per chat (review 2026-11-1
     expect(next).not.toBe(first);
   });
 
+  it('a failed send takes away only its own row: one that arrived meanwhile stays', async () => {
+    apiFetch.mockResolvedValue(channelPage());
+    const send: { fail?: (e: Error) => void } = {};
+    apiSend.mockResolvedValue(channelMessage());
+    const qc = client();
+    render(<QueryClientProvider client={qc}>{thread('s1')}</QueryClientProvider>);
+    await screen.findByLabelText(c.messageLabel);
+    await waitFor(() => expect(apiSend).toHaveBeenCalled());
+    apiFetch.mockImplementation(() => new Promise(() => undefined)); // the re-read never answers
+    apiSend.mockImplementationOnce(() => new Promise((_ok, no) => (send.fail = no)));
+    typeAndSend('شكرًا');
+    expect(await screen.findByText('شكرًا')).toBeTruthy();
+    const live = channelMessage({ id: 'live', body: 'وصلت الآن' });
+    const withLive = (p: ChannelPage, i: number) =>
+      i ? p : { ...p, messages: [...p.messages, live] };
+    qc.setQueryData<InfiniteData<ChannelPage>>(channelKey('portal', 's1'), (d) =>
+      d && { ...d, pages: d.pages.map(withLive) },
+    );
+    await waitFor(() => expect(send.fail).toBeDefined());
+    send.fail?.(new Error('offline'));
+    // The cache right after the failure (the re-read after it never answers here).
+    const ids = () =>
+      qc.getQueryData<InfiniteData<ChannelPage>>(channelKey('portal', 's1'))?.pages[0]?.messages
+        .map((m) => m.id);
+    await waitFor(() => expect(ids()?.some((id) => id.startsWith('pending:'))).toBe(false));
+    expect(ids()).toContain('live');
+    expect(screen.getByText('وصلت الآن')).toBeTruthy();
+  });
+
   it('switching the student never carries one chat’s text to another', async () => {
     apiFetch.mockResolvedValue(channelPage());
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(channelMessage());
     const qc = client();
     const view = render(<QueryClientProvider client={qc}>{thread('s1')}</QueryClientProvider>);
     fireEvent.change(await screen.findByLabelText(c.messageLabel), {

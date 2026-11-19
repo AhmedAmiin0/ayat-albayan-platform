@@ -8656,7 +8656,14 @@
       }
     },
     "keyboard": "Keyboard",
-    "closeChat": "Close the chat"
+    "closeChat": "Close the chat",
+    "web": {
+      "sendKey": "to send,",
+      "lineKey": "for a new line",
+      "micDenied": "The microphone is not allowed. Allow it in the browser settings, then try again.",
+      "closePhoto": "Close the photo",
+      "download": "Download the file"
+    }
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",
@@ -9612,6 +9619,24 @@
     "size": "Size: {size}",
     "waiting": "Waiting"
   },
+  "familyFiles": {
+    "download": "Download",
+    "openTab": "Open in a new tab",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomLevel": "{n}%",
+    "prevFile": "Previous file",
+    "nextFile": "Next file",
+    "pageOf": "{n} of {total}",
+    "pdfFrame": "Preview of {title}",
+    "playing": "Playing",
+    "fullscreen": "Full screen",
+    "videoMark": "Video",
+    "audioMark": "Audio",
+    "videoChip": "Video recording · {minutes} min",
+    "watched": "Watched in full",
+    "mixedHint": "Audio and video recordings of lessons held in the academy room. They open in the app and resume where you stopped."
+  },
   "testAccounts": {
     "chip": "Test",
     "userSwitch": "Test account",
@@ -9623,5 +9648,28 @@
     "cancel": "Cancel",
     "mismatch": "A family cannot mix a test account with a real student.",
     "failed": "The change could not be saved. Try again."
+  },
+  "roomFlow": {
+    "title": "{student}'s lesson with {teacher}",
+    "check": {
+      "title": "Before you join",
+      "hint": "Try your camera and microphone, then join.",
+      "starting": "Starting the camera and microphone…",
+      "camDenied": "Camera not allowed",
+      "micPick": "Microphone",
+      "camPick": "Camera"
+    },
+    "waiting": {
+      "title": "Waiting for the teacher…",
+      "body": "The teacher's camera will show here when they join."
+    },
+    "panel": {
+      "people": "Participants · {n}",
+      "close": "Close the panel"
+    },
+    "ended": {
+      "body": "It can't be joined again.",
+      "card": "The lesson ended at {time} and can't be joined again."
+    }
   }
 }

@@ -1,6 +1,6 @@
+import type { ProfileFact } from '@ab/client-core';
 import { View } from 'react-native';
 import { AppText, InsetGroup, Ltr, Section, t, type, useTheme } from '@ab/mobile-kit';
-import type { ProfileFact } from './profile-facts';
 
 /** One fact: its word over its value. A phone, email or code reads left to right. */
 function FactRow({ fact }: { fact: ProfileFact }) {
