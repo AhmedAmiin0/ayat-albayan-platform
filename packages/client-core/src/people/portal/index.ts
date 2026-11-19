@@ -31,3 +31,4 @@ export {
 export { lessonWaitText, type WaitTextInput, type WaitWords } from './wait-text.js';
 export * from './actions/index.js';
 export * from './app/index.js';
+export * from './profile/index.js';

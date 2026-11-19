@@ -15,10 +15,12 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as FamilyAccountRouteImport } from './routes/_family/account'
 import { Route as FamilyAlertsRouteImport } from './routes/_family/alerts'
 import { Route as FamilyPortalRouteImport } from './routes/_family/portal'
+import { Route as FamilyProfileRouteImport } from './routes/_family/profile'
 import { Route as FamilyReportsRouteImport } from './routes/_family/reports'
 import { Route as FamilyScheduleRouteImport } from './routes/_family/schedule'
 import { Route as FamilyChildrenIndexRouteImport } from './routes/_family/children/index'
 import { Route as FamilyChildrenStudentIdRouteImport } from './routes/_family/children/$studentId'
+import { Route as FamilyPackageStudentIdRouteImport } from './routes/_family/package.$studentId'
 import { Route as FamilyReportReportIdRouteImport } from './routes/_family/report.$reportId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -50,6 +52,11 @@ const FamilyPortalRoute = FamilyPortalRouteImport.update({
   path: '/portal',
   getParentRoute: () => FamilyRoute,
 } as any)
+const FamilyProfileRoute = FamilyProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => FamilyRoute,
+} as any)
 const FamilyReportsRoute = FamilyReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -70,6 +77,11 @@ const FamilyChildrenStudentIdRoute = FamilyChildrenStudentIdRouteImport.update({
   path: '/children/$studentId',
   getParentRoute: () => FamilyRoute,
 } as any)
+const FamilyPackageStudentIdRoute = FamilyPackageStudentIdRouteImport.update({
+  id: '/package/$studentId',
+  path: '/package/$studentId',
+  getParentRoute: () => FamilyRoute,
+} as any)
 const FamilyReportReportIdRoute = FamilyReportReportIdRouteImport.update({
   id: '/report/$reportId',
   path: '/report/$reportId',
@@ -82,9 +94,11 @@ export interface FileRoutesByFullPath {
   '/account': typeof FamilyAccountRoute
   '/alerts': typeof FamilyAlertsRoute
   '/portal': typeof FamilyPortalRoute
+  '/profile': typeof FamilyProfileRoute
   '/reports': typeof FamilyReportsRoute
   '/schedule': typeof FamilyScheduleRoute
   '/children/$studentId': typeof FamilyChildrenStudentIdRoute
+  '/package/$studentId': typeof FamilyPackageStudentIdRoute
   '/report/$reportId': typeof FamilyReportReportIdRoute
   '/children/': typeof FamilyChildrenIndexRoute
 }
@@ -94,9 +108,11 @@ export interface FileRoutesByTo {
   '/account': typeof FamilyAccountRoute
   '/alerts': typeof FamilyAlertsRoute
   '/portal': typeof FamilyPortalRoute
+  '/profile': typeof FamilyProfileRoute
   '/reports': typeof FamilyReportsRoute
   '/schedule': typeof FamilyScheduleRoute
   '/children/$studentId': typeof FamilyChildrenStudentIdRoute
+  '/package/$studentId': typeof FamilyPackageStudentIdRoute
   '/report/$reportId': typeof FamilyReportReportIdRoute
   '/children': typeof FamilyChildrenIndexRoute
 }
@@ -108,9 +124,11 @@ export interface FileRoutesById {
   '/_family/account': typeof FamilyAccountRoute
   '/_family/alerts': typeof FamilyAlertsRoute
   '/_family/portal': typeof FamilyPortalRoute
+  '/_family/profile': typeof FamilyProfileRoute
   '/_family/reports': typeof FamilyReportsRoute
   '/_family/schedule': typeof FamilyScheduleRoute
   '/_family/children/$studentId': typeof FamilyChildrenStudentIdRoute
+  '/_family/package/$studentId': typeof FamilyPackageStudentIdRoute
   '/_family/report/$reportId': typeof FamilyReportReportIdRoute
   '/_family/children/': typeof FamilyChildrenIndexRoute
 }
@@ -122,9 +140,11 @@ export interface FileRouteTypes {
     | '/account'
     | '/alerts'
     | '/portal'
+    | '/profile'
     | '/reports'
     | '/schedule'
     | '/children/$studentId'
+    | '/package/$studentId'
     | '/report/$reportId'
     | '/children/'
   fileRoutesByTo: FileRoutesByTo
@@ -134,9 +154,11 @@ export interface FileRouteTypes {
     | '/account'
     | '/alerts'
     | '/portal'
+    | '/profile'
     | '/reports'
     | '/schedule'
     | '/children/$studentId'
+    | '/package/$studentId'
     | '/report/$reportId'
     | '/children'
   id:
@@ -147,9 +169,11 @@ export interface FileRouteTypes {
     | '/_family/account'
     | '/_family/alerts'
     | '/_family/portal'
+    | '/_family/profile'
     | '/_family/reports'
     | '/_family/schedule'
     | '/_family/children/$studentId'
+    | '/_family/package/$studentId'
     | '/_family/report/$reportId'
     | '/_family/children/'
   fileRoutesById: FileRoutesById
@@ -204,6 +228,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FamilyPortalRouteImport
       parentRoute: typeof FamilyRoute
     }
+    '/_family/profile': {
+      id: '/_family/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof FamilyProfileRouteImport
+      parentRoute: typeof FamilyRoute
+    }
     '/_family/reports': {
       id: '/_family/reports'
       path: '/reports'
@@ -232,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FamilyChildrenStudentIdRouteImport
       parentRoute: typeof FamilyRoute
     }
+    '/_family/package/$studentId': {
+      id: '/_family/package/$studentId'
+      path: '/package/$studentId'
+      fullPath: '/package/$studentId'
+      preLoaderRoute: typeof FamilyPackageStudentIdRouteImport
+      parentRoute: typeof FamilyRoute
+    }
     '/_family/report/$reportId': {
       id: '/_family/report/$reportId'
       path: '/report/$reportId'
@@ -246,9 +284,11 @@ interface FamilyRouteChildren {
   FamilyAccountRoute: typeof FamilyAccountRoute
   FamilyAlertsRoute: typeof FamilyAlertsRoute
   FamilyPortalRoute: typeof FamilyPortalRoute
+  FamilyProfileRoute: typeof FamilyProfileRoute
   FamilyReportsRoute: typeof FamilyReportsRoute
   FamilyScheduleRoute: typeof FamilyScheduleRoute
   FamilyChildrenStudentIdRoute: typeof FamilyChildrenStudentIdRoute
+  FamilyPackageStudentIdRoute: typeof FamilyPackageStudentIdRoute
   FamilyReportReportIdRoute: typeof FamilyReportReportIdRoute
   FamilyChildrenIndexRoute: typeof FamilyChildrenIndexRoute
 }
@@ -257,9 +297,11 @@ const FamilyRouteChildren: FamilyRouteChildren = {
   FamilyAccountRoute: FamilyAccountRoute,
   FamilyAlertsRoute: FamilyAlertsRoute,
   FamilyPortalRoute: FamilyPortalRoute,
+  FamilyProfileRoute: FamilyProfileRoute,
   FamilyReportsRoute: FamilyReportsRoute,
   FamilyScheduleRoute: FamilyScheduleRoute,
   FamilyChildrenStudentIdRoute: FamilyChildrenStudentIdRoute,
+  FamilyPackageStudentIdRoute: FamilyPackageStudentIdRoute,
   FamilyReportReportIdRoute: FamilyReportReportIdRoute,
   FamilyChildrenIndexRoute: FamilyChildrenIndexRoute,
 }

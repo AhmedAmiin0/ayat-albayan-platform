@@ -79,7 +79,12 @@ export function ChildSummaryCard({ student, kind, onChoose }: Props) {
         />
         <ReadState read={read}>
           <CardLesson student={student} read={lesson} />
-          <SummaryFigures summary={read.summary} pkg={read.pkg} tz={student.tz} />
+          <SummaryFigures
+            summary={read.summary}
+            pkg={read.pkg}
+            tz={student.tz}
+            studentId={student.id}
+          />
         </ReadState>
         <Button
           type="button"
