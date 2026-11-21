@@ -37,6 +37,15 @@ describe('ReportingLogger (error lines also go to the error tracker, when one is
     expect(r.capture).toHaveBeenCalledWith(e, {});
   });
 
+  it('a job line (message, context): the context is a tag, never taken for a stack', () => {
+    vi.spyOn(process.stderr, 'write').mockReturnValue(true);
+    const r = reporter(true);
+    new ReportingLogger(r).error('run aborted: db down', 'RemindersJob');
+    const [error, tags] = r.capture.mock.calls[0] ?? [];
+    expect((error as Error).stack).not.toBe('RemindersJob');
+    expect(tags).toEqual({ context: 'RemindersJob' });
+  });
+
   it('warnings and info never reach the tracker', () => {
     vi.spyOn(process.stdout, 'write').mockReturnValue(true);
     const r = reporter(true);
