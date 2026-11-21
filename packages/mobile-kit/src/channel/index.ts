@@ -4,6 +4,7 @@ export { ChannelScreen } from './ChannelScreen';
 export { ChannelThread } from './ChannelThread';
 export { ChannelSheetHeader } from './header/ChannelSheetHeader';
 export { TEACHER_CHANNELS_KEY } from './channel-api';
+export { openOutside } from './attach/open-outside';
 export type {
   ChannelMediaPort,
   ChannelPickedFile,

@@ -9671,5 +9671,12 @@
       "body": "It can't be joined again.",
       "card": "The lesson ended at {time} and can't be joined again."
     }
+  },
+  "legal": {
+    "links": {
+      "privacy": "Privacy policy",
+      "deleteAccount": "Delete account and data",
+      "opensBrowser": "Opens in the browser"
+    }
   }
 }
