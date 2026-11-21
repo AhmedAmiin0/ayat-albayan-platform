@@ -3,27 +3,25 @@
 // the run's GITHUB_TOKEN (tags it makes start no workflow, so nothing loops).
 //   app  v<YYYY.MM.DD>-<n>                the web + API deploy (UTC day; n = 1 + that day's highest n)
 //   apk  mobile-v<version>-b<run number>  an EAS Android build (another profile: mobile-<profile>-v…)
+//   aab  aab-<profile>-v<version>-b<run>   a Google Play bundle (mobile.yml family production)
 //   ota  ota-<channel>-<YYYY.MM.DD>-<n>   an EAS update to that channel
 // A commit that already carries a tag of the family is skipped (re-runs never duplicate). The notes are
 // GitHub's generated notes since the family's previous tag. Any failure only warns: the run stays green
 // (deploy-baseline.mjs reads green runs) and a tag is a label, never part of the release.
 // Usage: GH_TOKEN=… GH_REPO=o/r KIND=app SHA=<40 hex> node tools/scripts/ci-checks/release-tags/release-tag.mjs
-//   apk also needs PROFILE, VERSION, GITHUB_RUN_NUMBER (EAS_URL optional); ota needs CHANNEL.
+//   apk and aab also need PROFILE, VERSION, GITHUB_RUN_NUMBER (EAS_URL optional); ota needs CHANNEL.
 import { execFileSync } from 'node:child_process';
 import { appendFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const NAME = /^[a-z][a-z0-9-]{0,30}$/;
-const RULES = {
-  app: {},
-  apk: { PROFILE: NAME, VERSION: /^\d+\.\d+\.\d+$/, GITHUB_RUN_NUMBER: /^\d+$/ },
-  ota: { CHANNEL: NAME },
-};
+const BUILD = { PROFILE: NAME, VERSION: /^\d+\.\d+\.\d+$/, GITHUB_RUN_NUMBER: /^\d+$/ };
+const RULES = { app: {}, apk: BUILD, aab: BUILD, ota: { CHANNEL: NAME } };
 const EAS_URL = /^https:\/\/expo\.dev\/[\w./-]+$/;
 
 /** The release the env describes, checked: its values end up in a tag name. */
 export function readRelease(env) {
-  if (!Object.hasOwn(RULES, env.KIND ?? '')) throw new Error('KIND must be app, apk or ota');
+  if (!Object.hasOwn(RULES, env.KIND ?? '')) throw new Error('KIND must be app, apk, aab or ota');
   for (const [key, re] of Object.entries({ SHA: /^[0-9a-f]{40}$/, ...RULES[env.KIND] })) {
     if (!re.test(env[key] ?? '')) throw new Error(`${key} is missing or malformed`);
   }
@@ -38,11 +36,18 @@ export function readRelease(env) {
   };
 }
 
-function prefix(release) {
-  if (release.kind === 'app') return 'v';
-  if (release.kind === 'ota') return `ota-${release.channel}-`;
-  return release.profile === 'preview' ? 'mobile-v' : `mobile-${release.profile}-v`;
-}
+const apkPrefix = (r) => (r.profile === 'preview' ? 'mobile-v' : `mobile-${r.profile}-v`);
+/** The fixed start of a family's tags: an AAB's «aab-» never starts like an APK's «mobile-». */
+const PREFIX = {
+  app: () => 'v',
+  apk: apkPrefix,
+  aab: (r) => `aab-${r.profile}-v`,
+  ota: (r) => `ota-${r.channel}-`,
+};
+const prefix = (release) => PREFIX[release.kind](release);
+/** APK and AAB tags carry the version and run number; the others a UTC day and a counter. */
+const BUILD_KINDS = { apk: true, aab: true };
+const isBuild = (release) => Object.hasOwn(BUILD_KINDS, release.kind);
 
 const DAY = String.raw`(?<day>\d{4}\.\d{2}\.\d{2})-(?<n>\d+)`;
 const APK = String.raw`\d+\.\d+\.\d+-b(?<n>\d+)`;
@@ -52,9 +57,9 @@ function older(a, b) {
   return a.n - b.n;
 }
 
-/** The family's tags, oldest first: `{ name, sha, day, n }` (APK tags have no day; n is the run number). */
+/** The family's tags, oldest first: `{ name, sha, day, n }` (builds: no day, n = run number). */
 export function familyTags(tags, release) {
-  const re = new RegExp(`^${prefix(release)}${release.kind === 'apk' ? APK : DAY}$`);
+  const re = new RegExp(`^${prefix(release)}${isBuild(release) ? APK : DAY}$`);
   return tags
     .flatMap(({ name, sha }) => {
       const g = re.exec(name)?.groups;
@@ -69,7 +74,7 @@ export function plan(tags, release, now) {
   const done = mine.find((t) => t.sha === release.sha);
   if (done) return { skip: `${release.sha.slice(0, 7)} is already ${done.name}` };
   const previous = mine.at(-1)?.name ?? '';
-  if (release.kind === 'apk') {
+  if (isBuild(release)) {
     return { tag: `${prefix(release)}${release.version}-b${release.run}`, previous };
   }
   const day = now.toISOString().slice(0, 10).replaceAll('-', '.');
@@ -77,11 +82,14 @@ export function plan(tags, release, now) {
   return { tag: `${prefix(release)}${day}-${n}`, previous };
 }
 
+const easLink = (r) => (r.easUrl ? ` EAS build: ${r.easUrl}` : '');
+
 const ABOUT = {
   app: () => 'Web app https://app.ayatalbayan.com and API https://api.ayatalbayan.com (deploy-staging).',
-  apk: (r) =>
-    `Android APK, EAS profile ${r.profile}, app version ${r.version}.` +
-    (r.easUrl ? ` EAS build: ${r.easUrl}` : ''),
+  apk: (r) => `Android APK, EAS profile ${r.profile}, app version ${r.version}.${easLink(r)}`,
+  aab: (r) =>
+    `Android App Bundle (AAB) for Google Play, build ${r.profile}, app version ${r.version}.` +
+    easLink(r),
   ota: (r) => `Over-the-air update (JavaScript only) to the EAS channel ${r.channel}.`,
 };
 
