@@ -1,6 +1,6 @@
 import type { Database } from '@ab/db';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { timedFetch } from '@/common/infra/http/db-fetch';
+import { type FetchLike, timedFetch } from '@/common/infra/http/db-fetch';
 
 interface DbClientOptions {
   url: string;
@@ -8,7 +8,7 @@ interface DbClientOptions {
   /** Deadline of each database call (DB_TIMEOUT_MS). */
   timeoutMs: number;
   /** The real fetch; tests pass a slow or fast fake. */
-  base?: typeof fetch;
+  base?: FetchLike;
 }
 
 /** The service-role client: a stalled database call fails fast (DbTimeoutError), never hangs. */

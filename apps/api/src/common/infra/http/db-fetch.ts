@@ -11,14 +11,17 @@ const timed = (input: string | URL | Request): boolean => {
   return TIMED_PATHS.some((p) => path.startsWith(p));
 };
 
+/** The fetch signature (supabase-js's `global.fetch`). */
+export type FetchLike = typeof fetch;
+
 interface TimedFetchOptions {
   ms: number;
   /** The real fetch (tests pass a slow or fast fake). */
-  base?: typeof fetch;
+  base?: FetchLike;
 }
 
 /** supabase-js's global fetch: a database call past `ms` fails with DbTimeoutError, never hangs. */
-export function timedFetch({ ms, base = fetch }: TimedFetchOptions): typeof fetch {
+export function timedFetch({ ms, base = fetch }: TimedFetchOptions): FetchLike {
   return (input, init) => {
     if (!timed(input)) return base(input, init);
     const deadline = AbortSignal.timeout(ms);
