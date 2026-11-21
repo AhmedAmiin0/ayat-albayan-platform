@@ -16,7 +16,6 @@ import { clientRequest } from './core/booking.payload';
 import { outsideSlotsQuerySchema, slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { BookingService } from './core/booking.service';
 import { bookingBodySchema } from './plan/package-size';
-import { OutsideSlotsService } from './plan/outside-slots.service';
 import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher/teacher-options.service';
 
@@ -30,7 +29,6 @@ export class BookingController {
     private readonly teachers: TeacherOptionsService,
     private readonly slotsService: SlotsService,
     private readonly booking: BookingService,
-    private readonly outside: OutsideSlotsService,
   ) {}
 
   @Get('teachers')
@@ -52,7 +50,7 @@ export class BookingController {
   outsideSlots(
     @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,
   ): Promise<OutsideSlotsResponse> {
-    return this.outside.slots(query);
+    return this.slotsService.outside(query);
   }
 
   /** The same body as POST /booking; 200 { conflicts } of the whole series, nothing written. */

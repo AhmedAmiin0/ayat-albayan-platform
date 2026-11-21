@@ -11,7 +11,6 @@ import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership, type CourseGrant } from './sales-booking.scope';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
-import { OutsideSlotsService } from '@/modules/teaching/booking/plan/outside-slots.service';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 
 /**
@@ -103,7 +102,6 @@ export class SalesBookingOptions {
     private readonly scope: SalesBookingScope,
     private readonly teachers: TeacherOptionsService,
     private readonly slotsService: SlotsService,
-    private readonly outside: OutsideSlotsService,
   ) {}
 
   /** Without the teachers' meeting links (the room is entered through the API); platform_classroom stays. */
@@ -119,7 +117,7 @@ export class SalesBookingOptions {
 
   /** «وقت آخر»: the same scope as `slots`, over the server's next 14 days. */
   async outsideSlots(q: OutsideSlotsQuery, user: AuthUser): Promise<OutsideSlotsResponse> {
-    return this.outside.slots({ ...q, ...(await this.scoped(q, user)) });
+    return this.slotsService.outside({ ...q, ...(await this.scoped(q, user)) });
   }
 
   /**

@@ -47,7 +47,6 @@ import { CourseDrafts } from './sales/course-draft/course-draft.service';
 import { SalesCourseRepo } from './sales/course/sales-course.repo';
 import { SalesCourse } from './sales/course/sales-course.service';
 import { SlotsService } from './plan/slots.service';
-import { OutsideSlotsService } from './plan/outside-slots.service';
 import { TeacherAlertRepo } from './teacher/teacher-alert.repo';
 import { TeacherAlert, TeacherAlertDeps } from './teacher/teacher-alert.service';
 import { TeacherOptionsRepo } from './teacher/teacher-options.repo';
@@ -87,7 +86,6 @@ import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
     ConflictContext,
     TeacherOptionsService,
     SlotsService,
-    OutsideSlotsService,
     BookingParties,
     BookingPlanner,
     BookingService,

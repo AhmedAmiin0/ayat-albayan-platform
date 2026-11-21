@@ -14,7 +14,7 @@ import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
-import { OutsideSlotsService } from './outside-slots.service';
+import { SlotsService } from './slots.service';
 
 export const TEACHER = 'a0000000-0000-4000-8000-000000000001';
 export const S1 = 'c0000000-0000-4000-8000-000000000001';
@@ -67,7 +67,7 @@ interface Call {
 
 /** The app, its fakes, a `call` and `reset` for beforeEach. */
 export async function outsideApp() {
-  const outside = { slots: vi.fn() };
+  const outside = { slots: vi.fn(), outside: vi.fn() };
   const booking = { book: vi.fn(), check: vi.fn() };
   const sales = { ownership: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
@@ -81,7 +81,7 @@ export async function outsideApp() {
     .useValue(fakeSettings({ sales_require_assignee: true }))
     .overrideProvider(BookingService)
     .useValue(booking)
-    .overrideProvider(OutsideSlotsService)
+    .overrideProvider(SlotsService)
     .useValue(outside)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -102,7 +102,7 @@ export async function outsideApp() {
       studentIds: [S1],
       phones: [],
     });
-    outside.slots.mockResolvedValue(LIST);
+    outside.outside.mockResolvedValue(LIST);
     booking.book.mockResolvedValue(BOOKED);
   };
   return { app, call, reset, outside, booking };

@@ -3,7 +3,9 @@ import { outsideSlotsResponseSchema } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeContext, IDS } from '@/modules/teaching/booking/booking.fakes';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
-import { OutsideSlotsService } from './outside-slots.service';
+import { readerOf } from '@/common/settings/settings.fakes';
+import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import { SlotsService } from './slots.service';
 
 // The server clock: Tue 2026-12-01 08:07Z (Cairo UTC+2), not on the 30-min grid.
 const SERVER_NOW = new Date('2026-12-01T08:07:00Z');
@@ -11,17 +13,21 @@ function setup() {
   const deps = fakeContext();
   return {
     ...deps,
-    service: new OutsideSlotsService(deps.queries as unknown as BookingRepo, deps.context),
+    service: new SlotsService(
+      deps.queries as unknown as BookingRepo,
+      deps.context,
+      readerOf(BookingSettings, { teachers_always_available: false }),
+    ),
   };
 }
 
-describe('OutsideSlotsService (GET /booking/outside-slots, server time)', () => {
+describe('SlotsService.outside (GET /booking/outside-slots, server time)', () => {
   beforeEach(() => vi.useFakeTimers({ now: SERVER_NOW, toFake: ['Date'] }));
   afterEach(() => vi.useRealTimers());
 
   it('counts 14 days from the server now and says when that was', async () => {
     const { service, busy, availability } = setup();
-    const res = await service.slots({
+    const res = await service.outside({
       teacherId: IDS.teacher,
       durationMin: 45,
       studentIds: [IDS.s1],
@@ -40,7 +46,7 @@ describe('OutsideSlotsService (GET /booking/outside-slots, server time)', () => 
   });
 
   it('marks the starts inside the teacher hours (fake grid: Sun + Tue 16:00–22:00 Cairo)', async () => {
-    const res = await setup().service.slots({ teacherId: IDS.teacher, durationMin: 45 });
+    const res = await setup().service.outside({ teacherId: IDS.teacher, durationMin: 45 });
     const inside = res.slots.filter((s) => s.inside_hours && s.starts_at.startsWith('2026-12-01'));
     expect(inside.map((s) => s.starts_at.slice(11, 16))).toEqual([
       '14:00',
@@ -65,7 +71,7 @@ describe('OutsideSlotsService (GET /booking/outside-slots, server time)', () => 
       ends_at: new Date('2026-12-01T10:45:00Z'),
     };
     availability.listBusyLessons.mockResolvedValue([lesson]);
-    const res = await service.slots({
+    const res = await service.outside({
       teacherId: IDS.teacher,
       durationMin: 45,
       stepMin: 60,
@@ -73,7 +79,7 @@ describe('OutsideSlotsService (GET /booking/outside-slots, server time)', () => 
     });
     expect(res.step_min).toBe(60);
     expect(res.slots.map((s) => s.starts_at)).toContain('2026-12-01T10:00:00.000Z');
-    const busy = await service.slots({ teacherId: IDS.teacher, durationMin: 45, stepMin: 60 });
+    const busy = await service.outside({ teacherId: IDS.teacher, durationMin: 45, stepMin: 60 });
     expect(busy.slots.map((s) => s.starts_at)).not.toContain('2026-12-01T10:00:00.000Z');
   });
 
@@ -81,7 +87,7 @@ describe('OutsideSlotsService (GET /booking/outside-slots, server time)', () => 
     const { service, queries } = setup();
     queries.teacher.mockResolvedValue(null);
     const err = await service
-      .slots({ teacherId: IDS.missing, durationMin: 45 })
+      .outside({ teacherId: IDS.missing, durationMin: 45 })
       .catch((e: unknown) => e);
     expect(err).toBeInstanceOf(HttpException);
     expect((err as HttpException).getStatus()).toBe(404);

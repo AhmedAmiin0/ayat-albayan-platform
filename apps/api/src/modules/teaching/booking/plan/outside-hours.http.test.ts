@@ -14,7 +14,7 @@ describe('GET outside-slots («وقت آخر»): who may read the grid', () => {
   it('admin reads /booking/outside-slots; the query carries no device time', async () => {
     const res = await rig.call({ url: `/booking/${grid}&studentIds=${S1}`, token: 'admin' });
     expect([res.statusCode, res.json()]).toEqual([200, LIST]);
-    expect(rig.outside.slots).toHaveBeenCalledWith(
+    expect(rig.outside.outside).toHaveBeenCalledWith(
       expect.objectContaining({ teacherId: TEACHER, durationMin: 45, studentIds: [S1] }),
     );
     const bad = `/booking/outside-slots?teacherId=${TEACHER}&durationMin=7`;
@@ -29,7 +29,7 @@ describe('GET outside-slots («وقت آخر»): who may read the grid', () => {
       token: 'sales',
     });
     expect([foreign.statusCode, foreign.json().code]).toEqual([403, 'not_your_student']);
-    expect(rig.outside.slots).toHaveBeenCalledTimes(1);
+    expect(rig.outside.outside).toHaveBeenCalledTimes(1);
   });
 
   it('a teacher or a guardian is 403 on both grids', async () => {
@@ -38,6 +38,6 @@ describe('GET outside-slots («وقت آخر»): who may read the grid', () => {
         expect((await rig.call({ url, token })).statusCode).toBe(403);
       }
     }
-    expect(rig.outside.slots).not.toHaveBeenCalled();
+    expect(rig.outside.outside).not.toHaveBeenCalled();
   });
 });
