@@ -1,4 +1,5 @@
 import { PUSH_KINDS, type PushKind } from '@ab/shared';
+import { z } from 'zod';
 
 // A push's `data` is PushService's { kind, ...event.data } (docs/12 §6): untrusted JSON, so every
 // field is checked before it reaches a route.
@@ -19,4 +20,13 @@ export function pushField(data: unknown, key: string): string | null {
 export function pushPhone(data: unknown): string | null {
   const phone = pushField(data, 'phone');
   return phone && /^\+\d{6,15}$/.test(phone) ? phone : null;
+}
+
+/** A push about a student: its id goes into a route path, so only a uuid is read. */
+const pushStudentSchema = z.object({ studentId: z.uuid() });
+
+/** The student a push is about (one schema for every route that opens a student), else null. */
+export function pushStudentId(data: unknown): string | null {
+  const parsed = pushStudentSchema.safeParse(data);
+  return parsed.success ? parsed.data.studentId : null;
 }

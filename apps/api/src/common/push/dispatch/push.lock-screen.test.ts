@@ -35,6 +35,13 @@ describe('lockScreenText', () => {
     expect(shown.body).toHaveLength('•••0123: '.length + PREVIEW_MAX);
   });
 
+  it('an emoji at the clip limit stays whole (code points, never a lone surrogate)', () => {
+    const text = `${'ا'.repeat(PREVIEW_MAX - 2)}🌙🌙🌙`;
+    const shown = lockScreenText({ kind: 'channel_message', vars: { name: 'هدى', student: 'سارة', text } });
+    expect(shown.body).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])/);
+    expect(shown.body).toContain(`${'ا'.repeat(PREVIEW_MAX - 2)}🌙…`);
+  });
+
   it('one person’s name: first word only; a list of names and the lesson time stay', () => {
     const one = lockScreenText({ kind: 'report_submitted', vars: { student: 'سهيلة أحمد علي', teacher: 'مريم حسن' } });
     expect(one.body).toBe('كُتب تقرير حلقة سهيلة مع مريم');

@@ -1,5 +1,6 @@
 import {
   CHANNEL_PAGE_SIZE,
+  CHANNEL_SENDER_ROLES,
   type ChannelClosedReason,
   type ChannelPage,
   type ChannelSenderRole,
@@ -38,18 +39,11 @@ export function toPage(rows: readonly ChannelMessageRow[], ctx: PageContext): Ch
 }
 
 /**
- * What counts as unread for a participant: everyone else's messages, never their own side's (a
- * co-teacher's, the other family login's, an earlier seat holder's).
+ * What counts as unread for a participant: every message not sent by this profile (the SQL skips
+ * the viewer's own rows), the same people ChannelNotify pushes: a guardian counts the child's
+ * message, a substitute teacher the regular teacher's (review finding 4).
  */
-const UNREAD_ROLES: Readonly<Record<ChannelSenderRole, readonly ChannelSenderRole[]>> = {
-  teacher: ['guardian', 'student', 'sales'],
-  guardian: ['teacher', 'sales'],
-  student: ['teacher', 'sales'],
-  sales: ['teacher', 'guardian', 'student'],
-};
-
-export const unreadRolesFor = (role: ChannelSenderRole): readonly ChannelSenderRole[] =>
-  UNREAD_ROLES[role];
+export const UNREAD_COUNT_ROLES: readonly ChannelSenderRole[] = CHANNEL_SENDER_ROLES;
 
 /** The teacher's list: newest activity first, then by name (Arabic collation). */
 export function toTeacherRows(

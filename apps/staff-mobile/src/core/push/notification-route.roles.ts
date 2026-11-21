@@ -1,7 +1,7 @@
 import { OPEN_COURSE, type PushKind } from '@ab/shared';
 import { canOpen } from '@/core/auth/route-permissions';
 import type { Can } from '@ab/mobile-kit';
-import { pushField, pushKind, pushPhone } from './push-data';
+import { pushField, pushKind, pushPhone, pushStudentId } from './push-data';
 
 // The sales and classroom-assistant trees (owner 2026-10-12: a bell in every staff portal). Each
 // map returns only its own tree's routes: never an admin URL, and never a tab the role cannot see.
@@ -22,12 +22,14 @@ const toSalesToday = (_data: unknown, can: Can) => (canOpen(can, 'salesSchedule'
 /** R-MEET-03: «الاجتماعات» is back for sales (docs/16 row 12b, reversed 2026-10-12). */
 const toSalesMeetings = (_data: unknown, can: Can) => (canOpen(can, 'salesMeetings') ? '/sales/more/meetings' : SALES_MORE);
 
-/** A chat message (owner 2026-11-16) → that student's teacher–family chat, read-only. */
+/**
+ * A chat message (owner 2026-11-16) → that student's chat, where the assistant in its seat writes
+ * too (read-only only while the family chat is off or the chat is closed).
+ */
 const toSalesChannel = (data: unknown, can: Can) => {
   if (!canOpen(can, 'salesStudents')) return SALES_MORE;
-  const student = pushField(data, 'studentId');
-  const valid = student && /^[\w-]+$/.test(student);
-  return valid ? `/sales/students/channel/${student}` : '/sales/students';
+  const student = pushStudentId(data);
+  return student ? `/sales/students/channel/${student}` : '/sales/students';
 };
 
 /** «عمولة جديدة» → «محفظتي» (owner 2026-10-29), with self.sales_earnings. */
@@ -67,8 +69,8 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
  * student (data `open: 'course'`), from her chats; null when the push is not one.
  */
 function toSalesCourse(data: unknown, can: Can): string | null {
-  const student = pushField(data, 'studentId');
-  const wizard = pushField(data, 'open') === OPEN_COURSE && student && /^[\w-]+$/.test(student);
+  const student = pushStudentId(data);
+  const wizard = pushField(data, 'open') === OPEN_COURSE && student;
   return wizard && canOpen(can, 'inbox') ? `/sales/inbox/sales-course?studentId=${student}` : null;
 }
 

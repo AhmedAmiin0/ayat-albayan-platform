@@ -10,7 +10,7 @@ import { ChannelNotify } from './channel-notify';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import { ChannelRepo } from './channel.repo';
 import { ChannelService, TeacherChannelList } from './channel.service';
-import { FamilyChatSettings } from './family-chat.settings';
+import { FamilyChatSettings, TeacherChatSettings } from './family-chat.settings';
 import { ChannelMedia } from './media/channel-media.service';
 import { ChannelBell } from './notify/channel-bell';
 import { ChannelBellRepo } from './notify/channel-bell.repo';
@@ -36,6 +36,7 @@ import { ChannelViews } from './views/channel-views.service';
   controllers: CHANNEL_CONTROLLERS,
   providers: [
     FamilyChatSettings,
+    TeacherChatSettings,
     ChannelRepo,
     ChannelPeopleRepo,
     AccessDeps,

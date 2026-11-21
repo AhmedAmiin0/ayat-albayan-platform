@@ -1,3 +1,4 @@
+import { clipText } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { HttpFailure } from '@/common/infra/http/failure';
@@ -53,8 +54,7 @@ export const fetchTransport: WebPushTransport = async ({ url, headers, body }) =
  */
 const GONE: ReadonlySet<number> = new Set([400, 403, 404, 410, 413]);
 
-const clip = (text: string) =>
-  text.length > WEB_PUSH_BODY_MAX ? `${text.slice(0, WEB_PUSH_BODY_MAX - 1)}…` : text;
+const clip = (text: string) => clipText(text, WEB_PUSH_BODY_MAX);
 
 /**
  * Browser push (R-NOT-02): one encrypted POST per subscription of the profile bound to a live session. Off (no call at all)

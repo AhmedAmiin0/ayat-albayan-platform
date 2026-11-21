@@ -1,4 +1,4 @@
-import type { AnyPushKind } from '@ab/shared';
+import { clipText, type AnyPushKind } from '@ab/shared';
 import { pushText, type PushText } from '@/common/push/expo/expo-push';
 
 // What a device shows on its lock screen (owner 2026-10-25): no more personal data than the alert
@@ -46,7 +46,7 @@ function firstName(value: string): string {
 /** A joinNames list («سهيلة أحمد وعلي حسن» → «سهيلة وعلي»); a lone name is a list of one. */
 const firstNames = (value: string) => value.split(/،| و/).map(firstName).join(' و');
 
-const clip = (text: string) => (text.length > PREVIEW_MAX ? `${text.slice(0, PREVIEW_MAX - 1)}…` : text);
+const clip = (text: string) => clipText(text, PREVIEW_MAX);
 
 function lockVar(key: string, value: string | number): string | number {
   if (MONEY_SLOTS.has(key)) return '•••';
