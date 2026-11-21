@@ -53,8 +53,9 @@ packages/mobile-kit, «cc» = packages/client-core.
 - **Hooks (R12):** 232 `useEffect`/`useLayoutEffect` in non-test code (sm 81, sw 61, mk 50, wk 39, fm 1),
   51 `.tsx` files call one directly; `useMemo` 57, `useCallback` 77, `memo()` 31 (sm, sw, wk, mk). About 110 effects can go without React changes (§5).
 - **State (R13):** about 50 hand-made `useSyncExternalStore` stores and listener sets, no state library.
-- **Tests (R14):** packages are well covered (client-core 96 % lines / 93 % branches, shared 99 / 97,
-  money 96 / 91); apps are not measured anywhere today — §7.1 has the first numbers. 46–82 % of the
+- **Tests (R14):** line coverage is high (api 90.8 %, sw 97.2 %, sm 98.2 %, cc 96.3 %, shared 99.2 %)
+  but nothing measures it in CI; the holes are api repositories (59.9 % lines / 42.5 % branches, 86 of
+  209 under 50 %), web branches (sw 79 %, wk 73 %, fw 68 %) and the family apps (80–88 % lines). 46–82 % of the
   apps' logic files have no test beside them. No `.only`; 127 conditional `test.skip` in e2e, all with
   a reason string. Nothing enforces red-first; no coverage gate, no mutation testing.
 - **Performance (R10):** the worst paths are N+1 reads on hot lists (sales renewals: one balance query
@@ -550,7 +551,88 @@ connectivity (written by the socket events of §4); (6) call session (after its 
 
 ## 7. Testing audit (R14)
 
-<!-- COVERAGE -->
+### 7.1 Coverage today (first measurement; no repo script or CI job reports it)
+
+`vitest run --coverage.enabled --coverage.provider=v8 --coverage.include='src/**'` and
+`jest --coverage --collectCoverageFrom='src/**' --collectCoverageFrom='app/**'` per package, on
+`14501246`, in a cloud session. Every suite passed (api 9,652 tests + 1 conditional skip, sw 4,301, sm
+4,263, mk 819, fm 133, …). Files no test imports count as 0 %.
+
+| Package | Lines % | Branches % | Functions % | Lines covered | Logic files at 0 % | Lowest logic files (≥ 20 lines) |
+|---|---|---|---|---|---|---|
+| apps/api | 90.8 | 80.9 | 88.9 | 27,401 / 30,170 | 8 | `scripts/storage-move.ts` 0, `classroom/assistants/assistants.repo.ts` 4, `webhook/external/external.repo.ts` 5, `calls/store/calls.repo.ts` 6 |
+| apps/staff-web | 97.2 | 79.0 | 90.3 | 28,506 / 29,336 | 0 | `shell/layout/use-rail-box.ts` 71, `saved-replies/lib/api.ts` 73, `reporting/reports/api.ts` 76, `teacher-earnings/api.ts` 79 |
+| apps/staff-mobile | 98.2 | 90.2 | 91.3 | 15,312 / 15,594 | 1 | `composer/voice/use-voice-recorder.ts` 91, `course-actions/course-actions-api.ts` 91 |
+| apps/family-web | 88.4 | 68.3 | 79.2 | 850 / 961 | 2 | `sign-in/use-student-sign-in.ts` 65, `schedule/strip/use-jump-to-day.ts` 76 |
+| apps/family-mobile | 80.5 | 65.9 | 71.0 | 948 / 1,177 | 1 | — |
+| packages/web-kit | 90.2 | 73.1 | 84.6 | 4,758 / 5,276 | 6 | `classroom/api/api.ts` 31, `auth/me.ts` 60, `classroom/room/livekit/livekit-room.ts` 71 |
+| packages/mobile-kit | 92.0 | 83.5 | 86.9 | 3,285 / 3,570 | 11 | `auth/use-permissions.ts` 18, `chat-ui/photo/use-zoom.ts` 30 |
+| packages/client-core | 96.3 | 92.6 | 93.9 | 2,834 / 2,943 | 1 | `messaging/calls/call-actions.ts` 69, `calls/call-store.ts` 75 |
+| packages/shared | 99.2 | 96.6 | 98.1 | 2,407 / 2,427 | 0 | — |
+| packages/money | 96.3 | 90.8 | 94.9 | 422 / 438 | 2 | — |
+| packages/schedule | 92.6 | 82.7 | 89.6 | 376 / 406 | 3 | `schemas/booking-extras.ts` 50 |
+| packages/settings | 99.1 | 81.8 | 100 | 221 / 223 | 0 | — |
+| packages/core | 91.9 | 95.9 | 96.7 | 158 / 172 | 1 | — |
+| packages/time | 83.4 | 82.0 | 83.8 | 136 / 163 | 1 | `format/format.ts` 82, `zone/calendar.ts` 82 |
+| packages/i18n | 93.7 | 95.8 | 100 | 59 / 63 | 1 | — |
+| packages/catalog | 83.7 | 77.8 | 63.4 | 211 / 252 | 8 | `permissions/catalog.ts` 0 |
+
+Where the holes are: **api repositories** — 209 `*.repo.ts`/`*.queries.ts` average **59.9 % lines /
+42.5 % branches**, 86 of them under 50 % (services 97.8 / 88.4, jobs 95.0 / 85.8, mappers 98.5 / 88.3,
+controllers 89.3 / 82.7). Repos are mocked in service tests and their own query shapes are tested only
+by e2e. **Branches** on the web side (sw 79 %, wk 73 %, fw 68 %) and the family apps overall. The money
+package is at 90.8 % branches, api `modules/finance` at 87.4 / 72.9.
+
+### 7.2 Other findings
+
+- **Logic files with no test beside them** (§1 R14 row): api 827 of 1,788 (46 %), sw 291/546, sm
+  272/565, mk 100/183, wk 77/149; many are covered through a neighbour's test (api lines 90.8 %), which
+  hides which file owns which behaviour. Critical ones without a sibling test: `money/ledger/views.ts`,
+  `money/assistant/views.ts`, `schedule/lessons/views.ts`, `schedule/classroom/meeting-invites.ts`,
+  `shared/sales/money-views.ts`, `mk/room/state/use-room-{session,join,lifecycle}.ts`,
+  `sm/inbox/thread/calls/state/use-call-session.ts`, `sw/sales/sales-money/payment-link/use-link-pay.ts`.
+- **`.only`: 0. Bare `.skip`/`xit`: 0** in unit tests (one `it.skipIf(!out)` smoke in
+  `report-pdf/render/pdf-renderer.smoke.test.ts`). **e2e: 127 conditional `test.skip(cond, 'reason')`**
+  (project-specific runs: «database only: one run», `E2E_LINES=single`) — all carry a reason.
+- **Flaky tests:** of the 60 latest completed `ci.yml` runs, 3 passed only on a re-run; the one
+  inspected (run 44482650589, «test others») failed on a runner shutdown (exit 143), not a test. No
+  test-level flake is visible in that window; the coverage job (§7.4) should also upload the JUnit
+  report so flakes become countable.
+- **Nothing enforces red-first.** Rule 4 asks for tests next to code; no check looks at changed files,
+  coverage, or whether a test failed before the fix.
+
+### 7.3 What TDD changes in practice
+
+Every behaviour PR: (1) commit the failing test(s) first — the PR's first commit is red in a cloud
+session (`vitest run <file>` shows the failure, pasted in the PR body); (2) the fix; (3) refactor.
+The PR body table «behaviour → test file:line», with at least one failure-path row. Tests are never
+weakened: a changed assertion in an existing test needs a line in the PR body saying which behaviour
+changed and who decided it.
+
+### 7.4 How CI enforces TDD outcomes
+
+1. **Changed-files coverage gate** (new `coverage` job, matrix like `verify`): runs the affected
+   packages with coverage (`--coverage.reporter=json`), maps the PR's changed lines
+   (`git diff -U0 origin/develop...HEAD`) onto the report, and fails when a changed **logic** file is
+   below **90 % lines / 80 % branches** or a changed line is uncovered without a `// coverage: <reason>`
+   (e.g. a native-only branch). Week 1: report-only (comment in the job summary, never a PR comment);
+   then a gate. No stored baseline needed: it judges only changed files. The package totals of §7.1 are
+   recorded per develop push and may not drop by more than 0.2 pt (shrinking-baseline file
+   `refactor/guards/coverage.json`, written by the ci `baselines` job like the other lists).
+2. **No focused or silent skips:** `vitest/no-focused-tests`, `jest/no-focused-tests`, and a rule that
+   allows `skip` only as `test.skip(condition, 'reason')`/`it.skipIf(cond)` (error, no baseline needed:
+   0 today).
+3. **Test beside new logic:** `guard:test-beside` fails when the PR adds a logic file (`.ts`, or a
+   `.tsx` component in a kit) without `x.test.ts(x)` or `x.<scenario>.test.ts(x)`; today's ~1,790
+   untested files sit in `refactor/guards/untested.json` and may only shrink.
+4. **Mutation testing:** Stryker (`@stryker-mutator/core` + vitest runner) on `packages/money`,
+   `packages/schedule`, `packages/core/src/{phone,text}`, `packages/time`, cc reminder/status logic and
+   the api state machines (`*-transitions.ts`). First a weekly scheduled workflow uploading the HTML
+   report (no secrets, `contents: read`); after two reports, a gate on PRs touching those folders
+   (`--incremental`, mutation score ≥ 80 % on changed files, the package score may not drop).
+5. **Repo tests:** the repo gap (§7.1) closes with a counting fake `Db` that records the PostgREST
+   chain (`from/select/eq/in/range/order`) so each repo method gets a shape test (columns, filters,
+   bounds), and the important ones also run against the CI Supabase in the e2e job.
 
 ## 8. Design-system audit and target (R15)
 
