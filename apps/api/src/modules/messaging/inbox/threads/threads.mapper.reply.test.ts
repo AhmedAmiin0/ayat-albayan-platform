@@ -28,10 +28,11 @@ describe('toThreadView reply_line', () => {
     expect([v.last_chat_inbound_at, v.last_notifications_inbound_at, v.last_inbound_line]).toEqual([CHAT, TAP, 'notifications']);
   });
 
-  it('prefers chat after a reminder tap on notifications; the badge keeps the newest line', () => {
+  it('prefers chat after a reminder tap on notifications; only notifications open: null (chat first)', () => {
     chatConfigured();
     expect(toThreadView(both, NOW).reply_line).toBe('chat');
-    expect(toThreadView(threadRow({ last_inbound_at: TAP, last_notifications_inbound_at: TAP }), NOW).reply_line).toBe('notifications');
+    const notif = threadRow({ last_inbound_at: TAP, last_notifications_inbound_at: TAP });
+    expect(toThreadView(notif, NOW).reply_line).toBeNull();
   });
 
   it('null once every window is closed', () => {

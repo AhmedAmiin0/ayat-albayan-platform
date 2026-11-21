@@ -1,0 +1,62 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { DB, type Db } from '@/common/db/db.module';
+import type { CrmReceived } from './crm-received.schema';
+import type { CrmQueueRow } from './crm-inbound.event';
+
+// The CRM inbound queue (migration 20261121000100, docs/19 «crm driver»): a message.received is
+// stored by its wamid (a re-sent delivery is a no-op), read when due, deleted once in the inbox.
+
+const TABLE = 'crm_inbound_queue';
+
+const check = (error: { message: string } | null, what: string): void => {
+  if (error) throw new Error(`crm inbound ${what} failed: ${error.message}`);
+};
+
+/** A failed lookup: the row stays, tried again at nextAt. */
+interface RetryWrite {
+  waMessageId: string;
+  attempts: number;
+  nextAt: Date;
+  error: string;
+}
+
+@Injectable()
+export class CrmInboundRepo {
+  constructor(@Inject(DB) private readonly db: Db) {}
+
+  async enqueue(r: CrmReceived): Promise<void> {
+    const row = {
+      wa_message_id: r.waMessageId,
+      conversation_id: r.conversationId,
+      contact_id: r.contactId,
+      content_type: r.contentType,
+      body: r.text,
+      received_at: r.at.toISOString(),
+    };
+    const opts = { onConflict: 'wa_message_id', ignoreDuplicates: true };
+    const { error } = await this.db.from(TABLE).upsert(row, opts);
+    check(error, 'enqueue');
+  }
+
+  async due(now: Date, limit: number): Promise<CrmQueueRow[]> {
+    const { data, error } = await this.db
+      .from(TABLE)
+      .select('*')
+      .lte('next_at', now.toISOString())
+      .order('next_at', { ascending: true })
+      .limit(limit);
+    check(error, 'due read');
+    return data ?? [];
+  }
+
+  async done(waMessageId: string): Promise<void> {
+    const { error } = await this.db.from(TABLE).delete().eq('wa_message_id', waMessageId);
+    check(error, 'done');
+  }
+
+  async retry(w: RetryWrite): Promise<void> {
+    const patch = { attempts: w.attempts, next_at: w.nextAt.toISOString(), last_error: w.error };
+    const { error } = await this.db.from(TABLE).update(patch).eq('wa_message_id', w.waMessageId);
+    check(error, 'retry');
+  }
+}

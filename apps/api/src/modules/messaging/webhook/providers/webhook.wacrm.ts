@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import { DELIVERY_STATUSES, type StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { parseReceived, type CrmReceived } from '@/modules/messaging/webhook/crm-inbound';
 
 // What POST /webhooks/wacrm reads out of the CRM's delivery envelope (docs/19 «crm driver»):
-// {id, event, occurred_at, account_id, data}. Only message.status_updated moves our rows (ticks).
+// {id, event, occurred_at, account_id, data}. message.status_updated moves our rows (ticks);
+// message.received is a message to the notifications number, mirrored into the inbox.
 
 const envelopeSchema = z.object({
   id: z.string().min(1).max(200),
@@ -17,9 +19,22 @@ const statusSchema = z.object({
   conversation_id: z.string().min(1).max(200).nullish(),
 });
 
-type WacrmDelivery =
+export type WacrmDelivery =
   | { id: string; kind: 'status'; status: StatusEvent }
-  | { id: string; kind: 'received' | 'other'; event: string };
+  | { id: string; kind: 'received'; received: CrmReceived }
+  | { id: string; kind: 'other'; event: string };
+
+/** A time the CRM sent, else now (missing or unreadable). */
+function atOf(raw: string | undefined, now: Date): Date {
+  const at = raw ? new Date(raw) : now;
+  return Number.isNaN(at.getTime()) ? now : at;
+}
+
+/** message.received with its ids, else `other`. */
+function received(env: { id: string; event: string; data: unknown }, at: Date): WacrmDelivery {
+  const r = parseReceived(env.data, at);
+  return r ? { id: env.id, kind: 'received', received: r } : { id: env.id, kind: 'other', event: env.event };
+}
 
 const isDelivery = (s: string): s is StatusEvent['status'] => (DELIVERY_STATUSES as readonly string[]).includes(s);
 
@@ -32,14 +47,13 @@ export function parseWacrm(body: unknown, now: Date): WacrmDelivery | null {
   const env = envelopeSchema.safeParse(body);
   if (!env.success) return null;
   const { id, event } = env.data;
-  if (event === 'message.received') return { id, kind: 'received', event };
+  if (event === 'message.received') return received(env.data, atOf(env.data.occurred_at, now));
   const data = event === 'message.status_updated' ? statusSchema.safeParse(env.data.data) : null;
   if (!data?.success || !isDelivery(data.data.status)) return { id, kind: 'other', event };
-  const at = env.data.occurred_at ? new Date(env.data.occurred_at) : now;
   const status: StatusEvent = {
     waMessageId: data.data.whatsapp_message_id,
     status: data.data.status,
-    at: Number.isNaN(at.getTime()) ? now : at,
+    at: atOf(env.data.occurred_at, now),
     errorCode: null,
     errorText: null,
     conversationId: null,

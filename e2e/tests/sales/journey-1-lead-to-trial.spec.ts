@@ -1,7 +1,8 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { fillStable } from '../../support/core/fill';
 import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
-import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../../support/core/wa-stub';
+import { setMessaging, stubReset, stubSent, type StubSent } from '../../support/core/wa-stub';
+import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 import { sidePanel } from '../../support/messaging/thread-panel';
 
 // Journey 1 (docs/03 §5): a lead writes on WhatsApp → appears in the inbox → the admin replies →
@@ -38,7 +39,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     const guardian = `أم ياسمين ${digits.slice(-4)}`;
     const student = 'ياسمين';
     const hello = 'السلام عليكم، عايزة أحجز حلقة تجريبية لبنتي';
-    const inbound = await stubInbound({ from: digits, name: guardian, text: hello });
+    const inbound = await stubInboundAnswerable({ from: digits, name: guardian, text: hello });
     expect(inbound.status).toBe(200); // the API accepted the signed webhook
 
     // The lead is in the inbox (the list refreshes on its own: the webhook stores async).

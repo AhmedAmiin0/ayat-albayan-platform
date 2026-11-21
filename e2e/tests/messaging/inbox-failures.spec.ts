@@ -2,7 +2,8 @@ import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { bubble, lastOutbound, openThread, pushesForMessage, stubFail, outboundRows } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/core/messages';
-import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
+import { setMessaging, stubReset, stubSent } from '../../support/core/wa-stub';
+import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 
 // A send that fails (R-MSG-03, R-MSG-05, M1–M3): Meta's error in words on the bubble, «حاول مرة أخرى»,
 // the wa.me hand-off with its «بعتّها؟» question, sent-by-hand and undo. The stub's injected
@@ -24,7 +25,7 @@ interface Failed {
 async function failedReply(page: Page, label: string): Promise<Failed> {
   const digits = freshDigits();
   const name = `${label} ${digits.slice(-4)}`;
-  expect((await stubInbound({ from: digits, name, text: 'السلام عليكم' })).status).toBe(200);
+  expect((await stubInboundAnswerable({ from: digits, name, text: 'السلام عليكم' })).status).toBe(200);
   const log = await openThread(page, name);
   await stubFail({ to: digits, code: CODE });
   const reply = `رد ${label} ${digits.slice(-4)}`;

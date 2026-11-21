@@ -1005,6 +1005,45 @@ export type Database = {
           },
         ];
       };
+      crm_inbound_queue: {
+        Row: {
+          attempts: number;
+          body: string | null;
+          contact_id: string;
+          content_type: string;
+          conversation_id: string;
+          created_at: string;
+          last_error: string | null;
+          next_at: string;
+          received_at: string;
+          wa_message_id: string;
+        };
+        Insert: {
+          attempts?: number;
+          body?: string | null;
+          contact_id: string;
+          content_type: string;
+          conversation_id: string;
+          created_at?: string;
+          last_error?: string | null;
+          next_at?: string;
+          received_at: string;
+          wa_message_id: string;
+        };
+        Update: {
+          attempts?: number;
+          body?: string | null;
+          contact_id?: string;
+          content_type?: string;
+          conversation_id?: string;
+          created_at?: string;
+          last_error?: string | null;
+          next_at?: string;
+          received_at?: string;
+          wa_message_id?: string;
+        };
+        Relationships: [];
+      };
       crm_media_copy_failures: {
         Row: {
           attempts: number;

@@ -4,7 +4,8 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { backdateInbound, bubble, inboundRows, lastOutbound } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/core/messages';
 import { signInSales } from '../../support/sales/sales-portal';
-import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
+import { setMessaging, stubReset, stubSent } from '../../support/core/wa-stub';
+import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 
 // docs/21 D2 (R-MSG-03): inside the 24 h window the assistant attaches an image in her chat, adds a
 // caption and sends it. It is stored in wa-media under her name, leaves «Meta» (tools/wa-stub) as
@@ -27,7 +28,8 @@ test.describe('inbox — the assistant sends a file (docs/21 D2)', () => {
     const me = await makeAssistant(`sf${test.info().project.name}`);
     const digits = freshDigits();
     const phone = `+${digits}`;
-    expect((await stubInbound({ from: digits, name: `أم ريم ${digits.slice(-4)}`, text: 'السلام عليكم' })).status).toBe(200);
+    const hello = { from: digits, name: `أم ريم ${digits.slice(-4)}`, text: 'السلام عليكم' };
+    expect((await stubInboundAnswerable(hello)).status).toBe(200);
 
     const page = await signInSales(browser, me.email);
     await page.goto(`/sales/inbox?phone=${encodeURIComponent(phone)}`);
@@ -59,7 +61,8 @@ test.describe('inbox — the assistant sends a file (docs/21 D2)', () => {
     const me = await makeAssistant(`sfc${test.info().project.name}`);
     const digits = freshDigits();
     const phone = `+${digits}`;
-    expect((await stubInbound({ from: digits, name: `أم هند ${digits.slice(-4)}`, text: 'السلام عليكم' })).status).toBe(200);
+    const hello = { from: digits, name: `أم هند ${digits.slice(-4)}`, text: 'السلام عليكم' };
+    expect((await stubInboundAnswerable(hello)).status).toBe(200);
     await expect.poll(async () => (await inboundRows(phone)).length).toBe(1);
     await backdateInbound({ phone, hoursAgo: 25 });
 

@@ -2,7 +2,8 @@ import { AWAITING_REPLY, type WaLine } from '@ab/shared';
 import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { waHttpError, windowless } from '@/modules/messaging/whatsapp';
-import { pickSend, type ThreadWindow } from './send-number';
+import { pickStaffSend } from './chat-first';
+import type { ThreadWindow } from './send-number';
 import type { SendLineCode } from './send-line';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
@@ -47,10 +48,11 @@ const lineError = (code: SendLineCode) =>
 /**
  * pickSend as the inbox answers it: 409 session_closed (no thread too), 503 line_not_configured.
  * Legacy: pickSendLine's { line? }; module mode (docs/23c decision 6): { number_id, line } from
- * the reply windows, which `windows` reads (module mode only).
+ * the reply windows, which `windows` reads (module mode only). Chat first (pickStaffSend): a
+ * notifications-line window never sends a staff message while a chat line exists (2026-11-21).
  */
 export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<SendFromLine> {
-  const picked = await pickSend({ thread, now: at.now, windows: at.windows });
+  const picked = await pickStaffSend({ thread, now: at.now, windows: at.windows });
   if (!('code' in picked)) return picked;
   if (goesFree(thread, picked.code)) return freeChat();
   throw lineError(picked.code);
@@ -65,7 +67,7 @@ export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<Se
  * it never reopened WhatsApp's window. No thread (a number that never wrote), meta and crm: 409.
  */
 export async function textLine(thread: ThreadRow | null, at: LineAt): Promise<SendFromLine> {
-  const picked = await pickSend({ thread, now: at.now, windows: at.windows });
+  const picked = await pickStaffSend({ thread, now: at.now, windows: at.windows });
   if (!('code' in picked)) return picked;
   if (goesFree(thread, picked.code)) return freeChat();
   if (picked.code !== 'session_closed' || !chatOnKapso()) throw lineError(picked.code);

@@ -111,7 +111,9 @@ export function threadReplyLine(row: ThreadRow, opts: { chatConfigured: boolean;
  * cannot send (the reply answers 503).
  */
 function shownReplyLine(row: ThreadRow, at: { chatConfigured: boolean; now: Date }): WaLine | null {
-  const line = threadReplyLine(row, at);
+  // Chat first (2026-11-21): a notifications window never answers a staff send beside a chat line.
+  const chatFirst = at.chatConfigured ? { ...row, last_notifications_inbound_at: null } : row;
+  const line = threadReplyLine(chatFirst, at);
   return at.chatConfigured || line === 'chat' ? line : null;
 }
 
