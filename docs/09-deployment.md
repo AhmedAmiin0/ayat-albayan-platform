@@ -75,6 +75,23 @@ On the first switch the API copies serve before `ayat-worker` exists (it starts 
 
 **Scale:** add `ayat-api-c` (copy `ayat-api-b`), add it to the `reverse_proxy` line in `lb/Caddyfile`, add `roll ayat-api-c` to `roll.sh` and the compose test; keep the memory sum in budget. Never a second `APP_ROLE=worker` (or `all`) container: one job runner only. CPU-heavy PDF rendering already runs only in the worker; give `ayat-worker` more memory before adding anything there. One exception (owner 2026-10-29): the chat's PDF previews render on request, in `ayat-pdf` («PDF sandbox» below).
 
+### Readiness (`/ready`) and liveness (`/health`)
+
+Two probes, both public (no token), both cheap:
+
+| Probe | Answers | Read by |
+|---|---|---|
+| `/health` | always 200 while the process serves (liveness); unchanged | `ayat-lb` (every 2 s), Docker healthchecks, `roll.sh` |
+| `/ready` | 200 `{status:'ok'\|'degraded', checks}` or 503 `{status:'down', checks}`, `Cache-Control: no-store` | the deploy gate, an outside uptime monitor |
+
+`checks` (schema `readinessSchema` in `packages/shared/src/schemas/readiness.ts`): `database` (one `settings` row through the API's own client, cut off after 2 s; `ok` or `down`, with `ms`), `redis` (`off` without `REDIS_URL`, `ok` connected, `degraded` not: Redis is only a cache, so never `down`), `jobs` (`stale`: how many background jobs have not succeeded for 3 of their intervals; `degraded` when any, `off` where the beats cannot be seen: an API copy without Redis). Only the database makes it `down` (503). No error text or job name is ever shown; admins see the jobs at `GET /admin/jobs` and get one bell alert per stale job a day.
+
+**Why the load balancer keeps `/health`:** a database blip would make both copies "not ready" at once and `ayat-lb` would have nobody to send to; with `/health` it keeps sending, and requests that need the database fail on their own and recover with it.
+
+**Deploy gate:** after the roll, `deploy-staging` checks `/health` (as before) and then `/ready` (6 retries 5 s apart, 10 s each); a failure runs `rollback.sh` like a failed health check (`tools/scripts/ci-checks/deploy/ready-gate.test.mjs`). The worker answers `/ready` too (on the project network only; its `jobs` come from its own memory).
+
+**Outside uptime monitor (owner):** point any free HTTP monitor at `https://api.ayatalbayan.com/ready` every 1 to 5 minutes, alert on a non-200 answer or a timeout over 10 s, and optionally on a body without `"status":"ok"` (degraded: look at `/admin/jobs` and the logs). Keep a separate check on `/health` if you want "process up" apart from "can serve".
+
 ### PDF sandbox (`ayat-pdf`)
 
 The chat's PDF previews (owner 2026-10-29, `apps/api/src/modules/messaging/inbox/files/pdf`) run poppler (`pdfinfo`, `pdftoppm`) on a sender's bytes. Since the review of 2026-10-30 (in an API copy, a poppler memory-corruption exploit would read PID 1's environment: the service-role key, the WhatsApp and CRM tokens) that happens only in `ayat-pdf`, where there is nothing to steal:
@@ -121,7 +138,7 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env/env-merge.mj
 
 **Optional** (empty = the server keeps its value): secrets `SSH_KNOWN_HOSTS`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET`, `LOGIN_CODE_PEPPER`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN`, `MINIO_EGRESS_ACCESS_KEY`, `MINIO_EGRESS_SECRET_KEY`; variables `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_VERSION`, `WA_APP_ID`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL`.
 
-On every run: the web app is built on the runner before anything on the server changes; if `/health` fails after the swap, the previous API code and web build are restored automatically (migrations are not undone); the run summary shows the commit and links.
+On every run: the web app is built on the runner before anything on the server changes; if `/health` or `/ready` fails after the swap, the previous API code and web build are restored automatically (migrations are not undone); the run summary shows the commit and links.
 
 Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. (Required reviewers would make every automatic deploy wait for an approval click.)
 
