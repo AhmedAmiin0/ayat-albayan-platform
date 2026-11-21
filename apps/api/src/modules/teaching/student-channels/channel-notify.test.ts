@@ -5,7 +5,7 @@ import type { PresenceRepo } from '@/modules/people/presence';
 import type { ChannelActor } from './channel-access';
 import { ChannelNotify } from './channel-notify';
 import type { ChannelPeopleRepo } from './channel-people.repo';
-import type { FamilyChatSettings } from './family-chat.settings';
+import type { FamilyChatSettings, TeacherChatSettings } from './family-chat.settings';
 import { ChannelMembers } from './reads/channel-members';
 
 // Owner 2026-11-16 «all 4 will receive the message teacher guardian student and the assistant»:
@@ -33,10 +33,13 @@ interface Setup {
   /** The seat holder (owner 2026-11-16 «… but only 1»); null = a free seat. */
   assistant?: string | null;
   familyOn?: boolean;
+  /** settings.teacher_student_messages_enabled. */
+  teachersOn?: boolean;
 }
 
 function notifier(setup: Setup = {}) {
   const { members = [TEACHER, GUARDIAN, STUDENT], assistant = 'p-a', familyOn = true } = setup;
+  const { teachersOn = true } = setup;
   const push = { notifyProfiles: vi.fn(async (_target: PushTarget) => undefined) };
   const people = {
     assistantId: vi.fn(async () => assistant),
@@ -54,6 +57,7 @@ function notifier(setup: Setup = {}) {
     people as unknown as ChannelPeopleRepo,
     inChat,
     push as unknown as PushService,
+    { enabled: vi.fn(async () => teachersOn) } as unknown as TeacherChatSettings,
   );
   return { notify, push };
 }
@@ -124,5 +128,13 @@ describe('ChannelNotify: who hears a chat message', () => {
     const monitor = { mode: 'monitor', studentId: 'st1', profileId: 'p-a', open: true } as const;
     await notify.sent(monitor, message);
     expect(push.notifyProfiles).not.toHaveBeenCalled();
+  });
+
+  it('teacher_student_messages_enabled off: no teacher hears it (no push, no bell row)', async () => {
+    const off = { teachersOn: false };
+    expect(await toldIds('sales', off)).toEqual(['p-g', 'p-s']);
+    expect(await toldIds('guardian', off)).toEqual(['p-s', 'p-a']);
+    expect(await toldIds('sales', { ...off, familyOn: false })).toEqual([]);
+    expect(await toldIds('teacher', off)).toEqual(['p-g', 'p-s', 'p-a']);
   });
 });

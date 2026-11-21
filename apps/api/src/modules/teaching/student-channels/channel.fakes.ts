@@ -14,7 +14,7 @@ import { fakePresence } from '@/modules/people/presence/presence.fakes';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
 import { ChannelRepo } from './channel.repo';
-import { FamilyChatSettings } from './family-chat.settings';
+import { FamilyChatSettings, TeacherChatSettings } from './family-chat.settings';
 import { channelExtras } from './testing/channel-extras.fakes';
 import { ChannelBellRepo } from './notify/channel-bell.repo';
 import { ChannelReadsRepo } from './reads/channel-reads.repo';
@@ -116,6 +116,7 @@ export async function channelApp() {
   const extras = channelExtras();
   const audit = { record: vi.fn(async () => undefined) };
   const familyChat = { enabled: vi.fn(async () => true) }; // family_chat_enabled on, as before
+  const teacherChat = { enabled: vi.fn(async () => true) }; // teacher_student_messages_enabled
   const presence = fakePresence();
   const seats = fakeSeats([ST, OTHER]);
   const push = {
@@ -127,7 +128,8 @@ export async function channelApp() {
     [ChannelRepo, queries], [ChannelPeopleRepo, people], [PortalScopeRepo, scope],
     [TeachersRepo, teachers], [PushService, push], [ChannelEditsRepo, edits],
     [AuditService, audit], [PresenceRepo, presence.repo], [PresenceSettings, presence.settings],
-    [FamilyChatSettings, familyChat], [ChannelReadsRepo, extras.reads],
+    [FamilyChatSettings, familyChat], [TeacherChatSettings, teacherChat],
+    [ChannelReadsRepo, extras.reads],
     [ChannelBellRepo, extras.bell], [StorageService, extras.storage], [ChannelSeatRepo, seats.repo],
   ];
   const builder = overrides.reduce(
@@ -139,7 +141,8 @@ export async function channelApp() {
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` } });
   const send = (method: 'POST' | 'PATCH' | 'PUT') => (url: string, who: Who, payload: object) =>
     app.inject({ method, url, headers: { authorization: `Bearer ${who}` }, payload });
-  const fakes = { queries, people, scope, teachers, push, edits, audit, presence, familyChat };
+  const fakes = { queries, people, scope, teachers, push, edits, audit, presence, familyChat,
+    teacherChat };
   const writes = { post: send('POST'), patch: send('PATCH'), put: send('PUT') };
   return { app, call, ...writes, ...fakes, seats, ...extras };
 }
