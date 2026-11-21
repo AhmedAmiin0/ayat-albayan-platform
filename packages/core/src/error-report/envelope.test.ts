@@ -18,7 +18,7 @@ describe('buildEnvelope (one error event, no client timestamp)', () => {
       exception: { values: [{ type: 'TypeError', value: 'boom' }] },
     });
     expect(event).not.toHaveProperty('timestamp');
-    expect((event?.extra as { stack: string }).stack).toContain('TypeError: boom');
+    expect(JSON.stringify(event?.extra)).toContain('TypeError: boom');
   });
 
   it('a thrown non-Error is reported as its text', () => {

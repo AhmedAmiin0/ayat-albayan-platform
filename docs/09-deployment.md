@@ -407,6 +407,7 @@ Owner request 2026-10-05: deploys, mobile builds/OTA, database migrations and th
 | `claude-tasks` | manual with a `prompt`; `@claude` comment | Claude Code opens a PR into `develop` | none (no deploy secrets) | ignored: needs the owner as actor, as author of the issue/PR and of every comment in the thread |
 | `claude-code-review` | PR opened, pushed, reopened or marked ready (not drafts) | Claude Code reviews the diff and posts inline comments (owner 2026-11-13) | none (only `CLAUDE_CODE_OAUTH_TOKEN`) | skipped: the job runs only for PRs from this repository, and a fork PR gets no secret |
 | `roster-report`, `staging-test-account` | manual | read-only roster CSV; test teacher + student on staging | `develop` | never triggered by a PR |
+| `db-backup` | nightly 02:17 UTC; manual | `pg_dump` (public + auth) of production, encrypted with the owner's age public key, kept 90 days as an artifact; off (green, a notice) until `SUPABASE_DB_URL` and `BACKUP_AGE_RECIPIENT` exist (docs/backups.md) | `db-backup` | never triggered by a PR |
 
 Migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. Since 2026-10-23 an automatic deploy **skips** the migrate job (no approval click) only when its `plan` job proves that nothing under `packages/db/supabase/migrations/` changed since the last deploy that pushed migrations (`tools/scripts/env/deploy-baseline.mjs` reads the run titles `deploy-staging <sha>`); if that deploy cannot be found or anything fails, migrate runs and waits for review as before. Every apply that does run pauses at «waiting for review»; approve it after reading the diff.
 
@@ -434,7 +435,7 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 
 ### What you must add (Settings → Secrets and variables → Actions, and Settings → Environments)
 
-**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer).
+**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer), `db-backup` (created by its first run; set Deployment branches = `develop` and put its secret there).
 
 | Secret | Where to get it | Used by |
 |---|---|---|
@@ -457,8 +458,9 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 | `GOOGLE_SERVICES_JSON` | Firebase `google-services.json` content; optional if the EAS `preview` environment already holds it | `mobile` (OTA) |
 | `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` | console.anthropic.com key, or `claude setup-token` | `claude-tasks` (the only secret it sees); `CLAUDE_CODE_OAUTH_TOKEN` also `claude-code-review` |
 | `TEST_ACCOUNT_PASSWORD`, `TEST_TEACHER_EMAIL` | Your choice (see «Test teacher on staging») | `staging-test-account` |
+| `SUPABASE_DB_URL` | **Optional, switches the nightly copy on:** Supabase → Connect → **Session pooler** URI of the production project, with the password (GitHub runners have no IPv6). Put it in the `db-backup` environment, never as a repository secret. With the variable `BACKUP_AGE_RECIPIENT` (your age public key) | `db-backup` (docs/backups.md) |
 
-Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `VERIFIED_TREE_SKIP`, `OTA_BASELINE_SHA`. `VERIFIED_TREE_SKIP` = `false` turns off the develop skip of `ci` (a push whose tree a green PR run already put through verify and guards runs only e2e, the full suite, and the baselines prune; `tools/scripts/ci-checks/ci-skip/verified-tree.mjs`). The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
+Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `VERIFIED_TREE_SKIP`, `OTA_BASELINE_SHA`, `BACKUP_AGE_RECIPIENT` and `BACKUP_PG_MAJOR` (`db-backup`, docs/backups.md), `VITE_SENTRY_DSN` (the web apps' optional error tracker). `VERIFIED_TREE_SKIP` = `false` turns off the develop skip of `ci` (a push whose tree a green PR run already put through verify and guards runs only e2e, the full suite, and the baselines prune; `tools/scripts/ci-checks/ci-skip/verified-tree.mjs`). The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
 
 Already created but **not used by any workflow yet:** `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`, other `WA_*`, `LIVEKIT_*` beyond the two above, `GOOGLE_SERVICES_JSON` outside `mobile`. They sit unused until a workflow names them.
 
