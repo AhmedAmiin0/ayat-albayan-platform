@@ -111,3 +111,11 @@ describe('WebPushSender (R-NOT-02)', () => {
     expect(transport.mock.calls.map(([r]) => r.url)).toEqual([`${FCM}/3`]);
   });
 });
+
+describe('WebPushSender failures', () => {
+  it('a failed subscription read answers 0, never throws', async () => {
+    const select = () => ({ eq: async () => ({ data: null, error: { message: 'db down' } }) });
+    const db = { from: vi.fn(() => ({ select })) } as unknown as Db;
+    expect(await new WebPushSender(db, vi.fn<WebPushTransport>(), vapid).send('p1', PAYLOAD)).toBe(0);
+  });
+});

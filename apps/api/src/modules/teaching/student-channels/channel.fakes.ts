@@ -4,7 +4,7 @@ import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
 import { bootWith } from '@/common/auth/auth.fakes';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { PushService } from '@/common/push/push.service';
+import { PushService, type PushTarget } from '@/common/push/push.service';
 import { PortalScopeRepo } from '@/modules/people/portal/scope/portal-scope.repo';
 import { TeachersRepo } from '@/modules/people/teachers';
 import { AuditService } from '@/common/audit/audit.service';
@@ -23,6 +23,8 @@ import { StorageService } from '@/common/storage/storage.service';
 import type { ChannelClosedReason } from '@ab/shared';
 import { ChannelSeatRepo } from './seat/channel-seat.repo';
 import { fakeSeats } from './seat/seat.fakes';
+
+type SummaryInput = Parameters<ChannelRepo['summaries']>[0];
 
 export const ST = '52000000-0000-4000-8000-000000000001';
 /** Another family's child. */
@@ -71,7 +73,7 @@ export async function channelApp() {
     }),
     teacherIds: vi.fn(async (): Promise<string[]> => ['t1']),
     teacherStudentIds: vi.fn(async () => [ST]),
-    summaries: vi.fn(async (): Promise<ChannelSummaryRow[]> => [
+    summaries: vi.fn(async (_in: SummaryInput): Promise<ChannelSummaryRow[]> => [
       {
         student_id: ST,
         unread: 2,
@@ -120,7 +122,7 @@ export async function channelApp() {
   const presence = fakePresence();
   const seats = fakeSeats([ST, OTHER]);
   const push = {
-    notifyProfiles: vi.fn(async () => undefined),
+    notifyProfiles: vi.fn(async (_target: PushTarget) => undefined),
     notifyAdmins: vi.fn(),
     notifySales: vi.fn(),
   };

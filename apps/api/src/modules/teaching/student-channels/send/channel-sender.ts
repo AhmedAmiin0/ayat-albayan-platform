@@ -14,8 +14,9 @@ type Participant = Extract<ChannelActor, { mode: 'participant' }>;
 /**
  * POST …/messages (docs/31 §2): 403 for a monitor, 409 channel_not_open while closed. Once the
  * row is stored the send has happened: the sender's read mark, the pushes (not awaited) and the
- * names are best-effort (a failure logs, never a 500). A resend with the same client_id answers the stored
- * message (found first; a race lost at the insert finds it there) and pushes nothing again.
+ * names are best-effort (a failure logs, never a 500). A resend with the same client_id answers
+ * the stored message (found first; a race lost at the insert finds it there) and pushes nothing
+ * again.
  */
 @Injectable()
 export class ChannelSender {

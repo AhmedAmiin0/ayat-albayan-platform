@@ -93,7 +93,11 @@ export class TeacherChannelList {
     const teacherId = await this.teachers.idByProfile(user.id);
     if (!teacherId) throw notFound('teacher_not_linked');
     const ids = await this.queries.teacherStudentIds(teacherId);
-    const [students, summaries] = await Promise.all([this.people.students(ids), this.queries.summaries({ profileId: user.id, studentIds: ids, countRoles: UNREAD_COUNT_ROLES })]);
+    const counts = { profileId: user.id, studentIds: ids, countRoles: UNREAD_COUNT_ROLES };
+    const [students, summaries] = await Promise.all([
+      this.people.students(ids),
+      this.queries.summaries(counts),
+    ]);
     return toTeacherRows(students, summaries);
   }
 }

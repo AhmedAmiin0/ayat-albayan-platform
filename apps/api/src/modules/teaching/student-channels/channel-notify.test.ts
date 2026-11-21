@@ -59,7 +59,7 @@ function notifier(setup: Setup = {}) {
     push as unknown as PushService,
     { enabled: vi.fn(async () => teachersOn) } as unknown as TeacherChatSettings,
   );
-  return { notify, push };
+  return { notify, push, people };
 }
 
 const actor = (role: ChannelSenderRole): ChannelActor => ({
@@ -136,5 +136,12 @@ describe('ChannelNotify: who hears a chat message', () => {
     expect(await toldIds('guardian', off)).toEqual(['p-s', 'p-a']);
     expect(await toldIds('sales', { ...off, familyOn: false })).toEqual([]);
     expect(await toldIds('teacher', off)).toEqual(['p-g', 'p-s', 'p-a']);
+  });
+
+  it('a student row gone meanwhile: the push still goes, without a student name', async () => {
+    const { notify, push, people } = notifier();
+    people.students.mockResolvedValueOnce([]);
+    await notify.sent(actor('teacher'), message);
+    expect(push.notifyProfiles.mock.calls[0]?.[0].vars).toMatchObject({ student: '' });
   });
 });
