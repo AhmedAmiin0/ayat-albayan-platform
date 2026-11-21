@@ -78,6 +78,7 @@ export const SETTINGS_LAYOUT = {
     'recording_retention_days',
     'activity_retention_days',
     ...TEACHER_PAGE_KEYS,
+    'maintenance_mode',
   ],
   sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
   appearance: [],
