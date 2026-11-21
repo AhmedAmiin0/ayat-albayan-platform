@@ -9,3 +9,10 @@ describe('a channel message in a push or bell row', () => {
     expect(previewOf({ body: 'تعليق', kind: 'pdf' })).toBe('تعليق');
   });
 });
+
+describe('a preview cut at the limit (code points, finding 3)', () => {
+  it('an emoji on the boundary is never split into a lone surrogate', () => {
+    const shown = previewOf({ body: `${'ب'.repeat(79)}😀 وبعد` });
+    expect(shown).toBe(`${'ب'.repeat(79)}😀`);
+  });
+});

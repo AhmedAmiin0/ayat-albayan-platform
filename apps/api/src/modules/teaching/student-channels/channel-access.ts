@@ -67,13 +67,29 @@ export class ChannelAccess {
   }
 
   /**
-   * The seat holder (ChannelPeopleRepo.assistantId; owner 2026-11-16 «… but only 1») writes as
-   * 'sales' on an open channel and reads a closed one as a monitor. The seat is not sales
+   * The seat holder (ChannelPeopleRepo.assistantId; owner 2026-11-16 «… but only 1») reads the
+   * chat; she writes as 'sales' only on an open channel while settings.family_chat_enabled is on
+   * (she writes to the family), else her page is read-only (no composer). The seat is not sales
    * ownership: it grants no money, lead or commission scope.
    */
   async assistant(user: AuthUser, studentId: string): Promise<ChannelActor> {
+    const seat = await this.seat(user, studentId);
+    const writes = seat.open && (await this.deps.familyChat.enabled());
+    return writes ? { ...seat, mode: 'participant', role: 'sales' } : { ...seat, mode: 'monitor' };
+  }
+
+  /**
+   * Her send and read-mark routes: 403 family_chat_off while the family chat is off (as the
+   * family's own routes), else a participant; a closed channel is then 409 channel_not_open.
+   */
+  async assistantWriter(user: AuthUser, studentId: string): Promise<ChannelActor> {
+    const seat = await this.seat(user, studentId);
+    if (!(await this.deps.familyChat.enabled())) throw forbidden(FAMILY_CHAT_OFF);
+    return { ...seat, mode: 'participant', role: 'sales' };
+  }
+
+  private async seat(user: AuthUser, studentId: string) {
     if ((await this.people.assistantId(studentId)) !== user.id) throw notFound('student_not_found');
-    const seat = { studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
-    return seat.open ? { ...seat, mode: 'participant', role: 'sales' } : { ...seat, mode: 'monitor' };
+    return { studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
   }
 }

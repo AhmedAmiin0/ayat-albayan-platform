@@ -57,6 +57,18 @@ describe('WebPushSender (R-NOT-02)', () => {
     expect(shown.body).toHaveLength(240);
   });
 
+  it('an emoji at the 240 limit is never split: the browser body has no lone surrogate', async () => {
+    const b = browser();
+    const { db } = fakeDb([{ id: 's1', endpoint: FCM, ...b.keys }]);
+    const transport = vi.fn<WebPushTransport>(async () => ({ status: 201 }));
+    const body = `${'ا'.repeat(238)}🌙🌙🌙`;
+    await new WebPushSender(db, transport, vapid).send('p1', { ...PAYLOAD, body });
+    const sent = transport.mock.calls[0]?.[0].body ?? Buffer.alloc(0);
+    const keys = { privateKey: b.ua.getPrivateKey(), auth: b.auth };
+    const shown = JSON.parse(decryptPayload(sent, keys).toString()) as typeof PAYLOAD;
+    expect(shown.body).toBe(`${'ا'.repeat(238)}🌙…`);
+  });
+
   it('400/403/404/410/413 delete the subscription; 401, 429 and 500 keep it', async () => {
     const subs = ['s400', 's401', 's403', 's404', 's410', 's413', 's429', 's500'].map((id) => ({
       id,
@@ -97,5 +109,13 @@ describe('WebPushSender (R-NOT-02)', () => {
     const transport = vi.fn<WebPushTransport>(async () => ({ status: 201 }));
     expect(await new WebPushSender(db, transport, vapid).send('p1', PAYLOAD)).toBe(1);
     expect(transport.mock.calls.map(([r]) => r.url)).toEqual([`${FCM}/3`]);
+  });
+});
+
+describe('WebPushSender failures', () => {
+  it('a failed subscription read answers 0, never throws', async () => {
+    const select = () => ({ eq: async () => ({ data: null, error: { message: 'db down' } }) });
+    const db = { from: vi.fn(() => ({ select })) } as unknown as Db;
+    expect(await new WebPushSender(db, vi.fn<WebPushTransport>(), vapid).send('p1', PAYLOAD)).toBe(0);
   });
 });
