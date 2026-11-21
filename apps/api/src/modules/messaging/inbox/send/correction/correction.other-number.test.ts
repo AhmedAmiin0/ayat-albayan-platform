@@ -58,12 +58,12 @@ describe('a correction from another line than its original', () => {
   });
   afterEach(() => vi.unstubAllEnvs());
 
-  it('chat window closed, notifications window open: 409 correction_other_number', async () => {
+  it('chat window closed, notifications window open: 409 session_closed (chat first)', async () => {
     queries.thread.mockResolvedValue(
       threadRow({ last_chat_inbound_at: at(30), last_notifications_inbound_at: at(1) }),
     );
     await expect(correct()).rejects.toMatchObject({
-      response: { code: 'correction_other_number' },
+      response: { code: 'session_closed' },
       status: 409,
     });
     expect(outbox.queue).not.toHaveBeenCalled();
