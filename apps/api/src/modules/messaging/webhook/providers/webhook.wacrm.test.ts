@@ -15,8 +15,19 @@ describe('parseWacrm', () => {
     });
   });
 
-  it('message.received and other events are not statuses; an unknown status or a bad envelope too', () => {
-    expect(parseWacrm(env('message.received', {}), NOW)).toEqual({ id: 'd-1', kind: 'received', event: 'message.received' });
+  it('message.received → the CRM ids, content type and text, at occurred_at', () => {
+    const data = { conversation_id: 'cv-1', contact_id: 'ct-1', whatsapp_message_id: 'wamid.in', content_type: 'image', text: 'تم' };
+    expect(parseWacrm(env('message.received', data), NOW)).toEqual({
+      id: 'd-1',
+      kind: 'received',
+      received: { waMessageId: 'wamid.in', conversationId: 'cv-1', contactId: 'ct-1', contentType: 'image', text: 'تم', at: new Date('2026-10-25T07:59:00.000Z') },
+    });
+    const bare = { ...data, text: null };
+    expect(parseWacrm(env('message.received', bare, { occurred_at: undefined }), NOW)).toMatchObject({ received: { text: null, at: NOW } });
+  });
+
+  it('a message.received without its ids, other events, an unknown status or a bad envelope: not mirrored', () => {
+    expect(parseWacrm(env('message.received', { text: 'x' }), NOW)).toEqual({ id: 'd-1', kind: 'other', event: 'message.received' });
     expect(parseWacrm(env('conversation.created', {}), NOW)).toMatchObject({ kind: 'other' });
     expect(parseWacrm(env('message.status_updated', { whatsapp_message_id: 'w', status: 'played' }), NOW)).toMatchObject({ kind: 'other' });
     expect(parseWacrm({ event: 'message.received' }, NOW)).toBeNull();

@@ -57,6 +57,13 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
 }
 
 /**
+ * A file in the CRM's storage: imported history on the crm number, or a message mirrored from the
+ * CRM (2026-11-21), which legacy mode stamps with no number. Another driver's number never is.
+ */
+const fromCrmStorage = (msg: MediaMessage): boolean =>
+  isCrmHistoryRow(msg) && (msg.number?.provider ?? 'crm') === 'crm';
+
+/**
  * An inbound WhatsApp file (image / PDF; audio / video for the chat bubble) as a file we own
  * (R-MSG-06). The webhook stores only Meta's media id, so the first time an admin needs the file (a thumbnail, «من الشات» on a booking) it is
  * fetched from Meta and cached in the private `wa-media` bucket; later calls read the cache.
@@ -117,7 +124,7 @@ export class InboundMedia {
   }
 
   private fetch(msg: MediaMessage): Promise<{ bytes: Uint8Array }> {
-    if (isCrmHistoryRow(msg) && msg.number?.provider === 'crm' && this.crm) return this.crm.download(msg);
+    if (fromCrmStorage(msg) && this.crm) return this.crm.download(msg);
     if (mediaExpired(msg, new Date()) || !msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
     return this.download(msg, msg.media_id);
   }

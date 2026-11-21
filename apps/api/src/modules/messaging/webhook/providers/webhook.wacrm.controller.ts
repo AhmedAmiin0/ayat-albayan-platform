@@ -4,7 +4,11 @@ import { Public } from '@/common/auth/decorators';
 import { RESPONSE_BUDGET_MS, WEBHOOK_CONFIG, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
 import { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import { verifyWacrmSignature, WACRM_TOLERANCE_MS } from '@/modules/messaging/webhook/parse/webhook.wacrm-signature';
-import { parseWacrm, SeenDeliveries } from './webhook.wacrm';
+import { CrmInbound, CrmInboundJob } from '@/modules/messaging/webhook/crm-inbound';
+import { parseWacrm, SeenDeliveries, type WacrmDelivery } from './webhook.wacrm';
+
+type Kind = WacrmDelivery['kind'];
+type Of<K extends Kind> = Extract<WacrmDelivery, { kind: K }>;
 
 /** The bits of the Fastify request used here (no direct `fastify` dependency). */
 interface RawRequest {
@@ -16,8 +20,9 @@ interface RawRequest {
 /**
  * The academy CRM's outbound webhook (docs/19 «crm driver»). Public: authenticated by WACRM_WEBHOOK_SECRET's
  * HMAC over `${t}.${rawBody}` only, within 5 minutes (a replay is refused). message.status_updated moves our
- * outbound row by its wamid (the existing delivery-status path); message.received is logged only (the CRM
- * owns that number's conversations). Deduped on the delivery id. Never sends anything.
+ * outbound row by its wamid (the existing delivery-status path); message.received (a family writing to
+ * the notifications number) is queued by its wamid and the mirror job kicked: it lands in the inbox
+ * (owner 2026-11-21). Deduped on the delivery id. Never sends anything.
  */
 @ApiTags('webhooks')
 @Public()
@@ -29,9 +34,11 @@ export class WacrmWebhookController {
   constructor(
     @Inject(WEBHOOK_CONFIG) private readonly config: WebhookConfig,
     private readonly statuses: StatusService,
+    private readonly crmInbound: CrmInbound,
+    private readonly crmInboundJob: CrmInboundJob,
   ) {}
 
-  /** 401 (nothing read) unless the signature is good and fresh; 500 when the status write failed, so it may come again. */
+  /** 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come again). */
   @Post()
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers('x-wacrm-signature') signature?: string): Promise<void> {
@@ -44,15 +51,31 @@ export class WacrmWebhookController {
     }
     const delivery = parseWacrm(req.body, now);
     if (!delivery || !this.seen.first(delivery.id, now.getTime())) return;
-    if (delivery.kind !== 'status') {
-      this.log.log(`wacrm ${delivery.event} ${delivery.id}: not mirrored (the CRM owns that number's conversations)`);
-      return;
-    }
     try {
-      await within(this.statuses.handle(delivery.status), RESPONSE_BUDGET_MS);
+      await within(this.apply(delivery), RESPONSE_BUDGET_MS);
     } catch (e) {
       this.seen.forget(delivery.id);
       throw e;
     }
+  }
+
+  /** Ticks → the delivery-status path; a received message → the mirror's queue; else logged. */
+  private readonly on: { [K in Kind]: (d: Of<K>) => Promise<void> } = {
+    status: async (d) => {
+      await this.statuses.handle(d.status);
+    },
+    received: async (d) => {
+      await this.crmInbound.accept(d.received);
+      this.crmInboundJob.kick().catch(() => undefined);
+    },
+    other: (d) => {
+      this.log.log(`wacrm ${d.event} ${d.id}: not mirrored`);
+      return Promise.resolve();
+    },
+  };
+
+  private apply<K extends Kind>(d: Of<K>): Promise<void> {
+    const run: (x: Of<K>) => Promise<void> = this.on[d.kind];
+    return run(d);
   }
 }

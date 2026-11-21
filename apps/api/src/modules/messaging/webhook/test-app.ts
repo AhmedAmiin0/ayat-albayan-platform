@@ -3,6 +3,7 @@
 import { createHmac } from 'node:crypto';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
+import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
@@ -18,6 +19,7 @@ import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from './webhook.module';
 import { WebhookRepo } from './webhook.repo';
 import { WEBHOOK_CONFIG, type WebhookConfig } from './webhook.service';
+import { CrmInboundRepo } from './crm-inbound';
 
 export const SECRET = 'stub-app-secret';
 export const CHAT_SECRET = 'stub-chat-app-secret';
@@ -41,6 +43,8 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
   const deps = fakeDeps();
   const external = fakeExternalQueries(deps.queries.stored);
   const kapso = fakeKapso();
+  /** The CRM inbound queue (no db): nothing due, so a kick finds no CRM call to make. */
+  const crmQueue = { enqueue: vi.fn(async () => undefined), due: vi.fn(async () => []) };
   const mod = await Test.createTestingModule({ imports: [AppModule, WebhookModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(async () => {
@@ -65,6 +69,8 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     // «أرسل عبر واتساب» attach (docs/19): no tapped row here, every external message is stored.
     .overrideProvider(ManualEchoRepo)
     .useValue({ candidates: async () => [], attach: async () => false })
+    .overrideProvider(CrmInboundRepo)
+    .useValue(crmQueue)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   await app.init();
@@ -88,5 +94,5 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
       headers: { 'content-type': 'application/json', ...(signature === null ? {} : { 'x-wacrm-signature': signature }) },
       payload: body,
     });
-  return { ...deps, external, kapso, app, post, postKapso, postWacrm };
+  return { ...deps, external, kapso, crmQueue, app, post, postKapso, postWacrm };
 }

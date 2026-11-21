@@ -3,11 +3,13 @@ import type { CrmLineEnv } from '@/config/env/env';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { crmJson, type CrmConn } from './crm-http';
 import {
+  crmContactSchema,
   crmContactsSchema,
   crmConversationSchema,
   crmConversationsSchema,
   crmMessagesSchema,
   type CrmContact,
+  type CrmContactCard,
   type CrmConversation,
   type CrmMessage,
 } from './crm-lookup.schemas';
@@ -56,8 +58,9 @@ async function read<T>(conn: CrmConn, call: Read<T>): Promise<T> {
   return parsed.data;
 }
 
-/** The four reads the confirm and its sweep make. */
+/** The reads the confirm, its sweep and the inbound mirror make. */
 export interface CrmLookup {
+  contact: (id: string) => Promise<CrmContactCard>;
   conversation: (id: string) => Promise<CrmConversation>;
   messages: (conversationId: string) => Promise<CrmMessage[]>;
   contacts: (search: string) => Promise<CrmContact[]>;
@@ -71,6 +74,8 @@ export function crmLookup(env: CrmLineEnv, fetch: CrmConn['fetch']): CrmLookup {
   const conn: CrmConn = { env, fetch, timeoutMs: LOOKUP_TIMEOUT_MS };
   const conversations = 'conversations:read';
   return {
+    contact: (id) =>
+      read(conn, { path: `contacts/${enc(id)}`, scope: 'contacts:read', schema: crmContactSchema }),
     conversation: (id) =>
       read(conn, {
         path: `conversations/${enc(id)}`,
