@@ -203,6 +203,8 @@ jobs:
           VITE_FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
           # The family app's «wrongApp» link for a staff account.
           VITE_STAFF_ORIGIN: ${{ vars.VITE_STAFF_ORIGIN || 'https://app.ayatalbayan.com' }}
+          # Optional error tracker (docs/09 «Error tracker»): unset = nothing is reported.
+          VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN }}
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
@@ -466,11 +468,16 @@ jobs:
         id: health
         env:
           API_URL: ${{ vars.API_URL || 'https://api.ayatalbayan.com' }}
+        # /health: the process answers (liveness, as the load balancer sees it). /ready: it can serve (the
+        # database answers within 2 s; Redis or a stale job only degrade it, still 200). /ready gets a few
+        # retries only: a 503 after them fails this step and the next one rolls back (docs/09 «Readiness»).
         run: |
           url="${API_URL}"
-          if [ -z "$url" ]; then ssh target "curl -fsS --retry 30 --retry-delay 5 --retry-all-errors http://127.0.0.1:3110/health"
-          else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health"; fi
-          echo; echo "staging is up"
+          ready="-fsS --retry 6 --retry-delay 5 --retry-all-errors --max-time 10"
+          if [ -z "$url" ]; then ssh target "curl -fsS --retry 30 --retry-delay 5 --retry-all-errors http://127.0.0.1:3110/health \
+            && echo && curl $ready http://127.0.0.1:3110/ready"
+          else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health" && echo && curl $ready "$url/ready"; fi
+          echo; echo "staging is up and ready"
 
       # The roll succeeded but the public health check failed: the same rollback.sh (under the deploy lock) puts the
       # previous code, compose files and Caddyfile back and rolls the previous layout; the web build is swapped back

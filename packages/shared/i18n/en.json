@@ -9683,6 +9683,11 @@
       "card": "The lesson ended at {time} and can't be joined again."
     }
   },
+  "backgroundJobs": {
+    "staleTitle": "A background job has stopped",
+    "staleReason": "The background job «{name}» has not succeeded for {minutes} minutes; it normally runs every {every} minutes. Last error: {error}. Check the worker container's logs (ayat-worker).",
+    "noError": "none"
+  },
   "maintenance": {
     "planned": {
       "title": "The platform is under maintenance",

@@ -3,6 +3,7 @@ import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy }
 import { ExpensesRepo } from './expenses.repo';
 import { ExpensesSettings } from './expenses.settings';
 import { BackgroundJob } from '@/config/role/background-job';
+import { beatTick } from '@/common/jobs/beats';
 
 const EVERY_MS = 6 * 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -30,7 +31,8 @@ export class ExpensesJob implements OnApplicationBootstrap, OnModuleDestroy {
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
+    const plan = { name: ExpensesJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS };
+    const tick = beatTick(plan, () => this.runOnce());
     this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, EVERY_MS).unref());
   }
 

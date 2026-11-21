@@ -47,3 +47,4 @@ export {
 } from './time/slots/slot-text';
 export { weekLabel } from './time/slots/week';
 export { useNow } from './time/use-now';
+export { installMobileErrorReporting } from './log/error-report';

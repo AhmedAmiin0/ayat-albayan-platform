@@ -6,3 +6,4 @@ export * from './money/index.js';
 export * from './phone/index.js';
 export * from './schemas/index.js';
 export * from './text/index.js';
+export * from './error-report/index.js';

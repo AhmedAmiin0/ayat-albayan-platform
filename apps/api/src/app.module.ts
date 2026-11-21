@@ -25,7 +25,7 @@ import { ClassroomModule } from './modules/teaching/classroom/classroom.module';
 import { FeedbackModule } from './modules/teaching/feedback/feedback.module';
 import { FxModule } from './modules/finance/fx/fx.module';
 import { GuardiansModule } from './modules/people/guardians/guardians.module';
-import { HealthController } from './modules/platform/health/health.controller';
+import { HealthModule } from './modules/platform/health';
 import { ProcessRoleModule } from './modules/platform/process-role';
 import { ShortLinksAdminModule } from './modules/platform/short-links-admin';
 import { InboxModule } from './modules/messaging/inbox/inbox.module';
@@ -144,7 +144,7 @@ import { ScriptRelayModule } from './modules/messaging/whatsapp';
     WebhookModule,
     ScriptRelayModule,
     ShortLinksAdminModule,
+    HealthModule,
   ],
-  controllers: [HealthController],
 })
 export class AppModule {}

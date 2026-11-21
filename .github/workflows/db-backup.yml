@@ -1,0 +1,84 @@
+# Nightly copy of the production database OUTSIDE Supabase (docs/backups.md): pg_dump of the
+# public and auth schemas, encrypted with the owner's age PUBLIC key before it touches the disk,
+# kept as a workflow artifact for 90 days. The repository is public: only the encrypted file is
+# ever stored, and the log never shows the URL, the host or any row.
+# Switched off until the owner adds the SUPABASE_DB_URL secret and the BACKUP_AGE_RECIPIENT
+# variable to the db-backup environment: until then every run ends green with a notice.
+name: db-backup
+
+on:
+  schedule:
+    # 02:17 UTC: after the reports and reminders of the evening, off the hour (GitHub's busy minute).
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+jobs:
+  dump:
+    runs-on: ubuntu-24.04
+    environment: db-backup
+    timeout-minutes: 60
+    env:
+      DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      AGE_RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
+      # Supabase runs Postgres 17: pg_dump must be at least the server's version.
+      PG_MAJOR: ${{ vars.BACKUP_PG_MAJOR || '17' }}
+    steps:
+      - name: Check the switch
+        id: switch
+        run: |
+          if [ -n "${DB_URL:-}" ] && [ -n "${AGE_RECIPIENT:-}" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "::notice::db-backup is off: add the SUPABASE_DB_URL secret and the BACKUP_AGE_RECIPIENT variable to the db-backup environment (docs/backups.md)"
+          echo "on=false" >> "$GITHUB_OUTPUT"
+
+      - name: Install pg_dump and age
+        if: ${{ steps.switch.outputs.on == 'true' }}
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt noble-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq "postgresql-client-${PG_MAJOR}" age > /dev/null
+          echo "PG_DUMP=/usr/lib/postgresql/${PG_MAJOR}/bin/pg_dump" >> "$GITHUB_ENV"
+          "/usr/lib/postgresql/${PG_MAJOR}/bin/pg_dump" --version
+
+      - name: Dump and encrypt
+        if: ${{ steps.switch.outputs.on == 'true' }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p backup
+          name="ayat-db-$(date -u +%Y-%m-%dT%H%MZ).dump.age"
+          err="$RUNNER_TEMP/pg_dump.err"
+          bytes="$RUNNER_TEMP/pg_dump.bytes"
+          # The plain dump only ever flows through the pipe into age; its byte count is kept.
+          if ! "$PG_DUMP" --dbname="$DB_URL" --format=custom --no-owner --no-privileges \
+            --schema=public --schema=auth 2> "$err" \
+            | tee >(wc -c > "$bytes") | age -r "$AGE_RECIPIENT" > "backup/$name"; then
+            # pg_dump's own message may name the host: only its line count is shown.
+            echo "::error::pg_dump or age failed ($(wc -l < "$err") error lines kept out of the log); test the connection from a trusted machine (docs/backups.md)"
+            exit 1
+          fi
+          # The count is written by a side process: give it a moment to land.
+          for _ in $(seq 50); do [ -s "$bytes" ] && break; sleep 0.1; done
+          plain="$(tr -d ' ' < "$bytes")"
+          if [ "${plain:-0}" -eq 0 ]; then echo "::error::pg_dump wrote nothing"; exit 1; fi
+          (cd backup && sha256sum "$name" > "$name.sha256")
+          echo "backup: $name, $(stat -c%s "backup/$name") bytes encrypted"
+
+      - name: Keep the encrypted copy
+        if: ${{ steps.switch.outputs.on == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backup-${{ github.run_id }}
+          path: backup/
+          retention-days: 90
+          if-no-files-found: error
+          compression-level: 0
