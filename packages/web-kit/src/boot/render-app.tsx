@@ -2,6 +2,7 @@ import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { RouterProvider, type AnyRouter } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { MaintenanceGate, type MaintenanceOptions } from '@ab/web-kit/boot/maintenance';
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 import { watchSystemTheme } from '@ab/web-kit/lib/theme';
 import { bindWebPushToSession } from '@ab/web-kit/push/web-push-session';
@@ -11,13 +12,16 @@ interface App {
   queryClient: QueryClient;
   /** The browser tab's title. */
   title: string;
+  /** «تحت الصيانة» (owner 2026-11-21): the staff app's rooms and sign-in; the family app none. */
+  maintenance?: MaintenanceOptions;
 }
 
 /**
  * Each app's boot.tsx, once `t` holds the chosen language: the system theme followed, this
- * browser's push subscription bound to the session (dropped when it ends), the app on #root.
+ * browser's push subscription bound to the session (dropped when it ends), the app on #root
+ * under the maintenance cover.
  */
-export function renderApp({ router, queryClient, title }: App): void {
+export function renderApp({ router, queryClient, title, maintenance = {} }: App): void {
   watchSystemTheme();
   bindWebPushToSession(supabase.auth);
   document.title = title;
@@ -26,7 +30,9 @@ export function renderApp({ router, queryClient, title }: App): void {
   createRoot(root).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <MaintenanceGate router={router} {...maintenance}>
+          <RouterProvider router={router} />
+        </MaintenanceGate>
       </QueryClientProvider>
     </StrictMode>,
   );
