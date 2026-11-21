@@ -1,6 +1,6 @@
 import type { JobBeat } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { STALE_AFTER_INTERVALS } from '@/common/jobs/beats';
+import { MIN_STALE_MS } from '@/common/jobs/beats';
 import { ReadinessService, type ReadinessDeps } from './readiness.service';
 
 const NOW = 10_000_000;
@@ -42,7 +42,7 @@ describe('ReadinessService (GET /ready)', () => {
   });
 
   it('a stale job → degraded with the count only', async () => {
-    const old = NOW - STALE_AFTER_INTERVALS * 1_000 - 1;
+    const old = NOW - MIN_STALE_MS - 1;
     const view = await new ReadinessService(deps({ beats: async () => [beat('a', old), beat('b', NOW)] })).check();
     expect(view).toMatchObject({ status: 'degraded', checks: { jobs: { status: 'degraded', stale: 1 } } });
   });
