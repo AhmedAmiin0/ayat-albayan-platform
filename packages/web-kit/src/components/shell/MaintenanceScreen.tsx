@@ -5,6 +5,7 @@ import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { BrandLockup } from './BrandLockup';
+import { LanguageSwitch } from './LanguageSwitch';
 import type { MaintenanceCover, MaintenanceScreenProps } from './MaintenanceScreen.types';
 
 const S = t.maintenance;
@@ -28,7 +29,7 @@ const TILE: Record<MaintenanceCover, { tone: string; glyph: ReactNode }> = {
 /**
  * «تحت الصيانة» (owner 2026-11-21) over the whole app, above the kit's top layer (calls, z-60):
  * the family sign-in's frame (the brand lockup, one card), the tile, the words (announced) and
- * one way to ask again now. The app keeps running underneath, inert.
+ * one way to ask again now, then the other language. The app keeps running underneath, inert.
  */
 export function MaintenanceScreen({ kind, checking, onRetry }: MaintenanceScreenProps) {
   const words = WORDS[kind];
@@ -50,6 +51,7 @@ export function MaintenanceScreen({ kind, checking, onRetry }: MaintenanceScreen
               {checking ? S.checking : S.retry}
             </Button>
           </Card>
+          <LanguageSwitch className="justify-self-center" />
         </div>
       </div>
     </div>

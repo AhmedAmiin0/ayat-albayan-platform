@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: {} } }));
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MaintenanceScreen } from './MaintenanceScreen';
 
@@ -22,7 +24,9 @@ describe('MaintenanceScreen («تحت الصيانة», owner 2026-11-21)', () =
     render(<MaintenanceScreen kind="down" checking={false} onRetry={onRetry} />);
     fireEvent.click(screen.getByRole('button', { name: S.retry }));
     expect(onRetry).toHaveBeenCalledTimes(1);
-    expect(screen.getAllByRole('button')).toHaveLength(1);
+    // The retry and the other language (as on the family sign-in), nothing else.
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(screen.getByRole('button', { name: new RegExp(t.language.label) })).toBeTruthy();
   });
 
   it('reads «جارٍ التحقق…» while a check runs', () => {
