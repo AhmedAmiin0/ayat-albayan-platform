@@ -4,6 +4,7 @@ import { CrmMediaCopier, type CopyOutcome } from './crm-media-copier';
 import { CrmMediaCopyDone } from './crm-media-copy.done';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
 import { BackgroundJob } from '@/config/role/background-job';
+import { beatTick } from '@/common/jobs/beats';
 
 /** Two files at a time: the batch of 20 takes ten rounds at most (10 s fetch timeout each). */
 const CONCURRENCY = 2;
@@ -45,7 +46,8 @@ export class CrmMediaCopyJob implements OnApplicationBootstrap, OnModuleDestroy 
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.runOnce();
+    const plan = { name: CrmMediaCopyJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS };
+    const tick = beatTick(plan, () => this.runOnce());
     const start = () => {
       tick();
       this.timers.push(setInterval(tick, EVERY_MS).unref());

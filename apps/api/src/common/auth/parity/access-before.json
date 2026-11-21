@@ -511,6 +511,7 @@
   "MessageHideController.unhide": ["admin","sales","teacher"],
   "StorageProbeController.run": ["admin"],
   "BackupStatusController.view": ["admin"],
+  "JobsStatusController.list": ["admin"],
   "FamilyRequestsController.approve": ["admin","sales"],
   "FamilyRequestsController.pending": ["admin","sales"],
   "FamilyRequestsController.reject": ["admin","sales"],
