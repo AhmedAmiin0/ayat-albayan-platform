@@ -17,6 +17,7 @@
     },
     "android": {
       "package": "com.ayatalbayan.family",
+      "allowBackup": false,
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.FOREGROUND_SERVICE",
@@ -97,7 +98,7 @@
       "reactCompiler": true
     },
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "fingerprint"
     },
     "updates": {
       "checkAutomatically": "ON_LOAD",

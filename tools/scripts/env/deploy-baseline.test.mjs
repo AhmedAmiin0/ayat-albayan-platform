@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { parseDeployTitle, pickDeployBases, pickOtaBase } from './deploy-baseline.mjs';
+import { parseDeployTitle, pickDeployBases, pickFamilyBases, pickOtaBase } from './deploy-baseline.mjs';
 
 const sha = (c) => c.repeat(40);
 const run = (title, extra = {}) => ({
@@ -76,4 +76,17 @@ test('a family app run (mobile.yml app=family) or a stripe-test run is never the
     run('mobile ota-update preview', { head_sha: sha('a') }),
   ];
   assert.equal(pickOtaBase(runs), sha('a'));
+});
+
+test('the family bases are its own green family-preview runs: last OTA and last build', () => {
+  const runs = [
+    run('mobile ota-update preview', { head_sha: sha('e') }),
+    run('mobile ota-update family-production', { head_sha: sha('d') }),
+    run('mobile ota-update family-preview', { head_sha: sha('c') }),
+    run('mobile build-android-apk family-production', { head_sha: sha('9') }),
+    run('mobile build-android-apk family-preview', { head_sha: sha('b'), conclusion: 'failure' }),
+    run('mobile both family-preview', { head_sha: sha('a') }),
+  ];
+  assert.deepEqual(pickFamilyBases(runs), { family_ota_base: sha('c'), family_build_base: sha('a') });
+  assert.deepEqual(pickFamilyBases([run('mobile')]), { family_ota_base: '', family_build_base: '' });
 });

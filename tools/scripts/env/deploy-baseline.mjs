@@ -4,6 +4,8 @@
 //   code_base     the newest green deploy-staging run that shipped code (no «env-only» marker)
 //   ota_base      the commit of the newest green mobile run that shipped an OTA to preview
 //                 (run-name «mobile ota-update preview» / «mobile both preview»); empty if none is known
+//   family_ota_base / family_build_base  the commits of the newest green family app preview OTA /
+//                 preview build (run-name «mobile <action> family-preview», lane L06)
 // An empty value means «unknown»: the workflow then fails safe (the gated migrate job runs; no OTA).
 // Usage: GITHUB_TOKEN=… GITHUB_REPOSITORY=o/r node tools/scripts/env/deploy-baseline.mjs   → key=value lines
 import { fileURLToPath } from 'node:url';
@@ -44,6 +46,16 @@ export function pickOtaBase(runs) {
   );
   return run && SHA.test(run.head_sha) ? run.head_sha : '';
 }
+
+const familyRun = (action) => (r) =>
+  onDevelop(r) && new RegExp(`^mobile (${action}|both) family-preview$`).test(String(r.display_title));
+const shaOf = (run) => (run && SHA.test(run.head_sha) ? run.head_sha : '');
+
+/** The family app's own bases: its newest green preview OTA and its newest green preview build. */
+export const pickFamilyBases = (runs) => ({
+  family_ota_base: shaOf(runs.find(familyRun('ota-update'))),
+  family_build_base: shaOf(runs.find(familyRun('build-android-apk'))),
+});
 
 const runsSchema = z
   .looseObject({
@@ -95,7 +107,8 @@ async function main() {
   const api = githubApi(process.env, fetch);
   const runs = await greenRuns(api, 'deploy-staging.yml');
   const out = await pickDeployBases(runs, (run) => deployJobPassed(api, run));
-  out.ota_base = pickOtaBase(await greenRuns(api, 'mobile.yml'));
+  const mobile = await greenRuns(api, 'mobile.yml');
+  Object.assign(out, { ota_base: pickOtaBase(mobile) }, pickFamilyBases(mobile));
   for (const [k, v] of Object.entries(out)) console.log(`${k}=${v}`);
 }
 
@@ -103,6 +116,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch((e) => {
     // Unknown, not wrong: every value stays empty and the workflow takes the safe path.
     console.error(`::warning::deploy baseline unknown: ${e.message}`);
-    console.log('migrate_base=\ncode_base=\nota_base=');
+    console.log('migrate_base=\ncode_base=\nota_base=\nfamily_ota_base=\nfamily_build_base=');
   });
 }

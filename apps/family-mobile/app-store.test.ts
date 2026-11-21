@@ -12,9 +12,8 @@ const resolved = (): ExpoConfig =>
   config({ config: app.expo as ExpoConfig, staticConfig: {} } as never);
 
 describe('the store build of the family app', () => {
-  it('is version 1.0.0 (runtime appVersion: a new native build)', () => {
+  it('is version 1.0.0 (its runtime is the native fingerprint: app-config.test.ts)', () => {
     expect(app.expo.version).toBe('1.0.0');
-    expect(app.expo.runtimeVersion).toEqual({ policy: 'appVersion' });
   });
 
   it('blocks the advertising ID', () => {
