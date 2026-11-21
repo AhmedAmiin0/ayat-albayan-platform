@@ -92,6 +92,16 @@ Two probes, both public (no token), both cheap:
 
 **Outside uptime monitor (owner):** point any free HTTP monitor at `https://api.ayatalbayan.com/ready` every 1 to 5 minutes, alert on a non-200 answer or a timeout over 10 s, and optionally on a body without `"status":"ok"` (degraded: look at `/admin/jobs` and the logs). Keep a separate check on `/health` if you want "process up" apart from "can serve".
 
+### Database timeouts (`DB_TIMEOUT_MS`)
+
+Every call the API and the worker make to Postgres through supabase-js (PostgREST tables and RPCs, and Auth) has a deadline: `DB_TIMEOUT_MS` (ms, default 15000, 1000 to 120000, zod-checked at boot; unset = 15 s). Storage transfers are not timed (big files). A stalled call fails with `DbTimeoutError` (`apps/api/src/common/db/db-timeout.ts`) instead of hanging a request or a job; postgrest-js never retries it.
+
+- A request answers **503 `db_timeout`** with `Retry-After: 5` (`DbTimeoutFilter`); every other error is handled exactly as before.
+- A job's pass fails like any database error: the Ticker logs it, records it on the job's heartbeat, and the next tick tries again. Rows stay queued (claims, leases and dedup keys), so nothing is lost.
+- Webhooks: a failed item makes the webhook answer 5xx, so Meta (and the other providers) re-send; replays are no-ops for the items that went through.
+
+Switch off: there is no "off"; set `DB_TIMEOUT_MS=120000` to make it as lenient as allowed.
+
 ### PDF sandbox (`ayat-pdf`)
 
 The chat's PDF previews (owner 2026-10-29, `apps/api/src/modules/messaging/inbox/files/pdf`) run poppler (`pdfinfo`, `pdftoppm`) on a sender's bytes. Since the review of 2026-10-30 (in an API copy, a poppler memory-corruption exploit would read PID 1's environment: the service-role key, the WhatsApp and CRM tokens) that happens only in `ayat-pdf`, where there is nothing to steal:
