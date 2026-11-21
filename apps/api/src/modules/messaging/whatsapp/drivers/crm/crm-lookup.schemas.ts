@@ -13,6 +13,10 @@ const crmMessageSchema = z.object({
   whatsapp_message_id: z.string().nullish(),
   status: z.string().nullish(),
   created_at: z.coerce.date(),
+  /** A file's link (the CRM's public chat-media copy), its type when the CRM says it. */
+  content_type: z.string().nullish(),
+  media_url: z.string().nullish(),
+  media_type: z.string().nullish(),
 });
 export type CrmMessage = z.infer<typeof crmMessageSchema>;
 
@@ -34,3 +38,11 @@ export type CrmContact = z.infer<typeof crmContactsSchema>[number];
 
 /** GET /conversations?contact_id=…: their ids. */
 export const crmConversationsSchema = z.array(z.object({ id: z.string() }));
+
+/** GET /contacts/{id}: the phone (it may come without the +) and the name. */
+export const crmContactSchema = z.object({
+  id: z.string(),
+  phone: z.string().nullish(),
+  name: z.string().nullish(),
+});
+export type CrmContactCard = z.infer<typeof crmContactSchema>;

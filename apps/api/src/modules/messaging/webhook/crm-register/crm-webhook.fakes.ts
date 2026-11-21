@@ -38,7 +38,7 @@ interface CrmCall {
 export const endpoint = (id: string, url = TARGET) => ({
   id,
   url,
-  events: ['message.status_updated'],
+  events: ['message.status_updated', 'message.received'],
   is_active: true,
   last_delivery_at: null,
   failure_count: 0,

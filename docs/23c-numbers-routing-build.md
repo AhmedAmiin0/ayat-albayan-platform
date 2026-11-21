@@ -38,6 +38,14 @@ migration `packages/db/supabase/migrations/20261024000633_numbers_routing.sql`.
    newest inbound whose number can send wins; open windows only on numbers that cannot send → 503
    `line_not_configured` (unchanged code); none open → 409 `session_closed`. The inbox stamps
    `number_id` and `line = purpose` at enqueue.
+   **Chat first (owner 2026-11-21):** a staff send from a chat (`sendLine` / `textLine`, so every text,
+   reply, file, sticker, GIF, forward and reaction) reads the windows through `pickStaffSend`
+   (`inbox/send/chat-first.ts`): while a chat line / sendable chat number exists, the notifications
+   line's windows are dropped (legacy: `last_notifications_inbound_at`; module mode: windows whose number,
+   or unstamped line, is notifications). A family writing to the notifications number therefore never
+   makes a reply leave from it: chat window open → the chat number; closed on Kapso → the AWAITING_REPLY
+   reopen-template path; otherwise 409 `session_closed`. `reply_line` follows. `pickSend` itself is
+   unchanged (meeting invitations, call permission). Templates and automatic notifications keep their line.
 7. **Inbound** (module mode): the webhook accepts a change whose `phone_number_id` is any `wa_numbers` row
    (enabled or not: «off = no sends, inbound still logged»), stamps `messages.number_id` and
    `line = purpose`; an unknown id is ignored as today. The signature is checked against every number's app

@@ -6418,7 +6418,7 @@
     "secretCleared": "Secret cleared",
     "crmWebhook": {
       "button": "Link CRM delivery ticks automatically",
-      "hint": "Creates the delivery-status webhook in the CRM with the notifications line's key and stores its secret here, unseen by anyone.",
+      "hint": "Creates the delivery-status and inbound-message webhook in the CRM with the notifications line's key and stores its secret here, unseen by anyone.",
       "pending": "Linking…",
       "done": "CRM delivery ticks linked",
       "errors": {
@@ -6547,7 +6547,7 @@
       },
       "WACRM_WEBHOOK_SECRET": {
         "label": "CRM webhook signing secret",
-        "hint": "Set by the «Link CRM delivery ticks automatically» button below: it registers the API origin followed by /webhooks/wacrm in the CRM for the event message.status_updated and stores its secret here so delivery ticks arrive."
+        "hint": "Set by the «Link CRM delivery ticks automatically» button below: it registers the API origin followed by /webhooks/wacrm in the CRM for the events message.status_updated and message.received and stores its secret here so delivery ticks and messages to the notifications number arrive."
       },
       "WA_ALLOWED_RECIPIENTS": {
         "label": "Allowed recipients",

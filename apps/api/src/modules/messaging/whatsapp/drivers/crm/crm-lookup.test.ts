@@ -38,6 +38,17 @@ describe('crmLookup', () => {
     expect(f.requests[0]?.init.headers).toMatchObject({ authorization: 'Bearer fake-crm-key' });
   });
 
+  it('reads one contact by its id: phone and name (the inbound mirror)', async () => {
+    const f = scriptedFetch(ok({ id: 'p-1', phone: '966500000001', name: 'أم أحمد', tags: [] }));
+    const lookup = crmLookup(CRM_ENV, f.fetch);
+    await expect(lookup.contact('p-1')).resolves.toEqual({
+      id: 'p-1',
+      phone: '966500000001',
+      name: 'أم أحمد',
+    });
+    expect(f.requests.map((r) => r.url)).toEqual([`${BASE}/contacts/p-1`]);
+  });
+
   it('finds contacts by digits and their conversations', async () => {
     const f = scriptedFetch(ok([{ id: 'p-1', phone: '+201000000001' }]), ok([{ id: 'c-1' }]));
     const lookup = crmLookup(CRM_ENV, f.fetch);

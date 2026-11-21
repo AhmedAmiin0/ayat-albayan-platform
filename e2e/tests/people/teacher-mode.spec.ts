@@ -1,6 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
-import { stubInbound, stubReset } from '../../support/core/wa-stub';
+import { stubReset } from '../../support/core/wa-stub';
+import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 
 // Teacher mode (R-TCH-03, R-MSG-05, owner 2026-10-02: "login as a teacher and see only my chats,
 // my calendar, my reports"): «أبرار» sees the chat of the family she teaches, never another
@@ -64,7 +65,8 @@ test.describe('teacher mode (R-TCH-03, R-MSG-05)', () => {
       await seedLesson({ teacherId: abrar, studentId: rim, startsAt: riyadh(today, '10:00'), minutes: 30 });
       await seedLesson({ teacherId: other, studentId: hala, startsAt: riyadh(today, '11:00'), minutes: 30 });
       for (const [phone, name] of [[myPhone, `أم ريم ${tag}`], [theirPhone, `أم هالة ${tag}`]] as const) {
-        expect((await stubInbound({ from: phone.slice(1), name, text: 'السلام عليكم' })).status).toBe(200);
+        const sent = await stubInboundAnswerable({ from: phone.slice(1), name, text: 'السلام عليكم' });
+        expect(sent.status).toBe(200);
       }
 
       // «المحادثات»: only the family she teaches (the API scopes GET /threads).

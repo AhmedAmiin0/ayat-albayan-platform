@@ -31,6 +31,13 @@ interface LineInbound {
 export const stubInboundOn = (line: WaLine, spec: LineInbound) =>
   stub<{ id: string; status: number }>('/__stub/inbound', { phoneNumberId: LINE_PN[line], ...spec });
 
+/**
+ * A family's message staff can answer (chat first, docs/23c decision 6): on the chat line when two
+ * lines run, on the only line otherwise (E2E_LINES=single).
+ */
+export const stubInboundAnswerable = (spec: LineInbound) =>
+  stubInboundOn(SINGLE_LINE ? 'notifications' : 'chat', spec);
+
 /** What «Meta» accepted on one phone-number id since the last reset. */
 export async function sentVia(pn: string): Promise<StubSent[]> {
   return (await stubSent()).filter((m) => m.phoneNumberId === pn);

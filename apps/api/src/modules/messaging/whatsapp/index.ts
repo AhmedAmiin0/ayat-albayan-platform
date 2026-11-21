@@ -1,5 +1,9 @@
 export { CodeSend } from './direct/code-send';
-export { isCrmHistoryRow, looksCrmHistory } from './messages/crm-history/crm-history-url';
+export {
+  crmMediaUrl,
+  isCrmHistoryRow,
+  looksCrmHistory,
+} from './messages/crm-history/crm-history-url';
 export { crmFetch } from './drivers/crm/crm.client';
 export { type CrmConn, crmJson } from './drivers/crm/crm-http';
 export { type CrmLookup, crmLookup, CrmLookupError } from './drivers/crm/crm-lookup';
