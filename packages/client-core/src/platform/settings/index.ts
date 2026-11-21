@@ -16,6 +16,7 @@ export { MaintenanceOnSchema } from './maintenance.schema.js';
 export type {
   MaintenanceFacts,
   MaintenanceProbes,
+  MaintenanceState,
   MaintenanceView,
   MaintenanceViewer,
 } from './maintenance.types.js';

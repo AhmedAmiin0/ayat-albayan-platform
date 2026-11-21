@@ -3,10 +3,11 @@ import {
   maintenanceFacts,
   maintenancePollMs,
   maintenanceView,
+  type MaintenanceState,
 } from '@ab/client-core';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { useSyncExternalStore } from 'react';
-import type { MaintenanceState, MaintenanceWatch } from './maintenance.types';
+import type { MaintenanceWatch } from './maintenance.types';
 import { isRoomOpen, subscribeRoomPresence } from './room-presence';
 import { useReopen } from './use-reopen';
 import { useRoutePath } from './use-route-path';

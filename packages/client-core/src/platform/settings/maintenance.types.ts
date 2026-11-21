@@ -15,6 +15,13 @@ export interface MaintenanceViewer {
   inRoom: boolean;
 }
 
+/** What a cover draws (web and phone): the view, whether a check is running, «أعد المحاولة». */
+export interface MaintenanceState {
+  view: MaintenanceView;
+  checking: boolean;
+  retry: () => void;
+}
+
 /** The platform pieces maintenanceFacts asks (web and phone pass their own). */
 export interface MaintenanceProbes {
   /** GET <api>/settings/public through probe(). */

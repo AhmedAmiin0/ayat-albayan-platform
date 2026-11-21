@@ -1,4 +1,3 @@
-import type { MaintenanceView } from '@ab/client-core';
 import type { AnyRouter } from '@tanstack/react-router';
 
 /** What an app's boot.tsx tells the cover (owner 2026-11-21, «تحت الصيانة»). */
@@ -13,11 +12,4 @@ export interface MaintenanceOptions {
 
 export interface MaintenanceWatch extends MaintenanceOptions {
   router: AnyRouter;
-}
-
-/** What the gate draws: the view, whether a check is running, and «أعد المحاولة». */
-export interface MaintenanceState {
-  view: MaintenanceView;
-  checking: boolean;
-  retry: () => void;
 }
