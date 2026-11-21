@@ -6,7 +6,7 @@ import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { summary, type SummaryRow } from '@/booking/trial/lib/confirm-summary';
 import { FailureNotice, PackageDaysNote } from './ConfirmNotices';
-import type { StudentChoice, TrialDraft } from '@/booking/trial/lib/draft';
+import { isOutside, type StudentChoice, type TrialDraft } from '@/booking/trial/lib/draft';
 import { effectiveByday } from '@/booking/trial/lib/package-choice';
 import { picksOf } from '@/booking/shared/picks';
 import { PicksList } from '@/booking/shared/PicksList';
@@ -59,7 +59,7 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
   return (
     <View style={{ gap: 14 }}>
       <SummaryList rows={summary(draft, viewer)} />
-      <OutsideNote outside={draft.outsideHours === true} />
+      <OutsideNote outside={isOutside(draft)} />
       {draft.pkg === 'trial' ? (
         <AppText style={note}>{t.booking.trialFree}</AppText>
       ) : (

@@ -65,6 +65,10 @@ export interface TrialDraft {
   extra: string[];
 }
 
+/** «وقت آخر» goes with a trial only: a package's day rows never set it. */
+export const isOutside = (d: Pick<TrialDraft, 'outsideHours' | 'kind'>): boolean =>
+  d.outsideHours === true && d.kind !== 'package';
+
 /** The answer to 409 duplicate_student: book that existing child, or create the new one anyway. */
 export type StudentChoice = { existingId: string } | { force: true } | null;
 

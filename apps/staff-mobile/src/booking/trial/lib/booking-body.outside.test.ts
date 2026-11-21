@@ -15,3 +15,10 @@ test('no flag for a normal free time, picked inside or reset', () => {
     'outsideHours',
   );
 });
+
+test('a package never sends it, even after an outside trial pick', () => {
+  const pkg = draft({ outsideHours: true, kind: 'package', pkg: '8' });
+  const body = toBookingRequest(pkg, { requestId: REQ });
+  expect(body).toMatchObject({ kind: 'package' });
+  expect(body).not.toHaveProperty('outsideHours');
+});
