@@ -46,6 +46,7 @@ Rules 14–22 (owner 2026-11-21, `docs/57-code-quality-rules.md`): each one's CI
 - Project skills live in `.claude/skills/` (see its README): every design review loads `heuristic-evaluation`, `design-qa-checklist` and `critique-brand-consistency`; every migration, SQL or RLS change loads `supabase-postgres-best-practices`.
 - Before finishing any phase: the PR's GitHub Actions CI is green (lint, typecheck, test, e2e), watched with `gh pr checks <n> --watch` (failures: `gh run view <run> --log-failed`); write `PHASE_SUMMARY.md`.
 - Tests, lint, typecheck, builds, installs (`pnpm i`), Supabase, docker, expo and dev servers never run on the owner's PC (owner, 2026-11-01: «run test with github actions or in the cloud»). Verify in GitHub Actions CI, or in a cloud session, which may run lint, typecheck and unit tests itself; e2e and DB checks run only in CI. Where the data import runs is still open (see Commands).
+- **No AI mentions in git** (owner, 2026-11-22): commit messages, PR titles and descriptions, branch names and code comments never mention Claude, AI, an assistant, a model or a generation tool. No `Co-Authored-By` trailer for a tool, no «Generated with …» footer, no session links. A squash merge sets its own clean subject and body (`gh pr merge --squash --subject … --body …`).
 
 ## Commands (never on the owner's PC; where each one runs is on its line)
 ```
