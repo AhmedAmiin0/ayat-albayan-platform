@@ -16,9 +16,10 @@ import {
 import { setMessaging, stubReset } from '../../support/core/wa-stub';
 
 // Two WhatsApp lines, outbound side (docs/12 §13.3, R-MSG-01, R-MSG-02, R-LEAD-02): a session reply
-// prefers the chat line whenever its 24 h window is open, else the notifications line, and its row
-// is stamped with it; a producer template leaves from the notifications number (a chat starter from
-// the chat number: sales-starter.spec); opening a thread
+// leaves from the chat line while its 24 h window is open, never from notifications because of a
+// notifications inbound (chat first, docs/23c decision 6), and its row is stamped with it; a
+// producer template leaves from the notifications number (a chat starter from the chat number:
+// sales-starter.spec); opening a thread
 // marks it read on its own line.
 
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
@@ -68,14 +69,15 @@ test.describe('two WhatsApp lines — replies and reads (R-MSG-01, R-MSG-02)', (
     ]);
   });
 
-  test('a reply after a notifications inbound leaves via the notifications number', async ({ asRole }) => {
+  test('chat first: a reply after a notifications inbound never leaves via it', async ({ asRole }) => {
     test.setTimeout(120_000);
-    const r = await replyAfter({ page: await asRole('admin'), line: 'notifications' });
-    await expect.poll(async () => (await textsTo(NOTIF_PN, r.digits)).length, WAIT).toBe(1);
+    const page = await asRole('admin');
+    const r = await replyAfter({ page, line: 'notifications' });
+    const refused = page.getByText(ar.inbox.error.session_closed).first();
+    await expect(refused).toBeVisible({ timeout: 20_000 });
+    expect(await textsTo(NOTIF_PN, r.digits)).toHaveLength(0);
     expect(await textsTo(CHAT_PN, r.digits)).toHaveLength(0);
-    await expect.poll(async () => (await messagesWithLine(r.phone)).filter((m) => m.direction === 'outbound'), WAIT).toEqual([
-      expect.objectContaining({ body: r.reply, line: 'notifications', status: 'sent' }),
-    ]);
+    expect((await messagesWithLine(r.phone)).filter((m) => m.direction === 'outbound')).toEqual([]);
   });
 
   test('chat, then a reminder tap on notifications a minute later: the reply still leaves via chat', async ({ asRole }) => {
