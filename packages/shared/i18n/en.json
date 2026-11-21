@@ -9676,7 +9676,127 @@
     "links": {
       "privacy": "Privacy policy",
       "deleteAccount": "Delete account and data",
-      "opensBrowser": "Opens in the browser"
+      "opensBrowser": "Opens in the browser",
+      "signIn": "Sign in",
+      "nav": "Legal pages"
+    },
+    "updated": "Last updated: {date}",
+    "contactFallback": "Contact the academy on the WhatsApp number you usually reach it on.",
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "This policy explains what data the Ayat Al-Bayan app for families and students and the family web portal use, why, how we protect it, and how to ask for it to be deleted.",
+      "sections": {
+        "who": {
+          "title": "Who runs the app",
+          "body": "The app and the family portal are run by Ayat Al-Bayan, an academy that teaches the Quran online. The academy is responsible for your data; you can reach it at the address at the end of this page."
+        },
+        "data": {
+          "title": "The data we use and why",
+          "body": "We use only the data needed to hold and follow up lessons:",
+          "items": {
+            "people": "The guardian's name and phone (WhatsApp) number, the student's own number if they have one, country and time zone, and the student's age, gender, programme and level. The academy records them at registration to plan lessons and choose a suitable teacher.",
+            "signIn": "Sign-in data: the phone number, to send a sign-in code on WhatsApp, or the student code and password. We never store the code itself, only an encrypted fingerprint of it, and passwords only in encrypted form.",
+            "lessons": "Lessons and their times, attendance and absence (with the reason if you give one), lesson reports (PDF), homework and the next lesson's plan, the package and the payment history (date and amount only).",
+            "recordings": "Audio recordings of lessons held in the academy's online classroom (sound only, no video); a «Recording» mark shows while recording. Families only see recordings the academy makes available.",
+            "chat": "If the academy turns chat on: messages with the teacher, voice notes, and photos and PDF files sent in it. Location and other photo data (EXIF) are removed before a photo is sent.",
+            "push": "Your device's or browser's notification token, to send lesson, report and message alerts. You can turn notifications off on «Account».",
+            "technical": "Technical logs: the IP address and app or browser type of each change you send, and when you were last seen in the app, to protect accounts and fix errors."
+          }
+        },
+        "devices": {
+          "title": "Camera, microphone and photos",
+          "body": "The app asks for the camera, microphone or photos only when you use them: to take part with sound or video in lessons inside the app, to take or choose a photo to send, and to record a voice note. Unlocking with a fingerprint or face stays on your device; no biometric data reaches us. We do not collect your location."
+        },
+        "children": {
+          "title": "Children",
+          "body": "The app is used by guardians and by students of all ages, including children under 13. A guardian registers the student with the academy and may ask for a login of the student's own; a child never creates an account on their own.",
+          "items": {
+            "noAds": "There are no ads in the app, and we do not use the device's advertising ID.",
+            "noTracking": "We use no analytics or tracking tools, and we never sell data or share it for marketing.",
+            "guardian": "A guardian may see, correct or ask us to delete their child's data at any time."
+          }
+        },
+        "sharing": {
+          "title": "Who processes data with us",
+          "body": "We do not sell your data. We rely on service providers who process it on our behalf and only to run the service:",
+          "items": {
+            "hosting": "Hosting of the app's servers and of the online classroom the academy runs.",
+            "database": "Supabase: the database, file storage and sign-in.",
+            "whatsapp": "WhatsApp (Meta): sign-in codes, reminders and lesson reports.",
+            "push": "Expo, Google Firebase Cloud Messaging and the browsers' push services: delivering notifications.",
+            "payments": "Stripe: the payment page, if the academy sends you a payment link (nothing is paid inside the app)."
+          },
+          "note": "We may disclose data where the law requires it."
+        },
+        "retention": {
+          "title": "How long we keep data",
+          "body": "We keep data while the student is enrolled with the academy, and delete it when you ask, as described on «Delete account and data». In detail:",
+          "items": {
+            "codes": "Sign-in codes are valid for ten minutes; their old records are deleted after about seven days.",
+            "logs": "Technical logs (including the IP address) are deleted automatically after the period the academy sets, 180 days unless changed.",
+            "recordings": "Lesson recordings are kept until the academy deletes them or an automatic deletion period it sets ends, and are deleted when you ask.",
+            "chat": "Chat messages and their files are kept while the account exists, and are deleted when you ask.",
+            "payments": "Payment records may be kept for as long as accounting and legal obligations require."
+          }
+        },
+        "security": {
+          "title": "How we protect data",
+          "body": "Data travels between the app and our servers encrypted (HTTPS and WSS). Each account reaches only its own data and that of the students linked to it, and files and recordings open through short-lived links. The app keeps a temporary copy of your data on your device to show it quickly; it is wiped when you sign out."
+        },
+        "rights": {
+          "title": "Your rights",
+          "body": "You may ask for a copy of your data, to correct it or to delete it, and you can turn notifications off on «Account». To ask for deletion, follow the steps on «Delete account and data»."
+        },
+        "changes": {
+          "title": "Changes to this policy",
+          "body": "We may update this policy when the app changes, and publish the new version on this page with its last-updated date."
+        },
+        "contact": {
+          "title": "Contact us",
+          "body": "For any question about privacy or your data, contact the academy:"
+        }
+      }
+    },
+    "deletion": {
+      "title": "Delete account and data",
+      "intro": "At any time you can ask us to delete a family account or a student's account in the Ayat Al-Bayan app and family portal, with the data linked to it. You do not need to sign in to ask.",
+      "sections": {
+        "steps": {
+          "title": "How to ask",
+          "items": {
+            "write": "Write to the academy at the contact address at the end of this page, with the subject «Account deletion request».",
+            "phone": "Give the phone number registered with the academy in full, with its country code, and the student's name and code (such as AB-1234) if there is one.",
+            "scope": "Say what you want deleted: one student's account, the whole family account, or only some data (such as recordings or chats).",
+            "verify": "We check that the request comes from the number's owner with a WhatsApp message to the registered number, then carry it out and tell you."
+          }
+        },
+        "deleted": {
+          "title": "What is deleted",
+          "items": {
+            "account": "The login, its password and its notification tokens.",
+            "profile": "The student's and guardian's data: names, phone numbers and registration details.",
+            "lessons": "Lessons, attendance, reports and homework.",
+            "recordings": "Lesson recordings.",
+            "chat": "Chat messages, voice notes, photos and files."
+          }
+        },
+        "kept": {
+          "title": "What we may keep, and why",
+          "items": {
+            "payments": "Payment and subscription records, only for as long as accounting and legal obligations require.",
+            "logs": "Technical logs until they are deleted automatically (180 days unless the academy changes the period).",
+            "proof": "A short record showing that we carried out the deletion."
+          }
+        },
+        "timing": {
+          "title": "How long it takes",
+          "body": "We confirm your request within seven days and complete the deletion within thirty days of verifying it."
+        },
+        "contact": {
+          "title": "Contact address",
+          "body": "Send your deletion request to:"
+        }
+      }
     }
   }
 }

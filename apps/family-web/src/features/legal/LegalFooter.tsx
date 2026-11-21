@@ -1,0 +1,25 @@
+import { LEGAL_PAGES, LEGAL_PATHS } from '@ab/client-core';
+import { Link } from '@tanstack/react-router';
+import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { LegalFooterProps } from './LegalFooter.types';
+
+const LINK = 'font-semibold text-accent underline-offset-4 hover:underline';
+
+/** Under a legal page: the other legal page, sign-in, then the other language. */
+export function LegalFooter({ current }: LegalFooterProps) {
+  const others = LEGAL_PAGES.filter((page) => page !== current);
+  return (
+    <>
+      {others.map((page) => (
+        <Link key={page} to={LEGAL_PATHS[page]} className={LINK}>
+          {t.legal.links[page]}
+        </Link>
+      ))}
+      <Link to="/login" className={LINK}>
+        {t.legal.links.signIn}
+      </Link>
+      <LanguageSwitch className="ms-auto" />
+    </>
+  );
+}

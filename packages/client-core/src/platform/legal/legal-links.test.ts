@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { FAMILY_WEB_ORIGIN, LEGAL_PAGES, LEGAL_PATHS, familyLegalUrl } from './legal-links.js';
+import {
+  FAMILY_WEB_ORIGIN,
+  LEGAL_PAGES,
+  LEGAL_PATHS,
+  LEGAL_UPDATED_ON,
+  familyLegalUrl,
+} from './legal-links.js';
 
 describe('the family legal pages', () => {
   it('live on the family portal, over https', () => {
@@ -17,5 +23,9 @@ describe('the family legal pages', () => {
   it('build the absolute URL the app opens in the browser', () => {
     expect(familyLegalUrl('privacy')).toBe('https://family.ayatalbayan.com/privacy');
     expect(familyLegalUrl('deleteAccount')).toBe('https://family.ayatalbayan.com/delete-account');
+  });
+
+  it('carry one last-updated day (ISO), shown on both pages', () => {
+    expect(LEGAL_UPDATED_ON).toBe('2026-11-21');
   });
 });

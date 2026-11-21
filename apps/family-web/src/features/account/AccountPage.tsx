@@ -1,12 +1,16 @@
 import type { PortalHome } from '@ab/shared';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { LegalLinks } from '@/features/legal';
 import { ChildRows } from './ChildRows';
 import { SettingsCard } from './SettingsCard';
 import { useSignOut } from './use-sign-out';
 import { Who } from './Who';
 
-/** «حسابي»: who is in, a guardian's children, this browser's settings, «تسجيل الخروج». */
+/**
+ * «حسابي»: who is in, a guardian's children, this browser's settings, «تسجيل الخروج», then the
+ * legal pages.
+ */
 export function AccountPage({ home }: { home: PortalHome }) {
   const out = useSignOut();
   return (
@@ -26,6 +30,7 @@ export function AccountPage({ home }: { home: PortalHome }) {
       >
         {t.auth.logout}
       </Button>
+      <LegalLinks />
     </section>
   );
 }

@@ -9,6 +9,9 @@ export const LEGAL_PATHS: Readonly<Record<LegalPage, string>> = {
   deleteAccount: '/delete-account',
 };
 
+/** The day the legal texts (i18n legal.privacy, legal.deletion) last changed: bump it with them. */
+export const LEGAL_UPDATED_ON = '2026-11-21';
+
 /** The pages in reading order (the app's rows, the portal's footer). */
 export const LEGAL_PAGES: readonly LegalPage[] = ['privacy', 'deleteAccount'];
 

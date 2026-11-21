@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FamilyRouteImport } from './routes/_family'
+import { Route as DeleteAccountRouteImport } from './routes/delete-account'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as FamilyAccountRouteImport } from './routes/_family/account'
 import { Route as FamilyAlertsRouteImport } from './routes/_family/alerts'
 import { Route as FamilyPortalRouteImport } from './routes/_family/portal'
@@ -34,9 +36,19 @@ const FamilyRoute = FamilyRouteImport.update({
   id: '/_family',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DeleteAccountRoute = DeleteAccountRouteImport.update({
+  id: '/delete-account',
+  path: '/delete-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FamilyAccountRoute = FamilyAccountRouteImport.update({
@@ -103,7 +115,9 @@ const FamilyReportReportIdRoute = FamilyReportReportIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/delete-account': typeof DeleteAccountRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/account': typeof FamilyAccountRoute
   '/alerts': typeof FamilyAlertsRoute
   '/portal': typeof FamilyPortalRoute
@@ -119,7 +133,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/delete-account': typeof DeleteAccountRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/account': typeof FamilyAccountRoute
   '/alerts': typeof FamilyAlertsRoute
   '/portal': typeof FamilyPortalRoute
@@ -137,7 +153,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_family': typeof FamilyRouteWithChildren
+  '/delete-account': typeof DeleteAccountRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/_family/account': typeof FamilyAccountRoute
   '/_family/alerts': typeof FamilyAlertsRoute
   '/_family/portal': typeof FamilyPortalRoute
@@ -155,7 +173,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/delete-account'
     | '/login'
+    | '/privacy'
     | '/account'
     | '/alerts'
     | '/portal'
@@ -171,7 +191,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/delete-account'
     | '/login'
+    | '/privacy'
     | '/account'
     | '/alerts'
     | '/portal'
@@ -188,7 +210,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_family'
+    | '/delete-account'
     | '/login'
+    | '/privacy'
     | '/_family/account'
     | '/_family/alerts'
     | '/_family/portal'
@@ -206,7 +230,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FamilyRoute: typeof FamilyRouteWithChildren
+  DeleteAccountRoute: typeof DeleteAccountRoute
   LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -225,11 +251,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FamilyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/delete-account': {
+      id: '/delete-account'
+      path: '/delete-account'
+      fullPath: '/delete-account'
+      preLoaderRoute: typeof DeleteAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_family/account': {
@@ -355,7 +395,9 @@ const FamilyRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FamilyRoute: FamilyRouteWithChildren,
+  DeleteAccountRoute: DeleteAccountRoute,
   LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
