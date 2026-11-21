@@ -9,9 +9,15 @@ export const PUBLIC_SETTINGS = '**/settings/public';
  */
 export async function stubSwitch(page: Page, on: { value: boolean }): Promise<void> {
   await page.route(PUBLIC_SETTINGS, async (route) => {
-    const response = await route.fetch();
-    const body: unknown = await response.json();
-    await route.fulfill({ response, json: { ...(body as object), maintenance_mode: on.value } });
+    try {
+      const response = await route.fetch();
+      const body: unknown = await response.json();
+      await route.fulfill({ response, json: { ...(body as object), maintenance_mode: on.value } });
+    } catch {
+      // A poll still in flight when the test ends: Playwright has disposed the response and the
+      // page is gone, so there is nothing left to answer (it failed CI as «Response has been
+      // disposed»). A stub that breaks while the test runs still fails its own assertions.
+    }
   });
 }
 
