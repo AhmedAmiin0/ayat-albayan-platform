@@ -8,7 +8,7 @@ export const WATCH_EVERY_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule. */
 export const WATCH_FIRST_MS = 30_000;
 /** The worker's own book and the server clock (jobBeats and Date.now; fakes in tests). */
-export interface WatchSource {
+interface WatchSource {
   book: Pick<BeatBook, 'list'>;
   now: () => number;
 }
