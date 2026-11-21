@@ -135,6 +135,7 @@
   "GuardiansController.update": ["admin"],
   "GuardiansController.removePhone": ["admin"],
   "HealthController.check": "public",
+  "ReadyController.check": "public",
   "InstantController.create": ["admin"],
   "IntegrationConfigController.clearSecret": ["admin"],
   "IntegrationConfigController.list": ["admin"],

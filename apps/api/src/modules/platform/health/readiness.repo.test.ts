@@ -4,7 +4,7 @@ import { ReadinessRepo } from './readiness.repo';
 
 type Answer = (signal: AbortSignal) => Promise<{ error: { message: string } | null }>;
 
-/** settings.select('key').limit(1).abortSignal(s): the answer decides, the signal can stop it. */
+/** roles.select('id').limit(1).abortSignal(s): the answer decides, the signal can stop it. */
 function fakeDb(answer: Answer) {
   const from = vi.fn(() => ({
     select: () => ({ limit: () => ({ abortSignal: (s: AbortSignal) => answer(s) }) }),
@@ -18,10 +18,10 @@ const never: Answer = (signal) =>
   });
 
 describe('ReadinessRepo.ping (one tiny query, a short timeout)', () => {
-  it('a fast answer passes, reading one key of settings', async () => {
+  it('a fast answer passes, reading one row of roles (six system roles, always there)', async () => {
     const t = fakeDb(async () => ({ error: null }));
     await expect(new ReadinessRepo(t.db).ping(50)).resolves.toBeUndefined();
-    expect(t.from).toHaveBeenCalledWith('settings');
+    expect(t.from).toHaveBeenCalledWith('roles');
   });
 
   it('a database error rejects', async () => {
