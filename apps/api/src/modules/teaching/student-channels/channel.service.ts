@@ -13,7 +13,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import type { ChannelActor } from './channel-access';
 import { ChannelPeopleRepo } from './channel-people.repo';
-import { toPage, toTeacherRows, unreadRolesFor } from './channel.mapper';
+import { toPage, toTeacherRows, UNREAD_COUNT_ROLES } from './channel.mapper';
 import { ChannelRepo } from './channel.repo';
 import { TeachersRepo } from '@/modules/people/teachers';
 import { ChannelSender } from '@/modules/teaching/student-channels/send/channel-sender';
@@ -74,7 +74,7 @@ export class ChannelService {
   /** A participant's unread on an open channel (a monitor never marks anything read: none). */
   async unread(actor: ChannelActor): Promise<ChannelUnread> {
     if (actor.mode !== 'participant' || !actor.open) return { unread: 0 };
-    const countRoles = unreadRolesFor(actor.role);
+    const countRoles = UNREAD_COUNT_ROLES;
     const [sum] = await this.queries.summaries({ profileId: actor.profileId, studentIds: [actor.studentId], countRoles });
     return { unread: sum?.unread ?? 0 };
   }
@@ -93,7 +93,7 @@ export class TeacherChannelList {
     const teacherId = await this.teachers.idByProfile(user.id);
     if (!teacherId) throw notFound('teacher_not_linked');
     const ids = await this.queries.teacherStudentIds(teacherId);
-    const [students, summaries] = await Promise.all([this.people.students(ids), this.queries.summaries({ profileId: user.id, studentIds: ids, countRoles: unreadRolesFor('teacher') })]);
+    const [students, summaries] = await Promise.all([this.people.students(ids), this.queries.summaries({ profileId: user.id, studentIds: ids, countRoles: UNREAD_COUNT_ROLES })]);
     return toTeacherRows(students, summaries);
   }
 }

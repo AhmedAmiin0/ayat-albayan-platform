@@ -52,20 +52,20 @@ describe('student channel messages over HTTP', () => {
     expect((await t.call('GET', `${TEACHER}/messages?before=soon`, 'teacher')).statusCode).toBe(400);
   });
 
-  it('read marks: up to the newest message shown (never later than now), a participant only; unread is the other side', async () => {
+  it('read marks: up to the newest message shown (never later than now), a participant only; unread is everyone else\'s', async () => {
     expect((await t.post(`${PORTAL}/read`, 'guardian', { at: '2026-10-20T10:05:00.000Z' })).statusCode).toBe(204);
     expect(t.queries.setReadMark).toHaveBeenCalledWith({ channelId: CH, profileId: 'p-g', at: '2026-10-20T10:05:00.000Z' });
     expect((await t.post(`${TEACHER}/read`, 'teacher', { at: '2999-01-01T00:00:00.000Z' })).statusCode).toBe(204);
     expect(Date.parse(t.queries.setReadMark.mock.calls.at(-1)?.[0].at ?? '')).toBeLessThan(Date.parse('2999-01-01T00:00:00.000Z'));
     expect((await t.post(`${PORTAL}/read`, 'guardian', { at: 'later' })).statusCode).toBe(400);
     expect((await t.call('GET', `${PORTAL}/unread`, 'guardian')).json()).toEqual({ unread: 2 });
-    expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-g', studentIds: [ST], countRoles: ['teacher', 'sales'] });
+    expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-g', studentIds: [ST], countRoles: ['teacher', 'guardian', 'student', 'sales'] });
   });
 
   it('the teacher list: current students with the last message and their own unread count', async () => {
     const res = await t.call('GET', '/teachers/me/channels', 'teacher');
     expect(res.json()).toEqual([{ student_id: ST, student_name: 'سلمى', student_code: 'AB-0201', unread: 2, last_message: { body: 'السلام عليكم', sender_role: 'guardian', created_at: '2026-10-27T10:00:00.000Z', deleted: false } }]);
     expect(t.queries.teacherStudentIds).toHaveBeenCalledWith('t1');
-    expect(t.queries.summaries).toHaveBeenCalledWith({ profileId: 'p-t1', studentIds: [ST], countRoles: ['guardian', 'student', 'sales'] });
+    expect(t.queries.summaries).toHaveBeenCalledWith({ profileId: 'p-t1', studentIds: [ST], countRoles: ['teacher', 'guardian', 'student', 'sales'] });
   });
 });

@@ -44,11 +44,11 @@ describe('the seated assistant in the student chat over HTTP', () => {
     expect(seen).toEqual([['m1', false, 'guardian'], ['b', true, 'sales']]);
   });
 
-  it('read marks and unread: hers counts the teacher and the family', async () => {
+  it('read marks and unread: hers counts everyone else\'s', async () => {
     expect((await t.post(`${SALES}/read`, 'sales', {})).statusCode).toBe(204);
     expect(t.queries.setReadMark).toHaveBeenCalledWith(expect.objectContaining({ profileId: 'p-sa' }));
     expect((await t.call('GET', `${SALES}/unread`, 'sales')).json()).toEqual({ unread: 2 });
-    const countRoles = ['teacher', 'guardian', 'student'];
+    const countRoles = ['teacher', 'guardian', 'student', 'sales'];
     expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-sa', studentIds: [ST], countRoles });
   });
 
