@@ -1767,3 +1767,17 @@ A behaviour-preserving refactor; docs/25 holds the vocabulary. No HTTP route, pa
 
 ## Teacher web: reports inside each lesson, docs/49 (branch `feat/teacher-web-reports-in-lessons`, 2026-11-13)
 - **Owner ask:** «remove the reports tab from the web and list all the reports inside each lesson» (web only). The «التقارير» nav item and page are gone (/teacher/reports → «الطلاب»), the student file has no tabs, and each lesson row of the file opens this student's report (lines, attachments, PDF) and the lesson's recording in a lazy `<details>`. Teachers lose the grade chart and the sortable sent-reports table; admins keep both. No API, migration or i18n change. Checks: CI.
+
+## «تحت الصيانة»: maintenance cover in all four apps (branch `feat/maintenance-screen`, 2026-11-21)
+- **Owner ask:** an «under maintenance» screen on both websites and both phone apps. It shows when an admin turns on a switch, or by itself when the API stops answering, but never when the device itself is offline. Admins still get in while the switch is on, and families never do. A running lesson is never covered. There is no API or server change: only the clients draw the cover.
+- **Setting:** `maintenance_mode` (bool, public, default off, simple confirm) in the academy domain and a new «النظام» (`system`) group in «القيم», with its own i18n words (MSA and English). There is no SQL migration: a missing row reads as the default, and config_seed adds the row. The pinned counts go from 73 to 74 keys, 61 to 62 editable and 19 to 20 public.
+- **client-core:**
+  - `probe()` is one bare GET with no token and no custom header, an 8 s AbortController deadline, and it never throws.
+  - `maintenanceFacts` reads the answer: 2xx → the flag (zod); a 4xx or 500 keeps the last verdict; no answer or a 502/503/504 asks again after 2 s, unless the device is offline. The API is asked at most twice.
+  - `maintenanceView` turns the facts into a view. `maintenancePollMs` polls every 10 s while the state is unknown, on or down, and every 60 s while healthy.
+- **Web (web-kit):** `renderApp` wraps the router in `MaintenanceGate`. The app stays mounted (inert) under `MaintenanceScreen`, which uses the family sign-in frame, so unsaved drafts survive.
+  - Staff bypass: an admin, or `/auth/me` still on its way (read from the cache only), or the sign-in pages.
+  - Never covered: the staff room paths and the family room overlay, which registers through a ref callback.
+  - When the cover lifts, the router reloads and errored queries are fetched again.
+- **Phones (mobile-kit):** `RootFrame` shows the startup-style `MaintenanceScreen` over everything. The hook uses `networkMode` `always` and `noPersist`, and passes are read from a table against `useRootGate` and the app audience. jest.shared mocks the hook. This is JS only, so it ships by OTA.
+- **Checks:** unit tests in client-core, web-kit and mobile-kit, plus the e2e spec `platform/maintenance.spec.ts` (switch stubbed per page). Screenshots and the review are in `docs/design/screens/maintenance/`.
