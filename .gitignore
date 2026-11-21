@@ -28,6 +28,17 @@ tools/migrate/out/
 
 # Firebase client config (EAS file secret GOOGLE_SERVICES_JSON)
 apps/staff-mobile/google-services.json
+google-services.json
+
+# Keys, keystores and service accounts never enter the repo (ci.yml job «secret-scan», .gitleaks.toml)
+deploy_key*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+*.keystore
+*.jks
+service-account*.json
 
 # Google Calendar exports and the diff generated from them hold students' names (tools/scripts/calendar-diff.mjs)
 *.ics

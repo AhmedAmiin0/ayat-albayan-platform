@@ -1,0 +1,51 @@
+# Secret scan config (ci.yml job «secret-scan»). Default gitleaks rules (private key blocks, Stripe, AWS,
+# GitHub, JWT, generic keys…) plus file-name rules for files that must never be committed at all.
+title = "ayat-albayan secret scan"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "key-file"
+description = "Private key or deploy key file"
+path = '''(?i)(^|/)(deploy_key[^/]*|id_(rsa|ed25519|ecdsa|dsa)[^/]*|[^/]+\.(pem|key))$'''
+[[rules.allowlists]]
+paths = ['''\.pub$''']
+
+[[rules]]
+id = "keystore-file"
+description = "Android or Java keystore, PKCS#12 bundle"
+path = '''(?i)\.(keystore|jks|p12|pfx)$'''
+
+[[rules]]
+id = "env-file"
+description = "Environment file with values (only .env.example may be committed)"
+path = '''(^|/)\.env(\.[^/]+)?$'''
+[[rules.allowlists]]
+paths = ['''(^|/)\.env\.example$''']
+
+[[rules]]
+id = "service-account-file"
+description = "Google service account or Firebase client config"
+path = '''(?i)(^|/)(service-account[^/]*\.json|google-services\.json|GoogleService-Info\.plist)$'''
+
+# Fake key shapes in unit tests, fakes, builders and docs (e.g. 'rk_live_51Abc…' in a Stripe rule test).
+# Only the shape rules; a private key block or a provider token in a test still fails.
+[[allowlists]]
+description = "Test fixtures and docs that show fake key shapes"
+targetRules = ["generic-api-key", "stripe-access-token"]
+paths = [
+  '''\.(test|spec)\.(ts|tsx|mjs|js)$''',
+  '''\.(fakes|builder)\.ts$''',
+  '''(^|/)testing/''',
+  '''(^|/)docs/''',
+  '''\.md$''',
+  '''(^|/)\.env\.example$''',
+]
+
+# Settings, template and rule keys ('teacher_lesson_v3', 'reminder_lead_minutes') look like keys
+# to the generic rule: lower snake_case is a name, never a secret.
+[[allowlists]]
+description = "snake_case identifiers"
+targetRules = ["generic-api-key"]
+regexes = ['''^[a-z][a-z0-9]*(_[a-z0-9]+)+$''']

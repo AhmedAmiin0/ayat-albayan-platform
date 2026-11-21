@@ -42,8 +42,8 @@ test('the automatic OTA only dispatches mobile.yml ota-update to preview on deve
   assert.doesNotMatch(run, /build-android-apk|production|force_ota|ios/i);
 });
 
-test('ci: check covers changes, every verify job, the guards and the refactor job; docs-only passes only when both were skipped', () => {
-  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor', 'image']);
+test('ci: check covers changes, every verify job, the guards, the refactor and secret-scan jobs; docs-only passes only when both were skipped', () => {
+  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor', 'image', 'secret-scan']);
   const run = ci.jobs.check.steps.map((s) => s.run).join('\n');
   assert.match(run, /test "\$CHANGES" = success/);
   assert.match(run, /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \]; then/);
