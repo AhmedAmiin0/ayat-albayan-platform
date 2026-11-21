@@ -29,3 +29,4 @@ export {
   type UploadFile,
 } from './signed-upload.js';
 export { installErrorReporting, type UncaughtSource } from './error-report.js';
+export { probe, PROBE_TIMEOUT_MS, type ProbeAnswer, type ProbeOptions } from './probe/index.js';

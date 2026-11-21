@@ -41,7 +41,7 @@ const LEGACY_PAGE_ORDER = [
   'recording_retention_days', 'activity_retention_days',
   'teacher_chats_enabled', 'teacher_student_messages_enabled', 'teacher_earnings_enabled',
   'teacher_statements_enabled', 'teacher_feedback_enabled', 'teacher_internal_meetings_enabled',
-  'teacher_scheduled_meetings_enabled',
+  'teacher_scheduled_meetings_enabled', 'maintenance_mode',
   'sales_auto_assign',
   'sales_require_assignee',
   'renewal_commission_enabled', 'renewal_commission_percent',

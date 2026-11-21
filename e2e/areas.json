@@ -510,6 +510,7 @@
         "platform/settings-gate.api.spec.ts",
         "platform/settings-switches.spec.ts",
         "messaging/teacher-restricted-templates.spec.ts",
+        "platform/maintenance.spec.ts",
         "messaging/template-numbers.spec.ts",
         "messaging/templates.spec.ts",
         "messaging/wa-lines-check.spec.ts"

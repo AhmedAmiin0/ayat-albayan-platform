@@ -42,6 +42,13 @@ jest.mock('./src/lib/http/supabase', () => ({
   },
 }));
 
+// «تحت الصيانة» (owner 2026-11-21): the root's maintenance probe would call fetch every 10 s in
+// every suite that mounts the real root; here the app is always open. Its own test uses requireActual.
+jest.mock('./src/root/use-maintenance', () => ({
+  maintenanceQuery: { queryKey: ['maintenance'] },
+  useMaintenance: () => ({ view: 'open', checking: false, retry: () => undefined }),
+}));
+
 // The connection probe loop would call fetch (stealing a test's mocked responses) and flip TanStack's
 // onlineManager: a still store here. The connectivity tests build their own with createConnectivity.
 jest.mock('./src/lib/connectivity/connectivity', () => {

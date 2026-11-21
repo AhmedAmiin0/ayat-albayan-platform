@@ -32,6 +32,7 @@ const AFTER_COPY: readonly string[] = [
   'teacher_scheduled_meetings_enabled',
   'family_chat_enabled', 'family_payment_instructions', 'family_meetings_in_app',
   'short_link_default_days', 'short_link_purge_days', 'short_link_extra_hosts',
+  'maintenance_mode',
 ];
 
 describe('migration config_describe', () => {
