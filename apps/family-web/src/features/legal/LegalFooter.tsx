@@ -3,8 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { LegalFooterProps } from './LegalFooter.types';
-
-const LINK = 'font-semibold text-accent underline-offset-4 hover:underline';
+import { FOOTER_LINK_CLASS } from './legal-content';
 
 /** Under a legal page: the other legal page, sign-in, then the other language. */
 export function LegalFooter({ current }: LegalFooterProps) {
@@ -12,11 +11,11 @@ export function LegalFooter({ current }: LegalFooterProps) {
   return (
     <>
       {others.map((page) => (
-        <Link key={page} to={LEGAL_PATHS[page]} className={LINK}>
+        <Link key={page} to={LEGAL_PATHS[page]} className={FOOTER_LINK_CLASS}>
           {t.legal.links[page]}
         </Link>
       ))}
-      <Link to="/login" className={LINK}>
+      <Link to="/login" className={FOOTER_LINK_CLASS}>
         {t.legal.links.signIn}
       </Link>
       <LanguageSwitch className="ms-auto" />

@@ -9,7 +9,7 @@ Console, EAS, production settings); «CI» = `.github/workflows/mobile.yml`; «d
 | # | Step | Who |
 |---|---|---|
 | 1 | Merge this PR to develop (deploys family-web with `/privacy` and `/delete-account`) | Owner |
-| 2 | Open `https://family.ayatalbayan.com/privacy` and `/delete-account` signed out; check the contact line shows the support address from `academy_contact` | Owner |
+| 2 | Open `https://family.ayatalbayan.com/privacy` and `/delete-account` signed out, directly by URL (the host Caddy's SPA fallback to index.html, docs/51 §4); check the contact line shows the support address from `academy_contact` | Owner |
 | 3 | Read both pages and confirm the commitments that are business decisions: «confirm within 7 days, delete within 30 days», payment records kept «as long as accounting and legal obligations require» (add a number of years if you want one) | Owner |
 | 4 | Production settings: `family_login_enabled` **on**; leave `family_chat_enabled` / `family_meetings_in_app` as decided (the listing claims neither) | Owner |
 | 5 | Family EAS project (`@holdmycup/ayat-albayan-family`), environment **production**: `EXPO_PUBLIC_API_URL=https://api.ayatalbayan.com`, `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_WEB_ORIGIN`, and the file variable `GOOGLE_SERVICES_JSON` (Firebase Android app `com.ayatalbayan.family`) (docs/50 §8) | Owner |

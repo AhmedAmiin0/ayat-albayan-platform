@@ -1,11 +1,7 @@
 import { contactLine } from '@ab/client-core';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 import type { AcademyContactLinkProps } from './AcademyContactLink.types';
-
-const TARGET = {
-  email: {},
-  site: { target: '_blank', rel: 'noopener noreferrer' },
-} as const;
+import { CONTACT_TARGET } from './legal-look';
 
 /**
  * How to reach the academy, from settings.academy_contact (GET /settings/public, the shared
@@ -18,7 +14,7 @@ export function AcademyContactLink({ fallback }: AcademyContactLinkProps) {
       href={line.href}
       dir="ltr"
       className="font-semibold text-accent underline underline-offset-4"
-      {...TARGET[line.kind]}
+      {...CONTACT_TARGET[line.kind]}
     >
       {line.text}
     </a>

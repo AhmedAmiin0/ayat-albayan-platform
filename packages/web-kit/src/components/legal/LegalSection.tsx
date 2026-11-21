@@ -1,7 +1,6 @@
 import { Card } from '@ab/web-kit/components/ui/surface/card';
+import { LEGAL_LIST_CLASS } from './legal-look';
 import type { LegalSectionProps } from './LegalSection.types';
-
-const LIST = { ol: 'list-decimal', ul: 'list-disc' } as const;
 
 /** One titled part of a legal page: a card with its heading, a paragraph, points, then extras. */
 export function LegalSection(props: LegalSectionProps) {
@@ -16,7 +15,7 @@ export function LegalSection(props: LegalSectionProps) {
         </h2>
         {body ? <p className="text-pretty">{body}</p> : null}
         {items.length > 0 ? (
-          <List className={`grid gap-2 ps-5 ${LIST[List]}`}>
+          <List className={`grid gap-2 ps-5 ${LEGAL_LIST_CLASS[List]}`}>
             {items.map((item) => (
               <li key={item} className="text-pretty">
                 {item}
