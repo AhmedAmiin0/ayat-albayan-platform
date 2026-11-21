@@ -7,12 +7,13 @@ import { pickPatch, type BookingDraft } from '@/features/teaching/booking/draft/
 import { SeriesCheck } from '@/features/teaching/booking/steps/review/SeriesCheck';
 import { pickHint, SlotDays } from './SlotDays';
 import { LessonRows } from './lesson-rows';
+import { OtherTime, OutsideNote } from './other-time';
 import { type Clock, useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface SlotStepProps {
   draft: BookingDraft;
-  onChange: (patch: Pick<BookingDraft, 'startsAt' | 'extra'>) => void;
+  onChange: (patch: Pick<BookingDraft, 'startsAt' | 'extra' | 'outsideHours'>) => void;
 }
 
 /**
@@ -71,6 +72,8 @@ function PackageTimes({ draft, onChange }: SlotStepProps) {
 function OneSlot({ draft, onChange }: SlotStepProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const teacherId = draft.teacher?.id ?? '';
+  const pick = (at: string, outsideHours: boolean) =>
+    onChange({ ...pickPatch(draft, at), outsideHours });
   return (
     <div className="grid gap-5">
       <section className="grid gap-2">
@@ -84,9 +87,10 @@ function OneSlot({ draft, onChange }: SlotStepProps) {
           studentIds={draft.students.map((s) => s.id)}
           studentTz={draft.tz}
           value={draft.startsAt}
-          onPick={(slot) => onChange(pickPatch(draft, slot.starts_at))}
+          onPick={(slot) => pick(slot.starts_at, false)}
           excludeLessonId={draft.trialDate?.upcomingId ?? undefined}
         />
+        <OtherTime draft={draft} onPick={(slot) => pick(slot.starts_at, !slot.inside_hours)} />
       </section>
       {draft.startsAt ? (
         <>
@@ -95,6 +99,7 @@ function OneSlot({ draft, onChange }: SlotStepProps) {
             <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
               {t.booking.picked.replace('{when}', pickedText(draft.startsAt, draft.tz, clock))}
             </p>
+            <OutsideNote draft={draft} />
           </section>
           <SeriesCheck draft={draft} />
         </>

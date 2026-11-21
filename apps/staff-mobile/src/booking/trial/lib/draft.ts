@@ -51,6 +51,8 @@ export interface TrialDraft {
   teacher: BookingTeacherOption | null;
   /** The picked free slot (UTC instant); a package's earliest pick (picks.ts). */
   startsAt: string | null;
+  /** «وقت آخر»: `startsAt` lies outside the teacher hours; the booking sends outsideHours. */
+  outsideHours?: boolean;
   /** «نوع الحجز»: a trial or a package (a makeup has its own wizard: makeup-draft.ts). */
   kind: Exclude<BookingKind, 'makeup'>;
   /** 'trial' for a trial, else a paid size (8, 12…); set together with `kind` (kindPatch). */
@@ -62,6 +64,10 @@ export interface TrialDraft {
   /** A paid package's other picks (one per family-tz weekday, each with its own time), sorted. */
   extra: string[];
 }
+
+/** «وقت آخر» goes with a trial only: a package's day rows never set it. */
+export const isOutside = (d: Pick<TrialDraft, 'outsideHours' | 'kind'>): boolean =>
+  d.outsideHours === true && d.kind !== 'package';
 
 /** The answer to 409 duplicate_student: book that existing child, or create the new one anyway. */
 export type StudentChoice = { existingId: string } | { force: true } | null;

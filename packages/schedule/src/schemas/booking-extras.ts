@@ -42,6 +42,8 @@ export const bookingExtras = {
   invoice: invoiceInputSchema.optional(),
   /** The missed lesson a makeup replaces. */
   makeupOfLessonId: z.uuid().optional(),
+  /** «وقت آخر» (owner 2026-11-21): skips only the teacher-hours check; never a clash, the past. */
+  outsideHours: z.boolean().optional(),
 };
 
 export type InvoiceInput = z.infer<typeof invoiceInputSchema>;

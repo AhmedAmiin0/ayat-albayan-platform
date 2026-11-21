@@ -9383,7 +9383,7 @@
   },
   "src/modules/teaching/booking/booking.dto.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/booking/booking.errors.ts": {
@@ -10029,7 +10029,7 @@
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.service.ts": {
     "max-len": {
-      "count": 19
+      "count": 16
     }
   },
   "src/modules/teaching/booking/sales/course/sales-course.controller.ts": {

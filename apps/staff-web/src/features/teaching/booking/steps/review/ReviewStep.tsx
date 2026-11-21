@@ -14,6 +14,7 @@ import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking
 import { DuplicateNotice } from './DuplicateNotice';
 import { useBookingMode, useCourseHeld } from '@/features/teaching/booking/mode';
 import { ReviewSummary } from './ReviewSummary';
+import { OutsideNote } from '@/features/teaching/booking/steps/slots/other-time';
 import { isSeriesClean, useSeriesCheck } from './SeriesCheck';
 
 const INVOICE_ERRORS = new Set(['invoice_required', 'invoice_type', 'invoice_too_large', 'invoice_path', 'invoice_message', 'media_expired']);
@@ -67,6 +68,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
   return (
     <div className="grid gap-5">
       <ReviewSummary draft={draft} />
+      <OutsideNote draft={draft} />
       {mode === 'admin' && (
         <div className="sm:max-w-[460px]">
           <Field label={t.booking.meetingLink} hint={t.booking.meetingLinkHint}>
