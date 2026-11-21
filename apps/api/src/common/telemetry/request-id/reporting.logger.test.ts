@@ -46,6 +46,13 @@ describe('ReportingLogger (error lines also go to the error tracker, when one is
     expect(tags).toEqual({ context: 'RemindersJob' });
   });
 
+  it('a job’s error line is recorded on its heartbeat, tracker on or off', () => {
+    vi.spyOn(process.stderr, 'write').mockReturnValue(true);
+    const beats = { failLogged: vi.fn() };
+    new ReportingLogger(reporter(false), beats).error('recurring expenses failed: db down', 'ExpensesJob');
+    expect(beats.failLogged).toHaveBeenCalledWith('ExpensesJob', 'recurring expenses failed: db down');
+  });
+
   it('warnings and info never reach the tracker', () => {
     vi.spyOn(process.stdout, 'write').mockReturnValue(true);
     const r = reporter(true);

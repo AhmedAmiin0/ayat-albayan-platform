@@ -25,6 +25,14 @@ describe('beatTick (a job with its own timers records each timed pass)', () => {
     expect(book.list()[0]).toMatchObject({ lastOkAt: null, lastErrorAt: 5, lastError: 'db timeout' });
   });
 
+  it('a pass that logged its own failure (and resolved) is not a success', async () => {
+    const book = new BeatBook(() => 5);
+    const tick = beatTick(plan, async () => book.failLogged('OwnTimerJob', 'caught: db down'), book);
+    tick();
+    await flush();
+    expect(book.list()[0]).toMatchObject({ lastOkAt: null, lastError: 'caught: db down' });
+  });
+
   it('a pass that never ends records nothing (the job goes stale)', async () => {
     const book = new BeatBook(() => 5);
     const run = vi.fn(() => new Promise<void>(() => undefined));

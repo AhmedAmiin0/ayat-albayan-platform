@@ -1,4 +1,6 @@
 import type { ErrorReporter, ReportTags } from '@ab/shared';
+import { jobBeats } from '@/common/jobs/beats';
+import type { LoggedFailures } from '@/common/jobs/beats/beat-book.types';
 import { currentRequestId } from './request-id';
 import { RequestIdLogger } from './request-id.logger';
 
@@ -12,26 +14,37 @@ function asError(message: unknown, stack: unknown): unknown {
   return error;
 }
 
-function tagsOf(rest: readonly unknown[]): ReportTags {
+/** Nest's logger passes its context last; none when the call had no extra argument. */
+const contextOf = (rest: readonly unknown[]): string | undefined => {
+  const last = rest.at(-1);
+  return rest.length > 0 && typeof last === 'string' ? last : undefined;
+};
+
+function tagsOf(context: string | undefined): ReportTags {
   const id = currentRequestId();
-  const context = rest.at(-1);
   const tags: Record<string, string> = id === undefined ? {} : { request_id: id };
-  if (rest.length > 0 && typeof context === 'string') tags.context = context;
+  if (context !== undefined) tags.context = context;
   return tags;
 }
 
 /**
- * RequestIdLogger whose error lines also go to the error tracker (SENTRY_DSN). With no DSN the
- * reporter is off and this logs exactly as RequestIdLogger: nothing else happens.
+ * RequestIdLogger whose error lines also fail the logging job's heartbeat (jobs catch their own
+ * errors, so a pass that logged one is not a success) and go to the error tracker (SENTRY_DSN;
+ * with no DSN nothing is sent).
  */
 export class ReportingLogger extends RequestIdLogger {
-  constructor(private readonly reporter: ErrorReporter) {
+  constructor(
+    private readonly reporter: ErrorReporter,
+    private readonly beats: LoggedFailures = jobBeats,
+  ) {
     super();
   }
 
   override error(message: unknown, ...rest: unknown[]): void {
     super.error(message, ...rest);
+    const context = contextOf(rest);
+    if (context !== undefined) this.beats.failLogged(context, String(message));
     if (!this.reporter.enabled) return;
-    this.reporter.capture(asError(message, rest[0]), tagsOf(rest));
+    this.reporter.capture(asError(message, rest[0]), tagsOf(context));
   }
 }

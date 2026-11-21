@@ -8,6 +8,7 @@ function fakeBeats() {
     ok: vi.fn<BeatSink['ok']>(),
     fail: vi.fn<BeatSink['fail']>(),
     forget: vi.fn<BeatSink['forget']>(),
+    begin: vi.fn<BeatSink['begin']>(),
   };
 }
 
@@ -35,6 +36,7 @@ describe('Ticker heartbeats (docs/09 «Readiness»)', () => {
     const run = vi.fn().mockRejectedValueOnce(boom).mockResolvedValue(undefined);
     const ticker = new Ticker({ name: 'j', firstMs: 1, everyMs: 1, run, beats });
     await ticker.tick();
+    expect(beats.begin).toHaveBeenCalledWith('j');
     expect(beats.fail).toHaveBeenCalledWith('j', boom);
     expect(beats.ok).not.toHaveBeenCalled();
     await ticker.tick();

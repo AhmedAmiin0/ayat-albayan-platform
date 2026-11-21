@@ -78,6 +78,7 @@ export class Ticker {
   private async passes(): Promise<void> {
     do {
       this.again = false;
+      this.beats.begin(this.opts.name);
       await this.opts.run().then(
         () => this.beats.ok(this.opts.name),
         (e: unknown) => this.failed(e),

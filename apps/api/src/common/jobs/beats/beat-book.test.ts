@@ -56,3 +56,30 @@ describe('BeatBook (each job’s last success and last error, server clock)', ()
     expect(seen).toHaveBeenCalledTimes(2);
   });
 });
+
+describe('BeatBook passes (a job that catches its own errors is not «ok»)', () => {
+  it('an error recorded during a pass keeps that pass from counting as a success', () => {
+    const t = setup();
+    t.book.register({ name: 'a', everyMs: 1, firstMs: 0 });
+    t.book.begin('a');
+    t.at(2_000);
+    t.book.fail('a', new Error('db down'));
+    t.book.ok('a');
+    expect(t.book.list()[0]).toMatchObject({ lastOkAt: null, lastErrorAt: 2_000 });
+    t.book.begin('a');
+    t.at(3_000);
+    t.book.ok('a');
+    expect(t.book.list()[0]?.lastOkAt).toBe(3_000);
+  });
+
+  it('failLogged: an error line under a job’s logger context fails that job and its lanes only', () => {
+    const t = setup();
+    for (const name of ['MessageSender:chat', 'MessageSender:main', 'MessageSenderX', 'ExpensesJob']) {
+      t.book.register({ name, everyMs: 1, firstMs: 0 });
+    }
+    t.book.failLogged('MessageSender', 'send pass aborted');
+    t.book.failLogged('NotAJob', 'x');
+    const failed = t.book.list().filter((b) => b.lastError !== null).map((b) => b.name);
+    expect(failed).toEqual(['MessageSender:chat', 'MessageSender:main']);
+  });
+});
