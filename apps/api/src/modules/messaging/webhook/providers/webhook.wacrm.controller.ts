@@ -34,8 +34,8 @@ export class WacrmWebhookController {
   constructor(
     @Inject(WEBHOOK_CONFIG) private readonly config: WebhookConfig,
     private readonly statuses: StatusService,
-    private readonly crmInbound: CrmInbound,
-    private readonly crmInboundJob: CrmInboundJob,
+    @Inject(CrmInbound) private readonly crmInbound: CrmInbound,
+    @Inject(CrmInboundJob) private readonly crmInboundJob: CrmInboundJob,
   ) {}
 
   /** 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come again). */
