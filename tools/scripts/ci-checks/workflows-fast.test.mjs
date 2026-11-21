@@ -97,7 +97,7 @@ test('mobile.yml profile: preview by default (every automatic run), stripe-test 
   assert.match(guard.run, /--build-profile "\$PROFILE" --status finished/);
   assert.match(guard.run, /native-changes\.mjs "\$last" "\$PROFILE"/);
   for (const s of [guard, step('ota', 'EAS update')]) {
-    assert.equal(s.env.PROFILE, "${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}");
+    assert.match(s.env.PROFILE, /^\$\{\{ inputs\.app == 'family' && .* \|\| inputs\.profile \|\| 'preview' \}\}$/);
   }
   // The build also takes the family production profile (mobile-family-production.test.mjs).
   assert.match(step('build', 'EAS build').env.PROFILE, / \|\| inputs\.profile \|\| 'preview' \}\}$/);

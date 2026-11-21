@@ -21,8 +21,9 @@ test('mobile.yml app: staff by default (every automatic run), family by hand in 
   for (const s of [step('build', 'EAS build'), step('ota', 'Native-change guard'), step('ota', 'EAS update')]) {
     assert.equal(s['working-directory'], '${{ env.APP_DIR }}');
   }
+  // deploy-staging's staff dispatch sends no app; the family one (lane L06): deploy-family-ota.
   const dispatch = deploy.jobs.ota.steps.map((s) => s.run ?? '').join('\n');
-  assert.doesNotMatch(dispatch, /"app"|family/, 'deploy-staging must leave the app at staff');
+  assert.match(dispatch, /dispatch '\{"ref":"develop","inputs":\{"action":"ota-update","branch":"preview"\}\}'/);
 });
 
 test('a family run is titled «... family-preview»: never the staff preview OTA deploy-baseline looks for', () => {
@@ -51,11 +52,11 @@ test('eas init links or creates the family EAS project before every EAS call, an
   assert.match(sh, />> "\$GITHUB_STEP_SUMMARY"/);
 });
 
-test('the family OTA goes to its own channel preview, without the staff app Stripe flag or Firebase secret', () => {
+test('the family OTA goes to its own channel (= profile), without the staff Stripe flag or Firebase secret', () => {
   const [family] = step('ota', 'EAS update').run.split('exit 0');
   assert.match(family, /if \[ "\$APP" = family \]/);
   assert.match(family, /unset EXPO_PUBLIC_FEATURE_STRIPE/);
-  assert.match(family, /update --channel preview --environment preview/);
+  assert.match(family, /update --channel "\$PROFILE" --environment "\$PROFILE"/);
   assert.match(step('ota', 'Write the Firebase file').if, /inputs\.app != 'family'/);
   const builds = mobile.jobs.ota.steps.filter((s) => /--filter "(staff-mobile|family-mobile)\^\.\.\." build/.test(s.run));
   assert.deepEqual(builds.map((s) => s.if), ["${{ inputs.app != 'family' }}", "${{ inputs.app == 'family' }}"]);

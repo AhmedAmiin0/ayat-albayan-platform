@@ -32,20 +32,16 @@ test('the EAS build takes the family production profile; preview stays the famil
   assert.match(step('build', 'EAS build').run, /--profile "\$PROFILE"/);
 });
 
-test('production is the family app build only: never the staff app, never an OTA', () => {
-  for (const job of ['build', 'ota']) {
-    const guard = step(job, 'Family production builds only');
-    assert.ok(guard, job);
-    assert.equal(mobile.jobs[job].steps.indexOf(guard), 1, `${job}: right after «Develop only»`);
-    assert.match(guard.run, /exit 1/);
-  }
-  assert.match(step('build', 'Family production builds only').if, /inputs\.app != 'family'/);
-  assert.equal(step('ota', 'Family production builds only').if, "${{ inputs.profile == 'production' }}");
+test('the production build is the family app only (its OTA: mobile-family-production-ota)', () => {
+  const guard = step('build', 'Family production builds only');
+  assert.equal(mobile.jobs.build.steps.indexOf(guard), 1, 'right after «Develop only»');
+  assert.match(guard.run, /exit 1/);
+  assert.match(guard.if, /inputs\.app != 'family'/);
 });
 
-test('the OTA steps keep the family preview channel', () => {
-  for (const [job, name] of [['ota', 'Native-change guard'], ['ota', 'EAS update']]) {
-    assert.equal(step(job, name).env.PROFILE, "${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}");
+test('the OTA steps take the family profile: preview unless production', () => {
+  for (const name of ['Native-change guard', 'EAS update']) {
+    assert.equal(step('ota', name).env.PROFILE, FAMILY_PROFILE);
   }
 });
 
