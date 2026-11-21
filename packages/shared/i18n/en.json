@@ -4714,7 +4714,8 @@
       "teacherStatementsEnabled": "When on, teachers see «Monthly statements» and its link in «My earnings». When off, the page and the link are hidden and teachers cannot open them; the statements stay as they are.",
       "teacherFeedbackEnabled": "When on, teachers see the ratings and feedback of their students. When off, the page is hidden on the website and in the mobile app and teachers cannot open it; the feedback stays saved.",
       "teacherInternalMeetingsEnabled": "When on, teachers can start an instant internal meeting from their page. When off, the button is hidden on the website and in the mobile app; admins, sales and assistants keep it.",
-      "teacherScheduledMeetingsEnabled": "When on, teachers can schedule an internal meeting from their page. When off, the button is hidden on the website and in the mobile app. With both meeting buttons off, the teacher's meetings list is hidden too."
+      "teacherScheduledMeetingsEnabled": "When on, teachers can schedule an internal meeting from their page. When off, the button is hidden on the website and in the mobile app. With both meeting buttons off, the teacher's meetings list is hidden too.",
+      "maintenanceMode": "When on, an \"under maintenance\" screen shows to everyone on both websites and both apps except administrators, who can still sign in to check things and turn it off. WhatsApp messages and payment notices keep arriving, reminders and other automatic jobs keep running, and a lesson in progress is not stopped. When turned off, the platform reopens for everyone within about a minute."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4756,7 +4757,8 @@
     "teacherStatementsEnabled": "Teacher «Monthly statements» page",
     "teacherFeedbackEnabled": "Teacher «Student feedback» page",
     "teacherInternalMeetingsEnabled": "Teacher «Internal meeting» button",
-    "teacherScheduledMeetingsEnabled": "Teacher «Scheduled meeting» button"
+    "teacherScheduledMeetingsEnabled": "Teacher «Scheduled meeting» button",
+    "maintenanceMode": "Maintenance mode"
   },
   "language": {
     "label": "Language",
@@ -7808,7 +7810,8 @@
       "retention": "Logs and retention",
       "notifications": "Notifications",
       "sending": "Sending and safety",
-      "teachers": "Teacher pages"
+      "teachers": "Teacher pages",
+      "system": "System"
     }
   },
   "settingsValues": {
@@ -7845,7 +7848,8 @@
       "sending": "Sending and safety",
       "google": "Google sync",
       "teachers": "Teacher pages",
-      "family": "Family app"
+      "family": "Family app",
+      "system": "System"
     },
     "all": "All",
     "clearSearch": "Clear search",
@@ -8065,7 +8069,8 @@
       "sending": "Sending and safety (view only)",
       "google": "Google sync (view only)",
       "teachers": "Teacher pages",
-      "family": "Family app"
+      "family": "Family app",
+      "system": "System"
     },
     "name": "Name",
     "value": "Value",
@@ -9677,5 +9682,17 @@
       "body": "It can't be joined again.",
       "card": "The lesson ended at {time} and can't be joined again."
     }
+  },
+  "maintenance": {
+    "planned": {
+      "title": "The platform is under maintenance",
+      "body": "We are updating the platform right now. It will open by itself as soon as maintenance ends, and your data is safe."
+    },
+    "outage": {
+      "title": "The platform is not responding right now",
+      "body": "The cause may be an update we are running right now. We keep retrying on our own, and the platform will open as soon as it is back."
+    },
+    "retry": "Try again",
+    "checking": "Checking…"
   }
 }

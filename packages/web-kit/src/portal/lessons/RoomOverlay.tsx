@@ -1,5 +1,6 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { createPortal } from 'react-dom';
+import { holdRoomOpen } from '@ab/web-kit/boot/maintenance';
 import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useRoomContext, type RoomLesson } from './room/room-context';
@@ -33,6 +34,7 @@ export function RoomOverlay({ join, onRejoin, about }: Props) {
   // under the shell's sticky header and bottom bar.
   return createPortal(
     <div
+      ref={holdRoomOpen}
       role="dialog"
       aria-modal="true"
       aria-label={t.portal.roomTitle}

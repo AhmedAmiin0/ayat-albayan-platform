@@ -74,7 +74,7 @@ const DEFAULTS_LITERAL = Object.freeze({
   academy_contact: { site: 'ayatalbayan.com' }, recording_consent_notice: null, recording_retention_days: null,
   activity_retention_days: 180,
   family_login_enabled: false, login_code_ttl_minutes: 10, login_code_max_attempts: 5,
-  presence_enabled: true,
+  presence_enabled: true, maintenance_mode: false,
   teacher_chats_enabled: false, teacher_student_messages_enabled: false,
   teacher_earnings_enabled: false,
   teacher_statements_enabled: false, teacher_feedback_enabled: false,
@@ -89,9 +89,9 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expect(surface[name]).toBeDefined();
   });
 
-  it('SETTING_DEFAULTS holds the 73 keys with today\'s values', () => {
-    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(73);
-    expect(root.SETTING_KEYS).toHaveLength(73);
+  it('SETTING_DEFAULTS holds the 74 keys with today\'s values', () => {
+    expect(Object.keys(DEFAULTS_LITERAL)).toHaveLength(74);
+    expect(root.SETTING_KEYS).toHaveLength(74);
     expect(root.SETTING_DEFAULTS).toEqual(DEFAULTS_LITERAL);
   });
 
@@ -120,6 +120,7 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
       | 'teacher_statements_enabled'
       | 'teacher_feedback_enabled' | 'teacher_internal_meetings_enabled'
       | 'teacher_scheduled_meetings_enabled' | 'family_chat_enabled' | 'family_meetings_in_app'
+      | 'maintenance_mode'
     >();
     expectTypeOf<PublicSettings>().toEqualTypeOf<Pick<AcademySettings, PublicSettingKey>>();
     expectTypeOf<keyof PublicConfig>().toEqualTypeOf<PublicSettingKey | 'custom'>();

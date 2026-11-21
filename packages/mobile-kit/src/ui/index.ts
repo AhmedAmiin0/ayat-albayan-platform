@@ -62,3 +62,4 @@ export {
   SpeakerIcon,
   SwitchCameraIcon,
 } from './call/call-icons';
+export { MaintenanceScreen, type MaintenanceCover, type MaintenanceScreenProps } from './startup';

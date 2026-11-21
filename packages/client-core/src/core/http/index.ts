@@ -28,3 +28,4 @@ export {
   type SupabaseSlotUpload,
   type UploadFile,
 } from './signed-upload.js';
+export { probe, PROBE_TIMEOUT_MS, type ProbeAnswer, type ProbeOptions } from './probe/index.js';
