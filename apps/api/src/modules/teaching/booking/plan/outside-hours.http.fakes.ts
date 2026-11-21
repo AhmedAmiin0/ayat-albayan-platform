@@ -19,17 +19,18 @@ import { OutsideSlotsService } from './outside-slots.service';
 export const TEACHER = 'a0000000-0000-4000-8000-000000000001';
 export const S1 = 'c0000000-0000-4000-8000-000000000001';
 export const S2 = 'c0000000-0000-4000-8000-000000000002';
-const USERS: Record<string, AuthUser> = {
-  sales: { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' },
-  admin: { id: 'ad000000-0000-4000-8000-0000000000ad', email: null, role: 'admin' },
-  teacher: { id: 'e1000000-0000-4000-8000-0000000000e1', email: null, role: 'teacher' },
-  guardian: { id: 'a2000000-0000-4000-8000-0000000000a2', email: null, role: 'guardian' },
-};
-const verify: TokenVerifier = async (token) => {
-  const user = USERS[token];
-  if (!user) throw new Error('bad token');
-  return user;
-};
+const user = (role: AuthUser['role'], id: string): AuthUser => ({ id, email: null, role });
+const USERS = new Map<string, AuthUser>([
+  ['sales', user('sales', 'a1000000-0000-4000-8000-00000000000a')],
+  ['admin', user('admin', 'ad000000-0000-4000-8000-0000000000ad')],
+  ['teacher', user('teacher', 'e1000000-0000-4000-8000-0000000000e1')],
+  ['guardian', user('guardian', 'a2000000-0000-4000-8000-0000000000a2')],
+]);
+/** A token is the user's key; anything else is refused. */
+const verify: TokenVerifier = (token) =>
+  USERS.has(token)
+    ? Promise.resolve(USERS.get(token) as AuthUser)
+    : Promise.reject(new Error('bad token'));
 /** Sat 2026-12-05 12:00 Riyadh, her own student S1. */
 export const TRIAL = {
   teacherId: TEACHER,
@@ -57,7 +58,12 @@ const BOOKED = {
   invoice_id: null,
 };
 
-interface Call { method?: 'GET' | 'POST'; url: string; token: string; body?: object }
+interface Call {
+  method?: 'GET' | 'POST';
+  url: string;
+  token: string;
+  body?: object;
+}
 
 /** The app, its fakes, a `call` and `reset` for beforeEach. */
 export async function outsideApp() {

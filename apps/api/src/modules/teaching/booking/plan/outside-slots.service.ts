@@ -8,7 +8,7 @@ import { outsideGrid } from './outside-slots';
 import { ALWAYS_STEP_MIN } from './slots.service';
 
 /** How far «وقت آخر» looks ahead of the server's now. */
-export const OUTSIDE_DAYS = 14;
+const OUTSIDE_DAYS = 14;
 
 /**
  * GET /booking/outside-slots («وقت آخر», owner 2026-11-21): every start of the teacher's whole day

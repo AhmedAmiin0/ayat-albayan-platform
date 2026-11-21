@@ -3,7 +3,6 @@ import type {
   BookingResult,
   BookingTeacherOption,
   Conflict,
-  OutsideSlotsResponse,
   SlotsResponse,
 } from '@ab/shared';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
@@ -82,7 +81,7 @@ export class SalesBookingOptionsController {
   outsideSlots(
     @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,
     @CurrentUser() user: AuthUser,
-  ): Promise<OutsideSlotsResponse> {
+  ): ReturnType<SalesBookingOptions['outsideSlots']> {
     return this.options.outsideSlots(query, user);
   }
 }
