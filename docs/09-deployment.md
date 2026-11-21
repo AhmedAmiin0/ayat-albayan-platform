@@ -31,7 +31,7 @@ Staging runs **six containers** in the compose project `ayat-albayan-staging` (`
 | `ayat-pdf` | — | the chat's PDF previews: poppler on a sender's PDF, asked by the copies over a unix socket; no secret, no network («PDF sandbox» below) | none (no network) | 128 MB |
 | `ayat-lb` | — | `caddy:2.10.2-alpine` (`deploy/staging/lb/Caddyfile`): round robin over both copies, active health checks on `/health` every 2 s, a refused connection retried on the other copy (never a request a copy already received) | `127.0.0.1:3110` | 64 MB |
 
-The host Caddy and `/opt/wacrm` are **unchanged**: Caddy still proxies the API domain to `127.0.0.1:3110`. With `ayat-redis` (96 MB) 2336 MB, about 2.3 GB in total beside the CRM on the 8 GB VPS. Every container's log rotates in the compose file (`x-log`: json-file, 3 × 10 MB; `ayat-pdf` 2 × 1 MB), not in the Docker daemon (shared with the CRM), so no log can fill the disk; the first deploy with it recreates `ayat-redis` and `ayat-lb` once (the cache refills from the database; a second or two of 502 on 3110, as an LB image bump).
+The host Caddy and `/opt/wacrm` are **unchanged**: Caddy still proxies the API domain to `127.0.0.1:3110`. With `ayat-redis` (96 MB) 2336 MB, about 2.3 GB in total beside the CRM on the 8 GB VPS. Every container's log rotates in the compose file (`x-log`: json-file, 3 × 10 MB; `ayat-pdf` 2 × 1 MB), not in the Docker daemon (shared with the CRM), so no log can fill the disk, except the three app containers, which log to the host journal so their lines survive a deploy («Logs» below); the first deploy with it recreates `ayat-redis` and `ayat-lb` once (the cache refills from the database; a second or two of 502 on 3110, as an LB image bump).
 
 **The role switch** (`apps/api/src/config/role/`: `app-role.ts`, `background-job.ts`, `worker-kick.ts`; the kick route and the HTTP filter in `modules/platform/process-role`): `APP_ROLE=api|worker|all`, default `all` (local dev, tests, e2e and today's single container: the same jobs and routes in one process, as before; not byte-for-byte the old process: SIGTERM now runs the shutdown hooks, so requests in flight finish and the timers stop, and the sign-in code limits count in the database, `rate_limit_hits`, instead of in memory, so they survive a restart). Every job class carries `@BackgroundJob({ name, kick? })`, the one place that decides: its `onApplicationBootstrap` (where its timers start) runs only where the role runs jobs, and its `kick` in an `api` process becomes an authenticated call to the worker (an HMAC of the service-role key, `x-ab-internal`). So two API copies can never both run the outbox sender, the reminders or the Google sync; the row claims and dedup keys stay as the second wall. Not gated, on purpose: per-process caches every copy needs (translations, integration config, numbers config refresh; an admin save also kicks the worker's `config-reload`, below), the usage log, and request-driven listeners (lesson events → alerts, ratings, trial status). An unknown `APP_ROLE` stops the boot. `vitest` boots the real `AppModule` in each role and records every timer it starts at boot and over 25 fake hours, however it is written (`setTimeout`, `setInterval`, a `Ticker`, in `onModuleInit` or `onApplicationBootstrap`): in `api` only the per-copy allow-list (each with its reason) may start one, and every class `@BackgroundJob` registered must start none in `api` and its timers in `worker` (`roles.boot.test.ts`, `roles.boot.probe.ts`; a timer started by a request, or a one-off boot pass with no timer, is outside what it sees).
 
@@ -74,6 +74,56 @@ Each process keeps its own in-memory copy as before; Redis is asked on a miss, b
 On the first switch the API copies serve before `ayat-worker` exists (it starts once the old container is gone, up to its health wait): «run now» kicks in that minute or so fail and the worker's own polls catch up when it starts; nothing runs a job twice. During a roll a POST that `ayat-lb` sends on a keep-alive connection just as a copy closes it can answer 502 (rare; the copy finishes every request it already received).
 
 **Scale:** add `ayat-api-c` (copy `ayat-api-b`), add it to the `reverse_proxy` line in `lb/Caddyfile`, add `roll ayat-api-c` to `roll.sh` and the compose test; keep the memory sum in budget. Never a second `APP_ROLE=worker` (or `all`) container: one job runner only. CPU-heavy PDF rendering already runs only in the worker; give `ayat-worker` more memory before adding anything there. One exception (owner 2026-10-29): the chat's PDF previews render on request, in `ayat-pdf` («PDF sandbox» below).
+
+### Readiness (`/ready`) and liveness (`/health`)
+
+Two probes, both public (no token), both cheap:
+
+| Probe | Answers | Read by |
+|---|---|---|
+| `/health` | always 200 while the process serves (liveness); unchanged | `ayat-lb` (every 2 s), Docker healthchecks, `roll.sh` |
+| `/ready` | 200 `{status:'ok'\|'degraded', checks}` or 503 `{status:'down', checks}`, `Cache-Control: no-store` | the deploy gate, an outside uptime monitor |
+
+`checks` (schema `readinessSchema` in `packages/shared/src/schemas/readiness.ts`): `database` (one `roles` row through the API's own client, cut off after 2 s; `ok` or `down`, with `ms`), `redis` (`off` without `REDIS_URL`, `ok` connected, `degraded` not: Redis is only a cache, so never `down`), `jobs` (`stale`: how many background jobs have not succeeded for 3 of their intervals, and at least 10 minutes; `degraded` when any, `off` where the beats cannot be seen: an API copy without Redis). Only the database makes it `down` (503). No error text or job name is ever shown; admins see the jobs at `GET /admin/jobs` and get one bell alert per stale job a day.
+
+**Why the load balancer keeps `/health`:** a database blip would make both copies "not ready" at once and `ayat-lb` would have nobody to send to; with `/health` it keeps sending, and requests that need the database fail on their own and recover with it.
+
+**Deploy gate:** after the roll, `deploy-staging` checks `/health` (as before) and then `/ready` (6 retries 5 s apart, 10 s each); a failure runs `rollback.sh` like a failed health check (`tools/scripts/ci-checks/deploy/ready-gate.test.mjs`). The worker answers `/ready` too (on the project network only; its `jobs` come from its own memory).
+
+**Outside uptime monitor (owner):** point any free HTTP monitor at `https://api.ayatalbayan.com/ready` every 1 to 5 minutes, alert on a non-200 answer or a timeout over 10 s, and optionally on a body without `"status":"ok"` (degraded: look at `/admin/jobs` and the logs). Keep a separate check on `/health` if you want "process up" apart from "can serve".
+
+### Database timeouts (`DB_TIMEOUT_MS`)
+
+Every call the API and the worker make to Postgres through supabase-js (PostgREST tables and RPCs, and Auth) has a deadline: `DB_TIMEOUT_MS` (ms, default 15000, 1000 to 120000, zod-checked at boot; unset = 15 s). Storage transfers are not timed (big files). A stalled call fails with `DbTimeoutError` (`apps/api/src/common/db/db-timeout.ts`) instead of hanging a request or a job; postgrest-js never retries it.
+
+- A request answers **503 `db_timeout`** with `Retry-After: 5` (`DbTimeoutFilter`); every other error is handled exactly as before.
+- A job's pass fails like any database error: the Ticker logs it, records it on the job's heartbeat, and the next tick tries again. Rows stay queued (claims, leases and dedup keys), so nothing is lost.
+- Webhooks: a failed item makes the webhook answer 5xx, so Meta (and the other providers) re-send; replays are no-ops for the items that went through.
+
+Switch off: there is no "off"; set `DB_TIMEOUT_MS=120000` to make it as lenient as allowed.
+
+### Logs
+
+- **Request ids:** every API request gets an id: a sane incoming `X-Request-Id` (1 to 128 of `A-Z a-z 0-9 . _ : -`) is kept, anything else gets a new UUID. The answer carries it back in `X-Request-Id`, and every log line written while serving it has `[req:<id>]` after its context (`apps/api/src/common/telemetry/request-id`). Ask a user or an app for the header value, then search for it.
+- **Where the app logs live:** `ayat-worker`, `ayat-api-a` and `ayat-api-b` use Docker's `journald` driver (`x-app-log` in `deploy/staging/docker-compose.yml`, tag = container name, non-blocking with a 4 MB buffer), so their lines stay in the host journal after a deploy recreates the containers. The other containers keep json-file with the caps above (their logs go with the container, as before).
+- **Reading them on the VPS:**
+  - the running container, as before: `docker logs --since 1h ayat-api-a`
+  - across deploys: `journalctl CONTAINER_TAG=ayat-api-a --since "2026-11-21 08:00" --until "2026-11-21 09:00"` (or `-t ayat-worker`; add `-f` to follow, `-o cat` for the bare lines)
+  - one request on both copies: `journalctl CONTAINER_TAG=ayat-api-a + CONTAINER_TAG=ayat-api-b --since -1d -o cat | grep 'req:<id>'`
+- **Size:** bounded by the host journal's own cap (`SystemMaxUse` in `/etc/systemd/journald.conf`; by default 10 % of the disk and at most 4 GB, shared with everything else on the host). `journalctl --disk-usage` shows it. The owner may set `SystemMaxUse=1G` there (then `systemctl restart systemd-journald`).
+- **Roll back:** point `x-app`'s `logging:` back at `*log` (json-file) and deploy; nothing else depends on the journal.
+
+### Error tracker (optional, off until a DSN is set)
+
+One small client (`packages/core/src/error-report`) sends Sentry envelopes, which Sentry and GlitchTip (free, self-hostable) both accept. There is no vendor SDK, so turning it on in the phone apps needs no native build. **No DSN is in git; with none set nothing is hooked, built or sent.**
+
+| Where | Variable | What it reports |
+|---|---|---|
+| API and worker | `SENTRY_DSN` in the server `.env` | every error log line: unhandled request errors (with the request id) and aborted job runs |
+| Both web apps | `VITE_SENTRY_DSN` at build time (GitHub variable for `deploy-staging`'s web build) | uncaught errors and unhandled promise rejections |
+| Staff and family phone apps | `EXPO_PUBLIC_SENTRY_DSN` at build or OTA time | uncaught JS errors (React Native's own handler still runs after) |
+
+Each report: error type, message and stack with phone numbers and emails masked, the app and (API) the request id; no timestamp from the device (the tracker stamps receipt). At most 20 a minute per process or device, and the same error once a minute. A DSN that is set but invalid leaves it off (the API warns once, naming the variable only). Switch off: remove the variable and deploy (web and phone apps: rebuild or publish an update).
 
 ### PDF sandbox (`ayat-pdf`)
 
@@ -121,7 +171,7 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env/env-merge.mj
 
 **Optional** (empty = the server keeps its value): secrets `SSH_KNOWN_HOSTS`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET`, `LOGIN_CODE_PEPPER`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN`, `MINIO_EGRESS_ACCESS_KEY`, `MINIO_EGRESS_SECRET_KEY`; variables `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_VERSION`, `WA_APP_ID`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL`.
 
-On every run: the web app is built on the runner before anything on the server changes; if `/health` fails after the swap, the previous API code and web build are restored automatically (migrations are not undone); the run summary shows the commit and links.
+On every run: the web app is built on the runner before anything on the server changes; if `/health` or `/ready` fails after the swap, the previous API code and web build are restored automatically (migrations are not undone); the run summary shows the commit and links.
 
 Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. (Required reviewers would make every automatic deploy wait for an approval click.)
 
@@ -357,6 +407,7 @@ Owner request 2026-10-05: deploys, mobile builds/OTA, database migrations and th
 | `claude-tasks` | manual with a `prompt`; `@claude` comment | Claude Code opens a PR into `develop` | none (no deploy secrets) | ignored: needs the owner as actor, as author of the issue/PR and of every comment in the thread |
 | `claude-code-review` | PR opened, pushed, reopened or marked ready (not drafts) | Claude Code reviews the diff and posts inline comments (owner 2026-11-13) | none (only `CLAUDE_CODE_OAUTH_TOKEN`) | skipped: the job runs only for PRs from this repository, and a fork PR gets no secret |
 | `roster-report`, `staging-test-account` | manual | read-only roster CSV; test teacher + student on staging | `develop` | never triggered by a PR |
+| `db-backup` | nightly 02:17 UTC; manual | `pg_dump` (public + auth) of production, encrypted with the owner's age public key, kept 90 days as an artifact; off (green, a notice) until `SUPABASE_DB_URL` and `BACKUP_AGE_RECIPIENT` exist (docs/backups.md) | `db-backup` | never triggered by a PR |
 
 Migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. Since 2026-10-23 an automatic deploy **skips** the migrate job (no approval click) only when its `plan` job proves that nothing under `packages/db/supabase/migrations/` changed since the last deploy that pushed migrations (`tools/scripts/env/deploy-baseline.mjs` reads the run titles `deploy-staging <sha>`); if that deploy cannot be found or anything fails, migrate runs and waits for review as before. Every apply that does run pauses at «waiting for review»; approve it after reading the diff.
 
@@ -384,7 +435,7 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 
 ### What you must add (Settings → Secrets and variables → Actions, and Settings → Environments)
 
-**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer).
+**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer), `db-backup` (created by its first run; set Deployment branches = `develop` and put its secret there).
 
 | Secret | Where to get it | Used by |
 |---|---|---|
@@ -407,8 +458,9 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 | `GOOGLE_SERVICES_JSON` | Firebase `google-services.json` content; optional if the EAS `preview` environment already holds it | `mobile` (OTA) |
 | `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` | console.anthropic.com key, or `claude setup-token` | `claude-tasks` (the only secret it sees); `CLAUDE_CODE_OAUTH_TOKEN` also `claude-code-review` |
 | `TEST_ACCOUNT_PASSWORD`, `TEST_TEACHER_EMAIL` | Your choice (see «Test teacher on staging») | `staging-test-account` |
+| `SUPABASE_DB_URL` | **Optional, switches the nightly copy on:** Supabase → Connect → **Session pooler** URI of the production project, with the password (GitHub runners have no IPv6). Put it in the `db-backup` environment, never as a repository secret. With the variable `BACKUP_AGE_RECIPIENT` (your age public key) | `db-backup` (docs/backups.md) |
 
-Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `VERIFIED_TREE_SKIP`, `OTA_BASELINE_SHA`. `VERIFIED_TREE_SKIP` = `false` turns off the develop skip of `ci` (a push whose tree a green PR run already put through verify and guards runs only e2e, the full suite, and the baselines prune; `tools/scripts/ci-checks/ci-skip/verified-tree.mjs`). The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
+Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `VERIFIED_TREE_SKIP`, `OTA_BASELINE_SHA`, `BACKUP_AGE_RECIPIENT` and `BACKUP_PG_MAJOR` (`db-backup`, docs/backups.md), `VITE_SENTRY_DSN` (the web apps' optional error tracker). `VERIFIED_TREE_SKIP` = `false` turns off the develop skip of `ci` (a push whose tree a green PR run already put through verify and guards runs only e2e, the full suite, and the baselines prune; `tools/scripts/ci-checks/ci-skip/verified-tree.mjs`). The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
 
 Already created but **not used by any workflow yet:** `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`, other `WA_*`, `LIVEKIT_*` beyond the two above, `GOOGLE_SERVICES_JSON` outside `mobile`. They sit unused until a workflow names them.
 

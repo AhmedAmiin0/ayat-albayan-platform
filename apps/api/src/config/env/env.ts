@@ -18,6 +18,7 @@ import { STRIPE_SHAPE } from './env.stripe';
 import { STORAGE_SHAPE } from './env.storage';
 import { SENDER_SHAPE } from './whatsapp/env.sender';
 import { webOrigin } from '@/common/http/public-origin';
+import { DB_TIMEOUT_DEFAULT_MS } from '@/common/db/db-timeout';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider, isGraphEnv } from './whatsapp/env.whatsapp';
 export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
@@ -102,6 +103,11 @@ const schema = z.object({
    * Shortest password an admin may type for a login (POST /users, reset-password); generated ones
    * are at least as long. Keep it >= the project's Auth setting (supabase config minimum_password_length).
    */
+  /** One database call's deadline (ms, default 15 s); a stall fails fast (common/db/db-timeout). */
+  DB_TIMEOUT_MS: z.preprocess(
+    blankIsUnset,
+    z.coerce.number().int().min(1_000).max(120_000).default(DB_TIMEOUT_DEFAULT_MS),
+  ),
   AUTH_PASSWORD_MIN_LENGTH: z.preprocess(blankIsUnset, z.coerce.number().int().min(6).max(72).default(8)),
 });
 

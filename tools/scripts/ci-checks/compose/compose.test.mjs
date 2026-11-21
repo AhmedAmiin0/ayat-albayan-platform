@@ -81,11 +81,23 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
   assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 3040);
 });
 
-test('every container log rotates (json-file, size-capped): never the disk the CRM shares', () => {
-  for (const [name, s] of Object.entries(services)) {
+test('every other container log rotates (json-file, size-capped): never the disk the CRM shares', () => {
+  for (const [name, s] of Object.entries(services).filter(([n]) => !APPS.includes(n))) {
     assert.equal(s.logging?.driver, 'json-file', name);
     assert.match(s.logging.options['max-size'], /^\d+m$/, name);
     assert.match(s.logging.options['max-file'], /^\d$/, name);
+  }
+});
+
+test('the app logs survive a deploy: journald, tagged by container, readable by docker logs', () => {
+  for (const name of APPS) {
+    const { logging } = services[name];
+    assert.equal(logging?.driver, 'journald', name);
+    // journalctl CONTAINER_TAG=ayat-api-a (or -t ayat-api-a) finds a removed container's lines too.
+    assert.equal(logging.options.tag, '{{.Name}}', name);
+    // Never blocks the app on a slow journal (a lost line beats a stalled request).
+    assert.equal(logging.options.mode, 'non-blocking', name);
+    assert.match(logging.options['max-buffer-size'], /^\d+m$/, name);
   }
 });
 

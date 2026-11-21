@@ -4,6 +4,7 @@ import { loadEnv } from '@/config/env/env';
 import { GoogleItemsQueries } from './google-items.queries';
 import { GoogleSyncProcessor } from './google-sync.processor';
 import { BackgroundJob } from '@/config/role/background-job';
+import { beatTick } from '@/common/jobs/beats';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */
@@ -40,8 +41,9 @@ export class GoogleSyncJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   onApplicationBootstrap(): void {
     const every = loadEnv().GOOGLE_SYNC_POLL_MS ?? POLL_MS;
-    const tick = () => void this.kick();
-    this.timers.push(setTimeout(tick, Math.min(FIRST_RUN_MS, every)).unref(), setInterval(tick, every).unref());
+    const firstMs = Math.min(FIRST_RUN_MS, every);
+    const tick = beatTick({ name: GoogleSyncJob.name, firstMs, everyMs: every }, () => this.kick());
+    this.timers.push(setTimeout(tick, firstMs).unref(), setInterval(tick, every).unref());
     const daily = () => {
       void this.reconcile();
       this.timers.push(setTimeout(daily, msUntilReconcile(new Date())).unref());

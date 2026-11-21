@@ -1,7 +1,7 @@
 {
   "src/app.module.ts": {
     "ab/module-boundaries": {
-      "count": 41
+      "count": 40
     }
   },
   "src/common/audit/audit.service.ts": {
@@ -1216,7 +1216,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/finance/assistant-pay/admin/admin.corrections.http.test.ts": {
@@ -7530,9 +7530,6 @@
   },
   "src/modules/platform/google-sync/sync/google-sync.job.ts": {
     "max-depth": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
