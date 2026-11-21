@@ -34,3 +34,9 @@ apps/mobile/google-services.json
 calendar-diff.sql
 oxlint-report.json
 lint-parity-report.json
+
+# Never commit keys (2026-11-22: a deploy key was pushed here and rotated)
+deploy_key*
+*.pem
+id_rsa*
+id_ed25519*
