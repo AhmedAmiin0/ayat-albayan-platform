@@ -5,6 +5,7 @@ import { errorCode } from '@/common/http/errors';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
 import type { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
+import type { OutsideSlotsService } from '@/modules/teaching/booking/plan/outside-slots.service';
 import type { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 import { SalesBookingScope } from './sales-booking.ownership';
 import type { SalesOwnershipRule } from '@/modules/sales/sales/rule/sales-ownership-rule';
@@ -30,7 +31,7 @@ function rig(lessonStudents: string[]) {
     isLessonOf: vi.fn(async (_id: string, ids: readonly string[]) => ids.length === lessonStudents.length && ids.every((i) => lessonStudents.includes(i))),
   };
   const slots = { slots: vi.fn(async () => ({ slots: [] })) };
-  const options = new SalesBookingOptions(scope as unknown as SalesBookingScope, {} as TeacherOptionsService, slots as unknown as SlotsService);
+  const options = new SalesBookingOptions(scope as unknown as SalesBookingScope, {} as TeacherOptionsService, slots as unknown as SlotsService, {} as OutsideSlotsService);
   return { options, slots, scope };
 }
 const failed = (p: Promise<unknown>) => p.then(() => null, (e: unknown) => errorCode(e));
