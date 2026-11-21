@@ -35,3 +35,4 @@ export * from './people/portal/index.js';
 export * from './teaching/audio-player/index.js';
 export * from './teaching/lesson-files/index.js';
 export * from './teaching/lesson-room/index.js';
+export * from './platform/legal/index.js';

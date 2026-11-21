@@ -26,7 +26,11 @@ test('mobile.yml app: staff by default (every automatic run), family by hand in 
 });
 
 test('a family run is titled «... family-preview»: never the staff preview OTA deploy-baseline looks for', () => {
-  assert.match(mobile['run-name'], /^mobile \$\{\{ inputs\.action \}\} \$\{\{ inputs\.app == 'family' && 'family-preview' \|\| /);
+  // 2026-11-21: the family Google Play build (profile production) is «... family-production» first.
+  const family = String.raw`inputs\.app == 'family' && inputs\.profile == 'production' && 'family-production'`;
+  const start = String.raw`^mobile \$\{\{ inputs\.action \}\} \$\{\{ `;
+  const preview = String.raw`\s+\|\| inputs\.app == 'family' && 'family-preview'\s+\|\| `;
+  assert.match(mobile['run-name'], new RegExp(`${start}${family}${preview}`));
 });
 
 test('eas init links or creates the family EAS project before every EAS call, and exports its id', () => {
@@ -61,7 +65,7 @@ test('family release tags: mobile-family-v… for the APK, ota-family-preview-�
   const tag = (kind) => mobile.jobs.release.steps.find((s) => s.env?.KIND === kind);
   assert.equal(tag('apk').env.PROFILE, "${{ inputs.app == 'family' && 'family' || inputs.profile || 'preview' }}");
   assert.match(tag('apk').run, /"\$APP_DIR\/app\.json"/);
-  assert.match(tag('ota').env.CHANNEL, /^\$\{\{ inputs\.app == 'family' && 'family-preview' \|\| /);
+  assert.match(tag('ota').env.CHANNEL, /\|\| inputs\.app == 'family' && 'family-preview'\s+\|\| /);
 });
 
 test('forcesRTL stays out of both apps', () => {
