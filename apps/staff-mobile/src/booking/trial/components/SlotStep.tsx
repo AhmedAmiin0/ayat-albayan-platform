@@ -13,6 +13,7 @@ import {
   freeSlotDays,
 } from '@ab/mobile-kit';
 import { MultiFooter } from './MultiFooter';
+import { OtherTime } from '@/booking/other-time';
 import { useSlots } from '@/booking/shared/queries';
 import { slotWindow, windowStart } from '@/booking/shared/slots';
 
@@ -34,6 +35,8 @@ export interface SlotStepProps {
   durationMin: number;
   /** One slot (a trial, a makeup): picking it moves on. */
   onPick?: (startsAt: string) => void;
+  /** «وقت آخر» (one slot only): a start of the server's fortnight, outside the hours or not. */
+  onPickOther?: (startsAt: string, outside: boolean) => void;
   /** Several slots (a package): toggled, then «التالي». */
   multi?: SlotMulti;
   /** The earliest start (an instant), when later than now: a subscription that starts ahead. */
@@ -53,6 +56,8 @@ export interface SlotStepProps {
  */
 export function SlotStep(props: SlotStepProps) {
   const { teacherId, tz, durationMin, onPick, multi, from, exclude, excludeLessonId } = props;
+  const { onPickOther } = props;
+  const other = { teacherId, tz, durationMin, ...excludeParams(exclude, excludeLessonId) };
   const { color } = useTheme();
   const viewer = useViewerClock();
   const viewerZone = viewer.tz;
@@ -95,6 +100,7 @@ export function SlotStep(props: SlotStepProps) {
         </View>
       ))}
       {multi ? <MultiFooter multi={multi} tz={tz} /> : null}
+      {onPickOther && !multi ? <OtherTime {...other} onPick={onPickOther} /> : null}
     </View>
   );
 }

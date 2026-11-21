@@ -10934,7 +10934,7 @@
   },
   "src/modules/teaching/booking/booking.dto.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/booking/booking.errors.ts": {
@@ -11664,7 +11664,7 @@
       "count": 5
     },
     "stylistic/max-len": {
-      "count": 19
+      "count": 16
     }
   },
   "src/modules/teaching/booking/sales/course-draft/course-draft.env.ts": {

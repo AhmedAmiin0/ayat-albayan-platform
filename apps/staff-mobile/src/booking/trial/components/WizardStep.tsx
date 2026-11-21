@@ -82,11 +82,11 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
     const onNext = () => go(next);
     const times = { slot, draft, patch, onNext };
     if (draft.kind === 'package') return <PackageTimes {...times} />;
-    const onPick = (startsAt: string) => {
-      patch({ startsAt });
+    const onPick = (startsAt: string, outsideHours = false) => {
+      patch({ startsAt, outsideHours });
       onNext();
     };
-    return <SlotStep {...slot} onPick={onPick} />;
+    return <SlotStep {...slot} onPick={onPick} onPickOther={onPick} />;
   }
   if (step === 'invoice') {
     const phone = normalizePhone(draft.phone);
@@ -107,7 +107,7 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
       failure={booking.failure}
       onSubmit={booking.submit}
       onChangeSlot={() => {
-        patch(NO_PICKS);
+        patch({ ...NO_PICKS, outsideHours: false });
         go('slot');
       }}
       onChangeInvoice={() => go('invoice')}

@@ -1,13 +1,22 @@
-import { DAY_MS, findConflicts, freeSlots } from '@ab/shared';
-import type { Conflict, SlotsResponse, SlotView, Occurrence } from '@ab/shared';
+import { DAY_MS, findConflicts, freeSlots, outsideSlotsResponseSchema } from '@ab/shared';
+import type {
+  Conflict,
+  Occurrence,
+  OutsideSlotsResponse,
+  SlotsResponse,
+  SlotView,
+} from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { OutsideSlotsQuery, SlotsQuery } from '@/modules/teaching/booking/booking.dto';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { ConflictContext } from './conflict-context';
+import { outsideGrid } from './outside-slots';
 
 const MAX_SLOT_RANGE_DAYS = 14;
+/** How far «وقت آخر» looks ahead of the server's now. */
+const OUTSIDE_DAYS = 14;
 /**
  * Default step while settings.teachers_always_available is on: the one window starts at midnight,
  * so stepping by a 45-min lesson would give 15:45, 16:30 and never 16:00. 30 keeps :00 and :30.
@@ -56,5 +65,26 @@ export class SlotsService {
     const proposed = grid.map((s) => ({ starts_at: s.start, ends_at: s.end }));
     const conflicts = findConflicts({ proposed, ...rows });
     return { teacher_tz: teacher.tz, step_min: stepMin, slots: slotViews(proposed, conflicts) };
+  }
+  /**
+   * GET /booking/outside-slots («وقت آخر», owner 2026-11-21): every start of the teacher's whole
+   * day over the next 14 days from the SERVER clock, minus the past and any clash (lessons, time
+   * off), each with inside_hours; `server_now` is the clock it used. The client only formats them.
+   */
+  async outside(q: OutsideSlotsQuery): Promise<OutsideSlotsResponse> {
+    const now = new Date();
+    const range = { from: now, to: new Date(now.getTime() + OUTSIDE_DAYS * DAY_MS) };
+    const teacher = await this.queries.teacher(q.teacherId);
+    if (!teacher) throw domainError(HttpStatus.NOT_FOUND, 'teacher_not_found');
+    const exclude = { excludeLessonId: q.excludeLessonId, excludeCourse: q.excludeCourse };
+    const studentIds = q.studentIds ?? [];
+    const who = { teacherId: teacher.id, studentIds };
+    const rows = await this.context.load({ ...who, ...range, ...exclude });
+    const stepMin = q.stepMin ?? ALWAYS_STEP_MIN;
+    const { durationMin } = q;
+    const slots = outsideGrid({ ...range, durationMin, stepMin, teacherTz: teacher.tz, rows });
+    const server_now = now.toISOString();
+    const body = { server_now, teacher_tz: teacher.tz, step_min: stepMin, slots };
+    return outsideSlotsResponseSchema.parse(body);
   }
 }

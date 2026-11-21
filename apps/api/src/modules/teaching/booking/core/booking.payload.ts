@@ -130,6 +130,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
         override_reason: reason,
         conflicts: conflicts.map((c) => ({ ...c })),
         ...dayTimesAudit(req),
+        ...(req.outsideHours ? { outside_hours: true } : {}),
         ...courseAudit(input.course),
       },
     },
