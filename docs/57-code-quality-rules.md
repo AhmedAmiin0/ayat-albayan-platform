@@ -1,4 +1,4 @@
-# 57 — Code quality rules R1–R15: audit, conventions, enforcement and lanes (owner 2026-11-21)
+# 57 — Code quality rules R1–R16: audit, conventions, enforcement and lanes (owner 2026-11-21)
 
 Owner, 2026-11-21: «set code quality rules and continue the refactor», «follow tdd to make sure the
 code has no bugs or issues», «make sure to build a design system components and follow its rules».
@@ -19,7 +19,7 @@ packages/mobile-kit, «cc» = packages/client-core.
 ## Contents
 
 0. Summary
-1. Gap per rule R1–R15
+1. Gap per rule R1–R16
 2. Conventions (example trees, TDD loop per kind)
 3. Performance audit (R10)
 4. Events audit (R11)
@@ -68,7 +68,7 @@ packages/mobile-kit, «cc» = packages/client-core.
   then behaviour lanes (events, stores, effects, N+1) in PRs of ≤ 150 files for moves and ≤ ~20 files
   for behaviour, **at most 2–3 PRs open at once**. Ten quick wins in §10.4.
 
-## 1. Gap per rule R1–R15
+## 1. Gap per rule R1–R16
 
 Counts are non-test code. «Mixed file» = a `.ts` file that declares types *and* functions/classes.
 
@@ -99,6 +99,7 @@ Counts are non-test code. «Mixed file» = a `.ts` file that declares types *and
 | R13 zustand | hand-made external stores / listener sets (files) | — | 13 | 19 | 1 | 4 | 12 | 14 | cc 9 |
 | R14 TDD | logic `.ts` without a sibling test (%) | 827 / 1,788 (46 %) | 291 / 546 (53 %) | 272 / 565 (48 %) | 18 / 22 | 37 / 46 | 77 / 149 | 100 / 183 | cc 19 %, money 26 %, schedule 33 %, settings 61 % |
 | R15 design system | see §8 | | 355 arbitrary values, 66 `<button>`, 55 `<input>` | 1,243 raw-number style objects, 88 `Pressable` | 7 arbitrary, 3 `<button>` | 155 raw-number styles, 11 `Pressable` | 102 arbitrary | 260 raw-number styles | catalog theme |
+| R16 server time | `Date.now()` / `new Date()` in non-test `.tsx` of the four apps (decisions and display mixed; to triage) | — | 55 across sw, sm, fw, fm | | | | | | `packages/time` formatters; booking «وقت آخر» (#781) already uses `server_now` |
 
 Notes per rule (what is already there and what is missing):
 
@@ -757,6 +758,7 @@ baseline that may only shrink (`eslint-suppressions.json` per package for lint r
 | R14 | **changed-lines coverage gate** (§7.4), `vitest/no-focused-tests` + `jest/no-focused-tests` (error), `no-disabled-tests` with a required reason (`test.skip(cond, 'reason')` allowed, bare `.skip`/`xit` banned), `guard:test-beside`: a new logic file without `x.test.ts(x)` fails | lint + new `coverage` job + guards | changed files only (no baseline needed); `refactor/guards/untested.json` for today's untested logic files | `vitest/*` and `jest/*` rules exist in oxlint | declarative files (`*.types.ts`, `index.ts`, `*.schemas.ts` tested through their package test) |
 | R14 | mutation testing (Stryker) on `packages/money`, `packages/schedule`, `packages/core/{phone,text}`, `packages/time`, cc reminders/status machines | weekly scheduled workflow first (report artifact), then a gate on changed files of those packages (mutation score ≥ 80 %) | score per package, may not drop | n/a | equivalent mutants (Stryker `// Stryker disable` with reason) |
 | R15 | §8.4 lint rules; `tokens.gen.css` freshness test; showcase-sibling guard; design-review output in the PR | lint, test, guards, review | suppressions + `refactor/guards/showcase.json` | `no-restricted-syntax` native for JSX elements; colour/arbitrary regex as plugin | QR colours, third-party widgets (LiveKit, Stripe Elements), the PDF report page |
+| R16 | `ab/no-client-now`: `Date.now()`/`new Date()` with no argument banned in app and kit code except in `*.timer.ts`/animation hooks; endpoints deciding by time return `server_now` (contract test) | lint + api tests | eslint-suppressions | `no-restricted-syntax` | countdown/animation timers, telemetry timestamps |
 
 New ESLint rules live in `packages/config/eslint-*.js` with their rule tests (pattern of
 `eslint-zod-inputs.test.js`); each lands **in one PR with its baseline** generated in a cloud session
