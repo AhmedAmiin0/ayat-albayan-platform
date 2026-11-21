@@ -2,7 +2,7 @@ name: mobile
 # Android preview APK and over-the-air (OTA) updates from GitHub instead of the owner's PC
 # (docs/09-deployment.md «GitHub Actions»). Manual (Actions → mobile → Run workflow, on develop), or an
 # ota-update to preview started by deploy-staging after a deploy with mobile JS changes and no native change.
-# Never production, never iOS/Apple. The repo is public: no pull_request trigger; EXPO_TOKEN lives
+# Never iOS/Apple; production only as the family app's Google Play build (below). The repo is public: no pull_request trigger; EXPO_TOKEN lives
 # in the environment `mobile` (restrict it to develop). An OTA replaces JavaScript only, so it is
 # refused when a native dependency, plugin or app.json native field changed since the last build.
 # profile stripe-test (owner 2026-10-28, docs/30): the separate Stripe TEST app (eas.json `stripe-test`,
@@ -10,13 +10,17 @@ name: mobile
 # app family (owner 2026-11-14, docs/50 §7): the separate family app apps/family-mobile (its own EAS project
 # @holdmycup/ayat-albayan-family, linked or created by `eas init` first): its eas.json `preview` APK, or an
 # OTA to its channel preview compared with its own last build. profile and branch apply to the staff app only.
+# app family + profile production (owner 2026-11-21): the Google Play bundle (eas.json `production`: an AAB,
+# channel and EAS environment production, so the build talks to the production API), tagged KIND aab. Only
+# build-android-apk: an OTA or the staff app with profile production is refused. Nothing is submitted.
 # Every automatic run (deploy-staging) sends no app and no profile, so it stays the staff app's preview.
 # deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/env/deploy-baseline.mjs):
 # a stripe-test run is titled «... stripe-test» and a family run «... family-preview», so neither is ever taken
 # for the staff app's preview OTA.
 run-name: >-
   mobile ${{ inputs.action }}
-  ${{ inputs.app == 'family' && 'family-preview'
+  ${{ inputs.app == 'family' && inputs.profile == 'production' && 'family-production'
+  || inputs.app == 'family' && 'family-preview'
   || inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
 on:
   workflow_dispatch:
@@ -37,9 +41,9 @@ on:
         options: [staff, family]
         default: staff
       profile:
-        description: "Staff app only: preview (the normal one) or stripe-test (the separate Stripe test APK, channel stripe-test; branch is then ignored)"
+        description: "Staff app: preview (the normal one) or stripe-test (the separate Stripe test APK, channel stripe-test; branch is then ignored). Family app: preview (its APK) or production = the Google Play AAB (eas.json production, EAS environment production; action build-android-apk only, not submitted)"
         type: choice
-        options: [preview, stripe-test]
+        options: [preview, stripe-test, production]
         default: preview
       force_ota:
         description: "I confirm: ship the OTA although a native change was found (the installed app may crash until a new APK is installed)"
@@ -71,6 +75,11 @@ jobs:
         env:
           REF: ${{ github.ref }}
         run: test "$REF" = refs/heads/develop || { echo "::error::run this workflow on develop (it is on $REF)"; exit 1; }
+      - name: Family production builds only
+        if: ${{ inputs.profile == 'production' && inputs.app != 'family' }}
+        run: |
+          echo "::error::profile production is the family app's Google Play build: choose app family"
+          exit 1
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
@@ -93,12 +102,13 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: bash ../../tools/scripts/ci-checks/eas-init-family.sh
-      - name: EAS build (Android APK of the chosen profile, built on Expo's servers)
+      # The family app: preview (APK) unless profile production (eas.json production: AAB, environment production).
+      - name: EAS build (Android APK or the family AAB of the chosen profile, built on Expo's servers)
         id: eas
         working-directory: ${{ env.APP_DIR }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          PROFILE: ${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}
+          PROFILE: ${{ inputs.app == 'family' && (inputs.profile == 'production' && 'production' || 'preview') || inputs.profile || 'preview' }}
         # pipefail: a failed build still fails the step through the tee. The build page link it prints (expo.dev,
         # no secret) goes to the release notes (job «release»).
         run: |
@@ -120,6 +130,11 @@ jobs:
         env:
           REF: ${{ github.ref }}
         run: test "$REF" = refs/heads/develop || { echo "::error::run this workflow on develop (it is on $REF)"; exit 1; }
+      - name: Family production builds only
+        if: ${{ inputs.profile == 'production' }}
+        run: |
+          echo "::error::profile production builds the Google Play AAB only: choose action build-android-apk"
+          exit 1
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
@@ -238,11 +253,19 @@ jobs:
         with:
           persist-credentials: false
       - name: Tag the APK
-        if: ${{ needs.build.result == 'success' }}
+        if: ${{ needs.build.result == 'success' && !(inputs.app == 'family' && inputs.profile == 'production') }}
         env:
           KIND: apk
           # The family APK: mobile-family-v<version>-b<run> (release-tag.mjs prefixes a non-preview profile).
           PROFILE: ${{ inputs.app == 'family' && 'family' || inputs.profile || 'preview' }}
+          EAS_URL: ${{ needs.build.outputs.eas_url }}
+        run: VERSION=$(jq -r .expo.version "$APP_DIR/app.json") node tools/scripts/ci-checks/release-tags/release-tag.mjs
+      # The family Google Play bundle: aab-family-production-v<version>-b<run>, never a mobile-… APK tag.
+      - name: Tag the AAB
+        if: ${{ needs.build.result == 'success' && inputs.app == 'family' && inputs.profile == 'production' }}
+        env:
+          KIND: aab
+          PROFILE: family-production
           EAS_URL: ${{ needs.build.outputs.eas_url }}
         run: VERSION=$(jq -r .expo.version "$APP_DIR/app.json") node tools/scripts/ci-checks/release-tags/release-tag.mjs
       - name: Tag the OTA
@@ -250,7 +273,9 @@ jobs:
         env:
           KIND: ota
           # ota-family-preview-<day>-<n> for the family app: never the staff app's ota-preview-… family of tags.
+          # The run-name's own expression (a production run never reaches the OTA: refused above).
           CHANNEL: >-
-            ${{ inputs.app == 'family' && 'family-preview'
+            ${{ inputs.app == 'family' && inputs.profile == 'production' && 'family-production'
+            || inputs.app == 'family' && 'family-preview'
             || inputs.profile == 'stripe-test' && 'stripe-test' || inputs.branch }}
         run: node tools/scripts/ci-checks/release-tags/release-tag.mjs

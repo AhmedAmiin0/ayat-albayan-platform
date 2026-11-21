@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { home, kid, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
@@ -55,6 +55,12 @@ describe('«حسابي»: who is in', () => {
     renderAt(<AccountPage home={home()} />);
     expect(await screen.findByRole('heading', { name: A.settings })).toBeTruthy();
     expect(screen.getByRole('button', { name: t.auth.logout })).toBeTruthy();
+  });
+
+  it('the privacy policy and the deletion page, for guardians and students', async () => {
+    renderAt(<AccountPage home={home({ kind: 'student', guardian: null })} />);
+    const nav = await screen.findByRole('navigation', { name: t.legal.links.nav });
+    expect(within(nav).getByRole('link', { name: t.legal.links.deleteAccount })).toBeTruthy();
   });
 });
 
