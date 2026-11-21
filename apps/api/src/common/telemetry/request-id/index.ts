@@ -1,2 +1,2 @@
 export { registerRequestId, requestIdOptions } from './request-id.hook';
-export { RequestIdLogger } from './request-id.logger';
+export { ReportingLogger } from './reporting.logger';

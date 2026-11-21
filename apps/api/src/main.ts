@@ -4,11 +4,8 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { AppModule } from './app.module';
 import { registerClientUsage } from './common/telemetry/client-usage/client-usage.hook';
 import { ClientUsageService } from './common/telemetry/client-usage/client-usage.service';
-import {
-  registerRequestId,
-  RequestIdLogger,
-  requestIdOptions,
-} from './common/telemetry/request-id';
+import { apiErrorReporter } from './common/infra/http/error-report';
+import { registerRequestId, ReportingLogger, requestIdOptions } from './common/telemetry/request-id';
 import { loadEnv } from './config/env/env';
 import { appRole, servesPublicHttp, trustProxyHops } from './config/role/app-role';
 import { registerRoleHttp } from './modules/platform/process-role';
@@ -23,11 +20,11 @@ async function bootstrap(): Promise<void> {
   // rawBody: the WhatsApp webhook checks X-Hub-Signature-256 over the exact bytes Meta sent
   // (req.rawBody); re-serialised JSON would not match (docs/12 §3).
   // Request ids (docs/09 «Logs»): a sane incoming X-Request-Id or a new UUID; every log line of the
-  // request carries it (RequestIdLogger) and the answer sends it back.
+  // request carries it and the answer sends it back. Error lines also go to SENTRY_DSN when set.
   const adapter = new FastifyAdapter({ trustProxy: trustProxyHops(), ...requestIdOptions() });
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
     rawBody: true,
-    logger: new RequestIdLogger(),
+    logger: new ReportingLogger(apiErrorReporter(process.env)),
   });
   registerRequestId(app);
   // APP_ROLE (docs/09): the worker answers /health and its kick route only; the API copies never /internal.
