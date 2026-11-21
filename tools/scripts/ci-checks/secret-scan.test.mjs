@@ -1,4 +1,4 @@
-// Secret scan (lane L05a): gitleaks, a pinned release binary checked by sha256, on every PR and push.
+// Secret scan (lane L05a): gitleaks, a pinned release binary checked by sha256, on PRs and pushes.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
