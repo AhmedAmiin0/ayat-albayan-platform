@@ -46,8 +46,7 @@ const PREFIX = {
 };
 const prefix = (release) => PREFIX[release.kind](release);
 /** APK and AAB tags carry the version and run number; the others a UTC day and a counter. */
-const BUILD_KINDS = { apk: true, aab: true };
-const isBuild = (release) => Object.hasOwn(BUILD_KINDS, release.kind);
+const isBuild = (release) => ['apk', 'aab'].includes(release.kind);
 
 const DAY = String.raw`(?<day>\d{4}\.\d{2}\.\d{2})-(?<n>\d+)`;
 const APK = String.raw`\d+\.\d+\.\d+-b(?<n>\d+)`;
@@ -113,10 +112,10 @@ export function createArgs(step, release, runUrl) {
   ];
 }
 
-const gh = (args) => execFileSync('gh', args, { encoding: 'utf8' });
+const realGh = (args) => execFileSync('gh', args, { encoding: 'utf8' });
 
 /** Every tag with the commit it points at (REST; /tags dereferences annotated tags). */
-function remoteTags() {
+function remoteTags(gh) {
   const jq = '.[] | .name + " " + .commit.sha';
   return gh(['api', '--paginate', 'repos/{owner}/{repo}/tags?per_page=100', '--jq', jq])
     .split('\n')
@@ -127,9 +126,10 @@ function remoteTags() {
     });
 }
 
-function main(env) {
+/** The release job's run; `gh` and `now` are injectable (tests). */
+export function main(env, { gh = realGh, now = new Date() } = {}) {
   const release = readRelease(env);
-  const step = plan(remoteTags(), release, new Date());
+  const step = plan(remoteTags(gh), release, now);
   if (step.skip) {
     console.log(`::notice::no new release tag: ${step.skip}`);
     return;
