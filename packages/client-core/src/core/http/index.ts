@@ -28,3 +28,4 @@ export {
   type SupabaseSlotUpload,
   type UploadFile,
 } from './signed-upload.js';
+export { installErrorReporting, type UncaughtSource } from './error-report.js';

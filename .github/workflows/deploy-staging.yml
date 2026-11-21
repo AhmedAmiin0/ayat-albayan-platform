@@ -203,6 +203,8 @@ jobs:
           VITE_FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
           # The family app's «wrongApp» link for a staff account.
           VITE_STAFF_ORIGIN: ${{ vars.VITE_STAFF_ORIGIN || 'https://app.ayatalbayan.com' }}
+          # Optional error tracker (docs/09 «Error tracker»): unset = nothing is reported.
+          VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN }}
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile

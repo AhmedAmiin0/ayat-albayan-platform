@@ -113,6 +113,18 @@ Switch off: there is no "off"; set `DB_TIMEOUT_MS=120000` to make it as lenient 
 - **Size:** bounded by the host journal's own cap (`SystemMaxUse` in `/etc/systemd/journald.conf`; by default 10 % of the disk and at most 4 GB, shared with everything else on the host). `journalctl --disk-usage` shows it. The owner may set `SystemMaxUse=1G` there (then `systemctl restart systemd-journald`).
 - **Roll back:** point `x-app`'s `logging:` back at `*log` (json-file) and deploy; nothing else depends on the journal.
 
+### Error tracker (optional, off until a DSN is set)
+
+One small client (`packages/core/src/error-report`) sends Sentry envelopes, which Sentry and GlitchTip (free, self-hostable) both accept. There is no vendor SDK, so turning it on in the phone apps needs no native build. **No DSN is in git; with none set nothing is hooked, built or sent.**
+
+| Where | Variable | What it reports |
+|---|---|---|
+| API and worker | `SENTRY_DSN` in the server `.env` | every error log line: unhandled request errors (with the request id) and aborted job runs |
+| Both web apps | `VITE_SENTRY_DSN` at build time (GitHub variable for `deploy-staging`'s web build) | uncaught errors and unhandled promise rejections |
+| Staff and family phone apps | `EXPO_PUBLIC_SENTRY_DSN` at build or OTA time | uncaught JS errors (React Native's own handler still runs after) |
+
+Each report: error type, message and stack with phone numbers and emails masked, the app and (API) the request id; no timestamp from the device (the tracker stamps receipt). At most 20 a minute per process or device, and the same error once a minute. A DSN that is set but invalid leaves it off (the API warns once, naming the variable only). Switch off: remove the variable and deploy (web and phone apps: rebuild or publish an update).
+
 ### PDF sandbox (`ayat-pdf`)
 
 The chat's PDF previews (owner 2026-10-29, `apps/api/src/modules/messaging/inbox/files/pdf`) run poppler (`pdfinfo`, `pdftoppm`) on a sender's bytes. Since the review of 2026-10-30 (in an API copy, a poppler memory-corruption exploit would read PID 1's environment: the service-role key, the WhatsApp and CRM tokens) that happens only in `ayat-pdf`, where there is nothing to steal:

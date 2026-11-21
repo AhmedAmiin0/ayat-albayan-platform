@@ -11,6 +11,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { loadOverrides } from '@ab/web-kit/lib/i18n/i18n-overrides';
 import { loadLocaleStrings } from '@ab/web-kit/lib/i18n/locale-strings';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { installWebErrorReporting } from './web-errors';
 
 /**
  * Each app's main.tsx: index.html paints Arabic RTL. The chosen language's texts (English is its
@@ -19,6 +20,8 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
  * which copy strings at module load). An English chunk that fails to load leaves the page Arabic.
  */
 export function startApp(boot: () => Promise<unknown>): void {
+  // Optional error tracker: nothing at all unless the build sets VITE_SENTRY_DSN.
+  installWebErrorReporting();
   void loadLocaleStrings(t, locale)
     .then((shown) => {
       document.documentElement.lang = shown;
