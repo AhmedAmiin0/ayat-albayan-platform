@@ -51,6 +51,8 @@ export interface TrialDraft {
   teacher: BookingTeacherOption | null;
   /** The picked free slot (UTC instant); a package's earliest pick (picks.ts). */
   startsAt: string | null;
+  /** «وقت آخر»: `startsAt` lies outside the teacher hours; the booking sends outsideHours. */
+  outsideHours?: boolean;
   /** «نوع الحجز»: a trial or a package (a makeup has its own wizard: makeup-draft.ts). */
   kind: Exclude<BookingKind, 'makeup'>;
   /** 'trial' for a trial, else a paid size (8, 12…); set together with `kind` (kindPatch). */

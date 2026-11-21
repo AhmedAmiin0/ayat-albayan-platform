@@ -49,6 +49,7 @@ export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingRequest 
     package: d.pkg,
     clientRequestId: o.requestId,
     leadId: d.leadId,
+    ...(d.outsideHours ? { outsideHours: true } : {}),
     // The API answers 400 invoice_required when a package arrives without one.
     ...(d.kind !== 'trial' && d.invoice ? { invoice: toInvoiceInput(d.invoice) } : {}),
   };

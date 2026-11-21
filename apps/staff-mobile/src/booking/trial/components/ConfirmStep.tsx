@@ -1,6 +1,7 @@
 import { counted } from '@ab/shared';
 import { View } from 'react-native';
 import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
+import { OutsideNote } from '@/booking/other-time';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import type { BookFailure } from '@/booking/shared/booking-errors';
 import { summary, type SummaryRow } from '@/booking/trial/lib/confirm-summary';
@@ -58,6 +59,7 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
   return (
     <View style={{ gap: 14 }}>
       <SummaryList rows={summary(draft, viewer)} />
+      <OutsideNote outside={draft.outsideHours === true} />
       {draft.pkg === 'trial' ? (
         <AppText style={note}>{t.booking.trialFree}</AppText>
       ) : (
