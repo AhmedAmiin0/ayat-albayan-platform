@@ -18,6 +18,7 @@ function kit(rows: ReturnType<typeof queued>[], ...replies: Parameters<typeof sc
     due: vi.fn(async () => rows),
     done: vi.fn(async () => undefined),
     retry: vi.fn(async () => undefined),
+    isActiveTeacher: vi.fn(async (_phone: string) => false),
   };
   const inbound = { handle: vi.fn(async () => true) };
   const source: CrmInboundSource = {
@@ -87,6 +88,26 @@ describe('CrmInbound.drain', () => {
     const k = kit([queued({ wa_message_id: 'w1' }), queued()], down, ok(contactCard()));
     expect(await k.service.drain(NOW)).toBe(1);
     expect(k.repo.done).toHaveBeenCalledExactlyOnceWith(WAMID);
+  });
+});
+
+describe('CrmInbound.drain: teachers use platform chat only (owner 2026-11-22)', () => {
+  it("an active teacher's message: the row deleted, never handed to the inbox", async () => {
+    const k = kit([queued({ content_type: 'image' })], ok(contactCard()));
+    k.repo.isActiveTeacher.mockResolvedValueOnce(true);
+    expect(await k.service.drain(NOW)).toBe(0);
+    expect(k.repo.isActiveTeacher).toHaveBeenCalledExactlyOnceWith('+966500000001');
+    expect(k.f.requests).toHaveLength(1);
+    expect(k.inbound.handle).not.toHaveBeenCalled();
+    expect(k.repo.done).toHaveBeenCalledExactlyOnceWith(WAMID);
+    expect(k.repo.retry).not.toHaveBeenCalled();
+  });
+
+  it("an inactive teacher's (or anyone else's) message is mirrored as before", async () => {
+    const k = kit([queued()], ok(contactCard()));
+    expect(await k.service.drain(NOW)).toBe(1);
+    expect(k.repo.isActiveTeacher).toHaveBeenCalledExactlyOnceWith('+966500000001');
+    expect(k.inbound.handle).toHaveBeenCalledOnce();
   });
 });
 

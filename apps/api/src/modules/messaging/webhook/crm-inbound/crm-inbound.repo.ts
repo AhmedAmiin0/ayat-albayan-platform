@@ -54,6 +54,18 @@ export class CrmInboundRepo {
     check(error, 'done');
   }
 
+  /** Owner 2026-11-22 «teachers can only use platform chat»: this E.164 is an active teacher's. */
+  async isActiveTeacher(phone: string): Promise<boolean> {
+    const { data, error } = await this.db
+      .from('teachers')
+      .select('id')
+      .eq('status', 'active')
+      .eq('phone_e164', phone)
+      .limit(1);
+    check(error, 'teacher read');
+    return (data ?? []).length > 0;
+  }
+
   async retry(w: RetryWrite): Promise<void> {
     const patch = { attempts: w.attempts, next_at: w.nextAt.toISOString(), last_error: w.error };
     const { error } = await this.db.from(TABLE).update(patch).eq('wa_message_id', w.waMessageId);

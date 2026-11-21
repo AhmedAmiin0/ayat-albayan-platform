@@ -263,7 +263,9 @@ chatline») → mirrored into the inbox, below. `conversation.created` → logge
 (zod), stores it in `crm_inbound_queue` keyed by the wamid (migration `20261121000100`, RLS, service role
 only; a re-sent delivery is a no-op) and answers 200 (500 only when that insert fails), then kicks
 `CrmInboundJob` (worker; also every minute). The job reads `GET /contacts/{contact_id}` (phone → E.164 by the
-shared normaliser, name) and, for a file, `GET /conversations/{id}/messages` (its `media_url`, the CRM's public
+shared normaliser, name); a phone on an active teacher (`teachers.phone_e164`, status active) is not
+mirrored (owner 2026-11-22: «teachers can only use platform chat»): its row is deleted and the message
+stays only in the CRM (which auto-replies). Otherwise, for a file, `GET /conversations/{id}/messages` (its `media_url`, the CRM's public
 `chat-media` copy; the mime from the link's extension), then `InboundService.handle` with line
 `notifications` (stamped only while the chat line is configured; module mode: the crm notifications number):
 the person's existing thread (a new person → a new lead), unread, the staff push, the usual line marker

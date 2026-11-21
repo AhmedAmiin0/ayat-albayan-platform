@@ -1,3 +1,4 @@
+import { waIdToE164 } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { CrmLineEnv } from '@/config/env/env';
 import {
@@ -15,7 +16,8 @@ import type { CrmReceived } from './crm-received.schema';
 // inbox (owner 2026-11-21; docs/19 «crm driver»). Each due queue row: the contact (phone, name)
 // and, for a file, its CRM message; then InboundService.handle (row, thread, broadcast, push;
 // idempotent by wamid) and the row is deleted. A failure keeps the row, retried later: never
-// dropped.
+// dropped. An active teacher's message is not mirrored (owner 2026-11-22: «teachers can only use
+// platform chat»): its row is deleted, it stays only in the CRM.
 
 /** Read per pass: the CRM env, where a message lands, the fetch (a fake in tests). */
 export interface CrmInboundSource {
@@ -73,24 +75,35 @@ export class CrmInbound {
 
   private async one(row: CrmQueueRow, now: Date): Promise<boolean> {
     try {
-      await this.mirror(row);
+      const handed = await this.mirror(row);
       await this.repo.done(row.wa_message_id);
-      return true;
+      return handed;
     } catch (e) {
       await this.later(row, { now, error: messageOf(e) });
       return false;
     }
   }
 
-  private async mirror(row: CrmQueueRow): Promise<void> {
+  /** True once handed to the inbox; false for an active teacher's message (skipped). */
+  private async mirror(row: CrmQueueRow): Promise<boolean> {
     const env = this.source.env();
     if (!env) throw new Error('no line or number on the crm driver');
     const lookup = crmLookup(env, this.source.fetch);
     const contact = await lookup.contact(row.contact_id);
+    if (await this.fromTeacher(contact.phone)) {
+      this.log.debug(`crm inbound ${row.wa_message_id.slice(-8)}: active teacher, not mirrored`);
+      return false;
+    }
     const media = await fileOf(lookup, row);
     const event = crmInboundEvent({ row, contact, media, place: this.source.place() });
     if (!event) throw new Error('the CRM contact has no phone');
     await this.inbound.handle(event);
+    return true;
+  }
+
+  private async fromTeacher(waId: string | null | undefined): Promise<boolean> {
+    const phone = waIdToE164(waId ?? '');
+    return phone !== null && (await this.repo.isActiveTeacher(phone));
   }
 
   /** Kept for another try (its own failure is only logged: the row stays due for the next pass). */

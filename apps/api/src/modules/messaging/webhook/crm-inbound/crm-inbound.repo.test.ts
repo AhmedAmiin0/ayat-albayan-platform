@@ -53,6 +53,14 @@ describe('CrmInboundRepo', () => {
     ]);
   });
 
+  it('isActiveTeacher: the phone on an active teacher (owner 2026-11-22)', async () => {
+    const { db, argsOf } = fakeDb({ teachers: [{ data: [{ id: 't-1' }] }, { data: [] }] });
+    const repo = new CrmInboundRepo(db);
+    await expect(repo.isActiveTeacher('+966500000001')).resolves.toBe(true);
+    expect(argsOf('teachers', 'eq')).toEqual(['status', 'active']);
+    await expect(repo.isActiveTeacher('+966500000002')).resolves.toBe(false);
+  });
+
   it('a database error is thrown with what failed', async () => {
     const { db } = fakeDb({ [T]: [{ error: { message: 'down' } }] });
     await expect(new CrmInboundRepo(db).enqueue(received)).rejects.toThrow('crm inbound enqueue');
