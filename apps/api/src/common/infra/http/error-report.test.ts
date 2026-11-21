@@ -26,3 +26,18 @@ describe('apiErrorReporter (SENTRY_DSN; no DSN in git)', () => {
     expect(warn).toHaveBeenCalledWith('SENTRY_DSN is set but is not a valid DSN: error reporting stays off');
   });
 });
+
+describe('apiErrorReporter defaults (the real fetch and the Nest logger)', () => {
+  it('sends with fetch and warns through the logger when no deps are given', async () => {
+    const { Logger } = await import('@nestjs/common');
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    apiErrorReporter({ SENTRY_DSN: 'nonsense' });
+    expect(warn).toHaveBeenCalledTimes(1);
+    const fetch = vi.fn(async () => new Response(null, { status: 200 }));
+    vi.stubGlobal('fetch', fetch);
+    apiErrorReporter({ SENTRY_DSN: 'https://k@errors.example.com/3' }).capture(new Error('x'));
+    expect(fetch).toHaveBeenCalledTimes(1);
+    vi.unstubAllGlobals();
+    warn.mockRestore();
+  });
+});

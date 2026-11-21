@@ -28,8 +28,8 @@ export class DbTimeoutFilter extends BaseExceptionFilter {
     }
     const http = host.switchToHttp();
     // The route pattern only (/students/:id), never an id or a phone from the path.
-    const route = http.getRequest<{ routeOptions?: { url?: string } }>().routeOptions?.url;
-    this.log.warn(`database call timed out on ${route ?? 'a request'}`);
+    const route = http.getRequest<{ routeOptions: { url: string } }>().routeOptions.url;
+    this.log.warn(`database call timed out on ${route}`);
     void http
       .getResponse<Reply>()
       .status(503)

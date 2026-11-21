@@ -42,6 +42,12 @@ describe('timedFetch (every database call gets a deadline)', () => {
     expect(settled).toBe('still going');
   });
 
+  it('a Request object is timed like a URL', async () => {
+    const base = slowFetch(10_000);
+    const call = timedFetch({ ms: 20, base })(new Request(`${BASE}/rest/v1/roles`));
+    await expect(call).rejects.toBeInstanceOf(DbTimeoutError);
+  });
+
   it('a caller’s own abort stays the caller’s (not a timeout)', async () => {
     const base = slowFetch(10_000);
     const own = new AbortController();

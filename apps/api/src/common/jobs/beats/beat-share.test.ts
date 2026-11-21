@@ -61,8 +61,10 @@ describe('heartbeats across processes (worker → Redis → API copies)', () => 
     const store = new MemoryCacheStore();
     const book = new BeatBook();
     const guard = new CacheGuard({ warn: () => undefined });
-    new BeatMirror({ store, guard, book, role: 'all' }).onModuleInit();
+    const mirror = new BeatMirror({ store, guard, book, role: 'all' });
+    mirror.onModuleInit();
     book.register(plan);
+    expect(() => mirror.onModuleDestroy()).not.toThrow();
     expect(await store.get(BEATS_KEY)).toBeNull();
     expect(await new BeatReader({ store, guard, book, role: 'api' }).read()).toBeNull();
   });

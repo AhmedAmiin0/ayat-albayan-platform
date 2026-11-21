@@ -34,9 +34,11 @@ describe('createErrorReporter (a complete no-op without a DSN)', () => {
     const t = setup(DSN);
     t.reporter.capture(new Error('same'));
     t.reporter.capture(new Error('same'));
+    t.reporter.capture('plain text');
+    t.reporter.capture('plain text');
     t.now.t = 61_000;
     t.reporter.capture(new Error('same'));
-    expect(t.send).toHaveBeenCalledTimes(2);
+    expect(t.send).toHaveBeenCalledTimes(3);
   });
 
   it('at most 20 events a minute (an error storm never floods the tracker)', () => {
@@ -57,5 +59,14 @@ describe('createErrorReporter (a complete no-op without a DSN)', () => {
     });
     expect(() => t.reporter.capture(new Error('b'))).not.toThrow();
     await Promise.resolve();
+  });
+});
+
+describe('createErrorReporter defaults', () => {
+  it('its own clock and 32-hex event ids', () => {
+    const send = vi.fn<ReportTransport>().mockResolvedValue(undefined);
+    createErrorReporter({ dsn: DSN, app: 'web', send }).capture(new Error('x'));
+    const body = send.mock.calls[0]?.[1].body ?? '';
+    expect(JSON.parse(body.split('\n')[0] ?? '{}')).toMatchObject({ event_id: expect.stringMatching(/^[0-9a-f]{32}$/) });
   });
 });

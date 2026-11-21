@@ -34,3 +34,12 @@ describe('installWebErrorReporting (VITE_SENTRY_DSN; off without it)', () => {
     expect(bodies[1]).toContain('load');
   });
 });
+
+describe('installWebErrorReporting defaults', () => {
+  it('the build env (no DSN in any test or git build) and the window: off', () => {
+    const add = vi.spyOn(window, 'addEventListener');
+    expect(installWebErrorReporting().enabled).toBe(false);
+    expect(add).not.toHaveBeenCalledWith('unhandledrejection', expect.anything());
+    add.mockRestore();
+  });
+});

@@ -38,3 +38,12 @@ describe('scrub (no phone numbers or emails leave the device)', () => {
     expect(scrub('x'.repeat(10_000))).toHaveLength(4_000);
   });
 });
+
+describe('buildEnvelope edge cases', () => {
+  it('an Error without a stack sends an empty stack', () => {
+    const error = new Error('no stack');
+    delete error.stack;
+    const body = buildEnvelope({ dsn, id: 'c'.repeat(32), report: { error, app: 'api' } });
+    expect(body).toContain('"extra":{"stack":""}');
+  });
+});

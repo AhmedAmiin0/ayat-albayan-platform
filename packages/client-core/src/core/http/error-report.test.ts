@@ -33,3 +33,15 @@ describe('installErrorReporting (web and phone apps; off without a DSN)', () => 
     expect(init.body).toContain('render failed');
   });
 });
+
+describe('installErrorReporting default transport', () => {
+  it('POSTs with fetch, keepalive on', () => {
+    const fetch = vi.fn(async () => new Response(null));
+    vi.stubGlobal('fetch', fetch);
+    const s = source();
+    installErrorReporting({ dsn: DSN, app: 'web', listen: s.listen });
+    s.fire(new Error('x'));
+    expect(fetch).toHaveBeenCalledWith('https://errors.example.com/api/5/envelope/', expect.objectContaining({ keepalive: true, method: 'POST' }));
+    vi.unstubAllGlobals();
+  });
+});

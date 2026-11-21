@@ -43,3 +43,15 @@ describe('installMobileErrorReporting (EXPO_PUBLIC_SENTRY_DSN; off without it)',
     expect(() => installMobileErrorReporting('staff-mobile', { dsn: DSN, errorUtils: undefined })).not.toThrow();
   });
 });
+
+describe('installMobileErrorReporting defaults (the build env and the RN global)', () => {
+  it('no EXPO_PUBLIC_SENTRY_DSN in the build: off, React Native’s handler untouched', () => {
+    const e = errorUtils();
+    const holder = globalThis as { ErrorUtils?: unknown };
+    const before = holder.ErrorUtils;
+    holder.ErrorUtils = e.utils;
+    expect(installMobileErrorReporting('staff-mobile').enabled).toBe(false);
+    expect(e.utils.setGlobalHandler).not.toHaveBeenCalled();
+    holder.ErrorUtils = before;
+  });
+});

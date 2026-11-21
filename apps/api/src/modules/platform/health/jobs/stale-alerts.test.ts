@@ -57,9 +57,17 @@ describe('StaleAlerts (one admin bell alert per stale job, deduplicated)', () =>
     expect(t.notifyAdmins.mock.calls[0]?.[1].vars.reason).toContain(ar.backgroundJobs.noError);
   });
 
-  it('a failed alert is tried again on the next check', async () => {
+  it('a failed alert (an Error or not) is tried again on the next check', async () => {
     const t = setup();
     t.notifyAdmins.mockRejectedValueOnce(new Error('db down'));
+    await t.alerts.check([beat()], 20 * MIN);
+    await t.alerts.check([beat()], 21 * MIN);
+    expect(t.notifyAdmins).toHaveBeenCalledTimes(2);
+  });
+
+  it('a rejected non-Error is logged as text', async () => {
+    const t = setup();
+    t.notifyAdmins.mockRejectedValueOnce('db down');
     await expect(t.alerts.check([beat()], 20 * MIN)).resolves.toBeUndefined();
     await t.alerts.check([beat()], 21 * MIN);
     expect(t.notifyAdmins).toHaveBeenCalledTimes(2);
