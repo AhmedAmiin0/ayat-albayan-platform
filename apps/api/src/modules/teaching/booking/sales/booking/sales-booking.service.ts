@@ -1,11 +1,11 @@
-import { bookingKindOf, type BookingRequest, type BookingResult, type BookingTeacherOption, type Conflict, type SlotsResponse } from '@ab/shared';
+import { bookingKindOf, type BookingRequest, type BookingResult, type BookingTeacherOption, type Conflict, type OutsideSlotsResponse, type SlotsResponse } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ar } from '@/common/infra/i18n/server-text';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
-import type { SlotsQuery, TeacherOptionsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { OutsideSlotsQuery, SlotsQuery, TeacherOptionsQuery } from '@/modules/teaching/booking/booking.dto';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';
@@ -110,29 +110,38 @@ export class SalesBookingOptions {
     return (await this.teachers.list(q)).map((t) => ({ ...t, meeting_link: null }));
   }
 
+  /** Her grid, scoped (`scoped`); «تغيير الموعد» / renew_any: docs/16 rows 37–38. */
+  async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
+    return this.slotsService.slots({ ...q, ...(await this.scoped(q, user)) });
+  }
+
+  /** «وقت آخر»: the same scope as `slots`, over the server's next 14 days. */
+  async outsideSlots(q: OutsideSlotsQuery, user: AuthUser): Promise<OutsideSlotsResponse> {
+    return this.slotsService.outside({ ...q, ...(await this.scoped(q, user)) });
+  }
+
   /**
    * `excludeLessonId` is kept only for a lesson of the grid's own students (her student's trial that
-   * «موعد تجريبي جديد» moves); any other is dropped. `excludeCourse` («تغيير أيام الحلقات») frees only
-   * her own students' course lessons (any while the rule does not enforce). `lessonId` (her
-   * «تغيير الموعد», lessons.reschedule): a grid of exactly that lesson's students reads whoever's they are,
-   * since she may move ANY lesson (owner 2026-10-28, docs/16 row 37); a read of free slots, nothing booked.
-   * sales.renew_any: ANY student's grid (its course wizard, «تغيير أيام الحلقات»; docs/16 row 38).
+   * «موعد تجريبي جديد» moves); any other is dropped. `excludeCourse` («تغيير أيام الحلقات») frees
+   * only her own students' course lessons (any while the rule does not enforce). `lessonId` (her
+   * «تغيير الموعد», lessons.reschedule): a grid of exactly that lesson's students reads whoever's
+   * they are (owner 2026-10-28). sales.renew_any: ANY student's grid. A read, nothing booked.
    */
-  async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
+  private async scoped(q: OutsideSlotsQuery, user: AuthUser) {
     const ids = q.studentIds ?? [];
     if (!can(user, 'sales.renew_any')) await this.assertOwnGrid(q, user);
     const keep = !!q.excludeLessonId && ids.length > 0 && (await this.scope.ownLesson(q.excludeLessonId, ids));
-    return this.slotsService.slots({ ...q, excludeLessonId: keep ? q.excludeLessonId : undefined });
+    return { excludeLessonId: keep ? q.excludeLessonId : undefined };
   }
 
   /** Hers while the rule enforces it (any otherwise), or the lesson she moves; a course's always hers then. */
-  private async assertOwnGrid(q: SlotsQuery, user: AuthUser): Promise<void> {
+  private async assertOwnGrid(q: OutsideSlotsQuery, user: AuthUser): Promise<void> {
     const ids = q.studentIds ?? [];
     const free = !q.excludeCourse && (await this.moving(q, user));
     if (ids.length && !free) assertOwnStudents(ids, await this.scope.of(user));
   }
 
-  private async moving(q: SlotsQuery, user: AuthUser): Promise<boolean> {
+  private async moving(q: OutsideSlotsQuery, user: AuthUser): Promise<boolean> {
     if (!q.lessonId || !can(user, 'lessons.reschedule')) return false;
     return this.scope.isLessonOf(q.lessonId, q.studentIds ?? []);
   }

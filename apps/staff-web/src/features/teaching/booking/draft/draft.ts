@@ -55,6 +55,8 @@ export interface BookingDraft {
   startsAt: string | null;
   /** A package: the other picked slots (UTC instants), one per weekday, each at its own time. */
   extra: string[];
+  /** «وقت آخر»: the one lesson lies outside the teacher hours (sent as outsideHours). */
+  outsideHours?: boolean;
   /** The assistant books a subscription's course: its fixed day count and lesson count; else null. */
   course: CourseDraft | null;
   /** «موعد تجريبي جديد» for an existing student (owner 2026-10-25); absent = any other booking. */
@@ -93,6 +95,10 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: 
   };
 }
 
+/** «وقت آخر» is sent for one lesson only (a trial, a makeup); a package's rows never set it. */
+export const isOutside = (d: Pick<BookingDraft, 'outsideHours' | 'kind'>): boolean =>
+  d.outsideHours === true && d.kind !== 'package';
+
 /** The rule fields a picked first slot fixes, in the family's zone. */
 export function ruleFromSlot(startsAt: string, tz: string): { startsOn: string; startTimeLocal: string; weekday: number } {
   const p = zonedPartsIn(new Date(startsAt), tz);
@@ -128,6 +134,7 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingReq
     meetingLink: d.meetingLink.trim() || null,
     clientRequestId: d.requestId,
     startsAt: rule.startsAt,
+    ...(isOutside(d) ? { outsideHours: true } : {}),
     ...(override ? { override: { reason: override } } : {}),
   };
   if (d.students.length > 0) {

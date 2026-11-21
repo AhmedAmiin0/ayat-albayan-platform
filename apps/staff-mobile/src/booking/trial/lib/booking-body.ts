@@ -2,7 +2,7 @@ import { bookingInvoiceInput } from '@ab/client-core';
 import { dayTimesFromPicks, normalizePhone, registrationStatus } from '@ab/shared';
 import type { BookingRequest } from '@ab/shared';
 import type { InvoiceDraft, InvoiceInput } from '@/booking/shared/contract';
-import type { StudentChoice, TrialDraft } from './draft';
+import { isOutside, type StudentChoice, type TrialDraft } from './draft';
 import { picksOf } from '@/booking/shared/picks';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
@@ -49,6 +49,7 @@ export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingRequest 
     package: d.pkg,
     clientRequestId: o.requestId,
     leadId: d.leadId,
+    ...(isOutside(d) ? { outsideHours: true } : {}),
     // The API answers 400 invoice_required when a package arrives without one.
     ...(d.kind !== 'trial' && d.invoice ? { invoice: toInvoiceInput(d.invoice) } : {}),
   };
