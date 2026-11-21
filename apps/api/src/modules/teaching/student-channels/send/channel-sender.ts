@@ -13,8 +13,8 @@ type Participant = Extract<ChannelActor, { mode: 'participant' }>;
 
 /**
  * POST …/messages (docs/31 §2): 403 for a monitor, 409 channel_not_open while closed. Once the
- * row is stored the send has happened: the sender's read mark, the pushes and the names are
- * best-effort (a failure logs, never a 500). A resend with the same client_id answers the stored
+ * row is stored the send has happened: the sender's read mark, the pushes (not awaited) and the
+ * names are best-effort (a failure logs, never a 500). A resend with the same client_id answers the stored
  * message (found first; a race lost at the insert finds it there) and pushes nothing again.
  */
 @Injectable()
@@ -63,7 +63,8 @@ export class ChannelSender {
     const { viewer, row } = sent;
     const mark = { channelId: viewer.channelId, profileId: viewer.profileId, at: row.created_at };
     await this.queries.setReadMark(mark).catch((e: unknown) => this.warn('read mark', e));
-    await this.notify.sent(actor, row).catch((e: unknown) => this.warn('push', e));
+    // Off the request path (as PushChannels): the fan-out is many round trips; errors are logged.
+    void this.notify.sent(actor, row).catch((e: unknown) => this.warn('push', e));
   }
 
   private warn(what: string, e: unknown): void {
