@@ -1,0 +1,31 @@
+import { readJson } from '../api-error.js';
+import type { ProbeAnswer, ProbeOptions } from './probe.types.js';
+
+/** A probe that has not settled in 8 s counts as no answer. */
+export const PROBE_TIMEOUT_MS = 8_000;
+
+const OPAQUE = 'opaque';
+
+const bodyOf = (res: Response): Promise<unknown> =>
+  res.type === OPAQUE ? Promise.resolve(null) : readJson(res);
+
+/**
+ * One bare GET (owner 2026-11-21, «تحت الصيانة»): no token and no custom header, so the browser
+ * sends no CORS preflight; `no-store` so no cached reply hides an outage. The deadline is an
+ * AbortController + setTimeout (React Native has no AbortSignal.timeout). Resolves null on a
+ * dropped connection or the deadline; never throws.
+ */
+export async function probe(url: string, opts: ProbeOptions = {}): Promise<ProbeAnswer | null> {
+  const abort = new AbortController();
+  const timer = setTimeout(() => abort.abort(), opts.timeoutMs ?? PROBE_TIMEOUT_MS);
+  const send = opts.fetch ?? fetch;
+  try {
+    const init: RequestInit = { method: 'GET', cache: 'no-store', mode: opts.mode ?? 'cors' };
+    const res = await send(url, { ...init, signal: abort.signal });
+    return { status: res.status, body: await bodyOf(res) };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}

@@ -32,7 +32,7 @@ export const ACADEMY_SETTINGS = {
     ],
     labelKey: 'config.academyContact', hintKey: 'config.academyContactHint',
   },
-  /** «تحت الصيانة» (owner 2026-11-21): the four apps cover every screen but the admin's; no API change. */
+  /** «تحت الصيانة» (owner 2026-11-21): the four apps cover all screens but admins'. */
   maintenance_mode: {
     module: 'academy', group: 'system', confirm: 'simple', reachesFamilies: true, public: true,
     type: 'bool', default: false, labelKey: 'settings.maintenanceMode', hintKey: `${h}.maintenanceMode`,
