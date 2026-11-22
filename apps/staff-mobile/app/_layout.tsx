@@ -101,3 +101,4 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
     </RootFrame>
   );
 }
+export { CrashScreen as ErrorBoundary } from '@ab/mobile-kit';

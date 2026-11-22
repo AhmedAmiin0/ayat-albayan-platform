@@ -11,3 +11,4 @@ export default function TeacherLayout() {
   const setup = useNeedsSetup();
   return setup ? <AccountSetupScreen /> : <TeacherTabs />;
 }
+export { CrashScreen as ErrorBoundary } from '@ab/mobile-kit';

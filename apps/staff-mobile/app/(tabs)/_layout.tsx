@@ -24,3 +24,4 @@ export default function TabsLayout() {
   useInboxRealtime(canOpen(can, 'inbox'));
   return <AppNativeTabs tabs={tabItems(can, badge)} />;
 }
+export { CrashScreen as ErrorBoundary } from '@ab/mobile-kit';
