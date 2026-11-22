@@ -37,27 +37,27 @@ describe('graph.ts error table', () => {
     const plain = async () => new Response('x'.repeat(400), { status: 502 });
     const e = await failure(plain);
     expect(e.message).toBe('WhatsApp HTTP 502');
-    expect(e.info).toEqual({ code: null, status: 502, details: 'x'.repeat(300) });
+    expect(e.info).toEqual({ code: null, status: 502, details: 'x'.repeat(300), lineDown: true });
     const empty = await failure(async () => new Response('', { status: 500 }));
-    expect(empty.info).toEqual({ code: null, status: 500, details: undefined });
+    expect(empty.info).toEqual({ code: null, status: 500, details: undefined, lineDown: true });
   });
 
-  it('network: uncertain unless the connection was never made', async () => {
+  it('network: uncertain unless the connection was never made (then the line is down)', async () => {
     const lost = await failure(() => Promise.reject(errno('ECONNRESET')));
     expect(lost.info).toEqual({ code: null, status: 0, uncertain: true });
     const refused = await failure(() => Promise.reject(errno('ECONNREFUSED')));
-    expect(refused.info).toEqual({ code: null, status: 0, uncertain: false });
+    expect(refused.info).toEqual({ code: null, status: 0, uncertain: false, lineDown: true });
     expect(refused.message).toBe('WhatsApp request failed');
   });
 
-  it('timeout: status 0, uncertain', async () => {
+  it('timeout: status 0, uncertain, timed out', async () => {
     const hang: FetchLike = (_url, init) =>
       new Promise((_, reject) => init.signal?.addEventListener('abort', () => reject(new Error('x'))));
     const e = await graphHttp({ env: STUB_ENV, fetch: hang, timeoutMs: 5 })
       .json({ path: 'x', schema: ANY })
       .catch((x: unknown) => x);
     expect(e).toBeInstanceOf(WaError);
-    expect((e as WaError).info).toEqual({ code: null, status: 0, uncertain: true });
+    expect((e as WaError).info).toEqual({ code: null, status: 0, uncertain: true, timedOut: true });
   });
 
   it('shape: «Unexpected WhatsApp response», status 200, the zod issues as details', async () => {

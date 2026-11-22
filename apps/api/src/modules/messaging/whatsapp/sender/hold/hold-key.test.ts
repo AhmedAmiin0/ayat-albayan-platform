@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { loadEnv } from '@/config/env/env';
 import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { holdKey } from './hold-key';
+import { holdKey, laneKey } from './hold-key';
 
 // The line hold's key carries the current driver and ids: a live switch starts unheld (§3.3).
 
@@ -52,5 +52,17 @@ describe('holdKey', () => {
     expect(holdKey(route('n-1'), env())).toBe('number:n-1:meta:stub-waba:stub-phone');
     expect(holdKey(route('n-2'), env())).toBeNull();
     expect(holdKey(route('n-9'), env())).toBe('number:n-9');
+  });
+});
+
+describe('laneKey', () => {
+  it('the hold key, crm lines and numbers included (a CRM outage holds its lane too)', () => {
+    expect(laneKey(notifications, env())).toBe('line:notifications:meta:n-waba:n-phone');
+    expect(laneKey(notifications, env({ ...CRM, WA_PROVIDER: 'crm' }))).toBe('line:notifications:crm');
+    const crm = { provider: 'crm' as const, base: 'http://crm', apiKey: 'k' };
+    const n2 = { id: 'n-2', env: crm } as unknown as OverlayNumber;
+    setNumbersOverlay({ values: {}, numberIds: {}, numbers: [n2] });
+    const route = { line: 'chat' as const, route: { numberId: 'n-2', line: 'chat' as const } };
+    expect(laneKey(route, env())).toBe('number:n-2:crm');
   });
 });

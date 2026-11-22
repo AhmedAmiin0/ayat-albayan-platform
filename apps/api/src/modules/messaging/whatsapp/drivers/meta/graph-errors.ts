@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { ErrorTable } from '@/common/infra/http/errors';
 import type { HttpFailure } from '@/common/infra/http/failure';
 import type { GraphEnv } from '@/config/env/env';
+import { reachInfo, serverDown, TIMEOUT_INFO } from '@/modules/messaging/whatsapp/drivers/transport-info';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The Graph API's error tables (docs/36 h8, h8b): Meta's error body → WaError, by failure kind.
@@ -29,7 +30,8 @@ type MetaError = z.infer<typeof metaErrorSchema>['error'];
 function fromMeta(e: MetaError, status: number): WaError {
   const details = e.error_data?.details ?? e.error_user_msg;
   const message = e.message ?? `WhatsApp HTTP ${status}`;
-  return new WaError(message, { code: e.code ?? null, status, details });
+  const code = e.code ?? null;
+  return new WaError(message, { code, status, details, ...serverDown(status, code) });
 }
 
 /** Meta's `{ error: { code, message, error_data.details } }`; anything else keeps code null. */
@@ -37,7 +39,8 @@ export function waErrorFrom(f: HttpFailure): WaError {
   const { status, body, text } = statusOf(f);
   const meta = metaErrorSchema.safeParse(body);
   if (meta.success) return fromMeta(meta.data.error, status);
-  return new WaError(`WhatsApp HTTP ${status}`, { code: null, status, details: text || undefined });
+  const details = text || undefined;
+  return new WaError(`WhatsApp HTTP ${status}`, { code: null, status, details, ...serverDown(status, null) });
 }
 
 const KEY_REFUSED = new Set([401, 403]);
@@ -73,14 +76,8 @@ const shapeError = (f: HttpFailure): WaError =>
 
 /** No credential involved: the table of every Graph call, and all of the download_url's. */
 export const PLAIN: ErrorTable<WaError> = {
-  network: (f) =>
-    new WaError('WhatsApp request failed', {
-      code: null,
-      status: 0,
-      uncertain: f.kind === 'network' && f.reached,
-    }),
-  timeout: () =>
-    new WaError('WhatsApp request timed out', { code: null, status: 0, uncertain: true }),
+  network: (f) => new WaError('WhatsApp request failed', reachInfo(f.kind === 'network' && f.reached)),
+  timeout: () => new WaError('WhatsApp request timed out', TIMEOUT_INFO),
   shape: shapeError,
   default: waErrorFrom,
 };
