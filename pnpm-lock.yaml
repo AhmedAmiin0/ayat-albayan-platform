@@ -944,9 +944,6 @@ importers:
       '@ab/db':
         specifier: workspace:*
         version: link:../db
-      '@ab/schedule':
-        specifier: workspace:*
-        version: link:../schedule
       '@ab/time':
         specifier: workspace:*
         version: link:../time

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { daysBetween } from '@ab/schedule';
-import { localDate } from '../../schemas/index.js';
+import { localDate } from '@ab/core';
 import { addDays } from '@ab/time';
 
 // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b): a pause of a student's course between two Riyadh

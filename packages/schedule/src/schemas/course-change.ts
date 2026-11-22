@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { timeOfDay } from '@ab/core';
+import { instant, localDate, timeOfDay } from '@ab/core';
 import { dayTimesSchema, refineDayTimes } from './day-times.js';
-import { bydaySchema, instant, localDate, overrideSchema } from './scheduling.js';
+import { bydaySchema, overrideSchema } from './scheduling.js';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): new days and times for the lessons of a booked course
 // that have not happened yet. The teacher, the length and the zone stay the course's.

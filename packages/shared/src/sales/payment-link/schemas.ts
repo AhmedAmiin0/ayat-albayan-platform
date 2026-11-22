@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localDate } from '../../schemas/index.js';
+import { localDate } from '@ab/core';
 import type { PaymentMethod } from '@ab/catalog';
 import { CURRENCY_ISOS, currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '@ab/money';
 

@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catalog';
 import type { ReportSummaryView } from '../../reports/index.js';
-import { instant, moveReasonSchema } from '../../schemas/index.js';
+import { instant } from '@ab/core';
+import { moveReasonSchema } from '../../schemas/index.js';
 import { isCancelledLesson } from '@ab/schedule';
 import type { SalesHistoryEntry } from '../academy.js';
 import type { SalesPackageSummary } from './student-package.js';

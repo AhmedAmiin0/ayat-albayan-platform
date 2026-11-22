@@ -1,5 +1,6 @@
 import { LESSON_STATUSES, type LessonStatus } from '@ab/catalog';
-import { instant, isOpenLesson } from '@ab/schedule';
+import { instant } from '@ab/core';
+import { isOpenLesson } from '@ab/schedule';
 import { z } from 'zod';
 
 // The family's own lesson actions (owner 2026-11-17: «add button to accept or reject or

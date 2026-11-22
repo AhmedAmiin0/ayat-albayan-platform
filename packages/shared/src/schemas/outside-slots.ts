@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { instant } from '@ab/schedule';
+import { instant } from '@ab/core';
 
 // «وقت آخر» (owner 2026-11-21): every bookable start of the next 14 days counted from the SERVER
 // clock, inside the teacher's hours or not. The client only formats these instants (rule 6).
