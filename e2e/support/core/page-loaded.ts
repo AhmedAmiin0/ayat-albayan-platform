@@ -31,12 +31,9 @@ export async function gotoLoaded(page: Page, path: string): Promise<void> {
   page.on('request', start);
   page.on('requestfinished', end);
   page.on('requestfailed', end);
-  const t0 = Date.now();
   try {
     await page.goto(path);
-    process.stdout.write(`[diag] ${path} load ${Date.now() - t0}ms\n`);
     await expect.poll(stillLoading, { ...LOAD_WAIT, message: `${path} loaded` }).toEqual([]);
-    process.stdout.write(`[diag] ${path} loaded ${Date.now() - t0}ms, ${seen.size} urls\n`);
   } finally {
     page.off('request', start);
     page.off('requestfinished', end);
