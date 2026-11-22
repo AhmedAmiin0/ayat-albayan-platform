@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { parseNameStatus } from '../pure-move-check.mjs';
+import { parseNameStatus } from './git.mjs';
 
 const MAP = /^refactor\/moves\/[^/]+\.json$/;
 const STARTUP = /^(e2e\/|\.github\/)|(^|\/)([^/]+\.config\.[cm]?[jt]s|tsconfig[^/]*\.json|routeTree\.gen\.ts)$/;
