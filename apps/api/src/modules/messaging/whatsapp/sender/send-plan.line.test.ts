@@ -57,7 +57,9 @@ const CASES: readonly [string, Driver, HttpFailure, object][] = [
 ];
 
 describe('failurePlan: line-level failures per driver', () => {
-  const rows = CASES.map(([name, driver, failure, expected]) => ({ name, driver, failure, expected }));
+  const rows = CASES.map(([name, driver, failure, expected]) => ({
+    name, driver, failure, expected,
+  }));
   it.each(rows)('$name', (c) => {
     expect(planOf(c.driver, c.failure)).toMatchObject(c.expected);
   });

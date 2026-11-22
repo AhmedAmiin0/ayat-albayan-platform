@@ -5267,7 +5267,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 14
+      "count": 13
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-mapping.test.ts": {
@@ -5831,11 +5831,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/sender/hold/hold-key.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/sender/message.dispatch.calls.test.ts": {
     "max-len": {
       "count": 1
@@ -5947,7 +5942,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/sender/send-line.ts": {
@@ -5970,7 +5965,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/messaging/whatsapp/sender/send-stale.trial-date.test.ts": {
@@ -6388,7 +6383,7 @@
   },
   "src/modules/messaging/whatsapp/whatsapp.types.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/whatsapp.upload.test.ts": {

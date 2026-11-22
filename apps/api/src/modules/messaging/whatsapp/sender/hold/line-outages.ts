@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { FailurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -26,7 +26,7 @@ export class LineOutages {
   /** Timeouts in a row per lane key, in memory (a restart only delays the hold). */
   private readonly timeouts = new Map<string, number>();
 
-  constructor(repo: PaymentHoldRepo) {
+  constructor(@Inject(PaymentHoldRepo) repo: PaymentHoldRepo) {
     this.lane = new LaneHold(repo, {
       code: WA_LINE_DOWN,
       text: 'held: the WhatsApp provider is down or unreachable; sent once it answers',
