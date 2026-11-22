@@ -39,3 +39,11 @@ test('an export-from counts; shared-own names, /testing and strings do not', () 
   });
   assert.deepEqual(none.counts.facade, {});
 });
+
+test('an app file named like a fixture counts; a script fixture does not', () => {
+  const out = side({
+    'apps/staff-web/src/money-fixture.ts': "import { toE164 } from '@ab/shared';\n",
+    'tools/scripts/x/x.fixture.mjs': "import { toE164 } from '@ab/shared';\n",
+  });
+  assert.deepEqual(out.counts.facade, { 'staff-web': 1 });
+});

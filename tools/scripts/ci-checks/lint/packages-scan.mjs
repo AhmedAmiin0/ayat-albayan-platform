@@ -10,6 +10,7 @@ import { resolver, workspaces } from './packages-workspaces.mjs';
 const CODE = /\.(ts|tsx|mts|cts|js|mjs|cjs)$/;
 const TEST = /(^|\/)__tests__\/|\.(test|spec)\.[cm]?[jt]sx?$/;
 const SKIPPED = /fixture|^tools\/scripts\/.*\.(test|spec)\.[cm]?[jt]sx?$/;
+const SCRIPT_FIXTURE = /^tools\/scripts\/.*(fixture|\.(test|spec)\.[cm]?[jt]sx?$)/;
 const PATH_SCOPE = /^(apps|packages)\/[^/]+\/|^e2e\//;
 const DB = /^@ab\/db(\/|$)/;
 const DB_HOME =
@@ -87,8 +88,11 @@ function configEdges({ root, at, files }) {
 const scanned = (root, at) =>
   tracked(root).filter((p) => at.owner(p) !== undefined && !SKIPPED.test(p));
 
-/** The tracked code files the gate reads: inside a workspace, fixtures and script tests aside. */
-export const codeFilesOf = (root, at) => scanned(root, at).filter((p) => CODE.test(p));
+/** The facade check's files: every workspace code file, app fixtures too; script fixtures aside. */
+export const codeFilesOf = (root, at) =>
+  tracked(root).filter(
+    (p) => at.owner(p) !== undefined && CODE.test(p) && !SCRIPT_FIXTURE.test(p),
+  );
 
 /** `{ edges, counts: { reexports, dbScope }, aliases, files }` of the tree at `root`. */
 export function scan(root) {

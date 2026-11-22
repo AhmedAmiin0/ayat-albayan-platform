@@ -27,3 +27,10 @@ test('a package already in any dependency field is not added; nothing missing ke
 test('a manifest with a malformed dependency field throws', () => {
   assert.throws(() => withDeps(manifest({ dependencies: [] }), ['@ab/core']));
 });
+
+test('a workspace with the facade only in devDependencies gets the owners there', () => {
+  const text = manifest({ name: 'e2e', devDependencies: { '@ab/shared': 'workspace:*' } });
+  const parsed = JSON.parse(withDeps(text, ['@ab/i18n', '@ab/core']).text);
+  assert.equal(parsed.dependencies, undefined);
+  assert.deepEqual(Object.keys(parsed.devDependencies), ['@ab/core', '@ab/i18n', '@ab/shared']);
+});
