@@ -981,9 +981,6 @@ importers:
       '@ab/db':
         specifier: workspace:*
         version: link:../db
-      '@ab/i18n':
-        specifier: workspace:*
-        version: link:../i18n
       '@ab/settings':
         specifier: workspace:*
         version: link:../settings
