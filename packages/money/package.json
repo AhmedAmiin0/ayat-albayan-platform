@@ -26,7 +26,6 @@
     "@ab/catalog": "workspace:*",
     "@ab/core": "workspace:*",
     "@ab/db": "workspace:*",
-    "@ab/schedule": "workspace:*",
     "@ab/time": "workspace:*",
     "zod": "^4.6.5"
   }

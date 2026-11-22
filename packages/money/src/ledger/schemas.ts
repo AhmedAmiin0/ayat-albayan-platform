@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { hasTwoDecimals } from '@ab/core';
+import { hasTwoDecimals, instant, localDate, optionalText } from '@ab/core';
 import { ALL_PAYMENT_METHODS, PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/catalog';
 import {
   CUSTOM_COUNT_MAX,
@@ -9,8 +9,6 @@ import {
   PACKAGE_IDS,
   PRICING_DURATIONS,
 } from '../pricing/catalog.js';
-import { optionalText } from '@ab/core';
-import { instant, localDate } from '@ab/schedule';
 import { calendarDaysBetween } from '@ab/time';
 
 // Money commands (docs/11 §5–8). camelCase. The API quotes every subscription from the catalog
