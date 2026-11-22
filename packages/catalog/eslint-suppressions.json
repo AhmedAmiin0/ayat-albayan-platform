@@ -1,9 +1,4 @@
 {
-  "src/enums/feedback.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/enums/finance.ts": {
     "max-len": {
       "count": 1
