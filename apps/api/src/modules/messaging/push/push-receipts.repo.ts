@@ -51,10 +51,8 @@ export class PushReceiptsRepo {
    * Deletes the session bindings of the tokens Expo reported DeviceNotRegistered, like the ticket
    * path (expoDeliver): migration 700's release trigger takes each token off the profile. Only this
    * row's profile (a phone handed on since keeps its new owner) and only bindings made before the
-   * row (a sign-in since bound the token again). Returns the tokens deleted.
-   * ponytail: claim_push_device's in-place re-claim keeps created_at, so a late receipt can still
-   * drop a device re-registered in the same session until its next app start; bump created_at on
-   * conflict if that shows up.
+   * row: a device that registered the token since (claim_push_device renews created_at, migration
+   * 20261122000200) is live again. Returns the tokens deleted.
    */
   async prune(row: Sent, dead: readonly string[]): Promise<string[]> {
     const { data, error } = await this.db
