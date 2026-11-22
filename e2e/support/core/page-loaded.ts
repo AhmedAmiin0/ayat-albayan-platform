@@ -3,6 +3,8 @@ import { expect, type Page, type Request } from '@playwright/test';
 /** The same quiet window as Playwright's 'networkidle'. */
 const QUIET_MS = 500;
 const LOAD_WAIT = { timeout: 30_000, intervals: [100] };
+/** Only the network counts: a blob: or data: read never reports finished (seen on /admin/book). */
+const isNetwork = (request: Request): boolean => /^https?:/.test(request.url());
 
 /**
  * Opens the path and waits until the page's own loads are done: every URL it asked for the first
@@ -15,8 +17,9 @@ export async function gotoLoaded(page: Page, path: string): Promise<void> {
   const seen = new Set<string>();
   const open = new Set<Request>();
   let last = Date.now();
+  const isRepeatOrLocal = (request: Request) => !isNetwork(request) || seen.has(request.url());
   const start = (request: Request) => {
-    if (seen.has(request.url())) return;
+    if (isRepeatOrLocal(request)) return;
     seen.add(request.url());
     open.add(request);
     last = Date.now();
