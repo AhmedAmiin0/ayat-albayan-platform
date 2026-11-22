@@ -3,7 +3,8 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 // Logo mark (docs/07 §11): the academy's own emblem, the open Mushaf on its green rahle inside the
 // gold eight-point star (docs/design/brand/logo-mark.png), exported on a transparent background by
-// docs/design/brand/tools/build.mjs into public/brand/. The emblem keeps its own ivory, so it reads
+// docs/design/brand/tools/build.mjs into packages/catalog/brand/, which every app serves at /brand/
+// (vite-public.js). The emblem keeps its own ivory, so it reads
 // on paper, on the green binding and in dark mode alike. Never recoloured, never struck.
 const BASE = import.meta.env.BASE_URL;
 const SRC = { large: `${BASE}brand/mark.png`, small: `${BASE}brand/mark-small.png` };

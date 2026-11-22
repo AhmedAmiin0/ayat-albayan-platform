@@ -5,11 +5,9 @@ import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
-import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import { kitPublic } from './vite-public.js';
 
-const KIT = fileURLToPath(new URL('../web-kit/src', import.meta.url));
 const STYLESHEET = /\.css($|\?)/;
 // fsModuleCache keys a module by its own content; Tailwind builds a stylesheet from every source
 // file, so stylesheets are always transformed afresh, never read from the cache.
@@ -29,9 +27,12 @@ const TEST_ENV = {
 /**
  * `dir`: the workspace folder (import.meta.dirname). `port`: the dev server's. `routes`: the app
  * has TanStack file routes (src/routes). `cacheDir`: a second dev server's own Vite cache.
- * `icons`: the app's icon set in @ab/web-kit (icons/<name>), served at its root (vite-public.js).
+ * `kitDir`, `brandDir`: absolute folders of @ab/web-kit and of @ab/catalog's brand marks, named by
+ * the caller so this package reaches into neither. `icons`: the app's icon set in <kitDir>/icons,
+ * served at its root (vite-public.js).
  */
-export function webConfig({ dir, port, routes = true, cacheDir, icons }) {
+export function webConfig({ dir, port, routes = true, cacheDir, kitDir, brandDir, icons }) {
+  const kitSrc = `${kitDir}/src`;
   return defineConfig({
     plugins: [
       ...(routes ? [tanstackRouter({ target: 'react', autoCodeSplitting: true })] : []),
@@ -41,11 +42,11 @@ export function webConfig({ dir, port, routes = true, cacheDir, icons }) {
       babel({ presets: [reactCompilerPreset()] }),
       tailwindcss(),
       noStylesheetCache,
-      kitPublic(icons),
+      kitPublic({ kitDir, brandDir, icons }),
     ],
     ...(cacheDir ? { cacheDir } : {}),
     resolve: {
-      alias: { '@/': `${dir}/src/`, '@ab/web-kit/': `${KIT}/` },
+      alias: { '@/': `${dir}/src/`, '@ab/web-kit/': `${kitSrc}/` },
       // One React, one query client and one router for the app and the kit's sources.
       dedupe: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
     },
@@ -55,7 +56,7 @@ export function webConfig({ dir, port, routes = true, cacheDir, icons }) {
       include: ['src/**/*.test.{ts,tsx}'],
       // Transforms persist across runs in <repo>/node_modules/.vitest-cache (ci.yml restores it).
       fsModuleCache: true,
-      setupFiles: [`${KIT}/testing/test-setup.ts`],
+      setupFiles: [`${kitSrc}/testing/test-setup.ts`],
       // Multi-step wizard/drawer flows take ~1.5s alone and >5s under parallel `turbo test` load.
       testTimeout: 20_000,
       // tokens / motion / avatar-tones tests read their raw sheets; every other stylesheet stays
