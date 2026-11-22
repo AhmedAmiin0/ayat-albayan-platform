@@ -84,11 +84,17 @@ function configEdges({ root, at, files }) {
   });
 }
 
+const scanned = (root, at) =>
+  tracked(root).filter((p) => at.owner(p) !== undefined && !SKIPPED.test(p));
+
+/** The tracked code files the gate reads: inside a workspace, fixtures and script tests aside. */
+export const codeFilesOf = (root, at) => scanned(root, at).filter((p) => CODE.test(p));
+
 /** `{ edges, counts: { reexports, dbScope }, aliases, files }` of the tree at `root`. */
 export function scan(root) {
   const list = workspaces(root);
   const at = resolver(list);
-  const files = tracked(root).filter((p) => at.owner(p) !== undefined && !SKIPPED.test(p));
+  const files = scanned(root, at);
   const code = files.filter((p) => CODE.test(p));
   const configs = files.filter((p) => CONFIG.test(p) && PATH_SCOPE.test(p));
   const out = {
