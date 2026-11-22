@@ -75,6 +75,7 @@ export function copyWorld(seed: MediaMessage[], values: Partial<AcademySettings>
   const failures = new Map<string, Failure>();
   const inbound = {
     message: vi.fn(async (id: string) => rows.get(id) ?? null),
+    setRefusal: vi.fn(),
     setPath: vi.fn(async (id: string, path: string) => {
       const m = rows.get(id);
       if (m && !m.media_path) rows.set(id, { ...m, media_path: path });

@@ -3089,6 +3089,7 @@ export type Database = {
           media_mime: string | null;
           media_name: string | null;
           media_pages: number | null;
+          media_refusal: string | null;
           number_id: string | null;
           media_path: string | null;
           next_attempt_at: string | null;
@@ -3145,6 +3146,7 @@ export type Database = {
           media_mime?: string | null;
           media_name?: string | null;
           media_pages?: number | null;
+          media_refusal?: string | null;
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
@@ -3201,6 +3203,7 @@ export type Database = {
           media_mime?: string | null;
           media_name?: string | null;
           media_pages?: number | null;
+          media_refusal?: string | null;
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;

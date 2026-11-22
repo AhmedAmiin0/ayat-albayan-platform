@@ -1,4 +1,4 @@
-import { evolutionStateOf, QR_DATA_URL_RE, type EvolutionState } from '@ab/shared';
+import { evolutionStateOf, PLAYABLE_MAX_BYTES, QR_DATA_URL_RE, type EvolutionState } from '@ab/shared';
 import { z } from 'zod';
 
 // Evolution API v2 answers the driver reads (docs/19 «Evolution driver»), each a zod schema the
@@ -36,11 +36,11 @@ export function qrOf(body: z.infer<typeof connectSchema>): EvolutionQr {
   return { state: 'connecting', qr, pairingCode: q.pairingCode ?? null };
 }
 
-/** POST /chat/getBase64FromMediaMessage/{instance} → {base64, mimetype, …}. */
-/** base64 of WhatsApp's 100 MB limit (4 chars per 3 bytes), refused before it is decoded. */
-const MAX_BASE64 = Math.ceil((100 * 1024 * 1024) / 3) * 4;
+/** base64 of the 16 MB chat file cap (4 chars per 3 bytes), refused before it is decoded. */
+export const MEDIA_BASE64_MAX = Math.ceil(PLAYABLE_MAX_BYTES / 3) * 4;
 
+/** POST /chat/getBase64FromMediaMessage/{instance} → {base64, mimetype, …}. */
 export const mediaSchema = z.looseObject({
-  base64: z.string().min(1).max(MAX_BASE64),
+  base64: z.string().min(1).max(MEDIA_BASE64_MAX),
   mimetype: z.string().nullish(),
 });

@@ -1,6 +1,7 @@
 import { PLAYABLE_MIMES, type NumberPurpose } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import type { MediaRefusal } from './media-refusal/media-refusal.schemas';
 import { RECEIPT_FILTERS } from './receipts/receipt-candidates';
 
 /** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
@@ -14,6 +15,8 @@ export type MediaMessage = {
   media_id: string | null;
   media_mime: string | null;
   media_path: string | null;
+  /** A final refusal of the file (media-refusal.ts), answered on later views with no fetch. */
+  media_refusal?: string | null;
   /** The file's caption. */
   body: string | null;
   /** A sent file's name (thread-file-send); «تنزيل» saves under it. */
@@ -28,7 +31,7 @@ export type MediaMessage = {
   /** Meta's message part ({type, [type]: …}); a «sticker» is never a receipt (receiptMime). */
   interactive_payload?: unknown;
 };
-const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, media_name, interactive_payload, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
+const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, media_refusal, body, media_name, interactive_payload, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
 
 /** The filters `cached` adds (a select or an update on messages). */
 type Filterable<Q> = { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q };
@@ -79,6 +82,13 @@ export class InboundMediaRepo {
   async setPath(id: string, path: string): Promise<void> {
     const { error } = await this.db.from('messages').update({ media_path: path }).eq('id', id).is('media_path', null);
     if (error) throw new Error(`message media_path update failed: ${error.message}`);
+  }
+
+  /** Only while no copy exists: a file cached by another view is served, never refused. */
+  async setRefusal(id: string, refusal: MediaRefusal): Promise<void> {
+    const update = this.db.from('messages').update({ media_refusal: refusal });
+    const { error } = await update.eq('id', id).is('media_path', null);
+    if (error) throw new Error(`message media_refusal update failed: ${error.message}`);
   }
 
   /**
