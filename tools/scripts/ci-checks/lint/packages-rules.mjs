@@ -6,7 +6,7 @@ const CONFIG = '@ab/config';
 const SHOWN = 3;
 const COUNTS = { reexports: 're-exports', dbScope: 'db scope' };
 const WIDENED =
-  "::warning title=guard:packages::layer table widened: needs the repository owner's CODEOWNERS approval";
+  "::warning title=guard:packages::layer table widened: merge only with the repository owner's go";
 
 const reaches = (reach, to) => reach === '*' || (reach ?? []).includes(to);
 

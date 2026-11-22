@@ -609,7 +609,7 @@ Security findings and their fixes are tracked in a private operations report kep
 
 - Rules: at most 150 lines per file and 100 characters per line, functions of 50 lines, complexity 8 (6 in plain .ts), max-depth 2, three parameters, type-aware typescript-eslint at --max-warnings 0, plus custom ab/\* rules (packages/config/eslint.js; packages/config/eslint-flow.js). Oxlint runs the same rules first.
 - Older findings sit in per-package suppression baselines (eslint-suppressions.json, oxlint-suppressions.json) and in refactor/guards and refactor/folder-cap. Totals may only shrink, measured against the merge base, and a bot prunes them (ci.yml:380-477).
-- Package boundaries: `pnpm guard:packages` checks manifests, imports and path literals against the layers and allowed edges in refactor/guards/packages.json; on a PR a new extra edge, a new cross-workspace re-export or a new @ab/db import outside the api's repositories fails, and only a CODEOWNERS-approved change may widen the table (CLAUDE.md rule 23).
+- Package boundaries: `pnpm guard:packages` checks manifests, imports and path literals against the layers and allowed edges in refactor/guards/packages.json; on a PR a new extra edge, a new cross-workspace re-export or a new @ab/db import outside the api's repositories fails, and a PR that widens the table prints a warning and merges only with the repository owner's go (CLAUDE.md rule 23).
 - CI routing fails safe: any change it cannot classify runs everything (ci.yml:24-34).
 - The deploy scripts have their own tests (tools/scripts/ci-checks/roll.test.mjs, rollback.test.mjs, compose/\*.test.mjs, workflows\*.test.mjs).
 
