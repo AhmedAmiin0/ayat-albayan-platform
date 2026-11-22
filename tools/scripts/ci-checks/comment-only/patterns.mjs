@@ -15,13 +15,17 @@ export const DIRECTIVES = [
   { tool: 'jscpd', test: /\bjscpd:ignore/ },
   { tool: 'deprecation', test: /@deprecated\b/ },
   { tool: 'jsx pragma', test: /@jsx(?:Runtime|ImportSource|Frag)?\b/ },
-  { tool: 'knip', test: /@(?:public|internal)\b/ },
+  { tool: 'knip', test: /@(?:public|internal|beta|alpha)\b/ },
+  { tool: 'bundler purity', test: /[#@]__(?:PURE|NO_SIDE_EFFECTS)__/ },
+  { tool: 'eslint globals', test: /^\/\*\s*(?:global|exported)\s/ },
+  { tool: 'source map', test: /^\/\/[#@]\s*sourceMappingURL=/ },
+  { tool: 'minifier (kept comment)', test: /^\/\*!|@(?:license|preserve)\b/ },
 ];
 
 export const isDirective = (comment) => DIRECTIVES.some(({ test }) => test.test(comment));
 
 /** Source files whose comments may go. */
-export const CODE = /\.(?:ts|tsx|js|mjs|cjs)$/;
+export const CODE = /\.(?:[mc]?ts|tsx|[mc]?js|jsx)$/;
 
 /** Lint baselines: dropping a comment can fix a suppressed warning (guard:lint: only shrink). */
 export const SUPPRESSIONS = /(?:^|\/)(?:eslint|oxlint)-suppressions\.json$/;

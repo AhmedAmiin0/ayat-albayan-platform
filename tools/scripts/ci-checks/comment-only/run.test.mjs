@@ -74,19 +74,23 @@ test('a failing file is named with its reason', () => {
   assert.match(out, /src\/a\.ts: .*NumericLiteral:1.*NumericLiteral:2/);
 });
 
-test('GUARD_BASE names the base checkout', () => {
-  const cwd = repo(({ write }) => write({ 'src/b.ts': 'export const b = 3;\n' }));
+test('GUARD_BASE names the base checkout, not the merge-base', () => {
+  const cwd = repo(({ write }) => write({ 'src/a.ts': 'export const a = 1;\n' }));
   const base = mkdtempSync(join(tmpdir(), 'comment-only-base-'));
-  execFileSync('git', ['worktree', 'add', '-q', '--detach', base, 'develop'], { cwd });
+  execFileSync('git', ['worktree', 'add', '-q', '--detach', base, 'HEAD~1'], { cwd });
+  writeFileSync(join(base, 'src/b.ts'), 'export const b = 3;\n');
+  execFileSync('git', ['commit', '-qam', 'other base'], { cwd: base });
   const env = { GITHUB_HEAD_REF: 'chore/comments-x', GUARD_BASE: base };
-  assert.equal(gate({ argv: [], env, cwd, log: () => undefined }), 1);
+  const lines = [];
+  assert.equal(gate({ argv: [], env, cwd, log: (line) => lines.push(line) }), 1);
+  assert.match(lines.join('\n'), /src\/b\.ts/);
   rmSync(cwd, { recursive: true, force: true });
   rmSync(base, { recursive: true, force: true });
 });
 
-test('a branch not named chore/comments-* is skipped with one line', () => {
+test('a branch not named chore/comments-* is skipped with one notice line', () => {
   const { code, out } = run(({ write }) => write({ 'src/c.ts': 'x;\n' }), ['--branch', 'feat/x']);
   assert.equal(code, 0);
   assert.equal(out.split('\n').length, 1);
-  assert.match(out, /skipped/);
+  assert.match(out, /^::notice::.*feat\/x.*not a chore\/comments-\* branch.*skipped/);
 });

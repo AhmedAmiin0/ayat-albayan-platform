@@ -1,5 +1,4 @@
-// Base/head pairs for the shape check: `pass` differ only in comments, `fail` in code. In JSX a
-// `{/* … */}` child and layout whitespace may change, elements and text not.
+// Base/head pairs for the shape check: `pass` differ only in comments, `fail` in code.
 export const pass = [
   {
     name: 'line, block and JSDoc comments removed',
@@ -20,6 +19,18 @@ export const pass = [
     base: 'const x = 1; // old words\n',
     head: 'const x = 1; // new words\n',
   },
+  {
+    name: 'a comment removed from a typed .mts file',
+    file: 'vitest.config.mts',
+    base: 'const n: number = 1; // why\nexport default <T,>(x: T) => n;\n',
+    head: 'const n: number = 1;\nexport default <T,>(x: T) => n;\n',
+  },
+  {
+    name: 'a comment removed from JSX in a .jsx file',
+    file: 'A.jsx',
+    base: 'const a = <p>{/* x */}hi</p>;\n',
+    head: 'const a = <p>hi</p>;\n',
+  },
 ];
 
 export const fail = [
@@ -29,7 +40,18 @@ export const fail = [
     base: 'const total = 1; // n\nexport { total };\n',
     head: 'const sum = 1;\nexport { sum };\n',
   },
-  { name: 'a number literal changed', file: 'a.ts', base: 'const x = 1;\n', head: 'const x = 2;\n' },
+  {
+    name: 'a type changed in a .cts file',
+    file: 'a.cts',
+    base: 'export const n: number = 1;\n',
+    head: 'export const n: string = 1;\n',
+  },
+  {
+    name: 'a number literal changed',
+    file: 'a.ts',
+    base: 'const x = 1;\n',
+    head: 'const x = 2;\n',
+  },
   { name: 'a string literal changed', file: 'a.js', base: "f('a');\n", head: "f('b');\n" },
   {
     name: 'two statements reordered',
@@ -66,55 +88,5 @@ export const fail = [
     file: 'a.mjs',
     base: '#!/usr/bin/env node\nrun();\n',
     head: '#!/usr/bin/env node --test\nrun();\n',
-  },
-];
-
-export const jsxPass = [
-  {
-    name: 'a JSX comment child removed',
-    file: 'A.tsx',
-    base: [
-      'export const A = () => (',
-      '  <div>',
-      '    {/* the title */}',
-      '    <h1>Hi</h1>',
-      '    {/* x */}',
-      '  </div>',
-      ');',
-    ].join('\n'),
-    head: 'export const A = () => (\n  <div>\n    <h1>Hi</h1>\n  </div>\n);\n',
-  },
-  {
-    name: 'a JSX comment removed between words',
-    file: 'A.tsx',
-    base: 'const a = <p>one {/* x */} two</p>;\n',
-    head: 'const a = <p>one two</p>;\n',
-  },
-  {
-    name: 'a comment inside a JSX attribute expression removed',
-    file: 'A.tsx',
-    base: 'const a = <p title={t /* why */}>x</p>;\n',
-    head: 'const a = <p title={t}>x</p>;\n',
-  },
-];
-
-export const jsxFail = [
-  {
-    name: 'a JSX child element removed',
-    file: 'A.tsx',
-    base: 'const a = (\n  <div>\n    <h1>Hi</h1>\n    <p>x</p>\n  </div>\n);\n',
-    head: 'const a = (\n  <div>\n    <h1>Hi</h1>\n  </div>\n);\n',
-  },
-  {
-    name: 'a // inside JSX text changed',
-    file: 'A.tsx',
-    base: 'const a = <p>see // here</p>;\n',
-    head: 'const a = <p>see</p>;\n',
-  },
-  {
-    name: 'a /* inside JSX text changed',
-    file: 'A.tsx',
-    base: 'const a = <p>a /* b */ c</p>;\n',
-    head: 'const a = <p>a c</p>;\n',
   },
 ];

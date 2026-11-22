@@ -3,8 +3,8 @@ import { test } from 'node:test';
 import { compareFile } from './compare.mjs';
 import * as code from './fixtures/code.mjs';
 import * as directives from './fixtures/directives.mjs';
+import * as jsx from './fixtures/jsx.mjs';
 
-const jsx = { pass: code.jsxPass, fail: code.jsxFail };
 const suites = { code, jsx, directives };
 
 for (const [suite, cases] of Object.entries(suites)) {

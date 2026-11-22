@@ -1,7 +1,13 @@
 // The TypeScript parse both checks share: one source file per text, children without JSDoc nodes.
 import ts from 'typescript';
 
-const KINDS = { ts: ts.ScriptKind.TS, tsx: ts.ScriptKind.TSX };
+const KINDS = {
+  ts: ts.ScriptKind.TS,
+  mts: ts.ScriptKind.TS,
+  cts: ts.ScriptKind.TS,
+  tsx: ts.ScriptKind.TSX,
+  jsx: ts.ScriptKind.JSX,
+};
 
 const scriptKind = (file) => KINDS[/\.([^.]+)$/.exec(file)?.[1] ?? ''] ?? ts.ScriptKind.JS;
 

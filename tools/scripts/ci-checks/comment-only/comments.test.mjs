@@ -43,6 +43,26 @@ test('keeps only the directive comments', () => {
   assert.ok(!found.includes('// plain'));
 });
 
+const directives = [
+  '/* #__PURE__ */',
+  '/* @__PURE__ */',
+  '/* @__NO_SIDE_EFFECTS__ */',
+  '/* global window */',
+  '/* exported main */',
+  '/** @beta */',
+  '/** @alpha */',
+  '//# sourceMappingURL=a.js.map',
+  '/*! keep me */',
+  '/** @license MIT */',
+  '/** @preserve */',
+];
+
+for (const comment of directives) {
+  test(`${comment} is a directive`, () => {
+    assert.deepEqual(directivesOf(`${comment}\nf();\n`, 'a.ts'), [comment]);
+  });
+}
+
 test('a JSDoc that only describes is not a directive', () => {
   assert.deepEqual(directivesOf('/** Adds two numbers. */\nf();\n', 'a.ts'), []);
 });

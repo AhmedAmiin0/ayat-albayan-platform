@@ -30,7 +30,7 @@ function failure({ status: code, path, from }) {
   const reasons = [
     kind === null ? null : `${kind}${from === undefined ? '' : ` from ${from}`}`,
     forbidden === undefined ? null : `${forbidden.why} is never part of a comment sweep`,
-    allowed(path) ? null : 'not a .ts/.tsx/.js/.mjs/.cjs or suppressions file',
+    allowed(path) ? null : 'not a .ts/.mts/.cts/.tsx/.js/.mjs/.cjs/.jsx or suppressions file',
   ];
   const reason = reasons.find((r) => r !== null);
   return reason === undefined ? null : `${path}: ${reason}`;

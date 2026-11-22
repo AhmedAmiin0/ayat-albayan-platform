@@ -25,7 +25,8 @@ function failuresOf(git, base) {
 export function gate({ argv, env, cwd, log }) {
   const { branch, guardBase } = parseArgs(argv, env);
   if (!isCommentBranch(branch)) {
-    log(`${TAG} ${branch || '(no branch)'} is not a chore/comments-* branch, skipped.`);
+    const name = branch || '(no branch)';
+    log(`::notice::${TAG} ${name} is not a chore/comments-* branch, comment proof skipped.`);
     return 0;
   }
   const git = gitIn(cwd);
