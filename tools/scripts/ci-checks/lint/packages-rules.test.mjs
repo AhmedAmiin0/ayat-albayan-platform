@@ -46,14 +46,14 @@ test('an extra the base already has passes and is printed; a new one fails', () 
   assert.match(added.lines.join('\n'), /new extra @ab\/time → @ab\/schedule \(import\)/);
 });
 
-test('widening allowed prints the CODEOWNERS warning and passes; no base table is not widened', () => {
+test('widening allowed prints the owner-go warning and passes; no base table is not widened', () => {
   const base = table();
   base.allowed['@ab/schedule'] = ['@ab/core'];
   const v = decided({}, {}, base);
   assert.equal(v.failed, false);
   assert.match(
     v.warnings.join('\n'),
-    /layer table widened: needs the repository owner's CODEOWNERS/,
+    /layer table widened: merge only with the repository owner's go/,
   );
   const none = decide({ table: table(), head: side({}), base: side({}) });
   assert.deepEqual(none.warnings, []);
