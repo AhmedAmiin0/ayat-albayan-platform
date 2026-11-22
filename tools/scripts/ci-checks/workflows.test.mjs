@@ -35,10 +35,11 @@ test('every workflow has top-level permissions of contents: read only', () => {
   for (const w of workflows) assert.deepEqual(w.doc.permissions, { contents: 'read' }, w.file);
 });
 
-test('only claude-tasks, the two release jobs and ci baselines may write contents (docs/09)', () => {
+test('only claude-tasks, the release jobs, ci baselines and lane-automerge write contents (docs/09)', () => {
   const writes = (j) => j.permissions === 'write-all' || j.permissions?.contents === 'write';
   const writers = workflows.flatMap((w) => jobsOf(w).filter(([, j]) => writes(j)).map(([n]) => `${w.file}/${n}`));
-  const expected = ['ci.yml/baselines', 'claude-tasks.yml/claude', 'deploy-staging.yml/release', 'mobile.yml/release'];
+  const expected = ['ci.yml/baselines', 'claude-tasks.yml/claude', 'deploy-staging.yml/release',
+    'lane-automerge.yml/automerge', 'mobile.yml/release'];
   assert.deepEqual(writers.sort(), expected);
 });
 
