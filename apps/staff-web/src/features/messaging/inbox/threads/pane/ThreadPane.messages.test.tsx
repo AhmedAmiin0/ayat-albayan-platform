@@ -93,7 +93,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     expect(await screen.findByText(t.messages.retryQueued)).toBeTruthy();
   });
 
-  it('a held row asks «بعتّها؟» from its own state (survives a refresh): yes = sent by hand, no = back to the queue', async () => {
+  it('a held row asks «بعتّها؟» from its own state; yes = sent by hand, and the answer shows', async () => {
     renderThread();
     await screen.findByRole('log');
     const held = bubble('رسالة باليد');
@@ -103,6 +103,14 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     apiSend.mockResolvedValue({ ...HANDED, status: 'sent_manually' });
     fireEvent.click(within(ask).getByRole('button', { name: t.messages.markSentManually }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/sent-manually'));
+    await waitFor(() => expect(held.queryByRole('group', { name: t.messages.markSentManually })).toBeNull());
+  });
+
+  it('a held row: no = back to the queue', async () => {
+    renderThread();
+    await screen.findByRole('log');
+    const ask = bubble('رسالة باليد').getByRole('group', { name: t.messages.markSentManually });
+    apiSend.mockResolvedValue({ ...HANDED, status: 'queued' });
     fireEvent.click(within(ask).getByRole('button', { name: t.messages.undoHandOff }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/retry'));
   });

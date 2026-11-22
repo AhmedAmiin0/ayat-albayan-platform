@@ -5,6 +5,7 @@ import { sendErrorCode } from '@/features/messaging/inbox/composer/lib/send-erro
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 import { stageReply } from '@/features/messaging/inbox/saved-replies/lib/api';
 import { getStaged, setStaged, type Staged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
+import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 /**
  * The staged attachment after its text: POST /saved-replies/:id/stage copies it as the sender's chat
@@ -20,14 +21,14 @@ export function useStagedSend(phone: string) {
       return sendFile({ phone, clientRequestId: s.requestId, path: staged.path, filename: staged.filename });
     },
     onMutate: sendStart,
-    onSuccess: async (view, s, start) => {
+    onSuccess: (view, s, start) => {
       settleOwnSend(phone, view.id, start);
       if (getStaged(phone)?.requestId === s.requestId) setStaged(phone, null);
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      showAnswer(queryClient, view);
     },
     onError: async (e, s) => {
       if (getStaged(phone)?.requestId === s.requestId) setStaged(phone, { ...s, failed: sendErrorCode(e) });
-      if (errorCode(e) === 'session_closed') await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      if (errorCode(e) === 'session_closed') await rereadSentChat(queryClient, phone);
     },
   });
 }

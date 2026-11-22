@@ -1681,12 +1681,6 @@
   "src/features/messaging/inbox/api/thread-delta.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/features/messaging/inbox/composer/components/AttachButton.test.tsx": {

@@ -13,6 +13,7 @@ import {
   sendErrorCode,
 } from '@/features/messaging/inbox/composer/lib/send-error';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
+import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 /** The calculator's default choice, with the country of the chat's number (+966 → SA …, else USD). */
 export function initialSelection(phone: string): Selection {
@@ -69,18 +70,18 @@ export function useQuoteSend(phone: string, onSent: () => void) {
       return view;
     },
     onMutate: sendStart,
-    onSuccess: async (view, offer, start) => {
+    onSuccess: (view, offer, start) => {
       quotePins.release(phone, offer.id, offer.generation);
       settleOwnSend(phone, view.id, start);
       onSent();
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      showAnswer(queryClient, view);
     },
     onError: async (e, offer) => {
       // No answer pins the id; an answer (a 4xx, or the first offer replayed) releases it.
       const keep = sendErrorCode(e) === SEND_UNCONFIRMED ? 'pin' : 'release';
       quotePins[keep](phone, offer.id, offer.generation);
       // The window closed (the sheet disables send and edit), or the offer may have gone.
-      if (rereadsAfter(e)) await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      if (rereadsAfter(e)) await rereadSentChat(queryClient, phone);
     },
     onSettled: () => {
       busy.current = false;

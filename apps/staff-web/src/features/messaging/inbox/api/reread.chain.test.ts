@@ -5,9 +5,9 @@ import { heldRead, msg, PHONE } from './patch-fixtures';
 import { rereadChat } from './reread';
 import { threadQuery } from './thread-query';
 
-// docs/44 K1 (#693 review): a chained chat re-read cancelled by another «تحميل الأقدم» runs once
-// more after it, and a deferred re-read never starts while the window has no focus (a full read
-// stamps read_at and sends Meta a read receipt).
+// docs/44 K1 (#693 review): a page load started while the event's delta is out (its answer is then
+// dropped) is followed by one more delta, and a deferred read never starts while the window has no
+// focus (a read stamps read_at and sends Meta a read receipt).
 
 const mockApiFetch = vi.fn();
 vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
@@ -18,17 +18,19 @@ vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
 const KEY = threadQuery(PHONE).queryKey;
 const page = (has_more: boolean, ...messages: MessageView[]) =>
   ({ messages, has_more }) as ThreadDetail;
-const firsts = (client: QueryClient) =>
-  client.getQueryData(KEY)?.pages.map((p) => p.messages.map((m) => `${m.id}:${m.status}`));
 const focused = (on: boolean) => vi.spyOn(document, 'hasFocus').mockReturnValue(on);
 
-/** An open, shown chat with older pages and its observer (fetchNextPage = «تحميل الأقدم»). */
+const deltas = vi.fn(async (): Promise<unknown> => 0);
+
+/** An open, shown chat with older pages, its delta query and observer («تحميل الأقدم»). */
 async function opened() {
   const client = new QueryClient();
   mockApiFetch.mockResolvedValueOnce(page(true, msg('a', 'sent')));
   await client.infiniteQuery(threadQuery(PHONE));
   const query = client.getQueryCache().find({ queryKey: KEY, exact: true });
   if (query) vi.spyOn(query, 'isActive').mockReturnValue(true);
+  const delta = { queryKey: ['thread-delta', PHONE], queryFn: deltas, initialData: 0 };
+  client.getQueryCache().build(client, delta);
   return { client, chat: new InfiniteQueryObserver(client, threadQuery(PHONE)) };
 }
 
@@ -44,28 +46,26 @@ async function held(start: () => unknown) {
 
 beforeEach(() => {
   mockApiFetch.mockReset();
+  deltas.mockReset().mockResolvedValue(0);
   focused(true);
 });
 
-it('a page load during the chained re-read: the re-read runs again after it', async () => {
+it('a page load started during the delta: one more delta after it lands', async () => {
   const { client, chat } = await opened();
-  const p1 = await held(() => void chat.fetchNextPage());
-  rereadChat(client, PHONE); // the event: waits for P1
-  const r1 = await held(() => p1.resolve(page(true, msg('b', 'sent'))));
-  const p2 = await held(() => void chat.fetchNextPage()); // a click during R: R is cancelled
-  mockApiFetch
-    .mockResolvedValueOnce(page(true, msg('new', 'delivered'), msg('a', 'read')))
-    .mockResolvedValueOnce(page(true, msg('b', 'read')))
-    .mockResolvedValueOnce(page(false, msg('c', 'read')));
-  p2.resolve(page(false, msg('c', 'sent')));
-  r1.resolve(page(true, msg('a', 'sent')));
-  await vi.waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(7));
-  await vi.waitFor(() =>
-    expect(firsts(client)).toEqual([['new:delivered', 'a:read'], ['b:read'], ['c:read']]),
-  );
+  const first = heldRead<unknown>();
+  deltas.mockReturnValueOnce(first.promise);
+  rereadChat(client, PHONE);
+  await vi.waitFor(() => expect(deltas).toHaveBeenCalledTimes(1));
+  const p1 = await held(() => void chat.fetchNextPage()); // a click while the delta is out
+  first.resolve(0);
+  await new Promise((r) => setTimeout(r, 0));
+  expect(deltas).toHaveBeenCalledTimes(1);
+  p1.resolve(page(false, msg('b', 'sent')));
+  await vi.waitFor(() => expect(deltas).toHaveBeenCalledTimes(2));
+  expect(client.getQueryData(KEY)?.pages).toHaveLength(2);
 });
 
-it('focus lost before a deferred re-read starts: no GET; with focus back the next one runs', async () => {
+it('focus lost before a deferred read starts: none; with focus back the next one runs', async () => {
   const { client, chat } = await opened();
   const p1 = await held(() => void chat.fetchNextPage());
   rereadChat(client, PHONE);
@@ -73,45 +73,22 @@ it('focus lost before a deferred re-read starts: no GET; with focus back the nex
   p1.resolve(page(false, msg('b', 'sent')));
   await chat.getCurrentQuery().promise;
   await new Promise((r) => setTimeout(r, 0));
-  expect(mockApiFetch).toHaveBeenCalledTimes(2);
   rereadChat(client, PHONE); // still no focus: nothing either
-  expect(mockApiFetch).toHaveBeenCalledTimes(2);
+  expect(deltas).not.toHaveBeenCalled();
   focused(true);
-  mockApiFetch.mockResolvedValue(page(false, msg('a', 'read')));
   rereadChat(client, PHONE);
-  await vi.waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(3));
+  await vi.waitFor(() => expect(deltas).toHaveBeenCalledTimes(1));
+  expect(mockApiFetch).toHaveBeenCalledTimes(2);
 });
 
-it('the chat left during a re-read after an older page: the chain stops (no endless loop)', async () => {
-  const { client, chat } = await opened();
-  const p1 = await held(() => void chat.fetchNextPage());
-  p1.resolve(page(false, msg('b', 'sent')));
-  await chat.getCurrentQuery().promise; // P1's fetchMeta (fetchMore) stays in state
-  // A microtask loop would never let a timer run: fail it fast instead of hanging the worker.
-  const refetch = client.refetchQueries.bind(client);
-  const reads = vi.spyOn(client, 'refetchQueries').mockImplementation((...args) => {
-    if (reads.mock.calls.length > 5) throw new Error('re-read loop');
-    return refetch(...args);
-  });
-  const r = await held(() => rereadChat(client, PHONE));
-  const query = client.getQueryCache().find({ queryKey: KEY, exact: true });
-  if (!query) throw new Error('no chat query');
-  vi.spyOn(query, 'isActive').mockReturnValue(false);
-  await query.cancel({ revert: true }); // what removing the last observer does: back to P1's meta
-  r.resolve(page(true, msg('a', 'read')));
-  await new Promise((done) => setTimeout(done, 20));
-  expect(reads).toHaveBeenCalledTimes(1);
-  expect(mockApiFetch).toHaveBeenCalledTimes(3);
-});
-
-it('a page load that already landed holds no later event back: each event re-reads', async () => {
+it('a page load that already landed holds no later event back: each event reads a delta', async () => {
   const { client, chat } = await opened();
   const p1 = await held(() => void chat.fetchNextPage());
   p1.resolve(page(false, msg('b', 'sent')));
   await chat.getCurrentQuery().promise;
-  mockApiFetch.mockResolvedValue(page(true, msg('a', 'read'))); // two pages each time
   rereadChat(client, PHONE);
-  await vi.waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(4));
+  await vi.waitFor(() => expect(deltas).toHaveBeenCalledTimes(1));
   rereadChat(client, PHONE);
-  await vi.waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(6));
+  await vi.waitFor(() => expect(deltas).toHaveBeenCalledTimes(2));
+  expect(mockApiFetch).toHaveBeenCalledTimes(2);
 });
