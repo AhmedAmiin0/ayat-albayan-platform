@@ -37,7 +37,7 @@ describe('graph.ts error table', () => {
     const plain = async () => new Response('x'.repeat(400), { status: 502 });
     const e = await failure(plain);
     expect(e.message).toBe('WhatsApp HTTP 502');
-    expect(e.info).toEqual({ code: null, status: 502, details: 'x'.repeat(300), lineDown: true });
+    expect(e.info).toEqual({ code: null, status: 502, details: 'x'.repeat(300), uncertain: true });
     const empty = await failure(async () => new Response('', { status: 500 }));
     expect(empty.info).toEqual({ code: null, status: 500, details: undefined, lineDown: true });
   });

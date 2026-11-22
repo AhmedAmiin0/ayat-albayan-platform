@@ -16,6 +16,17 @@ export const reachInfo = (reached: boolean): Info =>
 /** The deadline fired: uncertain like a dropped connection, and counted by the lane. */
 export const TIMEOUT_INFO: Info = { code: null, status: 0, uncertain: true, timedOut: true };
 
-/** A 5xx with no provider code: the provider itself is down and sent nothing. */
-export const serverDown = (status: number, code: number | null): Pick<Info, 'lineDown'> =>
-  code === null && status >= 500 ? { lineDown: true } : {};
+type ServerInfo = Pick<Info, 'lineDown' | 'uncertain'>;
+
+/**
+ * A gateway's 502 / 504 (Kapso, a proxy) may come after it passed the send on, so a resend could
+ * duplicate it, as the CRM rule says (docs/12 §3.3).
+ */
+const GATEWAY: Readonly<Record<number, ServerInfo>> = {
+  502: { uncertain: true },
+  504: { uncertain: true },
+};
+
+/** A 5xx with no provider code: the provider is down and sent nothing, unless a gateway's. */
+export const serverDown = (status: number, code: number | null): ServerInfo =>
+  code === null && status >= 500 ? (GATEWAY[status] ?? { lineDown: true }) : {};

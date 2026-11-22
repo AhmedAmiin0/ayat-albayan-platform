@@ -16,4 +16,10 @@ describe('transport info', () => {
     expect(serverDown(503, 131000)).toEqual({});
     expect(serverDown(429, null)).toEqual({});
   });
+
+  it('a gateway 502 or 504 with no provider code is uncertain, never the line', () => {
+    expect(serverDown(502, null)).toEqual({ uncertain: true });
+    expect(serverDown(504, null)).toEqual({ uncertain: true });
+    expect(serverDown(504, 131000)).toEqual({});
+  });
 });
