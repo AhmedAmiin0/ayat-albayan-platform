@@ -57,4 +57,22 @@ export const fail = [
     base: 'const a = (\n  <p>\n    {/* eslint-disable-next-line x */}\n    <b />\n  </p>\n);\n',
     head: 'const a = (\n  <p>\n    <b />\n  </p>\n);\n',
   },
+  {
+    name: 'a Stryker disable removed',
+    file: 'a.ts',
+    base: '// Stryker disable next-line all: a log line\nlog();\n',
+    head: 'log();\n',
+  },
+  {
+    name: 'a falls through removed',
+    file: 'a.ts',
+    base: 'switch (x) {\n  case 1:\n    f();\n  // falls through\n  case 2:\n    g();\n}\n',
+    head: 'switch (x) {\n  case 1:\n    f();\n  case 2:\n    g();\n}\n',
+  },
+  {
+    name: 'a JSDoc @type removed in a checked JS file',
+    file: 'a.mjs',
+    base: '// @ts-check\n/** @type {number} */\nlet n;\n',
+    head: '// @ts-check\nlet n;\n',
+  },
 ];

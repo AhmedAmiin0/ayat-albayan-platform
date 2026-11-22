@@ -20,9 +20,22 @@ export const DIRECTIVES = [
   { tool: 'eslint globals', test: /^\/\*\s*(?:global|exported)\s/ },
   { tool: 'source map', test: /^\/\/[#@]\s*sourceMappingURL=/ },
   { tool: 'minifier (kept comment)', test: /^\/\*!|@(?:license|preserve)\b/ },
+  { tool: 'stryker', test: /\bStryker\s+(?:disable|restore)\b/ },
+  { tool: 'eslint no-fallthrough', test: /^\/[/*]\s*falls?\s?through/i },
 ];
 
-export const isDirective = (comment) => DIRECTIVES.some(({ test }) => test.test(comment));
+/** In a JS file a JSDoc type tag is the type annotation that checkJs and `@ts-check` read. */
+const JS_FILE = /\.(?:[mc]?js|jsx)$/;
+const TYPE_TAGS = [
+  ...['type', 'param', 'returns?', 'typedef', 'template', 'satisfies', 'overload', 'enum'],
+  ...['this', 'callback', 'implements', 'extends', 'augments', 'import'],
+].join('|');
+const JSDOC_TYPE = new RegExp(`^/\\*\\*[\\s\\S]*@(?:${TYPE_TAGS})\\b`);
+
+const isJsDocType = (comment, file) => JS_FILE.test(file) && JSDOC_TYPE.test(comment);
+
+export const isDirective = (comment, file = '') =>
+  DIRECTIVES.some(({ test }) => test.test(comment)) || isJsDocType(comment, file);
 
 /** Source files whose comments may go. */
 export const CODE = /\.(?:[mc]?ts|tsx|[mc]?js|jsx)$/;

@@ -30,3 +30,9 @@ export const { SyntaxKind } = ts;
 export const leadingComments = (text, pos) => ts.getLeadingCommentRanges(text, pos) ?? [];
 
 export const trailingComments = (text, pos) => ts.getTrailingCommentRanges(text, pos) ?? [];
+
+/** The parser's own syntax errors, as text. */
+export const syntaxErrorsOf = (text, file) =>
+  parse(text, file).parseDiagnostics.map((d) =>
+    ts.flattenDiagnosticMessageText(d.messageText, ' '),
+  );

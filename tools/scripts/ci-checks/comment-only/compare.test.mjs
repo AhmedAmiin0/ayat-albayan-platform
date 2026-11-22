@@ -4,8 +4,9 @@ import { compareFile } from './compare.mjs';
 import * as code from './fixtures/code.mjs';
 import * as directives from './fixtures/directives.mjs';
 import * as jsx from './fixtures/jsx.mjs';
+import * as placement from './fixtures/placement.mjs';
 
-const suites = { code, jsx, directives };
+const suites = { code, jsx, directives, placement };
 
 for (const [suite, cases] of Object.entries(suites)) {
   for (const { name, file, base, head } of cases.pass) {
