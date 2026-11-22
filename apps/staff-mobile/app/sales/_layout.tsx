@@ -1,2 +1,4 @@
+import { CrashScreen } from '@ab/mobile-kit';
 export { SalesTabs as default } from '@/sales/app';
-export { CrashScreen as ErrorBoundary } from '@ab/mobile-kit';
+
+export const ErrorBoundary = CrashScreen;

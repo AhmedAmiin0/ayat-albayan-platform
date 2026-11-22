@@ -8,6 +8,7 @@ import {
   useMeReady,
   RootFrame,
   RootProviders,
+  CrashScreen,
   useProfileLocaleSync,
   useRootBoot,
   useTheme,
@@ -101,4 +102,5 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
     </RootFrame>
   );
 }
-export { CrashScreen as ErrorBoundary } from '@ab/mobile-kit';
+
+export const ErrorBoundary = CrashScreen;
