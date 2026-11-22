@@ -83,6 +83,7 @@ describe('InboundMedia: a refused file is remembered', () => {
   it.each([
     ['a timeout', new WaError('timed out', { code: null, status: 0 })],
     ['a 5xx', new WaError('down', { code: null, status: 503 })],
+    ['a rate limit (429)', new WaError('slow down', { code: 4, status: 429 })],
     ['a refused key', waHttpError('evolution_auth', 502)],
   ])('%s is not kept: a retry may work', async (_name, failure) => {
     const { media, queries } = setup(row(), failure);
