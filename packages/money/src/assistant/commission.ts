@@ -1,12 +1,11 @@
-import type { Enums } from '@ab/db';
 import { fromCents, toCents } from '@ab/core';
 
 // Assistant (base role sales) commission, the rule of migration 20261006000272 in pure code
 // (owner, 2026-10-06). The database decides; this twin is what the API and the screens preview with,
 // and its tests pin the same arithmetic. Money is integer cents inside, 2 decimals outside.
 
-export const ASSISTANT_COMMISSION_TYPES = ['percent', 'fixed'] as const satisfies readonly Enums<'assistant_commission_type'>[];
-export const ASSISTANT_COMMISSION_STATUSES = ['earned', 'voided'] as const satisfies readonly Enums<'assistant_commission_status'>[];
+export const ASSISTANT_COMMISSION_TYPES = ['percent', 'fixed'] as const;
+export const ASSISTANT_COMMISSION_STATUSES = ['earned', 'voided'] as const;
 export type AssistantCommissionType = (typeof ASSISTANT_COMMISSION_TYPES)[number];
 export type AssistantCommissionStatus = (typeof ASSISTANT_COMMISSION_STATUSES)[number];
 

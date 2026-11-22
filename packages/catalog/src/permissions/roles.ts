@@ -1,9 +1,6 @@
-import type { Enums } from '@ab/db';
-
-export type UserRole = Enums<'user_role'>;
-
-/** Mirrors the `user_role` DB enum. `satisfies` breaks the build if the enum drifts. */
-export const USER_ROLES = ['admin', 'teacher', 'guardian', 'assistant', 'sales', 'student'] as const satisfies readonly UserRole[];
+/** Mirrors the `user_role` DB enum. */
+export const USER_ROLES = ['admin', 'teacher', 'guardian', 'assistant', 'sales', 'student'] as const;
+export type UserRole = (typeof USER_ROLES)[number];
 
 export function isUserRole(value: unknown): value is UserRole {
   return USER_ROLES.some((r) => r === value);
