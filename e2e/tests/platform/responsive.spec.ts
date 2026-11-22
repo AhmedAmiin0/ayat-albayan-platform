@@ -4,6 +4,7 @@ import { resetAbrar, seedFamily, seedLesson } from '../../support/core/schedule'
 import { restingBox } from '../../support/finance/settle';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
+import { gotoLoaded } from '../../support/core/page-loaded';
 
 // Responsive guard (owner, 2026-10-05: "fix the responsive issues"): the main screens never scroll
 // sideways on a phone (390px) or a tablet (768px), in RTL. Tables and tab strips scroll inside
@@ -12,11 +13,6 @@ import { AR_LOCALE } from '../../support/core/locale';
 /** How far the document is wider than the viewport (0 = no horizontal overflow). */
 const overflow = (page: Page) =>
   page.evaluate<number>('document.scrollingElement.scrollWidth - window.innerWidth');
-
-async function settle(page: Page, path: string): Promise<void> {
-  await page.goto(path);
-  await page.waitForLoadState('networkidle');
-}
 
 // One test per width (2026-11-18): both widths in one 240 s test ran past the budget on slow shared
 // runners (a flaky timeout on several branches and on develop). Each width seeds its own scene.
@@ -34,7 +30,7 @@ for (const width of [390, 768]) {
     await stubInbound({ from: digits, name: guardian, text: 'السلام عليكم، أريد الاشتراك لابنتي في حلقات الحفظ' });
 
     const admin = await asRole('admin');
-    await settle(admin, `/admin/students/${studentId}`);
+    await gotoLoaded(admin, `/admin/students/${studentId}`);
     await admin.getByRole('button', { name: ar.studentLink.create }).click();
     const studentLink = new URL(await admin.getByLabel(ar.studentLink.shown).inputValue()).pathname;
     const teacher = await asRole('teacher');
@@ -60,16 +56,16 @@ for (const width of [390, 768]) {
     ];
     for (const page of [admin, teacher, guest]) await page.setViewportSize({ width, height: 844 });
     for (const path of adminPaths) {
-      await settle(admin, path);
+      await gotoLoaded(admin, path);
       expect.soft(await overflow(admin), `${path} @${width}px`).toBeLessThanOrEqual(0);
     }
     // The inbox with a conversation and its lead panel open.
-    await settle(admin, '/admin/inbox');
+    await gotoLoaded(admin, '/admin/inbox');
     await admin.getByRole('link', { name: ar.inbox.openThread.replace('{name}', guardian) }).click();
     await expect(admin.getByRole('log', { name: ar.messages.log })).toBeVisible();
     expect.soft(await overflow(admin), `inbox thread @${width}px`).toBeLessThanOrEqual(0);
     // A dialog never runs off the screen: its body scrolls inside the panel.
-    await settle(admin, `/admin/students/${studentId}`);
+    await gotoLoaded(admin, `/admin/students/${studentId}`);
     await admin.getByRole('button', { name: ar.subscriptions.new }).first().click();
     const dialog = admin.getByRole('dialog', { name: ar.subscriptions.new });
     const box = await restingBox(dialog);
@@ -81,10 +77,10 @@ for (const width of [390, 768]) {
     await expect.soft.poll(bottom, { message: `dialog bottom @${width}px` }).toBeLessThanOrEqual(844.5);
     expect.soft((box?.x ?? 0) + (box?.width ?? 0), `dialog right @${width}px`).toBeLessThanOrEqual(width);
 
-    await settle(teacher, '/teacher');
+    await gotoLoaded(teacher, '/teacher');
     expect.soft(await overflow(teacher), `/teacher @${width}px`).toBeLessThanOrEqual(0);
     for (const path of [studentLink, '/join/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ', '/login']) {
-      await settle(guest, path);
+      await gotoLoaded(guest, path);
       expect.soft(await overflow(guest), `${path} @${width}px`).toBeLessThanOrEqual(0);
     }
   });
