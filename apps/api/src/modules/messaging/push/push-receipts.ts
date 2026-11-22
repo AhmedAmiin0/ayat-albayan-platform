@@ -32,30 +32,41 @@ export const receiptsSchema = z
 const TOKEN = /Expo(?:nent)?PushToken\[[\w-]+\]/;
 
 /**
- * The token a DeviceNotRegistered receipt is about: details.expoPushToken, else the
- * «ExponentPushToken[…]» Expo quotes in the message; null for any other receipt or when the
- * receipt names no token (then nothing is pruned: the next ticket error catches it).
+ * The token a DeviceNotRegistered receipt is about: the one its ticket was sent to (`sentTo`, from
+ * the row's ticket_tokens), else details.expoPushToken, else the «ExponentPushToken[…]» Expo quotes
+ * in the message; null for any other receipt or when none is known. An FCM receipt («The recipient
+ * device is not registered with FCM.») names no token: only `sentTo` finds it.
  */
-export function deadToken(receipt: ExpoReceipt): string | null {
+export function deadToken(receipt: ExpoReceipt, sentTo?: string): string | null {
   if (receipt.status !== 'error' || receipt.details?.error !== 'DeviceNotRegistered') return null;
-  return receipt.details.expoPushToken ?? TOKEN.exec(receipt.message ?? '')?.[0] ?? null;
+  const named = receipt.details.expoPushToken ?? TOKEN.exec(receipt.message ?? '')?.[0];
+  return sentTo ?? named ?? null;
 }
 
 interface ReceiptOutcome {
   /** Tickets Expo has no receipt for yet: checked again next run (receipts live 24 h). */
   pending: string[];
-  /** Tokens to drop from the admin's profile. */
+  /** The ticket → token map of the pending tickets only: the row keeps what it still needs. */
+  pendingTokens: Record<string, string>;
+  /** Tokens whose session bindings to delete. */
   deadTokens: string[];
   /** The first receipt error, or null. */
   error: string | null;
 }
 
-/** One push_notifications row's tickets against the receipts Expo returned. */
+const only = (sentTo: Readonly<Record<string, string>>, ids: readonly string[]) =>
+  Object.fromEntries(Object.entries(sentTo).filter(([id]) => ids.includes(id)));
+
+/**
+ * One push_notifications row's tickets against the receipts Expo returned. `sentTo`: the row's
+ * ticket_tokens ({} on rows sent before it existed: only a receipt naming its token prunes).
+ */
 export function readReceipts(
   ticketIds: readonly string[],
   receipts: Readonly<Record<string, ExpoReceipt | undefined>>,
+  sentTo: Readonly<Record<string, string>>,
 ): ReceiptOutcome {
-  const outcome: ReceiptOutcome = { pending: [], deadTokens: [], error: null };
+  const outcome: ReceiptOutcome = { pending: [], pendingTokens: {}, deadTokens: [], error: null };
   for (const id of ticketIds) {
     const receipt = receipts[id];
     if (!receipt) {
@@ -64,8 +75,9 @@ export function readReceipts(
     }
     if (receipt.status === 'ok') continue;
     outcome.error ??= receipt.message ?? receipt.details?.error ?? 'error';
-    const token = deadToken(receipt);
+    const token = deadToken(receipt, sentTo[id]);
     if (token && !outcome.deadTokens.includes(token)) outcome.deadTokens.push(token);
   }
+  outcome.pendingTokens = only(sentTo, outcome.pending);
   return outcome;
 }

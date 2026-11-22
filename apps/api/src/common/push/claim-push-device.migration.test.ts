@@ -33,3 +33,28 @@ describe('migration 730: claim_push_device', () => {
     expect(code).not.toMatch(/\bdrop (table|column|function)\b/i);
   });
 });
+
+// The receipts job drops a binding made before the push its DeviceNotRegistered receipt is about:
+// a device that registers the same token again must count as new from then on.
+const reclaim = readFileSync(join(dir, '20261122000200_claim_push_device_created_at.sql'), 'utf8')
+  .split('\n')
+  .filter((l) => !l.trimStart().startsWith('--'))
+  .join('\n');
+const body730 = code.slice(code.indexOf('create or replace'), code.indexOf('end $$;'));
+
+describe('migration 20261122000200: a re-claim renews created_at', () => {
+  it('the on conflict update sets created_at = now(), the rest of 730 unchanged', () => {
+    expect(reclaim).toMatch(
+      /on conflict \(token\) do update set [^;]*contested_at = null, created_at = now\(\);/,
+    );
+    expect(reclaim.replace(', created_at = now()', '')).toContain(body730);
+  });
+
+  it('a refused claim returns before the upsert; definer, grants and revokes as in 730', () => {
+    expect(reclaim.indexOf("return 'in_use';")).toBeLessThan(reclaim.indexOf('on conflict'));
+    expect(reclaim).toContain("security definer set search_path = ''");
+    expect(reclaim).toContain('revoke all on function public.claim_push_device(text, uuid, uuid, text, text) from public, anon, authenticated;');
+    expect(reclaim).toContain('grant execute on function public.claim_push_device(text, uuid, uuid, text, text) to service_role;');
+    expect(reclaim).not.toMatch(/\bdrop\b/i);
+  });
+});

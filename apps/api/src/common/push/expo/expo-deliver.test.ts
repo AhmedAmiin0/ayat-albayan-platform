@@ -21,7 +21,7 @@ function run(transport: PushTransport) {
 }
 
 describe('expoDeliver', () => {
-  it('records the tickets and the send time', async () => {
+  it('records the tickets, the token each went to, and the send time', async () => {
     const { delivered, writes } = run(vi.fn<PushTransport>(async (m) => okTickets(m.length)));
     await delivered;
     expect(writes).toEqual([
@@ -30,6 +30,7 @@ describe('expoDeliver', () => {
         op: 'update',
         value: expect.objectContaining({
           ticket_ids: ['t0'],
+          ticket_tokens: { t0: 'ExponentPushToken[p]' },
           error: null,
           sent_at: expect.any(String),
         }),
@@ -48,6 +49,7 @@ describe('expoDeliver', () => {
         op: 'update',
         value: expect.objectContaining({
           ticket_ids: [],
+          ticket_tokens: {},
           error: 'expo push HTTP 503',
           sent_at: expect.any(String),
         }),

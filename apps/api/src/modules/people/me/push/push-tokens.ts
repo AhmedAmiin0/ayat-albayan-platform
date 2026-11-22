@@ -12,8 +12,8 @@ export const pushTokenBody = z.object({ token: pushTokenSchema, deviceKey: devic
 
 /**
  * A reinstall mints a new token; the dead one stays until Expo reports it DeviceNotRegistered,
- * on a push ticket (common/push PushService) or a receipt (modules/push PushReceiptsJob), which
- * prune it with withoutPushToken. Keep the newest few meanwhile.
+ * on a push ticket (expoDeliver) or a receipt (PushReceiptsJob), which delete its session binding
+ * (the release trigger takes it off the profile). Keep the newest few meanwhile.
  */
 export const MAX_PUSH_TOKENS = 10;
 
