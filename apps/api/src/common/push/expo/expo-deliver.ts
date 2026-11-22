@@ -32,15 +32,15 @@ async function sendOnce(d: ExpoDelivery, tokens: readonly string[]): Promise<Sen
     return readTickets(tokens, await d.transport(expoMessages(tokens, d.text, d.data)));
   } catch (e) {
     const failure = e instanceof Error ? e : new Error(String(e));
-    return { ticketIds: [], deadTokens: [], error: failure.message, failure };
+    return { ticketIds: [], ticketTokens: {}, deadTokens: [], error: failure.message, failure };
   }
 }
 
 /**
  * The app half of one notification (R-MOB-01): push to the profile's devices, record the tickets
- * (or the failure) on the row, and drop the tokens Expo reports DeviceNotRegistered (and their
- * session bindings). No device = nothing to do. A failed call rejects once recorded (PushChannels
- * logs it).
+ * and the token each went to (or the failure) on the row, and drop the tokens Expo reports
+ * DeviceNotRegistered (and their session bindings). No device = nothing to do. A failed call
+ * rejects once recorded (PushChannels logs it).
  */
 export async function expoDeliver(d: ExpoDelivery): Promise<void> {
   const tokens = d.profile.push_tokens;
@@ -50,6 +50,7 @@ export async function expoDeliver(d: ExpoDelivery): Promise<void> {
     .from('push_notifications')
     .update({
       ticket_ids: outcome.ticketIds,
+      ticket_tokens: outcome.ticketTokens,
       error: outcome.error,
       sent_at: new Date().toISOString(),
     })

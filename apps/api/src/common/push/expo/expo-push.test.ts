@@ -51,7 +51,26 @@ describe('expoMessages / readTickets (R-MOB-01)', () => {
       { status: 'ok', id: 't-1' },
       { status: 'error', message: 'gone', details: { error: 'DeviceNotRegistered' } },
     ]);
-    expect(outcome).toEqual({ ticketIds: ['t-1'], deadTokens: ['ExponentPushToken[b]'], error: null });
+    expect(outcome).toEqual({
+      ticketIds: ['t-1'],
+      ticketTokens: { 't-1': 'ExponentPushToken[a]' },
+      deadTokens: ['ExponentPushToken[b]'],
+      error: null,
+    });
+  });
+
+  it('maps each ok ticket to the token its message went to, past an error ticket', () => {
+    const three = [...tokens, 'ExponentPushToken[c]'];
+    const outcome = readTickets(three, [
+      { status: 'error', message: 'too big', details: { error: 'MessageTooBig' } },
+      { status: 'ok', id: 't-2' },
+      { status: 'ok', id: 't-3' },
+    ]);
+    expect(outcome.ticketIds).toEqual(['t-2', 't-3']);
+    expect(outcome.ticketTokens).toEqual({
+      't-2': 'ExponentPushToken[b]',
+      't-3': 'ExponentPushToken[c]',
+    });
   });
 
   it('reports the first error when no device took it', () => {
@@ -59,6 +78,6 @@ describe('expoMessages / readTickets (R-MOB-01)', () => {
       { status: 'error', message: 'rate limited', details: { error: 'MessageRateExceeded' } },
       { status: 'error', message: 'too big' },
     ]);
-    expect(outcome).toEqual({ ticketIds: [], deadTokens: [], error: 'rate limited' });
+    expect(outcome).toEqual({ ticketIds: [], ticketTokens: {}, deadTokens: [], error: 'rate limited' });
   });
 });
