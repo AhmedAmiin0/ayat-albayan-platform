@@ -6,6 +6,7 @@ import {
   removeMessage,
   replaceMessage,
   touchedThread,
+  type ThreadPages,
 } from '@ab/client-core';
 import type { MessageView, Page, ThreadView } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
@@ -76,16 +77,22 @@ export function holdSending(client: QueryClient, phone: string, id: string): voi
   refreshSentLists(client);
 }
 
+const holds = (data: ThreadPages | undefined, id: string): boolean =>
+  data?.pages.some((p) => p.messages.some((m) => m.id === id)) === true;
+
 /**
  * A send's or a bubble action's answer: its row takes the cached one's place by id, or joins the
- * open chat's newest page; the lists and the badge read again. The chat is not read: its delta and
- * live events bring what else moved.
+ * open chat's newest page; the lists and the badge read again. A row new to the chat becomes the
+ * delta's `after` anchor, so the newest page is read too: a row that landed first is not skipped.
  */
 export function showAnswer(client: QueryClient, row: MessageView): void {
+  const { queryKey } = threadQuery(row.phone_e164);
+  const known = holds(client.getQueryData(queryKey), row.id);
   const answer = { messages: [row], pending: [], has_more: false };
-  client.setQueryData(threadQuery(row.phone_e164).queryKey, (old) => mergeDelta(old, answer));
+  client.setQueryData(queryKey, (old) => mergeDelta(old, answer));
   touchLists(client, row);
-  refreshSentLists(client);
+  const reread = known ? refreshSentLists : () => void refreshSentChat(client, row, [row.id]);
+  reread(client);
 }
 
 /**

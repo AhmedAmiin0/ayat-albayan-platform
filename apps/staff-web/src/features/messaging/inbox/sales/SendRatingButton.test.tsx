@@ -35,7 +35,7 @@ describe('«إرسال تقييم الحلقة» counts as her own send (round 2
     expect(lastOwnSend(PHONE)).toBe('m-rating');
   });
 
-  it('a sent rating joins the open chat; only the lists and the badge read again', async () => {
+  it('a sent rating joins the chat; the lists, the badge and the chat\'s newest rows read again', async () => {
     routeFetch(apiFetch, [['/messaging/templates', [template({ key: 'lesson_rating' })]]]);
     const row = message({ id: 'm-rating', direction: 'outbound', status: 'sent' });
     apiSend.mockResolvedValue(row);
@@ -54,6 +54,7 @@ describe('«إرسال تقييم الحلقة» counts as her own send (round 2
     expect(invalidate.mock.calls.map(([f]) => f?.queryKey)).toEqual([
       ['threads', 'list'],
       ['threads', 'nav-count'],
+      chat,
     ]);
     const ids = client.getQueryData(chat)?.pages[0]?.messages.map((m) => m.id);
     expect(ids).toEqual(['m1', 'm-rating']);
