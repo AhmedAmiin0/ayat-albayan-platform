@@ -9,7 +9,11 @@ export interface WebConfigOptions {
   routes?: boolean;
   /** A second dev server's own Vite cache. */
   cacheDir?: string;
-  /** The app's icon set in @ab/web-kit (icons/<name>), served at its root with the kit's public. */
+  /** Absolute folder of @ab/web-kit: its src/ is aliased, its public/ and icons/ are served. */
+  kitDir: string;
+  /** Absolute folder of @ab/catalog's brand marks, served at /brand/. */
+  brandDir: string;
+  /** The app's icon set in <kitDir>/icons/<name>, served at its root with the kit's public. */
   icons?: 'staff' | 'family';
 }
 

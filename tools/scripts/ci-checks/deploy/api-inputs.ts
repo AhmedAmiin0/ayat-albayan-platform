@@ -25,7 +25,8 @@ const WORKSPACE = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/
 /**
  * Read besides the packages: what the Dockerfile installs from (lockfile, workspace and npm
  * config, patches, the root manifest, .dockerignore), the compose files and scripts that build
- * and run it (deploy/staging/), and the report PDF's logo (pdf-assets.ts LOGO_PATH). Paths
+ * and run it (deploy/staging/), and the report PDF's logo in @ab/catalog (pdf-assets.ts LOGO_PATH,
+ * read at runtime, not through a package dependency). Paths
  * ending in `/` are folders.
  */
 export const IMAGE_FILES: readonly string[] = [
@@ -36,7 +37,7 @@ export const IMAGE_FILES: readonly string[] = [
   'pnpm-workspace.yaml',
   'patches/',
   'deploy/staging/',
-  'apps/staff-web/public/brand/',
+  'packages/catalog/brand/',
 ];
 
 /** The workspace's packages by name: { name → folder } (repo-relative). */
