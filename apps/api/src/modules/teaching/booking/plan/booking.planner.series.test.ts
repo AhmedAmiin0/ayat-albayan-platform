@@ -1,19 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type * as Shared from '@ab/shared';
-import { probeOccurrences } from '@ab/shared';
+import type * as Schedule from '@ab/schedule';
+import { probeOccurrences as scheduleProbe } from '@ab/schedule';
+import { probeOccurrences as sharedProbe } from '@ab/shared';
 import { bookingRequest, fakePlanner, NOW } from '@/modules/teaching/booking/booking.fakes';
 
-vi.mock('@ab/shared', async (load) => {
-  const real = await load<typeof Shared>();
-  return { ...real, probeOccurrences: vi.fn(real.probeOccurrences) };
-});
+// One spy behind both paths, so the planner is watched whichever one it imports.
+const probe = vi.hoisted(() => vi.fn<typeof Schedule.probeOccurrences>());
+vi.mock('@ab/shared', async (load) => ({ ...(await load<object>()), probeOccurrences: probe }));
+vi.mock('@ab/schedule', async (load) => ({ ...(await load<object>()), probeOccurrences: probe }));
 
 const TWO_TIMES = { byday: [0, 2], dayTimes: [{ weekday: 2, startTimeLocal: '19:30' }] };
 
 describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-SCH-06)', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    const real = await vi.importActual<typeof Schedule>('@ab/schedule');
+    probe.mockReset().mockImplementation(real.probeOccurrences);
     vi.useFakeTimers({ now: NOW, toFake: ['Date'] });
-    vi.mocked(probeOccurrences).mockClear();
   });
   afterEach(() => vi.useRealTimers());
 
@@ -53,7 +55,9 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
     const { planner, busy } = fakePlanner();
     await planner.prepare(bookingRequest(TWO_TIMES));
     expect(busy.teacherLessons).toHaveBeenCalledTimes(1);
-    expect(vi.mocked(probeOccurrences).mock.calls.map(([p]) => p.timing.start_time_local)).toEqual(['17:00', '19:30']);
+    expect(scheduleProbe).toBe(probe);
+    expect(sharedProbe).toBe(probe);
+    expect(probe.mock.calls.map(([p]) => p.timing.start_time_local)).toEqual(['17:00', '19:30']);
   });
 
   it('endsOn caps both rules and drops the lessons after it; the check runs with the same cap', async () => {
