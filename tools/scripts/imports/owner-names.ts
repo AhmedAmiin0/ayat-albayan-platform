@@ -2,7 +2,7 @@
 // domain index re-exports only its own files, so no build output is needed.
 import { existsSync, readFileSync } from 'node:fs';
 import { posix } from 'node:path';
-import { Project, ts } from 'ts-morph';
+import { type Node, Project, ts } from 'ts-morph';
 
 export const DOMAINS = ['core', 'i18n', 'time', 'catalog', 'settings', 'money', 'schedule'];
 const SHARED_INDEX = 'packages/shared/src/index.ts';
@@ -47,7 +47,11 @@ export function ownerNames(root: string): Map<string, string> {
   return out;
 }
 
-/** The names @ab/shared exports from its own files (its relative export lines only). */
+/**
+ * The names @ab/shared declares in its own files. Its relative export lines may re-export a domain
+ * package (schemas/index.ts does), so a name counts only when declared under its src, or a built
+ * dist would turn every name of that package into a shared-own one.
+ */
 export function sharedOwnNames(root: string): Set<string> {
   const path = posix.join(root, SHARED_INDEX);
   if (!existsSync(path)) return new Set();
@@ -55,8 +59,13 @@ export function sharedOwnNames(root: string): Set<string> {
     .split('\n')
     .filter((line) => RELATIVE_EXPORT.test(line))
     .join('\n');
-  const virtual = posix.join(posix.dirname(path), '__own_exports__.ts');
-  return new Set(exportedNames(sourceProject(), virtual, own));
+  const src = `${posix.dirname(path)}/`;
+  const virtual = posix.join(src, '__own_exports__.ts');
+  const sf = sourceProject().createSourceFile(virtual, own, { overwrite: true });
+  const inShared = (n: Node): boolean => n.getSourceFile().getFilePath().startsWith(src);
+  return new Set(
+    [...sf.getExportedDeclarations()].filter(([, ds]) => ds.some(inShared)).map(([name]) => name),
+  );
 }
 
 /** The names a facade import may move: owner names that no shared-own name shadows. */

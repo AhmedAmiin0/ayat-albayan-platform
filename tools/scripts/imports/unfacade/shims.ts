@@ -21,6 +21,7 @@ const PACKAGE = /^(@ab\/[^/]+)/;
 interface Ctx extends ReadCtx {
   write: boolean;
   project: Project;
+  cache: Map<string, string>;
 }
 
 type Element = Named['elements'][number];
@@ -50,6 +51,12 @@ function routeOf(n: Named, shim: Shim | undefined): Route | undefined {
   return { stay, moved: [...groups] };
 }
 
+// A re-export file may also be an importer repointed earlier in the run, so later reads see this.
+function save(ctx: Ctx, path: string, text: string): void {
+  writeFileSync(posix.join(ctx.root, path), text);
+  ctx.cache.set(path, text);
+}
+
 /** Rewrites one importer of the live shims unless that would put it over cap. */
 function repointFile(ctx: Ctx, path: string, live: ReadonlyMap<string, Shim>): Repoint {
   const before = ctx.read(path);
@@ -60,7 +67,7 @@ function repointFile(ctx: Ctx, path: string, live: ReadonlyMap<string, Shim>): R
   ctx.project.removeSourceFile(sf);
   const targets = refs.imports.map((i) => i.target);
   if (overCap(before, out.text)) return { path, specs: [], targets, overCap: true };
-  if (ctx.write && out.text !== before) writeFileSync(posix.join(ctx.root, path), out.text);
+  if (ctx.write && out.text !== before) save(ctx, path, out.text);
   return { path, specs: out.specs, targets, overCap: false };
 }
 
@@ -70,8 +77,12 @@ function removeDead(ctx: Ctx, shim: Shim): void {
     rmSync(file);
     return;
   }
-  const edits = shim.decls.map(({ decl }) => ({ ...spanOf(decl, true), value: '' }));
-  writeFileSync(file, applyEdits(ctx.read(shim.path), edits));
+  const text = ctx.read(shim.path);
+  const sf = ctx.project.createSourceFile(`/${shim.path}`, text, { overwrite: true });
+  const decls = shimOf(sf, shim.path, new Map())?.decls ?? [];
+  const edits = decls.map(({ decl }) => ({ ...spanOf(decl, true), value: '' }));
+  save(ctx, shim.path, applyEdits(text, edits));
+  ctx.project.removeSourceFile(sf);
 }
 
 /** `workspace: @ab/x` for each package an importer's workspace now needs and lacks. */
@@ -106,7 +117,7 @@ export function unshim(opts: { root: string; workspace: string; write: boolean }
   const cache = new Map<string, string>();
   const read = (p: string): string =>
     cache.get(p) ?? cache.set(p, readFileSync(posix.join(opts.root, p), 'utf8')).get(p) ?? '';
-  const ctx: Ctx = { root: opts.root, write: opts.write, read, project: newProject() };
+  const ctx: Ctx = { root: opts.root, write: opts.write, read, cache, project: newProject() };
   const shims = shimsOf(ctx, opts.workspace);
   const refs = [...scanRefs(ctx, shims)];
   const mocked = new Set(refs.flatMap(([, r]) => r.mocked));

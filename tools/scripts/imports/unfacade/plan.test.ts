@@ -34,6 +34,8 @@ test('a result with a new line over 100 characters is over cap; an old long line
   assert.equal(plan(`import {\n  ${alias},\n} from '@ab/shared';\n`).kind, 'change');
   const wide = `export { toE164 as ${'z'.repeat(80)} } from '@ab/shared';\n`;
   assert.equal(plan(wide).kind, 'change');
+  const huge = `import { toE164 as ${'w'.repeat(100)} } from '@ab/shared';\n`;
+  assert.equal(plan(huge).kind, 'overCap');
 });
 
 test('a namespace import, vi.mock or dynamic import of the facade is manual', () => {

@@ -95,3 +95,15 @@ test('an importer the repoint would push past 150 lines is over cap and keeps it
   assert.equal(read(root, 'apps/api/src/a.ts'), big);
   assert.equal(existsSync(posix.join(root, SHIM)), true);
 });
+
+test('a re-export file that also imports another one keeps its repointed import', () => {
+  const fixtures = 'apps/api/src/fixtures.ts';
+  const text = "export { own } from '@ab/shared';\nimport { phone } from './conf/recipients';\n";
+  const root = tree({ [fixtures]: `${text}export const f = phone;\n` });
+  const r = unshim({ root, workspace: 'apps/api', write: true });
+  assert.ok(r.repointed.includes(fixtures));
+  assert.equal(
+    read(root, fixtures),
+    "import { toE164 as phone } from '@ab/core';\nexport const f = phone;\n",
+  );
+});
