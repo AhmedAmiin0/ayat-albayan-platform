@@ -25,7 +25,6 @@
   "dependencies": {
     "@ab/catalog": "workspace:*",
     "@ab/core": "workspace:*",
-    "@ab/db": "workspace:*",
     "@ab/settings": "workspace:*",
     "@ab/time": "workspace:*",
     "zod": "^4.6.5"
