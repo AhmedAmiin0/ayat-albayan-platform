@@ -370,8 +370,8 @@ jobs:
           else echo "not a move PR ($HEAD_REF): skipped"; fi
 
   # Code-health gates (docs/27 Wave F). Counts are measured on both sides, never stored: on a PR the merge base is
-  # checked out beside the head (GUARD_BASE) and jscpd (clones, duplicated lines, cross-app clones), cycles and lint
-  # (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a new violation, this
+  # checked out beside the head (GUARD_BASE) and jscpd (clones, duplicated lines, cross-app clones), cycles,
+  # package boundaries (both sides under the head's refactor/guards/packages.json) and lint (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a new violation, this
   # gate on a count raised by hand or an entry whose file is gone) fail only above the base branch's own measure.
   # Equal or below passes with nothing to edit, so PRs never touch a baseline and never conflict on one. knip and
   # queries keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
@@ -406,6 +406,7 @@ jobs:
       - run: pnpm guard:knip
       - run: pnpm guard:queries
       - run: pnpm guard:cycles
+      - run: pnpm guard:packages
       - name: pnpm guard:lint (on a PR, against the base branch's suppressions)
         run: |
           if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi
