@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { reexportsOf, renameTable } from './pure-move-paths.mjs';
+import { reexportsOf, renameTable, target } from './pure-move-paths.mjs';
 import { barrelPaths, onlyPathsChanged } from './pure-move-check.mjs';
 
 const ROUTE = 'apps/staff-mobile/app/(tabs)/inbox/index.tsx';
@@ -49,4 +49,11 @@ test('a move may write a `../` path as its `@/` alias (docs/32 R12), never anoth
   assert.equal(onlyPathsChanged(src, alias, c), true);
   assert.equal(onlyPathsChanged(src, alias.replace('@/common/x', '@/common/y'), c), false);
   assert.equal(onlyPathsChanged(src, alias.replace('@/modules/a/f/e', '@/modules/a/d/e'), c), false, 'stale path');
+});
+
+test('a workspace package resolves to its src index, digits in the name included', () => {
+  assert.equal(target('apps/api/src/a.ts', '@ab/i18n'), 'packages/i18n/src/index.ts');
+  assert.equal(target('apps/api/src/a.ts', '@ab/web-kit'), 'packages/web-kit/src/index.ts');
+  assert.equal(target('apps/api/src/a.ts', '@ab/shared/x'), null);
+  assert.equal(target('apps/api/src/a.ts', 'zod'), null);
 });

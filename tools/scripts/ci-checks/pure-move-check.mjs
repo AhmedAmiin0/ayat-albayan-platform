@@ -6,6 +6,10 @@
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { classifyBaseline } from './pure-move/baselines.mjs';
+import { classifyDeps } from './pure-move/deps.mjs';
+import { headModules } from './pure-move/exports.mjs';
+import { facadeMoved } from './pure-move/facade.mjs';
+import { headTree, parseNameStatus } from './pure-move/git.mjs';
 import { classifyConfig, followDomains, rewritePaths as rewriteText, textPairs } from './pure-move/configs.mjs';
 import { CODE_SPECS, grepFiles, identifierTable, renameIdentifiers, renameProblems } from './pure-move/identifiers.mjs';
 import { reexportsOf, renameTable, samePath } from './pure-move-paths.mjs';
@@ -61,9 +65,12 @@ export function onlyPathsChanged(before, after, ctx = {}) {
   const a = normalize(before);
   const b = normalize(after);
   const c = { from: ctx.from ?? 'x.ts', to: ctx.to ?? 'x.ts', table: ctx.table ?? new Map(), reexports: ctx.reexports };
-  if (JSON.stringify(a.statements) !== JSON.stringify(b.statements) || a.paths.length !== b.paths.length) return false;
-  if (!a.paths.every((p, i) => p === b.paths[i] || samePath(c, p, b.paths[i] ?? ''))) return false;
-  return a.body === b.body || sameButRenames(a.raw, b.raw, { subs: ctx.subs ?? new Map(), from: c.from, to: c.to });
+  const same = (p, q = '') => p === q || samePath(c, p, q);
+  const [calls, next] = [a.paths.slice(a.statements.length), b.paths.slice(b.statements.length)];
+  if (calls.length !== next.length || !calls.every((p, i) => same(p, next[i]))) return false;
+  if (a.body !== b.body && !sameButRenames(a.raw, b.raw, { subs: ctx.subs ?? new Map(), from: c.from, to: c.to })) return false;
+  const kept = JSON.stringify(a.statements) === JSON.stringify(b.statements) && a.paths.every((p, i) => same(p, b.paths[i]));
+  return kept || facadeMoved(a, b, { ...c, same, modules: ctx.modules });
 }
 
 /** A new barrel: an index file made only of `export … from` lines. */
@@ -86,8 +93,8 @@ const isConfig = (file) => CONFIG.some((re) => re.test(file));
 /** Why one `git diff --name-status` entry is not a pure move (null = fine), and its kind. */
 export function classify(entry, read, ctx = {}) {
   const { status, from, to } = entry;
-  const baseline = classifyBaseline(entry, read, ctx);
-  if (baseline) return baseline;
+  const early = classifyBaseline(entry, read, ctx) ?? classifyDeps(entry, read, ctx);
+  if (early) return early;
   if (status === 'R100') return { kind: 'rename' };
   if (TEXT.test(to) && !/^(\.github|refactor)\//.test(to) && status !== 'A' && status !== 'D') {
     const renamed = rewriteText(read('base', from), textPairs(to, ctx.renames ?? []));
@@ -107,17 +114,6 @@ export function classify(entry, read, ctx = {}) {
   return { kind: 'bad', why: `${status}: not a move` };
 }
 
-/** Parses `git diff --name-status -M` output. */
-export function parseNameStatus(out) {
-  return out
-    .split('\n')
-    .filter(Boolean)
-    .map((line) => {
-      const [status = '', a = '', b] = line.split('\t');
-      return { status, from: a, to: b ?? a };
-    });
-}
-
 function main([base, head = 'HEAD']) {
   if (!base) {
     console.error('usage: pure-move-check.mjs <base> [head]');
@@ -134,6 +130,7 @@ function main([base, head = 'HEAD']) {
   const ids = identifierTable(entries, read);
   const grep = (re, files = CODE_SPECS) => grepFiles(() => git('grep', '-lE', re, mergeBase, '--', ...files));
   const ctx = { renames, gone, ids, table: renameTable(renames), subs: substitutions(renames, gone), reexports: reexportsOf(readHead, barrelPaths) };
+  ctx.modules = headModules(headTree(git, head), normalize);
   const problems = renameProblems(ids, grep, entries.map((e) => e.from));
   for (const p of problems) console.log(`✗ renames: ${p}`);
   const counts = { rename: 0, paths: 0, barrel: 0, config: 0, bad: problems.length };
