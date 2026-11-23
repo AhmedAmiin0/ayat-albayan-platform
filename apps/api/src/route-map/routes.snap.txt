@@ -207,7 +207,7 @@ GET /sales/subscriptions/teachers access=self.sales_money guards=- code=- SalesS
 GET /sales/teachers access=self.sales_academy guards=- code=- SalesAcademyController.teachers
 GET /sales/teachers/:id/overview access=self.sales_academy guards=- code=- SalesTeacherOverviewController.overview
 GET /saved-replies access=inbox.read guards=RepliesUserGuard code=- SavedRepliesController.all
-GET /script-relay/api/v1/me access=public guards=- code=- RelayController.me
+GET /script-relay/api/v1/me access=public guards=RelayLimit code=- RelayController.me
 GET /settings access=settings.read guards=- code=- SettingsController.get
 GET /settings/integrations access=settings.read guards=- code=- IntegrationConfigController.list
 GET /settings/integrations/storage-backup access=settings.write guards=- code=- BackupStatusController.view
@@ -494,7 +494,7 @@ POST /saved-replies/attachment-upload-url access=inbox.read guards=RepliesUserGu
 POST /schedule-rules/:id/cancel access=lessons.write guards=- code=200 RuleCancelController.cancel
 POST /schedule-rules/:id/extend access=lessons.write guards=- code=200 ScheduleRulesController.extend
 POST /schedule-rules/refresh access=lessons.write guards=- code=200 ScheduleRulesController.refresh
-POST /script-relay/api/v1/messages access=public guards=- code=201 RelayController.send
+POST /script-relay/api/v1/messages access=public guards=RelayLimit code=201 RelayController.send
 POST /settings/integrations/crm-webhook access=settings.write guards=- code=200 CrmWebhookController.register
 POST /settings/integrations/storage-probe access=settings.write guards=- code=200 StorageProbeController.run
 POST /short-links access=short_links.manage guards=- code=- ManagedLinksController.create
