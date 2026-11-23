@@ -32,3 +32,27 @@ test('a deleted and an added file with the same code but their paths pair as a r
     ],
   );
 });
+
+test('two deleted files with the same masked text each pair with their own add', () => {
+  const texts = {
+    'base:p/a/index.ts': "export * from './x';\n",
+    'base:p/b/index.ts': "export * from './y';\n",
+    'HEAD:p/a/A/index.ts': "export * from '../x';\n",
+    'HEAD:p/b/B/index.ts': "export * from '../y';\n",
+  };
+  const entries = [
+    { status: 'D', path: 'p/a/index.ts' },
+    { status: 'D', path: 'p/b/index.ts' },
+    { status: 'A', path: 'p/a/A/index.ts' },
+    { status: 'A', path: 'p/b/B/index.ts' },
+  ];
+  const out = pairRenames(
+    entries,
+    (path) => texts[`base:${path}`] ?? '',
+    (path) => texts[`HEAD:${path}`] ?? '',
+  );
+  assert.deepEqual(
+    out.map((e) => e.status),
+    ['R', 'R'],
+  );
+});

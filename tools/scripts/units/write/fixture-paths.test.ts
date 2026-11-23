@@ -50,3 +50,15 @@ test('a file that stays and reads no moved path is left as it is', () => {
   const src = "new URL('./fixtures/a.json', import.meta.url);";
   assert.equal(run(src, { file: 'p/b.ts', to: 'p/b.ts', renamed: new Map() }), src);
 });
+
+test('several literals to a moved file become one literal to its new place', () => {
+  const renamed = new Map([['b/Unit.ts', 'b/Unit/Unit.ts']]);
+  const src = "join(__dirname, '..', 'b', 'Unit.ts');";
+  const still = { file: 'a/r.ts', to: 'a/r.ts', renamed };
+  assert.equal(run(src, still), "join(__dirname, '../b/Unit/Unit.ts');");
+});
+
+test('a folder URL keeps its trailing slash', () => {
+  const src = "new URL('./fixtures/', import.meta.url);";
+  assert.equal(run(src, MOVED), "new URL('../../fixtures/', import.meta.url);");
+});

@@ -8,14 +8,10 @@ const code = (entries, status) => entries.filter((e) => e.status === status && C
 
 /** `entries` with each such delete + add replaced by one `R` entry (status without a score). */
 export function pairRenames(entries, readBase, readHead) {
-  const gone = new Map(
-    code(entries, 'D').map((e) => [maskSpecifiers(readBase(e.path), e.path), e.path]),
-  );
+  const gone = Map.groupBy(code(entries, 'D'), (e) => maskSpecifiers(readBase(e.path), e.path));
   const pairs = code(entries, 'A').flatMap((e) => {
-    const from = gone.get(maskSpecifiers(readHead(e.path), e.path));
-    if (from === undefined) return [];
-    gone.delete(maskSpecifiers(readBase(from), from));
-    return [{ status: 'R', path: e.path, from }];
+    const from = gone.get(maskSpecifiers(readHead(e.path), e.path))?.shift()?.path;
+    return from === undefined ? [] : [{ status: 'R', path: e.path, from }];
   });
   const paired = new Set(pairs.flatMap((p) => [p.path, p.from]));
   return [...entries.filter((e) => !paired.has(e.path)), ...pairs];

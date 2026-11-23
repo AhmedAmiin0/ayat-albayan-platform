@@ -60,9 +60,15 @@ function whereOf(f: Found, ctx: PathCtx): Where {
   return { from, to: posix.dirname(ctx.to), target, moved: ctx.renamed.get(target) };
 }
 
+const lastOf = (f: Found): Node => f.rest.at(-1) ?? f.first;
+
+/** posix.relative drops it, and a folder URL resolves its children only with it. */
+const slashed = (f: Found, rel: string): string =>
+  textOf(lastOf(f)).endsWith('/') && !rel.endsWith('/') ? `${rel}/` : rel;
+
 /** One literal (or a moved target): the whole new path goes in it. */
-const wholeValue = (_f: Found, w: Where): string =>
-  dotted(posix.relative(w.to, w.moved ?? w.target));
+const wholeValue = (f: Found, w: Where): string =>
+  slashed(f, dotted(posix.relative(w.to, w.moved ?? w.target)));
 
 /** Several literals to an unmoved target: the way back to the old folder goes in front. */
 function prefixValue(f: Found, w: Where): string {
@@ -75,8 +81,11 @@ const isWhole = (f: Found, w: Where): boolean => f.rest.length === 0 || w.moved 
 function editOf(f: Found, ctx: PathCtx): Edit | undefined {
   const w = whereOf(f, ctx);
   if (w.moved === undefined && w.from === w.to) return undefined;
-  const value = (isWhole(f, w) ? wholeValue : prefixValue)(f, w);
-  return { start: f.first.getStart() + 1, end: f.first.getEnd() - 1, value };
+  const inside = { start: f.first.getStart() + 1, end: f.first.getEnd() - 1 };
+  if (!isWhole(f, w)) return { ...inside, value: prefixValue(f, w) };
+  const quote = f.first.getText().charAt(0);
+  const value = `${quote}${wholeValue(f, w)}${quote}`;
+  return { start: f.first.getStart(), end: lastOf(f).getEnd(), value };
 }
 
 /** Edits so the file's own-folder paths (URL and dirname joins) still reach their files. */
