@@ -21,10 +21,20 @@ const windowErrors = (target: Pick<EventTarget, 'addEventListener'>): UncaughtSo
     target.addEventListener('unhandledrejection', (e) => handler(rejected.parse(e).reason));
   };
 
+// Installed once by startApp, before the app's own modules load; React's root and the query
+// caches report through it later.
+let installed: ErrorReporter | null = null;
+
 /** Both web apps (startApp): uncaught errors and rejections go to VITE_SENTRY_DSN when set. */
 export function installWebErrorReporting(opts: WebErrorOptions = {}): ErrorReporter {
   const { VITE_SENTRY_DSN } = buildEnv.parse(opts.env ?? import.meta.env);
   const listen = windowErrors(opts.target ?? window);
   const dsn = VITE_SENTRY_DSN || undefined;
-  return installErrorReporting({ dsn, app: 'web', listen, send: opts.send });
+  installed = installErrorReporting({ dsn, app: 'web', listen, send: opts.send });
+  return installed;
+}
+
+/** An error the app caught itself (a route's error card, a failed read) for the tracker. */
+export function reportWebError(error: unknown): void {
+  installed?.capture(error);
 }

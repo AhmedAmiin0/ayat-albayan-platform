@@ -1,27 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { shouldRetry } from '@ab/client-core';
+import { createAuthExit, shouldRetry } from '@ab/client-core';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { focusManager, MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
-import { isAccountDisabled, setLoginNotice } from '../../auth/login-notice';
-import { ApiError } from '../http/api';
+import { setLoginNotice } from '../../auth/login-notice';
 import { supabase } from '../http/supabase';
 
 // R-MOB-03: reads survive a restart or a dead connection (the last good answer stays on screen).
 const DAY = 24 * 60 * 60 * 1000;
 
-/**
- * Expired or revoked session (401), or an account an admin disabled mid-session (403 `account_disabled`):
- * sign out; the auth gate then shows /login and clears the caches. A disabled account leaves its reason
- * for the login screen. Any other 403 (a permission the role lacks) keeps the session.
- */
-export function signOutOnAuthError(error: unknown): void {
-  if (isAccountDisabled(error)) setLoginNotice('accountDisabled');
-  else if (!(error instanceof ApiError && error.status === 401)) return;
-  void supabase.auth.signOut();
-}
+/** The auth gate then shows /login and clears the caches; a disabled account leaves its reason. */
+export const signOutOnAuthError = createAuthExit({
+  signOut: () => supabase.auth.signOut(),
+  onDisabled: () => setLoginNotice('accountDisabled'),
+});
 
 // RN has no window focus event: back in the foreground, mounted stale lists refetch (tabs stay
 // mounted, so nothing else would). TanStack's React Native recipe.

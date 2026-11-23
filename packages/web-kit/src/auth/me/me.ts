@@ -1,4 +1,4 @@
-import { meLocaleOf, pathKey, setViewerPersonTz } from '@ab/client-core';
+import { isAccountDisabled, meLocaleOf, pathKey, setViewerPersonTz } from '@ab/client-core';
 import type { Permission, UserRole } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
@@ -20,13 +20,6 @@ export interface Me {
   locale?: string | null;
   /** A test account (docs/56): the «تجريبي» chip; absent from an older API = real. */
   is_test?: boolean;
-}
-
-/** 403 account_disabled: the profile was disabled while the token was still valid (checked structurally, no import of ApiError). */
-export function isAccountDisabled(error: unknown): boolean {
-  if (typeof error !== 'object' || error === null || !('status' in error) || error.status !== 403 || !('body' in error)) return false;
-  const { body } = error;
-  return typeof body === 'object' && body !== null && 'code' in body && body.code === 'account_disabled';
 }
 
 function signedOut(): null {

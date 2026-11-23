@@ -6,6 +6,7 @@ import { MaintenanceGate, type MaintenanceOptions } from '@ab/web-kit/boot/maint
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 import { watchSystemTheme } from '@ab/web-kit/lib/theme';
 import { bindWebPushToSession } from '@ab/web-kit/push/web-push-session';
+import { reportWebError } from './web-errors';
 
 interface App {
   router: AnyRouter;
@@ -27,7 +28,9 @@ export function renderApp({ router, queryClient, title, maintenance = {} }: App)
   document.title = title;
   const root = document.getElementById('root');
   if (!root) throw new Error('#root missing');
-  createRoot(root).render(
+  // A render error a route's error card caught, or one nothing caught, still reaches the tracker.
+  const onError = (error: unknown): void => reportWebError(error);
+  createRoot(root, { onCaughtError: onError, onUncaughtError: onError }).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <MaintenanceGate router={router} {...maintenance}>

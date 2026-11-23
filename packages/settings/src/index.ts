@@ -15,7 +15,7 @@ export * from './google-defs.js';
 export * from './seed/seed-entries.js';
 export * from './seed/seed-payload.js';
 export * from './seed/entries.js';
-export * from './value-groups.js';
+export * from './value-groups/value-groups.js';
 export * from './custom-config/index.js';
 export * from './custom-config/public-config.js';
 export * from './custom-config/public-config-schema.js';

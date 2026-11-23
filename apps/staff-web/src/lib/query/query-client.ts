@@ -1,5 +1,5 @@
 import { CALLS_KEY, shouldRetryUnanswered } from '@ab/client-core';
-import { MutationCache, QueryClient, type Query } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, type Query } from '@tanstack/react-query';
 
 export const STALE_MS = 30_000;
 
@@ -23,11 +23,12 @@ const isLive = (query: Query): boolean => LIVE_ROOTS.includes(String(query.query
  * without a refetch: a screen opened next reads fresh data, open screens stay as they are and
  * refresh through their own invalidations.
  */
-export function createQueryClient(): QueryClient {
+export function createQueryClient(onError?: (error: unknown) => void): QueryClient {
   const markStale = (): Promise<void> =>
     client.invalidateQueries({ refetchType: 'none', predicate: (q) => !isLive(q) });
   const client: QueryClient = new QueryClient({
-    mutationCache: new MutationCache({ onSuccess: () => void markStale() }),
+    queryCache: new QueryCache({ onError }),
+    mutationCache: new MutationCache({ onSuccess: () => void markStale(), onError }),
     defaultOptions: { queries: { staleTime: STALE_MS, retry: shouldRetryUnanswered } },
   });
   for (const root of LIVE_ROOTS) client.setQueryDefaults([root], { staleTime: 0 });
