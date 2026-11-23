@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { PayoutsRepo } from './payouts.repo';
 
 describe('PayoutsQueries.forTeacher (a draft is the admin’s to change)', () => {

@@ -1,4 +1,4 @@
-import type { PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
 import { ScrollView } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { PayoutActionBar } from './PayoutActionBar';
