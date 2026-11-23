@@ -8,7 +8,12 @@ const disabledBody = z.object({ code: z.literal('account_disabled') });
 export const isAccountDisabled = (error: unknown): boolean =>
   error instanceof ApiError && error.status === 403 && disabledBody.safeParse(error.body).success;
 
-const isExpired = (error: unknown): boolean => error instanceof ApiError && error.status === 401;
+// The auth guard's 401 carries no code; a coded 401 (invalid_code, code_required) answers the
+// request itself, e.g. a wrong WhatsApp code on a public gate, and is not an ended session.
+const codedAnswer = z.object({ code: z.string() });
+
+const isExpired = (error: unknown): boolean =>
+  error instanceof ApiError && error.status === 401 && !codedAnswer.safeParse(error.body).success;
 
 /**
  * Expired or revoked session (401) or a disabled account: sign out. Any other 403 is a permission

@@ -45,6 +45,15 @@ describe('createAuthExit', () => {
     expect(s.signOut).not.toHaveBeenCalled();
   });
 
+  it('a 401 the API answers with a code (a wrong or missing code) keeps the session', () => {
+    const s = exitWith();
+    s.exit(new ApiError(401, { code: 'invalid_code', message: 'invalid_code' }));
+    s.exit(new ApiError(401, { code: 'code_required' }));
+    expect(s.signOut).not.toHaveBeenCalled();
+    s.exit(new ApiError(401, { statusCode: 401, message: 'Unauthorized' }));
+    expect(s.signOut).toHaveBeenCalledTimes(1);
+  });
+
   it('many 401s at once sign out once; a later session can sign out again', async () => {
     const s = exitWith();
     s.exit(new ApiError(401));
