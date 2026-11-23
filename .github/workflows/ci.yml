@@ -407,6 +407,7 @@ jobs:
       - run: pnpm guard:queries
       - run: pnpm guard:cycles
       - run: pnpm guard:packages
+      - run: pnpm guard:ownership
       - run: pnpm guard:comments
       - name: pnpm guard:lint (on a PR, against the base branch's suppressions)
         run: |
