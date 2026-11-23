@@ -17,7 +17,7 @@ import { RecordedNotice } from '@ab/web-kit/classroom/recordings/RecordedNotice'
 import type { RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
 import { opensAtText } from '@ab/web-kit/classroom/room/livekit/window-hint';
 
-/** A 403 with opens_at reads «بتفتح الساعة …»; every other code has its own line. */
+/** A 403 with opens_at says when it opens; every other code has its own line. */
 function problemText(error: unknown, cycle: ClockCycle): string {
   const opens = opensAtOf(error);
   return opens ? opensAtText(opens, cycle) : classroomErrorText(error);
@@ -55,10 +55,7 @@ function sendFor({ known, linkToken, name, joinWith }: SendInput): Send | null {
   return parsed.success ? () => joinWith({ linkToken, name: parsed.data.name }) : null;
 }
 
-/**
- * /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room.
- * No login, no app shell. The family app's link already names the student: just «ادخل».
- */
+/** No login or app shell; the family app's link already names the student. */
 export function GuestJoinPage(props: Props) {
   const known = props.knownStudent === true;
   const words = known ? t.classroom.guest.introKnown : t.classroom.guest.intro;

@@ -4,7 +4,6 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TrialHistoryTable } from './TrialHistoryTable';
 
-/** «مواعيد الحلقة التجريبية · 3 مواعيد»: the history's title and its count (counted). */
 export function TrialHistoryTitle({ history, id }: { history: TrialHistory | undefined; id?: string }) {
   return (
     <h2 id={id} className="flex flex-wrap items-baseline gap-x-2 text-sm font-semibold">
@@ -18,7 +17,6 @@ export function TrialHistoryTitle({ history, id }: { history: TrialHistory | und
   );
 }
 
-/** The history's states: loading, «تعذّر تحميل…», «لم يُحدَّد أي موعد…», else the table. */
 export function TrialHistoryBody({ query }: { query: UseQueryResult<TrialHistory> }) {
   if (query.isError) return <FormAlert>{t.trialDate.loadError}</FormAlert>;
   if (!query.data) return <p className="text-sm text-ink-3">{t.common.loading}</p>;

@@ -48,10 +48,7 @@ function PackageValue({ draft, students }: { draft: BookingDraft; students: numb
   );
 }
 
-/**
- * The review step's summary of what «احجز» creates (R-SCH-06): who, with whom, when, how often (each
- * day with its time). The assistant's course: its lesson count and end date, no price, no invoice.
- */
+/** The assistant's course shows its lesson count and end, no price or invoice (R-SCH-06). */
 export function ReviewSummary({ draft }: { draft: BookingDraft }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const names = draft.students.length > 0 ? draft.students.map((s) => s.name) : [draft.newStudent?.name ?? ''];

@@ -23,11 +23,11 @@ export interface BookingWizardProps {
   onOpenStudent: (id: string, kind?: BookingDraft['kind']) => void;
   /** From a calendar free gap: that teacher, then that start, preselected. */
   hint?: BookHint | null;
-  /** The type and package the admin picked, for the page title («تجريبية» only while it is the trial). */
+  /** For the page title, which says trial only while it is the trial. */
   onChoice?: (choice: Pick<BookingDraft, 'kind' | 'pkg'>) => void;
   /** From a missed lesson's drawer: the makeup's missed-lesson step preselects it (R-SCH-10). */
   missedLessonId?: string | undefined;
-  /** «رجوع» on the first step back to the caller's screen (a renewal's «تابِع بنفس الأيام» choice); absent = none. */
+  /** Back on the first step returns to the caller's screen; absent means none. */
   exit?: { label: string; onExit: () => void } | undefined;
   /** The step to open on (a kept sales draft, docs/20 W9); absent = the first step. */
   initialStep?: StepKey | undefined;
@@ -37,7 +37,7 @@ export interface BookingWizardProps {
 
 type BackProps = { first: boolean; exit: BookingWizardProps['exit']; onBack: () => void };
 
-/** «رجوع» to the previous step; on the first step the caller's exit, else disabled. */
+/** On the first step the caller's exit, else disabled. */
 function BackButton({ first, exit, onBack }: BackProps) {
   const leave = first ? exit : undefined;
   return (
@@ -47,13 +47,7 @@ function BackButton({ first, exit, onBack }: BackProps) {
   );
 }
 
-/**
- * Booking wizard (R-SCH-06, R-LEAD-06, R-SCH-10): booking type + student(s) → [missed lesson] →
- * teacher → [length + package] → slot (+ weekly repeat) → [invoice] → review → POST /booking (a new
- * trial date for an existing student: teacher → slot → review → POST /booking/trial-date). One
- * filled primary per step («التالي», then «احجز» on the review). Every step change (also «اختار
- * ميعاد تاني») moves focus to the new step.
- */
+/** R-SCH-06, R-LEAD-06, R-SCH-10: one filled primary per step; every step change moves focus. */
 export function BookingWizard(props: BookingWizardProps) {
   const { initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId, exit, onProgress } = props;
   const [draft, setDraft] = useState(initial);

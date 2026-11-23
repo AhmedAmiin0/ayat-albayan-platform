@@ -14,17 +14,11 @@ export interface LeadStudentStepProps {
   value: NewStudentDraft;
   tz: string;
   onChange: (patch: { newStudent?: NewStudentDraft; tz?: string }) => void;
-  /** The heading; «طالب جديد من المحادثة» unless there is no chat behind it (an assistant's registration). */
+  /** The default heading assumes a chat; an assistant's registration has none. */
   title?: string | undefined;
 }
 
-/**
- * Step 1 from a lead (R-LEAD-06): the registration form's questions in its order and wording
- * («اسم الطالب», «رقم الواتساب (مع كود الدولة)», «سن الطالب», «النوع», «عرفت عننا منين؟»),
- * prefilled from the WhatsApp number and the lead's «بيانات الطالب». The guardian's name (stored on
- * the guardian) and the zone (every person has one, rule 6) follow. The program is picked with the
- * teacher in step 2. The zone applies to both and becomes the rule's zone.
- */
+/** Lead path (R-LEAD-06); every person has a zone (rule 6), which becomes the rule's zone. */
 export function LeadStudentStep({ value, tz, onChange, title }: LeadStudentStepProps) {
   const set = (patch: Partial<NewStudentDraft>) => onChange({ newStudent: { ...value, ...patch } });
   const phoneProblem = value.guardianPhone.trim() ? phoneError(value.guardianPhone) : undefined;

@@ -21,7 +21,7 @@ import { groupSessions } from './sessions';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 
-// The day in the UI language with Western digits («الاثنين 5 أكتوبر»), not English.
+// The day in the UI language with Western digits, not English.
 const DAY = { weekday: 'long', day: 'numeric', month: 'long' } as const;
 const dayText = (iso: string): string => dateText(new Date(iso), { tz: viewerZone(), locale }, DAY);
 
@@ -66,12 +66,7 @@ function DaySwitcher({ offset, onOffset, day }: { offset: number; onOffset: (n: 
   );
 }
 
-/**
- * /admin/classrooms («الحلقات عبر الإنترنت»): every teacher's lessons of a day in three groups,
- * «الآن» (room open), «قادمة», «انتهت», each lesson a card with its actions. The header keeps an
- * actions slot (`actions`) for more entries next to «اجتماع جديد»; the groups scroll in a
- * fixed-height box like the tables.
- */
+/** A day's lessons in now, upcoming and ended groups; `actions` adds header entries. */
 export function AdminSessions({ actions }: { actions?: ReactNode }) {
   const [offset, setOffset] = useState(0);
   const now = useNow();

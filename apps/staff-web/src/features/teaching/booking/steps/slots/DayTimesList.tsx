@@ -18,10 +18,7 @@ export interface DayTimesListProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/**
- * «الأحد الساعة 17:00» for one picked day on the family's clock `tz`; «… 17:00 بتوقيت القاهرة»
- * when that zone is not the viewer's (`clock.tz`, from useViewerTz()).
- */
+/** Adds the family's zone name when it differs from the viewer's (`clock.tz`). */
 export function dayAtText(
   p: Pick<DayPick, 'weekday' | 'time'>,
   clock: Clock & { tz: string },
@@ -33,10 +30,7 @@ export function dayAtText(
   return t.booking.dayAt.replace('{day}', weekday[String(p.weekday)] ?? '').replace('{time}', time);
 }
 
-/**
- * The package's picked days, each with its own time (owner 2026-10-18: «اختر موعدًا لكل يوم»),
- * picked on the slot grid above; each removable with its own button (44px touch target).
- */
+/** Each removable with its own 44px button. */
 export function DayTimesList({ picks, tz, onRemove }: DayTimesListProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   if (picks.length === 0) return <p className="text-xs text-ink-3">{t.booking.noDayPicked}</p>;

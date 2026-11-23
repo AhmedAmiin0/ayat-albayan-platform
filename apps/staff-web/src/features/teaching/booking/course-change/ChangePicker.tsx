@@ -13,21 +13,12 @@ export interface ChangePickerProps {
   view: CourseChangeView;
   picks: readonly string[];
   onPicks: (picks: string[]) => void;
-  /** «التالي»: on to the check and the review. */
   onNext: () => void;
-  /** «رجوع» to the caller's screen (the drawer's lesson); absent = none. */
+  /** Back to the caller's screen; absent means none. */
   onBack?: (() => void) | undefined;
 }
 
-/**
- * «تغيير أيام الحلقات», step 1 (owner 2026-10-18): the current days prefilled on the teacher's slot
- * grid (the course's own lessons not busy: excludeCourse); one slot per weekday, each at its own time
- * (tapping another slot that day replaces it), exactly the plan's days a week. Unchanged days are
- * refused by the series check (400 no_change, shown with its text): only the server knows the active
- * rules a pending change keeps. The grid opens on the first prefilled pick's week (changePicks: never
- * before startsOn); «الأسبوع الماضي» pages back to the current week, so a pending change's old days
- * before its startsOn stay reachable.
- */
+/** Unchanged days are refused by the server (400 no_change), which alone knows pending rules. */
 export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePickerProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const { course, student } = view;

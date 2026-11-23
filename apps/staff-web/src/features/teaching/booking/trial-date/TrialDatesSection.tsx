@@ -11,11 +11,7 @@ import type { StudentProfile } from '@ab/shared';
 /** GET /students/:id returns every column; the teacher preference is one of them (migration 070). */
 type Profile = StudentProfile & { teacher_gender_pref?: Gender | null };
 
-/**
- * The student file's «مواعيد الحلقة التجريبية» (R-STU-05): the count, «موعد تجريبي جديد» (disabled
- * with the reason for a subscriber), and the compact history. Admin routes (/booking, booking.write):
- * a role without it sees no section rather than a 403.
- */
+/** Admin routes need booking.write; a role without it sees no section rather than a 403. */
 export function TrialDatesSection({ student }: { student: Profile }) {
   const { can } = usePermissions();
   return can('booking.write') ? <TrialDates student={student} /> : null;

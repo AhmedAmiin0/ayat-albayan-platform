@@ -9,8 +9,7 @@ const col = createColumnHelper<DataTableFeatures, SalesSubscriptionView>();
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const statusOptions = SUBSCRIPTION_STATUSES.map((s) => ({ value: s, label: t.enums.subscriptionStatus[s] }));
 
-// «الاشتراكات» of a salesperson: the whole list is loaded, so it sorts and filters locally. Never a
-// price or a payment. Stacked under 640px: student and code, then package · status · lessons, start.
+// The whole list is loaded, so it sorts and filters locally; never a price or payment.
 
 export const salesSubscriptionColumns = col.columns([
   // «name code»: sorts by the name, and the search finds a name or a code.

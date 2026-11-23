@@ -30,13 +30,13 @@ export { days, draftPicks, pickPatch, withPicks } from './draft.days';
 export type PickedStudent = { id: string; name: string; code: string | null };
 
 export interface BookingDraft {
-  /** تجريبية | اشتراك | حجز تعويضي (R-SCH-10). */
+  /** Trial, package or makeup (R-SCH-10). */
   kind: BookingKind;
   /** Non-trial: the payment proof (R-PAY-03); null until uploaded or picked from the chat. */
   invoice: InvoiceDraft | null;
   /** Makeup: the missed lesson being replaced. */
   missed: MissedPick | null;
-  /** The family's WhatsApp number (E.164) for «من الشات»; null when unknown (the lead path derives it). */
+  /** The family's WhatsApp number (E.164); null when unknown (the lead path derives it). */
   chatPhone: string | null;
   /** Existing students (group = siblings); empty on the lead path. */
   students: PickedStudent[];
@@ -55,11 +55,11 @@ export interface BookingDraft {
   startsAt: string | null;
   /** A package: the other picked slots (UTC instants), one per weekday, each at its own time. */
   extra: string[];
-  /** «وقت آخر»: the one lesson lies outside the teacher hours (sent as outsideHours). */
+  /** The one lesson lies outside the teacher hours (sent as outsideHours). */
   outsideHours?: boolean;
   /** The assistant books a subscription's course: its fixed day count and lesson count; else null. */
   course: CourseDraft | null;
-  /** «موعد تجريبي جديد» for an existing student (owner 2026-10-25); absent = any other booking. */
+  /** A new trial date for an existing student; absent means any other booking. */
   trialDate?: TrialDateDraft | null;
   pkg: PackageSize;
   meetingLink: string;
@@ -95,7 +95,7 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: 
   };
 }
 
-/** «وقت آخر» is sent for one lesson only (a trial, a makeup); a package's rows never set it. */
+/** Sent for one lesson only (a trial or makeup); a package's rows never set it. */
 export const isOutside = (d: Pick<BookingDraft, 'outsideHours' | 'kind'>): boolean =>
   d.outsideHours === true && d.kind !== 'package';
 

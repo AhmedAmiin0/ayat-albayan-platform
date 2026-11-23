@@ -9,7 +9,6 @@ import { useNow } from '@ab/web-kit/lib/time/use-now';
 
 const isOpen = (l: AssistantLessonView): boolean => (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
 
-/** The assistant's whole app: today's sessions of their students, each with «ادخل الحلقة». */
 export function AssistantHome() {
   const now = useNow(3_600_000);
   const day = localDay(now);

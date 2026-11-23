@@ -89,15 +89,12 @@ export function useInvalidateCourseActions(studentId: string): () => Promise<voi
 
 type StopInput = Course & {
   reason: string;
-  /** The money choice: `refund` («إلغاء مع استرداد») or `owe` («إلغاء فقط»). */
+  /** `refund` cancels with a refund; `owe` cancels only. */
   ask: StopMoneyAsk;
   onDone: (done: StopDone) => void;
 };
 
-/**
- * What the stop did (owner 2026-11-17, board CourseXWebDone): «أُلغي الاشتراك…» (with the
- * refund's amount), the student's status now, «الخطوة التالية» and who was told.
- */
+/** Includes the refund amount, the student's status now, the next step and who was told. */
 export const stopDoneOf = (result: CourseStopResult, currency: string): StopDone =>
   stopDoneLines({
     result,

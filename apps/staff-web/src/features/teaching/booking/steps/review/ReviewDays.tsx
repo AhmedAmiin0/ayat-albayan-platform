@@ -8,17 +8,14 @@ import { PACKAGE_NOTE_CLASS, packageDaysNote } from '@/features/teaching/booking
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
-/** «تنتهي الدورة في 27 أكتوبر 2026 بعد 8 حلقات»; null without a course or picks. */
+/** Null without a course or picks. */
 export function courseEndText(d: BookingDraft): string | null {
   const end = courseEnd(d);
   if (!end || !d.course) return null;
   return counted(t.booking.courseEnds, d.course.lessonsTotal).replace('{date}', dateLabel(end));
 }
 
-/**
- * The review's weekly days, each with its time (owner 2026-10-18): «الأحد الساعة 17:00 · الثلاثاء
- * الساعة 19:30 (مرتان في الأسبوع)». The admin sees the package note; the assistant's course its end.
- */
+/** The admin sees the package note; the assistant's course its end. */
 export function ReviewDays({ draft }: { draft: BookingDraft }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const picks = dayPicks(draft);

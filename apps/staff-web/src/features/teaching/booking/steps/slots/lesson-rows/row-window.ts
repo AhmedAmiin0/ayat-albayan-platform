@@ -61,7 +61,7 @@ export interface BesideZones {
   teacherTz: string | null;
 }
 
-/** «بتوقيتك 16:00، عند المعلم/ة 15:00» beside a time, each only when that clock reads otherwise. */
+/** Each clock shown only when it reads otherwise. */
 export function besideText(at: string, zones: BesideZones, clock: Clock): string {
   const opts = { ...clock, tz: zones.studentTz };
   const instant = new Date(at);

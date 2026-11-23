@@ -17,17 +17,11 @@ export interface SlotDaysProps {
 export const pickHint = (d: Pick<BookingDraft, 'course'>): string =>
   d.course ? counted(t.booking.pickNDays, d.course.perWeek) : t.booking.pickDayTimes;
 
-/** The course's neutral progress «اخترت 1 من 2 — بقي يوم واحد»; the admin's package note otherwise. */
 export function daysNote(d: Pick<BookingDraft, 'course' | 'pkg'>, picked: number): string | null {
   return d.course ? pickProgress(t.booking, picked, d.course.perWeek) : packageDaysNote(d.pkg, picked);
 }
 
-/**
- * A package's weekly days (R-SCH-02, owner 2026-10-18), as set in the date and time rows above:
- * «الأحد الساعة 17:00 · الثلاثاء الساعة 19:30». The admin keeps the note when the days don't add up
- * to the package (packageDaysNote); the assistant's course shows how many are left (pickProgress)
- * and can't go on until they add up.
- */
+/** The assistant's course can't go on until the days add up (R-SCH-02). */
 export function SlotDays({ draft }: SlotDaysProps) {
   const titleId = useId();
   const clock = { ...useClock(), tz: useViewerTz() };

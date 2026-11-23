@@ -12,10 +12,7 @@ interface CardBodyProps {
   onDone: (message: string) => void;
 }
 
-/**
- * The card's title with «بقيت N حلقات» and the package's status (board CourseXWebPanel), its
- * lines, then «الحلقات القادمة» once a course is booked; only the title while loading.
- */
+/** Only the title while loading. */
 export function CardBody({ card, onDone }: CardBodyProps) {
   const tz = useViewerTz();
   const pkg = card?.package ?? null;

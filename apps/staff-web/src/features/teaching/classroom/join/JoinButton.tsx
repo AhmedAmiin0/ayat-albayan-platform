@@ -11,7 +11,7 @@ export interface JoinableLesson {
   id: string;
   starts_at: string;
   ends_at: string;
-  /** «افتح الحلقة الآن»: the room was opened early (the window opens then). */
+  /** The room was opened early, so the window opens then. */
   room_opened_at?: string | null;
 }
 
@@ -25,9 +25,7 @@ interface Props {
   variant?: 'primary' | 'secondary';
 }
 
-/** «ادخل الحلقة» into the online classroom: enabled inside the settings' window (GET /settings/public) (re-checked every minute), otherwise disabled with «بتفتح الساعة …».
- * A plain link: it works without the router and opens /classroom/:id.
- */
+/** Enabled inside the settings' window, re-checked each minute; a plain link, no router needed. */
 export function EnterButton(props: Props) {
   const { lesson, size = 'md', className, now: given, variant = 'primary' } = props;
   const tick = useNow();

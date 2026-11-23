@@ -19,11 +19,7 @@ export interface TeacherMoveProps {
   onDone: () => void;
 }
 
-/**
- * «تغيير المعلم», step 2: the same days and times from «من تاريخ» straight to the review, or the
- * course-days picker on the new teacher's free slots, under «المعلم الجديد: …» (owner
- * 2026-11-17). One idempotency key per step (rule 8).
- */
+/** Same days from the start date, or new days on the new teacher's slots; one key per step. */
 export function TeacherMove(props: TeacherMoveProps) {
   const { teacher } = props;
   return (

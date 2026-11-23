@@ -4,7 +4,7 @@ import type { Mock } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 
-// Test data only: «تغيير أيام الحلقات» (owner 2026-10-18). Now is Saturday 3 October 2026, 12:00 Riyadh.
+// Test data only: now is Saturday 3 October 2026, 12:00 Riyadh.
 
 export const NOW = '2026-10-03T09:00:00.000Z';
 export const SUN = '2026-10-04T14:00:00.000Z'; // Sunday 17:00 Riyadh (a current day)
@@ -61,7 +61,7 @@ export function routeChangeSend(apiSend: Mock, check: unknown, answers: unknown[
 export const changeBodies = (apiSend: Mock): Record<string, unknown>[] =>
   apiSend.mock.calls.filter(([, path]) => String(path).endsWith('/change')).map(([, , body]) => body as Record<string, unknown>);
 
-/** On the picker: Monday 18:00 instead of Sunday (so «التالي» has a change to check). */
+/** Monday 18:00 instead of Sunday, so the check has a change. */
 export async function swapSundayForMonday(): Promise<void> {
   const monday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[1]} `) });
   fireEvent.click(within(monday).getByRole('button', { name: /18:00/ }));

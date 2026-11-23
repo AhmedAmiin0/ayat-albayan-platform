@@ -13,9 +13,7 @@ import { queryOptions, useMutation } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';
 
-// «الدورة والباقة» (owner 2026-11-17): the card, «مدّ الجدول» and the resume's preview. Paths, keys
-// and parsers come from @ab/client-core (the same as mobile); the card's key sits under the course
-// actions' key, so every action's re-read refreshes it.
+// Paths, keys and parsers come from @ab/client-core; the card key sits under the actions' key.
 
 export const courseCardQuery = (input: { studentId: string; tree: CardTree }) =>
   queryOptions({
@@ -40,7 +38,6 @@ export const cardLessonQuery = (lesson: CourseCardLesson) =>
     staleTime: 0,
   });
 
-/** POST «مدّ الجدول», then the re-read (the card, the student, the lessons). */
 export function useExtendCourse(input: {
   studentId: string;
   subscriptionId: string;

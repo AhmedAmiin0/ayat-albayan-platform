@@ -7,10 +7,7 @@ import { TeacherStudentItem } from './TeacherStudentItem';
 const L = t.studentLists;
 const EMPTY: Record<StudentListKind, string> = { active: L.emptyActive, trial: L.emptyTrial, all: L.emptyAll };
 
-/**
- * The teacher's students in the drawer, «مشترك · تجريبي · الكل» (owner 2026-10-12): subscribed first,
- * «الكل» is the whole list (paused included). Active / trial counts are the API's, «الكل» the list's.
- */
+/** Active and trial counts are the API's; the all count is the list's (paused included). */
 export function TeacherStudentsByKind({ teacher }: { teacher: SalesTeacherView }) {
   const [kind, setKind] = useState<StudentListKind>('active');
   const { students } = teacher;

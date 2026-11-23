@@ -4,7 +4,7 @@ import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
 
-/** One session of the assistant's list (AssistantHome, and sales' running lessons): time, students, teacher, «ادخل الحلقة». */
+/** Shared by AssistantHome and sales' running lessons. */
 export function AssistantLessonRow({ lesson }: { lesson: AssistantLessonView }) {
   const names = lesson.student_names.join(t.common.listSeparator);
   const clock = { ...useClock(), tz: viewerZone() };

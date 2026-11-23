@@ -17,10 +17,7 @@ export function groupSessions(lessons: LessonView[], now: Date, win: JoinWindowC
   return out;
 }
 
-/**
- * The card's chip: «بدأت» / «انتهت» by the room, otherwise the lesson's own status (مؤكدة, يحتاج تأكيد
- * while the academy requires a confirmation, `required`; else «مجدولة»).
- */
+/** By the room when started or ended, else lesson status; needs-confirmation only if `required`. */
 export function sessionChip(lesson: LessonView, group: SessionGroup, required: boolean): LessonStatusChip {
   if (group === 'now') return { tone: 'ok', glyph: 'fill', label: t.classroom.admin.live };
   if (group === 'ended') return { tone: 'neutral', glyph: 'struck', label: t.classroom.admin.ended };

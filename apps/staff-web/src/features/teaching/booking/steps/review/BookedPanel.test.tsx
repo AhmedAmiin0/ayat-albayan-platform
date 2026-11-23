@@ -100,7 +100,7 @@ describe('BookedPanel invoice and makeup (R-SCH-10, R-PAY-03)', () => {
     expect(screen.queryByRole('button', { name: t.finance.recordFromInvoice })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.inbox.subscription.make }));
     fireEvent.click(within(screen.getByRole('dialog', { name: t.subscriptions.new })).getByRole('button', { name: t.common.save }));
-    // «سجّل كدفعة»: the payment dialog opens on this student, with the invoice as the receipt
+    // Record as payment opens the dialog on this student with the invoice as the receipt.
     fireEvent.click(await screen.findByRole('button', { name: t.finance.recordFromInvoice }));
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText(t.finance.invoiceAsReceipt)).toBeTruthy();

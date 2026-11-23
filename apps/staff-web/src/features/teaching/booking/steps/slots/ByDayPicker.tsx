@@ -16,7 +16,7 @@ export interface ByDayPickerProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/** Weekly repeat «الأيام المتاحة» * (R-SCH-02 byday), السبت → الجمعة, at the first slot's time. */
+/** Weekly repeat (R-SCH-02 byday), Saturday to Friday, at the first slot's time. */
 export function ByDayPicker({ fixed, value, onChange, pkg }: ByDayPickerProps) {
   const note = pkg ? packageDaysNote(pkg, value.length) : null;
   const toggle = (day: number) =>

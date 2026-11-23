@@ -15,11 +15,7 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
 import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
-/**
- * One session on /admin/classrooms: time range, students, teacher, a status chip and a live dot
- * while the room is open; the actions sit at the inline-end, «ادخل الحلقة» first and dominant.
- * On phones the link actions fold behind «خيارات أخرى»; from 640px they are always shown.
- */
+/** Join first and dominant; on phones link actions fold behind a menu, from 640px always shown. */
 export function SessionCard({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   const [more, setMore] = useState(false);
   const chip = sessionChip(lesson, group, useLessonStatusText().required);
