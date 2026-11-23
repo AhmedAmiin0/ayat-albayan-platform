@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GOOGLE_SEED_DEFS } from '../google-defs.js';
-import { SEED_ENTRIES } from './seed-entries.js';
+import { SEED_ENTRIES } from './seed-entries/index.js';
 import { liveSqlObjects, sqlSettingsReaders } from './sql-readers.js';
 
 // Vite's raw import (vitest): the shared lib has no Node typings, so the migrations are read this way.

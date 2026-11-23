@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { LessonView } from '../lessons/views.js';
 import { instant } from '@ab/core';
-import { lessonDuration, overrideSchema } from './scheduling.js';
+import { lessonDuration, overrideSchema } from './scheduling/index.js';
 
 /**
  * PATCH /lessons/:id/time (R-SCH-11, admin only): the lesson's date, start and length in place.

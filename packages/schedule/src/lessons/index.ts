@@ -1,6 +1,6 @@
 export * from './chargeable.js';
 export * from './conflicts.js';
-export * from './state-machine.js';
+export * from './state-machine/state-machine.js';
 export * from './series/time-edit.js';
 export type * from './views.js';
 export * from './proposals/proposals.js';
@@ -12,4 +12,4 @@ export * from './makeup-offer.js';
 export * from './series/day-times.js';
 export * from './pick-progress.js';
 export * from './auto-held.js';
-export * from './lesson-outcome.js';
+export * from './lesson-outcome/lesson-outcome.js';

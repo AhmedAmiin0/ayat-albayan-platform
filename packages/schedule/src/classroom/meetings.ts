@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { lessonDuration, overrideSchema } from '../schemas/scheduling.js';
-import type { JoinWindow } from './join-window.js';
+import { lessonDuration, overrideSchema } from '../schemas/scheduling/index.js';
+import type { JoinWindow } from './join-window/index.js';
 
 // «حلقة فورية» (instant lesson), «افتح الحلقة الآن» (open the room early) and the student's own
 // long-lived link («رابط دخول الطالب», /s/<token>). A meeting with students is always a lesson;
