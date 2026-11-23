@@ -34,7 +34,7 @@ function withCountryCode(digits: string): string | null {
   // Bare 20 + Egyptian mobile: the WhatsApp wa_id shape. Unambiguous: no local format starts with 2.
   // Same 1x set as the EG pattern and the 01… rule, so a number is accepted however it is written.
   if (/^201[0-9]{9}$/.test(digits)) return `+${digits}`;
-  // TODO(R-STU-02): other bare international numbers (971…, 44…) stay rejected: without a + they are
+  // R-STU-02: other bare international numbers (971…, 44…) stay rejected: without a + they are
   // indistinguishable from local numbers. The Phase 4 webhook knows wa_id is international and adds the +.
   if (/^05[0-9]{8}$/.test(digits)) return `+966${digits.slice(1)}`;
   if (/^01[0-9]{9}$/.test(digits)) return `+20${digits.slice(1)}`;

@@ -2,8 +2,8 @@ import { RIYADH_TZ, type ClockOptions } from '../clock/index.js';
 import { clockOf, engineTimeZone } from './format.js';
 import { isTimeZone } from '@ab/core';
 
-// Whose clock a screen reads in (owner 2026-10-30, docs/34): «Store all in utc server time and
-// format it according to the device region or user region». DB instants stay UTC (rule 6).
+// Whose clock a screen reads in (docs/34): instants are stored in UTC (rule 6) and shown in the
+// user's or the device's zone.
 
 /** The academy's zone: only the last fallback of a display, and academy-wide day rules. */
 export const ACADEMY_TZ = RIYADH_TZ;

@@ -8,7 +8,6 @@ export interface Dsn {
 /** Short tags only (app, request id, route): never a person's data. */
 export type ReportTags = Readonly<Record<string, string>>;
 
-/** One error to report. */
 export interface ErrorReport {
   error: unknown;
   /** api, staff-web, staff-mobile, family-mobile. */
