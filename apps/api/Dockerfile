@@ -9,7 +9,7 @@
 #   build         the source; every workspace package the api depends on ("api^...", in dependency
 #                 order, so a package cut out of @ab/shared, docs/32 lane K, needs no change here),
 #                 then the api; then the dev dependencies pruned (pnpm's own --prod install). The repo
-#                 layout stays as it was: pdf-assets.ts reads packages/web-kit/public/brand/mark.png
+#                 layout stays as it was: pdf-assets.ts reads packages/catalog/brand/mark.png
 # The pnpm store lives in a BuildKit cache mount (never in a layer): a lockfile change downloads only
 # the new packages. Measured in CI (job «image», cold): runtime-base 50 s and deps 45 s, both skipped
 # by a source-only change; the build 30 s, the prod install 10 s and the final COPY 7 s. Any

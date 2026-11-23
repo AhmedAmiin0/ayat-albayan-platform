@@ -70,11 +70,17 @@ export const ticketsSchema = z
 
 interface TicketOutcome {
   ticketIds: string[];
+  /** Ticket id → the token it went to: a later DeviceNotRegistered receipt names no token. */
+  ticketTokens: Record<string, string>;
   /** Tokens Expo says are gone (app uninstalled): drop them from the profile. */
   deadTokens: string[];
   /** First error message when no ticket was ok; null once any device took it. */
   error: string | null;
 }
+
+/** Ticket i is message i, and message i went to tokens[i] (expoMessages; batches keep order). */
+const sentTo = (t: ExpoTicket, token: string | undefined): [string, string][] =>
+  t.status === 'ok' && token ? [[t.id, token]] : [];
 
 export function readTickets(tokens: readonly string[], tickets: readonly ExpoTicket[]): TicketOutcome {
   const ticketIds: string[] = [];
@@ -86,5 +92,6 @@ export function readTickets(tokens: readonly string[], tickets: readonly ExpoTic
     const token = tokens[i];
     if (t.details?.error === 'DeviceNotRegistered' && token) deadTokens.push(token);
   });
-  return { ticketIds, deadTokens, error: ticketIds.length ? null : firstError };
+  const ticketTokens = Object.fromEntries(tickets.flatMap((t, i) => sentTo(t, tokens[i])));
+  return { ticketIds, ticketTokens, deadTokens, error: ticketIds.length ? null : firstError };
 }

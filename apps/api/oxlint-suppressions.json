@@ -5139,19 +5139,14 @@
       "count": 1
     },
     "max-depth": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/push/push-receipts.module.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/push/push-receipts.repo.ts": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },

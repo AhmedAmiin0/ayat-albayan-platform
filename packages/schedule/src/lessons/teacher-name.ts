@@ -1,5 +1,4 @@
-import { localizedName } from '@ab/i18n';
-import type { Locale } from '@ab/core';
+import { localizedName, type Locale } from '@ab/core';
 
 /** The name to show for a teacher: the English one in the English UI when it exists, else Arabic. */
 export function teacherName(

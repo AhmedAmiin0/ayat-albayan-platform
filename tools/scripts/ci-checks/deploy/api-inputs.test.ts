@@ -50,18 +50,18 @@ test('this repository: the api, its packages and the image files; never the web 
 });
 
 test('folders match by prefix, files exactly', () => {
-  const inputs = ['apps/api/', 'pnpm-lock.yaml', 'apps/staff-web/public/brand/'];
+  const inputs = ['apps/api/', 'pnpm-lock.yaml', 'packages/catalog/brand/'];
   const changed = [
     'apps/api/Dockerfile',
     'apps/api-gateway/x.ts',
     'pnpm-lock.yaml',
     'pnpm-lock.yaml.bak',
-    'apps/staff-web/public/brand/mark.png',
+    'packages/catalog/brand/mark.png',
     'apps/staff-web/src/a.tsx',
   ];
   assert.deepEqual(apiFiles(changed, inputs), [
     'apps/api/Dockerfile',
     'pnpm-lock.yaml',
-    'apps/staff-web/public/brand/mark.png',
+    'packages/catalog/brand/mark.png',
   ]);
 });

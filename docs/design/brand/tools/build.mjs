@@ -75,7 +75,8 @@ write(`${BRAND}/logo-mushaf-transparent.png`, encode(matte(crop(mushaf, opaqueBo
 
 // Web (one brand package, docs/51 §1): favicons (≤ 32 px is the Mushaf crop; the full emblem is
 // illegible there), touch + PWA icons on the brand paper (staff) or the green tile (family), and
-// the two <Mark> images (components/ui/mark.tsx) both apps serve at /brand/.
+// the two <Mark> images (components/ui/display/mark.tsx): @ab/catalog owns them (also the report
+// PDF's logo) and both apps serve them at /brand/.
 const fav16 = small({ w: 16 }), fav32 = small({ w: 32 }), fav48 = emblem({ w: 48 });
 write('packages/web-kit/icons/staff/favicon.ico', ico([{ size: 16, png: fav16 }, { size: 32, png: fav32 }, { size: 48, png: fav48 }]));
 write('packages/web-kit/icons/staff/favicon-16.png', fav16);
@@ -83,8 +84,8 @@ write('packages/web-kit/icons/staff/favicon-32.png', fav32);
 write('packages/web-kit/icons/staff/apple-touch-icon.png', emblem({ w: 180, fill: 0.8, bg: PAPER }));
 write('packages/web-kit/icons/staff/icon-192.png', emblem({ w: 192, fill: 0.8, bg: PAPER }));
 write('packages/web-kit/icons/staff/icon-512.png', emblem({ w: 512, fill: 0.8, bg: PAPER }));
-write('packages/web-kit/public/brand/mark.png', encode(tall(master, 192)));
-write('packages/web-kit/public/brand/mark-small.png', encode(wide(mushaf, 96)));
+write('packages/catalog/brand/mark.png', encode(tall(master, 192)));
+write('packages/catalog/brand/mark-small.png', encode(wide(mushaf, 96)));
 familyIcons({ master, mushaf }, write);
 
 // Expo: iOS icon must be opaque; the adaptive foreground keeps the emblem inside the 66 dp safe

@@ -1,14 +1,13 @@
-// The files every web app serves at its root from the one brand package, @ab/web-kit (owner
-// 2026-11-18: apps never share by copying; docs/51 §1 «Brand»):
-//   packages/web-kit/public/**       every app: the web-push worker (/sw.js) and /brand/*.png;
-//   packages/web-kit/icons/<app>/**  that app's favicons, touch and manifest icons.
+// The files every web app serves at its root (apps never share by copying; docs/51 §1 «Brand»):
+//   <kitDir>/public/**        every app: the web-push worker (/sw.js);
+//   <brandDir>/**             every app: the brand marks at /brand/*.png (@ab/catalog owns them);
+//   <kitDir>/icons/<app>/**   that app's favicons, touch and manifest icons.
+// The caller names every folder, so this tooling package reaches into no other package itself.
 // The dev server answers them as is; the build emits them beside index.html at the same paths, so
 // the deployed URLs (index.html links, manifest.json) stay where they were.
 import { readdirSync, readFileSync } from 'node:fs';
 import { extname, join, relative, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const KIT = fileURLToPath(new URL('../web-kit/', import.meta.url));
 const TYPES = {
   '.js': 'text/javascript',
   '.png': 'image/png',
@@ -24,15 +23,18 @@ function tree(root) {
   return files.map((file) => [`/${relative(root, file).split(sep).join('/')}`, file]);
 }
 
-/** URL path → file: the shared tree, then the app's icons (none for the kit's own tests). */
-export function kitFiles(icons) {
-  const trees = [join(KIT, 'public'), ...(icons ? [join(KIT, 'icons', icons)] : [])];
-  return new Map(trees.flatMap(tree));
+const under = (prefix) => ([path, file]) => [`${prefix}${path}`, file];
+
+/** URL path → file: kit public tree, the marks, then the app's icons (none in kit tests). */
+export function kitFiles({ kitDir, brandDir, icons }) {
+  const appIcons = icons ? tree(join(kitDir, 'icons', icons)) : [];
+  const brand = tree(brandDir).map(under('/brand'));
+  return new Map([...tree(join(kitDir, 'public')), ...brand, ...appIcons]);
 }
 
-/** The Vite plugin: serve (dev) and emit (build) `kitFiles(icons)`. */
-export function kitPublic(icons) {
-  const files = kitFiles(icons);
+/** The Vite plugin: serve (dev) and emit (build) `kitFiles(options)`. */
+export function kitPublic(options) {
+  const files = kitFiles(options);
   return {
     name: 'ab:kit-public',
     configureServer(server) {

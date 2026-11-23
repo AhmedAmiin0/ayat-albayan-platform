@@ -1,4 +1,3 @@
-import type { Enums } from '@ab/db';
 import { z } from 'zod';
 import type { LessonStatus } from '@ab/catalog';
 import { SETTINGS_REGISTRY } from '@ab/settings';
@@ -7,7 +6,7 @@ import { SETTINGS_REGISTRY } from '@ab/settings';
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.
 
 /** trial = حلقة تجريبية, package = اشتراك, makeup = حجز تعويضي (a replacement for a missed lesson). */
-export const BOOKING_KINDS = ['trial', 'package', 'makeup'] as const satisfies readonly Enums<'booking_kind'>[];
+export const BOOKING_KINDS = ['trial', 'package', 'makeup'] as const;
 export type BookingKind = (typeof BOOKING_KINDS)[number];
 
 /**

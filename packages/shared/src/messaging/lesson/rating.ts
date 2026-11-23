@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import type { Enums } from '@ab/db';
 import { normalizeArabic } from '@ab/core';
 import { weekdayDayMonth } from '@ab/time';
 import { joinNames } from './booking-confirmation.js';
@@ -10,9 +9,7 @@ import { lenientString, parseOrNull } from '../payload/index.js';
 // «تقييم الحلقة» by WhatsApp buttons (migration 195): the lesson_rating template's three quick
 // replies. A tap is an inbound message, so it reopens the 24 h window (docs/12 §3.5).
 
-export const LESSON_RATINGS = ['excellent', 'good', 'needs_work'] as const satisfies readonly Enums<
-  'feedback_quick_rating'
->[];
+export const LESSON_RATINGS = ['excellent', 'good', 'needs_work'] as const;
 export type LessonRating = (typeof LESSON_RATINGS)[number];
 
 export const RATING_TEMPLATE = 'lesson_rating';

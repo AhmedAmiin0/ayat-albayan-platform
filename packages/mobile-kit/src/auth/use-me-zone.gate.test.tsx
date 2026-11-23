@@ -1,22 +1,22 @@
 import { setViewerPersonTz, viewerTz } from '@ab/client-core';
-import * as shared from '@ab/shared';
+import { deviceTimeZone as sharedDeviceZone } from '@ab/shared';
+import { deviceTimeZone } from '@ab/time';
 import { act, renderHook } from '@testing-library/react-native';
+import { setDeviceZone } from '../testing/device-zone';
 import { useMeZone } from './use-me-zone';
 
 // The startup gate («جارٍ الاتصال») must open once and stay open (review of #462).
 afterEach(() => setViewerPersonTz('Asia/Riyadh'));
 
-const sharedMock: { deviceTimeZone: () => string | null } = shared;
-
 test('the phone moving to another zone after start does not keep the gate shut', async () => {
-  const before = sharedMock.deviceTimeZone;
-  sharedMock.deviceTimeZone = () => 'Asia/Dubai';
+  setDeviceZone('Asia/Dubai');
   try {
+    expect([deviceTimeZone(), sharedDeviceZone()]).toEqual(['Asia/Dubai', 'Asia/Dubai']);
     const hook = await renderHook(() => useMeZone({ role: 'admin', tz: null }, true));
     expect(viewerTz()).toBe('Asia/Riyadh');
     expect(hook.result.current).toBe(true);
   } finally {
-    sharedMock.deviceTimeZone = before;
+    setDeviceZone('Asia/Riyadh');
   }
 });
 

@@ -3704,6 +3704,7 @@ export type Database = {
           read_at: string | null;
           sent_at: string | null;
           ticket_ids: string[];
+          ticket_tokens: NonNullable<Json>;
           title: string;
         };
         Insert: {
@@ -3718,6 +3719,7 @@ export type Database = {
           read_at?: string | null;
           sent_at?: string | null;
           ticket_ids?: string[];
+          ticket_tokens?: NonNullable<Json>;
           title: string;
         };
         Update: {
@@ -3732,6 +3734,7 @@ export type Database = {
           read_at?: string | null;
           sent_at?: string | null;
           ticket_ids?: string[];
+          ticket_tokens?: NonNullable<Json>;
           title?: string;
         };
         Relationships: [

@@ -24,6 +24,12 @@ export const timeZone = z.string().refine(isTimeZone, { message: 'invalid_time_z
 /** Wall-clock "HH:MM" (24h) — never free text (rule 6). */
 export const timeOfDay = z.string().regex(/^([01][0-9]|2[0-3]):[0-5][0-9]$/, 'invalid_time');
 
+/** A calendar day "YYYY-MM-DD", read in the zone that owns it. */
+export const localDate = z.iso.date();
+
+/** An ISO-8601 instant; the offset is required so it never reads as a local wall-clock time. */
+export const instant = z.iso.datetime({ offset: true });
+
 /** Trimmed non-empty text. */
 export const requiredText = z.string().trim().min(1);
 export const optionalText = z.string().trim().min(1).nullish();

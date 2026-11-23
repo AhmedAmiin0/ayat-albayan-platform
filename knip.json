@@ -72,7 +72,7 @@
       ]
     },
     "packages/web-kit": {
-      "entry": ["src/**/*.{ts,tsx}"],
+      "entry": ["src/**/*.{ts,tsx}", "src/index.css"],
       "project": ["src/**/*.{ts,tsx}"]
     },
     "tools/scripts": {

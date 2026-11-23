@@ -1,0 +1,204 @@
+{
+  "layers": [
+    {
+      "name": "T",
+      "packages": ["@ab/config"]
+    },
+    {
+      "name": "L0",
+      "packages": ["@ab/core"]
+    },
+    {
+      "name": "L0db",
+      "packages": ["@ab/db"]
+    },
+    {
+      "name": "L1",
+      "packages": ["@ab/time", "@ab/i18n", "@ab/catalog"]
+    },
+    {
+      "name": "L2",
+      "packages": ["@ab/settings", "@ab/schedule", "@ab/money"]
+    },
+    {
+      "name": "L3",
+      "packages": ["@ab/shared"]
+    },
+    {
+      "name": "L4",
+      "packages": ["@ab/client-core"]
+    },
+    {
+      "name": "L5",
+      "packages": ["@ab/web-kit", "@ab/mobile-kit"]
+    },
+    {
+      "name": "L6",
+      "packages": ["api", "staff-web", "family-web", "staff-mobile", "family-mobile"]
+    },
+    {
+      "name": "tools",
+      "packages": ["@ab/scripts", "@ab/migrate", "wa-stub", "google-stub", "@ab/brand-tools"]
+    },
+    {
+      "name": "harness",
+      "packages": ["e2e"]
+    }
+  ],
+  "apps": "L6",
+  "allowed": {
+    "@ab/core": [],
+    "@ab/db": [],
+    "@ab/config": [],
+    "@ab/time": ["@ab/core"],
+    "@ab/i18n": ["@ab/core"],
+    "@ab/catalog": ["@ab/core"],
+    "@ab/settings": ["@ab/core"],
+    "@ab/schedule": ["@ab/core", "@ab/time", "@ab/catalog"],
+    "@ab/money": ["@ab/core", "@ab/time", "@ab/catalog"],
+    "@ab/shared": [
+      "@ab/core",
+      "@ab/time",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "@ab/client-core": [
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "@ab/web-kit": [
+      "@ab/client-core",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "@ab/mobile-kit": [
+      "@ab/client-core",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "api": [
+      "@ab/db",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "staff-web": [
+      "@ab/web-kit",
+      "@ab/client-core",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "family-web": [
+      "@ab/web-kit",
+      "@ab/client-core",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "staff-mobile": [
+      "@ab/mobile-kit",
+      "@ab/client-core",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "family-mobile": [
+      "@ab/mobile-kit",
+      "@ab/client-core",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "e2e": [
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "@ab/migrate": [
+      "@ab/db",
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "@ab/scripts": [
+      "@ab/shared",
+      "@ab/core",
+      "@ab/time",
+      "@ab/i18n",
+      "@ab/catalog",
+      "@ab/settings",
+      "@ab/schedule",
+      "@ab/money"
+    ],
+    "wa-stub": [],
+    "google-stub": [],
+    "@ab/brand-tools": []
+  },
+  "appsBuildOnly": {
+    "e2e": ["api", "staff-web"]
+  },
+  "pathReach": {
+    "@ab/scripts": "*",
+    "@ab/migrate": "*",
+    "wa-stub": "*",
+    "google-stub": "*",
+    "@ab/brand-tools": "*",
+    "e2e": ["api", "staff-web", "family-web", "wa-stub", "google-stub", "@ab/db"]
+  }
+}

@@ -17,9 +17,10 @@ type ReceiptsSummary = { rows: number; settled: number; pruned: number };
 
 /**
  * R-MOB-01 push receipts (completes common/push, which prunes on ticket errors): every 15 minutes,
- * the tickets of pushes sent 15 min – 24 h ago are looked up at Expo; a DeviceNotRegistered
- * receipt drops that token from the admin's profile, the first receipt error is recorded, and
- * checked tickets leave ticket_ids so the next run skips them (no extra column).
+ * the tickets of pushes sent 15 min – 24 h ago are looked up at Expo. A DeviceNotRegistered
+ * receipt deletes the session binding of the token its ticket went to (ticket_tokens: an FCM
+ * receipt names no token), the first receipt error is recorded, and checked tickets leave
+ * ticket_ids and ticket_tokens so the next run skips them.
  */
 @BackgroundJob({ name: 'push-receipts' })
 @Injectable()
@@ -54,11 +55,12 @@ export class PushReceiptsJob implements OnApplicationBootstrap, OnModuleDestroy 
       summary.rows = rows.length;
       if (rows.length === 0) return summary;
       const receipts = await this.transport(rows.flatMap((r) => r.ticket_ids));
+      const done = new Set<string>();
       for (const row of rows) {
         const tokens = await this.settle(row, receipts);
         if (tokens === null) continue;
         summary.settled += 1;
-        if (tokens.length) summary.pruned += await this.queries.prune(row.profile_id, tokens);
+        summary.pruned += await this.prune(row, tokens, done);
       }
     } catch (e) {
       this.log.warn(`push receipts run aborted: ${e instanceof Error ? e.message : String(e)}`);
@@ -69,9 +71,25 @@ export class PushReceiptsJob implements OnApplicationBootstrap, OnModuleDestroy 
 
   /** Records what Expo answered for one row; its dead tokens, or null when no receipt is in yet. */
   private async settle(row: TicketRow, receipts: Readonly<Record<string, ExpoReceipt>>): Promise<string[] | null> {
-    const outcome = readReceipts(row.ticket_ids, receipts);
+    const outcome = readReceipts(row.ticket_ids, receipts, row.ticket_tokens);
     if (outcome.pending.length === row.ticket_ids.length) return null;
-    await this.queries.settle(row.id, { ticket_ids: outcome.pending, error: row.error ?? outcome.error });
+    await this.queries.settle(row.id, {
+      ticket_ids: outcome.pending,
+      ticket_tokens: outcome.pendingTokens,
+      error: row.error ?? outcome.error,
+    });
     return outcome.deadTokens;
+  }
+
+  /**
+   * A token two rows went to is deleted once per run. Only a token actually deleted is done: one
+   * the created_at guard kept for an older row is tried again for a newer row.
+   */
+  private async prune(row: TicketRow, dead: readonly string[], done: Set<string>): Promise<number> {
+    const fresh = dead.filter((t) => !done.has(t));
+    if (fresh.length === 0) return 0;
+    const deleted = await this.queries.prune(row, fresh);
+    for (const t of deleted) done.add(t);
+    return deleted.length;
   }
 }
