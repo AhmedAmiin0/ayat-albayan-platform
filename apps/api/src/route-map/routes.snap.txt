@@ -46,6 +46,7 @@ GET /admin/google/status access=settings.read guards=- code=- GoogleAdminControl
 GET /admin/google/students access=settings.read guards=- code=- GoogleMapController.students
 GET /admin/google/teachers access=settings.read guards=- code=- GoogleMapController.teachers
 GET /admin/google/teachers/:id/calendar-owner access=settings.read guards=- code=- GoogleMapController.calendarOwner
+GET /admin/jobs access=settings.write guards=- code=- JobsStatusController.list
 GET /admin/notifications access=settings.read guards=- code=- RulesController.overview
 GET /admin/numbers access=settings.read guards=- code=- NumbersController.list
 GET /admin/numbers/:id/evolution/qr access=numbers.manage guards=- code=- NumbersEvolutionController.qr
@@ -65,6 +66,7 @@ GET /auth/code/status access=public guards=- code=- SignInController.status
 GET /auth/me access=signed-in guards=- code=- AuthController.me
 GET /booking/course/change access=lessons.write guards=- code=- CourseChangeController.view
 GET /booking/makeup-candidates access=booking.write guards=- code=- BookingExtrasController.makeupCandidates
+GET /booking/outside-slots access=booking.write guards=- code=- BookingController.outsideSlots
 GET /booking/slots access=booking.write guards=- code=- BookingController.slots
 GET /booking/teachers access=booking.write guards=- code=- BookingController.teacherOptions
 GET /booking/trial-dates access=booking.write guards=- code=- TrialDateController.history
@@ -159,6 +161,7 @@ GET /public/student/:token access=public guards=- code=- StudentLinkPublicContro
 GET /public/teacher-report/:token access=public guards=TeacherLinkLimit code=- TeacherLinkController.form
 GET /public/teacher-report/:token/reports/:id/attachments/:attachmentId/url access=public guards=TeacherLinkLimit code=- TeacherLinkFilesController.url
 GET /r/:code access=public guards=- code=- ShortLinksController.go
+GET /ready access=public guards=- code=- ReadyController.check
 GET /receivables access=receivables.read guards=- code=- ReceivablesController.list
 GET /recordings/status access=meetings.read guards=- code=- RecordingStatusController.status
 GET /report-link/legacy/* access=public guards=- code=- LegacyReportLinkController.go
@@ -170,6 +173,7 @@ GET /reports/:id/pdf access=reports.read guards=- code=- ReportsController.pdf
 GET /roles access=roles.manage guards=- code=- RolesController.list
 GET /roles/staff-users access=roles.manage guards=- code=- RolesController.staffUsers
 GET /sales/booking/course access=self.sales_money guards=- code=- SalesCourseController.view
+GET /sales/booking/outside-slots access=self.sales guards=- code=- SalesBookingOptionsController.outsideSlots
 GET /sales/booking/slots access=self.sales guards=- code=- SalesBookingOptionsController.slots
 GET /sales/booking/teachers access=self.sales guards=- code=- SalesBookingOptionsController.teacherOptions
 GET /sales/booking/trial-dates access=self.sales guards=- code=- SalesTrialDateController.history
