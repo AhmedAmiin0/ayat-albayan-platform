@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { jsonFailure } from './json.mjs';
+import { jsonFailure, PATH_JSON } from './json.mjs';
 
 const RENAMES = [['apps/w/src/A.tsx', 'apps/w/src/A/A.tsx']];
 const sup = (key, count) => JSON.stringify({ [key]: { 'max-len': { count } } });
@@ -47,4 +47,9 @@ test('folder-cap entries may shrink, and gain sub-folders up to the cap', () => 
   assert.equal(jsonFailure({ file, base, head: ok, renames: [] }), null);
   const over = JSON.stringify({ d: { files: 14, dirs: 13 } });
   assert.match(jsonFailure({ file, base, head: over, renames: [] }) ?? '', /"d" is new or grew/);
+});
+
+test('the package layer table is not a baseline a move may edit', () => {
+  assert.equal(PATH_JSON.test('refactor/guards/packages.json'), false);
+  assert.equal(PATH_JSON.test('refactor/guards/knip.json'), true);
 });

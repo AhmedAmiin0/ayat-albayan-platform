@@ -36,8 +36,12 @@ const baselineFailure = (e, ctx) =>
 
 const isCode = (e) => CODE.test(e.path) && CODE.test(e.from ?? e.path);
 
+const TEST = /\.(?:test|spec)\.[mc]?[jt]sx?$/;
+const lostTest = (e) => e.from !== undefined && TEST.test(e.from) && !TEST.test(e.path);
+
 /** The first rule whose `when` holds decides; a path no rule takes fails with its kind. */
 const RULES = [
+  { when: lostTest, check: (e) => `no longer a test (was ${e.from})` },
   { when: (e) => e.status === 'R100', check: () => null },
   { when: (e) => /^[RM]/.test(e.status) && isCode(e), check: codeFailure },
   { when: (e) => e.status === 'M' && PATH_JSON.test(e.path), check: baselineFailure },

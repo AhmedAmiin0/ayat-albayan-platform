@@ -7,7 +7,7 @@ import { parseJson } from '../../ci-checks/lint/json-file.mjs';
 const SUPPRESSIONS = /(?:^|\/)(?:eslint|oxlint)-suppressions\.json$/;
 const CAP = /^refactor\/folder-cap\/[^/]+\.json$/;
 export const PATH_JSON = new RegExp(
-  `${SUPPRESSIONS.source}|^refactor\\/guards\\/[^/]+\\.json$|${CAP.source}`,
+  `${SUPPRESSIONS.source}|^refactor\\/guards\\/(?!packages\\.json$)[^/]+\\.json$|${CAP.source}`,
 );
 
 /** tools/scripts/ci-checks/folder-cap.mjs: a fold may add sub-folders up to the cap. */

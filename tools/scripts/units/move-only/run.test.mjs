@@ -127,3 +127,11 @@ test('other branches are skipped with a notice', () => {
   assert.equal(code, 0);
   assert.match(out, /not a move\/\* branch/);
 });
+
+test('a test renamed to a name no runner picks up fails', () => {
+  for (const to of [`${P}/A.x.tsx`, `${P}/A.x.test.tsx.off`]) {
+    const { code, out } = run(({ move }) => move(`${P}/A.x.test.tsx`, to));
+    assert.equal(code, 1, to);
+    assert.match(out, /no longer a test/, to);
+  }
+});
