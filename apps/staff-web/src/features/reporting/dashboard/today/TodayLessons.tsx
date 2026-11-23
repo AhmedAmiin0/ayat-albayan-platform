@@ -1,4 +1,5 @@
-import { clockOf, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

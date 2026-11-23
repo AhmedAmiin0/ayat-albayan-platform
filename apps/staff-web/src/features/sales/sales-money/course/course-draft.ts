@@ -1,4 +1,10 @@
-import { counted, courseLessonCount, courseOpensOn, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import {
+  courseLessonCount,
+  courseOpensOn,
+  type CourseSubscription,
+  type SalesCourseView,
+} from '@ab/shared';
+import { counted } from '@ab/core';
 import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
 import { dateLabel } from '@/features/teaching/schedule';

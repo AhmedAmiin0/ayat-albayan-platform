@@ -1,4 +1,4 @@
-import { lessonStatusStyle } from '@ab/shared';
+import { lessonStatusStyle } from '@ab/money';
 import { UPCOMING_LESSON_STYLE } from '@ab/client-core';
 import { renderHook } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';

@@ -1,4 +1,4 @@
-import type { AssistantStatementView } from '@ab/shared';
+import type { AssistantStatementView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, ErrorLine } from '@ab/mobile-kit';

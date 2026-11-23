@@ -7,7 +7,7 @@ import {
 } from '../../support/teaching/day-times';
 import { rolledBack, type Tx } from '../../support/edit-time';
 
-// «انعقدت» by default (owner 2026-11-02): the auto-held job's change set through the real
+// «انعقدت» by default: the auto-held job's change set through the real
 // apply_lesson_changes (AutoHeldService: scheduled → completed, attendance and chargeable
 // untouched,
 // audit reason auto_held, actor null), then its correction (completed → cancelled_by_teacher, not

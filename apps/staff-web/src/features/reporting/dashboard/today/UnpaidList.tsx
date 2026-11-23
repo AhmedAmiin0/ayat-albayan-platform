@@ -6,7 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { amount, currencyLabel } from '@/features/reporting/dashboard/shared/format';
 import { workItem, workLink } from './PendingReportsList';
 import { packageText } from '@/features/reporting/dashboard/work/work-text';
-import type { UnpaidRow } from '@ab/shared';
+import type { UnpaidRow } from '@ab/money';
 
 /**
  * Packages with status «مش مدفوع» (R-SUB-02), oldest first; each opens the student's file. A row

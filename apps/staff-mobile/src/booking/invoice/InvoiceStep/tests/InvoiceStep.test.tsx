@@ -1,4 +1,4 @@
-import { RECEIPT_MAX_BYTES } from '@ab/shared';
+import { RECEIPT_MAX_BYTES } from '@ab/money';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { pickReceipt } from '@/core/lib/receipts/receipt';

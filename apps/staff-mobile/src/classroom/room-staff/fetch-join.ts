@@ -1,5 +1,5 @@
 import { roomJoinResultSchema } from '@ab/client-core';
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { credentialsOf, type RoomCredentials, type RoomTarget } from '@ab/mobile-kit/room';
 import { joinPath } from './join-target';
 import { apiSend } from '@ab/mobile-kit';

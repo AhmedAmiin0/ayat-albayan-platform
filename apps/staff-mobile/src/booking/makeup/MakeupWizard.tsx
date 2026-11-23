@@ -1,5 +1,5 @@
-import { teacherName } from '@ab/shared';
-import type { Gender, Program } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
+import type { Gender, Program } from '@ab/catalog';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { useTabOpen } from '@/core/auth/use-tab-open';

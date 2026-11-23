@@ -1,4 +1,5 @@
-import { counted, pluralForm, type SettingKey } from '@ab/shared';
+import { counted, pluralForm } from '@ab/core';
+import type { SettingKey } from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The unit of each counted setting (rule 6: counts of hours, days…, never times of day). The

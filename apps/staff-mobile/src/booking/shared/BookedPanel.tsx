@@ -1,4 +1,4 @@
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';

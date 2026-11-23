@@ -6,7 +6,7 @@ import { seedFamily, withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/core/users';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
 
-// R-MEET-01..03 (owner 2026-10-12): a salesperson schedules a meeting and invites a teacher (in-app
+// R-MEET-01..03: a salesperson schedules a meeting and invites a teacher (in-app
 // bell) and two families: one with an open 24 h window (a chat text reaches the stub, never a
 // template) and one without (window_closed, the link and the invitation text to copy). Cancelling
 // revokes the personal links. Local Supabase + tools/wa-stub only; the numbers are seeded fakes.

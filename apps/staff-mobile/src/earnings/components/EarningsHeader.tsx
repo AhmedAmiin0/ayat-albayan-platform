@@ -1,4 +1,4 @@
-import type { TeacherEarningsBalanceView } from '@ab/shared';
+import type { TeacherEarningsBalanceView } from '@ab/money';
 import { View } from 'react-native';
 import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
 import { EarningsSummary } from './EarningsSummary';

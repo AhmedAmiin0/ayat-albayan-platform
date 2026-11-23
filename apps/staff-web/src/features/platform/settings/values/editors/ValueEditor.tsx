@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, settingDef, type SettingDef, type SettingKey } from '@ab/shared';
+import { SETTING_FIELD_OF, settingDef, type SettingDef, type SettingKey } from '@ab/settings';
 import type { ReactNode } from 'react';
 import { flag } from '@/features/platform/settings/registry-form/settings-form';
 import { useValues } from '@/features/platform/settings/values/values-context';

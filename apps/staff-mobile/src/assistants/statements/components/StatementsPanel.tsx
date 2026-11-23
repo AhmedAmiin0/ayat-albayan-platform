@@ -1,4 +1,5 @@
-import { PAYOUT_STATUSES, payoutStatusStyle } from '@ab/shared';
+import { PAYOUT_STATUSES } from '@ab/catalog';
+import { payoutStatusStyle } from '@ab/money';
 import { useState } from 'react';
 import { FlatList, ScrollView, View } from 'react-native';
 import { currentMonth } from '@/finance/shared/month';

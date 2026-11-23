@@ -1,4 +1,4 @@
-import { VALUE_CONFIRM, type SettingKey } from '@ab/shared';
+import { VALUE_CONFIRM, type SettingKey } from '@ab/settings';
 
 export type ConfirmKind = 'typed' | 'plain';
 

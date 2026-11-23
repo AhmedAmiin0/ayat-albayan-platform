@@ -3,12 +3,11 @@ import {
   submitBody,
   submitProblem,
   type FormValues,
-  type Grade,
-  type Program,
   type ReportAttachmentView,
   type ReportView,
   type Rubric,
 } from '@ab/shared';
+import type { Grade, Program } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';

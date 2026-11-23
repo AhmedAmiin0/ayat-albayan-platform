@@ -4,7 +4,7 @@ import {
   type CorrectTo,
   type LessonEvent,
   type LessonView,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { MakeupAction } from '@/booking/makeup/MakeupAction';

@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, type SettingKey } from '@ab/shared';
+import { SETTING_FIELD_OF, type SettingKey } from '@ab/settings';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 
 // PATCH /settings answers today with the whole AcademySettings; from docs/26 26-P0 it answers

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { kpisOf, type Kpi } from './kpis';
-import type { DashboardResponse, WorkTab } from '@ab/shared';
+import type { DashboardResponse, WorkTab } from '@ab/money';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 
 export interface KpiStripProps {

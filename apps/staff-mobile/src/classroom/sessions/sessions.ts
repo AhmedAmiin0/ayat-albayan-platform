@@ -1,4 +1,10 @@
-import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, type JoinWindowConfig, type LessonView } from '@ab/shared';
+import {
+  DEFAULT_JOIN_WINDOW,
+  isOpenLesson,
+  joinWindow,
+  type JoinWindowConfig,
+  type LessonView,
+} from '@ab/schedule';
 import type { SessionGroup } from '@ab/client-core';
 
 /** Which group a lesson is in at `now`: its room is open, still to open, or closed. */

@@ -1,4 +1,6 @@
-import { normalizePhone, packagePerWeek, wallParts } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
+import { packagePerWeek } from '@ab/money';
+import { wallParts } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { BookFailure } from '@/booking/shared/booking-errors';

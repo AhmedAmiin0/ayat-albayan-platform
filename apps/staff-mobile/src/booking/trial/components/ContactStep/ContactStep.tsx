@@ -1,4 +1,4 @@
-import type { Gender, LeadSource } from '@ab/shared';
+import type { Gender, LeadSource } from '@ab/catalog';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, Button, Field, FilterPills, ErrorLine, FormLabel } from '@ab/mobile-kit';

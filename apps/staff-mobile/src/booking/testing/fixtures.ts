@@ -1,4 +1,4 @@
-import type { BookingResult, BookingTeacherOption, SlotView } from '@ab/shared';
+import type { BookingResult, BookingTeacherOption, SlotView } from '@ab/schedule';
 import type { InvoiceDraft } from '@/booking/shared/contract';
 import type { TrialDraft } from '@/booking/trial/lib/draft';
 

@@ -3,7 +3,7 @@ import { API } from '../../support/core/messages';
 import { withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// «اجتماع داخلي» (owner, 2026-10-05): a standalone room with no lesson, no students, no teacher and
+// «اجتماع داخلي»: a standalone room with no lesson, no students, no teacher and
 // no WhatsApp; just a link /m/<token>. LiveKit does not run in e2e: every join answers 503
 // classroom_not_configured, while creating the meeting and its public page never need it.
 

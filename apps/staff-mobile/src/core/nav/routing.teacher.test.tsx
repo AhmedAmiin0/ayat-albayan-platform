@@ -1,7 +1,7 @@
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { supabase, t, queryClient, pathKey, registerPush } from '@ab/mobile-kit';
-import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/settings';
 import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';

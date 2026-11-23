@@ -7,7 +7,7 @@ import { freshDigits } from '../../support/core/messages';
 import { signInSales } from '../../support/sales/sales-portal';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// docs/22 (owner 2026-10-20): «القوائم» like WhatsApp Business. An assistant creates «بانتظار الدفع»
+// docs/22: «القوائم» like WhatsApp Business. An assistant creates «بانتظار الدفع»
 // from the chip row, adds a chat to it from the thread's «القوائم», filters the conversations by the
 // chip, renames the list and deletes it; the chat and its messages stay. Nothing is sent by a list.
 

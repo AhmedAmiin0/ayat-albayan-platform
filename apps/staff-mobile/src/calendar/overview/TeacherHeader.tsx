@@ -1,4 +1,4 @@
-import { teacherName } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { pushInTab } from '@/core/nav/back-within';
 import { Pressable, View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

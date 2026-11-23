@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { act, renderRouter, screen } from 'expo-router/testing-library';
 import * as Sharing from 'expo-sharing';
 import { Text } from 'react-native';

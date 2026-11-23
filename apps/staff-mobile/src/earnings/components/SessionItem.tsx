@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { earningStatusStyle, type TeacherEarningView } from '@ab/shared';
+import { earningStatusStyle, type TeacherEarningView } from '@ab/money';
 import { Pressable, View } from 'react-native';
 import { t, shape, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { egp, sessionDetail, sessionWhen } from '@/earnings/lib/format';

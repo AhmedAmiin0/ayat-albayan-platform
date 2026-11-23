@@ -1,5 +1,5 @@
 import type { PickState } from '@ab/client-core';
-import { wallParts, type Conflict } from '@ab/shared';
+import { wallParts, type Conflict } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

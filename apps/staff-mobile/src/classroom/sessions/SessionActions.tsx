@@ -1,4 +1,4 @@
-import { isOpenLesson, type LessonView } from '@ab/shared';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 import type { SessionGroup } from '@ab/client-core';
 import { usePermissions, t, Button } from '@ab/mobile-kit';
 import { router } from 'expo-router';
