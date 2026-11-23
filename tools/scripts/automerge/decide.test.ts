@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { decide } from './decide.ts';
-import { aFacts, aRun, HEAD, withPr } from './testing/facts.builder.ts';
+import { aFacts, aReviewedFacts, aRun, HEAD, withPr } from './testing/facts.builder.ts';
 import { staleComment } from './lockfile.ts';
 
 const action = (facts: ReturnType<typeof aFacts>) => decide(facts).action;
@@ -31,4 +31,12 @@ test('a stale lockfile PR gets one comment, then waits', () => {
 test('eligibility is decided before anything else', () => {
   const facts = { ...withPr({ labels: [] }), compare: OLD, files: [{ filename: 'package.json' }] };
   assert.match(decide(facts).reason, /no auto-merge label/);
+});
+
+test('a reviewed non-lane PR merges only when green too; a stale review skips', () => {
+  assert.equal(action(aReviewedFacts()), 'merge');
+  const red = { ...aReviewedFacts(), checks: [aRun('check', { conclusion: 'failure' })] };
+  assert.equal(action(red), 'skip');
+  const pushed = { ...aReviewedFacts(), suites: [{ created_at: '2026-11-23T01:00:00Z' }] };
+  assert.match(decide(pushed).reason, /head is newer than the review/);
 });

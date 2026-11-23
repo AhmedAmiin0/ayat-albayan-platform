@@ -32,7 +32,11 @@ export const annotationSchema = z.object({
   message: z.string().nullable(),
 });
 
-export const fileSchema = z.object({ filename: z.string() });
+/** A rename carries the old path too: moving a gated file away still changes it. */
+export const fileSchema = z.object({
+  filename: z.string(),
+  previous_filename: z.string().nullish(),
+});
 
 /** `compare/develop...<head>`: base_commit is the develop head. */
 export const compareSchema = z.object({
@@ -42,6 +46,16 @@ export const compareSchema = z.object({
 
 export const commentSchema = z.object({ body: z.string() });
 
+/** `issues/<n>/events`, only `labeled` and `head_ref_force_pushed`; GitHub's clock, not git's. */
+export const eventSchema = z.object({
+  event: z.string(),
+  label: z.string().nullable(),
+  created_at: z.iso.datetime(),
+});
+
+/** `commits/<head>/check-suites`: created when the head was pushed (a re-run adds none). */
+export const suiteSchema = z.object({ created_at: z.iso.datetime() });
+
 export const factsSchema = z.object({
   pr: prSchema,
   checks: z.array(checkRunSchema),
@@ -50,6 +64,8 @@ export const factsSchema = z.object({
   files: z.array(fileSchema),
   compare: compareSchema,
   comments: z.array(commentSchema),
+  events: z.array(eventSchema),
+  suites: z.array(suiteSchema),
 });
 
 export type Facts = z.infer<typeof factsSchema>;
@@ -60,6 +76,8 @@ export type Annotation = z.infer<typeof annotationSchema>;
 export type ChangedFile = z.infer<typeof fileSchema>;
 export type Compare = z.infer<typeof compareSchema>;
 export type Comment = z.infer<typeof commentSchema>;
+export type IssueEvent = z.infer<typeof eventSchema>;
+export type Suite = z.infer<typeof suiteSchema>;
 
 /** The combined commit status (`commits/<sha>/status`); its own `state` is pending with none. */
 export const combinedStatusSchema = z.object({ statuses: z.array(statusSchema) });

@@ -1,6 +1,6 @@
 name: lane-automerge
-# Low-risk lane PRs merge themselves into develop once every check on their head is green
-# (docs/09 «Lane auto-merge»; the conditions are tools/scripts/automerge/decide.ts). Remove the
+# Low-risk lane PRs, and PRs labelled `reviewed` after their last push, merge themselves into
+# develop once every check on their head is green (docs/09 «Lane auto-merge»; the conditions are tools/scripts/automerge/decide.ts). Remove the
 # auto-merge label from a PR to stop its merge. No secret: the built-in token only.
 on:
   workflow_run:
@@ -72,8 +72,14 @@ jobs:
               gh api "repos/$REPO/check-runs/$id/annotations?per_page=100" --paginate \
                 --jq '.[] | {title, message}'
             done | jq -s . > "$d/annotations.json"
-            gh api "repos/$REPO/pulls/$n/files?per_page=100" --paginate --jq '.[] | {filename}' \
-              | jq -s . > "$d/files.json"
+            gh api "repos/$REPO/pulls/$n/files?per_page=100" --paginate \
+              --jq '.[] | {filename, previous_filename}' | jq -s . > "$d/files.json"
+            # The reviewed path (reviewed.ts): GitHub's own times of the label, force pushes and head.
+            gh api "repos/$REPO/issues/$n/events?per_page=100" --paginate \
+              --jq '.[] | select(.event == "labeled" or .event == "head_ref_force_pushed")
+                | {event, label: .label.name, created_at}' | jq -s . > "$d/events.json"
+            gh api "repos/$REPO/commits/$sha/check-suites?per_page=100" --paginate \
+              --jq '.check_suites[] | {created_at}' | jq -s . > "$d/suites.json"
             gh api "repos/$REPO/compare/develop...$sha?per_page=1" \
               --jq '{base_commit: {sha: .base_commit.sha}, merge_base_commit: {sha: .merge_base_commit.sha}}' \
               > "$d/compare.json"

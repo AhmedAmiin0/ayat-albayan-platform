@@ -10,7 +10,7 @@ const skip = (reason: string): Decision => ({ action: 'skip', reason });
 /** First rule that answers wins; the order is the order of the merge conditions. */
 const RULES: readonly ((f: Facts) => Decision | null)[] = [
   (f) => {
-    const reason = notEligible(f.pr);
+    const reason = notEligible(f);
     return reason === null ? null : skip(reason);
   },
   (f) => {
