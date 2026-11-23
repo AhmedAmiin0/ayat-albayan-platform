@@ -42,8 +42,8 @@
     "@ab/config": "workspace:*",
     "jscpd": "4.0.5",
     "knip": "5.88.1",
-    "oxlint": "1.90.0",
-    "oxlint-tsgolint": "7.0.2005",
+    "oxlint": "1.95.0",
+    "oxlint-tsgolint": "7.0.2008",
     "postgres": "^3.4.9",
     "prettier": "^3.6.0",
     "turbo": "^2.11.6"
