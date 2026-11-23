@@ -67,6 +67,7 @@ describe('lockScreenText', () => {
       lockScreenText({ kind: 'channel_message', vars: { ...vars, name } });
     expect(named('أ. هدى علي').body).toBe('أ. هدى: متى الحلقة؟');
     expect(named('ولي الأمر').body).toBe('ولي الأمر: متى الحلقة؟');
+    expect(named('مسؤول المتابعة').body).toBe('مسؤول المتابعة: متى الحلقة؟');
   });
 
   it('an overriding title is masked too', () => {
