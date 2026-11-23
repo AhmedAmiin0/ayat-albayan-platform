@@ -1,20 +1,29 @@
-import { systemPermissionsOf, type UserRole } from '@ab/shared';
+import { systemResolver } from '@/common/auth/auth.guard';
+import type { AuthUser } from '@/common/auth/verify-token';
 import type { RouteAccess } from '@/common/auth/parity/route-walk.test-util';
 import type { OwnershipBaseline } from './ownership.schemas';
 import type { BaselineDiff } from './owned-routes.types';
 
 /** The logins that must see only their own rows (audit OPS-9); admin and assistant see all. */
-const SCOPED_ROLES: readonly UserRole[] = ['teacher', 'guardian', 'student', 'sales'];
+const SCOPED_ROLES: readonly NonNullable<AuthUser['role']>[] = ['teacher', 'guardian', 'student', 'sales'];
 
-const HELD = new Set<unknown>(SCOPED_ROLES.flatMap((role) => systemPermissionsOf(role)));
+/** Every permission one of the scoped roles holds by default. */
+export async function scopedPermissions(): Promise<ReadonlySet<unknown>> {
+  const sets = await Promise.all(
+    SCOPED_ROLES.map((role) => systemResolver({ id: role, email: null, role })),
+  );
+  return new Set<unknown>(sets.flat());
+}
 
 const hasParam = (r: RouteAccess) => r.route.includes('/:');
-const reachedByScopedRole = (r: RouteAccess) =>
-  !r.isPublic && (r.signedIn || HELD.has(r.permission));
 
 /** 'METHOD /path' of every id route a scoped login can call, sorted, once each. */
-export function ownedRoutes(routes: readonly RouteAccess[]): string[] {
-  const owned = routes.filter((r) => hasParam(r) && reachedByScopedRole(r)).map((r) => r.route);
+export function ownedRoutes(
+  routes: readonly RouteAccess[],
+  held: ReadonlySet<unknown>,
+): string[] {
+  const reached = (r: RouteAccess) => !r.isPublic && (r.signedIn || held.has(r.permission));
+  const owned = routes.filter((r) => hasParam(r) && reached(r)).map((r) => r.route);
   return [...new Set(owned)].sort();
 }
 

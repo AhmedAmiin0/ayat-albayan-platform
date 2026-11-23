@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { walkRoutes } from '@/common/auth/parity/route-walk.test-util';
-import { compareBaseline, ownedRoutes } from './owned-routes.test-util';
+import { compareBaseline, ownedRoutes, scopedPermissions } from './owned-routes.test-util';
 import { ownershipBaseline, UNCHECKED, type OwnershipBaseline } from './ownership.schemas';
 
 // The API reads with the service-role client, so only the handler keeps a teacher, family or
@@ -19,7 +19,7 @@ describe('ownership baseline', () => {
   let owned: string[];
   let baseline: OwnershipBaseline;
   beforeAll(async () => {
-    owned = ownedRoutes(await walkRoutes());
+    owned = ownedRoutes(await walkRoutes(), await scopedPermissions());
     baseline = readBaseline();
   }, 60_000);
 
