@@ -1,11 +1,6 @@
-import {
-  counted,
-  courseEndOf,
-  zonedPartsIn,
-  type CourseEnd,
-  type CourseEndKey,
-  type TeacherCourseView,
-} from '@ab/shared';
+import { courseEndOf, type CourseEnd, type CourseEndKey, type TeacherCourseView } from '@ab/shared';
+import { counted } from '@ab/core';
+import { zonedPartsIn } from '@ab/time';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

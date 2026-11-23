@@ -5,9 +5,8 @@ import {
   MEETING_DURATION_MIN,
   MEETING_MAX_AHEAD_DAYS,
   scheduleProblem,
-  wallInstant,
-  zonedPartsIn,
-} from '@ab/shared';
+} from '@ab/schedule';
+import { wallInstant, zonedPartsIn } from '@ab/time';
 import type { PickedInvitee } from '@/features/teaching/meetings/invitees/invitee-list';
 
 // Date plus a 15-minute select on the viewer's clock (rule 6), turned into UTC with wallInstant.

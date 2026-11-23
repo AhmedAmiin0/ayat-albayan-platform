@@ -1,5 +1,6 @@
-import type { TimeEditMode } from '@ab/shared';
-import { clockOf, clockTime, DURATIONS, wallInstant, weekdayOf } from '@ab/shared';
+import type { TimeEditMode } from '@ab/schedule';
+import { DURATIONS } from '@ab/catalog';
+import { clockOf, clockTime, wallInstant, weekdayOf } from '@ab/time';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';

@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { expect, it } from 'vitest';

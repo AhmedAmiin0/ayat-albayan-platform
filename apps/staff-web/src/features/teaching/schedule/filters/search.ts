@@ -5,8 +5,8 @@ import {
   type LessonStatus,
   type Program,
   PROGRAMS,
-  weekStart,
-} from '@ab/shared';
+} from '@ab/catalog';
+import { weekStart } from '@ab/time';
 /** /admin/schedule URL state; defaults (this week, everyone, open lessons) stay out of the URL. */
 export type ScheduleSearch = {
   /** The day board instead of the week grid. */

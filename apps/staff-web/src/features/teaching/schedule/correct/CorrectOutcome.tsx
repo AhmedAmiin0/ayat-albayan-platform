@@ -1,4 +1,4 @@
-import { correctionTargets, type CorrectTo } from '@ab/shared';
+import { correctionTargets, type CorrectTo } from '@ab/schedule';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

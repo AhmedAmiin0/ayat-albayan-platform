@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
@@ -13,7 +13,7 @@ import { publicProblem, submitFeedback, type PublicProblem } from '@/features/te
 import { RatingScale } from './RatingScale';
 import { KindLine } from './KindLine';
 import { FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend } from '@/features/teaching/feedback/types';
-import type { FeedbackRating } from '@ab/shared';
+import type { FeedbackRating } from '@ab/catalog';
 
 const RECOMMEND = FEEDBACK_RECOMMEND.map((r) => ({ value: r, label: t.enums.feedbackRecommend[r] }));
 const PROBLEM_TEXT: Record<PublicProblem, string> = {

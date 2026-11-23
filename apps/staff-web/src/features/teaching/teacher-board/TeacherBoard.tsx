@@ -1,4 +1,5 @@
-import { boardStudents, countByKind, type LessonView, type TeacherMe } from '@ab/shared';
+import { boardStudents, countByKind } from '@ab/shared';
+import type { LessonView, TeacherMe } from '@ab/schedule';
 import { useNavigate } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';

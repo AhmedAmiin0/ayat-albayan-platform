@@ -915,11 +915,6 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/list/PayoutsPage/tests/PayoutsPage.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/finance/payouts/list/PayoutsPage/PayoutsPage.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -937,6 +932,11 @@
       "count": 1
     },
     "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/features/finance/payouts/list/PayoutsPage/tests/PayoutsPage.test.tsx": {
+    "max-len": {
       "count": 1
     }
   },
@@ -2793,11 +2793,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/NewThread/tests/NewThread.test.tsx": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/features/messaging/inbox/threads/pane/NewThread/NewThread.tsx": {
     "max-len": {
       "count": 3
@@ -2806,12 +2801,12 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/PhoneChat.tsx": {
+  "src/features/messaging/inbox/threads/pane/NewThread/tests/NewThread.test.tsx": {
     "max-len": {
-      "count": 1
+      "count": 3
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadHeader/tests/ThreadHeader.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/PhoneChat.tsx": {
     "max-len": {
       "count": 1
     }
@@ -2824,12 +2819,37 @@
       "count": 4
     }
   },
+  "src/features/messaging/inbox/threads/pane/ThreadHeader/tests/ThreadHeader.test.tsx": {
+    "max-len": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.tsx": {
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane.tsx": {
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 11
+    },
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane/tests/chat.test.tsx": {
@@ -2904,26 +2924,6 @@
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane/tests/subscription.test.tsx": {
     "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane.tsx": {
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 11
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "no-restricted-syntax": {
       "count": 1
     }
   },

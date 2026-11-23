@@ -1,13 +1,12 @@
 import {
   attendanceRate,
   boardStudents,
-  matchesQuery,
   studentLessons,
-  type LessonView,
   type StudentLessons,
   type StudentListKind,
-  type TeacherMe,
 } from '@ab/shared';
+import { matchesQuery } from '@ab/core';
+import type { LessonView, TeacherMe } from '@ab/schedule';
 import { compareValues } from '@/components/data-table/client-sort';
 import type { FactsById } from './student-facts';
 

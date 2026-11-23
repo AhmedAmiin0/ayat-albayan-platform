@@ -1,4 +1,4 @@
-import type { LessonView, Span } from '@ab/shared';
+import type { LessonView, Span } from '@ab/schedule';
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { AXIS_HOURS } from '@/features/people/teachers/availability/track';

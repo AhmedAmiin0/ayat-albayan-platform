@@ -1,4 +1,5 @@
-import { GENDERS, LESSON_STATUSES, PROGRAMS, type OverviewTeacher } from '@ab/shared';
+import { GENDERS, LESSON_STATUSES, PROGRAMS } from '@ab/catalog';
+import type { OverviewTeacher } from '@ab/schedule';
 import { CheckboxFilterField, SelectFilterField } from '@/components/table-toolbar/fields';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

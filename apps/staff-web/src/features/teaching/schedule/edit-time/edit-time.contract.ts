@@ -1,4 +1,4 @@
-import type { LessonTimeEditView, LessonView, TimeEditMode } from '@ab/shared';
+import type { LessonTimeEditView, LessonView, TimeEditMode } from '@ab/schedule';
 
 // R-SCH-11: the wire contract lives in @ab/shared; the form imports it from there.
 

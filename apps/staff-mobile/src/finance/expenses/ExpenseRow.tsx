@@ -1,4 +1,4 @@
-import type { ExpenseCategoryView, ExpenseView } from '@ab/shared';
+import type { ExpenseCategoryView, ExpenseView } from '@ab/money';
 import { t, StatusChip, ListRow } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { categoryLabel } from './categories';

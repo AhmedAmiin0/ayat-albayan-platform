@@ -1,4 +1,4 @@
-import type { SlotView } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useBookingMode } from '@/features/teaching/booking/mode';

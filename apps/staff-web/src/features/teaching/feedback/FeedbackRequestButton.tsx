@@ -1,4 +1,5 @@
-import { feedbackEligible, type LessonView } from '@ab/shared';
+import { feedbackEligible } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

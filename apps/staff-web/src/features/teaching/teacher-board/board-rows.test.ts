@@ -1,4 +1,4 @@
-import type { TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { boardRows, searchRows } from './board-rows';

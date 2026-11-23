@@ -1,4 +1,5 @@
-import { addDays, BOARD_DAYS, wallInstant } from '@ab/shared';
+import { BOARD_DAYS } from '@ab/shared';
+import { addDays, wallInstant } from '@ab/time';
 import type { Window } from '@/features/teaching/schedule';
 
 // docs/46 D4: one window, 14 days back and ahead in the teacher's zone, shared by the home.

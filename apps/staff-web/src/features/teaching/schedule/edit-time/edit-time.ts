@@ -1,5 +1,6 @@
-import type { LessonTimeEdit, TimeEditMode } from '@ab/shared';
-import { addDays, lessonDuration, wallInstant, zonedPartsIn } from '@ab/shared';
+import type { LessonTimeEdit, TimeEditMode } from '@ab/schedule';
+import { lessonDuration } from '@ab/schedule';
+import { addDays, wallInstant, zonedPartsIn } from '@ab/time';
 // Time-edit logic (R-SCH-11): days and times are picked, never typed; pure.
 
 const STEP = 15;

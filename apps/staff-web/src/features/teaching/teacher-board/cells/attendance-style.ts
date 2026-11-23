@@ -1,4 +1,5 @@
-import type { AttendanceKind, StatusStyle } from '@ab/shared';
+import type { AttendanceKind } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** Only an unmarked lesson waits on her; present is green, absent red, the rest neutral. */

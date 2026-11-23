@@ -1,5 +1,6 @@
-import type { TimeEditMode } from '@ab/shared';
-import { sameClockAt, type LessonView } from '@ab/shared';
+import type { TimeEditMode } from '@ab/schedule';
+import type { LessonView } from '@ab/schedule';
+import { sameClockAt } from '@ab/time';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Change } from './edit-time';

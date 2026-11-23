@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { IDS } from '@/modules/teaching/booking/booking.fakes';
 import type { BookingPayload } from './booking.mapper';

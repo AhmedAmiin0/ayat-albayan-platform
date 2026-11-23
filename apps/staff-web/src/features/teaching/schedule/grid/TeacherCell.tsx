@@ -1,4 +1,5 @@
-import { sameClockAt, type OverviewTeacher } from '@ab/shared';
+import type { OverviewTeacher } from '@ab/schedule';
+import { sameClockAt } from '@ab/time';
 import { Link } from '@tanstack/react-router';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';

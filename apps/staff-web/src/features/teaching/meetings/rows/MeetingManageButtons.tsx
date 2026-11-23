@@ -1,4 +1,4 @@
-import type { MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RowDialog } from './MeetingRowDialogs';

@@ -1,12 +1,7 @@
-import {
-  clockOf,
-  joinNames,
-  type LessonStatus,
-  type LessonView,
-  needsConfirmation,
-  sameClockAt,
-  zonedPartsIn,
-} from '@ab/shared';
+import { joinNames } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { type LessonView, needsConfirmation } from '@ab/schedule';
+import { clockOf, sameClockAt, zonedPartsIn } from '@ab/time';
 import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

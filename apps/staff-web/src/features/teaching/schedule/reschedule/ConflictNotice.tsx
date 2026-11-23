@@ -1,4 +1,6 @@
-import { clockOf, type Conflict, lessonWhenAt, sameClockAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
+import { clockOf, sameClockAt } from '@ab/time';
 import { useId, useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';

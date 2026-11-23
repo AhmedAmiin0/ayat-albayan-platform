@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { TrialDateRepo } from '@/modules/teaching/booking';
 import { SalesStudentRepo } from './sales-student.repo';
 

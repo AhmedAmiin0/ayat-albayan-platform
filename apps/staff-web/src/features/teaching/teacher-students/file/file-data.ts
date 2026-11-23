@@ -1,10 +1,10 @@
 import type {
   AttendanceTableRow,
   StudentAttendanceTable,
-  StudentRecordingView,
   TeacherCourseView,
   TeacherStudentHead,
 } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 
 // Test data, not a test; sample names only.
 

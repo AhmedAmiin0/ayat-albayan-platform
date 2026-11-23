@@ -1,4 +1,4 @@
-import { dateText } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 

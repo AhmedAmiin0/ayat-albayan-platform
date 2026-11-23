@@ -1,4 +1,7 @@
-import { type LessonView, lessonWhenAt, sameClockAt, subscriptionStatusStyle } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
+import type { LessonView } from '@ab/schedule';
+import { sameClockAt } from '@ab/time';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

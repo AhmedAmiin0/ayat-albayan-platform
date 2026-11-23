@@ -1,4 +1,6 @@
-import { clockOf, type LessonView, subscriptionStatusStyle, type Tone } from '@ab/shared';
+import { subscriptionStatusStyle, type Tone } from '@ab/money';
+import type { LessonView } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

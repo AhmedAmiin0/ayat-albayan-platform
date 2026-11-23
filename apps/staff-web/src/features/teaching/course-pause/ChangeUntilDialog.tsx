@@ -1,5 +1,6 @@
 import { coursePauseErrorCode } from '@ab/client-core';
-import { riyadhToday, type CoursePauseView } from '@ab/shared';
+import type { CoursePauseView } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useMutation } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
