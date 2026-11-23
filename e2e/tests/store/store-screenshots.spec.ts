@@ -41,6 +41,17 @@ test.describe('store screenshots', () => {
     await page.goto(`${FAMILY_URL}/schedule`);
     const schedule = P.app.schedule.title;
     await expect(page.getByRole('heading', { level: 1, name: schedule })).toBeVisible();
+    const diag = await page.evaluate(() => {
+      const d = document.documentElement;
+      const wide = [...document.querySelectorAll('*')].filter((e) => {
+        const r = e.getBoundingClientRect();
+        return r.right > 361 || r.left < -1 || r.width > 361;
+      }).slice(0, 25).map((e) => `${e.tagName}.${String(e.className).slice(0, 80)} ` +
+        JSON.stringify(e.getBoundingClientRect()));
+      return { iw: innerWidth, ih: innerHeight, vv: visualViewport?.scale, vw: visualViewport?.width,
+        sw: d.scrollWidth, cw: d.clientWidth, sh: d.scrollHeight, wide };
+    });
+    console.log('DIAG', JSON.stringify(diag, null, 1));
     await shoot(page, '02-schedule');
 
     await page.goto(`${FAMILY_URL}/portal`);
