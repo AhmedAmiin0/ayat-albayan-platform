@@ -1,4 +1,4 @@
-import type { AssistantStatementView, MyEarnings as Earnings } from '@ab/shared';
+import type { AssistantStatementView, MyEarnings as Earnings } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

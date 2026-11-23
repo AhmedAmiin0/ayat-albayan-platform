@@ -1,4 +1,4 @@
-import type { MyPaymentRow } from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
