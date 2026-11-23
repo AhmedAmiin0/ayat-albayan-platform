@@ -1,10 +1,5 @@
-import {
-  Injectable,
-  Logger,
-  type OnApplicationBootstrap,
-  type BeforeApplicationShutdown,
-} from '@nestjs/common';
-import { stopWithin, Ticker } from '@/common/jobs';
+import { Injectable, Logger } from '@nestjs/common';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { AutoHeldService, type AutoHeldSummary } from './auto-held.service';
 
@@ -19,23 +14,17 @@ const wroteAny = (s: AutoHeldSummary): boolean => s.held + s.absent > 0;
  */
 @BackgroundJob({ name: 'lessons-auto-held' })
 @Injectable()
-export class AutoHeldJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
+export class AutoHeldJob extends TickerJob {
   private readonly log = new Logger(AutoHeldJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: AutoHeldJob.name,
     firstMs: 7 * MINUTE,
     everyMs: 10 * MINUTE,
     run: () => this.runOnce(),
   });
 
-  constructor(private readonly held: AutoHeldService) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  async beforeApplicationShutdown(): Promise<void> {
-    await stopWithin(this.ticker);
+  constructor(private readonly held: AutoHeldService) {
+    super();
   }
 
   /** One pass. Never throws. */

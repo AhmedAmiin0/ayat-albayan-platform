@@ -1,15 +1,9 @@
-import {
-  Injectable,
-  Logger,
-  type OnApplicationBootstrap,
-  type BeforeApplicationShutdown,
-  type OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { CourseDue } from '@/modules/finance/subscriptions/course-due/course-due';
 import { AlertsRepo } from './alerts.repo';
 import { SubscriptionAlertsService } from './alerts.service';
-import { stopWithin, Ticker } from '@/common/jobs';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 15 * 60_000;
@@ -29,9 +23,9 @@ const FIRST_RUN_MS = 5 * 60_000;
  */
 @BackgroundJob({ name: 'subscription-alerts' })
 @Injectable()
-export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, BeforeApplicationShutdown {
+export class AlertsJob extends TickerJob implements OnModuleInit {
   private readonly log = new Logger(AlertsJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: AlertsJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: EVERY_MS,
@@ -43,18 +37,12 @@ export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, BeforeAp
     private readonly alerts: SubscriptionAlertsService,
     private readonly events: LessonEvents,
     private readonly courseDue: CourseDue,
-  ) {}
+  ) {
+    super();
+  }
 
   onModuleInit(): void {
     this.events.onChanged((lessonIds) => this.alerts.evaluateLessons(lessonIds));
-  }
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  async beforeApplicationShutdown(): Promise<void> {
-    await stopWithin(this.ticker);
   }
 
   /** Never throws. */

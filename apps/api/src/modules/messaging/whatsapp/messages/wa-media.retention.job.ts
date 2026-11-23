@@ -1,11 +1,9 @@
 import { isPlayableMime } from '@ab/shared';
-import {
-  Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { InboundMediaRepo } from './inbound-media.repo';
-import { stopWithin, Ticker } from '@/common/jobs';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
@@ -27,9 +25,9 @@ export const MAX_BATCHES = 50;
  */
 @BackgroundJob({ name: 'wa-media-retention' })
 @Injectable()
-export class WaMediaRetentionJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
+export class WaMediaRetentionJob extends TickerJob {
   private readonly log = new Logger(WaMediaRetentionJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: WaMediaRetentionJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: EVERY_MS,
@@ -39,14 +37,8 @@ export class WaMediaRetentionJob implements OnApplicationBootstrap, BeforeApplic
   constructor(
     private readonly queries: InboundMediaRepo,
     private readonly storage: StorageService,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  async beforeApplicationShutdown(): Promise<void> {
-    await stopWithin(this.ticker);
+  ) {
+    super();
   }
 
   /** Never throws; the number of files purged. Any error is logged and ends this run. */

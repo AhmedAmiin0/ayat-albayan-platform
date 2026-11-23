@@ -1,9 +1,7 @@
 import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
-import {
-  Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ruleOf, timingOf } from '@/common/rules/rule-of';
-import { stopWithin, Ticker } from '@/common/jobs';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
 import {
@@ -45,9 +43,9 @@ interface Tick {
  */
 @BackgroundJob({ name: 'follow-ups' })
 @Injectable()
-export class FollowUpsJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
+export class FollowUpsJob extends TickerJob {
   private readonly log = new Logger(FollowUpsJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: FollowUpsJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: EVERY_MS,
@@ -59,14 +57,8 @@ export class FollowUpsJob implements OnApplicationBootstrap, BeforeApplicationSh
     private readonly slots: FollowUpSlots,
     private readonly settings: FollowUpsSettings,
     private readonly policy: NotificationPolicy,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  async beforeApplicationShutdown(): Promise<void> {
-    await stopWithin(this.ticker);
+  ) {
+    super();
   }
 
   kick(): Promise<unknown> {

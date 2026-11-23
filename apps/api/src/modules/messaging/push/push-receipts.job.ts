@@ -1,7 +1,5 @@
-import {
-  Inject, Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
-} from '@nestjs/common';
-import { stopWithin, Ticker } from '@/common/jobs';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { readReceipts, type ExpoReceipt } from './push-receipts';
 import { PushReceiptsRepo, type TicketRow } from './push-receipts.repo';
 import { RECEIPTS_TRANSPORT, type ReceiptsTransport } from './receipts.transport';
@@ -26,9 +24,9 @@ type ReceiptsSummary = { rows: number; settled: number; pruned: number };
  */
 @BackgroundJob({ name: 'push-receipts' })
 @Injectable()
-export class PushReceiptsJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
+export class PushReceiptsJob extends TickerJob {
   private readonly log = new Logger(PushReceiptsJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: PushReceiptsJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: EVERY_MS,
@@ -38,14 +36,8 @@ export class PushReceiptsJob implements OnApplicationBootstrap, BeforeApplicatio
   constructor(
     private readonly queries: PushReceiptsRepo,
     @Inject(RECEIPTS_TRANSPORT) private readonly transport: ReceiptsTransport,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  async beforeApplicationShutdown(): Promise<void> {
-    await stopWithin(this.ticker);
+  ) {
+    super();
   }
 
   /** One pass. Never throws. */

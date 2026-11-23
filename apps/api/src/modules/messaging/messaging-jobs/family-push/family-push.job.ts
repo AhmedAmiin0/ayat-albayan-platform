@@ -1,11 +1,5 @@
-import {
-  Inject,
-  Injectable,
-  Logger,
-  type OnApplicationBootstrap,
-  type BeforeApplicationShutdown,
-} from '@nestjs/common';
-import { stopWithin, Ticker } from '@/common/jobs';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { FamilyPushService, type FamilyPushSummary } from './family-push.service';
 
@@ -18,23 +12,17 @@ const MINUTE = 60_000;
  */
 @BackgroundJob({ name: 'family-push' })
 @Injectable()
-export class FamilyPushJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
+export class FamilyPushJob extends TickerJob {
   private readonly log = new Logger(FamilyPushJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: FamilyPushJob.name,
     firstMs: 2 * MINUTE,
     everyMs: MINUTE,
     run: () => this.runOnce(),
   });
 
-  constructor(@Inject(FamilyPushService) private readonly family: FamilyPushService) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  async beforeApplicationShutdown(): Promise<void> {
-    await stopWithin(this.ticker);
+  constructor(@Inject(FamilyPushService) private readonly family: FamilyPushService) {
+    super();
   }
 
   /** One pass. Never throws. */
