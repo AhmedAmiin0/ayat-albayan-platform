@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { PUBLIC_SETTING_DEFAULTS } from '../../public.js';
 import { SETTINGS_REGISTRY } from '../../registry.js';
-import { VALUE_GROUPS } from '../../value-groups.js';
+import { VALUE_GROUPS } from '../../value-groups/index.js';
 import { TEACHER_PAGE_KEYS, TEACHER_PAGE_SWITCH, teacherGateOpen, teacherPageOn } from './teacher-pages.js';
 
 const off = { ...PUBLIC_SETTING_DEFAULTS };

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { installWebErrorReporting } from './web-errors';
+import { installWebErrorReporting, reportWebError } from './web-errors';
 
 const DSN = 'https://k@errors.example.com/8';
 
@@ -41,5 +41,21 @@ describe('installWebErrorReporting defaults', () => {
     expect(installWebErrorReporting().enabled).toBe(false);
     expect(add).not.toHaveBeenCalledWith('unhandledrejection', expect.anything());
     add.mockRestore();
+  });
+});
+
+describe('reportWebError', () => {
+  it('sends a caught error through the installed reporter', () => {
+    const send = vi.fn(async () => undefined);
+    installWebErrorReporting({ env: { VITE_SENTRY_DSN: DSN }, target: new EventTarget(), send });
+    reportWebError(new Error('route failed'));
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it('without a DSN nothing is sent', () => {
+    const send = vi.fn();
+    installWebErrorReporting({ env: {}, target: new EventTarget(), send });
+    reportWebError(new Error('x'));
+    expect(send).not.toHaveBeenCalled();
   });
 });

@@ -2,7 +2,18 @@
   "app": {
     "name": "Ayat Al-Bayan Academy",
     "academy": "Academy",
-    "brand": "Ayat Al-Bayan"
+    "brand": "Ayat Al-Bayan",
+    "routeError": {
+      "title": "This page could not be opened",
+      "body": "Something went wrong while opening the page. Try again, or go back to the home page.",
+      "retry": "Try again",
+      "home": "Home page"
+    },
+    "notFound": {
+      "title": "This page does not exist",
+      "body": "The link may have changed or the page was removed. Go back to the home page and continue from there.",
+      "home": "Home page"
+    }
   },
   "auth": {
     "loginTitle": "Sign in",

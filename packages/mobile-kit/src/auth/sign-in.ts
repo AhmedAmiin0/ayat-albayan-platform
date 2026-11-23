@@ -1,10 +1,10 @@
-import { type CodeRoutes, isEmailIdentifier, signInError } from '@ab/client-core';
+import { type CodeRoutes, isAccountDisabled, isEmailIdentifier, signInError } from '@ab/client-core';
 import { apiFetch } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
 import { supabase } from '../lib/http/supabase';
 import { authApi } from './forgot/auth-api';
 import { authErrorText, loginErrorText } from './forgot/auth-errors';
-import { isAccountDisabled, isOtherAppRole, noticeText } from './login-notice';
+import { isOtherAppRole, noticeText } from './login-notice';
 import { appRole } from './role-claim';
 import type { Me } from './verify-role';
 

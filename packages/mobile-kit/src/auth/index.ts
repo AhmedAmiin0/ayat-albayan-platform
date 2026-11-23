@@ -14,7 +14,6 @@ export { PasswordSignIn } from './kit/PasswordSignIn';
 export { SignInFrame } from './kit/SignInFrame';
 export { SignOutButton } from './kit/SignOutButton';
 export {
-  isAccountDisabled,
   isOtherAppRole,
   type LoginNotice,
   noticeText,
