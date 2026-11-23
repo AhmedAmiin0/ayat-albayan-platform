@@ -4,7 +4,7 @@ import {
   PACKAGE_IDS,
   PRICING_DURATIONS,
   SITE_COUNTRIES,
-} from '@ab/shared';
+} from '@ab/money';
 import type { ReactNode } from 'react';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Input } from '@ab/web-kit/components/ui/form/input';

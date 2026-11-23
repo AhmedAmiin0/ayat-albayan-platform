@@ -1,4 +1,4 @@
-import { SUBSCRIPTION_STATUSES } from '@ab/shared';
+import { SUBSCRIPTION_STATUSES } from '@ab/catalog';
 import { chipIfSet, SelectFilterField } from '@/components/table-toolbar/fields';
 import type { ExtraFilters } from '@/components/table-toolbar/types';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

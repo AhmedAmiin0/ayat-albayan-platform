@@ -7,13 +7,13 @@ import {
   type PricingDuration,
   type QuoteResponse,
   type SiteCountry,
-} from '@ab/shared';
+} from '@ab/money';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 
 // Shapes returned by apps/api/src/modules/pricing (docs/08). The client never prices anything:
 // every number on the calculator comes from these responses.
-export type { CatalogResponse, FxRate, QuoteResponse } from '@ab/shared';
+export type { CatalogResponse, FxRate, QuoteResponse } from '@ab/money';
 
 /** «دولة تانية (بالدولار)»: no country is sent, so the API quotes in USD. */
 export const OTHER = 'other' as const;

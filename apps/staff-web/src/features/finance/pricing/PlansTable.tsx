@@ -1,4 +1,4 @@
-import type { Quote } from '@ab/shared';
+import type { Quote } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

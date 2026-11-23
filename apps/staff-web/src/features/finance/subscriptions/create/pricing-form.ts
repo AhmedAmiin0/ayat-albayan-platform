@@ -4,12 +4,12 @@ import {
   CUSTOM_COUNT_MIN,
   DEFAULT_DURATION,
   lessonsOf,
-  localDateIn,
   type PackageId,
   type PricingDuration,
   type SiteCountry,
   type SubscriptionPricing,
-} from '@ab/shared';
+} from '@ab/money';
+import { localDateIn } from '@ab/time';
 
 // The create dialog's calculator inputs (R-SUB-01). Only inputs: the price comes from the API.
 

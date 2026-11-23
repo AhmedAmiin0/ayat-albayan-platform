@@ -1,4 +1,4 @@
-import { countsForMoney, dueOf, owedFor } from '@ab/shared';
+import { countsForMoney, dueOf, owedFor } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Field } from '@ab/web-kit/components/ui/form/field';

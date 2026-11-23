@@ -1,4 +1,5 @@
-import { matchesQuery, settingDef, type SettingKey } from '@ab/shared';
+import { matchesQuery } from '@ab/core';
+import { settingDef, type SettingKey } from '@ab/settings';
 import { settingText, textAt } from './setting-text';
 
 /** Does the text contain the search (case, diacritics and alef forms ignored)? An empty search matches. */

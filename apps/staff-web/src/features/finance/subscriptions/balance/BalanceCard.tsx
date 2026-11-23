@@ -1,4 +1,4 @@
-import { cancelOffered, owesMore, subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, owesMore, subscriptionStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

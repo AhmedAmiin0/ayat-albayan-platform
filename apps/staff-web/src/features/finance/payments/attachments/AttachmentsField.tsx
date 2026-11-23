@@ -1,4 +1,4 @@
-import { PAYMENT_ATTACHMENTS_MAX } from '@ab/shared';
+import { PAYMENT_ATTACHMENTS_MAX } from '@ab/money';
 import { useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AttachmentItems } from './AttachmentItems';

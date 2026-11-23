@@ -1,4 +1,4 @@
-import { PAYMENT_KINDS, type PaymentKind } from '@ab/shared';
+import { PAYMENT_KINDS, type PaymentKind } from '@ab/catalog';
 import { DateFilterField, SelectFilterField } from '@/components/table-toolbar/fields';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { StudentPicker } from '@/features/finance/subscriptions/create/StudentPicker';

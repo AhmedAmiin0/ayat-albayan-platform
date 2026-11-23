@@ -1,4 +1,4 @@
-import type { TeacherEarningView } from '@ab/shared';
+import type { TeacherEarningView } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
