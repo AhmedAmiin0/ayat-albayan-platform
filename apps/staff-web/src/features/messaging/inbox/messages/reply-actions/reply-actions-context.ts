@@ -9,7 +9,7 @@ export interface ReplyActions {
   /** ThreadDetail.lessons of the first page: the family's next open lessons. */
   lessons: readonly ThreadLesson[];
   rights: ReplyRights;
-  /** Message ids whose lesson was moved from their «تغيير الموعد». */
+  /** Message ids whose lesson was moved from their reschedule action. */
   moved: readonly string[];
   /** Opens the reschedule drawer for `lesson`, remembered against `messageId` once it moves. */
   reschedule: (messageId: string, lesson: ReplyLesson) => void;

@@ -1553,11 +1553,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/calls/screen/IncomingCall.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/features/messaging/calls/state/CallProvider.cancel.test.tsx": {
     "no-nested-ternary": {
       "count": 1
@@ -1590,7 +1585,7 @@
   },
   "src/features/messaging/calls/state/call-platform.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/calls/state/call-test-kit.ts": {
@@ -1638,7 +1633,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/features/messaging/inbox/api/live.lifecycle.test.tsx": {
@@ -1677,11 +1672,6 @@
       "count": 2
     }
   },
-  "src/features/messaging/inbox/composer/components/Composer.lines.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/composer/components/Composer.teacher.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
@@ -1695,7 +1685,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     },
     "no-nested-ternary": {
       "count": 2
@@ -1711,7 +1701,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
@@ -1739,7 +1729,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -1754,9 +1744,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -1780,7 +1767,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -1820,7 +1807,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -1834,12 +1821,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
-    }
-  },
-  "src/features/messaging/inbox/composer/lib/composer-extras.ts": {
-    "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/composer/lib/draft-store.ts": {
@@ -1857,15 +1839,10 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/composer/lib/use-reply-target.ts": {
-    "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/composer/quote/QuoteButton.tsx": {
+  "src/features/messaging/inbox/composer/lib/use-reply-target.ts": {
     "max-len": {
       "count": 1
     }
@@ -1883,9 +1860,6 @@
   "src/features/messaging/inbox/composer/quote/QuoteDialog.tsx": {
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -1906,7 +1880,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/lead/FollowUpLine.tsx": {
@@ -1941,7 +1915,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -1966,7 +1940,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/features/messaging/inbox/lead/qualification/FamilyFields.tsx": {
@@ -1990,9 +1964,6 @@
   "src/features/messaging/inbox/lead/qualification/QualificationForm.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/lead/qualification/QualificationForm.v1.test.tsx": {
@@ -2010,29 +1981,14 @@
       "count": 3
     }
   },
-  "src/features/messaging/inbox/lists/components/ChatListChips.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/lists/components/ChatListsBar.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/lists/components/CreateListDialog.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/inbox/lists/components/DeleteListDialog.tsx": {
     "max-len": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/lists/components/EditListDialog.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/lists/components/ListChip.tsx": {
@@ -2042,7 +1998,7 @@
   },
   "src/features/messaging/inbox/lists/components/ListNameForm.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/lists/components/ThreadListChips.tsx": {
@@ -2064,16 +2020,13 @@
     "complexity": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }
   },
   "src/features/messaging/inbox/lists/lib/active-list.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/lists/lib/api.ts": {
@@ -2107,17 +2060,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
-    }
-  },
-  "src/features/messaging/inbox/lists/lib/use-lists-access.ts": {
-    "max-len": {
-      "count": 1
+      "count": 5
     }
   },
   "src/features/messaging/inbox/lists/lib/use-membership.ts": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/features/messaging/inbox/lists/lib/use-thread-lists-action.tsx": {
@@ -2135,7 +2083,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/features/messaging/inbox/messages/components/BubbleMenu.tools.test.tsx": {
@@ -2151,7 +2099,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -2160,27 +2108,9 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/messages/components/DeliveryTicks.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/messages/components/DownloadButton.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/messages/components/JumpToLatest.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/messages/components/MediaPlayer.tsx": {
     "jsx-a11y/media-has-caption": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/components/MessageActions.tsx": {
@@ -2201,7 +2131,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -2212,7 +2142,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/features/messaging/inbox/messages/components/MessageLog.days.test.tsx": {
@@ -2246,7 +2176,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -2310,16 +2240,6 @@
       "count": 2
     }
   },
-  "src/features/messaging/inbox/messages/lib/bubble-offers.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/messages/lib/bubble-side.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/messages/lib/day-groups.test.ts": {
     "max-len": {
       "count": 1
@@ -2340,9 +2260,6 @@
   },
   "src/features/messaging/inbox/messages/lib/message-notes.ts": {
     "complexity": {
-      "count": 2
-    },
-    "max-len": {
       "count": 2
     }
   },
@@ -2368,7 +2285,7 @@
   },
   "src/features/messaging/inbox/messages/reactions/reactions.test.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/messages/reactions/use-react.ts": {
@@ -2382,19 +2299,16 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/ReplyConfirmButton.tsx": {
     "ab/forbidden-imports": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -2405,7 +2319,7 @@
   },
   "src/features/messaging/inbox/messages/reply-actions/ReplyNoteLine.tsx": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/RescheduleLessonDrawer.tsx": {
@@ -2413,7 +2327,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/inbox/messages/reply-actions/reply-actions-context.ts": {
@@ -2433,12 +2347,7 @@
   },
   "src/features/messaging/inbox/messages/resend/ResendDialog.tsx": {
     "max-len": {
-      "count": 4
-    }
-  },
-  "src/features/messaging/inbox/messages/template/TappedLabel.tsx": {
-    "max-len": {
-      "count": 1
+      "count": 3
     }
   },
   "src/features/messaging/inbox/messages/template/TemplateButtons.tsx": {
@@ -2474,7 +2383,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/features/messaging/inbox/sales/SendRatingButton.tsx": {
@@ -2485,7 +2394,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     },
     "no-nested-ternary": {
       "count": 1
@@ -2512,7 +2421,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/sales/sales-register.ts": {
@@ -2520,7 +2429,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/inbox/sales/subscription.test.ts": {
@@ -2528,19 +2437,11 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/sales/subscription.ts": {
-    "max-len": {
-      "count": 5
-    }
-  },
   "src/features/messaging/inbox/saved-replies/components/AttachmentField.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
     "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     },
     "max-lines-per-function": {
@@ -2568,7 +2469,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/messaging/inbox/saved-replies/components/ReplyComposer.send.test.tsx": {
@@ -2583,7 +2484,7 @@
   },
   "src/features/messaging/inbox/saved-replies/components/ReplyComposer.tsx": {
     "max-len": {
-      "count": 10
+      "count": 7
     },
     "max-lines-per-function": {
       "count": 1
@@ -2591,7 +2492,7 @@
   },
   "src/features/messaging/inbox/saved-replies/components/ReplyEditorDialog.tsx": {
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "max-lines-per-function": {
       "count": 1

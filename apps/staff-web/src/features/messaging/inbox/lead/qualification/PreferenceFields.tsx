@@ -11,11 +11,7 @@ import type { QualFieldsProps } from './QualificationFields';
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/**
- * When the student can study (R-LEAD-03): days, «وقت البدء» as a range picked from the same
- * 30-minute selects as availability (times are never typed, rule 6), then the zone — the first
- * registration form's order (research-forms 8).
- */
+/** Times are picked from 30-minute selects, never typed (rule 6, R-LEAD-03). */
 export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
   const clock = useClock();
   const toggle = (day: number) =>

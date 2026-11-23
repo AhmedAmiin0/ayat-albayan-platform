@@ -63,7 +63,6 @@ export function threadKind(th: ThreadView): keyof typeof t.inbox.kind | null {
 
 const templateName = (key: string): string => (t.templates.names as Record<string, string>)[key] ?? key;
 
-/** The template line over an outbound template bubble: «قالب: تأكيد الحجز — لينك Jitsi». */
 export function templateLine(key: string): string {
   return t.inbox.templateLine.replace('{name}', templateName(key));
 }
@@ -80,22 +79,15 @@ function lastText(th: ThreadView): string {
   return t.inbox.media.other; // an inbound type we can't show (location, contacts, …)
 }
 
-/**
- * One line under the name: the last message, «أنت:» before ours, media and templates named; its
- * WhatsApp markers (*bold*, _italic_, ~strike~, ```mono```) dropped, as WhatsApp's own list does.
- */
+/** WhatsApp markers are dropped from the preview, as WhatsApp's own list does. */
 export function previewText(th: ThreadView): string {
   const text = stripWaMarkup(lastText(th));
   return th.last_direction === 'outbound' ? `${t.inbox.you} ${text}` : text;
 }
 
-/** «رسالتين جداد», «3 رسايل جديدة». */
 export const unreadLabel = (n: number): string => counted(t.inbox.unread, n);
 
-/**
- * Today → «14:05» / «2:05 م», another day → «3 أكتوبر». `now` is the list's ticking clock (useNow,
- * one per list): a default `new Date()` would be read once and kept by the React Compiler.
- */
+/** `now` comes from the list's ticking clock; a default would be frozen by the React Compiler. */
 export function listTime(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
   return sameDay(at, now) ? clockAt(at, clock) : dayMonth(at);
@@ -103,7 +95,7 @@ export function listTime(iso: string, clock: Clock, now: Date): string {
 
 export const clockText = (iso: string, clock: Clock): string => clockAt(new Date(iso), clock);
 
-/** A bubble's time: «05:53» today, «1 أكتوبر 05:53» another day (the 24 h window needs the day). */
+/** Another day includes the date because the 24 h window needs it. */
 export function stampText(iso: string, clock: Clock, now: Date): string {
   const at = new Date(iso);
   return sameDay(at, now) ? clockAt(at, clock) : `${dayMonth(at)} ${clockAt(at, clock)}`;
@@ -111,20 +103,17 @@ export function stampText(iso: string, clock: Clock, now: Date): string {
 
 const CITIES: Record<string, string | undefined> = t.tz;
 
-/** «المواعيد بتوقيت الرياض»: the zone every time on the page is shown in (the viewer's). */
 export function timesInText(tz: string = viewerZone()): string {
   return t.inbox.timesIn.replace('{city}', CITIES[tz] ?? tz);
 }
-/** «03/10/2026، 14:05»: the whole stamp (tooltips, notes). */
 export const fullTime = (iso: string, clock: Clock): string =>
   dateAndClock(new Date(iso), { ...clock, tz: viewerZone() }, { dateStyle: 'medium' });
 
-/** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message. */
+/** Plain replies are allowed until 24 h after their last message. */
 export function sessionUntil(lastInboundAt: string, clock: Clock): string {
   return t.inbox.sessionOpenUntil.replace('{time}', fullTime(new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS).toISOString(), clock));
 }
 
-/** Meta / sender error in words: messages.errors.<code>, else «حدثت مشكلة في الإرسال (code)» (as the phone). */
 export function errorText(m: Pick<MessageView, 'error_code' | 'error_text'>): string {
   return sendErrorReason(m.error_code ?? m.error_text, t.messages.errors);
 }
