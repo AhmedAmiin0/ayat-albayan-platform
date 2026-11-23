@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, Share, StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';

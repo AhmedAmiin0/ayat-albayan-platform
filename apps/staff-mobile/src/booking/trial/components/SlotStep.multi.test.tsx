@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { pickProgress } from '@ab/shared';
+import { pickProgress } from '@ab/schedule';
 import { useState } from 'react';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';

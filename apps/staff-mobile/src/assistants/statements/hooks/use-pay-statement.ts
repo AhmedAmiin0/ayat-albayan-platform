@@ -1,5 +1,5 @@
 import { uploadOnce } from '@ab/client-core';
-import type { AssistantStatementView } from '@ab/shared';
+import type { AssistantStatementView } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { payBody, type PayDraft } from '@/finance/payouts/payout-actions';

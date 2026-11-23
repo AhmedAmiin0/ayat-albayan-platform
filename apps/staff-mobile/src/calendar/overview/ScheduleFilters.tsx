@@ -1,4 +1,4 @@
-import { GENDERS, PROGRAMS } from '@ab/shared';
+import { GENDERS, PROGRAMS } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, FilterPills, type FilterPill } from '@ab/mobile-kit';
 import type { ScheduleView, TeacherFilter } from './overview';

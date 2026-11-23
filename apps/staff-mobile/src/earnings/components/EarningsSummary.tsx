@@ -1,4 +1,4 @@
-import type { TeacherEarningsBalanceView } from '@ab/shared';
+import type { TeacherEarningsBalanceView } from '@ab/money';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { egp } from '@/earnings/lib/format';

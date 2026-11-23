@@ -1,5 +1,5 @@
 import type { BookingPickFields } from '@ab/client-core';
-import { wallParts } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
 import { hhmm, type ViewerClock } from '@/core/lib/clock';
 import { t, cityOf } from '@ab/mobile-kit';
 

@@ -1,4 +1,4 @@
-import type { JoinLinkResult, JoinLinkUrl } from '@ab/shared';
+import type { JoinLinkResult, JoinLinkUrl } from '@ab/schedule';
 import { ApiError, apiSend, t } from '@ab/mobile-kit';
 import { joinError } from './join-text';
 

@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { renderHook } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';

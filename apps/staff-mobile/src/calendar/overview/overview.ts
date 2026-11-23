@@ -1,5 +1,6 @@
-import type { Gender, LessonView, OverviewTeacher, OverviewTimeOff, Program } from '@ab/shared';
-import type { ScheduleOverview, Span } from '@ab/shared';
+import type { Gender, Program } from '@ab/catalog';
+import type { LessonView, OverviewTeacher, OverviewTimeOff } from '@ab/schedule';
+import type { ScheduleOverview, Span } from '@ab/schedule';
 import { localDate, visibleLessons } from '@/today/lib/timeline';
 import { agendaDays } from '@/calendar/agenda/agenda';
 import { addDays, zonedMidnight } from '@/calendar/lib/week';

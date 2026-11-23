@@ -1,4 +1,4 @@
-import { PUSH_KINDS } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
 import { pushKind, pushPhone, routeFor } from '@/core/push/notification-route/notification-route';
 
 const PHONE = '+966552147730';

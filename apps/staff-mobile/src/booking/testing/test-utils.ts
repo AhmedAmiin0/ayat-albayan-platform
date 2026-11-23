@@ -1,4 +1,4 @@
-import type { BookingTeacherOption, SlotView } from '@ab/shared';
+import type { BookingTeacherOption, SlotView } from '@ab/schedule';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { cachedList, huda, unnamed } from '@/inbox/shared/fixtures';
 import { t, listKey } from '@ab/mobile-kit';

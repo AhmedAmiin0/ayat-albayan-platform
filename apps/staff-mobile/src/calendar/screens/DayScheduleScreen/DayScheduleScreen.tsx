@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { SectionList } from 'react-native';

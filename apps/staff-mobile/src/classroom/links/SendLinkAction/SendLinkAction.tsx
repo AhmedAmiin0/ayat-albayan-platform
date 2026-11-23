@@ -1,4 +1,4 @@
-import type { JoinLinkResult, LessonView } from '@ab/shared';
+import type { JoinLinkResult, LessonView } from '@ab/schedule';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';

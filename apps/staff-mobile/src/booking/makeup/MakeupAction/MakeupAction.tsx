@@ -1,4 +1,4 @@
-import { makeupOffer, type LessonView } from '@ab/shared';
+import { makeupOffer, type LessonView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';

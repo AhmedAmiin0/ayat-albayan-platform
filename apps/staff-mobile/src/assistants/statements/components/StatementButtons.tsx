@@ -1,5 +1,5 @@
 import { statementActions, type StatementAction } from '@ab/client-core';
-import type { AssistantStatementView } from '@ab/shared';
+import type { AssistantStatementView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';

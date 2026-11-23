@@ -1,4 +1,4 @@
-import type { ScheduleOverview } from '@ab/shared';
+import type { ScheduleOverview } from '@ab/schedule';
 import { lesson } from '@/today/testing/fixtures';
 import { agendaDays } from './agenda/agenda';
 import { weekWindow, zonedMidnight } from './lib/week';

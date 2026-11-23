@@ -1,15 +1,15 @@
+import { wallParts } from '@ab/schedule';
 import {
   addDays,
   dateText,
   RIYADH_TZ,
   riyadhToday,
   utcOffsetMinutes,
-  wallParts,
   wallToUtc,
   weekdayOf,
   weekStart,
   type DateFields,
-} from '@ab/shared';
+} from '@ab/time';
 import { locale } from '@ab/mobile-kit';
 
 // Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the week runs السبت → الجمعة on the

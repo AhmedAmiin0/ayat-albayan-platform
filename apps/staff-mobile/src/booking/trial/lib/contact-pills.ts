@@ -1,4 +1,5 @@
-import { GENDERS, LEAD_SOURCES, TZ_OPTIONS, type Gender, type LeadSource } from '@ab/shared';
+import { GENDERS, LEAD_SOURCES, type Gender, type LeadSource } from '@ab/catalog';
+import { TZ_OPTIONS } from '@ab/time';
 import { t, cityOf } from '@ab/mobile-kit';
 import type { FilterPill } from '@ab/mobile-kit';
 

@@ -1,4 +1,5 @@
-import { RIYADH_TZ, teacherName, type LessonView } from '@ab/shared';
+import { teacherName, type LessonView } from '@ab/schedule';
+import { RIYADH_TZ } from '@ab/time';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';

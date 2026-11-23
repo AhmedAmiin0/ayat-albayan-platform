@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { useLessonStatusText } from './lesson-status';
 import { StatusChip, type StatusChipProps } from '@ab/mobile-kit';
 

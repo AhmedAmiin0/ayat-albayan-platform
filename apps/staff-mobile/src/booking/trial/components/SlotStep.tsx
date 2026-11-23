@@ -1,4 +1,5 @@
-import { counted, togglePick } from '@ab/shared';
+import { counted } from '@ab/core';
+import { togglePick } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useViewerClock, zoneNote } from '@/core/lib/clock';

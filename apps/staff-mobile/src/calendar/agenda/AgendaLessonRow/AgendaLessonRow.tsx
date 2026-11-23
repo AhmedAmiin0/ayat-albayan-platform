@@ -1,4 +1,5 @@
-import type { ClockCycle, LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { JoinAround } from '@/classroom';

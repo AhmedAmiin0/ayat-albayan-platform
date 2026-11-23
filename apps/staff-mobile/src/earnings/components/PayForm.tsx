@@ -1,4 +1,5 @@
-import { PAYMENT_METHODS, earningIdsOf, payCeiling, type PaymentMethod, type TeacherEarningView } from '@ab/shared';
+import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
+import { earningIdsOf, payCeiling, type TeacherEarningView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, FilterPills, type FilterPill, ErrorLine, useNow, FormLabel } from '@ab/mobile-kit';
