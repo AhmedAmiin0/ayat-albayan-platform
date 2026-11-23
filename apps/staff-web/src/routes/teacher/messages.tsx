@@ -4,7 +4,6 @@ import { TeacherPageGate } from '@/features/teaching/teacher';
 
 const UUID = /^[0-9a-f-]{36}$/i;
 
-/** /teacher/messages?student= «رسائل الطلاب» (docs/31 §2): my channels with my current students' families. */
 export const Route = createFileRoute('/teacher/messages')({
   validateSearch: (search: Record<string, unknown>): { student?: string } =>
     typeof search['student'] === 'string' && UUID.test(search['student']) ? { student: search['student'] } : {},

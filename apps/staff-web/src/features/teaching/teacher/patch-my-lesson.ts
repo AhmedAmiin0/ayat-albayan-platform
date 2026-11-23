@@ -2,8 +2,7 @@ import type { LessonView } from '@ab/shared';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 
-// docs/48: her own lesson lists (the home window and «جدولي»'s weeks) share ['lessons','mine',…].
-// Only that prefix is patched: other keys under ['lessons'] are not her lists.
+// docs/48: only the ['lessons','mine'] prefix is patched; other lesson keys are not her lists.
 
 const MY_LESSONS: QueryKey = [...LESSONS_KEY, 'mine'];
 
@@ -27,7 +26,6 @@ export function patchMyLesson(
   return before;
 }
 
-/** Puts the snapshot back (a refused «سأحضر»). */
 export function restoreMyLessons(client: QueryClient, snapshot: LessonsSnapshot | undefined) {
   for (const [key, data] of snapshot ?? []) client.setQueryData(key, data);
 }

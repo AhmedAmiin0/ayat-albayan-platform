@@ -2,10 +2,9 @@ import type { Locator } from '@playwright/test';
 import { ar } from '../core/fixtures';
 import { addDays, nextWeekSaturday } from '../core/schedule';
 
-// A package's lesson days in the booking wizard: per day a native date input and a native time
-// input, the family's wall clock. Replaces clicking «الأسبوع التالي» + a slot.
+// Per lesson day, a native date and time input in the family's wall clock.
 
-/** Next week's (Riyadh, السبت → الجمعة) date of `weekday` (0 = الأحد): always in the future. */
+/** Next week's date (Riyadh, Saturday to Friday) of `weekday` (0 = Sunday), in the future. */
 function nextWeekDay(weekday: number): string {
   return addDays(nextWeekSaturday(), (weekday + 1) % 7);
 }
@@ -13,7 +12,7 @@ function nextWeekDay(weekday: number): string {
 const rowName = (n: number): string => ar.lessonTimes.row.replace('{n}', String(n));
 
 interface RowAt {
-  /** 0 = الأحد. */
+  /** 0 = Sunday. */
   weekday: number;
   /** «HH:MM», the family's wall clock. */
   time: string;
@@ -21,10 +20,7 @@ interface RowAt {
   weeksLater?: number;
 }
 
-/**
- * Fills lesson row `n` (1-based) of the slot step with next week's `weekday` at `time`; a missing
- * row is added first («أضف يومًا», the admin's package).
- */
+/** `n` is 1-based; a missing row is added first (the admin's package). */
 export async function fillLessonRow(step: Locator, n: number, at: RowAt): Promise<void> {
   const row = step.getByRole('group', { name: rowName(n) });
   const add = step.getByRole('button', { name: ar.lessonTimes.addDay });

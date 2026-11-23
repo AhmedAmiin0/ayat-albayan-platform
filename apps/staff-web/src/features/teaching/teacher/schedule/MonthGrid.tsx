@@ -18,10 +18,7 @@ const CELL =
   'flex min-h-11 w-full flex-col items-center justify-start gap-1 rounded-md px-0.5 py-1 ' +
   'text-sm transition-colors hover:bg-sunk sm:min-h-16';
 
-/**
- * The month as whole weeks السبت → الجمعة (owner 2026-11-14): each day a 44px button with its
- * number and a count of her lessons; today ringed, the picked day filled, borrowed days muted.
- */
+/** Whole Saturday-to-Friday weeks; each day is a 44px button with her lesson count. */
 export function MonthGrid({ month, today, picked, days, onPick }: MonthGridProps) {
   const weeks = monthCells(month, { today, picked, days });
   return (

@@ -26,10 +26,7 @@ export interface ProposeFormProps {
   bare?: boolean;
 }
 
-/**
- * «اقترح ميعاد تاني» (R-SCH-08): a native date + a time select in the teacher's zone (never free
- * text, rule 6) and an optional note. The admin approves it as a reschedule, conflicts checked there.
- */
+/** Date and time in the teacher's zone, never free text (rule 6); the admin checks conflicts. */
 export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormProps) {
   const queryClient = useQueryClient();
   const clock = useClock();

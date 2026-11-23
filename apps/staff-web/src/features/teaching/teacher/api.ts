@@ -28,7 +28,7 @@ export const myLessonsQuery = (w: Window) => {
   });
 };
 
-/** POST /lessons/:id/propose — «اقترح ميعاد تاني» for the admin to approve (R-SCH-08). */
+/** POST /lessons/:id/propose: a new time for the admin to approve (R-SCH-08). */
 export const proposeLesson = ({ id, body }: { id: string; body: LessonProposalRequest }) =>
   apiSend<LessonView>('POST', `/lessons/${id}/propose`, body);
 

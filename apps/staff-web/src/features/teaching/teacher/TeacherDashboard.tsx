@@ -50,20 +50,13 @@ export function TeacherDashboard() {
   return <>{head}<Dashboard me={me.data} />{meetingsShown && <InternalMeetingsList />}</>;
 }
 
-/** No me yet: the skeleton, or why not (with «حاول مرة أخرى» unless only the admin can fix it). */
 function MeFallback({ me }: { me: UseQueryResult<TeacherMe> }) {
   if (!me.isError) return <ListSkeleton />;
   const failed = ME_ERRORS[errorCode(me.error) ?? ''] ?? ME_ERROR_FALLBACK;
   return <LoadRetry text={failed.text} onRetry={failed.retry ? me.refetch : undefined} />;
 }
 
-/**
- * Her home (docs/46 C1, docs/48; owner 2026-11-14: today's lessons only, alerts first):
- * «تنبيهات اليوم», the hero (the lesson under way or next today), then the rest of today.
- * «تخصيص» hides alert kinds, the hero or the ended lessons and makes the rows compact. Her
- * students live on /teacher/students, her availability on /teacher/availability. One query of
- * the board window (14 days back and ahead, in her zone) feeds all; one drawer opens a lesson.
- */
+/** Her home (docs/46 C1, docs/48): today's lessons only, alerts first, from one 14-day window. */
 function Dashboard({ me }: { me: TeacherMe }) {
   const now = useNow();
   const platform = usePlatformClassroom(me.platform_classroom);

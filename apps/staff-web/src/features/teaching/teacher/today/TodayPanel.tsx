@@ -15,7 +15,7 @@ export interface TodayPanelProps {
   at: { now: Date; today: string };
   onOpen: (lessonId: string) => void;
   onDone: (message: string) => void;
-  /** «تخصيص»: a hidden hero leaves its lesson in the rows; the ended fold can hide. */
+  /** A hidden hero leaves its lesson in the rows; the ended fold can hide. */
   prefs: Pick<HomePrefs, 'hero' | 'ended' | 'density'>;
 }
 
@@ -27,7 +27,6 @@ interface Body {
 
 const quiet = (title: string, b: Body) => <EmptyState title={title} action={b.next} />;
 
-/** docs/48 «Day rows rule»: no lessons, «بقية اليوم», only the hero left, or all ended. */
 const BODY: Record<DayKind, (b: Body) => ReactNode> = {
   empty: (b) => quiet(t.teacherDash.noLessonsToday, b),
   rows: (b) => b.rows(b.split.rest),
@@ -35,11 +34,7 @@ const BODY: Record<DayKind, (b: Body) => ReactNode> = {
   quiet: (b) => quiet(t.today.quietTitle, b),
 };
 
-/**
- * The home «اليوم» tab (docs/48): today's lessons still to come as compact rows (the hero above
- * is left out), the ended ones folded in a native <details>, and on a quiet day the next lesson
- * within two weeks with «افتح جدولي». Closed lessons never show; due reports wait in the block.
- */
+/** Closed lessons never show; due reports wait in the pending block (docs/48). */
 export function TodayPanel({ lessons, me, at, onOpen, onDone, prefs }: TodayPanelProps) {
   const todays = lessonsOnDay(lessons, { date: at.today, tz: me.tz });
   const heroId = prefs.hero ? (pickHero(todays, at.now)?.lesson.id ?? null) : null;

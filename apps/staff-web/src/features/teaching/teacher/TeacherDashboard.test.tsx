@@ -32,7 +32,6 @@ const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 
 
 const BOARD_CALL = '/teachers/me/lessons?from=2026-09-18T21%3A00%3A00.000Z&to=2026-10-16T21%3A00%3A00.000Z';
 
-/** Today's 16:00 lesson is the hero («الحلقة التالية»); «التفاصيل» opens it in the drawer. */
 async function openHero() {
   const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
   fireEvent.click(within(hero).getByRole('button', { name: t.today.details }));
@@ -80,7 +79,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     expect(drawer.getByRole('link', { name: t.teacherDash.joinLink }).getAttribute('href')).toBe(ME.meeting_link);
     // One query: the board window, 14 days back and ahead of today in her zone (docs/46 D4).
     expect(apiFetch).toHaveBeenCalledWith(BOARD_CALL);
-    // Her own «إلغاء الحلقة» only (docs/46 C6), never the admin's; no family «تأكيد».
+    // Only her own cancel (docs/46 C6), never the admin's, and no family confirm.
     expect(drawer.getAllByRole('button', { name: t.teacherBoard.cancel })).toHaveLength(1);
     expect(drawer.queryByRole('button', { name: t.lessons.event.confirm })).toBeNull();
   });

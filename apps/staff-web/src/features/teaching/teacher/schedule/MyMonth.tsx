@@ -11,10 +11,7 @@ import { MonthBody } from './MonthBody';
 import { MonthNav } from './MonthNav';
 import { useMyMonth } from './use-my-month';
 
-/**
- * «جدولي» month (owner 2026-11-14): her lessons on a Saturday-first month in her own days
- * (docs/34), one query per shown month. A day lists its lessons; a lesson opens the drawer.
- */
+/** Saturday-first month in her own days (docs/34), one query per shown month. */
 export function MyMonth({ toggle }: { toggle?: ReactNode }) {
   const m = useMyMonth();
   const me = useQuery(teacherMeQuery);

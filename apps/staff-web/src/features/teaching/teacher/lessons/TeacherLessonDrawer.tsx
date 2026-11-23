@@ -15,10 +15,6 @@ export interface TeacherLessonDrawerProps {
   onDone: (message: string) => void;
 }
 
-/**
- * The full lesson (docs/48): TeacherLessonCard with every action, found by id in the poll, then
- * «ملفات الحلقة» (the recording, the report PDF, the files the teacher adds).
- */
 export function TeacherLessonDrawer(props: TeacherLessonDrawerProps) {
   const { lessons, openId, tz, fallbackLink, notice, onClose, onDone } = props;
   const open = lessons.find((l) => l.id === openId);

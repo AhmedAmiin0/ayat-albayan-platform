@@ -14,7 +14,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   apiSend,
 }));
 
-// docs/48 web mutations: «سأحضر» is optimistic, cancel is write-through, only her lists change.
+// docs/48 web mutations: confirm is optimistic, cancel is write-through, only her lists change.
 const HOME = ['lessons', 'mine', 'home'];
 const WEEK = ['lessons', 'mine', 'week'];
 const OTHER = ['lessons', 'day', 'admin'];

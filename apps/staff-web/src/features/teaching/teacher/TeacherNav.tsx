@@ -10,7 +10,7 @@ export const TEACHER_NAV_ITEMS = [
     label: t.teacherNav.today,
     icon: 'clock',
     exact: true,
-    // «اليوم» stays current on any search (an old ?tab= link; owner 2026-11-14).
+    // Today stays active on any search, for old ?tab= links.
     activeOptions: { exact: true, includeSearch: false },
     permission: 'self.teacher',
   },
@@ -26,7 +26,6 @@ export const TEACHER_NAV_ITEMS = [
 
 type NavPath = (typeof TEACHER_NAV_ITEMS)[number]['to'];
 
-/** The pages behind an academy switch («صفحات المعلم»); the others always show. */
 const NAV_PAGE: Partial<Record<NavPath, TeacherPage>> = {
   '/teacher/inbox': 'chats',
   '/teacher/messages': 'messages',
@@ -35,11 +34,7 @@ const NAV_PAGE: Partial<Record<NavPath, TeacherPage>> = {
   '/teacher/feedback': 'feedback',
 };
 
-/**
- * The teacher's nav: the row under the logo from 900px, the «القائمة» sheet below (docs/07 §7).
- * Only the pages the held role's permissions open (dynamic roles) and the academy switches show,
- * in both places («المحادثات» needs both inbox.read and its switch).
- */
+/** Shows only pages her role's permissions and the academy switches open (docs/07 §7). */
 export function TeacherNav({ can }: { can?: (permission: Permission) => boolean }) {
   const pageOn = useTeacherPageOn();
   const switchedOn = (to: NavPath): boolean => {

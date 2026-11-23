@@ -9807,7 +9807,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/teacher/TeacherDashboard.test.tsx": {
@@ -9849,7 +9849,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "max-lines-per-function": {
       "count": 1
@@ -9873,7 +9873,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/lib/dom/mount-refs.ts": {
@@ -9935,11 +9935,6 @@
       "count": 1
     }
   },
-  "src/lib/settings/query-keys.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/lib/settings/settings-api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
@@ -9958,9 +9953,6 @@
   "src/routes/(public)/feedback.$token.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/(public)/join.$linkToken.tsx": {
@@ -9976,24 +9968,15 @@
   "src/routes/(public)/pay.$token.tsx": {
     "@typescript-eslint/only-throw-error": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/(public)/s.$token.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/account/index.tsx": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -10016,9 +9999,6 @@
   "src/routes/admin/(finance)/finance.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/admin/(finance)/invoices.tsx": {
@@ -10026,7 +10006,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/routes/admin/(finance)/payments.tsx": {
@@ -10079,9 +10059,6 @@
   "src/routes/admin/(ops)/classrooms.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/admin/(ops)/feedback.tsx": {
@@ -10089,7 +10066,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/routes/admin/(ops)/schedule.tsx": {
@@ -10144,9 +10121,6 @@
   "src/routes/admin/assistants/route.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/admin/communications.tsx": {
@@ -10176,9 +10150,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/admin/settings.google.tsx": {
@@ -10192,9 +10163,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/admin/settings.tsx": {
@@ -10279,7 +10247,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/routes/sales/all-students.tsx": {
@@ -10290,17 +10258,11 @@
   "src/routes/sales/earnings.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/sales/inbox.tsx": {
     "ab/module-boundaries": {
       "count": 4
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/sales/index.tsx": {
@@ -10325,9 +10287,6 @@
   "src/routes/sales/meetings.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/sales/payments.tsx": {
@@ -10349,9 +10308,6 @@
   "src/routes/sales/schedule.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/sales/students.tsx": {
@@ -10362,9 +10318,6 @@
   "src/routes/sales/subscriptions.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/sales/teachers.tsx": {
@@ -10388,25 +10341,16 @@
   "src/routes/teacher/feedback.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/teacher/inbox.tsx": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/teacher/messages.tsx": {
     "@typescript-eslint/dot-notation": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/routes/teacher/payouts.tsx": {
@@ -10422,11 +10366,6 @@
   "src/test/entries-fixture.ts": {
     "max-len": {
       "count": 3
-    }
-  },
-  "src/test/open-filters.ts": {
-    "max-len": {
-      "count": 1
     }
   }
 }

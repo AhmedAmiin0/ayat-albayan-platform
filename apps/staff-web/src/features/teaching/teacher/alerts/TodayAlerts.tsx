@@ -11,15 +11,12 @@ import { useTodayAlerts } from './use-today-alerts';
 export interface TodayAlertsProps {
   lessons: readonly LessonView[];
   now: Date;
-  /** Her zone: «اليوم» is her calendar day. */
+  /** Her time zone: "today" is her calendar day. */
   tz: string;
   onOpen: (lessonId: string) => void;
 }
 
-/**
- * «تنبيهات اليوم» on the teacher's «اليوم» (owner 2026-11-14): her actionable items for today,
- * one row and one action each, with «تخصيص» to pick what shows. «لا تنبيهات اليوم» when none.
- */
+/** The teacher's actionable items for today, one row and one action each, filterable by kind. */
 export function TodayAlerts({ lessons, now, tz, onOpen }: TodayAlertsProps) {
   const rows = useTodayAlerts({ lessons, now, tz });
   const compact = useHomePrefs().density === 'compact';
