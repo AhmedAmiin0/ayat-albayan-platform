@@ -1,7 +1,7 @@
-// The owner's staging test account (2026-10-05: "create a test teacher and assign it to a test
-// student"): one teacher login, one guardian, one student. Same DEMO markers as seed-demo.data.mjs
-// (teacher English name ends in " (DEMO)", guardian/student notes = DEMO_NOTE), so `pnpm clear:demo`
-// also removes these rows. Phones are fake (+1 555 …) and fixed so re-runs upsert.
+// The staging test account (a test teacher assigned to a test student): one teacher login, one
+// guardian, one student. Same DEMO markers as seed-demo.data.mjs (teacher English name ends in
+// " (DEMO)", guardian/student notes = DEMO_NOTE), so `pnpm clear:demo` also removes these rows.
+// Phones are fake (+1 555 …) and fixed so re-runs upsert.
 import { DEMO_NOTE } from './seed-demo.data.mjs';
 
 /** Stamped on the auth user's metadata; --remove and re-runs never touch a login without it. */
