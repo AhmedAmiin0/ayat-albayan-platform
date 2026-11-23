@@ -64,6 +64,16 @@ describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typ
   });
 });
 
+// Rule 8: a write the server timed out on may still commit; only the same id makes a resend safe.
+describe.each([
+  ['POST /subscriptions', subscriptionCreateSchema, { studentId: SUB, startsOn: '2026-10-01', pricing: { tier: 'starter' } }],
+  ['POST /payments', paymentCreateSchema, payment],
+] as const)('%s needs its clientRequestId', (_route, schema, body) => {
+  it.each([['missing', undefined], ['not a uuid', 'x']])('refuses an id that is %s', (_c, id) => {
+    expect(schema.safeParse({ ...body, clientRequestId: id }).success).toBe(false);
+  });
+});
+
 describe('paymentCreateSchema (R-PAY-01)', () => {
   it('accepts a bank transfer with 2 decimals', () => {
     expect(paymentCreateSchema.safeParse({ ...payment, amount: 99.95 }).success).toBe(true);
