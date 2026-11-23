@@ -7,7 +7,7 @@ import {
   type Program,
 } from '@ab/catalog';
 import { normalizePhone, type PhoneCountry } from '@ab/core';
-import { type BookingTeacherOption } from '@ab/schedule';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { RIYADH_TZ, TZ_OPTIONS } from '@ab/time';
 import { qualForm } from '@/inbox/qualification/lib/qualification-form';
 import type { BookingKind, InvoiceDraft } from '@/booking/shared/contract';

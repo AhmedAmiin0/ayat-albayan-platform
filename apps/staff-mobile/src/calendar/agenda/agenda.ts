@@ -1,4 +1,4 @@
-import { type LessonView } from '@ab/schedule';
+import type { LessonView } from '@ab/schedule';
 import { sameClockAt, type ClockCycle } from '@ab/time';
 import { clockIn, type ViewerClock } from '@/core/lib/clock';
 import { clockAt } from '@/inbox/shared/format';

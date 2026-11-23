@@ -1,5 +1,5 @@
 import { CONFLICT_KINDS, type Conflict } from '@ab/schedule';
-import { type ClockCycle } from '@ab/time';
+import type { ClockCycle } from '@ab/time';
 import { whenIn } from '@/core/lib/clock';
 import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';

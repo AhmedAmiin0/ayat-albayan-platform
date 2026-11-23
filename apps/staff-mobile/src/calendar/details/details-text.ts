@@ -1,5 +1,5 @@
 import { reportBlock } from '@ab/shared';
-import { type LessonStudentView, type LessonView } from '@ab/schedule';
+import type { LessonStudentView, LessonView } from '@ab/schedule';
 import { otherZoneClock, RIYADH_TZ, type ClockCycle } from '@ab/time';
 import { clockIn, whenIn } from '@/core/lib/clock';
 import { t, locale, ltr } from '@ab/mobile-kit';

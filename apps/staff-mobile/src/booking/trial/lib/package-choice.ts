@@ -1,7 +1,7 @@
-import { type Duration, type PackageSize } from '@ab/catalog';
+import type { Duration, PackageSize } from '@ab/catalog';
 import { counted } from '@ab/core';
 import { packagePerWeek } from '@ab/money';
-import { type BookingResult } from '@ab/schedule';
+import type { BookingResult } from '@ab/schedule';
 import type { Href } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { localDate } from '@/today/lib/timeline';

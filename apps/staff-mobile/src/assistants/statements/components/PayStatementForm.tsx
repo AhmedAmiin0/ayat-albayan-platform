@@ -1,5 +1,5 @@
 import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
-import { type AssistantStatementView } from '@ab/money';
+import type { AssistantStatementView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import type { PayDraft } from '@/finance/payouts/payout-actions';
