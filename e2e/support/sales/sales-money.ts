@@ -1,4 +1,4 @@
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import type { APIRequestContext } from '@playwright/test';
 import { call } from './assistant-api';
 import { withSql } from '../core/schedule';

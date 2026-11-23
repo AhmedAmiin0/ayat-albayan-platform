@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { call, family, freshPhone, leadOf, makeAssistant, trialBody, type Assistant } from '../../support/sales/assistant-api';
 import { seedLead, setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';

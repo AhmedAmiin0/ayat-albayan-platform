@@ -1,4 +1,4 @@
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { createClient } from '@supabase/supabase-js';
 import postgres from 'postgres';
 

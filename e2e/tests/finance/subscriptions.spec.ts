@@ -1,4 +1,4 @@
-import { formatAmount, quote } from '@ab/shared';
+import { formatAmount, quote } from '@ab/money';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer } from '../../support/core/messages';

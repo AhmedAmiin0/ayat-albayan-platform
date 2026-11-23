@@ -4,7 +4,7 @@
 // (src/test-setup.ts). Shape of the JSON:
 //   { "names":   { "<slug>": "<Arabic display name>", … },      // slug = keys.teacher natural key
 //     "aliases": { "<Arabic spelling>": "<slug>", … } }          // matched after normalizeArabic
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { cachePath, readJson } from '../cache.ts';
 
 interface TeacherDirectory {

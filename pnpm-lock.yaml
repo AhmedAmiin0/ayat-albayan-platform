@@ -608,15 +608,30 @@ importers:
 
   e2e:
     devDependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../packages/catalog
       '@ab/config':
         specifier: workspace:*
         version: link:../packages/config
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../packages/core
       '@ab/money':
         specifier: workspace:*
         version: link:../packages/money
+      '@ab/schedule':
+        specifier: workspace:*
+        version: link:../packages/schedule
+      '@ab/settings':
+        specifier: workspace:*
+        version: link:../packages/settings
       '@ab/shared':
         specifier: workspace:*
         version: link:../packages/shared
+      '@ab/time':
+        specifier: workspace:*
+        version: link:../packages/time
       '@playwright/test':
         specifier: ^1.63.0
         version: 1.63.0
@@ -1226,9 +1241,18 @@ importers:
 
   tools/migrate:
     dependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../../packages/catalog
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@ab/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@ab/settings':
+        specifier: workspace:*
+        version: link:../../packages/settings
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1269,6 +1293,9 @@ importers:
 
   tools/scripts:
     dependencies:
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared

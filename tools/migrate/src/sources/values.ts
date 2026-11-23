@@ -1,7 +1,7 @@
 // Sheet vocabulary → target enums. Texts are the distinct values found in the export (2026-10-02).
 // Lookups go through normalizeArabic so spelling variants (أ/ا, ة/ه, ى/ي) match one entry.
 import type { Enums } from '@ab/db';
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { teacherSlug } from '../keys.ts';
 import { teacherDirectory } from './teachers.dir.ts';
 

@@ -1,7 +1,7 @@
 // What the old status rule (before 2026-10-27) would have said, so every student it made «مشترك»
 // without a current subscription is counted in the dry-run report (report/report.ts) by reason.
 // Pure; the issue detail is a machine reason, never a name or phone.
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { issuesFor } from '../../../sources/sheets/issues.ts';
 import type { RowIssue, SourceRef } from '../../../types.ts';
 import type { OldClaim } from '../rows.ts';

@@ -1,6 +1,6 @@
 // Find an accepted student (bundle.earlier) from what another sheet row knows: a phone, a name in
 // any spelling (A1), maybe a teacher. Pure. Exact normalized name beats similar; >1 = ambiguous.
-import { arabicNameSimilar } from '@ab/shared';
+import { arabicNameSimilar } from '@ab/core';
 import { personName } from '../../keys.ts';
 import type { Desired } from '../../plan/resolve.ts';
 import { latinMatchesArabic } from './translit.ts';

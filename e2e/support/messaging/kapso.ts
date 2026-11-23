@@ -1,4 +1,5 @@
-import type { LineCheckView, WaProvider } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import type { WaProvider } from '@ab/catalog';
 import { expect, type Page } from '@playwright/test';
 import { API, bearer } from '../core/messages';
 import { withSql } from '../core/schedule';
