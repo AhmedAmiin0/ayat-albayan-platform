@@ -1,4 +1,4 @@
-import { type Can, usePermissions, t, AppNativeTabs, type TabItem } from '@ab/mobile-kit';
+import { CrashScreen, type Can, usePermissions, t, AppNativeTabs, type TabItem } from '@ab/mobile-kit';
 import { canOpen, tabOpen } from '@/core/auth';
 import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
@@ -24,3 +24,5 @@ export default function TabsLayout() {
   useInboxRealtime(canOpen(can, 'inbox'));
   return <AppNativeTabs tabs={tabItems(can, badge)} />;
 }
+
+export const ErrorBoundary = CrashScreen;

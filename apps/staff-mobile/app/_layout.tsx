@@ -8,6 +8,7 @@ import {
   useMeReady,
   RootFrame,
   RootProviders,
+  CrashScreen,
   useProfileLocaleSync,
   useRootBoot,
   useTheme,
@@ -101,3 +102,5 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
     </RootFrame>
   );
 }
+
+export const ErrorBoundary = CrashScreen;

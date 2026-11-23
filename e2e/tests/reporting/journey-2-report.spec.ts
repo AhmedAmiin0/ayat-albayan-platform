@@ -53,14 +53,14 @@ test.describe('journey 2 — lesson report (R-REP-01..04)', () => {
     await expect(page.getByText(ar.reports.submitted)).toBeVisible();
     expect(await reportOf(seed.todayLessonId)).toMatchObject({ status: 'submitted', version: 1 });
 
-    // Admin: the student's report history shows the PDF once the job rendered it.
+    // Admin: the student's report history shows the PDF once the job rendered it. The page reads
+    // the PDF state when it loads (no live update), so wait for the job's own state, then open it:
+    // reloading inside a 2 s check could never pass while a cold page load took longer than that.
+    const pdfStatus = async () => (await reportOf(seed.todayLessonId))?.pdf_status;
+    await expect.poll(pdfStatus, PDF_WAIT).toBe('ready');
     const admin = await asRole('admin');
     await admin.goto(`/admin/students/${seed.studentId}/reports`);
-    await expect(async () => {
-      await admin.reload();
-      await expect(admin.getByRole('button', { name: ar.reports.downloadPdf })).toBeVisible({ timeout: 2_000 });
-    }).toPass(PDF_WAIT);
-    await expect.poll(async () => (await reportOf(seed.todayLessonId))?.pdf_status, PDF_WAIT).toBe('ready');
+    await expect(admin.getByRole('button', { name: ar.reports.downloadPdf })).toBeVisible();
 
     // The guardian's WhatsApp document is queued once (Phase 4 sends it), and the package dropped.
     await expect

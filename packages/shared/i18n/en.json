@@ -9700,6 +9700,11 @@
     "retry": "Try again",
     "checking": "Checking…"
   },
+  "crash": {
+    "title": "This page could not be shown",
+    "body": "Something unexpected went wrong in the app. Tap «Try again» to restart it; your data is safe on the platform.",
+    "retry": "Try again"
+  },
   "legal": {
     "links": {
       "privacy": "Privacy policy",
