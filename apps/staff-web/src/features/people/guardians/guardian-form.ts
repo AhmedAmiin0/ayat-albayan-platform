@@ -4,7 +4,7 @@ import { phoneError, requiredError } from '@/features/people/students/create/cre
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { GuardianDetail } from './api';
 
-/** «تعديل ولي الأمر» (research-forms item 10). Inputs hold strings; '' means "not set". */
+/** Inputs hold strings; '' means not set. */
 export type GuardianValues = {
   name: string;
   phone: string;

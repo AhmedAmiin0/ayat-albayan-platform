@@ -15,11 +15,9 @@ export interface SendFromCellProps {
   manage: boolean;
   /** A number picked (null = the role's default): the caller confirms before saving. */
   onPick: (tpl: TemplateView, numberId: string | null) => void;
-  /** A «يُرسل من» save is in flight: every select waits. */
   busy?: boolean;
 }
 
-/** «{label} ({role})», plus «(متوقف)» for a disabled number. */
 const optionText = (n: NumberView) => {
   const text = s.option.replace('{label}', n.label).replace('{role}', t.numbers.purpose[n.purpose]);
   return n.enabled ? text : `${text} ${s.disabledMark}`;
@@ -67,11 +65,7 @@ function SendFromSelect({ tpl, numbers, cell }: SendFromSelectProps) {
   );
 }
 
-/**
- * «يُرسل من» (docs/23c decision 9): the template's own number, or its role's default. Editable with
- * templates.manage once the API carries number_id (an older API: read-only), then the per-number
- * approval chips.
- */
+/** Editable with templates.manage once the API carries number_id (docs/23c decision 9). */
 export function SendFromCell({ tpl, numbers, manage, onPick, busy = false }: SendFromCellProps) {
   const name = templateName(tpl.key);
   const editable = manage && tpl.number_id !== undefined && numbers !== undefined;

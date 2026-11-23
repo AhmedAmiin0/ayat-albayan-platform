@@ -18,7 +18,7 @@ import { usePayStatement } from './use-pay-statement';
 
 type Props = { statement: AssistantStatementView; onClose: () => void };
 
-/** «تأكيد الدفع» of a statement: date, method, note and receipt; one request freezes it as paid. */
+/** One request freezes the statement as paid. */
 export function PayStatementDialog({ statement, onClose }: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();

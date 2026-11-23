@@ -1,8 +1,7 @@
 import { BODY_SLOTS, type CREATE_REPLY_INTENTS } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 
-// «قالب جديد» (owner 2026-10-31): the form's state as typed, and the body it posts. The variables
-// follow the body: one row per {{n}} it holds, kept by position while the text changes.
+// Variables follow the body: one row per {{n}}, kept by position while the text changes.
 
 type ReplyIntent = (typeof CREATE_REPLY_INTENTS)[number];
 

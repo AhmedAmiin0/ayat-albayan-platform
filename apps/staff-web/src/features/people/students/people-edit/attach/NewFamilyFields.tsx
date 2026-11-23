@@ -15,7 +15,6 @@ export interface NewFamilyFieldsProps {
   onUse: () => void;
 }
 
-/** «ولي أمر جديد»: name, WhatsApp number (E.164) and zone. */
 export function NewFamilyFields({ value, invalid, onChange, onUse }: NewFamilyFieldsProps) {
   const error = (key: string) => (invalid.includes(key) ? E.invalid : undefined);
   return (

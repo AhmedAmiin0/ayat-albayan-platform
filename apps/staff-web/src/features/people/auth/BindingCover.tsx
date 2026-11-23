@@ -40,7 +40,7 @@ function Mandorla() {
   );
 }
 
-/** Phones: a fixed 280px band, so the form (and «دخول») fits above the fold on a 667px phone. */
+/** A fixed 280px band keeps the form above the fold on a 667px phone. */
 export function BindingCover() {
   return (
     <div

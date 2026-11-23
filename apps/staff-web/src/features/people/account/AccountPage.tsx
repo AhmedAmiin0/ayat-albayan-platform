@@ -14,7 +14,6 @@ import { NameSection } from './sections/NameSection';
 import { PasswordSection } from './sections/PasswordSection';
 import { PhoneSection } from './sections/PhoneSection';
 
-/** Loading (R-ACC-01): the head's line and a few section-shaped bars, spoken as «جاري تحميل…». */
 function AccountSkeleton() {
   return (
     <div role="status" aria-busy="true" className="grid gap-6 pt-6">
@@ -36,11 +35,7 @@ function AccountSkeleton() {
   );
 }
 
-/**
- * «حسابي» (R-ACC-01..05): every signed-in role changes its own photo, name, phone, email and
- * password here. The name and number families see on lessons and reports stay with the
- * administration (the hint says so). One toast at a time, from whichever section saved.
- */
+/** R-ACC-01..05: the name and number families see stay with the administration. */
 export function AccountPage() {
   const profile = useQuery(profileQuery);
   const [toast, setToast] = useState<string | null>(null);
