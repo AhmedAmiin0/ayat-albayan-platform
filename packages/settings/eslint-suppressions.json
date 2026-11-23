@@ -252,7 +252,7 @@
       "count": 1
     }
   },
-  "src/value-groups.registry.test.ts": {
+  "src/value-groups/tests/registry.test.ts": {
     "max-len": {
       "count": 2
     }
