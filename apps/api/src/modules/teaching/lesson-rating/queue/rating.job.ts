@@ -1,6 +1,6 @@
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { Ticker } from '@/common/jobs';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { RATING_LOOKBACK_MS } from '@/modules/teaching/lesson-rating/rating.plan';
 import { RatingRepo } from '@/modules/teaching/lesson-rating/rating.repo';
 import { RatingQueue, type QueueResult } from './rating.queue';
@@ -16,26 +16,20 @@ const MINUTE = 60_000;
  */
 @BackgroundJob({ name: 'lesson-rating' })
 @Injectable()
-export class RatingJob implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy {
+export class RatingJob extends TickerJob implements OnModuleInit {
   private readonly log = new Logger(RatingJob.name);
-  private readonly ticker = new Ticker({ name: RatingJob.name, firstMs: 45_000, everyMs: 5 * MINUTE, run: () => this.runOnce() });
+  protected readonly ticker = new Ticker({ name: RatingJob.name, firstMs: 45_000, everyMs: 5 * MINUTE, run: () => this.runOnce() });
 
   constructor(
     private readonly queue: RatingQueue,
     private readonly queries: RatingRepo,
     private readonly events: LessonEvents,
-  ) {}
+  ) {
+    super();
+  }
 
   onModuleInit(): void {
     this.events.onChanged((ids) => this.onLessons(ids).then(() => undefined));
-  }
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  onModuleDestroy(): void {
-    this.ticker.stop();
   }
 
   /** The sweep. Never throws. */

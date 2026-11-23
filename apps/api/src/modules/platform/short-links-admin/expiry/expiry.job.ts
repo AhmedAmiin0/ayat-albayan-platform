@@ -2,10 +2,10 @@ import {
   Injectable,
   Logger,
   type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  type BeforeApplicationShutdown,
   Inject,
 } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { LinkExpiry } from './expiry.service';
 
@@ -18,7 +18,7 @@ const MINUTE = 60_000;
  */
 @BackgroundJob({ name: 'short-link-expiry' })
 @Injectable()
-export class LinkExpiryJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class LinkExpiryJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(LinkExpiryJob.name);
   private readonly tickers = [
     new Ticker({
@@ -41,8 +41,8 @@ export class LinkExpiryJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.tickers.forEach((t) => t.start());
   }
 
-  onModuleDestroy(): void {
-    this.tickers.forEach((t) => t.stop());
+  async beforeApplicationShutdown(): Promise<void> {
+    await Promise.all(this.tickers.map((t) => stopWithin(t)));
   }
 
   /** Never throws; the number of links stopped. */

@@ -59,8 +59,7 @@ export class OutboxTickerTransport implements EventTransport {
 
   async stop(): Promise<void> {
     this.handlers = null;
-    this.ticker.stop();
-    await Promise.allSettled(this.passes);
+    await Promise.allSettled([this.ticker.stop(), ...this.passes]);
   }
 
   drainOnce(): Promise<DrainSummary> {
