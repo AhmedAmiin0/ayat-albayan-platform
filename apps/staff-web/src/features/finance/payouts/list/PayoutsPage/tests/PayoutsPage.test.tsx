@@ -6,8 +6,8 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
 import { currentMonth, downloadPayoutsCsv } from '@/features/finance/payouts/api';
 import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';
-import { breakdownLines } from './payout-columns';
-import { PayoutsPage } from './PayoutsPage';
+import { breakdownLines } from '@/features/finance/payouts/list/payout-columns';
+import { PayoutsPage } from '@/features/finance/payouts/list/PayoutsPage/PayoutsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

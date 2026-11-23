@@ -31,7 +31,7 @@ describe('«التواصل» load state', () => {
     expect(document.querySelector('[aria-busy="true"]')).toBeTruthy();
     expect((await screen.findByRole('alert')).textContent).toContain(p.loadError);
     fail = false;
-    fireEvent.click(screen.getByRole('button', { name: p.retry }));
+    fireEvent.click(screen.getByRole('button', { name: t.common.retry }));
     expect(await screen.findByRole('button', { name: t.templates.settings.enableTitle })).toBeTruthy();
   });
 });
