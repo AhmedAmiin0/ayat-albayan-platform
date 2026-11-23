@@ -33,6 +33,7 @@
     },
     "plugins": [
       "./plugins/no-audio-capture/app.plugin.ts",
+      "./plugins/portrait-optional/app.plugin.ts",
       "expo-router",
       "expo-localization",
       "expo-font",
