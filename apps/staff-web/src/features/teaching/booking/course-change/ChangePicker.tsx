@@ -1,4 +1,6 @@
-import { counted, pickProgress, togglePick, type CourseChangeView } from '@ab/shared';
+import type { CourseChangeView } from '@ab/shared';
+import { counted } from '@ab/core';
+import { pickProgress, togglePick } from '@ab/schedule';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
