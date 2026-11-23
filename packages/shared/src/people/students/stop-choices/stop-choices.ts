@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { moneyAmount } from '@ab/money';
 import { fromMinor, toMinor, type StopRefund } from '../stop-refund/index.js';
 
-// The stop sheet's money choices (owner 2026-11-06: «for the refund make me choose what I need»).
+// The stop sheet's money choices.
 // No fixed policy: the person stopping the course picks the outcome, the server computes the
 // amount from the choice (never trusts a computed amount from the client) and the stop stores what
 // the family still owes (subscriptions.stop_owed_amount). A refund never touches the assistant's
@@ -82,7 +82,7 @@ export const owedAmountProblem = (
   amount < 0 || toMinor(amount, currency) > toMinor(price, currency) ? 'owed_exceeds_price' : null;
 
 /**
- * A replay of a stop that already committed (owner review 2026-11-06): the refund is what the stop
+ * A replay of a stop that already committed: the refund is what the stop
  * stored, never a live recompute: the net paid (this stop's own refunds left out) − the stored
  * owed amount, never below 0.
  */

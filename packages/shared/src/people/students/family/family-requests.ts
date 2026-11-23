@@ -1,7 +1,7 @@
 import { LESSON_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 
-// «طلبات الأسر» (owner 2026-11-17): the families' «اطلب موعدًا آخر» waiting for an admin or the
+// «طلبات الأسر»: the families' «اطلب موعدًا آخر» waiting for an admin or the
 // owning assistant. GET /family-requests answers these, oldest first; parsed at the client.
 
 export const familyRequestSchema = z.object({

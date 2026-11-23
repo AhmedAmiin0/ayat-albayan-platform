@@ -1,4 +1,4 @@
-import { settingDef, type SettingKey } from '@ab/shared';
+import { settingDef, type SettingKey } from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** A dotted ar.json / en.json path of the registry ('settings.hints.uploadMaxMb') → its string. */

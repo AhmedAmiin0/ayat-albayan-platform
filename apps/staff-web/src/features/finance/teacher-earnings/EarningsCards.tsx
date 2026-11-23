@@ -1,4 +1,4 @@
-import type { TeacherEarningsBalanceView } from '@ab/shared';
+import type { TeacherEarningsBalanceView } from '@ab/money';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

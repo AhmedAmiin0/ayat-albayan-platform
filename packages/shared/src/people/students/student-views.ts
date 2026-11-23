@@ -57,7 +57,7 @@ export interface StudentProfile extends StudentRef {
   contact_is_self?: boolean;
   /** A test student (docs/56); absent from an older API = real. */
   is_test?: boolean;
-  /** The main number and a second one (owner 2026-10-29); absent from an older API or cache. */
+  /** The main number and a second one; absent from an older API or cache. */
   guardian: { id: string; name: string; phone_e164: string; phones?: FamilyPhone[] };
   teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;
   /** Override, else the teacher's fixed link (R-STU-05). */

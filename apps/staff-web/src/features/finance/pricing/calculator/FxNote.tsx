@@ -1,4 +1,4 @@
-import { FX_ATTRIBUTION_URL } from '@ab/shared';
+import { FX_ATTRIBUTION_URL } from '@ab/money';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';

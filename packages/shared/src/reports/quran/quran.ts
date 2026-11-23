@@ -2,7 +2,7 @@ import { normalizeArabic } from '@ab/core';
 import { JUZ_STARTS, PAGE_STARTS, SURAHS } from './quran-data.js';
 
 // Lookups over the mushaf metadata (quran-data.ts): the v2 lesson report's surah/ayah picker,
-// its page and juz hints, and the family report's juz progress (owner 2026-10-26).
+// its page and juz hints, and the family report's juz progress.
 
 export const SURAH_COUNT = 114;
 export const PAGE_COUNT = 604;

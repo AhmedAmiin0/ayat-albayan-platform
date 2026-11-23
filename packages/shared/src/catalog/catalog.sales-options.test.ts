@@ -3,7 +3,7 @@ import ar from '../../i18n/ar.json' with { type: 'json' };
 import en from '../../i18n/en.json' with { type: 'json' };
 import { defaultGrantsOf, EDITABLE_SYSTEM_ROLES, isEditableSystemRole, isGrantable, systemPermissionsOf } from '@ab/catalog';
 
-// Owner 2026-10-12 (docs/16 rows 23–24): two sales options the admin can switch off.
+// docs/16 rows 23–24: two sales options the admin can switch off.
 const KEYS = ['students.check_registration', 'subscriptions.set_start_date'] as const;
 
 describe('sales options «التحقق من التسجيل» and «تحديد تاريخ بداية الاشتراك»', () => {
@@ -24,7 +24,7 @@ describe('sales options «التحقق من التسجيل» and «تحديد ت
   });
 });
 
-// Owner 2026-10-26: «عرض سعر» in the chat calls the calculator's routes; sales hold pricing.read by default.
+// «عرض سعر» in the chat calls the calculator's routes; sales hold pricing.read by default.
 describe('pricing.read', () => {
   it('is a default of sales (and the admin), never of a teacher or an assistant', () => {
     expect(defaultGrantsOf('sales')).toContain('pricing.read');
@@ -46,7 +46,7 @@ describe('editable system roles', () => {
   });
 });
 
-// Owner 2026-10-28 (docs/16): «تأكيد الحلقة» from the assistant's «الجدول», its own narrow key.
+// docs/16: «تأكيد الحلقة» from the assistant's «الجدول», its own narrow key.
 describe('lessons.confirm', () => {
   it('is grantable, a default of sales (and the admin), never of a teacher, an assistant or the portal', () => {
     expect(isGrantable('lessons.confirm')).toBe(true);
@@ -60,7 +60,7 @@ describe('lessons.confirm', () => {
   });
 });
 
-// Owner 2026-10-28 (docs/16 row 37c): «إيقاف الدورة مؤقتًا», its own narrow key, any student.
+// docs/16 row 37c: «إيقاف الدورة مؤقتًا», its own narrow key, any student.
 describe('courses.pause', () => {
   it('is grantable, a default of sales (and the admin), never of a teacher, an assistant or the portal', () => {
     expect(isGrantable('courses.pause')).toBe(true);
@@ -77,7 +77,7 @@ describe('courses.pause', () => {
   });
 });
 
-// Owner 2026-10-29 (docs/16 row 38): «تجديد اشتراك أي طالب من المحادثة», narrow, never a sales default.
+// docs/16 row 38: «تجديد اشتراك أي طالب من المحادثة», narrow, never a sales default.
 describe('sales.renew_any', () => {
   it('is grantable, held by the admin only by default (never sales, a teacher, an assistant or the portal)', () => {
     expect(isGrantable('sales.renew_any')).toBe(true);
@@ -92,7 +92,7 @@ describe('sales.renew_any', () => {
   });
 });
 
-// Owner 2026-11-03: «تعديل بيانات الباقة», edits of an EXISTING package; the admin's only.
+// «تعديل بيانات الباقة», edits of an EXISTING package; the admin's only.
 describe('subscriptions.edit_terms', () => {
   it('is grantable and held by the admin only by default (sales keeps set_start_date)', () => {
     expect(isGrantable('subscriptions.edit_terms')).toBe(true);

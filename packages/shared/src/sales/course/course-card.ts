@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { LESSON_STATUSES, SUBSCRIPTION_STATUSES } from '@ab/catalog';
 
-// «الدورة والباقة» (owner 2026-11-17): one group on the student file (admin) and on the sales
+// «الدورة والباقة»: one group on the student file (admin) and on the sales
 // screen with the course summary, the upcoming lessons and «مدّ الجدول» (book the package's
 // lessons left without a date after the course's planned end). Pure schemas; the API answers
 // them and the apps parse them (rule 12).

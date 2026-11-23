@@ -88,7 +88,7 @@ const EDIT_RULE: Partial<Record<UserRole, (input: EditWindowInput) => boolean>> 
 /**
  * R-REP-02: admins edit always; the report's teacher edits a draft any time and a submitted report
  * until `minutes` after its first submit (edits never extend it; the boundary instant is already
- * closed) and never once it was sent (owner 2026-11-11: raising the setting does not re-open a
+ * closed) and never once it was sent (raising the setting does not re-open a
  * sent report); guardians never.
  */
 export function canEditReport(input: EditWindowInput): boolean {

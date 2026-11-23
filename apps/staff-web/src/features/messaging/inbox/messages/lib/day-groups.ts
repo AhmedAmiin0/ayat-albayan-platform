@@ -1,11 +1,5 @@
-import {
-  calendarDaysBetween,
-  chatDayKey,
-  dateText,
-  mergeChat,
-  type CallView,
-  type MessageView,
-} from '@ab/shared';
+import { mergeChat, type CallView, type MessageView } from '@ab/shared';
+import { calendarDaysBetween, chatDayKey, dateText } from '@ab/time';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

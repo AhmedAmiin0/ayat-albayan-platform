@@ -2,7 +2,7 @@ import { phoneE164 } from '@ab/core';
 import { z } from 'zod';
 import { guardianCreateSchema, studentCreateSchema } from './people.js';
 
-// «تعديل البيانات» by an assistant (owner 2026-11-02): the admin's PATCH fields minus the
+// «تعديل البيانات» by an assistant: the admin's PATCH fields minus the
 // admin-only ones, under people.edit, never students.write / guardians.write (those also delete and
 // merge). Strict: an admin-only field answers 400, it is never silently dropped.
 
@@ -11,7 +11,7 @@ import { guardianCreateSchema, studentCreateSchema } from './people.js';
  * expected_status (automatic moves), program (pricing), teacher_id (assignment) and
  * meeting_link_override. guardian_id and contact_is_self have their own audited actions below. No
  * `.default()` here: a partial body never resets a field it does not name. `phone_e164`: the
- * student's own WhatsApp (owner 2026-11-17), a sign-in number; null removes it.
+ * student's own WhatsApp, a sign-in number; null removes it.
  */
 export const peopleStudentPatchSchema = studentCreateSchema
   .pick({
@@ -39,7 +39,7 @@ export const peopleGuardianPatchSchema = guardianCreateSchema
 export type PeopleGuardianPatch = z.output<typeof peopleGuardianPatchSchema>;
 
 /**
- * Notes stay the admin's (owner 2026-10-27, «never notes» for sales): a student or family PATCH
+ * Notes stay the admin's («never notes» for sales): a student or family PATCH
  * from any other role is also parsed by this, so a `notes` key answers 400.
  */
 export const notesFreeSchema = z.object({ notes: z.undefined().optional() });

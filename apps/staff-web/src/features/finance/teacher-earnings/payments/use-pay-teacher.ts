@@ -1,5 +1,5 @@
 import { uploadOnce } from '@ab/client-core';
-import { parseAmount } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';

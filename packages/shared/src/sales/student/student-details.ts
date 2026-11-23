@@ -10,12 +10,12 @@ import type { SalesStudentSchedule } from './student-schedule.js';
 import type { SalesStudentFamily } from './student-family.js';
 import type { TrialOutcome } from '../../people/students/index.js';
 
-// «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28), its trial,
-// «الجدول», attendance, subscriptions and sent reports (owner 2026-10-30: «Make all assistants see all»).
+// «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student, its trial,
+// «الجدول», attendance, subscriptions and sent reports; every assistant sees every student.
 
 /** A subscription without its payments or audit trail: package, status, dates, lessons used / left. */
 /**
- * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1» (owner 2026-10-28): net paid, price and what is left, in the
+ * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1»: net paid, price and what is left, in the
  * package currency. Sent ONLY to a viewer holding self.sales_money (she sees these in her money views
  * already) and only when 0 < paid < price; otherwise absent (docs/16 row 36 stays: no price for the rest).
  */
@@ -49,7 +49,7 @@ export interface SalesTrialLesson {
 
 /** GET /sales/students/:id: 404 student_not_found for an unknown id only. */
 export interface SalesStudentDetails {
-  /** Hers, or any while SalesOwnershipRule does not enforce (owner 2026-11-02): the money actions. Every student reads the same (owner 2026-10-30). Absent: old cache (= hers). */
+  /** Hers, or any while SalesOwnershipRule does not enforce: the money actions. Every student reads the same. Absent: old cache (= hers). */
   mine?: boolean;
   student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null; guardian_phone: string | null };
   /** Newest first; `current_id` is the newest active one, else the newest (null without any). */
@@ -64,11 +64,11 @@ export interface SalesStudentDetails {
   /** «الحلقة التجريبية»: the trial lessons newest first ([] without one). Absent in an old cache. */
   trial?: SalesTrialLesson[];
   /**
-   * The current package of ANY student (owner 2026-10-30): size, status, dates, lessons used /
+   * The current package of ANY student: size, status, dates, lessons used /
    * left; never a price or payment. null: none. Absent in an old cache.
    */
   package?: SalesPackageSummary | null;
-  /** «العائلة» (owner 2026-11-02): the guardian's name and the siblings. Absent in an old cache. */
+  /** «العائلة»: the guardian's name and the siblings. Absent in an old cache. */
   family?: SalesStudentFamily;
 }
 
@@ -79,7 +79,7 @@ export const salesRescheduleSchema = z.strictObject({
 });
 /**
  * POST /sales/lessons/:id/cancel: one lesson only; the reason is optional (null when absent).
- * `by` (owner 2026-11-02, default admin «ألغتها الإدارة»): teacher «ألغاها المعلم/ة» or
+ * `by` (default admin «ألغتها الإدارة»): teacher «ألغاها المعلم/ة» or
  * student «اعتذر الطالب» may also come after the lesson ended, and correct an auto-held one.
  */
 export const salesCancelSchema = z.strictObject({

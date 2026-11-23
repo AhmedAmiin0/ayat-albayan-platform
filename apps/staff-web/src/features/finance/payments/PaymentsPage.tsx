@@ -1,4 +1,4 @@
-import { riyadhToday } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';

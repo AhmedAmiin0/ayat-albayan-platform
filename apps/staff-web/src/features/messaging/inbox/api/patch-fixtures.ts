@@ -1,5 +1,6 @@
 import type { LiveRow } from '@ab/client-core';
-import type { MessageStatus, MessageView, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadView } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 
 // Rows and a hand-resolved read for the live-patch tests (docs/44 K1).
 
