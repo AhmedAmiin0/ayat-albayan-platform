@@ -1,4 +1,5 @@
-import { isOpenLesson, LESSON_STATUSES, type AssistantLessonView } from '@ab/shared';
+import { LESSON_STATUSES } from '@ab/catalog';
+import { isOpenLesson, type AssistantLessonView } from '@ab/schedule';
 import type { JoinableLesson } from '@/classroom/links/JoinClassroomButton';
 
 /** The entry data of an assistant's session, or null when it is cancelled/finished (or an unknown status from a newer API). */

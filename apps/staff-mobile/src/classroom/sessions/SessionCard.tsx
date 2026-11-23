@@ -1,4 +1,4 @@
-import { teacherName, type LessonView } from '@ab/shared';
+import { teacherName, type LessonView } from '@ab/schedule';
 import type { SessionGroup } from '@ab/client-core';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

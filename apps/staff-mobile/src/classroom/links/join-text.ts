@@ -1,5 +1,5 @@
 import { t } from '@ab/mobile-kit';
-import type { ClockCycle } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { lessonClock } from '@/today/lib/lesson-text';
 
 /** The line for a refused join: the API's `code` in words (the room's own wording). */

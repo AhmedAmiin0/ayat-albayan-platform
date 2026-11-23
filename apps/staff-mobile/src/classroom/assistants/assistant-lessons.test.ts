@@ -1,4 +1,4 @@
-import type { AssistantLessonView } from '@ab/shared';
+import type { AssistantLessonView } from '@ab/schedule';
 import { joinableOf, joinableRows } from './assistant-lessons';
 
 const base: AssistantLessonView = {

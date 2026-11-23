@@ -1,4 +1,4 @@
-import type { LessonView, OverviewTeacher } from '@ab/shared';
+import type { LessonView, OverviewTeacher } from '@ab/schedule';
 import { SLOTS } from '@/teaching/reschedule/fixtures';
 import { muscat, pending } from '@/today/testing/fixtures';
 import { FakeBackend } from '@/test/fake-backend';

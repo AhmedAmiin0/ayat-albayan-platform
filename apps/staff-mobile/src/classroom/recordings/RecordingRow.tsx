@@ -1,4 +1,4 @@
-import type { LessonRecordingView } from '@ab/shared';
+import type { LessonRecordingView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Button, StatusChip, ErrorLine } from '@ab/mobile-kit';

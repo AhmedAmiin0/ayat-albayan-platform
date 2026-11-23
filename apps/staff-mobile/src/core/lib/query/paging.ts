@@ -1,4 +1,4 @@
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 export interface WithId {
   id: string;

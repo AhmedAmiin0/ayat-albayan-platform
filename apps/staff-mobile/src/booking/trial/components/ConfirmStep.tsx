@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { View } from 'react-native';
 import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { OutsideNote } from '@/booking/other-time';

@@ -1,4 +1,4 @@
-import type { AssistantLessonView, AssistantView } from '@ab/shared';
+import type { AssistantLessonView, AssistantView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 

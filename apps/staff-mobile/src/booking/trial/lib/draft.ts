@@ -1,16 +1,14 @@
 import {
   LEAD_SOURCES,
-  normalizePhone,
-  RIYADH_TZ,
-  TZ_OPTIONS,
-  type BookingTeacherOption,
   type Duration,
   type Gender,
   type LeadSource,
   type PackageSize,
-  type PhoneCountry,
   type Program,
-} from '@ab/shared';
+} from '@ab/catalog';
+import { normalizePhone, type PhoneCountry } from '@ab/core';
+import { type BookingTeacherOption } from '@ab/schedule';
+import { RIYADH_TZ, TZ_OPTIONS } from '@ab/time';
 import { qualForm } from '@/inbox/qualification/lib/qualification-form';
 import type { BookingKind, InvoiceDraft } from '@/booking/shared/contract';
 import { DEFAULT_MINUTES } from './package-choice';

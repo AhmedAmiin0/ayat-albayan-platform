@@ -1,4 +1,4 @@
-import type { AssistantStatementView, AssistantTermsInput, AssistantTermsView } from '@ab/shared';
+import type { AssistantStatementView, AssistantTermsInput, AssistantTermsView } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@ab/mobile-kit';
 import { ASSISTANTS_KEY } from './api';

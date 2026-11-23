@@ -1,4 +1,4 @@
-import { PERMISSIONS } from '@ab/shared';
+import { PERMISSIONS } from '@ab/catalog';
 import { allowedRows, canOpen, ROUTE_PERMISSION, type RouteKey, tabOpen } from './route-permissions';
 
 test('every route needs a permission that exists in the catalog', () => {

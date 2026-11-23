@@ -1,4 +1,4 @@
-import { subscriptionStatusStyle, type Glyph, type Tone } from '@ab/shared';
+import { subscriptionStatusStyle, type Glyph, type Tone } from '@ab/money';
 import { pushInTab } from '@/core/nav/back-within';
 import { Pressable, View } from 'react-native';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';

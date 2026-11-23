@@ -1,5 +1,6 @@
 import { memo } from 'react';
-import { gradeStyle, type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
+import { type PendingReportView, type ReportSummaryView, type TeacherReportView } from '@ab/shared';
+import { gradeStyle } from '@ab/money';
 import { editableNow } from '@ab/client-core';
 import { router } from 'expo-router';
 import { t, Button, ListRow, StatusChip, useNow } from '@ab/mobile-kit';

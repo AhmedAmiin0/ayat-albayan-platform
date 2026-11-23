@@ -1,4 +1,4 @@
-import type { AssistantLessonView } from '@ab/shared';
+import type { AssistantLessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t, AppText, type, useTheme } from '@ab/mobile-kit';

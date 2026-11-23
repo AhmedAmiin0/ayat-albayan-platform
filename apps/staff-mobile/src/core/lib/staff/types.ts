@@ -1,4 +1,4 @@
-import type { JobApplicantStatus } from '@ab/shared';
+import type { JobApplicantStatus } from '@ab/catalog';
 
 // The fields of apps/api responses this tab shows (R-LEAD-04). Nothing else. The teacher shapes
 // (Teacher, TeacherListRow, AvailabilityRow, TimeOff) live in @ab/shared.

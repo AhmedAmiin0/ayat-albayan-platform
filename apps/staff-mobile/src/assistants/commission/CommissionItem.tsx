@@ -1,4 +1,4 @@
-import type { AssistantCommissionView } from '@ab/shared';
+import type { AssistantCommissionView } from '@ab/money';
 import { useState } from 'react';
 import { t, Button, ErrorLine, money } from '@ab/mobile-kit';
 import { MoneyCard } from '@/sales-money/components/MoneyCard';

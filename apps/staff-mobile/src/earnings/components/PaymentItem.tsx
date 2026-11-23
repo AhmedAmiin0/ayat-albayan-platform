@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { TeacherPaymentView } from '@ab/shared';
+import type { TeacherPaymentView } from '@ab/money';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';

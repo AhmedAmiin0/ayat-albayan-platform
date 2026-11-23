@@ -1,5 +1,6 @@
 import { pastRows, picksFromRows, repeatedDays, type LessonRow } from '@ab/client-core';
-import { counted, pickProgress } from '@ab/shared';
+import { counted } from '@ab/core';
+import { pickProgress } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 
 // What the step shows around its rows: the picks they make, the repeated weekdays, whether

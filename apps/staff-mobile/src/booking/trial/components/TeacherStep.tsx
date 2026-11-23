@@ -1,11 +1,5 @@
-import {
-  GENDERS,
-  PROGRAMS,
-  teacherName,
-  type BookingTeacherOption,
-  type Gender,
-  type Program,
-} from '@ab/shared';
+import { GENDERS, PROGRAMS, type Gender, type Program } from '@ab/catalog';
+import { teacherName, type BookingTeacherOption } from '@ab/schedule';
 import { View } from 'react-native';
 import {
   t,

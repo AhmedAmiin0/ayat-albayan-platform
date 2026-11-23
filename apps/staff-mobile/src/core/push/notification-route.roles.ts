@@ -1,4 +1,5 @@
-import { OPEN_COURSE, type PushKind } from '@ab/shared';
+import { OPEN_COURSE } from '@ab/shared';
+import { type PushKind } from '@ab/catalog';
 import { canOpen } from '@/core/auth/route-permissions';
 import type { Can } from '@ab/mobile-kit';
 import { pushField, pushKind, pushPhone, pushStudentId } from './push-data';

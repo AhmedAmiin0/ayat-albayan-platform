@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { editMode } from '@/edit-time/lib/types';
 import { t, Button } from '@ab/mobile-kit';
 import { studentNames } from '@/today';

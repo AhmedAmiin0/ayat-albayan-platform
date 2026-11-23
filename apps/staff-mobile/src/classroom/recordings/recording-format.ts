@@ -1,4 +1,6 @@
-import { dateText, type ClockCycle, type Glyph, type LessonRecordingView, type Tone } from '@ab/shared';
+import { type Glyph, type Tone } from '@ab/money';
+import { type LessonRecordingView } from '@ab/schedule';
+import { dateText, type ClockCycle } from '@ab/time';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { locale } from '@ab/mobile-kit';
 
