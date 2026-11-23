@@ -1,4 +1,6 @@
-import { counted, packagePerWeek, type PackageSize } from '@ab/shared';
+import type { PackageSize } from '@ab/catalog';
+import { counted } from '@ab/core';
+import { packagePerWeek } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**

@@ -1,4 +1,4 @@
-import { OPEN_LESSON_STATUSES, type AssistantLessonView } from '@ab/shared';
+import { OPEN_LESSON_STATUSES, type AssistantLessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
