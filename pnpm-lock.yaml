@@ -975,9 +975,6 @@ importers:
       '@ab/core':
         specifier: workspace:*
         version: link:../core
-      '@ab/settings':
-        specifier: workspace:*
-        version: link:../settings
       '@ab/time':
         specifier: workspace:*
         version: link:../time
@@ -1010,9 +1007,6 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
     devDependencies:
-      '@ab/catalog':
-        specifier: workspace:*
-        version: link:../catalog
       '@ab/config':
         specifier: workspace:*
         version: link:../config

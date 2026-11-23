@@ -22,11 +22,6 @@
       "count": 2
     }
   },
-  "src/locale/locale.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/phone/phone.reject.test.ts": {
     "max-len": {
       "count": 1
@@ -37,7 +32,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/schemas/common.ts": {

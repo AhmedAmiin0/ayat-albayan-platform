@@ -1,5 +1,3 @@
-import { SETTINGS_REGISTRY } from '@ab/settings';
-
 /** The classroom window in minutes (joinWindow's third argument). */
 export interface JoinWindowConfig {
   opensBeforeMin: number;
@@ -13,13 +11,10 @@ export const joinWindowConfig = (s: { join_opens_before_min: number; join_closes
 });
 
 /**
- * The registry defaults (15 min before, 120 after): settings.join_opens_before_min /
- * join_closes_after_min. Callers pass the live values (GET /settings/public on the clients).
+ * The registry defaults of settings.join_opens_before_min / join_closes_after_min, pinned by
+ * shared join-window.registry.test.ts. Callers pass the live values (GET /settings/public).
  */
-export const DEFAULT_JOIN_WINDOW: JoinWindowConfig = joinWindowConfig({
-  join_opens_before_min: SETTINGS_REGISTRY.join_opens_before_min.default,
-  join_closes_after_min: SETTINGS_REGISTRY.join_closes_after_min.default,
-});
+export const DEFAULT_JOIN_WINDOW: JoinWindowConfig = { opensBeforeMin: 15, closesAfterMin: 120 };
 
 const MIN_MS = 60_000;
 

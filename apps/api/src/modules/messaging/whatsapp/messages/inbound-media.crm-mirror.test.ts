@@ -13,7 +13,11 @@ import { InboundMedia } from './inbound-media.service';
 // it is still fetched from the crm_media_host (and only from there). No real host is reached.
 
 function setup(msg: MediaMessage) {
-  const queries = { message: vi.fn(async () => msg), setPath: vi.fn(async () => undefined) };
+  const queries = {
+    message: vi.fn(async () => msg),
+    setRefusal: vi.fn(),
+    setPath: vi.fn(async () => undefined),
+  };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { LessonStatus } from '@ab/catalog';
-import { SETTINGS_REGISTRY } from '@ab/settings';
 
 // Booking kind, invoice and makeup (R-SCH-10, R-PAY-03, R-MSG-06). Kept apart from scheduling.ts
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.
@@ -70,6 +69,9 @@ export type MakeupVerdict = 'ok' | 'status' | 'not_charged' | 'trial' | 'too_old
 
 const DAY_MS = 86_400_000;
 
+/** settings.makeup_window_days default, pinned by shared join-window.registry.test.ts. */
+export const MAKEUP_WINDOW_DAYS = 60;
+
 /**
  * May this lesson be made up? Only a student's own miss that the package already charged
  * (no_show, or an excuse that counted as a late cancel) within `windowDays` (settings.makeup_window_days). A cancel by the teacher or
@@ -79,7 +81,7 @@ const DAY_MS = 86_400_000;
 export function makeupEligible(
   original: MakeupOriginal,
   now: Date,
-  windowDays: number = SETTINGS_REGISTRY.makeup_window_days.default,
+  windowDays: number = MAKEUP_WINDOW_DAYS,
 ): MakeupVerdict {
   if (original.makeup) return 'is_makeup';
   if (original.trial) return 'trial';

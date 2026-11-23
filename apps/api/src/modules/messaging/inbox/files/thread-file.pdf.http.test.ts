@@ -40,7 +40,7 @@ const SIGNED = { url: 'http://signed', expires_at: '2026-10-29T13:00:00.000Z' };
 
 describe('GET /threads/:phone/messages/:id/pdf/:page: a PDF page under the file route\'s own rules', () => {
   let app: NestFastifyApplication;
-  const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
+  const queries = { message: vi.fn(), recent: vi.fn(), setRefusal: vi.fn(), setPath: vi.fn() };
   const pdfs = { doc: vi.fn(), setDoc: vi.fn() };
   const teachers = { teacher: vi.fn(), phones: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };

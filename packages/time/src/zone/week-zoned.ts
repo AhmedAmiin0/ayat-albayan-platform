@@ -1,8 +1,8 @@
 import { addDays, weekdayOf } from './week.js';
 import { hhmmIn, localDateIn, wallToUtc } from './zoned.js';
 
-// A person's local day, clock and academy week as UTC instants (R-SCH-01, rule 6; row k3b,
-// formerly the web schedule's tz.ts). Local dates «YYYY-MM-DD», times «HH:MM» (24 h).
+// A person's local day, clock and academy week as UTC instants (R-SCH-01, rule 6; row k3b).
+// Local dates «YYYY-MM-DD», times «HH:MM» (24 h).
 
 export interface ZonedParts {
   /** Local calendar day, "YYYY-MM-DD". */

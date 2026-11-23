@@ -30,6 +30,5 @@ export const localDate = z.iso.date();
 /** An ISO-8601 instant; the offset is required so it never reads as a local wall-clock time. */
 export const instant = z.iso.datetime({ offset: true });
 
-/** Trimmed non-empty text. */
 export const requiredText = z.string().trim().min(1);
 export const optionalText = z.string().trim().min(1).nullish();

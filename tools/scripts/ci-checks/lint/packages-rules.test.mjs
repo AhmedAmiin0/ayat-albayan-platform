@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { makeRepo, table } from './packages-fixture.test-util.mjs';
+import { makeRepo, table } from './testing/packages-fixture.test-util.mjs';
 import { decide } from './packages-rules.mjs';
 import { scan } from './packages-scan.mjs';
 import { validateTable } from './packages-table.mjs';
