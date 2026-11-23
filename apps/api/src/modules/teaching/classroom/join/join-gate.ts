@@ -10,7 +10,7 @@ import {
 } from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-/** What the gates read of a lesson: its window, and the «إنهاء الحلقة للجميع» stamp. */
+/** What the gates read of a lesson: its window and the room_ended_at stamp. */
 type GateLesson = WindowLesson & { room_ended_at?: string | null };
 
 const gone = (code: string): HttpException =>

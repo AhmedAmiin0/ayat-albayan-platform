@@ -19,12 +19,7 @@ type TimeEditEffects = Omit<TimeEditResult, 'lesson'>;
 const NOTHING: TimeEditEffects = { notified: 0, payout: 'none', pdf_refresh: false };
 const iso = (d: Date): string => d.toISOString();
 
-/**
- * «عدّل الوقت» (R-SCH-11, docs/10 §10): one lesson's date, start and length edited in place (same
- * row, report and payments). Admin only. A scheduled / confirmed lesson moves (`move`); a held one
- * is corrected on its own day with a reason (`correct`). The conflict check always applies; a
- * payout month that is approved or paid blocks a change it would have to re-price.
- */
+/** R-SCH-11, docs/10 §10: edited in place, admin only; approved or paid payouts block it. */
 @Injectable()
 export class LessonTimeService {
   constructor(

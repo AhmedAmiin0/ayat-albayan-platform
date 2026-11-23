@@ -10273,7 +10273,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/classroom.public.controller.ts": {
@@ -10307,7 +10307,7 @@
       "count": 9
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.fakes.ts": {
@@ -10317,7 +10317,7 @@
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.join.service.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.join.test.ts": {
@@ -10336,7 +10336,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.kick.test.ts": {
@@ -10352,12 +10352,12 @@
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.providers.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.repo.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.service.test.ts": {
@@ -10373,7 +10373,7 @@
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.service.ts": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.token.ts": {
@@ -10421,7 +10421,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/join/join-link.copy.test.ts": {
@@ -10529,9 +10529,6 @@
   "src/modules/teaching/classroom/join/room-open.controller.ts": {
     "ab/zod-inputs": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/classroom/join/room-open.service.test.ts": {
@@ -10550,20 +10547,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-api.mute.ts": {
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/livekit/livekit-api.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-token.server.test.ts": {
@@ -10610,7 +10599,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/livekit/livekit-webhook.test.ts": {
@@ -10673,7 +10662,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invite.sender.ts": {
@@ -10725,7 +10714,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invitees.repo.test.ts": {
@@ -10800,7 +10789,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 4
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invites.trigger-cap.test.ts": {
@@ -10834,7 +10823,7 @@
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-list.service.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-schedule.cancel.test.ts": {
@@ -10877,7 +10866,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 19
+      "count": 13
     }
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-schedule.stale.test.ts": {
@@ -10937,17 +10926,12 @@
       "count": 4
     },
     "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/teaching/classroom/moderation/mute.http.test.ts": {
-    "max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/moderation/mute.service.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/moderation/share-grant.controller.ts": {
@@ -10958,12 +10942,12 @@
       "count": 4
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/moderation/share-grant.service.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/recordings/recording-list.service.test.ts": {
@@ -10983,9 +10967,6 @@
   },
   "src/modules/teaching/classroom/recordings/recording.lifecycle.ts": {
     "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -11007,9 +10988,6 @@
   "src/modules/teaching/classroom/recordings/recordings.controller.ts": {
     "ab/zod-inputs": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/classroom/recordings/recordings.http.test.ts": {
@@ -11030,7 +11008,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.admin.service.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
@@ -11064,7 +11042,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/test-app.ts": {
@@ -11081,9 +11059,6 @@
   "src/modules/teaching/course-pause/course-pause.controller.ts": {
     "ab/zod-inputs": {
       "count": 5
-    },
-    "max-len": {
-      "count": 6
     }
   },
   "src/modules/teaching/course-pause/course-pause.fakes.ts": {
@@ -11132,11 +11107,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/course-pause/course-pause.module.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/course-pause/course-pause.repo.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
@@ -11150,7 +11120,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/teaching/course-pause/course-pause.service.test.ts": {
@@ -11163,7 +11133,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 13
+      "count": 8
     }
   },
   "src/modules/teaching/course-stop/course-stop.controller.ts": {
@@ -11174,9 +11144,6 @@
   "src/modules/teaching/feedback/feedback.controller.ts": {
     "ab/zod-inputs": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/feedback/feedback.fakes.ts": {
@@ -11215,7 +11182,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/feedback/feedback.settings.test.ts": {
@@ -11296,7 +11263,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/teaching/feedback/read/feedback.read.sort.test.ts": {
@@ -11341,12 +11308,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/teaching/lesson-rating/lesson-rating.settings.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/lesson-rating/queue/rating.job.ts": {
@@ -11473,9 +11440,6 @@
   "src/modules/teaching/lessons/lessons.module.ts": {
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/lessons/lessons.repo.seq.test.ts": {
@@ -11735,7 +11699,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/status/outcomes.ts": {
@@ -11791,7 +11755,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/store/lesson-views.ts": {
@@ -11841,7 +11805,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/lessons/time-edit/time-edit.fakes.ts": {
@@ -11884,11 +11848,6 @@
     },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/modules/teaching/lessons/time-edit/time-edit.repo.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/teaching/lessons/time-edit/time-edit.service.held.test.ts": {

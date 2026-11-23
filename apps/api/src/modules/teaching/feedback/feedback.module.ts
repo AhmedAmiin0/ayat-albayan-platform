@@ -15,11 +15,7 @@ import { FeedbackSender } from './request/feedback.sender';
 import { FeedbackSettings } from './feedback.settings';
 import { FeedbackLinksModule } from './links/feedback-links.module';
 
-/**
- * «رأيك يهمّنا» (docs/13-forms-spec.md form 3): the admin's «ابعت طلب الرأي» (an approved WhatsApp
- * template with a signed link, through the inbox Outbox), the family's public page, and the admin
- * and teacher lists. TemplateRegistry comes from the global WhatsappModule.
- */
+/** Lesson feedback (docs/13 form 3): admin request, the family's public page, the lists. */
 @Module({
   // FeedbackLinksModule is global: it provides FamilyFeedbackLinks to the report PDF module.
   imports: [InboxModule, TeachersModule, FeedbackLinksModule],

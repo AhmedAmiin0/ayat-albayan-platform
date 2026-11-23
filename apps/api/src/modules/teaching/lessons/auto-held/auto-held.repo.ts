@@ -83,7 +83,7 @@ export class AutoHeldRepo {
     return new Set(rows.map((r) => r.entity_id));
   }
 
-  /** Of these lessons, the ids with a submitted تقرير الحلقة (its outcome is the report's). */
+  /** Of these lessons, the ids with a submitted lesson report. */
   async reported(lessonIds: readonly string[]): Promise<Set<string>> {
     const rows = await readChunked(lessonIds, (chunk) =>
       this.db
@@ -95,10 +95,7 @@ export class AutoHeldRepo {
     return new Set(rows.map((r) => r.lesson_id));
   }
 
-  /**
-   * Completed lessons the job closed and no report has spoken for since: «لم تنعقد؟» may correct
-   * them.
-   */
+  /** Completed lessons the job closed and no report has spoken for since; they may be corrected. */
   async correctable(lessonIds: readonly string[]): Promise<Set<string>> {
     if (lessonIds.length === 0) return new Set();
     const [held, reported] = await Promise.all([
