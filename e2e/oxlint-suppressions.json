@@ -607,7 +607,7 @@
   },
   "tests/messaging/chat-lists.spec.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/messaging/chat-lists.sql.spec.ts": {
@@ -674,7 +674,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "tests/messaging/notification-bell.spec.ts": {
@@ -702,12 +702,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "tests/messaging/saved-replies.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/messaging/send-gate-boot.api.spec.ts": {
@@ -725,7 +725,7 @@
   },
   "tests/messaging/template-numbers.spec.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "tests/messaging/templates.spec.ts": {
@@ -789,7 +789,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "tests/people/avatars.sql.spec.ts": {
@@ -855,7 +855,7 @@
   },
   "tests/people/student-lists.spec.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/people/student-profile.spec.ts": {
@@ -1119,7 +1119,7 @@
   },
   "tests/sales/assistant-auto-assign-off.api.spec.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "tests/sales/assistant-course-renew.api.spec.ts": {
@@ -1139,12 +1139,12 @@
   },
   "tests/sales/assistant-portal.spec.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "tests/sales/assistant-reopen.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "tests/sales/assistant-scope.api.spec.ts": {
@@ -1175,7 +1175,7 @@
   },
   "tests/sales/journey-7-assistant-cycle.spec.ts": {
     "stylistic/max-len": {
-      "count": 16
+      "count": 14
     }
   },
   "tests/sales/lead-register.spec.ts": {
@@ -1188,7 +1188,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "typescript/dot-notation": {
       "count": 2
@@ -1223,7 +1223,7 @@
   },
   "tests/sales/sales-double-role.spec.ts": {
     "stylistic/max-len": {
-      "count": 13
+      "count": 11
     }
   },
   "tests/sales/sales-meetings.spec.ts": {
@@ -1262,7 +1262,7 @@
   },
   "tests/teaching/booking-day-times.spec.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "tests/teaching/booking-day-times.sql.spec.ts": {

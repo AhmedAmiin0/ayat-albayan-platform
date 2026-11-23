@@ -5,7 +5,7 @@ import { API, bearer, setSetting } from '../../support/core/messages';
 import { approveTemplates } from '../../support/reporting/teacher-templates';
 import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// «تقييم الحلقة» by WhatsApp buttons (owner 2026-10-05, migration 195): a completed lesson sends
+// «تقييم الحلقة» by WhatsApp buttons (migration 195): a completed lesson sends
 // lesson_rating; the guardian's tap is an inbound message, so it is stored as the rating and
 // reopens the 24 h window. In a closed chat the admin can send it by hand.
 
