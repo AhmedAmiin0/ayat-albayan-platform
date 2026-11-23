@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { attachmentUploadSchema } from '../schema/index.js';
 
-// «ملفات الحلقة» (owner 2026-11-17, migration 20261117150200): files staff add to a lesson, kept
+// «ملفات الحلقة» (migration 20261117150200): files staff add to a lesson, kept
 // in the report-attachments bucket (same types and 25 MiB cap), each shown to the family or not.
 
 /** A homework sheet, a teacher's voice note, a whiteboard snapshot, or other teacher material. */

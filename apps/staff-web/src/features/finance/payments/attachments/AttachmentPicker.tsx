@@ -1,4 +1,4 @@
-import { RECEIPT_MIMES } from '@ab/shared';
+import { RECEIPT_MIMES } from '@ab/money';
 import { useId } from 'react';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { cn } from '@ab/web-kit/lib/utils';

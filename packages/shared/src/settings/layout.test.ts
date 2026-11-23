@@ -10,7 +10,7 @@ import {
   type SettingsSectionId,
 } from '@ab/settings';
 
-/** /admin/settings field order before the registry was split by domain (2026-10-23): it must not move.
+/** /admin/settings field order before the registry was split by domain: it must not move.
  * comms_source (docs/23 phase 3) joined after crm_cutover_done; it has its own control, not a field. */
 const LEGACY_PAGE_ORDER = [
   'messaging_enabled', 'auto_messages_enabled', 'crm_cutover_done', 'comms_source', 'feedback_mode', 'reminder_minutes_before',

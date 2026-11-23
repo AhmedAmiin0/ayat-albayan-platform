@@ -1,10 +1,5 @@
 import { sendErrorReason } from '@ab/client-core';
 import {
-  clockOf,
-  counted,
-  dateText,
-  formatPhone,
-  localDateIn,
   previewNote,
   SESSION_WINDOW_MS,
   stripWaMarkup,
@@ -12,6 +7,8 @@ import {
   type NoteWords,
   type ThreadView,
 } from '@ab/shared';
+import { counted, formatPhone } from '@ab/core';
+import { clockOf, dateText, localDateIn } from '@ab/time';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

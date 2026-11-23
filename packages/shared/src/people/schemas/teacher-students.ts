@@ -6,9 +6,9 @@ export const TEACHER_STUDENT_KINDS = ['subscribed', 'trial'] as const;
 export type TeacherStudentKind = (typeof TEACHER_STUDENT_KINDS)[number];
 
 /**
- * subscribed = students.status 'active', 'pending_renewal' or 'expired' (owner 2026-10-12: the package
+ * subscribed = students.status 'active', 'pending_renewal' or 'expired' (the package
  * ended but lessons keep running, so the teacher keeps the student; the row carries its status for the
- * chip), trial = not subscribed yet (new, trial, pending_subscription; owner 2026-10-15); paused /
+ * chip), trial = not subscribed yet (new, trial, pending_subscription); paused /
  * churned are in neither.
  */
 export const TEACHER_STUDENT_STATUSES: Record<TeacherStudentKind, readonly StudentStatus[]> = {

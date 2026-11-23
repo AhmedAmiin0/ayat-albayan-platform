@@ -11,9 +11,15 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@ab/catalog": "workspace:*",
     "@ab/client-core": "workspace:*",
+    "@ab/core": "workspace:*",
     "@ab/i18n": "workspace:*",
+    "@ab/money": "workspace:*",
+    "@ab/schedule": "workspace:*",
+    "@ab/settings": "workspace:*",
     "@ab/shared": "workspace:*",
+    "@ab/time": "workspace:*",
     "@ab/web-kit": "workspace:*",
     "@tanstack/react-form": "^1.33.5",
     "@tanstack/react-query": "^5.104.0",

@@ -1,4 +1,5 @@
-import { bubbleWord, messageTicks, TICK_PATHS, tickTone, type MessageStatus, type TickTone } from '@ab/shared';
+import { bubbleWord, messageTicks, TICK_PATHS, tickTone, type TickTone } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 

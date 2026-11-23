@@ -2,8 +2,7 @@ import { z } from 'zod';
 import { LESSONS_USED_BEFORE_MAX } from '@ab/money';
 import { usedBeforeMax } from '../start-date.js';
 
-// «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02: «i want the ability to change the number of
-// attended sessions as assistant»): PATCH /subscriptions/:id/lessons-used-before, admins and
+// «تعديل عدد الحلقات المستخدمة»: PATCH /subscriptions/:id/lessons-used-before, admins and
 // assistants holding subscriptions.edit_terms (admin only by default). Same bound as the create
 // (usedBeforeMax: every lesson but one, never the whole package), never more than the
 // lessons the platform left free on it, and only while the package has no booked course (the course

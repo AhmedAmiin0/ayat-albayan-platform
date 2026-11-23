@@ -1,4 +1,4 @@
-import type { ExpenseYearView } from '@ab/shared';
+import type { ExpenseYearView } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { CancelBlock } from '@ab/money';
 
-// «إلغاء الباقة» by the assistant (owner 2026-11-02): ANY student's unused package, behind
+// «إلغاء الباقة» by the assistant: ANY student's unused package, behind
 // subscriptions.stop (the key of «إلغاء الاشتراك»), with the admin's rules, write and audit.
 
 const BLOCKS = [

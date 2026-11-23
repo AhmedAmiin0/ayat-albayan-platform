@@ -1,4 +1,4 @@
-import type { SettingMeta } from '@ab/shared';
+import type { SettingMeta } from '@ab/settings';
 import { createContext, useContext } from 'react';
 
 /** What every section needs besides the form: the search text and who last changed each setting. */

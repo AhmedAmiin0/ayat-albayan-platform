@@ -1,4 +1,4 @@
-import { INVOICE_SORT_KEYS } from '@ab/shared';
+import { INVOICE_SORT_KEYS } from '@ab/money';
 import { parsePage } from '@/features/finance/subscriptions/search';
 import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
 

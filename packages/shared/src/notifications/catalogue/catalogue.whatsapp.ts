@@ -56,7 +56,7 @@ export const WHATSAPP_ENTRIES = [
   },
   {
     // The family's PDF (report_ready) or, once approved, the live page's link to the family
-    // and the teacher (report_ready_family / _teacher, owner 2026-11-06): one rule for all.
+    // and the teacher (report_ready_family / _teacher): one rule for all.
     ...ROW,
     key: 'report_ready',
     audience: 'guardian',

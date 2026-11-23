@@ -1,15 +1,7 @@
-import {
-  RIYADH_TZ,
-  riyadhToday,
-  wallInstant,
-  type PaymentAttachmentView,
-  type PaymentKind,
-  type PaymentMethod,
-  type PaymentsPage,
-  type PaymentView,
-  type SignedDownload,
-  type SignedUpload,
-} from '@ab/shared';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
+import type { PaymentAttachmentView, PaymentsPage, PaymentView } from '@ab/money';
+import { RIYADH_TZ, riyadhToday, wallInstant } from '@ab/time';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
@@ -17,7 +9,7 @@ import { uploadSigned } from '@/lib/storage/upload-slot';
 import { MONEY_KEY, PAGE_SIZE } from '@/features/finance/subscriptions/api';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
-export type { PaymentView } from '@ab/shared';
+export type { PaymentView } from '@ab/money';
 
 /** The payments page filters (all optional); from/to are Riyadh days, inclusive. */
 export type PaymentFilters = { studentId?: string; from?: string; to?: string; method?: PaymentMethod; kind?: PaymentKind };

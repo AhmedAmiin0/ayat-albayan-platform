@@ -38,7 +38,7 @@ export function isRunningLesson(lesson: Pick<SalesScheduleLesson, 'status' | 'st
 }
 
 /**
- * «تأكيد الحلقة» for sales (owner 2026-10-28): ANY lesson still scheduled that has not ended, with
+ * «تأكيد الحلقة» for sales: ANY lesson still scheduled that has not ended, with
  * lessons.confirm (`holds`). Web and mobile show the button by it; the API checks again.
  */
 export function canSalesConfirm(lesson: Pick<SalesScheduleLesson, 'status' | 'ends_at'>, input: { now: Date; holds: boolean }): boolean {
@@ -49,7 +49,7 @@ type ChangeKey = 'lessons.reschedule' | 'lessons.cancel';
 
 /**
  * May sales move or cancel this lesson (docs/16 row 37)? Open, not over and with a student, ANY
- * student's (owner 2026-10-28), each action behind its own key. Web and mobile alike; the API
+ * student's, each action behind its own key. Web and mobile alike; the API
  * checks again.
  */
 export function canSalesChangeLesson(

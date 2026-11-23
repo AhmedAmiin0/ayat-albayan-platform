@@ -1,4 +1,5 @@
-import { studentStatusStyle, type ThreadLesson, type ThreadPeople } from '@ab/shared';
+import type { ThreadLesson, ThreadPeople } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

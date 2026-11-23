@@ -1,5 +1,5 @@
 import type { CallSession } from '@ab/client-core';
-import { avatarTone } from '@ab/shared';
+import { avatarTone } from '@ab/catalog';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { CallScreen } from './CallScreen';

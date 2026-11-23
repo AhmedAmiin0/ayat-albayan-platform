@@ -3,10 +3,9 @@ import { instant } from '@ab/core';
 import { isOpenLesson } from '@ab/schedule';
 import { z } from 'zod';
 
-// The family's own lesson actions (owner 2026-11-17: «add button to accept or reject or
-// reschedule»): «سأحضر» (confirm), «أعتذر عن الحلقة» (the student's cancel under the
-// late_cancel_hours rule) and «اطلب موعدًا آخر» (a family lesson_proposals row, answered by
-// staff), with «سحب الطلب». Whitelists: never a staff id or an internal reason.
+// The family's own lesson actions: «سأحضر» (confirm), «أعتذر عن الحلقة» (the student's cancel
+// under the late_cancel_hours rule) and «اطلب موعدًا آخر» (a family lesson_proposals row,
+// answered by staff), with «سحب الطلب». Whitelists: never a staff id or an internal reason.
 
 /**
  * Open and not started: the family may still confirm, excuse, ask or withdraw (the API's guard and

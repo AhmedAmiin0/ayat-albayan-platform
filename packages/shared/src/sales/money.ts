@@ -2,10 +2,10 @@ import { z } from 'zod';
 import { localDate, optionalText, phoneE164 } from '@ab/core';
 import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '@ab/money';
 
-// The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16): she subscribes
+// The salesperson's money writes from the chat (R-ASST-01/04, docs/16): she subscribes
 // a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's
 // commands, narrower: no typed price ever, no notes, no refund, no invoice, the method is always 'bank',
-// every write carries its clientRequestId (rule 8). Owner 2026-10-12 (docs/16 rows 24–25): the receipt is
+// every write carries its clientRequestId (rule 8). docs/16 rows 24–25: the receipt is
 // OPTIONAL now (old students have none) and the files go in `attachments` (0..5); `startsOn` is honoured only
 // with subscriptions.set_start_date (salesStartDate), a past day only with `alreadyStarted`. The API narrows further
 // (docs/16 rows 20–22): only the site's discount pills (403 discount_not_allowed) and the package currency
@@ -13,8 +13,8 @@ import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, payment
 // the admin's form has but hers does not (kind, method, invoiceId…) is a 400, never silently dropped.
 
 /**
- * The chat the write comes from (owner 2026-10-29, docs/16 row 38). Never an access check (owner 2026-11-01:
- * sales.renew_any renews ANY student): it only picks which of the student's family chats the receipt files come from.
+ * The chat the write comes from (docs/16 row 38). Never an access check
+ * (sales.renew_any renews ANY student): it only picks which of the student's family chats the receipt files come from.
  */
 const chatPhone = phoneE164.optional();
 
@@ -29,11 +29,11 @@ export const salesSubscriptionCreateSchema = z.strictObject({
   startsOn: localDate.optional(),
   /** «بدأ الاشتراك سابقًا»: allows a past startsOn (subscriptions.set_start_date only). */
   alreadyStarted: z.boolean().optional(),
-  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with alreadyStarted; 0..usedBeforeMax: every lesson but one. */
+  /** «حلقات مستخدمة من الباقة»: only with alreadyStarted; 0..usedBeforeMax: every lesson but one. */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
-  /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed; opens the student channel. */
+  /** «المعلم/ة»: students.teacher_id once subscribed; opens the student channel. */
   teacherId: z.uuid().optional(),
-  /** «مبلغ مخصص» (owner 2026-11-02): the package price, not the quote's (the link's cap). */
+  /** «مبلغ مخصص»: the package price, not the quote's (the link's cap). */
   customPrice: moneyAmount.optional(),
   clientRequestId: z.uuid(),
   phone: chatPhone,

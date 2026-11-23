@@ -1,4 +1,4 @@
-import { amountFromStripe, parseAmount } from '@ab/shared';
+import { amountFromStripe, parseAmount } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

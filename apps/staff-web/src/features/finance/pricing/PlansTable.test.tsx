@@ -1,4 +1,4 @@
-import { PACKAGE_IDS, quote, type Quote } from '@ab/shared';
+import { PACKAGE_IDS, quote, type Quote } from '@ab/money';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/data-table/ColumnFilterText';

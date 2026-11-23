@@ -1,5 +1,6 @@
 import { reopenTick } from '@ab/client-core';
-import type { MessageStatus, ReopenSent } from '@ab/shared';
+import type { ReopenSent } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 

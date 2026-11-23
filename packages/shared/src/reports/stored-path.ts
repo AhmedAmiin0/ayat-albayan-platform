@@ -1,4 +1,4 @@
-// Where a stored file lives (owner 2026-11-06: MinIO keeps every new file; old ones stay in
+// Where a stored file lives (MinIO keeps every new file; old ones stay in
 // Supabase Storage). The provider is a marker at the front of the path the database keeps:
 // «minio:<key>» is in MinIO, a path with no marker is in Supabase (every row written before the
 // switch). The API reads by the marker; the web and mobile apps upload by it (docs/45).

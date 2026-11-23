@@ -1,4 +1,5 @@
-import type { MessageStatus, MessageView, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadView } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { QueryClient } from '@tanstack/react-query';
 import { describe, expect, it, vi } from 'vitest';
 import { patchLiveCaches } from './live-patch';

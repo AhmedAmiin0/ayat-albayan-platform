@@ -11,7 +11,7 @@ import {
   trialMove,
 } from '../status-flow.js';
 
-// Owner 2026-10-15: new → trial → pending_subscription → active → pending_renewal → expired.
+// New → trial → pending_subscription → active → pending_renewal → expired.
 
 describe('student status groups', () => {
   it('the display order of every status', () => {

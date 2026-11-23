@@ -1,5 +1,6 @@
 // Test helpers for «حذف من المنصة» (test-only): the open chat's log as a given staff member.
-import type { MessageView, Permission, UserRole } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
+import type { Permission, UserRole } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
