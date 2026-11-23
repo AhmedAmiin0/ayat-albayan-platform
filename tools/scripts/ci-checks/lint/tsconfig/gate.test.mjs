@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { isTsconfig, violations } from './tsconfig-gate.mjs';
+import { isTsconfig, violations } from './gate.mjs';
 
 const check = (config, path = 'apps/api/tsconfig.json') =>
   violations(path, JSON.stringify(config));

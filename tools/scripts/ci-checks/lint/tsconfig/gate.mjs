@@ -2,7 +2,7 @@
 // package.json dependencies and `exports`/`imports`, never through compiler paths. No baseline and
 // no allow-list: every tsconfig.json and tsconfig.*.json outside node_modules passes or CI fails.
 // `compilerOptions.paths` is left to its own lane until no tsconfig has it.
-// Usage: node tools/scripts/ci-checks/lint/tsconfig-gate.mjs
+// Usage: node tools/scripts/ci-checks/lint/tsconfig/gate.mjs
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
@@ -67,7 +67,7 @@ export function violations(path, text) {
 }
 
 function main() {
-  const root = fileURLToPath(new URL('../../../..', import.meta.url));
+  const root = fileURLToPath(new URL('../../../../..', import.meta.url));
   const args = ['ls-files', '--cached', '--others', '--exclude-standard'];
   const files = execFileSync('git', args, { cwd: root, encoding: 'utf8' }).split('\n');
   const configs = [...new Set(files.filter(isTsconfig))].sort();
