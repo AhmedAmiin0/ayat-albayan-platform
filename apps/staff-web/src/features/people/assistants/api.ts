@@ -1,15 +1,14 @@
-import {
-  monthRangeIn,
-  type AssistantCommissionView,
-  type AssistantStatementView,
-  type AssistantTermsInput,
-  type AssistantTermsRow,
-  type AssistantTermsView,
-  type BroughtByInput,
-  type PaymentMethod,
-  type SignedDownload,
-  type SignedUpload,
-} from '@ab/shared';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import type {
+  AssistantCommissionView,
+  AssistantStatementView,
+  AssistantTermsInput,
+  AssistantTermsRow,
+  AssistantTermsView,
+  BroughtByInput,
+} from '@ab/money';
+import { monthRangeIn } from '@ab/time';
 import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
@@ -17,7 +16,11 @@ import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // apps/api assistant-pay module (owner, 2026-10-06; the salesperson, «مسؤول/ة المبيعات», is the base role sales). Reads need
 // assistantpay.read, writes assistantpay.write, approve assistantpay.approve. Amounts are per currency.
-export type { AssistantCommissionView, AssistantStatementView, AssistantTermsView } from '@ab/shared';
+export type {
+  AssistantCommissionView,
+  AssistantStatementView,
+  AssistantTermsView,
+} from '@ab/money';
 
 export const ASSISTANTS_KEY = ['assistant-pay'] as const;
 

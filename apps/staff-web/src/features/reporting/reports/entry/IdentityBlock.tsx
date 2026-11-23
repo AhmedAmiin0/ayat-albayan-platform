@@ -1,4 +1,5 @@
-import { lessonWhenAt, packageProgress, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import { lessonWhenAt, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import { packageProgress } from '@ab/money';
 import type { ReactNode } from 'react';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';

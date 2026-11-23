@@ -473,7 +473,7 @@
   },
   "ci-checks/release-tags/release-tag.mjs": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "ci-checks/roll-fake.mjs": {
@@ -558,11 +558,6 @@
     }
   },
   "seed/seed-test-account.auth.mjs": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "seed/seed-test-account.data.mjs": {
     "stylistic/max-len": {
       "count": 1
     }

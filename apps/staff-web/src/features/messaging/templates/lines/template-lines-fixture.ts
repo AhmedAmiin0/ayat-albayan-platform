@@ -1,4 +1,5 @@
-import type { LineCheckView, TemplateLineSync, TemplateLineView, WaLine } from '@ab/shared';
+import type { LineCheckView, TemplateLineSync, TemplateLineView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 
 // Test fixtures for the per-number template section (not app code).
 

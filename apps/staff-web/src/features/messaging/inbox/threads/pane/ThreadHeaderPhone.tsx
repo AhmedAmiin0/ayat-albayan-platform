@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';

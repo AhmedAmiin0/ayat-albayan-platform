@@ -1,5 +1,6 @@
 import { termsFormOf, TERMS_DEFAULT_CURRENCY, type TermsForm } from '@ab/client-core';
-import { addCalendarDays, CURRENCY_ISOS, RIYADH_TZ, shiftCalendarMonths, type AssistantTermsView } from '@ab/shared';
+import { CURRENCY_ISOS, type AssistantTermsView } from '@ab/money';
+import { addCalendarDays, RIYADH_TZ, shiftCalendarMonths } from '@ab/time';
 import { localDate } from '@/today/lib/timeline';
 
 // The web's terms-form.ts on the phone: the state, schema and start-day rule live in @ab/client-core (docs/27 E5);

@@ -1,4 +1,4 @@
-import { GENDERS, type Gender } from '@ab/shared';
+import { GENDERS, type Gender } from '@ab/catalog';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';

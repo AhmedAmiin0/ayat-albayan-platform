@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 
 /**
  * Where an old /sales/register?leadId&phone&name link goes: «تسجيل طالب جديد» now lives in the chat,

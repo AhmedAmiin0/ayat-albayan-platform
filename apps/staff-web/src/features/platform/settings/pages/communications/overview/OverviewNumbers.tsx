@@ -1,4 +1,5 @@
-import { formatPhone, type NumberView } from '@ab/shared';
+import type { NumberView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

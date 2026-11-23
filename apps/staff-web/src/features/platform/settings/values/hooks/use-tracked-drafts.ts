@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import type { RowSaves } from './use-row-saves';
 import { useValueDrafts, type ValueDrafts } from './use-value-drafts';
 

@@ -32,6 +32,9 @@ function wrap(proto: Record<string, unknown>, key: string, elsewhere: Method): v
   };
 }
 
+const hasHook = (proto: Record<string, unknown>, key: string): string[] =>
+  typeof proto[key] === 'function' ? [key] : [];
+
 /**
  * The one switch of the process roles (docs/09): a job's timers start in onApplicationBootstrap, which
  * runs only where APP_ROLE runs jobs (worker, all). In an `api` process it does nothing, and the job's
@@ -45,6 +48,8 @@ export function BackgroundJob(opts: BackgroundJobOptions): (job: JobClass) => vo
     const proto = job.prototype as unknown as Record<string, unknown>;
     if (JOBS.has(opts.name)) throw new Error(`@BackgroundJob: ${opts.name} is declared twice`);
     wrap(proto, 'onApplicationBootstrap', () => undefined);
+    // A job that never started here (an `api` copy) has no run to wait for on shutdown (BE-14).
+    hasHook(proto, 'beforeApplicationShutdown').forEach((key) => wrap(proto, key, () => undefined));
     JOBS.set(opts.name, job);
     if (!opts.kick) return;
     // A kick's options (lane, wait) travel to the worker's route (docs/42 42-7, 42-8).

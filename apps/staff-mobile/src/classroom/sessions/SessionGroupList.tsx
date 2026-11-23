@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { SESSION_GROUPS, type SessionGroup } from '@ab/client-core';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';

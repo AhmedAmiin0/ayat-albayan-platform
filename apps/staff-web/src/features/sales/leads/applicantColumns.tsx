@@ -1,4 +1,6 @@
-import { formatPhone, JOB_APPLICANT_STATUSES, jobApplicantStatusStyle, type StatusStyle } from '@ab/shared';
+import { JOB_APPLICANT_STATUSES } from '@ab/catalog';
+import { formatPhone } from '@ab/core';
+import { jobApplicantStatusStyle, type StatusStyle } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { ColumnFilterDef, DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

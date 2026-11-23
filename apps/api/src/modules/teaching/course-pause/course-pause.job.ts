@@ -1,6 +1,6 @@
 import { riyadhToday } from '@ab/shared';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { Injectable, Logger } from '@nestjs/common';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
@@ -25,9 +25,9 @@ interface ResumeSummary {
  */
 @BackgroundJob({ name: 'course-pause-resume' })
 @Injectable()
-export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class CoursePauseJob extends TickerJob {
   private readonly log = new Logger(CoursePauseJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: CoursePauseJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: HOUR_MS,
@@ -37,14 +37,8 @@ export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly queries: CoursePauseRepo,
     private readonly pauses: CoursePauseService,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  ) {
+    super();
   }
 
   /** One pass. Never throws: one bad pause does not stop the others. */

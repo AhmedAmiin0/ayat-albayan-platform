@@ -1,4 +1,4 @@
-import type { AssistantView } from '@ab/shared';
+import type { AssistantView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   usePermissions,

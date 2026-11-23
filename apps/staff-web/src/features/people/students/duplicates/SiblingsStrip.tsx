@@ -1,4 +1,4 @@
-import { studentStatusStyle } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

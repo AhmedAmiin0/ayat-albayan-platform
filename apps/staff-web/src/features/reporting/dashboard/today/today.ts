@@ -1,4 +1,10 @@
-import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, type JoinWindowConfig, type LessonView } from '@ab/shared';
+import {
+  DEFAULT_JOIN_WINDOW,
+  isOpenLesson,
+  joinWindow,
+  type JoinWindowConfig,
+  type LessonView,
+} from '@ab/schedule';
 
 /** Today's lessons that still happen (not cancelled/rescheduled), earliest first. */
 export function todaysLessons(lessons: LessonView[]): LessonView[] {

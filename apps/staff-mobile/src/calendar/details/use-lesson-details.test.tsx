@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-native';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { pending } from '@/today/testing/fixtures';
 import { useLessonDetails } from './use-lesson-details';
 

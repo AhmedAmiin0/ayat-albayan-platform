@@ -1,10 +1,11 @@
+import { isAccountDisabled } from '@ab/client-core';
 import type { Session } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { ApiError, apiFetch } from '../lib/http/api';
 import { pathKey } from '../lib/query/query-keys';
 import { cacheRestored, queryClient } from '../lib/query/query-client';
 import { supabase } from '../lib/http/supabase';
-import { isAccountDisabled, isOtherAppRole, setLoginNotice } from './login-notice';
+import { isOtherAppRole, setLoginNotice } from './login-notice';
 import { appRole, roleClaim, type AppRole } from './role-claim';
 
 /**

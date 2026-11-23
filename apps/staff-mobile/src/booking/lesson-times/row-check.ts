@@ -1,5 +1,6 @@
 import { lessonAt, nearestFree, pickState, type LessonRow, type PickState } from '@ab/client-core';
-import { otherZoneClock, type SlotsResponse } from '@ab/shared';
+import type { SlotsResponse } from '@ab/schedule';
+import { otherZoneClock } from '@ab/time';
 import type { ViewerClock } from '@/core/lib/clock';
 import { t, locale } from '@ab/mobile-kit';
 

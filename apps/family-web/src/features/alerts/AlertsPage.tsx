@@ -6,7 +6,7 @@ import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header'
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { AlertRow } from './AlertRow';
 import { useAlerts, useMarkAlertsRead, type FamilyAlerts } from './alerts-api';
 
@@ -61,9 +61,9 @@ export function AlertsPage({ kind }: { kind: PortalKind }) {
           </Button>
         )}
       </div>
-      <LoadState query={alerts}>
+      <QueryState query={alerts}>
         {(page) => <AlertList page={page} kind={kind} onRead={(id) => markRead.mutate([id])} />}
-      </LoadState>
+      </QueryState>
     </section>
   );
 }

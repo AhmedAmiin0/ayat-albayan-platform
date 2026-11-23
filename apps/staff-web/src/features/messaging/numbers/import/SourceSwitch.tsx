@@ -1,4 +1,5 @@
-import type { CommsSource, ParityView } from '@ab/shared';
+import type { ParityView } from '@ab/shared';
+import type { CommsSource } from '@ab/settings';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';

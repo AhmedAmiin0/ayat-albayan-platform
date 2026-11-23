@@ -1,4 +1,4 @@
-import { LOCALES, type Locale } from '@ab/shared';
+import { LOCALES, type Locale } from '@ab/core';
 import { placeholderTokens, type TranslationKeyRow } from '@ab/i18n';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

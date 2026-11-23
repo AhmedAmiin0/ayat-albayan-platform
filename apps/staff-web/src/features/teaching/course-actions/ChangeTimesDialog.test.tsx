@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';

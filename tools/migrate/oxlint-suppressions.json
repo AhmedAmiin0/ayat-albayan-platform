@@ -220,9 +220,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }

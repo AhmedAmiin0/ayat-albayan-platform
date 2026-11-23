@@ -16,12 +16,12 @@ export function mocks() {
     received: { adminIds: vi.fn(), ownerIds: vi.fn() }, // «تم استلام دفعة»: who is told
     courseDue: { unbooked: vi.fn(), overdue: vi.fn() }, // «احجز أيام الحلقات» (owner 2026-11-06)
     drafts: { get: vi.fn(), held: vi.fn() }, // course drafts: none unless a test sets one
-    statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
+    statuses: { student: vi.fn(), students: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
     trials: { studentsOfTrialLessons: vi.fn(), lessonsOf: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
     alerts: {
-      studentsOfLessons: vi.fn(), studentsWithPackages: vi.fn(), raiseTask: vi.fn(), recipient: vi.fn(),
-      queueRenewal: vi.fn(), closeTasks: vi.fn(),
+      studentsOfLessons: vi.fn(), sweepStudents: vi.fn(), raiseTask: vi.fn(), recipient: vi.fn(),
+      queueRenewal: vi.fn(), closeTasks: vi.fn(), openTasks: vi.fn(), closeKeys: vi.fn(),
     },
     tasks: { list: vi.fn(), done: vi.fn() },
     payments: {
@@ -76,7 +76,9 @@ export function resetMocks(m: Mocks): void {
   m.courseDue.overdue.mockResolvedValue([]);
   m.drafts.get.mockResolvedValue(null);
   m.drafts.held.mockResolvedValue(false);
-  m.subs.forStudents.mockResolvedValue([]);
+  m.subs.forStudents.mockImplementation(async (ids: string[]) =>
+    (await Promise.all(ids.map((id) => m.subs.forStudent(id)))).flat(),
+  );
   m.family.linkPackages.mockResolvedValue([]);
   m.subs.paid.mockResolvedValue(new Map());
   m.balances.forSubscriptions.mockResolvedValue(new Map());
@@ -94,7 +96,7 @@ export function resetMocks(m: Mocks): void {
   m.payments.byInvoice.mockResolvedValue(null);
   m.earnings.byRequest.mockResolvedValue(null);
   m.earnings.settlePayout.mockResolvedValue(null);
-  m.earnings.paidOnLessons.mockResolvedValue(0);
+  m.earnings.paidOnLessons.mockResolvedValue(new Map());
   m.subs.byRequest.mockResolvedValue(null);
   m.cancels.linkedLessons.mockResolvedValue(0);
   m.cancels.laterCommission.mockResolvedValue(false);
@@ -104,6 +106,11 @@ export function resetMocks(m: Mocks): void {
   m.attachments.owners.mockResolvedValue([]); // no path held by another payment
   m.statuses.student.mockResolvedValue(null); // no student row: the status rules change nothing
   m.statuses.lastStatusChange.mockResolvedValue(null);
+  m.statuses.students.mockImplementation(async (ids: string[]) => {
+    const rows = await Promise.all(ids.map(async (id) => [id, await m.statuses.student(id)] as const));
+    return new Map(rows.filter(([, s]) => s !== null));
+  });
+  m.alerts.openTasks.mockResolvedValue([]);
   m.trials.studentsOfTrialLessons.mockResolvedValue([]);
   m.trials.lessonsOf.mockResolvedValue([]); // no trial lesson
 }

@@ -1,4 +1,4 @@
-// Pure status rules (owner 2026-10-27): periods, the expiry window and the decision table.
+// Pure status rules: periods, the expiry window and the decision table.
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_EXPIRY_DAYS,

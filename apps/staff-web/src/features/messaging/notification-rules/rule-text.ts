@@ -1,5 +1,4 @@
 import {
-  counted,
   ESSENTIAL_OFF_TEXT,
   NOTIFICATION_CHANNELS,
   type NotificationChannel,
@@ -7,6 +6,7 @@ import {
   type NotificationKey,
   type NotificationsOverview,
 } from '@ab/shared';
+import { counted } from '@ab/core';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { hhmmText } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

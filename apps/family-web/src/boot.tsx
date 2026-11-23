@@ -1,8 +1,8 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createRouter } from '@tanstack/react-router';
 import { renderApp } from '@ab/web-kit/boot/render-app';
+import { routeStates } from '@ab/web-kit/boot/route-states';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RouteError, RoutePending } from '@/features/route-states';
 import { routeTree } from './routeTree.gen';
 
 // Loaded by main.tsx once `t` holds the chosen language. Reads stay fresh for 30 s: the family
@@ -12,9 +12,7 @@ const router = createRouter({
   routeTree,
   context: { queryClient },
   defaultPreload: 'intent',
-  // Never a blank page or the router's English error screen (audit 2026-11-19 #19c).
-  defaultPendingComponent: RoutePending,
-  defaultErrorComponent: RouteError,
+  ...routeStates({ words: t.familyWeb.routeError, home: '/portal' }),
 });
 
 declare module '@tanstack/react-router' {

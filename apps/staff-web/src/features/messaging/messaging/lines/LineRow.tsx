@@ -1,4 +1,6 @@
-import type { LineCheckView, Tone, WaLine } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
+import type { Tone } from '@ab/money';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { StatusChip, toneClass } from '@ab/web-kit/components/ui/display/status-chip';

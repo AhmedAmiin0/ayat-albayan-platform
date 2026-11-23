@@ -4,7 +4,7 @@ import { thisMonthStart } from '../../support/finance/money-extra';
 import { openNav } from '../../support/core/nav';
 import { withSql } from '../../support/core/schedule';
 
-// «سجل النشاط» (owner, 2026-10-05): the admin adds an expense; the API's ActivityInterceptor logs
+// «سجل النشاط»: the admin adds an expense; the API's ActivityInterceptor logs
 // it (flushed within a few seconds) and it shows on /admin/activity with its Arabic label and
 // result. A teacher can neither open the page nor read GET /activity.
 

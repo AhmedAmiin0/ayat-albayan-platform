@@ -1,4 +1,4 @@
-import { payoutStatusStyle } from '@ab/shared';
+import { payoutStatusStyle } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

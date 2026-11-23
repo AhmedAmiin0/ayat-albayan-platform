@@ -1,4 +1,4 @@
-import { isOpenLesson, joinWindow, type LessonView } from '@ab/shared';
+import { isOpenLesson, joinWindow, type LessonView } from '@ab/schedule';
 import { use, useRef, useState } from 'react';
 import { openRoom, useRoomsInApp } from '@/classroom/room-staff/open-room';
 import { useJoinWindow } from '@/core/lib/query/public-config';

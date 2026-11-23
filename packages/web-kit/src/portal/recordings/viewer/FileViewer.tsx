@@ -2,7 +2,7 @@ import type { PortalLessonFile } from '@ab/shared';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { fileLine, fileTitle } from '@ab/web-kit/lesson-files/file-words';
 import { cn } from '@ab/web-kit/lib/utils';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { useLessonFileUrl } from '@ab/web-kit/portal/recordings/use-recordings';
 import { useViewer, type Viewer } from './use-viewer';
 import { ViewerActions, ViewerBody } from './ViewerParts';
@@ -37,9 +37,9 @@ function ViewerDialog({ studentId, file, viewer }: {
     >
       {/* A step to another file swaps the stage with a short fade, never a jump. */}
       <div key={file.id} className="grid animate-fade-in gap-3">
-        <LoadState query={link} rows={2}>
+        <QueryState query={link} rows={2}>
           {(d) => <ViewerBody file={file} url={d.url} />}
-        </LoadState>
+        </QueryState>
         {viewer.page.total > 1 && <ViewerPager page={viewer.page} onGo={viewer.go} />}
       </div>
     </Dialog>

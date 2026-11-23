@@ -1,40 +1,34 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
 import { earningsSummaryQuery } from '@/features/finance/payouts/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receivablesQuery } from './api';
-
-const tile = 'grid gap-1 rounded-xs px-3 py-3 no-underline hover:bg-sunk/75';
+import { KpiTile } from './kpi-tile';
 
 /**
- * Two money numbers on the dashboard (owner, 2026-10-05): «مستحق للمعلمين» (the ledger, EGP) and
- * «مستحق على الطلاب» (receivables in the reporting currency); each opens the page behind it.
+ * Two money numbers on the dashboard: «مستحق للمعلمين» (the ledger, EGP) and «مستحق على الطلاب»
+ * (receivables in the reporting currency); each opens the page behind it.
  */
 export function MoneyKpis() {
   const dues = useQuery(earningsSummaryQuery());
   const owed = useQuery(receivablesQuery);
   return (
     <ul className="grid grid-cols-2 gap-1" aria-label={t.finance.moneyKpis}>
-      <li>
-        <Link to="/admin/payouts" className={tile}>
-          <span className="text-xs text-ink-2">{t.finance.teachersOwedKpi}</span>
-          {dues.data ? <Amount amount={dues.data.totals.owed} currency="EGP" className="text-2xl font-bold" /> : <span className="text-ink-3">—</span>}
-        </Link>
-      </li>
-      <li>
-        <Link to="/admin/receivables" className={tile}>
-          <span className="text-xs text-ink-2">{t.finance.receivablesKpi}</span>
-          {owed.data ? (
-            <Amount amount={owed.data.total} currency={owed.data.currency} className="text-2xl font-bold" />
-          ) : (
-            <span className="text-ink-3">—</span>
-          )}
-          {owed.data && owed.data.fx_missing.length > 0 && (
-            <span className="text-2xs text-act">{t.finance.fxMissing.replace('{currencies}', owed.data.fx_missing.join(t.common.listSeparator))}</span>
-          )}
-        </Link>
-      </li>
+      <KpiTile label={t.finance.teachersOwedKpi} to="/admin/payouts" query={dues}>
+        {(d) => <Amount amount={d.totals.owed} currency="EGP" className="text-2xl font-bold" />}
+      </KpiTile>
+      <KpiTile label={t.finance.receivablesKpi} to="/admin/receivables" query={owed}>
+        {(o) => (
+          <>
+            <Amount amount={o.total} currency={o.currency} className="text-2xl font-bold" />
+            {o.fx_missing.length > 0 && (
+              <span className="text-2xs text-act">
+                {t.finance.fxMissing.replace('{currencies}', o.fx_missing.join(t.common.listSeparator))}
+              </span>
+            )}
+          </>
+        )}
+      </KpiTile>
     </ul>
   );
 }

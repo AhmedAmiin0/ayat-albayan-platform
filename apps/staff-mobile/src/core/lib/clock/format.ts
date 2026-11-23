@@ -1,11 +1,5 @@
-import {
-  clockOf,
-  clockOfHhmm,
-  clockRange,
-  isolateClock,
-  lessonWhenAt,
-  type ClockCycle,
-} from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { clockOf, clockOfHhmm, clockRange, isolateClock, type ClockCycle } from '@ab/time';
 import { locale } from '@ab/mobile-kit';
 
 // The shared clock formatters bound to this run's UI language: screens pass the cycle from

@@ -1,5 +1,6 @@
 import { linkStateLook, sendLook, type LinkTone } from '@ab/client-core';
-import type { ShortLinkRow, ShortLinkSendStatus, Tone } from '@ab/shared';
+import type { ShortLinkRow, ShortLinkSendStatus } from '@ab/shared';
+import type { Tone } from '@ab/money';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

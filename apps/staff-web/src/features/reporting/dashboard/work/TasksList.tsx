@@ -8,7 +8,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { DASHBOARD_KEY, markTaskDone } from '@/features/reporting/dashboard/api';
 import { workItem, workLink } from '@/features/reporting/dashboard/today/PendingReportsList';
 import { taskText } from './work-text';
-import type { TaskRow } from '@ab/shared';
+import type { TaskRow } from '@ab/money';
 
 /** Open admin tasks (renewal due, unpaid) with «خلصت» (POST /admin-tasks/:id/done, docs/11 S8). */
 export function TasksList({ items }: { items: readonly TaskRow[] }) {

@@ -1,4 +1,6 @@
-import { counted, westernDigits, type SettingKey } from '@ab/shared';
+import { counted } from '@ab/core';
+import { westernDigits } from '@ab/money';
+import type { SettingKey } from '@ab/settings';
 import { useId, useState } from 'react';
 import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
 import { settingText } from '@/components/settings/search/setting-text';

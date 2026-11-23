@@ -1,5 +1,6 @@
 import { lessonStatusLabel, lessonStatusLook } from '@ab/client-core';
-import type { LessonStatus, StatusStyle } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import type { StatusStyle } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 

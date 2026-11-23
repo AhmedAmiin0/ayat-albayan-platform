@@ -48,13 +48,13 @@ describe('UnpaidFlags (R-SUB-02 «الباقة غير مدفوعة» on future l
 
 describe('AlertsJob', () => {
   function job(students: () => Promise<string[]>) {
-    const queries = { studentsWithPackages: vi.fn(students) };
+    const queries = { sweepStudents: vi.fn(students) };
     const alerts = { evaluateStudents: vi.fn(async () => 1), evaluateLessons: vi.fn(async () => undefined) };
     const events = new LessonEvents();
     const courseDue = { sweep: vi.fn(async () => 0) };
     const asAlerts = alerts as unknown as SubscriptionAlertsService;
     const j = new AlertsJob(queries as unknown as AlertsRepo, asAlerts, events, courseDue as unknown as CourseDue);
-    return { j, alerts, events, courseDue };
+    return { j, alerts, events, courseDue, queries };
   }
 
   it('a lesson change evaluates the lessons right away (report submit, status, cancel)', async () => {
@@ -75,9 +75,20 @@ describe('AlertsJob', () => {
     expect(await broken.j.runOnce(now)).toEqual({ students: 0, failed: 0 });
   });
 
-  it('timers are unref’d and cleared', () => {
+  it('the first sweep looks back a day; each next one from the start of the previous clean one', async () => {
+    const t = job(async () => []);
+    t.alerts.evaluateStudents.mockResolvedValue(0);
+    await t.j.runOnce(new Date('2026-10-02T09:00:00Z'));
+    await t.j.runOnce(new Date('2026-10-02T09:15:00Z'));
+    expect(t.queries.sweepStudents.mock.calls).toEqual([
+      [new Date('2026-10-01T09:00:00Z')],
+      [new Date('2026-10-02T09:00:00Z')],
+    ]);
+  });
+
+  it('timers are unref’d and cleared', async () => {
     const { j } = job(async () => []);
     j.onApplicationBootstrap();
-    j.onModuleDestroy();
+    await j.beforeApplicationShutdown();
   });
 });

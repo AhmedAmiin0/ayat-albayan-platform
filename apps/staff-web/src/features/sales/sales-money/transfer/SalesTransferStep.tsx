@@ -1,4 +1,5 @@
-import { cancelOffered, parseAmount, type SalesMoneySubscriptionView, type SalesPaymentView } from '@ab/shared';
+import type { SalesMoneySubscriptionView, SalesPaymentView } from '@ab/shared';
+import { cancelOffered, parseAmount } from '@ab/money';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

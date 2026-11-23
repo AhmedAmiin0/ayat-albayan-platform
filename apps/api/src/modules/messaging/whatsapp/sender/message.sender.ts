@@ -1,6 +1,8 @@
 import {
-  Inject, Injectable, Logger, Optional, type OnApplicationBootstrap, type OnModuleDestroy,
+  Inject, Injectable, Logger, Optional, type BeforeApplicationShutdown,
+  type OnApplicationBootstrap,
 } from '@nestjs/common';
+import { stopWithin } from '@/common/jobs';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { loadEnv } from '@/config/env/env';
 import type { KickOptions } from '@/config/role/kick-options';
@@ -37,7 +39,7 @@ type Numbers = readonly OverlayNumber[] | null;
  */
 @BackgroundJob({ name: 'message-sender', kick: 'kick' })
 @Injectable()
-export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
+export class MessageSender implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(MessageSender.name);
   private readonly tickers = new LaneTickers(MessageSender.name, (lane, kicked) =>
     this.runOnce(new Date(), { lane, kicked }));
@@ -56,8 +58,9 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     onPaceDue(() => void this.kick()); // an Evolution row's own slot (pace/): due before the poll
   }
 
-  onModuleDestroy(): void {
-    this.tickers.stop();
+  /** A deploy waits (bounded) for the row between its claim and 'sent' (BE-14). */
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.tickers);
   }
 
   /**
@@ -135,7 +138,9 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
   private drain(run: PassRun, numbers: Numbers, items: PassItem[]): Promise<void> {
     const size = loadEnv().MESSAGE_SENDER_CONCURRENCY;
     const pooled = pooledKeys(numbers);
-    const deps = { gate: this.gate, worker: this.worker, locks: this.locks, pooled, size };
+    const stopping = () => this.tickers.stopping;
+    const { gate, worker, locks } = this;
+    const deps = { gate, worker, locks, pooled, size, stopping };
     return drainLanes(deps, run, items);
   }
 

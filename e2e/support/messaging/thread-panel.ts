@@ -1,9 +1,9 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 
-// The open thread's side panel (owner, 2026-10-05: no form bars on the phone): beside / under the
-// chat from 900px, behind a thread-header button that opens a full-screen sheet below 900px (the
-// mobile project's Pixel 7 is 412px wide). Specs reach the panel the same way on both projects.
+// The open thread's side panel (no form bars on the phone): beside / under the chat from 900px,
+// behind a thread-header button that opens a full-screen sheet below 900px (the mobile project's
+// Pixel 7 is 412px wide). Specs reach the panel the same way on both projects.
 
 const PANEL = { lead: ar.inbox.leadPanel, family: ar.inbox.subscription.title } as const;
 const OPENER = { lead: ar.inbox.leadSheet, family: ar.inbox.subscriptionSheet } as const;

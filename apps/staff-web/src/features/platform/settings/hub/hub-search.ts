@@ -1,4 +1,4 @@
-import { OWNED_VALUE_GROUPS, SETTING_KEYS, VALUE_GROUPS, type SettingKey } from '@ab/shared';
+import { OWNED_VALUE_GROUPS, SETTING_KEYS, VALUE_GROUPS, type SettingKey } from '@ab/settings';
 import { matchesSetting, matchesText } from '@/components/settings/search/settings-search';
 import { settingText } from '@/components/settings/search/setting-text';
 import { groupsMatch, INTEGRATIONS_PAGE_GROUPS, LEGACY_LINE_GROUPS, SAFETY_GROUPS } from '@/features/platform/integrations/integration-places';

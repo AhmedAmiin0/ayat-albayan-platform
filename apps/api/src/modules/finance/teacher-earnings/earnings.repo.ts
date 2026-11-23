@@ -1,12 +1,12 @@
 import type { Json, Tables } from '@ab/db';
 import {
-  fromCents,
   toCents,
   type EarningsListQuery,
   type TeacherPaymentListQuery,
 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { readChunked } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 import { ledgerError } from './earnings.errors';
 import { paymentsPage, sessionsPage } from './summary/earnings.lists';
@@ -116,17 +116,18 @@ export class EarningsRepo {
     return data;
   }
 
-  /** Paid so far on these lessons (the monthly statement shows what the ledger already covered). */
-  async paidOnLessons(lessonIds: readonly string[]): Promise<number> {
-    let total = 0;
-    for (let i = 0; i < lessonIds.length; i += 100) {
-      const { data, error } = await this.db
+  /** Piasters paid so far per lesson: the monthly statement shows what the ledger covered. */
+  async paidOnLessons(lessonIds: readonly string[]): Promise<ReadonlyMap<string, number>> {
+    const rows = await readChunked(lessonIds, (chunk) =>
+      this.db
         .from('teacher_session_earnings')
-        .select('paid_amount')
-        .in('lesson_id', lessonIds.slice(i, i + 100));
-      if (error) throw dbError(error);
-      total += data.reduce((n, r) => n + toCents(r.paid_amount), 0);
+        .select('lesson_id, paid_amount')
+        .in('lesson_id', chunk),
+    );
+    const cents = new Map<string, number>();
+    for (const r of rows) {
+      cents.set(r.lesson_id, (cents.get(r.lesson_id) ?? 0) + toCents(r.paid_amount));
     }
-    return fromCents(total);
+    return cents;
   }
 }

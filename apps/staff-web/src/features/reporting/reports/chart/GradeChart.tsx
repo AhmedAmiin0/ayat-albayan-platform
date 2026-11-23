@@ -1,4 +1,5 @@
-import { GRADES, type GradePoint } from '@ab/shared';
+import type { GradePoint } from '@ab/shared';
+import { GRADES } from '@ab/catalog';
 import { useState } from 'react';
 import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

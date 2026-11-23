@@ -1,4 +1,5 @@
-import { isOwnedSettingKey, SEED_ENTRIES, type Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
+import { isOwnedSettingKey, SEED_ENTRIES } from '@ab/settings';
 
 // The registry hint keys (docs/26 §3): their Arabic text is a value's description, edited on «القيم»
 // (the API refuses an ar override there: 409 edit_on_values). English stays editable on «الترجمات».

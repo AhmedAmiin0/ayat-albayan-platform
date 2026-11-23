@@ -1,4 +1,5 @@
-import { ATTENDANCES, PROGRAMS, type ReportFormEntry, type ReportFormResponse } from '@ab/shared';
+import type { ReportFormEntry, ReportFormResponse } from '@ab/shared';
+import { ATTENDANCES, PROGRAMS } from '@ab/catalog';
 import { useRef } from 'react';
 import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

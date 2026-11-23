@@ -3,7 +3,7 @@ import { router as nav } from 'expo-router';
 import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { queryClient, pathKey } from '@ab/mobile-kit';
 import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';

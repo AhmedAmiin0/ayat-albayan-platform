@@ -1,4 +1,4 @@
-import { RECEIPT_MIMES } from '@ab/shared';
+import { RECEIPT_MIMES } from '@ab/money';
 import * as ImagePicker from 'expo-image-picker';
 import { ensureCameraPermission } from './camera-permission';
 

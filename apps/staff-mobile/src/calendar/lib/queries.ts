@@ -1,4 +1,5 @@
-import type { LessonView, AvailabilityRow, Teacher } from '@ab/shared';
+import type { AvailabilityRow, Teacher } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 

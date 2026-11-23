@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { CodeBoxes } from '@ab/web-kit/auth/code/CodeBoxes';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { Button } from '@ab/web-kit/components/ui/form/button';

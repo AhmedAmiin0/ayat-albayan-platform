@@ -1,4 +1,4 @@
-import { zonedPartsIn } from '@ab/shared';
+import { zonedPartsIn } from '@ab/time';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { Select } from '@ab/web-kit/components/ui/form/select';

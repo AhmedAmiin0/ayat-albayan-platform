@@ -1,4 +1,5 @@
-import { formatPhone, type LineHealthView, type NotificationEntryView } from '@ab/shared';
+import type { LineHealthView, NotificationEntryView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { numberParts } from './catalogue-text';

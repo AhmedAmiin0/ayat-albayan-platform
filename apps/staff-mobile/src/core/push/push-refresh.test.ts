@@ -1,4 +1,4 @@
-import { PUSH_KINDS } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
 import { pushRefreshKeys } from './push-refresh';
 
 // docs/48 MOBILE PUSH MAP: teacher tree only; the admin-only kinds refresh nothing.

@@ -49,4 +49,15 @@ describe('TemplateVerifier.afterSave', () => {
     await Promise.resolve();
     expect(verifyAll).toHaveBeenCalledTimes(1);
   });
+
+  it('an api process (no jobs) still stops listening on destroy', async () => {
+    vi.stubEnv('APP_ROLE', 'api');
+    const { v, verifyAll } = verifier();
+    v.onModuleInit();
+    v.onModuleDestroy();
+    await v.beforeApplicationShutdown();
+    lineSaved({ line: 'notifications', provider: 'meta' });
+    await Promise.resolve();
+    expect(verifyAll).not.toHaveBeenCalled();
+  });
 });

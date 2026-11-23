@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, InsetGroup } from '@ab/mobile-kit';
 import type { AgendaDay } from './agenda';

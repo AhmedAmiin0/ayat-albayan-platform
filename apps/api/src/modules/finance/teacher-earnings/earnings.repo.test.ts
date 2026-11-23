@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { earning, TEACHER } from './earnings.fakes';
 import { EarningsRepo } from './earnings.repo';
 
@@ -65,9 +65,11 @@ describe('EarningsQueries', () => {
     expect(await new EarningsRepo(db).record({})).toEqual({ payment_id: 'p', replayed: true });
   });
 
-  it('paidOnLessons sums in piasters, in chunks of 100 ids', async () => {
+  it('paidOnLessons sums piasters per lesson, in chunks of 100 ids', async () => {
     const ids = Array.from({ length: 150 }, (_, i) => `l${i}`);
-    const { db } = fakeDb({ teacher_session_earnings: [{ data: [{ paid_amount: 0.1 }] }, { data: [{ paid_amount: 0.2 }] }] });
-    expect(await new EarningsRepo(db).paidOnLessons(ids)).toBe(0.3);
+    const rows = [{ data: [{ lesson_id: 'l1', paid_amount: 0.1 }] }, { data: [{ lesson_id: 'l1', paid_amount: 0.2 }] }];
+    const { db, trips } = fakeDb({ teacher_session_earnings: rows });
+    expect(await new EarningsRepo(db).paidOnLessons(ids)).toEqual(new Map([['l1', 30]]));
+    expect(trips).toHaveLength(2);
   });
 });

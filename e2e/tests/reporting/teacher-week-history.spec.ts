@@ -5,7 +5,7 @@ import { apiSubmit } from '../../support/reporting/teacher-extra';
 import { openMyLesson } from '../../support/teaching/my-calendar';
 
 // Teacher pages beyond journey 2 (R-TCH-03, R-REP-05, R-SCH-03, docs/46 C1/C4): the hero's join
-// link on «اليوم» (today's lessons only, owner 2026-11-14), «سأحضر» on a coming lesson in
+// link on «اليوم» (today's lessons only), «سأحضر» on a coming lesson in
 // «جدولي», «تقارير لم تُكتب بعد» in the student file → the report, and «الطلاب» → the file.
 
 const DAY = 86_400_000;

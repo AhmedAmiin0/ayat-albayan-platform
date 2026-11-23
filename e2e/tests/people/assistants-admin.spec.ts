@@ -1,7 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { withSql } from '../../support/core/schedule';
 
-// «فريق المبيعات» (R-ASST-02, R-ASST-03, R-ASST-05, owner 2026-10-06): the admin sets an assistant's
+// «فريق المبيعات» (R-ASST-02, R-ASST-03, R-ASST-05): the admin sets an assistant's
 // terms (salary + 10 % commission), a student the assistant brought pays their first package in
 // full → the commission lands in the ledger, the month's statement carries salary and commission
 // per currency (EGP and SAR, never added), and goes draft → approved → paid with a receipt-less pay.

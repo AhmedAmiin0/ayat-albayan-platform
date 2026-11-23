@@ -4,7 +4,7 @@ import { closeCodes, codeSentTo, family, openCodes } from '../../support/people/
 import { stubReset } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// The family host's /login (docs/51, owner 2026-11-15): one sign-in for guardians and students,
+// The family host's /login (docs/51): one sign-in for guardians and students,
 // WhatsApp first: the number → the code from the stub → the six boxes → the guardian's /portal.
 
 const S = ar.familyApp.signIn;

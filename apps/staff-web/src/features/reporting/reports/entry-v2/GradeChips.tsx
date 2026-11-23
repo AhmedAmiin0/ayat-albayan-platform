@@ -1,4 +1,4 @@
-import { GRADES, type Grade } from '@ab/shared';
+import { GRADES, type Grade } from '@ab/catalog';
 import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

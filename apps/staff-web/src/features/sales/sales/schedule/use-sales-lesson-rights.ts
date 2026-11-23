@@ -1,10 +1,10 @@
 import {
   canSalesChangeLesson,
   canSalesConfirm,
-  correctionTargets,
   isRunningLesson,
   type SalesScheduleLesson,
 } from '@ab/shared';
+import { correctionTargets } from '@ab/schedule';
 import { usePermissions } from '@/features/people/auth';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 import { canSalesCorrect } from './correct/correctable';

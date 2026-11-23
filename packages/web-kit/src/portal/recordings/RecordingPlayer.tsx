@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { AudioPlayer } from '@ab/web-kit/lesson-files/AudioPlayer';
 import { VideoPlayer } from '@ab/web-kit/lesson-files/VideoPlayer';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { useLessonFileUrl, useRecordingUrl } from './use-recordings';
 
 interface Played {
@@ -31,9 +31,9 @@ interface Props {
 export function RecordingPlayer({ studentId, recording, code }: Props) {
   const link = useRecordingUrl({ studentId, recordingId: recording.id });
   return (
-    <LoadState query={link} rows={1}>
+    <QueryState query={link} rows={1}>
       {(d) => PLAYER[recording.media]({ id: recording.id, url: d.url, code })}
-    </LoadState>
+    </QueryState>
   );
 }
 
@@ -41,8 +41,8 @@ export function RecordingPlayer({ studentId, recording, code }: Props) {
 export function VoiceNotePlayer({ studentId, id }: { studentId: string; id: string }) {
   const link = useLessonFileUrl({ studentId, fileId: id });
   return (
-    <LoadState query={link} rows={1}>
+    <QueryState query={link} rows={1}>
       {(d) => <AudioPlayer id={id} url={d.url} label={t.lessonFiles.kinds.voice_note} />}
-    </LoadState>
+    </QueryState>
   );
 }

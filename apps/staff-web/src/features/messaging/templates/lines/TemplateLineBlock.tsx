@@ -1,4 +1,5 @@
-import type { TemplateLineSync, TemplateLineView, WaLine } from '@ab/shared';
+import type { TemplateLineSync, TemplateLineView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { fullTime } from '@/features/messaging/inbox/format';

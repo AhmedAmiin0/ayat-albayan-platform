@@ -1,4 +1,5 @@
-import type { GoogleSyncSettings, SettingKey } from '@ab/shared';
+import type { GoogleSyncSettings } from '@ab/catalog';
+import type { SettingKey } from '@ab/settings';
 import { CustomValueRow } from './CustomValueRow';
 import type { CustomValues } from '@/features/platform/custom-config/use-custom-values';
 import { groupLabel } from '@/features/platform/settings/values/lib/value-groups-view';

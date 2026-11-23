@@ -1,5 +1,7 @@
 import { bookingInvoiceInput } from '@ab/client-core';
-import { dayTimesFromPicks, normalizePhone, registrationStatus } from '@ab/shared';
+import { registrationStatus } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
+import { dayTimesFromPicks } from '@ab/schedule';
 import type { BookingRequest } from '@ab/shared';
 import type { InvoiceDraft, InvoiceInput } from '@/booking/shared/contract';
 import { isOutside, type StudentChoice, type TrialDraft } from '@/booking/trial/lib/draft';

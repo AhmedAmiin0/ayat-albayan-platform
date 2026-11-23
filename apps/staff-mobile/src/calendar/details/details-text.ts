@@ -1,11 +1,6 @@
-import {
-  otherZoneClock,
-  reportBlock,
-  RIYADH_TZ,
-  type ClockCycle,
-  type LessonStudentView,
-  type LessonView,
-} from '@ab/shared';
+import { reportBlock } from '@ab/shared';
+import type { LessonStudentView, LessonView } from '@ab/schedule';
+import { otherZoneClock, RIYADH_TZ, type ClockCycle } from '@ab/time';
 import { clockIn, whenIn } from '@/core/lib/clock';
 import { t, locale, ltr } from '@ab/mobile-kit';
 import type { TreeBase } from '@/core/nav/tree-base';

@@ -1,4 +1,4 @@
-import { type AcademySettings, GATE_CONFIRM_TEXT, type GateSwitch } from '@ab/shared';
+import { type AcademySettings, GATE_CONFIRM_TEXT, type GateSwitch } from '@ab/settings';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@ab/web-kit/lib/http/api';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';

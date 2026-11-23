@@ -1,4 +1,4 @@
-import { teacherStatusStyle } from '@ab/shared';
+import { teacherStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';

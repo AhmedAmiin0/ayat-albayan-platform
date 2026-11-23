@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 
-// Migration 310 (owner, 2026-10-12: config in the database): integration_config is readable by
+// Migration 310 (config in the database): integration_config is readable by
 // admins only and written by the service role; the Vault functions run for the service role only.
 // Values here are obviously fake and every test rolls back.
 

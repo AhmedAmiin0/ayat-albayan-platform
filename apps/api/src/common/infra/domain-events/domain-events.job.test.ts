@@ -22,7 +22,7 @@ describe('DomainEventsJob', () => {
 
   it('stops it on shutdown, waiting for the handler in flight', async () => {
     const transport = fakeTransport();
-    await new DomainEventsJob(transport, EVENT_HANDLER_MAP).onModuleDestroy();
+    await new DomainEventsJob(transport, EVENT_HANDLER_MAP).beforeApplicationShutdown();
     expect(transport.stop).toHaveBeenCalledTimes(1);
   });
 

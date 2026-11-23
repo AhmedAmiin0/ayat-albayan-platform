@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains } from '@/common/db/list-sort';
 import { dbError } from '@/common/http/http';
-import { readChunked } from '@/common/db/read-all';
+import { readChunked, readChunkedAll } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './list/subscriptions.list-query';
 import type { Page } from '@ab/shared';
 
@@ -54,8 +54,15 @@ export class SubscriptionsRepo {
 
   /** Several students' packages (no join), FIFO order within each student. */
   async forStudents(studentIds: readonly string[]): Promise<Tables<'subscriptions'>[]> {
-    return readChunked(studentIds, (chunk) =>
-      this.db.from('subscriptions').select('*').in('student_id', chunk).order('starts_on').order('created_at').order('id'),
+    return readChunkedAll(studentIds, (chunk, from, to) =>
+      this.db
+        .from('subscriptions')
+        .select('*')
+        .in('student_id', chunk)
+        .order('starts_on')
+        .order('created_at')
+        .order('id')
+        .range(from, to),
     );
   }
 
@@ -105,12 +112,9 @@ export class SubscriptionsRepo {
    */
   async paid(subs: readonly Pick<SubRow, 'id' | 'currency'>[]): Promise<Map<string, number>> {
     const sums = new Map(subs.map((s) => [s.id, 0]));
-    if (subs.length === 0) return sums;
-    const { data, error } = await this.db
-      .from('payments')
-      .select('subscription_id, amount, currency, kind')
-      .in('subscription_id', [...sums.keys()]);
-    if (error) throw dbError(error);
+    const data = await readChunked([...sums.keys()], (chunk) =>
+      this.db.from('payments').select('subscription_id, amount, currency, kind').in('subscription_id', chunk),
+    );
     const currency = new Map(subs.map((s) => [s.id, s.currency]));
     for (const p of data) {
       if (currency.get(p.subscription_id) !== p.currency) continue;
