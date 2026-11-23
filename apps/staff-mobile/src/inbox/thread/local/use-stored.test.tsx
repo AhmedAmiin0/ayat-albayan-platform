@@ -6,8 +6,8 @@ import { useInboxStore } from './use-stored';
 
 const mockStart = jest.fn(async (_owner: string) => undefined);
 const mockStop = jest.fn(async () => undefined);
-jest.mock('./store-session', () => ({
-  ...jest.requireActual('./store-session'),
+jest.mock('./store-session/store-session', () => ({
+  ...jest.requireActual('./store-session/store-session'),
   startInboxStore: (owner: string) => mockStart(owner),
   stopInboxStore: () => mockStop(),
 }));

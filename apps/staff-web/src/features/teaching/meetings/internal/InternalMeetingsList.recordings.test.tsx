@@ -1,4 +1,4 @@
-import type { LessonRecordingView, MeetingView } from '@ab/shared';
+import type { LessonRecordingView, MeetingView } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
