@@ -57,7 +57,7 @@ test.describe('teacher report edit window (R-REP-02/03/04)', () => {
     await expect(teacher.getByText(when(ar.reports.familySend.sendsIn))).toBeVisible();
     const first = await reportRow(s.todayLessonId);
 
-    // Sent: read-only until «تعديل التقرير», which re-opens the same report (owner 2026-11-06).
+    // Sent: read-only until «تعديل التقرير», which re-opens the same report.
     const homework = teacher.getByRole('textbox', { name: ar.reports.homework, exact: true });
     await expect(homework).toBeDisabled();
     await teacher.getByRole('button', { name: ar.reports.edit, exact: true }).click();

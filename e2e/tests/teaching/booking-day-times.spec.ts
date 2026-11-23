@@ -3,8 +3,8 @@ import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, resetAbrar, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
-// A time per weekday (owner 2026-10-18, R-SCH-06): the admin wizard sets Sunday 16:00 AND Wednesday
-// 18:00 in the lesson rows (a date input and a time input per day, owner 2026-11-07). «الأيام المتاحة» lists both,
+// A time per weekday (R-SCH-06): the admin wizard sets Sunday 16:00 AND Wednesday
+// 18:00 in the lesson rows (a date input and a time input per day). «الأيام المتاحة» lists both,
 // the review shows each day with its time, and the booking writes ONE schedule_rules row per distinct
 // time (the Wednesday one linked to the first by first_rule_id), lessons on both days at their times.
 

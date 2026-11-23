@@ -5,7 +5,7 @@ import { signInSales } from '../../support/sales/sales-portal';
 import { withSql } from '../../support/core/schedule';
 import { dropFilterStudents, filterSeed, seedFilterStudents, type FilterSeed } from '../../support/people/student-filters';
 
-// «مشترك / تجريبي» (owner 2026-10-12): the sales «المعلمون» drawer splits a teacher's students and
+// «مشترك / تجريبي»: the sales «المعلمون» drawer splits a teacher's students and
 // shows the teacher's fixed link; the admin teachers list counts link to the filtered students list;
 // the students list has a quick switch on the same `status` URL filter. One seeded teacher with an
 // active, a trial and a paused student (support/student-filters).
@@ -87,7 +87,7 @@ test.describe('student lists «مشترك / تجريبي»', () => {
     await expect(segment(kinds, L.all)).toHaveAttribute('aria-pressed', 'true');
     await expectNames(page, [names.active, names.trial, names.paused], []);
 
-    // «تجريبي» = not subscribed yet (owner 2026-10-15, docs/18): new, trial and pending_subscription.
+    // «تجريبي» = not subscribed yet (docs/18): new, trial and pending_subscription.
     await segment(kinds, L.trial).click();
     await expect(page).toHaveURL(/status=new(,|%2C)trial(,|%2C)pending_subscription(&|$)/);
     await expect(page).toHaveURL(new RegExp(`teacher=${teacherId}`));

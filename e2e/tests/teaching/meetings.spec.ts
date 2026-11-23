@@ -2,7 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// Meetings (owner, 2026-10-04): «حلقة فورية» from «اجتماع جديد», «افتح الحلقة الآن» before the
+// Meetings: «حلقة فورية» from «اجتماع جديد», «افتح الحلقة الآن» before the
 // usual 15 minutes, and the student's own long-lived link /s/<token>. A meeting with students is always
 // a lesson; the standalone «اجتماع داخلي» has its own spec (internal-meeting.spec.ts).
 
