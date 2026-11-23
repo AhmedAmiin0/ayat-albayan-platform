@@ -2,8 +2,8 @@ import type { APIRequestContext } from '@playwright/test';
 import type { RoleView } from '@ab/catalog';
 import { API, call } from './assistant-api';
 
-// Helpers of the sales options specs (owner 2026-10-12, docs/16 rows 23–26): the system sales role's
-// grants through the admin's «الأدوار والصلاحيات» API, and the Riyadh day. Real API and database.
+// Helpers of the sales options specs (docs/16 rows 23–26): the system sales role's grants through
+// the admin's «الأدوار والصلاحيات» API, and the Riyadh day. Real API and database.
 
 /** Today in Riyadh (UTC+3, no DST), YYYY-MM-DD, shifted by `days`. */
 export const riyadhDay = (days = 0): string => new Date(Date.now() + 3 * 3_600_000 + days * 86_400_000).toISOString().slice(0, 10);
