@@ -1,4 +1,5 @@
-import { formatPhone, leadStatusStyle } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { leadStatusStyle } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';

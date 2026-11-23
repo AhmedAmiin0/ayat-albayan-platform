@@ -1,13 +1,5 @@
-import {
-  addCalendarMonths,
-  addDays,
-  dateRangeQuery,
-  type DashboardSummary,
-  riyadhToday,
-  weekStart,
-  WORK_TABS,
-  type WorkTab,
-} from '@ab/shared';
+import { dateRangeQuery, type DashboardSummary, WORK_TABS, type WorkTab } from '@ab/money';
+import { addCalendarMonths, addDays, riyadhToday, weekStart } from '@ab/time';
 
 /** Local Riyadh days, inclusive (the summary's `range`). */
 export type DayRange = DashboardSummary['range'];

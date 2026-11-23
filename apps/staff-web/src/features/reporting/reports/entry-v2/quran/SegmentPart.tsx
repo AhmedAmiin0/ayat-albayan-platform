@@ -1,5 +1,6 @@
 import { fillSlots, rangeLabel, rangeMeta } from '@ab/client-core';
-import type { Grade, ReportSegment } from '@ab/shared';
+import type { ReportSegment } from '@ab/shared';
+import type { Grade } from '@ab/catalog';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

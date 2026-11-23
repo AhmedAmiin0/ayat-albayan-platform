@@ -1,4 +1,5 @@
-import { formatAmount, type PaymentLinkView } from '@ab/shared';
+import type { PaymentLinkView } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { currencySymbol } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

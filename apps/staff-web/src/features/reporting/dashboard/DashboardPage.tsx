@@ -1,4 +1,4 @@
-import { addCalendarMonths } from '@ab/shared';
+import { addCalendarMonths } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

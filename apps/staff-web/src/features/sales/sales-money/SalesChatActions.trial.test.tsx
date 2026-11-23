@@ -1,4 +1,4 @@
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { history } from '@/features/teaching/booking/trial-date/trial-fixture';

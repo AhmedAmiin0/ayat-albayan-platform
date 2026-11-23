@@ -1,4 +1,4 @@
-import { settingDef, type SettingKey } from '@ab/shared';
+import { settingDef, type SettingKey } from '@ab/settings';
 import { useId, useState } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
 import { Button } from '@ab/web-kit/components/ui/form/button';

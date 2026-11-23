@@ -1,5 +1,5 @@
 import { fillSlots, type LinkPick } from '@ab/client-core';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

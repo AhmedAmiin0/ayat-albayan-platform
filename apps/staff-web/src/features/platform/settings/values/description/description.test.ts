@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { entryOf } from '@/test/entries-fixture';
 import { canEditDescription, editorStart, shownDescription, textIn, type DescribeRights } from './description';

@@ -8,7 +8,7 @@ import { FunnelChart } from './funnel/FunnelChart';
 import { PeriodFilter } from './PeriodFilter';
 import { SourceTable } from './funnel/SourceTable';
 import type { DayRange } from './search';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 export interface PeriodSectionProps {
   period: DayRange;
