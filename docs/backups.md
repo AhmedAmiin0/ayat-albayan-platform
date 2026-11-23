@@ -17,7 +17,7 @@
    ```
    It prints `Public key: age1…`. **Keep `ayat-backup.key` offline**: in your password manager and on paper or a USB stick in a safe place. Without it no copy can ever be read; nobody else has it.
 2. GitHub → Settings → Environments → `db-backup` (it appears after the first run; or create it): Deployment branches = `develop`.
-   - Environment secret `SUPABASE_DB_URL`: Supabase → production project → Connect → **Session pooler** URI, with the database password filled in.
+   - The DB URL: the repository secret `STAGING_DATABASE_URL` (the session-pooler URI the migrations use) is read by default; an environment secret `SUPABASE_DB_URL` on `db-backup` overrides it (Supabase → production project → Connect → **Session pooler** URI, with the database password filled in).
    - Environment variable `BACKUP_AGE_RECIPIENT`: the `age1…` public key.
    - Optional variable `BACKUP_PG_MAJOR`: the server's Postgres major version if it is not 17.
 3. Actions → `db-backup` → Run workflow. It should end green with an artifact `db-backup-<run id>` holding `ayat-db-<time>.dump.age` and its `.sha256`.
