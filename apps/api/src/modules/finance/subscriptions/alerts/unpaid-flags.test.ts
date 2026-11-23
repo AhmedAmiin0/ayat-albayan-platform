@@ -75,8 +75,9 @@ describe('AlertsJob', () => {
     expect(await broken.j.runOnce(now)).toEqual({ students: 0, failed: 0 });
   });
 
-  it('the first sweep looks back a day; each next one from the start of the previous', async () => {
+  it('the first sweep looks back a day; each next one from the start of the previous clean one', async () => {
     const t = job(async () => []);
+    t.alerts.evaluateStudents.mockResolvedValue(0);
     await t.j.runOnce(new Date('2026-10-02T09:00:00Z'));
     await t.j.runOnce(new Date('2026-10-02T09:15:00Z'));
     expect(t.queries.sweepStudents.mock.calls).toEqual([

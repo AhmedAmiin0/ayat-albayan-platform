@@ -27,7 +27,8 @@ const BOOT_LOOKBACK_MS = 24 * 60 * 60_000;
 @Injectable()
 export class AlertsJob extends TickerJob implements OnModuleInit {
   private readonly log = new Logger(AlertsJob.name);
-  private lastSweep: Date | null = null;
+  /** Moves only after a sweep that evaluated every student, so a failed one is retried. */
+  private since: Date | null = null;
   protected readonly ticker = new Ticker({
     name: AlertsJob.name,
     firstMs: FIRST_RUN_MS,
@@ -51,10 +52,10 @@ export class AlertsJob extends TickerJob implements OnModuleInit {
   /** Never throws. */
   async runOnce(now = new Date()): Promise<{ students: number; failed: number }> {
     try {
-      const since = this.lastSweep ?? new Date(now.getTime() - BOOT_LOOKBACK_MS);
-      const ids = await this.queries.sweepStudents(since);
-      this.lastSweep = now;
+      this.since ??= new Date(now.getTime() - BOOT_LOOKBACK_MS);
+      const ids = await this.queries.sweepStudents(this.since);
       const failed = await this.alerts.evaluateStudents(ids, { now, cause: { via: 'sweep' } });
+      this.since = failed === 0 ? now : this.since;
       await this.courseDue.sweep(now);
       return { students: ids.length, failed };
     } catch (e) {
