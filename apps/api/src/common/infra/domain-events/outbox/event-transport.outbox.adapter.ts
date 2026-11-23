@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { parseDomainEvent } from '@ab/shared';
 import { Ticker } from '@/common/jobs';
-import { runHandler } from '@/common/events/event-handlers';
-import type { EventHandlers } from '@/common/events/event-handlers.types';
-import type { DrainSummary, EventTransport } from '@/common/events/event-transport.port';
+import { runHandler } from '@/common/infra/domain-events/event-handlers';
+import type { EventHandlers } from '@/common/infra/domain-events/event-handlers.types';
+import type { DrainSummary, EventTransport } from '@/common/infra/domain-events/event-transport.port';
 import { errorText, MAX_ATTEMPTS, retryDelayMs, settleFailure } from './outbox-retry';
 import type { OutboxRow } from './outbox.schemas';
 import type { OutboxStore, OutboxTransportOptions, Settled, SettleState } from './outbox.types';

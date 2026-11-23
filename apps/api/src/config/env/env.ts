@@ -17,7 +17,7 @@ import { RECORDING_SHAPE } from './env.recording';
 import { STRIPE_SHAPE } from './env.stripe';
 import { STORAGE_SHAPE } from './env.storage';
 import { SENDER_SHAPE } from './whatsapp/env.sender';
-import { EVENTS_SHAPE } from '@/common/events/events-transport.schemas';
+import { EVENTS_SHAPE } from '@/common/infra/domain-events/events-transport.schemas';
 import { webOrigin } from '@/common/http/public-origin';
 import { DB_TIMEOUT_DEFAULT_MS } from '@/common/db/db-timeout';
 

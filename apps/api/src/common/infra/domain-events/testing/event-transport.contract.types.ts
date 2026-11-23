@@ -1,4 +1,4 @@
-import type { EventTransport } from '@/common/events/event-transport.port';
+import type { EventTransport } from '@/common/infra/domain-events/event-transport.port';
 
 type RowState = 'pending' | 'done' | 'parked';
 

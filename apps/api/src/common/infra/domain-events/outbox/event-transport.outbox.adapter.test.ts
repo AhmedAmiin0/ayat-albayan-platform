@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { eventTransportContract } from '@/common/events/testing/event-transport.contract';
+import { eventTransportContract } from '@/common/infra/domain-events/testing/event-transport.contract';
 import { OutboxTickerTransport } from './event-transport.outbox.adapter';
 import { FakeOutboxStore } from './outbox.fake';
 

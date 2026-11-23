@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { EventHandlers } from '@/common/events/event-handlers.types';
+import type { EventHandlers } from '@/common/infra/domain-events/event-handlers.types';
 import type { HarnessFactory } from './event-transport.contract.types';
 
 const PROBE = { probe_id: '0b6c1d2e-3f40-4a51-8b62-7c8d9e0f1a2b' };

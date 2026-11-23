@@ -9,7 +9,7 @@ import { CustomConfigModule } from './common/configuration/custom-config/custom-
 import { DbModule } from './common/db/db.module';
 import { IntegrationConfigModule } from './common/configuration/integrations/integration-config.module';
 import { LessonEventsModule } from './common/infra/events/lesson-events';
-import { EventsModule } from '@/common/events';
+import { EventsModule } from '@/common/infra/domain-events';
 import { PublicConfigModule } from './common/configuration/public-config/public-config.module';
 import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
