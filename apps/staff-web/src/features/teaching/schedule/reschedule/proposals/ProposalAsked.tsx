@@ -1,4 +1,5 @@
-import { type LessonProposalView, type LessonView, lessonWhenAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { LessonProposalView, LessonView } from '@ab/schedule';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
