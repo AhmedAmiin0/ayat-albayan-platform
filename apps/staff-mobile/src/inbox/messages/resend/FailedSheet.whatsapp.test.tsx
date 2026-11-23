@@ -11,8 +11,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: jest.fn(),
 }));
 
-// The «!» sheet (the bubble's actions menu on mobile): «أرسل عبر واتساب» replaces the wa.me
-// hand-off for a text the 24 h window stopped; any other failure keeps the old actions.
+// A text the 24 h window stopped offers send via WhatsApp; other failures keep the old actions.
 
 const held = message({
   id: 'm-held',

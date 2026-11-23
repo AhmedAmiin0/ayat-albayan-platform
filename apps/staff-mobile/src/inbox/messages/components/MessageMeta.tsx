@@ -8,20 +8,11 @@ import { useClockCycle } from '@/core/lib/clock';
 import { WhatsAppStatusLine } from '@/inbox/messages/resend/WhatsAppSendLine';
 import { CorrectedMark } from '@/inbox/messages/components/correction/CorrectedMark';
 
-/**
- * When (the time only: the day is in the separator above, owner 2026-10-27), the line it came in
- * on or left from (a plain word), and for ours the delivery ticks; a row scheduled later says when
- * it goes; who sent ours («أرسلها: سارة», «رسالة تلقائية»). A long press on the ticks shows their
- * times on a line of their own under this row, so an older message's long times wrap in the bubble.
- * `onTicksPress`: the admin's row that did not go out (a tap on «! لم تُرسل» or the queued clock
- * opens
- * FailedSheet); the reader hears why it failed, or «أرسلها بنفسك» for a queued one.
- */
-/** The time, after «تم التعديل» for an edited message (owner 2026-10-30), as WhatsApp. */
+/** Time only, the day is in the separator; a long press on the ticks lists their times. */
 const timeOf = (m: MessageView, cycle: ClockCycle): string =>
   m.edited ? `${t.inbox.edited} · ${clock(m.created_at, cycle)}` : clock(m.created_at, cycle);
 
-/** A held text's sheet offers «أرسل عبر واتساب»; any other queued row the wa.me hand-off. */
+/** A held text offers send via WhatsApp; any other queued row the wa.me hand-off. */
 const queuedAction = (m: MessageView): string =>
   canSendViaWhatsApp(m) ? t.messages.whatsappSend.action : t.messages.clickToChat;
 
@@ -63,18 +54,13 @@ export function MessageMeta({
         mark={<CorrectedMark />}
       />
       {later ? <AppText style={small}>{later}</AppText> : null}
-      {/* «أرسل عبر واتساب» (2026-11-06): a failed row's comes after its reason (FailReason). */}
+      {/* A failed row's send-via-WhatsApp comes after its reason. */}
       {m.status === 'failed' ? null : <WhatsAppStatusLine message={m} phone={m.phone_e164} />}
     </>
   );
 }
 
-/**
- * «السبب: …» under a failed send, for everyone (the web's outboundNotes). The admin's is a button
- * to
- * the same sheet as «! لم تُرسل» (a wide target, as WhatsApp's tap on the failed row), cut to two
- * lines since the sheet shows it in full; anyone else reads it whole, its remedy included.
- */
+/** Everyone sees the reason; the admin's is a button to the failed sheet, cut to two lines. */
 export function FailReason({
   message: m,
   onPress,

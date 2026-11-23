@@ -62,14 +62,13 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
   const callBack = useCallBack({ phone, thread: query.data?.pages[0]?.thread ?? null });
   const more = query.hasNextPage;
   const rows = useMemo(() => logRows(threadMessages(query.data), { calls, hasMore: more, to }), [query.data, calls, more, to]);
-  // «تعديل» (owner 2026-11-07): each corrected original's newest correction.
   const corrections = rowCorrections(rows);
   const newest = rows[0]?.message;
   const ours = newest?.direction === 'outbound' && !senderLine(newest) ? newest.id : undefined;
   useEffect(() => {
     if (ours) list.current?.scrollToOffset({ offset: 0, animated: true });
   }, [ours]);
-  // A tap on a quote scrolls to the original (owner 2026-10-25 «رد»), loading older pages if needed.
+  // A tap on a quote scrolls to the original, loading older pages if needed.
   const { lit, jump, cancel, onScrollToIndexFailed } = useJump(list, rows, query);
   const onJump = useStableHandler(jump);
   useSearchJump(list, { jump, cancel, rows });
@@ -96,7 +95,7 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
     [rows, more, phone, onJump, lit, onCallBack, corrections],
   );
   const onEndReached = useOlder(query);
-  // «اليوم» / «أمس» move at midnight with no new message: today's key redraws the rows' day chips.
+  // Today's key redraws the day chips at midnight even without a new message.
   const today = chatDayKey(new Date(), deviceTimeZone());
   const top = useTopDay(rows, query.hasNextPage);
   // The rows seen on screen: a PDF asks its page 1 only then (owner 2026-11-01), never a burst.

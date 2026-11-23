@@ -6,8 +6,6 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
-// The sales chat's top (owner 2026-10-18: more room to read): one header line, and on a family one
-// strip of pills; a lead's «تسجيل طالب جديد» sits in «⋮» (owner 2026-10-30).
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

@@ -21,11 +21,7 @@ function load(): WebRtc | null {
   }
 }
 
-/**
- * The device's WebRTC (LiveKit's react-native-webrtc fork, docs/35; a native module), or null
- * where it is missing (the calls then say «هذا الجهاز لا يدعم المكالمات»). The family's audio plays by itself
- * once its track arrives; the shapes match media.ts structurally.
- */
+/** Null where the native module is missing, docs/35; the shapes match media.ts structurally. */
 export function nativeRtc(): RtcDeps | null {
   const rtc = load();
   if (!rtc) return null;

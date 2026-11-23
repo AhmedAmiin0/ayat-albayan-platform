@@ -12,7 +12,7 @@ export type LeadProfile = LeadView & {
   /** jsonb, any shape: qualForm() reads it. */
   qualification?: unknown;
   follow_up_paused?: boolean;
-  /** «lead» = they sent «وقف»: resuming needs the admin's explicit confirm. */
+  /** Lead means they opted out: resuming needs the admin's explicit confirm. */
   follow_up_paused_by?: 'lead' | 'admin' | null;
   follow_up_stage?: number;
   next_follow_up_at?: string | null;

@@ -28,14 +28,10 @@ export interface ChatActionsProviderProps {
   children: ReactNode;
 }
 
-/**
- * «رد» and «إعادة توجيه» (owner 2026-10-25), «نسخ» (2026-10-26) and «تفاعل» (2026-10-27) for one open
- * chat. The state lives with the chat screen, so leaving the chat drops the reply target. The menu (with
- * the reaction row), the forward, copy, emoji, reactors and failed-send sheets are drawn once here, not per bubble.
- */
+/** State lives with the chat screen; the shared sheets are drawn once here, not per bubble. */
 export function ChatActionsProvider({ phone, thread, children }: ChatActionsProviderProps) {
   const mode = useThreadMode();
-  // «رد» and «تعديل» (owner 2026-11-07): one of them at most (useComposeTarget).
+  // At most one of reply or correction.
   const target = useComposeTarget(phone);
   const { setReply } = target;
   const [menu, setMenu] = useState<{ m: MessageView; at: number | null } | null>(null);
@@ -48,14 +44,13 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   const { mutate: reactNow } = useReact(phone, (text) => say({ text }));
   const own = isOwnThread(mode, thread);
   const chat = sendState(thread, new Date());
-  // «رد» follows the text rule (owner 2026-11-01); a reaction keeps the window.
+  // Reply follows the text rule; a reaction keeps the window.
   const canSend = !own && staffMaySend(chat, mode.kind !== 'teacher');
   const windowOpen = !own && chat.open;
   const threadName = thread?.display_name ?? (phone ? ltr(formatPhone(phone)) : null);
   const enabled = mode.kind === 'admin';
   const reactableNow = thread?.reactable;
-  // Setters and the react mutation are stable: the bubbles' value changes only with the mode, the 24 h
-  // window, the name or whether the chat takes reactions; picking «رد» or a notice leaves it alone.
+  // The bubbles' value changes only with mode, window, name or reactions, avoiding rerenders.
   const bubble = useMemo<BubbleChatActions>(
     () => ({
       enabled,

@@ -3,7 +3,6 @@ import { formatPhone, type CallEntryKind, type CallView } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 import type { Palette } from '@ab/mobile-kit';
 
-/** «مكالمة صوتية صادرة · 2:14», «مكالمة واردة · 0:40», «مكالمة فائتة», «لم يُرَدّ», «مكالمة جارية». */
 export const callEntryText = (call: CallView): string => entryText(call, t.calls);
 
 /** The ink of a call: a missed one in the danger tone (red), a live one green, the rest quiet. */

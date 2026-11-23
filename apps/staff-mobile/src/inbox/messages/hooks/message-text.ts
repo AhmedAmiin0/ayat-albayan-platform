@@ -40,13 +40,7 @@ export function mediaKind(mime: string | null): MediaKind {
 type LineOf = Pick<MessageView, 'body' | 'media_mime' | 'interactive_payload'> &
   Partial<Pick<MessageView, 'direction' | 'deleted'>>;
 
-/**
- * The attachment line: its kind when there is a file; when there is neither file nor text (Meta's
- * `unsupported`, a location, a contact card…) as the web's: Meta's `unsupported` asks the
- * sender to send it again («هذه الرسالة غير متاحة» for 131060), anything else (a location, a contact
- * card…) arrived but cannot be shown here; null for a plain text message. A note comes first: a
- * deleted message, the ad's welcome or an unsupported echo (owner 2026-10-30).
- */
+/** Meta `unsupported` asks for a resend (131060); other fileless kinds cannot be shown here. */
 export function mediaLine(m: LineOf): string | null {
   const note = noteText({ ...m, direction: m.direction ?? 'inbound' }, NOTES);
   if (note) return note;
@@ -58,16 +52,13 @@ export function mediaLine(m: LineOf): string | null {
   return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
 }
 
-/** «قالب: تذكير الحلقة النهاردة — Jitsi»; an unknown key shows as itself, never blank. */
+/** An unknown key shows as itself, never blank. */
 export function templateLine(key: string): string {
   const names: Record<string, string> = t.templates.names;
   return t.inbox.templateLine.replace('{name}', names[key] ?? key);
 }
 
-/**
- * A thread row's last message: «إنت: …» for ours, media and templates named; Meta's `unsupported`
- * (131060 on a new number's first message) is «رسالة لم يصل محتواها», not the generic line.
- */
+/** Meta `unsupported` (131060 on a new number's first message) gets its own line. */
 export function threadPreview(th: ThreadView): string {
   const note = previewNote(th, NOTES);
   if (note) return th.last_direction === 'outbound' ? `${t.inbox.you} ${note}` : note;
@@ -87,11 +78,11 @@ export function deviceTimeZone(): string {
 interface StampOptions {
   now?: Date;
   tz?: string;
-  /** «تنسيق الوقت»: 12 or 24 h. */
+  /** 12 or 24 hour clock. */
   cycle: ClockCycle;
 }
 
-/** «08:05» today, «30/9 08:05» another day (or «8:05 ص»), in the device's zone (or `tz`). */
+/** Uses the device zone unless `tz` is given. */
 export function stamp(iso: string, { now = new Date(), tz = deviceTimeZone(), cycle }: StampOptions): string {
   const at = new Date(iso);
   const time = clockIn(at, tz, cycle);
@@ -101,12 +92,11 @@ export function stamp(iso: string, { now = new Date(), tz = deviceTimeZone(), cy
   return `${day}/${month} ${time}`;
 }
 
-/** «16:39» / «4:39 م» in the device's zone (or `tz`): a bubble's time, its day is in the separator above it. */
+/** Device zone unless `tz` is given; the day sits in the separator above. */
 export function clock(iso: string, cycle: ClockCycle, tz = deviceTimeZone()): string {
   return clockIn(new Date(iso), tz, cycle);
 }
 
-/** heldLine (a held text, an unconfirmed send); «ستُرسل …» for a row scheduled later; else null. */
 type QueuedRow = Pick<MessageView, 'status' | 'scheduled_for' | 'error_code'>;
 
 export function queuedLine(m: QueuedRow, options: StampOptions) {
@@ -119,7 +109,7 @@ export function queuedLine(m: QueuedRow, options: StampOptions) {
   return t.messages.queuedFor.replace('{time}', stamp(m.scheduled_for, options));
 }
 
-/** «أُرسلت … · وصلت … · قُرئت …»: every delivery time Meta reported on ours (the web's deliveryTitle). */
+/** Every delivery time Meta reported on ours, as the web's deliveryTitle. */
 export function deliveryTimes(m: MessageView, options: StampOptions): string {
   if (m.direction !== 'outbound') return '';
   const steps: [string, string | null][] = [
@@ -130,17 +120,13 @@ export function deliveryTimes(m: MessageView, options: StampOptions): string {
   return steps.flatMap(([text, iso]) => (iso ? [text.replace('{time}', stamp(iso, options))] : [])).join(' · ');
 }
 
-/** «السبب: …» from Meta's code (messages.errors), or the unknown line carrying the code (as the web). */
+/** Maps Meta's code (messages.errors), else an unknown line carrying the code. */
 export function errorLine(m: Pick<MessageView, 'error_code'>): string {
   return t.messages.errorLine.replace('{reason}', sendErrorReason(m.error_code, t.messages.errors));
 }
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
-/**
- * A refused send in Arabic: inbox.error.<code> (session_closed…) or a correction's refusal
- * (inbox.correction.errors), else «الرسالة متبعتتش…».
- */
 export function sendError(error: unknown): string {
   const code = error instanceof ApiError && isRecord(error.body) ? error.body['code'] : undefined;
   const errors: Record<string, string> = { ...t.inbox.correction.errors, ...t.inbox.error };

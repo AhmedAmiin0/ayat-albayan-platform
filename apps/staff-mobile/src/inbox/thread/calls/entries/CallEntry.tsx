@@ -20,11 +20,7 @@ interface CallEntryProps {
   onCallBack?: ((call: CallView) => void) | undefined;
 }
 
-/**
- * A call in the chat, merged by time with the messages (docs/28 §5), WhatsApp's: on the caller's side
- * as the bubbles (ours at the inline-end, the family's at the start), the handset, «مكالمة صوتية صادرة · 2:14» with its arrow, a missed
- * one in red, the time. A tap calls back.
- */
+/** docs/28 §5: calls merge by time with the messages; a tap calls back. */
 export function CallEntry({ call, onCallBack }: CallEntryProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

@@ -4,7 +4,7 @@ import { bubbleOffers } from './bubble-offers';
 
 type Options = Parameters<typeof bubbleOffers>[1];
 
-// «تعديل» (owner 2026-11-07): a correction of our own sent text; the admin's on anyone's.
+// A correction of our own sent text; the admin may correct anyone's.
 const sales = { id: 'u1', role: 'sales' };
 const admin = { id: 'u9', role: 'admin' };
 const on: Options = { enabled: true, teacher: false, me: sales };

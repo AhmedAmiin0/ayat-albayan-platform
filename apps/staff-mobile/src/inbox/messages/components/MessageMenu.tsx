@@ -19,7 +19,7 @@ const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
 interface MessageMenuProps {
   /** The long-pressed message; null hides the menu. */
   message: MessageView | null;
-  /** The chat's number: «تنزيل» asks this chat's file endpoint. */
+  /** Download asks this chat's file endpoint. */
   phone: string;
   /** The held bubble's window y. Unused for now: the reaction row sits at the top of the sheet (review of #332). */
   at: number | null;
@@ -28,11 +28,7 @@ interface MessageMenuProps {
   onMoreEmoji: (m: MessageView) => void;
 }
 
-/**
- * A long press on a bubble, at the bottom of the screen as the attach sheet, in WhatsApp's order: «رد»,
- * «نسخ النص» (the copy sheet), «إعادة توجيه», «تنزيل» (owner 2026-10-26). «رد» stays visible but off
- * where no text can go (canSend: the text rule), with the reason under it.
- */
+/** Reply stays visible but disabled where no text can go, with the reason under it. */
 export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: MessageMenuProps) {
   const { color } = useTheme();
   const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } = useChatActions();
@@ -49,8 +45,7 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
     onClose();
     setTimeout(run, AFTER_MENU_MS);
   };
-  // «تفاعل» (owner 2026-10-27): WhatsApp's row of emoji; one tap reacts and closes. At the top of the sheet,
-  // never floating over the bubble: a low bubble (the newest) put the floating row under the sheet.
+  // The reaction row sits at the sheet top, never floating, so a low bubble cannot hide it.
   const bar = m && offers?.react ? (
     <ReactionBar message={m} top={null} onReact={(e) => {
         onClose();

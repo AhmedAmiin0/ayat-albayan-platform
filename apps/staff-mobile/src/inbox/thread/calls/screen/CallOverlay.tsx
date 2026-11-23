@@ -11,7 +11,7 @@ import { PermissionDialog } from './PermissionDialog';
 
 interface CallOverlayProps {
   s: CallSessionApi;
-  /** Teachers never see a family's number: an unnamed caller is «رقم غير معروف» for them. */
+  /** Teachers never see a family's number. */
   showsPhone: boolean;
   ask: PermissionAsk | null;
   onAsk: (next: 'closed' | 'sent') => void;

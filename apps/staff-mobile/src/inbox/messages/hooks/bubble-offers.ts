@@ -9,7 +9,6 @@ import {
 import { t } from '@ab/mobile-kit';
 import { mediaKind } from './message-text';
 
-/** What a bubble's long-press menu offers, in WhatsApp's order: رد، نسخ النص، إعادة توجيه، تنزيل. */
 export interface BubbleOffers {
   reply: boolean;
   copy: boolean;
@@ -17,13 +16,11 @@ export interface BubbleOffers {
   download: boolean;
   /** The reaction row (owner 2026-10-27): ChatActions.reactable. */
   react: boolean;
-  /** «حذف من المنصة» (owner 2026-10-30): staff only, never sent to WhatsApp. */
+  /** Staff only; never sent to WhatsApp. */
   hide: boolean;
-  /** «إظهار» on a hidden message: the admin. */
+  /** Admin only. */
   unhide: boolean;
-  /** «تعديل» (owner 2026-11-07): a correction of our sent text (canCorrect). */
   correct: boolean;
-  /** «لا يمكن تعديل…»: our other messages (a file, a failed or someone else's text). */
   noEdit: boolean;
 }
 
@@ -43,10 +40,7 @@ const NONE: BubbleOffers = {
   ...{ hide: false, unhide: false, correct: false, noEdit: false },
 };
 
-/**
- * «نسخ النص» for a message with text; «تنزيل» only for a file this viewer may open today
- * (MessageFile's rule: our copy of a chat-view type, never a teacher, whom the API answers 403).
- */
+/** Download only for a file this viewer may open: never a teacher, whom the API answers 403. */
 export function bubbleOffers(m: MessageView, opts: OfferOptions): BubbleOffers {
   const on = opts.enabled;
   // A hidden message is only its placeholder: the admin may show it again, nothing else.
@@ -61,13 +55,11 @@ export function bubbleOffers(m: MessageView, opts: OfferOptions): BubbleOffers {
   };
 }
 
-/** A hidden bubble: «إظهار» for the admin, nothing else. */
 const hiddenOffers = (opts: OfferOptions): BubbleOffers => ({
   ...NONE,
   unhide: opts.enabled && opts.unhide === true,
 });
 
-/** «حذف من المنصة» for staff who may, and «تعديل» (a correction) or why there is none. */
 function hideOffers(
   m: MessageView,
   opts: OfferOptions,
@@ -76,7 +68,6 @@ function hideOffers(
   return { hide: live && opts.hide === true, unhide: false, ...editOffers(m, opts, live) };
 }
 
-/** «تعديل» when this viewer may correct it; the note on our other non-template messages. */
 function editOffers(
   m: MessageView,
   opts: OfferOptions,
@@ -90,6 +81,6 @@ function editOffers(
 export const offersAny = (o: BubbleOffers): boolean =>
   o.reply || o.copy || o.forward || o.download || o.react || o.hide || o.unhide || o.correct;
 
-/** «تنزيل الملف — خطة الحفظ.pdf», or the file's kind when it has no name. */
+/** Falls back to the file's kind when it has no name. */
 export const downloadLabel = (m: Pick<MessageView, 'media_name' | 'media_mime'>): string =>
   t.inbox.download.label.replace('{name}', m.media_name ?? t.inbox.media[mediaKind(m.media_mime)]);

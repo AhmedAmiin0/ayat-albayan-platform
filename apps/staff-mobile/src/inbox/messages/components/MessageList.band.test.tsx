@@ -7,8 +7,7 @@ import { dayLabel } from '@/inbox/messages/days/day-label';
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
-// Owner 2026-10-27 (screenshot): the floating «الأربعاء» was drawn over the inline «الأحد». As
-// WhatsApp, it hides while an inline separator is in its band and comes back once it scrolled past.
+// The floating day hides while an inline separator is in its band, as WhatsApp does.
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),

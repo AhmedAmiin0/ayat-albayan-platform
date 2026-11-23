@@ -13,9 +13,6 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
-// A chat PDF like WhatsApp's (owner 2026-10-29): page 1 as the thumb, the name, «12 صفحة · PDF ·
-// 1.2 ميغابايت». A family's PDF (PdfPreview.states.test.tsx: the others, the states;
-// PdfPreview.seen.test.tsx: the name, the list).
 const FILE = '/threads/%2B966552147730/messages/d1/file';
 const SIGNED_PDF = 'https://storage.test/wa-media/d1.pdf?token=x';
 const serve = (first: () => Promise<unknown>) =>

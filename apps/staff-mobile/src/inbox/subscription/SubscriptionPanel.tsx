@@ -16,14 +16,7 @@ interface SubscriptionPanelProps {
   phone: string;
 }
 
-/**
- * Over a guardian's or a lead's chat (R-SUB-01), ONE row so the messages get the room (owner
- * 2026-10-29): «مشترك» / «انتهت الباقة» / «غير مشترك» (none for a converted lead with no family on this
- * number) and one subscribe pill. An only child's name and package sit beside the chip (the guardian's
- * name in the title is often not the child's); a family folds into
- * «غير مدفوع · مشترك: 2 من 5 ⌄», opened in place (a line per package, one «بلا باقة: …»). A
- * teacher's or an unknown number's chat shows nothing.
- */
+/** R-SUB-01: one row to leave room for messages; nothing for a teacher's or unknown number. */
 export function SubscriptionPanel({ data, phone }: SubscriptionPanelProps) {
   const { color } = useTheme();
   const [open, setOpen] = useState(false);
@@ -44,7 +37,6 @@ export function SubscriptionPanel({ data, phone }: SubscriptionPanelProps) {
         ) : (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 1 }}>
             {chip ? <StatusChip {...chip} size="sm" /> : null}
-            {/* No package: the chip alone says «غير مشترك». */}
             {only?.subscription ? <ChildLines student={only} /> : null}
           </View>
         )}
@@ -92,10 +84,6 @@ function FamilyToggle({ chip, summary, open, onToggle }: FamilyToggleProps) {
   );
 }
 
-/**
- * The 36pt pill at the row's end (44pt with its hitSlop), as the sales strip: one child → its form;
- * several → «لأيّ طالب؟», each row with that child's own new / renew (owner 2026-10-29, one pill).
- */
 function SubscribePill({ action }: { action: SubscribeAction }) {
   const [picking, setPicking] = useState(false);
   const targets = 'targets' in action ? action.targets : null;

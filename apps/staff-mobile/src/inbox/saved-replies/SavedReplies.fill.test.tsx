@@ -7,7 +7,7 @@ import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { REPLIES, WELCOME } from './testing/fixtures';
 import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 
-// «أكمل الرد» (owner 2026-10-27): a reply with blanks asks for them before it goes into the box.
+// A reply with blanks asks for them before it goes into the box.
 
 const DEPOSIT: SavedReply = {
   ...WELCOME,
@@ -42,7 +42,6 @@ const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const form = () => screen.getByTestId('fill-reply-sheet');
 const preview = () => screen.getByTestId('fill-reply-preview').props.children;
 async function pickFromSheet(title: string | RegExp) {
-  // «الردود السريعة» is a tile of the paperclip's sheet (owner 2026-10-27, WhatsApp Business).
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
   await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.savedReplies.open }));
   await fireEvent.press(await screen.findByRole('button', { name: title }));

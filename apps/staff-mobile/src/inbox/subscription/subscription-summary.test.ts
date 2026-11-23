@@ -35,7 +35,7 @@ test('mixed: «مشترك: 1 من 3», the ended package keeps its line, the chi
 });
 
 test('money owed: one «غير مدفوع» for the family (the rows’ packageChip, not the DB status)', () => {
-  // `active` in the DB but 120 still due: the row says «غير مدفوع», so the folded line must too.
+  // Active in the DB but with money due must still read as unpaid in the folded line.
   const owing = sub({ status: 'active', due_amount: 120 });
   expect(familySummary([kid('a', owing), kid('b', owing), kid('c', paid)]).chips).toEqual([unpaidChip]);
   // Paid in full and used up: the DB keeps `unpaid`, the rows show no chip, neither does the summary.

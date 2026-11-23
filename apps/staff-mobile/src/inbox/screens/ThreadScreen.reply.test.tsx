@@ -5,8 +5,6 @@ import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 
-// «رد» (owner 2026-10-25): a long press on a bubble → the menu → the composer's one-line quote strip.
-
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

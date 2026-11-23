@@ -2,8 +2,7 @@ import type { ClockCycle, ThreadView } from '@ab/shared';
 import { clockIn } from '@/core/lib/clock';
 import { t } from '@ab/mobile-kit';
 
-// Display helpers for the inbox. Hermes has no Intl.RelativeTimeFormat / PluralRules, so the age
-// is built from ar.json forms (Egyptian «من 3 أيام»), Western digits only (docs/07 §2).
+// Hermes lacks Intl.RelativeTimeFormat and PluralRules, so ages use ar.json forms (docs/07 §2).
 
 export type PluralForm = 'one' | 'two' | 'few' | 'other';
 
@@ -33,12 +32,12 @@ export function leadAge(iso: string, now: Date = new Date()): string {
   return counted(age.days, Math.floor(ms / DAY));
 }
 
-/** «16:20» / «4:20 م» in the viewer's `tz`: when the cached list on screen was last fetched (R-MOB-03). */
+/** When the cached list was last fetched, in the viewer's `tz` (R-MOB-03). */
 export function clockAt(epochMs: number, cycle: ClockCycle, tz: string): string {
   return clockIn(new Date(epochMs), tz, cycle);
 }
 
-/** Who the number is in words (guardian / teacher / lead, else «رقم مش متسجل»): never the number. */
+/** Never shows the number itself. */
 export function kindLabel(thread: ThreadView | null | undefined): string {
   if (thread?.guardian_id) return t.inbox.kind.guardian;
   if (thread?.teacher_id) return t.inbox.kind.teacher;
