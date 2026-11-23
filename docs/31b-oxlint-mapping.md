@@ -95,11 +95,11 @@ Oxlint rule names). `pnpm lint:oxfull` writes Oxlint's JSON report (`oxlint-repo
 `lint-gate.mjs --oxlint` holds **every file to its exact per-rule count**: above it fails (a new
 violation, fix it); below it fails until pruned (`pnpm lint:oxfull -- --prune`, then commit the
 baselines: a count only goes down, an entry never appears); a finding outside every package or a
-parse error always fails. On a PR, `pnpm guard:lint` also refuses any per-rule total above the base
-branch's (a count raised by hand), as it does for ESLint. The carried-over baseline (PR 1) is
+parse error always fails. On a PR, `pnpm guard:lint` also holds every file to the base branch's, per
+file and per rule, as it does for ESLint (docs/59): no count raised by hand, no new entry, no new file. The carried-over baseline (PR 1) is
 today's ESLint suppressions under Oxlint names: 9 736 of 9 801 entries identical (after develop's
 absolute-import sweep); the rest are the
-§3.1 misses (lower) and §3.2 extras (higher). `--suppress-all` wrote it once; nothing else may.
+§3.1 misses (lower) and §3.2 extras (higher). `--suppress-all` wrote it once and is gone: nothing writes a baseline now.
 
 ## 5. Parity check (`pnpm lint:parity`, CI «verify (lint + parity (oxlint))»)
 
