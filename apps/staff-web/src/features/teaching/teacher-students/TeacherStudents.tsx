@@ -1,22 +1,11 @@
-import type { TeacherMe } from '@ab/shared';
-import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import type { ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { teacherMeQuery } from '@/features/teaching/teacher';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { loadState, type LoadState } from './load-state';
 import { MeError } from './MeError';
 import { StudentsBoard } from './StudentsBoard';
-
-type MeQuery = UseQueryResult<TeacherMe>;
-
-const BODY: Record<LoadState, (me: MeQuery) => ReactNode> = {
-  ready: (me) => me.data && <StudentsBoard me={me.data} />,
-  error: (me) => <MeError me={me} />,
-  loading: () => <ListSkeleton />,
-};
 
 /**
  * /teacher/students «الطلاب» (R-TCH-03, docs/48): a thin page around the same TeacherBoard as
@@ -30,7 +19,9 @@ export function TeacherStudents() {
       <PageHead>
         <Cartouche>{t.teacherStudents.title}</Cartouche>
       </PageHead>
-      {BODY[loadState(me)](me)}
+      <QueryState query={me} error={<MeError me={me} />}>
+        {(data) => <StudentsBoard me={data} />}
+      </QueryState>
     </>
   );
 }

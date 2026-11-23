@@ -54,7 +54,7 @@ describe('LessonPage (`/lesson/<id>`, board FamFilesWebNoRec)', () => {
   it('a lesson the family cannot open (404): «صفحة الحلقة» with a retry', async () => {
     apiFetch.mockRejectedValue(new Error('lesson_not_found'));
     show();
-    expect(await screen.findByText(t.portal.loadFailed)).toBeTruthy();
+    expect(await screen.findByText(t.common.loadFailed)).toBeTruthy();
     expect(screen.getByRole('heading', { name: F.lessonPage })).toBeTruthy();
   });
 });

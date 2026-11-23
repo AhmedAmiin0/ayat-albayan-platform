@@ -52,7 +52,7 @@ describe('«الملف الشخصي»', () => {
   it('a failed read offers a retry, and the way back to «حسابي»', async () => {
     apiFetch.mockRejectedValue(new Error('offline'));
     renderAt(<ProfilePage home={home()} />, '/profile');
-    expect(await screen.findByRole('button', { name: t.portal.retry })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: t.common.retry })).toBeTruthy();
     const back = screen.getByRole('link', { name: t.portal.app.tabs.account });
     expect(back.getAttribute('href')).toBe('/account');
   });
