@@ -1,5 +1,5 @@
 import { fromCents, toCents } from '@ab/core';
-import { localDay } from './first-paid.js';
+import { localDay } from './first-paid/index.js';
 import { addCalendarDays, addCalendarMonths } from '@ab/time';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:

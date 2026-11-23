@@ -33,6 +33,9 @@
     "guard:packages": "node tools/scripts/ci-checks/lint/packages-gate.mjs",
     "guard:ownership": "node tools/scripts/ownership/ownership-gate.mjs",
     "guard:comments": "node tools/scripts/ci-checks/comment-only/gate.mjs",
+    "guard:units": "node tools/scripts/units/guard.ts",
+    "guard:move-only": "node tools/scripts/units/move-only/gate.mjs",
+    "units:fold": "node tools/scripts/units/fold.ts",
     "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs"
   },
   "prettier": "@ab/config/prettier",

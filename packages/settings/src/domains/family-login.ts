@@ -1,7 +1,7 @@
 import type { SettingDef } from '../defs.js';
 
 /**
- * Family accounts (owner 2026-10-27, docs/30): sign-in and password codes by WhatsApp. Built dark:
+ * Family accounts (docs/30): sign-in and password codes by WhatsApp. Built dark:
  * while family_login_enabled is off (or account_code is not approved) the family tab says «not yet»
  * and staff «نسيت كلمة المرور؟» points to the admin's reset.
  */

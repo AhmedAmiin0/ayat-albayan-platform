@@ -17,7 +17,9 @@ interface WeekStripProps {
 
 /**
  * The week at a glance (owner 2026-11-19: an agenda, not a grid): its seven days in one row, today
- * marked, a dot under each day with lessons; a tap jumps to that day below.
+ * marked, a dot under each day with lessons; a tap jumps to that day below. Seven 44 px days with
+ * this spacing (326 px) fit a 360 px phone inside its 16 px gutters: any wider and the page
+ * overflows, so a phone zooms the whole page out.
  */
 export function WeekStrip({ days, selected, onJump }: WeekStripProps) {
   return (
@@ -25,7 +27,7 @@ export function WeekStrip({ days, selected, onJump }: WeekStripProps) {
       role="group"
       aria-label={t.portal.app.schedule.days}
       data-indicator-host
-      className="relative flex gap-1 rounded-lg border border-rule bg-raised p-1"
+      className="relative flex gap-0.5 rounded-lg border border-rule bg-raised p-0.5"
     >
       <span data-indicator hidden aria-hidden="true" className={INDICATOR} />
       {days.map((day) => (

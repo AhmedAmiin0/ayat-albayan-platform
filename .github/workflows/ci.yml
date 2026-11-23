@@ -374,7 +374,7 @@ jobs:
   # package boundaries (both sides under the head's refactor/guards/packages.json) and lint (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a new violation, this
   # gate on a count raised by hand or an entry whose file is gone) fail only above the base branch's own measure.
   # Equal or below passes with nothing to edit, so PRs never touch a baseline and never conflict on one. knip and
-  # queries keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
+  # queries (and the floating units) keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
   # job «baselines» drops it on develop. Pushes print the counts (each change was compared on its PR). The e2e area
   # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
   guards:
@@ -409,6 +409,8 @@ jobs:
       - run: pnpm guard:packages
       - run: pnpm guard:ownership
       - run: pnpm guard:comments
+      - run: pnpm guard:units
+      - run: pnpm guard:move-only
       - name: pnpm guard:lint (on a PR, against the base branch's suppressions)
         run: |
           if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi
@@ -424,7 +426,7 @@ jobs:
           pnpm guard:lint -- --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
-  # develop only, after green guards (or guards skipped because a green PR run checked this tree): drop the knip and queries entries that are fixed (the gates pass on them, so
+  # develop only, after green guards (or guards skipped because a green PR run checked this tree): drop the knip, queries and units entries that are fixed (the gates pass on them, so
   # PRs never edit the lists for that; after a green gate `--write` can only remove lines). The commit says
   # [skip ci], touches only refactor/guards/ (paths-ignore above) and is pushed with the built-in token, which
   # starts no workflow: nothing loops and nothing deploys. The only ci job that may write contents; the token
@@ -463,6 +465,7 @@ jobs:
           key: ${{ steps.store.outputs.key }}
       - run: pnpm guard:knip -- --write
       - run: pnpm guard:queries -- --write
+      - run: pnpm guard:units -- --write
       - name: Commit the pruned lists
         env:
           GH_TOKEN: ${{ github.token }}
@@ -470,7 +473,7 @@ jobs:
           if git diff --quiet -- refactor/guards; then echo "nothing to prune"; exit 0; fi
           git -c user.name='github-actions[bot]' \
             -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-            commit -m 'chore(guards): drop fixed knip and queries entries [skip ci]' -- refactor/guards
+            commit -m 'chore(guards): drop fixed knip, queries and units entries [skip ci]' -- refactor/guards
           git push "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:develop \
             || echo "::warning::develop moved: the next push prunes the lists"
 

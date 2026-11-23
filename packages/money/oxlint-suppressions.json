@@ -7,17 +7,17 @@
       "count": 8
     }
   },
-  "src/assistant/first-paid.sales.test.ts": {
+  "src/assistant/first-paid/tests/sales.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
   },
-  "src/assistant/first-paid.test.ts": {
+  "src/assistant/first-paid/tests/first-paid.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/assistant/first-paid.ts": {
+  "src/assistant/first-paid/first-paid.ts": {
     "complexity": {
       "count": 3
     },
@@ -220,22 +220,22 @@
       "count": 1
     }
   },
-  "src/ledger/usage/usage.before.test.ts": {
+  "src/ledger/usage/tests/before.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/ledger/usage/usage.instant.test.ts": {
+  "src/ledger/usage/tests/instant.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/ledger/usage/usage.makeup.test.ts": {
+  "src/ledger/usage/tests/makeup.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/ledger/usage/usage.test.ts": {
+  "src/ledger/usage/tests/usage.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
@@ -261,12 +261,12 @@
       "count": 1
     }
   },
-  "src/pricing/price.ts": {
+  "src/pricing/price/price.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/pricing/quote.ts": {
+  "src/pricing/quote/quote.ts": {
     "complexity": {
       "count": 1
     },

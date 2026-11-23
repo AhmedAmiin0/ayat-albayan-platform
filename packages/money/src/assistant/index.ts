@@ -1,5 +1,5 @@
 export * from './commission.js';
-export * from './first-paid.js';
+export * from './first-paid/first-paid.js';
 export * from './kind.js';
 export * from './renewal.js';
 export * from './schemas.js';

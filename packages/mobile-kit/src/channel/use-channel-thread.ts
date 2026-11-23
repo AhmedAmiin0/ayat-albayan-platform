@@ -16,8 +16,7 @@ export function useChannelThread(refs: ChannelRef) {
   const mode = channelMode(refs.audience, first);
   // The API's newest time, never a pending row's (the phone's clock).
   const sent = first?.messages.filter((m) => !isPending(m));
-  const newest = mode === 'write' ? sent?.at(-1)?.created_at : undefined;
   useChannelLive(refs, { channelId: liveChannelId(mode, first), onLive: setLive });
-  useMarkRead(refs, newest);
+  useMarkRead(refs, { enabled: mode === 'write', at: sent?.at(-1)?.created_at });
   return { query, mode, first };
 }
