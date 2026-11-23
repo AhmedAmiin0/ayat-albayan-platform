@@ -38,13 +38,16 @@ describe('«أرسل عبر واتساب» in the web bubble: app-send, then ope
     expect(tab.opener).toBeNull();
   });
 
-  it('settled: the chat and its anchored windows are read again', async () => {
+  it('settled: this chat, the lists, the badge and the anchored windows read', async () => {
     vi.mocked(apiSend).mockResolvedValue(message(held));
     const client = renderBubble({});
     const invalidate = vi.spyOn(client, 'invalidateQueries');
     fireEvent.click(action() as HTMLElement);
-    await waitFor(() => expect(invalidate).toHaveBeenCalledTimes(2));
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads'] });
+    await waitFor(() => expect(invalidate).toHaveBeenCalledTimes(4));
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'detail', '+966500000001'] });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: anchoredThreadPrefix('+966500000001') });
   });
 

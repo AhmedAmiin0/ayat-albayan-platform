@@ -8,6 +8,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
+import { rereadSentChat } from '@/features/messaging/inbox/api/send-cache';
 import { startAppSend } from './whatsapp-send.api';
 
 /** One «أرسل عبر واتساب»: the row, and the tab opened in the click (null: blocked). */
@@ -55,9 +56,10 @@ export function useWhatsAppSend(): (m: MessageView) => void {
         open: () => openIn(tab, whatsappWebUrl(message)),
       }),
     onError: (_e, { tab }) => tab?.close(),
+    // The answer is not parsed (startAppSend): this chat reads its row, never every chat.
     onSettled: (_r, _e, { message }) =>
       Promise.all([
-        client.invalidateQueries({ queryKey: ['threads'] }),
+        rereadSentChat(client, message.phone_e164),
         refreshAnchored(client, message.phone_e164),
       ]),
   });

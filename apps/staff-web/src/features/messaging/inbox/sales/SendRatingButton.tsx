@@ -9,6 +9,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sendRating } from '@/features/messaging/inbox/api/api';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
+import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 const r = t.inbox.rating;
 const ERRORS: Record<string, string | undefined> = {
@@ -37,11 +38,11 @@ export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e
   const send = useMutation({
     mutationFn: sendRating,
     onMutate: sendStart,
-    onSuccess: async (view, sent, start) => {
+    onSuccess: (view, sent, start) => {
       // Her own send: the log snaps to it when the row arrives (W4), like a text or a template.
       settleOwnSend(sent.phone, view.id, start);
       requestId.current = crypto.randomUUID();
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      showAnswer(queryClient, view);
     },
   });
   if (!admin || !thread.guardian_id) return null;

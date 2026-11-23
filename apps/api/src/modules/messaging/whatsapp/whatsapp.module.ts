@@ -36,6 +36,7 @@ import { WindowRelease } from './sender/window/window-release';
 import { WindowRepo } from './sender/window/window.repo';
 import * as manualSend from './sender/window/manual-send';
 import { WindowSettings } from './sender/window/window.settings';
+import { LineOutages } from './sender/hold/line-outages';
 import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
 import { PaymentHolds } from './sender/hold/payment-holds';
 import { MessagesController } from './messages/messages.controller';
@@ -104,8 +105,7 @@ function lines(): WhatsappLines {
     NumberRoutes,
     MessageDispatch,
     CodeSend,
-    PaymentHoldRepo,
-    PaymentHolds,
+    PaymentHoldRepo, PaymentHolds, LineOutages,
     WindowRepo, manualSend.ReopenPickRepo, manualSend.ReopenPick,
     manualSend.ReopenCancelRepo, manualSend.ReopenCancel,
     manualSend.AppSendAdoptRepo, manualSend.AppSendAdopt,

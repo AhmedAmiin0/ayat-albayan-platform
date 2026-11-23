@@ -31,11 +31,15 @@ async function mount(enabled = true) {
   const refetch = vi.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
   const invalidate = vi.spyOn(client, 'invalidateQueries').mockResolvedValue(undefined);
   const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  // The open chat's delta query (thread-delta.ts): what a chat event runs.
+  const deltas = vi.fn(async () => 0);
+  client.getQueryCache().build(client, { queryKey: ['thread-delta', OPEN], queryFn: deltas, initialData: 0 });
   const hook = renderHook(() => useInboxRealtime(enabled), { wrapper });
   await act(async () => undefined);
   const keys = () => refetch.mock.calls.map(([f]) => f?.queryKey?.slice(1).join(' '));
   const calls = () => refetch.mock.calls;
-  return { hook, keys, calls, badges: () => invalidate.mock.calls.length };
+  const badges = () => invalidate.mock.calls.length;
+  return { hook, keys, calls, badges, deltas: () => deltas.mock.calls.length };
 }
 const send = (phone: string) => act(async () => rt.hooks.event?.({ payload: { phone } }));
 
@@ -60,15 +64,15 @@ describe('useInboxRealtime (web)', () => {
     expect(rt.supabase.channel).toHaveBeenCalledTimes(1);
   });
 
-  it('the open chat re-reads on its own phone only; the list and the badge on every phone', async () => {
+  it('the open chat reads its delta on its own phone only; list and badge on every phone', async () => {
     const release = inboxLive.watch(chatLiveKey(OPEN));
     const m = await mount();
     await send(OPEN);
-    expect(m.keys()).toEqual(['list', `detail ${OPEN}`]);
+    expect([m.keys(), m.deltas()]).toEqual([['list'], 1]);
     expect(m.badges()).toBe(1);
     await act(() => vi.advanceTimersByTimeAsync(5_000));
     await send(OTHER);
-    expect(m.keys()).toEqual(['list', `detail ${OPEN}`, 'list']);
+    expect([m.keys(), m.deltas()]).toEqual([['list', 'list'], 1]);
     release();
     m.hook.unmount();
   });
@@ -86,7 +90,7 @@ describe('useInboxRealtime (web)', () => {
     vi.spyOn(document, 'hasFocus').mockReturnValue(false);
     const m = await mount();
     await send(OPEN);
-    expect(m.keys()).toEqual(['list']);
+    expect([m.keys(), m.deltas()]).toEqual([['list'], 0]);
     release();
     m.hook.unmount();
   });
@@ -105,7 +109,8 @@ describe('useInboxRealtime (web)', () => {
     for (let i = 0; i < 20; i += 1) await send(OPEN);
     await act(() => vi.advanceTimersByTimeAsync(10_000));
     expect(m.keys().filter((k) => k === 'list')).toHaveLength(2);
-    expect(m.keys().filter((k) => k?.startsWith('detail'))).toHaveLength(2);
+    expect(m.deltas()).toBe(2);
+    expect(m.keys().filter((k) => k?.startsWith('detail'))).toHaveLength(0);
     expect(m.badges()).toBe(2);
     await act(async () => rt.hooks.status?.('SUBSCRIBED'));
     expect(inboxLive.isLive()).toBe(true);

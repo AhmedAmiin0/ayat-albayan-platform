@@ -5,6 +5,7 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { markSentManually } from '@/features/messaging/inbox/api/api';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
+import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 import { clearWhatsAppSend } from './use-whatsapp-send';
 
 interface Props {
@@ -20,12 +21,10 @@ interface Props {
  */
 export function AppSendAnswers({ message: m, answers }: Props) {
   const client = useQueryClient();
-  const refresh = () => {
+  const refresh = (row: MessageView) => {
     clearWhatsAppSend(client, m.id);
-    return Promise.all([
-      client.invalidateQueries({ queryKey: ['threads'] }),
-      refreshAnchored(client, m.phone_e164),
-    ]);
+    showAnswer(client, row);
+    return refreshAnchored(client, m.phone_e164);
   };
   const sent = useMutation({ mutationFn: markSentManually, onSuccess: refresh });
   const answer = () => sent.mutate(m.id);

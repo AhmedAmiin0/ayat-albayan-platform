@@ -6006,7 +6006,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 14
+      "count": 13
     },
     "ab/no-shape-checks": {
       "count": 3
@@ -6653,11 +6653,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/sender/hold/hold-key.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/sender/hold/payment-holds.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
@@ -6783,7 +6778,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/sender/send-line.ts": {
@@ -6806,7 +6801,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/messaging/whatsapp/sender/send-stale.trial-date.test.ts": {
@@ -7323,7 +7318,7 @@
   },
   "src/modules/messaging/whatsapp/whatsapp.types.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/whatsapp.upload.test.ts": {

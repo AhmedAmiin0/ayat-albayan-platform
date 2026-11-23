@@ -1,19 +1,14 @@
 import type { ThreadDetail, ThreadView } from '@ab/shared';
-import {
-  QueryClient,
-  QueryClientProvider,
-  useInfiniteQuery,
-  useQuery,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { useInboxRealtime, useLiveChat } from './live';
+import { useInboxRealtime } from './live';
 import { live, msg, PHONE, thread } from './patch-fixtures';
-import { threadQuery } from './thread-query';
+import { useLiveThread } from './thread-delta';
 
 // docs/44 K1 (rounds 4-5): a reminder batch (insert + claim + sent + delivered + read per message)
-// must not starve GET /threads nor the open chat's GET /threads/:phone: a rows event never cancels
+// must not starve GET /threads nor the open chat's delta read: a rows event never cancels
 // a read, so the throttled re-read lands during the burst. Real live layer and query client; the
 // socket and the API are fakes.
 
@@ -79,39 +74,46 @@ it('a burst of 20 rows events over 6 s with a slow list read: list reads still l
   view.unmount();
 });
 
-/** GET /threads/:phone: 400 ms per read, every message still ✓ (each event moves one tick). */
+/** GET /threads/:phone: 400 ms per read, full or delta (each event moves one tick). */
 const slowChat = vi.fn(
-  () =>
-    new Promise<ThreadDetail>((resolve) => {
+  (path: string) =>
+    new Promise<unknown>((resolve) => {
       const messages = ids.map((id) => msg(id, 'sent'));
-      setTimeout(() => resolve({ messages, has_more: false } as ThreadDetail), 400);
+      const delta = { messages: [], has_more: false, pending: [msg('m0', 'read')] };
+      const full = { messages, has_more: false } as ThreadDetail;
+      setTimeout(() => resolve(path.includes('?after=') ? delta : full), 400);
     }),
 );
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch: (path: string) => slowChat(path),
+}));
 
-it('15 tick events over 8 s on the open chat with a 400 ms read: chat reads land', async () => {
+it('15 tick events over 8 s on the open chat with a 400 ms read: deltas land, no full read', async () => {
   const client = new QueryClient();
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );
-  const chat = { ...threadQuery(PHONE), queryFn: slowChat, refetchInterval: false } as const;
   const view = renderHook(
     () => {
       useInboxRealtime(true);
-      useLiveChat(PHONE);
-      return useInfiniteQuery(chat);
+      return useLiveThread(PHONE);
     },
     { wrapper },
   );
   await act(() => vi.advanceTimersByTimeAsync(400));
-  const first = client.getQueryState(chat.queryKey)?.dataUpdatedAt ?? 0;
+  const delta = ['thread-delta', PHONE];
+  const first = client.getQueryState(delta)?.dataUpdatedAt ?? 0;
   const landed: number[] = [];
   for (const id of ids.slice(0, 15)) {
     await act(async () =>
       rt.hooks.event?.({ payload: { phone: PHONE, rows: [live(id, 'read')] } }),
     );
     await act(() => vi.advanceTimersByTimeAsync(533));
-    landed.push(client.getQueryState(chat.queryKey)?.dataUpdatedAt ?? 0);
+    landed.push(client.getQueryState(delta)?.dataUpdatedAt ?? 0);
   }
   expect(new Set(landed.filter((at) => at > first)).size).toBeGreaterThan(3);
+  const paths = slowChat.mock.calls.map(([p]) => p);
+  expect(paths.filter((p) => !p.includes('?after=') && p.startsWith('/threads/'))).toHaveLength(1);
   view.unmount();
 });

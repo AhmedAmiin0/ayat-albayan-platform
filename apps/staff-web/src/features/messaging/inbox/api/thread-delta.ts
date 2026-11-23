@@ -1,21 +1,63 @@
 import { deltaSearch, mergeDelta, needsFullRead } from '@ab/client-core';
 import type { ThreadDelta } from '@ab/shared';
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { inboxPollMs, threadPath } from './api';
 import { useTicksInLists } from './list-ticks';
-import { threadQuery } from './thread-query';
+import { threadDeltaKey, threadQuery } from './thread-query';
 import { useLiveChat } from './live';
 
+type Fold = (client: QueryClient, phone: string, delta: ThreadDelta) => void;
+
+/** More new rows than one delta: merging would hide the ones in between, so the thread is read. */
+const fold: Record<'full' | 'merge', Fold> = {
+  full: (client, phone) => void client.invalidateQueries({ queryKey: threadQuery(phone).queryKey }),
+  merge: (client, phone, delta) =>
+    client.setQueryData(threadQuery(phone).queryKey, (old) => mergeDelta(old, delta)),
+};
+
+/** A thread read or a send in flight answers after this delta and would overwrite its merge. */
+const busy = (client: QueryClient, phone: string): boolean =>
+  client.isFetching({ queryKey: threadQuery(phone).queryKey }) +
+    client.isMutating({ mutationKey: ['inbox-send', phone] }) >
+  0;
+
+/** The chat changed since the delta was asked (a full read landed, or a read or send runs). */
+const overtaken = (client: QueryClient, phone: string, asked: number | undefined): boolean =>
+  busy(client, phone) ||
+  client.getQueryState(threadQuery(phone).queryKey)?.dataUpdatedAt !== asked;
+
+const searchFor = (client: QueryClient, phone: string): string | null =>
+  document.hasFocus()
+    ? deltaSearch(client.getQueryData(threadQuery(phone).queryKey), Date.now())
+    : null;
+
 /**
- * The open chat, live (owner 2026-10-27): threadQuery (a full read on open, on window focus and every
- * threadFullRefreshMs) plus a delta every INBOX_REFRESH_MS while the window has focus (the same W13
- * gating: a chat open in a background window never stamps new rows read) — GET /threads/:phone?after=…
- * (~2 reads), folded into the cache by mergeDelta. A thread fetch or a send in flight wins (its answer
- * would overwrite the merge); more new rows than one page re-read the whole thread instead.
- * Realtime (docs/12 §15) re-reads it sooner on a change. The delta keeps a pace while connected too
- * (docs/44 BUG5: a socket that died quietly still reads SUBSCRIBED, and the 60 s full read alone
- * left the chat up to a minute late): inboxPollMs, 20 s while live, 10 s while down (as mobile).
+ * The open chat's delta read (GET /threads/:phone?after=…, ~2 rows; the server stamps read_at as a
+ * full read does). Only while this window has focus: a chat open in a background window never marks
+ * new rows read. A chat with no row has no `after`: nothing is read. Returns the time it ran.
+ */
+async function readThreadDelta(
+  client: QueryClient,
+  phone: string,
+  signal: AbortSignal,
+): Promise<number> {
+  const search = searchFor(client, phone);
+  if (search === null) return Date.now();
+  const asked = client.getQueryState(threadQuery(phone).queryKey)?.dataUpdatedAt;
+  const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
+  // A full read that landed meanwhile is newer than this answer: keep it.
+  if (overtaken(client, phone, asked)) return Date.now();
+  fold[needsFullRead(delta) ? 'full' : 'merge'](client, phone, delta);
+  return Date.now();
+}
+
+/**
+ * The open chat, live: threadQuery (a full read on open, on window focus and every
+ * threadFullRefreshMs) plus a delta (readThreadDelta, ~2 rows) every inboxPollMs while the
+ * window has focus: a chat open in a background window never stamps new rows read. A realtime event
+ * (docs/12 §15) runs this delta sooner (reread.ts). It keeps a pace while live too (docs/44 BUG5:
+ * a socket that died quietly still reads SUBSCRIBED): 20 s while live, 10 s while down (as mobile).
  */
 export function useLiveThread(phone: string) {
   const options = threadQuery(phone);
@@ -23,22 +65,9 @@ export function useLiveThread(phone: string) {
   const client = useQueryClient();
   useLiveChat(phone);
   useTicksInLists(phone, detail.data); // the list beside it shows the same tick (docs/43 43-1)
-  const queryKey = options.queryKey;
   useQuery({
-    // Outside ['threads']: a send's or an opened chat's invalidation never runs it.
-    queryKey: ['thread-delta', phone],
-    queryFn: async ({ signal }) => {
-      const search = document.hasFocus() ? deltaSearch(client.getQueryData(queryKey), Date.now()) : null;
-      if (!search) return Date.now();
-      const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
-      const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
-      const busy = client.isFetching({ queryKey }) + client.isMutating({ mutationKey: ['inbox-send', phone] }) > 0;
-      // A full read that landed meanwhile is newer than this answer: keep it.
-      if (busy || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();
-      if (needsFullRead(delta)) void client.invalidateQueries({ queryKey });
-      else client.setQueryData(queryKey, (old) => mergeDelta(old, delta));
-      return Date.now();
-    },
+    queryKey: threadDeltaKey(phone),
+    queryFn: ({ signal }) => readThreadDelta(client, phone, signal),
     enabled: detail.isSuccess,
     // No fetch on open: the thread query just read the whole page.
     initialData: 0,

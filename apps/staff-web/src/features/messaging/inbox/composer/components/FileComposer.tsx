@@ -14,6 +14,7 @@ import { ReplyStrip } from './ReplyStrip';
 import { sendErrorCode, sendErrorCodeText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
+import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 type FileSend = { phone: string; clientRequestId: string; file: File; caption: string; replyTo?: string | undefined };
 
@@ -69,15 +70,15 @@ export function FileComposer({ phone, file, onDone }: FileComposerProps) {
       return sendFile(text ? { ...body, caption: text } : body);
     },
     onMutate: sendStart,
-    onSuccess: async (view, s, start) => {
+    onSuccess: (view, s, start) => {
       settleOwnSend(s.phone, view.id, start);
       if (s.replyTo) reply.done(s.replyTo);
       onDone();
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      showAnswer(queryClient, view);
     },
     onError: async (e) => {
       // The window may have closed since the page loaded: refetch so the composer switches.
-      if (errorCode(e) === 'session_closed') await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      if (errorCode(e) === 'session_closed') await rereadSentChat(queryClient, phone);
     },
   });
   const pending = useIsMutating({ mutationKey }) > 0;

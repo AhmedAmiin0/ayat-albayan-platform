@@ -10,24 +10,42 @@ export interface HoldPlace {
   route?: NumberRoute | null;
 }
 
-/** The base plus the current driver and its WABA / number ids; null = crm (never 131042-held). */
-function withConn(base: string, env: WhatsappEnv | null): string | null {
-  if (!env) return base;
-  if (env.provider === 'crm') return null;
-  if (env.provider === 'evolution') return `${base}:evolution:${env.instance}`;
-  return `${base}:${env.provider ?? 'meta'}:${env.wabaId}:${env.phoneNumberId}`;
+/** The base, its connection (driver and WABA / number ids, or the instance), and if it is crm. */
+interface Place {
+  base: string;
+  env: WhatsappEnv | null;
+  crm: boolean;
 }
 
-/**
- * The in-memory line hold's key: the line under legacy, the number in module mode (docs/23c), each
- * with its CURRENT driver and WABA / phone-number id, so a live switch (another WABA, kapso, crm)
- * starts unheld. null = never line-held: the line (number) is on the crm driver.
- */
-export function holdKey(at: HoldPlace, env: Env = loadEnv()): string | null {
-  if (at.route) {
-    const id = at.route.numberId;
-    return withConn(`number:${id}`, overlayNumbers()?.find((n) => n.id === id)?.env ?? null);
+function connOf(env: WhatsappEnv): string {
+  if (env.provider === 'crm') return 'crm';
+  if (env.provider === 'evolution') return `evolution:${env.instance}`;
+  return `${env.provider ?? 'meta'}:${env.wabaId}:${env.phoneNumberId}`;
+}
+
+function placeOf(at: HoldPlace, env: Env): Place {
+  if (!at.route) {
+    const crm = lineProvider(env, at.line) === 'crm';
+    return { base: `line:${at.line}`, env: lineEnvs(env)[at.line], crm };
   }
-  if (lineProvider(env, at.line) === 'crm') return null;
-  return withConn(`line:${at.line}`, lineEnvs(env)[at.line]);
+  const id = at.route.numberId;
+  const own = overlayNumbers()?.find((n) => n.id === id)?.env ?? null;
+  return { base: `number:${id}`, env: own, crm: own?.provider === 'crm' };
+}
+
+const keyOf = (p: Place): string => {
+  const conn = p.crm ? 'crm' : p.env && connOf(p.env);
+  return conn ? `${p.base}:${conn}` : p.base;
+};
+
+/**
+ * The outage hold's key: the line under legacy, the number in module mode (docs/23c), each with
+ * its CURRENT driver and WABA / phone-number id, so a live switch starts unheld.
+ */
+export const laneKey = (at: HoldPlace, env: Env = loadEnv()): string => keyOf(placeOf(at, env));
+
+/** The 131042 hold's key: laneKey, but null on the crm driver (its errors carry no 131042). */
+export function holdKey(at: HoldPlace, env: Env = loadEnv()): string | null {
+  const place = placeOf(at, env);
+  return place.crm ? null : keyOf(place);
 }

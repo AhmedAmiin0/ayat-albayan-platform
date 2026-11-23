@@ -23,3 +23,6 @@ export const threadQuery = (phone: string) =>
     getNextPageParam: threadNextParam,
     refetchInterval: () => (document.hasFocus() ? env.threadFullRefreshMs : false),
   });
+
+/** The open chat's delta (thread-delta.ts). Outside ['threads']: a send never runs it. */
+export const threadDeltaKey = (phone: string) => ['thread-delta', phone] as const;

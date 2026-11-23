@@ -16,6 +16,7 @@ import { TemplateParamFields } from './TemplateParamFields';
 import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
+import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 const NAMES: Record<string, string | undefined> = t.templates.names;
 
@@ -78,11 +79,11 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
   const send = useMutation({
     mutationFn: sendTemplate,
     onMutate: sendStart,
-    onSuccess: async (view, sent, start) => {
+    onSuccess: (view, sent, start) => {
       settleOwnSend(sent.phone, view.id, start);
       pick('');
       reopen?.onSent(sent.key);
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      showAnswer(queryClient, view);
     },
   });
   const pickLesson = (id: string) => {
