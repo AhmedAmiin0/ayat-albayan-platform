@@ -35,7 +35,7 @@ export interface Teacher {
   profile_id: string | null;
   /** That login's sign-in username (docs/30); null without one; GET /teachers rows carry none. */
   username?: string | null;
-  /** The teacher's photo, a short-lived signed URL; null = the initials (owner 2026-10-28). */
+  /** The teacher's photo, a short-lived signed URL; null = the initials. */
   avatar_url: string | null;
   created_at: string;
   created_by: string | null;

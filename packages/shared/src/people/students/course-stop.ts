@@ -4,7 +4,7 @@ import { OPEN_LESSON_STATUSES, wallParts } from '@ab/schedule';
 import type { StopRefund } from './stop-refund/index.js';
 import { stopOweAskSchema, stopRefundAskSchema, type StopOwe } from './stop-choices/index.js';
 
-// «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY.
+// «إلغاء الاشتراك» from the student's profile: STOP THE COURSE, KEEP THE MONEY.
 // Every future lesson of the subscription's course is cancelled, its weekly rules end on the cancel
 // date, the student becomes «توقف» (churned) unless another package still runs, and the package
 // «ملغاة» (cancel_kind 'stopped', migration 990) with who / when / why. Payments, held lessons,
@@ -15,7 +15,7 @@ export const COURSE_STOP_REASON_MAX = 300;
 
 /**
  * POST /students/:id/course-stop: idempotent on clientRequestId (rule 8); the reason is required.
- * `refund` (subscriptions.refund): «إلغاء مع استرداد» and the chosen refund (owner 2026-11-06);
+ * `refund` (subscriptions.refund): «إلغاء مع استرداد» and the chosen refund;
  * absent = «إلغاء فقط», with `owe`: what the family still owes (absent = attended × rate). Never
  * both.
  */
@@ -46,7 +46,7 @@ export interface CourseStopPreview {
   subscriptionId: string;
   /** Open lessons of the course still to come: all of them are cancelled. */
   futureLessons: number;
-  /** Their instants, earliest first (owner 2026-11-17; absent in an old answer). */
+  /** Their instants, earliest first (absent in an old answer). */
   futureStarts?: string[];
   /** Weekly rules of the course that still run: each ends on the cancel date. */
   activeRules: number;
@@ -54,7 +54,7 @@ export interface CourseStopPreview {
   paid: number;
   currency: string;
   /**
-   * «إلغاء مع استرداد»'s lines (owner 2026-11-02): paid, attended × price × rate, refund; null
+   * «إلغاء مع استرداد»'s lines: paid, attended × price × rate, refund; null
    * for a caller without subscriptions.refund.
    */
   refund: StopRefund | null;

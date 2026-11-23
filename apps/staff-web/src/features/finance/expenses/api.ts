@@ -1,13 +1,7 @@
-import {
-  localizedName,
-  round2,
-  type ExpenseCategoryView,
-  type ExpenseView,
-  type ExpenseYearView,
-  type PaymentMethod,
-  type SignedDownload,
-  type SignedUpload,
-} from '@ab/shared';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import { localizedName, round2 } from '@ab/core';
+import type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -16,7 +10,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // apps/api/src/modules/expenses (docs/11 §9 + §13, R-RPT-02, issue E4).
-export type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/shared';
+export type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/money';
 
 export const expensesQuery = (month: string) =>
   queryOptions({

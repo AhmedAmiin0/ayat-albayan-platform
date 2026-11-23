@@ -1,4 +1,4 @@
-import { AGING_BUCKETS } from '@ab/shared';
+import { AGING_BUCKETS } from '@ab/money';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/data-table/DataTable';
 import { Button } from '@ab/web-kit/components/ui/form/button';

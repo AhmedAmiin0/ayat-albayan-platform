@@ -3,7 +3,7 @@ import { dayTimesFromPicks, timeGroups, wallParts, type DayTime, type PickedRule
 import type { BookedCourse, PrefilledPick } from './course-follow.js';
 import { prefillDays } from './course-follow.js';
 
-// The picks of «تابِع بنفس الأيام» and «تغيير أيام الحلقات» (owner 2026-10-18), shared by web and
+// The picks of «تابِع بنفس الأيام» and «تغيير أيام الحلقات», shared by web and
 // mobile so both read the same days the same way. Pure, Intl only.
 
 /** Days are shown السبت → الجمعة everywhere (docs/07 §8). */

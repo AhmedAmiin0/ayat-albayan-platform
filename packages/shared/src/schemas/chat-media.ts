@@ -1,6 +1,6 @@
 import { INVOICE_MAX_BYTES, INVOICE_MIMES } from '@ab/schedule';
 
-// What a chat bubble may open (owner 2026-10-19 #1): images/PDFs as before, plus the voice notes
+// What a chat bubble may open: images/PDFs as before, plus the voice notes
 // and videos families send. WhatsApp's own audio/video limit is 16 MB (migration 500's bucket cap).
 
 export const PLAYABLE_MIMES = [

@@ -1,17 +1,13 @@
-import {
-  riyadhToday,
-  type PaymentMethod,
-  type PayoutGenerateResult,
-  type PayoutView,
-  type SignedDownload,
-  type TeacherEarningsSummaryView,
-} from '@ab/shared';
+import type { SignedDownload } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import type { PayoutGenerateResult, PayoutView, TeacherEarningsSummaryView } from '@ab/money';
+import { riyadhToday } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 
 // apps/api/src/modules/payouts (docs/11 §8, R-PAY-02, R-TCH-04). Teacher money is EGP.
-export type { PayoutGenerateResult, PayoutView } from '@ab/shared';
+export type { PayoutGenerateResult, PayoutView } from '@ab/money';
 
 export const payoutsQuery = (month: string) =>
   queryOptions({

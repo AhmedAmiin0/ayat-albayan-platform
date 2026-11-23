@@ -27,12 +27,12 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<AnyPushKind, readonly Permis
   google_sync_alert: SETTINGS,
   channel_message: BELL,
   commission_earned: EARNINGS,
-  // A schedule change (owner 2026-10-30): the teacher, and the family once they hold the bell.
+  // A schedule change: the teacher, and the family once they hold the bell.
   lesson_rescheduled: BELL,
   lesson_cancelled: BELL,
   course_paused: BELL,
   course_resumed: BELL,
-  // Owner 2026-11-05: a payment came in (the admins and the student's assistant).
+  // A payment came in (the admins and the student's assistant).
   payment_received: BELL,
   // docs/50 §5.6: a lesson's join window opened; its report was sent to the family.
   lesson_starting: FAMILY,

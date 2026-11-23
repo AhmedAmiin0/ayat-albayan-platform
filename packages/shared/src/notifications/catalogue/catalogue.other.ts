@@ -29,7 +29,7 @@ export const PUSH_ENTRIES = [
   { ...STAFF, key: 'meeting_invite', audience: 'staff', pushKind: 'meeting_invite' },
   // docs/24: the Google link expired or a teacher has no calendar; admins, the bell only (no push).
   { ...STAFF, channels: ['bell'], key: 'google_sync_alert', audience: 'staff', pushKind: 'google_sync_alert' },
-  // docs/31 §2 (owner 2026-11-16): a message in a student's chat, to everyone in it but its writer:
+  // docs/31 §2: a message in a student's chat, to everyone in it but its writer:
   // the current teacher(s), the guardian and the student (family_chat_enabled) and the assistant.
   {
     ...STAFF,
@@ -38,8 +38,8 @@ export const PUSH_ENTRIES = [
     alsoTo: ['guardian', 'staff'],
     pushKind: 'channel_message',
   },
-  // «محفظتي» (owner 2026-10-29): a commission earned, to the assistant who brought the student; the bell only.
+  // «محفظتي»: a commission earned, to the assistant who brought the student; the bell only.
   { ...STAFF, channels: ['bell'], key: 'commission_earned', audience: 'staff', pushKind: 'commission_earned' },
-  // Owner 2026-11-05: a payment came in → the admins and the student's assistant.
+  // A payment came in → the admins and the student's assistant.
   { ...STAFF, key: 'payment_received', audience: 'staff', pushKind: 'payment_received' },
 ] as const satisfies readonly NotificationEntry[];

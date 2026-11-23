@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { useQueries } from '@tanstack/react-query';
 import type { AdminNavProps } from '@/components/shell/nav/AdminNav';
 import { unreadCountQuery, useInboxLive } from '@/features/messaging/inbox';

@@ -2,12 +2,12 @@ import type { StudentStatus } from '@ab/catalog';
 import { parseStatusList } from '../schemas/student-filters.js';
 import { isNotSubscribed, NOT_SUBSCRIBED_STATUSES, PACKAGE_ENDED_STATUSES } from './status-flow/index.js';
 
-// «مشترك / تجريبي» (owner 2026-10-12): a teacher's students split by status, the same rules on the
+// «مشترك / تجريبي»: a teacher's students split by status, the same rules on the
 // web, the mobile app and the API mappers (sales «المعلمون», admin teachers and students lists).
 
 /**
- * The quick switch: subscribed (active), «تجريبي» (not subscribed yet: new, trial, pending_subscription,
- * owner 2026-10-15), or every status (pending_renewal, expired and paused included).
+ * The quick switch: subscribed (active), «تجريبي» (not subscribed yet: new, trial, pending_subscription),
+ * or every status (pending_renewal, expired and paused included).
  */
 export const STUDENT_LIST_KINDS = ['active', 'trial', 'all'] as const;
 export type StudentListKind = (typeof STUDENT_LIST_KINDS)[number];
@@ -15,7 +15,7 @@ export type StudentListKind = (typeof STUDENT_LIST_KINDS)[number];
 export type StudentKindCounts = Record<StudentListKind, number>;
 
 /**
- * A teacher's CURRENT students (owner 2026-10-12, 2026-10-15): not subscribed yet (new, trial,
+ * A teacher's CURRENT students: not subscribed yet (new, trial,
  * pending_subscription), subscribed, and the package ended (pending_renewal, expired: lessons keep
  * running until renewal). Teacher loads, the admin teacher panel's default view and the «needs a
  * teacher» note read this. A package-ended status is never «مشترك» in the switch below (it shows

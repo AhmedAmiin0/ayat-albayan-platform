@@ -1,12 +1,12 @@
+import { counted } from '@ab/core';
 import {
-  counted,
   livePackages,
   packageProgress,
   type AdminTaskView,
   type BalanceView,
   type PackageProgress,
   type StudentBalanceView,
-} from '@ab/shared';
+} from '@ab/money';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { currencySymbol, moneyText } from '@ab/web-kit/lib/money-text';

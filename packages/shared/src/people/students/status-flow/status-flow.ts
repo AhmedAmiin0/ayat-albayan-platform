@@ -1,6 +1,6 @@
 import type { StudentStatus } from '@ab/catalog';
 
-// Student statuses (owner 2026-10-15, docs/03 R-STU-05, docs/11 §7): the pure rules of the automatic
+// Student statuses (docs/03 R-STU-05, docs/11 §7): the pure rules of the automatic
 // transitions. The API applies them compare-and-set on the expected from-status and audits each move;
 // a status the admin sets by hand is never a from-status these rules expect, so it wins.
 
@@ -58,12 +58,12 @@ export interface TrialFacts {
  * open trial → trial (an open one keeps a trial student in trial, even after an older attended one);
  * attended and nothing open → pending_subscription; trial with neither an open nor an attended
  * trial lesson (no_show, excused, cancelled and nothing else booked) → new. Anything else: null.
- * Attended but already paid (owner 2026-10-15): no move; the payment rules own that student.
+ * Attended but already paid: no move; the payment rules own that student.
  */
 export function trialMove(current: StudentStatus, facts: TrialFacts): StatusMovePlan | null {
   if (current !== 'new' && current !== 'trial') return null;
   if (facts.attended && facts.paid) return null;
-  // A trial date still ahead wins over an older attended one: «موعد تجريبي جديد» (owner 2026-10-25).
+  // A trial date still ahead wins over an older attended one: «موعد تجريبي جديد».
   if (facts.open) return current === 'new' ? { from: current, to: 'trial', reason: 'trial_booked' } : null;
   if (facts.attended) return { from: current, to: 'pending_subscription', reason: 'trial_attended' };
   return current === 'trial' ? { from: current, to: 'new', reason: 'trial_missed' } : null;

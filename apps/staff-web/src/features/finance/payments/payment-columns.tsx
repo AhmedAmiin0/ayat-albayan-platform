@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS } from '@ab/shared';
+import { PAYMENT_METHODS } from '@ab/catalog';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@ab/web-kit/components/ui/form/button';

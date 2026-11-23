@@ -6,7 +6,6 @@ import {
   usedBeforeEditSchema,
 } from './used-before-edit.js';
 
-// Owner 2026-11-02: «i want the ability to change the number of attended sessions as assistant».
 const base = {
   next: 3, lessonsTotal: 8, platformUsed: 0, cancelled: false, courseBooked: false, pastStart: true,
 };

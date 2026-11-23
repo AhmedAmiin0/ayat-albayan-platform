@@ -1,4 +1,4 @@
-import { matchesQuery } from '@ab/shared';
+import { matchesQuery } from '@ab/core';
 
 // Pure compare/match for client-side tables (DataTable `clientSort` / `clientFilter`).
 

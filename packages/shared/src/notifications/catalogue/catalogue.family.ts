@@ -22,6 +22,6 @@ export const FAMILY_ENTRIES = [
   { ...FAMILY, key: 'report_sent', pushKind: 'report_sent' },
   // The teacher entered the lesson room («بدأت الحلقة»): the push opens the room straight in.
   { ...FAMILY, key: 'lesson_live', pushKind: 'lesson_live' },
-  // Staff declined the family's «اطلب موعدًا آخر» (owner 2026-11-17): the lesson stays as it was.
+  // Staff declined the family's «اطلب موعدًا آخر»: the lesson stays as it was.
   { ...FAMILY, key: 'lesson_request_declined', pushKind: 'lesson_request_declined' },
 ] as const satisfies readonly NotificationEntry[];

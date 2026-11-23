@@ -1,4 +1,4 @@
-// A staff notice that opens the course wizard (owner 2026-11-06): a package paid with no weekly
+// A staff notice that opens the course wizard: a package paid with no weekly
 // course yet. Its data carries `open: 'course'` beside the student (and the family's phone, so the
 // web opens that chat with «أيام الحلقات»); web-path.ts and the app's push route read it.
 

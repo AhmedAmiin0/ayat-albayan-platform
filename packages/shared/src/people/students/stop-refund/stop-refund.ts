@@ -1,4 +1,4 @@
-// «إلغاء مع استرداد» (owner 2026-11-02): the refund a course stop may pay back, and how it is
+// «إلغاء مع استرداد»: the refund a course stop may pay back, and how it is
 // split between the card payments (Stripe) and the rest (a manual transfer). Pure; every amount is
 // rounded to the package currency's minor unit as the platform stores it: the ISO 4217 decimals,
 // at most 2 (payments and prices are numeric(12, 2) in every currency, so KWD / OMR keep 2).
@@ -106,7 +106,7 @@ export function splitRefund(input: {
 
 /**
  * 409 refund_exceeds_allowed: the amount asked is above the allowed maximum or negative. 0 is a
- * stop that refunds nothing (owner 2026-11-06: «مبلغ مخصص» from 0).
+ * stop that refunds nothing («مبلغ مخصص» from 0).
  */
 export const refundAmountProblem = (
   amount: number,
