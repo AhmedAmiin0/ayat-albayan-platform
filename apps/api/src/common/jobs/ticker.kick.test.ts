@@ -63,7 +63,7 @@ describe('Ticker.kick (one more run after the current one)', () => {
     gate.resolve();
     await vi.advanceTimersByTimeAsync(0);
     expect(run).toHaveBeenCalledTimes(2);
-    ticker.stop();
+    await ticker.stop();
   });
 
   it('start(timing) replaces the options’ timing', async () => {
@@ -77,6 +77,6 @@ describe('Ticker.kick (one more run after the current one)', () => {
     expect(run).toHaveBeenCalledTimes(2);
     await vi.advanceTimersByTimeAsync(1_000);
     expect(run).toHaveBeenCalledTimes(3);
-    ticker.stop();
+    await ticker.stop();
   });
 });

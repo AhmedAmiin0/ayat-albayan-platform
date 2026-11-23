@@ -75,7 +75,7 @@ describe('HorizonJob — daily refresh of active rules (R-SCH-02)', () => {
     expect(run).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(86_400_000);
     expect(run).toHaveBeenCalledTimes(2);
-    j.onModuleDestroy();
+    await j.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(2 * 86_400_000);
     expect(run).toHaveBeenCalledTimes(2);
   });

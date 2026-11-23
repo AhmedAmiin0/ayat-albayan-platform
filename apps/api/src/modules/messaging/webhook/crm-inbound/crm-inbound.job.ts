@@ -2,9 +2,9 @@ import {
   Inject,
   Injectable,
   type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  type BeforeApplicationShutdown,
 } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { CrmInbound } from './crm-inbound.service';
 
@@ -18,7 +18,7 @@ const EVERY_MS = 60_000;
 
 @BackgroundJob({ name: 'crm-inbound', kick: 'kick' })
 @Injectable()
-export class CrmInboundJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class CrmInboundJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly ticker = new Ticker({
     name: CrmInboundJob.name,
     firstMs: FIRST_RUN_MS,
@@ -33,8 +33,8 @@ export class CrmInboundJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** Run now (a message was just queued) instead of waiting for the next minute. */

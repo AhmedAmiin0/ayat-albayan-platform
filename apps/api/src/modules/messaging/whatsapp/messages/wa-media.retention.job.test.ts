@@ -106,7 +106,7 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
     await vi.advanceTimersByTimeAsync(15 * 60_000);
     // One run: an inbound read and an echo read.
     expect(queries.cachedBefore).toHaveBeenCalledTimes(2);
-    job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(48 * 3_600_000);
     expect(queries.cachedBefore).toHaveBeenCalledTimes(2);
   });

@@ -2,14 +2,14 @@ import {
   Injectable,
   Logger,
   type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  type BeforeApplicationShutdown,
   type OnModuleInit,
 } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
 import { CourseDue } from '@/modules/finance/subscriptions/course-due/course-due';
 import { AlertsRepo } from './alerts.repo';
 import { SubscriptionAlertsService } from './alerts.service';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 15 * 60_000;
@@ -29,7 +29,7 @@ const FIRST_RUN_MS = 5 * 60_000;
  */
 @BackgroundJob({ name: 'subscription-alerts' })
 @Injectable()
-export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy {
+export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(AlertsJob.name);
   private readonly ticker = new Ticker({
     name: AlertsJob.name,
@@ -53,8 +53,8 @@ export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, OnModule
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** Never throws. */

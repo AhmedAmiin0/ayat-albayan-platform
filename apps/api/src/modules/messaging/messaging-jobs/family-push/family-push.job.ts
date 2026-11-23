@@ -3,9 +3,9 @@ import {
   Injectable,
   Logger,
   type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  type BeforeApplicationShutdown,
 } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { FamilyPushService, type FamilyPushSummary } from './family-push.service';
 
@@ -18,7 +18,7 @@ const MINUTE = 60_000;
  */
 @BackgroundJob({ name: 'family-push' })
 @Injectable()
-export class FamilyPushJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class FamilyPushJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(FamilyPushJob.name);
   private readonly ticker = new Ticker({
     name: FamilyPushJob.name,
@@ -33,8 +33,8 @@ export class FamilyPushJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** One pass. Never throws. */

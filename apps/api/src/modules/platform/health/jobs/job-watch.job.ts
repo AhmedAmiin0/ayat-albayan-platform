@@ -1,5 +1,7 @@
-import { Inject, Injectable, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import {
+  Inject, Injectable, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
+import { stopWithin, Ticker } from '@/common/jobs';
 import type { BeatBook } from '@/common/jobs/beats';
 import { BackgroundJob } from '@/config/role/background-job';
 import { StaleAlerts } from './stale-alerts';
@@ -17,7 +19,7 @@ export const WATCH_SOURCE = Symbol('WATCH_SOURCE');
 /** Every minute in the worker: a job whose last success is too old raises one admin bell alert. */
 @BackgroundJob({ name: 'job-watch' })
 @Injectable()
-export class JobWatchJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class JobWatchJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly ticker = new Ticker({
     name: JobWatchJob.name,
     firstMs: WATCH_FIRST_MS,
@@ -35,8 +37,8 @@ export class JobWatchJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   runOnce(): Promise<void> {

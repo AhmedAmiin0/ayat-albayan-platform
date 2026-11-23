@@ -1,6 +1,8 @@
 import { riyadhToday } from '@ab/shared';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import {
+  Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
@@ -25,7 +27,7 @@ interface ResumeSummary {
  */
 @BackgroundJob({ name: 'course-pause-resume' })
 @Injectable()
-export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class CoursePauseJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(CoursePauseJob.name);
   private readonly ticker = new Ticker({
     name: CoursePauseJob.name,
@@ -43,8 +45,8 @@ export class CoursePauseJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** One pass. Never throws: one bad pause does not stop the others. */

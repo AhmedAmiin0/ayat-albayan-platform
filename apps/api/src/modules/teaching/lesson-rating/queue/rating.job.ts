@@ -1,6 +1,9 @@
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
+import {
+  Injectable, Logger, type BeforeApplicationShutdown, type OnApplicationBootstrap,
+  type OnModuleInit,
+} from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { RATING_LOOKBACK_MS } from '@/modules/teaching/lesson-rating/rating.plan';
 import { RatingRepo } from '@/modules/teaching/lesson-rating/rating.repo';
 import { RatingQueue, type QueueResult } from './rating.queue';
@@ -16,7 +19,7 @@ const MINUTE = 60_000;
  */
 @BackgroundJob({ name: 'lesson-rating' })
 @Injectable()
-export class RatingJob implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy {
+export class RatingJob implements OnModuleInit, OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(RatingJob.name);
   private readonly ticker = new Ticker({ name: RatingJob.name, firstMs: 45_000, everyMs: 5 * MINUTE, run: () => this.runOnce() });
 
@@ -34,8 +37,8 @@ export class RatingJob implements OnModuleInit, OnApplicationBootstrap, OnModule
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** The sweep. Never throws. */

@@ -3,9 +3,9 @@ import {
   Inject,
   Injectable,
   type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  type BeforeApplicationShutdown,
 } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import type { CrmLookup, CrmMessage } from '@/modules/messaging/whatsapp';
 import { CrmConfirm, type Pending } from './crm-confirm.service';
@@ -35,7 +35,7 @@ const due =
 
 @BackgroundJob({ name: 'crm-confirm-sweep' })
 @Injectable()
-export class CrmConfirmSweepJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class CrmConfirmSweepJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly ticker = new Ticker({
     name: CrmConfirmSweepJob.name,
     firstMs: FIRST_RUN_MS,
@@ -52,8 +52,8 @@ export class CrmConfirmSweepJob implements OnApplicationBootstrap, OnModuleDestr
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** One pass; never throws. The rows confirmed. */

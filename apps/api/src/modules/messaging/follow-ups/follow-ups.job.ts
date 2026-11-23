@@ -1,16 +1,13 @@
 import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
 import { ruleOf, timingOf } from '@/common/rules/rule-of';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
 import {
-  followUpDedupKey,
-  followUpRow,
-  followUpStep,
-  leadZone,
-  pickTwoSlots,
-  sameInstant,
+  followUpDedupKey, followUpRow, followUpStep, leadZone, pickTwoSlots, sameInstant,
   type FollowUpLeadRow,
 } from './follow-ups.plan';
 import { FollowUpsSettings } from './follow-ups.settings';
@@ -48,7 +45,7 @@ interface Tick {
  */
 @BackgroundJob({ name: 'follow-ups' })
 @Injectable()
-export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class FollowUpsJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(FollowUpsJob.name);
   private readonly ticker = new Ticker({
     name: FollowUpsJob.name,
@@ -68,8 +65,8 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   kick(): Promise<unknown> {

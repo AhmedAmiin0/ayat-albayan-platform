@@ -1,6 +1,8 @@
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
 import { BackgroundJob } from '@/config/role/background-job';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import {
   meetingTarget,
   roomNameOf,
@@ -36,7 +38,7 @@ const why = (e: unknown): string => (e instanceof Error ? e.message : String(e))
  */
 @BackgroundJob({ name: 'meeting-max-duration' })
 @Injectable()
-export class MeetingMaxDurationJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class MeetingMaxDurationJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(MeetingMaxDurationJob.name);
   private readonly ticker = new Ticker({
     name: MeetingMaxDurationJob.name,
@@ -56,8 +58,8 @@ export class MeetingMaxDurationJob implements OnApplicationBootstrap, OnModuleDe
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** One pass. Never throws. */

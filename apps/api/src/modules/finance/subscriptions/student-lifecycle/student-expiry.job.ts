@@ -1,10 +1,12 @@
 import { expiryMove } from '@ab/shared';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
 import { pendingSince } from './student-renewal.plan';
 import { StudentExpiryRepo } from './student-expiry.repo';
 import { StudentStatusRepo } from './student-status.repo';
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
@@ -34,7 +36,7 @@ const errorText = (e: unknown): string => (e instanceof Error ? e.message : Stri
  */
 @BackgroundJob({ name: 'student-expiry' })
 @Injectable()
-export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class StudentExpiryJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(StudentExpiryJob.name);
   private readonly ticker = new Ticker({
     name: StudentExpiryJob.name,
@@ -53,8 +55,8 @@ export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /**

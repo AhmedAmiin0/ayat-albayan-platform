@@ -2,13 +2,13 @@ import {
   Injectable,
   Logger,
   type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  type BeforeApplicationShutdown,
 } from '@nestjs/common';
 import { addDays } from '@ab/shared';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const DAY_MS = 86_400_000;
@@ -31,7 +31,7 @@ export interface RunSummary {
  */
 @BackgroundJob({ name: 'horizon' })
 @Injectable()
-export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class HorizonJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(HorizonJob.name);
   private readonly ticker = new Ticker({
     name: HorizonJob.name,
@@ -50,8 +50,8 @@ export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** One pass over the active rules. Never throws: one bad rule doesn't stop the others. */

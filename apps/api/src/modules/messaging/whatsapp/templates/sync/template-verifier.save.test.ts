@@ -44,7 +44,7 @@ describe('TemplateVerifier.afterSave', () => {
     v.onModuleInit();
     lineSaved({ line: 'notifications', provider: 'meta' });
     await vi.waitFor(() => expect(verifyAll).toHaveBeenCalledTimes(1));
-    v.onModuleDestroy();
+    await v.beforeApplicationShutdown();
     lineSaved({ line: 'notifications', provider: 'meta' });
     await Promise.resolve();
     expect(verifyAll).toHaveBeenCalledTimes(1);

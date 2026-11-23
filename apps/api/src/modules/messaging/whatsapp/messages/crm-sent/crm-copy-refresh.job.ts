@@ -1,8 +1,8 @@
 import type { WaLine } from '@ab/shared';
 import {
-  Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy,
+  Inject, Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
 } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import { TemplateVerifier } from '@/modules/messaging/whatsapp/templates/sync/template-verifier';
 
@@ -17,7 +17,7 @@ const said = (e: unknown): string => (e instanceof Error ? e.message : String(e)
  */
 @BackgroundJob({ name: 'crm-template-copy' })
 @Injectable()
-export class CrmCopyRefresh implements OnApplicationBootstrap, OnModuleDestroy {
+export class CrmCopyRefresh implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(CrmCopyRefresh.name);
   private readonly ticker = new Ticker({
     name: CrmCopyRefresh.name, ...TIMING, run: () => this.runOnce(),
@@ -29,8 +29,8 @@ export class CrmCopyRefresh implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** The crm lines read ([] on a failure, logged). */

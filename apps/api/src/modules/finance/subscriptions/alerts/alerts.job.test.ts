@@ -21,7 +21,7 @@ describe('AlertsJob sweep timers (Ticker)', () => {
     expect(sweep).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(2 * SWEEP_MS);
     expect(sweep).toHaveBeenCalledTimes(3);
-    job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(4 * SWEEP_MS);
     expect(sweep).toHaveBeenCalledTimes(3);
   });

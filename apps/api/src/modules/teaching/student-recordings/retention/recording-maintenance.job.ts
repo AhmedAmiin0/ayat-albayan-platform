@@ -1,6 +1,8 @@
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
 import { RecordingRetention } from './recording-retention';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 3_600_000;
@@ -14,7 +16,7 @@ const FIRST_RUN_MS = 20 * 60_000;
  */
 @BackgroundJob({ name: 'recording-maintenance' })
 @Injectable()
-export class RecordingMaintenanceJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class RecordingMaintenanceJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(RecordingMaintenanceJob.name);
   private readonly ticker = new Ticker({
     name: RecordingMaintenanceJob.name,
@@ -29,8 +31,8 @@ export class RecordingMaintenanceJob implements OnApplicationBootstrap, OnModule
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** Never throws; how many rows each sweep changed. */

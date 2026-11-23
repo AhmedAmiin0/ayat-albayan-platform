@@ -1,5 +1,7 @@
 import { joinWindowConfig, type TemplateKey } from '@ab/shared';
-import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Inject, Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { livekitEnv, loadEnv } from '@/config/env/env';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
@@ -11,7 +13,7 @@ import { RemindersRepo } from './reminders.repo';
 import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
 import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
 import { ReminderTeacherLinks, v3Approved } from './reminders.teacher-links';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const MINUTE = 60_000;
@@ -37,7 +39,7 @@ type QueueInput = { settings: RemindersSettingsValues; rules: ReminderRules; les
  */
 @BackgroundJob({ name: 'reminders' })
 @Injectable()
-export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class RemindersJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(RemindersJob.name);
   private readonly ticker = new Ticker({
     name: RemindersJob.name,
@@ -60,11 +62,10 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
-  /** Run now (single flight). */
   kick(): Promise<unknown> {
     return this.ticker.tick();
   }

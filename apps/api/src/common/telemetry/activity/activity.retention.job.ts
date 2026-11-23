@@ -1,6 +1,8 @@
-import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Inject, Injectable, Logger, type OnApplicationBootstrap, type BeforeApplicationShutdown,
+} from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 
 const EVERY_MS = 24 * 3_600_000;
@@ -14,7 +16,7 @@ const FIRST_RUN_MS = 15 * 60_000;
  */
 @BackgroundJob({ name: 'activity-retention' })
 @Injectable()
-export class ActivityRetentionJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class ActivityRetentionJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(ActivityRetentionJob.name);
   private readonly ticker = new Ticker({
     name: ActivityRetentionJob.name,
@@ -29,8 +31,8 @@ export class ActivityRetentionJob implements OnApplicationBootstrap, OnModuleDes
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   /** Never throws; the number of rows deleted. */

@@ -2,10 +2,10 @@ import {
   Injectable,
   Logger,
   type OnApplicationBootstrap,
-  type OnModuleDestroy,
+  type BeforeApplicationShutdown,
 } from '@nestjs/common';
 import { BackgroundJob } from '@/config/role/background-job';
-import { Ticker } from '@/common/jobs';
+import { stopWithin, Ticker } from '@/common/jobs';
 import { EVERY_MS } from '@/modules/messaging/webhook/external/external-catchup.job';
 import { kapsoChatNumbers } from '@/modules/messaging/webhook/external/kapso-numbers';
 import { InboundCatchUp, type InboundCounts } from './inbound-catchup.service';
@@ -24,7 +24,7 @@ const FIRST_RUN_MS = 3 * 60_000;
  */
 @BackgroundJob({ name: 'inbound-catch-up' })
 @Injectable()
-export class InboundCatchUpJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class InboundCatchUpJob implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly log = new Logger(InboundCatchUpJob.name);
   private readonly ticker = new Ticker({
     name: InboundCatchUpJob.name,
@@ -44,8 +44,8 @@ export class InboundCatchUpJob implements OnApplicationBootstrap, OnModuleDestro
     this.ticker.start();
   }
 
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  async beforeApplicationShutdown(): Promise<void> {
+    await stopWithin(this.ticker);
   }
 
   async runOnce(now = new Date()): Promise<InboundCounts[]> {
