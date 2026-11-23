@@ -39,6 +39,7 @@ const balance = (id: string, used: number): BalanceRow => ({
 function setup(rows: SubRow[], paid: Map<string, number>) {
   const subs = {
     forStudent: vi.fn(async () => rows),
+    forStudents: vi.fn(async () => rows),
     paid: vi.fn(async () => paid),
     update: vi.fn(async () => null),
   };
@@ -56,10 +57,10 @@ function setup(rows: SubRow[], paid: Map<string, number>) {
   return { service, subs, audit, paidIds };
 }
 
-describe('PackagesService.recompute (journey 3: a full payment → active)', () => {
+describe('PackagesService.recomputeMany (journey 3: a full payment → active)', () => {
   it('writes and audits each derived status change, returns the new statuses', async () => {
     const { service, subs, audit } = setup([sub('a')], new Map([['a', 145]]));
-    const { rows } = await service.recompute('s1', 'admin-1');
+    const rows = (await service.recomputeMany(['s1'], 'admin-1')).get('s1')?.rows ?? [];
     expect(subs.update).toHaveBeenCalledWith('a', { status: 'active' });
     expect(audit.record).toHaveBeenCalledWith(
       expect.objectContaining({ actorId: 'admin-1', entityId: 'a', action: 'status_change', after: { status: 'active' } }),
@@ -69,18 +70,29 @@ describe('PackagesService.recompute (journey 3: a full payment → active)', () 
 
   it('a package moved to active tells PackageEvents (its course draft is booked); no change → nothing', async () => {
     const moved = setup([sub('a')], new Map([['a', 145]]));
-    await moved.service.recompute('s1', null);
+    await moved.service.recomputeMany(['s1'], null);
     expect(moved.paidIds).toEqual(['a']);
     const same = setup([sub('a', { status: 'active' })], new Map([['a', 145]]));
-    await same.service.recompute('s1', null);
+    await same.service.recomputeMany(['s1'], null);
     expect(same.paidIds).toEqual([]);
   });
 
   it('nothing changes → no write, no audit (idempotent)', async () => {
     const { service, subs, audit } = setup([sub('a', { status: 'active' })], new Map([['a', 145]]));
-    await service.recompute('s1', null);
+    await service.recomputeMany(['s1'], null);
     expect(subs.update).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();
+  });
+
+  it('several students: one read each of packages, balances and payments; each gets only its own packages', async () => {
+    const rows = [sub('a'), sub('b', { student_id: 's2', starts_on: '2026-09-20' })];
+    const { service, subs } = setup(rows, new Map([['a', 145]]));
+    const states = await service.recomputeMany(['s1', 's2', 's3'], null);
+    expect(subs.forStudents).toHaveBeenCalledOnce();
+    expect(subs.paid).toHaveBeenCalledOnce();
+    expect(states.get('s1')?.rows.map((r) => [r.id, r.status])).toEqual([['a', 'active']]);
+    expect(states.get('s2')?.rows.map((r) => [r.id, r.status])).toEqual([['b', 'unpaid']]);
+    expect(states.get('s3')?.rows).toEqual([]);
   });
 });
 

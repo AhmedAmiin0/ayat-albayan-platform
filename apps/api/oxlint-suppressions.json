@@ -485,6 +485,14 @@
       "count": 1
     }
   },
+  "src/common/db/testing/fake-db.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/common/http/errors.ts": {
     "ab/no-shape-checks": {
       "count": 2
@@ -2497,9 +2505,6 @@
     "typescript/consistent-type-imports": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 5
     },
@@ -2510,26 +2515,12 @@
       "count": 3
     }
   },
-  "src/modules/finance/subscriptions/alerts/alerts.service.renewal.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/finance/subscriptions/alerts/alerts.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 5
     },
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/finance/subscriptions/alerts/unpaid-flags.service.ts": {
@@ -2557,7 +2548,7 @@
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.recompute.http.test.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.repo.test.ts": {
@@ -2818,7 +2809,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
@@ -2909,7 +2900,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-type-conversion": {
       "count": 2
@@ -7267,17 +7258,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/people/guardians/fake-db.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
     }
   },
   "src/modules/people/guardians/guardian-phones.service.ts": {

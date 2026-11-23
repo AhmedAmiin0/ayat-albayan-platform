@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

@@ -1,4 +1,4 @@
-// The family app's Google Play build (owner 2026-11-21): mobile.yml action=build-android-apk
+// The family app's Google Play build: mobile.yml action=build-android-apk
 // app=family profile=production builds eas.json `production` (an AAB, EAS environment production)
 // and tags it KIND aab. Every other path (staff, stripe-test, family preview, OTAs) is unchanged.
 import assert from 'node:assert/strict';

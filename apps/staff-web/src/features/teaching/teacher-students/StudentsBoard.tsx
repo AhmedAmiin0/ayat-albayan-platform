@@ -1,4 +1,5 @@
-import { zonedPartsIn, type TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
+import { zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { LoadRetry, myLessonsQuery } from '@/features/teaching/teacher';

@@ -1,6 +1,14 @@
 import type { BookingMode } from '@ab/client-core';
-import type { LessonTimeEdit, TimeEditResult } from '@ab/shared';
-import type { CancelRequest, Conflict, LessonView, RescheduleRequest, SlotsResponse, StatusRouteEvent, ScheduleOverview } from '@ab/shared';
+import type { LessonTimeEdit, TimeEditResult } from '@ab/schedule';
+import type {
+  CancelRequest,
+  Conflict,
+  LessonView,
+  RescheduleRequest,
+  SlotsResponse,
+  StatusRouteEvent,
+  ScheduleOverview,
+} from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { errorCode } from '@ab/web-kit/lib/http/error-code';

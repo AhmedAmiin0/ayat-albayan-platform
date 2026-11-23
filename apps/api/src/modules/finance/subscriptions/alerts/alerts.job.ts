@@ -9,12 +9,16 @@ import { BackgroundJob } from '@/config/role/background-job';
 const EVERY_MS = 15 * 60_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
 const FIRST_RUN_MS = 5 * 60_000;
+/** The first sweep after a boot also takes packages changed while the API was down. */
+const BOOT_LOOKBACK_MS = 24 * 60 * 60_000;
 
-/** R-SUB-02: lesson changes evaluate at once; a 15-minute sweep catches missed events. */
+/** R-SUB-02: lesson events alert at once; a 15-minute idempotent sweep catches missed ones. */
 @BackgroundJob({ name: 'subscription-alerts' })
 @Injectable()
 export class AlertsJob extends TickerJob implements OnModuleInit {
   private readonly log = new Logger(AlertsJob.name);
+  /** Moves only after a sweep that evaluated every student, so a failed one is retried. */
+  private since: Date | null = null;
   protected readonly ticker = new Ticker({
     name: AlertsJob.name,
     firstMs: FIRST_RUN_MS,
@@ -38,8 +42,10 @@ export class AlertsJob extends TickerJob implements OnModuleInit {
   /** Never throws. */
   async runOnce(now = new Date()): Promise<{ students: number; failed: number }> {
     try {
-      const ids = await this.queries.studentsWithPackages();
+      this.since ??= new Date(now.getTime() - BOOT_LOOKBACK_MS);
+      const ids = await this.queries.sweepStudents(this.since);
       const failed = await this.alerts.evaluateStudents(ids, { now, cause: { via: 'sweep' } });
+      this.since = failed === 0 ? now : this.since;
       await this.courseDue.sweep(now);
       return { students: ids.length, failed };
     } catch (e) {

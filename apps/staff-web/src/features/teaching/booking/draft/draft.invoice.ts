@@ -1,5 +1,5 @@
 import { bookingInvoiceInput } from '@ab/client-core';
-import type { Duration } from '@ab/shared';
+import type { Duration } from '@ab/catalog';
 import type { InvoiceInput } from './contract';
 
 /** The invoice picked in the wizard: uploaded from the device, or a chat message the API copies. */
