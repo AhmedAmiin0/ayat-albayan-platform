@@ -8,7 +8,7 @@ import { LinesCard } from './LinesCard';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 const lang = vi.hoisted(() => ({ en: false }));
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => {
   const real = await orig<{ t: object }>();

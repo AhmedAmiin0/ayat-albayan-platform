@@ -5,7 +5,7 @@ export * from './kind-permissions.js';
 export * from './catalogue/catalogue.js';
 export * from './catalogue/catalogue-settings.js';
 export * from './catalogue/catalogue-views.js';
-export * from './catalogue/catalogue-state.js';
+export * from './catalogue/catalogue-state/catalogue-state.js';
 export * from './rules.types.js';
 export * from './rules.legacy.js';
 export * from './rules.effective.js';

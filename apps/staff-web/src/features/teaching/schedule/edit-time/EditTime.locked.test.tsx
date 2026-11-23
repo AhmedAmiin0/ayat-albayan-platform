@@ -6,7 +6,7 @@ import { fakeNow, HELD, openEditTime, pick, SAVED } from './edit-time-fixture';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
 const LOCKED = new ApiError(409, { code: 'payout_locked', message: 'payout_locked', month: '2026-09', status: 'approved' });
 const SAVE = () => screen.getByRole('button', { name: t.lessons.timeEdit.submit }) as HTMLButtonElement;

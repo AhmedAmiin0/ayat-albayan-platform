@@ -463,12 +463,12 @@
       "count": 2
     }
   },
-  "src/ui/form/Field.test.tsx": {
+  "src/ui/form/Field/tests/Field.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/ui/form/Field.tsx": {
+  "src/ui/form/Field/Field.tsx": {
     "complexity": {
       "count": 1
     },
@@ -500,17 +500,17 @@
       "count": 1
     }
   },
-  "src/ui/layout/Screen.inset.test.tsx": {
+  "src/ui/layout/Screen/tests/inset.test.tsx": {
     "no-restricted-syntax": {
       "count": 1
     }
   },
-  "src/ui/layout/Screen.test.tsx": {
+  "src/ui/layout/Screen/tests/Screen.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/ui/layout/Screen.tsx": {
+  "src/ui/layout/Screen/Screen.tsx": {
     "complexity": {
       "count": 1
     },

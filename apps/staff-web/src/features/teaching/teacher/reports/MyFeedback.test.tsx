@@ -8,7 +8,7 @@ import type { ServerListSearch } from '@/lib/list/server-list-search';
 import { MyFeedback } from './MyFeedback';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 function open(data: unknown, search: ServerListSearch = {}) {
   apiFetch.mockResolvedValue(data);

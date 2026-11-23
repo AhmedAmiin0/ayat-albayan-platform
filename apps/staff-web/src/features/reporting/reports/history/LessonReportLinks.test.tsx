@@ -8,7 +8,7 @@ import { LessonReportLinks } from './LessonReportLinks';
 import { PendingReports } from './PendingReports';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const STARTED = '2026-10-03T13:00:00.000Z';
 const AYA = { ...SUHAILA, id: 's-2', name: 'آية', code: 'AB-0184' };

@@ -12,7 +12,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
   useRouterState: () => '/admin/students',
 }));
-vi.mock('@ab/web-kit/auth/me', () => ({ meQuery: {} }));
+vi.mock('@ab/web-kit/auth/me/me', () => ({ meQuery: {} }));
 vi.mock('@/components/shell/nav/Crumbs', () => ({ Crumbs: () => null }));
 vi.mock('@/components/shell/header/MenuBar', () => ({ MenuBar: () => <header data-menu-bar /> }));
 vi.mock('@/components/shell/account/SideFoot', () => ({ SideFoot: () => <div data-side-foot /> }));

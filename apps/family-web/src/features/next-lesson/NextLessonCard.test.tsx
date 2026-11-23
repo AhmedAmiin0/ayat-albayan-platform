@@ -7,7 +7,7 @@ import { renderAt } from '@/test/render-at';
 import { NextLessonCard } from './NextLessonCard';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // lesson(): 16:00Z on 27 Oct, its join window 15:50–16:45.
 const OPEN = new Date('2026-10-27T15:55:00.000Z');

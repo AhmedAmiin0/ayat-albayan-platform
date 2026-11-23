@@ -1,6 +1,6 @@
 import type { ProbeAnswer } from '../../../core/http/index.js';
 
-/** What the four apps show (owner 2026-11-21): the app, the planned screen or the outage one. */
+/** What the four apps show: the app, the planned screen or the outage one. */
 export type MaintenanceView = 'open' | 'maintenance' | 'down';
 
 /** The last verdict: the admin switch is on, and/or the API stopped answering. */

@@ -8,7 +8,7 @@ import { packageDaysNote } from '@/features/teaching/booking/steps/package/packa
 import { ReviewSummary } from './ReviewSummary';
 
 const apiFetch = vi.hoisted(() => vi.fn(() => Promise.resolve({ total: 1080, currency: 'SAR', fx: null })));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const TEACHER = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', has_availability: true } as BookingTeacherOption;
 const SUN = '2026-10-04T14:00:00.000Z'; // Sunday 17:00 Riyadh

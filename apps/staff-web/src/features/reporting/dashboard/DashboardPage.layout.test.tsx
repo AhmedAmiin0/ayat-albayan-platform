@@ -11,7 +11,7 @@ import { DashboardPage } from './DashboardPage';
 // box; row headers wrap instead of forcing the table wider. Measured for real by the responsive e2e.
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
 const answer = (path: string): unknown => {

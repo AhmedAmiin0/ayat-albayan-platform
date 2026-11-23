@@ -12,11 +12,11 @@ import { routeTree } from './routeTree.gen';
 
 const FAMILY = vi.hoisted(() => 'https://family.example.test');
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
-vi.mock('@ab/web-kit/lib/http/env', async (orig) => {
+vi.mock('@ab/web-kit/lib/http/env/env', async (orig) => {
   const real = await orig<{ env: object }>();
   return { ...real, env: { ...real.env, familyOrigin: FAMILY } };
 });
-vi.mock('@ab/web-kit/auth/sign-in', async (orig) => ({ ...(await orig<object>()), signOut }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', async (orig) => ({ ...(await orig<object>()), signOut }));
 
 const routes = import.meta.glob<string>(['./routes/**/*.tsx'], {
   query: '?raw', import: 'default', eager: true,

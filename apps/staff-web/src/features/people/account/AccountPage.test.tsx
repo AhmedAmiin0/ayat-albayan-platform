@@ -5,7 +5,7 @@ import { PROFILE, renderWithClient } from './account-test-kit';
 import { AccountPage } from './AccountPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 beforeEach(() => {
   apiFetch.mockReset();

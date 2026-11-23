@@ -7,7 +7,7 @@ import { CreateListDialog } from './CreateListDialog';
 import { EditListDialog } from './EditListDialog';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn(async () => []) }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn(async () => []) }));
 
 const L = t.inbox.lists;
 const LIST = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع', count: 3, auto_rule: null };

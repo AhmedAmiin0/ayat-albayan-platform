@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 // After sign-in the login's language (GET /auth/me `locale`) wins over the browser's copy.
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: {} } }));
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch: vi.fn(), apiSend }));
 
 async function fresh() {
   vi.resetModules();

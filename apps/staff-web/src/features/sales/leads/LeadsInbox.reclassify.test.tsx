@@ -8,7 +8,7 @@ import type { LeadView } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({ Link: ({ children }: { children: ReactNode }) => <a href="/admin/book">{children}</a> }));
 
 const ROW: LeadView = {

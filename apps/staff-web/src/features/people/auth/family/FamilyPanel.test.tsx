@@ -9,7 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const navigate = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate, useSearch: () => ({}) }));
 

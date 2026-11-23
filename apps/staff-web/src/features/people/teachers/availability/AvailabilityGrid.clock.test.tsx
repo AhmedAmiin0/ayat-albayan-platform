@@ -6,7 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AvailabilityGrid } from './AvailabilityGrid';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiSend, apiFetch: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiSend, apiFetch: vi.fn() }));
 
 const SAT = t.enums.weekday[6];
 const ROWS = [{ weekday: 6, start_time: '16:00', end_time: '18:30', tz: 'Asia/Riyadh' }];

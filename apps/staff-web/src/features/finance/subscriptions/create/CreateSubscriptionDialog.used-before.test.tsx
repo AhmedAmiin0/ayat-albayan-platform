@@ -9,7 +9,7 @@ import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.set_start_date'] }));
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 vi.mock('@/features/people/auth', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),

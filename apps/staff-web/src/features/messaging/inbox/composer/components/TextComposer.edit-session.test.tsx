@@ -6,7 +6,7 @@ import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { box, editBar, OWN, pickEdit, showChat } from '@/features/messaging/inbox/testing/correction-harness';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 // Follow-up to #694 (items 4, 6): a sent correction ends only the «تعديل» tap it came from, and
 // gives the box back the draft it held before that tap.

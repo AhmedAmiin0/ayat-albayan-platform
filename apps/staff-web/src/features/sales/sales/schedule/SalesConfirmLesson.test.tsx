@@ -8,7 +8,7 @@ import { SalesLessonDrawer } from './SalesLessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ confirm: true }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => p === 'lessons.confirm' && granted.confirm }),
 }));

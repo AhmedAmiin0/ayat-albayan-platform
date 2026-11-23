@@ -5,7 +5,7 @@ import { renderAt } from '@/test/render-at';
 import { LegalPage } from './LegalPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const L = t.legal;
 const contact = { site: 'ayatalbayan.com', email: 'help@example.org' };

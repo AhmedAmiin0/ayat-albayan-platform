@@ -5,8 +5,8 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LoginPage } from './LoginPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend: vi.fn() }));
-vi.mock('@ab/web-kit/auth/sign-in', () => ({ signIn: vi.fn(), signInWithCode: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signIn: vi.fn(), signInWithCode: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
 function renderPage() {

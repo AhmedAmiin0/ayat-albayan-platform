@@ -8,7 +8,7 @@ import { LessonDrawer } from './LessonDrawer';
 import { setConfirmationRequired } from '@ab/web-kit/lib/settings/confirmation-testing';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
 
 function openCancel(l: LessonView) {
   const onDone = vi.fn();

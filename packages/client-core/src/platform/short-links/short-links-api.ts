@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { ApiError, toQueryString, type ApiClient } from '../../core/http/index.js';
 import { listKey, pathKey } from '../../core/keys/index.js';
 
-// «الروابط المختصرة» (owner 2026-11-17, docs/19 «Managed links»): the reads both apps use. The
+// «الروابط المختصرة» (docs/19 «Managed links»): the reads both apps use. The
 // admin / sales routes sit under /short-links; the web gate /l/<code> reads the public view.
 // Plain TanStack Query options (no React), answers parsed with the shared zod schemas.
 

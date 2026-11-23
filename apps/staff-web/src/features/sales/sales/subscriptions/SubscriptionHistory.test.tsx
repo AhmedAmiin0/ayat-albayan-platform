@@ -7,7 +7,7 @@ import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const CONFIRMED = [{ id: HISTORY_ID, student: { id: 's1', code: 'AB-0183', name: 'سهيلة' }, package: '8', status: 'active', starts_on: '2026-09-01', lessons_total: 8 }];
 

@@ -12006,7 +12006,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/scheduling/rules/rule-extend.service.test.ts": {

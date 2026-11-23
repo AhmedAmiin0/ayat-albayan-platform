@@ -1,6 +1,6 @@
 import { DURATIONS, type Attendance, type Duration, type Gender, type LessonStatus, type Program, type StudentStatus } from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
-import { isNotSubscribed } from './status-flow.js';
+import { isNotSubscribed } from './status-flow/index.js';
 
 // «موعد تجريبي جديد» (owner 2026-10-25): a new free-trial date for an existing student who has no
 // running subscription, and the history of every trial time picked for them. Pure.

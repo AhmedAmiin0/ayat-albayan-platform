@@ -5,7 +5,7 @@ import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { ADMIN, SALES, showLog } from './hide.testing';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const h = t.inbox.hide;
 const hidden = message({

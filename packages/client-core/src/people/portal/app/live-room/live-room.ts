@@ -7,8 +7,8 @@ import {
 } from '@ab/shared';
 import { roomLiveMinutes } from '../../../../teaching/lesson-room/index.js';
 
-// «الحلقة جارية الآن» on the family's lesson card and schedule row (owner 2026-11-16, canvas
-// RoomXLiveHome, RoomXLivePush): from the lesson's `room` (LiveKit participant_joined / left),
+// «الحلقة جارية الآن» on the family's lesson card and schedule row (canvas RoomXLiveHome,
+// RoomXLivePush): from the lesson's `room` (LiveKit participant_joined / left),
 // how long it has run and who is inside. A lesson ended for everyone is never live.
 
 export interface LiveRoom {

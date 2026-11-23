@@ -7,7 +7,7 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { TextComposer } from './TextComposer';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
 afterEach(() => {
   apiSend.mockReset();

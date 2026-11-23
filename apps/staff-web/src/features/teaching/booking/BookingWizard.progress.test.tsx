@@ -7,7 +7,7 @@ import { BookingWizard, type BookingWizardProps } from './BookingWizard';
 import { ABRAR, respond } from './wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const initial = draftFromLead({ leadId: 'lead-1', phone: '+966501234567', name: 'أم جود' }, null);
 const filled = initial.newStudent ? { ...initial, newStudent: { ...initial.newStudent, name: 'جود' } } : initial;

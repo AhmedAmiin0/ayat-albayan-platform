@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { action, button, fakeTab, held, renderBubble } from './whatsapp-send.test-util';
 
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 // Staff's answers about a «أرسل عبر واتساب» (docs/19): the platform never sends such a row itself.
 

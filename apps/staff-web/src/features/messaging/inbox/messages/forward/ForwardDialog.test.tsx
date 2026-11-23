@@ -9,7 +9,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const M = message({ id: 'b3f0e7a2-5d1c-4e8b-9a6f-0c2d4e6f8a10', body: 'رابط الحلقة', replyable: true, forwardable: true });
 const phoneOf = (i: number) => `+96650000000${i}`;

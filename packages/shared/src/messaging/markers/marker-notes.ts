@@ -1,7 +1,7 @@
 import type { MessageDirection } from '@ab/catalog';
 import { adWelcomeOf } from './chat-markers.js';
 import type { HiddenMark } from '../message-actions/hidden.js';
-import type { CorrectionMark } from '../message-actions/correction.js';
+import type { CorrectionMark } from '../message-actions/correction/index.js';
 import { payloadTypeOf } from '../payload/index.js';
 
 // What a bubble (or the chats list's last line) shows instead of its own content (owner

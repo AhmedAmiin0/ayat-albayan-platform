@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CHAT_SEND_MIMES, type ChatSendMime } from '../chat/chat-files.js';
+import { CHAT_SEND_MIMES, type ChatSendMime } from '../chat/chat-files/index.js';
 import { WA_TEXT_MAX } from '../schemas.js';
 
 // «الردود السريعة» (owner 2026-10-25): saved replies staff insert into the chat composer. Named

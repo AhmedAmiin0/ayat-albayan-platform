@@ -11,7 +11,7 @@ import { PaymentsPage } from '@/features/finance/payments/PaymentsPage';
 import type { PaymentsUrlSearch } from '@/features/finance/payments/search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const row = (id: string, legacy = false): PaymentAttachmentView => ({ id, mime: 'image/jpeg', size: 9, url: `https://signed/${id}`, expires_at: '', legacy });
 

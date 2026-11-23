@@ -9,7 +9,7 @@ vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
   ...(await orig<object>()),
   locale: 'en',
 }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
   apiFetch: () => Promise.resolve({ academy_contact: { email: 'help@example.org' } }),
 }));

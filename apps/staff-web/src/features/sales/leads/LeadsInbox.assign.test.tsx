@@ -8,7 +8,7 @@ import type { LeadView } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children, ...rest }: { to: string; search: Record<string, string>; children: ReactNode }) => (
     <a href={`${to}?${new URLSearchParams(search)}`} {...rest}>{children}</a>

@@ -4,7 +4,7 @@ import { threadQuery } from './thread-query';
 import { inboxLive } from './live';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 /** The interval as TanStack calls it (a function of the query, unused here). */
 function interval(value: unknown): unknown {

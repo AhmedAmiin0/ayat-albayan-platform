@@ -8,7 +8,7 @@ import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture
 import { TextComposer } from './TextComposer';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
 const OTHER = '+966507654321';
 const client = new QueryClient({

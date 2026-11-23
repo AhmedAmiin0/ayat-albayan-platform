@@ -16,7 +16,7 @@ export * from './sales/pick-sales.js';
 export * from './sales/views.js';
 export * from './sales/academy.js';
 export * from './sales/schedule.js';
-export * from './sales/teacher-filter.js';
+export * from './sales/teacher-filter/teacher-filter.js';
 export * from './sales/money.js';
 export * from './sales/money-views.js';
 export * from './sales/payment-link/index.js';

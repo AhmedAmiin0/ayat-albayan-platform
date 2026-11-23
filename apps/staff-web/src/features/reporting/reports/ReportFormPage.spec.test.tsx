@@ -8,7 +8,7 @@ import { ReportFormPage } from './ReportFormPage';
 // تقرير الحلقة: the form's section headings, field titles and their order (the Google Form's).
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 async function open(over: Parameters<typeof formResponse>[1] = {}) {
   apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/lessons/l-1/report-form' ? formResponse({}, over) : []));

@@ -7,7 +7,7 @@ import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const LINK = 'https://meet.example.org/abrar-fixed';
 const L = t.studentLists;

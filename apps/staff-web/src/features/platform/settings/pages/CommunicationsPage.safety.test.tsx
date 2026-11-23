@@ -7,7 +7,7 @@ import { renderCommunications } from './communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async (orig) => ({
   ...(await orig<object>()),
   Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,

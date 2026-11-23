@@ -8,9 +8,9 @@ const apiSend = vi.hoisted(() => vi.fn());
 const navigate = vi.hoisted(() => vi.fn());
 const role = vi.hoisted(() => ({ current: 'admin' }));
 const me = vi.hoisted(() => () => ({ role: role.current }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
-vi.mock('@ab/web-kit/auth/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: me, initialData: me, staleTime: Infinity } }));
+vi.mock('@ab/web-kit/auth/me/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: me, initialData: me, staleTime: Infinity } }));
 
 const row = (item = ITEM, onPick = vi.fn()) =>
   renderWithClient(

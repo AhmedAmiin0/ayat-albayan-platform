@@ -6,7 +6,7 @@ import { LessonRecording } from './LessonRecording';
 import { pageOf, recordingView } from './recordings-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const NO_RETRY = { defaultOptions: { queries: { retry: false } } };
 

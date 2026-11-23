@@ -6,7 +6,7 @@ import { OPEN_SUB, student } from '@/features/sales/sales-money/sales-money-fixt
 import { SalesMoneyFlow } from '@/features/sales/sales-money/SalesMoneyFlow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
 }));

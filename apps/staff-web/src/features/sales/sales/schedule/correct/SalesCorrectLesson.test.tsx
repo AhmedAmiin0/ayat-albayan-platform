@@ -8,7 +8,7 @@ import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLessonDrawer } from '@/features/sales/sales/schedule/SalesLessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => ['lessons.confirm', 'lessons.cancel'].includes(p) }),
 }));

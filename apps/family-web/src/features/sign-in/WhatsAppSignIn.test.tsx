@@ -11,7 +11,7 @@ vi.mock('@ab/web-kit/auth/login/auth-api', async (orig) => {
   const real = await orig<{ authApi: object }>();
   return { ...real, authApi: { ...real.authApi, familyCodes: { request, verify: vi.fn() } } };
 });
-vi.mock('@ab/web-kit/auth/sign-in', async (orig) => ({ ...(await orig<object>()), signInWithCode }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', async (orig) => ({ ...(await orig<object>()), signInWithCode }));
 
 const PHONE = '+966500000005';
 const box = (n: number) => screen.getByLabelText(t.familyAuth.codeDigit.replace('{n}', String(n)));
