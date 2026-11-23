@@ -1,9 +1,7 @@
 import type { DashboardSummary, WorkTab } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// docs/07 §6 KPI strip: four numbers, each a filter link to the work behind it. Saffron («دورك»)
-// only when there is work: a count above zero. «يحتاج تأكيد» only while the academy requires a
-// confirmation (settings.lesson_confirmation_required, owner 2026-11-02): never a 0 tile.
+// KPI strip (docs/07 §6): highlighted only above zero; confirmation tile only when it is required.
 
 export type KpiKey = 'needsConfirm' | WorkTab;
 

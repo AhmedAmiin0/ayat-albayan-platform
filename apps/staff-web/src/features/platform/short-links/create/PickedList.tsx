@@ -39,7 +39,6 @@ function Pill({ children, name, onRemove }: PillProps) {
   );
 }
 
-/** The listed people and numbers as removable pills (board LinkXWebCreate «المحددون»). */
 export function PickedList({ people, phones, onRemovePerson, onRemovePhone }: PickedListProps) {
   if (people.length + phones.length === 0) return null;
   return (

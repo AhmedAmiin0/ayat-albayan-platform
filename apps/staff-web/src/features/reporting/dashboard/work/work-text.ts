@@ -3,7 +3,6 @@ import { packageProgress } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { TaskRow, UnpaidRow } from '@ab/money';
 
-/** «باقة سهيلة قربت تخلص: فاضل حلقتين» (dashboard.task.<kind>, R-SUB-02 wording). */
 export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): string {
   const left = task.balance
     ? packageProgress(task.balance.used, task.balance.total, { forms: t.subscriptions.progress }).remainingLabel
@@ -11,7 +10,6 @@ export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): s
   return t.dashboard.task[task.kind].replace('{student}', task.student?.name ?? '').replace('{left}', left);
 }
 
-/** «4 حلقات في الشهر», or the counted lessons of a custom package («6 حلقات»). */
 export function packageText(row: Pick<UnpaidRow, 'package' | 'lessons_total'>): string {
   return row.package ? t.enums.packageSize[row.package] : counted(t.pricing.customSessions, row.lessons_total);
 }

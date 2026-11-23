@@ -8,10 +8,7 @@ import { workItem, workLink } from './PendingReportsList';
 import { packageText } from '@/features/reporting/dashboard/work/work-text';
 import type { UnpaidRow } from '@ab/money';
 
-/**
- * Packages with status «مش مدفوع» (R-SUB-02), oldest first; each opens the student's file. A row
- * says what is due: the money still owed, or a renewal (paid in full and used up).
- */
+/** Unpaid packages (R-SUB-02), oldest first; each row says money owed or a renewal due. */
 export function UnpaidList({ items }: { items: readonly UnpaidRow[] }) {
   if (items.length === 0) return <p className="py-3 text-sm text-ink-2">{t.dashboard.noUnpaid}</p>;
   return (

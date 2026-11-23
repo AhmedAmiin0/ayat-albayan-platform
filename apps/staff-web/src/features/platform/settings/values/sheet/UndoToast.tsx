@@ -10,10 +10,7 @@ export interface UndoToastProps {
   duration?: number;
 }
 
-/**
- * «تم حفظ القيمة» with «تراجع» (the app's toast look, docs/07 §10). Unlike the shared Toast, the
- * timer also pauses while focus is inside, so a keyboard user can reach «تراجع» in time.
- */
+/** Unlike the shared Toast, the timer pauses while focus is inside so keyboard users can undo. */
 export function UndoToast({ message, onUndo, onDismiss, duration = 10_000 }: UndoToastProps) {
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -23,7 +20,7 @@ export function UndoToast({ message, onUndo, onDismiss, duration = 10_000 }: Und
     return () => clearTimeout(id);
   }, [hovered, focused, onDismiss, duration]);
   return (
-    // Not a live region: «القيم» announces the save once, by name, in its own polite region.
+    // Not a live region: the page announces the save once, by name, in its own polite region.
     <div
       data-undo-toast
       onMouseEnter={() => setHovered(true)}

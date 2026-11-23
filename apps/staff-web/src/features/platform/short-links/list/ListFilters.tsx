@@ -48,7 +48,6 @@ function OwnerSelect({ search, onSearch, owners }: Omit<ListFiltersProps, 'count
   );
 }
 
-/** «بحث», «المالك» (the admin), «مسح التصفية» and the status chips with their counts. */
 export function ListFilters({ search, onSearch, counts, owners }: ListFiltersProps) {
   const tab: LinkStatusTab = search.status ?? 'all';
   const options = LINK_STATUS_TABS.map((value) => ({

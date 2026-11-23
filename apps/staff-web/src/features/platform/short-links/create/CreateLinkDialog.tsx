@@ -88,7 +88,6 @@ function AccessFields({ state }: { state: LinkFormState }) {
   );
 }
 
-/** «رابط جديد» (board LinkXWebCreate): the side panel over the list. */
 export function CreateLinkDialog({ onClose, onCreated }: CreateLinkDialogProps) {
   const formId = useId();
   const state = useLinkForm(onCreated);

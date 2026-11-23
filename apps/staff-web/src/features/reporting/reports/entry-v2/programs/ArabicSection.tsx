@@ -7,7 +7,6 @@ import { TopicField } from './TopicField';
 
 const arabicOf = (c: ReportContent): ArabicContent => c.arabic ?? arabicContentSchema.parse({});
 
-/** Arabic program: «موضوع الدرس» and the four graded skills. */
 export function ArabicSection({ s }: { s: ReportEntryV2State }) {
   const v2 = t.reports.v2;
   const a = arabicOf(s.values.content);

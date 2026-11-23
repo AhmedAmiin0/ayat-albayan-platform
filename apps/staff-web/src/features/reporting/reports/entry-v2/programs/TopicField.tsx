@@ -11,7 +11,7 @@ export interface TopicFieldProps {
   required?: boolean;
 }
 
-/** One short line of the lesson (موضوع الدرس، المحفوظ): 300 characters at most. */
+/** 300 characters at most. */
 export function TopicField({ label, value, onChange, invalid, required }: TopicFieldProps) {
   const blank = !value?.trim();
   return (

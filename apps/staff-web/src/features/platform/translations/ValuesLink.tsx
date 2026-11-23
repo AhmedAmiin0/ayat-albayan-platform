@@ -5,10 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RegistryHint } from './registry-hints';
 import { valuesHref } from './registry-hints';
 
-/**
- * «عدّله من «القيم»»: a real <a href> (it carries the query string without a typed route search) that
- * navigates in-app on a plain click; its click never opens the row's editor.
- */
+/** A real anchor carries the query string without a typed route search; never opens the editor. */
 export function ValuesLink({ hint }: { hint: RegistryHint }) {
   const router = useRouter({ warn: false });
   const href = valuesHref(hint);

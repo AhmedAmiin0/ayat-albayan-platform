@@ -4,8 +4,7 @@ import {
 import { SHORT_LINK_STATUSES } from '@ab/shared';
 import { z } from 'zod';
 
-// Where the short-link screens live: the admin's and the salesperson's sections share them, and
-// the list keeps its filters in the URL so «رجوع» from a link lands on the same page.
+// Admin and sales sections share these screens; filters live in the URL so back keeps the page.
 
 export type LinkSection = 'admin' | 'sales';
 
@@ -40,5 +39,4 @@ export const filterOf = (search: LinkListSearch): ShortLinkListFilter => ({
   pageSize: LIST_PAGE_SIZE,
 });
 
-/** Any filter set (the «مسح التصفية» link and the empty state's words). */
 export const isFiltered = (search: LinkListSearch): boolean => isListFiltered(viewOf(search));
