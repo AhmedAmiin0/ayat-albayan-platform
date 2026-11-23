@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { DomainEventsRepo } from './domain-events.repo';
 
 // The outbox's two RPCs (migration 20261123000100): the claim and the batched finish.
