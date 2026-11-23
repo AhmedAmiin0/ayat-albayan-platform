@@ -1,4 +1,4 @@
-import type { Weekday } from '@ab/shared';
+import type { Weekday } from '@ab/catalog';
 import { useId, useState, type FocusEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';

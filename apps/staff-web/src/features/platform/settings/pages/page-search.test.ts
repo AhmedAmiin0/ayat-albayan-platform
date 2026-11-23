@@ -1,4 +1,4 @@
-import { isEditableValueKey, VALUE_GROUPS } from '@ab/shared';
+import { isEditableValueKey, VALUE_GROUPS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import {
   communicationsAliasRedirect,

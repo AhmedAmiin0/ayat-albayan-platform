@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { portalHomeQuery } from '@ab/web-kit/portal/api';
 import { ChildView } from './child/ChildView';
 import { GuardianHome } from './home/GuardianHome';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 
 /** A student's own login lands on their own screen; a guardian on every child, then one. */
 function Landing({ home }: { home: Home }) {
@@ -35,7 +35,7 @@ export function PortalHome() {
       <div className="empty:hidden">
         <MeTestChip />
       </div>
-      <LoadState query={query}>
+      <QueryState query={query}>
         {(home) =>
           home.students.length === 0 ? (
             <EmptyState title={t.portal.noStudents}>{t.portal.noStudentsHint}</EmptyState>
@@ -43,7 +43,7 @@ export function PortalHome() {
             <Landing home={home} />
           )
         }
-      </LoadState>
+      </QueryState>
     </div>
   );
 }

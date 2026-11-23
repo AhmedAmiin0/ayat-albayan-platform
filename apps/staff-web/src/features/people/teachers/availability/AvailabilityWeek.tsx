@@ -1,4 +1,4 @@
-import type { Weekday } from '@ab/shared';
+import type { Weekday } from '@ab/catalog';
 import { forwardRef } from 'react';
 import { useMinuteClock } from '@ab/web-kit/components/ui/layout/running-head';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

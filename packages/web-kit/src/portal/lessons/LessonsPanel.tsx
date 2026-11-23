@@ -6,7 +6,7 @@ import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { portalLessonsQuery } from '@ab/web-kit/portal/api';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { LessonCard } from './LessonCard';
 import { PrepareCard } from './PrepareCard';
 
@@ -60,7 +60,7 @@ export function LessonsPanel({ student, exceptNext = false }: Props) {
   const query = useQuery(portalLessonsQuery(student.id));
   const now = useNow(PORTAL_REFRESH_MS);
   return (
-    <LoadState query={query}>
+    <QueryState query={query}>
       {(read) => (
         <Lessons
           lessons={read}
@@ -68,6 +68,6 @@ export function LessonsPanel({ student, exceptNext = false }: Props) {
           skip={exceptNext ? nextLesson(read.lessons, now) : null}
         />
       )}
-    </LoadState>
+    </QueryState>
   );
 }

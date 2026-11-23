@@ -8,7 +8,7 @@ import type {
   GoogleTeacherMapRow,
   TeacherCalendarOwner,
   TeacherCalendarView,
-} from '@ab/shared';
+} from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 

@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { settingsForm, settingsUpdate } from './settings-form';

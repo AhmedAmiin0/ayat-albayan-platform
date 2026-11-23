@@ -1,5 +1,5 @@
 import { ApiError } from '@ab/client-core';
-import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

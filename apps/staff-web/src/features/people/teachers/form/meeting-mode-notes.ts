@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem, TemplateStatus } from '@ab/shared';
+import type { IntegrationConfigItem, TemplateStatus } from '@ab/catalog';
 
 export const JOIN_TEMPLATE = 'lesson_join_link';
 const LIVEKIT_KEYS = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'] as const;

@@ -1,7 +1,7 @@
 import { portalViewer, readsOwn } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { ScheduleNotes } from './ScheduleNotes';
 import { useWeek, type Week } from './use-week';
 import { WeekBar } from './WeekBar';
@@ -15,9 +15,9 @@ function Days({ week, guardian }: { week: Week; guardian: boolean }) {
     refetch: week.retry,
   };
   return (
-    <LoadState query={query} rows={3}>
+    <QueryState query={query} rows={3}>
       {(days) => <WeekBody key={week.offset} week={week} days={days} guardian={guardian} />}
-    </LoadState>
+    </QueryState>
   );
 }
 

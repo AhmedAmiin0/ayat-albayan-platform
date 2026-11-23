@@ -89,7 +89,7 @@ describe('PortalHome: the guardian sees every child at a glance', () => {
     apiFetch.mockImplementation(portalApi(answers));
     apiFetch.mockRejectedValueOnce(new Error('down'));
     renderPortal(<PortalHome />);
-    fireEvent.click(await screen.findByRole('button', { name: t.portal.retry }));
+    fireEvent.click(await screen.findByRole('button', { name: t.common.retry }));
     await waitFor(() => expect(screen.getByRole('article', { name: 'سلمى' })).toBeTruthy());
   });
 });

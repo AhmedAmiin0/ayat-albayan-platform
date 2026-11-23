@@ -1,4 +1,4 @@
-import { settingSection, type SettingsSectionId } from '@ab/shared';
+import { settingSection, type SettingsSectionId } from '@ab/settings';
 import { matchesSetting } from '@/components/settings/search/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
 import { RegistryField } from '@/features/platform/settings/registry-form/RegistryField';
