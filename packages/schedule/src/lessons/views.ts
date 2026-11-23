@@ -6,7 +6,7 @@ import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
 import type { LessonRoomState } from '../classroom/index.js';
 import type { LessonProposalView } from './proposals/proposals.js';
 
-// Phase 2 API response shapes (docs/10-phase2-contracts.md §3): snake_case rows, ISO UTC, IANA tz.
+// API response shapes (docs/10-phase2-contracts.md §3): snake_case rows, ISO UTC, IANA tz.
 
 /** One student on a lesson. */
 export interface LessonStudentView {

@@ -20,7 +20,7 @@ export interface RoomJoinResult {
   role: JoinRole;
   /** 'off': RECORDING_S3_* or LiveKit Egress are not set up, so this room is not recorded (the admin is warned). */
   recording?: 'on' | 'off';
-  /** false: a trial lesson (owner, 2026-10-11): no text chat between the family and the teacher. */
+  /** false: a trial lesson: no text chat between the family and the teacher. */
   chat?: boolean;
 }
 

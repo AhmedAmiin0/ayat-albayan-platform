@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Scheduled meetings and invitations (R-MEET-01..03, owner 2026-10-12, migrations 410–419). Staff are
+// Scheduled meetings and invitations (R-MEET-01..03, migrations 410–419). Staff are
 // invited in the app (the bell, kind meeting_invite); a family (picked from the students: the guardian's
 // phone is resolved by the API, never sent to a client) or any typed phone gets a WhatsApp CHAT message
 // inside its 24 h window only (no template). A closed window is not an error: that recipient's result
@@ -26,7 +26,7 @@ export const DEFAULT_MEETING_DURATION = 60;
 export const MEETING_MAX_AHEAD_DAYS = 90;
 
 /**
- * Who may type any phone as an invitee and see every student (owner policy 2026-10-13): admin and
+ * Who may type any phone as an invitee and see every student: admin and
  * sales only. Anyone else gets 403 phone_invite_not_allowed, and the clients hide «رقم هاتف».
  */
 export const mayInvitePhones = (role: string | null | undefined): boolean => role === 'admin' || role === 'sales';

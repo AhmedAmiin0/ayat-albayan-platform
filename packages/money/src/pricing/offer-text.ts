@@ -4,7 +4,7 @@
 import { counted, type PluralForm } from '@ab/core';
 import type { PackageId } from './catalog.js';
 import type { CurrencyIso } from './currency.js';
-import type { Quote } from './quote.js';
+import type { Quote } from './quote/index.js';
 
 export interface OfferLabels {
   waIntro: string;

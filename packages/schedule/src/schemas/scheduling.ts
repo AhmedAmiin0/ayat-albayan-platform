@@ -6,7 +6,7 @@ import { instant, localDate, requiredText, timeOfDay, timeZone } from '@ab/core'
 import { dayTimesSchema } from './day-times.js';
 
 // Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; POST /booking's
-// schema joins the people row schemas in @ab/shared (k5a). Times are never free text (rule 6):
+// schema joins the people row schemas in @ab/shared. Times are never free text (rule 6):
 // wall-clock "HH:MM" + IANA tz, local dates "YYYY-MM-DD", instants ISO-8601 with offset.
 
 /** A one-lesson move's optional reason (docs/47 owner call 4), written on the moved-away row. */
@@ -110,7 +110,7 @@ export const proposalApproveSchema = z.object({
   override: overrideSchema.optional(),
   startsAt: instant.optional(),
 });
-/** POST /lesson-proposals/:id/reject — `note` reaches the family (owner 2026-11-17). */
+/** POST /lesson-proposals/:id/reject — `note` reaches the family. */
 export const proposalRejectSchema = z.object({ note: z.string().trim().max(500).optional() });
 
 export type RescheduleRequest = z.infer<typeof rescheduleRequestSchema>;

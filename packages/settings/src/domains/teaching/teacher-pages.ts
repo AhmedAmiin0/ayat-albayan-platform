@@ -1,9 +1,8 @@
 import type { SettingDef } from '../../defs.js';
 
-// Owner 2026-11-13 «disable … for now» + «enable them via admin portal»: one switch per teacher
-// page or button, off by default. UI only: the teacher stops seeing and reaching the page on web
-// and mobile; the API, the data and the pushes are unchanged. Admin, sales and assistant screens
-// never read these.
+// One switch per teacher page or button, off by default and turned on from the admin portal.
+// UI only: the teacher stops seeing and reaching the page on web and mobile; the API, the data
+// and the pushes are unchanged. Admin, sales and assistant screens never read these.
 
 const teacherSwitch = (name: string) =>
   ({
