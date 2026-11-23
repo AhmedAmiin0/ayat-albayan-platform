@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { clockOfHhmm, clockRange, isolateClock } from './clock.js';
 
 const rangeHhmm = (from: string, to: string, opts: { cycle: '12' | '24'; locale: 'ar' | 'en' }) =>
-  clockRange(clockOfHhmm(from, opts.cycle, opts.locale), clockOfHhmm(to, opts.cycle, opts.locale), opts);
+  clockRange(
+    clockOfHhmm(from, opts.cycle, opts.locale),
+    clockOfHhmm(to, opts.cycle, opts.locale),
+    opts,
+  );
 
 const LRI = '⁦';
 const RLI = '⁧';
@@ -21,15 +25,23 @@ describe('isolateClock', () => {
 
 describe('clockRange / clockRangeHhmm', () => {
   it('24 h keeps today’s «from – to» LTR island', () => {
-    expect(rangeHhmm('16:00', '18:00', { cycle: '24', locale: 'ar' })).toBe(`${LRI}16:00 – 18:00${PDI}`);
+    expect(rangeHhmm('16:00', '18:00', { cycle: '24', locale: 'ar' })).toBe(
+      `${LRI}16:00 – 18:00${PDI}`,
+    );
   });
 
   it('12 h in both languages', () => {
-    expect(rangeHhmm('16:00', '18:00', { cycle: '12', locale: 'ar' })).toBe(`${RLI}4:00 م – 6:00 م${PDI}`);
-    expect(rangeHhmm('11:30', '12:15', { cycle: '12', locale: 'en' })).toBe(`${LRI}11:30 AM – 12:15 PM${PDI}`);
+    expect(rangeHhmm('16:00', '18:00', { cycle: '12', locale: 'ar' })).toBe(
+      `${RLI}4:00 م – 6:00 م${PDI}`,
+    );
+    expect(rangeHhmm('11:30', '12:15', { cycle: '12', locale: 'en' })).toBe(
+      `${LRI}11:30 AM – 12:15 PM${PDI}`,
+    );
   });
 
   it('joins two clocks formatted elsewhere', () => {
-    expect(clockRange('9:00 AM', '10:00 AM', { cycle: '12', locale: 'en' })).toBe(`${LRI}9:00 AM – 10:00 AM${PDI}`);
+    expect(clockRange('9:00 AM', '10:00 AM', { cycle: '12', locale: 'en' })).toBe(
+      `${LRI}9:00 AM – 10:00 AM${PDI}`,
+    );
   });
 });

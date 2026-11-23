@@ -1,21 +1,24 @@
+import { toResult } from './result.js';
+import type { RetryOptions } from './retry.types.js';
+
 /**
  * Run `fn`; after a failure wait delays[i] and try again, so delays.length + 1 attempts in all.
- * The last error is rethrown; so is one `giveUp` accepts, at once (an outcome a retry cannot change).
+ * The last error is rethrown; so is one `giveUp` accepts, at once (a retry cannot change it).
  * `sleep` is injected: @ab/shared has no timers (it also runs on Hermes), and tests skip the wait.
  */
-export async function retry<T>(
-  fn: () => Promise<T>,
-  opts: { delays: readonly number[]; sleep: (ms: number) => Promise<void>; giveUp?: (e: unknown) => boolean },
-): Promise<T> {
+export async function retry<T>(fn: () => Promise<T>, opts: RetryOptions): Promise<T> {
   for (let attempt = 0; ; attempt += 1) {
-    try {
-      return await fn();
-    } catch (e) {
-      const delay = opts.delays[attempt];
-      if (delay === undefined || opts.giveUp?.(e)) throw e;
-      await opts.sleep(delay);
-    }
+    const outcome = await toResult(fn);
+    if (outcome.ok) return outcome.value;
+    await waitOrThrow(outcome.error, attempt, opts);
   }
+}
+
+/** Waits the delay after failed `attempt`; rethrows `e` when none is left or giveUp says so. */
+async function waitOrThrow(e: unknown, attempt: number, opts: RetryOptions): Promise<void> {
+  const delay = opts.delays[attempt];
+  if (delay === undefined || opts.giveUp?.(e)) throw e;
+  await opts.sleep(delay);
 }
 
 /** An exponential backoff curve: baseMs × factor^step, never above capMs. */

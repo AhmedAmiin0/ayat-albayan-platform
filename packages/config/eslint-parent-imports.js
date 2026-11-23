@@ -25,13 +25,17 @@ const calleeName = (callee) => {
   return object.type === 'Identifier' && property.type === 'Identifier' ? `${object.name}.${property.name}` : '';
 };
 
-/** The literal node of a static module path, or undefined (a template with `${}` is not a path). */
+const stringValue = (node) => (typeof node.value === 'string' ? node.value : undefined);
+const plainTemplate = (node) =>
+  node.expressions.length === 0 ? (node.quasis[0]?.value.cooked ?? '') : undefined;
+
+/** The module path a node spells, per node type (a template with `${}` is not a path). */
+const PATH_VALUE = { Literal: stringValue, TemplateLiteral: plainTemplate };
+
+/** The literal node of a static module path, or undefined. */
 const pathLiteral = (node) => {
-  if (node?.type === 'Literal' && typeof node.value === 'string') return { node, value: node.value };
-  if (node?.type === 'TemplateLiteral' && node.expressions.length === 0) {
-    return { node, value: node.quasis[0]?.value.cooked ?? '' };
-  }
-  return undefined;
+  const value = PATH_VALUE[node?.type]?.(node);
+  return value === undefined ? undefined : { node, value };
 };
 
 const rule = {

@@ -30,9 +30,9 @@ export interface TranslationKeyRow {
   arOverride: string | null;
   enOverride: string | null;
   /**
-   * docs/26 §3: set only on a settings row's hint key (its Arabic text is that row's description,
-   * edited on «القيم»): the settings key. The ar column is then read-only here (PUT/DELETE of the ar
-   * override → 409 `edit_on_values`); en stays editable.
+   * docs/26 §3: set only on a settings row's hint key (its Arabic text is that row's
+   * description, edited on «القيم»): the settings key. The ar column is then read-only here
+   * (PUT/DELETE of the ar override → 409 `edit_on_values`); en stays editable.
    */
   valuesKey?: string;
 }

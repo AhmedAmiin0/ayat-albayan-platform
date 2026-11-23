@@ -1,13 +1,16 @@
 // Brand exports from the academy's real logo (docs/07 §11). Run from the repo root:
 //   node docs/design/brand/tools/build.mjs
 // Source: docs/design/brand/logo-mark.png (1536×1024 on ivory #FDF8F0). Writes the transparent
-// masters next to it, the web favicons/icons + <Mark> images, and the Expo icon/splash/adaptive set.
-// No dependencies: png.mjs is a node:zlib PNG codec, image.mjs + resample.mjs the pixel ops.
+// masters next to it, the web favicons/icons + <Mark> images, and the Expo icon, splash and
+// adaptive set.
+// No dependencies: png.mjs is a node:zlib PNG codec; paper.mjs, image.mjs and resample.mjs the
+// pixel ops.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { decode, encode } from './png.mjs';
-import { crop, extract, monochrome, opaqueBox } from './image.mjs';
+import { crop, monochrome, opaqueBox } from './image.mjs';
+import { extract } from './paper.mjs';
 import { place } from './resample.mjs';
 import { familyIcons, ico } from './web-icons.mjs';
 
@@ -16,40 +19,65 @@ const BRAND = 'docs/design/brand';
 const PAPER = [0xfd, 0xf8, 0xf0].map((v) => v / 255); // T.paper in the Apps Script Brand library
 
 // Paper pockets the two swirl ornaments enclose (source px): the border flood cannot reach them.
-const SEEDS = [[521, 417], [547, 452], [1033, 424], [986, 454], [995, 478]];
-// Top edge of the open pages in the Mushaf crop (crop px, ~4 px above the gold page line). Everything
-// above it is the star field and frame, cleared so the small mark is the Mushaf on its rahle alone.
-const PAGE_TOP = [[128, 0], [180, 8], [230, 18], [280, 34], [320, 51], [355, 71], [385, 94], [410, 114],
-  [435, 96], [465, 74], [500, 56], [545, 38], [590, 21], [640, 10], [690, 0]];
+const SEEDS = [
+  [521, 417],
+  [547, 452],
+  [1033, 424],
+  [986, 454],
+  [995, 478],
+];
+// Top edge of the open pages in the Mushaf crop (crop px, ~4 px above the gold page line).
+// Everything above it is the star field and frame, cleared so the small mark is the Mushaf on its
+// rahle alone.
+const PAGE_TOP = [
+  [128, 0],
+  [180, 8],
+  [230, 18],
+  [280, 34],
+  [320, 51],
+  [355, 71],
+  [385, 94],
+  [410, 114],
+  [435, 96],
+  [465, 74],
+  [500, 56],
+  [545, 38],
+  [590, 21],
+  [640, 10],
+  [690, 0],
+];
 
 function curveAt(x) {
   const pts = PAGE_TOP;
   if (x <= pts[0][0]) return pts[0][1];
   for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+    const [x0, y0] = pts[i - 1],
+      [x1, y1] = pts[i];
     if (x <= x1) return y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
   }
   return pts[pts.length - 1][1];
 }
 
-/** The Mushaf on its rahle: the emblem below the star, with the star field above the pages cleared. */
+/** The Mushaf on its rahle: the emblem below the star, the star field above the pages cleared. */
 function mushafOf(master) {
   const top = 448;
   const cut = crop(master, { x: 0, y: top, w: master.width, h: master.height - top });
   const m = crop(cut, opaqueBox(cut, 2));
   for (let i = 0; i < m.width * m.height; i++) {
-    const x = i % m.width, y = (i / m.width) | 0;
+    const x = i % m.width,
+      y = (i / m.width) | 0;
     m.data[i * 4 + 3] *= Math.min(1, Math.max(0, (y - curveAt(x)) / 1.5)); // 1.5 px soft edge
   }
   return crop(m, opaqueBox(m, 2));
 }
 
 /**
- * Paper under fully clear pixels: resamplers that skip premultiplying (Expo's Android mipmaps) blend
- * the hidden RGB into the edge, and paper is what every icon background is.
+ * Paper under fully clear pixels: resamplers that skip premultiplying (Expo's Android mipmaps)
+ * blend the hidden RGB into the edge, and paper is what every icon background is.
  */
 function matte(img) {
-  for (let i = 0; i < img.width * img.height; i++) if (img.data[i * 4 + 3] < 0.5 / 255) img.data.set(PAPER, i * 4);
+  for (let i = 0; i < img.width * img.height; i++)
+    if (img.data[i * 4 + 3] < 0.5 / 255) img.data.set(PAPER, i * 4);
   return img;
 }
 
@@ -77,11 +105,23 @@ write(`${BRAND}/logo-mushaf-transparent.png`, encode(matte(crop(mushaf, opaqueBo
 // illegible there), touch + PWA icons on the brand paper (staff) or the green tile (family), and
 // the two <Mark> images (components/ui/display/mark.tsx): @ab/catalog owns them (also the report
 // PDF's logo) and both apps serve them at /brand/.
-const fav16 = small({ w: 16 }), fav32 = small({ w: 32 }), fav48 = emblem({ w: 48 });
-write('packages/web-kit/icons/staff/favicon.ico', ico([{ size: 16, png: fav16 }, { size: 32, png: fav32 }, { size: 48, png: fav48 }]));
+const fav16 = small({ w: 16 }),
+  fav32 = small({ w: 32 }),
+  fav48 = emblem({ w: 48 });
+write(
+  'packages/web-kit/icons/staff/favicon.ico',
+  ico([
+    { size: 16, png: fav16 },
+    { size: 32, png: fav32 },
+    { size: 48, png: fav48 },
+  ]),
+);
 write('packages/web-kit/icons/staff/favicon-16.png', fav16);
 write('packages/web-kit/icons/staff/favicon-32.png', fav32);
-write('packages/web-kit/icons/staff/apple-touch-icon.png', emblem({ w: 180, fill: 0.8, bg: PAPER }));
+write(
+  'packages/web-kit/icons/staff/apple-touch-icon.png',
+  emblem({ w: 180, fill: 0.8, bg: PAPER }),
+);
 write('packages/web-kit/icons/staff/icon-192.png', emblem({ w: 192, fill: 0.8, bg: PAPER }));
 write('packages/web-kit/icons/staff/icon-512.png', emblem({ w: 512, fill: 0.8, bg: PAPER }));
 write('packages/catalog/brand/mark.png', encode(tall(master, 192)));
@@ -92,9 +132,16 @@ familyIcons({ master, mushaf }, write);
 // circle of the 108 dp canvas (fill 0.5); monochrome is the line art Android 13 tints.
 write('apps/staff-mobile/assets/icon.png', emblem({ w: 1024, fill: 0.8, bg: PAPER }));
 write('apps/staff-mobile/assets/android-icon-foreground.png', emblem({ w: 1024, fill: 0.5 }));
-const solid = (w, c) => ({ width: w, height: w, data: Float32Array.from({ length: w * w * 4 }, (_, i) => (i % 4 === 3 ? 1 : c[i % 4])) });
+const solid = (w, c) => ({
+  width: w,
+  height: w,
+  data: Float32Array.from({ length: w * w * 4 }, (_, i) => (i % 4 === 3 ? 1 : c[i % 4])),
+});
 write('apps/staff-mobile/assets/android-icon-background.png', encode(solid(1024, PAPER), true));
-write('apps/staff-mobile/assets/android-icon-monochrome.png', encode(place(monochrome(master, PAPER), { w: 1024, fill: 0.5 })));
+write(
+  'apps/staff-mobile/assets/android-icon-monochrome.png',
+  encode(place(monochrome(master, PAPER), { w: 1024, fill: 0.5 })),
+);
 // (monochrome stays white under clear pixels: Android only reads its alpha)
 write('apps/staff-mobile/assets/splash-icon.png', emblem({ w: 1024, fill: 0.9 }));
 write('apps/staff-mobile/assets/favicon.png', fav48);
