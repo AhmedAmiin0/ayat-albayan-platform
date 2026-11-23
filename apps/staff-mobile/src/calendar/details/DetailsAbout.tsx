@@ -7,14 +7,10 @@ import type { DetailsLesson, DetailsRole } from './details-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { DetailsTeacher } from './DetailsTeacher';
 
-/** Neither field sent (sales' «الجدول» never gets the way in): unknown, not «لا يوجد رابط». */
+/** Neither field sent (sales never get the way in) means unknown, not "no link". */
 const linkKnown = (l: DetailsLesson): boolean => l.meeting_link !== undefined || l.platform_classroom !== undefined;
 
-/**
- * «بيانات الحلقة»: the teacher, the way in (DetailsLink, every role: sales too since owner
- * 2026-10-26; left out when the lesson carries neither field), the override and cancel reasons and the clashes the daily job found (R-SCH-04), in
- * the bad tone.
- */
+/** Clashes found by the daily job (R-SCH-04) show in the bad tone; link omitted when unknown. */
 export function DetailsAbout({ lesson, role }: { lesson: DetailsLesson; role: DetailsRole }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

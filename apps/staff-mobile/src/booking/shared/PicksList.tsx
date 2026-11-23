@@ -15,7 +15,7 @@ interface PicksListProps {
 
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
-/** «أيام الحلقات»: one row per picked day with its time («الأحد الساعة 18:00»), earliest first. */
+/** Earliest first. */
 export function PicksList({ picks, tz, onRemove }: PicksListProps) {
   const viewer = useViewerClock();
   const { color } = useTheme();

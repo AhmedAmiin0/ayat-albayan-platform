@@ -675,11 +675,6 @@
       "count": 2
     }
   },
-  "src/booking/screens/BookTrial.package.test.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/booking/screens/BookTrialScreen.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -754,7 +749,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/booking/shared/slots/slots.ts": {
@@ -777,11 +772,6 @@
       "count": 3
     }
   },
-  "src/booking/trial/components/ConfirmStep.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/booking/trial/components/ContactStep/tests/contact.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -798,11 +788,6 @@
       "count": 1
     }
   },
-  "src/booking/trial/components/DurationPills.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/booking/trial/components/MultiFooter.tsx": {
     "max-len": {
       "count": 1
@@ -816,7 +801,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/booking/trial/components/TrialWizard.tsx": {
@@ -851,12 +836,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/booking/trial/lib/confirm-summary.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/booking/trial/lib/contact-pills.ts": {
@@ -886,9 +871,6 @@
   "src/booking/trial/lib/package-choice.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/booking/trial/lib/use-book-trial.ts": {
@@ -901,17 +883,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
-    }
-  },
-  "src/calendar/agenda/AgendaItemRow.tsx": {
-    "max-len": {
-      "count": 1
+      "count": 3
     }
   },
   "src/calendar/agenda/AgendaLessonRow/AgendaLessonRow.tsx": {
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/calendar/agenda/LessonRowActions/tests/hierarchy.test.tsx": {
@@ -927,19 +904,11 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/calendar/agenda/RowDefaultActions.tsx": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/calendar/agenda/Tag.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -949,9 +918,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/calendar/details/DetailsAbout.tsx": {
@@ -959,12 +925,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/calendar/details/DetailsLink.tsx": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/calendar/details/DetailsStudentRow.tsx": {
@@ -978,11 +944,6 @@
       "count": 1
     }
   },
-  "src/calendar/details/DetailsStudents.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/calendar/details/DetailsTeacher.tsx": {
     "max-len": {
       "count": 1
@@ -993,7 +954,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/calendar/details/LessonDetailsSheet.tsx": {
@@ -1001,25 +962,17 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/calendar/details/StudentPackageLine.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/calendar/details/details-text.test.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/calendar/details/details-text.ts": {
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/calendar/details/use-lesson-details.test.tsx": {
@@ -1037,11 +990,6 @@
       "count": 1
     }
   },
-  "src/calendar/live/LiveBadge.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/calendar/overview/TeacherHeader.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -1052,7 +1000,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/calendar/overview/tests/overview.test.ts": {
@@ -1081,11 +1029,6 @@
       "count": 1
     }
   },
-  "src/calendar/route.test.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/calendar/screens/DayScheduleScreen/tests/DayScheduleScreen.test.tsx": {
     "@typescript-eslint/dot-notation": {
       "count": 2
@@ -1099,7 +1042,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -1127,7 +1070,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -1146,7 +1089,7 @@
   },
   "src/classroom/assistants/AssistantLessonItem.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/assistants/AssistantLessonsList.tsx": {
@@ -1185,7 +1128,7 @@
   },
   "src/classroom/links/CopyLinkAction.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/classroom/links/JoinClassroomButton/JoinClassroomButton.tsx": {
@@ -1193,7 +1136,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 1
     }
   },
   "src/classroom/links/SendLinkAction/SendLinkAction.tsx": {
@@ -1201,7 +1144,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-nested-ternary": {
       "count": 1
@@ -1226,11 +1169,6 @@
       "count": 4
     }
   },
-  "src/classroom/links/use-join-classroom.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/classroom/links/web-origin.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
@@ -1250,7 +1188,7 @@
   },
   "src/classroom/recordings/RecordingRow.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/recordings/RecordingsList.tsx": {
@@ -1261,7 +1199,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/recordings/recording-format.ts": {
@@ -1321,7 +1259,7 @@
   },
   "src/core/auth/route-permissions.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/core/auth/use-tab-open.ts": {
@@ -1349,7 +1287,7 @@
   },
   "src/core/lib/money/format/format.ts": {
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/core/lib/money/paid-day/tests/paid-day.test.ts": {
@@ -1467,7 +1405,7 @@
   },
   "src/core/lib/stripe-flag.ts": {
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/core/lib/time/use-following-day.ts": {
@@ -1495,7 +1433,7 @@
   },
   "src/core/nav/routing.chat.test.tsx": {
     "max-len": {
-      "count": 5
+      "count": 3
     },
     "no-nested-ternary": {
       "count": 1
@@ -1537,7 +1475,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 5
+      "count": 2
     },
     "no-restricted-syntax": {
       "count": 3
@@ -1566,7 +1504,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "no-nested-ternary": {
       "count": 1
@@ -1603,9 +1541,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -1658,7 +1593,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 14
+      "count": 13
     },
     "no-restricted-syntax": {
       "count": 1
@@ -1666,7 +1601,7 @@
   },
   "src/core/ui/lists/ReportRows.tsx": {
     "max-len": {
-      "count": 10
+      "count": 7
     },
     "no-nested-ternary": {
       "count": 2
@@ -1701,7 +1636,7 @@
   },
   "src/earnings/components/EarningsSummary.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/earnings/components/PayForm.tsx": {
@@ -1709,7 +1644,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/earnings/components/PaymentItem.tsx": {
@@ -1775,7 +1710,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/earnings/lib/scope.ts": {

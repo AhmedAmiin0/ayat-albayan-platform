@@ -37,7 +37,6 @@ export function DetailsGroup({ label, children }: { label: string; children: Rea
   );
 }
 
-/** A quiet second line inside a group: «عند الطالب 16:00 بتوقيت مسقط», «45 دقيقة». */
 export function DetailsLine({
   children,
   tone = 'ink2',
@@ -62,7 +61,6 @@ export function DetailsLine({
   );
 }
 
-/** «المعلم/ة  أبرار»: a label beside its value, for the short facts of «بيانات الحلقة». */
 export function DetailsFact({ label, children }: { label: string; children: ReactNode }) {
   const { color } = useTheme();
   return (

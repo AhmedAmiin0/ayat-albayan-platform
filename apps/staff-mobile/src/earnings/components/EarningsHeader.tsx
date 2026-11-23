@@ -21,7 +21,6 @@ interface EarningsHeaderProps {
   onFilter: (filter: SessionFilter) => void;
 }
 
-/** The list header: the three cards, «الحلقات | الدفعات», and (on sessions) the status filter. */
 export function EarningsHeader({ balance, tab, onTab, filter, onFilter }: EarningsHeaderProps) {
   return (
     <View style={{ gap: 12 }}>

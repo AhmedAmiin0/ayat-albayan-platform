@@ -11,10 +11,7 @@ import { PayForm } from '@/earnings/components/PayForm';
 import type { SessionFilter } from '@ab/client-core';
 import { useEarningsBalance } from '@/earnings/hooks/queries';
 
-/**
- * «مستحقات» of a teacher (admin: More > المعلمين > teacher): the balance, the sessions with ticks,
- * the payments, and «سجّل دفعة» for the ticked sessions (or everything outstanding).
- */
+/** Admin pays the ticked sessions, or everything outstanding. */
 export function TeacherEarningsScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const scope = { teacherId: id };

@@ -1,13 +1,9 @@
 import { Platform } from 'react-native';
 
-// «رابط دفع» exists only in a Stripe build (owner 2026-10-28, go live 2026-11-01, docs/30). Expo inlines
-// EXPO_PUBLIC_* at bundle time: eas.json's `preview` and `stripe-test` profiles and mobile.yml's OTA set it to
-// '1' (app-config.stripe.test.ts); a build without it has every Stripe screen and pill as dead code that asks
-// nothing. Even with it, GET /stripe/feature decides (use-stripe.ts). Here in core
-// (sales-subscribe/payment-link/flag.ts re-exports it) because the chats open pay links too.
+// Inlined at bundle time; without it Stripe screens are dead code; the API flag still decides.
 export const STRIPE_FEATURE = process.env.EXPO_PUBLIC_FEATURE_STRIPE === '1';
 
-/** GET /stripe/feature's query key: use-stripe.ts reads it, an «التكاملات» save invalidates it. */
+/** use-stripe.ts reads it; saving integrations invalidates it. */
 export const STRIPE_FEATURE_KEY = ['stripe', 'feature'] as const;
 
 /** The platform's pay page, https://<host>/pay/<token>, with nothing after the token. */

@@ -22,7 +22,7 @@ export type { Step } from '@/booking/trial/lib/steps';
 
 interface WizardStepProps {
   step: Step;
-  /** This wizard's steps in order: «التالي» / a pick moves to the one after `step`. */
+  /** Next or a pick moves to the one after step. */
   steps: readonly Step[];
   draft: TrialDraft;
   patch: (p: Partial<TrialDraft>) => void;
@@ -44,7 +44,7 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
   // A salesperson registers a trial only: no booking type to pick.
   const sales = useBookingMode() === 'sales';
   if (step === 'contact') {
-    // «المده» is asked here unless a package step follows (it asks the length with the package).
+    // Duration is asked here unless a package step follows.
     return (
       <View style={{ gap: 16 }}>
         {sales ? null : <KindPills value={draft.kind} onChange={(kind) => patch(kindPatch(kind))} />}

@@ -22,10 +22,7 @@ interface PayFormProps {
   onDone: (replayed: boolean) => void;
 }
 
-/**
- * «سجّل دفعة» for a teacher (admin): amount (default = what the ticked sessions owe; more than
- * that is refused here and by the API), method, day, receipt photo. A refused save keeps everything.
- */
+/** Defaults to what the ticked sessions owe; more is refused here and by the API. */
 export function PayForm({ teacherId, selected, outstanding, onDone }: PayFormProps) {
   const now = useNow();
   const ceiling = payCeiling(selected, outstanding);

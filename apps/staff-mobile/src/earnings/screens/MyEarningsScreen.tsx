@@ -10,10 +10,7 @@ import { useEarningsBalance } from '@/earnings/hooks/queries';
 
 const MINE = {};
 
-/**
- * «مستحقاتي» (teacher, More tab): earned, paid and outstanding, every lesson with its status and
- * the payments made to me. Read only: there is no tick and no pay button here.
- */
+/** Read only: no tick and no pay button here. */
 export function MyEarningsScreen() {
   const balance = useEarningsBalance(MINE);
   const [tab, setTab] = useState<Tab>('sessions');

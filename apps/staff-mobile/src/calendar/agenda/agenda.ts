@@ -18,11 +18,7 @@ export interface AgendaDay {
   lessons: LessonView[];
 }
 
-/**
- * The 7 days from `start`, each with its lessons on the viewer's calendar `tz`, earliest first: the
- * day a lesson sits under is the day its clock reads in (a Cairo teacher's 00:30 Riyadh Sunday
- * lesson is Saturday 23:30 for them, so under السبت). The week window is the same zone's (weekWindow).
- */
+/** A lesson sits under the day its clock reads in the viewer's tz, not Riyadh's. */
 export function agendaDays(lessons: readonly LessonView[], start: string, tz: string): AgendaDay[] {
   const days: AgendaDay[] = Array.from({ length: 7 }, (_, i) => ({
     date: addDays(start, i),
@@ -35,11 +31,7 @@ export function agendaDays(lessons: readonly LessonView[], start: string, tz: st
   return days;
 }
 
-/**
- * «عند المعلم/ة 15:00 بتوقيت القاهرة» when the teacher's wall clock reads differently from the
- * viewer's `viewer` zone (a Riyadh admin, Cairo in winter); null when it reads the same. Past
- * midnight it names the teacher's day: «عند المعلم/ة الجمعة 23:30 بتوقيت القاهرة».
- */
+/** Shown when the teacher's wall clock differs from the viewer's; null when the same. */
 export function teacherClock(lesson: LessonView, cycle: ClockCycle, viewer: string): string | null {
   const at = new Date(lesson.starts_at);
   const { tz } = lesson.teacher;
@@ -52,11 +44,7 @@ export function teacherClock(lesson: LessonView, cycle: ClockCycle, viewer: stri
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/**
- * The faint availability line of a day: «متاح 16:00 – 18:00، 20:00 – 22:00 بتوقيت القاهرة». The
- * weekly grid is read in the zone it was saved in, named in the line. ponytail: the weekday is
- * matched as is, so a window past midnight in that zone sits on its own weekday, not Riyadh's.
- */
+/** Read in the saved zone; a window past midnight stays on its own weekday, not Riyadh's. */
 export function availabilityLine(
   rows: readonly AvailabilityRow[],
   on: { date: string; teacherTz: string; cycle: ClockCycle },
@@ -71,10 +59,7 @@ export function availabilityLine(
     .replace('{city}', cityOf(gridTz(rows, teacherTz)));
 }
 
-/**
- * The screen's subtitle parts joined with « · », plus «آخر تحديث 16:20» while a refetch failed over
- * saved data (offline; there is no NetInfo), so the admin knows how old the list is.
- */
+/** Shows the last update time while a refetch failed over saved data (no NetInfo). */
 export function headerLine(
   parts: readonly string[],
   query: { isError: boolean; data: unknown; dataUpdatedAt: number },

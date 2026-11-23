@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { useNow } from '@ab/mobile-kit';
 
-/**
- * A Date that changes only when the device's calendar day does (useNow underneath: a minute timer
- * and the foreground refresh). A list's day words («أمس», the weekday) switch at midnight, while
- * the minute ticks between redraw no row (React's adjust-state-while-rendering pattern).
- */
+/** Changes only on a calendar-day change, so minute ticks redraw no row. */
 export function useToday(): Date {
   const now = useNow();
   const [today, setToday] = useState(now);
