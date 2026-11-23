@@ -105,12 +105,9 @@ export class SubscriptionsRepo {
    */
   async paid(subs: readonly Pick<SubRow, 'id' | 'currency'>[]): Promise<Map<string, number>> {
     const sums = new Map(subs.map((s) => [s.id, 0]));
-    if (subs.length === 0) return sums;
-    const { data, error } = await this.db
-      .from('payments')
-      .select('subscription_id, amount, currency, kind')
-      .in('subscription_id', [...sums.keys()]);
-    if (error) throw dbError(error);
+    const data = await readChunked([...sums.keys()], (chunk) =>
+      this.db.from('payments').select('subscription_id, amount, currency, kind').in('subscription_id', chunk),
+    );
     const currency = new Map(subs.map((s) => [s.id, s.currency]));
     for (const p of data) {
       if (currency.get(p.subscription_id) !== p.currency) continue;
