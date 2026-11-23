@@ -1,11 +1,13 @@
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { sleep } from '@/common/infra/cache/sleep';
 import { PushService } from '@/common/push/push.service';
-import { PAYMENT_HOLD_EXPIRED, paymentSubject, WA_PAYMENT_HOLD } from './hold/payment-hold';
+import { LineOutages } from './hold/line-outages';
+import { PAYMENT_HOLD_EXPIRED } from './hold/payment-hold';
 import { PaymentHolds, type HoldAt } from './hold/payment-holds';
 import { MessageDispatch } from './message.dispatch';
-import { authSubject, claimRow, sendingAt, UNRECORDED, unrecordedAt, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
-import { CRM_RATE_LIMITED, failurePlan, messageLabel, readyToSend, SENDING, type FailurePlan } from './send-plan';
+import { claimRow, sendingAt, UNRECORDED, unrecordedAt, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
+import { failurePush, pauseOf, timeoutPause, trySubject, type Pause } from './pause';
+import { failurePlan, readyToSend, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderRepo, type DueMessage } from './sender.repo';
 import { TemplateMissing } from '@/modules/messaging/whatsapp/templates/check/template-missing';
@@ -16,8 +18,8 @@ import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 export type { PassJob, SendJob } from './message.job';
 /**
- * One queued row (docs/12 §3.3): the window hold (window/), expiry, staleness, auto_off, the 131042
- * hold (hold/), claim, send, outcome. Never throws; claimed by compare-and-set: never sent twice.
+ * One queued row (docs/12 §3.3): the window hold (window/), expiry, staleness, auto_off, the
+ * 131042 and outage holds (hold/), claim, send, outcome. Never throws; claimed by compare-and-set.
  */
 @Injectable()
 export class MessageWorker {
@@ -28,6 +30,7 @@ export class MessageWorker {
   /** The chat window (window/): held texts, window refusals, release(); unit tests: none. */
   @Optional() @Inject(WindowHold) private readonly window?: WindowHold;
   @Optional() @Inject(EvolutionPaceRepo) private readonly pace?: EvolutionPaceRepo; // docs/19
+  @Optional() @Inject(LineOutages) outages?: LineOutages; // the outage hold (hold/line-outages)
 
   constructor(
     private readonly queries: SenderRepo,
@@ -73,6 +76,7 @@ export class MessageWorker {
     const recordDeps = { queries: this.queries, wait: this.wait, log: this.log };
     await clock.record(() => recordSent(recordDeps, { row, sent }));
     await this.holds?.lift({ line, route, now });
+    await this.outages?.lift({ line, route, now });
     return clock.end('sent');
   }
 
@@ -82,29 +86,30 @@ export class MessageWorker {
   }
 
   private async failed(input: FailedInput): Promise<SendOutcome> {
-    const { row, now, line, route } = input;
+    const { row, now, line } = input;
     const plan = await this.plan(input);
     await this.queries.failure(row.id, plan, ...unrecordedAt(input));
     await this.missing?.check({ key: row.template_key, line, error: input.error, now });
-    // The CRM's rate limit (per key): the line waits for Retry-After this pass; not a token failure, no push.
-    if (plan.error_code === CRM_RATE_LIMITED) return 'paused';
-    if (plan.error_code === WA_PAYMENT_HOLD) {
-      // 131042: the row (a template: its line too) waits; one push per line (number) a day.
-      this.log.error(`WhatsApp refused for payment (131042) on ${line}: message ${row.id} held`);
-      await this.alert(row, paymentSubject({ line, route, now }));
-      return 'paused';
-    }
-    if (plan.attempts !== undefined) {
-      // The token, not the message: rows wait; one push a day (fixed in Business Manager).
-      this.log.error(`WhatsApp refused the token (${plan.error_code}); sending paused: ${plan.error_text}`);
-      // One push per line per day (the notifications subject unchanged); module mode: per number.
-      await this.alert(row, authSubject({ line, route, now }));
-      return 'paused';
-    }
+    const pause = pauseOf({ ...input, plan }) ?? (await this.timeouts(input));
+    if (pause) return this.paused(row, pause);
     if (plan.status === 'queued') return 'retry';
     this.log.warn(`message ${row.id} failed: ${plan.error_code} ${plan.error_text}`);
-    await this.alert(row, `${row.id}:${now.getTime()}`);
+    await failurePush(this.push, row, trySubject(row, now));
     return 'failed';
+  }
+
+  /** The lane waits for the rest of the pass; one push per line (number) and period. */
+  private async paused(row: DueMessage, pause: Pause): Promise<SendOutcome> {
+    if (pause.log) this.log.error(pause.log);
+    if (pause.subject) await failurePush(this.push, row, pause.subject);
+    return 'paused';
+  }
+
+  /** Timeouts in a row hold the lane; the timed-out row stays uncertain and is pushed itself. */
+  private async timeouts(input: FailedInput): Promise<Pause | null> {
+    if (!(await this.outages?.settle(input.error, input))) return null;
+    await failurePush(this.push, input.row, trySubject(input.row, input.now));
+    return timeoutPause(input);
   }
 
   /**
@@ -120,30 +125,24 @@ export class MessageWorker {
     }
     if (!readyToSend(row, job.template)) return 'skipped';
     const check = await this.holds?.check(row, at);
-    if (check === 'deferred') return 'skipped';
+    if (check === 'deferred' || (await this.outages?.check(row, at)) === 'deferred') return 'skipped';
     if (check !== 'aged') return null;
     return this.failed({ ...at, row, error: PAYMENT_HOLD_EXPIRED, attempts: row.attempts });
   }
 
   /** The failure's plan; a template's 131042 also holds its line with this row as the probe. */
-  private plan(input: FailedInput): Promise<FailurePlan> {
+  private async plan(input: FailedInput): Promise<FailurePlan> {
     const plan = failurePlan(input);
-    return this.holds ? this.holds.probe(plan, input) : Promise.resolve(plan);
+    const paid = this.holds ? await this.holds.probe(plan, input) : plan;
+    return this.outages ? this.outages.probe(paid, input) : paid;
   }
 
   release = (): Promise<number> => this.window?.release() ?? Promise.resolve(0);
-  /** The pass's later rows of a paused line: deferred in one write while it is 131042-held. */
+  /** The pass's later rows of a paused line: deferred in one write while it is held. */
   async deferRest(probe: PassJob, rest: readonly DueMessage[]): Promise<void> {
     const { line } = sendingAt(probe, this.dispatch.multi);
-    await this.holds?.deferRest(rest, { line, route: probe.route, now: probe.now });
-  }
-
-  /** reminder_failed, keyed per failed try: a row that fails again after the admin's retry pushes again. */
-  private alert(row: DueMessage, subject: string): Promise<void> {
-    return this.push.notifyAdmins('reminder_failed', {
-      subject,
-      vars: { template: messageLabel(row), name: row.guardian?.name ?? row.lead?.name ?? row.phone_e164 },
-      data: { phone: row.phone_e164, messageId: row.id },
-    });
+    const at = { line, route: probe.route, now: probe.now };
+    await this.holds?.deferRest(rest, at);
+    await this.outages?.deferRest(rest, at);
   }
 }

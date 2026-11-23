@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { at, fakeHolds, heldPlan, iso, NOTIFICATIONS, NOW } from './payment-holds.fakes';
+import { WA_PAYMENT_HOLD as PAY } from './payment-hold';
 
 // The line hold behind the 131042 probe (docs/12 §3.3): set, defer, 48 h stop, session texts.
 
@@ -39,7 +40,7 @@ describe('PaymentHolds — the probe', () => {
       now: at(31),
     });
     expect(plan.next_attempt_at).toBe(iso(91));
-    expect(repo.move).toHaveBeenCalledWith({ from: [iso(30), iso(32)], to: iso(93) });
+    expect(repo.move).toHaveBeenCalledWith({ from: [iso(30), iso(32)], to: iso(93), code: PAY });
   });
 });
 
@@ -54,6 +55,7 @@ describe('PaymentHolds — rows of a held line', () => {
       attempts: 1,
       next: iso(32),
       text: expect.stringContaining('131042'),
+      code: PAY,
     });
   });
 
@@ -100,7 +102,7 @@ describe('PaymentHolds — lift', () => {
   it('a sent row lifts the hold and frees its deferred rows now; then rows send at once', async () => {
     const { holds, repo } = await held();
     await holds.lift({ ...NOTIFICATIONS, now: at(5) });
-    expect(repo.move).toHaveBeenCalledWith({ from: [iso(30), iso(32)], to: iso(5) });
+    expect(repo.move).toHaveBeenCalledWith({ from: [iso(30), iso(32)], to: iso(5), code: PAY });
     await expect(holds.check(template('m-2'), { ...NOTIFICATIONS, now: at(6) })).resolves.toBe(
       'send',
     );

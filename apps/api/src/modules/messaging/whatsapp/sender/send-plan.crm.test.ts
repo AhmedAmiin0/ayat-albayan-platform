@@ -35,9 +35,10 @@ describe('failurePlan on the crm driver', () => {
     expect(plan(crm(400, 'whatsapp_not_configured'))).toMatchObject({ status: 'queued', error_code: 'crm_auth' });
   });
 
-  it('500 internal / another 5xx: uncertain (failed, the admin checks before resending)', () => {
+  it('500 internal / another 5xx: uncertain; a 503 page: the CRM is down (lane held)', () => {
     expect(plan(crm(500, 'internal'))).toMatchObject({ status: 'failed', error_code: UNCERTAIN });
-    expect(plan(crmErrorFrom({ status: 503, text: 'down', retryAfter: null }))).toMatchObject({ status: 'failed', error_code: UNCERTAIN });
+    expect(plan(crmErrorFrom({ status: 504, text: 'late', retryAfter: null }))).toMatchObject({ status: 'failed', error_code: UNCERTAIN });
+    expect(plan(crmErrorFrom({ status: 503, text: 'down', retryAfter: null }))).toMatchObject({ status: 'queued', error_code: 'wa_line_down' });
     expect(errorCode(crm(404, 'not_found'))).toBe('crm_not_found');
   });
 });

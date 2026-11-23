@@ -67,6 +67,7 @@ describe('MessageWorker — 131042 line hold, review fixes', () => {
     expect(repo.move).toHaveBeenCalledWith({
       from: ['2026-10-30T08:30:00.000Z', '2026-10-30T08:32:00.000Z'],
       to: LATER.toISOString(),
+      code: 'wa_payment_hold',
     });
     await expect(w.process(job(reminder('m-2', { expires_at: ago(-HOUR) }), LATER))).resolves.toBe(
       'sent',
