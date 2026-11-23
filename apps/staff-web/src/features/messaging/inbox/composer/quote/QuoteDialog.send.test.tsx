@@ -96,5 +96,6 @@ it('a 409 session_closed refetches the thread so the sheet locks send and edit',
   await screen.findByTestId('quote-text');
   fireEvent.click(button(q.send));
   expect(await screen.findByText(t.inbox.error.session_closed)).toBeTruthy();
-  await waitFor(() => expect(refetch).toHaveBeenCalledWith({ queryKey: ['threads'] }));
+  await waitFor(() => expect(refetch).toHaveBeenCalledWith({ queryKey: ['threads', 'detail', PHONE] }));
+  expect(refetch).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
 });

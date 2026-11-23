@@ -10,6 +10,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadsQuery } from '@/features/messaging/inbox/api/api';
 import { forwardMessage } from '@/features/messaging/inbox/api/api.forward';
 import { ForwardList } from './ForwardList';
+import { refreshSentLists } from '@/features/messaging/inbox/api/send-cache';
 
 export interface ForwardDialogProps {
   message: MessageView;
@@ -36,9 +37,9 @@ export function ForwardDialog({ message, from, onClose, onDone }: ForwardDialogP
   const request = useRef({ key: '', id: '' });
   const send = useMutation({
     mutationFn: forwardMessage,
-    onSuccess: async (res) => {
+    onSuccess: (res) => {
       onDone(res, picked);
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      refreshSentLists(queryClient);
     },
   });
   const full = picked.size >= FORWARD_MAX_TARGETS;

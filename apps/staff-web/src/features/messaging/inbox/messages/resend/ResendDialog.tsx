@@ -6,6 +6,7 @@ import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sendText } from '@/features/messaging/inbox/api/api';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 /** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
 const RESEND_TEXT = ar.inbox.resend.text;
@@ -20,9 +21,9 @@ export function ResendDialog({ phone, clientRequestId, onClose }: { phone: strin
   const queryClient = useQueryClient();
   const send = useMutation({
     mutationFn: () => sendText({ phone, text: RESEND_TEXT, clientRequestId }),
-    onSuccess: async () => {
+    onSuccess: (view) => {
       onClose();
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      showAnswer(queryClient, view);
     },
   });
   // While it goes, the dialog stays: closing then could lose the answer of a send already on its way.

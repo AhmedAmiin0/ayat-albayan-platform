@@ -84,7 +84,9 @@ describe('«إعادة توجيه» (owner 2026-10-25)', () => {
     expect(toast.textContent).toContain(t.inbox.forward.result.replace('{sent}', '1').replace('{skipped}', '1'));
     expect(toast.textContent).toContain(`محادثة 1: ${t.inbox.forward.skip.session_closed}`);
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads'] });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
   });
 
   it('an error keeps the dialog with the error line; the retry reuses the request id', async () => {

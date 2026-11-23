@@ -1,23 +1,19 @@
+import type { ThreadPages } from '@ab/client-core';
 import type { Query, QueryClient } from '@tanstack/react-query';
-import { threadQuery } from './thread-query';
+import { threadDeltaKey, threadQuery } from './thread-query';
 
-// docs/44 K1: the re-reads a live event runs. Each starts after the event (cancelRefetch: true: an
-// older read in flight is cancelled, never joined), except for loads that must not be cancelled nor
-// joined: a chat page load («تحميل الأقدم»: query-core cancels a fetchNextPage for a cancelRefetch
-// read) and a first load (joining it would leave the event's change missing until the next poll).
-// The re-read then waits for that load to settle and runs once after it.
+// docs/44 K1: the re-reads a live event runs, each started after the event (cancelRefetch: true:
+// an older read in flight is cancelled, never joined). A chat load in flight («تحميل الأقدم», a
+// first load, a full read) is waited for instead: cancelling a page load drops it, joining a first
+// load misses the event, and a delta landing during any of them is dropped (thread-delta.ts).
 
 const fetching = (query: Query) => query.state.fetchStatus === 'fetching';
 
 /** A first load in flight: joined by a refetch (no data to cancel), so a re-read follows it. */
 const firstLoad = (query: Query) => fetching(query) && query.state.data === undefined;
 
-/**
- * A chat load in flight the re-read waits for: a page load or a first load (fetchMeta outlives the
- * page load, so a settled one never holds a later event's re-read back).
- */
-const mustWait = (query: Query) =>
-  firstLoad(query) || (fetching(query) && Boolean(query.state.fetchMeta?.fetchMore));
+/** A page load in flight (fetchMeta outlives it, so a settled one holds no later event back). */
+const pageLoad = (query: Query) => fetching(query) && Boolean(query.state.fetchMeta?.fetchMore);
 
 /** Loads a re-read is already chained onto: one chained re-read per load is enough. */
 const chained = new WeakSet<Promise<unknown>>();
@@ -31,33 +27,52 @@ function after(load: Promise<unknown> | undefined, reread: Reread): void {
   void load.catch(() => undefined).then(reread);
 }
 
+/** Chains `reread` after the load in flight on `query` when `loading` says one runs. */
+function waits(query: Query | undefined, loading: (q: Query) => boolean, reread: Reread): boolean {
+  const busy = query !== undefined && loading(query);
+  if (busy) after(query.promise, reread);
+  return busy;
+}
+
+/** A loaded chat with no row has no `after` for a delta: only a whole read shows its first row. */
+const unanchored = (pages: ThreadPages | undefined): boolean =>
+  pages?.pages[0]?.messages.length === 0;
+
+type Read = (client: QueryClient, phone: string) => Promise<unknown>;
+
+const READS: Record<'delta' | 'whole', Read> = {
+  // Run on the query itself: its observer may not be enabled yet right after a first load.
+  delta: (client, phone) =>
+    client
+      .getQueryCache()
+      .find({ queryKey: threadDeltaKey(phone), exact: true })
+      ?.fetch(undefined, { cancelRefetch: true })
+      .catch(() => undefined) ?? Promise.resolve(),
+  whole: (client, phone) =>
+    client.refetchQueries(
+      { queryKey: threadQuery(phone).queryKey, exact: true, type: 'active' },
+      { cancelRefetch: true },
+    ),
+};
+
 /**
- * Re-reads the chat of `phone` now, or right after the page / first load in flight. Only while this
- * window has focus, checked when the read starts (a full read stamps read_at and sends Meta a read
- * receipt): a skipped one is made up by the chat's focus re-read (useWindowFocus).
+ * A live event on the chat of `phone`: its delta (~2 rows), never every loaded page again; the
+ * whole thread is read only when the delta leaves a gap (thread-delta.ts) or no row anchors
+ * it. A thread read in flight is waited for, as is a page load started during the delta. Only
+ * while this window has focus, checked when the read starts (both reads stamp read_at): a skipped
+ * one is made up by the chat's focus re-read (useWindowFocus).
  */
 export function rereadChat(client: QueryClient, phone: string): void {
-  const filters = { queryKey: ['threads', 'detail', phone], type: 'active' } as const;
-  const find = () =>
-    client.getQueryCache().find({ queryKey: threadQuery(phone).queryKey, exact: true });
-  // A page load started during the re-read cancels it (fetchNextPage's cancelRefetch) and commits
-  // pages built on the old ones: the re-read runs once more after it (one per «تحميل الأقدم»).
-  // Only a NEW page load counts (each fetchNextPage dispatches its own fetchMeta object; an older
-  // one stays in state, and leaving the chat reverts to it), and only while the chat is shown.
-  const metaNow = () => find()?.state.fetchMeta;
-  const replacedSince = (before: unknown) => {
-    const meta = metaNow();
-    return Boolean(find()?.isActive() && meta?.fetchMore && meta !== before);
-  };
-  const read = () => client.refetchQueries(filters, { cancelRefetch: true });
+  const { queryKey } = threadQuery(phone);
+  const find = () => client.getQueryCache().find({ queryKey, exact: true });
   const reread = (): Promise<unknown> => {
     if (!document.hasFocus()) return Promise.resolve();
-    const before = metaNow();
-    return read().then(() => (replacedSince(before) ? reread() : undefined));
+    const read = READS[unanchored(client.getQueryData(queryKey)) ? 'whole' : 'delta'];
+    return read(client, phone).then(() => {
+      waits(find(), pageLoad, reread);
+    });
   };
-  const query = find();
-  if (query && mustWait(query)) after(query.promise, reread);
-  else void reread();
+  if (!waits(find(), fetching, reread)) void reread();
 }
 
 /** The mounted chats lists (a web page shows only mounted queries). */

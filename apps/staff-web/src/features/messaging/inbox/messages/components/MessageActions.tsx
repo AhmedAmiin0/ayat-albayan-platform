@@ -6,6 +6,7 @@ import { errorCode } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { handOffMessage, markSentManually, retryMessage } from '@/features/messaging/inbox/api/api';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
+import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 import { canRetry, canSendByHand, isHandedOff } from '@/features/messaging/inbox/messages/lib/message-notes';
 
 /**
@@ -18,14 +19,23 @@ import { canRetry, canSendByHand, isHandedOff } from '@/features/messaging/inbox
  */
 export function MessageActions({ message: m }: { message: MessageView }) {
   const queryClient = useQueryClient();
-  const refresh = () =>
+  const answered = (row: MessageView) => {
+    showAnswer(queryClient, row);
+    return refreshAnchored(queryClient, m.phone_e164);
+  };
+  // A refused hand-off: the sender claimed the row meanwhile, so the chat reads its real state.
+  const refused = () =>
     Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['threads'] }),
+      rereadSentChat(queryClient, m.phone_e164),
       refreshAnchored(queryClient, m.phone_e164),
     ]);
-  const retry = useMutation({ mutationFn: retryMessage, onSuccess: refresh });
-  const handOff = useMutation({ mutationFn: handOffMessage, onSettled: refresh });
-  const manual = useMutation({ mutationFn: markSentManually, onSuccess: refresh });
+  const retry = useMutation({ mutationFn: retryMessage, onSuccess: answered });
+  const handOff = useMutation({
+    mutationFn: handOffMessage,
+    onSuccess: answered,
+    onError: refused,
+  });
+  const manual = useMutation({ mutationFn: markSentManually, onSuccess: answered });
   const asking = isHandedOff(m);
   const busy = retry.isPending || manual.isPending;
   const sending = errorCode(handOff.error) === 'not_manual';

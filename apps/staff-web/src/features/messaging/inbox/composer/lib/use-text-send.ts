@@ -11,7 +11,13 @@ import { BUNDLES, t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { errorCode } from '@/features/teaching/schedule';
 import { sendText } from '@/features/messaging/inbox/api/api';
-import { dropSending, holdSending, showSending, showSent } from '@/features/messaging/inbox/api/send-cache';
+import {
+  dropSending,
+  holdSending,
+  rereadSentChat,
+  showSending,
+  showSent,
+} from '@/features/messaging/inbox/api/send-cache';
 import { type Draft, getDraft, requestIdFor, setDraft } from './draft-store';
 import { recordOwnSend } from './own-send';
 import { sendErrorCode } from './send-error';
@@ -133,7 +139,7 @@ export function useTextSend(phone: string, hooks: SendHooks) {
       const failed = { text: sent.text, id: sent.clientRequestId, code };
       setDraft(sent.phone, { text: now.text || sent.text, failed }, sent.gen.draft);
       // The window may have closed since the page loaded: refetch so the composer switches.
-      if (errorCode(e) === 'session_closed') await client.invalidateQueries({ queryKey: ['threads'] });
+      if (errorCode(e) === 'session_closed') await rereadSentChat(client, sent.phone);
     },
     onSettled: hooks.settled,
   });
