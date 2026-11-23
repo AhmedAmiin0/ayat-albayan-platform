@@ -4,7 +4,7 @@ import { Ticker } from '@/common/jobs';
 import { runHandler } from '@/common/infra/domain-events/event-handlers';
 import type { EventHandlers } from '@/common/infra/domain-events/event-handlers.types';
 import type { DrainSummary, EventTransport } from '@/common/infra/domain-events/event-transport.port';
-import { errorText, MAX_ATTEMPTS, retryDelayMs, settleFailure } from './outbox-retry';
+import { errorText, MAX_ATTEMPTS, retryDelayMs, settleFailure, storable } from './outbox-retry';
 import type { OutboxRow } from './outbox.schemas';
 import type { OutboxStore, OutboxTransportOptions, Settled, SettleState } from './outbox.types';
 
@@ -87,7 +87,7 @@ export class OutboxTickerTransport implements EventTransport {
 
   private deliver(row: OutboxRow, handlers: EventHandlers): Promise<Settled> {
     const parsed = parseDomainEvent(row);
-    if (!parsed.ok) return Promise.resolve(parked(row.id, parsed.reason));
+    if (!parsed.ok) return Promise.resolve(parked(row.id, storable(parsed.reason)));
     const { event } = parsed;
     const settle = { ...this.opts.retry, now: this.opts.now };
     return runHandler(handlers, event.kind, event).then(

@@ -74,4 +74,18 @@ describe('OutboxTickerTransport', () => {
     await expect(transport.drainOnce()).rejects.toThrow('db down');
     await expect(transport.stop()).resolves.toBeUndefined();
   });
+
+  it('parks a malformed row with a reason jsonb can store (never half an emoji)', async () => {
+    const store = new FakeOutboxStore(() => NOW);
+    const key = 'a'.repeat(470) + '😀'.repeat(20);
+    const id = store.enqueue({ kind: 'events.probe', payload: { ...PROBE, [key]: 1 } });
+    const transport = new OutboxTickerTransport(store, { now: () => NOW });
+    transport.start(noop);
+    await expect(transport.drainOnce()).resolves.toMatchObject({ parked: 1 });
+    await transport.stop();
+    const reason = store.rowOf(id)?.last_error ?? '';
+    expect(reason).toContain('Unrecognized key');
+    expect(reason).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])/u);
+    expect(reason).not.toMatch(/[\uD800-\uDBFF]$/);
+  });
 });

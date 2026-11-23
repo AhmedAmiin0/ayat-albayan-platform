@@ -16,7 +16,7 @@ export function retryDelayMs(attempt: number, random: () => number = Math.random
 // whole batch (no row finished, attempts never counted): the error is cleaned and cut whole.
 const LONE_SURROGATE = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g;
 
-function storable(error: string): string {
+export function storable(error: string): string {
   const clean = error.replaceAll('\u0000', '').replace(LONE_SURROGATE, '\uFFFD');
   return clean.slice(0, ERROR_MAX).replace(LONE_SURROGATE, '');
 }
