@@ -1,4 +1,4 @@
-import { REGISTRY_VERSION, SEED_ENTRIES } from '@ab/shared';
+import { REGISTRY_VERSION, SEED_ENTRIES } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { configSeedSql, seedConfig } from './config-seed.ts';
 

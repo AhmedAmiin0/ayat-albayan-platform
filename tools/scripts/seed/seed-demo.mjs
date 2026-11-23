@@ -2,7 +2,7 @@
 // Reads DATABASE_URL from e2e/.env (`pnpm env:local`); refuses anything but a local database.
 // Re-runs upsert by phone (teachers, guardians, leads, applicants) and by guardian+name
 // (students), so codes stay stable. Availability and time-off of demo teachers are replaced.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import postgres from 'postgres';
 import { allowedTarget } from './clear-demo.plan.mjs';
 import { APPLICANTS, DEMO_NOTE, FAMILIES, LEADS, TEACHERS } from './seed-demo.data.mjs';

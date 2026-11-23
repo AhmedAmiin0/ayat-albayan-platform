@@ -1,5 +1,5 @@
 // Home time zone of a person (rule 6: tz on every person). Pure.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 
 // Calling code → zone. Single-zone countries only; longest prefix first.
 const TZ_BY_CODE: readonly (readonly [string, string])[] = [

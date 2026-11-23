@@ -1,7 +1,7 @@
 // The test teacher / guardian / student rows (seed-test-account.mjs). Upserts are keyed like
 // seed-demo.mjs (teacher: its login OR its fixed phone; guardian: phone; student: guardian + name)
 // and deletes match those keys AND the DEMO markers, so a real row is never selected.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { TEST_FAMILY, TEST_TEACHER } from './seed-test-account.data.mjs';
 
 const T = TEST_TEACHER;

@@ -1,4 +1,4 @@
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { dropTeacher, insertTeacher } from './admin-extra';
 import { withSql } from '../core/schedule';
 

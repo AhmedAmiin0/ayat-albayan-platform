@@ -1,6 +1,6 @@
 // Gathers the status evidence of every student being built (pure) and decides each status with
 // rules.ts; downgrade.ts reports what the old rule would have made active.
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import type { SourceBundle } from '../../../entities/contract.ts';
 import { keyId } from '../../../keys.ts';
 import type { Desired } from '../../../plan/resolve.ts';

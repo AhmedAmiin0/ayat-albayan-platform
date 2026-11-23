@@ -3,7 +3,7 @@
 // A match is adopted (import_items row only, nothing overwritten); a match by name alone is
 // listed for the owner (merge_candidate warn: every imported lesson and report will hang off that
 // row). Similar-but-not-equal names and rows already claimed by another record go to review.
-import { arabicNameSimilar } from '@ab/shared';
+import { arabicNameSimilar } from '@ab/core';
 import { keyId, personName } from '../../keys.ts';
 import type { RowIssue } from '../../types.ts';
 import type { Desired } from '../resolve.ts';

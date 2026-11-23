@@ -1,5 +1,5 @@
 // «تقرير الحلقة» form cells → lesson_reports columns (grades, texts) and lesson facts. Pure.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { text } from '../../sources/sheets/cells.ts';
 import { grade, teacherFromText } from '../../sources/values.ts';
 import type { Cell, ColumnValue } from '../../types.ts';

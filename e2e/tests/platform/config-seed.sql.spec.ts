@@ -1,4 +1,4 @@
-import { SEED_ENTRIES } from '@ab/shared';
+import { SEED_ENTRIES } from '@ab/settings';
 import { expect, test } from '@playwright/test';
 import { runConfigSeed } from '../../support/platform/config-seed';
 import { rolledBack, type Tx } from '../../support/core/rls';

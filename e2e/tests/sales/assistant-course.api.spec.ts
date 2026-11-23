@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import type { BookingResult, SalesCourseView, SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesCourseView, SalesMoneySubscriptionView } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { call, family, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
 import { setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/core/schedule';

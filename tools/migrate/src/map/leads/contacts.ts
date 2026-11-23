@@ -1,6 +1,6 @@
 // CRM contacts joined with their tags, conversation and messages. Pure; shared by the leads and
 // messages mappers so both judge a contact (phone, test row) the same way.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { type CrmTables, crmRef, rowsByAge, text } from '../../sources/crm/rows.ts';
 import type { CrmRow, SourceRef } from '../../types.ts';
 import { DUMMY_PHONES, type PhoneInfo, toE164 } from './phone.ts';

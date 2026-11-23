@@ -4,7 +4,7 @@
 // on that day — is never attached on its own: it goes to review until the owner lists the zip path
 // in cache/pdf-approved.json (bundle.approvedPdfs). A wrong match sends one child's report PDF to
 // another child's parent.
-import { arabicNameSimilar } from '@ab/shared';
+import { arabicNameSimilar } from '@ab/core';
 import type { SourceBundle } from '../entities/contract.ts';
 import { keys, personName } from '../keys.ts';
 import { splitStudentKey } from '../plan/match/similar.ts';

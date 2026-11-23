@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
-import type { BookingResult, CourseChangeCheck, CourseChangeResult, SalesCourseView, SalesMoneySubscriptionView } from '@ab/shared';
+import type {
+  CourseChangeCheck,
+  CourseChangeResult,
+  SalesCourseView,
+  SalesMoneySubscriptionView,
+} from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { call, family, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
 import { countedLessons, courseAudit, courseRules, renewal } from '../../support/finance/course-renew';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/core/schedule';

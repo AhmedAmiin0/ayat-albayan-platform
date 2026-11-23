@@ -1,4 +1,4 @@
-import { LOCALE_STORAGE_KEY } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
 import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';

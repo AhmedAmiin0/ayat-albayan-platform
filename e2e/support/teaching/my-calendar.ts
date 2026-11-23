@@ -1,4 +1,4 @@
-import { zonedPartsIn } from '@ab/shared';
+import { zonedPartsIn } from '@ab/time';
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 
