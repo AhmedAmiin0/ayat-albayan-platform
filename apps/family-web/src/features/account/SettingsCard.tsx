@@ -1,9 +1,8 @@
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
-import { ThemeToggle } from '@ab/web-kit/components/ui/layout/theme-toggle';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { WebPushToggle } from '@ab/web-kit/push/WebPushToggle';
+import { LanguageSwitch } from '@ab/web-kit/shell';
+import { ThemeToggle } from '@ab/web-kit/layout';
+import { Card, SectionHeader } from '@ab/web-kit/surface';
+import { t } from '@ab/web-kit/i18n';
+import { WebPushToggle } from '@ab/web-kit/push';
 
 /** «الإعدادات»: this browser's notifications, then the theme and the language. */
 export function SettingsCard() {

@@ -1,8 +1,8 @@
 import { packageSummary } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalPackageQuery } from '@ab/web-kit/portal/api';
-import { amountText, dayText, usedOfText } from '@ab/web-kit/portal/package/package-text';
+import { t } from '#/lib/i18n/index.ts';
+import { portalPackageQuery } from '#/portal/api.ts';
+import { amountText, dayText, usedOfText } from '#/portal/package/package-text.ts';
 
 /**
  * The home card's package summary (a guardian's only): «8 من 12», the renewal day and the amount

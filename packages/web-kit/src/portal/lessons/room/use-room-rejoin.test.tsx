@@ -1,17 +1,17 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { act, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { ClassroomRoomProps } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { kid, lesson } from '@ab/web-kit/portal/portal.fixtures';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
-import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
+import type { ClassroomRoomProps } from '#/classroom/room/components/ClassroomRoom/index.ts';
+import { ApiError } from '#/lib/http/api/index.ts';
+import { t } from '#/lib/i18n/i18n.ts';
+import { kid, lesson } from '#/portal/portal.fixtures.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
+import { RoomOverlay } from '#/portal/lessons/RoomOverlay.tsx';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiSend }));
 const seen = vi.hoisted(() => ({ props: null as ClassroomRoomProps | null }));
-vi.mock('@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom', () => ({
+vi.mock('#/classroom/room/components/ClassroomRoom/ClassroomRoom.tsx', () => ({
   ClassroomRoom: (props: ClassroomRoomProps) => {
     seen.props = props;
     return <p>{props.join.token}</p>;

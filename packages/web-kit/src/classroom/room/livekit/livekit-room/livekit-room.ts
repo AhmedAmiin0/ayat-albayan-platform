@@ -1,11 +1,11 @@
 import { DisconnectReason, Room, RoomEvent, type Participant, type Track } from 'livekit-client';
-import { boardSharer } from '@ab/web-kit/classroom/room/livekit/livekit-board-share';
-import { listenData, sendData } from '@ab/web-kit/classroom/room/livekit/livekit-data';
-import { watchModeration } from '@ab/web-kit/classroom/room/livekit/livekit-moderated';
-import { attachTrack } from '@ab/web-kit/classroom/room/livekit/media-attach';
-import { BOTH_ON, EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
-import { stopRevokedShare } from '@ab/web-kit/classroom/share/stop-revoked';
-import { snapshotOf } from '@ab/web-kit/classroom/room/livekit/snapshot';
+import { boardSharer } from '#/classroom/room/livekit/livekit-board-share.ts';
+import { listenData, sendData } from '#/classroom/room/livekit/livekit-data.ts';
+import { watchModeration } from '#/classroom/room/livekit/livekit-moderated.ts';
+import { attachTrack } from '#/classroom/room/livekit/media-attach.ts';
+import { BOTH_ON, EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from '#/classroom/room/components/room-types.ts';
+import { stopRevokedShare } from '#/classroom/share/stop-revoked.ts';
+import { snapshotOf } from '#/classroom/room/livekit/snapshot/index.ts';
 
 const REFRESH: readonly RoomEvent[] = [
   RoomEvent.TrackSubscribed,

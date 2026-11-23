@@ -1,5 +1,5 @@
 import type { ChannelSenderLabel } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 
 /** The name's colour by role (the phone's role-ink): the teacher green, the assistant amber. */
 const INK: Readonly<Record<ChannelSenderLabel, string>> = {

@@ -1,7 +1,7 @@
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { LessonReportView } from '@ab/web-kit/report';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { LessonReportView } from '#/report/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { FileButtons, type PortalFile } from './FileButtons';
 
 export interface OpenReport {

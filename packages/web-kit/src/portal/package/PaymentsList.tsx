@@ -1,7 +1,7 @@
 import { signedAmount } from '@ab/client-core';
 import type { PortalPayment } from '@ab/shared';
-import { moneyText } from '@ab/web-kit/lib/money-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { moneyText } from '#/lib/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { dayText } from './package-text';
 
 /** «سجل المدفوعات»: date, kind and amount, newest first; a refund is a minus. None: hidden. */

@@ -1,13 +1,13 @@
 import { QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { signOut } from '@ab/web-kit/auth/sign-in';
-import { REPORT_TIMEOUT_MS } from '@ab/web-kit/auth/session-activity';
+import { signOut } from '#/auth/sign-in/index.ts';
+import { REPORT_TIMEOUT_MS } from '#/auth/session-activity.ts';
 
 const auth = vi.hoisted(() => ({ signInWithPassword: vi.fn(), signOut: vi.fn(), getSession: vi.fn() }));
 const apiFetch = vi.hoisted(() => vi.fn());
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth } }));
+vi.mock('#/lib/http/api/api.ts', () => ({ apiFetch }));
 
 afterEach(() => {
   vi.useRealTimers();

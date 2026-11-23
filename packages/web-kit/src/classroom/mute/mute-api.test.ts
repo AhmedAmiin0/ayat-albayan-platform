@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { muteFor } from './mute-api';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiSend }));
+vi.mock('#/lib/http/api/api.ts', () => ({ apiSend }));
 
 describe('muteFor', () => {
   afterEach(() => apiSend.mockClear());

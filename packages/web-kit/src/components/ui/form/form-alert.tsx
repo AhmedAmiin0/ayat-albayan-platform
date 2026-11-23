@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
-import { isolateLtr } from '@ab/web-kit/components/ui/display/ltr';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { cn } from '@ab/web-kit/lib/utils';
+import { isolateLtr, NuqtaGlyph } from '#/components/ui/display/index.ts';
+import { cn } from '#/lib/index.ts';
 
 /** Form-level inline alert (docs/07 §10): danger-soft, inset danger ring, struck glyph. */
 export function FormAlert({ children, className }: { children: ReactNode; className?: string }) {

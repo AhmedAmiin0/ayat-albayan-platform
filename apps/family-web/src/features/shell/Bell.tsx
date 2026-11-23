@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
-import { useAlerts } from '@/features/alerts';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useAlerts } from '#/features/alerts/index.ts';
+import { Icon } from '@ab/web-kit/display';
+import { t } from '@ab/web-kit/i18n';
 
 /**
  * The bell at the top (canvas): the unread badge (the solid danger fill and its own foreground:

@@ -1,14 +1,14 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { kid } from '@ab/web-kit/portal/portal.fixtures';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
-import { RecordingsPanel } from '@ab/web-kit/portal/recordings/RecordingsPanel/RecordingsPanel';
-import { lessonPage, recording, signed } from '@ab/web-kit/portal/recordings/recordings.fixtures';
+import { t } from '#/lib/i18n/i18n.ts';
+import { kid } from '#/portal/portal.fixtures.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
+import { RecordingsPanel } from '#/portal/recordings/RecordingsPanel/RecordingsPanel.tsx';
+import { lessonPage, recording, signed } from '#/portal/recordings/recordings.fixtures.ts';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const FF = t.familyFiles;
 const items = [

@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { kid, lesson } from '@ab/web-kit/portal/portal.fixtures';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
+import { t } from '#/lib/i18n/i18n.ts';
+import { kid, lesson } from '#/portal/portal.fixtures.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
 import { FamilyChip } from './FamilyChip';
 import { FamilyLine } from './FamilyLine';
 

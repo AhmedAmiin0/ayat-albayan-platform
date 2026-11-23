@@ -1,16 +1,16 @@
 import type { RoomJoinResult } from '@ab/shared';
-import { kickScope, recordingSourceOf } from '@ab/web-kit/classroom/api/moderation-api';
-import { useBoard } from '@ab/web-kit/classroom/board/use-board';
-import { KickButton } from '@ab/web-kit/classroom/kick/KickButton';
-import { useKick, type KickController } from '@ab/web-kit/classroom/kick/use-kick';
-import { muteFor } from '@ab/web-kit/classroom/mute/mute-api';
-import { MuteButtons } from '@ab/web-kit/classroom/mute/MuteButtons';
-import { useMute, type MuteController } from '@ab/web-kit/classroom/mute/use-mute';
-import type { TileSlots } from '@ab/web-kit/classroom/room/components/ParticipantGrid';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
-import { grantShareFor } from '@ab/web-kit/classroom/share/share-api';
-import { useShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
+import { kickScope, recordingSourceOf } from '#/classroom/api/moderation-api.ts';
+import { useBoard } from '#/classroom/board/use-board.ts';
+import { KickButton } from '#/classroom/kick/KickButton.tsx';
+import { useKick, type KickController } from '#/classroom/kick/use-kick.ts';
+import { muteFor } from '#/classroom/mute/mute-api.ts';
+import { MuteButtons } from '#/classroom/mute/MuteButtons.tsx';
+import { useMute, type MuteController } from '#/classroom/mute/use-mute.ts';
+import type { TileSlots } from '#/classroom/room/components/ParticipantGrid.tsx';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
+import { grantShareFor } from '#/classroom/share/share-api.ts';
+import { useShareRequests } from '#/classroom/share/use-share-requests.ts';
 
 /** Staff may act on this tile (mute its mic or camera, remove the person). */
 const actsOn = (tile: TileView, kick: KickController, mute: MuteController): boolean =>

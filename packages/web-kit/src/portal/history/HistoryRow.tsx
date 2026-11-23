@@ -1,12 +1,11 @@
 import { isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { LessonWhen } from '@ab/web-kit/portal/lessons/LessonWhen';
-import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
-import { markReportSeen, useSeenReports } from '@ab/web-kit/portal/use-seen-reports';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { t, teacherLabel } from '#/lib/i18n/index.ts';
+import { LessonWhen } from '#/portal/lessons/LessonWhen.tsx';
+import type { OpenReport } from '#/portal/report/ReportView.tsx';
+import { markReportSeen, useSeenReports } from '#/portal/use-seen-reports.ts';
 
 interface Props {
   row: PortalHistoryRow;

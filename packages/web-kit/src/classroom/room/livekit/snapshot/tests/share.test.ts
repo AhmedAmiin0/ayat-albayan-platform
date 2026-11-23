@@ -1,6 +1,6 @@
 import { participantMeta } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { mayShareScreen, snapshotOf, type ParticipantLike } from '@ab/web-kit/classroom/room/livekit/snapshot/snapshot';
+import { mayShareScreen, snapshotOf, type ParticipantLike } from '#/classroom/room/livekit/snapshot/snapshot.ts';
 
 // «اطلب مشاركة الشاشة»: who may share comes from LiveKit's live permission, never a guess.
 

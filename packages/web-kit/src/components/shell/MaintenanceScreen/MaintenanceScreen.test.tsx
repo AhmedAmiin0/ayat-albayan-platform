@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: {} } }));
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth: {} } }));
+import { t } from '#/lib/i18n/i18n.ts';
 import { MaintenanceScreen } from './MaintenanceScreen';
 
 const S = t.maintenance;

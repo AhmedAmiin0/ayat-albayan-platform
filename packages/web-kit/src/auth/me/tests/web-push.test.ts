@@ -1,7 +1,7 @@
 import { ApiError } from '@ab/client-core';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { signIn } from '@ab/web-kit/auth/sign-in';
+import { signIn } from '#/auth/sign-in/index.ts';
 
 const order = vi.hoisted(() => [] as string[]);
 const auth = vi.hoisted(() => ({
@@ -10,10 +10,10 @@ const auth = vi.hoisted(() => ({
   getSession: vi.fn(async () => ({ data: { session: { access_token: 'tok' } } })),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
-vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
-vi.mock('@ab/web-kit/push/web-push', () => ({
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth } }));
+vi.mock('#/lib/http/api/api.ts', () => ({ apiFetch }));
+vi.mock('#/auth/session-activity.ts', () => ({ reportSession: vi.fn(async () => undefined) }));
+vi.mock('#/push/web-push.ts', () => ({
   forgetWebPush: vi.fn(async () => void order.push('forget')),
 }));
 

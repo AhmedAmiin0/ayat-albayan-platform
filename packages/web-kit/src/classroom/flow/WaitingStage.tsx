@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
-import { VideoTile } from '@ab/web-kit/classroom/room/components/VideoTile';
+import { Icon } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
+import { VideoTile } from '#/classroom/room/components/VideoTile.tsx';
 
 interface Props {
   /** One's own camera tile, once it is there. */

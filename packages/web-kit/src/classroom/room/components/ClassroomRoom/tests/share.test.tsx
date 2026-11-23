@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { openRoom } from '@ab/web-kit/classroom/board/board-fixture';
-import { fakeClient, tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { t } from '#/lib/i18n/i18n.ts';
+import { openRoom } from '#/classroom/board/board-fixture.tsx';
+import { fakeClient, tile } from '#/classroom/room/livekit/fake-client.ts';
 
 const track = { kind: 'video', id: 'board-track' } as unknown as MediaStreamTrack;
 

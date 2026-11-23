@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { QueryState } from '#/components/ui/display/query-state/index.ts';
+import { t } from '#/lib/i18n/i18n.ts';
 
 const query = (data: readonly string[] | undefined, isError = false) => ({
   data,

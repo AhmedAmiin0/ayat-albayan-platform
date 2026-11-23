@@ -1,12 +1,12 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { joinAs } from '@ab/web-kit/classroom/board/board-fixture';
-import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom';
-import { fakeClient, tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { t } from '#/lib/i18n/i18n.ts';
+import { joinAs } from '#/classroom/board/board-fixture.tsx';
+import { ClassroomRoom } from '#/classroom/room/components/ClassroomRoom/ClassroomRoom.tsx';
+import { fakeClient, tile } from '#/classroom/room/livekit/fake-client.ts';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<typeof import('@ab/web-kit/lib/http/api/api')>()), apiSend }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<typeof import('#/lib/http/api/api.ts')>()), apiSend }));
 
 const M = t.classroom.mute;
 const TILES = [

@@ -1,7 +1,6 @@
 import { lessonWhenAt, sameClockAt } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { t } from '#/lib/i18n/index.ts';
+import { useClock, useViewerTz } from '#/lib/index.ts';
 
 /**
  * The lesson's time on the family's clock, and the viewer's time under it when their clock reads

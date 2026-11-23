@@ -1,4 +1,4 @@
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // Filled media glyphs of the players (boards FamRecWeb*): the icon sprite is line art, a play
 // triangle reads better solid. Not directional: «تشغيل» points the same way in both directions.

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/i18n.ts';
 import { PasswordInput } from './PasswordInput';
 
 // The Arabic UI: a password is an LTR island like the email, eye and end padding on one side.

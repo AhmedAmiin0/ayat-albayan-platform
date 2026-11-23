@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { readThemePref, setThemePref, type ThemePref } from '@ab/web-kit/lib/theme';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
+import { t } from '#/lib/i18n/index.ts';
+import { readThemePref, setThemePref, type ThemePref } from '#/lib/index.ts';
+import { SegmentedControl } from '#/components/ui/form/index.ts';
 
 const OPTIONS: { value: ThemePref; label: string }[] = [
   { value: 'auto', label: t.theme.auto },

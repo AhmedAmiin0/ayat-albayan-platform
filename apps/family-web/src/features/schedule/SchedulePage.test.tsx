@@ -2,14 +2,13 @@ import { setViewerPersonTz } from '@ab/client-core';
 import type { PortalLesson } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalApi } from '@ab/web-kit/portal/portal.api-fixture';
-import { kid, lesson } from '@ab/web-kit/portal/portal.fixtures';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { portalApi, kid, lesson } from '@ab/web-kit/testing';
+import { renderAt } from '#/test/render-at.tsx';
 import { SchedulePage } from './SchedulePage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/http', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const S = t.portal.app.schedule;
 // Wednesday 2026-11-11, 12:00 in Riyadh: the academy week runs Sat 7 → Fri 13.

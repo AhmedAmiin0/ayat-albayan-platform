@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ChildPage, parseChildSearch } from '@/features/children';
-import { WithHome } from '@/features/shell';
+import { ChildPage, parseChildSearch } from '#/features/children/index.ts';
+import { WithHome } from '#/features/shell/index.ts';
 
 /**
  * One of a guardian's children, never filtered by the pick (a push or a link opens it); `?tab=`

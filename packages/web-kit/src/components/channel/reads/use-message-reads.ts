@@ -1,8 +1,8 @@
 import { channelKey, channelReadsPath } from '@ab/client-core';
 import { channelReadsSchema } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import type { ChannelRef } from '#/components/channel/api.ts';
+import { apiFetch } from '#/lib/http/index.ts';
 
 /**
  * «من قرأ الرسالة» (GET …/messages/:id/reads, parsed): who of the chat has read one message and

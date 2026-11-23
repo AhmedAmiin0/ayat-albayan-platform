@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { env, intervalMs } from '@ab/web-kit/lib/http/env/env';
+import { env, intervalMs } from '#/lib/http/env/env.ts';
 
 describe('intervalMs: an optional poll interval from the build env', () => {
   it('unset, blank, not a whole number or under 500 ms → the fallback', () => {

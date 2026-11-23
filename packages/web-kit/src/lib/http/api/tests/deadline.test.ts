@@ -1,10 +1,10 @@
 import { READ_TIMEOUT_MS, SEND_TIMEOUT_MS } from '@ab/client-core';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api/api';
+import { apiFetch, apiSend } from '#/lib/http/api/api.ts';
 
 // docs/43 AU9 / AU10: web reads get mobile's read deadline (client-core), writes 30 s.
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+vi.mock('#/lib/http/supabase.ts', () => ({
   supabase: {
     auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) },
   },

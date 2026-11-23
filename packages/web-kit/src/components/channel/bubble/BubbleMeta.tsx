@@ -1,7 +1,7 @@
 import { isPending, ticksOf, type ChannelTicks } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 import { ChatGlyph, type ChatGlyphName } from './ChatGlyph';
 
 const c = t.studentChannel;

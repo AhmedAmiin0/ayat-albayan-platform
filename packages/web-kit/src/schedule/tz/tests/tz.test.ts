@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayMonthLabel } from '@ab/web-kit/schedule/tz/tz';
+import { dayMonthLabel } from '#/schedule/tz/tz.ts';
 
 describe('schedule date labels', () => {
   it('dayMonthLabel prints the day with Western digits', () => {

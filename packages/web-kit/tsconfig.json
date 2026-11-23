@@ -1,9 +1,4 @@
 {
   "extends": "@ab/config/tsconfig/react.json",
-  "compilerOptions": {
-    "paths": {
-      "@ab/web-kit/*": ["./src/*"]
-    }
-  },
   "include": ["src", "vite.config.ts"]
 }

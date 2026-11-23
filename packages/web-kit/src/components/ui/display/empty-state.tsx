@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 export interface EmptyStateProps {
   /** Amiri title from i18n, e.g. t.students.empty «لسه مفيش طلاب». */

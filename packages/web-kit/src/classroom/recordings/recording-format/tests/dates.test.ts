@@ -1,7 +1,7 @@
 import { intlLocale } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { recordingTime } from '@ab/web-kit/classroom/recordings/recording-format/recording-format';
+import { locale } from '#/lib/i18n/locale.ts';
+import { recordingTime } from '#/classroom/recordings/recording-format/recording-format.ts';
 
 // The date-fns facade swap (docs/34 §7) keeps the exact Intl string shown before.
 describe('recording start, as before', () => {

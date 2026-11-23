@@ -1,11 +1,10 @@
 import type { PortalFileKind } from '@ab/client-core';
 import { useMutation } from '@tanstack/react-query';
-import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalApi } from '@ab/web-kit/portal/api';
-import { openAfter } from '@ab/web-kit/portal/open-file';
+import { Icon, type IconName } from '#/components/ui/display/index.ts';
+import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { portalApi } from '#/portal/api.ts';
+import { openAfter } from '#/portal/open-file.ts';
 
 export interface PortalFile {
   kind: PortalFileKind;

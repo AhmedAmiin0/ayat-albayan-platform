@@ -1,13 +1,13 @@
 import { childSummary, portalViewer, seesMoney } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { useNow } from '@ab/web-kit/time';
 import {
   portalLessonsQuery,
   portalPackageQuery,
   portalReportsQuery,
-} from '@ab/web-kit/portal/api';
-import { useSeenReports } from '@ab/web-kit/portal/use-seen-reports';
+  useSeenReports,
+} from '@ab/web-kit/portal';
 
 interface Read {
   isPending: boolean;

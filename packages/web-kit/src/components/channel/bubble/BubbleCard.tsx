@@ -1,8 +1,8 @@
 import type { ChannelMessageView } from '@ab/shared';
-import { ChannelBubbleBody } from '@ab/web-kit/components/channel/edit/ChannelBubbleBody';
-import type { useBubbleEditing } from '@ab/web-kit/components/channel/edit/use-bubble-editing';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { ChannelBubbleBody } from '#/components/channel/edit/ChannelBubbleBody.tsx';
+import type { useBubbleEditing } from '#/components/channel/edit/use-bubble-editing.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 import { BubbleMeta } from './BubbleMeta';
 import { ChatGlyph } from './ChatGlyph';
 import { SenderLine } from './SenderLine';

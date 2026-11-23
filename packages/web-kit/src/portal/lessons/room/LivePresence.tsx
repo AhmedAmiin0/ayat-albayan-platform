@@ -1,6 +1,6 @@
 import { liveRoomText, type LiveRoom } from '@ab/client-core';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 /** Up to three overlapping faces, as on the app's live card. */
 const FACES = 3;

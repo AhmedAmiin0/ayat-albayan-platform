@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { nowPlaying } from '@ab/web-kit/lesson-files/use-now-playing';
+import { nowPlaying } from '#/lesson-files/use-now-playing.ts';
 import { useVoiceNote } from './use-voice-note';
 
 /** One note's <audio> with the hook's handlers (jsdom does not play: the events are fired). */

@@ -1,6 +1,6 @@
 import type { ChannelMessageKind, ChannelReplyView } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 import { ChatGlyph } from './ChatGlyph';
 import { jumpToMessage } from './jump';
 

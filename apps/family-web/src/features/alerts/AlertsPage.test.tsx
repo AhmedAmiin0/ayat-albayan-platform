@@ -1,12 +1,12 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { renderAt } from '#/test/render-at.tsx';
 import { AlertsPage } from './AlertsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn(async () => undefined));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+vi.mock('@ab/web-kit/http', async (orig) => ({
   ...(await orig<object>()),
   apiFetch,
   apiSend,

@@ -1,8 +1,7 @@
 import { meLocaleSend } from '@ab/client-core';
 import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/shared';
 import { z } from 'zod';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { apiFetch, apiSend, supabase } from '#/lib/http/index.ts';
 import { locale, saveLocale, setLocale } from './locale';
 
 // «اللغة» lives on the login (profiles.locale, owner 2026-11-16), on the staff pages and the

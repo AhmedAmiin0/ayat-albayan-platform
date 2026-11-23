@@ -1,6 +1,6 @@
 import { canResend } from '@ab/client-core';
 import { useState } from 'react';
-import { signInErrorText } from '@ab/web-kit/auth/login/auth-api';
+import { signInErrorText } from '#/auth/login/auth-api.ts';
 import { emptyCode } from './code-boxes';
 import { useCountdown } from './use-countdown';
 

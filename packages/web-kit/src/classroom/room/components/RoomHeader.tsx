@@ -1,5 +1,5 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RecIndicator } from '@ab/web-kit/classroom/recordings/RecIndicator';
+import { t } from '#/lib/i18n/index.ts';
+import { RecIndicator } from '#/classroom/recordings/RecIndicator.tsx';
 import type { RoomSnapshot } from './room-types';
 
 /**

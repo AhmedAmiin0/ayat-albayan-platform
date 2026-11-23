@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { FieldControlProps } from '@ab/web-kit/components/ui/form/field';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { FieldControlProps } from '#/components/ui/form/index.ts';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Input } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 type Props = FieldControlProps & {
   value: string;

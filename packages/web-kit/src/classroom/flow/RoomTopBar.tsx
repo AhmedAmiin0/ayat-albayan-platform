@@ -1,7 +1,7 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RecIndicator } from '@ab/web-kit/classroom/recordings/RecIndicator';
-import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
-import type { RoomSnapshot } from '@ab/web-kit/classroom/room/components/room-types';
+import { t } from '#/lib/i18n/index.ts';
+import { RecIndicator } from '#/classroom/recordings/RecIndicator.tsx';
+import { RoomIcon } from '#/classroom/room/components/room-icons.tsx';
+import type { RoomSnapshot } from '#/classroom/room/components/room-types.ts';
 import { ContextHeader } from './ContextHeader';
 import type { RoomContext } from './room-kit';
 

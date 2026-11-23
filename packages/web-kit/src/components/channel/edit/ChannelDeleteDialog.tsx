@@ -1,5 +1,5 @@
-import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ConfirmSwitchDialog } from '#/components/ui/overlay/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 interface Props {
   /** The admin's moderation: the body says so. */

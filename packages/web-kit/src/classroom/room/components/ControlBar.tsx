@@ -1,14 +1,14 @@
 import type { JoinRole } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import type { BoardController } from '@ab/web-kit/classroom/board/use-board';
-import { ChatButton } from '@ab/web-kit/classroom/panel/ChatButton';
+import { Button } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
+import type { BoardController } from '#/classroom/board/use-board.ts';
+import { ChatButton } from '#/classroom/panel/ChatButton.tsx';
 import { RoomButton } from './RoomButton';
-import { RequestButton } from '@ab/web-kit/classroom/share/RequestButton';
-import { ShareButton } from '@ab/web-kit/classroom/share/ShareButton';
-import type { ShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import { RequestButton } from '#/classroom/share/RequestButton.tsx';
+import { ShareButton } from '#/classroom/share/ShareButton.tsx';
+import type { ShareRequests } from '#/classroom/share/use-share-requests.ts';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 
 /** The family's «المحادثة»: its unread count, open in the panel now, and how to open it. */
 export interface ChatControl {

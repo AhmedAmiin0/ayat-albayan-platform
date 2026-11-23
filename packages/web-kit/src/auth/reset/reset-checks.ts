@@ -1,5 +1,5 @@
 import { userChecks } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 
 const { passwordError } = userChecks(() => ({ validation: t.users.validation, phoneErrors: t.common.phoneErrors }));
 

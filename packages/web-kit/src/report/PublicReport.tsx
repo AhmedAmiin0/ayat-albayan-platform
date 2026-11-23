@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ListSkeleton } from '#/components/ui/display/index.ts';
+import { FormAlert } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { CodeGate } from './CodeGate';
 import { needsCode, publicPageQuery } from './public-api';
 import { ReportPageBody } from './ReportPageBody';

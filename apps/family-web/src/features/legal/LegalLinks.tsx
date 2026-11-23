@@ -1,6 +1,6 @@
 import { LEGAL_PAGES, LEGAL_PATHS } from '@ab/client-core';
 import { Link } from '@tanstack/react-router';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit/i18n';
 
 /** The two public legal pages, for the sign-in footer and «حسابي» (owner 2026-11-21). */
 export function LegalLinks() {

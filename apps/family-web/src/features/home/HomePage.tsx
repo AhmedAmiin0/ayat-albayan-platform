@@ -1,8 +1,8 @@
 import { portalViewer, readsOwn, type ChildTab } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ChildBody, ChildHead } from '@/features/children';
-import { NextLessonCard } from '@/features/next-lesson';
+import { t } from '@ab/web-kit/i18n';
+import { ChildBody, ChildHead } from '#/features/children/index.ts';
+import { NextLessonCard } from '#/features/next-lesson/index.ts';
 
 interface Props {
   /** The student in view: a student's own, an only child, or the child a guardian picked. */

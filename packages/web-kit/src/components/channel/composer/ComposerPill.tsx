@@ -1,9 +1,9 @@
 import { useRef, type KeyboardEvent } from 'react';
-import { ChatGlyph } from '@ab/web-kit/components/channel/bubble/ChatGlyph';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ChatGlyph } from '#/components/channel/bubble/ChatGlyph.tsx';
+import { Icon } from '#/components/ui/display/index.ts';
+import { IconButton } from '#/components/ui/form/index.ts';
+import { useDismiss } from '#/components/ui/overlay/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { AttachMenu } from './AttachMenu';
 import { EmojiPanel } from './EmojiPanel';
 import type { Panel, useComposer } from './use-composer';

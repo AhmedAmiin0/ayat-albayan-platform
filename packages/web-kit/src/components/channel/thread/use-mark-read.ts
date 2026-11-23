@@ -4,7 +4,7 @@ import {
   channelCountKeys,
   markChannelRead,
   type ChannelRef,
-} from '@ab/web-kit/components/channel/api';
+} from '#/components/channel/api.ts';
 import { usePageVisible } from './use-page-visible';
 
 interface Mark {

@@ -1,6 +1,6 @@
 import { useRouter } from '@tanstack/react-router';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { EmptyState } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
 import type { RouteNotFoundProps } from './RouteNotFound.types';
 
 /** An address no route matches: said in the app's words, with the way home. */

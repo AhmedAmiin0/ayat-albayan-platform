@@ -1,12 +1,11 @@
 import { nextLesson, PORTAL_REFRESH_MS } from '@ab/client-core';
 import type { PortalLesson, PortalLessons, PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { portalLessonsQuery } from '@ab/web-kit/portal/api';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
+import { EmptyState, QueryState } from '#/components/ui/display/index.ts';
+import { Card } from '#/components/ui/surface/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { useNow } from '#/lib/time/index.ts';
+import { portalLessonsQuery } from '#/portal/api.ts';
 import { LessonCard } from './LessonCard';
 import { PrepareCard } from './PrepareCard';
 

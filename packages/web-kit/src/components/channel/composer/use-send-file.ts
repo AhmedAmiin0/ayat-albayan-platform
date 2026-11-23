@@ -14,11 +14,9 @@ import {
   channelCountKeys,
   sendChannelMessage,
   type ChannelRef,
-} from '@ab/web-kit/components/channel/api';
-import { apiSend } from '@ab/web-kit/lib/http/api';
-import { errorCode } from '@ab/web-kit/lib/http/error-code';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+} from '#/components/channel/api.ts';
+import { apiSend, errorCode, supabase } from '#/lib/http/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 // A photo, PDF or voice note from the browser (docs/31 §2, docs/45): the shared check and upload
 // (client-core uploadChannelFile) over this kit's HTTP call and its Supabase client.

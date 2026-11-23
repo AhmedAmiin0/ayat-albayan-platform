@@ -1,17 +1,15 @@
 import { hasVideo, partIdsByLesson, recordingMonths } from '@ab/client-core';
 import { dateText, type PortalRecording, type PortalRecordings, type PortalStudent } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { useNowPlaying } from '@ab/web-kit/lesson-files/use-now-playing';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { scrollBehavior } from '@ab/web-kit/lib/motion/reduced-motion';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
-import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
-import { LessonPanel } from '@ab/web-kit/portal/recordings/LessonPanel';
-import { RecordingRowButton } from '@ab/web-kit/portal/recordings/RecordingRowButton';
-import { useChildRecordings } from '@ab/web-kit/portal/recordings/use-recordings';
+import { EmptyState, QueryState } from '#/components/ui/display/index.ts';
+import { SectionHeader } from '#/components/ui/surface/index.ts';
+import { useNowPlaying } from '#/lesson-files/index.ts';
+import { t, locale } from '#/lib/i18n/index.ts';
+import { scrollBehavior } from '#/lib/motion/index.ts';
+import type { OpenReport } from '#/portal/report/ReportView.tsx';
+import { LessonPanel } from '#/portal/recordings/LessonPanel.tsx';
+import { RecordingRowButton } from '#/portal/recordings/RecordingRowButton.tsx';
+import { useChildRecordings } from '#/portal/recordings/use-recordings.ts';
 
 const F = t.lessonFiles;
 

@@ -1,11 +1,10 @@
 import { liveRoom } from '@ab/client-core';
 import { lessonWhenAt, type PortalLesson, type PortalStudent } from '@ab/shared';
-import type { RoomContext } from '@ab/web-kit/classroom/flow/room-kit';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { LessonCountdown } from '@ab/web-kit/portal/lessons/LessonCountdown';
+import type { RoomContext } from '#/classroom/index.ts';
+import { useClock } from '#/lib/index.ts';
+import { t, teacherLabel } from '#/lib/i18n/index.ts';
+import { useNow } from '#/lib/time/index.ts';
+import { LessonCountdown } from '#/portal/lessons/LessonCountdown.tsx';
 import { LivePresence } from './LivePresence';
 
 /** The countdown under «بانتظار المعلم/ة…» ticks once a second, like the card's. */

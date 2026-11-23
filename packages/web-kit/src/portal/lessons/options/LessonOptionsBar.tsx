@@ -1,8 +1,7 @@
 import { lessonOptions, type LessonOption } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { AskTimeDrawer } from './AskTimeDrawer';
 import { DeclinePanel } from './DeclinePanel';
 import { useLessonOptions } from './use-lesson-options';

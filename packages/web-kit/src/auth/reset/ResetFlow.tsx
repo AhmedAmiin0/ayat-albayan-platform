@@ -1,13 +1,12 @@
 import { useId, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
-import { codeOf } from '@ab/web-kit/auth/code/code-boxes';
-import { CodeStep } from '@ab/web-kit/auth/code/CodeStep';
-import { RequestStep } from '@ab/web-kit/auth/code/RequestStep';
-import { useCodeFlow } from '@ab/web-kit/auth/code/use-code-flow';
-import { authApi } from '@ab/web-kit/auth/login/auth-api';
+import { Button, Field } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { PasswordInput } from '#/auth/PasswordInput.tsx';
+import { codeOf } from '#/auth/code/code-boxes.ts';
+import { CodeStep } from '#/auth/code/CodeStep.tsx';
+import { RequestStep } from '#/auth/code/RequestStep.tsx';
+import { useCodeFlow } from '#/auth/code/use-code-flow.ts';
+import { authApi } from '#/auth/login/auth-api.ts';
 import { newPasswordProblem } from './reset-checks';
 
 const F = t.familyAuth;

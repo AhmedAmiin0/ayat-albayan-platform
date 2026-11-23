@@ -1,9 +1,9 @@
 import { channelMode, isPending, liveChannelId } from '@ab/client-core';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { channelQuery, type ChannelRef } from '@ab/web-kit/components/channel/api';
-import { useChannelLive } from '@ab/web-kit/components/channel/use-channel-live';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { channelQuery, type ChannelRef } from '#/components/channel/api.ts';
+import { useChannelLive } from '#/components/channel/use-channel-live.ts';
+import { useNow } from '#/lib/time/index.ts';
 import { useChannelSend } from './use-channel-send';
 import { useMarkRead } from './use-mark-read';
 

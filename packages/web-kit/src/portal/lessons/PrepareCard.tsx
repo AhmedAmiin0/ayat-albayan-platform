@@ -1,7 +1,7 @@
-import { cardClass } from '@ab/web-kit/components/ui/surface/card';
+import { cardClass } from '#/components/ui/surface/index.ts';
 import { prepareCard } from '@ab/client-core';
 import type { PortalLessons } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 
 /**
  * «ما المطلوب للحلقة القادمة» (docs/50 §2): the newest sent report's homework and next plan; an

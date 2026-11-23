@@ -4,13 +4,13 @@ import type { AnyRouter } from '@tanstack/react-router';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { meQuery } from '@ab/web-kit/auth/me';
+import { meQuery } from '#/auth/me/index.ts';
 import type { MaintenanceOptions } from './maintenance.types';
 import { holdRoomOpen } from './room-presence';
 import { useMaintenance } from './use-maintenance';
 
 const net = vi.hoisted(() => ({ answers: [] as (ProbeAnswer | null)[], online: true }));
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: {} } }));
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth: {} } }));
 vi.mock('./web-probes', () => ({
   webProbes: {
     api: () => Promise.resolve(net.answers.length > 1 ? net.answers.shift() : net.answers[0]),

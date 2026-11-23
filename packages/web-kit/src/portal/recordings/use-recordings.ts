@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { portalApi, portalAssets } from '@ab/web-kit/portal/api';
+import { portalApi, portalAssets } from '#/portal/api.ts';
 
 /** A signed link lasts an hour; it is minted again after 50 minutes. */
 const LINK_FRESH_MS = 50 * 60_000;

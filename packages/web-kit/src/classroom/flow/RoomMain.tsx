@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
-import { ParticipantGrid, type TileSlots } from '@ab/web-kit/classroom/room/components/ParticipantGrid';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
-import { RoomStage } from '@ab/web-kit/classroom/room/components/RoomStage';
-import type { RoomLayout } from '@ab/web-kit/classroom/room/livekit/stage';
+import { ParticipantGrid, type TileSlots } from '#/classroom/room/components/ParticipantGrid.tsx';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
+import { RoomStage } from '#/classroom/room/components/RoomStage.tsx';
+import type { RoomLayout } from '#/classroom/room/livekit/stage.ts';
 import { WaitingStage } from './WaitingStage';
 
 interface Props {

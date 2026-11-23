@@ -1,6 +1,6 @@
 import type { WebPushKey } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '#/lib/http/index.ts';
 
 // apps/api /me/web-push (R-NOT-01): this browser's push subscription, for staff and families alike.
 /** The server's VAPID public key; null = browser push is off on the server. */

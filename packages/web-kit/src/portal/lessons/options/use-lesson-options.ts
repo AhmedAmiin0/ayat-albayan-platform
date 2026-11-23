@@ -1,7 +1,7 @@
 import { FAMILY_NOTICE, type FamilyAction, type LessonOption } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 import { useFamilyAction } from './use-family-action';
 
 export type OptionsOpen = 'decline' | 'ask' | null;

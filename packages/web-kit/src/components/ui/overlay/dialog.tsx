@@ -1,10 +1,10 @@
 import type { Glyph, Tone } from '@ab/shared';
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 import { pickLayout } from './dialog-classes';
 import { DialogHeader } from './dialog-header';
-import { jadwalClass } from '@ab/web-kit/components/ui/layout/page';
+import { jadwalClass } from '#/components/ui/layout/index.ts';
 import { useFocusTrap } from './use-focus-trap';
 
 export interface DialogProps {

@@ -1,16 +1,16 @@
 import type { RoomJoinResult } from '@ab/shared';
-import { BoardStage } from '@ab/web-kit/classroom/board/BoardStage';
+import { BoardStage } from '#/classroom/board/BoardStage.tsx';
 import { ControlBar, type ChatControl } from './ControlBar';
-import { STAFF_KIT, type RoomKit } from '@ab/web-kit/classroom/flow/room-kit';
-import { RoomMain } from '@ab/web-kit/classroom/flow/RoomMain';
-import { RoomOverlays } from '@ab/web-kit/classroom/flow/RoomOverlays';
-import { isAlone, roomLayout } from '@ab/web-kit/classroom/flow/spotlight';
-import { useRoomTools } from '@ab/web-kit/classroom/flow/use-room-tools';
-import { useRoomUi, type RoomPanelName, type RoomUi } from '@ab/web-kit/classroom/flow/use-room-ui';
-import { PeopleList } from '@ab/web-kit/classroom/panel/PeopleList';
-import { RoomPanel, type PanelTab } from '@ab/web-kit/classroom/panel/RoomPanel';
+import { STAFF_KIT, type RoomKit } from '#/classroom/flow/room-kit.ts';
+import { RoomMain } from '#/classroom/flow/RoomMain.tsx';
+import { RoomOverlays } from '#/classroom/flow/RoomOverlays.tsx';
+import { isAlone, roomLayout } from '#/classroom/flow/spotlight.ts';
+import { useRoomTools } from '#/classroom/flow/use-room-tools.tsx';
+import { useRoomUi, type RoomPanelName, type RoomUi } from '#/classroom/flow/use-room-ui.ts';
+import { PeopleList } from '#/classroom/panel/PeopleList.tsx';
+import { RoomPanel, type PanelTab } from '#/classroom/panel/RoomPanel.tsx';
 import { RoomTop } from './RoomTop';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 
 interface Props {
   room: RoomController;

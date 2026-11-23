@@ -1,9 +1,8 @@
 import { cardRoom } from '@ab/client-core';
 import type { PortalLesson, PortalStudent, RoomJoinResult } from '@ab/shared';
 import { useState } from 'react';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { useNow } from '#/lib/time/index.ts';
+import { t, teacherLabel } from '#/lib/i18n/index.ts';
 import { LessonAction } from './LessonAction';
 import { LessonCountdown } from './LessonCountdown';
 import { LessonWhen } from './LessonWhen';

@@ -1,10 +1,10 @@
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { renderWithClient } from '@ab/web-kit/testing/query-render';
+import { renderWithClient } from '#/testing/query-render.ts';
 import { AcademyContactLink } from './AcademyContactLink';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const answer = (academy_contact: unknown) => apiFetch.mockResolvedValue({ academy_contact });
 const FALLBACK = 'no contact';

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { MediaChoice } from '@ab/web-kit/classroom/room/components/room-types';
+import type { MediaChoice } from '#/classroom/room/components/room-types.ts';
 
 /** This browser's last «قبل الدخول» choice (a per-viewer convenience: blocked storage = none). */
 export const MEDIA_CHOICE_KEY = 'ab.classroom.media';

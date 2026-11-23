@@ -1,8 +1,8 @@
 import { useRef, useState, type ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
-import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
+import { t } from '#/lib/i18n/index.ts';
+import { Icon } from '#/components/ui/display/index.ts';
+import { iconButtonClass } from '#/components/ui/form/index.ts';
+import { useDismiss } from '#/components/ui/overlay/use-dismiss.ts';
 
 /**
  * «⋯ المزيد» (owner, 2026-10-05: one primary action per page head on phones): a plain disclosure

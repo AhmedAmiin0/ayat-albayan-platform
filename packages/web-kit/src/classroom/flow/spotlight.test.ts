@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { tile } from '#/classroom/room/livekit/fake-client.ts';
 import { isAlone, roomLayout } from './spotlight';
 
 const me = tile({ key: 'me', isLocal: true });

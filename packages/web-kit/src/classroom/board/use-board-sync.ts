@@ -1,7 +1,7 @@
 import type { JoinRole } from '@ab/shared';
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import type { DataPacketIn, RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import type { DataPacketIn, RoomStatus } from '#/classroom/room/components/room-types.ts';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import { BOARD_TOPIC, decodeMessage, encodeMessage, syncMessages, type BoardMessage } from './model/messages';
 import type { BoardState } from './model/model';
 import { shouldAnswerSync, type BoardInput } from './model/reducer';

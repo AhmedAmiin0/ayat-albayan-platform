@@ -1,6 +1,6 @@
 import { familyChatOn } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
+import { publicConfigQuery } from '#/lib/settings/index.ts';
 
 /**
  * settings.family_chat_enabled (docs/50 §2, public): the family's teacher chat exists only while it

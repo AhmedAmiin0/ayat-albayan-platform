@@ -4,9 +4,9 @@ import {
   type SendMethod,
   withReadDeadline,
 } from '@ab/client-core';
-import { WEB_CLIENT_TAG } from '@ab/web-kit/lib/http/client-tag';
-import { env } from '@ab/web-kit/lib/http/env';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { WEB_CLIENT_TAG } from '#/lib/http/client-tag.ts';
+import { env } from '#/lib/http/env/index.ts';
+import { supabase } from '#/lib/http/supabase.ts';
 
 // The one client lives in @ab/client-core (docs/27 E1); this module injects web's env, session and tag.
 export { ApiError, type SendMethod } from '@ab/client-core';

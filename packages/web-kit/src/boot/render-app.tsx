@@ -2,10 +2,10 @@ import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { RouterProvider, type AnyRouter } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MaintenanceGate, type MaintenanceOptions } from '@ab/web-kit/boot/maintenance';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
-import { watchSystemTheme } from '@ab/web-kit/lib/theme';
-import { bindWebPushToSession } from '@ab/web-kit/push/web-push-session';
+import { MaintenanceGate, type MaintenanceOptions } from '#/boot/maintenance/index.ts';
+import { supabase } from '#/lib/http/index.ts';
+import { watchSystemTheme } from '#/lib/index.ts';
+import { bindWebPushToSession } from '#/push/index.ts';
 import { reportWebError } from './web-errors';
 
 interface App {

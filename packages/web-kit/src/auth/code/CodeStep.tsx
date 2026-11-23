@@ -1,9 +1,8 @@
 import { CODE_STEP_ACTIONS, type CodeStepAction, canResend, resendLabel } from '@ab/client-core';
 import { Fragment, type ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { StatusNote } from '@ab/web-kit/auth/login/StatusNote';
+import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { StatusNote } from '#/auth/login/StatusNote.tsx';
 import { CodeBoxes } from './CodeBoxes';
 import type { CodeFlow } from './use-code-flow';
 

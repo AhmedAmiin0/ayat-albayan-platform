@@ -1,9 +1,9 @@
 import { channelEditError, channelMessagePath, type ChannelEditError } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { z } from 'zod';
-import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
+import { ApiError, apiSend } from '#/lib/http/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import type { ChannelRef } from '#/components/channel/api.ts';
 
 // «تعديل» / «حذف للجميع» (owner 2026-10-30): PATCH / DELETE …/messages/:id (the API checks every
 // rule).

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { cn } from '#/lib/index.ts';
+import { Icon } from '#/components/ui/display/index.ts';
 import { Input } from './input';
 
 /**

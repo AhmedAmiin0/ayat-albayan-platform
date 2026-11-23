@@ -1,9 +1,9 @@
 import { listenState, listenText, type ListenState } from '@ab/client-core';
 import type { PortalRecording, PortalStudent } from '@ab/shared';
-import { Pill } from '@ab/web-kit/components/ui/surface/pill';
-import { useResumeMap } from '@ab/web-kit/lesson-files/use-resume';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Pill } from '#/components/ui/surface/index.ts';
+import { useResumeMap } from '#/lesson-files/index.ts';
+import { useClock } from '#/lib/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { lessonTitle, rowLine } from './lesson-words';
 
 const FF = t.familyFiles;

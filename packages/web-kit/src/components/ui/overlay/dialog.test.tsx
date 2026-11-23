@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '#/lib/i18n/i18n.ts';
+import { Button } from '#/components/ui/form/button.tsx';
 import { Dialog } from './dialog';
 
 function renderDialog(onClose = vi.fn()) {

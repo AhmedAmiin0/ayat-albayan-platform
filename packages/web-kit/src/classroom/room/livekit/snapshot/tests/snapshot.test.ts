@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { snapshotOf, type ParticipantLike, type PublicationLike } from '@ab/web-kit/classroom/room/livekit/snapshot/snapshot';
+import { snapshotOf, type ParticipantLike, type PublicationLike } from '#/classroom/room/livekit/snapshot/snapshot.ts';
 
 const pub = (source: string, sid: string, isMuted = false): PublicationLike => ({ source, isMuted, track: { sid, mediaStreamTrack: { id: `m-${sid}` } } });
 

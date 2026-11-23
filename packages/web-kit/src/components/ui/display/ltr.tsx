@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 /** LTR island inside Arabic text (codes AB-0183, E.164 phones, emails, URLs): isolated, no wrap. */
 export function Ltr({ children, className }: { children: ReactNode; className?: string }) {

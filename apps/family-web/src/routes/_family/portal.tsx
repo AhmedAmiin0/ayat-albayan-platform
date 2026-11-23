@@ -1,7 +1,7 @@
 import type { ChildTab } from '@ab/client-core';
 import { createFileRoute } from '@tanstack/react-router';
-import { parseChildSearch, WithPick } from '@/features/children';
-import { HomePage } from '@/features/home';
+import { parseChildSearch, WithPick } from '#/features/children/index.ts';
+import { HomePage } from '#/features/home/index.ts';
 
 /** «الرئيسية»: the student in view's page; `?tab=` opens a tab (an alert opens the package). */
 export const Route = createFileRoute('/_family/portal')({

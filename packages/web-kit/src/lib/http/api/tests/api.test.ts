@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, apiFetch, apiSend, publicApiSend } from '@ab/web-kit/lib/http/api/api';
+import { ApiError, apiFetch, apiSend, publicApiSend } from '#/lib/http/api/api.ts';
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+vi.mock('#/lib/http/supabase.ts', () => ({
   supabase: {
     auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) },
   },

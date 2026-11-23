@@ -1,11 +1,9 @@
 import type { Locale } from '@ab/shared';
 import { useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { chooseLocale } from '@ab/web-kit/lib/i18n/profile-locale';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Toast } from '#/components/ui/overlay/index.ts';
+import { t, locale, chooseLocale } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 
 const other: Locale = locale === 'ar' ? 'en' : 'ar';
 

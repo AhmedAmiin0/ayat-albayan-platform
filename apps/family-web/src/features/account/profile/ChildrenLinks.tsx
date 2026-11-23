@@ -1,11 +1,8 @@
 import type { PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Icon, Ltr } from '@ab/web-kit/display';
+import { Card, SectionHeader } from '@ab/web-kit/surface';
+import { t } from '@ab/web-kit/i18n';
 
 /** «الأبناء» on a guardian's profile: each child opens their own page (/children/<id>). */
 export function ChildrenLinks({ students }: { students: readonly PortalStudent[] }) {

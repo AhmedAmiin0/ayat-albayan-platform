@@ -1,6 +1,6 @@
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
-import { onSessionEnd } from '@ab/web-kit/lib/session/session-end';
+import { onSessionEnd } from '#/lib/session/session-end.ts';
 import { bindWebPushToSession } from './web-push-session';
 
 const dropLocalWebPush = vi.hoisted(() => vi.fn(async () => undefined));

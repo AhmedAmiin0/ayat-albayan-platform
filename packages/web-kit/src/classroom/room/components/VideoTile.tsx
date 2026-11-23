@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { NuqtaGlyph } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 import type { TileView } from './room-types';
 
 interface Props {

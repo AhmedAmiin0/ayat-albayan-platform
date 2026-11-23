@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { channelPage } from '@ab/web-kit/components/channel/channel.fixtures';
-import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread/ChannelThread';
+import { channelPage } from '#/components/channel/channel.fixtures.ts';
+import { ChannelThread } from '#/components/channel/ChannelThread/ChannelThread.tsx';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn(() => Promise.resolve({})) }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn(() => Promise.resolve({})) }));
 
 // 23:59 in Riyadh on the 27th; the fixture's messages are at 13:00 and 13:05 that day.
 beforeEach(() => vi.useFakeTimers({ now: new Date('2026-10-27T20:59:00Z'), toFake: ['Date', 'setInterval', 'clearInterval'] }));

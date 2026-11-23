@@ -1,8 +1,8 @@
 import { formatClock } from '@ab/client-core';
 import type { ChannelAttachmentView } from '@ab/shared';
-import { ChatGlyph } from '@ab/web-kit/components/channel/bubble/ChatGlyph';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ChatGlyph } from '#/components/channel/bubble/ChatGlyph.tsx';
+import { Ltr } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { useVoiceNote } from './use-voice-note';
 import { Waveform } from './Waveform';
 

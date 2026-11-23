@@ -1,4 +1,4 @@
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // Classroom line icons on the same 20px grid / 1.6 stroke as components/ui/icon.tsx.
 const PATHS = {

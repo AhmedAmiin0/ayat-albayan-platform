@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { FamilyLessonPage, parseLessonSearch } from '@/features/recordings';
+import { FamilyLessonPage, parseLessonSearch } from '#/features/recordings/index.ts';
 
 /** A sent lesson of one of the login's students: recording, report lines, files (docs/50 §6). */
 export const Route = createFileRoute('/_family/lesson/$lessonId')({

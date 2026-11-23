@@ -1,11 +1,11 @@
 import { useRef, useState, type KeyboardEvent } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import type { TileSlots } from '@ab/web-kit/classroom/room/components/ParticipantGrid';
-import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
-import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
-import { VideoTile } from '@ab/web-kit/classroom/room/components/VideoTile';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
+import type { TileSlots } from '#/classroom/room/components/ParticipantGrid.tsx';
+import { RoomButton } from '#/classroom/room/components/RoomButton.tsx';
+import { RoomIcon } from '#/classroom/room/components/room-icons.tsx';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
+import { VideoTile } from '#/classroom/room/components/VideoTile.tsx';
 import { useMaximize } from './use-maximize';
 
 interface Props extends TileSlots {

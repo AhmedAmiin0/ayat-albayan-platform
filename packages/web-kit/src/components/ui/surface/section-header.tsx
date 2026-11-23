@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 const HEADING = { 2: 'h2', 3: 'h3' } as const;
 

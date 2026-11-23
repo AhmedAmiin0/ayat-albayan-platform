@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { reportLines, reportPageByIdQuery } from '@ab/web-kit/report';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SectionHeader } from '#/components/ui/surface/index.ts';
+import { reportLines, reportPageByIdQuery } from '#/report/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 /** How many of the report's lines the lesson page shows before «اقرأ التقرير كاملًا». */
 const SUMMARY_LINES = 5;

@@ -1,10 +1,10 @@
 import type { ChildTab } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
-import { Tabs, tabIds } from '@ab/web-kit/components/ui/layout/tabs';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ChildPanel } from '@ab/web-kit/portal/ChildPanel';
-import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
+import { Tabs, tabIds } from '@ab/web-kit/layout';
+import { t } from '@ab/web-kit/i18n';
+import { ChildPanel } from '@ab/web-kit/portal';
+import type { OpenReport } from '@ab/web-kit/portal';
 import { shownTab, tabOptions } from './child-tabs';
 import { useChatTab } from './use-chat-tab';
 

@@ -1,7 +1,7 @@
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RecordingsPanel } from '@ab/web-kit/portal/recordings/RecordingsPanel';
+import { Icon } from '@ab/web-kit/display';
+import { Button } from '@ab/web-kit/form';
+import { t } from '@ab/web-kit/i18n';
+import { RecordingsPanel } from '@ab/web-kit/portal';
 import { StudentOf } from './StudentOf';
 import { useLessonNav } from './use-lesson-nav';
 

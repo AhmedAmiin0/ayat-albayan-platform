@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { RECORDING_TONE, recordingTime } from '@ab/web-kit/classroom/recordings/recording-format/recording-format';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { RECORDING_TONE, recordingTime } from '#/classroom/recordings/recording-format/recording-format.ts';
+import { locale } from '#/lib/i18n/locale.ts';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

@@ -1,5 +1,5 @@
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
+import { Avatar } from '@ab/web-kit/display';
+import { Card } from '@ab/web-kit/surface';
 
 interface Props {
   name: string;

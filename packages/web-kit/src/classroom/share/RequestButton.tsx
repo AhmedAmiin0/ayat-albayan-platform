@@ -1,4 +1,4 @@
-import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
+import { RoomButton } from '#/classroom/room/components/RoomButton.tsx';
 import { REQUEST_TEXT } from './request-text';
 import type { RequestKind } from './share-messages';
 import type { ShareRequests } from './use-share-requests';

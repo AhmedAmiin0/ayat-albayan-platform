@@ -1,4 +1,4 @@
-import { scrollBehavior } from '@ab/web-kit/lib/motion/reduced-motion';
+import { scrollBehavior } from '#/lib/motion/index.ts';
 
 // A tapped quote's original: scrolled into view and flashed (its edge rings for 1.5 s), as the
 // phone's chat does. An original older than the loaded pages is not on the page: nothing moves.

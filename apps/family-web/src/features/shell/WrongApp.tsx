@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { env } from '@ab/web-kit/lib/http/env';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { buttonVariants } from '@ab/web-kit/form';
+import { Card } from '@ab/web-kit/surface';
+import { env } from '@ab/web-kit/http';
+import { t } from '@ab/web-kit/i18n';
 
 /**
  * A staff login on the family host (docs/51 §3): already signed out by the guard; the notice, the

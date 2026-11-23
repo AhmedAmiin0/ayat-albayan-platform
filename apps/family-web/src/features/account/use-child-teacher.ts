@@ -1,8 +1,8 @@
 import { nextLesson } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { portalLessonsQuery } from '@ab/web-kit/portal/api';
+import { teacherLabel } from '@ab/web-kit/i18n';
+import { useNow } from '@ab/web-kit/time';
+import { portalLessonsQuery } from '@ab/web-kit/portal';
 
 /**
  * «حسابي»'s child row: the teacher of the child's next lesson (the lessons read the home shares),

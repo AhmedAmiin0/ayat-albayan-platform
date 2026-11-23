@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { home, kid } from '@ab/web-kit/testing';
+import { renderAt } from '#/test/render-at.tsx';
 import { TabBar } from './TabBar';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/http', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const TABS = t.portal.app.tabs;
 const names = () => screen.getAllByRole('link').map((link) => link.textContent);

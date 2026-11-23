@@ -4,7 +4,7 @@ import {
 import type { PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useSyncExternalStore } from 'react';
-import { meQuery } from '@ab/web-kit/auth/me';
+import { meQuery } from '@ab/web-kit/auth';
 import { usePortalHome } from './use-portal-home';
 
 // «اختر الطالب» (owner 2026-11-16, docs/50 §6): the student the family pages work as, from

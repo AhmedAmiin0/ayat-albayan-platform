@@ -1,8 +1,8 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { createPortal } from 'react-dom';
-import { holdRoomOpen } from '@ab/web-kit/boot/maintenance';
-import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { holdRoomOpen } from '#/boot/index.ts';
+import { ClassroomRoom } from '#/classroom/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { useRoomContext, type RoomLesson } from './room/room-context';
 import { useRoomChat } from './room/use-room-chat';
 import { useRoomRejoin } from './room/use-room-rejoin';

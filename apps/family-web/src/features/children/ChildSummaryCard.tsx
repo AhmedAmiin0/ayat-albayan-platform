@@ -1,12 +1,10 @@
 import { isSelfChild } from '@ab/client-core';
 import { counted, type PortalKind, type PortalStudent } from '@ab/shared';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { Pill } from '@ab/web-kit/components/ui/surface/pill';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { NextLessonDetails, useNextLesson, type NextLessonRead } from '@/features/next-lesson';
+import { Avatar } from '@ab/web-kit/display';
+import { Button } from '@ab/web-kit/form';
+import { Card, Pill, SectionHeader } from '@ab/web-kit/surface';
+import { t } from '@ab/web-kit/i18n';
+import { NextLessonDetails, useNextLesson, type NextLessonRead } from '#/features/next-lesson/index.ts';
 import { ReadState } from './ReadState';
 import { SummaryFigures } from './SummaryFigures';
 import { useChildSummary } from './use-child-summary';

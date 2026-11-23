@@ -1,5 +1,5 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
+import { t } from '#/lib/i18n/index.ts';
+import type { RoomStatus } from '#/classroom/room/components/room-types.ts';
 
 /**
  * «جارٍ إعادة الاتصال…» as a full-width strip under the top line: it drops in from the top (the

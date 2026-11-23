@@ -1,4 +1,4 @@
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // Verse-end rosette (docs/07 §5, motif-rosette-number.svg). It ONLY ever holds a number: the
 // current page in the pager, a section number. Never a status, a bullet or struck through.

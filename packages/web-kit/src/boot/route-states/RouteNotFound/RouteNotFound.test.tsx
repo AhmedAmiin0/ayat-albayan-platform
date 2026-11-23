@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { renderRoute } from '@ab/web-kit/boot/route-states/tests/render-route';
-import { NOT_FOUND_WORDS } from '@ab/web-kit/boot/route-states/tests/words';
+import { renderRoute } from '#/boot/route-states/tests/render-route.tsx';
+import { NOT_FOUND_WORDS } from '#/boot/route-states/tests/words.ts';
 import { RouteNotFound } from './RouteNotFound';
 
 describe('RouteNotFound', () => {

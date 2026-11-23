@@ -1,5 +1,5 @@
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import { Toast } from '#/components/ui/overlay/index.ts';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import type { MuteController } from './use-mute';
 import { useMutedNotice } from './use-muted-notice';
 

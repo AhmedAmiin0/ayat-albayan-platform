@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 import { controlClass } from './input';
 
 /** Native <select> styled like Input, chevron at the inline-end. Times are always selects (rule 6). */

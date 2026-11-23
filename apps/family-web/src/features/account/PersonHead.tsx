@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Icon } from '@ab/web-kit/display';
+import { Card } from '@ab/web-kit/surface';
+import { t } from '@ab/web-kit/i18n';
 
 interface Props {
   /** The person's name, or only the role word when the name is not known. */

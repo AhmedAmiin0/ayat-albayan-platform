@@ -1,8 +1,8 @@
 import { liveRoomText, type CardRoom, type LiveRoom } from '@ab/client-core';
 import { clockOf } from '@ab/shared';
-import { StatusMark } from '@ab/web-kit/components/ui/surface/status-mark';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusMark } from '#/components/ui/surface/index.ts';
+import { useClock } from '#/lib/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { LivePresence } from './LivePresence';
 
 interface Props {

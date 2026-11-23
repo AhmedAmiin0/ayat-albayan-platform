@@ -1,8 +1,7 @@
 import type { PackageSummary } from '@ab/client-core';
 import { dateText, type PortalAmount } from '@ab/shared';
-import { moneyText } from '@ab/web-kit/lib/money-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { moneyText } from '#/lib/index.ts';
+import { t, locale } from '#/lib/i18n/index.ts';
 
 // The package's words, shared by the home card's summary and «الباقة».
 

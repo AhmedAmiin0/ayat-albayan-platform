@@ -1,8 +1,7 @@
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { roleWord, type RoomVariant } from '@ab/web-kit/classroom/flow/room-variant';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import { Avatar, NuqtaGlyph } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { roleWord, type RoomVariant } from '#/classroom/flow/room-variant.ts';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
 
 const nameOf = (tile: TileView): string =>
   tile.isLocal ? `${tile.name} (${t.classroom.you})` : tile.name;

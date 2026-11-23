@@ -1,7 +1,7 @@
 import type { ChannelMessageView } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon } from '#/components/ui/display/index.ts';
+import { IconButton } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 const c = t.studentChannel;
 

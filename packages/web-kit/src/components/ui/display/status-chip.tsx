@@ -1,5 +1,5 @@
 import type { Glyph, Tone } from '@ab/shared';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 import { GradePips, NuqtaGlyph } from './nuqta-glyph';
 
 // docs/07 §6 Status chip: nuqta glyph + ar.json word (+ tone colour). Literal class strings so

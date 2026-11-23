@@ -1,5 +1,5 @@
-import { CodeStep } from '@ab/web-kit/auth/code/CodeStep';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { CodeStep } from '@ab/web-kit/auth';
+import { t } from '@ab/web-kit/i18n';
 import { CodeNote } from './CodeNote';
 import { PhoneStep } from './PhoneStep';
 import { useWhatsAppSignIn } from './use-whatsapp-sign-in';

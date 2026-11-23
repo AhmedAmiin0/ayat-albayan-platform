@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import { BrandLockup } from '@ab/web-kit/components/shell/BrandLockup';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { Card } from '#/components/ui/surface/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
+import { BrandLockup } from '#/components/shell/BrandLockup.tsx';
+import { LanguageSwitch } from '#/components/shell/LanguageSwitch.tsx';
 import type { MaintenanceCover, MaintenanceScreenProps } from './MaintenanceScreen.types';
 
 const S = t.maintenance;

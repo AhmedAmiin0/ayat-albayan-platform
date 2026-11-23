@@ -1,7 +1,6 @@
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { controlClass } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Field, controlClass } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 
 /** The API's limit for a move reason (packages/schedule moveReasonSchema). */
 const MAX = 500;

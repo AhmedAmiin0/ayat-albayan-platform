@@ -1,14 +1,14 @@
 import type { ChannelPage } from '@ab/shared';
 import { Fragment } from 'react';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
-import { ChannelBubble } from '@ab/web-kit/components/channel/ChannelBubble';
-import { threadAttrs } from '@ab/web-kit/components/channel/bubble/jump';
-import { DayChip } from '@ab/web-kit/components/channel/rows/DayChip';
-import { UnreadBand } from '@ab/web-kit/components/channel/rows/UnreadBand';
-import { useThreadRows } from '@ab/web-kit/components/channel/rows/use-thread-rows';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { EmptyState } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import type { ChannelRef } from '#/components/channel/api.ts';
+import { ChannelBubble } from '#/components/channel/ChannelBubble.tsx';
+import { threadAttrs } from '#/components/channel/bubble/jump.ts';
+import { DayChip } from '#/components/channel/rows/DayChip.tsx';
+import { UnreadBand } from '#/components/channel/rows/UnreadBand.tsx';
+import { useThreadRows } from '#/components/channel/rows/use-thread-rows.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 interface Props {
   pages: readonly ChannelPage[];

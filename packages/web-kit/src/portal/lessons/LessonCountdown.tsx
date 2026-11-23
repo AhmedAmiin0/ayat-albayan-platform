@@ -1,7 +1,7 @@
 import { lessonClock, lessonClockText, type LessonClock } from '@ab/client-core';
 import type { PortalLesson } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 
 type Shown = LessonClock['kind'];
 

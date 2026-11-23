@@ -1,6 +1,6 @@
 import { lessonWhenAt, type ReportPageView } from '@ab/shared';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '#/lib/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { reportLines } from './lines';
 import { ReportPageFiles } from './ReportPageFiles';
 

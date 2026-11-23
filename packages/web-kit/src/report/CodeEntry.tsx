@@ -1,11 +1,8 @@
 import { LOGIN_CODE_LENGTH } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Label } from '@ab/web-kit/components/ui/form/label';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, Input, Label } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { gateProblem, verifyCode } from './public-api';
 
 /** The six digits from WhatsApp; a right code calls onVerified, a wrong one says so. */

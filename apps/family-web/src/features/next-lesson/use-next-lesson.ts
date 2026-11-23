@@ -1,7 +1,7 @@
 import { lessonWait, nextLesson } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { portalLessonsQuery } from '@ab/web-kit/portal/api';
+import { useNow } from '@ab/web-kit/time';
+import { portalLessonsQuery } from '@ab/web-kit/portal';
 
 /** The countdown ticks every second; «ادخل الحلقة» turns on by itself at the window. */
 const TICK_MS = 1_000;

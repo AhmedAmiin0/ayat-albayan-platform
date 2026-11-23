@@ -1,8 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createRouter } from '@tanstack/react-router';
-import { renderApp } from '@ab/web-kit/boot/render-app';
-import { routeStates } from '@ab/web-kit/boot/route-states';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { renderApp, routeStates } from '@ab/web-kit/boot';
+import { t } from '@ab/web-kit/i18n';
 import { routeTree } from './routeTree.gen';
 
 // Loaded by main.tsx once `t` holds the chosen language. Reads stay fresh for 30 s: the family

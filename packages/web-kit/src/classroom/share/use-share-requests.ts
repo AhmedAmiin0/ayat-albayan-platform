@@ -1,9 +1,9 @@
 import { canGrantShare, type JoinRole } from '@ab/shared';
 import { useCallback, useEffect, useReducer, useState } from 'react';
-import type { BoardController } from '@ab/web-kit/classroom/board/use-board';
-import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import type { BoardController } from '#/classroom/board/use-board.ts';
+import { classroomErrorText } from '#/classroom/room/livekit/errors.ts';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import { REQUEST_TEXT } from './request-text';
 import type { GrantShare } from './share-api';
 import {

@@ -1,7 +1,6 @@
 import { canJoinNow, clockOf, DEFAULT_JOIN_WINDOW, joinWindow, type ClockCycle, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
-import { viewerZone } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { viewerZone } from '#/lib/index.ts';
+import { t, locale } from '#/lib/i18n/index.ts';
 
 /**
  * «تفتح الساعة 17:45» / «5:45 م» in the viewer's own zone and cycle (Western digits). Every caller

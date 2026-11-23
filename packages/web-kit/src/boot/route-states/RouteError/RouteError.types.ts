@@ -1,3 +1,3 @@
-import type { RouteErrorWords, RouteStatesOptions } from '@ab/web-kit/boot/route-states/route-states.types';
+import type { RouteErrorWords, RouteStatesOptions } from '#/boot/route-states/route-states.types.ts';
 
 export type RouteErrorProps = RouteStatesOptions<RouteErrorWords>;

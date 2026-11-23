@@ -1,10 +1,7 @@
 import type { ReactNode } from 'react';
-import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { PasswordInput } from '@ab/web-kit/auth';
+import { Button, Field, FormAlert, Input } from '@ab/web-kit/form';
+import { t } from '@ab/web-kit/i18n';
 import { useStudentSignIn } from './use-student-sign-in';
 
 /** The student code and the password, «دخول»; `children`: «أول دخول؟» / «نسيت كلمة المرور؟». */

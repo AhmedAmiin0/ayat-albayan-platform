@@ -1,6 +1,6 @@
 import { clockOf, weekStart, weekWindowIn, zonedPartsIn } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Clock } from '@ab/web-kit/lib/clock';
+import { t } from '#/lib/i18n/index.ts';
+import type { Clock } from '#/lib/index.ts';
 
 /** A span of time: a week's bookable part, a schedule read's from/to. */
 export interface Window {

@@ -1,12 +1,16 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { codeOf, emptyCode } from '@ab/web-kit/auth/code/code-boxes';
-import { type CodeFlow, useCodeFlow } from '@ab/web-kit/auth/code/use-code-flow';
-import { authApi } from '@ab/web-kit/auth/login/auth-api';
-import { usePhoneEntry } from '@ab/web-kit/auth/phone/use-phone-entry';
-import { signInWithCode } from '@ab/web-kit/auth/sign-in';
-import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import {
+  codeOf,
+  emptyCode,
+  type CodeFlow,
+  useCodeFlow,
+  authApi,
+  usePhoneEntry,
+  signInWithCode,
+  useLandAfterSignIn,
+} from '@ab/web-kit/auth';
+import { t } from '@ab/web-kit/i18n';
 
 const F = t.familyAuth;
 const sameCode = (a: readonly string[], b: readonly string[]) => a.join('') === b.join('');

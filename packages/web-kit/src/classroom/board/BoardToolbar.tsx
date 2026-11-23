@@ -1,8 +1,8 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
-import { RequestButton } from '@ab/web-kit/classroom/share/RequestButton';
-import type { ShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
+import { RoomButton } from '#/classroom/room/components/RoomButton.tsx';
+import { RequestButton } from '#/classroom/share/RequestButton.tsx';
+import type { ShareRequests } from '#/classroom/share/use-share-requests.ts';
 import { PEN_COLORS, type PenColor } from './model/model';
 import type { BoardController } from './use-board';
 import type { BoardShare } from './use-board-share';

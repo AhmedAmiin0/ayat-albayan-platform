@@ -10,9 +10,8 @@ import {
   type RoomJoinResult,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { env } from '@ab/web-kit/lib/http/env';
-import { viewerZone } from '@ab/web-kit/lib/clock-text';
+import { ApiError, apiFetch, apiSend, env } from '#/lib/http/index.ts';
+import { viewerZone } from '#/lib/index.ts';
 
 export const CLASSROOM_KEY = ['classroom'] as const;
 

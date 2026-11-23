@@ -1,11 +1,11 @@
 import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { renderAt } from '@/test/render-at';
-import { LegalPage } from '@/features/legal/LegalPage/LegalPage';
+import { t } from '@ab/web-kit/i18n';
+import { renderAt } from '#/test/render-at.tsx';
+import { LegalPage } from '#/features/legal/LegalPage/LegalPage.tsx';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/http', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const L = t.legal;
 const contact = { site: 'ayatalbayan.com', email: 'help@example.org' };

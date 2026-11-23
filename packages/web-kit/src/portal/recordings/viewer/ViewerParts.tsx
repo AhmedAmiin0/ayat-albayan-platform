@@ -1,11 +1,11 @@
 import { downloadName } from '@ab/client-core';
 import type { LessonFileMedia, PortalLessonFile } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { fileTitle } from '@ab/web-kit/lesson-files/file-words';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useSaveLessonFile } from '@ab/web-kit/portal/recordings/use-recordings';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Button, buttonVariants } from '#/components/ui/form/index.ts';
+import { fileTitle } from '#/lesson-files/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { useSaveLessonFile } from '#/portal/recordings/use-recordings.ts';
 import { ImageView } from './ImageView';
 
 const V = t.familyFiles;

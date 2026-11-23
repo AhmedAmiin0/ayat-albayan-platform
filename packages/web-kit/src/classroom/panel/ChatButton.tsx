@@ -1,5 +1,5 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
+import { t } from '#/lib/i18n/index.ts';
+import { RoomButton } from '#/classroom/room/components/RoomButton.tsx';
 
 interface Props {
   unread: number;

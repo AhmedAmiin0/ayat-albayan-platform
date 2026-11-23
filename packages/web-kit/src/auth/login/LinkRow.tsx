@@ -1,4 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '#/components/ui/form/index.ts';
 
 export interface LinkItem {
   label: string;

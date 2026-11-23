@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { kid, lesson } from '@ab/web-kit/portal/portal.fixtures';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
-import { LessonCard } from '@ab/web-kit/portal/lessons/LessonCard';
+import { t } from '#/lib/i18n/i18n.ts';
+import { kid, lesson } from '#/portal/portal.fixtures.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
+import { LessonCard } from '#/portal/lessons/LessonCard.tsx';
 
 // lesson(): 16:00Z on 27 Oct, its join window 15:50–16:45.
 const NOW = new Date('2026-10-27T16:04:00.000Z');

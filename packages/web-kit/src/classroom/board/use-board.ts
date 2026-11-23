@@ -1,6 +1,6 @@
 import type { JoinRole } from '@ab/shared';
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import { canAllowStudents, canDraw, canManageBoard, EMPTY_BOARD, lastStrokeOf, type BoardState, type PenColor } from './model/model';
 import type { BoardMessage } from './model/messages';
 import { boardReducer } from './model/reducer';

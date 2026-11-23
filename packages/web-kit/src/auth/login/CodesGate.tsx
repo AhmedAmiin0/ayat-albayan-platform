@@ -6,7 +6,7 @@ import {
 } from '@ab/client-core';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 import { authApi } from './auth-api';
 
 /** GET /auth/code/status (docs/30 §4); a failed call counts as «not available». */

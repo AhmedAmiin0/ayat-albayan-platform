@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { pageView, PUBLIC_ID } from '@ab/web-kit/report/page.fixture';
-import { ReportPage } from '@ab/web-kit/report/ReportPage/ReportPage';
+import { t } from '#/lib/i18n/i18n.ts';
+import { pageView, PUBLIC_ID } from '#/report/page.fixture.ts';
+import { ReportPage } from '#/report/ReportPage/ReportPage.tsx';
 
 // The WhatsApp code for a viewer who is not one of the report's signed-in readers.
 const fetchMock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>();

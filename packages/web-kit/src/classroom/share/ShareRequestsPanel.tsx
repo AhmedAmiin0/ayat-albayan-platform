@@ -1,5 +1,5 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { REQUEST_TEXT } from './request-text';
 import type { ShareRequests } from './use-share-requests';
 

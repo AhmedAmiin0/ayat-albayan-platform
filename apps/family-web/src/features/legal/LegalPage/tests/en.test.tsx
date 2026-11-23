@@ -1,15 +1,11 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
-import { renderAt } from '@/test/render-at';
-import { LegalPage } from '@/features/legal/LegalPage/LegalPage';
+import { renderAt } from '#/test/render-at.tsx';
+import { LegalPage } from '#/features/legal/LegalPage/LegalPage.tsx';
 
-vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
-  ...(await orig<object>()),
-  locale: 'en',
-}));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+vi.mock('@ab/web-kit/i18n', async (orig) => ({ ...(await orig<object>()), t: en, locale: 'en' }));
+vi.mock('@ab/web-kit/http', async (orig) => ({
   ...(await orig<object>()),
   apiFetch: () => Promise.resolve({ academy_contact: { email: 'help@example.org' } }),
 }));

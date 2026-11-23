@@ -1,6 +1,6 @@
 import { roleOfMeta } from '@ab/shared';
 import { RoomEvent, type Room } from 'livekit-client';
-import type { DataPacketIn, DataSendOptions } from '@ab/web-kit/classroom/room/components/room-types';
+import type { DataPacketIn, DataSendOptions } from '#/classroom/room/components/room-types.ts';
 
 /** Reliable data on a topic; `to` limits it to some identities (a sync answer to one late joiner). */
 export function sendData(room: Room, bytes: Uint8Array, opts: DataSendOptions): Promise<void> {

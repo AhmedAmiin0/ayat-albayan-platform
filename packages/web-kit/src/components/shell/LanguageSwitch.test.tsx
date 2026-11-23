@@ -1,15 +1,15 @@
 import { LOCALE_STORAGE_KEY } from '@ab/shared';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/i18n.ts';
 import { LanguageSwitch } from './LanguageSwitch';
 
 const session = vi.hoisted(() => ({ current: null as { access_token: string } | null }));
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+vi.mock('#/lib/http/supabase.ts', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: session.current } }) } },
 }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 afterEach(() => {
   localStorage.clear();

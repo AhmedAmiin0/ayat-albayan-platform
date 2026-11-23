@@ -1,5 +1,5 @@
 import { roleOfMeta } from '@ab/shared';
-import type { RoomSnapshot, RoomStatus, TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import type { RoomSnapshot, RoomStatus, TileView } from '#/classroom/room/components/room-types.ts';
 
 // Structural slices of livekit-client's Room / Participant, so this file is pure and testable.
 export interface PublicationLike {

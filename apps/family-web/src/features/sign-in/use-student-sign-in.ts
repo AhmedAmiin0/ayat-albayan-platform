@@ -1,9 +1,8 @@
 import { studentCodeOnTrack } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { signIn } from '@ab/web-kit/auth/sign-in';
-import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { signIn, useLandAfterSignIn } from '@ab/web-kit/auth';
+import { t } from '@ab/web-kit/i18n';
 
 /**
  * «الدخول برمز الطالب وكلمة المرور» (docs/50 §4): the student code, checked while typed

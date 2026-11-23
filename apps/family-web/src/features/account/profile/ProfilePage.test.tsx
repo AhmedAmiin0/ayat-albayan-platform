@@ -1,13 +1,13 @@
 import { formatPhone } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { home, kid } from '@ab/web-kit/testing';
+import { renderAt } from '#/test/render-at.tsx';
 import { ProfilePage } from './ProfilePage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/http', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // A made-up number and fake names only.
 const PHONE = '+966500000005';

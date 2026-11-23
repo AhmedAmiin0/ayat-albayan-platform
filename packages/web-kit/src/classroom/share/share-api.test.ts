@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { grantShareFor } from './share-api';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiSend }));
+vi.mock('#/lib/http/api/api.ts', () => ({ apiSend }));
 
 describe('grantShareFor', () => {
   afterEach(() => apiSend.mockClear());

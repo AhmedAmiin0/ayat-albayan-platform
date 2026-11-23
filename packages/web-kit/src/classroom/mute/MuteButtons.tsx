@@ -1,8 +1,8 @@
 import type { MuteSource } from '@ab/shared';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import { IconButton } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { RoomIcon } from '#/classroom/room/components/room-icons.tsx';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
 import type { MuteController } from './use-mute';
 
 const M = t.classroom.mute;

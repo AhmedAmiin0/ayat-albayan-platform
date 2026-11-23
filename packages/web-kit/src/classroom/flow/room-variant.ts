@@ -1,5 +1,5 @@
 import type { JoinRole } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 
 /**
  * Who the room is for. ONE room (ClassroomRoom / LiveRoom / ControlBar) serves the staff pages and

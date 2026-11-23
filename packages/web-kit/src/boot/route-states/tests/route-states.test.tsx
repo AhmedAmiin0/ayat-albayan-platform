@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-router';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { notFoundState, routeStates } from '@ab/web-kit/boot/route-states/route-states';
+import { notFoundState, routeStates } from '#/boot/route-states/route-states.ts';
 import { ERROR_WORDS, NOT_FOUND_WORDS } from './words';
 
 function routerAt(path: string) {

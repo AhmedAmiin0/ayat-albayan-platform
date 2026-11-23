@@ -1,14 +1,12 @@
 import { historyMonths, historyRows } from '@ab/client-core';
 import { dateText, type PortalHistoryStatus, type PortalStudent } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { portalHistoryQuery } from '@ab/web-kit/portal/api';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
-import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
-import { HistoryRow } from '@ab/web-kit/portal/history/HistoryRow';
+import { EmptyState, QueryState } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { t, locale } from '#/lib/i18n/index.ts';
+import { portalHistoryQuery } from '#/portal/api.ts';
+import type { OpenReport } from '#/portal/report/ReportView.tsx';
+import { HistoryRow } from '#/portal/history/HistoryRow.tsx';
 
 interface Props {
   student: PortalStudent;

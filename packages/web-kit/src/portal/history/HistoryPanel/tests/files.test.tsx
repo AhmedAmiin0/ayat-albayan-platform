@@ -1,13 +1,13 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { historyRow, kid } from '@ab/web-kit/portal/portal.fixtures';
-import { portalApi } from '@ab/web-kit/portal/portal.api-fixture';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
-import { HistoryPanel } from '@ab/web-kit/portal/history/HistoryPanel/HistoryPanel';
+import { t } from '#/lib/i18n/i18n.ts';
+import { historyRow, kid } from '#/portal/portal.fixtures.ts';
+import { portalApi } from '#/portal/portal.api-fixture.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
+import { HistoryPanel } from '#/portal/history/HistoryPanel/HistoryPanel.tsx';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const rows = [historyRow(), historyRow({ lesson_id: 'h2', report_id: null })];
 

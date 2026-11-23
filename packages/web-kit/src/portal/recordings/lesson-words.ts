@@ -3,8 +3,7 @@ import {
   clockOf, counted, dateText, teacherName, type ClockOptions, type PortalLessonAssets,
   type PortalRecording,
 } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '#/lib/i18n/index.ts';
 
 const F = t.lessonFiles;
 

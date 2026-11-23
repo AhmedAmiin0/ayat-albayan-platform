@@ -6,13 +6,13 @@ import {
 } from '@ab/client-core';
 import { HOME_BY_ROLE, type CodeSession, type PasswordSession } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { forgetTabMemories } from '@ab/web-kit/lib/session/session-end';
-import { forgetWebPush } from '@ab/web-kit/push/web-push';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
-import { authApi, signInErrorText } from '@ab/web-kit/auth/login/auth-api';
-import { meQuery } from '@ab/web-kit/auth/me';
-import { reportSession } from '@ab/web-kit/auth/session-activity';
+import { t } from '#/lib/i18n/index.ts';
+import { forgetTabMemories } from '#/lib/session/index.ts';
+import { forgetWebPush } from '#/push/index.ts';
+import { supabase } from '#/lib/http/index.ts';
+import { authApi, signInErrorText } from '#/auth/login/auth-api.ts';
+import { meQuery } from '#/auth/me/index.ts';
+import { reportSession } from '#/auth/session-activity.ts';
 
 /**
  * `email` is what the user typed: an email (GoTrue directly) or a username / student code (POST

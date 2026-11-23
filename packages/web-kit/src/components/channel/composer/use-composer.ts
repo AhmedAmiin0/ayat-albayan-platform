@@ -1,8 +1,8 @@
 import { insertAt, remainingDraft, type ChannelFileToSend } from '@ab/client-core';
 import { CHANNEL_BODY_MAX, type ChannelMessageView } from '@ab/shared';
 import { useState, type KeyboardEvent } from 'react';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
-import type { TextSend } from '@ab/web-kit/components/channel/thread/use-channel-send';
+import type { ChannelRef } from '#/components/channel/api.ts';
+import type { TextSend } from '#/components/channel/thread/use-channel-send.ts';
 import { useChannelDraft } from './use-channel-draft';
 import { canRecord, useRecorder } from './use-recorder';
 import { useSendFile } from './use-send-file';

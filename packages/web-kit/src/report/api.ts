@@ -1,7 +1,7 @@
 import { portalQueries } from '@ab/client-core';
 import { reportPageViewSchema, type ReportPageView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '#/lib/http/index.ts';
 
 /** TanStack key of a report's live page. */
 export const reportPageKey = (publicId: string) => ['report-page', publicId] as const;

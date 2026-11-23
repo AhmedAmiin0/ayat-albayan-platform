@@ -1,10 +1,10 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import type { RejoinState } from '@ab/web-kit/classroom/closing/RoomClosing';
-import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
-import { errorCode } from '@ab/web-kit/lib/http/error-code';
-import { portalApi } from '@ab/web-kit/portal/api';
+import type { RejoinState } from '#/classroom/index.ts';
+import { classroomErrorText } from '#/classroom/index.ts';
+import { errorCode } from '#/lib/http/index.ts';
+import { portalApi } from '#/portal/api.ts';
 
 export interface RejoinInput {
   first: RoomJoinResult;

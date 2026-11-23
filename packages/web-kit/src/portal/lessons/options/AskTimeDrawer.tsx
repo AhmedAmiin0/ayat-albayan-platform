@@ -2,18 +2,20 @@ import { lessonMinutes } from '@ab/client-core';
 import { firstName, type PortalLesson, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
-import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
-import { MoveReason } from '@ab/web-kit/schedule/MoveReason';
-import { bookableWindow, currentWeekStart, openingWeek } from '@ab/web-kit/schedule/slots';
-import { WeekSlotsFrame } from '@ab/web-kit/schedule/WeekSlotsFrame';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { familySlotsQuery } from '@ab/web-kit/portal/api';
-import { LessonWhen } from '@ab/web-kit/portal/lessons/LessonWhen';
+import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { ButtonRow } from '#/components/ui/layout/index.ts';
+import { Drawer } from '#/components/ui/overlay/index.ts';
+import {
+  MoveReason,
+  bookableWindow,
+  currentWeekStart,
+  openingWeek,
+  WeekSlotsFrame,
+} from '#/schedule/index.ts';
+import { t, teacherLabel } from '#/lib/i18n/index.ts';
+import { useViewerTz } from '#/lib/index.ts';
+import { familySlotsQuery } from '#/portal/api.ts';
+import { LessonWhen } from '#/portal/lessons/LessonWhen.tsx';
 
 interface AskTimeDrawerProps {
   lesson: PortalLesson;

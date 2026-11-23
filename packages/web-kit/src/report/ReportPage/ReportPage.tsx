@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Logo } from '@ab/web-kit/components/ui/display/mark';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { reportPageQuery } from '@ab/web-kit/report/api';
-import { PublicReport } from '@ab/web-kit/report/PublicReport';
-import { ReportPageBody } from '@ab/web-kit/report/ReportPageBody';
+import { LanguageSwitch } from '#/components/shell/index.ts';
+import { Cartouche, Logo, ListSkeleton } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { reportPageQuery } from '#/report/api.ts';
+import { PublicReport } from '#/report/PublicReport.tsx';
+import { ReportPageBody } from '#/report/ReportPageBody.tsx';
 
 /**
  * /report/:publicId (owner 2026-11-06): the report's live page, without the app shell, rendered

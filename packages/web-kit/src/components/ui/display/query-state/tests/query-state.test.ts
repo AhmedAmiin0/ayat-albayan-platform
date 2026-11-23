@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { queryStateOf } from '@ab/web-kit/components/ui/display/query-state';
+import { queryStateOf } from '#/components/ui/display/query-state/index.ts';
 
 const none = (list: readonly number[]): boolean => list.length === 0;
 

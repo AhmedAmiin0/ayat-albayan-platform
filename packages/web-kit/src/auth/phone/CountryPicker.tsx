@@ -1,11 +1,9 @@
 import { type Country, nameOf, orderCountries, searchCountries } from '@ab/client-core';
 import { useState } from 'react';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { EmptyState, Ltr } from '#/components/ui/display/index.ts';
+import { SearchInput } from '#/components/ui/form/index.ts';
+import { Dialog } from '#/components/ui/overlay/index.ts';
+import { t, locale } from '#/lib/i18n/index.ts';
 import { browserRegion } from './browser-country';
 
 interface Props {

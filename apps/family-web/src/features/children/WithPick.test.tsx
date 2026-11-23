@@ -1,15 +1,15 @@
 import type { PortalStudent } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { home, kid } from '@ab/web-kit/testing';
+import { renderAt } from '#/test/render-at.tsx';
 import { WithPick } from './WithPick';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/http', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 // The profile the pick is saved under (the shell's guard reads the rest of the module).
-vi.mock('@ab/web-kit/auth/me/me', async (orig) => ({
+vi.mock('@ab/web-kit/auth', async (orig) => ({
   ...(await orig<object>()),
   meQuery: { queryKey: ['me'], queryFn: () => ({ id: 'g1', role: 'guardian', permissions: [] }) },
 }));

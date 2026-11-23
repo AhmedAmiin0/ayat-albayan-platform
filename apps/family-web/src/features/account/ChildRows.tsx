@@ -1,9 +1,9 @@
 import { familyChildren, isSelfChild, type FamilyPick } from '@ab/client-core';
 import type { PortalHome, PortalStudent } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useFamilyPick, usePickChild } from '@/features/shell';
+import { SectionHeader } from '@ab/web-kit/surface';
+import { t } from '@ab/web-kit/i18n';
+import { useFamilyPick, usePickChild } from '#/features/shell/index.ts';
 import { ChildRow } from './ChildRow';
 
 /** The id of the child the pages show now, if one is. */

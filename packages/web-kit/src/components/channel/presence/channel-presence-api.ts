@@ -1,7 +1,7 @@
 import { channelPresenceKey, channelPresencePath, type ChannelAudience } from '@ab/client-core';
 import { channelPresenceSchema } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '#/lib/http/index.ts';
 
 // The chat header's presence (docs/33): last seen from the API, online now from the socket
 // (use-presence-watch).

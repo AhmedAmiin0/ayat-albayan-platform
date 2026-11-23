@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { env, optionalOrigin } from '@ab/web-kit/lib/http/env/env';
+import { env, optionalOrigin } from '#/lib/http/env/env.ts';
 
 describe('optionalOrigin: the other web app (docs/51 §3)', () => {
   it('unset, blank or not an http(s) URL → "" (no link, no redirect)', () => {

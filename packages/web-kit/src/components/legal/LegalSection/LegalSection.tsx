@@ -1,5 +1,5 @@
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { LEGAL_LIST_CLASS } from '@ab/web-kit/components/legal/legal-look';
+import { Card } from '#/components/ui/surface/index.ts';
+import { LEGAL_LIST_CLASS } from '#/components/legal/legal-look.ts';
 import type { LegalSectionProps } from './LegalSection.types';
 
 /** One titled part of a legal page: a card with its heading, a paragraph, points, then extras. */

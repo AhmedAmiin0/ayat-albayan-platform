@@ -1,10 +1,10 @@
 import { lessonMutePath } from '@ab/client-core';
 import type { MuteSource } from '@ab/shared';
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { apiSend } from '#/lib/http/index.ts';
 import {
   recordingSourceOf,
   type RecordingSource,
-} from '@ab/web-kit/classroom/api/moderation-api';
+} from '#/classroom/api/moderation-api.ts';
 
 /** «كتم الميكروفون» / «إيقاف الكاميرا» for one participant: 204, or an ApiError. */
 export type MuteCall = (input: { identity: string; source: MuteSource }) => Promise<void>;

@@ -1,6 +1,5 @@
 import { chatDay, dateText, type ChatDay } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '#/lib/i18n/index.ts';
 
 // A day chip's words on the web (owner 2026-10-27, «like whatsapp»), worded from the shared
 // chatDay in the student's time zone: «اليوم», «أمس», the weekday within the last six days, else

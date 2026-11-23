@@ -1,4 +1,4 @@
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
 
 /**
  * - `stage`: the board (when open here) or the first shared screen takes the big area, everyone's

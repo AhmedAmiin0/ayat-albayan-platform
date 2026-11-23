@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BOARD_TRACK_NAME, snapshotOf, type ParticipantLike, type PublicationLike } from '@ab/web-kit/classroom/room/livekit/snapshot/snapshot';
+import { BOARD_TRACK_NAME, snapshotOf, type ParticipantLike, type PublicationLike } from '#/classroom/room/livekit/snapshot/snapshot.ts';
 
 const screen = (trackName?: string): PublicationLike => ({ source: 'screen_share', isMuted: false, trackName, track: { sid: 'S', mediaStreamTrack: { id: 'm' } } });
 

@@ -1,7 +1,6 @@
 import { channelTimeText } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { cn } from '@ab/web-kit/lib/utils';
+import { useClock, cn } from '#/lib/index.ts';
 import type { ChannelRef } from './api';
 import { BubbleCard } from './bubble/BubbleCard';
 import { rowAttrs } from './bubble/jump';

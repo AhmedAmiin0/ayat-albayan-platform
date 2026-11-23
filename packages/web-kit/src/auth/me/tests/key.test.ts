@@ -1,8 +1,8 @@
 import { pathKey } from '@ab/client-core';
 import { describe, expect, it, vi } from 'vitest';
-import { meQuery } from '@ab/web-kit/auth/me/me';
+import { meQuery } from '#/auth/me/me.ts';
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: {} } }));
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth: {} } }));
 
 describe('meQuery key (E1: one key convention)', () => {
   it('is the old literal key, so every existing invalidation still matches', () => {

@@ -1,5 +1,5 @@
 import type { PortalMonth } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 
 /** «هذا الشهر: حضر 6 · غاب 1» (the student's calendar month); an older API sends nothing. */
 export function MonthCounts({ month }: { month: PortalMonth | undefined }) {

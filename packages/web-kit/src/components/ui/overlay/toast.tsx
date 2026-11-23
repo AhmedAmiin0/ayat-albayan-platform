@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { cn } from '#/lib/index.ts';
+import { NuqtaGlyph } from '#/components/ui/display/index.ts';
 
 export interface ToastProps {
   /** Same verb as the action: t.students.created «الطالب اتسجل». */

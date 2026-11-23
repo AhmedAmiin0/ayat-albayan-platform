@@ -1,7 +1,7 @@
 import { firstWay, OTHER_WAY, type SignInWay } from '@ab/client-core';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/form';
+import { t } from '@ab/web-kit/i18n';
 import { StudentSignIn } from './StudentSignIn';
 import { WhatsAppSignIn } from './WhatsAppSignIn';
 

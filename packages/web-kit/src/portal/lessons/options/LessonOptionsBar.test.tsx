@@ -1,13 +1,13 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { kid, lesson } from '@ab/web-kit/portal/portal.fixtures';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
+import { t } from '#/lib/i18n/i18n.ts';
+import { kid, lesson } from '#/portal/portal.fixtures.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
 import { LessonOptionsBar } from './LessonOptionsBar';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch }));
 
 const NOW = new Date('2026-10-26T10:00:00.000Z');
 const A = t.portal.actions;

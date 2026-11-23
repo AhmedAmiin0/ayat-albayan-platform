@@ -1,13 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { openRoom } from '@ab/web-kit/classroom/board/board-fixture';
-import { fakeClient, tile, type FakeClient } from '@ab/web-kit/classroom/room/livekit/fake-client';
-import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from '@ab/web-kit/classroom/share/share-messages';
+import { t } from '#/lib/i18n/i18n.ts';
+import { openRoom } from '#/classroom/board/board-fixture.tsx';
+import { fakeClient, tile, type FakeClient } from '#/classroom/room/livekit/fake-client.ts';
+import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from '#/classroom/share/share-messages.ts';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<typeof import('@ab/web-kit/lib/http/api/api')>()), apiSend }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<typeof import('#/lib/http/api/api.ts')>()), apiSend }));
 
 const S = t.classroom.shareRequest;
 const guestRoom = () => fakeClient({ shareAllowed: false, tiles: [tile({ key: 'me', isLocal: true, role: 'guest' }), tile({ key: 't', role: 'teacher' })] });

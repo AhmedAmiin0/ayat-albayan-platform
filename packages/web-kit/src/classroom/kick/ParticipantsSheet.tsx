@@ -1,8 +1,8 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { MuteController } from '@ab/web-kit/classroom/mute/use-mute';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import { Button } from '#/components/ui/form/index.ts';
+import { Drawer } from '#/components/ui/overlay/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import type { MuteController } from '#/classroom/mute/use-mute.ts';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
 import type { KickController } from './use-kick';
 
 const M = t.classroom.mute;

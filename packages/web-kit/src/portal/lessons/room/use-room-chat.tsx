@@ -1,9 +1,9 @@
 import { chatOpen, type PortalStudent, type RoomJoinResult } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import type { RoomChatSlot } from '@ab/web-kit/classroom/flow/room-kit';
-import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';
-import { portalUnreadQuery } from '@ab/web-kit/portal/api';
-import { useFamilyChatOn } from '@ab/web-kit/portal/use-family-chat';
+import type { RoomChatSlot } from '#/classroom/index.ts';
+import { ChannelThread } from '#/components/channel/index.ts';
+import { portalUnreadQuery } from '#/portal/api.ts';
+import { useFamilyChatOn } from '#/portal/use-family-chat.ts';
 
 /** The unread count's query: asked only while counted and for a known student. */
 const unreadOf = (student: PortalStudent | null, counted: boolean) => ({

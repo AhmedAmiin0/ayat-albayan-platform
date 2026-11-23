@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { dayId } from '@/features/schedule/day-text';
+import { dayId } from '#/features/schedule/day-text.ts';
 
 // A tap on the week strip: the agenda scrolls to that day (at once under reduced motion) and its
 // ring flashes once (opacity only, kept under reduced motion: it says where the eye should land).

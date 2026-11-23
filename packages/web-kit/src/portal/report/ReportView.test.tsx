@@ -1,14 +1,14 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/i18n.ts';
 import { ReportView } from './ReportView';
-import { pageView } from '@ab/web-kit/report/page.fixture';
-import { portalApi } from '@ab/web-kit/portal/portal.api-fixture';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
+import { pageView } from '#/report/page.fixture.ts';
+import { portalApi } from '#/portal/portal.api-fixture.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const onBack = vi.fn();
 const show = (recordingId: string | null = null) =>

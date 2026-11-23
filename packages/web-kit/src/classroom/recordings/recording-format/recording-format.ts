@@ -1,6 +1,6 @@
 import type { LessonRecordingView, Tone } from '@ab/shared';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
+import type { Clock } from '#/lib/index.ts';
+import { dateAndClock, viewerZone } from '#/lib/index.ts';
 
 /** Status chip of a recording: under way = act, ready = ok, failed = bad. */
 export const RECORDING_TONE: Record<LessonRecordingView['status'], Tone> = {

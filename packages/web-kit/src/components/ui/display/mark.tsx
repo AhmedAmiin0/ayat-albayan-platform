@@ -1,5 +1,5 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 
 // Logo mark (docs/07 §11): the academy's own emblem, the open Mushaf on its green rahle inside the
 // gold eight-point star (docs/design/brand/logo-mark.png), exported on a transparent background by

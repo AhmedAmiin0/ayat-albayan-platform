@@ -1,5 +1,5 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
+import { t } from '#/lib/i18n/index.ts';
+import { RoomIcon } from '#/classroom/room/components/room-icons.tsx';
 import type { ProbeState } from './media-probe';
 
 const C = t.roomFlow.check;

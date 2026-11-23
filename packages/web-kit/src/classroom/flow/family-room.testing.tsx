@@ -2,9 +2,9 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import { ClassroomRoom, type ClassroomRoomProps } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
-import { MEDIA_CHOICE_KEY } from '@ab/web-kit/classroom/entry/saved-choice';
-import type { FakeClient } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { ClassroomRoom, type ClassroomRoomProps } from '#/classroom/room/components/ClassroomRoom/index.ts';
+import { MEDIA_CHOICE_KEY } from '#/classroom/entry/saved-choice.ts';
+import type { FakeClient } from '#/classroom/room/livekit/fake-client.ts';
 
 export const FAMILY_JOIN: RoomJoinResult = {
   url: 'wss://lk.test',

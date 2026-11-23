@@ -1,11 +1,11 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
+import { t } from '#/lib/i18n/i18n.ts';
+import { renderPortal } from '#/portal/portal.render.tsx';
 import { RoomOverlay } from './RoomOverlay';
 
-vi.mock('@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom', () => ({
+vi.mock('#/classroom/room/components/ClassroomRoom/ClassroomRoom.tsx', () => ({
   ClassroomRoom: () => <p>room</p>,
 }));
 

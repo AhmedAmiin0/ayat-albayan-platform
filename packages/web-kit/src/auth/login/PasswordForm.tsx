@@ -1,14 +1,11 @@
 import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
-import { signIn } from '@ab/web-kit/auth/sign-in';
-import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
+import { Button, Field, FormAlert, Input } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { PasswordInput } from '#/auth/PasswordInput.tsx';
+import { signIn } from '#/auth/sign-in/index.ts';
+import { useLandAfterSignIn } from '#/auth/use-return-to.ts';
 
 const required = ({ value }: { value: string }) => (value.trim() ? undefined : t.common.required);
 

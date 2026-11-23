@@ -1,14 +1,14 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { channelPage } from '@ab/web-kit/components/channel/channel.fixtures';
-import { showThread } from '@ab/web-kit/components/channel/thread.testing';
+import { t } from '#/lib/i18n/i18n.ts';
+import { channelPage } from '#/components/channel/channel.fixtures.ts';
+import { showThread } from '#/components/channel/thread.testing.tsx';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('#/lib/http/api/api.ts', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 const upload = vi.hoisted(() => vi.fn(async () => ({ error: null })));
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+vi.mock('#/lib/http/supabase.ts', () => ({
   supabase: {
     storage: { from: () => ({ uploadToSignedUrl: upload }) },
     channel: () => ({ on: () => ({ subscribe: () => ({}) }) }),
@@ -70,7 +70,7 @@ describe('ChannelThread composer: emoji and files (FamChatWebAttach)', () => {
   });
 
   it("a refused send says the API's reason (the chat closed), the words stay in the box", async () => {
-    const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
+    const { ApiError } = await import('#/lib/http/api/api.ts');
     apiFetch.mockResolvedValue(channelPage());
     apiSend.mockImplementation(async (_m: string, path: string) => {
       if (path === MESSAGES) throw new ApiError(409, { code: 'channel_not_open' });

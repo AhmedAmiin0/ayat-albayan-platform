@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { MediaDevice } from '@ab/web-kit/classroom/room/components/room-types';
+import { t } from '#/lib/i18n/index.ts';
+import type { MediaDevice } from '#/classroom/room/components/room-types.ts';
 
 /** Why the device check could not start a device: refused by the person/browser, or none there. */
 export type ProbeProblem = 'denied' | 'missing';

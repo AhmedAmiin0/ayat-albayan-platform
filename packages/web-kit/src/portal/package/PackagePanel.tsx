@@ -1,11 +1,9 @@
 import { packageSummary, paymentInstructions } from '@ab/client-core';
 import { subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalPackageQuery } from '@ab/web-kit/portal/api';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
+import { EmptyState, StatusChip, QueryState } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { portalPackageQuery } from '#/portal/api.ts';
 import { amountText, dayText, usedOfText } from './package-text';
 import { PaymentsList } from './PaymentsList';
 

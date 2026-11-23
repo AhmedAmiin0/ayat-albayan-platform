@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit/i18n';
 import { SignInLockup } from './SignInLockup';
 
 const S = t.familyApp.signIn;

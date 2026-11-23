@@ -1,8 +1,8 @@
-import { cardClass } from '@ab/web-kit/components/ui/surface/card';
-import { useCodesOpen } from '@ab/web-kit/auth/login/CodesGate';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { LegalLinks } from '@/features/legal';
+import { cardClass } from '@ab/web-kit/surface';
+import { useCodesOpen } from '@ab/web-kit/auth';
+import { LanguageSwitch } from '@ab/web-kit/shell';
+import { ListSkeleton } from '@ab/web-kit/display';
+import { LegalLinks } from '#/features/legal/index.ts';
 import { SignInLockup } from './SignInLockup';
 import { SignInWays } from './SignInWays';
 

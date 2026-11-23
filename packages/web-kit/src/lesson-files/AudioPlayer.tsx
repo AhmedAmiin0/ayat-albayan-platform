@@ -1,5 +1,5 @@
 import { resumeAt } from '@ab/client-core';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 import { MediaControls } from './MediaControls';
 import { useHtmlAudio } from './use-html-audio';
 import { useResumeMap } from './use-resume';

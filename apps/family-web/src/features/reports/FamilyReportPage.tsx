@@ -1,6 +1,6 @@
 import { useNavigate, useRouter } from '@tanstack/react-router';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ReportView } from '@ab/web-kit/portal/report/ReportView';
+import { t } from '@ab/web-kit/i18n';
+import { ReportView } from '@ab/web-kit/portal';
 import type { ReportSearch } from './report-search';
 
 /**

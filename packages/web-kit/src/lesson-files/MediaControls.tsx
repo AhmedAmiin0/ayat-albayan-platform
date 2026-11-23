@@ -1,8 +1,7 @@
 import { formatClock } from '@ab/client-core';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr } from '#/components/ui/display/index.ts';
+import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { PlayerButtons } from './PlayerButtons';
 import { SeekBar } from './SeekBar';
 import type { HtmlAudio } from './use-html-audio';

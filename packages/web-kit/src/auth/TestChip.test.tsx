@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, expect, it } from 'vitest';
 import { pathKey } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/i18n.ts';
 import { MeTestChip } from './MeTestChip';
 import { TestChip } from './TestChip';
 

@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { Tabs } from '@ab/web-kit/components/ui/layout/tabs/tabs';
+import { t } from '#/lib/i18n/i18n.ts';
+import { SegmentedControl } from '#/components/ui/form/segmented-control.tsx';
+import { Tabs } from '#/components/ui/layout/tabs/tabs.tsx';
 
 const TABS = [
   { value: 'all', label: t.leads.filterAll, count: 107 },

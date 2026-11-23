@@ -1,6 +1,6 @@
-import { MaintenanceScreen } from '@ab/web-kit/components/shell';
+import { MaintenanceScreen } from '#/components/shell/index.ts';
 import type { MaintenanceGateProps } from './MaintenanceGate.types';
-import { useMaintenance } from '@ab/web-kit/boot/maintenance/use-maintenance';
+import { useMaintenance } from '#/boot/maintenance/use-maintenance.ts';
 
 /**
  * The app always stays mounted (unsaved drafts survive); while covered it is inert (no focus, no

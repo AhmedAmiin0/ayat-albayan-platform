@@ -1,17 +1,17 @@
 import { formatPhone } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { renderAt } from '#/test/render-at.tsx';
 import { WhatsAppSignIn } from './WhatsAppSignIn';
 
 const request = vi.hoisted(() => vi.fn(async () => undefined));
 const signInWithCode = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/auth/login/auth-api', async (orig) => {
+vi.mock('@ab/web-kit/auth', async (orig) => {
   const real = await orig<{ authApi: object }>();
-  return { ...real, authApi: { ...real.authApi, familyCodes: { request, verify: vi.fn() } } };
+  const authApi = { ...real.authApi, familyCodes: { request, verify: vi.fn() } };
+  return { ...real, authApi, signInWithCode };
 });
-vi.mock('@ab/web-kit/auth/sign-in/sign-in', async (orig) => ({ ...(await orig<object>()), signInWithCode }));
 
 const PHONE = '+966500000005';
 const box = (n: number) => screen.getByLabelText(t.familyAuth.codeDigit.replace('{n}', String(n)));

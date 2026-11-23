@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { fakeClient, tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { t } from '#/lib/i18n/i18n.ts';
+import { fakeClient, tile } from '#/classroom/room/livekit/fake-client.ts';
 import { CONTEXT, familyRoom, openFamilyRoom, saveEarlierChoice } from './family-room.testing';
 
 const me = tile({ key: 'me', name: 'يوسف', isLocal: true, role: 'guest' });

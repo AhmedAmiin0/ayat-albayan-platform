@@ -1,9 +1,9 @@
 import { familyChildren, ownStudent, profileFacts, whoLine, type OwnProfile } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
+import { buttonVariants } from '@ab/web-kit/form';
+import { t } from '@ab/web-kit/i18n';
+import { QueryState } from '@ab/web-kit/display';
 import { ChildrenLinks } from './ChildrenLinks';
 import { ProfileDetails } from './ProfileDetails';
 import { ProfileHero } from './ProfileHero';

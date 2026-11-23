@@ -1,6 +1,6 @@
 import type { ChangeEvent, KeyboardEvent, ReactNode } from 'react';
-import { ChatGlyph } from '@ab/web-kit/components/channel/bubble/ChatGlyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ChatGlyph } from '#/components/channel/bubble/ChatGlyph.tsx';
+import { t } from '#/lib/i18n/index.ts';
 import { escapeCloses } from './use-composer';
 
 const m = t.studentChannel.media;

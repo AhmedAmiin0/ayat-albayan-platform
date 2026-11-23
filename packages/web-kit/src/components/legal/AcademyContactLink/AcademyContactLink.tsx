@@ -1,7 +1,7 @@
 import { contactLine } from '@ab/client-core';
-import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
+import { usePublicConfig } from '#/lib/settings/index.ts';
 import type { AcademyContactLinkProps } from './AcademyContactLink.types';
-import { CONTACT_TARGET } from '@ab/web-kit/components/legal/legal-look';
+import { CONTACT_TARGET } from '#/components/legal/legal-look.ts';
 
 /**
  * How to reach the academy, from settings.academy_contact (GET /settings/public, the shared

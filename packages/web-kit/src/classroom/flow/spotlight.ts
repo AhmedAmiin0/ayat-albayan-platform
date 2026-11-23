@@ -1,5 +1,5 @@
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
-import { layoutOf, type RoomLayout } from '@ab/web-kit/classroom/room/livekit/stage';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
+import { layoutOf, type RoomLayout } from '#/classroom/room/livekit/stage.ts';
 
 const isTeacherCamera = (x: TileView): boolean =>
   !x.isLocal && x.kind === 'camera' && x.role === 'teacher';

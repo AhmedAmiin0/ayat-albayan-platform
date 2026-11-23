@@ -1,4 +1,4 @@
-import { Mark } from '@ab/web-kit/components/ui/display/mark';
+import { Mark } from '#/components/ui/display/index.ts';
 import type { LegalDocumentProps } from './LegalDocument.types';
 
 /**

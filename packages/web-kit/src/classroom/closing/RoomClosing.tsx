@@ -1,11 +1,10 @@
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ContextHeader } from '@ab/web-kit/classroom/flow/ContextHeader';
-import type { RoomContext } from '@ab/web-kit/classroom/flow/room-kit';
-import type { RoomVariant } from '@ab/web-kit/classroom/flow/room-variant';
-import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { ContextHeader } from '#/classroom/flow/ContextHeader.tsx';
+import type { RoomContext } from '#/classroom/flow/room-kit.ts';
+import type { RoomVariant } from '#/classroom/flow/room-variant.ts';
+import { RoomIcon } from '#/classroom/room/components/room-icons.tsx';
 import { closingSpec, type ClosingKind } from './closing-kinds';
 
 /** The page's own rejoin: under way, or refused (its words). */

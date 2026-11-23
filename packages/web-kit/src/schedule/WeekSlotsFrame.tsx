@@ -1,13 +1,11 @@
 import type { SlotView } from '@ab/shared';
 import { addDays } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { SlotGrid, type SlotGridProps } from '@ab/web-kit/schedule/SlotGrid';
-import { dayMonthLabel } from '@ab/web-kit/schedule/tz';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { Button, FormAlert, tzCity } from '#/components/ui/form/index.ts';
+import { Icon } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { SlotGrid, type SlotGridProps } from '#/schedule/SlotGrid.tsx';
+import { dayMonthLabel } from '#/schedule/tz/index.ts';
+import { useViewerTz } from '#/lib/index.ts';
 
 /** One week's slot read: staff's GET /booking/slots, or the family's free starts. */
 export interface SlotsRead {

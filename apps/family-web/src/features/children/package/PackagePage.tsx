@@ -2,10 +2,10 @@ import { portalViewer, seesMoney } from '@ab/client-core';
 import type { PortalHome, PortalKind, PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { PackagePanel } from '@ab/web-kit/portal/package/PackagePanel';
+import { EmptyState } from '@ab/web-kit/display';
+import { buttonVariants } from '@ab/web-kit/form';
+import { t } from '@ab/web-kit/i18n';
+import { PackagePanel } from '@ab/web-kit/portal';
 
 const BACK = buttonVariants({ variant: 'secondary', size: 'sm' });
 

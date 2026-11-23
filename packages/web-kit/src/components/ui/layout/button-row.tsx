@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 export interface ButtonRowProps {
   /** 2–3 peer Buttons (or button-styled links), in reading order. */

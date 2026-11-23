@@ -1,13 +1,13 @@
 import { chatOpen, type RoomJoinResult } from '@ab/shared';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ReconnectStrip } from '@ab/web-kit/classroom/flow/ReconnectStrip';
-import type { RoomKit } from '@ab/web-kit/classroom/flow/room-kit';
-import { RoomTopBar } from '@ab/web-kit/classroom/flow/RoomTopBar';
-import { RecordingOffAlert } from '@ab/web-kit/classroom/recordings/RecordingsPanel';
-import { ShareRequestsPanel } from '@ab/web-kit/classroom/share/ShareRequestsPanel';
-import type { ShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import { FormAlert } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { ReconnectStrip } from '#/classroom/flow/ReconnectStrip.tsx';
+import type { RoomKit } from '#/classroom/flow/room-kit.ts';
+import { RoomTopBar } from '#/classroom/flow/RoomTopBar.tsx';
+import { RecordingOffAlert } from '#/classroom/recordings/RecordingsPanel.tsx';
+import { ShareRequestsPanel } from '#/classroom/share/ShareRequestsPanel.tsx';
+import type { ShareRequests } from '#/classroom/share/use-share-requests.ts';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import { RoomHeader } from './RoomHeader';
 
 interface Props {

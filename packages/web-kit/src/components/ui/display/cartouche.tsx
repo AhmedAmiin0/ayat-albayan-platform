@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // The screen title (docs/07 §5): exactly ONE per screen, holding the screen title (or the entity
 // name on a profile). Renders the screen's heading, h1 by default. Owner, 2026-10-05 («simplify»):

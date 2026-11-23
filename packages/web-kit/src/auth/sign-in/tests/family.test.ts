@@ -1,8 +1,8 @@
 import { ApiError } from '@ab/client-core';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { signIn, signInWithCode } from '@ab/web-kit/auth/sign-in/sign-in';
+import { t } from '#/lib/i18n/i18n.ts';
+import { signIn, signInWithCode } from '#/auth/sign-in/sign-in.ts';
 
 const auth = vi.hoisted(() => ({
   signInWithPassword: vi.fn(),
@@ -14,9 +14,9 @@ const auth = vi.hoisted(() => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
-vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn() }));
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth } }));
+vi.mock('#/lib/http/api/api.ts', () => ({ apiFetch, apiSend }));
+vi.mock('#/auth/session-activity.ts', () => ({ reportSession: vi.fn() }));
 
 const session = { access_token: 'at', refresh_token: 'rt', expires_in: 3600, expires_at: null };
 

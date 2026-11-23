@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '#/components/ui/form/button.tsx';
 import { ButtonRow } from './button-row';
 
 describe('ButtonRow (docs/07 «الأزرار»)', () => {

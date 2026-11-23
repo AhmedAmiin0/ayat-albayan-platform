@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { MediaChoice, MediaDevice } from '@ab/web-kit/classroom/room/components/room-types';
+import type { MediaChoice, MediaDevice } from '#/classroom/room/components/room-types.ts';
 import { problemText, type ProbeState } from './media-probe';
 import type { JoinPick } from './saved-choice';
 import { useMediaProbe } from './use-media-probe';

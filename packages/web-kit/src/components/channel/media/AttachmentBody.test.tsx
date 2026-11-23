@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { channelMessage } from '@ab/web-kit/components/channel/channel.fixtures';
+import { t } from '#/lib/i18n/i18n.ts';
+import { channelMessage } from '#/components/channel/channel.fixtures.ts';
 import { AttachmentBody } from './AttachmentBody';
 
 const c = t.studentChannel;

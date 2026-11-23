@@ -1,8 +1,8 @@
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
-import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
+import { Card } from '#/components/ui/surface/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { QueryState } from '#/components/ui/display/index.ts';
+import type { OpenReport } from '#/portal/report/ReportView.tsx';
 import { LessonHead, ReportBlock } from './LessonHead';
 import { LessonParts } from './LessonParts';
 import { PortalFileList } from './PortalFileList';

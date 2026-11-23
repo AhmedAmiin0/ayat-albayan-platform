@@ -1,15 +1,15 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { followProfileLocale } from '@ab/web-kit/lib/i18n/profile-locale';
-import { meQuery } from '@ab/web-kit/auth/me/me';
+import { followProfileLocale } from '#/lib/i18n/profile-locale.ts';
+import { meQuery } from '#/auth/me/me.ts';
 
 // Staff pages and the family portal alike pass through GET /auth/me: its `locale` is followed.
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+vi.mock('#/lib/http/supabase.ts', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } },
 }));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
-vi.mock('@ab/web-kit/lib/i18n/profile-locale', () => ({ followProfileLocale: vi.fn(() => false) }));
+vi.mock('#/lib/http/api/api.ts', () => ({ apiFetch }));
+vi.mock('#/lib/i18n/profile-locale.ts', () => ({ followProfileLocale: vi.fn(() => false) }));
 
 beforeEach(() => vi.clearAllMocks());
 

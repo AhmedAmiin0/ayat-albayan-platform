@@ -1,7 +1,7 @@
 import type { ChannelMessageView } from '@ab/shared';
-import { QuoteBlock } from '@ab/web-kit/components/channel/bubble/QuoteBlock';
-import { AttachmentBody } from '@ab/web-kit/components/channel/media/AttachmentBody';
-import { LinkedBody } from '@ab/web-kit/components/ui/display/linked-body';
+import { QuoteBlock } from '#/components/channel/bubble/QuoteBlock.tsx';
+import { AttachmentBody } from '#/components/channel/media/AttachmentBody.tsx';
+import { LinkedBody } from '#/components/ui/display/index.ts';
 import { ChannelEditForm } from './ChannelEditForm';
 import type { useBubbleEditing } from './use-bubble-editing';
 

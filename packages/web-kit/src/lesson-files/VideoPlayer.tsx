@@ -1,7 +1,7 @@
 import { resumeAt } from '@ab/client-core';
 import { useRef } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 import { MediaControls } from './MediaControls';
 import { MediaGlyph } from './media-glyphs';
 import { useHtmlAudio } from './use-html-audio';

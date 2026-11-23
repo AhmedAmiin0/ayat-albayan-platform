@@ -1,6 +1,6 @@
 import { presenceWatchKey, watchPresence, type PresenceWatch } from '@ab/client-core';
 import { useEffect, useState } from 'react';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { supabase } from '#/lib/http/index.ts';
 
 const IDLE: PresenceWatch = { live: false, online: new Set() };
 

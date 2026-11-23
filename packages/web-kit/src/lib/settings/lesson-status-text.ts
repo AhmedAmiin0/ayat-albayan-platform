@@ -1,6 +1,6 @@
 import { lessonStatusLabel, lessonStatusLook } from '@ab/client-core';
 import type { LessonStatus, StatusStyle } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 import { usePublicConfig } from './public-config';
 
 /** A lesson status as a chip: its look and its words. */

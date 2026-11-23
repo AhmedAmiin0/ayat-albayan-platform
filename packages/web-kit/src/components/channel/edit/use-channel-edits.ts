@@ -1,6 +1,6 @@
 import { channelKey } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { channelCountKeys, type ChannelRef } from '@ab/web-kit/components/channel/api';
+import { channelCountKeys, type ChannelRef } from '#/components/channel/api.ts';
 import { deleteChannelMessage, editChannelMessage, editProblem } from './edit-api';
 
 /**

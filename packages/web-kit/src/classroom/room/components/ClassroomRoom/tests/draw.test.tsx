@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { openRoom, sent } from '@ab/web-kit/classroom/board/board-fixture';
+import { t } from '#/lib/i18n/i18n.ts';
+import { openRoom, sent } from '#/classroom/board/board-fixture.tsx';
 
 function canvas() {
   const el = screen.getByRole('img', { name: t.classroom.board.title });

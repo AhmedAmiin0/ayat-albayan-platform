@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BOTH_ON, type MediaChoice } from '@ab/web-kit/classroom/room/components/room-types';
+import { BOTH_ON, type MediaChoice } from '#/classroom/room/components/room-types.ts';
 import { readSavedChoice, saveChoice, type JoinPick } from './saved-choice';
 
 export interface RoomEntry {

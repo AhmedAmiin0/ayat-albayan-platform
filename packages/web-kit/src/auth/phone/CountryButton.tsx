@@ -1,8 +1,7 @@
 import { type Country, nameOf } from '@ab/client-core';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { Ltr } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { t, locale } from '#/lib/i18n/index.ts';
 
 interface Props {
   country: Country;

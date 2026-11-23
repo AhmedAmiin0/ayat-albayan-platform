@@ -1,8 +1,8 @@
 import { ApiError } from '@ab/client-core';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { signIn, signOut } from '@ab/web-kit/auth/sign-in/sign-in';
+import { t } from '#/lib/i18n/i18n.ts';
+import { signIn, signOut } from '#/auth/sign-in/sign-in.ts';
 
 const auth = vi.hoisted(() => ({
   signInWithPassword: vi.fn(),
@@ -12,9 +12,9 @@ const auth = vi.hoisted(() => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 const reportSession = vi.hoisted(() => vi.fn());
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
-vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession }));
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth } }));
+vi.mock('#/lib/http/api/api.ts', () => ({ apiFetch }));
+vi.mock('#/auth/session-activity.ts', () => ({ reportSession }));
 
 const creds = { email: 'admin@ab.local', password: 'secret-123' };
 

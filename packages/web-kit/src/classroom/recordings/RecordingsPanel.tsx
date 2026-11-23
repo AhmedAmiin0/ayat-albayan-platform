@@ -1,14 +1,12 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '@ab/web-kit/classroom/api/moderation-api';
+import { FormAlert, buttonVariants } from '#/components/ui/form/index.ts';
+import { Icon, StatusChip } from '#/components/ui/display/index.ts';
+import { Drawer } from '#/components/ui/overlay/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '#/classroom/api/moderation-api.ts';
 import { RECORDING_TONE, recordingTime } from './recording-format';
-import { useClock } from '@ab/web-kit/lib/clock';
+import { useClock } from '#/lib/index.ts';
 
 const R = t.classroom.recordings;
 

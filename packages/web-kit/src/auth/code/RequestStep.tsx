@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Field, Input } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 interface Props {
   label: string;

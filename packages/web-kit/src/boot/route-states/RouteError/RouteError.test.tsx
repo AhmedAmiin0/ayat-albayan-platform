@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { renderRoute } from '@ab/web-kit/boot/route-states/tests/render-route';
-import { ERROR_WORDS } from '@ab/web-kit/boot/route-states/tests/words';
+import { renderRoute } from '#/boot/route-states/tests/render-route.tsx';
+import { ERROR_WORDS } from '#/boot/route-states/tests/words.ts';
 import { RouteError } from './RouteError';
 
 describe('RouteError', () => {

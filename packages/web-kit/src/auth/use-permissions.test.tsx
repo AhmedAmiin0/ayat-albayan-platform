@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { meQuery } from './me';
 import { usePermissions } from './use-permissions';
 
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: () => new Promise(() => undefined) } } }));
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth: { getSession: () => new Promise(() => undefined) } } }));
 
 function render(seed?: unknown) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });

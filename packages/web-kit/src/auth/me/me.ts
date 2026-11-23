@@ -2,11 +2,10 @@ import { isAccountDisabled, meLocaleOf, pathKey, setViewerPersonTz } from '@ab/c
 import type { Permission, UserRole } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
-import { forgetWebPush } from '@ab/web-kit/push/web-push';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
-import { followProfileLocale } from '@ab/web-kit/lib/i18n/profile-locale';
-import { returnSearchOf } from '@ab/web-kit/auth/return-to';
+import { apiFetch, supabase } from '#/lib/http/index.ts';
+import { forgetWebPush } from '#/push/index.ts';
+import { followProfileLocale } from '#/lib/i18n/index.ts';
+import { returnSearchOf } from '#/auth/return-to.ts';
 
 export interface Me {
   id: string;

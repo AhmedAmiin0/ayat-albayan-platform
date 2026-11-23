@@ -1,6 +1,6 @@
 import { MAINTENANCE_CONFIRM_MS, probe, type MaintenanceProbes } from '@ab/client-core';
 import { PUBLIC_CONFIG_PATH } from '@ab/shared';
-import { env } from '@ab/web-kit/lib/http/env';
+import { env } from '#/lib/http/index.ts';
 
 const wait = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 

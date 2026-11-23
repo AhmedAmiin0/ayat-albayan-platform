@@ -1,6 +1,6 @@
 import type { NotificationsPage } from '@ab/shared';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '#/lib/http/index.ts';
 
 // apps/api /me/notifications and /me/web-push (R-NOT-01): the bell's rows and this browser's
 // push subscription. Everyone holding notifications.push (staff, guardians, students) reads

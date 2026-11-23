@@ -1,11 +1,11 @@
 import { recordingMinutes } from '@ab/client-core';
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
-import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Pill } from '@ab/web-kit/components/ui/surface/pill';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { OpenReport } from '#/portal/report/ReportView.tsx';
+import { Icon } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { Pill } from '#/components/ui/surface/index.ts';
+import { useClock } from '#/lib/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { lessonLine, lessonTitle } from './lesson-words';
 import { ReportSummary } from './ReportSummary';
 

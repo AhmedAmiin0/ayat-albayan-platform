@@ -1,8 +1,7 @@
 import type { Country } from '@ab/client-core';
 import { useState, type KeyboardEvent, type ReactNode } from 'react';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input } from '#/components/ui/form/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { CountryButton } from './CountryButton';
 import { CountryPicker } from './CountryPicker';
 import type { PhoneEntry } from './use-phone-entry';

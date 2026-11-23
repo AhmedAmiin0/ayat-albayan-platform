@@ -1,6 +1,6 @@
 import { tzChoices, tzOptionLabel } from '@ab/shared';
 import type { ComponentProps } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 import { Select } from './select';
 
 const CITY: Record<string, string | undefined> = t.tz;

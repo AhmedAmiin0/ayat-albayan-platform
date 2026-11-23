@@ -1,7 +1,7 @@
 import {
   portalAssetsApi, portalLessonSends, portalQueries, portalSends, portalSlotsQuery,
 } from '@ab/client-core';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '#/lib/http/index.ts';
 
 // The family portal (docs/31, docs/50): the routes, queries and rules live in @ab/client-core, the
 // same as the family app's; this module binds them to the web's API client.

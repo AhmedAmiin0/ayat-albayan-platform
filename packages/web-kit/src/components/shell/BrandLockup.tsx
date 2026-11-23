@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { Mark } from '@ab/web-kit/components/ui/display/mark';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Mark } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 const S = t.familyApp.signIn;
 

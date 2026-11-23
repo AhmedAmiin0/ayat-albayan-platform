@@ -1,11 +1,9 @@
 import type { Glyph, Tone } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { toneClass } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
+import { Icon, NuqtaGlyph, toneClass } from '#/components/ui/display/index.ts';
+import { IconButton } from '#/components/ui/form/index.ts';
 
 export interface DialogHeaderProps {
   title: string;

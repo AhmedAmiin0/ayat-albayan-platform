@@ -1,7 +1,7 @@
 import type { PortalHome } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { LegalLinks } from '@/features/legal';
+import { Button } from '@ab/web-kit/form';
+import { t } from '@ab/web-kit/i18n';
+import { LegalLinks } from '#/features/legal/index.ts';
 import { ChildRows } from './ChildRows';
 import { SettingsCard } from './SettingsCard';
 import { useSignOut } from './use-sign-out';

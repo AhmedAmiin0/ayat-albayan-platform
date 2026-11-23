@@ -1,9 +1,9 @@
 import type { PortalLessonFile } from '@ab/shared';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { fileLine, fileTitle } from '@ab/web-kit/lesson-files/file-words';
-import { cn } from '@ab/web-kit/lib/utils';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
-import { useLessonFileUrl } from '@ab/web-kit/portal/recordings/use-recordings';
+import { Dialog } from '#/components/ui/overlay/index.ts';
+import { fileLine, fileTitle } from '#/lesson-files/index.ts';
+import { cn } from '#/lib/index.ts';
+import { QueryState } from '#/components/ui/display/index.ts';
+import { useLessonFileUrl } from '#/portal/recordings/use-recordings.ts';
 import { useViewer, type Viewer } from './use-viewer';
 import { ViewerActions, ViewerBody } from './ViewerParts';
 import { ViewerPager } from './ViewerPager';

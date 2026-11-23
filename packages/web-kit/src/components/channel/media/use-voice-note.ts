@@ -1,6 +1,6 @@
 import { initialPlayer, playerReducer, type PlayerState } from '@ab/client-core';
 import { useEffect, useId, useReducer, useRef, type RefObject, type SyntheticEvent } from 'react';
-import { nowPlaying } from '@ab/web-kit/lesson-files/use-now-playing';
+import { nowPlaying } from '#/lesson-files/index.ts';
 
 type AudioEvent = SyntheticEvent<HTMLAudioElement>;
 

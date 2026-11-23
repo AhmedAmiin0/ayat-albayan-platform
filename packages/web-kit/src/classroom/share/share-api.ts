@@ -1,5 +1,5 @@
-import { apiSend } from '@ab/web-kit/lib/http/api';
-import { lessonIdOfRoom, meetingIdOfRoom } from '@ab/web-kit/classroom/api/moderation-api';
+import { apiSend } from '#/lib/http/index.ts';
+import { lessonIdOfRoom, meetingIdOfRoom } from '#/classroom/api/moderation-api.ts';
 
 /** «سماح» (allow) / «إيقاف مشاركة» (stop) one guest's screen share: 204, or an ApiError. */
 export type GrantShare = (input: { identity: string; allow: boolean }) => Promise<void>;

@@ -1,9 +1,9 @@
 import { canRemove, type JoinRole } from '@ab/shared';
 import { useCallback, useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
-import { removeParticipant } from '@ab/web-kit/classroom/api/moderation-api';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import { t } from '#/lib/i18n/index.ts';
+import { classroomErrorText } from '#/classroom/room/livekit/errors.ts';
+import { removeParticipant } from '#/classroom/api/moderation-api.ts';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
 
 export interface KickToast {
   message: string;

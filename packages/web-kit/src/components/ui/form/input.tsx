@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // docs/07 §6 Input/Select: 3:1 rule-input border on raised paper, lapis focus, cinnabar when
 // aria-invalid. 16px text and 44px tall under 640px (iOS zoom floor). LTR values (email, codes,

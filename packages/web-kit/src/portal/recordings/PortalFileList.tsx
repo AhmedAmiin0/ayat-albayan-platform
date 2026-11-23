@@ -1,10 +1,10 @@
 import type { PortalLessonFile } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { fileLine, fileTitle } from '@ab/web-kit/lesson-files/file-words';
-import { FileButtons } from '@ab/web-kit/portal/report/FileButtons';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SectionHeader } from '#/components/ui/surface/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { fileLine, fileTitle } from '#/lesson-files/index.ts';
+import { FileButtons } from '#/portal/report/FileButtons.tsx';
+import { t } from '#/lib/i18n/index.ts';
 import { VoiceNotePlayer } from './RecordingPlayer';
 import { FileViewer } from './viewer/FileViewer';
 

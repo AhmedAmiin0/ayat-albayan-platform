@@ -2,11 +2,11 @@ import type { MaintenanceView } from '@ab/client-core';
 import type { AnyRouter } from '@tanstack/react-router';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/i18n.ts';
 import { MaintenanceGate } from './MaintenanceGate';
 
 const state: { view: MaintenanceView } = vi.hoisted(() => ({ view: 'open' }));
-vi.mock('@ab/web-kit/boot/maintenance/use-maintenance', () => ({
+vi.mock('#/boot/maintenance/use-maintenance.ts', () => ({
   useMaintenance: () => ({ view: state.view, checking: false, retry: vi.fn() }),
 }));
 

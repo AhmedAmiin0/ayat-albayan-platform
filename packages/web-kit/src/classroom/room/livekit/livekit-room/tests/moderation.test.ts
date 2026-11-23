@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createLivekitRoom } from '@ab/web-kit/classroom/room/livekit/livekit-room/livekit-room';
+import { createLivekitRoom } from '#/classroom/room/livekit/livekit-room/livekit-room.ts';
 
 type Handler = (...a: unknown[]) => void;
 const fake = vi.hoisted(() => ({

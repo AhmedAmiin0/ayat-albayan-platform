@@ -1,8 +1,8 @@
 import { requestChip, type RequestChip } from '@ab/client-core';
 import type { PortalLesson, Tone } from '@ab/shared';
-import { StatusMark } from '@ab/web-kit/components/ui/surface/status-mark';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
+import { StatusMark } from '#/components/ui/surface/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { useLessonStatusText } from '#/lib/settings/index.ts';
 
 /** The family's request outranks the lesson's status. */
 const REQUEST_TONE: Readonly<Record<RequestChip, Tone>> = { pendingChip: 'act', rejectedChip: 'bad' };

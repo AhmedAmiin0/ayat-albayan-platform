@@ -1,7 +1,7 @@
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '@ab/shared/testing';
 import { wallInstant, weekWindowIn, zonedPartsIn } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { dateLabel, dayMonthLabel } from '@ab/web-kit/schedule/tz/tz';
+import { dateLabel, dayMonthLabel } from '#/schedule/tz/tz.ts';
 
 // Regression golden (docs/34 §7). Before the date-fns facade replaced the en-CA Intl parts and the
 // Date.UTC offset math here, both ran side by side over this sweep and agreed on every value; the

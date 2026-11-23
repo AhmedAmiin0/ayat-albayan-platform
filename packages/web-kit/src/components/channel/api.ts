@@ -16,8 +16,7 @@ import {
   type TeacherChannelRow,
 } from '@ab/shared';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { env } from '@ab/web-kit/lib/http/env';
+import { apiFetch, apiSend, env } from '#/lib/http/index.ts';
 
 // The student channel (docs/31 §2). Lists and badges poll while the window has focus; the thread
 // has its socket (use-channel-live) and polls only as the fallback.

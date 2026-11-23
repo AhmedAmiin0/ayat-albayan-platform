@@ -1,12 +1,12 @@
 import type { ChannelAudience } from '@ab/client-core';
 import type { ChannelPage } from '@ab/shared';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
-import { ClosedChannel } from '@ab/web-kit/components/channel/closed/ClosedChannel';
-import { ChannelLoadFailed } from '@ab/web-kit/components/channel/thread/ChannelLoadFailed';
-import { OpenThread } from '@ab/web-kit/components/channel/thread/OpenThread';
-import { useChannelThread } from '@ab/web-kit/components/channel/thread/use-channel-thread';
+import { ListSkeleton } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import type { ChannelRef } from '#/components/channel/api.ts';
+import { ClosedChannel } from '#/components/channel/closed/ClosedChannel.tsx';
+import { ChannelLoadFailed } from '#/components/channel/thread/ChannelLoadFailed.tsx';
+import { OpenThread } from '#/components/channel/thread/OpenThread.tsx';
+import { useChannelThread } from '#/components/channel/thread/use-channel-thread.ts';
 
 const c = t.studentChannel;
 

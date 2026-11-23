@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { MediaDevice } from '@ab/web-kit/classroom/room/components/room-types';
+import type { MediaDevice } from '#/classroom/room/components/room-types.ts';
 import { canProbe, constraintsOf, inputsOf, problemOf, type ProbeState } from './media-probe';
 
 export interface ProbeInput {

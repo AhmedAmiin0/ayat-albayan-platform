@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { Button, type ButtonProps } from '@ab/web-kit/components/ui/form/button';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Button, type ButtonProps } from '#/components/ui/form/index.ts';
+import { cn } from '#/lib/index.ts';
 import { RoomIcon, type RoomIconName } from './room-icons';
 
 export interface RoomButtonProps extends Omit<ButtonProps, 'children'> {

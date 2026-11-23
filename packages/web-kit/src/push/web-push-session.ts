@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { forgetTabMemories } from '@ab/web-kit/lib/session/session-end';
+import { forgetTabMemories } from '#/lib/session/index.ts';
 import { dropLocalWebPush, rebindWebPush } from './web-push';
 
 /**

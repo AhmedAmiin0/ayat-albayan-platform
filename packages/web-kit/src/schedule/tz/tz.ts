@@ -1,5 +1,5 @@
 import { dateText } from '@ab/shared';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { locale } from '#/lib/i18n/index.ts';
 
 // Date labels for the schedule screens (R-SCH-01, rule 6). The zone math they used to sit beside
 // (zonedPartsIn, weekDates, weekWindowIn, wallInstant) lives in @ab/time behind @ab/shared (k3b).

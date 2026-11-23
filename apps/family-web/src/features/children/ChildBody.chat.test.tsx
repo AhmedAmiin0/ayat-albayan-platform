@@ -1,15 +1,13 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { channelPage } from '@ab/web-kit/components/channel/channel.fixtures';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalApi, type Answers } from '@ab/web-kit/portal/portal.api-fixture';
-import { kid } from '@ab/web-kit/portal/portal.fixtures';
-import { renderAt } from '@/test/render-at';
+import { channelPage, portalApi, type Answers, kid } from '@ab/web-kit/testing';
+import { t } from '@ab/web-kit/i18n';
+import { renderAt } from '#/test/render-at.tsx';
 import { ChildBody } from './ChildBody';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn(async () => ({})));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+vi.mock('@ab/web-kit/http', async (orig) => ({
   ...(await orig<object>()),
   apiFetch,
   apiSend,

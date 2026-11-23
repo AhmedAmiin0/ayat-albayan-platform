@@ -1,16 +1,16 @@
 import type { RoomJoinResult } from '@ab/shared';
-import { closingOf } from '@ab/web-kit/classroom/closing/closing-kinds';
-import { RoomClosing, type RejoinState } from '@ab/web-kit/classroom/closing/RoomClosing';
-import { DeviceCheck } from '@ab/web-kit/classroom/entry/DeviceCheck';
-import { useRoomEntry } from '@ab/web-kit/classroom/entry/use-room-entry';
+import { closingOf } from '#/classroom/closing/closing-kinds.ts';
+import { RoomClosing, type RejoinState } from '#/classroom/closing/RoomClosing.tsx';
+import { DeviceCheck } from '#/classroom/entry/DeviceCheck.tsx';
+import { useRoomEntry } from '#/classroom/entry/use-room-entry.ts';
 import {
   roomKit, type RoomChatSlot, type RoomContext, type RoomKit,
-} from '@ab/web-kit/classroom/flow/room-kit';
-import type { RoomVariant } from '@ab/web-kit/classroom/flow/room-variant';
-import { createLivekitRoom } from '@ab/web-kit/classroom/room/livekit/livekit-room';
-import { useRoom } from '@ab/web-kit/classroom/room/livekit/use-room';
-import { LiveRoom } from '@ab/web-kit/classroom/room/components/LiveRoom';
-import type { MediaChoice, RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
+} from '#/classroom/flow/room-kit.ts';
+import type { RoomVariant } from '#/classroom/flow/room-variant.ts';
+import { createLivekitRoom } from '#/classroom/room/livekit/livekit-room/index.ts';
+import { useRoom } from '#/classroom/room/livekit/use-room.ts';
+import { LiveRoom } from '#/classroom/room/components/LiveRoom.tsx';
+import type { MediaChoice, RoomClient } from '#/classroom/room/components/room-types.ts';
 
 export interface ClassroomRoomProps {
   join: RoomJoinResult;

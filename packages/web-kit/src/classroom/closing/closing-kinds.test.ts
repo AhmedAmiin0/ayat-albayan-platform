@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/i18n.ts';
 import { CLOSINGS, closingOf, closingSpec } from './closing-kinds';
 
 const base = { status: 'connected' as const, failure: null, endedForAll: false };

@@ -5,12 +5,9 @@ import '@fontsource/noto-sans-arabic/400.css';
 import '@fontsource/noto-sans-arabic/500.css';
 import '@fontsource/noto-sans-arabic/600.css';
 import '@fontsource/noto-sans-arabic/700.css';
-import '@ab/web-kit/index.css';
-import { env } from '@ab/web-kit/lib/http/env';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { loadOverrides } from '@ab/web-kit/lib/i18n/i18n-overrides';
-import { loadLocaleStrings } from '@ab/web-kit/lib/i18n/locale-strings';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import '#/index.css';
+import { env } from '#/lib/http/index.ts';
+import { t, loadOverrides, loadLocaleStrings, locale } from '#/lib/i18n/index.ts';
 import { installWebErrorReporting } from './web-errors';
 
 /**

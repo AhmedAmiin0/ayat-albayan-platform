@@ -1,9 +1,9 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom';
-import { from, joinAs, openRoom, sent } from '@ab/web-kit/classroom/board/board-fixture';
-import { fakeClient, tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { t } from '#/lib/i18n/i18n.ts';
+import { ClassroomRoom } from '#/classroom/room/components/ClassroomRoom/ClassroomRoom.tsx';
+import { from, joinAs, openRoom, sent } from '#/classroom/board/board-fixture.tsx';
+import { fakeClient, tile } from '#/classroom/room/livekit/fake-client.ts';
 
 // Owner, 2026-10-11: a trial lesson's room has no text chat; it says so in one line.
 const NOTE = 'المحادثة النصية مغلقة في الحلقات التجريبية.';

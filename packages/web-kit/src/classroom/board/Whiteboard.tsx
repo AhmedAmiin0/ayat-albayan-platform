@@ -1,6 +1,6 @@
 import { useEffect, useRef, type PointerEvent, type RefObject } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 import { paintBoard, tokenColor } from './model/draw';
 import { BOARD_SIZE, normalize } from './model/model';
 import type { BoardController } from './use-board';

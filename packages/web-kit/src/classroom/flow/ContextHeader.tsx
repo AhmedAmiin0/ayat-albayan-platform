@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '#/lib/i18n/index.ts';
 import type { RoomContext } from './room-kit';
 
 /** «حلقة يوسف مع أ. فاطمة» over its time («6:30 – 7:15 م»), or the room's own name. */

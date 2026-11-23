@@ -1,5 +1,5 @@
 import { dateRangeText, dateText } from '@ab/shared';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { locale } from '@ab/web-kit/i18n';
 
 // A week's days are calendar dates («YYYY-MM-DD») already on the viewer's clock: they are read at
 // noon UTC so no zone moves them.

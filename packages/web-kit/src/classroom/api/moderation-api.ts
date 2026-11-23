@@ -1,7 +1,7 @@
 import { lessonRemovePath } from '@ab/client-core';
 import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '#/lib/http/index.ts';
 import { CLASSROOM_KEY } from './api';
 
 const ROOM_PREFIX = 'lesson-';

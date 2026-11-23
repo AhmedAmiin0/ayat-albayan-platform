@@ -1,8 +1,8 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { from, openRoom, sent } from '@ab/web-kit/classroom/board/board-fixture';
-import { encodeMessage } from '@ab/web-kit/classroom/board/model/messages';
+import { t } from '#/lib/i18n/i18n.ts';
+import { from, openRoom, sent } from '#/classroom/board/board-fixture.tsx';
+import { encodeMessage } from '#/classroom/board/model/messages.ts';
 
 const TEACHER = { identity: 't', role: 'teacher' } as const;
 

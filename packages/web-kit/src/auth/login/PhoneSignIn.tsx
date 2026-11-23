@@ -2,13 +2,13 @@ import type { CodeRoutes } from '@ab/client-core';
 import { normalizePhone } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { codeOf } from '@ab/web-kit/auth/code/code-boxes';
-import { CodeStep } from '@ab/web-kit/auth/code/CodeStep';
-import { RequestStep } from '@ab/web-kit/auth/code/RequestStep';
-import { useCodeFlow } from '@ab/web-kit/auth/code/use-code-flow';
-import { signInWithCode } from '@ab/web-kit/auth/sign-in';
-import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
+import { t } from '#/lib/i18n/index.ts';
+import { codeOf } from '#/auth/code/code-boxes.ts';
+import { CodeStep } from '#/auth/code/CodeStep.tsx';
+import { RequestStep } from '#/auth/code/RequestStep.tsx';
+import { useCodeFlow } from '#/auth/code/use-code-flow.ts';
+import { signInWithCode } from '#/auth/sign-in/index.ts';
+import { useLandAfterSignIn } from '#/auth/use-return-to.ts';
 
 const F = t.familyAuth;
 

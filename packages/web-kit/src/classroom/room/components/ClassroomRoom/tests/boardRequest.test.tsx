@@ -1,10 +1,10 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { act } from 'react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { from, openRoom, sent as boardSent } from '@ab/web-kit/classroom/board/board-fixture';
-import { fakeClient, tile, type FakeClient } from '@ab/web-kit/classroom/room/livekit/fake-client';
-import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from '@ab/web-kit/classroom/share/share-messages';
+import { t } from '#/lib/i18n/i18n.ts';
+import { from, openRoom, sent as boardSent } from '#/classroom/board/board-fixture.tsx';
+import { fakeClient, tile, type FakeClient } from '#/classroom/room/livekit/fake-client.ts';
+import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from '#/classroom/share/share-messages.ts';
 
 const B = t.classroom.boardRequest;
 const S = t.classroom.shareRequest;

@@ -1,6 +1,6 @@
 import type { StripDay } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '@ab/web-kit/i18n';
+import { cn } from '@ab/web-kit/lib';
 import { StripButton } from './StripButton';
 
 // The tile behind the chosen day slides to the next one (motion.css `.ab-indicator`).

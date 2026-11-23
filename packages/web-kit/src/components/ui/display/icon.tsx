@@ -1,5 +1,5 @@
 import type { SVGProps } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // Line icons from the reference sprite (docs/design/ink-and-gold.html): 20px grid, 1.6 stroke.
 // Directional icons are picked for RTL: «السابق» uses chevron-right, «التالي» chevron-left, and

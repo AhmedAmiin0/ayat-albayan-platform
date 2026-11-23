@@ -1,7 +1,7 @@
 import { confirmedLine, excusedLine, requestChip } from '@ab/client-core';
 import { firstName, lessonWhenAt, type PortalLesson, type PortalStudent } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useClock } from '@ab/web-kit/lib/clock';
+import { t } from '#/lib/i18n/index.ts';
+import { useClock } from '#/lib/index.ts';
 
 const A = t.portal.actions;
 

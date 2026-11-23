@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Tabs, tabIds } from '@ab/web-kit/components/ui/layout/tabs/tabs';
+import { Tabs, tabIds } from '#/components/ui/layout/tabs/tabs.tsx';
 
 const TABS = [
   { value: 'a', label: 'أ' },

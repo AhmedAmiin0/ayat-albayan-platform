@@ -1,9 +1,9 @@
-import { KickDialog } from '@ab/web-kit/classroom/kick/KickDialog';
-import { ParticipantsSheet } from '@ab/web-kit/classroom/kick/ParticipantsSheet';
-import { LeaveConfirm } from '@ab/web-kit/classroom/closing/LeaveConfirm';
-import { MuteToasts } from '@ab/web-kit/classroom/mute/MuteToasts';
-import { RecordingsPanel } from '@ab/web-kit/classroom/recordings/RecordingsPanel';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import { KickDialog } from '#/classroom/kick/KickDialog.tsx';
+import { ParticipantsSheet } from '#/classroom/kick/ParticipantsSheet.tsx';
+import { LeaveConfirm } from '#/classroom/closing/LeaveConfirm.tsx';
+import { MuteToasts } from '#/classroom/mute/MuteToasts.tsx';
+import { RecordingsPanel } from '#/classroom/recordings/RecordingsPanel.tsx';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import type { RoomKit } from './room-kit';
 import type { RoomTools } from './use-room-tools';
 import type { RoomUi } from './use-room-ui';

@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import type { RoomChatSlot } from '@ab/web-kit/classroom/flow/room-kit';
+import { Icon } from '#/components/ui/display/index.ts';
+import { IconButton } from '#/components/ui/form/index.ts';
+import { Dialog } from '#/components/ui/overlay/index.ts';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
+import type { RoomChatSlot } from '#/classroom/flow/room-kit.ts';
 import { useWideRoom } from './use-wide-room';
 
 export type PanelTab = 'chat' | 'people';

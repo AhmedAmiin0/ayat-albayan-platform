@@ -1,5 +1,5 @@
 import { RequiredMark } from './label';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 export interface RadioChipsProps<V extends string> {
   /** Radio group name (unique per form). */

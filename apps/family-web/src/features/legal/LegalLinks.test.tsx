@@ -1,7 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import { expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { renderAt } from '#/test/render-at.tsx';
 import { LegalLinks } from './LegalLinks';
 
 it('a named navigation with both legal pages, in order', async () => {

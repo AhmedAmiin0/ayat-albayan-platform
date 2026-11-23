@@ -1,4 +1,4 @@
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { ListSkeleton } from '#/components/ui/display/index.ts';
 
 /** A route still loading (its guard or its code): the kit skeleton, never a blank page. */
 export function RoutePending() {

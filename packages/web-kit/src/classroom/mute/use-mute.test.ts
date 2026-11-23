@@ -1,9 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import { ApiError } from '#/lib/http/api/index.ts';
+import { t } from '#/lib/i18n/i18n.ts';
+import { tile } from '#/classroom/room/livekit/fake-client.ts';
+import type { TileView } from '#/classroom/room/components/room-types.ts';
 import type { MuteCall } from './mute-api';
 import { useMute, type MuteOptions } from './use-mute';
 

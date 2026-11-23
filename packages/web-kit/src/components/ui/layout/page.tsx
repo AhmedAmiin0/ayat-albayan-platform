@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // The work page (docs/07 §6 Card/Page): a flat card, 1px rule and an 8px radius with a hairline
 // shadow (owner, 2026-10-05: simplify; no gold outline). Never nested, nothing boxed inside it.

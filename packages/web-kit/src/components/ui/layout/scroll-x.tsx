@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 /**
  * A wide table scrolling sideways in its own box (components.css `.ab-scroll-x`). A scrollable box

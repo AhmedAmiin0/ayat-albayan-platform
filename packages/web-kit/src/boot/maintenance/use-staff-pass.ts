@@ -1,5 +1,5 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { meQuery, type Me } from '@ab/web-kit/auth/me';
+import { meQuery, type Me } from '#/auth/index.ts';
 
 type MeRead = Pick<UseQueryResult<Me | null>, 'data' | 'fetchStatus'>;
 

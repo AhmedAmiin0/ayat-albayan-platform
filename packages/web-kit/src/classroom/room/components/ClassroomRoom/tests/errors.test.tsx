@@ -1,9 +1,9 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom';
-import { fakeClient, tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { t } from '#/lib/i18n/i18n.ts';
+import { ClassroomRoom } from '#/classroom/room/components/ClassroomRoom/ClassroomRoom.tsx';
+import { fakeClient, tile } from '#/classroom/room/livekit/fake-client.ts';
 
 const JOIN: RoomJoinResult = { url: 'wss://lk.test', token: 'tok', room: 'lesson-1', role: 'teacher' };
 const named = (name: string) => Object.assign(new Error(name), { name });

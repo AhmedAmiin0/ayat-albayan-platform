@@ -1,7 +1,7 @@
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // docs/07 §6 «الأزرار». Green is the only action colour: white text on the green fill (lapis-fill), green text (lapis) on ghosts; at most ONE filled primary per sheet or section.
 // One line, never clipped: a peer row goes in a ButtonRow (components/ui/layout/button-row.tsx).

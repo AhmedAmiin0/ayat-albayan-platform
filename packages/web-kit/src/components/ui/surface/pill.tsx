@@ -1,6 +1,6 @@
 import type { Tone } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // Status words (owner 2026-11-19): a state that needs the family («يحتاج تأكيد», an amount due,
 // «جديد») is a tinted Pill; a passive one («مؤكدة», «انتهت») is a coloured Dot and plain text.

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '#/lib/i18n/i18n.ts';
+import { Button } from '#/components/ui/form/button.tsx';
 import { Dialog, type DialogProps } from './dialog';
 import { asideLayout, compactLayout, pickLayout, sheetLayout } from './dialog-classes';
 

@@ -1,10 +1,10 @@
 import { useState, type ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
 import type { TileSlots } from './ParticipantGrid';
 import { RoomButton } from './RoomButton';
 import type { TileView } from './room-types';
-import { StageScreen } from '@ab/web-kit/classroom/stage/StageScreen';
+import { StageScreen } from '#/classroom/stage/StageScreen.tsx';
 import { VideoTile } from './VideoTile';
 
 interface Props extends TileSlots {

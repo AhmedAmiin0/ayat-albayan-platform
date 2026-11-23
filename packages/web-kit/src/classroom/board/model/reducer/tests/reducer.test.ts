@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { BoardMessage } from '@ab/web-kit/classroom/board/model/messages';
-import { EMPTY_BOARD, type BoardState, type Stroke } from '@ab/web-kit/classroom/board/model/model';
-import { boardReducer, shouldAnswerSync, type BoardInput } from '@ab/web-kit/classroom/board/model/reducer/reducer';
+import type { BoardMessage } from '#/classroom/board/model/messages.ts';
+import { EMPTY_BOARD, type BoardState, type Stroke } from '#/classroom/board/model/model.ts';
+import { boardReducer, shouldAnswerSync, type BoardInput } from '#/classroom/board/model/reducer/reducer.ts';
 
 const stroke = (id: string, by: string, pts = [0.1, 0.1]): Stroke => ({ id, by, color: 'ink', width: 0.004, erase: false, pts });
 const teacher: BoardInput['from'] = { identity: 't', role: 'teacher' };

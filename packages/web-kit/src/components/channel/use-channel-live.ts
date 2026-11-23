@@ -1,7 +1,7 @@
 import { channelKey, subscribeChannelMessages } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { supabase } from '#/lib/http/index.ts';
 import type { ChannelRef } from './api';
 
 interface Live {

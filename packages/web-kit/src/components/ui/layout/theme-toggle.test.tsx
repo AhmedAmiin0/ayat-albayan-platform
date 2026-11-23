@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { THEME_KEY } from '@ab/web-kit/lib/theme';
+import { t } from '#/lib/i18n/i18n.ts';
+import { THEME_KEY } from '#/lib/theme.ts';
 import { ThemeToggle } from './theme-toggle';
 
 afterEach(() => localStorage.clear());

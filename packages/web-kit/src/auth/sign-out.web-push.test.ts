@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { signIn, signOut } from '@ab/web-kit/auth/sign-in';
+import { signIn, signOut } from '#/auth/sign-in/index.ts';
 
 const order = vi.hoisted(() => [] as string[]);
 const auth = vi.hoisted(() => ({
@@ -10,9 +10,9 @@ const auth = vi.hoisted(() => ({
     return { error: new Error('Invalid login') };
   }),
 }));
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn(async () => void order.push('report')) }));
-vi.mock('@ab/web-kit/push/web-push', () => ({ forgetWebPush: vi.fn(async () => void order.push('forget')) }));
+vi.mock('#/lib/http/supabase.ts', () => ({ supabase: { auth } }));
+vi.mock('#/auth/session-activity.ts', () => ({ reportSession: vi.fn(async () => void order.push('report')) }));
+vi.mock('#/push/web-push.ts', () => ({ forgetWebPush: vi.fn(async () => void order.push('forget')) }));
 
 beforeEach(() => {
   order.length = 0;

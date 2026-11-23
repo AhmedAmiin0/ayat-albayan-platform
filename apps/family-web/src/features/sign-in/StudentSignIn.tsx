@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { LinkRow } from '@ab/web-kit/auth/login/LinkRow';
-import { StatusNote } from '@ab/web-kit/auth/login/StatusNote';
-import { ResetFlow } from '@ab/web-kit/auth/reset/ResetFlow';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { LinkRow, StatusNote, ResetFlow } from '@ab/web-kit/auth';
+import { t } from '@ab/web-kit/i18n';
 import { StudentPasswordForm } from './StudentPasswordForm';
 
 type View = 'password' | 'firstTime' | 'forgot';

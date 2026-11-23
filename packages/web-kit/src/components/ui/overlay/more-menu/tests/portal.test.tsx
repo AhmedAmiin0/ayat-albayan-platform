@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { MoreMenu } from '@ab/web-kit/components/ui/overlay/more-menu/more-menu';
+import { t } from '#/lib/i18n/i18n.ts';
+import { Dialog } from '#/components/ui/overlay/dialog.tsx';
+import { MoreMenu } from '#/components/ui/overlay/more-menu/more-menu.tsx';
 
 /** An entry that owns its dialog, rendered inside the menu (like «تحقق من التسجيل»). */
 function CheckEntry() {

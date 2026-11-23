@@ -1,9 +1,8 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { t } from '#/lib/i18n/index.ts';
+import { cn } from '#/lib/index.ts';
+import { Button } from '#/components/ui/form/index.ts';
+import { Icon, Rosette } from '#/components/ui/display/index.ts';
 import { pageCount, pageList } from './page-list';
-import { Rosette } from '@ab/web-kit/components/ui/display/rosette';
 
 export interface PagerProps {
   /** 1-based current page. */

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ListSkeleton } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 import { reportPageByIdQuery } from './api';
 import { ReportPageBody } from './ReportPageBody';
 

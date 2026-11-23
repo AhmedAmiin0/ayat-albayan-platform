@@ -1,9 +1,9 @@
 import { headerPeople, threadMessages } from '@ab/client-core';
 import type { ChannelPage } from '@ab/shared';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
-import { ChannelPresenceLine } from '@ab/web-kit/components/channel/presence/ChannelPresenceLine';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { ChannelRef } from '#/components/channel/api.ts';
+import { ChannelPresenceLine } from '#/components/channel/presence/ChannelPresenceLine.tsx';
+import { Avatar } from '#/components/ui/display/index.ts';
+import { t } from '#/lib/i18n/index.ts';
 
 const c = t.studentChannel;
 

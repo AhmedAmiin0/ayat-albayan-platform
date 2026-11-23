@@ -1,4 +1,4 @@
-import { mayShareScreen, type ParticipantLike } from '@ab/web-kit/classroom/room/livekit/snapshot';
+import { mayShareScreen, type ParticipantLike } from '#/classroom/room/livekit/snapshot/index.ts';
 
 export interface LocalShareLike extends Pick<ParticipantLike, 'permissions' | 'metadata' | 'isScreenShareEnabled'> {
   setScreenShareEnabled(on: boolean): Promise<unknown>;

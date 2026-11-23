@@ -1,5 +1,5 @@
 import type { LegalPage } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit/i18n';
 import type { LegalContent, LegalPart, LegalSectionView } from './legal-content.types';
 
 /** A link under a legal page (the other page, sign-in). */

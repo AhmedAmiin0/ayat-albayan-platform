@@ -1,8 +1,8 @@
 import { menuOffers, type MenuOffers } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import { useState } from 'react';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
-import { useBubbleTools } from '@ab/web-kit/components/channel/bubble/bubble-tools';
+import type { ChannelRef } from '#/components/channel/api.ts';
+import { useBubbleTools } from '#/components/channel/bubble/bubble-tools.ts';
 import { useChannelEdits } from './use-channel-edits';
 
 type Mode = 'view' | 'edit' | 'delete';

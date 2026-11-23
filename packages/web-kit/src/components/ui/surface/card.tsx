@@ -1,6 +1,6 @@
 import { Slot } from '@radix-ui/react-slot';
 import type { HTMLAttributes } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // docs/07 §6 Card (audit 2026-11-19, extraction 1): the one raised surface on the margin, a 1px
 // rule, a 12px radius and the page hairline shadow. Padding varies by use, so it comes in

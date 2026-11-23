@@ -1,5 +1,5 @@
 import type { SVGProps } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '#/lib/index.ts';
 
 // The chat's own line glyphs (the FamChat boards), on the Icon sprite's 20px grid and 1.6 stroke:
 // the menu's pencil and info, the composer's emoji face, the files' photo and page, the deleted

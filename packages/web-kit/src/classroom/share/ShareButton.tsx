@@ -1,8 +1,8 @@
 import type { JoinRole } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
+import { t } from '#/lib/i18n/index.ts';
+import { RoomButton } from '#/classroom/room/components/RoomButton.tsx';
 import { RequestButton } from './RequestButton';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import { canShareScreen } from './media-support';
 import type { ShareRequests } from './use-share-requests';
 

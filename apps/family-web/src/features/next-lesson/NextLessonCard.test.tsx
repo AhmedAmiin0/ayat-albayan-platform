@@ -1,13 +1,12 @@
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalApi } from '@ab/web-kit/portal/portal.api-fixture';
-import { kid, lesson } from '@ab/web-kit/portal/portal.fixtures';
-import { renderAt } from '@/test/render-at';
+import { t } from '@ab/web-kit/i18n';
+import { portalApi, kid, lesson } from '@ab/web-kit/testing';
+import { renderAt } from '#/test/render-at.tsx';
 import { NextLessonCard } from './NextLessonCard';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/http', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // lesson(): 16:00Z on 27 Oct, its join window 15:50–16:45.
 const OPEN = new Date('2026-10-27T15:55:00.000Z');

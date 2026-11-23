@@ -1,9 +1,9 @@
 import { newReportCount } from '@ab/client-core';
 import { counted } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalReportsQuery } from '@ab/web-kit/portal/api';
-import { useSeenReports } from '@ab/web-kit/portal/use-seen-reports';
+import { t } from '#/lib/i18n/index.ts';
+import { portalReportsQuery } from '#/portal/api.ts';
+import { useSeenReports } from '#/portal/use-seen-reports.ts';
 
 /** «تقريران جديدان»: sent reports not opened in this browser yet; nothing when none. */
 export function NewReports({ studentId }: { studentId: string }) {

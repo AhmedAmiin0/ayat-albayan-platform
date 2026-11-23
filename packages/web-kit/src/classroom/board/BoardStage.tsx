@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { ShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
-import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
+import { t } from '#/lib/i18n/index.ts';
+import type { ShareRequests } from '#/classroom/share/use-share-requests.ts';
+import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import { BoardToolbar } from './BoardToolbar';
 import type { BoardController } from './use-board';
 import { useBoardShare } from './use-board-share';

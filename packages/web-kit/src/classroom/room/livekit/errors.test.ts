@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError } from '#/lib/http/api/index.ts';
+import { t } from '#/lib/i18n/i18n.ts';
 import { classroomErrorKey, classroomErrorText, mediaErrorText, opensAtOf } from './errors';
 
 const named = (name: string) => Object.assign(new Error(name), { name });

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { BoardMessage } from '@ab/web-kit/classroom/board/model/messages';
-import { EMPTY_BOARD, type Stroke } from '@ab/web-kit/classroom/board/model/model';
-import { boardReducer, type BoardInput } from '@ab/web-kit/classroom/board/model/reducer/reducer';
+import type { BoardMessage } from '#/classroom/board/model/messages.ts';
+import { EMPTY_BOARD, type Stroke } from '#/classroom/board/model/model.ts';
+import { boardReducer, type BoardInput } from '#/classroom/board/model/reducer/reducer.ts';
 
 // A sync answer carries strokes like a 'draw' does: only someone who may draw adds them. Before,
 // a guest without the grant painted the board by answering a sync-request with made-up strokes.

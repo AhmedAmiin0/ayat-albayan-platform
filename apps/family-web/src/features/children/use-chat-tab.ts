@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { portalUnreadQuery } from '@ab/web-kit/portal/api';
-import { useFamilyChatOn } from '@ab/web-kit/portal/use-family-chat';
+import { portalUnreadQuery, useFamilyChatOn } from '@ab/web-kit/portal';
 import type { ChatTab } from './child-tabs';
 
 /**

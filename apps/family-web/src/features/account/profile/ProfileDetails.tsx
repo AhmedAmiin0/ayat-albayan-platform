@@ -1,8 +1,7 @@
 import type { ProfileFact } from '@ab/client-core';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr } from '@ab/web-kit/display';
+import { Card, SectionHeader } from '@ab/web-kit/surface';
+import { t } from '@ab/web-kit/i18n';
 
 /** A phone, email or code reads left to right in an isolate; a name in the page's direction. */
 function FactValue({ fact }: { fact: ProfileFact }) {
