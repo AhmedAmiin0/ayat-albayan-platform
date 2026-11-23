@@ -1,17 +1,10 @@
 import { useSyncExternalStore } from 'react';
-import { ApiError } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
 import { type Audience, audience } from './audience';
 
 export { isOtherAppRole } from './role-claim';
 
 export type LoginNotice = 'accountDisabled' | 'wrongApp';
-
-/** The API's refusal for a disabled account: 403 with code `account_disabled`. */
-export function isAccountDisabled(error: unknown): boolean {
-  if (!(error instanceof ApiError) || error.status !== 403) return false;
-  return typeof error.body === 'object' && error.body !== null && Reflect.get(error.body, 'code') === 'account_disabled';
-}
 
 /**
  * «wrongApp» in the staff app names every staff role it serves (mobileRoles, owner 2026-10-12); the

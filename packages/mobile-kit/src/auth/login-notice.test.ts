@@ -1,18 +1,8 @@
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
 import { act, renderHook } from '@testing-library/react-native';
-import { ApiError } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
-import { isAccountDisabled, isOtherAppRole, setLoginNotice, useLoginNotice } from './login-notice';
-
-test('only a 403 with code account_disabled is a disabled account', () => {
-  expect(isAccountDisabled(new ApiError(403, { code: 'account_disabled' }))).toBe(true);
-  expect(isAccountDisabled(new ApiError(403, { code: 'other' }))).toBe(false);
-  expect(isAccountDisabled(new ApiError(403, 'account_disabled'))).toBe(false);
-  expect(isAccountDisabled(new ApiError(403))).toBe(false);
-  expect(isAccountDisabled(new ApiError(401, { code: 'account_disabled' }))).toBe(false);
-  expect(isAccountDisabled(new TypeError('offline'))).toBe(false);
-});
+import { isOtherAppRole, setLoginNotice, useLoginNotice } from './login-notice';
 
 test('guardian and student are other apps\' roles; the four app roles, null and junk are not', () => {
   for (const role of ['guardian', 'student']) expect(isOtherAppRole(role)).toBe(true);

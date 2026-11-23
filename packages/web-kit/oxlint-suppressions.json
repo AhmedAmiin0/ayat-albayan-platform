@@ -52,15 +52,6 @@
     }
   },
   "src/auth/me/me.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 5
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
     },
@@ -401,11 +392,6 @@
       "count": 1
     }
   },
-  "src/classroom/room/livekit/livekit-room/tests/livekit-room.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
     "max-lines-per-function": {
       "count": 1
@@ -417,17 +403,12 @@
       "count": 1
     }
   },
+  "src/classroom/room/livekit/livekit-room/tests/livekit-room.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
   "src/classroom/room/livekit/media-attach.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/livekit/snapshot/tests/share.test.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/classroom/room/livekit/snapshot/tests/snapshot.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -438,6 +419,16 @@
     },
     "stylistic/max-len": {
       "count": 3
+    }
+  },
+  "src/classroom/room/livekit/snapshot/tests/share.test.ts": {
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/classroom/room/livekit/snapshot/tests/snapshot.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/classroom/room/livekit/stage.ts": {
@@ -528,17 +519,17 @@
       "count": 1
     }
   },
-  "src/components/channel/ChannelThread/tests/live.test.tsx": {
-    "typescript/no-unnecessary-condition": {
-      "count": 2
-    }
-  },
   "src/components/channel/ChannelThread/tests/ChannelThread.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     },
     "typescript/no-unnecessary-type-assertion": {
       "count": 1
+    }
+  },
+  "src/components/channel/ChannelThread/tests/live.test.tsx": {
+    "typescript/no-unnecessary-condition": {
+      "count": 2
     }
   },
   "src/components/channel/api.ts": {
@@ -794,11 +785,6 @@
       "count": 1
     }
   },
-  "src/lib/http/api/tests/api.test.ts": {
-    "typescript/no-base-to-string": {
-      "count": 1
-    }
-  },
   "src/lib/http/api/api.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -807,8 +793,8 @@
       "count": 1
     }
   },
-  "src/lib/http/env/tests/env.test.ts": {
-    "stylistic/max-len": {
+  "src/lib/http/api/tests/api.test.ts": {
+    "typescript/no-base-to-string": {
       "count": 1
     }
   },
@@ -824,6 +810,11 @@
     },
     "typescript/no-unsafe-argument": {
       "count": 6
+    }
+  },
+  "src/lib/http/env/tests/env.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/lib/i18n/i18n-overrides.ts": {

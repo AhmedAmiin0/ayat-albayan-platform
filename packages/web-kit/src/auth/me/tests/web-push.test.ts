@@ -1,3 +1,4 @@
+import { ApiError } from '@ab/client-core';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { signIn } from '@ab/web-kit/auth/sign-in';
@@ -25,7 +26,7 @@ beforeEach(() => {
 describe('the forced sign-outs drop this browser’s push subscription first', () => {
   it('account_disabled (403): forget, then sign out', async () => {
     apiFetch.mockRejectedValueOnce(
-      Object.assign(new Error('API 403'), { status: 403, body: { code: 'account_disabled' } }),
+      new ApiError(403, { code: 'account_disabled' }),
     );
     await signIn(creds, new QueryClient());
     // The first forget is the sign-in's own (a leftover from the previous user).

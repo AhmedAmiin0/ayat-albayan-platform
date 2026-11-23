@@ -1,7 +1,6 @@
-import { signInApi, signInError } from '@ab/client-core';
+import { isAccountDisabled, signInApi, signInError } from '@ab/client-core';
 import * as http from '@ab/web-kit/lib/http/api/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { isAccountDisabled } from '@ab/web-kit/auth/me';
 
 /**
  * The public sign-in routes (docs/30 §6) on the web's API client. The client's functions are read at
