@@ -1,6 +1,3 @@
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatusRepo } from './student-status.repo';
 
-export interface StudentTz {
-  status: StudentStatus;
-  tz: string;
-}
+export type StudentTz = NonNullable<Awaited<ReturnType<StudentStatusRepo['student']>>>;

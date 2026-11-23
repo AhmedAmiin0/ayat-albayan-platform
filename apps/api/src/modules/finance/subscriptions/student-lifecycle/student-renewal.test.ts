@@ -1,7 +1,7 @@
-import type { StudentStatus } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { PackagesService, StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { StudentRenewal, type RenewalCause } from './student-renewal';
+import type { StudentTz } from './student-status.types';
 import type { StudentStatusRepo } from './student-status.repo';
 import type { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
@@ -15,7 +15,7 @@ function state(o: { remaining?: number; renews_on?: string | null; paid?: number
 }
 
 function setup(o: { status?: string; tz?: string; last?: unknown; moved?: boolean } = {}) {
-  const student = async () => ({ status: (o.status ?? 'active') as StudentStatus, tz: o.tz ?? 'Asia/Riyadh' });
+  const student = async () => ({ status: (o.status ?? 'active') as StudentTz['status'], tz: o.tz ?? 'Asia/Riyadh' });
   const statuses = {
     lastStatusChange: vi.fn(async () => o.last ?? null),
     move: vi.fn(async () => o.moved ?? true),
