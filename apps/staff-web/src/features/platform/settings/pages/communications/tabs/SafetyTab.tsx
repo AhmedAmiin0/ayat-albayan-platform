@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { DangerFrame } from '@/components/settings/fields/DangerFrame';
 import {
   EVOLUTION_GROUPS,

@@ -1,4 +1,4 @@
-import { GENDERS, PROGRAMS } from '@ab/shared';
+import { GENDERS, PROGRAMS } from '@ab/catalog';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { PhonePreview } from '@ab/web-kit/components/ui/form/phone-preview';

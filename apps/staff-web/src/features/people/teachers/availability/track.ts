@@ -1,4 +1,6 @@
-import { intlLocale, WEEKDAYS, weekdayIn, zonedFieldsIn, type Weekday } from '@ab/shared';
+import { WEEKDAYS, type Weekday } from '@ab/catalog';
+import { intlLocale } from '@ab/core';
+import { weekdayIn, zonedFieldsIn } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { toMin, type Grid, type Range } from './grid';

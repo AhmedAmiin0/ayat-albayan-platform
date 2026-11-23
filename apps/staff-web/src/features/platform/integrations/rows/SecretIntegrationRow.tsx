@@ -1,4 +1,8 @@
-import { integrationSecretCheck, isIntegrationSecretKey, type IntegrationConfigItem } from '@ab/shared';
+import {
+  integrationSecretCheck,
+  isIntegrationSecretKey,
+  type IntegrationConfigItem,
+} from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { SettingRow } from '@/components/settings/fields/SettingRow';

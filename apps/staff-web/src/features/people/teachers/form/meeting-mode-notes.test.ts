@@ -1,4 +1,4 @@
-import type { IntegrationKey } from '@ab/shared';
+import type { IntegrationKey } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { joinStatus, livekitConfigured, meetingModeNotes, type NotesInput } from './meeting-mode-notes';
 

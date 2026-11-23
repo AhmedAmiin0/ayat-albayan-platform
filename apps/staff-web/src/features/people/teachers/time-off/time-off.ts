@@ -1,13 +1,12 @@
+import { timeOffCreateSchema, type TimeOffCreate } from '@ab/schedule';
 import {
   addCalendarDays,
   dateRangeText,
   hhmmIn,
   localDateIn,
-  timeOffCreateSchema,
   wallInstant,
   wallToUtc,
-  type TimeOffCreate,
-} from '@ab/shared';
+} from '@ab/time';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

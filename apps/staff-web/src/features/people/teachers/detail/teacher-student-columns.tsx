@@ -1,4 +1,5 @@
-import { STUDENT_PACKAGE_FILTERS, studentStatusStyle } from '@ab/shared';
+import { STUDENT_PACKAGE_FILTERS } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';

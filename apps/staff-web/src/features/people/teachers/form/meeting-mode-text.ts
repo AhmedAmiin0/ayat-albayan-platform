@@ -1,4 +1,4 @@
-import type { TeacherMeetingMode } from '@ab/shared';
+import type { TeacherMeetingMode } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** A radio value per teachers.meeting_mode: null is «حسب إعداد الأكاديمية» (radios need a string). */

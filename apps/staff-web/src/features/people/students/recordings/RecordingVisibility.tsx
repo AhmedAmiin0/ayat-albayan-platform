@@ -1,4 +1,4 @@
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { ApiError } from '@ab/web-kit/lib/http/api';

@@ -1,4 +1,4 @@
-import { SETTING_KEYS } from '@ab/shared';
+import { SETTING_KEYS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { settingText } from '@/components/settings/search/setting-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

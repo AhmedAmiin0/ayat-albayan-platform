@@ -1,4 +1,4 @@
-import { driveFolderLink, sheetLink } from '@ab/shared';
+import { driveFolderLink, sheetLink } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { parseManualLink, parseWindowDays } from './google-input';
 

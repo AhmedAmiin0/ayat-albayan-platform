@@ -1,4 +1,5 @@
-import { USER_ROLES, USER_STATUSES } from '@ab/shared';
+import { USER_STATUSES } from '@ab/shared';
+import { USER_ROLES } from '@ab/catalog';
 import type { FilterOption } from '@/components/data-table/data-table-features';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
 import type { ExtraFilters, FilterChip } from '@/components/table-toolbar/types';

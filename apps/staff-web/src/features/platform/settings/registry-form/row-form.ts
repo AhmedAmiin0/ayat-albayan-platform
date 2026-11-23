@@ -1,5 +1,5 @@
+import { normalizePhone } from '@ab/core';
 import {
-  normalizePhone,
   SETTING_DEFAULTS,
   SETTING_FIELD_OF,
   settingDef,
@@ -8,7 +8,7 @@ import {
   type SettingDef,
   type SettingKey,
   type SettingsUpdate,
-} from '@ab/shared';
+} from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { isDirty } from './settings-dirty';
 import { flag, onKey, shapeId, str, type SettingsForm } from './settings-form';

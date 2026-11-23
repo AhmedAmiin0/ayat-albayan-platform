@@ -1,4 +1,4 @@
-import { GOOGLE_SYNC_STATES, type GoogleStatusView } from '@ab/shared';
+import { GOOGLE_SYNC_STATES, type GoogleStatusView } from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
