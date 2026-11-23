@@ -4,6 +4,7 @@
 import { boundariesPlugin } from '../eslint-boundaries.js';
 import { noDupeArgsRule, noOctalRule } from '../legacy-js.js';
 import { restrictedSyntaxRule } from '../restricted-syntax.js';
+import { consistentTypeImportsRule } from '../type-imports/index.js';
 
 export default {
   meta: { name: 'ab' },
@@ -12,5 +13,6 @@ export default {
     'no-restricted-syntax': restrictedSyntaxRule,
     'no-dupe-args': noDupeArgsRule,
     'no-octal': noOctalRule,
+    'consistent-type-imports': consistentTypeImportsRule,
   },
 };
