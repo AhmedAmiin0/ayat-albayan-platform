@@ -1,4 +1,4 @@
-import { addCalendarMonths, RIYADH_TZ } from '@ab/shared';
+import { addCalendarMonths, RIYADH_TZ } from '@ab/time';
 import { localDate } from '@/today/lib/timeline';
 
 /** This month in Riyadh, `YYYY-MM` (the academy's reporting clock, as the web's currentMonth). */

@@ -1,4 +1,4 @@
-import { systemPermissionsOf } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
 import { screen } from '@testing-library/react-native';
 import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
