@@ -9,11 +9,6 @@
       "count": 1
     }
   },
-  "src/zone/wall.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/zone/week.ts": {
     "stylistic/max-len": {
       "count": 1
