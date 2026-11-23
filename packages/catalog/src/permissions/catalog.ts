@@ -1,4 +1,4 @@
-import type { UserRole } from './roles.js';
+import type { UserRole } from './roles/index.js';
 import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';
 import { PORTAL_FIXED_GRANTS } from './catalog.portal.js';
 
@@ -80,7 +80,7 @@ export function permissionGroups(): PermissionGroup[] {
 
 /**
  * The built-in roles whose grants the admin may switch off (or on) and restore to defaultGrantsOf with
- * «استعادة الافتراضي» (owner 2026-10-12). The system admin stays fixed; self.* keys are never grants.
+ * «استعادة الافتراضي». The system admin stays fixed; self.* keys are never grants.
  */
 export const EDITABLE_SYSTEM_ROLES = ['teacher', 'assistant', 'sales'] as const satisfies readonly UserRole[];
 export type EditableSystemRole = (typeof EDITABLE_SYSTEM_ROLES)[number];

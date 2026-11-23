@@ -1,6 +1,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterEach, describe, expect, it } from 'vitest';
+import { RateLimitRepo } from '@/common/http/rate-limit.repo';
 import { CRM_SENT, crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { RelayController } from './relay.controller';
@@ -35,6 +36,7 @@ async function relayApp(input: {
       RelayService,
       { provide: RelayLine, useValue: line },
       { provide: RelayRepo, useValue: repo },
+      { provide: RateLimitRepo, useValue: { takeOrThrow: async () => undefined } },
     ],
   }).compile();
   app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -72,7 +74,7 @@ describe('script relay HTTP', () => {
 
   it('401 {error} for a wrong or missing key; nothing stored or sent', async () => {
     const refused = crmFailure(401, 'unauthorized');
-    const r = await relayApp({ fetch: scriptedFetch(refused, refused) });
+    const r = await relayApp({ fetch: scriptedFetch(refused) });
     for (const auth of ['Bearer wrong', null]) {
       const res = await r.post(templateBody(), auth);
       expect(res.statusCode).toBe(401);
@@ -82,8 +84,8 @@ describe('script relay HTTP', () => {
     }
     expect((await r.me('Bearer wrong')).statusCode).toBe(401);
     expect(r.repo.rows).toEqual([]);
-    // Only the key checks (GET /me with the wrong key), no send; a missing key asks nothing.
-    expect(r.f.requests.map((q) => q.url)).toEqual([ME_URL, ME_URL]);
+    // One key check: the repeat is refused from memory, no send; a missing key asks nothing.
+    expect(r.f.requests.map((q) => q.url)).toEqual([ME_URL]);
   });
 
   it("the script's own CRM key (same account, messages:send): 201, sent with the line's key", async () => {

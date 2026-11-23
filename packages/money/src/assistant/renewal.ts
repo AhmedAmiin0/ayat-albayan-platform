@@ -1,13 +1,13 @@
-import { planOn, type CommissionContext, type PlannedCommission, type SubscriptionFact } from './first-paid.js';
+import { planOn, type CommissionContext, type PlannedCommission, type SubscriptionFact } from './first-paid/index.js';
 import { commissionKindOf, RENEWAL_CUTOFF } from './kind.js';
 
-// Renewal commission (owner 2026-10-26, migration 20261027000751 assistant_commission_plan): «half of the
+// Renewal commission (migration 20261027000751 assistant_commission_plan): «half of the
 // value» = HALF OF HER NORMAL COMMISSION on each renewal (settings.renewal_commission_percent, default 50),
 // not half of the renewal's price. Pure twin; the database decides.
 
 /**
  * The share of the normal commission a NEW renewal earns now, for the screens: the percent
- * while «عمولة التجديد» is on, 0 while it is off (owner 2026-11-01). Not a twin of
+ * while «عمولة التجديد» is on, 0 while it is off. Not a twin of
  * renewal_commission_share (always the percent): the SQL switch gates a new row in
  * evaluate_assistant_commission (migration 20261101000996); an existing row settles at the percent.
  */

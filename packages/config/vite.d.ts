@@ -15,6 +15,8 @@ export interface WebConfigOptions {
   brandDir: string;
   /** The app's icon set in <kitDir>/icons/<name>, served at its root with the kit's public. */
   icons?: 'staff' | 'family';
+  /** The app's name in its X-AB-Client tag, `<client>/<build>` (default 'web'). */
+  client?: 'web' | 'family-web';
 }
 
 /** The Vite + Vitest config of a web workspace (docs/51 §2). */

@@ -8,6 +8,10 @@ describe('parseClientTag (X-AB-Client)', () => {
     expect(parseClientTag(' ios/0.2.0_1 ')).toBe('ios/0.2.0_1');
   });
 
+  it('accepts a two-word platform such as family-web', () => {
+    expect(parseClientTag('family-web/4ac41e4')).toBe('family-web/4ac41e4');
+  });
+
   it('missing, repeated or malformed → untagged', () => {
     for (const v of [
       undefined,
@@ -24,6 +28,11 @@ describe('parseClientTag (X-AB-Client)', () => {
       `web/${'x'.repeat(41)}`,
       'web/1;drop',
       'android/0.2.0é',
+      '-web/1',
+      'web-/1',
+      'family--web/1',
+      'family-web-x/1',
+      'Family-web/1',
     ]) {
       expect(parseClientTag(v)).toBe(UNTAGGED);
     }

@@ -8,10 +8,10 @@ import type {
   PayoutStatus,
   SubscriptionStatus,
 } from '@ab/catalog';
-import type { QuoteResponse } from '../pricing/quote.js';
+import type { QuoteResponse } from '../pricing/quote/index.js';
 import type { PayoutLine } from './earnings/payout.js';
 
-// Phase 3 money responses (docs/11 §5–9). snake_case rows; instants ISO UTC; money as numbers
+// Money responses (docs/11 §5–9). snake_case rows; instants ISO UTC; money as numbers
 // with at most 2 decimals; local dates YYYY-MM-DD; months YYYY-MM.
 
 /** One v_subscription_balance row (R-SUB-01, R-SUB-03). */
@@ -32,7 +32,7 @@ export interface SubscriptionView {
   package: PackageSize | null;
   duration: Duration;
   lessons_total: number;
-  /** Taken before the platform, counted in balance.lessons_used (owner 2026-10-28); absent from older APIs. */
+  /** Taken before the platform, counted in balance.lessons_used; absent from older APIs. */
   lessons_used_before?: number;
   /** Per student, after discount, in `currency` (quote.afterDiscount for students = 1). */
   price: number;
@@ -94,7 +94,7 @@ export interface PaymentView {
 }
 
 /**
- * One file of a payment's «المرفقات» (owner 2026-10-12), signed for the UI (1 h). A payment recorded before
+ * One file of a payment's «المرفقات», signed for the UI (1 h). A payment recorded before
  * attachments existed shows its receipt_path first, `legacy: true` (id 'receipt').
  */
 export interface PaymentAttachmentView {

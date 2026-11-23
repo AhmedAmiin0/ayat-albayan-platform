@@ -30,7 +30,6 @@ export class ExpensesService {
     const write = expensePatch(patch);
     const after = Object.keys(write).length > 0 ? await this.expenses.update(id, write) : before;
     await this.audit.record({ actorId, entity: 'expenses', entityId: id, action: 'update', before, after });
-    if (patch.receiptPath !== undefined && before.receipt_path !== after.receipt_path) await this.receipts.discard(before.receipt_path);
     return toExpenseView(after);
   }
 
@@ -38,7 +37,6 @@ export class ExpensesService {
     const before = await this.row(id);
     await this.expenses.remove(id);
     await this.audit.record({ actorId, entity: 'expenses', entityId: id, action: 'delete', before });
-    await this.receipts.discard(before.receipt_path);
   }
 
   async receipt(id: string) {

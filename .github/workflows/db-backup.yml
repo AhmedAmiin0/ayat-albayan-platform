@@ -2,10 +2,10 @@
 # public and auth schemas, encrypted with the owner's age PUBLIC key before it touches the disk,
 # kept as a workflow artifact for 90 days. The repository is public: only the encrypted file is
 # ever stored, and the log never shows the URL, the host or any row.
-# Switched off until the owner adds the SUPABASE_DB_URL secret and the BACKUP_AGE_RECIPIENT
-# variable to the db-backup environment: until then every run ends green with a notice, unless the
-# repository variable BACKUP_REQUIRED is true: then a missing secret fails the run, and GitHub
-# emails the owner about the failed scheduled run.
+# Switched off until the db-backup environment has the BACKUP_AGE_RECIPIENT variable and a DB URL
+# (its SUPABASE_DB_URL secret, else the repository's STAGING_DATABASE_URL): until then every run
+# ends green with a notice, unless the repository variable BACKUP_REQUIRED is true: then a missing
+# URL fails the run, and GitHub emails the owner about the failed scheduled run.
 name: db-backup
 
 on:
@@ -27,7 +27,8 @@ jobs:
     environment: db-backup
     timeout-minutes: 60
     env:
-      DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      # The migrations' repository secret is the same production session-pooler URL.
+      DB_URL: ${{ secrets.SUPABASE_DB_URL || secrets.STAGING_DATABASE_URL }}
       AGE_RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
       # Supabase runs Postgres 17: pg_dump must be at least the server's version.
       PG_MAJOR: ${{ vars.BACKUP_PG_MAJOR || '17' }}

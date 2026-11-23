@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { relayDedupKey } from './relay.dedup';
 import { relayError, relayFailure, sentWithoutId } from './relay.errors';
-import { RelayKeys } from './relay.keys';
+import { RelayKeys } from './access';
 import { relayCrmBody, relayReadable } from './relay.kinds';
 import { RelayLine, type RelayLineNow } from './relay.line';
 import { RelayRepo, type RelayIds } from './relay.repo';
@@ -39,7 +39,7 @@ export class RelayService {
     private readonly repo: RelayRepo,
   ) {}
 
-  /** The line when the Bearer is a key of its CRM account (relay.keys.ts); else 503 / 401 / 502. */
+  /** The line when the Bearer is a key of its CRM account (access/); else 503 / 401 / 502. */
   async authorize(header: string | undefined): Promise<RelayLineNow> {
     const line = this.line.current();
     if (!line) throw relayError(NOT_CRM);

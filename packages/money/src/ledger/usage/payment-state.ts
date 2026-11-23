@@ -34,7 +34,7 @@ export function convertPayment(input: { amount: number; sarToSent: number; sarTo
 }
 
 /**
- * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1» (owner 2026-10-28): what was paid, the price and what is left,
+ * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1»: what was paid, the price and what is left,
  * or null unless 0 < paid < price. The rule itself never changes: such a package stays 'unpaid'.
  */
 export function partPaid(input: { paid: number; price: number }): { paid: number; price: number; due: number } | null {
@@ -42,7 +42,7 @@ export function partPaid(input: { paid: number; price: number }): { paid: number
   return { paid: input.paid, price: input.price, due: (toCents(input.price) - toCents(input.paid)) / 100 };
 }
 
-/** How much a receipt falls short of what is still due (owner 2026-10-28): 0 when it covers it or nothing is due. */
+/** How much a receipt falls short of what is still due: 0 when it covers it or nothing is due. */
 export function receiptShortfall(input: { amount: number; due: number }): number {
   return Math.max(0, toCents(input.due) - toCents(input.amount)) / 100;
 }

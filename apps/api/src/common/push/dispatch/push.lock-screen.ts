@@ -31,11 +31,11 @@ export function redact(text: string): string {
 }
 
 /**
- * Compound first names («عبد الرحمن», «أبو بكر»), a title («أ. هدى») and a chat's role word
- * («ولي الأمر»): the first word alone means nothing.
+ * Compound first names («عبد الرحمن», «أبو بكر»), a title («أ. هدى») and a chat's role words
+ * («ولي الأمر», «مسؤول المتابعة»): the first word alone means nothing.
  */
 const NAME_PREFIXES: ReadonlySet<string> = new Set([
-  'عبد', 'أبو', 'ابو', 'أبي', 'أم', 'ام', 'أ.', 'ولي',
+  'عبد', 'أبو', 'ابو', 'أبي', 'أم', 'ام', 'أ.', 'ولي', 'مسؤول',
 ]);
 
 function firstName(value: string): string {

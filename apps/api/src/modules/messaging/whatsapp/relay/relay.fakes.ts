@@ -82,3 +82,22 @@ export const templateBody = (to = '966500000001') => ({
     params: { body: ['سارة', '17:00'], buttonParams: { '0': 'room-1' } },
   },
 });
+
+/** rate_limit_take in memory: one window, a bucket is full once it has taken its max. */
+export function countingLimitDb() {
+  const taken = new Map<string, number>();
+  const take = (args: { p_buckets: string[]; p_maxes: number[] }) =>
+    args.p_buckets
+      .map((b, i) => {
+        const n = (taken.get(b) ?? 0) + 1;
+        taken.set(b, n);
+        return n <= (args.p_maxes[i] ?? 0);
+      })
+      .every(Boolean);
+  return {
+    rpc: async (_fn: string, args: Parameters<typeof take>[0]) => ({
+      data: take(args),
+      error: null,
+    }),
+  };
+}

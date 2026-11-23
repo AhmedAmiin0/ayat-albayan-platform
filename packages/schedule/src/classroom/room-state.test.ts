@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canEndLesson } from './moderation.js';
+import { canEndLesson } from './moderation/index.js';
 import { lessonEndResultSchema, lessonRoomStateSchema, roomEnded } from './room-state.js';
 
 describe('lessonRoomStateSchema', () => {

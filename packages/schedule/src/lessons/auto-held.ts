@@ -1,13 +1,10 @@
 import type { LessonStatus } from '@ab/catalog';
-import { isOpenLesson } from './state-machine.js';
+import { isOpenLesson } from './state-machine/index.js';
 
-// Owner 2026-11-02 («the default is that lessons are not requiring confirmation»): while the
-// setting
-// lesson_confirmation_required is OFF, a lesson still scheduled / confirmed AUTO_HELD_GRACE_MS
-// after
-// its end counts as held (→ completed, audit reason AUTO_HELD_REASON, actor null). The job never
-// looks
-// further back than AUTO_HELD_MAX_AGE_MS, nor before the start of a student's current package.
+// Lessons need no confirmation by default: while the setting lesson_confirmation_required is OFF,
+// a lesson still scheduled / confirmed AUTO_HELD_GRACE_MS after its end counts as held
+// (→ completed, audit reason AUTO_HELD_REASON, actor null). The job never looks further back
+// than AUTO_HELD_MAX_AGE_MS, nor before the start of a student's current package.
 
 const MINUTE = 60_000;
 export const AUTO_HELD_GRACE_MS = 30 * MINUTE;

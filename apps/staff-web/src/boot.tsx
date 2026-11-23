@@ -1,14 +1,14 @@
-import { QueryClient } from '@tanstack/react-query';
 import { createRouter } from '@tanstack/react-router';
 import { renderApp } from '@ab/web-kit/boot/render-app';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { rememberUntilSessionEnd } from './features/messaging/inbox';
+import { rememberUntilSessionEnd } from '@/features/messaging/inbox';
+import { createQueryClient, ROUTER_DEFAULTS } from '@/lib/query';
 import { routeTree } from './routeTree.gen';
 
 // Loaded by main.tsx once the translation overrides are in `t`: every screen module evaluates here.
 
-const queryClient = new QueryClient();
-const router = createRouter({ routeTree, context: { queryClient } });
+const queryClient = createQueryClient();
+const router = createRouter({ routeTree, context: { queryClient }, ...ROUTER_DEFAULTS });
 
 declare module '@tanstack/react-router' {
   interface Register {

@@ -6,7 +6,7 @@
   },
   "src/enums/messaging.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/google/enums.ts": {
@@ -60,24 +60,24 @@
       "count": 1
     }
   },
-  "src/integrations/keys.kapso.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/integrations/keys.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/integrations/keys.ts": {
+  "src/integrations/keys/keys.ts": {
     "max-len": {
       "count": 3
     }
   },
+  "src/integrations/keys/tests/kapso.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/integrations/keys/tests/keys.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
   "src/permissions/catalog.data.ts": {
     "max-len": {
-      "count": 23
+      "count": 14
     }
   },
   "src/permissions/catalog.ts": {
@@ -88,10 +88,10 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
-  "src/permissions/roles.ts": {
+  "src/permissions/roles/roles.ts": {
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -103,20 +103,15 @@
   },
   "src/theme/avatar-tones.ts": {
     "max-len": {
-      "count": 3
-    }
-  },
-  "src/theme/theme.brand.test.ts": {
-    "max-len": {
       "count": 2
     }
   },
-  "src/theme/theme.contrast.test.ts": {
+  "src/theme/tests/contrast.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/theme/theme.glass.test.ts": {
+  "src/theme/tests/glass.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -126,7 +121,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   }
 }

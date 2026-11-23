@@ -85,14 +85,8 @@ export class PaymentAttachments {
     return this.views(row);
   }
 
-  /** Read before the payment is deleted (its rows cascade). */
   async paths(paymentId: string): Promise<string[]> {
     return (await this.rows.forPayment(paymentId)).map((r) => r.path);
-  }
-
-  /** Best effort: an orphaned object is harmless once its payment is gone. */
-  async discard(paths: readonly string[]): Promise<void> {
-    await Promise.all(paths.map((path) => this.storage.remove({ bucket: BUCKETS.receipts, path }).catch(() => undefined)));
   }
 
   private async checkOne(path: string): Promise<CheckedAttachment> {

@@ -1,4 +1,4 @@
-// Per-teacher meeting mode (teachers.meeting_mode, migration 490, owner 2026-10-19). null follows
+// Per-teacher meeting mode (teachers.meeting_mode, migration 490). null follows
 // the academy default (settings.meeting_link_auto); a teacher's own mode always wins.
 
 export const TEACHER_MEETING_MODES = ['static', 'platform'] as const;

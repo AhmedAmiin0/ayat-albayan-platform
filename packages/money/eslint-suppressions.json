@@ -7,27 +7,27 @@
       "count": 8
     }
   },
-  "src/assistant/first-paid.sales.test.ts": {
+  "src/assistant/first-paid/tests/sales.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/assistant/first-paid.test.ts": {
+  "src/assistant/first-paid/tests/first-paid.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/assistant/first-paid.ts": {
+  "src/assistant/first-paid/first-paid.ts": {
     "complexity": {
       "count": 3
     },
     "max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/assistant/kind.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/assistant/renewal.test.ts": {
@@ -37,7 +37,7 @@
   },
   "src/assistant/renewal.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/assistant/schemas.test.ts": {
@@ -60,7 +60,7 @@
   },
   "src/assistant/started.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/assistant/statement.test.ts": {
@@ -96,7 +96,7 @@
   },
   "src/assistant/wallet.ts": {
     "max-len": {
-      "count": 18
+      "count": 17
     }
   },
   "src/ledger/alerts.test.ts": {
@@ -186,7 +186,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/ledger/usage/package-cancel.ts": {
@@ -194,7 +194,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/ledger/usage/package-progress.ts": {
@@ -215,7 +215,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/ledger/usage/tiers.ts": {
@@ -223,22 +223,22 @@
       "count": 1
     }
   },
-  "src/ledger/usage/usage.before.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/ledger/usage/usage.instant.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/ledger/usage/usage.makeup.test.ts": {
+  "src/ledger/usage/tests/before.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/ledger/usage/usage.test.ts": {
+  "src/ledger/usage/tests/instant.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/ledger/usage/tests/makeup.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/ledger/usage/tests/usage.test.ts": {
     "max-len": {
       "count": 4
     }
@@ -256,7 +256,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/pricing/currency.ts": {
@@ -264,12 +264,12 @@
       "count": 1
     }
   },
-  "src/pricing/price.ts": {
+  "src/pricing/price/price.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/pricing/quote.ts": {
+  "src/pricing/quote/quote.ts": {
     "complexity": {
       "count": 1
     },
@@ -314,7 +314,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   }
 }

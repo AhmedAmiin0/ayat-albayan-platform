@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Headers, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
 import { relayError } from './relay.errors';
+import { RelayLimit } from './relay.limit';
 import { relayRequestSchema } from './relay.schema';
 import { RelayService, type RelaySent } from './relay.service';
 
@@ -30,6 +31,7 @@ function invalid(issues: readonly { path: PropertyKey[]; message: string }[]) {
  */
 @ApiTags('webhooks')
 @Public()
+@UseGuards(RelayLimit)
 @Controller(`${RELAY_BASE}/api/v1`)
 export class RelayController {
   constructor(private readonly relay: RelayService) {}

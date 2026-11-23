@@ -807,14 +807,6 @@
       "count": 1
     }
   },
-  "src/lib/http/client-tag.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
-    }
-  },
   "src/lib/http/env.test.ts": {
     "stylistic/max-len": {
       "count": 1

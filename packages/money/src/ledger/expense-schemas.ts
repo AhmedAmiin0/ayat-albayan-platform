@@ -3,7 +3,7 @@ import { PAYMENT_METHODS } from '@ab/catalog';
 import { localDate, optionalText } from '@ab/core';
 import { currencyIso, monthParam, moneyAmount, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from './schemas.js';
 
-// Expenses (R-RPT-02, issue E4; owner 2026-10-05). The category is a key of expense_categories
+// Expenses (R-RPT-02, issue E4). The category is a key of expense_categories
 // (migration 20261005000204): the seeded ones plus any the admin adds.
 
 /** A category key: lower-case latin, digits and _, like `platform_fees`. */

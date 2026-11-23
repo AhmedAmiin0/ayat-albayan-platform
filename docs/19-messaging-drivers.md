@@ -624,7 +624,9 @@ routes, so the script reaches the CRM **through** the platform (`modules/messagi
 account (11-01: «Apps Script - Booking messages», the script's, and «apis», the platform's `WACRM_API_KEY`), so
 the `Authorization: Bearer` is accepted when it is the notifications line's own key (constant time, no call) or
 when the CRM itself answers `GET /me` for it with the same `account.id` as the line's key and the
-`messages:send` scope (`relay.keys.ts`; an accepted key is remembered as its sha256 for 10 minutes). The send
+`messages:send` scope (`access/relay.keys.ts`; a verdict is remembered as the key's sha256, accepted 10 minutes,
+refused 1 minute, and the line key's own account once). Both routes take one per-IP bucket first
+(`relay.limit.ts`, `rate_limit_take`, 120 a minute like the CRM's own budget) → 429. The send
 always goes with the line's key. No new key or secret. Wrong or missing key → 401; the CRM unreachable during
 the check → 502; notifications line not configured or `WACRM_API_BASE` / `WACRM_API_KEY` unset → 503; invalid body → 422; failures use the CRM's
 envelope `{error:{message, code}}`.

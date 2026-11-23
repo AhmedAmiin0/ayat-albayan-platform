@@ -29,6 +29,16 @@ describe('student channel replies over HTTP', () => {
     });
   });
 
+  it('a quoted sender whose name is blank is stored with none, never spaces', async () => {
+    t.people.names.mockResolvedValueOnce(new Map([['p-t1', ' \t ']]));
+    t.edits.message.mockResolvedValueOnce(
+      messageRow({ id: ORIGINAL, sender_profile_id: 'p-t1', sender_role: 'teacher' }),
+    );
+    await t.post(`${PORTAL}/messages`, 'guardian', { body: 'حسنًا', reply_to_id: ORIGINAL });
+    const stored = expect.objectContaining({ quote_sender_name: '', quote_sender_role: 'teacher' });
+    expect(t.queries.insert).toHaveBeenCalledWith(stored);
+  });
+
   it('a message of another channel, or one deleted for everyone, is 400 reply_not_found', async () => {
     t.edits.message.mockResolvedValueOnce(null);
     t.edits.message.mockResolvedValueOnce(messageRow({ id: ORIGINAL, deleted_at: '2026-10-27T11:00:00.000Z' }));

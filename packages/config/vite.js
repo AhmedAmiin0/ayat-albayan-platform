@@ -29,11 +29,13 @@ const TEST_ENV = {
  * has TanStack file routes (src/routes). `cacheDir`: a second dev server's own Vite cache.
  * `kitDir`, `brandDir`: absolute folders of @ab/web-kit and of @ab/catalog's brand marks, named by
  * the caller so this package reaches into neither. `icons`: the app's icon set in <kitDir>/icons,
- * served at its root (vite-public.js).
+ * served at its root (vite-public.js). `client`: the app's name in its X-AB-Client tag.
  */
-export function webConfig({ dir, port, routes = true, cacheDir, kitDir, brandDir, icons }) {
+export function webConfig(options) {
+  const { dir, port, routes = true, cacheDir, kitDir, brandDir, icons, client = 'web' } = options;
   const kitSrc = `${kitDir}/src`;
   return defineConfig({
+    define: { 'import.meta.env.VITE_CLIENT_APP': JSON.stringify(client) },
     plugins: [
       ...(routes ? [tanstackRouter({ target: 'react', autoCodeSplitting: true })] : []),
       react(),

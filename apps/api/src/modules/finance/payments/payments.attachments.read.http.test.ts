@@ -60,14 +60,9 @@ describe('GET /payments/:id/attachments and delete (docs/11 §7)', () => {
       expect((await call({ method: 'GET', url: `/payments/${PAYMENT_ID}/attachments`, token })).statusCode).toBe(403);
   });
 
-  it('delete: the files are read before the row goes (cascade), then every object is discarded, best effort', async () => {
-    m.storage.remove.mockImplementation(async (ref: { path: string }) => {
-      if (ref.path === attachment(2)) throw new Error('storage down');
-    });
+  it('delete keeps the receipt and every attached object', async () => {
     expect((await call({ method: 'DELETE', url: `/payments/${PAYMENT_ID}` })).statusCode).toBe(204);
-    const order = [m.attachments.forPayment.mock.invocationCallOrder[0], m.payments.remove.mock.invocationCallOrder[0]];
-    expect(order[0]).toBeLessThan(order[1] ?? 0);
-    for (const path of [RECEIPT, attachment(1), attachment(2)])
-      expect(m.storage.remove).toHaveBeenCalledWith({ bucket: 'receipts', path });
+    expect(m.payments.remove).toHaveBeenCalledWith(PAYMENT_ID);
+    expect(m.storage.remove).not.toHaveBeenCalled();
   });
 });

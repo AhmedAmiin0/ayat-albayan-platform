@@ -2,6 +2,7 @@ import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues, ty
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { pathKey } from '@ab/mobile-kit';
+import { dropIfRefused, dropStoredDraft, keepStoredDraft, useOnResume } from '@/teacher/report/drafts';
 import { saveDraft, withReport } from './api';
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };
@@ -18,6 +19,7 @@ function useSettled(value: string, ms: number): string {
 
 /** What a draft PUT sends (a JSON string, so a settled value compares by content) and its route. */
 interface DraftSaver {
+  id: string;
   body: string;
   enabled: boolean;
   save: (body: string) => Promise<ReportView>;
@@ -26,7 +28,8 @@ interface DraftSaver {
 /**
  * Debounced draft save while `enabled` (R-REP-02), shared by both form versions. Each saved draft
  * also goes into the saved form, so reopening it (even offline) shows what was typed. `flush`
- * saves the current body now («احفظ مسودة»).
+ * saves the current body now («احفظ مسودة»). Each body is kept on the phone until the server has
+ * it; a failed one is sent again once the phone is online or the app is back in front.
  */
 export function useDraftAutosave(input: DraftSaver): { state: SaveState; flush: () => void } {
   const client = useQueryClient();
@@ -35,18 +38,24 @@ export function useDraftAutosave(input: DraftSaver): { state: SaveState; flush: 
   const [failed, setFailed] = useState<string | null>(null);
   const [result, setResult] = useState<SaveState>({ kind: 'idle' });
   const save = useMutation({
-    mutationFn: input.save,
+    mutationFn: async (b: string) => {
+      await keepStoredDraft(input.id, { body: b, base: saved });
+      return input.save(b);
+    },
     onSuccess: (view, b) => {
+      void dropStoredDraft(input.id);
       client.setQueriesData<ReportFormResponse>({ queryKey: [...pathKey('/reports'), 'form'] }, (old) => withReport(old, view));
       setSaved(b);
       setFailed(null);
       setResult({ kind: 'saved', at: new Date() });
     },
-    onError: (_e, b) => {
+    onError: (e, b) => {
+      void dropIfRefused(input.id, e);
       setFailed(b);
       setResult({ kind: 'failed' });
     },
   });
+  useOnResume(() => setFailed(null));
   const pending = save.isPending;
   const { mutate } = save;
   useEffect(() => {
@@ -61,6 +70,7 @@ export function useDraftAutosave(input: DraftSaver): { state: SaveState; flush: 
 /** Debounced PUT /reports/:id/draft of the whole v1 form while it is a draft, as on the web. */
 export function useAutosave(input: { id: string; values: FormValues; enabled: boolean }): SaveState {
   return useDraftAutosave({
+    id: input.id,
     body: JSON.stringify(draftBody(input.values)),
     enabled: input.enabled,
     save: (b) => saveDraft(input.id, JSON.parse(b) as DraftBody),

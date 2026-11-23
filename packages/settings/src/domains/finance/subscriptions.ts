@@ -12,7 +12,7 @@ export const SUBSCRIPTION_SETTINGS = {
     type: 'int', default: 2, min: 0, max: 10,
     labelKey: 'settings.renewalAlertRemaining', hintKey: `${h}.renewalAlertRemaining`,
   },
-  /** Days a student stays «بانتظار التجديد» before «انتهى الاشتراك» (owner 2026-10-15). */
+  /** Days a student stays «بانتظار التجديد» before «انتهى الاشتراك». */
   subscription_expiry_days: {
     module: 'subscriptions', group: 'accounts',
     type: 'int', default: 7, min: 1, max: 90,
@@ -24,7 +24,7 @@ export const SUBSCRIPTION_SETTINGS = {
     labelKey: 'settings.flagFutureLessonsWhenUnpaid', hintKey: `${h}.flagFutureLessonsWhenUnpaid`,
   },
   /**
-   * «إلغاء مع استرداد» (owner 2026-11-02): each attended lesson costs this percent of the package's
+   * «إلغاء مع استرداد»: each attended lesson costs this percent of the package's
    * per-lesson price. The API only (no SQL reader): no migration.
    */
   refund_attended_rate_percent: {

@@ -1,6 +1,6 @@
 import { riyadhToday } from '@ab/time';
 
-// «If the course already started so dont give commission» (owner 2026-10-28, migration 20261028000942
+// A subscription whose course already started earns no commission (migration 20261028000942
 // subscription_already_started). Pure twin; the database decides.
 
 export interface StartFact {

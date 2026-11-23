@@ -1,4 +1,4 @@
-// Who asked to move a lesson (lesson_proposals.requested_by, owner 2026-11-17): the teacher's
+// Who asked to move a lesson (lesson_proposals.requested_by): the teacher's
 // «اقترح موعدًا آخر» (R-SCH-08) or the family's «اطلب موعدًا آخر». Staff answer both the same way.
 
 export const PROPOSAL_REQUESTERS = ['teacher', 'family'] as const;
