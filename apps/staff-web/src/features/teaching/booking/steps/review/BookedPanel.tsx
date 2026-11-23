@@ -1,4 +1,6 @@
-import { type BookingResult, counted, weekStart, zonedPartsIn } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { BookingResult } from '@ab/schedule';
+import { weekStart, zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';

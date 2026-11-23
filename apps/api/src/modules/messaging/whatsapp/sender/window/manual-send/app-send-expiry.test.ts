@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import type { AppSendAdopt, HeldRow } from './app-send-adopt';
 import { AppSendExpiry } from './app-send-expiry';
 import { AppSendExpiryRepo, UNCONFIRMED_TEXT } from './app-send-expiry.repo';

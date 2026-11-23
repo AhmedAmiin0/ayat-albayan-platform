@@ -1,4 +1,4 @@
-import type { LessonTimeEditView, LessonView, TimeEditMode } from '@ab/shared';
+import type { LessonTimeEditView, LessonView, TimeEditMode } from '@ab/schedule';
 
 // R-SCH-11 «عدّل الوقت»: the wire contract lives in @ab/shared (schemas/lesson-time.ts,
 // lessons/time-edit.ts, LessonView); the form imports it from there.

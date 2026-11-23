@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { SalesRegistrationRepo, toMatch } from './sales-registration.repo';
 
 const dbRow = { name: 'ياسمين', code: 'AB-0101', status: 'churned', teacher: { display_name_ar: 'أبرار' }, guardian: { phone_e164: '+966551110000' } };

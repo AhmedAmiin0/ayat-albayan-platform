@@ -1,5 +1,5 @@
-import { teacherName } from '@ab/shared';
-import type { TeacherEarningView } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
+import type { TeacherEarningView } from '@ab/money';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ScrollView } from 'react-native';

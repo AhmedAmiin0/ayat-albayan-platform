@@ -1,0 +1,72 @@
+import type { ReportFormResponse } from '@ab/shared';
+import { View } from 'react-native';
+import { t, Button, ErrorLine } from '@ab/mobile-kit';
+import { useClockCycle } from '@/core/lib/clock';
+import { ButtonRow } from '@/core/ui/actions';
+import { Note } from '@/more';
+import { reportErrorText } from '@/teacher/report/hooks/api';
+import { SentNote, saveLine } from '@/teacher/report/components/ReportFooter';
+import { SendButton } from '@/teacher/report/components/SendButton';
+import { SentPanel } from '@/teacher/report/components/SentPanel';
+import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
+
+const ERRORS: Record<string, string> = t.reports.error;
+
+/** What stops the send: the form's own check, an API refusal or no connection, the lesson's state. */
+function Problems({ s, block }: { s: V2EntryState; block: ReportFormResponse['submit_block'] }) {
+  const lines = [
+    s.problem ? (ERRORS[s.problem] ?? t.common.error) : null,
+    s.submit.error ? reportErrorText(s.submit.error) : null,
+    block ? (ERRORS[block] ?? t.common.error) : null,
+  ];
+  return <>{lines.map((line, i) => (line ? <ErrorLine key={i} message={line} /> : null))}</>;
+}
+
+/** Send and draft as one ButtonRow, send first (docs/07 §6), stacked when labels do not fit. */
+export function V2Footer({
+  s,
+  block,
+  tz,
+}: {
+  s: V2EntryState;
+  block: ReportFormResponse['submit_block'];
+  tz: string;
+}) {
+  const cycle = useClockCycle();
+  const v2 = t.reports.v2;
+  const { report } = s;
+  const sent = report.status === 'submitted';
+  const draft = s.mode.mode === 'draft';
+  const saved = report.status === 'draft' ? saveLine(s.saveState, tz, cycle) : null;
+  const label = sent ? t.reports.resubmit : v2.send;
+  return (
+    <View style={{ gap: 8 }}>
+      <Problems s={s} block={block} />
+      {sent ? <SentNote report={report} tz={tz} /> : null}
+      <SentPanel report={report} mode={s.mode.mode} onEdit={s.mode.startEdit} tz={tz}
+        busy={s.submit.isPending} />
+      {s.locked ? null : (
+        <>
+          <ButtonRow testID="report-footer-actions">
+            <SendButton
+              label={label}
+              pending={s.submit.isPending}
+              disabled={block !== null}
+              onPress={s.send}
+            />
+            {draft ? (
+              <Button
+                variant="secondary"
+                label={v2.saveDraft}
+                busy={s.saveState.kind === 'saving'}
+                onPress={s.saveDraft}
+              />
+            ) : null}
+          </ButtonRow>
+          <Note>{v2.sendHint}</Note>
+        </>
+      )}
+      {saved ? <Note>{saved}</Note> : null}
+    </View>
+  );
+}

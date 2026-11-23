@@ -1,4 +1,4 @@
-import type { MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { opensLine, scheduleLine } from '@/features/teaching/meetings/scheduled/meeting-when';
 import { useClock } from '@ab/web-kit/lib/clock';
