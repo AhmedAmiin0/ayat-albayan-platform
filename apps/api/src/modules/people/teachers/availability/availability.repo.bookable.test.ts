@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
 import { AvailabilityRepo } from './availability.repo';
 import { allDayRows } from '@ab/shared';

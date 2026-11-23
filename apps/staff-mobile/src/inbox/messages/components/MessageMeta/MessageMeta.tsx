@@ -1,4 +1,5 @@
-import { canSendViaWhatsApp, type ClockCycle, type MessageView } from '@ab/shared';
+import { canSendViaWhatsApp, type MessageView } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { Pressable } from 'react-native';
 import { t, type, AppText, BubbleMeta, useSmallText } from '@ab/mobile-kit';
 import { lineWord } from '@/inbox/shared/line-words';

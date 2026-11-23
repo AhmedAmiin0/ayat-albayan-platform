@@ -1,4 +1,5 @@
-import { type CallView, chatDayKey, senderLine } from '@ab/shared';
+import { type CallView, senderLine } from '@ab/shared';
+import { chatDayKey } from '@ab/time';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t, useTheme, EmptyState, FloatingDay } from '@ab/mobile-kit';

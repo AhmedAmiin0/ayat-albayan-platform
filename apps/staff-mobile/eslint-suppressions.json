@@ -3110,9 +3110,6 @@
     }
   },
   "src/inbox/messages/hooks/message-text/message-text.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -3890,9 +3887,6 @@
     }
   },
   "src/inbox/shared/flow-backend.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 7
-    },
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
     },

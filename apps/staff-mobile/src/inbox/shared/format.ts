@@ -1,4 +1,5 @@
-import type { ClockCycle, ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { clockIn } from '@/core/lib/clock';
 import { t } from '@ab/mobile-kit';
 

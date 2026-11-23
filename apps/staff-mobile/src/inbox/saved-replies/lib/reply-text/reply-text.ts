@@ -1,4 +1,5 @@
-import { matchesQuery, type SavedReply, type SavedReplyScope } from '@ab/shared';
+import type { SavedReply, SavedReplyScope } from '@ab/shared';
+import { matchesQuery } from '@ab/core';
 
 // Pure helpers of the «الردود السريعة» picker (owner 2026-10-25): which replies a search shows, when
 // «/» opens the picker, and how a picked reply fills the composer.

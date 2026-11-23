@@ -1,4 +1,5 @@
-import { LEAD_STATUSES, type LeadStatus, leadStatusStyle } from '@ab/shared';
+import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
+import { leadStatusStyle } from '@ab/money';
 import { type ReactNode, useCallback, useState } from 'react';
 import { View } from 'react-native';
 import type { LeadView } from '@ab/shared';
