@@ -1,1 +1,1 @@
-export { SETTINGS_HREF, SettingsScreen } from './SettingsScreen';
+export * from './SettingsScreen';

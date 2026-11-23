@@ -1,1 +1,1 @@
-export { type MoneyView, MyMoneyScreen } from './MyMoneyScreen';
+export * from './MyMoneyScreen';

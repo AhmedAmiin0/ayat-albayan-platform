@@ -1,1 +1,1 @@
-export { AccountScreen, type AccountScreenProps } from './AccountScreen';
+export * from './AccountScreen';
