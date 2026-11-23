@@ -1,5 +1,7 @@
 import { reportEntryValues, sendChecked, withServerWindow } from '@ab/client-core';
 import {
+  draftBody,
+  reportDraftSchema,
   submitBody,
   submitProblem,
   type FormValues,
@@ -10,13 +12,32 @@ import {
   type Rubric,
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { refreshAfterSubmit, submitReport } from './api';
-import { useAutosave } from './use-autosave';
-import { useFormMode } from './use-form-mode';
+import { useState, type Dispatch, type SetStateAction } from 'react';
+import { dropStoredDraft, useStoredDraft, viewWithDraft } from '@/teacher/report/drafts';
+import { refreshAfterSubmit, submitReport } from '@/teacher/report/hooks/api';
+import { useAutosave } from '@/teacher/report/hooks/use-autosave';
+import { useFormMode } from '@/teacher/report/hooks/use-form-mode';
 
 /** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
 const entryValuesOf = reportEntryValues;
+
+interface Restore {
+  report: ReportView;
+  studentProgram: Program;
+  values: FormValues;
+}
+
+/** The draft this phone kept for a draft report goes back into the form on open. */
+function useRestoredDraft(input: Restore, setValues: Dispatch<SetStateAction<FormValues>>): void {
+  const { report, studentProgram } = input;
+  useStoredDraft({
+    id: report.id,
+    enabled: report.status === 'draft',
+    schema: reportDraftSchema,
+    body: JSON.stringify(draftBody(input.values)),
+    restore: (draft) => setValues(entryValuesOf(viewWithDraft(report, draft), studentProgram)),
+  });
+}
 
 /**
  * One student's report on the form (R-REP-02): local values, the debounced draft autosave while a
@@ -34,12 +55,14 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const submit = useMutation({
     mutationFn: (version: number) => submitReport(report.id, submitBody(values, version)),
     onSuccess: async (view) => {
+      void dropStoredDraft(view.id);
       setReport(view);
       mode.sent();
       setValues(entryValuesOf(view, studentProgram));
       await refreshAfterSubmit(client);
     },
   });
+  useRestoredDraft({ report, studentProgram, values }, setValues);
   const saveState = useAutosave({ id: report.id, values, enabled: report.status === 'draft' && !submit.isPending });
 
   const set = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
