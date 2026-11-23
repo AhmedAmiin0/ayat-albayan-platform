@@ -4,6 +4,7 @@ import { badRequest } from '@/common/http/errors';
 import { ChannelEditsRepo } from '@/modules/teaching/student-channels/channel-edits.repo';
 import { ChannelPeopleRepo } from '@/modules/teaching/student-channels/channel-people.repo';
 import { ChannelMedia } from '@/modules/teaching/student-channels/media/channel-media.service';
+import { senderName } from '@/modules/teaching/student-channels/notify/sender-name';
 import {
   fileColumns,
   quoteColumns,
@@ -42,6 +43,6 @@ export class ChannelSendInputs {
     if (!quoted || quoted.deleted_at) throw badRequest('reply_not_found');
     const sender = quoted.sender_profile_id ?? '';
     const names = await this.people.names([sender].filter(Boolean));
-    return quoteColumns(quoted, names.get(sender) ?? '');
+    return quoteColumns(quoted, senderName(names, sender, ''));
   }
 }

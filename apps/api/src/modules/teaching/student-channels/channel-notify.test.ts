@@ -8,9 +8,8 @@ import type { ChannelPeopleRepo } from './channel-people.repo';
 import type { FamilyChatSettings, TeacherChatSettings } from './family-chat.settings';
 import { ChannelMembers } from './reads/channel-members';
 
-// Owner 2026-11-16 «all 4 will receive the message teacher guardian student and the assistant»:
-// everyone in the chat but the sender; the family only while family_chat_enabled is on; the
-// assistant is the one in the seat («… but only 1»).
+// Everyone in the chat but the sender; the family only while family_chat_enabled is on; the
+// assistant is the one in the seat.
 
 interface Person {
   profile_id: string;
@@ -104,8 +103,12 @@ describe('ChannelNotify: who hears a chat message', () => {
     expect((await told('teacher'))?.vars).toMatchObject({ name: 'أ. هدى' });
   });
 
-  it('a sender without a name reads as their role word', async () => {
+  it('a sender without a name, or with a blank one, reads as their role word', async () => {
     expect((await told('student'))?.vars).toMatchObject({ name: 'الطالب' });
+    const { notify, push, people } = notifier();
+    people.names.mockResolvedValueOnce(new Map([['p-g', ' \t']]));
+    await notify.sent(actor('guardian'), message);
+    expect(push.notifyProfiles.mock.calls[0]?.[0].vars).toMatchObject({ name: 'ولي الأمر' });
   });
 
   it('family_chat_enabled off: the teacher\'s message reaches the assistant only', async () => {
