@@ -8,12 +8,14 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 const CAP_MS = 20_000;
 const ROLES = ['authenticator', 'service_role', 'postgres'];
 
+// service_role's own value, else the authenticator session value PostgREST runs under.
 const roleCap = async (tx: Tx): Promise<string | undefined> => {
-  const [row] = await tx<{ value: string }[]>`
-    select substr(c, length('statement_timeout=') + 1) as value
+  const rows = await tx<{ rolname: string; value: string }[]>`
+    select r.rolname, substr(c, length('statement_timeout=') + 1) as value
       from pg_roles r, unnest(r.rolconfig) c
-     where r.rolname = 'service_role' and c like 'statement_timeout=%'`;
-  return row?.value;
+     where r.rolname in ('service_role', 'authenticator') and c like 'statement_timeout=%'`;
+  const byRole = new Map(rows.map((r) => [r.rolname, r.value]));
+  return byRole.get('service_role') ?? byRole.get('authenticator');
 };
 
 const capMs = async (tx: Tx, value: string): Promise<number> => {
@@ -41,7 +43,7 @@ test.describe('API statement timeout (SQL)', () => {
     });
   });
 
-  test('service_role is capped at 20 s or less', async () => {
+  test('the API role is capped at 20 s or less', async () => {
     await rolledBack(async (tx) => {
       const value = await roleCap(tx);
       expect(value).toBeDefined();

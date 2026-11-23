@@ -9,7 +9,8 @@
 -- pg_cron and maintenance jobs run as postgres and are not affected.
 -- RLS / grants: no table or function changes.
 -- SQL test plan (e2e/tests/platform/api-statement-timeout.sql.spec.ts):
---   1. service_role carries statement_timeout ≤ 20 s.
+--   1. the effective cap (service_role's, else authenticator's) is ≤ 20 s. On the local stack
+--      authenticator has 8s and service_role none, so this migration changes nothing there.
 --   2. a call that sleeps past it under service_role's settings is cancelled (57014).
 
 set local lock_timeout = '5s';
