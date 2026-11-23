@@ -1,4 +1,4 @@
-import type { DashboardSummary, WorkTab } from '@ab/shared';
+import type { DashboardSummary, WorkTab } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // docs/07 §6 KPI strip: four numbers, each a filter link to the work behind it. Saffron («دورك»)

@@ -1,4 +1,4 @@
-import type { DashboardResponse, DashboardWork } from '@ab/shared';
+import type { DashboardResponse, DashboardWork } from '@ab/money';
 
 // Test fixtures (not a test): one summary and one queue as the API returns them.
 

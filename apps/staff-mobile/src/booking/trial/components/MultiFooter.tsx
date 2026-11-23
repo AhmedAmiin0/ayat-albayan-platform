@@ -1,4 +1,4 @@
-import { pickProgress } from '@ab/shared';
+import { pickProgress } from '@ab/schedule';
 import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { PicksList } from '@/booking/shared/PicksList';
 import type { SlotMulti } from './SlotStep';

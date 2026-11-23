@@ -1,4 +1,10 @@
-import { GOOGLE_SETTING_KEYS, settingDef, type AcademySettings, type CustomConfigView, type GoogleSyncSettings, type SettingKey } from '@ab/shared';
+import { GOOGLE_SETTING_KEYS, type GoogleSyncSettings } from '@ab/catalog';
+import {
+  settingDef,
+  type AcademySettings,
+  type CustomConfigView,
+  type SettingKey,
+} from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
 import { matchesSetting, matchesText } from '@/components/settings/search/settings-search';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

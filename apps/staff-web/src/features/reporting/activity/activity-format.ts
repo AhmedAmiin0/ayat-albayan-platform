@@ -1,4 +1,5 @@
-import { dateText, type StatusStyle } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
+import { dateText } from '@ab/time';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { clockWithSeconds } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

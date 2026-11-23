@@ -3,8 +3,8 @@ import {
   type PaymentLinkCreate,
   type PaymentLinkQuoteView,
   type PaymentLinkView,
-  type SubscriptionPricing,
 } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useDebounced } from '@/features/finance/pricing';

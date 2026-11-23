@@ -1,4 +1,5 @@
-import { formatPhone, normalizePhone, teacherName } from '@ab/shared';
+import { formatPhone, normalizePhone } from '@ab/core';
+import { teacherName } from '@ab/schedule';
 import type { ViewerClock } from '@/core/lib/clock';
 import { t, ltr, locale, whenText } from '@ab/mobile-kit';
 import type { InvoiceDraft } from '@/booking/shared/contract';

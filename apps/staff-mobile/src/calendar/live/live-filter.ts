@@ -4,7 +4,7 @@ import {
   joinWindow,
   type JoinWindowConfig,
   type LessonView,
-} from '@ab/shared';
+} from '@ab/schedule';
 
 type LivePhase = 'live' | 'soon';
 

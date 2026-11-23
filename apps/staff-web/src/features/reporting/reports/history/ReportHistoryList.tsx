@@ -1,4 +1,6 @@
-import { gradeStyle, lessonWhenAt, type ReportSummaryView, type UserRole } from '@ab/shared';
+import { lessonWhenAt, type ReportSummaryView } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import { gradeStyle } from '@ab/money';
 import { editableNow } from '@ab/client-core';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

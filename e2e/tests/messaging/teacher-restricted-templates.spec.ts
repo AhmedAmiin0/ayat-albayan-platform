@@ -5,7 +5,7 @@ import { resetAbrar, seedFamily, withSql } from '../../support/core/schedule';
 import { CHAT_PN, sentVia, SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// Teacher mode and the restricted allow-list (owner 2026-10-12): «أبرار» lists and sends only
+// Teacher mode and the restricted allow-list: «أبرار» lists and sends only
 // the three defaults (free_trial_invite, welcome_greeting, trial_reschedule once approved), to her own families; the lesson reminders are no longer
 // hers to send by hand (403 template_not_allowed; the automatic reminders are unchanged).
 

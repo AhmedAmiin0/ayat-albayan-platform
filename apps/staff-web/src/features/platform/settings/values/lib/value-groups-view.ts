@@ -5,7 +5,7 @@ import {
   type OwnedValueGroupId,
   type SettingKey,
   type ValueGroupId,
-} from '@ab/shared';
+} from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // «القيم»'s group list (docs/26b §2): the editable groups, «قيم مخصصة», then under «تُدار من صفحة

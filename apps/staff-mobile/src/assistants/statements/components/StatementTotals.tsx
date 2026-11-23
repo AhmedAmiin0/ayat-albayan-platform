@@ -1,4 +1,4 @@
-import type { CurrencyTotals } from '@ab/shared';
+import type { CurrencyTotals } from '@ab/money';
 import { View } from 'react-native';
 import { t, money } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

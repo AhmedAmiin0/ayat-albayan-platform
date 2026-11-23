@@ -5,7 +5,7 @@ import { openNav } from '../../support/core/nav';
 import { withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// «الأدوار والصلاحيات» (owner, 2026-10-05): the admin creates «محاسب» with payments.read only and
+// «الأدوار والصلاحيات»: the admin creates «محاسب» with payments.read only and
 // gives it to a staff user. That user lands in the admin app on «المدفوعات», sees no «الطلاب» in
 // the nav, and the API refuses the students list (403) — the role's grants, not its base role.
 

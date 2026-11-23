@@ -1,5 +1,6 @@
 import type { ReportStage } from '@ab/client-core';
-import { reportBlock, type LessonStatus, type UserRole } from '@ab/shared';
+import { reportBlock } from '@ab/shared';
+import type { LessonStatus, UserRole } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // Where a report is opened from (R-REP-01: always from the lesson itself).

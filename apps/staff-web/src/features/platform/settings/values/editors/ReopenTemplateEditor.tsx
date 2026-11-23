@@ -1,10 +1,5 @@
-import {
-  REOPEN_NO_TEMPLATE,
-  reopenChoiceOf,
-  SETTING_FIELD_OF,
-  settingDef,
-  type ReopenChoice,
-} from '@ab/shared';
+import { REOPEN_NO_TEMPLATE, reopenChoiceOf, type ReopenChoice } from '@ab/shared';
+import { SETTING_FIELD_OF, settingDef } from '@ab/settings';
 import { z } from 'zod';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

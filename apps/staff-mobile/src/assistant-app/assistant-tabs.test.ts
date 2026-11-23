@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import { assistantTabItems } from './assistant-tabs';
 

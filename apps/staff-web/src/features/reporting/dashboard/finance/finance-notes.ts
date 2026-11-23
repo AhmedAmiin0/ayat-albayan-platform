@@ -1,7 +1,7 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { currencyLabel, rateDate } from '@/features/reporting/dashboard/shared/format';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 type Finance = DashboardResponse['finance'];
 

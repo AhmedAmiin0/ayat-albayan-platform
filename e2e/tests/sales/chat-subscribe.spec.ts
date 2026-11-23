@@ -101,7 +101,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await expect(thread.locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
 
     await admin.goto('/admin/inbox');
-    // The list row carries no tag (owner 2026-11-06): the avatar's green ring says «مشترك».
+    // The list row carries no tag: the avatar's green ring says «مشترك».
     const row = admin.getByRole('link', { name: openThread(guardian) });
     await expect(row.locator('[data-ring="subscribed"]')).toBeVisible();
   });

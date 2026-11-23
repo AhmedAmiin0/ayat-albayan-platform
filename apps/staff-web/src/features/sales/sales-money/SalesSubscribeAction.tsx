@@ -1,4 +1,5 @@
-import type { SalesFamilyStudent, StudentStatus } from '@ab/shared';
+import type { SalesFamilyStudent } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 
 // The sales chat's money actions (owner 2026-10-12, R-ASST-01/04): only in sales mode, only on a
 // family's chat, and only for the students she brought (GET /sales/money/family). Their state and

@@ -1,4 +1,4 @@
-import { teacherName } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';

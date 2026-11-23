@@ -1,4 +1,4 @@
-import { applyLessonEvent, type LessonView } from '@ab/shared';
+import { applyLessonEvent, type LessonView } from '@ab/schedule';
 
 /** The API offered the move and the shared state machine allows it from this status. */
 export function canReschedule(lesson: LessonView): boolean {

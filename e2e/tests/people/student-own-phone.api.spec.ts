@@ -4,7 +4,7 @@ import { withSql } from '../../support/core/schedule';
 import { stubReset } from '../../support/core/wa-stub';
 import { closeCodes, codeSentTo, family, openCodes, post } from '../../support/people/family-sign-in';
 
-// A student's own WhatsApp number (owner 2026-11-17) on the real database through PostgREST: the
+// A student's own WhatsApp number on the real database through PostgREST: the
 // one-to-one `own` embed and the nested `student_id is null` filters keep it the student's, never
 // the family's «الرقم الثاني»; family sign-in finds it through guardian_phones and opens the
 // student's own login. Example data only.

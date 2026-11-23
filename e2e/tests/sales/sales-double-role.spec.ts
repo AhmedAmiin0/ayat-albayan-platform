@@ -5,7 +5,7 @@ import { lastOutbound } from '../../support/messaging/inbox';
 import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { salesNav, seedBooked, seedMine, setSalesStarter, signInSales } from '../../support/sales/sales-portal';
 
-// Sales double role (owner 2026-10-11, docs/16): the salesperson also does the classroom assistant's job.
+// Sales double role (docs/16): the salesperson also does the classroom assistant's job.
 // She reads a chat that is not hers, opens the history of a confirmed subscription she made (with its payment amounts),
 // sees the teachers (master-detail) and every student, the academy's day read-only, and a lesson running now
 // with «ادخل الحلقة». Owner report 2026-10-12: she starts a conversation with a template, one the
@@ -41,7 +41,7 @@ test.describe('sales double role', () => {
     await expect(row).toContainText(ar.sales.teachers.liveNow);
     await row.click();
     const drawer = page.getByRole('dialog', { name: ar.sales.teachers.detailTitle.replace('{name}', names.teacher) });
-    // «مشترك» is the default segment (owner 2026-10-12); «الكل» shows the student whatever her status.
+    // «مشترك» is the default segment; «الكل» shows the student whatever her status.
     await drawer.getByRole('group', { name: ar.studentLists.kinds }).getByRole('button', { name: new RegExp(`^${ar.studentLists.all}`) }).click();
     await expect(drawer.getByRole('listitem').filter({ hasText: names.mine })).toContainText(ar.enums.program.quran);
 

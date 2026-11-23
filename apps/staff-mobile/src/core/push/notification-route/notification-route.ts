@@ -1,4 +1,4 @@
-import type { PushKind } from '@ab/shared';
+import type { PushKind } from '@ab/catalog';
 import { canOpen, tabOpen, type TabRoute } from '@/core/auth/route-permissions';
 import type { Can } from '@ab/mobile-kit';
 import { threadHref } from '@/inbox/thread/hooks/thread-cache';

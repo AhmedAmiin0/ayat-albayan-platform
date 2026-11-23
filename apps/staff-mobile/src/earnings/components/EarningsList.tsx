@@ -1,4 +1,4 @@
-import type { TeacherEarningView, TeacherPaymentView } from '@ab/shared';
+import type { TeacherEarningView, TeacherPaymentView } from '@ab/money';
 import { type ReactElement, useCallback } from 'react';
 
 import { t, EmptyState, ErrorState } from '@ab/mobile-kit';

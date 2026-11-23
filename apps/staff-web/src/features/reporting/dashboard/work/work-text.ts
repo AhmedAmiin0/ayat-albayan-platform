@@ -1,6 +1,7 @@
-import { counted, packageProgress } from '@ab/shared';
+import { counted } from '@ab/core';
+import { packageProgress } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { TaskRow, UnpaidRow } from '@ab/shared';
+import type { TaskRow, UnpaidRow } from '@ab/money';
 
 /** «باقة سهيلة قربت تخلص: فاضل حلقتين» (dashboard.task.<kind>, R-SUB-02 wording). */
 export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): string {

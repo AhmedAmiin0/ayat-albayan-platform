@@ -363,18 +363,36 @@ importers:
 
   apps/staff-mobile:
     dependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../../packages/catalog
       '@ab/client-core':
         specifier: workspace:*
         version: link:../../packages/client-core
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@ab/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
       '@ab/mobile-kit':
         specifier: workspace:*
         version: link:../../packages/mobile-kit
+      '@ab/money':
+        specifier: workspace:*
+        version: link:../../packages/money
+      '@ab/schedule':
+        specifier: workspace:*
+        version: link:../../packages/schedule
+      '@ab/settings':
+        specifier: workspace:*
+        version: link:../../packages/settings
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@ab/time':
+        specifier: workspace:*
+        version: link:../../packages/time
       '@config-plugins/react-native-webrtc':
         specifier: 15.0.2
         version: 15.0.2(expo@57.0.26)

@@ -1,4 +1,4 @@
-import type { AssistantView } from '@ab/shared';
+import type { AssistantView } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, ListRow, InsetGroup } from '@ab/mobile-kit';

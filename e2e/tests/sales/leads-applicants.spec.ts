@@ -67,7 +67,7 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     await tab('new').click();
     await expect(page.getByText(byStatus(2, 'new'), { exact: true })).toBeVisible();
     await page.getByRole('tab', { name: ar.leads.filterAll, exact: true }).click();
-    // The source filter lives in the shared «تصفية» panel (owner, 2026-10-05): the button counts it.
+    // The source filter lives in the shared «تصفية» panel: the button counts it.
     let panel = await openFilters(page);
     await panel.getByLabel(ar.leads.source, { exact: true }).selectOption('facebook_ad');
     await showResults(panel);
