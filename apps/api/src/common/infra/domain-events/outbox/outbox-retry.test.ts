@@ -48,4 +48,14 @@ describe('settleFailure', () => {
   it('keeps at most 500 characters of the error', () => {
     expect(settleFailure(row(0), 'x'.repeat(900), fixed).error).toHaveLength(500);
   });
+
+  it('never cuts a character in half: the stored error stays valid jsonb text', () => {
+    const error = settleFailure(row(0), `${'x'.repeat(499)}😀tail`, fixed).error;
+    expect(error).toBe('x'.repeat(499));
+  });
+
+  it('drops NUL and lone surrogates, which jsonb refuses', () => {
+    const error = settleFailure(row(0), 'a\u0000b\ud83dc\ude00d', fixed).error;
+    expect(error).toBe('ab\ufffdc\ufffdd');
+  });
 });

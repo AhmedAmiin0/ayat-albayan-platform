@@ -82,12 +82,15 @@ export function eventTransportContract(name: string, make: HarnessFactory): void
       const draining = h.transport.drainOnce();
       await vi.waitFor(() => expect(entered).toHaveBeenCalled());
       let stopped = false;
-      const stopping = h.transport.stop().then(() => (stopped = true));
-      await Promise.resolve();
+      const finishedAtStop = h.transport.stop().then(() => {
+        stopped = true;
+        return finished.mock.calls.length;
+      });
+      await new Promise((resolve) => setTimeout(resolve, 20));
       expect(stopped).toBe(false);
       open();
-      await Promise.all([draining, stopping]);
-      expect(finished).toHaveBeenCalledTimes(1);
+      await expect(finishedAtStop).resolves.toBe(1);
+      await draining;
       await expect(h.stateOf(id)).resolves.toBe('done');
     });
   });

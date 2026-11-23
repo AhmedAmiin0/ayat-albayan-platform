@@ -12,6 +12,15 @@ export function retryDelayMs(attempt: number, random: () => number = Math.random
   return Math.round(ms * (0.5 + random()));
 }
 
+// jsonb refuses NUL and a lone surrogate, and one bad string fails finish_domain_events for the
+// whole batch (no row finished, attempts never counted): the error is cleaned and cut whole.
+const LONE_SURROGATE = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g;
+
+function storable(error: string): string {
+  const clean = error.replaceAll('\u0000', '').replace(LONE_SURROGATE, '\uFFFD');
+  return clean.slice(0, ERROR_MAX).replace(LONE_SURROGATE, '');
+}
+
 const retryAt = (attempts: number, opts: SettleOptions): Date =>
   new Date(opts.now().getTime() + opts.delayMs(attempts));
 
@@ -22,7 +31,7 @@ export function settleFailure(
   opts: SettleOptions,
 ): Settled {
   const attempts = row.attempts + 1;
-  const text = error.slice(0, ERROR_MAX);
+  const text = storable(error);
   return attempts >= opts.maxAttempts
     ? { id: row.id, state: 'parked', at: null, error: text }
     : { id: row.id, state: 'retry', at: retryAt(attempts, opts), error: text };
