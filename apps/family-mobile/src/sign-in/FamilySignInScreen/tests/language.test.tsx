@@ -3,8 +3,7 @@ import { setLocale, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
 import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
 
-// Signed out, the other language is one quiet tap under the sign-in (no «اللغة» section): an
-// English phone that wants Arabic, or the other way round, need not sign in first.
+// Signed out, a phone in one language can switch to the other without signing in first.
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

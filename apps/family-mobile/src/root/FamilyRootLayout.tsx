@@ -17,15 +17,7 @@ import { ROOM_CHAT_SCREEN, ROOM_SCREEN } from './room-screen';
 import { screenAnimation } from './screen-animation';
 import { useFamilyPush } from './use-family-push';
 
-/**
- * The family app's root (app/_layout, docs/50 §7): the shared boot, providers and frame
- * (@ab/mobile-kit), one stack. A guardian or a student gets the tabs (home, schedule, reports,
- * account), the pushed child, chat, report, package and alerts, «اختر الطالب» (pick-child)
- * for a guardian of several children, and a lesson's room with its channel sheet; everyone
- * else the sign-in.
- * Staff are signed out by the gate with the inverted «wrongApp» notice
- * (role-claim / login-notice follow the app's audience, set in index.ts).
- */
+/** docs/50 §7: staff are signed out by the gate with the inverted wrongApp notice. */
 export function FamilyRootLayout() {
   const gate = useAuthGate();
   const boot = useRootBoot(gate);

@@ -1,10 +1,7 @@
 import { familyLegalUrl, LEGAL_PAGES } from '@ab/client-core';
 import { InsetGroup, ListRow, openOutside, t } from '@ab/mobile-kit';
 
-/**
- * «سياسة الخصوصية» and «حذف الحساب وبياناته» (owner 2026-11-21, Google Play): the family portal's
- * public pages, opened in the phone's browser (no sign-in needed there).
- */
+/** Privacy policy and account deletion pages for Google Play, opened in the browser. */
 export function LegalLinks() {
   const L = t.legal.links;
   return (

@@ -13,12 +13,7 @@ interface CodeBoxesProps {
 
 const BOXES = Array.from({ length: CODE_LENGTH }, (_, i) => i);
 
-/**
- * The one-time code as six boxes (docs/50 §4). One real input lies over them, nearly invisible:
- * it takes the keyboard, a long-press «لصق» of WhatsApp's «copy code» (or the keyboard's clipboard
- * chip), so a paste fills every box at once; the OS's code autofill where it offers one. The
- * boxes only draw it (hidden from screen readers), LTR in both languages.
- */
+/** One near-invisible real input over six boxes so paste and OS autofill fill every box. */
 export function CodeBoxes({ value, onChange, refused }: CodeBoxesProps) {
   const [focused, setFocused] = useState(true);
   const look = (i: number): BoxLook => {

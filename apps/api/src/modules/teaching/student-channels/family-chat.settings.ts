@@ -20,10 +20,7 @@ export class FamilyChatSettings {
   }
 }
 
-/**
- * settings.teacher_student_messages_enabled («رسائل الطلاب», default off): while off the teacher
- * has no page for the chat, so a chat message sends the teachers no push and no bell row.
- */
+/** Default off: while off the teacher has no chat page, so chat sends teachers no push or bell. */
 @Injectable()
 export class TeacherChatSettings {
   constructor(@Inject(SettingsService) private readonly store: SettingsService) {}
