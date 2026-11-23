@@ -6,7 +6,7 @@ import { closeCodes, openCodes } from '../../support/people/family-sign-in';
 import { guardianSignIn, seedPortalFamily } from '../../support/people/family-portal';
 import { LIVE, MEDIA_FLAGS, roomPage, shot } from '../../support/teaching/classroom-live';
 
-// The family web's live room (owner 2026-11-19, boards FamRoomWeb*): a guardian opens the running
+// The family web's live room (boards FamRoomWeb*): a guardian opens the running
 // lesson from the child's «القادمة», passes «قبل الدخول», waits for the teacher, asks before
 // leaving, and «رجوع» brings the card back. Needs a LiveKit server (LIVEKIT_URL), like the staff
 // classroom specs: skipped in CI without it.

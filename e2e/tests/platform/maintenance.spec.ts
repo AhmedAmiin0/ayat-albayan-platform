@@ -1,7 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { PUBLIC_SETTINGS, stubSwitch, switchAnswer } from '../../support/platform/maintenance';
 
-// «تحت الصيانة» (owner 2026-11-21): the clients' cover only, no API change. The switch is stubbed
+// «تحت الصيانة»: the clients' cover only, no API change. The switch is stubbed
 // per page (GET /settings/public); the real setting is never flipped.
 const M = ar.maintenance;
 

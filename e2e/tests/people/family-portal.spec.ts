@@ -6,8 +6,8 @@ import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { closeCodes, openCodes } from '../../support/people/family-sign-in';
 import { guardianSignIn, seedPortalFamily, studentSignIn } from '../../support/people/family-portal';
 
-// The family pages on the family host (docs/51, owner 2026-11-15) on the real API and seeded data:
-// a guardian of two picks a child first («اختر الطالب», owner 2026-11-16), then sees its attended
+// The family pages on the family host (docs/51) on the real API and seeded data:
+// a guardian of two picks a child first («اختر الطالب»), then sees its attended
 // and missed lessons and the package with its payments, and switches from the name on top; a
 // child's own login never sees money (not even a /package request); no teacher chat while
 // family_chat_enabled is off. No WhatsApp link anywhere.

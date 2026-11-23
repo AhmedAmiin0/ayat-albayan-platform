@@ -21,7 +21,7 @@ const unread = (n: number) => ar.bell.openUnread.replace('{n}', String(n));
 const SHELL = 900;
 
 /**
- * Opens the bell's list: the header bell from 900px; below it (owner 2026-10-05: one bar button)
+ * Opens the bell's list: the header bell from 900px; below it (one bar button)
  * «القائمة», then the sheet's «الإشعارات» row. `name`: the bell's / the row's accessible name.
  */
 async function openBell(page: Page, name: string | RegExp): Promise<void> {

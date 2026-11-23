@@ -4,7 +4,7 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 import { assistant, code, commissionOf, pay } from '../../support/sales/assistant';
 import { importedCourse, stop } from '../../support/teaching/course-stop';
 
-// The stop sheet's money choice (owner 2026-11-06, migrations 20261106000100 / 101): the stop
+// The stop sheet's money choice (migrations 20261106000100 / 101): the stop
 // stores what the course is still owed for; a stop's refund never touches the assistant's
 // commission, while a refund on a running package voids it as before. Rolled back.
 

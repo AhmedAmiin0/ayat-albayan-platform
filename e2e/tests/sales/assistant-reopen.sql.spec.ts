@@ -40,7 +40,7 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
       const { statement_id: s1 } = await generate(tx, a, last);
       await approve(tx, s1);
       await pay(tx, sub, { amount: 100, kind: 'refund' }); // voided: the reversal (-20) waits for a statement
-      // The second package is a renewal by order (owner 2026-10-26): 10 % x 50 % of 300 = 15, never the first's 30.
+      // The second package is a renewal by order: 10 % x 50 % of 300 = 15, never the first's 30.
       await pay(tx, await subscription(tx, s, { price: 300 }), 300);
       await tx`select public.reopen_assistant_statement(${s1}, null)`; // takes its own line and the waiting reversal away
       expect((await tx`select 1 from public.assistant_adjustments where assistant_id = ${a}`).length).toBe(0);
