@@ -7,12 +7,19 @@ import { moveFailures } from './entries.mjs';
 
 const TAG = 'guard:move-only:';
 const BRANCH = /^move\//;
+// The facade lane rewrites import sources and adds the owner package to package.json and the
+// lockfile, so it is not made of renames; unfacade's own tests and guard:packages cover it.
+const FACADE = /^move\/facade-/;
 
 /** Runs the gate; returns the exit code. */
 export function gate({ argv, env, cwd, log }) {
   const { branch, guardBase } = parseArgs(argv, env);
   if (!BRANCH.test(branch)) {
     log(`::notice::${TAG} ${branch || '(no branch)'} is not a move/* branch, move proof skipped.`);
+    return 0;
+  }
+  if (FACADE.test(branch)) {
+    log(`::notice::${TAG} ${branch} is the facade lane (import rewrites), move proof skipped.`);
     return 0;
   }
   const git = gitIn(cwd);
