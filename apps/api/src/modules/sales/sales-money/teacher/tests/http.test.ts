@@ -3,9 +3,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockIns
 import { STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { badRequest } from '@/common/http/errors';
-import { CREATE, salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { CREATE, salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 import { SalesMoney } from '@/modules/sales/sales-money/sales-money.service';
-import { SalesTeacherAssign } from './sales-teacher-assign';
+import { SalesTeacherAssign } from '@/modules/sales/sales-money/teacher/sales-teacher-assign';
 
 const TEACHER = '7a000000-0000-4000-8000-000000000001';
 

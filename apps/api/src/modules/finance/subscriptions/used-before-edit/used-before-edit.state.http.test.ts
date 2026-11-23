@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 import { balanceOf, editApp, URL } from './used-before-edit.test-util';
 
 // GET /subscriptions/:id/lessons-used-before: what the editor offers (review 2026-11-02), and a

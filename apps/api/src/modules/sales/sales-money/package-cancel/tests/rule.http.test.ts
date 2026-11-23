@@ -2,7 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 // «اشتراط التعيين» ON (resetMocks' ENFORCED_SETTINGS, SalesOwnershipRule): the assistant cancels
 // only her own students' packages; the system admin is never bound by the rule.

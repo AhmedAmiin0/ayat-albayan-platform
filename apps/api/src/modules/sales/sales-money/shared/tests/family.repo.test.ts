@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/modules/people/guardians/fake-db';
-import { SalesFamilyRepo } from './sales-family.repo';
+import { SalesFamilyRepo } from '@/modules/sales/sales-money/shared/sales-family.repo';
 
 describe('SalesFamilyQueries', () => {
   it('studentsOfPhone: the children of the family of the chat number (main or second), oldest first', async () => {

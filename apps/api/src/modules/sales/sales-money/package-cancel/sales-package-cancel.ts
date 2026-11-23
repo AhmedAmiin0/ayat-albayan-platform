@@ -2,8 +2,8 @@ import type { SalesMoneySubscriptionView, SubscriptionCancel as CancelBody } fro
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SubscriptionCancel } from '@/modules/finance/subscriptions';
-import { toSalesSubscription } from './sales-money.mapper';
-import { SalesMoneyScope } from './sales-money.scope';
+import { toSalesSubscription } from '@/modules/sales/sales-money/shared/sales-money.mapper';
+import { SalesMoneyScope } from '@/modules/sales/sales-money/shared/sales-money.scope';
 
 /**
  * «إلغاء الباقة» by the salesperson (owner 2026-10-28): a package of HER student only while SalesOwnershipRule

@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
-import { SalesMoneySettings, type SalesMoneySettingsValues } from './sales-money.settings';
+import { SalesMoneySettings, type SalesMoneySettingsValues } from '@/modules/sales/sales-money/shared/sales-money.settings';
 
 /** Pinned by hand: every key SalesPaymentsController and SalesMoneyReads read. */
 const EXPECTED = ['upload_max_mb', 'renewal_alert_remaining'] as const;

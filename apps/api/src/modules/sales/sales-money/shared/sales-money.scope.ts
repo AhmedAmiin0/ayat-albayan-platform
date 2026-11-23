@@ -4,7 +4,7 @@ import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
 import { SalesOwnershipRule } from '@/modules/sales/sales';
-import { SalesFamilyRepo } from './reads/sales-family.repo';
+import { SalesFamilyRepo } from './sales-family.repo';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
 /** 403 not_your_student unless the student is one of hers. */

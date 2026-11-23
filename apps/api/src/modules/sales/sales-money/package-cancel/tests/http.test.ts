@@ -8,7 +8,7 @@ import {
   SALES_B,
   type Mocks,
 } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 // POST /sales/packages/:id/cancel «إلغاء الباقة» by the assistant (owner 2026-11-02): ANY student,
 // the admin's rules, write, audit and recompute (SubscriptionCancel).

@@ -2,7 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { FAMILY_PHONE, MSG, salesDefaults } from './sales-money.fakes';
+import { FAMILY_PHONE, MSG, salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 const now = new Date().toISOString();
 const row = (id: string, mime: string, type = 'image') => ({ id, phone_e164: FAMILY_PHONE, direction: 'inbound', media_id: 'm', media_mime: mime, media_path: null, body: null, created_at: now, line: 'chat', interactive_payload: { type } });

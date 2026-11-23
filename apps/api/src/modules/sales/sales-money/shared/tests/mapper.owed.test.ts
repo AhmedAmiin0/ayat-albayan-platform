@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { toSubscriptionView } from '@/modules/finance/subscriptions/subscriptions.mapper';
-import { toSalesSubscription } from './sales-money.mapper';
+import { toSalesSubscription } from '@/modules/sales/sales-money/shared/sales-money.mapper';
 
 // Owner 2026-11-06: every API money reader uses owedFor: a stopped course owes its stored decision.
 const view = (patch: Parameters<typeof subRow>[0], paid: number) =>

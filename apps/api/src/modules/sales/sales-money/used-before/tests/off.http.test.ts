@@ -3,7 +3,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 import { editApp, URL } from '@/modules/finance/subscriptions/used-before-edit/used-before-edit.test-util';
 
 // «اشتراط التعيين» OFF (SETTING_DEFAULTS, SalesOwnershipRule): an assistant with edit_terms edits

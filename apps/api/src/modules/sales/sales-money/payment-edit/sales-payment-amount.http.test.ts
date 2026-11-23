@@ -5,7 +5,7 @@ import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 // «تعديل المبلغ» by the assistant (owner 2026-11-02): subscriptions.edit_terms (owner
 // 2026-11-03), never payments.write.

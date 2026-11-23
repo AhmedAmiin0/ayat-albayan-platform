@@ -15,14 +15,14 @@ import {
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict } from '@/common/http/errors';
-import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
+import { toSalesPayment, toSalesQuote, toSalesSubscription } from './shared/sales-money.mapper';
 import {
   assertSalesDiscount,
   assertSalesPrice,
   renewsAny,
   SalesMoneyScope,
-} from './sales-money.scope';
-import { SalesMoneyServices } from './sales-money.services';
+} from './shared/sales-money.scope';
+import { SalesMoneyServices } from './shared/sales-money.services';
 import { SalesMoneyReads } from './reads/sales-money.reads';
 import { salesStartsOn } from './sales-start';
 import { loadEnv } from '@/config/env/env';

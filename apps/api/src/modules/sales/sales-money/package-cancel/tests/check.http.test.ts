@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 // GET /sales/packages/:id/cancel (whether «إلغاء الباقة» shows) and the key: subscriptions.stop,
 // never subscriptions.write.

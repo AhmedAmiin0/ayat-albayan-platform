@@ -2,7 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 import { balanceOf, editApp, URL } from './used-before-edit.test-util';
 
 // «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): the weekly package, 4 lessons, 1 a week: 0..3.

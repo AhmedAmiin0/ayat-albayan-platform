@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { REQUIRE_ON, ruleWith } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
-import type { SalesFamilyRepo } from './reads/sales-family.repo';
-import { assertOwnStudent, assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
+import type { SalesFamilyRepo } from '@/modules/sales/sales-money/shared/sales-family.repo';
+import { assertOwnStudent, assertSalesDiscount, SalesMoneyScope } from '@/modules/sales/sales-money/shared/sales-money.scope';
 
 const USER: AuthUser = { id: 'u1', email: null, role: 'sales' };
 const OWN = { leadIds: [], guardianIds: [], studentIds: ['s1'], phones: [] };

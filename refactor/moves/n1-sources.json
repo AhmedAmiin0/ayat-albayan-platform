@@ -1,0 +1,56 @@
+{
+  "id": "n1-sources",
+  "seq": 229,
+  "moves": [
+    {
+      "from": "apps/api/src/modules/sales/sales-money/sales-money.scope.ts",
+      "to": "apps/api/src/modules/sales/sales-money/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-money/sales-money.services.ts",
+      "to": "apps/api/src/modules/sales/sales-money/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-money/sales-money.settings.ts",
+      "to": "apps/api/src/modules/sales/sales-money/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-money/sales-money.mapper.ts",
+      "to": "apps/api/src/modules/sales/sales-money/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-money/reads/sales-family.repo.ts",
+      "to": "apps/api/src/modules/sales/sales-money/shared/"
+    },
+    {
+      "from": "apps/api/src/modules/sales/sales-money/sales-package-cancel.ts",
+      "to": "apps/api/src/modules/sales/sales-money/package-cancel/"
+    }
+  ],
+  "files": [
+    [
+      "apps/api/src/modules/sales/sales-money/reads/sales-family.repo.ts",
+      "apps/api/src/modules/sales/sales-money/shared/sales-family.repo.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-money/sales-money.mapper.ts",
+      "apps/api/src/modules/sales/sales-money/shared/sales-money.mapper.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-money/sales-money.scope.ts",
+      "apps/api/src/modules/sales/sales-money/shared/sales-money.scope.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-money/sales-money.services.ts",
+      "apps/api/src/modules/sales/sales-money/shared/sales-money.services.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-money/sales-money.settings.ts",
+      "apps/api/src/modules/sales/sales-money/shared/sales-money.settings.ts"
+    ],
+    [
+      "apps/api/src/modules/sales/sales-money/sales-package-cancel.ts",
+      "apps/api/src/modules/sales/sales-money/package-cancel/sales-package-cancel.ts"
+    ]
+  ]
+}

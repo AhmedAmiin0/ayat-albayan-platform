@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { SalesTeacherAssign } from './sales-teacher-assign';
+import { SalesTeacherAssign } from '@/modules/sales/sales-money/teacher/sales-teacher-assign';
 
 const dbWith = (result: { data: unknown; error: { message: string; code: string } | null }) => {
   const rpc = vi.fn(async () => result);

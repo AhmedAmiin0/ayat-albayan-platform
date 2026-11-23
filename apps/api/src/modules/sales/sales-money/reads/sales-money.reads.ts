@@ -2,9 +2,9 @@ import { DEFAULT_RENEWAL_PRICING, type SalesFamilyView, type SalesMoneySubscript
 import { Injectable } from '@nestjs/common';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
-import { SalesFamilyRepo } from './sales-family.repo';
+import { SalesFamilyRepo } from '@/modules/sales/sales-money/shared/sales-family.repo';
 import { SalesRenewals } from './sales-renewals';
-import { toSalesSubscription } from '@/modules/sales/sales-money/sales-money.mapper';
+import { toSalesSubscription } from '@/modules/sales/sales-money/shared/sales-money.mapper';
 
 /** A family has a handful of children, each with one or two packages owed. */
 const OPEN_PAGE = { page: 1, pageSize: 20 } as const;

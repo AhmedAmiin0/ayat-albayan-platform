@@ -20,7 +20,7 @@ import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corr
 import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
 import { PricingService } from '@/modules/finance/pricing/pricing.service';
 import { SalesRepo } from '@/modules/sales/sales/sales.repo';
-import { SalesFamilyRepo } from '@/modules/sales/sales-money/reads/sales-family.repo';
+import { SalesFamilyRepo } from '@/modules/sales/sales-money/shared/sales-family.repo';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
 import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
