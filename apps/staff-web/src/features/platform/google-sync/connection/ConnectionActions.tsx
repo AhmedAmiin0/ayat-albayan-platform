@@ -9,7 +9,7 @@ import { disconnectGoogle, getConnectUrl, googleStatusQuery } from '@/features/p
 
 const s = t.googleSync.connection;
 
-/** «اربط حساب Google» / «أعد الربط» go to Google's consent screen; «افصل الحساب» asks first. */
+/** Disconnecting asks first. */
 export function ConnectionActions({ status, onNote }: { status: GoogleStatusView; onNote: (message: string) => void }) {
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);

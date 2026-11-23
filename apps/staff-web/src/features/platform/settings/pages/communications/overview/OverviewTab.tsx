@@ -8,12 +8,7 @@ import { OwnTraffic } from './OwnTraffic';
 import { OverviewWhat } from './OverviewWhat';
 import { PublicNumber } from './PublicNumber';
 
-/**
- * «نظرة عامة» (docs/23 §2d tab 1, docs/26b §6a 1.1–1.10): the two master switches as they were (the
- * kill switch with its server note and queued count, the automatic messages, each in its danger
- * frame), then short read-only tables — the numbers and their health, what sends now per audience —
- * and the number the families see. Two columns on a wide screen, so it fits one screen.
- */
+/** docs/23 §2d tab 1, docs/26b §6a 1.1-1.10: two columns on wide screens to fit one screen. */
 export function OverviewTab({ settings }: { settings: AcademySettings }) {
   return (
     <div className="grid gap-6 lg:grid-cols-2 lg:items-start">

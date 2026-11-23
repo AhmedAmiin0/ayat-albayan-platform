@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { joinStatus, livekitConfigured, meetingModeNotes, type MeetingModeNote } from './meeting-mode-notes';
 
 const NOTE = 'rounded-md bg-sunk px-3 py-2 text-sm text-ink-2';
-/** The templates live in «التواصل» → «القوالب», where the admin submits one to Meta (docs/26b §1). */
+/** Templates are submitted to Meta from the communications templates tab (docs/26b §1). */
 const TEMPLATES_HREF = '/admin/settings/communications?tab=templates';
 
 interface Props {
@@ -39,11 +39,7 @@ function NoteText({ note, livekit }: { note: MeetingModeNote; livekit: boolean |
   );
 }
 
-/**
- * Non-blocking notes under «طريقة حضور الحلقات» (save stays allowed), from meetingModeNotes. One
- * always-mounted polite live region holds them, so a note that appears after the lists load is
- * announced. A failed or forbidden read is unknown: no note rests on it.
- */
+/** Non-blocking; a failed or forbidden read is unknown, so no note rests on it. */
 export function MeetingModeWarnings({ id, platform, link }: Props) {
   const known = platform !== null;
   const templates = useQuery({ ...templatesQuery, enabled: known });

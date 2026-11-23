@@ -8,10 +8,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const row = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2 text-sm';
 
-/**
- * «المدفوعات» on the student's profile: every payment and refund of the student's packages, newest
- * first (the first page), with the net total. Nothing while there are none; a failed read says so.
- */
 export function StudentPayments({ studentId }: { studentId: string }) {
   const list = useQuery(paymentsQuery(1, { studentId }));
   return (

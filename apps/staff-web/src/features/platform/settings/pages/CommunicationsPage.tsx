@@ -13,27 +13,20 @@ import { ModuleHead } from './ModuleHead';
 import { COMMUNICATIONS_TABS, type CommunicationsTab } from './page-search';
 
 export interface CommunicationsPageProps {
-  /** The tab in view (`?tab=`, «نظرة عامة» by default). */
   tab: CommunicationsTab;
-  /** «الإشعارات» opens on this audience (`?audience=`); guardian when none. */
+  /** Guardian when none. */
   audience?: NotificationAudience | undefined;
   onTab: (tab: CommunicationsTab) => void;
   /** Asks before leaving the page with unsaved rule rows (the route passes LeaveGuard). */
   renderGuard?: (names: readonly string[]) => ReactNode;
 }
 
-/** «ماذا يُرسل ومتى» is «الإشعارات» now (editable, docs/26b §3); the tab value stays 'catalogue'. */
+/** The tab value stays 'catalogue' for old links (docs/26b §3). */
 const tabLabel = (value: CommunicationsTab): string =>
   value === 'catalogue' ? t.notificationRules.tabLabel : t.settingsPages.communicationsTabs[value];
 const TABS = COMMUNICATIONS_TABS.map((value) => ({ value, label: tabLabel(value) }));
 
-/**
- * /admin/settings/communications «التواصل» (docs/23 §2d, docs/26b §3; /admin/communications opens it):
- * one tab at a time — «نظرة عامة» (the two switches, the numbers, what sends now, the families'
- * number), «الأرقام» (numbers and lines), «الإشعارات» (the editable catalogue), «القوالب» and
- * «الحماية» (CRM cut-over, test guards, Kapso). The sending state stays in the head on every tab. Only
- * the tab in view is mounted (its queries load on demand); the rule drafts live above the tabs.
- */
+/** Only the tab in view is mounted; rule drafts live above the tabs (docs/23 §2d, docs/26b §3). */
 export function CommunicationsPage({ tab, audience, onTab, renderGuard }: CommunicationsPageProps) {
   const settings = useQuery(settingsQuery);
   const meta = useQuery(settingsMetaQuery);

@@ -12,12 +12,7 @@ export interface StudentCountLinkProps {
 const ARIA = { active: t.studentLists.activeLink, trial: t.studentLists.trialLink };
 const LABEL = { active: t.studentLists.active, trial: t.studentLists.trial };
 
-/**
- * «مشترك» / «تجريبي» count of a teacher row (owner 2026-10-12): the number opens the students list
- * filtered to that teacher and status
- * («تجريبي» = new, trial, pending_subscription). Its own click, not the row's (the row opens the profile).
- * Stacked under 640px the column head is hidden, so the kind is said before the number.
- */
+/** Trial counts new, trial and pending_subscription; its click is separate from the row's. */
 export function StudentCountLink({ teacher, kind }: StudentCountLinkProps) {
   const n = kind === 'active' ? teacher.active_count : teacher.trial_count;
   return (

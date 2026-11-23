@@ -23,7 +23,6 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-// Finding 1: the «الإشعارات» row drafts live above «التواصل»'s tabs.
 describe('«التواصل»: the «الإشعارات» row drafts', () => {
   it('survive a switch to another «التواصل» tab and back', async () => {
     renderCommunications({ apiFetch, tab: 'catalogue', catalogue: overview() });

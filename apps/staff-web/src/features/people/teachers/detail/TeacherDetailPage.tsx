@@ -28,7 +28,6 @@ import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import type { Teacher } from '@ab/shared';
 
 type Tab = 'data' | 'availability' | 'students' | 'activity';
-// «المستحقات» is its own page (the earnings button in the head).
 const TABS: { value: Tab; label: string }[] = [
   { value: 'data', label: t.teachers.tabData },
   { value: 'availability', label: t.availability.title },
@@ -36,7 +35,7 @@ const TABS: { value: Tab; label: string }[] = [
   { value: 'activity', label: t.activity.profileTitle },
 ];
 
-/** «المواعيد المتاحة» tab: the weekly editor, then time-off beside the rates (docs/07 §8). */
+/** docs/07 §8. */
 function AvailabilityPanel({ teacher }: { teacher: Teacher }) {
   const availability = useQuery(availabilityQuery(teacher.id));
   return (
