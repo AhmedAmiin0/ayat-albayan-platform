@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { notGreen } from './checks.ts';
+import { aFacts, aRun } from './testing/facts.builder.ts';
+
+const verdict = (over: Partial<ReturnType<typeof aFacts>>) => notGreen({ ...aFacts(), ...over });
+const base = aFacts().checks;
+
+test('success, skipped and neutral runs with check and guards green are green', () => {
+  assert.equal(verdict({}), null);
+  assert.equal(verdict({ checks: [...base, aRun('review', { conclusion: 'neutral' })] }), null);
+  assert.equal(verdict({ statuses: [{ context: 'ext', state: 'success' }] }), null);
+});
+
+test('a pending, failed or cancelled run blocks the merge', () => {
+  const cases: readonly [ReturnType<typeof aRun>, RegExp][] = [
+    [aRun('e2e (2)', { status: 'in_progress', conclusion: null }), /pending: e2e \(2\)/],
+    [aRun('e2e (2)', { status: 'queued', conclusion: null }), /pending: e2e \(2\)/],
+    [aRun('verify (web)', { conclusion: 'failure' }), /not green: verify \(web\) failure/],
+    [aRun('verify (web)', { conclusion: 'cancelled' }), /not green: verify \(web\) cancelled/],
+    [aRun('verify (web)', { conclusion: 'timed_out' }), /not green/],
+    [aRun('verify (web)', { conclusion: 'action_required' }), /not green/],
+  ];
+  for (const [run, reason] of cases) assert.match(verdict({ checks: [...base, run] }) ?? '', reason);
+});
+
+test('a commit status that is not success blocks the merge', () => {
+  for (const state of ['pending', 'failure', 'error'] as const) {
+    const statuses = [{ context: 'ext', state }];
+    assert.match(verdict({ statuses }) ?? '', /ext/, state);
+  }
+});
+
+test('check and guards must both have run and passed', () => {
+  const only = (runs: ReturnType<typeof aRun>[]) => verdict({ checks: runs }) ?? '';
+  assert.match(only([aRun('check')]), /guards did not pass/);
+  assert.match(only([aRun('guards')]), /check did not pass/);
+  assert.match(only([aRun('check'), aRun('guards', { conclusion: 'skipped' })]), /guards did not/);
+  assert.match(only([]), /check did not pass/);
+});
+
+test('the automerge job itself is ignored while it runs', () => {
+  const self = aRun('lane automerge', { status: 'in_progress', conclusion: null });
+  assert.equal(verdict({ checks: [...base, self] }), null);
+});
