@@ -10,6 +10,7 @@ export * from '@ab/schedule';
 export * from './messaging/index.js';
 export * from './reports/index.js';
 export * from './schemas/index.js';
+export * from './events/index.js';
 export * from './people/students/student-lists.js';
 export * from './people/students/index.js';
 export type * from './people/teachers/index.js';
