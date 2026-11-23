@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { computeCommission } from './commission.js';
-import { planCommission, type PaymentFact, type SubscriptionFact } from './first-paid.js';
+import { planCommission, type PaymentFact, type SubscriptionFact } from './first-paid/index.js';
 import { commissionKindOf, DEFAULT_RENEWAL_SHARE, RENEWAL_CUTOFF } from './kind.js';
 import { planRenewalCommission } from './renewal.js';
 
