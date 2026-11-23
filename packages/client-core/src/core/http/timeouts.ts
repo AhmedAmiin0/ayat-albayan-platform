@@ -1,5 +1,5 @@
 /**
- * A read that has not settled by now counts as no answer (owner 2026-11-05: a chat read stuck
+ * A read that has not settled by now counts as no answer (a chat read stuck
  * across a background/resume pinned the chats list and the open chat to the saved copy, with no
  * error). The deadline covers the whole request, the access token included.
  */

@@ -9,7 +9,7 @@ import { ABRAR, bookingBodies, next, respond, routeSend, STUDENT_ID } from './wi
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch,
   apiSend,

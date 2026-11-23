@@ -6,7 +6,7 @@ import { answerHub, renderHub, settingsWith } from './hub-test-utils';
 import { SettingsHub } from './SettingsHub';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const H = t.settingsHub;
 const search = () => screen.getByRole('searchbox', { name: t.config.search.label });

@@ -9,7 +9,7 @@ import { ChildBody } from './ChildBody';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn(async () => ({})));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
   apiFetch,
   apiSend,

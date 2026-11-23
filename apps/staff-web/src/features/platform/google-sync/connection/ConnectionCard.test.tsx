@@ -6,7 +6,7 @@ import { renderGoogle } from '@/features/platform/google-sync/google-test-utils'
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const s = t.googleSync.connection;
 const disconnected = { status: 'disconnected' as const, email: null, scopes: [] as string[], connected_at: null, last_error: null };

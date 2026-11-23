@@ -1,5 +1,5 @@
 import type { TemplateCategory, TemplateStatus, WaLine } from '@ab/catalog';
-import type { TemplateDisplay } from './template-block.js';
+import type { TemplateDisplay } from './template-block/index.js';
 import type { TemplateButton } from './templates.js';
 
 // Moved out of views.ts (150-line cap, docs/12 §13.8).

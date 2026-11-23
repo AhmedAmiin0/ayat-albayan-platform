@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StaffPresencePanel } from './StaffPresencePanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 /** No Realtime (as CI's e2e stack): online comes from a recent last seen. */
 vi.mock('@ab/client-core', async (orig) => ({ ...(await orig<object>()), watchPresence: () => () => undefined }));

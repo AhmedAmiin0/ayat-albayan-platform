@@ -9,7 +9,7 @@ import { StatementsPanel } from './StatementsPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const ALL = { write: true, approve: true };
 const B = { ...ASSISTANT, id: 'a2', name: 'سارة' };

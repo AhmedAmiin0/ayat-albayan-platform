@@ -7,7 +7,7 @@ import { ASSISTANT, COMMISSION } from '@/features/people/assistants/fixtures';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const EGP = { ...COMMISSION, id: 'c2', student: { id: 's2', code: 'AB-1002', name: 'جود' }, amount: 70, currency: 'EGP', base_currency: 'EGP', base_amount: 700 };

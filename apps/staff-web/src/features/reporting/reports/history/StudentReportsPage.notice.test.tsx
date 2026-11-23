@@ -8,7 +8,7 @@ import { TrialChatNote } from '@/features/teaching/teacher/lessons/TrialChatNote
 import { StudentReportsPage } from './StudentReportsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const EMPTY: StudentReportsResponse = { items: [], total: 0, page: 1, pageSize: 10, series: [] };
 

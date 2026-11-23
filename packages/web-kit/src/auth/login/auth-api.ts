@@ -1,5 +1,5 @@
 import { signInApi, signInError } from '@ab/client-core';
-import * as http from '@ab/web-kit/lib/http/api';
+import * as http from '@ab/web-kit/lib/http/api/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { isAccountDisabled } from '@ab/web-kit/auth/me';
 

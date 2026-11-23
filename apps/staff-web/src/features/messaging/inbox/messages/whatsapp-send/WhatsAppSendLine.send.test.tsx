@@ -6,7 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { action, fakeTab, held, renderBubble } from './whatsapp-send.test-util';
 
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 const refused = (status: string, error_code: string | null = null) =>
   new ApiError(409, { code: 'not_app_send', message: 'not_app_send', status, error_code });

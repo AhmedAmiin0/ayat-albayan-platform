@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { highlightParts } from '../replies/saved-reply-text.js';
+import { highlightParts } from '../replies/saved-reply-text/index.js';
 import { searchSnippet } from './search-snippet.js';
 
 it('a short text is its own snippet, its lines joined', () => {

@@ -7,7 +7,7 @@ import { SalesMoneyFlow } from '@/features/sales/sales-money/SalesMoneyFlow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 // Owner 2026-10-28 («Why is this unpaid»): 81 SAR, a receipt of 80 leaves it unpaid; say so before saving.

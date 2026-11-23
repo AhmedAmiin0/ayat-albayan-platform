@@ -9,7 +9,7 @@ import { history, routeTrialFetch, routeTrialSend, row } from '@/features/teachi
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const STUDENT = { id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' };
 const historyCalls = () => apiFetch.mock.calls.filter(([p]) => String(p).startsWith('/booking/trial-dates')).length;

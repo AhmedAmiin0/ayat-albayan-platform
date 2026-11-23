@@ -3,10 +3,10 @@ import type { ChatListRef } from './chat-lists.js';
 import type { ReplyQuote } from '../replies/reply-forward.js';
 import type { MessageReactions } from '../reactions/reactions.js';
 import type { MessageMarks, ThreadNote } from '../markers/marker-notes.js';
-import type { TemplatedMessage } from '../templates/template-block.js';
-import type { ReopenFields } from './thread-reopen.js';
+import type { TemplatedMessage } from '../templates/template-block/index.js';
+import type { ReopenFields } from './thread-reopen/index.js';
 import type { TemplateParams } from '../templates/templates.js';
-import type { FamilyRingField, SubscriptionBadge, ThreadPeople } from './thread-people.js';
+import type { FamilyRingField, SubscriptionBadge, ThreadPeople } from './thread-people/index.js';
 
 // Phase 4 responses (docs/12 §4): snake_case rows like every API response; instants ISO-8601 UTC.
 /** GET /threads item: one v_threads row plus the 24 h window at response time. */

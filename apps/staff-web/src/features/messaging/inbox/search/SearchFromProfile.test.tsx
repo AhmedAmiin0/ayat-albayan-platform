@@ -10,7 +10,7 @@ import { ChatSearchProvider } from './ChatSearchProvider';
 import { SearchFromProfile } from './SearchFromProfile';
 import { ThreadSideSheet } from '@/features/messaging/inbox/threads/pane/ThreadSideSheet';
 
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
 
 const label = t.inbox.chatSearch.fromProfile;
 

@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { fakeNow, openEditTime, pick, SAVED, SCHEDULED } from './edit-time-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
 const BUSY = '2026-10-05T15:00:00.000Z';
 const CLASH = { kind: 'teacher_busy', startsAt: BUSY, endsAt: BUSY };

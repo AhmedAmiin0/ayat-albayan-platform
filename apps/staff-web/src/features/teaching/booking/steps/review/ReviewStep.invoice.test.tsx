@@ -8,7 +8,7 @@ import { ReviewStep } from './ReviewStep';
 import { ABRAR, SLOT, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
 
 const DRAFT: BookingDraft = {
   ...emptyDraft(),

@@ -7,7 +7,7 @@ import { fakeApi, renderWithClient } from '@/features/people/users/users-test-ki
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const onDone = vi.fn();
 const open = (canWrite = true) => renderWithClient(<UserDetailDialog userId="u1" canWrite={canWrite} onClose={() => undefined} onDone={onDone} />);

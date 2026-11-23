@@ -1,6 +1,6 @@
 import type { AssistantTermsView, PayoutStatus } from '@ab/shared';
 
-// The «المساعدون» screens of web and mobile (apps/api assistant-pay, owner 2026-10-06).
+// The «المساعدون» screens of web and mobile (apps/api assistant-pay).
 
 /** One assistant of the list: GET /assistant-pay/terms reshaped to the profile and its terms. */
 export interface AssistantRow {

@@ -8,7 +8,7 @@ import { answerHub, googleStatus, item, renderHub, settingsWith } from './hub-te
 import { HubStatus } from './HubStatus';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const H = t.settingsHub;
 const GATE_OPEN = { open: true, reason: null, queued: 0 } as const;

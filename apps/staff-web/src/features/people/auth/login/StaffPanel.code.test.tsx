@@ -6,8 +6,8 @@ import { StaffPanel } from './StaffPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
-vi.mock('@ab/web-kit/auth/sign-in', () => ({ signIn: vi.fn(), signInWithCode: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signIn: vi.fn(), signInWithCode: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
 const T = t.teacherAuth;
@@ -57,7 +57,7 @@ describe('StaffPanel «الدخول برمز واتساب» (docs/46 A6)', () =>
 
 describe('the teacher code tab speaks for teachers (review)', () => {
   it('a 503 at verify says the teacher text, not the family one', async () => {
-    const { signInWithCode } = await import('@ab/web-kit/auth/sign-in');
+    const { signInWithCode } = await import('@ab/web-kit/auth/sign-in/sign-in');
     vi.mocked(signInWithCode).mockResolvedValue({
       ok: false,
       error: t.familyAuth.errors.codes_unavailable,

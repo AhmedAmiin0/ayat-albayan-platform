@@ -6,7 +6,7 @@ import { channelPage } from '@ab/web-kit/components/channel/channel.fixtures';
 import { MonitorChannel } from './MonitorChannel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 describe('MonitorChannel (the admin’s student page)', () => {
   it('closed until asked; then the thread read-only through the monitor route; the toggle hides it again', async () => {

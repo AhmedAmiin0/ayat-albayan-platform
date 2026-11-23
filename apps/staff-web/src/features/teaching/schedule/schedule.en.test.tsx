@@ -16,7 +16,7 @@ const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const PENDING = { id: 'p1', proposed_starts_at: '2026-10-05T15:00:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
   apiFetch: vi.fn(async () => [lesson({ pending_proposal: PENDING })]),
 }));

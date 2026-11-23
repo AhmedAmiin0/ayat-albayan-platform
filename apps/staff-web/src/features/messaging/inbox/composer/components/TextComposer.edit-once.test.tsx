@@ -13,7 +13,7 @@ import {
 } from '@/features/messaging/inbox/testing/correction-harness';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 // Review of PR #694, round 3: a correction is never corrected again (staff correct the original
 // once more), and a text that is only the prefix has nothing to send.

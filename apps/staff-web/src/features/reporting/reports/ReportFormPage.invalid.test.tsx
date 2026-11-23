@@ -7,7 +7,7 @@ import { ReportFormPage } from './ReportFormPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const pick = (group: string, option: string) =>
   fireEvent.click(within(screen.getByRole('group', { name: group })).getByRole('radio', { name: option }));

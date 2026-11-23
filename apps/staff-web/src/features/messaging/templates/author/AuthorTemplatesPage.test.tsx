@@ -9,7 +9,7 @@ import { AuthorTemplatesPage } from './AuthorTemplatesPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // «القوالب» for sales (owner 2026-11-14): status chips, «تعديل» only where allowed, «قالب جديد».
 

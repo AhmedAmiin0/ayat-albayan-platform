@@ -12,7 +12,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useThreadLog } from './use-thread-log';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 const jump = vi.hoisted(() => vi.fn());
 vi.mock('@/features/messaging/inbox/messages/lib/jump-to-message', () => ({ jumpToMessage: jump }));
 

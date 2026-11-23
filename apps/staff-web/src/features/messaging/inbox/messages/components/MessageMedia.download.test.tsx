@@ -7,7 +7,7 @@ import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const FILE = `/threads/${encodeURIComponent(PHONE)}/messages/m-1/file`;
 const IMAGE = message({ id: 'm-1', body: null, media_mime: 'image/png' });

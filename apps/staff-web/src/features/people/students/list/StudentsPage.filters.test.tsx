@@ -7,7 +7,7 @@ import type { StudentsFilters } from './filters';
 import { StudentsPage } from './StudentsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const COUNTS = { new: 1, trial: 2, pending_subscription: 1, active: 9, pending_renewal: 0, expired: 1, paused: 1, churned: 0 };
 

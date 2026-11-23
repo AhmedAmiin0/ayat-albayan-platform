@@ -16,7 +16,7 @@ import { MessageActions } from './MessageActions';
 // too (it sits outside the live chat's key on purpose).
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn() }));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({ can: () => true }),

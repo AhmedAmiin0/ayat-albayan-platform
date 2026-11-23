@@ -6,7 +6,7 @@ import { lesson } from '@ab/web-kit/portal/portal.fixtures';
 import { renderPortal } from '@ab/web-kit/portal/portal.render';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const NOW_OPEN = new Date('2026-10-27T15:55:00.000Z');
 const onJoined = vi.fn();

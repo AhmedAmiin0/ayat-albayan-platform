@@ -10,7 +10,7 @@ const bodyOf = (res: Response): Promise<unknown> =>
   res.type === OPAQUE ? Promise.resolve(null) : readJson(res);
 
 /**
- * One bare GET (owner 2026-11-21, «تحت الصيانة»): no token and no custom header, so the browser
+ * One bare GET («تحت الصيانة»): no token and no custom header, so the browser
  * sends no CORS preflight; `no-store` so no cached reply hides an outage. The deadline is an
  * AbortController + setTimeout (React Native has no AbortSignal.timeout). Resolves null on a
  * dropped connection or the deadline; never throws.

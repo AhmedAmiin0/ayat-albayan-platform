@@ -26,11 +26,10 @@ interface QuoteCustomState {
 const OFF: QuoteCustomState = { total: undefined, valid: true, error: null };
 
 /**
- * «مبلغ مخصص» on the chat's «عرض سعر» (owner 2026-11-15), web and mobile: any positive amount
- * (parseAmount, Arabic digits too) for every role (owner 2026-11-18: «i want to enter any custom
- * amount», no sales floor). Off: no `total` (the offer is today's), valid, no error. On: `total`
- * once the amount is valid; `valid` gates send, edit and copy; `error` is `invalid` (the field's
- * line) as soon as a non-amount is typed.
+ * «مبلغ مخصص» on the chat's «عرض سعر», web and mobile: any positive amount (parseAmount, Arabic
+ * digits too) for every role, with no sales floor. Off: no `total` (the offer is today's), valid,
+ * no error. On: `total` once the amount is valid; `valid` gates send, edit and copy; `error` is
+ * `invalid` (the field's line) as soon as a non-amount is typed.
  */
 export function quoteCustom(typed: Typed, invalid: string): QuoteCustomState {
   if (!typed.on) return OFF;

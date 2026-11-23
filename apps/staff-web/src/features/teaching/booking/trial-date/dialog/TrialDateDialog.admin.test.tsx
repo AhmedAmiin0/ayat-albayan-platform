@@ -9,7 +9,7 @@ import { history, routeTrialFetch, routeTrialSend, row, sentTo, UPCOMING_ID } fr
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const STUDENT = { id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' };
 const DONE = { lesson_id: 'new-1', starts_at: SLOT, ends_at: SLOT, teacher_id: ABRAR.id, moved_from_id: UPCOMING_ID };
