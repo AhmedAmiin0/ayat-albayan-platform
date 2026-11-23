@@ -1,4 +1,4 @@
-// Integration config in the database (owner, 2026-10-12: «make most of the config in the db").
+// Integration config lives in the database.
 // The keys an admin edits in «التكاملات» (/admin/settings): plain ones live in the
 // integration_config table, secret ones in Supabase Vault. A non-empty DB value wins over the
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.

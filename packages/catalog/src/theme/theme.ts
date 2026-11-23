@@ -1,5 +1,5 @@
 // The ONE source of colour values (docs/07 §3, §12); apps/staff-web/src/styles/tokens.css carries the same
-// hex (tokens.test.ts there diffs the two). Owner, 2026-10-05 («Emerald Mint»): white pages, an emerald
+// hex (tokens.test.ts there diffs the two). «Emerald Mint»: white pages, an emerald
 // action with white text on its fill, a light mint sidebar (dark green text) in light, a SOFT
 // green-grey dark mode (never near-black), no beige/cream. Green for «done/ok», amber only for «دورك»,
 // red for errors, gold for small ornament only. `lapis*` is the action token's historical name:
@@ -19,7 +19,7 @@ const light = {
   inverse: '#17201c', onInverse: '#f5f8f6', inverseGold: '#e4c97e', cover: '#ecfdf5', leather: '#ecfdf5',
   leatherDeep: '#d1fae5', leatherLift: '#f0fdf8', goldOnCover: '#064e3b', coverInk: '#064e3b',
   scrim: 'rgba(15, 30, 22, 0.42)', read: '#0284c7', tick: '#55615b',
-  // The family app's tile and icon ground (owner 2026-11-16, LogoGreen): one green in both themes.
+  // The family app's tile and icon ground (LogoGreen): one green in both themes.
   brandTile: '#064e3b',
 };
 
@@ -64,7 +64,7 @@ export type GlassStop = readonly [offset: number, opacity: number];
 
 export interface Glass {
   /** The tab capsule's fill: `raised` at 92 %. No backdrop blur in this APK, so a row scrolled under
-   *  the capsule must not read through it (0.8 / 0.84 did, 2026-10-26). */
+   *  the capsule must not read through it (0.8 / 0.84 did). */
   fill: string;
   /** The vertical sheen over the capsule (white in both themes): bright top, dim middle, a lift at the foot. */
   sheen: { color: string; stops: readonly GlassStop[] };
@@ -76,7 +76,7 @@ export interface Glass {
   pill: { fill: string; shadow: string };
 }
 
-// The floating mobile tab bar «like iOS» (owner 2026-10-26, docs/29 §7): the approved values as RN
+// The floating mobile tab bar «like iOS» (docs/29 §7): the approved values as RN
 // boxShadow strings, like `elevation` above. The mobile app only; the web has no tab bar.
 export const glass: Record<ThemeName, Glass> = {
   light: {
@@ -95,7 +95,7 @@ export const glass: Record<ThemeName, Glass> = {
   },
 };
 
-/** Font family names as registered with expo-font: Noto Sans Arabic only (owner, 2026-10-05: easier
+/** Font family names as registered with expo-font: Noto Sans Arabic only (easier
  *  to read); titles are its 700 weight. */
 export const type = {
   display: 'NotoSansArabic_700Bold',
