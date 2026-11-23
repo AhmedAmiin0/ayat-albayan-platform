@@ -13,7 +13,8 @@ run-name: >-
   deploy-staging ${{ github.event.workflow_run.head_sha || github.sha }}${{ inputs.env_only && ' env-only'
   || (github.event_name == 'workflow_dispatch' && !inputs.migrate) && ' no-migrate' || '' }}
 on:
-  # Automatic: every merge into develop, once ci has passed on it (a red develop never ships).
+  # Automatic: every merge into develop, once ci has passed on it (a red develop never ships). A merge
+  # by lane-automerge starts no push run, so it dispatches ci on develop: preflight accepts that too.
   workflow_run:
     workflows: [ci]
     types: [completed]
@@ -43,7 +44,8 @@ jobs:
   preflight:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+      (github.event.workflow_run.conclusion == 'success'
+       && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')
        && github.event.workflow_run.head_branch == 'develop'
        && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
