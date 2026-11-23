@@ -1,6 +1,6 @@
 import type { ExpenseCategory, PaymentMethod } from '@ab/catalog';
 
-// Expenses responses (R-RPT-02, issue E4; owner 2026-10-05, migration 20261005000204).
+// Expenses responses (R-RPT-02, issue E4; migration 20261005000204).
 
 export interface ExpenseView {
   id: string;

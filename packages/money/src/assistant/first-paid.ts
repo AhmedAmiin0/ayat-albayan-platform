@@ -101,7 +101,7 @@ export interface CommissionContext {
  * What one subscription earns at `share` % of the normal commission: null unless somebody brought the
  * student, the assistant has terms, it is fully paid on or after BOTH startsOn and the day the student was
  * brought (in the assistant's tz: nothing is retroactive), the course did not start before it was recorded
- * (subscriptionAlreadyStarted, owner 2026-10-28) and the amount is above zero.
+ * (subscriptionAlreadyStarted) and the amount is above zero.
  */
 export function planOn(ctx: CommissionContext, sub: SubscriptionFact, share: number): PlannedCommission | null {
   const fullAt = subscriptionFullAt(sub);
@@ -115,7 +115,7 @@ export function planOn(ctx: CommissionContext, sub: SubscriptionFact, share: num
 
 /**
  * The student's ONE 'first' commission (evaluate_assistant_commission): on the first fully paid of its
- * candidates, the first subscription BY ORDER (commissionKindOf; owner 2026-10-26) and the subscription an
+ * candidates, the first subscription BY ORDER (commissionKindOf) and the subscription an
  * existing 'first' row already sits on (`firstRowSubscriptionId`: a row never flips). A later package is a
  * renewal (planRenewalCommission), never a second first.
  */

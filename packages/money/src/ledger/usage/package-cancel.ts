@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { SubscriptionStatus } from '@ab/catalog';
 
-// «إلغاء الباقة» (owner 2026-10-28): a package made by mistake is cancelled, never deleted. Only one
+// «إلغاء الباقة»: a package made by mistake is cancelled, never deleted. Only one
 // nothing hangs on: no money kept (net paid 0) and no lesson booked on it. A cancelled package stays
 // in the history («ملغاة»), is never current, never owed, never bookable and never earns commission.
 
@@ -33,7 +33,7 @@ export function cancelBlock(facts: CancelFacts): CancelBlock | null {
 export const isCancelled = (p: { status: SubscriptionStatus }): boolean => p.status === 'cancelled';
 
 /**
- * Whether the package still counts for money (owner 2026-10-30, migration 991): every one but an
+ * Whether the package still counts for money (migration 991): every one but an
  * unused cancel. A STOPPED package («إلغاء الاشتراك»: the course stopped, the money kept) stays
  * owed, paid into, used FIFO and commissioned. SQL twin: status <> 'cancelled' or cancel_kind =
  * 'stopped'.
