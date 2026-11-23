@@ -2,7 +2,7 @@
 export const CLIENT_HEADER = 'x-ab-client';
 export const UNTAGGED = 'untagged';
 
-const PLATFORM_RE = /^[a-z]{2,16}$/;
+const PLATFORM_RE = /^[a-z]{2,16}(-[a-z]{2,16})?$/;
 const BUILD_RE = /^[A-Za-z0-9._+-]{1,40}$/;
 
 /**

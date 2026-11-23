@@ -233,6 +233,8 @@ jobs:
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
+          # The X-AB-Client build (web/<sha>, family-web/<sha>), so ClientUsage tells web releases apart.
+          export VITE_BUILD_ID="$(git rev-parse --short HEAD)"
           # family-web's workspace dependencies are a subset of staff-web's (client-core, shared, web-kit).
           pnpm --filter "staff-web^..." build >/dev/null
           pnpm --filter staff-web build

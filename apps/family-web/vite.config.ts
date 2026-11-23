@@ -7,6 +7,7 @@ export default webConfig({
   dir: import.meta.dirname,
   port: 5174,
   icons: 'family',
+  client: 'family-web',
   cacheDir: process.env.FAMILY_WEB_CACHE,
   kitDir: fileURLToPath(new URL('../../packages/web-kit', import.meta.url)),
   brandDir: fileURLToPath(new URL('../../packages/catalog/brand', import.meta.url)),
