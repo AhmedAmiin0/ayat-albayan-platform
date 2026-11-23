@@ -46,6 +46,13 @@ test('security definer fails without search_path or without the revoke', () => {
   assert.match(definer(noRevoke)[0], /needs revoke execute .* from public, anon/);
 });
 
+test('security definer needs search_path on every definer function in the file', () => {
+  const sql = "create function f() returns int language sql security definer set search_path = ''"
+    + ' as $$ select 1 $$;\ncreate function g() returns int language sql security definer'
+    + ' as $$ select 2 $$;\nrevoke execute on function f(), g() from public, anon;\n';
+  assert.deepEqual(definer(sql), ['m.sql: security definer needs set search_path']);
+});
+
 test('ddl on an existing table passes with set local lock_timeout', () => {
   const sql = `${LOCK}alter table public.lessons add column x int;\n`
     + 'create unique index if not exists lessons_x on public.lessons (x);\n';

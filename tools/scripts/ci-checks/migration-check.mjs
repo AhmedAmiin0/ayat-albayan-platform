@@ -38,6 +38,7 @@ const LOCK_TIMEOUT = /\bset\s+local\s+lock_timeout\b/i;
 const SEARCH_PATH = /\bset\s+search_path\b/i;
 const REVOKE_PUBLIC = /\brevoke\s+(?:all|execute)\b[^;]*?\bfrom\s+public\s*,[^;]*?\banon\b/i;
 const MARKER = /--\s*destructive:\s*\S/i;
+const DEFINER = /\bsecurity\s+definer\b/i;
 
 const bare = (name) => name.replaceAll('"', '').replace(/^public\./i, '').toLowerCase();
 const targets = (re, sql) => [...sql.matchAll(re)].map((m) => bare(m[1]));
@@ -54,9 +55,13 @@ function touchesExistingTable(body) {
   return DROP_LOCKING.test(body) || touched.some((t) => !created.has(t));
 }
 
+// Per statement: one definer function with search_path must not cover another without it.
+const definersWithoutPath = (body) => body.split(';')
+  .some((s) => DEFINER.test(s) && !SEARCH_PATH.test(s));
+
 function definerProblems({ body, code }) {
   const missing = [
-    [!SEARCH_PATH.test(body), 'security definer needs set search_path'],
+    [definersWithoutPath(body), 'security definer needs set search_path'],
     [!REVOKE_PUBLIC.test(code), 'security definer needs revoke execute … from public, anon'],
   ];
   return missing.filter(([bad]) => bad).map(([, message]) => message);
@@ -65,7 +70,7 @@ function definerProblems({ body, code }) {
 const RULES = [
   ({ body }) => tablesWithoutRls(body)
     .map((t) => `create table ${t} needs enable row level security`),
-  (sql) => (/\bsecurity\s+definer\b/i.test(sql.body) ? definerProblems(sql) : []),
+  (sql) => (DEFINER.test(sql.body) ? definerProblems(sql) : []),
   ({ body }) => (touchesExistingTable(body) && !LOCK_TIMEOUT.test(body)
     ? ['ddl on an existing table needs set local lock_timeout'] : []),
   ({ body, raw }) => (DESTRUCTIVE.test(body) && !MARKER.test(raw)
