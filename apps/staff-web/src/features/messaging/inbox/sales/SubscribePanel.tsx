@@ -1,4 +1,5 @@
-import { studentStatusStyle, type ThreadPeople } from '@ab/shared';
+import { type ThreadPeople } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { railXl } from '@ab/web-kit/components/ui/layout/rail';
 import { cn } from '@ab/web-kit/lib/utils';

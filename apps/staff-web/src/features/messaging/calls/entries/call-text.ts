@@ -1,5 +1,6 @@
 import { callEntryText as entryText } from '@ab/client-core';
-import { formatPhone, type CallEntryKind, type CallView } from '@ab/shared';
+import { type CallEntryKind, type CallView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { showsPhone, type InboxMode } from '@/features/messaging/inbox';

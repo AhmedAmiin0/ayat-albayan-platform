@@ -2,7 +2,6 @@ import {
   normaliseTemplateParams,
   type FollowUpNote,
   type LeadQualification,
-  type LeadStatus,
   type MessageView,
   type ThreadDetail,
   type ThreadRating,
@@ -11,13 +10,15 @@ import {
   type ThreadFile,
   type ThreadView,
 } from '@ab/shared';
+import { type LeadStatus } from '@ab/catalog';
 import { liveInterval, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { inboxLive } from './live';
-import type { LeadView, Page } from '@ab/shared';
+import type { LeadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 

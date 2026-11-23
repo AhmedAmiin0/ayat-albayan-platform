@@ -1,4 +1,10 @@
-import { quote, type PaymentView, type PayoutView, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
+import {
+  quote,
+  type PaymentView,
+  type PayoutView,
+  type StudentBalanceView,
+  type SubscriptionView,
+} from '@ab/money';
 
 // Test fixtures for the money screens (the shapes the API returns, docs/11 §6–8).
 

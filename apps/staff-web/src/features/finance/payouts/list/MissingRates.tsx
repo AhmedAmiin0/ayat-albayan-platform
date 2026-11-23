@@ -1,4 +1,4 @@
-import type { PayoutGenerateResult } from '@ab/shared';
+import type { PayoutGenerateResult } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

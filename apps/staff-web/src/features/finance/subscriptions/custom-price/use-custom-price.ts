@@ -1,5 +1,5 @@
 import type { QuotedPrice } from '@ab/client-core';
-import { parseAmount } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 import { useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

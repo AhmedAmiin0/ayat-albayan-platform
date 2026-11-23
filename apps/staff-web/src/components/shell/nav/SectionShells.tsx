@@ -1,4 +1,4 @@
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import type { ComponentType } from 'react';
 import { ADMIN_NAV_ITEMS } from '@/components/shell/nav/admin-nav-items';
 import { AdminNav } from '@/components/shell/nav/AdminNav';

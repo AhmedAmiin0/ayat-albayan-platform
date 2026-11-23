@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { cn } from '@ab/web-kit/lib/utils';
 import { currencySymbol } from '@/features/finance/subscriptions/format';

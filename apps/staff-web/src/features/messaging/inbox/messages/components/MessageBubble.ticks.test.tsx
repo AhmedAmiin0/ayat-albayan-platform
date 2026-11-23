@@ -1,4 +1,5 @@
-import { MESSAGE_STATUSES, type MessageStatus, type MessageView } from '@ab/shared';
+import { type MessageView } from '@ab/shared';
+import { MESSAGE_STATUSES, type MessageStatus } from '@ab/catalog';
 import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

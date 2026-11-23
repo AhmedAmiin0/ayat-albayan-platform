@@ -1,4 +1,4 @@
-import { offerText, type Quote } from '@ab/shared';
+import { offerText, type Quote } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

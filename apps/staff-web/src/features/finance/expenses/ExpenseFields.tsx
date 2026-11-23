@@ -1,4 +1,5 @@
-import { CURRENCY_ISOS, PAYMENT_METHODS, type PaymentMethod } from '@ab/shared';
+import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
+import { CURRENCY_ISOS } from '@ab/money';
 import { CheckField } from '@/components/settings/fields/CheckField';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Input } from '@ab/web-kit/components/ui/form/input';

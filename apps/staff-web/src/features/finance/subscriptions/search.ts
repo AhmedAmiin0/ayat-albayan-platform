@@ -1,4 +1,5 @@
-import { PACKAGE_SIZES, SUBSCRIPTION_SORT_KEYS, SUBSCRIPTION_STATUSES, type PackageSize } from '@ab/shared';
+import { PACKAGE_SIZES, SUBSCRIPTION_STATUSES, type PackageSize } from '@ab/catalog';
+import { SUBSCRIPTION_SORT_KEYS } from '@ab/money';
 import type { SubscriptionFilter } from '@ab/client-core';
 import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
 

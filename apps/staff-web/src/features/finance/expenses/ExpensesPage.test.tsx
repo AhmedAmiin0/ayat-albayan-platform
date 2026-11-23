@@ -1,4 +1,4 @@
-import type { ExpenseView } from '@ab/shared';
+import type { ExpenseView } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';

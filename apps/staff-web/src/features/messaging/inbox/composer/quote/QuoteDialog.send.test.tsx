@@ -1,4 +1,4 @@
-import { offerText, type Quote } from '@ab/shared';
+import { offerText, type Quote } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
