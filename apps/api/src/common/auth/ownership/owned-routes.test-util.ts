@@ -1,8 +1,8 @@
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { RouteAccess } from '@/common/auth/parity/route-walk.test-util';
-import type { OwnershipBaseline } from './ownership.schemas';
-import type { BaselineDiff } from './owned-routes.types';
+import type { OwnedRouteTests } from './ownership.schemas';
+import type { RouteMapDiff } from './owned-routes.types';
 
 /** The logins that must see only their own rows (audit OPS-9); admin and assistant see all. */
 const SCOPED_ROLES: readonly NonNullable<AuthUser['role']>[] = ['teacher', 'guardian', 'student', 'sales'];
@@ -27,10 +27,10 @@ export function ownedRoutes(
   return [...new Set(owned)].sort();
 }
 
-export function compareBaseline(now: readonly string[], baseline: OwnershipBaseline): BaselineDiff {
-  const listed = Object.keys(baseline);
+export function compareRouteMap(now: readonly string[], map: OwnedRouteTests): RouteMapDiff {
+  const listed = Object.keys(map);
   return {
-    added: now.filter((r) => !listed.includes(r)),
+    unmapped: now.filter((r) => !listed.includes(r)),
     stale: listed.filter((r) => !now.includes(r)),
   };
 }

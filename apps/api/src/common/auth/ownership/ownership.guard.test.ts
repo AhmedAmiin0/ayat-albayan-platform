@@ -1,47 +1,39 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { walkRoutes } from '@/common/auth/parity/route-walk.test-util';
-import { compareBaseline, ownedRoutes, scopedPermissions } from './owned-routes.test-util';
-import { ownershipBaseline, UNCHECKED, type OwnershipBaseline } from './ownership.schemas';
+import { compareRouteMap, ownedRoutes, scopedPermissions } from './owned-routes.test-util';
+import { ownedRouteTests, type OwnedRouteTests } from './ownership.schemas';
 
 // The API reads with the service-role client, so only the handler keeps a teacher, family or
-// sales login to its own rows (audit OPS-9). Every id route such a login can call is listed in
-// refactor/guards/ownership.json with the test that sends it someone else's id; guard:ownership
-// keeps the «unchecked» entries from growing.
-const ROOT = join(__dirname, '../../../../../..');
-const BASELINE = join(ROOT, 'refactor/guards/ownership.json');
+// sales login to its own rows (audit OPS-9). Every id route such a login can call maps in
+// owned-routes.json to the test that sends it someone else's id; pnpm guard:ownership checks
+// that each mapped test exists and asserts a 403 or 404.
+const readMap = (): OwnedRouteTests =>
+  ownedRouteTests.parse(JSON.parse(readFileSync(join(__dirname, 'owned-routes.json'), 'utf8')));
 
-const readBaseline = (): OwnershipBaseline =>
-  ownershipBaseline.parse(JSON.parse(readFileSync(BASELINE, 'utf8')));
-
-describe('ownership baseline', () => {
+describe('owned id routes', () => {
   let owned: string[];
-  let baseline: OwnershipBaseline;
+  let map: OwnedRouteTests;
   beforeAll(async () => {
     owned = ownedRoutes(await walkRoutes(), await scopedPermissions());
-    baseline = readBaseline();
+    map = readMap();
   }, 60_000);
 
   it('finds the scoped id routes', () => {
     expect(owned.length).toBeGreaterThan(100);
   });
 
-  it('lists every scoped id route, and only those', () => {
-    const { added, stale } = compareBaseline(owned, baseline);
-    expect({ added, stale }, 'add a foreign-id test and list it in ownership.json').toEqual({
-      added: [],
+  it('maps every scoped id route to its foreign-id test, and lists no other route', () => {
+    const { unmapped, stale } = compareRouteMap(owned, map);
+    expect({ unmapped, stale }, 'write a foreign-id test and map it in owned-routes.json').toEqual({
+      unmapped: [],
       stale: [],
     });
   });
 
-  it('points every checked route at a test file that exists', () => {
-    const files = Object.values(baseline).filter((v) => v !== UNCHECKED);
-    expect(files.filter((f) => !existsSync(join(ROOT, f)))).toEqual([]);
-  });
-
   it('keeps the file sorted, so a diff shows one line per route', () => {
-    const keys = Object.keys(baseline);
+    const keys = Object.keys(map);
     expect(keys).toEqual([...keys].sort());
   });
 });

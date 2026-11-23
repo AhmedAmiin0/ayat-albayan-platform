@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { compareBaseline, ownedRoutes, scopedPermissions } from './owned-routes.test-util';
+import { compareRouteMap, ownedRoutes, scopedPermissions } from './owned-routes.test-util';
 
 const route = (r: string, permission: unknown, signedIn = false) => ({
   key: 'X.y',
@@ -45,16 +45,16 @@ describe('ownedRoutes', () => {
   });
 });
 
-describe('compareBaseline', () => {
-  const baseline = { 'GET /a/:id': 'unchecked', 'GET /b/:id': 'apps/api/src/b.test.ts' } as const;
+describe('compareRouteMap', () => {
+  const map = { 'GET /a/:id': 'apps/api/src/a.test.ts', 'GET /b/:id': 'apps/api/src/b.test.ts' };
 
-  it('is clean when the walked routes and the baseline match', () => {
-    expect(compareBaseline(['GET /a/:id', 'GET /b/:id'], baseline)).toEqual({ added: [], stale: [] });
+  it('is clean when the walked routes and the map match', () => {
+    expect(compareRouteMap(['GET /a/:id', 'GET /b/:id'], map)).toEqual({ unmapped: [], stale: [] });
   });
 
-  it('names a new route and a route that is gone', () => {
-    expect(compareBaseline(['GET /a/:id', 'GET /c/:id'], baseline)).toEqual({
-      added: ['GET /c/:id'],
+  it('names an unmapped route and a route that is gone', () => {
+    expect(compareRouteMap(['GET /a/:id', 'GET /c/:id'], map)).toEqual({
+      unmapped: ['GET /c/:id'],
       stale: ['GET /b/:id'],
     });
   });

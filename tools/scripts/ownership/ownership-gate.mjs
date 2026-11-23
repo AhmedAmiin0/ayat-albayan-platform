@@ -1,42 +1,40 @@
-// Id routes a teacher, family or sales login can call (refactor/guards/ownership.json) map to
-// the test that sends them someone else's id, or to «unchecked». The api's ownership guard test
-// keeps the list equal to the routes; this gate keeps the «unchecked» entries from growing
-// against the base branch (GUARD_BASE, set by ci.yml «guards»), so the list only shrinks.
-// Usage: [GUARD_BASE=<base checkout>] node tools/scripts/ownership/ownership-gate.mjs
-import { existsSync } from 'node:fs';
+// Every id route a teacher, family or sales login can call is mapped in
+// apps/api/src/common/auth/ownership/owned-routes.json to the test that sends it someone else's
+// id. The api test ownership.guard.test.ts fails on a walked route the map lacks; this gate fails
+// on an entry that names no existing test file or a test that asserts no 403/404. No baseline.
+// Usage: node tools/scripts/ownership/ownership-gate.mjs
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { z } from 'zod';
 import { readJson } from '../ci-checks/lint/json-file.mjs';
 
-const FILE = join('refactor', 'guards', 'ownership.json');
-const UNCHECKED = 'unchecked';
-const baselineSchema = z.record(z.string(), z.string());
+const FILE = join('apps', 'api', 'src', 'common', 'auth', 'ownership', 'owned-routes.json');
+const testFile = z.string().regex(/^apps\/api\/src\/.+\.test\.ts$/);
+export const mapSchema = z.record(z.string().regex(/^[A-Z]+ \/\S*:\S*$/), testFile);
+const DENIAL = /\b40[34]\b|ForbiddenException|NotFoundException/;
 
-const uncheckedOf = (baseline) => Object.keys(baseline).filter((k) => baseline[k] === UNCHECKED);
+const problemOf = (read) => (file) => {
+  const text = read(file);
+  const reasons = { missing: text === undefined, 'asserts no 403/404': !DENIAL.test(text ?? '') };
+  return Object.keys(reasons).find((k) => reasons[k]);
+};
 
-/** Head routes left «unchecked» that the base had checked or did not list. */
-export function newUnchecked(head, base) {
-  return uncheckedOf(head).filter((k) => base[k] !== UNCHECKED);
+/** `{ lines, failed }` for the map; `read(file)` gives a test file's text or undefined. */
+export function decide(map, read) {
+  const problem = problemOf(read);
+  const bad = Object.entries(map).flatMap(([route, file]) => {
+    const why = problem(file);
+    return why === undefined ? [] : [`  ${route}: ${file} (${why})`];
+  });
+  const lines = [`ownership: ${Object.keys(map).length} id routes mapped, ${bad.length} broken`];
+  return { lines: [...lines, ...bad], failed: bad.length > 0 };
 }
-
-/** `{ lines, failed }` for the head baseline against the base one (undefined: none yet). */
-export function decide(head, base) {
-  const count = uncheckedOf(head).length;
-  const was = base === undefined ? '-' : String(uncheckedOf(base).length);
-  const added = base === undefined ? [] : newUnchecked(head, base);
-  const lines = [`ownership: unchecked ${count} (base ${was}), new ${added.length}`];
-  for (const k of added) lines.push(`  new unchecked: ${k} (add a test that sends another id)`);
-  return { lines, failed: added.length > 0 };
-}
-
-const readIfAny = (path) => (existsSync(path) ? readJson(path, baselineSchema) : undefined);
 
 function main() {
   const root = fileURLToPath(new URL('../../..', import.meta.url));
-  const dir = process.env.GUARD_BASE;
-  const base = dir === undefined || dir === '' ? undefined : readIfAny(join(dir, FILE));
-  const { lines, failed } = decide(readJson(join(root, FILE), baselineSchema), base);
+  const read = (f) => (existsSync(join(root, f)) ? readFileSync(join(root, f), 'utf8') : undefined);
+  const { lines, failed } = decide(readJson(join(root, FILE), mapSchema), read);
   for (const line of lines) console.log(line);
   if (failed) process.exit(1);
 }

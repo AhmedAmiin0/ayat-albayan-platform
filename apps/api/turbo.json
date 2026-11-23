@@ -6,8 +6,7 @@
       "inputs": [
         "$TURBO_EXTENDS$",
         "$TURBO_ROOT$/packages/db/supabase/migrations/**",
-        "$TURBO_ROOT$/packages/catalog/brand/**",
-        "$TURBO_ROOT$/refactor/guards/ownership.json"
+        "$TURBO_ROOT$/packages/catalog/brand/**"
       ]
     }
   }

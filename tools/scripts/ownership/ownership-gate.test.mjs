@@ -1,29 +1,30 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { decide, newUnchecked } from './ownership-gate.mjs';
+import { decide, mapSchema } from './ownership-gate.mjs';
 
-const T = 'apps/api/src/a.test.ts';
+const A = 'apps/api/src/a.test.ts';
+const files = { [A]: "expect(res.statusCode).toBe(403);", 'apps/api/src/b.test.ts': 'ok' };
+const read = (f) => files[f];
 
-test('newUnchecked: a route that is unchecked on the head but not on the base', () => {
-  const base = { 'GET /a/:id': 'unchecked', 'GET /b/:id': T };
-  const head = { 'GET /a/:id': 'unchecked', 'GET /b/:id': 'unchecked', 'GET /c/:id': 'unchecked' };
-  assert.deepEqual(newUnchecked(head, base), ['GET /b/:id', 'GET /c/:id']);
-});
-
-test('newUnchecked: checking a route or dropping one passes', () => {
-  const base = { 'GET /a/:id': 'unchecked', 'GET /b/:id': 'unchecked' };
-  assert.deepEqual(newUnchecked({ 'GET /a/:id': T }, base), []);
-});
-
-test('decide: no base file (first run) passes; a new unchecked route fails', () => {
-  assert.equal(decide({ 'GET /a/:id': 'unchecked' }, undefined).failed, false);
-  const out = decide({ 'GET /a/:id': 'unchecked' }, {});
-  assert.equal(out.failed, true);
-  assert.match(out.lines.join('\n'), /GET \/a\/:id/);
-});
-
-test('decide: reports the unchecked count of both sides', () => {
-  const out = decide({ 'GET /a/:id': T }, { 'GET /a/:id': 'unchecked' });
+test('decide: every route on an existing test that asserts a denial passes', () => {
+  const out = decide({ 'GET /a/:id': A }, read);
   assert.equal(out.failed, false);
-  assert.match(out.lines[0] ?? '', /unchecked 0 \(base 1\)/);
+  assert.match(out.lines[0] ?? '', /1 id routes mapped, 0 broken/);
+});
+
+test('decide: a missing test file fails and names the route', () => {
+  const out = decide({ 'GET /c/:id': 'apps/api/src/c.test.ts' }, read);
+  assert.equal(out.failed, true);
+  assert.match(out.lines.join('\n'), /GET \/c\/:id.*missing/);
+});
+
+test('decide: a test that asserts no 403 or 404 fails', () => {
+  const out = decide({ 'GET /b/:id': 'apps/api/src/b.test.ts' }, read);
+  assert.match(out.lines.join('\n'), /asserts no 403\/404/);
+});
+
+test('mapSchema: «unchecked» or a non-test path is refused', () => {
+  assert.throws(() => mapSchema.parse({ 'GET /a/:id': 'unchecked' }));
+  assert.throws(() => mapSchema.parse({ 'GET /a/:id': 'apps/api/src/a.ts' }));
+  assert.throws(() => mapSchema.parse({ 'GET /a': A }));
 });
