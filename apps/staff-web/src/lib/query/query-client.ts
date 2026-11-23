@@ -1,4 +1,4 @@
-import { CALLS_KEY, shouldRetry } from '@ab/client-core';
+import { CALLS_KEY, shouldRetryUnanswered } from '@ab/client-core';
 import { MutationCache, QueryClient, type Query } from '@tanstack/react-query';
 
 export const STALE_MS = 30_000;
@@ -28,7 +28,7 @@ export function createQueryClient(): QueryClient {
     client.invalidateQueries({ refetchType: 'none', predicate: (q) => !isLive(q) });
   const client: QueryClient = new QueryClient({
     mutationCache: new MutationCache({ onSuccess: () => void markStale() }),
-    defaultOptions: { queries: { staleTime: STALE_MS, retry: shouldRetry } },
+    defaultOptions: { queries: { staleTime: STALE_MS, retry: shouldRetryUnanswered } },
   });
   for (const root of LIVE_ROOTS) client.setQueryDefaults([root], { staleTime: 0 });
   return client;

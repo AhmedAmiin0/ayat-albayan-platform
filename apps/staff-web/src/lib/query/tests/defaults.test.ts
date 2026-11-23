@@ -1,4 +1,4 @@
-import { ApiError, shouldRetry } from '@ab/client-core';
+import { ApiError, shouldRetryUnanswered } from '@ab/client-core';
 import { QueryObserver, type QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createQueryClient, STALE_MS } from '@/lib/query';
@@ -24,11 +24,11 @@ const settled = (observer: QueryObserver<string, Error, string, string, string[]
   });
 
 describe('staff-web query defaults', () => {
-  it('reads stay fresh for 30 s and retry with the shared rule', () => {
+  it('reads stay fresh for 30 s and retry with the shared web rule', () => {
     const { queries } = createQueryClient().getDefaultOptions();
     expect(STALE_MS).toBe(30_000);
     expect(queries?.staleTime).toBe(STALE_MS);
-    expect(queries?.retry).toBe(shouldRetry);
+    expect(queries?.retry).toBe(shouldRetryUnanswered);
   });
 
   it('a 404 is read once', async () => {
@@ -39,6 +39,12 @@ describe('staff-web query defaults', () => {
 
   it('a 500 is retried', async () => {
     const { queryFn, observer } = failingRead(new ApiError(500));
+    await settled(observer);
+    expect(queryFn).toHaveBeenCalledTimes(4);
+  });
+
+  it('a read with no answer is retried: the web has no reconnect signal to refetch it', async () => {
+    const { queryFn, observer } = failingRead(new TypeError('Failed to fetch'));
     await settled(observer);
     expect(queryFn).toHaveBeenCalledTimes(4);
   });
