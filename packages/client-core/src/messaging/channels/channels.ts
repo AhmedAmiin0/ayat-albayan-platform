@@ -1,5 +1,5 @@
-import { type ChannelPage } from '@ab/shared';
-import { type Locale } from '@ab/core';
+import type { ChannelPage } from '@ab/shared';
+import type { Locale } from '@ab/core';
 import { clockOf, dateText, localDateIn, type ClockCycle } from '@ab/time';
 
 // The student channel (docs/31 §2) for web and mobile: who reads it through which API path.

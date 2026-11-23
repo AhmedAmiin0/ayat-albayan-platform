@@ -1,6 +1,6 @@
 import { lessonMinutes, liveRoom, type WeekLesson } from '@ab/client-core';
 import { firstName } from '@ab/schedule';
-import { type ClockOptions } from '@ab/time';
+import type { ClockOptions } from '@ab/time';
 import { View } from 'react-native';
 import { t, useTheme } from '@ab/mobile-kit';
 import { RowText } from '@/ui';

@@ -1,5 +1,5 @@
-import { type UserDetail, type UserRoleOption, type UserUpdate } from '@ab/shared';
-import { type UserRole } from '@ab/catalog';
+import type { UserDetail, UserRoleOption, UserUpdate } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
 
 /** What the edit panel edits. `role_id` '' = the base role's own (system) role. */

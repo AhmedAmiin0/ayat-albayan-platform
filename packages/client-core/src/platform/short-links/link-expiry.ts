@@ -1,4 +1,4 @@
-import { type ShortLinkRow } from '@ab/shared';
+import type { ShortLinkRow } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { addDaysIn, calendarDaysBetween, localDateIn } from '@ab/time';

@@ -1,5 +1,5 @@
 import { signedAmount } from '@ab/client-core';
-import { type PortalPayment } from '@ab/shared';
+import type { PortalPayment } from '@ab/shared';
 import { dateText } from '@ab/time';
 import { View } from 'react-native';
 import { AppText, InsetGroup, locale, money, t, type, useTheme } from '@ab/mobile-kit';

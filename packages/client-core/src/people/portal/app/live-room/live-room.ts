@@ -1,5 +1,5 @@
 import { counted, type PluralForm } from '@ab/core';
-import { type LessonRoomState, type RoomPresence, type RoomPresenceRole } from '@ab/schedule';
+import type { LessonRoomState, RoomPresence, RoomPresenceRole } from '@ab/schedule';
 import { roomLiveMinutes } from '../../../../teaching/lesson-room/index.js';
 
 // «الحلقة جارية الآن» on the family's lesson card and schedule row (canvas RoomXLiveHome,

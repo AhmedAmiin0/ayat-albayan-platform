@@ -1,5 +1,5 @@
 import type { PackageSummary } from '@ab/client-core';
-import { type PortalAmount } from '@ab/shared';
+import type { PortalAmount } from '@ab/shared';
 import { calendarDayText } from '@ab/time';
 import { locale, money, t } from '@ab/mobile-kit';
 

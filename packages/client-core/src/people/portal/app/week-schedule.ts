@@ -1,4 +1,4 @@
-import { type PortalLesson, type PortalStudent, type PortalTeacher } from '@ab/shared';
+import type { PortalLesson, PortalStudent, PortalTeacher } from '@ab/shared';
 import { addDaysIn, localDateIn, startOfWeekIn } from '@ab/time';
 import { lessonOptions } from '../actions/lesson-options.js';
 import { isAhead } from '../lesson-window.js';

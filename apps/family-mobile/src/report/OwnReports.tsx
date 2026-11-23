@@ -1,5 +1,5 @@
 import { reportMonths } from '@ab/client-core';
-import { type PortalReport, type PortalStudent } from '@ab/shared';
+import type { PortalReport, PortalStudent } from '@ab/shared';
 import { localDateIn } from '@ab/time';
 import { View } from 'react-native';
 import { EmptyState, t, useNow } from '@ab/mobile-kit';

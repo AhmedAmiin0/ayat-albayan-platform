@@ -1,4 +1,4 @@
-import { type PortalKind, type PortalStudent } from '@ab/shared';
+import type { PortalKind, PortalStudent } from '@ab/shared';
 import {
   PUBLIC_CONFIG_PATH,
   PUBLIC_CONFIG_QUERY_KEY,

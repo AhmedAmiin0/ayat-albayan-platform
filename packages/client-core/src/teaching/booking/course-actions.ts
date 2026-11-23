@@ -1,4 +1,4 @@
-import { type CourseStopPreview } from '@ab/shared';
+import type { CourseStopPreview } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { ApiError } from '../../core/http/index.js';
 

@@ -1,5 +1,5 @@
 import { dayWord, lessonMinutes, type DayWord } from '@ab/client-core';
-import { type PortalLesson, type PortalTeacher } from '@ab/shared';
+import type { PortalLesson, PortalTeacher } from '@ab/shared';
 import { teacherName } from '@ab/schedule';
 import { clockOf, dateText, type ClockOptions } from '@ab/time';
 import { locale, t } from '@ab/mobile-kit';

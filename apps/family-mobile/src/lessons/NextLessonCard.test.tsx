@@ -1,4 +1,4 @@
-import { type RoomPresence } from '@ab/schedule';
+import type { RoomPresence } from '@ab/schedule';
 import { PUBLIC_CONFIG_QUERY_KEY, PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';

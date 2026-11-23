@@ -1,5 +1,5 @@
 import { isSelfChild } from '@ab/client-core';
-import { type PortalKind, type PortalStudent } from '@ab/shared';
+import type { PortalKind, PortalStudent } from '@ab/shared';
 import { counted } from '@ab/core';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { Button } from '@ab/web-kit/components/ui/form/button';

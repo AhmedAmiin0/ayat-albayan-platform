@@ -1,4 +1,4 @@
-import { type PortalLesson } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
 import { clockOf, type ClockOptions } from '@ab/time';
 import type { LessonWait } from './lesson-window.js';
 

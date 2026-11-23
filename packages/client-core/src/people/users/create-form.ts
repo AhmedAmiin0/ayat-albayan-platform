@@ -1,5 +1,5 @@
-import { type CredentialMode, type LinkCandidate, type UserCreate } from '@ab/shared';
-import { type UserRole } from '@ab/catalog';
+import type { CredentialMode, LinkCandidate, UserCreate } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
 
 export interface NewTeacherForm {

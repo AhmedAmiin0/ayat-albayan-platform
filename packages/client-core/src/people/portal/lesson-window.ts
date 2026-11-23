@@ -1,4 +1,4 @@
-import { type PortalLesson } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
 import { isOpenLesson, type JoinState, type JoinWindow } from '@ab/schedule';
 
 // The join window as the screen's own clock reads it (moved from the web's student link and portal

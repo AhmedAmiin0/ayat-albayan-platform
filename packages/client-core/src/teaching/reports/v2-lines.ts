@@ -12,8 +12,8 @@ import {
   type SegmentKind,
   type TajweedTopic,
 } from '@ab/shared';
-import { type Attendance, type Grade, type Program } from '@ab/catalog';
-import { type Locale } from '@ab/core';
+import type { Attendance, Grade, Program } from '@ab/catalog';
+import type { Locale } from '@ab/core';
 import { rangeLabel, type RangeWords } from './v2-text.js';
 
 /** What the lines read: a ReportView, or the live page's report (ReportPageReport). */

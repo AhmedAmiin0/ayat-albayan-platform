@@ -4,7 +4,7 @@ import {
   type SalesPackageCancelCheck,
   type SalesPackageCancelled,
 } from '@ab/shared';
-import { type SubscriptionCancel } from '@ab/money';
+import type { SubscriptionCancel } from '@ab/money';
 
 // «إلغاء الباقة» in the assistant's «تفاصيل الطالب» (owner 2026-11-02), web and mobile: the
 // route (GET the check, POST the cancel), the query key, and whether the button shows.

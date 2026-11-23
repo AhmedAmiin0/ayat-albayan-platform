@@ -1,4 +1,4 @@
-import { type StudentAttendanceTable } from '@ab/shared';
+import type { StudentAttendanceTable } from '@ab/shared';
 import { ATTENDANCES, LESSON_STATUSES, REPORT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 

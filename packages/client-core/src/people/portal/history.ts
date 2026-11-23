@@ -1,8 +1,8 @@
-import {
-  type PortalHistory,
-  type PortalHistoryRow,
-  type PortalHistoryStatus,
-  type PortalOutcome,
+import type {
+  PortalHistory,
+  PortalHistoryRow,
+  PortalHistoryStatus,
+  PortalOutcome,
 } from '@ab/shared';
 import { localDateIn } from '@ab/time';
 

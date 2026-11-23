@@ -1,5 +1,5 @@
 import { notificationKind, type NotificationItem } from '@ab/shared';
-import { type AnyPushKind } from '@ab/catalog';
+import type { AnyPushKind } from '@ab/catalog';
 import { calendarDaysBetween, localDateIn } from '@ab/time';
 import { z } from 'zod';
 

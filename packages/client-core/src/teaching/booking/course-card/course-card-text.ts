@@ -1,4 +1,4 @@
-import { type CourseCardView } from '@ab/shared';
+import type { CourseCardView } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 
 // The lines of «الدورة والباقة» and of each action's preview (owner 2026-11-17: «every action

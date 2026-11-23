@@ -8,7 +8,7 @@ import {
   type CourseExtendResult,
   type CourseResumePreview,
 } from '@ab/shared';
-import { type StudentStatus } from '@ab/catalog';
+import type { StudentStatus } from '@ab/catalog';
 import { apiErrorCode } from '../../../core/http/index.js';
 import { courseActionsKey } from '../course-actions.js';
 

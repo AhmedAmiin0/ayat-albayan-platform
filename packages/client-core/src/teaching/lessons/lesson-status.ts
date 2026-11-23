@@ -1,4 +1,4 @@
-import { type LessonStatus } from '@ab/catalog';
+import type { LessonStatus } from '@ab/catalog';
 import { lessonStatusStyle, type StatusStyle } from '@ab/money';
 import { needsConfirmation } from '@ab/schedule';
 

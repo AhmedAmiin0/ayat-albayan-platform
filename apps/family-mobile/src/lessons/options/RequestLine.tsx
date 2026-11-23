@@ -1,5 +1,5 @@
 import { confirmedLine, excusedLine, requestChip } from '@ab/client-core';
-import { type PortalLesson } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
 import { clockOf, dateText, type ClockOptions } from '@ab/time';
 import { AppText, t, type } from '@ab/mobile-kit';
 
