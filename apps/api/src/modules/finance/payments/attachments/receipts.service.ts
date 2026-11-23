@@ -47,11 +47,6 @@ export class ReceiptsService {
     if (owners.some((o) => o.paymentId !== input.paymentId)) throw conflict('attachment_in_use', { path });
   }
 
-  /** Best effort: an orphaned object is harmless once its payment is gone. */
-  async discard(path: string | null): Promise<void> {
-    if (path) await this.storage.remove({ bucket: BUCKETS.receipts, path }).catch(() => undefined);
-  }
-
   async subscription(id: string): Promise<PaymentSubscription> {
     const sub = await this.payments.subscription(id);
     if (!sub) throw notFound('subscription_not_found');
