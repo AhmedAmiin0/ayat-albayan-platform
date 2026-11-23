@@ -168,17 +168,17 @@
       "count": 7
     }
   },
-  "src/seed/seed-entries/tests/metadata.test.ts": {
+  "src/seed/seed-entries.metadata.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
   },
-  "src/seed/seed-entries/tests/sql-keys.test.ts": {
+  "src/seed/seed-entries.sql-keys.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/seed/seed-entries/tests/seed-entries.test.ts": {
+  "src/seed/seed-entries.test.ts": {
     "complexity": {
       "count": 1
     },
@@ -186,7 +186,7 @@
       "count": 1
     }
   },
-  "src/seed/seed-entries/seed-entries.ts": {
+  "src/seed/seed-entries.ts": {
     "stylistic/max-len": {
       "count": 5
     }
@@ -231,12 +231,12 @@
       "count": 4
     }
   },
-  "src/validation/schema/tests/schema.test.ts": {
+  "src/validation/schema.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/validation/schema/schema.ts": {
+  "src/validation/schema.ts": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -252,7 +252,7 @@
       "count": 1
     }
   },
-  "src/value-groups/tests/registry.test.ts": {
+  "src/value-groups.registry.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }

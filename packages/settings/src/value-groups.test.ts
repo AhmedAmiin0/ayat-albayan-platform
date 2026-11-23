@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { SETTING_KEYS } from '../../registry.js';
-import { EDITABLE_VALUE_KEYS, isEditableValueKey, OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS } from '../value-groups.js';
+import { SETTING_KEYS } from './registry.js';
+import { EDITABLE_VALUE_KEYS, isEditableValueKey, OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS } from './value-groups.js';
 
 describe('«القيم» groups', () => {
   const owned: readonly string[] = Object.values(OWNED_VALUE_GROUPS).flat();

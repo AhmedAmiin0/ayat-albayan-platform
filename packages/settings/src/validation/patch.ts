@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ownedKeyOfField } from '../ownership.js';
 import { SETTING_KEY_OF, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingKey } from '../registry.js';
-import { settingZod } from './schema/index.js';
+import { settingZod } from './schema.js';
 import type { SettingDef } from '../defs.js';
 
 /**

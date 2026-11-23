@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { SettingGroup } from '../../groups.js';
-import { isOwnedSettingKey } from '../../ownership.js';
-import { settingDef, type SettingKey } from '../../registry.js';
-import { OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS, type ValueGroupId } from '../value-groups.js';
+import type { SettingGroup } from './groups.js';
+import { isOwnedSettingKey } from './ownership.js';
+import { settingDef, type SettingKey } from './registry.js';
+import { OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS, type ValueGroupId } from './value-groups.js';
 
 // «القيم» (web + Expo) reads VALUE_GROUPS; 26-P1 put `group` / `confirm` / `ownedBy` on the registry.
 // Until the screens read the registry directly, the two must say the same thing.

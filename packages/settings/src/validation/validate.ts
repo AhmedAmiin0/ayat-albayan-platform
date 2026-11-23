@@ -5,7 +5,7 @@ import {
   type AcademySettings,
   type SettingKey,
 } from '../registry.js';
-import { storedSettingZod } from './schema/index.js';
+import { storedSettingZod } from './schema.js';
 import type { SettingDef } from '../defs.js';
 
 /** Is the stored JSON valid for this entry? The PATCH schema minus its trim (docs/36 z3). */

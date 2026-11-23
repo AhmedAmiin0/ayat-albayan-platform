@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS } from '../public.js';
 import { SETTINGS_REGISTRY } from '../registry.js';
-import { storedSettingZod } from '../validation/schema/index.js';
+import { storedSettingZod } from '../validation/schema.js';
 import type { PublicConfig } from './public-config.js';
 
 // The apps' parse of GET /settings/public (docs/36 Z-5): each public key by its registry schema,

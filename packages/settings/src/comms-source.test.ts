@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { settingsUpdateSchema } from './validation/schema/index.js';
+import { settingsUpdateSchema } from './validation/schema.js';
 import { readSettings } from './validation/validate.js';
 import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from './registry.js';
 

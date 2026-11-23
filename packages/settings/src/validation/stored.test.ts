@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '../registry.js';
-import { settingZod, storedSettingZod } from './schema/index.js';
+import { settingZod, storedSettingZod } from './schema.js';
 import { isValidSetting, readSettings } from './validate.js';
 
 // docs/36 z3: the read side is the PATCH schema (settingZod) minus its trim. A stored string that

@@ -1,6 +1,6 @@
-import type { SettingKey } from '../registry.js';
-import { SCHEDULE_KEYS } from '../domains/teaching/schedule-keys.js';
-import { TEACHER_PAGE_KEYS } from '../domains/teaching/teacher-pages.js';
+import type { SettingKey } from './registry.js';
+import { SCHEDULE_KEYS } from './domains/teaching/schedule-keys.js';
+import { TEACHER_PAGE_KEYS } from './domains/teaching/teacher-pages.js';
 
 // «القيم» (docs/26b §2): the store's rows in small groups, one group per view, each a table
 // rather than one long page. Kept apart from layout.ts, which still orders the old single page;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SETTING_DEFAULTS } from './registry.js';
-import { settingsChanges } from './validation/schema/index.js';
+import { settingsChanges } from './validation/schema.js';
 import { readSettings } from './validation/validate.js';
 
 // Read side (readSettings) against the registry defaults, plus the write-side diff (settingsChanges).

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { SEED_ENTRIES } from '../seed-entries.js';
-import { sqlSettingsReaders } from '../../sql-readers.js';
+import { SEED_ENTRIES } from './seed-entries.js';
+import { sqlSettingsReaders } from './sql-readers.js';
 
 // Vite's raw import (vitest): the shared lib has no Node typings, so the migrations are read this way.
 declare global {
@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-const MIGRATIONS = import.meta.glob<string>('../../../../../db/supabase/migrations/*.sql', {
+const MIGRATIONS = import.meta.glob<string>('../../../db/supabase/migrations/*.sql', {
   query: '?raw',
   import: 'default',
   eager: true,
