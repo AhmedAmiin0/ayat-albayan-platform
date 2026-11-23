@@ -1,4 +1,4 @@
-import type { StatusStyle } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
 import { t, FilterPills } from '@ab/mobile-kit';
 
 interface StatusPillsProps<S extends string> {

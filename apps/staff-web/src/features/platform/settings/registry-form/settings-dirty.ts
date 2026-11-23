@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
+import { SETTING_DEFAULTS, SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/settings';
 import { onKey, settingsForm, shapeId, type SettingsForm } from './settings-form';
 
 const defaults = settingsForm(SETTING_DEFAULTS);

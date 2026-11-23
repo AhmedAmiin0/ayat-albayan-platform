@@ -55,13 +55,13 @@ export async function seedFxRate(): Promise<void> {
  * auto_messages_enabled (162) is on here: journey 3 asserts the job-queued renewal_due.
  * teachers_always_available (320) is off here: the journeys book inside the grids they set with
  * setAvailability; teachers-always-available.spec turns it on and back off itself.
- * lesson_confirmation_required (owner 2026-11-02, code default false) is ON here: the journeys
- * confirm lessons, and the auto-held job must not close lessons they seed in the past mid-run
- * (the OFF path: unit tests + lessons-auto-held.sql.spec).
+ * lesson_confirmation_required (code default false) is ON here: the journeys confirm lessons, and
+ * the auto-held job must not close lessons they seed in the past mid-run (the OFF path: unit tests
+ * + lessons-auto-held.sql.spec).
  * report_teacher_edit_minutes (docs/46, code default 30) is 0 here: a submitted report goes to the
  * family at once, as the journeys expect; teacher-report-edit-window.spec sets 30 and back.
- * The seven teacher page switches (owner 2026-11-13, code default false) are ON here: the journeys
- * open the teacher's chats, earnings, statements, feedback and meetings (off: unit tests).
+ * The seven teacher page switches (code default false) are ON here: the journeys open the teacher's
+ * chats, earnings, statements, feedback and meetings (off: unit tests).
  */
 export async function seedSettings(): Promise<void> {
   const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });

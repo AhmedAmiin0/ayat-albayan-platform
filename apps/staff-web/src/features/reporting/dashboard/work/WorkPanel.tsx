@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { PendingReportsList } from '@/features/reporting/dashboard/today/PendingReportsList';
-import type { DashboardWork, WorkList, WorkTab } from '@ab/shared';
+import type { DashboardWork, WorkList, WorkTab } from '@ab/money';
 import { TasksList } from './TasksList';
 import { UnpaidList } from '@/features/reporting/dashboard/today/UnpaidList';
 

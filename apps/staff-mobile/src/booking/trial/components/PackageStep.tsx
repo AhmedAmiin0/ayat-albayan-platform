@@ -1,4 +1,4 @@
-import type { PackageSize } from '@ab/shared';
+import type { PackageSize } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, Button, FilterPills, type FilterPill, FormLabel } from '@ab/mobile-kit';
 import type { TrialDraft } from '@/booking/trial/lib/draft';

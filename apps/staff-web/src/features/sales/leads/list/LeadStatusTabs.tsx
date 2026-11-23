@@ -1,4 +1,4 @@
-import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
+import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
 import { Tabs, type TabOption } from '@ab/web-kit/components/ui/layout/tabs';
 import { paneScroll } from '@ab/web-kit/components/ui/layout/rail';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

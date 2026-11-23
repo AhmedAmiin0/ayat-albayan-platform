@@ -1,4 +1,4 @@
-import type { LeadStatus } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
 
 // R-RPT-01 funnel new → trial_booked → trial_done → converted, from the leads' CURRENT status
 // (issue F3: statuses, not formulas). A lead counts at every stage up to the one it is in now; a

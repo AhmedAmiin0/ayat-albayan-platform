@@ -1,4 +1,4 @@
-import { INTEGRATION_KEYS, type IntegrationConfigItem } from '@ab/shared';
+import { INTEGRATION_KEYS, type IntegrationConfigItem } from '@ab/catalog';
 
 // Test fixture (not app code): GET /settings/integrations with a few keys set.
 

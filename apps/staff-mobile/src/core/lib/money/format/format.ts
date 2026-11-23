@@ -1,13 +1,13 @@
+import { counted } from '@ab/core';
 import {
-  counted,
-  dateText,
   formatAmount,
   owedFor,
   partPaidOf,
   receiptShortfall,
   type OwedPackage,
   type SubscriptionView,
-} from '@ab/shared';
+} from '@ab/money';
+import { dateText } from '@ab/time';
 import { t, currencyName, locale, ltr, money } from '@ab/mobile-kit';
 
 // Money lines (docs/07 §2: Western digits, LTR values isolated). Strings come from ar.json only.

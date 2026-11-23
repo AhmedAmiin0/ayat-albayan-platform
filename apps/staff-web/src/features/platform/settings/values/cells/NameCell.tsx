@@ -1,4 +1,4 @@
-import { settingDef, VALUE_CONFIRM, type SettingKey } from '@ab/shared';
+import { settingDef, VALUE_CONFIRM, type SettingKey } from '@ab/settings';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

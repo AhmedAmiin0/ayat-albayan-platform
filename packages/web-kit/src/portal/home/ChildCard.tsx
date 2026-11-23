@@ -7,7 +7,7 @@ import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { portalLessonsQuery } from '@ab/web-kit/portal/api';
 import { LessonCard } from '@ab/web-kit/portal/lessons/LessonCard';
 import { PrepareCard } from '@ab/web-kit/portal/lessons/PrepareCard';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { MonthCounts } from './MonthCounts';
 import { NewReports } from './NewReports';
 import { PackageLine } from './PackageLine';
@@ -58,9 +58,9 @@ export function ChildCard({ student, money, onOpen }: Props) {
         </div>
         <NewReports studentId={student.id} />
       </header>
-      <LoadState query={lessons} rows={2}>
+      <QueryState query={lessons} rows={2}>
         {(data) => <CardLessons lessons={data} student={student} />}
-      </LoadState>
+      </QueryState>
       {money && <PackageLine studentId={student.id} />}
       <Button type="button" variant="secondary" className="justify-self-start" onClick={onOpen}>
         {t.portal.openChild}

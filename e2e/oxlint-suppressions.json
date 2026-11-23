@@ -190,7 +190,7 @@
   },
   "support/messaging/chat-more.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "support/messaging/inbox.ts": {
@@ -216,12 +216,12 @@
   },
   "support/messaging/reschedule-template.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "support/messaging/restricted-templates.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     },
     "ab/no-unchecked-json": {
       "count": 2
@@ -260,7 +260,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "support/people/student-statuses.ts": {
@@ -344,17 +344,17 @@
   },
   "support/sales/assistant-course.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "support/sales/assistant-journey-ui.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "support/sales/assistant-journey.ts": {
     "stylistic/max-len": {
-      "count": 12
+      "count": 9
     }
   },
   "support/sales/assistant.ts": {
@@ -370,12 +370,12 @@
   },
   "support/sales/sales-money.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "support/sales/sales-options.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "support/sales/sales-portal.ts": {
@@ -423,14 +423,9 @@
       "count": 2
     }
   },
-  "tests/finance/assistant-commission-started.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "tests/finance/assistant-commission.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "tests/finance/assistant-money.api.spec.ts": {
@@ -438,12 +433,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "tests/finance/assistant-renewal-commission.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "tests/finance/assistant-statement.api.spec.ts": {
@@ -464,7 +459,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 3
@@ -483,7 +478,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 6
     },
     "typescript/dot-notation": {
       "count": 10
@@ -507,7 +502,7 @@
   },
   "tests/finance/finance-money.spec.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/finance/pay-rule.sql.spec.ts": {
@@ -517,7 +512,7 @@
   },
   "tests/finance/payment-attachments.api.spec.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 5
     },
     "typescript/dot-notation": {
       "count": 2

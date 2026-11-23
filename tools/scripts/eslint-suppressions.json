@@ -565,11 +565,6 @@
       "count": 1
     }
   },
-  "seed/seed-test-account.data.mjs": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "seed/seed-test-account.mjs": {
     "max-len": {
       "count": 1

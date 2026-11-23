@@ -1,4 +1,4 @@
-import type { CustomConfigUpsert, CustomConfigView } from '@ab/shared';
+import type { CustomConfigUpsert, CustomConfigView } from '@ab/settings';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

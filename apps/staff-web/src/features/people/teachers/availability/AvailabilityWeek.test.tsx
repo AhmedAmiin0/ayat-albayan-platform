@@ -1,4 +1,4 @@
-import type { Weekday } from '@ab/shared';
+import type { Weekday } from '@ab/catalog';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

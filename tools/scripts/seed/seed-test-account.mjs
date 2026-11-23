@@ -1,5 +1,5 @@
 // node tools/scripts/seed-test-account.mjs [--remove] [--allow-remote-staging]
-// Owner's test teacher (2026-10-05): a sign-in account with role teacher, its teachers row (DEMO),
+// The staging test teacher: a sign-in account with role teacher, its teachers row (DEMO),
 // and a DEMO guardian + student assigned to it. Idempotent: re-runs update the same rows and reset
 // the password. --remove deletes exactly these rows and the login (also idempotent).
 // Env: TEST_TEACHER_EMAIL, TEST_ACCOUNT_PASSWORD (create only, ≥ 10 chars), DATABASE_URL (or PGHOST/

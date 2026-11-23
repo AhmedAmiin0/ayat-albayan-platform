@@ -1,4 +1,4 @@
-import { addCalendarDays, formatRunningHead, RIYADH_TZ, wallToUtc } from '@ab/shared';
+import { addCalendarDays, formatRunningHead, RIYADH_TZ, wallToUtc } from '@ab/time';
 import { t, locale } from '@ab/mobile-kit';
 import { localDate } from '@/today/lib/timeline';
 

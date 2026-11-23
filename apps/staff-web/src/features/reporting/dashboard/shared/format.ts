@@ -1,4 +1,5 @@
-import { clockOf, dateText, formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
+import { clockOf, dateText } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import type { Clock } from '@ab/web-kit/lib/clock';

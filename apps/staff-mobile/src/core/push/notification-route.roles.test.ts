@@ -1,5 +1,5 @@
-import { PUSH_KINDS } from '@ab/shared';
-import type { Permission } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
+import type { Permission } from '@ab/catalog';
 import { notificationsHref, routeIn } from './notification-route';
 import { assistantRouteFor, salesRouteFor } from './notification-route.roles';
 

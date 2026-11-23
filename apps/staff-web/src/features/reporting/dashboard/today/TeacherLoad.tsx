@@ -1,4 +1,4 @@
-import type { DashboardSummary } from '@ab/shared';
+import type { DashboardSummary } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';

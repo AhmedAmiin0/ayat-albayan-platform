@@ -10,7 +10,6 @@ vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signOut }));
 const ME_KEY = ['me'];
 vi.mock('@ab/web-kit/auth/me/me', () => ({
   meQuery: { queryKey: ['me'], queryFn: () => null },
-  isAccountDisabled: () => false,
 }));
 vi.mock('@ab/web-kit/portal/api', () => ({
   portalHomeQuery: { queryKey: ['portal-me'], queryFn: () => null },

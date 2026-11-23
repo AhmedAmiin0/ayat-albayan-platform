@@ -1,4 +1,4 @@
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

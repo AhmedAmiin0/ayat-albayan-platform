@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { t, StatusChip, useNow } from '@ab/mobile-kit';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { livePhase } from './live-filter';

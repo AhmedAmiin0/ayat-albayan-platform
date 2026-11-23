@@ -1,4 +1,4 @@
-import { avatarTone } from '@ab/shared';
+import { avatarTone } from '@ab/catalog';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

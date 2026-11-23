@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t } from '@ab/mobile-kit';

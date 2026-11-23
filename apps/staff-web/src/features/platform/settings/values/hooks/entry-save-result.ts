@@ -1,4 +1,4 @@
-import type { ConfigEntryConflict } from '@ab/shared';
+import type { ConfigEntryConflict } from '@ab/settings';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { serverMessage } from './save-result';
 

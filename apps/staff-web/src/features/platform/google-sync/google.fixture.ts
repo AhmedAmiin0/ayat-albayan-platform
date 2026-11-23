@@ -1,4 +1,10 @@
-import { GOOGLE_SCOPES, type GoogleStatusView, type GoogleStudentMapRow, type GoogleSyncItemView, type GoogleTeacherMapRow } from '@ab/shared';
+import {
+  GOOGLE_SCOPES,
+  type GoogleStatusView,
+  type GoogleStudentMapRow,
+  type GoogleSyncItemView,
+  type GoogleTeacherMapRow,
+} from '@ab/catalog';
 
 // Test fixture (not app code): obviously fake ids and names, never a real Google id or person.
 

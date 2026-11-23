@@ -1,4 +1,5 @@
-import { bookingRequestSchema, counted, courseBodyPackage } from '@ab/shared';
+import { bookingRequestSchema, courseBodyPackage } from '@ab/shared';
+import { counted } from '@ab/core';
 import { describe, expect, it } from 'vitest';
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 import { stepReady, toBookingRequest, withPicks } from '@/features/teaching/booking/draft/draft';

@@ -526,14 +526,8 @@
     }
   },
   "src/features/finance/finance/ReceivablesPage.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/finance/finance/api.ts": {
@@ -910,12 +904,12 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/list/PayoutsPage.test.tsx": {
+  "src/features/finance/payouts/list/PayoutsPage/tests/PayoutsPage.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/features/finance/payouts/list/PayoutsPage.tsx": {
+  "src/features/finance/payouts/list/PayoutsPage/PayoutsPage.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -926,18 +920,13 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/no-restricted-syntax": {
       "count": 1
     },
     "ab/module-boundaries": {
       "count": 3
-    }
-  },
-  "src/features/finance/payouts/list/TeacherDuesSummary.tsx": {
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/features/finance/payouts/list/payout-columns.tsx": {

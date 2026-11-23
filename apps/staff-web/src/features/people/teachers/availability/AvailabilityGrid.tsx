@@ -1,4 +1,5 @@
-import type { AvailabilitySlot, AvailabilityRow } from '@ab/shared';
+import type { AvailabilityRow } from '@ab/shared';
+import type { AvailabilitySlot } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Toast } from '@ab/web-kit/components/ui/overlay/toast';

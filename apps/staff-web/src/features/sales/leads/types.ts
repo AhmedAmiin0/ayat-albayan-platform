@@ -1,4 +1,5 @@
-import { LEAD_SOURCES, LEAD_STATUSES, NO_ASSIGNEE, type LeadSource, type LeadStatus } from '@ab/shared';
+import { NO_ASSIGNEE } from '@ab/shared';
+import { LEAD_SOURCES, LEAD_STATUSES, type LeadSource, type LeadStatus } from '@ab/catalog';
 import { parseLeadSort, type LeadSort } from '@ab/client-core';
 
 /**

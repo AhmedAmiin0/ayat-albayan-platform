@@ -1,4 +1,5 @@
-import type { AcademySettings, ConfigEntry, CustomConfigView, GoogleSyncSettings } from '@ab/shared';
+import type { GoogleSyncSettings } from '@ab/catalog';
+import type { AcademySettings, ConfigEntry, CustomConfigView } from '@ab/settings';
 import { useState } from 'react';
 import { screen } from '@testing-library/react';
 import type { Mock } from 'vitest';

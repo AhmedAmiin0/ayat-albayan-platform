@@ -1,4 +1,4 @@
-import { PUSH_KINDS } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
 import { isThreadHref } from '@/core/nav/chat-groups';
 import { notificationsHref, routeIn, teacherRouteFor } from '@/core/push/notification-route/notification-route';
 

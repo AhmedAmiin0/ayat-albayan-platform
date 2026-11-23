@@ -1,4 +1,4 @@
-import { clockTime, wallToUtc, weekdayOfDate } from '@ab/shared';
+import { clockTime, wallToUtc, weekdayOfDate } from '@ab/time';
 import { localDate } from '@/today/lib/timeline';
 
 // Free trial slots (R-SCH-06, R-SCH-01): the next 7 days of GET /booking/slots, laid out by the

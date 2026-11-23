@@ -1,4 +1,4 @@
-import { DESCRIPTION_MAX, type ConfigEntry } from '@ab/shared';
+import { DESCRIPTION_MAX, type ConfigEntry } from '@ab/settings';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

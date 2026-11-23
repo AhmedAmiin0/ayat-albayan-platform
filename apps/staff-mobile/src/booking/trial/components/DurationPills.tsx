@@ -1,4 +1,4 @@
-import { DURATIONS, type Duration } from '@ab/shared';
+import { DURATIONS, type Duration } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, FilterPills, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

@@ -1,4 +1,4 @@
-import { SEED_ENTRIES } from '@ab/shared';
+import { SEED_ENTRIES } from '@ab/settings';
 import type { TranslationKeyRow } from '@ab/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';

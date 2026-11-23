@@ -1,4 +1,5 @@
-import type { ReportFormEntry, ReportFormResponse, UserRole } from '@ab/shared';
+import type { ReportFormEntry, ReportFormResponse } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import type { ComponentType } from 'react';
 import { ReportEntry } from './entry/ReportEntry';
 import { ReportEntryV2 } from './entry-v2/ReportEntryV2';

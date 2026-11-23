@@ -54,8 +54,10 @@ describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
   it('money KPIs: owed to teachers (ledger) and owed by students, each linking to its page', async () => {
     renderPage();
     const kpis = await screen.findByRole('list', { name: t.finance.moneyKpis });
-    expect(within(kpis).getByRole('link', { name: new RegExp(t.finance.teachersOwedKpi) }).getAttribute('href')).toBe('/admin/payouts');
-    expect(within(kpis).getByRole('link', { name: new RegExp(t.finance.receivablesKpi) }).getAttribute('href')).toBe('/admin/receivables');
+    const teachers = await within(kpis).findByRole('link', { name: new RegExp(t.finance.teachersOwedKpi) });
+    expect(teachers.getAttribute('href')).toBe('/admin/payouts');
+    const students = await within(kpis).findByRole('link', { name: new RegExp(t.finance.receivablesKpi) });
+    expect(students.getAttribute('href')).toBe('/admin/receivables');
     expect(await within(kpis).findByText('600')).toBeTruthy();
   });
 
@@ -88,7 +90,8 @@ describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
   it('a failed read says so instead of showing zeros', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
     renderPage();
-    expect(await screen.findByRole('alert')).toHaveProperty('textContent', t.dashboard.loadFailed);
+    const texts = () => screen.queryAllByRole('alert').map((a) => a.textContent);
+    await vi.waitFor(() => expect(texts()).toContain(t.dashboard.loadFailed));
   });
 
   it('opens with today: four numbers, today\'s lessons, the work queue and the latest messages', async () => {

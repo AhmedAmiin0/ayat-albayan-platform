@@ -1,1 +1,1 @@
-export { canDo, isAccountDisabled, type Me, meQuery, requireRole } from './me';
+export { canDo, type Me, meQuery, requireRole } from './me';

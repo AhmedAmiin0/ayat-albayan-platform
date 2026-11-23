@@ -3,7 +3,7 @@ import type { PortalHome } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { ChildrenLinks } from './ChildrenLinks';
 import { ProfileDetails } from './ProfileDetails';
 import { ProfileHero } from './ProfileHero';
@@ -45,7 +45,9 @@ export function ProfilePage({ home }: { home: PortalHome }) {
       <h1 id="profile-title" className="font-display text-h2 font-bold">
         {t.portal.app.profile.title}
       </h1>
-      <LoadState query={profile}>{(data) => <ProfileBody profile={data} home={home} />}</LoadState>
+      <QueryState query={profile}>
+        {(data) => <ProfileBody profile={data} home={home} />}
+      </QueryState>
     </section>
   );
 }

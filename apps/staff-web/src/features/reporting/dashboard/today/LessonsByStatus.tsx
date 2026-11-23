@@ -1,4 +1,4 @@
-import { LESSON_STATUSES, type LessonStatus } from '@ab/shared';
+import { LESSON_STATUSES, type LessonStatus } from '@ab/catalog';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';

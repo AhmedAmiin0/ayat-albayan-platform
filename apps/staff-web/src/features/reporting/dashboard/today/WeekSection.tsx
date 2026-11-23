@@ -5,7 +5,7 @@ import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { LessonsByStatus } from './LessonsByStatus';
 import { TeacherLoad } from './TeacherLoad';
 import type { DayRange } from '@/features/reporting/dashboard/search';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 /** «الأسبوع ده» (Saturday → Friday, Riyadh): lessons by status and teacher load (R-RPT-01). */
 export function WeekSection({

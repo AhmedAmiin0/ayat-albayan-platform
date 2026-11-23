@@ -1,4 +1,4 @@
-import type { CustomConfigView } from '@ab/shared';
+import type { CustomConfigView } from '@ab/settings';
 import { useId } from 'react';
 import { formatDateTime } from '@/features/sales/leads';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

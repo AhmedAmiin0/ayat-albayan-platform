@@ -1,5 +1,6 @@
 import { fillSlots, notOpenedCount, usageText } from '@ab/client-core';
-import { counted, type ShortLinkDetail } from '@ab/shared';
+import type { ShortLinkDetail } from '@ab/shared';
+import { counted } from '@ab/core';
 import type { ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useLinkDates } from '@/features/platform/short-links/shared/use-link-dates';

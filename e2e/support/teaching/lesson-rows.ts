@@ -2,8 +2,8 @@ import type { Locator } from '@playwright/test';
 import { ar } from '../core/fixtures';
 import { addDays, nextWeekSaturday } from '../core/schedule';
 
-// A package's lesson days in the booking wizard (owner 2026-11-07): per day a native date input and
-// a native time input, the family's wall clock. Replaces clicking «الأسبوع التالي» + a slot.
+// A package's lesson days in the booking wizard: per day a native date input and a native time
+// input, the family's wall clock. Replaces clicking «الأسبوع التالي» + a slot.
 
 /** Next week's (Riyadh, السبت → الجمعة) date of `weekday` (0 = الأحد): always in the future. */
 function nextWeekDay(weekday: number): string {
