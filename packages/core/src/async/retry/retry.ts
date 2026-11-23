@@ -1,4 +1,4 @@
-import { toResult } from './result.js';
+import { toResult } from '../result.js';
 import type { RetryOptions } from './retry.types.js';
 
 /**
