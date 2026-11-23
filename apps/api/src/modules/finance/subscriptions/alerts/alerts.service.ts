@@ -43,10 +43,7 @@ export class SubscriptionAlertsService {
     await this.evaluateStudents(await this.queries.studentsOfLessons(lessonIds));
   }
 
-  /**
-   * Recompute statuses, then raise the alert, then the student's «بانتظار التجديد» rule (StudentRenewal).
-   * One student's failure never stops the others.
-   */
+  /** One student's failure never stops the others. */
   async evaluateStudents(studentIds: readonly string[], opts: EvaluateOptions = {}): Promise<number> {
     if (studentIds.length === 0) return 0;
     const { renewal_alert_remaining: threshold, auto_messages_enabled: auto } = await this.env.settings.read();

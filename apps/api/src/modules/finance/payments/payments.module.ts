@@ -14,11 +14,7 @@ import { ReceiptsService } from './attachments/receipts.service';
 import { PaymentReceived } from './received/payment-received';
 import { PaymentReceivedRepo } from './received/payment-received.repo';
 
-/**
- * Payments CRUD + receipt upload URL + «المرفقات» (payment_attachments); subscription status
- * recomputed after a payment, and «تم استلام دفعة» (PaymentReceived).
- * R-PAY-01, R-MOB-02 (camera receipt). Routes P1–P7 (docs/11 §7).
- */
+/** Payments CRUD, receipt upload, attachments (R-PAY-01, R-MOB-02); routes P1-P7. */
 @Module({
   imports: [SubscriptionsModule, FxModule, InvoicesModule],
   controllers: [PaymentsController],

@@ -16,7 +16,7 @@ const row = (n: number, over: object = {}) => ({
   ...over,
 });
 
-// «بحث» inside a chat (owner 2026-11-02): the same visibility as reading the chat.
+// Search inside a chat has the same visibility as reading it.
 describe('GET /threads/:phone/search', () => {
   let t: App;
   beforeAll(async () => {

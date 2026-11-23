@@ -44,10 +44,7 @@ export class AlertsRepo {
     return [...new Set(data.map((r) => r.student_id))];
   }
 
-  /**
-   * insert … on conflict (dedup_key) do nothing. `title` keeps the balance line when it was raised
-   * («فاضل حلقتين»): the UI fills {left} of dashboard.task.renewal_due with it.
-   */
+  /** `title` keeps the balance line as raised, for the UI's {left}. */
   /** true when the task is new (not already raised under its dedup key). */
   async raiseTask(task: { kind: AdminTaskKind; subjectId: string; dedupKey: string; title: string }): Promise<boolean> {
     const { data, error } = await this.db.from('admin_tasks').upsert(
