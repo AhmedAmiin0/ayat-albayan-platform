@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { STUB_WA_ENV, rows } from '@/modules/messaging/whatsapp/gate/send-gate.fakes';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';

@@ -1,4 +1,5 @@
-import { feedbackEligible, type LessonView } from '@ab/shared';
+import { feedbackEligible } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { ApiError, t } from '@ab/mobile-kit';
 import type { FeedbackListRow } from '@ab/shared';
 import type { FeedbackAverage } from './types';

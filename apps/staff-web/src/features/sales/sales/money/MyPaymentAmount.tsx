@@ -1,4 +1,4 @@
-import type { MyPaymentRow } from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { EditAmountDialog } from '@/features/finance/payments';
 import { useMyPaymentAmount } from './use-my-payment-amount';
 

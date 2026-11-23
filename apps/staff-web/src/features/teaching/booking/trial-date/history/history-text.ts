@@ -1,4 +1,5 @@
-import { lessonWhenAt, type TrialDateRow, zonedPartsIn } from '@ab/shared';
+import { lessonWhenAt, type TrialDateRow } from '@ab/shared';
+import { zonedPartsIn } from '@ab/time';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Clock } from '@ab/web-kit/lib/clock';

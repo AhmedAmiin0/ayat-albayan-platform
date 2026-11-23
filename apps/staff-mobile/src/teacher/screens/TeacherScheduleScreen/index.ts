@@ -1,0 +1,1 @@
+export { TeacherScheduleScreen } from './TeacherScheduleScreen';

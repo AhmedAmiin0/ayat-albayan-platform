@@ -1,0 +1,51 @@
+import { fireEvent, screen } from '@testing-library/react-native';
+import { router } from 'expo-router';
+import { t } from '@ab/mobile-kit';
+import { renderWithQuery, teacherPagesClient } from '@/test/query';
+import { TeacherMoreScreen } from '@/teacher/screens/TeacherMoreScreen/TeacherMoreScreen';
+
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: jest.fn(jest.requireActual('@/test/account').fetchWithProfile({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] })) }));
+jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
+jest.mock('@ab/mobile-kit/lib/session/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+
+const GATED = [
+  t.teacherNav.messages, t.teacherNav.payouts, t.teacherNav.statements, t.mobile.feedback.title,
+  t.mobileClassroom.meetingsRow,
+];
+
+test('«مستحقاتي» opens the per-lesson earnings (the monthly statements are inside it)', async () => {
+  await renderWithQuery(<TeacherMoreScreen />, teacherPagesClient());
+  await fireEvent.press(await screen.findByText(t.teacherNav.payouts));
+  expect(router.push).toHaveBeenCalledWith('/teacher/more/earnings');
+  expect(screen.queryByText(t.teacherNav.statements)).toBeNull();
+});
+
+test('«المواعيد المتاحة» is the first row (owner 2026-11-14) and opens her availability', async () => {
+  await renderWithQuery(<TeacherMoreScreen />, teacherPagesClient());
+  const row = await screen.findByText(t.availability.title);
+  const tree = JSON.stringify(screen.toJSON());
+  expect(tree.indexOf(t.availability.title)).toBeLessThan(tree.indexOf(t.teacherNav.students));
+  await fireEvent.press(row);
+  expect(router.push).toHaveBeenCalledWith('/teacher/more/availability');
+});
+
+test('every switch off (the default): only students and availability stay', async () => {
+  await renderWithQuery(<TeacherMoreScreen />, teacherPagesClient(false));
+  expect(await screen.findByText(t.teacherNav.students)).toBeTruthy();
+  expect(screen.getByText(t.availability.title)).toBeTruthy();
+  for (const title of GATED) expect(screen.queryByText(title)).toBeNull();
+});
+
+test('«أرباحي» off, «كشوف الشهر» on: a direct row to the statements', async () => {
+  const client = teacherPagesClient(false, { teacher_statements_enabled: true });
+  await renderWithQuery(<TeacherMoreScreen />, client);
+  await fireEvent.press(await screen.findByText(t.teacherNav.statements));
+  expect(router.push).toHaveBeenCalledWith('/teacher/more/payouts');
+  expect(screen.queryByText(t.teacherNav.payouts)).toBeNull();
+});
+
+test('one meetings switch is enough for the meetings row', async () => {
+  const client = teacherPagesClient(false, { teacher_scheduled_meetings_enabled: true });
+  await renderWithQuery(<TeacherMoreScreen />, client);
+  expect(await screen.findByText(t.mobileClassroom.meetingsRow)).toBeTruthy();
+});
