@@ -2,9 +2,9 @@ import type { SettingKey } from './registry.js';
 import { SCHEDULE_KEYS } from './domains/teaching/schedule-keys.js';
 import { TEACHER_PAGE_KEYS } from './domains/teaching/teacher-pages.js';
 
-// «القيم» (docs/26b §2): the store's rows in small groups, one group per view (owner, 2026-10-23
-// «i dont like long pages», «stick with table»). Kept apart from layout.ts, which still orders the
-// old single page; docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
+// «القيم» (docs/26b §2): the store's rows in small groups, one group per view, each a table
+// rather than one long page. Kept apart from layout.ts, which still orders the old single page;
+// docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
 
 /** The editable groups of «القيم», in list order (62 keys). */
 export const VALUE_GROUPS = {
@@ -70,7 +70,7 @@ export const isEditableValueKey = (key: string): key is SettingKey =>
   (EDITABLE_VALUE_KEYS as readonly string[]).includes(key);
 
 /**
- * Owner defaults (2026-10-23): a typed confirmation (type the number of days) for values that
+ * A typed confirmation (type the number of days) for values that
  * delete data; a plain dialog for booking-wide switches.
  */
 export const VALUE_CONFIRM: Partial<Record<SettingKey, 'typed' | 'plain'>> = {
