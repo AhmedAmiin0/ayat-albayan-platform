@@ -10,7 +10,7 @@ export const SCOPES: readonly string[] = [
   'settings', 'catalog', 'i18n', 'config', 'e2e', 'tools', 'repo', 'deps',
 ];
 
-export const MAX_HEADER = 100;
+const MAX_HEADER = 100;
 const SHAPE = /^([^()\s:]+)\(([^()\s]*)\): (.*)$/s;
 const MODULE = /^[a-z0-9][a-z0-9.-]*$/;
 
