@@ -25,7 +25,7 @@ export { SYNTAX, syntaxExempt } from './eslint-syntax.js';
 
 export const hardRules = {
   'max-lines': ['error', { max: 150, skipBlankLines: false, skipComments: false }],
-  // docs/32 R1: 150 lines of at most 100 characters (the prettier width); long strings and URLs
+  // docs/32 R1: 150 lines of at most 100 characters (the oxfmt width); long strings and URLs
   // may run on.
   'max-len': [
     'error',

@@ -34,6 +34,26 @@ minimumReleaseAgeExclude:
   - '@tanstack/router-generator@1.167.40'
   - '@tanstack/router-plugin@1.168.42'
   - vite@8.3.2
+  - '@oxfmt/binding-android-arm-eabi@0.80.0'
+  - '@oxfmt/binding-android-arm64@0.80.0'
+  - '@oxfmt/binding-darwin-arm64@0.80.0'
+  - '@oxfmt/binding-darwin-x64@0.80.0'
+  - '@oxfmt/binding-freebsd-x64@0.80.0'
+  - '@oxfmt/binding-linux-arm-gnueabihf@0.80.0'
+  - '@oxfmt/binding-linux-arm-musleabihf@0.80.0'
+  - '@oxfmt/binding-linux-arm64-gnu@0.80.0'
+  - '@oxfmt/binding-linux-arm64-musl@0.80.0'
+  - '@oxfmt/binding-linux-ppc64-gnu@0.80.0'
+  - '@oxfmt/binding-linux-riscv64-gnu@0.80.0'
+  - '@oxfmt/binding-linux-riscv64-musl@0.80.0'
+  - '@oxfmt/binding-linux-s390x-gnu@0.80.0'
+  - '@oxfmt/binding-linux-x64-gnu@0.80.0'
+  - '@oxfmt/binding-linux-x64-musl@0.80.0'
+  - '@oxfmt/binding-openharmony-arm64@0.80.0'
+  - '@oxfmt/binding-win32-arm64-msvc@0.80.0'
+  - '@oxfmt/binding-win32-ia32-msvc@0.80.0'
+  - '@oxfmt/binding-win32-x64-msvc@0.80.0'
+  - oxfmt@0.80.0
 # One React DOM for the workspace, equal to react 19.2.3 (React refuses a mismatched pair): apps/staff-web and the
 # optional react-dom peer of expo-router / @expo/metro-runtime would otherwise take the newest 19.x (docs/32 x1).
 overrides:

@@ -324,7 +324,7 @@ Also correct docs/57 on develop:
 - §10.4: strike quick win #4 (template lookups are already cached once a minute, template-names.ts:7).
 - §10.4: restate #7 (one cache entry per pathKey, so no duplicate requests).
 - §7.4.5: note that the counting fake Db already exists (people/guardians/fake-db.ts).
-- Lane L: replaced by prettier --check on added files.
+- Lane L: replaced by the oxfmt format sweep (`pnpm format:check`, docs/31b §9).
 
 Tests first: with the counting fake Db, N payouts take one ledger read, and the totals equal today's.
 

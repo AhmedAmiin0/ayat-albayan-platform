@@ -306,3 +306,18 @@ count (no suppressions) = Oxlint's matching count; `+n stricter`: §3.2; **gap**
 | `react-hooks/unsupported-syntax` | web, mobile | `react/unsupported-syntax` | native | same (no findings) |
 | `react-hooks/use-memo` | web, mobile | `react/use-memo` | native | same (no findings) |
 | `react-hooks/void-use-memo` | web, mobile | `react/void-use-memo` | native | same (no findings) |
+
+## 9. Formatting (oxfmt)
+
+The repo formats with oxfmt, the Oxc formatter (pinned exactly in the root `package.json`); Prettier
+is gone. `.oxfmtrc.json` at the root carries Prettier's old options (`singleQuote`, `trailingComma:
+all`, `printWidth: 100`) and keeps `package.json` key order (`sortPackageJson: false`), so oxfmt's
+output matches what Prettier printed. A block that must keep its layout takes `// oxfmt-ignore`
+(oxfmt also honours `prettier-ignore`, so the comment guard treats both as directives).
+
+- `pnpm format` writes, `pnpm format:check` checks; both read `.gitignore` and the config's
+  `ignorePatterns`.
+- **No CI format check yet.** The repo is not formatted today, and a check may only land at zero
+  (no suppressions of any kind). The format sweep formats one workspace per PR (a whole-workspace
+  reformat, proved code-identical by an AST comparison that ignores punctuation tokens); the PR
+  that brings `pnpm format:check` to zero adds it to CI.

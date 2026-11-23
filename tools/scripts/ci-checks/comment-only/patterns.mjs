@@ -11,7 +11,7 @@ export const DIRECTIVES = [
   { tool: 'coverage', test: /\b(?:istanbul|c8|v8)\s+ignore\b/ },
   { tool: 'vite', test: /@vite-ignore\b/ },
   { tool: 'webpack', test: /\bwebpack[A-Z]\w*\s*:/ },
-  { tool: 'prettier', test: /\bprettier-ignore\b/ },
+  { tool: 'oxfmt', test: /\b(?:oxfmt|prettier)-ignore\b/ },
   { tool: 'jscpd', test: /\bjscpd:ignore/ },
   { tool: 'deprecation', test: /@deprecated\b/ },
   { tool: 'jsx pragma', test: /@jsx(?:Runtime|ImportSource|Frag)?\b/ },

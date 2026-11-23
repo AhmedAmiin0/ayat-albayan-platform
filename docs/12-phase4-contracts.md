@@ -386,7 +386,7 @@ Consumers: `MessageDispatch(lines, storage)`: `ready(row: DueMessage, line: WaLi
 
 ### 13.14 `packages/db/src/types.ts` hand-edits (generated; cannot be regenerated here)
 
-Prettier style and alphabetical order exactly as `pnpm gen:types` would emit, so a later regeneration is a no-op. Exactly EIGHT entries; anchors are content, original line numbers in brackets. Apply bottom-to-top, or by anchor, so line numbers do not shift. `Relationships` of `v_threads` (and the many `referencedRelation: 'v_threads'` entries) stay untouched; nothing else changes.
+oxfmt style and alphabetical order exactly as `pnpm gen:types` would emit, so a later regeneration is a no-op. Exactly EIGHT entries; anchors are content, original line numbers in brackets. Apply bottom-to-top, or by anchor, so line numbers do not shift. `Relationships` of `v_threads` (and the many `referencedRelation: 'v_threads'` entries) stay untouched; nothing else changes.
 
 1. `Tables.messages.Row`, after `lesson_id: string | null;` and before `media_id: string | null;` [1884]: add `line: Database['public']['Enums']['wa_line'] | null;`
 2. `Tables.messages.Insert`, after `lesson_id?: string | null;` and before `media_id?: string | null;` [1919]: add `line?: Database['public']['Enums']['wa_line'] | null;`

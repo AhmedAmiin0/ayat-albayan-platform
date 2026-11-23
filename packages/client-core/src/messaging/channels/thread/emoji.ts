@@ -1,7 +1,7 @@
 // The emoji sheet's curated set (owner 2026-10-27: ~80 built-in emoji, no emoji library): faces,
 // hands, hearts and the academy's own (the Quran, the mosque, a lesson's time). Order = reading
 // order.
-// prettier-ignore
+// oxfmt-ignore
 export const EMOJI: readonly string[] = [
   '😀', '😃', '😄', '😁', '😊', '🙂', '😉', '😍', '🥰', '😘', '😇', '🤗',
   '🤩', '😎', '🤔', '🤲', '🙏', '👍', '👌', '👏', '🙌', '💪', '✋', '👋',

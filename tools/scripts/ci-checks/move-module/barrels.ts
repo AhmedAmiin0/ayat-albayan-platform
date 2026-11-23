@@ -6,7 +6,7 @@ import { readText } from './files.ts';
 const isTypeOnly = (decls: Node[]): boolean =>
   decls.every((d) => Node.isInterfaceDeclaration(d) || Node.isTypeAliasDeclaration(d));
 
-/** `export { a, type B } from './x';`, wrapped like prettier (printWidth 100) when it is long. */
+/** `export { a, type B } from './x';`, wrapped like oxfmt (printWidth 100) when it is long. */
 function exportLine(names: string[], spec: string): string {
   const one = `export { ${names.join(', ')} } from '${spec}';`;
   if (one.length <= 100) return one;

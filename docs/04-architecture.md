@@ -9,7 +9,7 @@
 | API | **NestJS 10** (TypeScript, Fastify adapter) | Owns all business logic & WhatsApp webhooks. Talks to Postgres via `postgres.js`/Kysely + Supabase service client for Storage/Auth admin |
 | Web (admin + teacher + guardian portal) | **React 19 + Vite + TanStack** (Router, Query, Table, Form) + Tailwind + shadcn/ui (RTL) | Single app, role-based routes |
 | Mobile (admin) | **Expo SDK 51+ / React Native**, expo-router, TanStack Query, expo-notifications | EAS Build; same `packages/api-client` |
-| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (eslint/tsconfig/prettier) | |
+| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (lint/tsconfig; formatting: root `.oxfmtrc.json`, oxfmt) | |
 | Messaging | Meta WhatsApp Cloud API v20+ | Webhook → Nest; outbound via Nest `MessagingModule` |
 | PDF | `@react-pdf/renderer` or Playwright-Chromium HTML→PDF in Nest worker | Arabic fonts (Amiri / Noto Naskh), RTL |
 | Jobs | BullMQ (Redis on Upstash) **or** pg-boss on Supabase Postgres (preferred: no extra infra) | Reminders, PDF generation, calendar mirror |
@@ -44,7 +44,7 @@ ayat-albayan/
 │  ├─ db/                        # supabase/ (config, migrations, seed), generated types
 │  ├─ shared/                    # enums, zod schemas, i18n/ar.json + en.json, pure utils (phone, tz, money, …)
 │  ├─ client-core/               # web + mobile: http client, query keys and options, non-UI hooks (usePermissions)
-│  └─ config/                    # eslint config (+ the module-boundaries rule), tsconfig, prettier
+│  └─ config/                    # eslint config (+ the module-boundaries rule), tsconfig (formatting: oxfmt, root .oxfmtrc.json)
 ├─ tools/
 │  ├─ migrate/                   # Google Sheets → Supabase import (dry-run + apply)
 │  ├─ wa-stub/  google-stub/  livekit/
