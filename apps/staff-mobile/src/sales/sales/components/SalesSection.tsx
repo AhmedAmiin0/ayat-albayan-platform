@@ -13,11 +13,7 @@ const rows = () =>
     { route: 'salesEarnings', title: t.assistantPortal.nav.earnings, href: '/more/sales/earnings' },
   ] as const;
 
-/**
- * «المبيعات» on «المزيد» (docs/16, web SALES_NAV_ITEMS): the salesperson's subscriptions with their
- * history, the assistant side (all students, teachers, running lessons, the read-only schedule) and «أرباحي». Only the rows `can` allows;
- * the chats are the «المحادثات» tab. Nothing left → no section.
- */
+/** The sales section (docs/16): only the rows `can` allows; nothing left means no section. */
 export function SalesSection({ can = () => true }: { can?: Can }) {
   const shown = allowedRows(can, rows());
   if (shown.length === 0) return null;

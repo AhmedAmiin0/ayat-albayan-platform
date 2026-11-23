@@ -4,7 +4,6 @@ import { renderWithQuery } from '@/test/query';
 import { familyOf, KID, kid, openSub, PHONE, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// «مبلغ مخصص» on the package price of «تحويل بنكي» (owner 2026-11-02): new and renewal.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

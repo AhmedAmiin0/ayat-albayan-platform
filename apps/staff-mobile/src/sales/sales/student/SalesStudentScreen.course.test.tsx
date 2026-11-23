@@ -7,9 +7,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { details } from './fixtures';
 import { SalesStudentScreen } from './SalesStudentScreen';
 
-// «تغيير المعلم» / «تغيير موعد الحلقات» on sales' «تفاصيل الطالب» (owner 2026-11-02): her student
-// (`mine`, the ownership rule) or ANY with sales.renew_any, once a course exists; before it
-// «أيام الحلقات» (owner 2026-11-06); «إلغاء الاشتراك» whatever `mine` says.
+// Course moves need her own student or sales.renew_any and an existing course.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

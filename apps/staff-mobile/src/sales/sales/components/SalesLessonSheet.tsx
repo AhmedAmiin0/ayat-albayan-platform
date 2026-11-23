@@ -13,17 +13,11 @@ import { SalesRescheduleSheet } from '@/sales/sales/lesson-actions/SalesReschedu
 interface SalesLessonSheetProps {
   lesson: SalesScheduleLesson | null;
   onClose: () => void;
-  /** Opened from «تفاصيل الطالب» of this student: their name does not open that screen again. */
+  /** Opened from this student's details, so their name does not reopen that screen. */
   studentId?: string;
 }
 
-/**
- * The salesperson's «تفاصيل الحلقة» (PR #261): «ادخل الحلقة» while the lesson runs (she joins as the
- * classroom assistant, docs/16). On ANY open lesson not over yet (owner 2026-10-28, docs/16 rows 37, 37b)
- * «تغيير الموعد» and «إلغاء الحلقة» too, each with its key, and «تأكيد الحلقة» while it is scheduled (lessons.confirm;
- * then it reads «مؤكدة»), laid out by SalesLessonActions (docs/07 §6: one filled button); «للاطلاع فقط» only when none is allowed. Any student's name opens «تفاصيل الطالب» (the
- * admin's student file in the admin tree; not from that student's own file, `studentId`). Never a series, an outcome or a report.
- */
+/** Sales lesson details (docs/16 rows 37, 37b); never a series, an outcome or a report. */
 export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonSheetProps) {
   const now = useNow();
   const can = usePermissions();
@@ -36,7 +30,7 @@ export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonShee
   const moves = shown ? canChangeLesson(shown, { now, can }).reschedule : false;
   const cancelInput = { now, holds: can('lessons.cancel'), required };
   const cancels = shown ? offersCancel(salesCancelRights(shown, cancelInput)) : false;
-  // «تأكيد الحلقة» only while the academy requires one (settings.lesson_confirmation_required).
+  // Confirm only while settings.lesson_confirmation_required is on.
   const confirmInput = { now, holds: holdsConfirm };
   const confirmable = shown ? required && canSalesConfirm(shown, confirmInput) : false;
   return (

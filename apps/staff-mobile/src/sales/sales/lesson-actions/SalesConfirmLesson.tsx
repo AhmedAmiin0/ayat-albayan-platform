@@ -6,16 +6,13 @@ import { useSalesConfirm } from './lesson-actions-api';
 
 interface SalesConfirmLessonProps {
   lessonId: string;
-  /** The sheet then shows the lesson «مؤكدة» (the day query refetches behind it). */
+  /** The sheet then shows the lesson as confirmed while the day query refetches. */
   onConfirmed: () => void;
-  /** In the row under a live «ادخل الحلقة»: outlined, so the sheet keeps one filled button. */
+  /** Outlined under a live join button, so the sheet keeps one filled button. */
   secondary?: boolean;
 }
 
-/**
- * «تأكيد الحلقة» in sales' «تفاصيل الحلقة» (owner 2026-10-28): one tap, scheduled → confirmed, no message
- * to the family or the teacher. The sheet decides when it shows (canSalesConfirm (@ab/shared)).
- */
+/** One tap from scheduled to confirmed, with no message to the family or the teacher. */
 export function SalesConfirmLesson({ lessonId, onConfirmed, secondary = false }: SalesConfirmLessonProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

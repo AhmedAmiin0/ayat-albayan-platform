@@ -37,18 +37,7 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
   };
 }
 
-/**
- * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student reads as hers (owner 2026-10-30, «Make
- * all assistants see all»): the status chip, the trial first, the subscription (start, renewal / end,
- * lessons used / left, past ones folded), «الجدول», the attendance and the sent reports as the teacher
- * sees them. Under the name: the code · the guardian's phone, and «فتح المحادثة» opens that family's chat;
- * under it (it loads after the page: nothing shifts) the one money action, on HER students only (`mine`,
- * absent in an old cache = hers; UX review #9: «تسجيل تحويل» / «تجديد»), ANY with sales.renew_any.
- * «تغيير المعلم» / «تغيير موعد الحلقات» like the money action, once a course exists (before it
- * «أيام الحلقات», StudentCourseSection); «تعديل الموعد التجريبي» on her trial.
- * An unknown id answers 404: «هذا الطالب غير موجود». «إيقاف مؤقت» (courses.pause) and its banner
- * for ANY student, in «الدورة والباقة» (owner 2026-11-17) with the course and its next lessons.
- */
+/** Any student reads as hers (docs/16 row 36); `mine` absent in an old cache means hers. */
 export function SalesStudentScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const student = useSalesStudent(id);

@@ -6,16 +6,13 @@ const pills = (disabled: boolean): FilterPill<ContactFor>[] =>
   (['guardian', 'self'] as const).map((v) => ({ value: v, label: t.familyAuth.contactIsSelf[v], disabled }));
 
 interface ContactIsSelfPillsProps {
-  /** students.contact_is_self; false = «ولي الأمر» (the default). */
+  /** False means the guardian, the default. */
   value: boolean;
   onChange: (value: boolean) => void;
   disabled?: boolean;
 }
 
-/**
- * «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1; NOT in the owner's Google Form, a docs/13
- * deviation). Wording only: «الطالب نفسه» = an adult student is their own WhatsApp contact.
- */
+/** Not in the original Google Form, a docs/13 deviation. */
 export function ContactIsSelfPills({ value, onChange, disabled = false }: ContactIsSelfPillsProps) {
   return (
     <FilterPills<ContactFor>

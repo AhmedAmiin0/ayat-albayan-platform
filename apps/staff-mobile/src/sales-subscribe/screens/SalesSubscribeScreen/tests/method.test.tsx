@@ -5,7 +5,6 @@ import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fi
 import { linkQuote } from '@/sales-subscribe/testing/link-fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// «طريقة الدفع» (owner 2026-10-29): «تحويل بنكي» or «دفع إلكتروني», inside «اشتراك جديد» (the Stripe test build).
 jest.mock('@/sales-subscribe/payment-link/flag', () => ({ STRIPE_FEATURE: true }));
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -47,7 +46,7 @@ test('her own child: two methods, «تحويل بنكي» first and picked; savi
 test('«دفع إلكتروني»: the amount to transfer gives way to the reference and «مبلغ مخصص»; the button makes the link', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByText(m.price)).toBeTruthy();
-  // «تحويل بنكي» has its own «مبلغ مخصص» (the package price, owner 2026-11-02), off.
+  // Bank transfer has its own custom amount on the package price, off by default.
   expect(screen.getByRole('checkbox', { name: t.paymentLinks.customAmount, checked: false })).toBeTruthy();
   await fireEvent.press(await screen.findByRole('radio', { name: m.payOnline }));
   await fireEvent.press(await screen.findByRole('checkbox', { name: t.paymentLinks.customAmount }));

@@ -7,10 +7,9 @@ import {
 } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
-/** Who cancelled (POST /sales/lessons/:id/cancel `by`); none = «ألغتها الإدارة». */
+/** Who cancelled (the cancel endpoint's `by`); absent means the academy cancelled it. */
 export type SalesCancelBy = NonNullable<SalesCancel['by']>;
 
-/** Her choice's words: «ألغتها الإدارة» / «ألغاها المعلم/ة» / «اعتذر الطالب». */
 export const CANCEL_BY_LABEL: Record<SalesCancelBy, string> = {
   admin: t.enums.lessonStatus.cancelled_by_admin,
   teacher: t.lessons.correct.byTeacher,
@@ -30,12 +29,9 @@ const CHOICES: Record<'on' | 'off', Record<When, readonly SalesCancelBy[]>> = {
 };
 
 interface CancelRights {
-  /** «إلغاء الحلقة» and who may be recorded; empty = no cancel. */
+  /** Who may be recorded as cancelling; empty means no cancel. */
   cancelBy: readonly SalesCancelBy[];
-  /**
-   * «تصحيح حالة الحلقة» targets (owner 2026-11-03): an ended open lesson, or a held / absent one
-   * (the sales row has no auto flag: 409 not_auto_held unless the job settled it); [] = none.
-   */
+  /** Outcome correction targets; 409 not_auto_held unless the job settled it; empty is none. */
   correct: readonly CorrectTo[];
 }
 
@@ -55,7 +51,7 @@ const choicesFor = (lesson: SalesScheduleLesson, input: CancelInput): readonly S
 const whenOf = (lesson: SalesScheduleLesson, now: Date): When =>
   Date.parse(lesson.ends_at) > now.getTime() ? 'before' : 'after';
 
-/** What «إلغاء الحلقة» and «تصحيح حالة الحلقة» offer on this lesson; the API checks each again. */
+/** What cancel and outcome correction offer on this lesson; the API checks each again. */
 export function salesCancelRights(lesson: SalesScheduleLesson, input: CancelInput): CancelRights {
   const may = input.holds && hasStudents(lesson);
   return {
