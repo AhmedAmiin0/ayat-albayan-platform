@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { AuditService } from '@/common/audit/audit.service';
 import { forbidden } from '@/common/http/errors';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { GuardiansService } from '@/modules/people/guardians';
 import { FamilyMoveService } from './family-move.service';
 import { FamilySearchRepo } from './family-search.repo';

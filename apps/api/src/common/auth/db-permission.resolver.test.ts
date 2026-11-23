@@ -1,6 +1,6 @@
 import { GRANTABLE_PERMISSIONS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { dbPermissionResolver } from './db-permission.resolver';
 import { PermissionCache } from './permission.cache';
 import { TestFlagReader } from './test-flag/test-flag.reader';

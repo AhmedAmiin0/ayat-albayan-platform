@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
 import { readerOf } from '@/common/settings/settings.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { OverviewRepo } from './overview.repo';
 
