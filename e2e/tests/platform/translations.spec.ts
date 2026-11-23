@@ -2,7 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { openNav } from '../../support/core/nav';
 import { withSql } from '../../support/core/schedule';
 
-// «الترجمات» (owner, 2026-10-05: dynamic translations): an admin overrides a nav label in
+// «الترجمات» (dynamic translations): an admin overrides a nav label in
 // Arabic; after a reload the sidebar shows it (main.tsx merges GET /i18n/ar/overrides into `t`
 // before the first render). «استعادة الأصل» brings the bundled label back on the next load.
 

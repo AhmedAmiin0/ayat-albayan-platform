@@ -5,7 +5,7 @@ import { API, bearer, setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 import { openMyLesson } from '../../support/teaching/my-calendar';
 
-// settings.meeting_link_auto (owner 2026-10-12): ON = the messages carry the platform classroom,
+// settings.meeting_link_auto: ON = the messages carry the platform classroom,
 // chosen when they are queued; lessons.meeting_link keeps the teacher's fixed link either way. The
 // reminders job's family link (lesson_join_link per student) is covered by its unit tests
 // (reminders.job.room.test.ts, reminders.room.test.ts): the 5-minute job has no trigger here.

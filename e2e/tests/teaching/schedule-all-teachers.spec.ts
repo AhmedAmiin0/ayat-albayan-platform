@@ -58,7 +58,7 @@ test.describe('all-teachers week schedule (R-SCH-01/03)', () => {
     await open(page);
     await expectOnly(page, [STUDENTS.abrar, STUDENTS.quran, STUDENTS.arabic]);
     for (const name of Object.values(NAMES)) await expect(grid(page).getByText(name, { exact: true })).toBeVisible();
-    // The schedule filters live in the shared «تصفية» panel (owner, 2026-10-05).
+    // The schedule filters live in the shared «تصفية» panel.
     const panel = await openFilters(page);
     await panel.getByLabel(ar.schedule.showClosed).check();
     await expect(page).toHaveURL(/closed=true/);

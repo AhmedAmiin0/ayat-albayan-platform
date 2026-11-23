@@ -5,7 +5,7 @@ import { money } from '../../support/finance/assistant-money';
 import { USERS } from '../../support/core/users';
 
 // What an assistant may NOT see or do, through the REAL API and database (R-ASST-04): the money routes
-// answer 403. Since docs/16 (owner 2026-10-11) she reads every chat, still with no money in it.
+// answer 403. Since docs/16 she reads every chat, still with no money in it.
 
 test.describe.serial('assistant scope: money routes and chats (API + DB)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'API only: one run'));

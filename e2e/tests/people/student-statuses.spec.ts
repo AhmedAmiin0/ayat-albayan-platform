@@ -12,7 +12,7 @@ import {
   unpaidPackage,
 } from '../../support/people/student-statuses';
 
-// Student status pipeline (owner 2026-10-15, R-STU-05, docs/18): a registered student with no trial
+// Student status pipeline (R-STU-05, docs/18): a registered student with no trial
 // time is «جديد»; booking a trial lesson → «بانتظار الحلقة التجريبية»; attending it → «بانتظار
 // الاشتراك»; a positive payment → «مشترك». Each step through the real API (:3100), checked in
 // students.status, in its status_change audit row and on the admin profile chip. No WhatsApp is sent.

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// A reply that arrives before the message it quotes (migration 20261031000995, owner 2026-10-31):
+// A reply that arrives before the message it quotes (migration 20261031000995):
 // the WhatsApp Business app's echo or Kapso's history stores our message after the family's
 // reply; the reply is linked when that row (or its wamid) lands, on the SAME phone only, and a link
 // already set is never re-pointed. Rolled back; database only, no message is ever sent.

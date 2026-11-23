@@ -12,7 +12,7 @@ import {
 import { seedPackageStudent } from '../../support/finance/money';
 import { fillAttended } from '../../support/reporting/teacher-extra';
 
-// docs/47 PR 1 «ملف الطالب» (owner 2026-11-13): her student's file shows the course start and
+// docs/47 PR 1 «ملف الطالب»: her student's file shows the course start and
 // end, an excused lesson with its reason, a lesson the admin moved with its old time and the
 // move reason, and per-lesson reports: «اكتب التقرير» → submit → «تعديل التقرير».
 

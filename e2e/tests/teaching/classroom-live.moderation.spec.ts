@@ -2,7 +2,7 @@ import type { Browser, Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { BOARD, boardInk, drawStroke, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, roomPage, shot } from '../../support/teaching/classroom-live';
 
-// Mute and «اطلب الكتابة على السبورة» against a real LiveKit (owner, 2026-10-05), next to
+// Mute and «اطلب الكتابة على السبورة» against a real LiveKit, next to
 // classroom-live.spec.ts (split for the 150-line rule). Skipped without LIVEKIT_URL.
 
 const C = ar.classroom;
