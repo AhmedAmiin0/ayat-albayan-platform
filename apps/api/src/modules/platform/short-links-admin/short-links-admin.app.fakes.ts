@@ -11,7 +11,7 @@ import {
 } from '@/common/auth/auth.guard';
 import { DB } from '@/common/db/db.module';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { ShortLinks } from '@/modules/platform/short-links';
 import { LinkTargets } from './managed/link-targets';
 import { LinkUsersRepo } from './managed/link-users.repo';

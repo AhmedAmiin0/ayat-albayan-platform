@@ -7,7 +7,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/au
 import { DB } from '@/common/db/db.module';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { GuardianPhonesService } from '@/modules/people/guardians';
 import { PeopleEditRepo } from '@/modules/people/people-edit/people-edit.repo';
 import { StudentRecordsRepo } from '@/modules/people/people-edit/student-records.repo';

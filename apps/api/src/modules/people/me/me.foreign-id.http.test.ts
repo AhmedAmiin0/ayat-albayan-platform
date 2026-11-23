@@ -9,7 +9,7 @@ import {
   type TokenVerifier,
 } from '@/common/auth/auth.guard';
 import { DB } from '@/common/db/db.module';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 
 const ROLES = ['teacher', 'guardian', 'student', 'sales', 'admin'] as const;
 const verify: TokenVerifier = async (token) => {
