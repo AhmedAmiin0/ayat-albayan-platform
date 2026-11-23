@@ -1,5 +1,6 @@
 import type { LiveRow } from '@ab/client-core';
-import type { MessageStatus, SyncMessage, ThreadSync } from '@ab/shared';
+import type { SyncMessage, ThreadSync } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { encodeSyncCursor } from '@ab/shared';
 import { memoryPort } from '@/test/node-sql';
 import { createMessageStore } from '@/inbox/thread/store/message-store';

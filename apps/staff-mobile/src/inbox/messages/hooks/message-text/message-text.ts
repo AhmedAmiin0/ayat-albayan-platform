@@ -1,7 +1,5 @@
 import { sendErrorReason } from '@ab/client-core';
 import {
-  type ClockCycle,
-  dayParts,
   isUnavailableMessage,
   isUnsupportedMessage,
   type MessageView,
@@ -11,6 +9,7 @@ import {
   reactionText,
   type ThreadView,
 } from '@ab/shared';
+import { type ClockCycle, dayParts } from '@ab/time';
 import { clockIn, phoneTz } from '@/core/lib/clock';
 import { ApiError, t } from '@ab/mobile-kit';
 import { heldLine } from '@/inbox/messages/hooks/held-line';
@@ -142,7 +141,7 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
  * (inbox.correction.errors), else «الرسالة متبعتتش…».
  */
 export function sendError(error: unknown): string {
-  const code = error instanceof ApiError && isRecord(error.body) ? error.body['code'] : undefined;
+  const code = error instanceof ApiError && isRecord(error.body) ? error.body.code : undefined;
   const errors: Record<string, string> = { ...t.inbox.correction.errors, ...t.inbox.error };
   return (typeof code === 'string' ? errors[code] : undefined) ?? t.inbox.error.send_failed;
 }
