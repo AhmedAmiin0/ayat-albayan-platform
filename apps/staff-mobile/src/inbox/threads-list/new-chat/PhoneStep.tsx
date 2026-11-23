@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Field, ScreenHeader, Button, ErrorLine } from '@ab/mobile-kit';

@@ -1,4 +1,5 @@
-import { forAudience, formatPhone, type TemplateView } from '@ab/shared';
+import { forAudience, type TemplateView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, ScreenHeader, BackButton, Button, ltr, ErrorLine } from '@ab/mobile-kit';

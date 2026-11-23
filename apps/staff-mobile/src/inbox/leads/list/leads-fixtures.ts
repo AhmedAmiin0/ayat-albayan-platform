@@ -1,4 +1,5 @@
-import type { LeadView, Page, SalesPersonView } from '@ab/shared';
+import type { LeadView, SalesPersonView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { huda, unnamed } from '@/inbox/shared/fixtures';
 
 // Test rows for the leads / sales endpoints the parity screens read.

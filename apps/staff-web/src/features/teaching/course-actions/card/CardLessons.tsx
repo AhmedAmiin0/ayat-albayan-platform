@@ -1,4 +1,5 @@
-import { clockOf, type CourseCardLesson } from '@ab/shared';
+import type { CourseCardLesson } from '@ab/shared';
+import { clockOf } from '@ab/time';
 import { useState } from 'react';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { useClock } from '@ab/web-kit/lib/clock';

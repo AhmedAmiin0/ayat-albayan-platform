@@ -1,4 +1,4 @@
-import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
+import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import type { ChatChoice } from '@/inbox/lists/components/ChatListChips';
 import { ListChip } from '@/inbox/lists/components/ListChip';

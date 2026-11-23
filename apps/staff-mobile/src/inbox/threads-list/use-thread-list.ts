@@ -1,5 +1,7 @@
 import { INBOX_LIST_REFRESH_MS, liveInterval } from '@ab/client-core';
-import type { LeadStatus, Page, ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
+import type { Page } from '@ab/core';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { apiFetch, toQueryString, useScreenFocused } from '@ab/mobile-kit';

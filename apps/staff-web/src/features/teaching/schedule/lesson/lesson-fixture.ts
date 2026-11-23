@@ -1,5 +1,6 @@
-import type { LessonTimeEditView, TimeEditMode } from '@ab/shared';
-import { allowedLessonEvents, type LessonStatus, type LessonView } from '@ab/shared';
+import type { LessonTimeEditView, TimeEditMode } from '@ab/schedule';
+import type { LessonStatus } from '@ab/catalog';
+import { allowedLessonEvents, type LessonView } from '@ab/schedule';
 
 // Test data only (imported by *.test.tsx): LessonView rows shaped like GET /lessons responses.
 

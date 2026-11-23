@@ -1,4 +1,5 @@
-import { formatPhone, type MessageSearchHit } from '@ab/shared';
+import type { MessageSearchHit } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { Pressable, View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
 import { t, Avatar, AppText, ltr, type, useTheme } from '@ab/mobile-kit';

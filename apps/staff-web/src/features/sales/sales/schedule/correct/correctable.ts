@@ -1,4 +1,5 @@
-import { isOpenLesson, type SalesScheduleLesson } from '@ab/shared';
+import type { SalesScheduleLesson } from '@ab/shared';
+import { isOpenLesson } from '@ab/schedule';
 
 export interface CorrectableInput {
   now: Date;

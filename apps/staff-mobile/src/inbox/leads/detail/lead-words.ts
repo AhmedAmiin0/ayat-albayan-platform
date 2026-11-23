@@ -1,4 +1,4 @@
-import { leadStatusStyle, type StatusStyle } from '@ab/shared';
+import { leadStatusStyle, type StatusStyle } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
 // A lead's status / source as the inbox lists show them. The API can send a value this build has

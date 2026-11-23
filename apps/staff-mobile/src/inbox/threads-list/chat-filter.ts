@@ -1,4 +1,5 @@
-import type { LeadStatus, ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import type { ChatChoice } from '@/inbox/lists/components/ChatListChips';
 

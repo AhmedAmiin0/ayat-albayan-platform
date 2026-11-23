@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { View } from 'react-native';
 import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 

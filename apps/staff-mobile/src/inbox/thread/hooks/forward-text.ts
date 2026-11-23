@@ -1,4 +1,5 @@
-import { formatPhone, type ForwardResult, type ThreadView } from '@ab/shared';
+import type { ForwardResult, ThreadView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { t, ltr } from '@ab/mobile-kit';
 import type { ChatNoticeValue } from './chat-actions';
 

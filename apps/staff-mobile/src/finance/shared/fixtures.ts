@@ -1,5 +1,6 @@
 // Test fixtures for the finance screens (test-only).
-import type { ExpenseCategoryView, ExpenseView, InvoiceView, PayoutView } from '@ab/shared';
+import type { ExpenseCategoryView, ExpenseView, PayoutView } from '@ab/money';
+import type { InvoiceView } from '@ab/schedule';
 
 export const PAYOUT: PayoutView = {
   id: 'p1',
