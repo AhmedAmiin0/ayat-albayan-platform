@@ -1,26 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { shouldRetry } from '@ab/client-core';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { focusManager, MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
 import { isAccountDisabled, setLoginNotice } from '../../auth/login-notice';
-import { isNetworkError } from '../connectivity/network-error';
 import { ApiError } from '../http/api';
 import { supabase } from '../http/supabase';
 
 // R-MOB-03: reads survive a restart or a dead connection (the last good answer stays on screen).
 const DAY = 24 * 60 * 60 * 1000;
-
-/**
- * A 4xx never succeeds on retry; a 5xx gets TanStack's default three tries. A request with no answer
- * is not retried: the connection probe takes over (lib/connectivity) and the reconnect refetches.
- */
-export function shouldRetry(failureCount: number, error: unknown): boolean {
-  if (error instanceof ApiError && error.status < 500) return false;
-  if (isNetworkError(error)) return false;
-  return failureCount < 3;
-}
 
 /**
  * Expired or revoked session (401), or an account an admin disabled mid-session (403 `account_disabled`):

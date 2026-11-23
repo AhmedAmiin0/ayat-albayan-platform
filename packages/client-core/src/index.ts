@@ -2,6 +2,7 @@
 // Native imports; react and @tanstack/react-query join as peers with the first hook (Wave E).
 export * from './core/http/index.js';
 export * from './core/keys/index.js';
+export * from './core/query/index.js';
 export * from './core/auth/index.js';
 export * from './people/users/index.js';
 export * from './people/family-auth/index.js';
