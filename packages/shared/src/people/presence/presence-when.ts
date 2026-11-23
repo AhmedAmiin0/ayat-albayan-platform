@@ -9,17 +9,13 @@ import {
   isolateClock,
 } from '@ab/time';
 
-// «آخر ظهور …» / «آخر رسالة …» (docs/33 §4): how long ago, on the viewer's clock and zone. The
-// words come from each app's ar.json / en.json (`presence`), so this stays pure.
+// Presence times (docs/33 §4) on the viewer's clock and zone; pure.
 
 export interface PresenceWords {
-  /** «الآن» */
   now: string;
-  /** «منذ {n} دقائق», one string per Arabic count form. */
+  /** One string per Arabic count form. */
   minutes: Readonly<Record<PluralForm, string>>;
-  /** «اليوم {time}» */
   today: string;
-  /** «أمس» */
   yesterday: string;
 }
 
@@ -41,7 +37,7 @@ function dayText(at: Date, input: PresenceWhenInput): string {
   return dateText(at, input, sameYear ? fields : { ...fields, year: 'numeric' });
 }
 
-/** «الآن» · «منذ 5 دقائق» · «اليوم 10:30» · «أمس» · «25 أكتوبر»; a future time (skew) is «الآن». */
+/** A future time from clock skew reads as now. */
 export function presenceWhen(input: PresenceWhenInput): string {
   const at = new Date(input.iso);
   const ago = input.now.getTime() - at.getTime();

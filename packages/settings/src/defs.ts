@@ -20,11 +20,11 @@ interface Base {
   // still fits; seed-entries.test.ts requires module and group on every registry entry.
   /** The owning module: the domain file's name (follow_ups for follow-ups.ts). */
   module?: string;
-  /** Its «القيم» group (docs/26b §2). */
+  /** Its values-page group (docs/26b §2). */
   group?: SettingGroup;
   /** The confirmation asked before a change is saved. */
   confirm?: SettingConfirm;
-  /** The module page that edits it when that is not «القيم» (the same owner as OWNED_SETTING_KEYS). */
+  /** The module page that edits it when not the values page (same owner as OWNED_SETTING_KEYS). */
   ownedBy?: SettingOwner;
   /**
    * true: changing it changes a message families, guardians or leads receive, or a page, link, number or

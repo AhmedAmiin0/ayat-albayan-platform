@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { optionalText, timeOfDay, timeZone } from '@ab/core';
 
-/** One weekly slot, wall-clock in `tz`. weekday: 0 = الأحد … 6 = السبت. R-TCH-02. */
+/** One weekly slot, wall-clock in `tz`; weekday 0 = Sunday ... 6 = Saturday (R-TCH-02). */
 export const availabilitySlotSchema = z
   .object({
     weekday: z.int().min(0).max(6),

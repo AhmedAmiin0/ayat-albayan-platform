@@ -19,7 +19,7 @@ export interface DashboardSummary {
   active_students: number;
   /** Lessons starting in the range, by status. */
   lessons_by_status: Record<LessonStatus, number>;
-  /** scheduled lessons in the next 48 h that nobody confirmed yet («يحتاج تأكيد»). */
+  /** Scheduled lessons in the next 48 h that nobody confirmed yet. */
   needs_confirmation: number;
   pending_reports: number;
   unpaid_subscriptions: number;

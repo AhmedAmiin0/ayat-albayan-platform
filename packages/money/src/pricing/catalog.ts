@@ -45,7 +45,7 @@ export const MONTHLY = {
 /** Custom lesson counts the calculator accepts. */
 export const CUSTOM_COUNT_MIN = 1;
 export const CUSTOM_COUNT_MAX = 60;
-/** «عدد مخصوص» opens on 10 lessons, as on the site. */
+/** The custom count opens on 10 lessons, as on the site. */
 export const CUSTOM_COUNT_DEFAULT = 10;
 /** Students per quote the calculator accepts (the site's stepper stops at 6). */
 export const STUDENTS_MIN = 1;
@@ -64,10 +64,7 @@ export function basePrice(id: PackageId, duration: PricingDuration): number {
   return tierOf(id).base[duration];
 }
 
-/**
- * The site's discount field: `Number(text) || 0`, clamped to 0–100. Also takes Arabic-Indic and
- * Persian digits and «٫» / «,» as the decimal point (a phone's Arabic keypad).
- */
+/** The site's discount field clamped to 0-100, accepting Arabic keypad digits and decimals. */
 export function parseDiscount(text: string): number {
   const western = asciiDigits(text.trim()).replace(/[٫,]/g, '.');
   return Math.min(DISCOUNT_MAX, Math.max(0, Number(western) || 0));

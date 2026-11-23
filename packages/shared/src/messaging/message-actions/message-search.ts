@@ -2,9 +2,7 @@ import { phoneE164 } from '@ab/core';
 import { z } from 'zod';
 import { chatSearchHitSchema, cursorSchema, searchFold } from './chat-search.js';
 
-// «بحث في كل الرسائل» (owner 2026-11-06, docs/37): GET /threads/search, every chat the caller
-// may read, newest hit first. No total (as WhatsApp): only «عرض مزيد من الرسائل» while a cursor
-// remains.
+// Search across all readable chats (docs/37), newest first; no total, only a cursor.
 
 /** Hits a page carries (the RPC reads one more to know whether older ones remain). */
 export const MESSAGE_SEARCH_PAGE = 30;

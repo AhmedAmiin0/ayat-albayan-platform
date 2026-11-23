@@ -22,12 +22,12 @@ export type JoinState = 'early' | 'open' | 'closed';
 
 export interface JoinWindow {
   state: JoinState;
-  /** ISO instants of the two edges, for «بيفتح الساعة …» messages. */
+  /** ISO instants of the two edges, for opening-time messages. */
   opens_at: string;
   closes_at: string;
 }
 
-/** What the window reads of a lesson; room_opened_at = «افتح الحلقة الآن» (lessons.room_opened_at). */
+/** room_opened_at is set when the room is opened early (lessons.room_opened_at). */
 export interface WindowLesson {
   starts_at: string;
   ends_at: string;
@@ -48,7 +48,7 @@ export function joinWindow(lesson: WindowLesson, now: Date, win: JoinWindowConfi
   return { state, opens_at: new Date(opens).toISOString(), closes_at: new Date(closes).toISOString() };
 }
 
-/** What the «ادخل الحلقة» buttons check (the API checks again). */
+/** What the join buttons check; the API checks again. */
 export const canJoinNow = (lesson: WindowLesson, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): boolean =>
   joinWindow(lesson, now, win).state === 'open';
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { OWNED_SETTING_KEYS, SETTINGS_REGISTRY } from '@ab/settings';
 import { RULE_SETTING_KEYS } from './rules.legacy.js';
 
-// docs/23b decision 1: the 8 keys move to «الإشعارات» in the registry AND in OWNED_SETTING_KEYS.
+// docs/23b decision 1: the 8 keys move to notifications in the registry and OWNED_SETTING_KEYS.
 describe('the notification rules own exactly RULE_SETTING_KEYS', () => {
   it('OWNED_SETTING_KEYS names them notifications, and nothing else', () => {
     const owned = Object.entries(OWNED_SETTING_KEYS).filter(([, o]) => o === 'notifications').map(([k]) => k);

@@ -48,7 +48,7 @@ export const studentRecordingsQuerySchema = z.object({
   from: day.optional(),
   to: day.optional(),
   teacherId: z.string().uuid().optional(),
-  /** Only rows in this state («جاهز», «فشل التسجيل», …); absent = every state. */
+  /** Only rows in this state; absent means every state. */
   status: z.enum(STUDENT_RECORDING_STATUSES).optional(),
 });
 export type StudentRecordingsQuery = z.output<typeof studentRecordingsQuerySchema>;

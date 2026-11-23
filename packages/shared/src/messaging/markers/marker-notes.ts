@@ -51,14 +51,11 @@ export function previewNote(
   return th.last_note === 'ad_welcome' ? (th.last_body ?? words.adWelcome) : words[th.last_note];
 }
 
-/**
- * MessageView's marks (owner 2026-10-30), set by the API from messages.edited_at / deleted_at, and
- * hidden_at («حذف من المنصة», HiddenMark).
- */
+/** Set by the API from messages.edited_at, deleted_at and hidden_at. */
 export interface MessageMarks extends HiddenMark, CorrectionMark {
-  /** Edited after it was sent («تم التعديل»): body is the new text. Absent = no. */
+  /** Edited after it was sent: body is the new text; absent means no. */
   edited?: boolean;
-  /** Deleted for everyone («تم حذف هذه الرسالة»): body, file and payload withheld. Absent = no. */
+  /** Deleted for everyone: body, file and payload withheld; absent means no. */
   deleted?: boolean;
 }
 

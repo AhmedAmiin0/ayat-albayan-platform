@@ -4,7 +4,7 @@ import { baseMime } from '../../schemas/chat-media.js';
 import { isPdfMime } from '../chat/chat-files/index.js';
 import type { MessageDirection } from '@ab/catalog';
 
-// «رد» and «إعادة توجيه» in the inbox (owner 2026-10-25). Pure: the API, the web and the app share it.
+// Reply and forward in the inbox; pure, shared by the API, web and app.
 
 /** A forward reaches at most this many chats at once. */
 export const FORWARD_MAX_TARGETS = 5;
@@ -35,10 +35,7 @@ export interface MessageQuote {
   sender_name: string | null;
 }
 
-/**
- * WhatsApp named a quoted message we do not hold (never stored, owner 2026-10-31): the bubble shows
- * «رسالة غير متاحة», greyed, with nothing to jump to.
- */
+/** WhatsApp quoted a message we never stored: shown as unavailable with nothing to jump to. */
 export interface UnavailableQuote {
   unavailable: true;
 }
@@ -71,10 +68,10 @@ export interface ForwardResponse {
 
 type Quotable = { replyable?: boolean; template_key: string | null };
 
-/** «رد»: a message WhatsApp knows (it has a wamid), template or not. */
+/** A message WhatsApp knows (has a wamid), template or not. */
 export const canReply = (m: Pick<Quotable, 'replyable'>): boolean => m.replyable === true;
 
-/** «إعادة توجيه»: a text or a file we hold (or can fetch), never a template. */
+/** A text or a file we hold or can fetch, never a template. */
 export function canForward(m: Quotable & { body: string | null; media_mime: string | null; forwardable?: boolean }): boolean {
   return !m.template_key && m.forwardable === true && (!!m.body?.trim() || !!m.media_mime);
 }
@@ -98,7 +95,6 @@ export type QuoteKind = NonNullable<ReturnType<typeof mediaKindOf>> | 'pdf';
 export const quoteKindOf = (mime: string | null): QuoteKind | null =>
   isPdfMime(mime) ? 'pdf' : mediaKindOf(mime);
 
-/** The small icon before a quoted file's line (📷 صورة, 📄 ملف PDF, 🎤 رسالة صوتية). */
 const QUOTE_ICONS: Readonly<Record<QuoteKind, string>> = {
   image: '📷',
   audio: '🎤',
@@ -119,10 +115,7 @@ export interface QuoteWords {
   template: string;
 }
 
-/**
- * A quote's line, as WhatsApp (owner 2026-10-31): its first line; a file without a caption says its
- * kind («ملف PDF» apart); a template says so; nothing at all says it cannot be shown.
- */
+/** First line; a captionless file names its kind; nothing at all says it can't be shown. */
 export function quoteSnippet(q: MessageQuote, words: QuoteWords): string {
   const line = quoteLine(q.body);
   if (line) return line;

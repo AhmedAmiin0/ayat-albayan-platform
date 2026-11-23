@@ -52,7 +52,7 @@ export function stickerKey(m: { id: string; interactive_payload: unknown }): str
 export const threadStickerSendSchema = z.object({ messageId: z.uuid(), clientRequestId: z.uuid() });
 export type ThreadStickerSend = z.infer<typeof threadStickerSendSchema>;
 
-/** PUT /threads/stickers/favourites: «أضف إلى المفضلة» on a sticker bubble. */
+/** Adds a sticker bubble to favourites. */
 export const stickerFavouriteSchema = z.object({ messageId: z.uuid() });
 
 /** A GIPHY GIF id: the API asks GIPHY for its mp4 itself, never a link from the app. */
@@ -90,6 +90,6 @@ export const gifItemSchema = z.object({
 });
 export type GifItem = z.infer<typeof gifItemSchema>;
 
-/** GET /threads/gifs: `configured` false = no GIPHY key in «التكاملات» yet (no items). */
+/** `configured` false means no GIPHY key in integrations yet (no items). */
 export const gifListSchema = z.object({ configured: z.boolean(), items: z.array(gifItemSchema) });
 export type GifList = z.infer<typeof gifListSchema>;

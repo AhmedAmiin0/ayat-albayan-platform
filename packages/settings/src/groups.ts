@@ -1,7 +1,4 @@
-/**
- * «القيم» page groups (docs/26b §2), one per view. The first ten hold the 28 CONFIG keys of docs/26 §1;
- * the last three are «تُدار من صفحة أخرى»: rows shown read-only that their module page edits.
- */
+/** Values page groups (docs/26b §2); the last three are read-only rows their module page edits. */
 export const CONFIG_GROUPS = [
   'schedule', 'classroom', 'reports', 'accounts', 'payouts', 'uploads', 'academy', 'messaging', 'sales', 'retention',
   'teachers', 'family', 'system',
