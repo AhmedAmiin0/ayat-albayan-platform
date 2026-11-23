@@ -8,7 +8,7 @@ import { previewLine } from './course-pause-text';
 
 type Preview = ReturnType<typeof usePausePreview>;
 
-/** The answer's lines (an old one without dates: its count line), «جارٍ الحساب…», or nothing. */
+/** An old answer without dates shows its count line. */
 function linesOf(preview: Preview, tz: string): string[] {
   const data = preview.data;
   if (data?.starts) return pauseLines(data, tz);
@@ -16,11 +16,7 @@ function linesOf(preview: Preview, tz: string): string[] {
   return preview.isPending ? [t.coursePause.previewLoading] : [];
 }
 
-/**
- * «ما سيحدث» for the window picked now (GET …/preview, owner 2026-11-17): the lessons cancelled
- * with their dates, then how far the package moves on resume; an old answer without the dates
- * keeps the one count line. Nothing if it fails.
- */
+/** An old answer without dates keeps the one count line; nothing if it fails. */
 export function PausePreviewLine(props: { studentId: string; from: string; until: string | null }) {
   const { color } = useTheme();
   const tz = useViewerTz();

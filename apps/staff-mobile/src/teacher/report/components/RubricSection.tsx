@@ -13,10 +13,7 @@ interface RubricSectionProps {
   register: (key: string) => (node: View | null) => void;
 }
 
-/**
- * «التقييم التفصيلي»: «تقييم البنود *» (the six rows, each graded ممتاز … يحتاج إلى مراجعة), then
- * «التقدير العام للحلقة *». All required once the student attended (the API's missing_grades).
- */
+/** All grades required once the student attended (the API's missing_grades). */
 export function RubricSection({ s, locked, register }: RubricSectionProps) {
   const { values, problem } = s;
   return (

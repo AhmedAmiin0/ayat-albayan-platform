@@ -2,10 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ApiError } from '@ab/client-core';
 import { z } from 'zod';
 
-// Unsent «تقرير الحلقة» draft bodies by report id (R-REP-02): a failed save or a closed app keeps
-// what was typed on this phone until the server has it. Storage errors are swallowed: the form
-// still works, it only forgets the copy. `base` is the server draft the body was typed against:
-// once the server holds another one (saved from the web), the copy is stale and never restored.
+// Unsent drafts (R-REP-02) stay on the phone until saved; a copy older than the server's drops.
 
 export const REPORT_DRAFTS_KEY = 'ab.report-drafts';
 

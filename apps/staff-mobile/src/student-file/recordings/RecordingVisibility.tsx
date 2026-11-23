@@ -5,10 +5,7 @@ import { useSetVisibility, visibilityError } from './recording-actions';
 
 const V = t.mobileStudentFile.recordings.visible;
 
-/**
- * «إظهار للطالب» (off by default). The switch is live only for who may change it (`editable`: the
- * recordings.manage permission and the row's `can_manage`); everyone else just reads the state.
- */
+/** Off by default; editable only with recordings.manage and the row's `can_manage`. */
 export function RecordingVisibility({ rec, studentId, editable }: { rec: StudentRecordingView; studentId: string; editable: boolean }) {
   const { color } = useTheme();
   const toggle = useSetVisibility(studentId);

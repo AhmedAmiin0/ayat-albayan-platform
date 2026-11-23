@@ -11,7 +11,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 
-// docs/48 MOBILE MUTATIONS: «سأحضر» optimistic with rollback; cancel write-through.
+// Attendance confirm is optimistic with rollback; cancel writes through (docs/48).
 const TODAY = ['lessons', 'mine', { from: 'a', to: 'b' }];
 const WEEK = ['lessons', 'mine', { from: 'c', to: 'd' }];
 const OTHER = ['lessons', 'day', { date: 'x' }];

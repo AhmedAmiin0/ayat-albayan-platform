@@ -10,7 +10,7 @@ const L = t.mobileStudentFile.list;
 const cities: Record<string, string | undefined> = t.tz;
 type Pill = { value: string; label: string };
 
-/** Each select filter's options, «الكل» first (value '' = no filter), as the web's studentFilterOptions. */
+/** The all option comes first with value '' meaning no filter. */
 function filterOptions(teachers: TeacherOption[], tz: string): Record<Exclude<FilterKey, 'status'>, Pill[]> {
   return {
     teacher: [{ value: '', label: S.teacherAll }, { value: NO_TEACHER, label: S.teacherNone }, ...teachers.map((x) => ({ value: x.id, label: teacherName(x, locale) }))],

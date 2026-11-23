@@ -36,11 +36,7 @@ function useRemoveSecondPhone(guardianId: string) {
 const removeError = (error: unknown): string =>
   error instanceof ApiError && error.status === 404 ? t.guardians.phoneNotFound : t.common.error;
 
-/**
- * «الرقم الثاني» of the family (owner 2026-10-29, «ربط بطالب موجود»), LTR, under the guardian's buttons:
- * those stay on the main number. guardians.write (the admin) may remove it after an inline confirm: its
- * chat becomes a lead chat again, and the line says «أُزيل الرقم الثاني» while the file refetches.
- */
+/** Admin (guardians.write) may remove it; its chat becomes a lead chat again. */
 export function SecondPhone({ guardianId, phones }: { guardianId: string; phones: readonly FamilyPhone[] }) {
   const { color } = useTheme();
   const canRemove = useHolds('guardians.write');

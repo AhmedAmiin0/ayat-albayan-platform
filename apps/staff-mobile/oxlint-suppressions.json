@@ -7731,9 +7731,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
@@ -7757,7 +7754,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 2
@@ -7784,11 +7781,6 @@
       "count": 5
     }
   },
-  "src/students/course-pause/ChangeUntilForm.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/students/course-pause/ChangeUntilSheet.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -7802,12 +7794,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/students/course-pause/CoursePauseForm.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/students/course-pause/CoursePauseSection.tsx": {
@@ -7815,15 +7807,10 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/students/course-pause/PausePreviewLine.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/students/course-pause/PauseSheetFrame.tsx": {
+  "src/students/course-pause/PausePreviewLine.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -7835,12 +7822,12 @@
   },
   "src/students/course-pause/UntilField.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/students/course-pause/course-pause-api.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-untyped-api-calls": {
       "count": 5
@@ -7848,12 +7835,12 @@
   },
   "src/students/course-pause/course-pause-text.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/students/course-pause/fixtures.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/students/list/StudentFilterBar.test.tsx": {
@@ -7872,7 +7859,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/students/list/StudentFilterGroups.tsx": {
@@ -7880,7 +7867,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/students/list/StudentRow.tsx": {
@@ -7895,7 +7882,7 @@
   },
   "src/students/list/student-filters.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -7922,16 +7909,6 @@
       "count": 2
     }
   },
-  "src/students/profile/BalanceCard/tests/cancel.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/students/profile/BalanceCard/tests/part-paid.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/students/profile/BalanceCard/BalanceCard.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -7956,7 +7933,7 @@
   },
   "src/students/profile/GuardianCard.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/students/profile/SecondPhone.test.tsx": {
@@ -7972,7 +7949,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -8003,11 +7980,6 @@
       "count": 2
     }
   },
-  "src/students/profile/student-note.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/students/screens/StudentScreen/tests/pause.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -8022,9 +7994,6 @@
     "max-lines-per-function": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 4
-    },
     "ab/module-boundaries": {
       "count": 3
     },
@@ -8035,17 +8004,9 @@
       "count": 1
     }
   },
-  "src/students/screens/StudentsScreen.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/students/screens/StudentsScreen.tsx": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/students/shared/test-data.ts": {
@@ -8055,7 +8016,7 @@
   },
   "src/subscribe/NoCommissionNote.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/subscribe/PricingInputs.tsx": {
@@ -8090,7 +8051,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -8106,7 +8067,7 @@
   },
   "src/subscribe/UsedBeforeField.tsx": {
     "stylistic/max-len": {
-      "count": 10
+      "count": 6
     }
   },
   "src/subscribe/chat-subscribe.flow.test.tsx": {
@@ -8136,7 +8097,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1
@@ -8180,11 +8141,6 @@
     }
   },
   "src/teacher/components/TeacherTabs.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/teacher/components/TeacherTabs.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -8236,7 +8192,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/report/components/ReportFooter.tsx": {
@@ -8270,11 +8226,6 @@
       "count": 1
     },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/teacher/report/hooks/use-report-entry/use-report-entry.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },

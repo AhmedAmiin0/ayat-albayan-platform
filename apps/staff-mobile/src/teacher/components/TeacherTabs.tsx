@@ -3,10 +3,7 @@ import { type Can, usePermissions, t, AppNativeTabs, type TabItem } from '@ab/mo
 import { useTeacherPageOn } from '@/teacher/lib/teacher-pages';
 import { TeacherScope } from './TeacherScope';
 
-// The teacher app, native tabs (R-AUTH-01, R-TCH-03, R-MOB-02): only her lessons, schedule, chats, students,
-// reports and payouts. Five tabs, the native bar's limit on Android; «الطلاب» lives in «المزيد».
-// The first tab sits at the inline-start (right in Arabic), as in the admin tabs. «المحادثات» hides
-// without inbox.read or while its academy switch is off (settings «صفحات المعلم»).
+// Five tabs, Android's native bar limit; chats hide without inbox.read or with the switch off.
 const tabItems = (can: Can, chatsOn: boolean): TabItem[] => [
   { name: 'today', title: t.teacherNav.today, icon: 'today' },
   { name: 'schedule', title: t.teacherNav.calendar, icon: 'teacherSchedule' },

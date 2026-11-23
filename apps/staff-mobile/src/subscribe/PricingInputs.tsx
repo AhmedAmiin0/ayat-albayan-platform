@@ -24,7 +24,6 @@ const DURATIONS = PRICING_DURATIONS.map((d) => {
   const value = `${d}` as const;
   return { value, label: p.durations[value] };
 });
-/** By lessons a month (4 … 28), then «عدد مخصوص». */
 const BY_SIZE = ['weekly', 'starter', 'standard', 'premium', 'monthly', 'bulk'] as const;
 const PLANS: readonly FilterPill<PlanChoice>[] = [
   ...BY_SIZE.map((id) => ({ value: id, label: p.packages[id].sessions })),
@@ -40,15 +39,10 @@ interface PricingInputsProps {
   onChange: (patch: Partial<SubscribeForm>) => void;
   /** false (sales): only the site's pills 0/5/10/15 %, no free number field. Default true (admin). */
   freeDiscount?: boolean;
-  /** Under the discount pills (sales «دفع إلكتروني»: «مبلغ مخصص»). */
   discountExtra?: ReactNode;
 }
 
-/**
- * The calculator's inputs for ONE child (docs/08): country (the guardian's by default), lesson
- * length, package (or a custom count) and discount. No students step: a family buys one package
- * per child. Built from the «حاسبة الأسعار» pieces; never a price.
- */
+/** One child per package (docs/08); never computes a price. */
 export function PricingInputs(props: PricingInputsProps) {
   const { form, onChange, freeDiscount = true, discountExtra } = props;
   return (

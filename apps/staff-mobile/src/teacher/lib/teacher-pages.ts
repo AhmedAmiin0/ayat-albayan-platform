@@ -2,8 +2,7 @@ import { teacherGateOpen, teacherPageOn, withPublicDefaults, type TeacherGate, t
 import { useQuery } from '@tanstack/react-query';
 import { publicConfigQuery, usePublicConfig } from '@/core/lib/query/public-config';
 
-// The teacher page switches (owner 2026-11-13, settings «صفحات المعلم»): UI only; the admin,
-// sales and assistant trees never read them.
+// Teacher page switches are UI only; the admin, sales and assistant trees never read them.
 
 /** For tabs, rows and buttons: the registry default (off) until GET /settings/public answers. */
 export function useTeacherPageOn(): (page: TeacherPage) => boolean {
@@ -11,7 +10,7 @@ export function useTeacherPageOn(): (page: TeacherPage) => boolean {
   return (page) => teacherPageOn(config, page);
 }
 
-/** For «المزيد»: does this gated row open (meetings: either meetings button)? */
+/** Meetings opens if either meetings button is on. */
 export function useTeacherGateOpen(): (gate: TeacherGate) => boolean {
   const config = usePublicConfig();
   return (gate) => teacherGateOpen(config, gate);
