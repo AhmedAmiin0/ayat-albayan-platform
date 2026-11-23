@@ -1,22 +1,8 @@
-import type { Json } from '@ab/db';
-import type { LessonStatus, PayoutLine, PayoutView } from '@ab/shared';
+import { payoutBreakdownSchema, type PayoutView } from '@ab/shared';
+import { parseStoredJson } from '@/common/db/stored-json';
 import type { PayoutRow } from './payouts.repo';
 
-type Breakdown = PayoutView['breakdown'];
-
-const isRecord = (v: Json): v is { [key: string]: Json | undefined } =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-const list = <T>(v: Json | undefined): T[] => (Array.isArray(v) ? (v as unknown as T[]) : []);
-
-/** teacher_payouts.breakdown is written only by generate (payouts.plan); a hand edit reads empty. */
-function readBreakdown(v: Json): Breakdown {
-  if (!isRecord(v)) return { lines: [], lesson_ids: [], statuses: [] };
-  return {
-    lines: list<PayoutLine>(v['lines']),
-    lesson_ids: list<string>(v['lesson_ids']),
-    statuses: list<LessonStatus>(v['statuses']),
-  };
-}
+const BREAKDOWN_AT = { table: 'teacher_payouts', column: 'breakdown' };
 
 export function toPayoutView(row: PayoutRow): PayoutView {
   return {
@@ -29,7 +15,7 @@ export function toPayoutView(row: PayoutRow): PayoutView {
     status: row.status,
     approved_at: row.approved_at,
     paid_at: row.paid_at,
-    breakdown: readBreakdown(row.breakdown),
+    breakdown: parseStoredJson(payoutBreakdownSchema, row.breakdown, BREAKDOWN_AT),
     method: row.method,
     note: row.note,
     has_receipt: row.receipt_path !== null,
