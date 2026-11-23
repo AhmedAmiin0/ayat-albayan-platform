@@ -633,7 +633,8 @@ changed and who decided it.
    (`--incremental`, mutation score ≥ 80 % on changed files, the package score may not drop).
 5. **Repo tests:** the repo gap (§7.1) closes with a counting fake `Db` that records the PostgREST
    chain (`from/select/eq/in/range/order`) so each repo method gets a shape test (columns, filters,
-   bounds), and the important ones also run against the CI Supabase in the e2e job.
+   bounds), and the important ones also run against the CI Supabase in the e2e job. The counting
+   fake `Db` already exists: `apps/api/src/modules/people/guardians/fake-db.ts` (`calls`, `trips`).
 
 ## 8. Design-system audit and target (R15)
 
@@ -801,7 +802,7 @@ is held to it. Total new suppressions are reported in the PR; `guard:lint` keeps
 | 13 | **B** builders | `packages/shared/src/testing/builders` + api row builders, then migrate test files per module (codemod where shapes are regular) | 2 + many | — |
 | 14 | **A** adapters | Stripe and S3 ports in api; `RoomClient` port into cc | 3 PRs | — |
 | 15 | **T1** types (docs/52 §4, 231 declarations) + R (v2 lane R, 37 `*queries.ts`) + M/K/S rows | as docs/32 and docs/52 | per those docs | G2 |
-| 16 | **L** `max-len` sweep (12,987 of the 20,189 suppressions) | prettier-driven codemod per package, no logic | ≤ 150 files per PR | — (can run any time as the third open PR) |
+| 16 | ~~**L** `max-len` sweep (12,987 of the 20,189 suppressions)~~ | replaced by `prettier --check` on added files | — | — |
 | 17 | **MT** mutation testing | weekly workflow, then gate | 2 PRs | G1 |
 
 ### 10.3 Lane rows, smallest first in each lane
@@ -822,12 +823,12 @@ is held to it. Total new suppressions are reported in the PR; `guard:lint` keeps
 | # | Change | Where | Why it is fast and safe |
 |---|---|---|---|
 | 1 | Default `staleTime: 30_000` in staff-web's `QueryClient` | `apps/staff-web/src/boot.tsx:10` | stops refetch-on-every-mount/focus; inbox/calls keep their own short settings |
-| 2 | Batch the sales renewals balance reads | `sales-renewals.ts:23` | one query instead of N per sales list page |
-| 3 | Batch the payout ledger annotation | `payouts.ledger.ts:41` | one query instead of N on the payouts page |
-| 4 | Batch template/name lookups and signed URLs in message views | `message.views.ts`, `sync-views.ts` | every inbox sync gets cheaper |
+| 2 | ~~Batch the sales renewals balance reads~~ | `sales-money.reads.ts:32-36` | ~~one query instead of N per sales list page~~: already one read per family; nothing to do |
+| 3 | Batch the payout ledger annotation | `payouts.ledger.ts` `annotate` | one ledger read for the page's lessons instead of N, grouped per payout (lane L29) |
+| 4 | ~~Batch template/name lookups and signed URLs in message views~~ | `template-names.ts:7` | ~~every inbox sync gets cheaper~~: the template catalog is already read once a minute and shared |
 | 5 | Virtualise the web chat log and thread list; clock only in the time cell | `MessageLog.tsx`, `ThreadResults.tsx` | long chats scroll smoothly; no full re-render each minute |
 | 6 | Dashboard cards from SQL aggregates (RPC) + 60 s cache | `dashboard.queries.ts`, `finance.queries.ts`, `work.queries.ts` | stops paging whole windows into Node |
-| 7 | One `meQueryOptions` for `/auth/me` in cc, used by the 7 sm callers (and `me/profile` ×3) | sm, cc | fewer duplicate requests at startup |
+| 7 | One `meQueryOptions` for `/auth/me` in cc, used by the 7 sm callers (and `me/profile` ×3) | sm, cc | one source of options and typing; requests are already shared, as the cache holds one entry per `pathKey` |
 | 8 | Replace `select('*')` on `message_templates`, `expenses` and the widest reads | 80 sites, top tables first | smaller payloads, no schema change |
 | 9 | `count: 'estimated'` (or no count) on big list headers | `v_student_list`, `v_threads`, `messages` | removes full scans per page |
 | 10 | Move push sends off the request (enqueue) | `family-push`, `lesson-live.push`, `schedule-notices`, `teacher-alert` | saves feel instant; failures retried by the job |
