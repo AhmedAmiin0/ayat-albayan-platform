@@ -5,7 +5,7 @@ import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { portalReportsQuery } from '@ab/web-kit/portal/api';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { ReportRow } from './ReportRow';
 
 const MONTH = { month: 'long', year: 'numeric' } as const;
@@ -15,7 +15,7 @@ const monthTitle = (month: string) =>
 function Reports({ student }: { student: PortalStudent }) {
   const query = useQuery(portalReportsQuery(student.id));
   return (
-    <LoadState query={query}>
+    <QueryState query={query}>
       {({ reports }) =>
         reports.length === 0 ? (
           <EmptyState title={t.portal.app.reports.empty} />
@@ -32,7 +32,7 @@ function Reports({ student }: { student: PortalStudent }) {
           ))
         )
       }
-    </LoadState>
+    </QueryState>
   );
 }
 

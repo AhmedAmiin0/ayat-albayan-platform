@@ -1,12 +1,10 @@
 import { zonedPartsIn, type TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import type { ReactNode } from 'react';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { LoadRetry, myLessonsQuery } from '@/features/teaching/teacher';
 import { boardWindow, TeacherBoard } from '@/features/teaching/teacher-board';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { cn } from '@ab/web-kit/lib/utils';
-import { loadState, type LoadState } from './load-state';
 
 /**
  * The board with her lessons of the board window (14 days back and ahead, her zone): the same
@@ -17,14 +15,13 @@ export function StudentsBoard({ me }: { me: TeacherMe }) {
   const today = zonedPartsIn(now, me.tz).date;
   const lessons = useQuery(myLessonsQuery(boardWindow(today, me.tz)));
   const busy = lessons.isPlaceholderData;
-  const views: Record<LoadState, () => ReactNode> = {
-    ready: () => lessons.data && (
-      <div aria-busy={busy || undefined} className={cn(busy && 'opacity-60')}>
-        <TeacherBoard me={me} lessons={lessons.data} now={now} />
-      </div>
-    ),
-    error: () => <LoadRetry onRetry={lessons.refetch} />,
-    loading: () => <ListSkeleton />,
-  };
-  return views[loadState(lessons)]();
+  return (
+    <QueryState query={lessons} error={<LoadRetry onRetry={lessons.refetch} />}>
+      {(data) => (
+        <div aria-busy={busy || undefined} className={cn(busy && 'opacity-60')}>
+          <TeacherBoard me={me} lessons={data} now={now} />
+        </div>
+      )}
+    </QueryState>
+  );
 }

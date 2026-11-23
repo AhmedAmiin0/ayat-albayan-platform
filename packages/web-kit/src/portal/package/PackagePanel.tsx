@@ -5,7 +5,7 @@ import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { portalPackageQuery } from '@ab/web-kit/portal/api';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { amountText, dayText, usedOfText } from './package-text';
 import { PaymentsList } from './PaymentsList';
 
@@ -16,7 +16,7 @@ import { PaymentsList } from './PaymentsList';
 export function PackagePanel({ student }: { student: PortalStudent }) {
   const query = useQuery(portalPackageQuery(student.id));
   return (
-    <LoadState query={query}>
+    <QueryState query={query}>
       {(view) => {
         const instructions = paymentInstructions(view);
         return (
@@ -36,7 +36,7 @@ export function PackagePanel({ student }: { student: PortalStudent }) {
           </div>
         );
       }}
-    </LoadState>
+    </QueryState>
   );
 }
 

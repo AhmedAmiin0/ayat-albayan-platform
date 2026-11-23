@@ -3,7 +3,7 @@ import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 import { usePortalLesson } from './use-recordings';
 import { LessonHead, ReportBlock } from './LessonHead';
@@ -65,9 +65,9 @@ export function LessonPage({ student, lessonId, onOpenReport, onBack }: Props) {
         {t.common.back}
       </Button>
       {!query.data && <h1 className="font-display text-h2 font-bold">{t.lessonFiles.lessonPage}</h1>}
-      <LoadState query={query} rows={3}>
+      <QueryState query={query} rows={3}>
         {(view) => <Body view={view} student={student} onOpenReport={onOpenReport} />}
-      </LoadState>
+      </QueryState>
     </section>
   );
 }
