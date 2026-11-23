@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '#/lib/index.ts';
-import { Icon } from '#/components/ui/display/index.ts';
+import { Icon } from '#/components/ui/display/icon.tsx';
 import { Input } from './input';
 
 /**

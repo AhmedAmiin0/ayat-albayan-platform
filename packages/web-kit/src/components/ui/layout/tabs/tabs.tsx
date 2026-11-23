@@ -1,6 +1,6 @@
 import { Fragment, useSyncExternalStore, type KeyboardEvent } from 'react';
 import { cn } from '#/lib/index.ts';
-import type { SegmentOption } from '#/components/ui/form/index.ts';
+import type { SegmentOption } from '#/components/ui/form/segmented-control.tsx';
 import { keepInStrip, TabBadge } from '#/components/ui/layout/tab-parts/tab-parts.tsx';
 
 export interface TabOption<V extends string> extends SegmentOption<V> {

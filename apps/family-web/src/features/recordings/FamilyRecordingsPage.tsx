@@ -1,5 +1,4 @@
-import { Icon } from '@ab/web-kit/display';
-import { Button } from '@ab/web-kit/form';
+import { Icon, Button } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { RecordingsPanel } from '@ab/web-kit/portal';
 import { StudentOf } from './StudentOf';

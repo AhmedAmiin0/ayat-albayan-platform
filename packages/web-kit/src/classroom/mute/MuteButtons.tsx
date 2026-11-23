@@ -1,5 +1,5 @@
 import type { MuteSource } from '@ab/shared';
-import { IconButton } from '#/components/ui/form/index.ts';
+import { IconButton } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { RoomIcon } from '#/classroom/room/components/room-icons.tsx';
 import type { TileView } from '#/classroom/room/components/room-types.ts';

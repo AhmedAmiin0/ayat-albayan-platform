@@ -1,6 +1,4 @@
-import { Icon } from '#/components/ui/display/index.ts';
-import { buttonVariants } from '#/components/ui/form/index.ts';
-import { Dialog } from '#/components/ui/overlay/index.ts';
+import { Icon, buttonVariants, Dialog } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 interface Props {

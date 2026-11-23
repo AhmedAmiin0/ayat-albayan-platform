@@ -1,4 +1,4 @@
-import { Button } from '#/components/ui/form/index.ts';
+import { Button } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { REQUEST_TEXT } from './request-text';
 import type { ShareRequests } from './use-share-requests';

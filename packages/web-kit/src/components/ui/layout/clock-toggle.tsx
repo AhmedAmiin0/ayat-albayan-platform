@@ -1,7 +1,7 @@
 import type { ClockPref } from '@ab/shared';
 import { setClockPref, useClockPref } from '#/lib/index.ts';
 import { t } from '#/lib/i18n/index.ts';
-import { SegmentedControl } from '#/components/ui/form/index.ts';
+import { SegmentedControl } from '#/components/ui/form/segmented-control.tsx';
 
 const OPTIONS: { value: ClockPref; label: string }[] = [
   { value: 'auto', label: t.clock.autoShort },

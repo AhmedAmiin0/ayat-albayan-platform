@@ -1,4 +1,4 @@
-import { ConfirmSwitchDialog } from '#/components/ui/overlay/index.ts';
+import { ConfirmSwitchDialog } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 interface Props {

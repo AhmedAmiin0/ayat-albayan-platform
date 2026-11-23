@@ -1,5 +1,4 @@
-import { Button } from '#/components/ui/form/index.ts';
-import { Drawer } from '#/components/ui/overlay/index.ts';
+import { Button, Drawer } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import type { MuteController } from '#/classroom/mute/use-mute.ts';
 import type { TileView } from '#/classroom/room/components/room-types.ts';

@@ -1,6 +1,6 @@
 import { CHANNEL_BODY_MAX } from '@ab/shared';
 import { useState, type KeyboardEvent, type SubmitEvent } from 'react';
-import { Button } from '#/components/ui/form/index.ts';
+import { Button } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 interface Props {

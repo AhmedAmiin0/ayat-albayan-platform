@@ -2,8 +2,7 @@ import { portalViewer, seesMoney } from '@ab/client-core';
 import type { PortalHome, PortalKind, PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { EmptyState } from '@ab/web-kit/display';
-import { buttonVariants } from '@ab/web-kit/form';
+import { EmptyState, buttonVariants } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { PackagePanel } from '@ab/web-kit/portal';
 

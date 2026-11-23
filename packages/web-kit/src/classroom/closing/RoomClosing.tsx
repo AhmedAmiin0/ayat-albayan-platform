@@ -1,5 +1,4 @@
-import { Icon } from '#/components/ui/display/index.ts';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { Icon, Button, FormAlert } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { ContextHeader } from '#/classroom/flow/ContextHeader.tsx';
 import type { RoomContext } from '#/classroom/flow/room-kit.ts';

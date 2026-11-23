@@ -3,7 +3,7 @@ import {
 } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { z } from 'zod';
-import type { TabOption } from '@ab/web-kit/layout';
+import type { TabOption } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 
 /** `?tab=` of a child's page (an alert opens the package or the chat): unknown values drop. */

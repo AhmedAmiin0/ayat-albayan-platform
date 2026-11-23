@@ -1,7 +1,7 @@
 import { portalViewer, readsOwn } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { t } from '@ab/web-kit/i18n';
-import { QueryState } from '@ab/web-kit/display';
+import { QueryState } from '@ab/web-kit/ui';
 import { ScheduleNotes } from './ScheduleNotes';
 import { useWeek, type Week } from './use-week';
 import { WeekBar } from './WeekBar';

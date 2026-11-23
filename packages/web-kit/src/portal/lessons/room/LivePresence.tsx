@@ -1,5 +1,5 @@
 import { liveRoomText, type LiveRoom } from '@ab/client-core';
-import { Avatar } from '#/components/ui/display/index.ts';
+import { Avatar } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 /** Up to three overlapping faces, as on the app's live card. */

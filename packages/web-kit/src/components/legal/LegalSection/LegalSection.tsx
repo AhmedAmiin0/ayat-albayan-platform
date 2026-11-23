@@ -1,4 +1,4 @@
-import { Card } from '#/components/ui/surface/index.ts';
+import { Card } from '#/components/ui/index.ts';
 import { LEGAL_LIST_CLASS } from '#/components/legal/legal-look.ts';
 import type { LegalSectionProps } from './LegalSection.types';
 

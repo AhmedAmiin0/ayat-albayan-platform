@@ -10,6 +10,7 @@ import { posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Project } from 'ts-morph';
 import { z } from 'zod';
+import { readJson } from '../ci-checks/lint/json-file.mjs';
 import { applyEdits, specifierNodes } from '../ci-checks/move-module/specifiers.ts';
 import { codeFiles, targetPath } from './absolute-imports.mjs';
 
@@ -19,7 +20,10 @@ const TRIES = ['', '.ts', '.tsx', '/index.ts', '/index.tsx'];
 const manifest = z.object({ exports: z.record(z.string(), z.string()) });
 const project = new Project({ useInMemoryFileSystem: true, skipFileDependencyResolution: true });
 
-const isFile = (root, rel) => existsSync(posix.join(root, rel)) && statSync(posix.join(root, rel)).isFile();
+const isFile = (root, rel) => {
+  const abs = posix.join(root, rel);
+  return existsSync(abs) && statSync(abs).isFile();
+};
 const fileOf = (root, path) => TRIES.map((t) => path + t).find((p) => isFile(root, p));
 
 /** The kit file a barrel's `spec` names: a sibling path or the kit's own `#/`. */
@@ -29,26 +33,30 @@ const reexported = (root, { barrel, spec }) => {
 };
 
 function sourcesOf(root, file) {
-  const sf = project.createSourceFile(`/kit/${file}`, readFileSync(posix.join(root, file), 'utf8'), {
-    overwrite: true,
-  });
+  const text = readFileSync(posix.join(root, file), 'utf8');
+  const sf = project.createSourceFile(`/kit/${file}`, text, { overwrite: true });
   const specs = sf.getExportDeclarations().map((d) => d.getModuleSpecifierValue());
   project.removeSourceFile(sf);
   return specs.filter((s) => s !== undefined);
 }
 
-/** `Map<kit file, entry name>`: every file an entry's index re-exports, through nested index files. */
+/** Adds to `out` every file the barrel `index` re-exports for `entry`, through nested barrels. */
+function walk(root, { out, entry, index }) {
+  const queue = [index];
+  for (let file = queue.shift(); file !== undefined; file = queue.shift()) {
+    if (out.has(file) || !/\.tsx?$/.test(file)) continue;
+    out.set(file, entry);
+    const next = sourcesOf(root, file).map((spec) => reexported(root, { barrel: file, spec }));
+    queue.push(...next.filter((f) => f !== undefined));
+  }
+}
+
+/** `Map<kit file, entry name>`: every file an entry's index re-exports, nested barrels too. */
 export function entryFiles(root) {
-  const json = readFileSync(posix.join(root, KIT, 'package.json'), 'utf8');
+  const { exports } = readJson(posix.join(root, KIT, 'package.json'), manifest);
   const out = new Map();
-  for (const [key, target] of Object.entries(manifest.parse(JSON.parse(json)).exports)) {
-    const queue = [posix.join(KIT, target)];
-    for (let file = queue.shift(); file !== undefined; file = queue.shift()) {
-      if (out.has(file) || !/\.tsx?$/.test(file)) continue;
-      out.set(file, key.slice(2));
-      const next = sourcesOf(root, file).map((spec) => reexported(root, { barrel: file, spec }));
-      queue.push(...next.filter((f) => f !== undefined));
-    }
+  for (const [key, target] of Object.entries(exports)) {
+    walk(root, { out, entry: key.slice(2), index: posix.join(KIT, target) });
   }
   return out;
 }
@@ -67,12 +75,16 @@ function rewriteFile(root, { file, entries }) {
   const sf = project.createSourceFile(`/app/${file}`, text, { overwrite: true });
   const kit = specifierNodes(sf).filter((s) => s.value.startsWith(PREFIX));
   project.removeSourceFile(sf);
-  const found = kit.map((s) => ({ ...s, ...entryOf(root, { entries, path: s.value.slice(PREFIX.length) }) }));
+  const found = kit.map((s) => {
+    const path = s.value.slice(PREFIX.length);
+    return { ...s, ...entryOf(root, { entries, path }) };
+  });
   const edits = found
     .filter((s) => s.entry !== undefined && !s.same)
     .map((s) => ({ start: s.start, end: s.end, value: PREFIX + s.entry }));
   const missing = found.filter((s) => s.entry === undefined).map((s) => `${file}: ${s.value}`);
-  return { text: edits.length === 0 ? text : applyEdits(text, edits), rewritten: edits.length, missing };
+  const out = edits.length === 0 ? text : applyEdits(text, edits);
+  return { text: out, rewritten: edits.length, missing };
 }
 
 /** Rewrites (or with `write: false` only counts) every target's deep kit paths. */
@@ -92,10 +104,13 @@ export function runKit(root, { targets, write }) {
 function main(args) {
   const root = fileURLToPath(new URL('../../..', import.meta.url)).replace(/\\/g, '/');
   const targets = args.filter((a) => a !== '--write' && a !== '--');
-  if (targets.length === 0) throw new Error('usage: pnpm imports:kit -- <workspace|paths…> [--write]');
+  if (targets.length === 0) {
+    throw new Error('usage: pnpm imports:kit -- <workspace|paths…> [--write]');
+  }
   const write = args.includes('--write');
   const { files, rewritten, missing } = runKit(root, { targets, write });
-  console.log(`kit entries${write ? ' (written)' : ' (dry run)'}: ${rewritten} specifiers in ${files} files`);
+  const mode = write ? 'written' : 'dry run';
+  console.log(`kit entries (${mode}): ${rewritten} specifiers in ${files} files`);
   missing.forEach((m) => console.log(`  not exported by any entry: ${m}`));
   process.exitCode = missing.length === 0 ? 0 : 1;
 }

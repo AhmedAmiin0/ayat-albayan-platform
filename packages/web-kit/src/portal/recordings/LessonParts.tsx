@@ -1,7 +1,7 @@
 import { partChoices } from '@ab/client-core';
 import type { PortalRecording, PortalStudent } from '@ab/shared';
 import { useState } from 'react';
-import { RadioChips } from '#/components/ui/form/index.ts';
+import { RadioChips } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { RecordingPlayer } from './RecordingPlayer';
 

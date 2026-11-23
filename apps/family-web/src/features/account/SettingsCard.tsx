@@ -1,6 +1,5 @@
 import { LanguageSwitch } from '@ab/web-kit/shell';
-import { ThemeToggle } from '@ab/web-kit/layout';
-import { Card, SectionHeader } from '@ab/web-kit/surface';
+import { ThemeToggle, Card, SectionHeader } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { WebPushToggle } from '@ab/web-kit/push';
 

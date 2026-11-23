@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/display';
+import { Icon } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { usePickedChild } from './use-family-pick';
 

@@ -3,7 +3,7 @@ import type { PortalKind } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
 import { useClock, dateAndClock, cn } from '@ab/web-kit/lib';
 import { t } from '@ab/web-kit/i18n';
-import { Card } from '@ab/web-kit/surface';
+import { Card } from '@ab/web-kit/ui';
 import { useFamilyChatOn } from '@ab/web-kit/portal';
 import { alertLink } from './alert-link';
 import type { FamilyAlerts } from './alerts-api';

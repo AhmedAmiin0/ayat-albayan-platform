@@ -1,5 +1,5 @@
 import type { JoinRole } from '@ab/shared';
-import { Button } from '#/components/ui/form/index.ts';
+import { Button } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
 import type { BoardController } from '#/classroom/board/use-board.ts';

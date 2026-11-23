@@ -8,17 +8,13 @@
     "./boot": "./src/boot/index.ts",
     "./channel": "./src/components/channel/index.ts",
     "./classroom": "./src/classroom/index.ts",
-    "./display": "./src/components/ui/display/index.ts",
-    "./form": "./src/components/ui/form/index.ts",
     "./http": "./src/lib/http/index.ts",
     "./i18n": "./src/lib/i18n/index.ts",
     "./index.css": "./src/index.css",
-    "./layout": "./src/components/ui/layout/index.ts",
     "./legal": "./src/components/legal/index.ts",
     "./lesson-files": "./src/lesson-files/index.ts",
     "./lib": "./src/lib/index.ts",
     "./motion": "./src/lib/motion/index.ts",
-    "./overlay": "./src/components/ui/overlay/index.ts",
     "./portal": "./src/portal/index.ts",
     "./push": "./src/push/index.ts",
     "./report": "./src/report/index.ts",
@@ -26,9 +22,9 @@
     "./session": "./src/lib/session/index.ts",
     "./settings": "./src/lib/settings/index.ts",
     "./shell": "./src/components/shell/index.ts",
-    "./surface": "./src/components/ui/surface/index.ts",
     "./testing": "./src/testing/index.ts",
-    "./time": "./src/lib/time/index.ts"
+    "./time": "./src/lib/time/index.ts",
+    "./ui": "./src/components/ui/index.ts"
   },
   "imports": {
     "#/*": "./src/*"

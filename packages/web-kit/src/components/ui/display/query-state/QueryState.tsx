@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ListSkeleton, Skeleton } from '#/components/ui/display/skeleton.tsx';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { Button } from '#/components/ui/form/button.tsx';
+import { FormAlert } from '#/components/ui/form/form-alert.tsx';
 import { t } from '#/lib/i18n/index.ts';
 import { queryStateOf } from './query-state';
 import type { QueryStateKind, QueryStateProps } from './QueryState.types';

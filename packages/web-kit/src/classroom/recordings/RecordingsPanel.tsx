@@ -1,8 +1,6 @@
 import type { LessonRecordingView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert, buttonVariants } from '#/components/ui/form/index.ts';
-import { Icon, StatusChip } from '#/components/ui/display/index.ts';
-import { Drawer } from '#/components/ui/overlay/index.ts';
+import { FormAlert, buttonVariants, Icon, StatusChip, Drawer } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { recordingsQuery, recordingStatusQuery, type RecordingSource } from '#/classroom/api/moderation-api.ts';
 import { RECORDING_TONE, recordingTime } from './recording-format';

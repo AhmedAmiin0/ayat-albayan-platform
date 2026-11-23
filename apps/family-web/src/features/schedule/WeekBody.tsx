@@ -1,5 +1,5 @@
 import type { WeekDay } from '@ab/client-core';
-import { EmptyState } from '@ab/web-kit/display';
+import { EmptyState } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { AgendaDay } from './agenda';
 import { useJumpToDay, WeekStrip } from './strip';

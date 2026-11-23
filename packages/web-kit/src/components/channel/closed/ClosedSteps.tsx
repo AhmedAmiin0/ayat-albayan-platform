@@ -1,7 +1,6 @@
 import type { ClosedStep, StepState } from '@ab/client-core';
 import type { ReactNode } from 'react';
-import { Icon } from '#/components/ui/display/index.ts';
-import { Pill } from '#/components/ui/surface/index.ts';
+import { Icon, Pill } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
 

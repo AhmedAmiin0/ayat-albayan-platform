@@ -1,4 +1,4 @@
-import { Field, controlClass } from '#/components/ui/form/index.ts';
+import { Field, controlClass } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
 

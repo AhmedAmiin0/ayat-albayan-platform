@@ -2,7 +2,7 @@ import type { PortalRecording } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { AudioPlayer, VideoPlayer } from '#/lesson-files/index.ts';
 import { t } from '#/lib/i18n/index.ts';
-import { QueryState } from '#/components/ui/display/index.ts';
+import { QueryState } from '#/components/ui/index.ts';
 import { useLessonFileUrl, useRecordingUrl } from './use-recordings';
 
 interface Played {

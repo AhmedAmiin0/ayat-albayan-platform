@@ -1,8 +1,7 @@
 import { historyMonths, historyRows } from '@ab/client-core';
 import { dateText, type PortalHistoryStatus, type PortalStudent } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { EmptyState, QueryState } from '#/components/ui/display/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
+import { EmptyState, QueryState, Button } from '#/components/ui/index.ts';
 import { t, locale } from '#/lib/i18n/index.ts';
 import { portalHistoryQuery } from '#/portal/api.ts';
 import type { OpenReport } from '#/portal/report/ReportView.tsx';

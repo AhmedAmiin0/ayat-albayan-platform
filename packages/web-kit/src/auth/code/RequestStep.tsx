@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button, Field, Input } from '#/components/ui/form/index.ts';
+import { Button, Field, Input } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 interface Props {

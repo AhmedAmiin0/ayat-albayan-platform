@@ -26,16 +26,15 @@ const TEST_ENV = {
 };
 
 /**
- * `dir`: the workspace folder (import.meta.dirname). `port`: the dev server's. `routes`: the app
- * has TanStack file routes (src/routes). `cacheDir`: a second dev server's own Vite cache.
+ * `port`: the dev server's. `routes`: the app has TanStack file routes (src/routes). `cacheDir`:
+ * a second dev server's own Vite cache.
  * `kitDir`, `brandDir`: absolute folders of @ab/web-kit and of @ab/catalog's brand marks, named by
  * the caller so this package reaches into neither. `icons`: the app's icon set in <kitDir>/icons,
  * served at its root (vite-public.js). `client`: the app's name in its X-AB-Client tag. `alias`:
  * the tsconfig-paths aliases of an app not yet on package.json `imports` (docs/32 R12).
  */
 export function webConfig(options) {
-  const { dir, port, routes = true, cacheDir, kitDir, brandDir, icons, client = 'web' } = options;
-  const { alias } = options;
+  const { port, routes = true, cacheDir, kitDir, brandDir, icons, client = 'web', alias } = options;
   const kitSrc = `${kitDir}/src`;
   return defineConfig({
     define: { 'import.meta.env.VITE_CLIENT_APP': JSON.stringify(client) },

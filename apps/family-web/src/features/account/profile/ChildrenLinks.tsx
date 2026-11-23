@@ -1,7 +1,6 @@
 import type { PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Avatar, Icon, Ltr } from '@ab/web-kit/display';
-import { Card, SectionHeader } from '@ab/web-kit/surface';
+import { Avatar, Icon, Ltr, Card, SectionHeader } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 
 /** «الأبناء» on a guardian's profile: each child opens their own page (/children/<id>). */

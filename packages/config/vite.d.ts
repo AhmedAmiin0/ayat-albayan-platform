@@ -1,8 +1,6 @@
 import type { UserConfig } from 'vitest/config';
 
 export interface WebConfigOptions {
-  /** The workspace folder (import.meta.dirname). */
-  dir: string;
   /** The dev server's port. */
   port: number;
   /** TanStack file routes in src/routes (default true). */

@@ -1,4 +1,4 @@
-import { StatusChip } from '#/components/ui/display/index.ts';
+import { StatusChip } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 interface TestChipProps {

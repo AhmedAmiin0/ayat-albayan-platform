@@ -1,6 +1,6 @@
 import { listenState, listenText, type ListenState } from '@ab/client-core';
 import type { PortalRecording, PortalStudent } from '@ab/shared';
-import { Pill } from '#/components/ui/surface/index.ts';
+import { Pill } from '#/components/ui/index.ts';
 import { useResumeMap } from '#/lesson-files/index.ts';
 import { useClock } from '#/lib/index.ts';
 import { t } from '#/lib/i18n/index.ts';

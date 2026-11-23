@@ -1,6 +1,6 @@
 import { formatClock, progressOf, seekAtPoint, seekByKey } from '@ab/client-core';
 import type { KeyboardEvent, PointerEvent } from 'react';
-import { Ltr } from '#/components/ui/display/index.ts';
+import { Ltr } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 const P = t.audioPlayer;

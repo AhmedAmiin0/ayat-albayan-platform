@@ -1,6 +1,5 @@
 import type { ChannelMessageView } from '@ab/shared';
-import { Icon } from '#/components/ui/display/index.ts';
-import { IconButton } from '#/components/ui/form/index.ts';
+import { Icon, IconButton } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 const c = t.studentChannel;

@@ -1,6 +1,6 @@
 import { liveRoomText, type CardRoom, type LiveRoom } from '@ab/client-core';
 import { clockOf } from '@ab/shared';
-import { StatusMark } from '#/components/ui/surface/index.ts';
+import { StatusMark } from '#/components/ui/index.ts';
 import { useClock } from '#/lib/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { LivePresence } from './LivePresence';

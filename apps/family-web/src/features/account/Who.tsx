@@ -1,6 +1,6 @@
 import type { PortalHome, PortalKind } from '@ab/shared';
 import type { ReactElement } from 'react';
-import { Ltr } from '@ab/web-kit/display';
+import { Ltr } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { PersonHead } from './PersonHead';
 

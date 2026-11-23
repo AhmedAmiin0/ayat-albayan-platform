@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { Button } from '#/components/ui/form/button.tsx';
+import { FormAlert } from '#/components/ui/form/form-alert.tsx';
 import { Dialog } from './dialog';
 import { t } from '#/lib/i18n/index.ts';
 

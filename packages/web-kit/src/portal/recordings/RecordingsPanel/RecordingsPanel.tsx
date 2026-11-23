@@ -1,8 +1,7 @@
 import { hasVideo, partIdsByLesson, recordingMonths } from '@ab/client-core';
 import { dateText, type PortalRecording, type PortalRecordings, type PortalStudent } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { EmptyState, QueryState } from '#/components/ui/display/index.ts';
-import { SectionHeader } from '#/components/ui/surface/index.ts';
+import { EmptyState, QueryState, SectionHeader } from '#/components/ui/index.ts';
 import { useNowPlaying } from '#/lesson-files/index.ts';
 import { t, locale } from '#/lib/i18n/index.ts';
 import { scrollBehavior } from '#/lib/motion/index.ts';

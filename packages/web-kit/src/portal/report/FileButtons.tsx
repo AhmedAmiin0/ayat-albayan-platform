@@ -1,7 +1,6 @@
 import type { PortalFileKind } from '@ab/client-core';
 import { useMutation } from '@tanstack/react-query';
-import { Icon, type IconName } from '#/components/ui/display/index.ts';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { Icon, type IconName, Button, FormAlert } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { portalApi } from '#/portal/api.ts';
 import { openAfter } from '#/portal/open-file.ts';

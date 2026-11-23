@@ -2,7 +2,7 @@ import { lessonWait, lessonWaitText, type LessonWait } from '@ab/client-core';
 import type { PortalLesson, RoomJoinResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { buttonVariants, Button, FormAlert } from '#/components/ui/form/index.ts';
+import { buttonVariants, Button, FormAlert } from '#/components/ui/index.ts';
 import { classroomErrorText, RecordedNotice } from '#/classroom/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { portalApi } from '#/portal/api.ts';

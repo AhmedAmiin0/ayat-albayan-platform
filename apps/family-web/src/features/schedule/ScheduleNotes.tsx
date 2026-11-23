@@ -1,4 +1,4 @@
-import { tzCity } from '@ab/web-kit/form';
+import { tzCity } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { useViewerTz } from '@ab/web-kit/lib';
 

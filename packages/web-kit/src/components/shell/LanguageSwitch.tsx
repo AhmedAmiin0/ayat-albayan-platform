@@ -1,7 +1,6 @@
 import type { Locale } from '@ab/shared';
 import { useState } from 'react';
-import { Icon } from '#/components/ui/display/index.ts';
-import { Toast } from '#/components/ui/overlay/index.ts';
+import { Icon, Toast } from '#/components/ui/index.ts';
 import { t, locale, chooseLocale } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
 

@@ -2,9 +2,7 @@ import { lessonMinutes } from '@ab/client-core';
 import { firstName, type PortalLesson, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
-import { ButtonRow } from '#/components/ui/layout/index.ts';
-import { Drawer } from '#/components/ui/overlay/index.ts';
+import { Button, FormAlert, ButtonRow, Drawer } from '#/components/ui/index.ts';
 import {
   MoveReason,
   bookableWindow,

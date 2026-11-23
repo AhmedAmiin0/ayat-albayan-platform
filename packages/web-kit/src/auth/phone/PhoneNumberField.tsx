@@ -1,6 +1,6 @@
 import type { Country } from '@ab/client-core';
 import { useState, type KeyboardEvent, type ReactNode } from 'react';
-import { Field, Input } from '#/components/ui/form/index.ts';
+import { Field, Input } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { CountryButton } from './CountryButton';
 import { CountryPicker } from './CountryPicker';

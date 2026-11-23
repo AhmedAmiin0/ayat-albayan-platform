@@ -1,6 +1,6 @@
 import type { ChannelAudience } from '@ab/client-core';
 import type { ChannelPage } from '@ab/shared';
-import { ListSkeleton } from '#/components/ui/display/index.ts';
+import { ListSkeleton } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import type { ChannelRef } from '#/components/channel/api.ts';
 import { ClosedChannel } from '#/components/channel/closed/ClosedChannel.tsx';

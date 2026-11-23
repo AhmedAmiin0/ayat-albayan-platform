@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { PasswordInput } from '@ab/web-kit/auth';
-import { Button, Field, FormAlert, Input } from '@ab/web-kit/form';
+import { Button, Field, FormAlert, Input } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { useStudentSignIn } from './use-student-sign-in';
 

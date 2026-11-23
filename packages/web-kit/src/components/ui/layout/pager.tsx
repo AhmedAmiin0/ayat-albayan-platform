@@ -1,7 +1,8 @@
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
-import { Icon, Rosette } from '#/components/ui/display/index.ts';
+import { Button } from '#/components/ui/form/button.tsx';
+import { Icon } from '#/components/ui/display/icon.tsx';
+import { Rosette } from '#/components/ui/display/rosette.tsx';
 import { pageCount, pageList } from './page-list';
 
 export interface PagerProps {

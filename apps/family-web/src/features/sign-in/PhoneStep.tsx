@@ -1,6 +1,6 @@
 import type { PhoneState } from '@ab/client-core';
 import { PhoneNumberField } from '@ab/web-kit/auth';
-import { Button } from '@ab/web-kit/form';
+import { Button } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import type { WhatsAppSignIn } from './use-whatsapp-sign-in';
 

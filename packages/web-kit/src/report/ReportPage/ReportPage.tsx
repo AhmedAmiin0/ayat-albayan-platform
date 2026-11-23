@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { LanguageSwitch } from '#/components/shell/index.ts';
-import { Cartouche, Logo, ListSkeleton } from '#/components/ui/display/index.ts';
+import { Cartouche, Logo, ListSkeleton } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { reportPageQuery } from '#/report/api.ts';
 import { PublicReport } from '#/report/PublicReport.tsx';

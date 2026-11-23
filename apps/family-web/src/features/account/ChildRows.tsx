@@ -1,7 +1,7 @@
 import { familyChildren, isSelfChild, type FamilyPick } from '@ab/client-core';
 import type { PortalHome, PortalStudent } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
-import { SectionHeader } from '@ab/web-kit/surface';
+import { SectionHeader } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { useFamilyPick, usePickChild } from '#/features/shell/index.ts';
 import { ChildRow } from './ChildRow';

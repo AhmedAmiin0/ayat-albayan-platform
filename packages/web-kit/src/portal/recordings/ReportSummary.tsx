@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { SectionHeader } from '#/components/ui/surface/index.ts';
+import { SectionHeader } from '#/components/ui/index.ts';
 import { reportLines, reportPageByIdQuery } from '#/report/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 

@@ -1,6 +1,6 @@
 import { requestChip, type RequestChip } from '@ab/client-core';
 import type { PortalLesson, Tone } from '@ab/shared';
-import { StatusMark } from '#/components/ui/surface/index.ts';
+import { StatusMark } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { useLessonStatusText } from '#/lib/settings/index.ts';
 

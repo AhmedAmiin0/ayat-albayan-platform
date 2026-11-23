@@ -1,7 +1,7 @@
 import type { FamilyPick } from '@ab/client-core';
 import type { PortalHome, PortalStudent } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { EmptyState, ListSkeleton } from '@ab/web-kit/display';
+import { EmptyState, ListSkeleton } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { useFamilyPick, WithHome } from '#/features/shell/index.ts';
 import { PickChildPage } from './PickChildPage';

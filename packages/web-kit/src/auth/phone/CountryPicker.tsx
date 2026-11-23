@@ -1,8 +1,6 @@
 import { type Country, nameOf, orderCountries, searchCountries } from '@ab/client-core';
 import { useState } from 'react';
-import { EmptyState, Ltr } from '#/components/ui/display/index.ts';
-import { SearchInput } from '#/components/ui/form/index.ts';
-import { Dialog } from '#/components/ui/overlay/index.ts';
+import { EmptyState, Ltr, SearchInput, Dialog } from '#/components/ui/index.ts';
 import { t, locale } from '#/lib/i18n/index.ts';
 import { browserRegion } from './browser-country';
 

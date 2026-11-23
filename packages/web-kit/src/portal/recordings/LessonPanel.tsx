@@ -1,7 +1,6 @@
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
-import { Card } from '#/components/ui/surface/index.ts';
+import { Card, QueryState } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
-import { QueryState } from '#/components/ui/display/index.ts';
 import type { OpenReport } from '#/portal/report/ReportView.tsx';
 import { LessonHead, ReportBlock } from './LessonHead';
 import { LessonParts } from './LessonParts';

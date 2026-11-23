@@ -1,8 +1,7 @@
 import { declineLine } from '@ab/client-core';
 import type { PortalLesson } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '#/components/ui/form/index.ts';
-import { ButtonRow } from '#/components/ui/layout/index.ts';
+import { Button, ButtonRow } from '#/components/ui/index.ts';
 import { MoveReason } from '#/schedule/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 

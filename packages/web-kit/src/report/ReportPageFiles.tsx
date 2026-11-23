@@ -1,5 +1,5 @@
 import type { ReportPageView } from '@ab/shared';
-import { buttonVariants } from '#/components/ui/form/index.ts';
+import { buttonVariants } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 /** The teacher's attachments, each opening through its signed URL, then the PDF (or its wait). */

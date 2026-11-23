@@ -1,6 +1,5 @@
 import { formatClock } from '@ab/client-core';
-import { Ltr } from '#/components/ui/display/index.ts';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { Ltr, Button, FormAlert } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { PlayerButtons } from './PlayerButtons';
 import { SeekBar } from './SeekBar';

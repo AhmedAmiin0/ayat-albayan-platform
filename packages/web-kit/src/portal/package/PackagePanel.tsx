@@ -1,7 +1,7 @@
 import { packageSummary, paymentInstructions } from '@ab/client-core';
 import { subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { EmptyState, StatusChip, QueryState } from '#/components/ui/display/index.ts';
+import { EmptyState, StatusChip, QueryState } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { portalPackageQuery } from '#/portal/api.ts';
 import { amountText, dayText, usedOfText } from './package-text';

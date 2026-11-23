@@ -1,4 +1,4 @@
-import { Mark } from '#/components/ui/display/index.ts';
+import { Mark } from '#/components/ui/index.ts';
 import type { LegalDocumentProps } from './LegalDocument.types';
 
 /**

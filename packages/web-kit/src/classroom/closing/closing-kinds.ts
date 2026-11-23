@@ -1,4 +1,4 @@
-import type { IconName } from '#/components/ui/display/index.ts';
+import type { IconName } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import type { RoomVariant } from '#/classroom/flow/room-variant.ts';
 import type { RoomStatus } from '#/classroom/room/components/room-types.ts';

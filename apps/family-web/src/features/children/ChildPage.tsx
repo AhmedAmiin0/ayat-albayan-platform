@@ -1,8 +1,7 @@
 import type { ChildTab } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { EmptyState } from '@ab/web-kit/display';
-import { buttonVariants } from '@ab/web-kit/form';
+import { EmptyState, buttonVariants } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { ChildBody } from './ChildBody';
 import { ChildHead } from './ChildHead';

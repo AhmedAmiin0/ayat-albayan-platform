@@ -2,8 +2,10 @@ import type { Glyph, Tone } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
-import { Icon, NuqtaGlyph, toneClass } from '#/components/ui/display/index.ts';
-import { IconButton } from '#/components/ui/form/index.ts';
+import { Icon } from '#/components/ui/display/icon.tsx';
+import { NuqtaGlyph } from '#/components/ui/display/nuqta-glyph.tsx';
+import { toneClass } from '#/components/ui/display/status-chip.tsx';
+import { IconButton } from '#/components/ui/form/icon-button.tsx';
 
 export interface DialogHeaderProps {
   title: string;

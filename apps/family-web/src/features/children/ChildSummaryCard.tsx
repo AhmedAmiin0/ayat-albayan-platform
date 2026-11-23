@@ -1,8 +1,6 @@
 import { isSelfChild } from '@ab/client-core';
 import { counted, type PortalKind, type PortalStudent } from '@ab/shared';
-import { Avatar } from '@ab/web-kit/display';
-import { Button } from '@ab/web-kit/form';
-import { Card, Pill, SectionHeader } from '@ab/web-kit/surface';
+import { Avatar, Button, Card, Pill, SectionHeader } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { NextLessonDetails, useNextLesson, type NextLessonRead } from '#/features/next-lesson/index.ts';
 import { ReadState } from './ReadState';

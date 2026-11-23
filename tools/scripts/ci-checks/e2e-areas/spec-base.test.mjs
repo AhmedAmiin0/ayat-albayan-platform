@@ -9,7 +9,7 @@ test('baseOf: `#/` is the importing workspace\'s src, the app or the kit itself'
 });
 
 test('baseOf: `@ab/web-kit/<entry>` is the file its package.json `exports` names', () => {
-  assert.equal(baseOf('apps/family-web/src/a.ts', '@ab/web-kit/form'), 'packages/web-kit/src/components/ui/form/index.ts');
+  assert.equal(baseOf('apps/family-web/src/a.ts', '@ab/web-kit/ui'), 'packages/web-kit/src/components/ui/index.ts');
   assert.equal(baseOf('apps/staff-web/src/a.ts', '@ab/web-kit/lib/clock'), 'packages/web-kit/src/lib/clock', 'deep, until staff-web moves');
 });
 

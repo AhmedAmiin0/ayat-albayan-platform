@@ -1,5 +1,5 @@
 import { clockOf, type SlotView, weekDates, weekdayOf } from '@ab/shared';
-import { NuqtaGlyph } from '#/components/ui/display/index.ts';
+import { NuqtaGlyph } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { cn, useClock, useViewerTz, clockDir } from '#/lib/index.ts';
 import { byLocalDay, zoneLabel } from '#/schedule/slots.ts';

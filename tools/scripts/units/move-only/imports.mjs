@@ -11,7 +11,8 @@ const sides = (e, ctx) => [readAt(ctx.git, ctx.base, e.path), readAt(ctx.git, 'H
 
 function codeFailure(e, ctx) {
   const [base, head] = sides(e, ctx);
-  return compareFile({ file: e.path, base: maskSources(base, e.path), head: maskSources(head, e.path) });
+  const file = e.path;
+  return compareFile({ file, base: maskSources(base, file), head: maskSources(head, file) });
 }
 
 function baselineFailure(e, ctx) {

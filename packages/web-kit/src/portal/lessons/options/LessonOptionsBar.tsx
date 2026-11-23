@@ -1,6 +1,6 @@
 import { lessonOptions, type LessonOption } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { Button, FormAlert } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { AskTimeDrawer } from './AskTimeDrawer';
 import { DeclinePanel } from './DeclinePanel';

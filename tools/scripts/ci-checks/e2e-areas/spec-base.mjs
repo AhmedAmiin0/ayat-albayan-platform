@@ -1,13 +1,13 @@
 // Where an import specifier starts in the repo, for the e2e import graph (graph.mjs).
-import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { posix } from 'node:path';
 
 const KIT = '@ab/web-kit/';
 const KIT_DIR = 'packages/web-kit';
-const KIT_JSON = new URL(`../../../../${KIT_DIR}/package.json`, import.meta.url);
-// ci «changes» runs the selection with no `pnpm i` (no-install.test.mjs): node built-ins only.
+// Node's own JSON loader (no hand JSON.parse, docs/36 Z-2). ci «changes» runs the selection with
+// no `pnpm i` (no-install.test.mjs), so no zod here: the kit's `exports` map is strings only.
 /** @type {Record<string, string>} */
-const kitExports = JSON.parse(readFileSync(KIT_JSON, 'utf8')).exports ?? {};
+const kitExports = createRequire(import.meta.url)(`../../../../${KIT_DIR}/package.json`).exports;
 
 const srcOf = (from) => /^(?:apps|packages)\/[^/]+\/src\//.exec(from)?.[0];
 const appOf = (from) => /^apps\/[^/]+\/src\//.exec(from)?.[0];

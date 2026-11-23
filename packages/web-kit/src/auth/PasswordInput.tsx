@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import type { FieldControlProps } from '#/components/ui/form/index.ts';
-import { Icon } from '#/components/ui/display/index.ts';
-import { Input } from '#/components/ui/form/index.ts';
+import type { FieldControlProps } from '#/components/ui/index.ts';
+import { Icon, Input } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 type Props = FieldControlProps & {

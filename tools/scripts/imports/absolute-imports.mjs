@@ -23,7 +23,9 @@ export function rewriteText(project, alias, { file, text }) {
   const found = specifierNodes(sf).filter((s) => isAppPath(s.value));
   project.removeSourceFile(sf);
   const all = found.map((s) => ({ ...s, to: absoluteSpec(alias, file, s.value) }));
-  const edits = all.flatMap((s) => (s.to === null ? [] : [{ start: s.start, end: s.end, value: s.to }]));
+  const edits = all
+    .filter((s) => s.to !== null)
+    .map((s) => ({ start: s.start, end: s.end, value: s.to }));
   const out = edits.length === 0 ? text : applyEdits(text, edits);
   const kept = all.filter((s) => s.to === null && !s.value.startsWith('#/')).length;
   return { text: out, rewritten: edits.length, kept };

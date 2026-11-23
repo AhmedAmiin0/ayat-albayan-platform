@@ -1,6 +1,5 @@
 import type { RoomJoinResult } from '@ab/shared';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
-import { Card } from '#/components/ui/surface/index.ts';
+import { Button, FormAlert, Card } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { ContextHeader } from '#/classroom/flow/ContextHeader.tsx';
 import type { RoomContext } from '#/classroom/flow/room-kit.ts';

@@ -1,5 +1,5 @@
 import { formatPhone } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/display';
+import { Ltr } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 
 const S = t.familyApp.signIn;

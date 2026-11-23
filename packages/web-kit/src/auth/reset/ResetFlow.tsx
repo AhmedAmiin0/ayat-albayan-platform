@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { Button, Field } from '#/components/ui/form/index.ts';
+import { Button, Field } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { PasswordInput } from '#/auth/PasswordInput.tsx';
 import { codeOf } from '#/auth/code/code-boxes.ts';

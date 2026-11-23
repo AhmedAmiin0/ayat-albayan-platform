@@ -1,4 +1,4 @@
-import { Avatar, NuqtaGlyph } from '#/components/ui/display/index.ts';
+import { Avatar, NuqtaGlyph } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { roleWord, type RoomVariant } from '#/classroom/flow/room-variant.ts';
 import type { TileView } from '#/classroom/room/components/room-types.ts';

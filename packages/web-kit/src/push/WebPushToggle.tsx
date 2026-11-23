@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { Button } from '#/components/ui/form/index.ts';
+import { Button } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { useWebPush, type WebPushView } from './use-web-push';
 

@@ -1,5 +1,4 @@
-import { Button } from '#/components/ui/form/index.ts';
-import { Dialog, Toast } from '#/components/ui/overlay/index.ts';
+import { Button, Dialog, Toast } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import type { KickController } from './use-kick';
 

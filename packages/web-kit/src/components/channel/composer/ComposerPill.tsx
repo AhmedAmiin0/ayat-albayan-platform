@@ -1,8 +1,6 @@
 import { useRef, type KeyboardEvent } from 'react';
 import { ChatGlyph } from '#/components/channel/bubble/ChatGlyph.tsx';
-import { Icon } from '#/components/ui/display/index.ts';
-import { IconButton } from '#/components/ui/form/index.ts';
-import { useDismiss } from '#/components/ui/overlay/index.ts';
+import { Icon, IconButton, useDismiss } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { AttachMenu } from './AttachMenu';
 import { EmojiPanel } from './EmojiPanel';

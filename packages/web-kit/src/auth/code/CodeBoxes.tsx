@@ -1,5 +1,5 @@
 import { useId, useRef, type ClipboardEvent, type KeyboardEvent } from 'react';
-import { Input } from '#/components/ui/form/index.ts';
+import { Input } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { keyStep, typeInto, type BoxesState } from './code-boxes';
 import { useFirstBoxFocus } from './use-first-box-focus';

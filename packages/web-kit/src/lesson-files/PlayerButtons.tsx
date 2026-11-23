@@ -1,7 +1,6 @@
 import { PLAYER_SPEEDS, speedLabel, type PlayerSpeed } from '@ab/client-core';
 import { useId } from 'react';
-import { Icon } from '#/components/ui/display/index.ts';
-import { Button, RadioChips } from '#/components/ui/form/index.ts';
+import { Icon, Button, RadioChips } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
 import { MediaGlyph, type MediaGlyphName } from './media-glyphs';

@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@ab/web-kit/form';
-import { Card } from '@ab/web-kit/surface';
+import { buttonVariants, Card } from '@ab/web-kit/ui';
 import { env } from '@ab/web-kit/http';
 import { t } from '@ab/web-kit/i18n';
 

@@ -1,25 +1,28 @@
 // The app alias (docs/32 R12): `#/…`, defined by the app's package.json `imports` (Node subpath
 // imports). TypeScript and Metro resolve an `imports` target exactly, with no extension or index
 // lookup, so a `#/` specifier names the file with its extension (`#/inbox/index.ts`).
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { posix } from 'node:path';
 import { z } from 'zod';
+import { readJson } from '../ci-checks/lint/json-file.mjs';
 
 const KEYS = ['#/*', '#/*.ts'];
-const target = z.union([z.string(), z.object({ types: z.string() }), z.object({ default: z.string() })]);
-const manifest = z.object({ imports: z.record(z.string(), target).optional() });
+/** A subpath target as the path TypeScript reads: plain, or its `types` / `default` condition. */
+const target = z.union([
+  z.string(),
+  z.object({ types: z.string() }).transform((t) => t.types),
+  z.object({ default: z.string() }).transform((t) => t.default),
+]);
+const manifest = z.object({ imports: z.record(z.string(), target).default({}) });
 
-const pathOf = (t) => (typeof t === 'string' ? t : ('types' in t ? t.types : t.default));
-
-/** `{ root, scope, dir }` (`dir`: the folder `#/` names) from `scope`'s package.json, or undefined. */
+/** `{ root, scope, dir }` (`dir`: the folder `#/` names) from `scope`'s package.json. */
 export function aliasOf(root, scope) {
   const file = posix.join(root, scope, 'package.json');
   if (!existsSync(file)) return undefined;
-  const imports = manifest.parse(JSON.parse(readFileSync(file, 'utf8'))).imports ?? {};
-  const key = KEYS.find((k) => k in imports);
-  const value = key === undefined ? undefined : imports[key];
+  const { imports } = readJson(file, manifest);
+  const value = KEYS.map((k) => imports[k]).find((v) => v !== undefined);
   if (value === undefined) return undefined;
-  const folder = pathOf(value).split('*')[0] ?? '';
+  const folder = value.split('*')[0] ?? '';
   return { root, scope, dir: posix.join(scope, folder).replace(/\/$/, '') };
 }
 

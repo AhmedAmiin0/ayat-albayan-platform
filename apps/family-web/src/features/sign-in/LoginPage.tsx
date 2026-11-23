@@ -1,7 +1,6 @@
-import { cardClass } from '@ab/web-kit/surface';
+import { cardClass, ListSkeleton } from '@ab/web-kit/ui';
 import { useCodesOpen } from '@ab/web-kit/auth';
 import { LanguageSwitch } from '@ab/web-kit/shell';
-import { ListSkeleton } from '@ab/web-kit/display';
 import { LegalLinks } from '#/features/legal/index.ts';
 import { SignInLockup } from './SignInLockup';
 import { SignInWays } from './SignInWays';

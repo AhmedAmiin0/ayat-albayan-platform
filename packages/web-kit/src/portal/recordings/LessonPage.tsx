@@ -1,7 +1,5 @@
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
-import { Icon, QueryState } from '#/components/ui/display/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
-import { Card } from '#/components/ui/surface/index.ts';
+import { Icon, QueryState, Button, Card } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import type { OpenReport } from '#/portal/report/ReportView.tsx';
 import { usePortalLesson } from './use-recordings';

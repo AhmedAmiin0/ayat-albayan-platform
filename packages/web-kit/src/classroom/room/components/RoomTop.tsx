@@ -1,5 +1,5 @@
 import { chatOpen, type RoomJoinResult } from '@ab/shared';
-import { FormAlert } from '#/components/ui/form/index.ts';
+import { FormAlert } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { ReconnectStrip } from '#/classroom/flow/ReconnectStrip.tsx';
 import type { RoomKit } from '#/classroom/flow/room-kit.ts';

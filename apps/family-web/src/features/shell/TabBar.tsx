@@ -1,6 +1,6 @@
 import { familyTabs, type FamilyTab } from '@ab/client-core';
 import { Link, useLocation } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/display';
+import { Icon } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { followSelected } from '@ab/web-kit/motion';
 import { cn } from '@ab/web-kit/lib';

@@ -1,6 +1,5 @@
 import { useRouter } from '@tanstack/react-router';
-import { Button } from '#/components/ui/form/index.ts';
-import { Card } from '#/components/ui/surface/index.ts';
+import { Button, Card } from '#/components/ui/index.ts';
 import type { RouteErrorProps } from './RouteError.types';
 
 /**

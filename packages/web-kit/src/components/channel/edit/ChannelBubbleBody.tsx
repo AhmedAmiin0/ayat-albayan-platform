@@ -1,7 +1,7 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { QuoteBlock } from '#/components/channel/bubble/QuoteBlock.tsx';
 import { AttachmentBody } from '#/components/channel/media/AttachmentBody.tsx';
-import { LinkedBody } from '#/components/ui/display/index.ts';
+import { LinkedBody } from '#/components/ui/index.ts';
 import { ChannelEditForm } from './ChannelEditForm';
 import type { useBubbleEditing } from './use-bubble-editing';
 

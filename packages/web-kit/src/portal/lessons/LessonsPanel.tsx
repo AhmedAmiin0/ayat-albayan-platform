@@ -1,8 +1,7 @@
 import { nextLesson, PORTAL_REFRESH_MS } from '@ab/client-core';
 import type { PortalLesson, PortalLessons, PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { EmptyState, QueryState } from '#/components/ui/display/index.ts';
-import { Card } from '#/components/ui/surface/index.ts';
+import { EmptyState, QueryState, Card } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { useNow } from '#/lib/time/index.ts';
 import { portalLessonsQuery } from '#/portal/api.ts';

@@ -1,5 +1,4 @@
-import { Icon } from '#/components/ui/display/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
+import { Icon, Button } from '#/components/ui/index.ts';
 import { LessonReportView } from '#/report/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { FileButtons, type PortalFile } from './FileButtons';

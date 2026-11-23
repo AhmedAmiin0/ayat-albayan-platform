@@ -1,7 +1,6 @@
 import type { PortalStudent } from '@ab/shared';
-import { Card, SectionHeader } from '@ab/web-kit/surface';
+import { Card, SectionHeader, QueryState } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
-import { QueryState } from '@ab/web-kit/display';
 import { NextLessonDetails } from './NextLessonDetails';
 import { useNextLesson } from './use-next-lesson';
 

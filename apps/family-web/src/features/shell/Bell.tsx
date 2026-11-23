@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useAlerts } from '#/features/alerts/index.ts';
-import { Icon } from '@ab/web-kit/display';
+import { Icon } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 
 /**

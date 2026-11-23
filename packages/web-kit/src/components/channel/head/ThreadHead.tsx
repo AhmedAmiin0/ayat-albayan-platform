@@ -2,7 +2,7 @@ import { headerPeople, threadMessages } from '@ab/client-core';
 import type { ChannelPage } from '@ab/shared';
 import type { ChannelRef } from '#/components/channel/api.ts';
 import { ChannelPresenceLine } from '#/components/channel/presence/ChannelPresenceLine.tsx';
-import { Avatar } from '#/components/ui/display/index.ts';
+import { Avatar } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 const c = t.studentChannel;

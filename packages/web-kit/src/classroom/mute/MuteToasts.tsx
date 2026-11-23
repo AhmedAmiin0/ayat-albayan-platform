@@ -1,4 +1,4 @@
-import { Toast } from '#/components/ui/overlay/index.ts';
+import { Toast } from '#/components/ui/index.ts';
 import type { RoomController } from '#/classroom/room/livekit/use-room.ts';
 import type { MuteController } from './use-mute';
 import { useMutedNotice } from './use-muted-notice';

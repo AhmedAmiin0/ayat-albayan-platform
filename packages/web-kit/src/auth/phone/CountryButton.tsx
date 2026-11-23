@@ -1,6 +1,5 @@
 import { type Country, nameOf } from '@ab/client-core';
-import { Ltr } from '#/components/ui/display/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
+import { Ltr, Button } from '#/components/ui/index.ts';
 import { t, locale } from '#/lib/i18n/index.ts';
 
 interface Props {

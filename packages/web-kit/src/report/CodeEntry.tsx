@@ -1,7 +1,7 @@
 import { LOGIN_CODE_LENGTH } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button, FormAlert, Input, Label } from '#/components/ui/form/index.ts';
+import { Button, FormAlert, Input, Label } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { gateProblem, verifyCode } from './public-api';
 

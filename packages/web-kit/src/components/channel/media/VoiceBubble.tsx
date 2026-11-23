@@ -1,7 +1,7 @@
 import { formatClock } from '@ab/client-core';
 import type { ChannelAttachmentView } from '@ab/shared';
 import { ChatGlyph } from '#/components/channel/bubble/ChatGlyph.tsx';
-import { Ltr } from '#/components/ui/display/index.ts';
+import { Ltr } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { useVoiceNote } from './use-voice-note';
 import { Waveform } from './Waveform';

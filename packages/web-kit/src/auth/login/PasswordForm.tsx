@@ -1,7 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { Button, Field, FormAlert, Input } from '#/components/ui/form/index.ts';
+import { Button, Field, FormAlert, Input } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { PasswordInput } from '#/auth/PasswordInput.tsx';
 import { signIn } from '#/auth/sign-in/index.ts';

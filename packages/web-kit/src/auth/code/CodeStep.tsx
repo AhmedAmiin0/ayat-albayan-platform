@@ -1,6 +1,6 @@
 import { CODE_STEP_ACTIONS, type CodeStepAction, canResend, resendLabel } from '@ab/client-core';
 import { Fragment, type ReactNode } from 'react';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
+import { Button, FormAlert } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { StatusNote } from '#/auth/login/StatusNote.tsx';
 import { CodeBoxes } from './CodeBoxes';

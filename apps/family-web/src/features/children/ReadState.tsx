@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { Skeleton } from '@ab/web-kit/display';
-import { Button } from '@ab/web-kit/form';
+import { Skeleton, Button } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import type { ChildSummaryRead } from './use-child-summary';
 

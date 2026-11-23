@@ -1,4 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { posix } from 'node:path';
 import { ts } from 'ts-morph';
 import { z } from 'zod';
@@ -51,17 +52,19 @@ function aliasesOf(root: string, scope: string): Alias[] {
   });
 }
 
-const subpath = z.union([z.string(), z.object({ types: z.string() })]);
-const manifest = z.object({ imports: z.record(z.string(), subpath).optional() });
+// Node's own JSON loader (no hand JSON.parse, docs/36 Z-2); zod checks what it read.
+const load = createRequire(import.meta.url);
+const subpath = z.union([z.string(), z.object({ types: z.string() }).transform((t) => t.types)]);
+const manifest = z.object({ imports: z.record(z.string(), subpath).default({}) });
 
 function importsAliasOf(root: string, scope: string): Alias[] {
   const file = posix.join(root, scope, 'package.json');
   if (!existsSync(file)) return [];
-  const imports = manifest.parse(JSON.parse(readFileSync(file, 'utf8'))).imports ?? {};
-  const target = imports['#/*'] ?? imports['#/*.ts'];
+  const { imports } = manifest.parse(load(file));
+  const target = ['#/*', '#/*.ts'].map((k) => imports[k]).find((t) => t !== undefined);
   if (target === undefined) return [];
-  const folder = (typeof target === 'string' ? target : target.types).split('*')[0] ?? '';
-  return [{ prefix: '#/', dir: posix.join(scope, folder).replace(/\/$/, ''), scope, exact: true }];
+  const dir = posix.join(scope, target.split('*')[0] ?? '').replace(/\/$/, '');
+  return [{ prefix: '#/', dir, scope, exact: true }];
 }
 
 /** The `#/` aliases of every package.json `imports`, then the `paths` aliases of every tsconfig. */

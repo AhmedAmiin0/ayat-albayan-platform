@@ -1,5 +1,5 @@
 import type { WeekDay } from '@ab/client-core';
-import { SectionHeader } from '@ab/web-kit/surface';
+import { SectionHeader } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { dayId, longDay } from '#/features/schedule/day-text.ts';
 import { AgendaLesson } from './AgendaLesson';

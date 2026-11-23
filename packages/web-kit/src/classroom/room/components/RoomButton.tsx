@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button, type ButtonProps } from '#/components/ui/form/index.ts';
+import { Button, type ButtonProps } from '#/components/ui/index.ts';
 import { cn } from '#/lib/index.ts';
 import { RoomIcon, type RoomIconName } from './room-icons';
 

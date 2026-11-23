@@ -22,9 +22,9 @@ export function domainModuleRegex({ base, exempt, domains = [] }) {
 const INDEX = ['index.ts', 'index.tsx'];
 
 /**
- * `no-restricted-imports` patterns for route files (gitignore order: later lines win): a feature only through
- * its index (`#/inbox/index.ts`, `#/sales/app/index.ts`), never its internals; `exempt` folders are free.
- * Gitignore reads a leading `#` as a comment, so it is escaped.
+ * `no-restricted-imports` patterns for route files (gitignore order: later lines win): a feature
+ * only through its index (`#/inbox/index.ts`, `#/sales/app/index.ts`), never its internals;
+ * `exempt` folders are free. Gitignore reads a leading `#` as a comment, so it is escaped.
  */
 export function routeImportGroup({ prefix, exempt, domains = [] }) {
   checked([...exempt, ...domains]);

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { MoreMenu } from '#/components/ui/overlay/index.ts';
+import { MoreMenu } from '#/components/ui/overlay/more-menu/index.ts';
 import { usePhone } from './use-narrow';
 
 export interface HeadActionsProps {

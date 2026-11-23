@@ -1,13 +1,12 @@
 import { nextLesson, PORTAL_REFRESH_MS } from '@ab/client-core';
 import type { PortalLessons, PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '#/components/ui/form/index.ts';
+import { Button, QueryState } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { useNow } from '#/lib/time/index.ts';
 import { portalLessonsQuery } from '#/portal/api.ts';
 import { LessonCard } from '#/portal/lessons/LessonCard.tsx';
 import { PrepareCard } from '#/portal/lessons/PrepareCard.tsx';
-import { QueryState } from '#/components/ui/display/index.ts';
 import { MonthCounts } from './MonthCounts';
 import { NewReports } from './NewReports';
 import { PackageLine } from './PackageLine';

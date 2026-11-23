@@ -1,7 +1,7 @@
 import type { MenuOffers } from '@ab/client-core';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { ChatGlyph } from '#/components/channel/bubble/ChatGlyph.tsx';
-import { Icon } from '#/components/ui/display/index.ts';
+import { Icon } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
 import type { MenuPick } from './use-bubble-editing';

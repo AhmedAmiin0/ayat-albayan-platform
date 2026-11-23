@@ -1,6 +1,5 @@
 import type { PortalStudent } from '@ab/shared';
-import { Avatar, Icon, Ltr } from '@ab/web-kit/display';
-import { Card, Dot } from '@ab/web-kit/surface';
+import { Avatar, Icon, Ltr, Card, Dot } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { useChildTeacher } from './use-child-teacher';
 

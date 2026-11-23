@@ -1,8 +1,7 @@
 import type { PortalLessonFile } from '@ab/shared';
-import { Dialog } from '#/components/ui/overlay/index.ts';
+import { Dialog, QueryState } from '#/components/ui/index.ts';
 import { fileLine, fileTitle } from '#/lesson-files/index.ts';
 import { cn } from '#/lib/index.ts';
-import { QueryState } from '#/components/ui/display/index.ts';
 import { useLessonFileUrl } from '#/portal/recordings/use-recordings.ts';
 import { useViewer, type Viewer } from './use-viewer';
 import { ViewerActions, ViewerBody } from './ViewerParts';

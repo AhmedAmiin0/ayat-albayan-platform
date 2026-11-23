@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Icon } from '#/components/ui/display/index.ts';
-import { IconButton } from '#/components/ui/form/index.ts';
+import { Icon } from '#/components/ui/display/icon.tsx';
+import { IconButton } from '#/components/ui/form/icon-button.tsx';
 import { useFocusTrap } from './use-focus-trap';
 import { t } from '#/lib/i18n/index.ts';
 

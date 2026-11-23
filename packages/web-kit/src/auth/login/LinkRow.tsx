@@ -1,4 +1,4 @@
-import { Button } from '#/components/ui/form/index.ts';
+import { Button } from '#/components/ui/index.ts';
 
 export interface LinkItem {
   label: string;

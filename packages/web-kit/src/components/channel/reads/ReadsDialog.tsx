@@ -1,9 +1,7 @@
 import { channelTimeText } from '@ab/client-core';
 import type { ChannelMessageView } from '@ab/shared';
 import type { ChannelRef } from '#/components/channel/api.ts';
-import { ListSkeleton } from '#/components/ui/display/index.ts';
-import { Button, FormAlert } from '#/components/ui/form/index.ts';
-import { Dialog } from '#/components/ui/overlay/index.ts';
+import { ListSkeleton, Button, FormAlert, Dialog } from '#/components/ui/index.ts';
 import { useClock } from '#/lib/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { ReadsList } from './ReadsList';

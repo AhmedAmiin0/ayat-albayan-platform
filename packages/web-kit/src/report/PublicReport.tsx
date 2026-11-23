@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ListSkeleton } from '#/components/ui/display/index.ts';
-import { FormAlert } from '#/components/ui/form/index.ts';
+import { ListSkeleton, FormAlert } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { CodeGate } from './CodeGate';
 import { needsCode, publicPageQuery } from './public-api';

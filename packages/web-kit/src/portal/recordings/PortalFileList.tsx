@@ -1,7 +1,6 @@
 import type { PortalLessonFile } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { SectionHeader } from '#/components/ui/surface/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
+import { SectionHeader, Button } from '#/components/ui/index.ts';
 import { fileLine, fileTitle } from '#/lesson-files/index.ts';
 import { FileButtons } from '#/portal/report/FileButtons.tsx';
 import { t } from '#/lib/i18n/index.ts';

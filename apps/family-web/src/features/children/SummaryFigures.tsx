@@ -1,8 +1,7 @@
 import { packageSummary, reportAt, type ChildSummary } from '@ab/client-core';
 import { dateText, type PortalMonth, type PortalPackage } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/display';
-import { Dot, Pill } from '@ab/web-kit/surface';
+import { Icon, Dot, Pill } from '@ab/web-kit/ui';
 import { t, locale } from '@ab/web-kit/i18n';
 import { amountText, usedOfText } from '@ab/web-kit/portal';
 

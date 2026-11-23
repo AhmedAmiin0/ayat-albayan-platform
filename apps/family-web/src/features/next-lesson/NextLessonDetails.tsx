@@ -8,7 +8,7 @@ import {
   LessonWhen,
   CardRoomLine,
 } from '@ab/web-kit/portal';
-import { Dot, StatusMark } from '@ab/web-kit/surface';
+import { Dot, StatusMark } from '@ab/web-kit/ui';
 import { t, teacherLabel } from '@ab/web-kit/i18n';
 import { useLessonStatusText } from '@ab/web-kit/settings';
 

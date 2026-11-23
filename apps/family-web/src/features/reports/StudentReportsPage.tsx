@@ -1,7 +1,7 @@
 import { portalViewer, readsOwn, reportMonths } from '@ab/client-core';
 import { dateText, type PortalKind, type PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { EmptyState, QueryState } from '@ab/web-kit/display';
+import { EmptyState, QueryState } from '@ab/web-kit/ui';
 import { t, locale } from '@ab/web-kit/i18n';
 import { portalReportsQuery } from '@ab/web-kit/portal';
 import { ReportRow } from './ReportRow';

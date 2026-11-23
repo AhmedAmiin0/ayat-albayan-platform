@@ -1,4 +1,4 @@
-import { cardClass } from '#/components/ui/surface/index.ts';
+import { cardClass } from '#/components/ui/index.ts';
 import { prepareCard } from '@ab/client-core';
 import type { PortalLessons } from '@ab/shared';
 import { t } from '#/lib/i18n/index.ts';

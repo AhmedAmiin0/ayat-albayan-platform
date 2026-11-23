@@ -1,7 +1,7 @@
 import { lessonMinutes, lessonWait, type WeekLesson } from '@ab/client-core';
 import { clockOf, type RoomJoinResult } from '@ab/shared';
 import { useState } from 'react';
-import { Card, Dot } from '@ab/web-kit/surface';
+import { Card, Dot } from '@ab/web-kit/ui';
 import { useClock, useViewerTz } from '@ab/web-kit/lib';
 import { teacherLabel, t } from '@ab/web-kit/i18n';
 import { useNow } from '@ab/web-kit/time';

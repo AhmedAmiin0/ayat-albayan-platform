@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Mark } from '#/components/ui/display/index.ts';
+import { Mark } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 const S = t.familyApp.signIn;

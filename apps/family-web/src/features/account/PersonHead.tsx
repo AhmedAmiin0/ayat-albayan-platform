@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Avatar, Icon } from '@ab/web-kit/display';
-import { Card } from '@ab/web-kit/surface';
+import { Avatar, Icon, Card } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 
 interface Props {

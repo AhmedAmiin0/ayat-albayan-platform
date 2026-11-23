@@ -1,7 +1,6 @@
 import { isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
-import { Icon } from '#/components/ui/display/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
+import { Icon, Button } from '#/components/ui/index.ts';
 import { t, teacherLabel } from '#/lib/i18n/index.ts';
 import { LessonWhen } from '#/portal/lessons/LessonWhen.tsx';
 import type { OpenReport } from '#/portal/report/ReportView.tsx';

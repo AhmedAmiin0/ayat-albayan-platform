@@ -1,6 +1,5 @@
 import type { ProfileFact } from '@ab/client-core';
-import { Ltr } from '@ab/web-kit/display';
-import { Card, SectionHeader } from '@ab/web-kit/surface';
+import { Ltr, Card, SectionHeader } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 
 /** A phone, email or code reads left to right in an isolate; a name in the page's direction. */

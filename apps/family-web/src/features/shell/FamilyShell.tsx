@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { MeTestChip } from '@ab/web-kit/auth';
-import { Mark } from '@ab/web-kit/display';
+import { Mark } from '@ab/web-kit/ui';
 import { t } from '@ab/web-kit/i18n';
 import { cn } from '@ab/web-kit/lib';
 import { Bell } from './Bell';

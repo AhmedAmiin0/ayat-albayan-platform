@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { Icon } from '#/components/ui/display/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
-import { Card } from '#/components/ui/surface/index.ts';
+import { Icon, Button, Card } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 import { cn } from '#/lib/index.ts';
 import { BrandLockup } from '#/components/shell/BrandLockup.tsx';

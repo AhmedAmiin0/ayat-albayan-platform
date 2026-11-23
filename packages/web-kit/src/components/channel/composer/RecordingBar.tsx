@@ -1,6 +1,5 @@
 import { formatClock } from '@ab/client-core';
-import { Icon, Ltr } from '#/components/ui/display/index.ts';
-import { IconButton } from '#/components/ui/form/index.ts';
+import { Icon, Ltr, IconButton } from '#/components/ui/index.ts';
 import { t } from '#/lib/i18n/index.ts';
 
 const m = t.studentChannel.media;

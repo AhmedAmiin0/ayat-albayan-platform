@@ -1,7 +1,6 @@
 import type { ChannelPage } from '@ab/shared';
 import { Fragment } from 'react';
-import { EmptyState } from '#/components/ui/display/index.ts';
-import { Button } from '#/components/ui/form/index.ts';
+import { EmptyState, Button } from '#/components/ui/index.ts';
 import type { ChannelRef } from '#/components/channel/api.ts';
 import { ChannelBubble } from '#/components/channel/ChannelBubble.tsx';
 import { threadAttrs } from '#/components/channel/bubble/jump.ts';
