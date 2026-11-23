@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { clickToChatLink } from '@ab/shared';
+import { clickToChatLink } from '@ab/core';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { IconButton, iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

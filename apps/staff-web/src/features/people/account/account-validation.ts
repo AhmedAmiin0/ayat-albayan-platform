@@ -1,4 +1,10 @@
-import { ACCOUNT_NAME_MAX, ACCOUNT_NAME_MIN, DEFAULT_PASSWORD_MIN, normalizePhone, passwordProblem } from '@ab/shared';
+import {
+  ACCOUNT_NAME_MAX,
+  ACCOUNT_NAME_MIN,
+  DEFAULT_PASSWORD_MIN,
+  passwordProblem,
+} from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { AccountErrors } from './errors';
 

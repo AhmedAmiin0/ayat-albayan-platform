@@ -1,4 +1,15 @@
-import type { CommsSource, CommsSourceView, ImportResult, NumberCreate, NumberSecretName, NumberUpdate, NumberView, OwnTrafficView, ParityView, TemplateNumberSyncView } from '@ab/shared';
+import type {
+  CommsSourceView,
+  ImportResult,
+  NumberCreate,
+  NumberSecretName,
+  NumberUpdate,
+  NumberView,
+  OwnTrafficView,
+  ParityView,
+  TemplateNumberSyncView,
+} from '@ab/shared';
+import type { CommsSource } from '@ab/settings';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';

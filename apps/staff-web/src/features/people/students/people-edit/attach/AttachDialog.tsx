@@ -1,5 +1,5 @@
 import { roleActions } from '@ab/client-core';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

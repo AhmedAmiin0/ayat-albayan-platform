@@ -1,13 +1,11 @@
 import {
   callsNeedKapso,
   META_ID_RE,
-  type EvolutionMode,
   type NumberCreate,
-  type NumberPurpose,
   type NumberUpdate,
   type NumberView,
-  type WaProvider,
 } from '@ab/shared';
+import type { EvolutionMode, NumberPurpose, WaProvider } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The add / edit dialog's fields as typed (ids trimmed on submit; empty optional ids are null). */

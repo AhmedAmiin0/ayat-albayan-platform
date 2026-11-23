@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';

@@ -1,11 +1,11 @@
-import type { RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/shared';
+import type { RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // apps/api/src/modules/roles: «الأدوار والصلاحيات», all behind roles.manage.
-export type { RoleView, StaffUserView } from '@ab/shared';
+export type { RoleView, StaffUserView } from '@ab/catalog';
 
 export const ROLES_KEY = ['roles'] as const;
 

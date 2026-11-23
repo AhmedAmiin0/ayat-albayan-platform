@@ -1,4 +1,4 @@
-import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/shared';
+import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/catalog';
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';

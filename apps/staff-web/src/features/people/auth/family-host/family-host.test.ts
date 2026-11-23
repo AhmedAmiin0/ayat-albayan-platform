@@ -1,4 +1,4 @@
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { QueryClient } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { familyHostUrl, leaveForFamilyHost } from './family-host';

@@ -1,4 +1,4 @@
-import { STUDENT_STATUSES } from '@ab/shared';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { QueryClient, QueryClientProvider, queryOptions } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';

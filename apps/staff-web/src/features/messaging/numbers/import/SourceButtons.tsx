@@ -1,4 +1,5 @@
-import type { CommsSource, ParityView } from '@ab/shared';
+import type { ParityView } from '@ab/shared';
+import type { CommsSource } from '@ab/settings';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

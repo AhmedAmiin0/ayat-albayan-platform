@@ -1,4 +1,4 @@
-import { STUDENT_STATUSES, type StudentStatus } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 import { cn } from '@ab/web-kit/lib/utils';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

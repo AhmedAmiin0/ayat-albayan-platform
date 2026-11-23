@@ -1,4 +1,5 @@
-import { E164_RE, LEAD_STATUSES, type LeadStatus } from '@ab/shared';
+import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
+import { E164_RE } from '@ab/core';
 import { z } from 'zod';
 
 /** The list's orders: no `sort` = newest message first; «غير المقروءة أولًا»; by name. */

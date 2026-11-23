@@ -1,5 +1,5 @@
 import { notesFilter, type StudentForm } from '@ab/client-core';
-import { GENDERS } from '@ab/shared';
+import { GENDERS } from '@ab/catalog';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
