@@ -3,8 +3,8 @@ import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { useFamilyClock } from '@/portal';
-import { JoinButton } from './JoinButton';
-import { useJoin } from './use-join';
+import { JoinButton } from '@/lessons/JoinButton';
+import { useJoin } from '@/lessons/use-join';
 
 interface JoinActionProps {
   lesson: PortalLesson;

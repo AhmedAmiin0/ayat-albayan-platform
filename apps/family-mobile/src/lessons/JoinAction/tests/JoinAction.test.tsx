@@ -3,7 +3,7 @@ import { Linking, Vibration } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
 import { lesson, student } from '@/portal/portal.fixtures';
-import { JoinAction } from './JoinAction';
+import { JoinAction } from '@/lessons/JoinAction/JoinAction';
 
 const mockSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
