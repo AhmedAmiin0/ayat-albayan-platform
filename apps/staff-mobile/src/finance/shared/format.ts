@@ -1,4 +1,4 @@
-import { round2 } from '@ab/shared';
+import { round2 } from '@ab/core';
 import { egp } from '@/earnings/lib/format';
 import { money } from '@ab/mobile-kit';
 

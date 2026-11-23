@@ -1,5 +1,5 @@
 import type { AuthorTemplate } from '@ab/client-core';
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { fullAccessMe } from '@/test/staff-me';

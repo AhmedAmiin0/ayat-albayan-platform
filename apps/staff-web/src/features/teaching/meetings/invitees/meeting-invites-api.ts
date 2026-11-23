@@ -6,7 +6,7 @@ import type {
   MeetingInviteeView,
   MeetingInviteResult,
   UpdateMeeting,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';

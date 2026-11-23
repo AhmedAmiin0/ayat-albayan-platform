@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { wholeText } from '@/finance/shared/format';
-import type { MonthFinance } from '@ab/shared';
+import type { MonthFinance } from '@ab/money';
 
 /** Amounts wrap onto their own lines, never clip. */
 export function MonthRow({ month: m, currency }: { month: MonthFinance; currency: string }) {

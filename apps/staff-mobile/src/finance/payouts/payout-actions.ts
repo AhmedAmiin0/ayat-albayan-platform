@@ -1,4 +1,6 @@
-import { round2, type PaymentMethod, type PayoutView } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import { round2 } from '@ab/core';
+import type { PayoutView } from '@ab/money';
 import { paidAtFor } from '@/core/lib/money/paid-day';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 

@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { t, RescheduleFrame } from '@ab/mobile-kit';
 import { EditTimeForm } from './EditTimeForm';
 import { editMode } from '@/edit-time/lib/types';

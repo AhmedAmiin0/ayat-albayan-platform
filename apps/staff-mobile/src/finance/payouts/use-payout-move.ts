@@ -1,5 +1,5 @@
 import { uploadOnce } from '@ab/client-core';
-import type { PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
 import { useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { uploadTeacherReceipt } from '@/earnings/hooks/upload-receipt';

@@ -1,4 +1,4 @@
-import type { LeadSource, LeadStatus } from '@ab/shared';
+import type { LeadSource, LeadStatus } from '@ab/catalog';
 import type { ListParams } from '@ab/mobile-kit';
 import { leadSortValue, type LeadSort } from '@ab/client-core';
 

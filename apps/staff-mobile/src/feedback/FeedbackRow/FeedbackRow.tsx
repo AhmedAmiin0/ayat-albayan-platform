@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { View } from 'react-native';
 import { phoneTz } from '@/core/lib/clock';
 import { t, shape, type, useTheme, AppText, ltr, NuqtaGlyph, StatusChip } from '@ab/mobile-kit';

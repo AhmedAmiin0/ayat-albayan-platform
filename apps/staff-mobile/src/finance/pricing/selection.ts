@@ -6,7 +6,7 @@ import {
   type PackageId,
   type PricingDuration,
   type SiteCountry,
-} from '@ab/shared';
+} from '@ab/money';
 import type { ListParams } from '@ab/mobile-kit';
 
 // The API prices the choice (GET /pricing/quote); pill values are strings, hence `${}`.

@@ -1,4 +1,5 @@
-import { counted, formatAmount } from '@ab/shared';
+import { counted } from '@ab/core';
+import { formatAmount } from '@ab/money';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

@@ -1,4 +1,4 @@
-import type { TimeEditResult } from '@ab/shared';
+import type { TimeEditResult } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Button, NuqtaGlyph, whenText } from '@ab/mobile-kit';
 import { useViewerClock } from '@/core/lib/clock';

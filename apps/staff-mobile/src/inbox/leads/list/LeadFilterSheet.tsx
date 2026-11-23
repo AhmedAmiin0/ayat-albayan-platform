@@ -1,4 +1,5 @@
-import { LEAD_SOURCES, NO_ASSIGNEE, type LeadSource } from '@ab/shared';
+import { NO_ASSIGNEE } from '@ab/shared';
+import { LEAD_SOURCES, type LeadSource } from '@ab/catalog';
 import type { ReactNode } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
 import {

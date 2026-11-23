@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { courseEnd, dayPicks } from '@/features/teaching/booking/draft/draft.days';

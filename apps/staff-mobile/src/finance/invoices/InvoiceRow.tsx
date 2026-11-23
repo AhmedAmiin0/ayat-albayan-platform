@@ -1,4 +1,4 @@
-import type { InvoiceView } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { memo } from 'react';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 import { invoiceStudents, invoiceSubtitle } from './invoice-text';

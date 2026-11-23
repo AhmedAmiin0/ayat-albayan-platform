@@ -1,4 +1,4 @@
-import type { ClockCycle } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { bookFailure, type BookFailure } from '@/booking/shared/booking-errors';
 import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';

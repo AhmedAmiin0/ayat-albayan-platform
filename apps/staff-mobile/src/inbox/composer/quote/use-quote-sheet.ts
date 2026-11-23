@@ -1,4 +1,4 @@
-import { offerText, pricingCountryOfPhone } from '@ab/shared';
+import { offerText, pricingCountryOfPhone } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { useIsMutating } from '@tanstack/react-query';
 import { useRef, useState } from 'react';

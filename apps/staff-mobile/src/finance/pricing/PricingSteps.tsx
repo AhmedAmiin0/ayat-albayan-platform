@@ -6,7 +6,7 @@ import {
   SITE_COUNTRIES,
   STUDENTS_MAX,
   STUDENTS_MIN,
-} from '@ab/shared';
+} from '@ab/money';
 import type { ReactNode } from 'react';
 import { t, FilterPills, type FilterPill, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

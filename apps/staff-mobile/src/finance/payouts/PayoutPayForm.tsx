@@ -1,4 +1,5 @@
-import { PAYMENT_METHODS, type PayoutView, type PaymentMethod } from '@ab/shared';
+import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
+import type { PayoutView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import {

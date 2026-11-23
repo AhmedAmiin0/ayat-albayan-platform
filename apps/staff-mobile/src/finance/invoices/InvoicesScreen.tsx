@@ -1,4 +1,4 @@
-import type { InvoiceView } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';

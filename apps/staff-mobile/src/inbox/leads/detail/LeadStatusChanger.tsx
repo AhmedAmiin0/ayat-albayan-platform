@@ -1,4 +1,5 @@
-import { allowedNextStatuses, type LeadStatus, leadStatusStyle } from '@ab/shared';
+import { allowedNextStatuses, type LeadStatus } from '@ab/catalog';
+import { leadStatusStyle } from '@ab/money';
 import { Pressable, View } from 'react-native';
 import { ApiError, t, StatusChip, type, useTheme, AppText, ErrorLine } from '@ab/mobile-kit';
 import { useOptimisticStatus } from '@/core/lib/query/use-optimistic-status';

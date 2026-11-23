@@ -2,7 +2,7 @@ import { t, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { MonthRow } from './MonthRow';
 import { activeMonths } from './summary-lines';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 /** Only months with money, newest first. */
 export function SummaryMonths({ finance }: { finance: DashboardResponse['finance'] }) {

@@ -1,4 +1,5 @@
-import { formatPhone, type ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { render, screen, within } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { thread } from '@/inbox/shared/thread-fixtures';

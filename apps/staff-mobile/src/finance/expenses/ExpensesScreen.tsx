@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import type { ExpenseView } from '@ab/shared';
+import type { ExpenseView } from '@ab/money';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, ScrollView, View } from 'react-native';
 import { t, Button, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';

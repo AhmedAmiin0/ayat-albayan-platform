@@ -1,4 +1,4 @@
-import type { PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';

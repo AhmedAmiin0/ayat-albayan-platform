@@ -5,7 +5,8 @@ import {
   windowBar,
   type WindowBar,
 } from '@ab/client-core';
-import type { MessageStatus, MessageView, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadView } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';

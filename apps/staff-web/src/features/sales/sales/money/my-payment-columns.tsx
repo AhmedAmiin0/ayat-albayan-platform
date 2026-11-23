@@ -1,4 +1,5 @@
-import { PAYMENT_KINDS, PAYMENT_METHODS, type MyPaymentRow } from '@ab/shared';
+import { PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/catalog';
+import type { MyPaymentRow } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { formatDate } from '@/features/sales/leads';

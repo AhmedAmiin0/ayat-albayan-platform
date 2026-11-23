@@ -1,4 +1,4 @@
-import type { LessonView, TimeEditMode } from '@ab/shared';
+import type { LessonView, TimeEditMode } from '@ab/schedule';
 import { Switch, View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { chosenStart, isBookable, isChanged, lengthOf, willNotify, type EditState } from '@/edit-time/lib/edit-time-body';

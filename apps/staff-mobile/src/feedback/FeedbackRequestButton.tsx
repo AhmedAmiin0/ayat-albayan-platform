@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { useApprovedTemplates } from '@/inbox/composer/TemplatePicker';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';

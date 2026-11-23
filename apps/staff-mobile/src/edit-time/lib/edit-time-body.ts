@@ -1,5 +1,6 @@
-import type { LessonTimeEdit } from '@ab/shared';
-import { DURATIONS, lessonDuration, type LessonView } from '@ab/shared';
+import type { LessonTimeEdit } from '@ab/schedule';
+import { DURATIONS } from '@ab/catalog';
+import { lessonDuration, type LessonView } from '@ab/schedule';
 import { localDate } from '@/today/lib/timeline';
 import { editMode } from './types';
 

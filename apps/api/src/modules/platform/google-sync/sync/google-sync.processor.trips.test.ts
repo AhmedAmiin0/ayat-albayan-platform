@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import type { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
 import type { GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
 import { GoogleData } from '@/modules/platform/google-sync/google-data';
