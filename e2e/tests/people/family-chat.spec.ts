@@ -6,11 +6,7 @@ import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { closeCodes, openCodes } from '../../support/people/family-sign-in';
 import { guardianSignIn, seedPortalFamily } from '../../support/people/family-portal';
 
-// The family chat on the web (docs/31 §2, FamChatWeb boards) on the real API: with
-// family_chat_enabled on and the child subscribed with «أبرار» as the teacher, the guardian opens
-// «المحادثة», sees the teacher's message under her role, answers it with «ردّ» (the quote rides
-// along) and sees his own message at the inline end with its tick. The shared ChannelThread is the
-// teacher's «رسائل الطلاب» too. Invented names only.
+// Family chat (docs/31 §2) with family_chat_enabled on; invented names only.
 
 const C = ar.studentChannel;
 const P = ar.portal;
@@ -62,7 +58,7 @@ test.describe('the family chat on the family host', () => {
     await question.getByRole('button', { name: C.actions.menu }).click();
     await page.getByRole('button', { name: C.reply.action, exact: true }).click();
     await expect(chat.getByText(C.reply.replyingTo.replace('{name}', C.roles.teacher))).toBeVisible();
-    // «الرسالة» is also inside «خيارات الرسالة» and the quote's name: the box by role, exactly.
+    // The message label also appears in the options menu and the quote, so match the box exactly.
     const box = chat.getByRole('textbox', { name: C.messageLabel, exact: true });
     await box.fill(ANSWER);
     await chat.getByRole('button', { name: C.send, exact: true }).click();

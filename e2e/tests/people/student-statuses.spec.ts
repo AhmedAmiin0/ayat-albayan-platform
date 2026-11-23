@@ -12,10 +12,7 @@ import {
   unpaidPackage,
 } from '../../support/people/student-statuses';
 
-// Student status pipeline (R-STU-05, docs/18): a registered student with no trial
-// time is «جديد»; booking a trial lesson → «بانتظار الحلقة التجريبية»; attending it → «بانتظار
-// الاشتراك»; a positive payment → «مشترك». Each step through the real API (:3100), checked in
-// students.status, in its status_change audit row and on the admin profile chip. No WhatsApp is sent.
+// Student status pipeline (R-STU-05, docs/18) through the real API; no WhatsApp is sent.
 
 const E = ar.enums.studentStatus;
 const NAME = `مسار الحالات ${String(Date.now()).slice(-6)}`;
@@ -40,23 +37,21 @@ test.describe('student statuses (owner 2026-10-15, R-STU-05)', () => {
     const family = await seedFamily(`أم ${NAME}`, [NAME]);
     const studentId = family.studentIds[0] ?? '';
 
-    // 1. Registered without a trial session time: the column default «جديد».
+    // 1. Registered without a trial time: the column default status new.
     expect(await studentStatusOf(studentId)).toBe('new');
     const admin = await asRole('admin');
     await expectChip(admin, { studentId, label: E.new });
 
-    // 2. A trial lesson is booked → «بانتظار الحلقة التجريبية».
     const lessonId = await bookTrial(admin, { teacherId, studentId });
     await expect.poll(() => studentStatusOf(studentId)).toBe('trial');
     await expectChip(admin, { studentId, label: E.trial });
 
-    // 3. The trial is attended (the teacher's «حضر») → «بانتظار الاشتراك».
     await startNow(lessonId);
     expect(await completeLesson(admin, lessonId)).toBe(200);
     await expect.poll(() => studentStatusOf(studentId)).toBe('pending_subscription');
     await expectChip(admin, { studentId, label: E.pending_subscription });
 
-    // 4. A positive payment on a package → «مشترك».
+    // 4. A positive payment on a package makes the student subscribed.
     const pkg = await unpaidPackage(studentId);
     expect(await recordPayment(admin, pkg)).toBe(201);
     await expect.poll(() => studentStatusOf(studentId)).toBe('active');

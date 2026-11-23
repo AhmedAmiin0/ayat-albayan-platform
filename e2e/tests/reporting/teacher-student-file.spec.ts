@@ -12,9 +12,7 @@ import {
 import { seedPackageStudent } from '../../support/finance/money';
 import { fillAttended } from '../../support/reporting/teacher-extra';
 
-// docs/47 PR 1 «ملف الطالب»: her student's file shows the course start and
-// end, an excused lesson with its reason, a lesson the admin moved with its old time and the
-// move reason, and per-lesson reports: «اكتب التقرير» → submit → «تعديل التقرير».
+// docs/47 PR 1: excused and moved lessons show their reasons, with per-lesson reports.
 
 const WINDOW_MIN = 30;
 const EXCUSE = 'مرض الطالب';
@@ -96,12 +94,11 @@ test.describe('teacher student file (docs/47 PR 1)', () => {
     await expect(upcoming).toContainText(before(log.movedFrom, '{when}'));
     await expect(upcoming).toContainText(log.moveReason.replace('{reason}', MOVE));
 
-    // The month log: the excused lesson reads «اعتذر» with the family's reason.
+    // The excused lesson shows the family's reason.
     const month = teacher.getByRole('table', { name: ar.teacherBoard.attendanceLog });
     await expect(month).toContainText(log.cancelReason.replace('{reason}', EXCUSE));
     await expect(month).toContainText(ar.sales.student.kind.excused);
 
-    // Today's started lesson: «اكتب التقرير» opens its form; once sent, «تعديل التقرير».
     const reportLink = month.locator(`a[href="/teacher/report/${s.todayLessonId}"]`);
     await expect(reportLink).toHaveText(ar.teacherBoard.writeReport);
     await reportLink.click();
@@ -115,7 +112,7 @@ test.describe('teacher student file (docs/47 PR 1)', () => {
     const edit = after.locator(`a[href="/teacher/report/${s.todayLessonId}"]`);
     await expect(edit).toHaveText(ar.reports.edit, { timeout: 30_000 });
 
-    // docs/49: the sent report reads inside its own row (no «التقارير» tab), still with no money.
+    // docs/49: the sent report reads inside its own row, still with no money.
     const editHref = teacher.locator(`a[href="/teacher/report/${s.todayLessonId}"]`);
     const today = after.getByRole('row').filter({ has: editHref });
     await today.locator('summary', { hasText: ar.reports.view }).click();

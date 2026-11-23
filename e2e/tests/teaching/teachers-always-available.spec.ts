@@ -4,10 +4,7 @@ import { setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
-// Owner 2026-10-12 «make all the teachers available 24/7» (settings.teachers_always_available,
-// migration 320): «أبرار» has no saved availability, yet she can be picked, 03:00 Riyadh books with
-// no conflict and no reason, and a start over a booked lesson is still marked busy. Global setup
-// seeds the switch off for the grid-based journeys; this spec turns it on and back off.
+// Always-available (migration 320) skips availability but still marks booked slots busy.
 
 const KEY = 'teachers_always_available';
 

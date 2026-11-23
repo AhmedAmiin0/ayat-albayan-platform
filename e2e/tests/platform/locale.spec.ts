@@ -11,7 +11,7 @@ import { openNav } from '../../support/core/nav';
 type Dict = typeof ar;
 const switchIn = (scope: Page | Locator, dict: Dict, target: 'ar' | 'en') =>
   scope.getByRole('button', { name: new RegExp(`${dict.language.label}\\s*${dict.language[target]}`) });
-/** Signed in: the switch sits in the «القائمة» sheet below 900px (the mobile project), else in view. */
+/** Signed in, the switch sits in the menu sheet below 900px, else in view. */
 const switchTo = async (page: Page, dict: Dict, target: 'ar' | 'en') => switchIn(await openNav(page, dict), dict, target);
 
 async function expectDocument(page: Page, lang: 'ar' | 'en'): Promise<void> {

@@ -4,9 +4,7 @@ import { expect, test } from '../../support/core/fixtures';
 import { API, bearer } from '../../support/core/messages';
 import { dropLogins, expectSignedIn, signInAs } from '../../support/people/users-control';
 
-// «حسابي» API (R-ACC-02, rule 9): PATCH /me/profile edits only the caller's whitelisted fields.
-// A non-admin cannot raise their own role through it: role/role_id are stripped, and a body with
-// nothing known is a 400.
+// PATCH /me/profile (R-ACC-02, rule 9) strips role/role_id; a body with nothing known is a 400.
 
 const USER = accountUser('account-api');
 

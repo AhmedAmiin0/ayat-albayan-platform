@@ -7,9 +7,7 @@ import { freshDigits } from '../../support/core/messages';
 import { signInSales } from '../../support/sales/sales-portal';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// docs/22: «القوائم» like WhatsApp Business. An assistant creates «بانتظار الدفع»
-// from the chip row, adds a chat to it from the thread's «القوائم», filters the conversations by the
-// chip, renames the list and deletes it; the chat and its messages stay. Nothing is sent by a list.
+// docs/22: lists like WhatsApp Business; deleting a list keeps chats, and lists never send.
 
 const L = ar.inbox.lists;
 
@@ -39,7 +37,7 @@ test.describe('inbox — chat lists «القوائم» (docs/22)', () => {
     await expect(listChip(page, name)).toHaveAttribute('aria-pressed', 'true');
     await expect(page.getByText(L.empty)).toBeVisible();
 
-    // The thread's «القوائم»: tick the new list (saved at once), then its chip shows in the header.
+    // Ticking a list saves at once, then its chip shows in the header.
     await page.goto(`/sales/inbox?phone=${encodeURIComponent(phone)}`);
     await expect(page.getByRole('log', { name: ar.messages.log })).toBeVisible({ timeout: 30_000 });
     await fromChatMore(page, L.title);

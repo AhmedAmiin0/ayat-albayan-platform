@@ -2,11 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { guardianPhoneOf, uniqueName } from '../../support/finance/money-extra';
 import { seedFamily, withSql } from '../../support/core/schedule';
 
-// The link no other spec covers (R-LEAD-01, R-SUB-01, R-PAY-01): a lead whose trial is done became
-// a guardian + student; the admin subscribes from the STUDENT PROFILE (chat-subscribe.spec does it
-// from the chat, journey 3 starts from a seeded package) → the lead is «مشترك» and linked to the
-// guardian → the package is unpaid → the payment makes it active. Journeys 1 and chat-subscribe own
-// the trial booking itself.
+// Lead to subscription from the student profile (R-LEAD-01, R-SUB-01, R-PAY-01).
 
 interface LeadRow {
   status: string;
@@ -35,7 +31,6 @@ test.describe('trial lead → subscription → payment → active', () => {
     const lead = page.getByRole('listitem').filter({ hasText: name });
     await expect(lead).toContainText(ar.enums.leadStatus.trial_done);
 
-    // «اشتراك جديد» on the profile: the calculator defaults, saved.
     await page.goto(`/admin/students/${studentId}`);
     const card = page.getByRole('region', { name: ar.subscriptions.balance });
     await card.getByRole('button', { name: ar.subscriptions.new }).click();
@@ -52,7 +47,6 @@ test.describe('trial lead → subscription → payment → active', () => {
     await expect.poll(async () => (await packageOf(studentId))[0]?.status).toBe('active');
     await expect(card.getByText(ar.enums.subscriptionStatus.active, { exact: true })).toBeVisible();
 
-    // The lead list now says «مشترك» for the same person.
     await page.goto(`/admin/leads?q=${encodeURIComponent(phone.slice(1))}`);
     await expect(lead).toContainText(ar.enums.leadStatus.converted);
   });

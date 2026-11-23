@@ -6,10 +6,7 @@ import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { closeCodes, openCodes } from '../../support/people/family-sign-in';
 import { seedPortalFamily, studentSignIn } from '../../support/people/family-portal';
 
-// The lesson's own page on the family host (boards FamFilesWebAttended / FamFilesWebNoRec, the
-// app's lesson screen): from an attended lesson with a sent report, «ملفات الحلقة» opens
-// /lesson/<id> even though nothing was recorded; its files start with the report's PDF. The
-// child's recordings page (/recordings/<id>, the app's screen) says why it is empty.
+// A lesson with a sent report opens its files page even with nothing recorded.
 
 const F = ar.lessonFiles;
 const P = ar.portal;

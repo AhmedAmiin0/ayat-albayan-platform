@@ -8,10 +8,7 @@ import { resetSales } from '../../support/sales/sales-options';
 import { withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/core/users';
 
-// Owner 2026-10-12 (docs/16 rows 23, 24, 26), in the browser: in her family's chat the salesperson checks
-// the number («تحقق من التسجيل») and sees the start-date field of «اشتراك جديد»; the admin unticks
-// «تحديد تاريخ بداية الاشتراك» on the built-in sales role in «الأدوار والصلاحيات», and after a reload the
-// field is gone («تبدأ الباقة اليوم»). The sales role's defaults are restored at the end.
+// docs/16 rows 23, 24, 26: without the grant the start-date field is gone after reload.
 
 const P = ar.permissions.page;
 const SM = ar.salesMoney;
@@ -44,7 +41,7 @@ test.describe('sales start date: the admin can switch it off', () => {
 
     const admin = await asRole('admin');
     await admin.goto('/admin/roles');
-    // The built-in sales role is named «المبيعات» (migration 20261006000289).
+    // The built-in sales role name comes from migration 20261006000289.
     await admin.getByRole('button', { name: `${P.edit} المبيعات`, exact: true }).click();
     const dialog = admin.getByRole('dialog', { name: P.editRole });
     await dialog.getByRole('checkbox', { name: ar.permissions.items['subscriptions.set_start_date'], exact: true }).uncheck();
