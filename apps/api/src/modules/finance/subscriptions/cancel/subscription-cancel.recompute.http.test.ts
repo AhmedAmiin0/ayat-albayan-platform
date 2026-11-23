@@ -41,10 +41,12 @@ describe('a cancelled package in the student balance and the recompute', () => {
     m.subs.update.mockResolvedValue(rows()[0]);
     m.balances.forSubscriptions.mockResolvedValue(new Map([[OLD, { subscription_id: OLD, lessons_total: 4, lessons_used: 4, remaining: 0, is_last: true, ended_at: null, projected_end_at: null }]]));
     m.alerts.raiseTask.mockResolvedValue(false);
+    const open = (id: string) => ({ subject_id: id, dedup_key: `old_kind:${id}` });
+    m.alerts.openTasks.mockResolvedValue([open(OLD), open(CANCELLED)]);
     await call({ method: 'PATCH', url: `/subscriptions/${OLD}`, body: { notes: 'x' } });
     for (const [id] of m.subs.update.mock.calls) expect(id).not.toBe(CANCELLED);
     for (const [task] of m.alerts.raiseTask.mock.calls) expect(task).toMatchObject({ subjectId: OLD });
     expect(m.alerts.raiseTask).toHaveBeenCalled();
-    expect(m.alerts.closeTasks).toHaveBeenCalledWith(expect.objectContaining({ subjectIds: [OLD] }));
+    expect(m.alerts.closeKeys).toHaveBeenCalledWith([`old_kind:${OLD}`], expect.any(Date));
   });
 });

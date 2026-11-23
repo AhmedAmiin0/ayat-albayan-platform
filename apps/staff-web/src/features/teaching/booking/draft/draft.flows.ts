@@ -1,4 +1,5 @@
-import type { PackageSize, PrefilledPick } from '@ab/shared';
+import type { PrefilledPick } from '@ab/shared';
+import type { PackageSize } from '@ab/catalog';
 
 // The reduced flows of the booking wizard (teacher → slot → review): the assistant's course of a
 // subscription, and a new trial date for an existing student. Types only.

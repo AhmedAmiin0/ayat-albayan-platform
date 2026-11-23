@@ -1,4 +1,4 @@
-import { clickToChatLink, formatPhone } from '@ab/shared';
+import { clickToChatLink, formatPhone } from '@ab/core';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, ScrollView, View } from 'react-native';
 import { t, Button, BackButton, ErrorState, ltr, Screen, ScreenHeader } from '@ab/mobile-kit';

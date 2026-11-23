@@ -634,7 +634,7 @@ changed and who decided it.
 5. **Repo tests:** the repo gap (§7.1) closes with a counting fake `Db` that records the PostgREST
    chain (`from/select/eq/in/range/order`) so each repo method gets a shape test (columns, filters,
    bounds), and the important ones also run against the CI Supabase in the e2e job. The counting
-   fake `Db` already exists: `apps/api/src/modules/people/guardians/fake-db.ts` (`calls`, `trips`).
+   fake `Db` already exists: `apps/api/src/common/db/testing/fake-db.ts` (`calls`, `trips`).
 
 ## 8. Design-system audit and target (R15)
 

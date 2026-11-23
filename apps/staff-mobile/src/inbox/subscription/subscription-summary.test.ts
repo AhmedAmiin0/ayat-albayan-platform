@@ -1,4 +1,5 @@
-import { counted, subscriptionStatusStyle } from '@ab/shared';
+import { counted } from '@ab/core';
+import { subscriptionStatusStyle } from '@ab/money';
 import { t, isolate } from '@ab/mobile-kit';
 import { child, sub, usedUp } from './people-fixtures';
 import { familySummary } from './subscription-summary';

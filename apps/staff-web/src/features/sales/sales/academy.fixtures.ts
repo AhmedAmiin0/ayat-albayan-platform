@@ -1,11 +1,11 @@
 import type {
-  AssistantLessonView,
   SalesScheduleLesson,
   SalesStudentView,
   SalesSubscriptionHistory,
   SalesTeacherStudent,
   SalesTeacherView,
 } from '@ab/shared';
+import type { AssistantLessonView } from '@ab/schedule';
 
 // Test fixtures for the sales assistant side (docs/16): what the API sends, nothing more.
 

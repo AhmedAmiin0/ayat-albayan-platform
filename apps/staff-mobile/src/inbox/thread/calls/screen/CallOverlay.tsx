@@ -1,5 +1,6 @@
 import type { PermissionAsk } from '@ab/client-core';
-import { formatPhone, type ActiveCallView } from '@ab/shared';
+import type { ActiveCallView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
 import { Modal } from 'react-native';
 import { t } from '@ab/mobile-kit';

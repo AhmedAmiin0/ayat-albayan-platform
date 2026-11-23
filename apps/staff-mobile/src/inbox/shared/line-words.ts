@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 
 // Which WhatsApp line a message came in on or left from (docs/12 §13.10). The API can send a line

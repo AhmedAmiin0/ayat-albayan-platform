@@ -1,5 +1,6 @@
 import { staffMaySend } from '@ab/client-core';
-import { canReact, formatPhone, type MessageView, type ThreadView } from '@ab/shared';
+import { canReact, type MessageView, type ThreadView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { type ReactNode, useMemo, useState } from 'react';
 import { ltr } from '@ab/mobile-kit';
 import {

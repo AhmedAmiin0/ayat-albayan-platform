@@ -1,4 +1,4 @@
-import type { LessonView, OverviewTeacher, ScheduleOverview } from '@ab/shared';
+import type { LessonView, OverviewTeacher, ScheduleOverview } from '@ab/schedule';
 import { ABRAR, FATMA } from './lesson/lesson-fixture';
 
 // Test data only (imported by *.test.ts[x]): GET /lessons/overview rows for the week of Sat 3 Oct

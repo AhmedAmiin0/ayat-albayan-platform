@@ -1,4 +1,4 @@
-import type { MyStudentRow } from '@ab/shared';
+import type { MyStudentRow } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

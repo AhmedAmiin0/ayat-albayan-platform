@@ -1,4 +1,4 @@
-import { phoneE164 } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { router, useLocalSearchParams } from 'expo-router';
 import { t, Button } from '@ab/mobile-kit';
 import { requestSearch } from './search-request';

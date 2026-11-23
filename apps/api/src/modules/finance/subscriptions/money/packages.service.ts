@@ -7,11 +7,13 @@ import { statusChanges, withChanges } from './packages.plan';
 import { toStudentBalance, toSubscriptionView, type SubContext } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import { SubscriptionsRepo, type SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
 
+type PackageRow = Omit<SubRow, 'student'>;
 export interface StudentState {
   /** FIFO order, statuses as stored after the recompute. */
-  rows: SubRow[];
+  rows: PackageRow[];
   ctx: SubContext;
 }
+type StatusChange = ReturnType<typeof statusChanges>[number];
 
 /**
  * A student's packages with their balances and payments, and the status recompute that runs after
@@ -26,7 +28,7 @@ export class PackagesService {
     private readonly events: PackageEvents,
   ) {}
 
-  async context(rows: readonly SubRow[]): Promise<SubContext> {
+  async context(rows: readonly Pick<SubRow, 'id' | 'currency'>[]): Promise<SubContext> {
     const [balances, paid] = await Promise.all([
       this.balances.forSubscriptions(rows.map((r) => r.id)),
       this.subs.paid(rows),
@@ -40,15 +42,24 @@ export class PackagesService {
   }
 
   /**
-   * Writes subscriptionStatusFor for each of the student's packages; audited as the actor. A cancelled
-   * package is left out of everything here (statuses, alerts, renewal): never rewritten, never the newest.
-   * Each package moved to 'active' (a payment, an amount correction, a price or discount edit, the
-   * sweep) tells PackageEvents, so its course draft is booked (idempotent, PR #648 review).
+   * Writes subscriptionStatusFor for each package of these students; audited as the actor. The
+   * reads are three set reads whatever the number of students (the alerts sweep, BE-07). A
+   * cancelled package is left out of everything here (statuses, alerts, renewal): never rewritten,
+   * never the newest. Each package moved to 'active' tells PackageEvents, so its course draft is
+   * booked (idempotent).
    */
-  async recompute(studentId: string, actorId: string | null): Promise<StudentState> {
-    const rows = livePackages(await this.subs.forStudent(studentId));
+  async recomputeMany(studentIds: readonly string[], actorId: string | null): Promise<Map<string, StudentState>> {
+    const rows = livePackages(await this.subs.forStudents(studentIds));
     const ctx = await this.context(rows);
-    const changes = statusChanges({ subs: rows, balances: ctx.balances, paid: ctx.paid });
+    const states = new Map(studentIds.map((id) => [id, { rows: rows.filter((r) => r.student_id === id), ctx }]));
+    const changes = [...states.values()].flatMap((s) => statusChanges({ subs: s.rows, ...ctx }));
+    await this.write(changes, actorId);
+    for (const c of changes.filter(isActivation)) await this.events.paid(c.id);
+    const after = (s: StudentState): StudentState => ({ rows: withChanges(s.rows, changes), ctx });
+    return new Map([...states].map(([id, s]) => [id, after(s)]));
+  }
+
+  private async write(changes: readonly StatusChange[], actorId: string | null): Promise<void> {
     for (const c of changes) {
       await this.subs.update(c.id, { status: c.to });
       await this.audit.record({
@@ -60,8 +71,6 @@ export class PackagesService {
         after: { status: c.to },
       });
     }
-    for (const c of changes.filter(isActivation)) await this.events.paid(c.id);
-    return { rows: withChanges(rows, changes), ctx };
   }
 
   /** GET /students/:id/balance (S6). Read only: statuses are kept fresh by writes and the sweep. */

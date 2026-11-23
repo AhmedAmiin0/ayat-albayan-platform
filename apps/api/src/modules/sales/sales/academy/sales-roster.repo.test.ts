@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { SalesRosterRepo } from './sales-roster.repo';
 
 const IDS = ['s1', 's2'];

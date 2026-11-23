@@ -1,4 +1,6 @@
-import type { AcademySettings, FollowUpNote, LeadView, Page } from '@ab/shared';
+import type { FollowUpNote, LeadView } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { AcademySettings } from '@ab/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey, t } from '@ab/mobile-kit';
 import { patchCached } from '@/core/lib/query/paging';

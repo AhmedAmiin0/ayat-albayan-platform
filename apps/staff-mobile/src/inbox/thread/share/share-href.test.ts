@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { shareHome, shareHref } from './share-href';
 
 const all = () => true;

@@ -1,4 +1,5 @@
-import type { ClockCycle, RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

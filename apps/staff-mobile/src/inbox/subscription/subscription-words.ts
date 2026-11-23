@@ -1,16 +1,14 @@
 import {
   packageChip,
-  packageProgress,
   subscribeKind,
   subscriptionBadge,
-  subscriptionStatusStyle,
-  type StatusStyle,
   type SubscriptionBadge,
   type ThreadPeople,
   type ThreadStudentView,
   type ThreadSubscriptionView,
   type ThreadView,
 } from '@ab/shared';
+import { packageProgress, subscriptionStatusStyle, type StatusStyle } from '@ab/money';
 import type { Href } from 'expo-router';
 import { t, isolate, ltr, money } from '@ab/mobile-kit';
 import { partPaidLine } from '@/core/lib/money/format';

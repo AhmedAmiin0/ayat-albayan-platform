@@ -1,4 +1,5 @@
-import { durationText, lessonWhenAt, payoutLockOf } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { durationText, payoutLockOf } from '@ab/schedule';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

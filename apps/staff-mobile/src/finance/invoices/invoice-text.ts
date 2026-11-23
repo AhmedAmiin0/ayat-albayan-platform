@@ -1,4 +1,4 @@
-import type { InvoiceView } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
 
