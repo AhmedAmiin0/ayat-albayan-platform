@@ -248,7 +248,7 @@
   },
   "src/lib/query/query-client.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/dot-notation": {
       "count": 1

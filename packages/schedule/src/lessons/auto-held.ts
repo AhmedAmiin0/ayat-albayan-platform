@@ -1,5 +1,5 @@
 import type { LessonStatus } from '@ab/catalog';
-import { isOpenLesson } from './state-machine.js';
+import { isOpenLesson } from './state-machine/index.js';
 
 // Lessons need no confirmation by default: while the setting lesson_confirmation_required is OFF,
 // a lesson still scheduled / confirmed AUTO_HELD_GRACE_MS after its end counts as held

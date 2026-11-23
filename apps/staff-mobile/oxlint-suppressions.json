@@ -8273,7 +8273,7 @@
       "count": 1
     }
   },
-  "src/teacher/report/hooks/use-report-entry.ts": {
+  "src/teacher/report/hooks/use-report-entry/use-report-entry.ts": {
     "stylistic/max-len": {
       "count": 1
     }

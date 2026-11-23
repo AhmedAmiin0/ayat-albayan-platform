@@ -1,4 +1,4 @@
-import { addCalendarDays } from './calendar.js';
+import { addCalendarDays } from './calendar/index.js';
 import { wallInstant } from './zoned.js';
 
 // Local wall clock → UTC instant in an IANA zone, for prefilled picks (continue on the
@@ -13,4 +13,4 @@ export const zonedInstant = (date: string, time: string, tz: string): string =>
 export const addLocalDays = addCalendarDays;
 
 /** 0 = الأحد … 6 = السبت of a local date (the date-fns facade). */
-export { weekdayOfDate } from './calendar.js';
+export { weekdayOfDate } from './calendar/index.js';

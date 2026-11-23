@@ -60,17 +60,17 @@
       "count": 1
     }
   },
-  "src/integrations/keys.kapso.test.ts": {
+  "src/integrations/keys/tests/kapso.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/integrations/keys.test.ts": {
+  "src/integrations/keys/tests/keys.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/integrations/keys.ts": {
+  "src/integrations/keys/keys.ts": {
     "max-len": {
       "count": 3
     }
@@ -91,7 +91,7 @@
       "count": 3
     }
   },
-  "src/permissions/roles.ts": {
+  "src/permissions/roles/roles.ts": {
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -106,17 +106,17 @@
       "count": 3
     }
   },
-  "src/theme/theme.brand.test.ts": {
+  "src/theme/tests/brand.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/theme/theme.contrast.test.ts": {
+  "src/theme/tests/contrast.test.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/theme/theme.glass.test.ts": {
+  "src/theme/tests/glass.test.ts": {
     "max-len": {
       "count": 1
     }

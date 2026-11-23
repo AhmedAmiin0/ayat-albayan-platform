@@ -1,10 +1,11 @@
 import type { BookingResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { refreshBooked } from './refresh-booked';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Input } from '@ab/web-kit/components/ui/form/input';
-import { conflictsOf, errorCode, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule';
+import { conflictsOf, errorCode, lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/people/students/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -47,7 +48,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
       return createBooking(body, mode, draft.course?.hold === true);
     },
     onSuccess: async (result) => {
-      await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
+      await refreshBooked(queryClient);
       if (result) onBooked(result);
       else held?.();
     },
