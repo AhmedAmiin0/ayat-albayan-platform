@@ -1,4 +1,6 @@
-import { lessonWhenAt, type ClockCycle, type StudentLinkLesson } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { StudentLinkLesson } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';

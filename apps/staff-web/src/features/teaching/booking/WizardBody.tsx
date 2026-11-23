@@ -1,4 +1,5 @@
-import type { BookingResult, StudentRef, TrialDateResult } from '@ab/shared';
+import type { StudentRef, TrialDateResult } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { mediaPhone } from './steps/review/booked';
 import type { BookingDraft, PickedStudent, StepKey } from './draft/draft';

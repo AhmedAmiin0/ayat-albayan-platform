@@ -1,4 +1,5 @@
-import { bookingRequestSchema, type BookingTeacherOption } from '@ab/shared';
+import { bookingRequestSchema } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { courseEnd, dayPicks, days, draftPicks, pickPatch, withPicks } from './draft.days';
 import { emptyDraft, stepReady, stepsOf, toBookingRequest, type BookingDraft } from './draft';

@@ -2262,30 +2262,13 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "max-len": {
       "count": 5
     }
   },
-  "src/modules/finance/subscriptions/alerts/alerts.service.renewal.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/finance/subscriptions/alerts/alerts.service.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "max-len": {
-      "count": 10
+      "count": 8
     }
   },
   "src/modules/finance/subscriptions/alerts/unpaid-flags.service.ts": {
@@ -2315,7 +2298,7 @@
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.recompute.http.test.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.repo.test.ts": {
@@ -2535,7 +2518,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-status.repo.ts": {
@@ -2623,7 +2606,7 @@
       "count": 2
     },
     "complexity": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/subscriptions/subscriptions.service.ts": {

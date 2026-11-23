@@ -1,4 +1,4 @@
-import type { PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

@@ -1,4 +1,5 @@
-import { clockOf, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import type { SessionGroup } from '@ab/client-core';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

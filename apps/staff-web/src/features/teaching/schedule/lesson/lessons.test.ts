@@ -12,7 +12,7 @@ import {
   teacherRows,
   timeInCity,
 } from './lessons';
-import { RIYADH_TZ } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */

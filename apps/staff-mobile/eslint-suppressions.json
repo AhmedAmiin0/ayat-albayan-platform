@@ -2455,7 +2455,7 @@
       "count": 1
     }
   },
-  "src/inbox/composer/quote/QuoteSheet.actions.test.tsx": {
+  "src/inbox/composer/quote/QuoteSheet/tests/actions.test.tsx": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },
@@ -2463,12 +2463,12 @@
       "count": 2
     }
   },
-  "src/inbox/composer/quote/QuoteSheet.prefill.test.tsx": {
+  "src/inbox/composer/quote/QuoteSheet/tests/prefill.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/composer/quote/QuoteSheet.tsx": {
+  "src/inbox/composer/quote/QuoteSheet/QuoteSheet.tsx": {
     "complexity": {
       "count": 1
     },
@@ -2529,7 +2529,7 @@
       "count": 4
     }
   },
-  "src/inbox/composer/voice/MicHold.access.test.tsx": {
+  "src/inbox/composer/voice/MicHold/tests/access.test.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
@@ -2543,7 +2543,7 @@
       "count": 2
     }
   },
-  "src/inbox/composer/voice/MicHold.en.test.tsx": {
+  "src/inbox/composer/voice/MicHold/tests/en.test.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
@@ -2551,7 +2551,7 @@
       "count": 1
     }
   },
-  "src/inbox/composer/voice/MicHold.test.tsx": {
+  "src/inbox/composer/voice/MicHold/tests/MicHold.test.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
@@ -2562,7 +2562,7 @@
       "count": 1
     }
   },
-  "src/inbox/composer/voice/MicHold.tsx": {
+  "src/inbox/composer/voice/MicHold/MicHold.tsx": {
     "max-len": {
       "count": 1
     },
@@ -2744,7 +2744,7 @@
       "count": 2
     }
   },
-  "src/inbox/leads/list/LeadsList.tsx": {
+  "src/inbox/leads/list/LeadsList/LeadsList.tsx": {
     "complexity": {
       "count": 1
     },
@@ -2809,22 +2809,22 @@
       "count": 3
     }
   },
-  "src/inbox/lists/components/ChatListChips.access.test.tsx": {
+  "src/inbox/lists/components/ChatListChips/tests/access.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/lists/components/ChatListChips.choice.test.tsx": {
+  "src/inbox/lists/components/ChatListChips/tests/choice.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/lists/components/ChatListChips.test.tsx": {
+  "src/inbox/lists/components/ChatListChips/tests/ChatListChips.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/lists/components/ChatListChips.tsx": {
+  "src/inbox/lists/components/ChatListChips/ChatListChips.tsx": {
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -2895,17 +2895,17 @@
       "count": 4
     }
   },
-  "src/inbox/messages/components/MessageBubble.side.en.test.tsx": {
+  "src/inbox/messages/components/MessageBubble/tests/side.en.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/messages/components/MessageBubble.side.test.tsx": {
+  "src/inbox/messages/components/MessageBubble/tests/side.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/messages/components/MessageBubble.tsx": {
+  "src/inbox/messages/components/MessageBubble/MessageBubble.tsx": {
     "complexity": {
       "count": 1
     },
@@ -2922,7 +2922,7 @@
       "count": 1
     }
   },
-  "src/inbox/messages/components/MessageFile.test.tsx": {
+  "src/inbox/messages/components/MessageFile/tests/MessageFile.test.tsx": {
     "max-len": {
       "count": 4
     },
@@ -2930,7 +2930,7 @@
       "count": 1
     }
   },
-  "src/inbox/messages/components/MessageFile.tsx": {
+  "src/inbox/messages/components/MessageFile/MessageFile.tsx": {
     "complexity": {
       "count": 1
     },
@@ -2938,27 +2938,27 @@
       "count": 9
     }
   },
-  "src/inbox/messages/components/MessageList.band.test.tsx": {
+  "src/inbox/messages/components/MessageList/tests/band.test.tsx": {
     "max-len": {
       "count": 4
     }
   },
-  "src/inbox/messages/components/MessageList.days.test.tsx": {
+  "src/inbox/messages/components/MessageList/tests/days.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/messages/components/MessageList.jump.test.tsx": {
+  "src/inbox/messages/components/MessageList/tests/jump.test.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/inbox/messages/components/MessageList.older.test.tsx": {
+  "src/inbox/messages/components/MessageList/tests/older.test.tsx": {
     "max-len": {
       "count": 6
     }
   },
-  "src/inbox/messages/components/MessageList.quote.test.tsx": {
+  "src/inbox/messages/components/MessageList/tests/quote.test.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
     },
@@ -2966,17 +2966,17 @@
       "count": 2
     }
   },
-  "src/inbox/messages/components/MessageList.renders.test.tsx": {
+  "src/inbox/messages/components/MessageList/tests/renders.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/messages/components/MessageList.test.tsx": {
+  "src/inbox/messages/components/MessageList/tests/MessageList.test.tsx": {
     "max-len": {
       "count": 5
     }
   },
-  "src/inbox/messages/components/MessageList.tsx": {
+  "src/inbox/messages/components/MessageList/MessageList.tsx": {
     "complexity": {
       "count": 1
     },
@@ -3006,7 +3006,7 @@
       "count": 1
     }
   },
-  "src/inbox/messages/components/QuoteStrip.test.tsx": {
+  "src/inbox/messages/components/QuoteStrip/tests/QuoteStrip.test.tsx": {
     "max-len": {
       "count": 1
     }
@@ -3096,7 +3096,7 @@
       "count": 1
     }
   },
-  "src/inbox/messages/hooks/bubble-offers.ts": {
+  "src/inbox/messages/hooks/bubble-offers/bubble-offers.ts": {
     "complexity": {
       "count": 2
     },
@@ -3104,12 +3104,12 @@
       "count": 1
     }
   },
-  "src/inbox/messages/hooks/message-text.test.ts": {
+  "src/inbox/messages/hooks/message-text/tests/message-text.test.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/inbox/messages/hooks/message-text.ts": {
+  "src/inbox/messages/hooks/message-text/message-text.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -3240,12 +3240,12 @@
       "count": 1
     }
   },
-  "src/inbox/messages/photo/PdfPreview.test.tsx": {
+  "src/inbox/messages/photo/PdfPreview/tests/PdfPreview.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/messages/photo/PdfPreview.tsx": {
+  "src/inbox/messages/photo/PdfPreview/PdfPreview.tsx": {
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
     },
@@ -3393,7 +3393,7 @@
       "count": 1
     }
   },
-  "src/inbox/messages/resend/FailedSheet.test.tsx": {
+  "src/inbox/messages/resend/FailedSheet/tests/FailedSheet.test.tsx": {
     "max-len": {
       "count": 2
     },
@@ -3401,7 +3401,7 @@
       "count": 1
     }
   },
-  "src/inbox/messages/resend/FailedSheet.tsx": {
+  "src/inbox/messages/resend/FailedSheet/FailedSheet.tsx": {
     "complexity": {
       "count": 1
     },
@@ -3419,12 +3419,12 @@
       "count": 1
     }
   },
-  "src/inbox/messages/resend/ResendSheet.test.tsx": {
+  "src/inbox/messages/resend/ResendSheet/tests/ResendSheet.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/messages/resend/ResendSheet.tsx": {
+  "src/inbox/messages/resend/ResendSheet/ResendSheet.tsx": {
     "max-len": {
       "count": 6
     }
@@ -3457,7 +3457,7 @@
       "count": 5
     }
   },
-  "src/inbox/messages/text/LinkedText.tsx": {
+  "src/inbox/messages/text/LinkedText/LinkedText.tsx": {
     "max-len": {
       "count": 4
     }
@@ -3496,12 +3496,12 @@
       "count": 1
     }
   },
-  "src/inbox/qualification/components/LeadProfileSection.offline.test.tsx": {
+  "src/inbox/qualification/components/LeadProfileSection/tests/offline.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/qualification/components/LeadProfileSection.tsx": {
+  "src/inbox/qualification/components/LeadProfileSection/LeadProfileSection.tsx": {
     "max-len": {
       "count": 1
     }
@@ -3689,7 +3689,7 @@
       "count": 2
     }
   },
-  "src/inbox/saved-replies/hooks/use-saved-reply.ts": {
+  "src/inbox/saved-replies/hooks/use-saved-reply/use-saved-reply.ts": {
     "max-len": {
       "count": 4
     }
@@ -3702,7 +3702,7 @@
       "count": 1
     }
   },
-  "src/inbox/saved-replies/lib/reply-text.ts": {
+  "src/inbox/saved-replies/lib/reply-text/reply-text.ts": {
     "max-len": {
       "count": 3
     }
@@ -3722,12 +3722,12 @@
       "count": 4
     }
   },
-  "src/inbox/saved-replies/quick-list/QuickReplyRow.dir.test.tsx": {
+  "src/inbox/saved-replies/quick-list/QuickReplyRow/tests/dir.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/saved-replies/quick-list/QuickReplyRow.tsx": {
+  "src/inbox/saved-replies/quick-list/QuickReplyRow/QuickReplyRow.tsx": {
     "max-len": {
       "count": 1
     }
@@ -3771,12 +3771,12 @@
       "count": 1
     }
   },
-  "src/inbox/screens/InboxScreen.threads.test.tsx": {
+  "src/inbox/screens/InboxScreen/tests/threads.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/screens/InboxScreen.tsx": {
+  "src/inbox/screens/InboxScreen/InboxScreen.tsx": {
     "max-len": {
       "count": 3
     }
@@ -3789,22 +3789,22 @@
       "count": 1
     }
   },
-  "src/inbox/screens/ThreadScreen.actions.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/actions.test.tsx": {
     "max-len": {
       "count": 4
     }
   },
-  "src/inbox/screens/ThreadScreen.forward.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/forward.test.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/inbox/screens/ThreadScreen.keyboard.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/keyboard.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/screens/ThreadScreen.lines.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/lines.test.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -3812,7 +3812,7 @@
       "count": 3
     }
   },
-  "src/inbox/screens/ThreadScreen.read.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/read.test.tsx": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -3820,12 +3820,12 @@
       "count": 1
     }
   },
-  "src/inbox/screens/ThreadScreen.reply.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/reply.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/screens/ThreadScreen.send.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/send.test.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -3833,17 +3833,17 @@
       "count": 2
     }
   },
-  "src/inbox/screens/ThreadScreen.teacher.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/teacher.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/screens/ThreadScreen.template.test.tsx": {
+  "src/inbox/screens/ThreadScreen/tests/template.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/screens/ThreadScreen.tsx": {
+  "src/inbox/screens/ThreadScreen/ThreadScreen.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
     },
@@ -3942,17 +3942,17 @@
       "count": 3
     }
   },
-  "src/inbox/subscription/SubscriptionPanel.action.test.tsx": {
+  "src/inbox/subscription/SubscriptionPanel/tests/action.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/subscription/SubscriptionPanel.en.test.tsx": {
+  "src/inbox/subscription/SubscriptionPanel/tests/en.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/subscription/SubscriptionPanel.tsx": {
+  "src/inbox/subscription/SubscriptionPanel/SubscriptionPanel.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
@@ -4022,12 +4022,12 @@
       "count": 2
     }
   },
-  "src/inbox/thread/calls/entries/CallEntry.test.tsx": {
+  "src/inbox/thread/calls/entries/CallEntry/tests/CallEntry.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/thread/calls/entries/CallEntry.tsx": {
+  "src/inbox/thread/calls/entries/CallEntry/CallEntry.tsx": {
     "max-len": {
       "count": 2
     },
@@ -4261,12 +4261,12 @@
       "count": 3
     }
   },
-  "src/inbox/thread/components/ChatHeader.side.test.tsx": {
+  "src/inbox/thread/components/ChatHeader/tests/side.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/thread/components/ChatHeader.tsx": {
+  "src/inbox/thread/components/ChatHeader/ChatHeader.tsx": {
     "max-lines-per-function": {
       "count": 1
     }
@@ -4340,17 +4340,17 @@
       "count": 1
     }
   },
-  "src/inbox/thread/components/ThreadHeaderActions.link.test.tsx": {
+  "src/inbox/thread/components/ThreadHeaderActions/tests/link.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/thread/components/ThreadHeaderActions.register.test.tsx": {
+  "src/inbox/thread/components/ThreadHeaderActions/tests/register.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/thread/components/ThreadHeaderActions.tsx": {
+  "src/inbox/thread/components/ThreadHeaderActions/ThreadHeaderActions.tsx": {
     "complexity": {
       "count": 1
     },
@@ -4395,7 +4395,7 @@
       "count": 2
     }
   },
-  "src/inbox/thread/hooks/thread-cache.merge.test.ts": {
+  "src/inbox/thread/hooks/thread-cache/tests/merge.test.ts": {
     "complexity": {
       "count": 1
     },
@@ -4421,17 +4421,17 @@
       "count": 2
     }
   },
-  "src/inbox/thread/hooks/thread-poll.live.test.tsx": {
+  "src/inbox/thread/hooks/thread-poll/tests/live.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/thread/hooks/thread-poll.test.tsx": {
+  "src/inbox/thread/hooks/thread-poll/tests/thread-poll.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/thread/hooks/thread-poll.ts": {
+  "src/inbox/thread/hooks/thread-poll/thread-poll.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
     },
@@ -4487,17 +4487,17 @@
       "count": 1
     }
   },
-  "src/inbox/thread/live/use-inbox-realtime.lifecycle.test.tsx": {
+  "src/inbox/thread/live/use-inbox-realtime/tests/lifecycle.test.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/inbox/thread/live/use-inbox-realtime.test.tsx": {
+  "src/inbox/thread/live/use-inbox-realtime/tests/use-inbox-realtime.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/inbox/thread/live/use-inbox-realtime.ts": {
+  "src/inbox/thread/live/use-inbox-realtime/use-inbox-realtime.ts": {
     "max-len": {
       "count": 6
     }
@@ -4557,12 +4557,12 @@
       "count": 1
     }
   },
-  "src/inbox/threads-list/ThreadsList.draft.test.tsx": {
+  "src/inbox/threads-list/ThreadsList/tests/draft.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/threads-list/ThreadsList.filters.test.tsx": {
+  "src/inbox/threads-list/ThreadsList/tests/filters.test.tsx": {
     "max-len": {
       "count": 1
     },
@@ -4570,27 +4570,27 @@
       "count": 1
     }
   },
-  "src/inbox/threads-list/ThreadsList.header.test.tsx": {
+  "src/inbox/threads-list/ThreadsList/tests/header.test.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/inbox/threads-list/ThreadsList.subscribed.test.tsx": {
+  "src/inbox/threads-list/ThreadsList/tests/subscribed.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/threads-list/ThreadsList.tags.test.tsx": {
+  "src/inbox/threads-list/ThreadsList/tests/tags.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/threads-list/ThreadsList.ticks.test.tsx": {
+  "src/inbox/threads-list/ThreadsList/tests/ticks.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/inbox/threads-list/ThreadsList.tsx": {
+  "src/inbox/threads-list/ThreadsList/ThreadsList.tsx": {
     "complexity": {
       "count": 1
     },
@@ -6896,12 +6896,12 @@
       "count": 2
     }
   },
-  "src/sales/app/screens/SalesMoreScreen.test.tsx": {
+  "src/sales/app/screens/SalesMoreScreen/tests/SalesMoreScreen.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/sales/app/screens/SalesMoreScreen.tsx": {
+  "src/sales/app/screens/SalesMoreScreen/SalesMoreScreen.tsx": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -6959,17 +6959,17 @@
       "count": 1
     }
   },
-  "src/sales/sales/attendance/AttendanceLogScreen.open.test.tsx": {
+  "src/sales/sales/attendance/AttendanceLogScreen/tests/open.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/attendance/AttendanceLogScreen.test.tsx": {
+  "src/sales/sales/attendance/AttendanceLogScreen/tests/AttendanceLogScreen.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/attendance/AttendanceLogScreen.tsx": {
+  "src/sales/sales/attendance/AttendanceLogScreen/AttendanceLogScreen.tsx": {
     "@typescript-eslint/no-useless-default-assignment": {
       "count": 1
     },
@@ -7008,7 +7008,7 @@
       "count": 1
     }
   },
-  "src/sales/sales/components/AllStudentRow.tsx": {
+  "src/sales/sales/components/AllStudentRow/AllStudentRow.tsx": {
     "max-len": {
       "count": 2
     },
@@ -7118,12 +7118,12 @@
       "count": 2
     }
   },
-  "src/sales/sales/lesson-actions/SalesLessonActions.flow.test.tsx": {
+  "src/sales/sales/lesson-actions/SalesLessonActions/tests/flow.test.tsx": {
     "no-nested-ternary": {
       "count": 1
     }
   },
-  "src/sales/sales/lesson-actions/SalesLessonActions.tsx": {
+  "src/sales/sales/lesson-actions/SalesLessonActions/SalesLessonActions.tsx": {
     "complexity": {
       "count": 1
     },
@@ -7184,7 +7184,7 @@
       "count": 3
     }
   },
-  "src/sales/sales/lib/sales-text.ts": {
+  "src/sales/sales/lib/sales-text/sales-text.ts": {
     "max-len": {
       "count": 6
     }
@@ -7375,42 +7375,42 @@
       "count": 1
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.en.test.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/tests/en.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.money.test.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/tests/money.test.tsx": {
     "no-nested-ternary": {
       "count": 2
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.others.test.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/tests/others.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.pause.test.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/tests/pause.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.schedule.test.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/tests/schedule.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.sheet.test.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/tests/sheet.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.test.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/tests/SalesStudentScreen.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/student/SalesStudentScreen.tsx": {
+  "src/sales/sales/student/SalesStudentScreen/SalesStudentScreen.tsx": {
     "@typescript-eslint/no-useless-default-assignment": {
       "count": 1
     },
@@ -7487,7 +7487,7 @@
       "count": 1
     }
   },
-  "src/sales/sales/teacher/overview-text.test.ts": {
+  "src/sales/sales/teacher/overview-text/tests/overview-text.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -8143,12 +8143,12 @@
       "count": 1
     }
   },
-  "src/teacher/components/TeacherTabs.test.tsx": {
+  "src/teacher/components/TeacherTabs/tests/TeacherTabs.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/teacher/components/TeacherTabs.tsx": {
+  "src/teacher/components/TeacherTabs/TeacherTabs.tsx": {
     "max-len": {
       "count": 1
     }
@@ -8211,7 +8211,7 @@
       "count": 1
     }
   },
-  "src/teacher/report/components/ReportTextField.tsx": {
+  "src/teacher/report/components/ReportTextField/ReportTextField.tsx": {
     "no-nested-ternary": {
       "count": 1
     }
@@ -8269,22 +8269,22 @@
       "count": 1
     }
   },
-  "src/teacher/report/screens/ReportFormScreen.order.test.tsx": {
+  "src/teacher/report/screens/ReportFormScreen/tests/order.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
-  "src/teacher/report/screens/ReportFormScreen.submit.test.tsx": {
+  "src/teacher/report/screens/ReportFormScreen/tests/submit.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/teacher/report/screens/ReportFormScreen.test.tsx": {
+  "src/teacher/report/screens/ReportFormScreen/tests/ReportFormScreen.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/teacher/report/screens/ReportFormScreen.tsx": {
+  "src/teacher/report/screens/ReportFormScreen/ReportFormScreen.tsx": {
     "@typescript-eslint/no-useless-default-assignment": {
       "count": 1
     },
@@ -8306,12 +8306,12 @@
       "count": 2
     }
   },
-  "src/teacher/report/v2/V2Footer.buttons.test.tsx": {
+  "src/teacher/report/v2/V2Footer/tests/buttons.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/teacher/report/v2/V2Footer.tsx": {
+  "src/teacher/report/v2/V2Footer/V2Footer.tsx": {
     "max-len": {
       "count": 2
     }
@@ -8415,7 +8415,7 @@
       "count": 1
     }
   },
-  "src/teacher/screens/StudentReportsScreen.tsx": {
+  "src/teacher/screens/StudentReportsScreen/StudentReportsScreen.tsx": {
     "ab/module-boundaries": {
       "count": 1
     }
@@ -8425,7 +8425,7 @@
       "count": 1
     }
   },
-  "src/teacher/screens/TeacherMoreScreen.tsx": {
+  "src/teacher/screens/TeacherMoreScreen/TeacherMoreScreen.tsx": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -8433,12 +8433,12 @@
       "count": 3
     }
   },
-  "src/teacher/screens/TeacherReportsScreen.test.tsx": {
+  "src/teacher/screens/TeacherReportsScreen/tests/TeacherReportsScreen.test.tsx": {
     "no-nested-ternary": {
       "count": 1
     }
   },
-  "src/teacher/screens/TeacherReportsScreen.tsx": {
+  "src/teacher/screens/TeacherReportsScreen/TeacherReportsScreen.tsx": {
     "max-len": {
       "count": 3
     },
@@ -8449,7 +8449,7 @@
       "count": 1
     }
   },
-  "src/teacher/screens/TeacherScheduleScreen.details.test.tsx": {
+  "src/teacher/screens/TeacherScheduleScreen/tests/details.test.tsx": {
     "max-len": {
       "count": 1
     }

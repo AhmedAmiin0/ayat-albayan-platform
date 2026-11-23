@@ -41,3 +41,19 @@ export async function readChunked<T>(
   }
   return out;
 }
+
+/**
+ * readChunked where one chunk may pass max_rows (many rows per id, e.g. a student's packages):
+ * each chunk is read with readAll. `page(chunk, from, to)` must apply a total order and the range.
+ */
+export async function readChunkedAll<T>(
+  ids: readonly string[],
+  page: (chunk: string[], from: number, to: number) => PromiseLike<PageResult<T>>,
+): Promise<T[]> {
+  const out: T[] = [];
+  for (let i = 0; i < ids.length; i += IN_CHUNK) {
+    const chunk = ids.slice(i, i + IN_CHUNK);
+    out.push(...(await readAll((from, to) => page(chunk, from, to))));
+  }
+  return out;
+}

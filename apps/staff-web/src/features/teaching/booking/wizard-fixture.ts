@@ -1,4 +1,4 @@
-import type { BookingTeacherOption } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { expect, vi, type Mock } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
