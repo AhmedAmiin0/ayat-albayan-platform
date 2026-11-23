@@ -1,4 +1,4 @@
-import type { LessonView, TimeEditResult } from '@ab/shared';
+import type { LessonView, TimeEditResult } from '@ab/schedule';
 import { SLOTS, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { done, lesson } from '@/today/testing/fixtures';
 

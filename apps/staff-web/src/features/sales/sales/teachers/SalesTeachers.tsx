@@ -1,4 +1,4 @@
-import { PROGRAMS } from '@ab/shared';
+import { PROGRAMS } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

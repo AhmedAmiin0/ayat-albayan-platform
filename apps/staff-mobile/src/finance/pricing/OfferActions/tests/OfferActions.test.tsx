@@ -1,4 +1,4 @@
-import { offerText } from '@ab/shared';
+import { offerText } from '@ab/money';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Linking, Share } from 'react-native';
 import { t } from '@ab/mobile-kit';

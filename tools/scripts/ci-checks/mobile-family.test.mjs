@@ -1,4 +1,4 @@
-// The separate family app (owner 2026-11-14, docs/50 §7-8): apps/family-mobile, own EAS project,
+// The separate family app (docs/50 §7-8): apps/family-mobile, own EAS project,
 // built, updated and tagged by mobile.yml app=family, and checked by ci.yml like apps/staff-mobile.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';

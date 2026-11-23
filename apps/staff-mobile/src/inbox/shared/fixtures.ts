@@ -1,4 +1,5 @@
-import type { LeadView, Page } from '@ab/shared';
+import type { LeadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 // Test rows in the GET /leads shape.
 

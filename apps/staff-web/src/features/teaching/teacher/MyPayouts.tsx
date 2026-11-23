@@ -1,4 +1,4 @@
-import { payoutStatusStyle, type PayoutView } from '@ab/shared';
+import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
