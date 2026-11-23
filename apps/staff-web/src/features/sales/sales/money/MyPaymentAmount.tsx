@@ -7,7 +7,6 @@ interface Props {
   onClose: () => void;
 }
 
-/** «تعديل المبلغ» on one of «مدفوعاتي»: the admin's dialog, with her own write. */
 export function MyPaymentAmount({ payment, onClose }: Props) {
   const save = useMyPaymentAmount(payment.id);
   return <EditAmountDialog payment={payment} save={save} onClose={onClose} onDone={onClose} />;

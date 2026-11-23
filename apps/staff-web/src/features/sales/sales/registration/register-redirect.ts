@@ -1,9 +1,6 @@
 import { normalizePhone } from '@ab/shared';
 
-/**
- * Where an old /sales/register?leadId&phone&name link goes: «تسجيل طالب جديد» now lives in the chat,
- * so the sales inbox, opened on that number when the link carried one.
- */
+/** Registration now lives in the chat, so old links open the sales inbox on that number. */
 export function registerRedirect(search: Record<string, unknown>) {
   const raw = search['phone'];
   const phone = typeof raw === 'string' ? normalizePhone(raw) : null;

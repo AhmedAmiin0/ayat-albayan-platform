@@ -12,8 +12,7 @@ const kindOptions = PAYMENT_KINDS.map((k) => ({ value: k, label: t.enums.payment
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
 
-// «مدفوعاتي»: only what I recorded. Amount per row in its own currency (never a total across them), and
-// «عرض المرفقات» (her transfer's files, GET /sales/me/payments/:id/attachments).
+// Only what I recorded; amounts per row in their own currency, never totalled across them.
 export const myPaymentColumns = ({ onAttachments, onEditAmount }: MyPaymentHandlers) =>
   col.columns([
     col.accessor((p) => `${p.student.name} ${p.student.code}`, {

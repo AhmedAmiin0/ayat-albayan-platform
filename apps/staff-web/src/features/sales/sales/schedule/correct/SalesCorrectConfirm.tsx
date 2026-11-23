@@ -16,7 +16,6 @@ export interface SalesCorrectConfirmProps {
   onBack: () => void;
 }
 
-/** «لم تنعقد؟» for sales, step two: who, an optional reason, «تأكيد الإلغاء» | «رجوع». */
 export function SalesCorrectConfirm(props: SalesCorrectConfirmProps) {
   const { by, pending, error, onSubmit, onBack } = props;
   const a = t.sales.lessonActions;

@@ -5,7 +5,7 @@ import { useCustomPrice } from '@/features/finance/subscriptions';
 import { quoteSalesSubscription, SALES_MONEY_KEY, type Bind } from '@/features/sales/sales-money/api';
 
 interface Opts {
-  /** '' = no quote asked (no student yet, or «دفع إلكتروني», which has its own). */
+  /** Empty means no quote asked (no student yet, or online payment, which has its own). */
   studentId: string;
   /** One object per form (usePricingBody): the debounce settles on it. */
   pricing: SubscriptionPricing;
@@ -22,7 +22,6 @@ export function useSalesQuote({ studentId, pricing, bind }: Opts) {
   });
 }
 
-/** «مبلغ مخصص» on the bank-transfer package price, starting from the sales quote. */
 export function useSalesCustomPrice(opts: Opts) {
   const quote = useSalesQuote(opts).data;
   return useCustomPrice({ quote, active: opts.studentId !== '' });

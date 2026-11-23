@@ -2,10 +2,7 @@ import { NO_ASSIGNEE } from '@ab/shared';
 import { LEAD_SOURCES, LEAD_STATUSES, type LeadSource, type LeadStatus } from '@ab/catalog';
 import { parseLeadSort, type LeadSort } from '@ab/client-core';
 
-/**
- * Inbox URL state: status tab, source and «مسؤول المبيعات» filters, name/phone search, order and
- * page (server-side, R-NFR-08). `assignee` is a profile id or `none`.
- */
+/** Server-side URL state (R-NFR-08); `assignee` is a profile id or `none`. */
 export type LeadSearch = LeadSort & { status?: LeadStatus; source?: LeadSource; q?: string; assignee?: string; page: number };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

@@ -17,7 +17,6 @@ export interface FooterHeadProps {
   tz: string;
 }
 
-/** The top of a report's footer: what stops the send, then the sent state with «تعديل التقرير». */
 export function FooterHead({ s, block, tz }: FooterHeadProps) {
   const { report, mode } = s;
   return (

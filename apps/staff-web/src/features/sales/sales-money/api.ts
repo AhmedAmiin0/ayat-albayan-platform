@@ -52,18 +52,14 @@ export type SalesQuoteBody = Bind & { studentId: string; pricing: SubscriptionPr
 export const quoteSalesSubscription = (body: SalesQuoteBody) =>
   apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', body);
 
-/**
- * Strict body: no notes, no renewal day, never a price. `startsOn` only with subscriptions.set_start_date
- * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked, and with it
- * `lessonsUsedBefore` («حلقات مستخدمة من الباقة», owner 2026-10-28) when > 0.
- */
+/** Never a price; `startsOn` needs subscriptions.set_start_date; used lessons only when started. */
 export type SalesSubscriptionBody = SalesQuoteBody & {
   startsOn?: string;
   alreadyStarted?: true;
   lessonsUsedBefore?: number;
-  /** «المعلم/ة» (owner 2026-10-29): students.teacher_id once subscribed. */
+  /** The teacher, stored as students.teacher_id once subscribed. */
   teacherId?: string;
-  /** «مبلغ مخصص» (owner 2026-11-02): the price instead of the quote's (the admin's cap applies). */
+  /** A custom price instead of the quote's; the admin's cap applies. */
   customPrice?: number;
   clientRequestId: string;
 };
@@ -71,11 +67,11 @@ export type SalesSubscriptionBody = SalesQuoteBody & {
 export const createSalesSubscription = (body: SalesSubscriptionBody) =>
   apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);
 
-/** «إلغاء الباقة» of her student's package made by mistake (owner 2026-10-28): nothing paid, no lessons. */
+/** Cancels a package made by mistake: only when nothing is paid and no lessons. */
 export const cancelSalesSubscription = (id: string, body: { reason?: string }) =>
   apiSend<SalesMoneySubscriptionView>('POST', `/sales/subscriptions/${id}/cancel`, body);
 
-/** Strict body: never kind / method / invoiceId (always a bank payment); «المرفقات» optional (0..5 paths). */
+/** Never kind, method or invoiceId (always a bank payment); 0 to 5 optional attachment paths. */
 export type SalesPaymentBody = Bind & {
   subscriptionId: string;
   amount: number;
@@ -106,7 +102,7 @@ export async function uploadSalesReceipt(input: { subscriptionId: string; file: 
   return signed.path;
 }
 
-/** After a write: the chat list (the «مشترك» badge), her money reads and «مدفوعاتي» / «طلابي». */
+/** Refreshes the chat list (subscribed badge), her money reads and her payments and students. */
 export async function refreshAfterSalesWrite(queryClient: QueryClient): Promise<void> {
   await Promise.all([
     queryClient.invalidateQueries({ queryKey: ['threads'] }),
@@ -116,7 +112,7 @@ export async function refreshAfterSalesWrite(queryClient: QueryClient): Promise<
   ]);
 }
 
-/** GET /sales/booking/course?studentId=: what «أيام الحلقات» needs (the subscription's facts, or why she can't). */
+/** What the course-days dialog needs: the subscription's facts, or why she can't book. */
 export const salesCourseQuery = (studentId: string) =>
   queryOptions({
     queryKey: [...SALES_MONEY_KEY, 'course', studentId],

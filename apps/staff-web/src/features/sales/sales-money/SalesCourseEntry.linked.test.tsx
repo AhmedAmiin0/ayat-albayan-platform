@@ -54,7 +54,7 @@ function openChat(linked: string | null, chat: object = detail([], FAMILY)) {
   );
 }
 
-// «تم الدفع: احجز أيام الحلقات» (owner 2026-11-06): the notice opens the chat with the wizard.
+// A payment-done notice opens the chat with the course wizard.
 describe('a «احجز أيام الحلقات» notice on the web', () => {
   afterEach(() => apiFetch.mockReset());
 

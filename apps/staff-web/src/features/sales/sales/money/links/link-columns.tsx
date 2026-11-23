@@ -20,13 +20,11 @@ const STYLE: Record<PaymentLinkStatus, { tone: Tone; glyph: Glyph }> = {
   cancelled: { tone: 'neutral', glyph: 'struck' },
 };
 
-/** «دُفع …» once paid, else «ينتهي …». */
 const whenText = (l: PaymentLinkView) => (l.paid_at ? fillText(P.paidAt, { when: formatDate(l.paid_at) }) : fillText(P.expiresAt, { when: formatDate(l.expires_at) }));
 
 type Opts = { now: Date; onCancel: (link: PaymentLinkView) => void };
 
-// «روابط الدفع»: hers, newest first. The status as it reads now (an open link past its expiry is
-// «منتهي»); «إلغاء الرابط» on an open one only.
+// An open link past its expiry reads as expired; cancel only on an open one.
 export const linkColumns = ({ now, onCancel }: Opts) =>
   col.columns([
     col.accessor((l) => `${l.student.name} ${l.student.code}`, {

@@ -7,11 +7,11 @@ type Props = {
   quote: PaymentLinkQuoteView | undefined;
   fetching: boolean;
   error: unknown;
-  /** «مبلغ مخصص» on: the admin's lowest amount is said too. */
+  /** With a custom amount, the admin's lowest amount is shown too. */
   custom: boolean;
 };
 
-/** «سعر الحاسبة» (the reference the agreed amount starts from) and, with the admin's cap, the lowest amount allowed. */
+/** The calculator price is the reference the agreed amount starts from. */
 export function LinkQuote({ quote, fetching, error, custom }: Props) {
   if (error) return <FormAlert>{paymentLinkErrorText(error)}</FormAlert>;
   return (

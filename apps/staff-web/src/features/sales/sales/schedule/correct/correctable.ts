@@ -10,11 +10,7 @@ export interface CorrectableInput {
 
 type Lesson = Pick<SalesScheduleLesson, 'status' | 'ends_at'>;
 
-/**
- * «لم تنعقد؟» for sales (owner 2026-11-02, POST /sales/lessons/:id/cancel by teacher | student):
- * while no confirmation is required, an open lesson before it ends. After the end, and on a held /
- * absent lesson, «تصحيح حالة الحلقة» takes over (CorrectOutcome, owner 2026-11-03).
- */
+/** Cancel only while no confirmation is required and before the end; then outcome correction. */
 export function canSalesCorrect(lesson: Lesson, input: CorrectableInput): boolean {
   const upcoming = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime();
   return input.holds && !input.required && upcoming;

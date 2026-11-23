@@ -22,10 +22,7 @@ export function useTeacherPick(students: readonly SalesFamilyStudent[], studentI
 
 type Props = { value: string; onChange: (id: string) => void };
 
-/**
- * «المعلم/ة» (owner 2026-10-29): who teaches the student once subscribed, the trial's teacher by default
- * (students.teacher_id). Saved with the package; the teacher–student chat opens after the subscription.
- */
+/** Defaults to the trial's teacher (students.teacher_id); teacher chat opens after subscribing. */
 export function SalesTeacherField({ value, onChange }: Props) {
   const teachers = useQuery(salesTeachersQuery).data ?? [];
   return (

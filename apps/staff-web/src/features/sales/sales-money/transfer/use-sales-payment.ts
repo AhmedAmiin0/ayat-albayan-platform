@@ -16,12 +16,7 @@ export interface TransferForm {
 
 export type TransferInput = { sub: SalesMoneySubscriptionView; form: TransferForm; attachments: ReceiptChoice[] };
 
-/**
- * The «سجّل التحويل» save (R-ASST-04): one clientRequestId per open step, re-sent on every retry, and each
- * uploaded attachment sent to storage once per file (a chat file is already copied). «المرفقات» are optional
- * (owner 2026-10-12). Never kind / method; the currency is always the package's. `bind`: the chat's phone for a
- * child not hers (chatBinding, sales.renew_any); none for hers.
- */
+/** One clientRequestId per step, re-sent on retry; each upload sent once; package's currency. */
 export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void, bind: Bind = {}) {
   const queryClient = useQueryClient();
   const [requestId] = useState(() => crypto.randomUUID());

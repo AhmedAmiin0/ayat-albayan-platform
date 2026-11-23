@@ -24,7 +24,6 @@ async function rowHolds(n: number, date: string, time: string): Promise<void> {
 }
 const taken = (n: 0 | 3) => t.booking.courseChange.continueTaken.replace('{day}', t.enums.weekday[n]);
 
-/** Open the dialog, «تابِع بنفس الأيام», wait for the previous teacher, then on to the slot step. */
 async function continueToSlots(): Promise<void> {
   renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
   expect(await screen.findByText(continueText(RENEWAL_VIEW, C24))).toBeTruthy();

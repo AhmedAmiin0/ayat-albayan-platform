@@ -6,10 +6,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LinkQuote } from './LinkQuote';
 import type { LinkPay } from './use-link-pay';
 
-/**
- * «دفع إلكتروني»: the calculator price after the pill (the link's amount); with «مبلغ مخصص» on,
- * the amount box (the price by default) and the admin's lowest amount.
- */
 export function OnlinePayFields({ pay }: { pay: LinkPay }) {
   const q = pay.quote.data;
   const error = pay.quote.error;

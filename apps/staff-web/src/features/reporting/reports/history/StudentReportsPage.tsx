@@ -16,7 +16,6 @@ export interface StudentReportsPageProps {
   notice?: ReactNode;
 }
 
-/** «سجل التقارير» of one student (R-REP-05, issue D2): the grade chart, then every report. */
 export function StudentReportsPage({ studentId, name, role, tz, notice }: StudentReportsPageProps) {
   return (
     <>

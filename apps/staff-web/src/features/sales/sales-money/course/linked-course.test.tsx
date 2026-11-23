@@ -19,7 +19,6 @@ function setup(first: string | null) {
   return { view, link };
 }
 
-// «تم الدفع: احجز أيام الحلقات» (owner 2026-11-06) on the web chat.
 describe('useLinkedCourse', () => {
   it('opens on the linked student; closing keeps it closed while the link stays', () => {
     const { view, link } = setup(A);

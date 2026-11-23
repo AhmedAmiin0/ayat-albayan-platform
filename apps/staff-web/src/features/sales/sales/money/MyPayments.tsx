@@ -10,10 +10,7 @@ import { MyPaymentAmount } from './MyPaymentAmount';
 import { myPaymentColumns } from './my-payment-columns';
 import { PortalList } from '@/features/sales/sales/students/PortalList';
 
-/**
- * «مدفوعاتي» on /sales/earnings: the payments I recorded and no others (the API answers only for
- * me). «تعديل المبلغ» only with subscriptions.edit_terms (owner 2026-11-02).
- */
+/** The API answers only for me; amount edits need subscriptions.edit_terms. */
 export function MyPayments() {
   const [open, setOpen] = useState<MyPaymentRow | null>(null);
   const [editing, setEditing] = useState<MyPaymentRow | null>(null);

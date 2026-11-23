@@ -10,9 +10,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 
-// «رابط دفع» (docs/30, with FEATURE_STRIPE test or live): /stripe/feature, /sales/payment-links
-// and /pay/:token (the switch and the keys are integration keys, «التكاملات»). Each read is
-// asked only behind stripeBuild(); a 404 means the server has no Stripe.
+// Payment links (docs/30) need FEATURE_STRIPE; reads go behind stripeBuild(); 404 means no Stripe.
 
 /** Her links and their quotes. */
 export const PAYMENT_LINKS_KEY = ['sales', 'payment-links'] as const;
@@ -46,5 +44,5 @@ export const publicLinkQuery = (token: string) =>
     retry: false,
   });
 
-/** «ادفع الآن» is a browser navigation (303 to Stripe Checkout, or back to the page), never a fetch. */
+/** Pay now is a browser navigation (303 to Stripe Checkout or back), never a fetch. */
 export const checkoutUrl = (token: string): string => `${env.apiUrl}/pay/${encodeURIComponent(token)}/checkout`;

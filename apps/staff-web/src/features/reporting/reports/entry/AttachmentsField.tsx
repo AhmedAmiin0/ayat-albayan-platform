@@ -13,18 +13,17 @@ export interface AttachmentsFieldProps {
   onChange: (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) => void;
   /** canEditReport: adding and removing close with the edit window. */
   editable: boolean;
-  /** The add button's words; the old form's «إرفاق ملف» by default. */
   addLabel?: string;
 }
 
-/** صورة / ملف PDF / تسجيل صوتي and its size in MB (one decimal, Western digits). */
+/** File kind and its size in MB (one decimal, Western digits). */
 export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): string {
   const kind = file.mime === 'application/pdf' ? 'pdf' : file.mime.startsWith('audio/') ? 'audio' : 'image';
   const mb = t.reports.sizeMb.replace('{n}', Math.max(0.1, file.size / 1_048_576).toFixed(1));
   return `${t.reports.fileKind[kind]} · ${mb}`;
 }
 
-/** «المرفقات (اختياري)» (R-REP-02): signed upload to Storage, then registered on the report. */
+/** Optional attachments (R-REP-02): signed upload to Storage, then registered on the report. */
 export function AttachmentsField({ reportId, files, onChange, editable, addLabel = t.reports.attach }: AttachmentsFieldProps) {
   const { files: calls } = useReportApi();
   const input = useRef<HTMLInputElement>(null);

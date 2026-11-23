@@ -3,11 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
 import { LinkActions } from './LinkActions';
 
-/**
- * The value of «رابط الحلقة» in sales' lesson details (owner 2026-10-26, mobile parity): «عبر الفصل»
- * in our classroom, else the full http(s) URL on its own line (LTR, one line, cut at the end, still
- * selectable) over the LinkActions row, else «لا يوجد رابط».
- */
+/** Our classroom, else the full http(s) URL on its own LTR line over LinkActions, else none. */
 export function LessonMeetingLink({ lesson }: { lesson: SalesScheduleLesson }) {
   const platform = usePlatformClassroom(lesson.platform_classroom);
   if (platform) return <>{t.lessons.viaClassroom}</>;

@@ -18,10 +18,7 @@ type Props = {
   bind?: Bind | undefined;
 };
 
-/**
- * The transfer's «المرفقات» (R-ASST-04, optional, up to five): files the family sent in this chat (copied
- * into the package's receipts when picked) and photos / PDFs she uploads (checked here, uploaded on save).
- */
+/** Optional attachments (R-ASST-04, up to five): chat files copied on pick, uploads checked. */
 export function ReceiptChooser({ sub, value, onChange, maxBytes, bind }: Props) {
   const [browsing, setBrowsing] = useState(false);
   const [problem, setProblem] = useState<AttachmentProblem | null>(null);
