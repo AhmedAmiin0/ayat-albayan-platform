@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { RoomPresenceRepo } from './room-presence.repo';
 
 const E = { lessonId: 'l1', identity: 'guest-1', at: '2026-11-16T10:00:00.000Z' };
