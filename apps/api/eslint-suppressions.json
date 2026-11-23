@@ -447,6 +447,14 @@
       "count": 1
     }
   },
+  "src/common/db/testing/fake-db.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
   "src/common/http/errors.ts": {
     "ab/no-shape-checks": {
       "count": 2
@@ -6365,17 +6373,6 @@
     },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/common/db/testing/fake-db.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
     }
   },
   "src/modules/people/guardians/guardian-phones.service.ts": {
