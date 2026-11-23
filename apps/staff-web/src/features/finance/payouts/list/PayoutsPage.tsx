@@ -8,7 +8,7 @@ import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { downloadCsv } from '@/features/reporting/exports/api';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { apiErrorText } from '@/features/finance/subscriptions';
@@ -90,18 +90,21 @@ export function PayoutsPage({ month, onMonth }: Props) {
       {dialog && <PayoutDialogs open={dialog} onClose={() => setDialog(null)} />}
       {(csv.isError || ledger.isError) && <FormAlert>{t.common.error}</FormAlert>}
       <MissingRates items={missing} />
-      {list.isPending && <ListSkeleton />}
-      {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isSuccess && rows.length === 0 && <TableBox center><EmptyState title={t.payouts.empty} /></TableBox>}
-      {rows.length > 0 && (
-        <>
-          <DataTable fill stacked clientSort clientFilter columns={columns} data={rows} getRowId={(r) => r.id} />
-          <p className="mt-3 flex justify-end gap-2 text-sm">
-            <span className="text-ink-3">{t.expenses.total}</span>
-            <Amount amount={total} currency="EGP" className="font-semibold" />
-          </p>
-        </>
-      )}
+      <QueryState
+        query={list}
+        isEmpty={(data) => data.length === 0}
+        empty={<TableBox center><EmptyState title={t.payouts.empty} /></TableBox>}
+      >
+        {(data) => (
+          <>
+            <DataTable fill stacked clientSort clientFilter columns={columns} data={data} getRowId={(r) => r.id} />
+            <p className="mt-3 flex justify-end gap-2 text-sm">
+              <span className="text-ink-3">{t.expenses.total}</span>
+              <Amount amount={total} currency="EGP" className="font-semibold" />
+            </p>
+          </>
+        )}
+      </QueryState>
     </>
   );
 }

@@ -6,7 +6,7 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { portalHistoryQuery } from '@ab/web-kit/portal/api';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 import { HistoryRow } from '@ab/web-kit/portal/history/HistoryRow';
 
@@ -32,7 +32,7 @@ export function HistoryPanel({ student, status, ...open }: Props) {
   const query = useInfiniteQuery(portalHistoryQuery({ studentId: student.id, status }));
   const [title, hint] = EMPTY[status]();
   return (
-    <LoadState query={query}>
+    <QueryState query={query}>
       {({ pages }) => {
         const months = historyMonths(historyRows(pages, status), student.tz);
         if (months.length === 0) return <EmptyState title={title}>{hint}</EmptyState>;
@@ -67,6 +67,6 @@ export function HistoryPanel({ student, status, ...open }: Props) {
           </div>
         );
       }}
-    </LoadState>
+    </QueryState>
   );
 }

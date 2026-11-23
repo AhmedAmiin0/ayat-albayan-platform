@@ -7,7 +7,7 @@ import { useNowPlaying } from '@ab/web-kit/lesson-files/use-now-playing';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { scrollBehavior } from '@ab/web-kit/lib/motion/reduced-motion';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 import { LessonPanel } from '@ab/web-kit/portal/recordings/LessonPanel';
 import { RecordingRowButton } from '@ab/web-kit/portal/recordings/RecordingRowButton';
@@ -97,8 +97,8 @@ function List({ data, student, onOpenReport }: Props & { data: PortalRecordings 
 export function RecordingsPanel({ student, onOpenReport }: Props) {
   const query = useChildRecordings(student.id);
   return (
-    <LoadState query={query}>
+    <QueryState query={query}>
       {(data) => <List data={data} student={student} onOpenReport={onOpenReport} />}
-    </LoadState>
+    </QueryState>
   );
 }

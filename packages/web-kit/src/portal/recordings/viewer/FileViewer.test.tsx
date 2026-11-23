@@ -62,7 +62,7 @@ describe('FileViewer (boards FamFilesWebImage / FamFilesWebPdf)', () => {
   it('closes after its exit plays; a link that cannot be had offers a retry', async () => {
     apiSend.mockRejectedValue(new Error('gone'));
     const onClose = show();
-    expect(await screen.findByText(t.portal.loadFailed)).toBeTruthy();
+    expect(await screen.findByText(t.common.loadFailed)).toBeTruthy();
     vi.useFakeTimers();
     fireEvent.click(screen.getByRole('button', { name: t.common.close }));
     expect(onClose).not.toHaveBeenCalled();
