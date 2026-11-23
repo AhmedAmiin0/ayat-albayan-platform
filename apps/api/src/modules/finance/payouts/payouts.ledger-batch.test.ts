@@ -1,4 +1,3 @@
-import type { PayoutView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { payoutRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
@@ -10,6 +9,8 @@ import type { PayoutsRepo } from './payouts.repo';
 
 const LEDGER = 'teacher_session_earnings';
 const PAID_AT = '2026-10-01T09:00:00Z';
+
+type PayoutView = ReturnType<typeof toPayoutView>;
 
 function ledgerOver(results: FakeResult[]) {
   const fake = fakeDb({ [LEDGER]: results });
