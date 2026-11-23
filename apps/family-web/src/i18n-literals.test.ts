@@ -1,4 +1,4 @@
-import { arabicLiterals } from '@ab/shared';
+import { arabicLiterals } from '@ab/i18n';
 import { expect, it } from 'vitest';
 
 // «Nothing untranslated» (owner, 2026-10-05): no Arabic in the family pages' string literals or

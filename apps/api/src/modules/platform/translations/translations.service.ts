@@ -1,4 +1,10 @@
-import { applyStrings, type FlatStrings, type Locale, type TranslationKeysPage, type TranslationKeysQuery } from '@ab/shared';
+import type { Locale } from '@ab/shared';
+import {
+  applyStrings,
+  type FlatStrings,
+  type TranslationKeysPage,
+  type TranslationKeysQuery,
+} from '@ab/i18n';
 import { BadRequestException, Injectable, Logger, NotFoundException, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { ar } from '@/common/infra/i18n/server-text';

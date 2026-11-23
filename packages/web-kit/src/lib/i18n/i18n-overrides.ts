@@ -1,4 +1,5 @@
-import { applyStrings, type FlatStrings, type Locale } from '@ab/shared';
+import type { Locale } from '@ab/shared';
+import { applyStrings, type FlatStrings } from '@ab/i18n';
 
 // Dynamic translations at boot: GET /i18n/:locale/overrides (public, ETag) is merged into `t`
 // before the first render. The page never waits longer than the timeout: on a slow or failed

@@ -1,4 +1,4 @@
-import { arabicLiterals } from '@ab/shared';
+import { arabicLiterals } from '@ab/i18n';
 import { describe, expect, it } from 'vitest';
 import allow from './i18n-literals.allow.json';
 

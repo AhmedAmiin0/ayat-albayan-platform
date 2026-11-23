@@ -1,6 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
-import { cloneBundle } from '@ab/shared';
+import { cloneBundle } from '@ab/i18n';
 import { describe, expect, it, vi } from 'vitest';
 import { loadLocaleStrings } from './locale-strings';
 

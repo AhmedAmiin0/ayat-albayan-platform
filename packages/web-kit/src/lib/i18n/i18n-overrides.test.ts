@@ -1,4 +1,4 @@
-import { cloneBundle } from '@ab/shared';
+import { cloneBundle } from '@ab/i18n';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BUNDLES, t } from './i18n';
 import { fetchOverrides, loadOverrides, OVERRIDES_TIMEOUT_MS } from './i18n-overrides';

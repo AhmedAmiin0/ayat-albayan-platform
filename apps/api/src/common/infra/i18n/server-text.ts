@@ -1,4 +1,4 @@
-import { cloneBundle } from '@ab/shared';
+import { cloneBundle } from '@ab/i18n';
 import arBundle from '@ab/shared/i18n/ar.json';
 import enBundle from '@ab/shared/i18n/en.json';
 

@@ -1,4 +1,5 @@
-import { LOCALES, missingPlaceholders, type Locale, type TranslationKeyRow } from '@ab/shared';
+import { LOCALES, type Locale } from '@ab/shared';
+import { missingPlaceholders, type TranslationKeyRow } from '@ab/i18n';
 import { editedOnValues } from './registry-hints';
 import type { OverrideChange } from './translations.api';
 

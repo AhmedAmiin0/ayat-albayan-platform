@@ -1,4 +1,4 @@
-import type { TranslationKeyRow } from '@ab/shared';
+import type { TranslationKeyRow } from '@ab/i18n';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';

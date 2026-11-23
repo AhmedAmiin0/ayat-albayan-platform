@@ -1,4 +1,4 @@
-import { cloneBundle } from '@ab/shared';
+import { cloneBundle } from '@ab/i18n';
 import ar from '@ab/shared/i18n/ar.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type * as Module from './i18n-overrides';
