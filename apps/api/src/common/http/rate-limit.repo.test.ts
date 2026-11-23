@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { RateLimitRepo } from './rate-limit.repo';
 
 const TAKE = { buckets: [{ key: 'route:ip:1.1.1.1', max: 1 }], windowMs: 60_000 };

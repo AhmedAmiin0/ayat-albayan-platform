@@ -5,7 +5,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import { AuthModule } from '@/common/auth/auth.module';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { DB, DbModule } from '@/common/db/db.module';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { LeadFamilyController } from './lead-family.controller';
 import { LeadFamilyService } from './lead-family.service';
 

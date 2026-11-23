@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { payoutRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { EarningsRepo } from '@/modules/finance/teacher-earnings/earnings.repo';
 import type { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { toPayoutView } from './payouts.mapper';
 import { PayoutsLedger } from './payouts.ledger';
 import type { PayoutsRepo } from './payouts.repo';

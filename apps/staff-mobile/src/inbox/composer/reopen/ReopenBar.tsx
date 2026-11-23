@@ -1,5 +1,5 @@
 import type { WindowBar } from '@ab/client-core';
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, Button, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 

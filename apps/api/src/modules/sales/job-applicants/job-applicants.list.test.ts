@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { JobApplicantsRepo, type ApplicantListFilter } from './job-applicants.repo';
 
 const page = { page: 1, pageSize: 25 };

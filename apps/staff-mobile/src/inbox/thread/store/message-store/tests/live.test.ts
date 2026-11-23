@@ -1,5 +1,5 @@
 import type { LiveRow } from '@ab/client-core';
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { memoryPort } from '@/test/node-sql';
 import { createMessageStore } from '@/inbox/thread/store/message-store/message-store';
 import { A, at as at0, B, applyAs, id, plan, row, threadRow } from '@/inbox/thread/store/store-fixtures';
