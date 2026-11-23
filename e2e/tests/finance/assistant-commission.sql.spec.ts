@@ -22,7 +22,7 @@ test.describe('assistant commission (20261006000270-274)', () => {
       const second = await subscription(tx, s, { price: 400 });
       await pay(tx, second, 400);
       expect(await commissionOf(tx, s)).toMatchObject({ amount: '25.00', subscription_id: sub });
-      // Owner 2026-10-26: one 'first' per student; the second package earns the renewal share (10 % x 50 %).
+      // One 'first' per student; the second package earns the renewal share (10 % x 50 %).
       expect(await tx`select kind, amount::text from public.assistant_commissions where student_id = ${s} order by kind`).toEqual([
         { kind: 'first', amount: '25.00' },
         { kind: 'renewal', amount: '20.00' },

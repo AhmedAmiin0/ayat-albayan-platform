@@ -1,4 +1,4 @@
-import { INTEGRATION_GROUPS, type IntegrationConfigItem } from '@ab/shared';
+import { INTEGRATION_GROUPS, type IntegrationConfigItem } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';

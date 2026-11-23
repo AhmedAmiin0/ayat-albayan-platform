@@ -1,9 +1,9 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 
-// «مستحقات المعلم» (admin) and «أرباحي» (teacher), owner 2026-10-05: a completed lesson is owed,
-// the admin pays it, then voids the payment with a reason — the payment stays in the history
-// struck through and the lesson is owed again; the teacher sees the same in «أرباحي».
+// «مستحقات المعلم» (admin) and «أرباحي» (teacher): a completed lesson is owed, the admin pays it,
+// then voids the payment with a reason — the payment stays in the history struck through and the
+// lesson is owed again; the teacher sees the same in «أرباحي».
 
 async function setup(): Promise<{ teacherId: string; lessonId: string }> {
   const teacherId = await resetAbrar();

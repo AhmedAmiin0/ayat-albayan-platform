@@ -1,4 +1,5 @@
-import type { AcademySettings, NotificationAudience } from '@ab/shared';
+import type { NotificationAudience } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import type { QueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import type { Mock } from 'vitest';

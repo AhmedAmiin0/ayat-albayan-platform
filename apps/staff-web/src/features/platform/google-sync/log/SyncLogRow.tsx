@@ -1,4 +1,4 @@
-import type { GoogleSyncItemView } from '@ab/shared';
+import type { GoogleSyncItemView } from '@ab/catalog';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

@@ -1,7 +1,7 @@
-import { picksChild } from '@ab/client-core';
+import { isAccountDisabled, picksChild } from '@ab/client-core';
 import type { QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
-import { isAccountDisabled, meQuery } from '@ab/web-kit/auth/me';
+import { meQuery } from '@ab/web-kit/auth/me';
 import { returnSearchOf } from '@ab/web-kit/auth/return-to';
 import { signOut } from '@ab/web-kit/auth/sign-in';
 import { portalHomeQuery } from '@ab/web-kit/portal/api';

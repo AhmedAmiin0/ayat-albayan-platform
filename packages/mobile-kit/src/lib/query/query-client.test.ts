@@ -12,7 +12,7 @@ import {
   signOutOnAuthError,
 } from './query-client';
 
-const mockSignOut = jest.fn();
+const mockSignOut = jest.fn(async () => undefined);
 const mockSetNotice = jest.fn();
 jest.mock('../../auth/login-notice', () => ({
   ...jest.requireActual('../../auth/login-notice'),

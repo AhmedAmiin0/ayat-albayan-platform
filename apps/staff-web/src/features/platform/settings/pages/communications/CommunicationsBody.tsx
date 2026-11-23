@@ -1,4 +1,5 @@
-import type { AcademySettings, NotificationAudience } from '@ab/shared';
+import type { NotificationAudience } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { useState, type ReactNode } from 'react';
 import { tabIds } from '@ab/web-kit/components/ui/layout/tabs';
 import { Toast } from '@ab/web-kit/components/ui/overlay/toast';

@@ -1,4 +1,4 @@
-import { integrationEnum, type IntegrationConfigItem } from '@ab/shared';
+import { integrationEnum, type IntegrationConfigItem } from '@ab/catalog';
 import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { Select } from '@ab/web-kit/components/ui/form/select';

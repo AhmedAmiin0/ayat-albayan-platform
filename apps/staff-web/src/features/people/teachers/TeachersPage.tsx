@@ -14,7 +14,8 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { teacherColumns } from './teacher-columns';
 import { TeacherDialog } from './form/TeacherDialog';
-import type { Page, Teacher, TeacherListRow } from '@ab/shared';
+import type { Teacher, TeacherListRow } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 type Props = {
   /** Page, column sort and filters, kept in the route search (R-NFR-08). */

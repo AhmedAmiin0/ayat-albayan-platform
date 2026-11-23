@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { usePermissions } from '@/features/people/auth';

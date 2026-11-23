@@ -1,4 +1,6 @@
-import { formatPhone, PROGRAMS, TEACHER_STATUSES, teacherStatusStyle } from '@ab/shared';
+import { PROGRAMS, TEACHER_STATUSES } from '@ab/catalog';
+import { formatPhone } from '@ab/core';
+import { teacherStatusStyle } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Link } from '@tanstack/react-router';

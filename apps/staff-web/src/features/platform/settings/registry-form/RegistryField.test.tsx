@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
@@ -8,7 +8,7 @@ import { RegistryField } from './RegistryField';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';
 import { settingsForm, type SettingsForm } from './settings-form';
 import type { SettingsFormState } from './use-settings-form';
-import type { SettingKey, SettingMeta } from '@ab/shared';
+import type { SettingKey, SettingMeta } from '@ab/settings';
 
 const saved = settingsForm({ ...SETTING_DEFAULTS, activity_retention_days: 30 });
 

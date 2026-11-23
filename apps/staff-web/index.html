@@ -25,7 +25,12 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Shown until the app paints over it, so a slow first load is never a blank page. -->
+    <div id="root">
+      <div class="grid min-h-dvh place-items-center text-ink-2" role="status" aria-busy="true">
+        <p class="px-4 text-center font-display text-h3">أكاديمية آيات البيان · جارٍ التحميل…</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

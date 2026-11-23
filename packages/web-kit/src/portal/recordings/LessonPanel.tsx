@@ -1,7 +1,7 @@
 import type { PortalLessonAssets, PortalStudent } from '@ab/shared';
 import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { LoadState } from '@ab/web-kit/portal/LoadState';
+import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 import { LessonHead, ReportBlock } from './LessonHead';
 import { LessonParts } from './LessonParts';
@@ -47,9 +47,9 @@ export function LessonPanel({ student, lessonId, onOpenReport }: Props) {
   return (
     <Card asChild className="@container animate-fade-up p-5">
       <section aria-label={t.lessonFiles.lessonPage}>
-        <LoadState query={query} rows={2}>
+        <QueryState query={query} rows={2}>
           {(view) => <Body view={view} student={student} onOpenReport={onOpenReport} />}
-        </LoadState>
+        </QueryState>
       </section>
     </Card>
   );

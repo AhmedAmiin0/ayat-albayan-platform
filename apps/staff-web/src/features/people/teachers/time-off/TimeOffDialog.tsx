@@ -1,4 +1,4 @@
-import type { TimeOffCreate } from '@ab/shared';
+import type { TimeOffCreate } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

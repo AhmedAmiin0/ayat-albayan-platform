@@ -1,4 +1,5 @@
-import { PUBLIC_SETTING_DEFAULTS, type TemplateStatus } from '@ab/shared';
+import type { TemplateStatus } from '@ab/catalog';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { useState } from 'react';

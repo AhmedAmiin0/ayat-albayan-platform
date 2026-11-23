@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem } from '@ab/shared';
+import type { IntegrationConfigItem } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { formatDateTime } from '@/features/sales/leads/format';
 import { useClock } from '@ab/web-kit/lib/clock';

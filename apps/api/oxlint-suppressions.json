@@ -3076,7 +3076,7 @@
   },
   "src/modules/finance/teacher-earnings/earnings.repo.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/teacher-earnings/earnings.repo.ts": {

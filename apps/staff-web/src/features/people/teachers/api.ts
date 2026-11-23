@@ -1,4 +1,5 @@
-import type { AvailabilityRow, Page, Teacher, TeacherListRow, TimeOff } from '@ab/shared';
+import type { AvailabilityRow, Teacher, TeacherListRow, TimeOff } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams } from '@/lib/list/list-search';

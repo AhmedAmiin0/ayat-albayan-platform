@@ -1,4 +1,4 @@
-import type { GoogleFound, GoogleTeacherMapRow } from '@ab/shared';
+import type { GoogleFound, GoogleTeacherMapRow } from '@ab/catalog';
 import { useId } from 'react';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

@@ -1,4 +1,4 @@
-import { PAYOUT_CORRECTIONS, type PayoutView } from '@ab/shared';
+import { fromCents, PAYOUT_CORRECTIONS, type PayoutView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
 import { CorrectionsRepo } from '@/modules/finance/teacher-earnings/summary/corrections.repo';
@@ -37,13 +37,11 @@ export class PayoutsLedger {
     return this.view(id);
   }
 
-  /** `ledger_paid` on every payout not yet paid (a paid one is settled whole). */
+  /** `ledger_paid` on every payout not yet paid (a paid one is settled whole): one ledger read. */
   async annotate(views: PayoutView[]): Promise<PayoutView[]> {
-    return Promise.all(
-      views.map(async (v) =>
-        v.status === 'paid' ? v : { ...v, ledger_paid: await this.earnings.paidOnLessons(v.breakdown.lesson_ids) },
-      ),
-    );
+    const lessonIds = new Set(views.filter(isOpen).flatMap((v) => v.breakdown.lesson_ids));
+    const paid = await this.earnings.paidOnLessons([...lessonIds]);
+    return views.map((v) => (isOpen(v) ? { ...v, ledger_paid: ledgerPaid(v, paid) } : v));
   }
 
   private async view(id: string): Promise<PayoutView> {
@@ -57,4 +55,11 @@ export class PayoutsLedger {
     if (!row) throw notFound('payout_not_found');
     return row;
   }
+}
+
+const isOpen = (v: PayoutView): boolean => v.status !== 'paid';
+
+function ledgerPaid(v: PayoutView, paidCents: ReadonlyMap<string, number>): number {
+  const lessons = new Set(v.breakdown.lesson_ids);
+  return fromCents([...lessons].reduce((n, id) => n + (paidCents.get(id) ?? 0), 0));
 }

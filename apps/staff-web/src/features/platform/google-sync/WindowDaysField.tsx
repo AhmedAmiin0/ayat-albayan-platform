@@ -1,4 +1,4 @@
-import { GOOGLE_WINDOW_DAYS } from '@ab/shared';
+import { GOOGLE_WINDOW_DAYS } from '@ab/catalog';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';

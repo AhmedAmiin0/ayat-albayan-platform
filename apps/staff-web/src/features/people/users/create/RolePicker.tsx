@@ -1,4 +1,5 @@
-import { USER_ROLES, type UserRole, type UserRoleOption } from '@ab/shared';
+import type { UserRoleOption } from '@ab/shared';
+import { USER_ROLES, type UserRole } from '@ab/catalog';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { roleName } from '@/features/people/roles/api';
