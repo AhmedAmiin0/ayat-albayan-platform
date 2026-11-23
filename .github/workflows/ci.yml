@@ -408,6 +408,7 @@ jobs:
       - run: pnpm guard:cycles
       - run: pnpm guard:packages
       - run: pnpm guard:comments
+      - run: pnpm guard:comment-language
       - run: pnpm guard:units
       - run: pnpm guard:move-only
       - name: pnpm guard:lint (on a PR, against the base branch's suppressions)
