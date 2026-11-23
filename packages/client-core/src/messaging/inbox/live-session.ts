@@ -1,4 +1,4 @@
-import type { LiveConnection } from './live-connect.js';
+import type { LiveConnection } from './live-connect/index.js';
 
 /**
  * The channel's lifetime around the app's visibility (owner 2026-10-27: close the connection when

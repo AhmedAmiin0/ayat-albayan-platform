@@ -2,7 +2,7 @@ export * from './defs.js';
 export * from './camel.js';
 export * from './layout.js';
 export * from './registry.js';
-export * from './validation/schema.js';
+export * from './validation/schema/schema.js';
 export * from './validation/validate.js';
 export * from './public.js';
 export * from './meta.js';

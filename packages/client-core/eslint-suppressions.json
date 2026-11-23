@@ -37,12 +37,12 @@
       "count": 1
     }
   },
-  "src/core/http/api-client.test.ts": {
+  "src/core/http/api-client/tests/api-client.test.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 2
     }
   },
-  "src/core/http/api-client.ts": {
+  "src/core/http/api-client/api-client.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
     },
@@ -217,12 +217,12 @@
       "count": 2
     }
   },
-  "src/messaging/inbox/live-connect.test.ts": {
+  "src/messaging/inbox/live-connect/tests/live-connect.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/messaging/inbox/live-connect.ts": {
+  "src/messaging/inbox/live-connect/live-connect.ts": {
     "max-len": {
       "count": 5
     }
@@ -240,12 +240,12 @@
       "count": 1
     }
   },
-  "src/messaging/inbox/live-store.test.ts": {
+  "src/messaging/inbox/live-store/tests/live-store.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/messaging/inbox/live-store.ts": {
+  "src/messaging/inbox/live-store/live-store.ts": {
     "max-len": {
       "count": 1
     },

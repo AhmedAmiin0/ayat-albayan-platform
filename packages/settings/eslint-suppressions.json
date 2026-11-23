@@ -231,12 +231,12 @@
       "count": 4
     }
   },
-  "src/validation/schema.test.ts": {
+  "src/validation/schema/tests/schema.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/validation/schema.ts": {
+  "src/validation/schema/schema.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
