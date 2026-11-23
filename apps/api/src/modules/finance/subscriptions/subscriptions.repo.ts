@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains } from '@/common/db/list-sort';
 import { dbError } from '@/common/http/http';
-import { readChunked } from '@/common/db/read-all';
+import { readChunked, readChunkedAll } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './list/subscriptions.list-query';
 import type { Page } from '@ab/shared';
 
@@ -54,8 +54,15 @@ export class SubscriptionsRepo {
 
   /** Several students' packages (no join), FIFO order within each student. */
   async forStudents(studentIds: readonly string[]): Promise<Tables<'subscriptions'>[]> {
-    return readChunked(studentIds, (chunk) =>
-      this.db.from('subscriptions').select('*').in('student_id', chunk).order('starts_on').order('created_at').order('id'),
+    return readChunkedAll(studentIds, (chunk, from, to) =>
+      this.db
+        .from('subscriptions')
+        .select('*')
+        .in('student_id', chunk)
+        .order('starts_on')
+        .order('created_at')
+        .order('id')
+        .range(from, to),
     );
   }
 
