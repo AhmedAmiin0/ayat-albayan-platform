@@ -1,4 +1,4 @@
-import { riyadhToday } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

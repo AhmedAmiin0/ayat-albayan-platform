@@ -75,9 +75,9 @@ describe('AlertsJob', () => {
     expect(await broken.j.runOnce(now)).toEqual({ students: 0, failed: 0 });
   });
 
-  it('timers are unref’d and cleared', () => {
+  it('timers are unref’d and cleared', async () => {
     const { j } = job(async () => []);
     j.onApplicationBootstrap();
-    j.onModuleDestroy();
+    await j.beforeApplicationShutdown();
   });
 });

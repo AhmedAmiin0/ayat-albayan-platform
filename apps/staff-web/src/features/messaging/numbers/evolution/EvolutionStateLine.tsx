@@ -1,4 +1,5 @@
-import type { EvolutionState, Glyph, Tone } from '@ab/shared';
+import type { EvolutionState } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads';
 import { useClock } from '@ab/web-kit/lib/clock';

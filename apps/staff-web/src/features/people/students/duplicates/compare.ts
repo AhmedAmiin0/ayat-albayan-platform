@@ -1,4 +1,4 @@
-import { arabicNameSimilar, normalizeArabic } from '@ab/shared';
+import { arabicNameSimilar, normalizeArabic } from '@ab/core';
 
 /** Result column of the duplicate compare (R-STU-03, docs/07 §6 Dialog): ✓ same, ≈ near. */
 export type Match = 'same' | 'near' | 'differs';

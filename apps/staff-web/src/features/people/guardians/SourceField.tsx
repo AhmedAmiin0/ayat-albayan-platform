@@ -1,4 +1,4 @@
-import { LEAD_SOURCES, type LeadSource } from '@ab/shared';
+import { LEAD_SOURCES, type LeadSource } from '@ab/catalog';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

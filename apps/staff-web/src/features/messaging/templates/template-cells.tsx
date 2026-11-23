@@ -1,4 +1,5 @@
-import { templateStatusStyle, type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
+import { templateStatusStyle, type TemplateLineView, type TemplateView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { useId, type ReactNode } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

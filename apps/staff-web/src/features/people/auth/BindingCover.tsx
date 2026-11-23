@@ -1,4 +1,4 @@
-import { PROGRAMS } from '@ab/shared';
+import { PROGRAMS } from '@ab/catalog';
 import { Mark } from '@ab/web-kit/components/ui/display/mark';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';

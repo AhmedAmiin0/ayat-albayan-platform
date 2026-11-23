@@ -1,4 +1,4 @@
-import type { TemplateStatus } from '@ab/shared';
+import type { TemplateStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { crmCanSubmit, crmOnly } from './crm-submit';
 

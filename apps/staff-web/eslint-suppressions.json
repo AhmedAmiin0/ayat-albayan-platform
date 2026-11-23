@@ -3784,9 +3784,6 @@
     }
   },
   "src/features/messaging/templates/template-columns.tsx": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },

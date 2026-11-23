@@ -1,11 +1,6 @@
 import { waIdToE164 } from '@ab/shared';
-import {
-  Inject,
-  Injectable,
-  type OnApplicationBootstrap,
-  type OnModuleDestroy,
-} from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { Inject, Injectable } from '@nestjs/common';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 import type { CrmLookup, CrmMessage } from '@/modules/messaging/whatsapp';
 import { CrmConfirm, type Pending } from './crm-confirm.service';
@@ -35,8 +30,8 @@ const due =
 
 @BackgroundJob({ name: 'crm-confirm-sweep' })
 @Injectable()
-export class CrmConfirmSweepJob implements OnApplicationBootstrap, OnModuleDestroy {
-  private readonly ticker = new Ticker({
+export class CrmConfirmSweepJob extends TickerJob {
+  protected readonly ticker = new Ticker({
     name: CrmConfirmSweepJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: EVERY_MS,
@@ -46,14 +41,8 @@ export class CrmConfirmSweepJob implements OnApplicationBootstrap, OnModuleDestr
   /** row id → when a pass last looked it up: the least recently tried go first (no starving). */
   private tried = new Map<string, number>();
 
-  constructor(@Inject(CrmConfirm) private readonly confirm: CrmConfirm) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  constructor(@Inject(CrmConfirm) private readonly confirm: CrmConfirm) {
+    super();
   }
 
   /** One pass; never throws. The rows confirmed. */

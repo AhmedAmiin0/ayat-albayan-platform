@@ -1,4 +1,5 @@
-import { templateCreateSchema, type TemplateView, type WaLine } from '@ab/shared';
+import { templateCreateSchema, type TemplateView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { useId, useState, type SubmitEvent } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

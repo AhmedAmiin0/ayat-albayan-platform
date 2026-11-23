@@ -1,13 +1,11 @@
 import {
-  leadStatusStyle,
   packageChip,
   subscribeKind,
-  subscriptionStatusStyle,
-  type LeadStatus,
-  type StatusStyle,
   type SubscriptionBadge,
   type ThreadSubscriptionView,
 } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
+import { leadStatusStyle, subscriptionStatusStyle, type StatusStyle } from '@ab/money';
 import { moneyText, progressOf } from '@/features/finance/subscriptions';
 import { partPaidText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

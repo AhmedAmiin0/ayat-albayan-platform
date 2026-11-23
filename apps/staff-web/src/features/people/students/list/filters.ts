@@ -2,11 +2,10 @@ import {
   STUDENT_FILTER_KEYS,
   parseStatusList,
   studentListFiltersSchema,
-  type Program,
   type StudentPackageFilter,
-  type StudentStatus,
   type StudentWeeklyFilter,
 } from '@ab/shared';
+import type { Program, StudentStatus } from '@ab/catalog';
 
 /**
  * Filters of /admin/students as they sit in the URL (and go to GET /students as they are).

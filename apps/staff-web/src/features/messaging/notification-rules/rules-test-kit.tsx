@@ -1,13 +1,13 @@
 import {
   catalogueViews,
   notificationEntry,
-  SETTING_DEFAULTS,
   type AnyRuleTiming,
   type NotificationAudience,
   type NotificationEntryView,
   type NotificationRuleView,
   type NotificationsOverview,
 } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

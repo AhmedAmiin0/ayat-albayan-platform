@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { useState } from 'react';
 import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
 import { Button } from '@ab/web-kit/components/ui/form/button';

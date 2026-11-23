@@ -1,4 +1,5 @@
-import type { NumberSecretName, NumberView, WaProvider } from '@ab/shared';
+import type { NumberSecretName, NumberView } from '@ab/shared';
+import type { WaProvider } from '@ab/catalog';
 
 const META_SECRETS = ['access_token', 'app_secret'] as const;
 const EVOLUTION_SECRETS = ['evolution_token', 'evolution_proxy_password'] as const;

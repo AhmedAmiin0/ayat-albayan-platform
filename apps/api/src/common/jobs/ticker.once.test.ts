@@ -16,7 +16,7 @@ describe('Ticker without everyMs (one run after boot)', () => {
     expect(run).toHaveBeenCalledTimes(1);
     const stopped = new Ticker({ name: 'stopped', firstMs: 5_000, run });
     stopped.start();
-    stopped.stop();
+    await stopped.stop();
     await vi.advanceTimersByTimeAsync(10_000);
     expect(run).toHaveBeenCalledTimes(1);
   });

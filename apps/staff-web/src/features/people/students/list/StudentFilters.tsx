@@ -1,4 +1,6 @@
-import { PROGRAMS, STUDENT_PACKAGE_FILTERS, NO_TEACHER, tzChoices, tzOptionLabel } from '@ab/shared';
+import { STUDENT_PACKAGE_FILTERS, NO_TEACHER } from '@ab/shared';
+import { PROGRAMS } from '@ab/catalog';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import type { FilterOption } from '@/components/data-table/data-table-features';
 import { SelectFilterField } from '@/components/table-toolbar/fields';

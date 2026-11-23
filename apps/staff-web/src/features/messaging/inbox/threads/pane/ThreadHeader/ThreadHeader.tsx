@@ -1,4 +1,5 @@
-import { formatPhone, type ChatListRef, type SubscriptionBadge, type ThreadView } from '@ab/shared';
+import type { ChatListRef, SubscriptionBadge, ThreadView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';

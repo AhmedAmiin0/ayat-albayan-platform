@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

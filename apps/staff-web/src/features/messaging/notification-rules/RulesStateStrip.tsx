@@ -1,4 +1,5 @@
-import { counted, type AcademySettings } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { AcademySettings } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

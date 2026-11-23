@@ -1,4 +1,4 @@
-import { EVOLUTION_MODES, type EvolutionMode } from '@ab/shared';
+import { EVOLUTION_MODES, type EvolutionMode } from '@ab/catalog';
 import { CheckField } from '@/components/settings/fields/CheckField';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Select } from '@ab/web-kit/components/ui/form/select';

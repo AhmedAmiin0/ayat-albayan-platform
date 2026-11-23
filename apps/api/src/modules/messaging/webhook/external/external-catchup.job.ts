@@ -1,5 +1,5 @@
-import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { Ticker } from '@/common/jobs';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { field } from '@/modules/messaging/webhook/parse/webhook.parse';
 import { KAPSO_HISTORY } from './external-status';
 import { ExternalRepo } from './external.repo';
@@ -42,22 +42,16 @@ const tail = (id: string): string => `…${id.slice(-4)}`;
  */
 @BackgroundJob({ name: 'external-catch-up' })
 @Injectable()
-export class ExternalCatchUpJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class ExternalCatchUpJob extends TickerJob {
   private readonly log = new Logger(ExternalCatchUpJob.name);
-  private readonly ticker = new Ticker({ name: ExternalCatchUpJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS, run: () => this.runOnce() });
+  protected readonly ticker = new Ticker({ name: ExternalCatchUpJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS, run: () => this.runOnce() });
 
   constructor(
     private readonly queries: ExternalRepo,
     private readonly store: ExternalStore,
     @Inject(KAPSO_HISTORY) private readonly kapso: KapsoHistory,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  ) {
+    super();
   }
 
   /** One pass over every Kapso chat number. Never throws; one number's failure doesn't stop the others. */

@@ -1,4 +1,5 @@
-import { normalizePhone, type Gender, type LeadSource, type Program } from '@ab/shared';
+import type { Gender, LeadSource, Program } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { CreateStudentBody } from '@/features/people/students/api';
 

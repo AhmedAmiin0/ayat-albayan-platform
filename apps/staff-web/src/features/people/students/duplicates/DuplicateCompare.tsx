@@ -1,4 +1,4 @@
-import { formatPhone, normalizePhone } from '@ab/shared';
+import { formatPhone, normalizePhone } from '@ab/core';
 import { HighlightDiff } from '@ab/web-kit/components/ui/display/highlight-diff';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
