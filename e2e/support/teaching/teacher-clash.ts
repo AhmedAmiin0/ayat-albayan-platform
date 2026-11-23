@@ -9,8 +9,8 @@ import { BASE, iso, MIN, type Tx } from '../edit-time';
 
 type Sql = ReturnType<typeof postgres>;
 type Db = Sql | Tx;
-export interface Teacher { id: string; profile_id: string }
-export interface Failure { code?: string; message?: string }
+interface Teacher { id: string; profile_id: string }
+interface Failure { code?: string; message?: string }
 
 export const FAR = Math.floor(BASE / 86_400_000) * 86_400_000 + 300 * 86_400_000 + 187 * MIN;
 

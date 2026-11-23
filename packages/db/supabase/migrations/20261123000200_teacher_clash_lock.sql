@@ -2,8 +2,8 @@
 -- the teacher's time with a read in the API, then write here: two writes for one teacher slot could
 -- both pass that read. create_booking (latest: 20261106000501), edit_lesson_time (latest:
 -- 20261117100160) and apply_lesson_changes (latest: 20261018000475) now take a transaction advisory
--- lock per teacher they write, in uuid order so two callers never wait on each other in a cycle,
--- then re-read that teacher's occupying lessons (OCCUPYING_LESSON_STATUSES) overlapping each new
+-- lock per teacher they write or move, in uuid order and before any lesson row lock, then
+-- re-read that teacher's occupying lessons (OCCUPYING_LESSON_STATUSES) overlapping each new
 -- interval and raise teacher_clash (P0001; the API answers 409) unless the lesson carries
 -- override_reason. No exclusion constraint: an audited override may double-book on purpose.
 -- create_booking replays its client_request_id once more after the lock: a retry that waited on
@@ -361,8 +361,14 @@ declare
   v_actor uuid := (p ->> 'actor')::uuid;
   c record;
 begin
+  -- The teachers of the lessons it changes too, before any row lock: change_course moves lessons
+  -- in one call and inserts in a later one, and edit_lesson_time takes the teacher, then the row.
   perform public.lock_teachers(array(
-    select (x ->> 'teacher_id')::uuid from jsonb_array_elements(coalesce(p -> 'lessons', '[]'::jsonb)) x));
+    select (x ->> 'teacher_id')::uuid from jsonb_array_elements(coalesce(p -> 'lessons', '[]'::jsonb)) x
+    union
+    select l.teacher_id from public.lessons l
+     where l.id in (select (c ->> 'id')::uuid
+                      from jsonb_array_elements(coalesce(p -> 'changes', '[]'::jsonb)) c)));
 
   if p ? 'end_rule' then
     -- Ended now when nothing is left: the last day is before today or before the rule starts.

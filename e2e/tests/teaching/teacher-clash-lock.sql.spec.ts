@@ -80,4 +80,20 @@ test.describe('teacher clash lock', () => {
       expect(await outcome(tx, (sp) => addLesson(sp, t, { at: FAR + 20 * MIN, from }))).toBe('ok');
     });
   });
+
+  test('apply_lesson_changes with only changes still takes the teacher lock before its row locks', async () => {
+    await rolledBack(async (tx) => {
+      const s = await seed(tx);
+      const p = {
+        actor: s.teacher.profile_id,
+        changes: [{ id: s.lesson, from_status: 'scheduled', to_status: 'rescheduled', chargeable: false }],
+      };
+      await tx`select public.apply_lesson_changes(${tx.json(p)})`;
+      const key = `teacher:${s.teacher.id}`;
+      const [held] = await tx<{ held: boolean }[]>`select exists (select 1 from pg_locks
+        where pid = pg_backend_pid() and locktype = 'advisory' and granted and objsubid = 1
+          and ((classid::bigint << 32) | objid::bigint) = hashtextextended(${key}, 0)) as held`;
+      expect(held?.held).toBe(true);
+    });
+  });
 });
