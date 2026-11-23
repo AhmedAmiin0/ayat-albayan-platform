@@ -28,9 +28,4 @@ export class ExpenseReceipts {
     if (!path) throw notFound('receipt_not_found');
     return this.storage.signedDownload({ bucket: BUCKETS.receipts, path });
   }
-
-  /** Best effort: an orphaned object is harmless. */
-  async discard(path: string | null): Promise<void> {
-    if (path) await this.storage.remove({ bucket: BUCKETS.receipts, path }).catch(() => undefined);
-  }
 }

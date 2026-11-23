@@ -81,18 +81,13 @@ export class PaymentsService {
     const after = await writePayment(this.payments, before, { amount, write });
     const audit = { actorId, entity: 'payments', entityId: id, action: 'update', before, after };
     await this.writes.done(audit, studentOf(before));
-    if (patch.receiptPath !== undefined && before.receipt_path !== patch.receiptPath)
-      await this.receipts.discard(before.receipt_path);
     return this.get(id);
   }
 
   async remove(id: string, actorId: string): Promise<void> {
     const before = notCancelled(await this.row(id));
-    const attached = await this.files.attachments.paths(id); // read first: the rows cascade
     await this.payments.remove(id);
     await this.writes.done({ actorId, entity: 'payments', entityId: id, action: 'delete', before }, studentOf(before));
-    await this.receipts.discard(before.receipt_path);
-    await this.files.attachments.discard(attached);
   }
 
   /** «المرفقات»: the legacy receipt first, then the files, each signed for 1 h. */

@@ -108,7 +108,7 @@ describe('payments routes (P1–P7, R-PAY-01)', () => {
     expect(res.json()).toEqual({ url: 'https://x', expires_at: '2026-10-02T10:00:00Z' });
   });
 
-  it('P4/P5: edits are audited and recomputed; delete removes the receipt', async () => {
+  it('P4/P5: edits are audited and recomputed; delete keeps the receipt', async () => {
     m.payments.update.mockResolvedValue(paymentRow({ amount: 100 }));
     m.payments.netPaid.mockResolvedValue(145);
     const res = await call({ method: 'PATCH', url: `/payments/${PAYMENT_ID}`, body: { amount: 100 } });
@@ -117,7 +117,7 @@ describe('payments routes (P1–P7, R-PAY-01)', () => {
     expect(m.payments.update).toHaveBeenCalledWith(PAYMENT_ID, { amount: 100, ...fx });
     m.payments.get.mockResolvedValue(paymentRow({ receipt_path: RECEIPT }));
     expect((await call({ method: 'DELETE', url: `/payments/${PAYMENT_ID}` })).statusCode).toBe(204);
-    expect(m.storage.remove).toHaveBeenCalledWith({ bucket: 'receipts', path: RECEIPT });
+    expect(m.storage.remove).not.toHaveBeenCalled();
     expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'payments', action: 'delete' }));
   });
 
