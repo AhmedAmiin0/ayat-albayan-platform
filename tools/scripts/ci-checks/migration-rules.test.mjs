@@ -18,6 +18,7 @@ test('create table fails without row level security for that table', () => {
   const sql = 'create table public.t (id int);\ncreate table u (id int);\n'
     + 'alter table u enable row level security;\n';
   const e = rls(sql);
+  assert.match(rls('create unlogged table v (id int);\n')[0], /create table v needs/);
   assert.equal(e.length, 1);
   assert.match(e[0], /m\.sql: create table t needs enable row level security/);
 });
@@ -73,10 +74,14 @@ test('drop or rename fails without a destructive marker', () => {
   assert.match(destructive(`${LOCK}drop table if exists old_t;\n`)[0], /m\.sql: drop or rename/);
   assert.match(destructive(`${LOCK}alter table t rename to u;\n`)[0], /destructive: <reason>/);
   assert.match(destructive(`${LOCK}alter table t drop column x;\n`)[0], /destructive/);
+  assert.match(destructive(`${LOCK}alter table t drop x;\n`)[0], /destructive/);
+  const listed = `${LOCK}alter table t add y int, drop if exists x;\n`;
+  assert.match(destructive(listed)[0], /destructive/);
 });
 
 test('dropping a policy, function or default is not destructive', () => {
   const sql = `${LOCK}drop policy if exists p on t;\ndrop function if exists f();\n`
-    + 'alter table t alter column x drop default;\n';
+    + 'alter table t alter column x drop default, alter column y drop not null;\n'
+    + 'alter table t drop constraint c, alter column z drop expression;\n';
   assert.deepEqual(destructive(sql), []);
 });

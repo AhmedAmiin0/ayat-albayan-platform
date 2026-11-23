@@ -20,12 +20,20 @@ export function stripSql(sql) {
 const TABLE = String.raw`((?:"?\w+"?\.)?"?\w+"?)`;
 const ALTER = String.raw`\balter\s+table\s+(?:if\s+exists\s+)?(?:only\s+)?`;
 const named = (prefix, suffix = '') => new RegExp(`${prefix}${TABLE}${suffix}`, 'gi');
-const CREATE_TABLE = named(String.raw`\bcreate\s+table\s+(?:if\s+not\s+exists\s+)?`);
+const CREATE_TABLE = named(
+  String.raw`\bcreate\s+(?:unlogged\s+)?table\s+(?:if\s+not\s+exists\s+)?`,
+);
 const ALTER_TABLE = named(ALTER);
 const RLS_ON = named(ALTER, String.raw`\s+enable\s+row\s+level\s+security`);
 const CREATE_INDEX = named(String.raw`\bcreate\s+(?:unique\s+)?index\b[^;]*?\bon\s+(?:only\s+)?`);
 const DROP_LOCKING = /\bdrop\s+(?:table|index)\b/i;
-const DESTRUCTIVE = /\bdrop\s+(?:table|schema|column)\b|\brename\s+(?:to|column)\b/i;
+// `alter table t drop x` drops a column too: COLUMN is optional in Postgres.
+const KEPT_DROPS = String.raw`(?!constraint\b|default\b|not\s+null\b|expression\b|identity\b)`;
+const DESTRUCTIVE = new RegExp(
+  String.raw`\bdrop\s+(?:table|schema|column)\b|\brename\s+(?:to|column)\b`
+    + String.raw`|\balter\s+table\b[^;]*?[\s,]drop\s+${KEPT_DROPS}\w`,
+  'i',
+);
 const LOCK_TIMEOUT = /\bset\s+local\s+lock_timeout\b/i;
 const SEARCH_PATH = /\bset\s+search_path\b/i;
 const REVOKE_PUBLIC = /\brevoke\s+(?:all|execute)\b[^;]*?\bfrom\s+public\s*,[^;]*?\banon\b/i;
