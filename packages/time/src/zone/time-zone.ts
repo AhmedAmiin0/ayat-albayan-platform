@@ -31,10 +31,7 @@ export function tzChoices(current: string): string[] {
   return !current || known.includes(current) ? [...known] : [current, ...known];
 }
 
-/**
- * «القاهرة (Africa/Cairo)» for an <option> (which can't hold <bdi>): the id is wrapped in
- * LRI…PDI so it stays one LTR island. No city label → the isolated id alone.
- */
+/** An <option> can't hold <bdi>, so the id is wrapped in LRI...PDI. */
 export function tzOptionLabel(id: string, city: string | undefined): string {
   const ltr = `⁦${id}⁩`;
   return city ? `${city} (${ltr})` : ltr;
@@ -52,11 +49,7 @@ export function utcOffsetMinutes(tz: string, at: Date): number {
   return offsetMinutesIn(tz, at);
 }
 
-/**
- * The next UTC-offset change of `tz` within `days` after `now`, or null (docs/07 §8 DST note:
- * «من الجمعة 30 أكتوبر القاهرة بترجع ساعة»). An hourly scan (≤720 offset reads);
- * fine for one note per screen.
- */
+/** docs/07 §8 DST note; an hourly scan (at most 720 reads) is fine for one note per screen. */
 export function nextDstTransition(tz: string, now: Date, days = 30): DstShift | null {
   const before = offsetMinutesIn(tz, now);
   for (let h = 1; h <= days * 24; h += 1) {

@@ -4,15 +4,12 @@ import { addCalendarMonths, monthRangeIn, RIYADH_TZ, riyadhToday } from '@ab/tim
 import { monthParam } from '@ab/money';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
 
-// «سجل الحضور»: every past lesson of one student in a Riyadh month, as a table.
-// GET /sales/students/:id/attendance (self.sales_academy) and
-// GET /students/:id/attendance (students.read).
-// Whitelist: never a price, a payment, a meeting link or a note.
+// One student's past lessons in a Riyadh month; never a price, payment, meeting link or note.
 
 /** `?month=YYYY-MM` (optional: the current Riyadh month). */
 export const attendanceMonthQuery = z.object({ month: monthParam.optional() });
 
-/** One past lesson of the student. `kind` is «الحضور»'s (attendanceKind); null when moved. */
+/** `kind` is attendanceKind; null when moved. */
 export interface AttendanceTableRow {
   lesson_id: string;
   starts_at: string;
@@ -36,7 +33,7 @@ export interface AttendanceTableRow {
   moved_from?: string | null;
   /** The start of the lesson this one moved to (a 'rescheduled' row). */
   moved_to?: string | null;
-  /** «سبب تغيير الموعد»: a one-lesson move's reason (same teacher only). */
+  /** A one-lesson move's reason (same teacher only). */
   move_reason?: string | null;
   /** The teacher reader's report of this lesson (docs/47); staff rows never carry it. */
   report?: AttendanceRowReport | null;
@@ -51,10 +48,7 @@ export interface AttendanceRowReport {
   edit_until: string | null;
 }
 
-/**
- * held = حضر (completed / late or marked present), late = marked late (part of held), cancelled per
- * side, rescheduled = moved away.
- */
+/** late is part of held; cancelled is per side; rescheduled is moved away. */
 export type AttendanceTotalKind =
   | 'held'
   | 'late'

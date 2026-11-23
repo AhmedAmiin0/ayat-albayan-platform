@@ -9,7 +9,7 @@ interface Props {
   onClick: () => void;
 }
 
-/** The number field's start (as the family app, #752): flag + calling code; opens «اختر الدولة». */
+/** Flag and calling code at the field's start (#752); opens the country picker. */
 export function CountryButton({ country, onClick }: Props) {
   const label = t.familyApp.signIn.country.replace('{name}', nameOf(country, locale));
   return (

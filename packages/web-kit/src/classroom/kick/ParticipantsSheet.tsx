@@ -52,7 +52,6 @@ interface Props {
   onClose: () => void;
 }
 
-/** «المشاركون»: everyone with their role; «كتم الجميع», mute and «إخراج من الحلقة» where allowed. */
 export function ParticipantsSheet({ tiles, kick, mute, onClose }: Props) {
   const people = tiles.filter((x) => x.kind === 'camera');
   return (

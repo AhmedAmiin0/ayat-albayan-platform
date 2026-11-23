@@ -502,7 +502,7 @@
   },
   "src/people/schemas/people.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/people/schemas/student-filters.ts": {
@@ -517,7 +517,7 @@
   },
   "src/people/students/course-pause.ts": {
     "stylistic/max-len": {
-      "count": 16
+      "count": 9
     },
     "typescript/no-deprecated": {
       "count": 1
@@ -525,7 +525,7 @@
   },
   "src/people/students/portal.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/people/students/status-flow/status-flow.ts": {
@@ -533,7 +533,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 14
+      "count": 12
     }
   },
   "src/people/students/status-flow/tests/status-flow.test.ts": {
@@ -551,7 +551,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1
@@ -562,7 +562,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/people/users/index.ts": {
@@ -606,7 +606,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/reports/program.test.ts": {
@@ -616,7 +616,7 @@
   },
   "src/reports/quran/quran-data.ts": {
     "stylistic/max-len": {
-      "count": 30
+      "count": 29
     }
   },
   "src/reports/quran/quran.test.ts": {
@@ -626,7 +626,7 @@
   },
   "src/reports/quran/quran.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/reports/rules.test.ts": {
@@ -639,7 +639,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/reports/schema/tests/schema.test.ts": {
@@ -649,7 +649,7 @@
   },
   "src/reports/teacher-list.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/reports/v2/content.ts": {
@@ -675,12 +675,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/reports/v2/progress.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/reports/v2/rules.test.ts": {
@@ -722,12 +722,12 @@
   },
   "src/reports/views.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/sales/academy.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1
@@ -735,7 +735,7 @@
   },
   "src/sales/course/course-change.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/sales/course/course-follow.test.ts": {
@@ -745,7 +745,7 @@
   },
   "src/sales/course/course-follow.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/sales/course/course-picks.test.ts": {
@@ -760,7 +760,7 @@
   },
   "src/sales/course/course.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/sales/family-link.ts": {
@@ -768,12 +768,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/money-views.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/sales/money.test.ts": {
@@ -783,7 +783,7 @@
   },
   "src/sales/money.ts": {
     "stylistic/max-len": {
-      "count": 17
+      "count": 16
     }
   },
   "src/sales/payment-link/index.ts": {
@@ -803,7 +803,7 @@
   },
   "src/sales/payment-link/schemas.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/sales/payment-link/views.ts": {
@@ -846,7 +846,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/renewal-due.test.ts": {
@@ -856,12 +856,12 @@
   },
   "src/sales/renewal-due.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/sales/schedule.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/sales/start-date.test.ts": {
@@ -874,7 +874,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 4
     }
   },
   "src/sales/student/student-attendance.test.ts": {
@@ -898,7 +898,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 13
+      "count": 7
     }
   },
   "src/sales/student/student-roster.ts": {
@@ -911,12 +911,12 @@
   },
   "src/sales/student/student-schedule.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/sales/teacher-filter/teacher-filter.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/sales/teacher/teacher-overview.test.ts": {
@@ -959,7 +959,7 @@
   },
   "src/schemas/feedback.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/module-boundaries": {
       "count": 1

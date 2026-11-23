@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import { PROGRAMS, STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 
-/** «الباقة» filter: a valid package, none (or exhausted), low balance, newest package unpaid. */
+/** A valid package, none (or exhausted), low balance, or newest package unpaid. */
 export const STUDENT_PACKAGE_FILTERS = ['active', 'none', 'low', 'unpaid'] as const;
 export type StudentPackageFilter = (typeof STUDENT_PACKAGE_FILTERS)[number];
 export const STUDENT_WEEKLY_FILTERS = ['yes', 'no'] as const;
 export type StudentWeeklyFilter = (typeof STUDENT_WEEKLY_FILTERS)[number];
-/** teacher=none → students without a teacher («بدون معلم»). */
+/** teacher=none selects students without a teacher. */
 export const NO_TEACHER = 'none';
 
 const blank = (v: unknown) => (v === '' || v === null ? undefined : v);

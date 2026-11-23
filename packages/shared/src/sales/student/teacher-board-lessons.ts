@@ -20,7 +20,7 @@ export interface StudentLessons {
 }
 
 const startsAt = (l: LessonView): number => Date.parse(l.starts_at);
-/** A lesson moved to another time keeps its old row (status rescheduled): never «آخر حلقة». */
+/** A rescheduled lesson keeps its old row, so it is never the last lesson. */
 const notMoved = (l: LessonView): boolean => l.status !== 'rescheduled';
 const ownOf = (l: LessonView, studentId: string) => l.students.find((s) => s.id === studentId);
 

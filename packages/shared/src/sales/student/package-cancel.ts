@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import type { CancelBlock } from '@ab/money';
 
-// «إلغاء الباقة» by the assistant: ANY student's unused package, behind
-// subscriptions.stop (the key of «إلغاء الاشتراك»), with the admin's rules, write and audit.
+// The assistant cancels any student's unused package behind subscriptions.stop, with audit.
 
 const BLOCKS = [
   'already_cancelled',
@@ -21,7 +20,7 @@ export const salesPackageCancelCheckSchema = z.object({
 });
 export type SalesPackageCancelCheck = z.infer<typeof salesPackageCancelCheckSchema>;
 
-/** POST /sales/packages/:id/cancel: the package, now «ملغاة» (never a price: maybe not hers). */
+/** The cancelled package, never with a price since it may not be hers. */
 export const salesPackageCancelledSchema = z.object({
   id: z.string(),
   status: z.literal('cancelled'),

@@ -8,7 +8,7 @@ import type { AttendanceTableRow } from './student-attendance.js';
 export interface TeacherCourseView {
   /** Calendar date (YYYY-MM-DD), shown with no zone shift. */
   starts_on: string;
-  /** When the course was stopped («توقفت الدورة»); null otherwise. */
+  /** When the course was stopped; null otherwise. */
   stopped_at: string | null;
   /** When its last lesson was used (v_subscription_balance.ended_at). */
   ended_at: string | null;

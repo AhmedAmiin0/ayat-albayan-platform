@@ -12,7 +12,6 @@ const LABEL: Record<MuteSource, { short: string; of: string; icon: 'mic' | 'cam'
 };
 const SOURCES: readonly MuteSource[] = ['microphone', 'camera'];
 
-/** The tile's corner «كتم الميكروفون» / «إيقاف الكاميرا» (named for the person), where allowed. */
 export function MuteButtons({ tile, mute }: { tile: TileView; mute: MuteController }) {
   return (
     <>

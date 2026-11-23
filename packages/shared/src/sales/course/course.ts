@@ -61,20 +61,11 @@ export interface SalesCourseView {
   /** Days a week to pick; null when unknown (no subscription, or a custom count the admin books). */
   perWeek: number | null;
   blocked: CourseBlock | null;
-  /**
-   * The student's latest course of an earlier subscription, while the newest one has no course yet
-   * (a renewal: «تابِع بنفس الأيام»); null otherwise. Absent from an older API.
-   */
+  /** The latest earlier course while the newest subscription has none; absent from old APIs. */
   previous?: BookedCourse | null;
-  /**
-   * The course «تغيير أيام الحلقات» changes: the one whose active rules cover today (starts_on ≤ today,
-   * ends_on null or ≥ today), else the earliest-starting upcoming one (a renewal booked ahead). null = none.
-   */
+  /** The course whose active rules cover today, else the earliest upcoming one; null means none. */
   current?: BookedCourse | null;
-  /**
-   * Hold mode: the package is unpaid with an open payment link, so «احجز» saves
-   * the picks as a draft (PUT /sales/booking/course/draft) booked on payment. Absent = false.
-   */
+  /** Unpaid with an open payment link: booking saves a draft booked on payment. */
   hold?: boolean;
   /** The draft saved for it (its picks also come as `previous` to prefill), else null / absent. */
   draft?: CourseDraftInfo | null;
@@ -97,6 +88,6 @@ export function courseOpensOn(
   return opens > today ? opens : today;
 }
 
-/** «تابِع بنفس الأيام» is offered only when the previous course had exactly the new plan's days a week. */
+/** Continue on the same days only when the previous course had the new plan's days a week. */
 export const continueFits = (view: Pick<SalesCourseView, 'previous' | 'perWeek'>): boolean =>
   !!view.previous && view.perWeek !== null && view.previous.days.length === view.perWeek;

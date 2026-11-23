@@ -42,10 +42,7 @@ export function sameClockAt(at: Date, zones: { a: string; b: string }): boolean 
   return clockOf(at, { ...opts, tz: zones.a }) === clockOf(at, { ...opts, tz: zones.b });
 }
 
-/**
- * The other person's clock for a secondary label («٦:٠٠ م بتوقيت العائلة»), or null when their
- * zone reads the same time as the viewer's at that instant (no label needed).
- */
+/** null when their zone reads the same time as the viewer's at that instant. */
 export function otherZoneClock(
   at: Date,
   other: string | null | undefined,

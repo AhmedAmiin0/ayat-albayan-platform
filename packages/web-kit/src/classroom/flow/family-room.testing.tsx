@@ -17,7 +17,7 @@ export const FAMILY_JOIN: RoomJoinResult = {
 
 export const CONTEXT = { title: 'حلقة يوسف مع أ. فاطمة', subtitle: 'اليوم 6:30 م' };
 
-/** A choice saved by an earlier join: the room skips «قبل الدخول». */
+/** A choice saved by an earlier join: the room skips the pre-join check. */
 export const saveEarlierChoice = () =>
   localStorage.setItem(MEDIA_CHOICE_KEY, JSON.stringify({ mic: true, cam: false }));
 

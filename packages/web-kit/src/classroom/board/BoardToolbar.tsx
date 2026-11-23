@@ -52,7 +52,6 @@ function StudentsSwitch({ board }: { board: BoardController }) {
 interface Props {
   board: BoardController;
   share: BoardShare;
-  /** A guest who may not draw asks «اطلب الكتابة على السبورة». */
   requests: ShareRequests;
 }
 
