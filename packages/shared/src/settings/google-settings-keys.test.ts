@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { isSettingKey, SETTING_KEYS } from '../registry.js';
+import { isSettingKey, SETTING_KEYS } from '@ab/settings';
 import { GOOGLE_SETTING_KEYS, type GoogleSettingKey } from '@ab/catalog';
 
-// Vite's raw import (vitest): the shared lib has no Node typings, so the migration is read this way.
+// The shared lib has no Node typings, so the migration is read through Vite's raw import.
 declare global {
   interface ImportMeta {
     glob<T>(pattern: string | string[], options: { query: '?raw'; import: 'default'; eager: true }): Record<string, T>;
@@ -25,7 +25,8 @@ describe('GOOGLE_SETTING_KEYS', () => {
   });
 
   it('never overlaps the settings registry (GET /settings does not list them)', () => {
-    for (const key of Object.values(GOOGLE_SETTING_KEYS)) expect([key, isSettingKey(key)]).toEqual([key, false]);
+    for (const key of Object.values(GOOGLE_SETTING_KEYS))
+      expect([key, isSettingKey(key)]).toEqual([key, false]);
     expect(SETTING_KEYS.filter((k) => k.startsWith('google_'))).toEqual([]);
   });
 

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GOOGLE_SEED_DEFS } from '../google-defs.js';
-import { SEED_ENTRIES } from './seed-entries.js';
+import { GOOGLE_SEED_DEFS, SEED_ENTRIES } from '@ab/settings';
 import { GOOGLE_SETTING_KEYS, GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS } from '@ab/catalog';
 
 // src/settings may not import src/google (settings/boundaries.test.ts), so the google rows' seed
