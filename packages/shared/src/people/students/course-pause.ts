@@ -3,7 +3,7 @@ import { daysBetween } from '@ab/schedule';
 import { localDate } from '@ab/core';
 import { addDays } from '@ab/time';
 
-// «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b): a pause of a student's course between two Riyadh
+// «إيقاف الدورة مؤقتًا» (docs/11 §7b): a pause of a student's course between two Riyadh
 // days. The database (migrations 955–957) does the work; these are the contracts and the day arithmetic it
 // mirrors, so the API's checks and the sheet's preview say what the RPCs will do. Dates are "YYYY-MM-DD".
 
@@ -59,7 +59,7 @@ export interface CoursePausePreview {
   from_date: string;
   until_date: string | null;
   lessons: number;
-  /** The instants of those lessons, earliest first (owner 2026-11-17; absent in an old answer). */
+  /** The instants of those lessons, earliest first (absent in an old answer). */
   starts?: string[];
   /** The days a resume moves the package forward; null = until «استئناف» (counted then). */
   extend_days?: number | null;

@@ -1,4 +1,4 @@
-import type { SubscriptionPricing } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { FxNote } from '@/features/finance/pricing/calculator/FxNote';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';

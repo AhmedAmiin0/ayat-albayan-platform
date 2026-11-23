@@ -1,4 +1,5 @@
-import { amountFromStripe, parseAmount, type PaymentKind, type PaymentMethod } from '@ab/shared';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
+import { amountFromStripe, parseAmount } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** What the dialog says of the payment: its amount, currency and student. */

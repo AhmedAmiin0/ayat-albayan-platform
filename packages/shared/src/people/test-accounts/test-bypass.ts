@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Test accounts (owner 2026-11-17): the four checks a test account may skip, and on whose flag.
+// Test accounts: the four checks a test account may skip, and on whose flag.
 // Never in this table: sign-in, scope, RLS, permissions, payments. Pure.
 
 export const testCheckSchema = z.enum(['watermark', 'rate_limits', 'join_window', 'screen_capture']);

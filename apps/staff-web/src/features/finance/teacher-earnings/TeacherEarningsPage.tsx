@@ -1,4 +1,4 @@
-import type { TeacherEarningView } from '@ab/shared';
+import type { TeacherEarningView } from '@ab/money';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';

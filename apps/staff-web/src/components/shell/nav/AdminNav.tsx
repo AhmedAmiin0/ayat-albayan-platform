@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

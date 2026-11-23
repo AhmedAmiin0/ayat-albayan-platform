@@ -1,4 +1,5 @@
-import { riyadhToday, usedBeforeMax } from '@ab/shared';
+import { usedBeforeMax } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { usePermissions } from '@/features/people/auth';
 

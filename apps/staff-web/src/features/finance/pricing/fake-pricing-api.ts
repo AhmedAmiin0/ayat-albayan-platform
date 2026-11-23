@@ -1,4 +1,4 @@
-import { PACKAGE_IDS, parseDiscount, PRICING_DURATIONS, quote, type Quote } from '@ab/shared';
+import { PACKAGE_IDS, parseDiscount, PRICING_DURATIONS, quote, type Quote } from '@ab/money';
 import type { CatalogResponse, FxRate, QuoteResponse } from './api';
 
 // Test double for GET /pricing/quote and /pricing/catalog: answers the way PricingService does

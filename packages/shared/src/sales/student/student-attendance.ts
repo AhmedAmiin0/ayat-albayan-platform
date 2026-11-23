@@ -4,7 +4,7 @@ import { addCalendarMonths, monthRangeIn, RIYADH_TZ, riyadhToday } from '@ab/tim
 import { monthParam } from '@ab/money';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
 
-// «سجل الحضور» (owner 2026-10-28): every past lesson of one student in a Riyadh month, as a table.
+// «سجل الحضور»: every past lesson of one student in a Riyadh month, as a table.
 // GET /sales/students/:id/attendance (self.sales_academy) and
 // GET /students/:id/attendance (students.read).
 // Whitelist: never a price, a payment, a meeting link or a note.
@@ -24,7 +24,7 @@ export interface AttendanceTableRow {
   kind: AttendanceKind | null;
   /** A report of this student for this lesson was submitted (sent). */
   report_sent: boolean;
-  /** That report's id (it opens for any student, owner 2026-10-30); else null. */
+  /** That report's id (it opens for any student); else null. */
   report_id: string | null;
   /** Only for a cancelled lesson. */
   cancel_reason: string | null;

@@ -46,7 +46,7 @@ const MEETINGS: Record<Area, string> = {
 
 /**
  * A chat message (docs/31 §2): the teacher's «رسائل الطلاب» on that student; for the seated
- * assistant (the seat is not «طلابي»: owner 2026-11-16 «… but only 1») «الطلاب» with that
+ * assistant (the seat is not «طلابي») «الطلاب» with that
  * student's chat open; nobody else gets the kind (home).
  */
 const CHANNEL: Record<Area, (studentId: string | null) => string> = {
@@ -75,14 +75,14 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   // «مزامنة Google» (docs/24, docs/26b §1); only admins get this kind.
   google_sync_alert: (area) => (area === 'admin' ? '/admin/settings/google' : HOME_BY_ROLE[area]),
   channel_message: (area, data) => CHANNEL[area](uuid(data, 'studentId')),
-  // «محفظتي» (owner 2026-10-29): the salesperson's wallet; only sales get this kind.
+  // «محفظتي»: the salesperson's wallet; only sales get this kind.
   commission_earned: (area) => (area === 'sales' ? '/sales/earnings' : HOME_BY_ROLE[area]),
-  // A schedule change (owner 2026-10-30): the lesson on the teacher's calendar, else the student.
+  // A schedule change: the lesson on the teacher's calendar, else the student.
   lesson_rescheduled: lessonPath,
   lesson_cancelled: lessonPath,
   course_paused: lessonPath,
   course_resumed: lessonPath,
-  // A payment came in (owner 2026-11-05): the student (their balance).
+  // A payment came in: the student (their balance).
   payment_received: student,
   // The family app's kinds (docs/50 §5.6) reach only portal logins (their home, '/portal'); a
   // staff area never gets them, so it opens its home.
@@ -92,7 +92,7 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   lesson_request_declined: (area) => HOME_BY_ROLE[area],
 };
 
-/** «احجز أيام الحلقات» (owner 2026-11-06): the family chat, wizard open; else the student. */
+/** «احجز أيام الحلقات»: the family chat, wizard open; else the student. */
 function coursePath(area: Area, data: Data): string {
   const id = uuid(data, 'studentId');
   const p = phone(data);

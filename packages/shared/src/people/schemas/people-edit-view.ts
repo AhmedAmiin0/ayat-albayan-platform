@@ -22,11 +22,11 @@ export const peopleEditStudentSchema = z.object({
   goal: text,
   riwaya: text,
   tz: z.string(),
-  /** The admin's only (owner 2026-10-27): absent for every other role. */
+  /** The admin's only: absent for every other role. */
   notes: text.optional(),
   teacher_gender_pref: gender,
   contact_is_self: z.boolean(),
-  /** The student's own WhatsApp (sign-in, owner 2026-11-17), E.164; null = none. */
+  /** The student's own WhatsApp (sign-in), E.164; null = none. */
   phone_e164: z.string().nullable(),
   has_login: z.boolean(),
   /** Lessons, packages, money, reports, messages…: «تحويل إلى ولي أمر» is refused. */

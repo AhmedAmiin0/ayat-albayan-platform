@@ -1,4 +1,4 @@
-import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '@ab/shared';
+import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '@ab/money';
 import { useEffect, useId, useMemo } from 'react';
 import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

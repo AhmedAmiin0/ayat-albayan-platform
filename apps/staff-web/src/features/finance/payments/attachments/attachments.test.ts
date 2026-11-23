@@ -1,4 +1,4 @@
-import type { PaymentAttachmentView } from '@ab/shared';
+import type { PaymentAttachmentView } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { ApiError } from '@ab/web-kit/lib/http/api';

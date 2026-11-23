@@ -1,4 +1,4 @@
-import { PAYMENT_ATTACHMENTS_MAX, type PaymentAttachmentView } from '@ab/shared';
+import { PAYMENT_ATTACHMENTS_MAX, type PaymentAttachmentView } from '@ab/money';
 import { useRef } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receiptProblem } from './ReceiptField';

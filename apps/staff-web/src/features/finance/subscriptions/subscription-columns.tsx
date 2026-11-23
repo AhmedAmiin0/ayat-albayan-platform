@@ -1,4 +1,12 @@
-import { cancelOffered, countsForMoney, isCancelled, owedFor, owesMore, PACKAGE_SIZES, subscriptionStatusStyle } from '@ab/shared';
+import { PACKAGE_SIZES } from '@ab/catalog';
+import {
+  cancelOffered,
+  countsForMoney,
+  isCancelled,
+  owedFor,
+  owesMore,
+  subscriptionStatusStyle,
+} from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@ab/web-kit/components/ui/form/button';

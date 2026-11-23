@@ -1,4 +1,4 @@
-import { offerText, quote } from '@ab/shared';
+import { offerText, quote } from '@ab/money';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { asciiDigits } from '@ab/core';
 
-// The report page's WhatsApp code (owner 2026-11-06): a viewer who is not signed in asks for a code
+// The report page's WhatsApp code: a viewer who is not signed in asks for a code
 // sent to a phone ON FILE (the lesson's teacher or the student's family), never a typed number.
 
 export const REPORT_CODE_TARGETS = ['teacher', 'family'] as const;
@@ -29,7 +29,7 @@ export type ReportCodeRequest = z.infer<typeof reportCodeRequestSchema>;
 export type ReportCodeVerify = z.output<typeof reportCodeVerifySchema>;
 export type ReportAccessView = z.infer<typeof reportAccessViewSchema>;
 
-// The teacher link's attachment answers (owner 2026-11-06), parsed by the page (rule 12).
+// The teacher link's attachment answers, parsed by the page (rule 12).
 
 /** POST …/attachments/upload-url: where to PUT the file (SignedUpload). */
 export const signedUploadSchema = z.object({

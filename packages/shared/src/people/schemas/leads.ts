@@ -10,7 +10,7 @@ export type GroupKind = (typeof GROUP_KINDS)[number];
 
 /**
  * Structured, all-optional qualification captured in-thread (R-LEAD-03), plus the questions the
- * first registration form asked (city … notes; owner's "identical fields", 2026-10-02).
+ * first registration form asked (city … notes, identical fields).
  */
 export const leadQualificationSchema = z.object({
   student_name: optionalText,

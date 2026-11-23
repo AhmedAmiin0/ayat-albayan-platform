@@ -1,4 +1,4 @@
-import { addCalendarMonths, dateText } from '@ab/shared';
+import { addCalendarMonths, dateText } from '@ab/time';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

@@ -1,5 +1,6 @@
 import { applyLiveRows, type LiveRow, patchChat, patchList } from '@ab/client-core';
-import type { MessageStatus, ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { writeTicks } from './list-ticks';
 import { threadQuery } from './thread-query';

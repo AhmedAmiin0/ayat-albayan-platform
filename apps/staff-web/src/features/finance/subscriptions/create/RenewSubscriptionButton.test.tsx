@@ -1,4 +1,5 @@
-import { quote, STUDENT_STATUSES, type StudentStatus } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
+import { quote } from '@ab/money';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

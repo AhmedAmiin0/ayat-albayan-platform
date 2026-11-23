@@ -25,7 +25,7 @@ import type {
   ShapeField,
 } from '../index.js';
 
-// Export-surface lock (settings segregation, 2026-10-23): every name the apps import from
+// Export-surface lock (settings segregation): every name the apps import from
 // @ab/shared today must survive the move of the settings files (additions only).
 
 const SETTINGS_NAMES = [

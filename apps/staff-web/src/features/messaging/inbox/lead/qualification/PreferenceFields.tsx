@@ -1,4 +1,4 @@
-import { tzChoices, tzOptionLabel } from '@ab/shared';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';

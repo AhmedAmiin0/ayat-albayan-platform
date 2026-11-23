@@ -1,4 +1,10 @@
-import { amountProblem, earningIdsOf, parseAmount, payCeiling, type TeacherEarningView } from '@ab/shared';
+import {
+  amountProblem,
+  earningIdsOf,
+  parseAmount,
+  payCeiling,
+  type TeacherEarningView,
+} from '@ab/money';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

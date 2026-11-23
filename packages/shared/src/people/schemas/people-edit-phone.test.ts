@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { PEOPLE_EDIT_ERRORS, peopleStudentPatchSchema } from './people-edit.js';
 import { peopleEditStudentSchema } from './people-edit-view.js';
 
-// Owner 2026-11-17: a student's own WhatsApp number (optional, E.164), entered by staff.
+// A student's own WhatsApp number (optional, E.164), entered by staff.
 
 describe("peopleStudentPatchSchema: the student's own number", () => {
   it('normalizes a typed number to E.164', () => {

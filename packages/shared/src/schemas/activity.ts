@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { USER_ROLES } from '@ab/catalog';
 import { listSortShape } from '@ab/core';
 
-// «سجل النشاط» (owner, 2026-10-05): GET /activity, admin only, paged (R-NFR-08). The API logs
+// «سجل النشاط»: GET /activity, admin only, paged (R-NFR-08). The API logs
 // every mutating request + sign-in/out; this is the list's query and row shape.
 
 /** The actor's role on a row: a user role, or 'public' for calls without a login. */

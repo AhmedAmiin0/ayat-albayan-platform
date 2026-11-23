@@ -1,4 +1,4 @@
-import { riyadhToday } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 
 /** Today in Riyadh (YYYY-MM-DD): the payment date field's default and its latest day. */
 export function paidAtDay(now = new Date()): string {
