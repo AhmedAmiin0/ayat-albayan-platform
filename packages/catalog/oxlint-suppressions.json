@@ -6,7 +6,7 @@
   },
   "src/enums/messaging.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/google/enums.ts": {
@@ -60,6 +60,11 @@
       "count": 1
     }
   },
+  "src/integrations/keys/keys.ts": {
+    "stylistic/max-len": {
+      "count": 3
+    }
+  },
   "src/integrations/keys/tests/kapso.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -70,14 +75,9 @@
       "count": 2
     }
   },
-  "src/integrations/keys/keys.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/permissions/catalog.data.ts": {
     "stylistic/max-len": {
-      "count": 23
+      "count": 14
     }
   },
   "src/permissions/catalog.ts": {
@@ -85,7 +85,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -102,11 +102,6 @@
     }
   },
   "src/theme/avatar-tones.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/theme/tests/brand.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -126,7 +121,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   }
 }

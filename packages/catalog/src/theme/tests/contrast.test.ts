@@ -41,7 +41,7 @@ const PAIRS: [Key, Key][] = [
   // text on fills: the primary (its own fill token) + hover, destructive-solid, the inverse toast
   ['onLapis', 'lapisFill'],
   ['onLapis', 'lapisHover'],
-  ['onBad', 'badSolid'], // also the bell's unread badge (audit 2026-11-19: never white on `bad`)
+  ['onBad', 'badSolid'], // also the bell's unread badge (never white on `bad`)
   ['onInverse', 'inverse'],
   // the login binding: wordmark and programme line on every leather tone
   ['goldOnCover', 'leather'],
@@ -58,7 +58,7 @@ const EDGES: [Key, Key][] = [
   ['ruleInput', 'page'],
   ['inverseGold', 'inverse'],
   // a selected chip / row / day and an unread alert: the lapis edge on its card and on its wash
-  // (audit 2026-11-19: `primary` as an edge was 2.45:1 in dark, weaker than the unselected edge)
+  // (`primary` as an edge was 2.45:1 in dark, weaker than the unselected edge)
   ['lapis', 'raised'],
   ['lapis', 'lapisWash'],
   ['lapis', 'margin'],

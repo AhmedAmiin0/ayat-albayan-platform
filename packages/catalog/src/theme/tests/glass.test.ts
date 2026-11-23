@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { glass, palette, type ThemeName } from '../theme.js';
 
-// The glass tab bar keeps the brand colours (owner: «keep the colors»): its fill is `raised` made
+// The glass tab bar keeps the brand colours: its fill is `raised` made
 // translucent, the sheen is white, and the tab labels on it stay readable (docs/29 §7).
 type Rgb = [number, number, number];
 const rgbOf = (hex: string): Rgb => {

@@ -63,7 +63,7 @@ export const PACKAGE_SIZES = [
   '28',
 ] as const;
 export const GENDERS = ['male', 'female'] as const;
-/** Display order everywhere (owner 2026-10-15): pills, filters, chips, selects. */
+/** Display order everywhere: pills, filters, chips, selects. */
 export const STUDENT_STATUSES = [
   'new',
   'trial',
