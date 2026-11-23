@@ -50,7 +50,7 @@ const toLive: Reader = (data) => {
 const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
   report_sent: toReport,
   lesson_starting: toStudent('child'),
-  // Owner 2026-11-16: the teacher is in; the tap goes straight to the lesson.
+  // The teacher is in; the tap goes straight to the lesson.
   lesson_live: toLive,
   lesson_request_declined: toStudent('child'),
   lesson_rescheduled: toStudent('child'),
@@ -58,7 +58,7 @@ const TARGETS: Partial<Record<AnyPushKind, Reader>> = {
   course_paused: toStudent('child'),
   course_resumed: toStudent('child'),
   payment_received: toStudent('package'),
-  // Owner 2026-11-16: a message in the child's chat with the teacher opens that chat.
+  // A message in the child's chat with the teacher opens that chat.
   channel_message: toStudent('chat'),
 };
 

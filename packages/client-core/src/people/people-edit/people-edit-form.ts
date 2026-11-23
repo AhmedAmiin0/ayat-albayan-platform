@@ -44,7 +44,7 @@ export function studentFormOf(s: PeopleEditView['student']): StudentForm {
     tz: s.tz,
     notes: text(s.notes ?? null),
     teacher_gender_pref: text(s.teacher_gender_pref),
-    /** The student's own WhatsApp (sign-in, owner 2026-11-17); blank = none. */
+    /** The student's own WhatsApp (sign-in); blank = none. */
     phone_e164: text(s.phone_e164),
   };
 }
@@ -59,7 +59,7 @@ export function familyFormOf(g: PeopleEditView['guardian']): FamilyForm {
   };
 }
 
-/** Notes are the admin's (owner 2026-10-27): the API leaves them out of anyone else's view. */
+/** Notes are the admin's: the API leaves them out of anyone else's view. */
 export const notesShown = (view: PeopleEditView): boolean => view.student.notes !== undefined;
 
 /** A field-key filter: `notes` only while it is shown. */
