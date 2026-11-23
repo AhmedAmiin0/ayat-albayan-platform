@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '../http/index.js';
+import { ApiError } from '../../http/index.js';
 import { createAuthExit, isAccountDisabled } from './auth-exit.js';
 
 const disabled = () => new ApiError(403, { code: 'account_disabled' });
