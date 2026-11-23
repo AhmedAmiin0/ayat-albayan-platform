@@ -1,4 +1,4 @@
-import { addCalendarDays, weekdayOfDate, weekStartOfDate } from './calendar.js';
+import { addCalendarDays, weekdayOfDate, weekStartOfDate } from './calendar/index.js';
 
 // Academy-week calendar math on local dates "YYYY-MM-DD" (R-SCH-01, rule 6). Plain calendar
 // arithmetic, no zone involved (the date-fns facade, calendar.ts). Shared by the web schedule grid

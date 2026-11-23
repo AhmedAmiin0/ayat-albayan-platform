@@ -1,11 +1,11 @@
+import type { Locale } from '@ab/shared';
 import {
   translationKeysQuerySchema,
   translationLocaleSchema,
   translationValueSchema,
-  type Locale,
   type TranslationKeysPage,
   type TranslationOverrides,
-} from '@ab/shared';
+} from '@ab/i18n';
 import {
   Body,
   Controller,

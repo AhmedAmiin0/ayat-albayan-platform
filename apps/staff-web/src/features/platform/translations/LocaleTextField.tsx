@@ -1,4 +1,5 @@
-import { MAX_TRANSLATION_LENGTH, type Locale } from '@ab/shared';
+import type { Locale } from '@ab/shared';
+import { MAX_TRANSLATION_LENGTH } from '@ab/i18n';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { controlClass } from '@ab/web-kit/components/ui/form/input';

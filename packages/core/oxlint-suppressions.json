@@ -22,7 +22,7 @@
       "count": 2
     }
   },
-  "src/phone/phone.reject.test.ts": {
+  "src/phone/tests/reject.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -51,7 +51,7 @@
       "count": 2
     }
   },
-  "src/text/arabic.ts": {
+  "src/text/arabic/arabic.ts": {
     "stylistic/max-len": {
       "count": 1
     }

@@ -45,6 +45,9 @@ importers:
       '@ab/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@ab/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@ab/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
@@ -293,6 +296,9 @@ importers:
       '@ab/client-core':
         specifier: workspace:*
         version: link:../../packages/client-core
+      '@ab/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -357,6 +363,9 @@ importers:
       '@ab/client-core':
         specifier: workspace:*
         version: link:../../packages/client-core
+      '@ab/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@ab/mobile-kit':
         specifier: workspace:*
         version: link:../../packages/mobile-kit
@@ -520,6 +529,9 @@ importers:
       '@ab/client-core':
         specifier: workspace:*
         version: link:../../packages/client-core
+      '@ab/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -808,6 +820,9 @@ importers:
       '@ab/client-core':
         specifier: workspace:*
         version: link:../client-core
+      '@ab/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@ab/shared':
         specifier: workspace:*
         version: link:../shared
@@ -1034,9 +1049,6 @@ importers:
       '@ab/core':
         specifier: workspace:*
         version: link:../core
-      '@ab/i18n':
-        specifier: workspace:*
-        version: link:../i18n
       '@ab/money':
         specifier: workspace:*
         version: link:../money
@@ -1105,6 +1117,9 @@ importers:
       '@ab/client-core':
         specifier: workspace:*
         version: link:../client-core
+      '@ab/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@ab/shared':
         specifier: workspace:*
         version: link:../shared

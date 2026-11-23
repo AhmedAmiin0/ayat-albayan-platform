@@ -1,4 +1,5 @@
-import type { Locale, TranslationKeysPage } from '@ab/shared';
+import type { Locale } from '@ab/shared';
+import type { TranslationKeysPage } from '@ab/i18n';
 import { keepPreviousData, queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 

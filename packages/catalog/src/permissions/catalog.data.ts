@@ -1,4 +1,4 @@
-// The permission catalog (owner, 2026-10-05: dynamic roles). One stable `resource.action` key per group of API
+// The permission catalog (dynamic roles). One stable `resource.action` key per group of API
 // endpoints that had the same @Roles set before (the API's parity test). `grants` = the non-admin system roles holding
 // it by default (seeded in 20261005000220 and later migrations); the system admin holds every grantable permission.
 // Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
@@ -17,13 +17,13 @@ export const PERMISSION_ROWS = [
   { key: 'leads.read', area: 'people', grants: [] },
   { key: 'leads.write', area: 'people', grants: [] },
   { key: 'leads.assign', area: 'people', grants: [] },
-  { key: 'leads.link_family', area: 'people', grants: [] }, // «ربط بطالب موجود» (owner 2026-10-29): the admin's only
+  { key: 'leads.link_family', area: 'people', grants: [] }, // «ربط بطالب موجود»: the admin's only
   { key: 'applicants.read', area: 'people', grants: [] },
   { key: 'applicants.write', area: 'people', grants: [] },
   { key: 'students.read', area: 'students', grants: [] },
   { key: 'students.write', area: 'students', grants: [] },
   { key: 'students.balance', area: 'students', grants: T },
-  // «التحقق من التسجيل» (owner 2026-10-12, docs/16 row 23): is this phone / name already a student? Name,
+  // «التحقق من التسجيل» (docs/16 row 23): is this phone / name already a student? Name,
   // code, status and teacher only. Sales by default; the admin may switch it off for the sales role.
   { key: 'students.check_registration', area: 'students', grants: ['sales'] },
   { key: 'guardians.read', area: 'students', grants: [] },
@@ -45,14 +45,14 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.reschedule', area: 'schedule', grants: ['sales'] },
   { key: 'lessons.cancel', area: 'schedule', grants: ['sales'] },
   { key: 'lessons.confirm', area: 'schedule', grants: ['sales'] },
-  // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/16 row 37c): the course pause routes, ANY student.
+  // «إيقاف الدورة مؤقتًا» (docs/16 row 37c): the course pause routes, ANY student.
   { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
-  // The profile's course actions (owner 2026-10-30, migration 990): ANY student, audited.
+  // The profile's course actions (migration 990): ANY student, audited.
   { key: 'subscriptions.stop', area: 'schedule', grants: ['sales'] },
   { key: 'subscriptions.refund', area: 'finance', grants: [] }, // «إلغاء مع استرداد»: admin only
   { key: 'students.change_teacher', area: 'schedule', grants: ['sales'] },
   { key: 'courses.reschedule', area: 'schedule', grants: ['sales'] },
-  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (owner 2026-10-26, migration 760).
+  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (migration 760).
   { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
   { key: 'tasks.manage', area: 'schedule', grants: [] },
   { key: 'classroom.join', area: 'classroom', grants: TAS },
@@ -72,19 +72,19 @@ export const PERMISSION_ROWS = [
   { key: 'inbox.read', area: 'messaging', grants: TS },
   { key: 'inbox.send', area: 'messaging', grants: TS },
   { key: 'inbox.media', area: 'messaging', grants: [] },
-  // «القوائم» (owner 2026-10-20, docs/22): create, rename and delete the academy's chat lists and add
+  // «القوائم» (docs/22): create, rename and delete the academy's chat lists and add
   // chats to them. Sales by default (the admin may switch it off); teachers never get lists.
   { key: 'inbox.lists', area: 'messaging', grants: ['sales'] },
-  // «الردود السريعة» (owner 2026-10-25): write the SHARED saved replies everyone with the inbox inserts.
+  // «الردود السريعة»: write the SHARED saved replies everyone with the inbox inserts.
   // The admin by default (grantable to assistants); personal replies «ردودي» need no permission.
   { key: 'saved_replies.manage', area: 'messaging', grants: [] },
   { key: 'messages.read', area: 'messaging', grants: TS },
   { key: 'messages.manage', area: 'messaging', grants: [] },
   { key: 'templates.manage', area: 'messaging', grants: [] },
-  // Every template from the inbox (owner 2026-10-12); without it (or templates.manage) only the
+  // Every template from the inbox; without it (or templates.manage) only the
   // restricted allow-list: free_trial_invite and welcome_greeting by default (restricted-templates.ts).
   { key: 'templates.send_all', area: 'messaging', grants: [] },
-  { key: 'templates.author', area: 'messaging', grants: ['sales'] }, // «القوالب» (2026-11-14)
+  { key: 'templates.author', area: 'messaging', grants: ['sales'] }, // «القوالب»
   ...SHORT_LINK_ROWS,
   // docs/31 §2: read every student channel (teacher ↔ family), read-only. The admin by default; the owning
   // assistant reads her own students' channels without it (sales ownership).
@@ -95,11 +95,11 @@ export const PERMISSION_ROWS = [
   { key: 'subscriptions.write', area: 'finance', grants: [] },
   // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): the start date on the CREATE / renew forms only.
   { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
-  // «تعديل بيانات الباقة» (owner 2026-11-03): every change to an EXISTING package or payment
+  // «تعديل بيانات الباقة»: every change to an EXISTING package or payment
   // (start date, «حلقات مستخدمة من الباقة», price, a payment's amount). Admin only; granted by
   // hand to a trusted assistant's role, never to sales by default (migration 999: admin row).
   { key: 'subscriptions.edit_terms', area: 'finance', grants: [] },
-  // «تجديد اشتراك أي طالب من المحادثة» (owner 2026-10-29, docs/16 row 38): inline in SalesMoneyScope; the admin's only.
+  // «تجديد اشتراك أي طالب من المحادثة» (docs/16 row 38): inline in SalesMoneyScope; the admin's only.
   { key: 'sales.renew_any', area: 'finance', grants: [] },
   { key: 'invoices.read', area: 'finance', grants: [] },
   { key: 'receivables.read', area: 'finance', grants: [] },
@@ -125,7 +125,7 @@ export const PERMISSION_ROWS = [
   { key: 'notifications.manage', area: 'system', grants: [] },
   { key: 'activity.read', area: 'system', grants: [] },
   { key: 'roles.manage', area: 'system', grants: [] },
-  // The bell (R-NOT-01, 2026-10-12): every staff portal reads its own notifications and registers its devices.
+  // The bell (R-NOT-01): every staff portal reads its own notifications and registers its devices.
   { key: 'notifications.push', area: 'system', grants: TAS },
   { key: 'translations.manage', area: 'system', grants: [] },
   { key: 'users.read', area: 'system', grants: [] },
@@ -138,10 +138,10 @@ export const PERMISSION_ROWS = [
   { key: 'self.sales_students', area: 'self', grants: ['sales'] },
   { key: 'self.sales_payments', area: 'self', grants: ['sales'] },
   { key: 'self.sales_earnings', area: 'self', grants: ['sales'] },
-  // The assistant side of sales (owner 2026-10-11, docs/16): the academy's teachers, every student and
+  // The assistant side of sales (docs/16): the academy's teachers, every student and
   // the lessons running now (read-only, whitelisted). Follows the base role like the keys above.
   { key: 'self.sales_academy', area: 'self', grants: ['sales'] },
-  // Her money writes from the chat (owner 2026-10-12, docs/16 row 16): subscribe a student she owns and
+  // Her money writes from the chat (docs/16 row 16): subscribe a student she owns and
   // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments, /sales/money).
   { key: 'self.sales_money', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },

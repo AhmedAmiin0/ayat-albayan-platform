@@ -12,15 +12,16 @@
   },
   "dependencies": {
     "@ab/client-core": "workspace:*",
+    "@ab/i18n": "workspace:*",
     "@ab/shared": "workspace:*",
+    "@ab/web-kit": "workspace:*",
     "@tanstack/react-form": "^1.33.5",
     "@tanstack/react-query": "^5.104.0",
     "@tanstack/react-router": "^1.170.41",
     "@tanstack/react-table": "^9.2.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "zod": "^4.6.5",
-    "@ab/web-kit": "workspace:*"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",

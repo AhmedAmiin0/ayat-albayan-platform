@@ -251,7 +251,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/lib/query/query-keys.test.ts": {

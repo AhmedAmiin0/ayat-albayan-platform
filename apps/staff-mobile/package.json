@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@ab/client-core": "workspace:*",
+    "@ab/i18n": "workspace:*",
     "@ab/mobile-kit": "workspace:*",
     "@ab/shared": "workspace:*",
     "@config-plugins/react-native-webrtc": "15.0.2",

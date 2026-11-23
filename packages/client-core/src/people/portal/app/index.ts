@@ -17,7 +17,7 @@ export { familyChildren, isSelfChild } from './children-list.js';
 export {
   cardRoom, liveRoom, liveRoomText,
   type CardRoom, type LiveRoom, type LiveRoomText, type LiveRoomWords,
-} from './live-room.js';
+} from './live-room/index.js';
 export {
   PICKED_CHILD_KEY, pickStore, savedFor, type PickStore, type PickStoreState, type SavedPick,
 } from './pick-store.js';

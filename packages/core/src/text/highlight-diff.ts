@@ -1,4 +1,4 @@
-import { normalizeArabic } from './arabic.js';
+import { normalizeArabic } from './arabic/index.js';
 
 // Which letters of `text` differ from `other` (duplicate dialog, R-STU-03, docs/07 §14.2).
 // Both names are aligned on their normalizeArabic() letters (so tashkeel / tatweel never shift the

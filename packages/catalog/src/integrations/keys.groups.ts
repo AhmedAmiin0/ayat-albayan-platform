@@ -1,4 +1,4 @@
-import type { IntegrationGroup, IntegrationKey } from './keys.js';
+import type { IntegrationGroup, IntegrationKey } from './keys/index.js';
 
 // Beside keys.ts (its 150-line cap): the group of every integration key. keys.ts builds
 // INTEGRATION_KEYS from it; this file imports types only from there, so no runtime cycle.
@@ -53,7 +53,7 @@ export const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   // own Vault entry).
   GOOGLE_CLIENT_ID: 'google',
   GOOGLE_CLIENT_SECRET: 'google',
-  // The chat's GIF panel (owner 2026-11-01); unset = the panel asks an admin for the key.
+  // The chat's GIF panel; unset = the panel asks an admin for the key.
   GIPHY_API_KEY: 'giphy',
   // Object storage (docs/45): which one keeps new files, and the MinIO server.
   STORAGE_DRIVER: 'storage',

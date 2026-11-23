@@ -4,7 +4,7 @@ import { driverKeys } from './driver-keys.js';
 import {
   evolutionBase, evolutionBaseAllowed, evolutionInternalHosts, evolutionInternalList,
 } from './evolution.js';
-import { integrationDef, integrationEnum, WA_LINE_PROVIDERS } from './keys.js';
+import { integrationDef, integrationEnum, WA_LINE_PROVIDERS } from './keys/index.js';
 
 // The Evolution driver's config (docs/19 «Evolution driver»): base URL (SSRF), pacing, keys.
 
