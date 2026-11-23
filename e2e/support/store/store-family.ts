@@ -1,4 +1,4 @@
-import { quote } from '@ab/shared';
+import { quote } from '@ab/money';
 import { createClient } from '@supabase/supabase-js';
 import { addDays, resetAbrar, riyadh, seedFamily, withSql } from '../core/schedule';
 import { DEMO } from './store-demo';
