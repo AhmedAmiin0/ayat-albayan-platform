@@ -1,5 +1,6 @@
 import type { BookingResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { refreshBooked } from './refresh-booked';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
@@ -14,7 +15,6 @@ import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking
 import { DuplicateNotice } from './DuplicateNotice';
 import { useBookingMode, useCourseHeld } from '@/features/teaching/booking/mode';
 import { ReviewSummary } from './ReviewSummary';
-import { refreshBooked } from './refresh-booked';
 import { OutsideNote } from '@/features/teaching/booking/steps/slots/other-time';
 import { isSeriesClean, useSeriesCheck } from './SeriesCheck';
 
