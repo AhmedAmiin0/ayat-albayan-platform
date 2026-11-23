@@ -5,6 +5,7 @@ import type { ChannelActor } from './channel-access';
 import { ChannelPeopleRepo } from './channel-people.repo';
 import type { ChannelMessageRow } from './channel.repo';
 import { previewOf } from '@/modules/teaching/student-channels/notify/preview';
+import { senderName } from '@/modules/teaching/student-channels/notify/sender-name';
 import {
   ChannelMembers,
   type ChannelMember,
@@ -53,7 +54,7 @@ export class ChannelNotify {
       subject: message.id,
       vars: {
         student: student?.name ?? '',
-        name: names.get(profileId) ?? ar.studentChannel.roles[actor.role],
+        name: senderName(names, profileId, ar.studentChannel.roles[actor.role]),
         text: previewOf(message),
       },
       data: { studentId },

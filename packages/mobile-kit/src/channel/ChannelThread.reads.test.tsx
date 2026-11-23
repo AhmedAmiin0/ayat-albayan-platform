@@ -1,4 +1,5 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import type { ChannelPage } from '@ab/shared';
 import { AppState } from 'react-native';
 import { t } from '../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../testing/query';
@@ -90,4 +91,31 @@ test('in the background the thread is not marked read', async () => {
     expect(mockApiSend).toHaveBeenCalledWith('POST', READ_PATH, expect.anything()),
   );
   Object.defineProperty(AppState, 'currentState', { value: 'active', configurable: true });
+});
+
+describe('the owning assistant (sales): a monitor on a closed chat', () => {
+  const SALES_READ = '/sales/students/s1/channel/read';
+  const asSales = async (over: Partial<ChannelPage>) => {
+    mockApiFetch.mockImplementation(async (path: string) =>
+      path.endsWith('/reads') ? reads : { ...page, ...over },
+    );
+    const refs = { audience: 'sales', studentId: 's1' } as const;
+    await renderWithQuery(<ChannelThread refs={refs} />, freshQueryClient());
+    await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
+    await act(async () => undefined);
+  };
+
+  test.each([
+    { open: false, read_only: true },
+    { open: false, read_only: false },
+  ])('a closed chat never calls the read endpoint (%o)', async (over) => {
+    await asSales(over);
+    expect(mockApiSend).not.toHaveBeenCalledWith('POST', SALES_READ, expect.anything());
+  });
+
+  test('an open chat marks it read up to the newest message', async () => {
+    await asSales({ open: true, read_only: false });
+    const at = '2026-10-27T10:05:00.000Z';
+    await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', SALES_READ, { at }));
+  });
 });
