@@ -1,5 +1,6 @@
 import { touchedThread } from '@ab/client-core';
-import type { MessageView, Page, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import type { InfiniteData } from '@tanstack/react-query';
 import type { ThreadCache } from './thread-cache';
 

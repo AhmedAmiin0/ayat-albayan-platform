@@ -1,4 +1,5 @@
-import { formatPhone, sessionWindowOpen, type ThreadView } from '@ab/shared';
+import { sessionWindowOpen, type ThreadView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useHolds, t, ErrorState, KeyboardFrame, ltr, Screen, Avatar } from '@ab/mobile-kit';
@@ -23,7 +24,8 @@ import { useInboxRead } from '@/inbox/thread/hooks/inbox-sync';
 import { useThread } from '@/inbox/thread/hooks/use-thread';
 import { useLastMessageLine } from '@/inbox/thread/hooks/use-last-message';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import type { ClockCycle, ThreadLesson } from '@ab/shared';
+import type { ThreadLesson } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 

@@ -3109,9 +3109,6 @@
     },
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/inbox/messages/hooks/quote-text.ts": {
@@ -3897,9 +3894,6 @@
     },
     "complexity": {
       "count": 2
-    },
-    "typescript/dot-notation": {
-      "count": 7
     },
     "typescript/no-unnecessary-condition": {
       "count": 2

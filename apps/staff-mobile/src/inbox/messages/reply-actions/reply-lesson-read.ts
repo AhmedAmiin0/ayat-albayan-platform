@@ -1,4 +1,6 @@
-import { chatDayKey, type LessonView, type ReplyLesson, RIYADH_TZ, type SalesScheduleLesson, type SalesScheduleDay } from '@ab/shared';
+import type { ReplyLesson, SalesScheduleLesson, SalesScheduleDay } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { chatDayKey, RIYADH_TZ } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString } from '@ab/mobile-kit';
 
