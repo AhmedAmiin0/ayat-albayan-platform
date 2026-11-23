@@ -17,8 +17,9 @@ export async function tablesWithoutRls(tx: Tx): Promise<string[]> {
 }
 
 /**
- * What anon can read (a column grant counts): a table it may select with a permissive read policy for anon or public, a
- * view that runs as its owner (RLS of the tables below does not apply), or a materialized view.
+ * What anon can read (a column grant counts): a table it may select with a permissive read
+ * policy for anon or public, a view that runs as its owner (RLS of the tables below does not
+ * apply), or a materialized view.
  */
 export async function anonReadable(tx: Tx): Promise<string[]> {
   const rows = await tx.unsafe<{ name: string }[]>(`select c.relname as name
