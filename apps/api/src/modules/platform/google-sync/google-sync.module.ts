@@ -30,11 +30,7 @@ import { ReportPdfWriter } from './writers/drive/report-pdf.writer';
 import { SheetRowsWriter } from './writers/sheets/sheet-rows.writer';
 import { TeacherCalendarService } from './map/teacher-calendar.service';
 
-/**
- * Google Calendar + Drive + Sheets sync alongside the old Apps Script (docs/24). One way only,
- * platform → Google; default OFF and dry_run. The client factory reads the Google env at call
- * time, so a client id/secret saved in «التكاملات» applies without a restart; tests override it.
- */
+/** One way only, platform to Google (docs/24); default off and dry_run; env read at call time. */
 @Module({
   controllers: [GoogleAdminController, GoogleMapController, GoogleItemsController, GoogleCallbackController],
   providers: [

@@ -6,7 +6,7 @@ type App = Awaited<ReturnType<typeof portalApp>>;
 const base = (student = S1) => `/portal/students/${student}/lessons/${L1}`;
 const LATER = '2026-10-28T16:00:00.000Z';
 
-// «خيارات الحلقة» (owner 2026-11-17): the family's buttons reuse the lesson services, scoped.
+// The family's buttons reuse the lesson services, scoped.
 describe('POST /portal/students/:id/lessons/:lessonId/{confirm,cancel,request,withdraw}', () => {
   let t: App;
   const spies = { confirm: vi.fn(), cancel: vi.fn(), request: vi.fn(), withdraw: vi.fn() };

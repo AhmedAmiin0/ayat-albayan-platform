@@ -26,10 +26,7 @@ const hostName = z
   .toLowerCase()
   .regex(/^(?=.{4,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/);
 
-/**
- * short_link_extra_hosts (managed links only, docs/19): a comma or space separated list of hosts
- * the admin added in «القيم». Anything that is not a bare host is skipped.
- */
+/** Managed links only (docs/19); anything not a bare host is skipped. */
 export function extraHosts(raw: string): string[] {
   return raw.split(/[\s,]+/).flatMap((h) => {
     const parsed = hostName.safeParse(h);

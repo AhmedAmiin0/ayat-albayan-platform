@@ -34,7 +34,7 @@ interface BatchQuery {
 /** A month of one student's lessons is a few dozen. */
 const MONTH_LIMIT = 200;
 
-/** «حضرها» / «غاب عنها» reads (service role; PortalScopes already decided the student). */
+/** Service role; PortalScopes already decided the student. */
 @Injectable()
 export class PortalHistoryRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

@@ -7091,7 +7091,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-number-set.test.ts": {
@@ -7104,7 +7104,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-number-sync.test.ts": {
@@ -7124,18 +7124,12 @@
     "typescript/consistent-type-imports": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/zod-inputs": {
       "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.service.ts": {
     "typescript/consistent-type-imports": {
-      "count": 2
-    },
-    "stylistic/max-len": {
       "count": 2
     }
   },
@@ -7167,7 +7161,7 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template.move.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template.submit-chat.test.ts": {
@@ -7519,9 +7513,6 @@
     }
   },
   "src/modules/people/portal/home/chat-number.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    },
     "ab/forbidden-imports": {
       "count": 2
     }
@@ -7549,12 +7540,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/people/portal/lessons/portal-lessons.service.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/modules/people/portal/portal-read-only.migration.test.ts": {
@@ -7568,9 +7559,6 @@
     }
   },
   "src/modules/people/portal/portal.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/zod-inputs": {
       "count": 9
     }
@@ -7585,7 +7573,7 @@
   },
   "src/modules/people/portal/portal.join.http.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/portal/portal.privacy.http.test.ts": {
@@ -7611,7 +7599,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/people/portal/scope/portal-scope.repo.ts": {
@@ -7657,7 +7645,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/zod-inputs": {
       "count": 4
@@ -8031,7 +8019,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -8136,7 +8124,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/people/teachers/teachers.mapper.ts": {
@@ -8167,7 +8155,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/modules/people/teachers/teachers.settings.ts": {
@@ -8254,9 +8242,6 @@
   "src/modules/people/users/photo/staff-photo.controller.ts": {
     "typescript/consistent-type-imports": {
       "count": 3
-    },
-    "stylistic/max-len": {
-      "count": 4
     },
     "ab/zod-inputs": {
       "count": 6
@@ -8348,7 +8333,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 10
     },
     "ab/module-boundaries": {
       "count": 2
@@ -8383,7 +8368,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/zod-inputs": {
       "count": 2
@@ -8448,7 +8433,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/platform/google-sync/google-client.port.ts": {
@@ -8477,7 +8462,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     },
     "ab/forbidden-imports": {
       "count": 2
@@ -8521,7 +8506,7 @@
   },
   "src/modules/platform/google-sync/http/google-http.client.ts": {
     "stylistic/max-len": {
-      "count": 12
+      "count": 11
     }
   },
   "src/modules/platform/google-sync/http/google-http.oauth.ts": {
@@ -8542,7 +8527,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/zod-inputs": {
       "count": 9
@@ -8672,7 +8657,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 8
     }
   },
   "src/modules/platform/google-sync/sync/google-sync.job.ts": {
@@ -8820,7 +8805,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "typescript/dot-notation": {
       "count": 1
@@ -8837,7 +8822,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/platform/google-sync/writers/drive/drive.waits.test.ts": {
@@ -9063,7 +9048,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/platform/translations/values-owned.test.ts": {
@@ -9073,7 +9058,7 @@
   },
   "src/modules/platform/translations/values-owned.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/reporting/dashboard/dashboard.controller.test.ts": {
@@ -9121,7 +9106,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/reporting/dashboard/dashboard.service.test.ts": {
@@ -9392,11 +9377,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/report-pdf/render/pdf-model.before.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/report-pdf/render/pdf-model.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -9407,7 +9387,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/reporting/report-pdf/render/pdf-renderer.lazy.test.ts": {
@@ -9543,7 +9523,7 @@
   },
   "src/modules/reporting/report-pdf/v2/family-sections.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/reporting/report-pdf/v2/family-source.test.ts": {
@@ -9607,7 +9587,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 1
@@ -9615,7 +9595,7 @@
   },
   "src/modules/reporting/reports/files/report-files.student-pdf.test.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/reporting/reports/history/report-history.mapper.ts": {
@@ -9661,7 +9641,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/reporting/reports/report-row.ts": {
@@ -9741,7 +9721,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "ab/zod-inputs": {
       "count": 4
@@ -9926,7 +9906,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/reporting/reports/test-app.ts": {
