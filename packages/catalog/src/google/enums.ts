@@ -1,4 +1,4 @@
-// Google Calendar + Drive + Sheets sync alongside the old Apps Script (docs/24, owner 2026-10-22).
+// Google Calendar + Drive + Sheets sync alongside the old Apps Script (docs/24).
 // One way only, platform → Google, into the SAME calendars, folders and sheets the script uses.
 
 /** google_sync_items.kind: one mirrored object each (docs/24 §3). */

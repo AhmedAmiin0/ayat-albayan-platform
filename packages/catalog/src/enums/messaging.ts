@@ -31,8 +31,8 @@ export const TEMPLATE_CATEGORIES = [
  * new_student (a teacher's new booking, R-NOT-03) and meeting_invite (an internal meeting, R-NOT-01),
  * and google_sync_alert (docs/24: the Google link expired or a teacher has no calendar; bell only, admins),
  * channel_message (docs/31 §2: a family's message in a student channel, to the current teacher) and
- * commission_earned (owner 2026-10-29: «عمولة جديدة» to the assistant who brought the student; bell only).
- * payment_received (owner 2026-11-05): a payment came in; the admins and the student's assistant.
+ * commission_earned («عمولة جديدة» to the assistant who brought the student; bell only).
+ * payment_received: a payment came in; the admins and the student's assistant.
  */
 export const PUSH_KINDS = [
   'new_lead',
@@ -54,7 +54,7 @@ export const PUSH_KINDS = [
 ] as const;
 /**
  * The family app's own kinds (docs/50 §5 item 6): a lesson's join window opened, its report was
- * sent to the family, the teacher entered its room (lesson_live, «بدأت الحلقة», owner 2026-11-16),
+ * sent to the family, the teacher entered its room (lesson_live, «بدأت الحلقة»),
  * staff declined the family's «اطلب موعدًا آخر». Kept apart from PUSH_KINDS, which the staff apps
  * map exhaustively.
  */

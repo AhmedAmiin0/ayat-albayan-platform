@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { palette, type ThemeName } from './theme.js';
 
-// «Emerald Mint» (owner, 2026-10-05): white pages, white text on the emerald primary, a mint sidebar.
+// «Emerald Mint»: white pages, white text on the emerald primary, a mint sidebar.
 it('light tokens are the emerald mint palette', () => {
   const c = palette.light;
   expect(c.page).toBe('#ffffff'); // white page
@@ -16,7 +16,7 @@ it('light tokens are the emerald mint palette', () => {
   expect(c.bad).toBe('#b91c1c');
 });
 
-// Soft dark (owner): green-grey surfaces, never near-black; the same emerald fill, a mint-teal link.
+// Soft dark: green-grey surfaces, never near-black; the same emerald fill, a mint-teal link.
 it('dark tokens are soft green-grey with a separate link colour', () => {
   const c = palette.dark;
   expect(c.page).toBe('#1e2623');
@@ -27,7 +27,7 @@ it('dark tokens are soft green-grey with a separate link colour', () => {
   expect(c.cover).toBe('#18201d'); // the dark sidebar
 });
 
-// The family sign-in tile (owner 2026-11-16, canvas LogoGreen): the same deep green in both themes.
+// The family sign-in tile (canvas LogoGreen): the same deep green in both themes.
 it('the brand tile is the deep green in light and dark', () => {
   expect(palette.light.brandTile).toBe('#064e3b');
   expect(palette.dark.brandTile).toBe('#064e3b');

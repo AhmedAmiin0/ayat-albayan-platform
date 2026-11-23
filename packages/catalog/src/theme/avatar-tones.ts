@@ -1,6 +1,6 @@
 import type { ThemeName } from './theme.js';
 
-// The initials circle's backgrounds (owner 2026-10-28: one consistent circle when there is no photo).
+// The initials circle's backgrounds (one consistent circle when there is no photo).
 // Six muted tones, the text is always `ink` (AA in both themes: avatar-tones.test.ts). A person keeps
 // the same tone on every screen and both apps: avatarTone(id) hashes the person's id, never the name.
 // apps/staff-web/src/styles/avatar-tones.css carries the same hex (its test diffs the two).

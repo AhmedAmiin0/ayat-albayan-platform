@@ -53,7 +53,7 @@ export const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   // own Vault entry).
   GOOGLE_CLIENT_ID: 'google',
   GOOGLE_CLIENT_SECRET: 'google',
-  // The chat's GIF panel (owner 2026-11-01); unset = the panel asks an admin for the key.
+  // The chat's GIF panel; unset = the panel asks an admin for the key.
   GIPHY_API_KEY: 'giphy',
   // Object storage (docs/45): which one keeps new files, and the MinIO server.
   STORAGE_DRIVER: 'storage',
