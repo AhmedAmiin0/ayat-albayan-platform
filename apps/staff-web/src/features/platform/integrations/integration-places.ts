@@ -1,4 +1,4 @@
-import { INTEGRATION_KEYS, type IntegrationGroup } from '@ab/shared';
+import { INTEGRATION_KEYS, type IntegrationGroup } from '@ab/catalog';
 import { matchesIntegration } from './integrations-form';
 
 // Where each integrations group is edited (docs/26b §3, §6a 10.1–10.21; docs/23 phase 6): the WhatsApp

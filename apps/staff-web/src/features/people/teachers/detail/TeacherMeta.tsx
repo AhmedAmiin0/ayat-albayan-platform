@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

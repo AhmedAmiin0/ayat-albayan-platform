@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { DangerFrame } from '@/components/settings/fields/DangerFrame';
 import { AutoMessagesSwitch } from '@/features/messaging/messaging/AutoMessagesSwitch';
 import { MessagingSwitch } from '@/features/messaging/messaging/MessagingSwitch';

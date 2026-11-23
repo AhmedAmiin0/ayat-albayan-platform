@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { useState } from 'react';
 import { useBelowShell, usePhone } from '@ab/web-kit/components/ui/layout/use-narrow';
 import type { CustomValues } from '@/features/platform/custom-config/use-custom-values';

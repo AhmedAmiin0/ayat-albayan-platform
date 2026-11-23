@@ -1,4 +1,6 @@
-import type { AcademySettings, GoogleStatusView, IntegrationConfigItem, SendGateView } from '@ab/shared';
+import type { SendGateView } from '@ab/shared';
+import type { GoogleStatusView, IntegrationConfigItem } from '@ab/catalog';
+import type { AcademySettings } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';

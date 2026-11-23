@@ -1,4 +1,5 @@
-import type { StaffPresence, UserRole } from '@ab/shared';
+import type { StaffPresence } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

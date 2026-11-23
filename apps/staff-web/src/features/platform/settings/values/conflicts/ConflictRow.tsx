@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { ConflictNotice } from './ConflictNotice';
 import { useValues } from '@/features/platform/settings/values/values-context';
 

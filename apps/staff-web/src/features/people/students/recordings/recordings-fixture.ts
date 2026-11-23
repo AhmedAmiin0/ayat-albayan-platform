@@ -1,4 +1,4 @@
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 
 // Test fixture (not shipped; imported by tests only).
 

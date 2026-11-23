@@ -1,4 +1,5 @@
-import { CURRENT_STUDENT_STATUSES, STUDENT_STATUSES, type StudentStatus } from '@ab/shared';
+import { CURRENT_STUDENT_STATUSES } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { useMemo, useState } from 'react';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';

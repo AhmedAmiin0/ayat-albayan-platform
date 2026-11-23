@@ -1,4 +1,11 @@
-import { googleErrorKey, intlLocale, type GoogleAccountStatus, type GoogleSkipReason, type GoogleSyncState, type Glyph, type Tone } from '@ab/shared';
+import {
+  googleErrorKey,
+  type GoogleAccountStatus,
+  type GoogleSkipReason,
+  type GoogleSyncState,
+} from '@ab/catalog';
+import { intlLocale } from '@ab/core';
+import type { Glyph, Tone } from '@ab/money';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { dateAndClock } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

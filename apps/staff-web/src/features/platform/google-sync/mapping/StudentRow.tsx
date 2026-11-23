@@ -1,4 +1,4 @@
-import type { GoogleStudentMapInput, GoogleStudentMapRow } from '@ab/shared';
+import type { GoogleStudentMapInput, GoogleStudentMapRow } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

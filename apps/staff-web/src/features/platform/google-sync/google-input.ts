@@ -1,4 +1,4 @@
-import { fileIdIn, folderIdIn, GOOGLE_WINDOW_DAYS, type GoogleStudentMapInput } from '@ab/shared';
+import { fileIdIn, folderIdIn, GOOGLE_WINDOW_DAYS, type GoogleStudentMapInput } from '@ab/catalog';
 
 // The admin's typed input of the Google section, checked before anything is sent.
 

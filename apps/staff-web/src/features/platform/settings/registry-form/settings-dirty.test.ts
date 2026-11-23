@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { fieldIds, isDefault, isDirty, resetPatch } from './settings-dirty';
 import { settingsForm } from './settings-form';

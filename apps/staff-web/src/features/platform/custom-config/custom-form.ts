@@ -1,4 +1,9 @@
-import { customConfigUpsertSchema, customKeySchema, type CustomConfigUpsert, type CustomConfigView } from '@ab/shared';
+import {
+  customConfigUpsertSchema,
+  customKeySchema,
+  type CustomConfigUpsert,
+  type CustomConfigView,
+} from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The add/edit form's boxes (the value is JSON text). */

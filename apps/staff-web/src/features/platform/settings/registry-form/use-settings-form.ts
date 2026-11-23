@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, type AcademySettings, type SettingKey } from '@ab/shared';
+import { SETTING_FIELD_OF, type AcademySettings, type SettingKey } from '@ab/settings';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
