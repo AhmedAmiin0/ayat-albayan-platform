@@ -7,7 +7,7 @@ import { gradeEverything, renderReportForm } from './report-form-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 // Owner 2026-11-06: one send per tap, a clear «sent» and a read-only view, and an edit only
 // through «تعديل التقرير» (the same report, its version), never a second report.

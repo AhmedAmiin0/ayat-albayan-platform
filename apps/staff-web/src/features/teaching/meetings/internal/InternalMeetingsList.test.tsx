@@ -7,7 +7,7 @@ import { InternalMeetingsList } from './InternalMeetingsList';
 import { meetingRow as row } from '@/features/teaching/meetings/meeting-fixture';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
 
 const L = t.meetings.internal;
 const M = t.meetingInvites.list;

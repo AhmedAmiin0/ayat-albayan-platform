@@ -14,7 +14,7 @@ import { ProposalsPanel } from './proposals/ProposalsPanel';
 // UTC+2 again (Riyadh UTC+3), so 14:00Z reads 17:00 → 16:00. test-setup pins Riyadh first.
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const AT = '2026-11-01T14:00:00.000Z';
 const busy: Conflict = { kind: 'teacher_busy', startsAt: AT, endsAt: AT };

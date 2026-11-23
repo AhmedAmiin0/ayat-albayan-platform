@@ -9,7 +9,7 @@ import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search
 import { WeekSchedule } from './WeekSchedule';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children, className }: { to: string; search?: Record<string, string>; children: ReactNode; className?: string }) => (
     <a href={search ? `${to}?${new URLSearchParams(search)}` : to} className={className}>{children}</a>

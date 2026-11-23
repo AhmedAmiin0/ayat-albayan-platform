@@ -9,7 +9,7 @@ import { ThreadListsDialog } from './ThreadListsDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const L = t.inbox.lists;
 const SUBSCRIBED = { id: '0c000000-0000-4000-8000-000000000011', name: 'مشترك', count: 4, auto_rule: 'subscribed' as const };

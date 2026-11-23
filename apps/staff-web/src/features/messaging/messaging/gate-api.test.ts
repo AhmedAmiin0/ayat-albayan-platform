@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { sendGateChange } from './gate-api';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 afterEach(() => apiSend.mockReset());
 

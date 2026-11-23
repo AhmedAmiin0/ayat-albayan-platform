@@ -6,7 +6,7 @@ import { hasRecoverySession, savePassword, setPasswordError } from './set-passwo
 const auth = vi.hoisted(() => ({ getSession: vi.fn(), updateUser: vi.fn() }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn() }));
 
 describe('set-password', () => {

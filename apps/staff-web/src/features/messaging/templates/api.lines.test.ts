@@ -6,7 +6,7 @@ import { checked } from './lines/template-lines-fixture';
 import { phonesOf } from './lines/use-template-lines';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 afterEach(() => apiSend.mockReset());
 

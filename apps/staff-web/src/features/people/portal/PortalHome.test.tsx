@@ -8,7 +8,7 @@ import { PortalHome } from './PortalHome';
 import { reloadSeenReports } from '@ab/web-kit/portal/use-seen-reports';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const prepare = { homework: 'سورة الملك', next_plan: null, report_id: 'r9', lesson_starts_at: null };
 const answers: Answers = {

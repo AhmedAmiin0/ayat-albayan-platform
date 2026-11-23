@@ -6,7 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StudentReportsBody } from './StudentReportsBody';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const NO_RETRY = { defaultOptions: { queries: { retry: false } } };
 

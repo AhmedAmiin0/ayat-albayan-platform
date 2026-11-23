@@ -6,7 +6,7 @@ import { AssistantsManager } from './AssistantsManager';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const NOUR = { profile_id: 'p-1', full_name: 'نور' };
 const HALA = { profile_id: 'p-2', full_name: 'هالة' };

@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { openV2, v2Content } from '@/features/reporting/reports/entry-v2/v2-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const v2 = t.reports.v2;
 const sent = { status: 'submitted' as const, version: 1, attendance: 'on_time' as const, pdf_status: 'ready' as const, can_edit: false };

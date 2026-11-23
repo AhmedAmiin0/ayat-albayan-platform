@@ -10,7 +10,7 @@ import { threadQuery } from './thread-query';
 // chat's first load: the patch leaves them alone, the delta read waits for them, then runs.
 
 const mockApiFetch = vi.fn();
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args) as unknown,
 }));

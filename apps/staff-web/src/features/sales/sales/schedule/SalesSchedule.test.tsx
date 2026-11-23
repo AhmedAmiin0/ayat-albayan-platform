@@ -7,7 +7,7 @@ import { SalesSchedule } from './SalesSchedule';
 import type { SalesScheduleSearch } from './schedule-search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const iso = (min: number) => new Date(Date.now() + min * 60_000).toISOString();
 const NOW_LESSON = scheduleLesson({ id: 'l-now', starts_at: iso(-5), ends_at: iso(25), trial: true });

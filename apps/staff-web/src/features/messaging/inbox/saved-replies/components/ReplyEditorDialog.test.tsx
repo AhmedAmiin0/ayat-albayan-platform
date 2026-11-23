@@ -7,7 +7,7 @@ import { ReplyEditorDialog } from './ReplyEditorDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const S = t.savedReplies;
 const onClose = vi.fn();
@@ -50,7 +50,7 @@ describe('ReplyEditorDialog', () => {
   });
 
   it('shows the API\'s refusal inline', async () => {
-    const { ApiError } = await import('@ab/web-kit/lib/http/api');
+    const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
     apiSend.mockRejectedValue(new ApiError(403, { code: 'saved_replies_forbidden' }));
     renderWithClient(<ReplyEditorDialog reply={PRICES} scope="shared" onClose={onClose} />);
     save();

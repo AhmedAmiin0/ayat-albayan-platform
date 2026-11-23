@@ -13,13 +13,13 @@ const auth = vi.hoisted(() => ({
   getSession: vi.fn(),
   signOut: vi.fn(),
 }));
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigate,
   useSearch: () => search.value,
 }));
-vi.mock('@ab/web-kit/auth/sign-in', () => ({ signOut: vi.fn() }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signOut: vi.fn() }));
 
 const S = t.teacherAuth.setup;
 const type = (label: string, value: string) =>

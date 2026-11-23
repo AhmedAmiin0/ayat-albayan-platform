@@ -7,7 +7,7 @@ import { ContinueChoice } from './ContinueChoice';
 import { RENEWAL_VIEW } from './course-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const NOW = '2026-10-03T09:00:00.000Z';
 const open = () =>

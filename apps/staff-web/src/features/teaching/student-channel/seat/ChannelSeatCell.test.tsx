@@ -10,7 +10,7 @@ import { OpenSeatChat } from './OpenSeatChat';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // Owner 2026-11-16 «any assistant can subscribe to the chating channel but only 1» and «who
 // brought the student have the priority»: the chat cell of «كل الطلاب» and «طلابي».

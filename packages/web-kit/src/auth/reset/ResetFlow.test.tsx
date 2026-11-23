@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ResetFlow } from './ResetFlow';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch: vi.fn(), apiSend }));
 
 const F = t.familyAuth;
 const click = (name: string) => fireEvent.click(screen.getByRole('button', { name }));

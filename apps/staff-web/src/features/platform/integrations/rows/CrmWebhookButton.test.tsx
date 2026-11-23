@@ -7,7 +7,7 @@ import { integrationsQuery } from '@/features/platform/integrations/integrations
 import { CrmWebhookButton } from './CrmWebhookButton';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const s = t.integrations.crmWebhook;
 const ANSWER = {

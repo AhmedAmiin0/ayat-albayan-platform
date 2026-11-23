@@ -7,7 +7,7 @@ import { renderPortal } from '@ab/web-kit/portal/portal.render';
 import { PortalHome } from './PortalHome';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const ON: Answers = { settings: { family_chat_enabled: true }, unread: { unread: 3 } };
 const self = home({ kind: 'student', students: [kid({ contact_is_self: true })] });

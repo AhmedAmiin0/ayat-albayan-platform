@@ -9,7 +9,7 @@ import { EditStartDateAction } from './EditStartDateAction';
 // «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms only; a native date input.
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiSend,
 }));

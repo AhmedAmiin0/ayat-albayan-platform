@@ -9,7 +9,7 @@ import { OtherTime } from './OtherTime';
 import { OutsideNote } from './OutsideNote';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch,
 }));

@@ -6,7 +6,7 @@ import { ApiError } from '@ab/web-kit/lib/http/api';
 import { useStripeFeature } from './use-stripe-feature';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 function run() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });

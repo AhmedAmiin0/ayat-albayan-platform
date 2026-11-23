@@ -6,7 +6,7 @@ import { BalanceCard } from './BalanceCard';
 import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 
 // Owner 2026-10-28 («Why is this unpaid»): 81 SAR, 80 received → «غير مدفوعة» with what is left.
 const PART = { ...WEEKLY, price: 81, paid: 80 };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { waSendKind } from '../chat/chat-files.js';
+import { waSendKind } from '../chat/chat-files/index.js';
 import {
   gifListSchema,
   isGifMessage,

@@ -7,7 +7,7 @@ import { LessonReportView } from './LessonReportView';
 import { pageView } from './page.fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 function open() {
   render(

@@ -9,7 +9,7 @@ import { TemplateHealth } from '@/features/messaging/templates/TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // «نقل إلى الرقم الآخر» (owner 2026-10-18): always behind a confirm; a producer's template warns first.
 

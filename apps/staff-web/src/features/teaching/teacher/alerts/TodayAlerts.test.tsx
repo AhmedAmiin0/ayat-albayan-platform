@@ -11,7 +11,7 @@ import { TodayAlerts } from './TodayAlerts';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn(() => Promise.resolve(undefined)));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({ can: () => true }),

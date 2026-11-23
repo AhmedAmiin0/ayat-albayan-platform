@@ -7,7 +7,7 @@ import type { SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const sub = (over: Partial<SalesSubscriptionView>): SalesSubscriptionView => ({
   id: 'p1',

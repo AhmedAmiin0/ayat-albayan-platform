@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StaffJoinButton } from './StaffJoinButton';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const L = lesson({ id: 'l-7', status: 'scheduled', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
 const show = (l = L) =>

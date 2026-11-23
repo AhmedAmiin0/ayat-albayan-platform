@@ -10,7 +10,7 @@ import { EvolutionSyncPanel } from './EvolutionSyncPanel';
 import { syncView } from './sync.fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const s = t.numbers.evolution.sync;
 const SYNC_PATH = '/admin/numbers/num-7/evolution/sync';

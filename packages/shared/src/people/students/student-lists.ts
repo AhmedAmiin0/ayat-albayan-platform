@@ -1,6 +1,6 @@
 import type { StudentStatus } from '@ab/catalog';
 import { parseStatusList } from '../schemas/student-filters.js';
-import { isNotSubscribed, NOT_SUBSCRIBED_STATUSES, PACKAGE_ENDED_STATUSES } from './status-flow.js';
+import { isNotSubscribed, NOT_SUBSCRIBED_STATUSES, PACKAGE_ENDED_STATUSES } from './status-flow/index.js';
 
 // «مشترك / تجريبي» (owner 2026-10-12): a teacher's students split by status, the same rules on the
 // web, the mobile app and the API mappers (sales «المعلمون», admin teachers and students lists).

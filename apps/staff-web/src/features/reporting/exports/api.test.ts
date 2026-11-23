@@ -5,7 +5,7 @@ import { downloadCsv, exportErrorCode, exportPath, filenameFrom } from './api';
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } },
 }));
-vi.mock('@ab/web-kit/lib/http/env', () => ({ env: { apiUrl: 'http://api.test' } }));
+vi.mock('@ab/web-kit/lib/http/env/env', () => ({ env: { apiUrl: 'http://api.test' } }));
 
 describe('exports api (R-RPT-03)', () => {
   afterEach(() => vi.unstubAllGlobals());

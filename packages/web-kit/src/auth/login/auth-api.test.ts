@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { signInErrorText } from './auth-api';
 
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 const err = (status: number, code: string) => new ApiError(status, { code });
 

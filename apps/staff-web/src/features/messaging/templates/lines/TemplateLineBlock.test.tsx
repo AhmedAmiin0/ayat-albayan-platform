@@ -11,7 +11,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 const C24 = { cycle: '24', locale } as const;
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const p = t.templates.perNumber;
 

@@ -6,7 +6,7 @@ import { renderReportForm } from './report-form-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 // Review 11-11 (#709 follow-up): the close-time refetch never costs the teacher the form or shows
 // unsaved edits as if they had been sent.

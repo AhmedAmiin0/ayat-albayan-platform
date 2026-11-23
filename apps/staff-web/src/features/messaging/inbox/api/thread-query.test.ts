@@ -7,7 +7,7 @@ import { threadQuery } from './thread-query';
 // abandoned read is freed instead of finishing in the background.
 
 const mockApiFetch = vi.fn();
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args) as unknown,
 }));

@@ -13,7 +13,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } },
 }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft goes now inside academy_message. The API is
 // faked: nothing reaches WhatsApp.

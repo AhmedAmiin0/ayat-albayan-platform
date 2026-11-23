@@ -7,7 +7,7 @@ import { StudentFilters, studentFilterOptions } from './StudentFilters';
 import { studentFilterChips } from './use-student-filters';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const T = '11111111-1111-4111-8111-111111111111';
 const s = t.students;

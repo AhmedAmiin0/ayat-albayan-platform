@@ -5,10 +5,10 @@ import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
 import { requireFamily, requirePicker } from './guard';
 
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
-vi.mock('@ab/web-kit/auth/sign-in', () => ({ signOut }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signOut }));
 
 const ME_KEY = ['me'];
-vi.mock('@ab/web-kit/auth/me', () => ({
+vi.mock('@ab/web-kit/auth/me/me', () => ({
   meQuery: { queryKey: ['me'], queryFn: () => null },
   isAccountDisabled: () => false,
 }));

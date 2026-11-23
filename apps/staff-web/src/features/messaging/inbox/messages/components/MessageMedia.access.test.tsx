@@ -11,7 +11,7 @@ import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const SIGNED = 'https://storage.test/wa-media/m-1.png?token=x';
 const IMAGE = message({ id: 'm-1', body: 'صورة الاستمارة', media_mime: 'image/png' }) satisfies MessageView;

@@ -9,7 +9,7 @@ import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const MONDAY = new RegExp(`^${t.enums.weekday[1]} 5`);
 const TIMES = (select: HTMLElement) => within(select).getAllByRole('option').map((o) => o.getAttribute('value'));

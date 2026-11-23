@@ -51,7 +51,7 @@
       "count": 2
     }
   },
-  "src/auth/me.ts": {
+  "src/auth/me/me.ts": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
     },
@@ -97,7 +97,7 @@
       "count": 1
     }
   },
-  "src/auth/sign-in.ts": {
+  "src/auth/sign-in/sign-in.ts": {
     "@typescript-eslint/no-deprecated": {
       "count": 1
     }
@@ -208,7 +208,7 @@
       "count": 2
     }
   },
-  "src/classroom/board/model/reducer.ts": {
+  "src/classroom/board/model/reducer/reducer.ts": {
     "@typescript-eslint/prefer-optional-chain": {
       "count": 1
     },
@@ -295,7 +295,7 @@
       "count": 3
     }
   },
-  "src/classroom/room/components/ClassroomRoom.boardRequest.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/boardRequest.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
@@ -303,27 +303,27 @@
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.en.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/en.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.mute.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/mute.test.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.recordingOff.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/recordingOff.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.share.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/share.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.shareRequest.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/shareRequest.test.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     },
@@ -404,12 +404,12 @@
       "count": 1
     }
   },
-  "src/classroom/room/livekit/livekit-room.test.ts": {
+  "src/classroom/room/livekit/livekit-room/tests/livekit-room.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/classroom/room/livekit/livekit-room.ts": {
+  "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
     "@typescript-eslint/no-meaningless-void-operator": {
       "count": 2
     },
@@ -428,17 +428,17 @@
       "count": 1
     }
   },
-  "src/classroom/room/livekit/snapshot.share.test.ts": {
+  "src/classroom/room/livekit/snapshot/tests/share.test.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/classroom/room/livekit/snapshot.test.ts": {
+  "src/classroom/room/livekit/snapshot/tests/snapshot.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/livekit/snapshot.ts": {
+  "src/classroom/room/livekit/snapshot/snapshot.ts": {
     "complexity": {
       "count": 1
     },
@@ -534,12 +534,12 @@
       "count": 1
     }
   },
-  "src/components/channel/ChannelThread.live.test.tsx": {
+  "src/components/channel/ChannelThread/tests/live.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
     }
   },
-  "src/components/channel/ChannelThread.test.tsx": {
+  "src/components/channel/ChannelThread/tests/ChannelThread.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
@@ -692,7 +692,7 @@
       "count": 1
     }
   },
-  "src/components/ui/layout/tabs.tsx": {
+  "src/components/ui/layout/tabs/tabs.tsx": {
     "complexity": {
       "count": 1
     },
@@ -753,7 +753,7 @@
       "count": 1
     }
   },
-  "src/components/ui/overlay/more-menu.tsx": {
+  "src/components/ui/overlay/more-menu/more-menu.tsx": {
     "jsx-a11y/click-events-have-key-events": {
       "count": 1
     },
@@ -805,12 +805,12 @@
       "count": 1
     }
   },
-  "src/lib/http/api.test.ts": {
+  "src/lib/http/api/tests/api.test.ts": {
     "@typescript-eslint/no-base-to-string": {
       "count": 1
     }
   },
-  "src/lib/http/api.ts": {
+  "src/lib/http/api/api.ts": {
     "@typescript-eslint/unbound-method": {
       "count": 1
     },
@@ -818,12 +818,12 @@
       "count": 1
     }
   },
-  "src/lib/http/env.test.ts": {
+  "src/lib/http/env/tests/env.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/lib/http/env.ts": {
+  "src/lib/http/env/env.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 4
     },

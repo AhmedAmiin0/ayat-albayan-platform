@@ -1,12 +1,12 @@
-export * from './status-flow.js';
+export * from './status-flow/status-flow.js';
 export * from './trial-dates.js';
 export * from './portal.js';
 export * from './family/index.js';
 export * from './portal-family.js';
 export * from './course-pause.js';
 export * from './course-stop.js';
-export * from './stop-refund.js';
-export * from './stop-choices.js';
+export * from './stop-refund/stop-refund.js';
+export * from './stop-choices/stop-choices.js';
 export * from './board-students.js';
 export type * from './student-views.js';
 export type { TeacherStudentCounts } from './student-lists.js';

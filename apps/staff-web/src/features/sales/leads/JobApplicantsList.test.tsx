@@ -6,7 +6,7 @@ import { JobApplicantsList } from './JobApplicantsList';
 import type { JobApplicantView } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend: vi.fn() }));
 
 const row = (over: Partial<JobApplicantView>): JobApplicantView => ({
   id: 'a1',

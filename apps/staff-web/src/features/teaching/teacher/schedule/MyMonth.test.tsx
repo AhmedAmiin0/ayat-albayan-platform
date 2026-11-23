@@ -8,7 +8,7 @@ import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { MyMonth } from './MyMonth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 
 const ME: TeacherMe = {
   id: 't-1', display_name_ar: 'معلمة', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',

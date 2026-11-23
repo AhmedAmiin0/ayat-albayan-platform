@@ -8,7 +8,7 @@ import { scheduleLesson } from '@/features/sales/sales/academy.fixtures';
 import { LessonMeetingLink } from './LessonMeetingLink';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const LINK = 'https://meet.example.org/room-with-a-long-name?pwd=abc';
 const L = t.studentLists;
