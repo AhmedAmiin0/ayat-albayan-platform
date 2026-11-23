@@ -13,7 +13,7 @@ test('Today → «التفاصيل» → «غيّر الموعد» → «هذه 
   const { backend } = calendarBackend();
   const app = await renderApp({ url: '/', backend });
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
-  // The 16:00 lesson runs: it is the hero; its actions are in «تفاصيل الحلقة».
+  // The running lesson is the hero; its actions are in the details sheet.
   await fireEvent.press(screen.getByRole('button', { name: t.today.details }));
   await fireEvent.press(await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` }));
   expect(await screen.findByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();

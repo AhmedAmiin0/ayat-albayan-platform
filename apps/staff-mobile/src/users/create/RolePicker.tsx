@@ -13,10 +13,7 @@ export interface RolePickerProps {
   hint?: string | undefined;
 }
 
-/**
- * The web's RolePicker: base role, then a role of that base role (custom ones only, «الدور
- * الافتراضي» when none is picked). A role the actor cannot grant is shown but not choosable.
- */
+/** Custom roles only; a role the actor cannot grant is shown but not choosable. */
 export function RolePicker({ role, roleId, options, onChange, disabled = false, hint }: RolePickerProps) {
   const F = t.users.form;
   const custom = options.filter((o) => o.base_role === role && !o.is_system);

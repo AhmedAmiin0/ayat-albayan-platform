@@ -8313,7 +8313,7 @@
   },
   "src/teacher/report/v2/V2Footer.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/report/v2/V2Header.tsx": {
@@ -8335,9 +8335,6 @@
     }
   },
   "src/teacher/report/v2/picker/AyahStepper.tsx": {
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -8348,19 +8345,11 @@
     }
   },
   "src/teacher/report/v2/picker/SurahPickerSheet.tsx": {
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }
   },
   "src/teacher/report/v2/picker/picker-state.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/teacher/report/v2/sections/IslamicSection.tsx": {
     "max-len": {
       "count": 1
     }
@@ -8383,11 +8372,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/teacher/report/v2/ui/Pills.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -8428,9 +8412,6 @@
   "src/teacher/screens/TeacherMoreScreen.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/teacher/screens/TeacherReportsScreen.test.tsx": {
@@ -8440,7 +8421,7 @@
   },
   "src/teacher/screens/TeacherReportsScreen.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
@@ -8456,7 +8437,7 @@
   },
   "src/teacher/screens/TeacherStudentsScreen.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-restricted-syntax": {
       "count": 1
@@ -8492,7 +8473,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teaching/reschedule/reschedule-body.ts": {
@@ -8618,12 +8599,12 @@
   },
   "src/today/components/EndedFold.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/today/components/LessonRow.tsx": {
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "max-lines-per-function": {
       "count": 1
@@ -8636,7 +8617,7 @@
   },
   "src/today/components/RestSection.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/today/components/RowsCard.tsx": {
@@ -8658,17 +8639,11 @@
   "src/today/components/TodayHeader.test.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/today/components/TodayHeader.tsx": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/today/hero/HeroActions.test.tsx": {
@@ -8681,23 +8656,10 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/today/hero/HeroCard.tsx": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/today/hero/hero-text.ts": {
-    "max-len": {
       "count": 1
     }
   },
   "src/today/lib/lesson-text/lesson-text.ts": {
-    "max-len": {
-      "count": 1
-    },
     "no-nested-ternary": {
       "count": 1
     }
@@ -8712,16 +8674,11 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/today/lib/use-day-lessons.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/today/lib/use-greeting.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -8741,16 +8698,6 @@
       "count": 4
     }
   },
-  "src/today/screens/TodayScreen.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/today/testing/today-sheet.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/trial-date/components/PickedLines.tsx": {
     "ab/module-boundaries": {
       "count": 1
@@ -8762,14 +8709,6 @@
   "src/trial-date/components/ReviewNotices.tsx": {
     "ab/no-shape-checks": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/trial-date/components/SalesTrialPills.test.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/trial-date/components/SalesTrialPills.tsx": {
@@ -8777,12 +8716,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/trial-date/components/TrialDateDone.tsx": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/trial-date/components/TrialDateReview.tsx": {
@@ -8873,7 +8812,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/trial-date/screens/TrialDateWizard.tsx": {
@@ -8957,11 +8896,6 @@
       "count": 4
     }
   },
-  "src/users/create/create-form.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/users/edit/UserEditFields.tsx": {
     "max-len": {
       "count": 4
@@ -8992,7 +8926,7 @@
   },
   "src/users/list/UsersFilters.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/users/panels/DeletePanel.tsx": {

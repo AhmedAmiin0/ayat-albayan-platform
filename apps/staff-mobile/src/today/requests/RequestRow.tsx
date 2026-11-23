@@ -9,7 +9,6 @@ interface RequestRowProps {
   onOpen: (request: FamilyRequestView) => void;
 }
 
-/** One family request: who, «from ← to» on the viewer's clock, «بانتظار ردّك». */
 export function RequestRow({ request, viewer, onOpen }: RequestRowProps) {
   const { color } = useTheme();
   const who = requestWho(request);

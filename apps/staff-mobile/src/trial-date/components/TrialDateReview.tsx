@@ -14,21 +14,15 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 interface TrialDateReviewProps {
   draft: TrialDateDraft;
   history: TrialHistory;
-  /** The body «احجز» sends (null until a teacher and a time are picked). */
+  /** Null until a teacher and a time are picked. */
   body: TrialDateBody | null;
-  /** «رابط الحلقة» typed (draft.meetingLink). */
   onLink: (link: string) => void;
   submit: { busy: boolean; failure: BookFailure | null; onSubmit: () => void };
-  /** «اختر موعدًا آخر»: back to the free slots, fetched afresh. */
+  /** The free slots are fetched afresh. */
   onChangeSlot: () => void;
 }
 
-/**
- * «المراجعة»: the new time and the teacher, what it does (moves the upcoming trial, or books a new
- * one), the warning from the 3rd date on, the optional meeting link, and the clashes
- * POST …/trial-date/check finds (as the booking shows them; the way out is another slot, mobile has
- * no override).
- */
+/** Mobile has no override; the way out of a clash is another slot. */
 export function TrialDateReview(props: TrialDateReviewProps) {
   const { draft, history, body, onLink, submit, onChangeSlot } = props;
   const cycle = useClockCycle();

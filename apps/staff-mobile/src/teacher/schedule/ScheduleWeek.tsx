@@ -13,16 +13,12 @@ import { Note } from '@/core/ui/feedback/Note';
 import { ScheduleSheet } from './ScheduleSheet';
 import { useScheduleWeek } from './use-schedule-week';
 
-/** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so it is idle. */
+/** The API never offers a teacher `reschedule`, so this is a no-op. */
 const noMove = () => undefined;
 
 type Week = ReturnType<typeof useScheduleWeek>;
 
-/**
- * «جدولي» week: السبت → الجمعة from GET /teachers/me/lessons, day by day in her own days and clock
- * (docs/34), her availability as a faint line. ‹ › moves a week; offline the saved week stays.
- * `head(subtitle)` draws the screen's header and the period switch above it.
- */
+/** Saturday to Friday in her own days and clock (docs/34); offline the saved week stays. */
 export function ScheduleWeek({ head }: { head: (subtitle: string) => ReactNode }) {
   const cycle = useClockCycle();
   const w = useScheduleWeek();

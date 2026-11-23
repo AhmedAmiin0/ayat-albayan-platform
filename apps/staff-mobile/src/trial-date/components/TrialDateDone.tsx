@@ -13,7 +13,6 @@ interface TrialDateDoneProps {
   onClose: () => void;
 }
 
-/** After POST …/trial-date 201: «نُقلت الحلقة التجريبية…» or «تم حجز…», the time, the teacher, the note. */
 export function TrialDateDone({ result, teacherName, tz, onClose }: TrialDateDoneProps) {
   const cycle = useClockCycle();
   const viewerZone = useViewerTz();

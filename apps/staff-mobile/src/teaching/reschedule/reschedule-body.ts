@@ -7,8 +7,7 @@ import {
 } from '@ab/shared';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
-// POST /lessons/:id/reschedule bodies (R-SCH-07, docs/10 route 8), as the web builds them
-// (staff-web/src/features/schedule/reschedule.ts). Mobile has no «احجز رغم التعارض»: no override.
+// Reschedule bodies (R-SCH-07, docs/10 route 8), as the web builds them; mobile has no override.
 
 export type Scope = 'one' | 'rule';
 type Duration = (typeof DURATIONS)[number];
@@ -54,7 +53,7 @@ interface RescheduleInput {
   startsAt: string;
   /** Extra weekdays for scope `rule`. */
   byday: readonly number[];
-  /** «سبب تغيير الموعد» (docs/47, optional, scope `one` only): the teacher sees it in her file. */
+  /** Optional (docs/47), scope `one` only; the teacher sees it in her file. */
   reason?: string;
 }
 

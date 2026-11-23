@@ -3,18 +3,16 @@ import { Pressable, TextInput, View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface AyahStepperProps {
-  /** «من الآية» / «إلى الآية»: the field's name, and the typed number's. */
   label: string;
   value: number;
   onChange: (value: number) => void;
-  /** The digits typed and not yet applied (null once applied), so «تمّ» can apply them. */
+  /** Digits typed but not yet applied (null once applied), so done can apply them. */
   onPending?: (text: string | null) => void;
   disabled?: boolean;
 }
 
 interface StepProps {
   sign: string;
-  /** «أنقص» / «زِد»; the hint names the field. */
   label: string;
   field: string;
   onPress: () => void;
@@ -101,7 +99,7 @@ export function AyahStepper({ label, value, onChange, onPending, disabled }: Aya
           onPress={() => apply(value - 1)}
           disabled={disabled}
         />
-        {/* Typed digits apply when editing ends (or on «تمّ»), so «25» never passes through «2». */}
+        {/* Typed digits apply when editing ends, so "25" never passes through "2". */}
         <TextInput
           accessibilityLabel={label}
           keyboardType="number-pad"

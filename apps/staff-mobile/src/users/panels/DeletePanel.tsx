@@ -13,10 +13,7 @@ interface DeletePanelProps {
   onDone: (message: string) => void;
 }
 
-/**
- * Confirms the delete. The API decides (as on the web): a user with history answers 409, and the
- * panel lists the tables and offers «تعطيل بدلًا من الحذف» instead of the delete.
- */
+/** The API decides: a user with history answers 409 and disabling is offered instead. */
 export function DeletePanel({ user, onBack, onDone }: DeletePanelProps) {
   const D = t.users.delete;
   const { color } = useTheme();

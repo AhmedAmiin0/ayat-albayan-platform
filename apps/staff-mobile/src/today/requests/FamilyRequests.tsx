@@ -14,10 +14,7 @@ interface FamilyRequestsProps {
   slotsPath?: string;
 }
 
-/**
- * «طلبات الأسر · N» on «اليوم» (owner 2026-11-17): the families' «اطلب موعدًا آخر» this admin
- * (all) or assistant (her families) answers; a row opens the answer sheet. Nothing when none.
- */
+/** Admins see all requests, assistants only their families'; nothing when none. */
 export function FamilyRequests({ slotsPath }: FamilyRequestsProps) {
   const { color } = useTheme();
   const viewer = useViewerClock();

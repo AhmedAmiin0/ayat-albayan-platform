@@ -11,7 +11,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 // The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
-// «طلبات الأسر» reads its own route (FamilyRequests.test.tsx): out of this day's mock.
+// Family requests read their own route and are tested separately.
 jest.mock('@/today/requests/FamilyRequests', () => ({ FamilyRequests: () => null }));
 // The greeting's first name reads /me/profile (TodayHeader.test); here it would take the day's mocked answers.
 jest.mock('@ab/mobile-kit/lib/profile/my-profile', () => ({
@@ -55,7 +55,7 @@ test('the summary counts the shown day; a column filters the list, a second tap 
   expect(screen.getByRole('button', column('completed', 1))).toBeTruthy();
   expect(screen.getByRole('button', row('جنى وليد'))).toBeTruthy();
 
-  // «تحتاج تأكيد»: only the 16:00 lesson, as a row (no hero under a filter).
+  // No hero under a filter.
   await fireEvent.press(screen.getByRole('button', column('scheduled', 1)));
   expect(screen.getByRole('button', { ...column('scheduled', 1, true), selected: true })).toBeTruthy();
   expect(screen.getByRole('button', row('يوسف أحمد'))).toBeTruthy();
@@ -65,7 +65,6 @@ test('the summary counts the shown day; a column filters the list, a second tap 
   await fireEvent.press(screen.getByRole('button', column('scheduled', 1, true)));
   expect(screen.getByText(t.today.running)).toBeTruthy();
 
-  // «انتهت» opens the fold; «الكل» resets.
   await fireEvent.press(screen.getByRole('button', column('completed', 1)));
   expect(screen.getByText('جودى خالد')).toBeTruthy();
   expect(screen.getByRole('button', { name: 'انتهت حلقة واحدة اليوم', expanded: true })).toBeTruthy();

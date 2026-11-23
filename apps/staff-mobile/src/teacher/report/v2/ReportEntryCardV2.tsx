@@ -22,12 +22,7 @@ interface ReportEntryCardV2Props {
   tz: string;
 }
 
-/**
- * One student's new «تقرير الحلقة» (form_version 2, docs/design/report-form): الحضور and البرنامج,
- * then either the absent card or the program's content (Quran parts by surah and ayah, Arabic
- * skills, Islamic studies), the overall grade, homework, next lesson, the note to the family and
- * «ملفات الحلقة» (the lesson's recording and files, canvas RecXStaffReportLink).
- */
+/** The new report form (form_version 2, docs/design/report-form). */
 export function ReportEntryCardV2({ form, entry, tz }: ReportEntryCardV2Props) {
   const s = useV2Entry(entry);
   const { attendance, program } = s.values;
