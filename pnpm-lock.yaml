@@ -611,6 +611,9 @@ importers:
       '@ab/config':
         specifier: workspace:*
         version: link:../packages/config
+      '@ab/money':
+        specifier: workspace:*
+        version: link:../packages/money
       '@ab/shared':
         specifier: workspace:*
         version: link:../packages/shared
