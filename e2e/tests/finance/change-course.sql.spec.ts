@@ -94,7 +94,14 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
       const c = await seedCourse(tx);
       const first = await change(tx, changeOf(c, { requestId: randomUUID() }));
       const rules = [...c.rules, ...first.rule_ids];
-      await change(tx, changeOf(c, { requestId: randomUUID(), at: CHANGE + 7 * DAY, rules }));
+      const later = await tx<{ id: string }[]>`select id from public.lessons
+        where rule_id in ${tx(first.rule_ids)} and starts_at >= ${iso(CHANGE + 7 * DAY)}`;
+      // The second change moves the first one's lessons from its point, as the API does: the new
+      // rules land on the same weekly times, and an open old lesson there is a teacher clash.
+      const move = { from_status: 'scheduled', to_status: 'rescheduled', chargeable: false };
+      const changes = later.map((l) => ({ id: l.id, ...move }));
+      const second = changeOf(c, { requestId: randomUUID(), at: CHANGE + 7 * DAY, rules });
+      await change(tx, { ...second, changes });
       const all = await rulesOf(tx, c.sub);
       expect(all.filter((r) => c.rules.includes(r.id)).map((r) => r.ends_on)).toEqual(c.rules.map(() => iso(CHANGE - DAY).slice(0, 10)));
       expect(all.filter((r) => first.rule_ids.includes(r.id)).map((r) => r.ends_on)).toEqual(first.rule_ids.map(() => iso(CHANGE + 6 * DAY).slice(0, 10)));

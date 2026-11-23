@@ -1079,6 +1079,7 @@
       "request_id_required": "Try again, the booking needs a request id",
       "makeup_not_eligible": "This lesson cannot be made up",
       "makeup_exists": "This lesson already has a makeup booking",
+      "teacher_clash": "The teacher now has another lesson at this time. Pick another time or write an override reason.",
       "number_taken": "This number belongs to a registered family; book from the student's file",
       "makeup_student": "The student is not on the missed lesson",
       "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule",
@@ -1217,6 +1218,7 @@
       "invalid_transition": "You can't change this lesson's status from its current one",
       "not_started": "The lesson hasn't started yet. Record attendance after its start time.",
       "slot_taken": "This schedule already has a lesson at the same time. Pick another time.",
+      "teacher_clash": "The teacher now has another lesson at this time. Pick another time or write an override reason.",
       "rule_not_active": "This schedule is paused or has ended, so it can't be edited",
       "no_rule": "This lesson isn't part of a weekly schedule. Change or cancel this lesson only.",
       "no_occurrences": "No lessons in this period. Pick an earlier start date.",
@@ -1533,6 +1535,7 @@
     "offline": "The connection dropped before we got an answer, so we are not sure the time changed. Open the schedule again once you are back online",
     "error": {
       "stale_time": "Someone else changed this lesson, open it again",
+      "teacher_clash": "The teacher now has another lesson at this time. Pick another time or write an override reason.",
       "payout_locked": "The teacher's payout for this month is approved or paid, so you cannot change the length of a lesson counted in it",
       "time_edit_not_allowed": "You cannot edit the time of a cancelled or rescheduled lesson",
       "date_in_future": "A correction has to be before now",
