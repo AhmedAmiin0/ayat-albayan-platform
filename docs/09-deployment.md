@@ -96,11 +96,13 @@ Two probes, both public (no token), both cheap:
 
 Every call the API and the worker make to Postgres through supabase-js (PostgREST tables and RPCs, and Auth) has a deadline: `DB_TIMEOUT_MS` (ms, default 15000, 1000 to 120000, zod-checked at boot; unset = 15 s). Storage transfers are not timed (big files). A stalled call fails with `DbTimeoutError` (`apps/api/src/common/db/db-timeout.ts`) instead of hanging a request or a job; postgrest-js never retries it.
 
-- A request answers **503 `db_timeout`** with `Retry-After: 5` (`DbTimeoutFilter`); every other error is handled exactly as before.
+- A read (GET) answers **503 `db_timeout`** with `Retry-After: 5` (`DbTimeoutFilter`); every other error is handled exactly as before.
+- A write answers **503 `db_outcome_unknown`** with `Retry-After: 5`: it may still have committed, so the client resends the same body with the same `clientRequestId` (required on POST /subscriptions, /payments and /teacher-earnings/:id/payments), and the API returns the row already written.
+- Postgres also cancels the API's statements at **20 s** (`statement_timeout` on `service_role`, migration 20261123000300), so a stalled write cannot commit long after its 503. Raising `DB_TIMEOUT_MS` above 20 s needs a matching migration for that role.
 - A job's pass fails like any database error: the Ticker logs it, records it on the job's heartbeat, and the next tick tries again. Rows stay queued (claims, leases and dedup keys), so nothing is lost.
 - Webhooks: a failed item makes the webhook answer 5xx, so Meta (and the other providers) re-send; replays are no-ops for the items that went through.
 
-Switch off: there is no "off"; set `DB_TIMEOUT_MS=120000` to make it as lenient as allowed.
+Switch off: there is no "off"; set `DB_TIMEOUT_MS=120000` to make it as lenient as allowed (the 20 s server cap still applies).
 
 ### Logs
 

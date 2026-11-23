@@ -12,10 +12,17 @@ import {
 import { expenseCreateSchema } from './expense-schemas.js';
 
 const SUB = '00000000-0000-4000-8000-000000000001';
-const payment = { subscriptionId: SUB, amount: 120, currency: 'SAR', method: 'bank', paidAt: '2026-10-01T09:00:00Z' };
+const payment = {
+  subscriptionId: SUB,
+  amount: 120,
+  currency: 'SAR',
+  method: 'bank',
+  paidAt: '2026-10-01T09:00:00Z',
+  clientRequestId: SUB,
+};
 
 describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typed)', () => {
-  const base = { studentId: SUB, startsOn: '2026-10-01' };
+  const base = { studentId: SUB, startsOn: '2026-10-01', clientRequestId: SUB };
   it('a package: duration defaults to 45, discount to 0', () => {
     const r = subscriptionCreateSchema.parse({ ...base, pricing: { tier: 'starter', country: 'sa' } });
     expect(r.pricing).toEqual({ tier: 'starter', country: 'SA', duration: 45, discount: 0 });
