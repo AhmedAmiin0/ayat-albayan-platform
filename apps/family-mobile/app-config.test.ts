@@ -55,4 +55,9 @@ describe('the store binary', () => {
     expect(app.expo.android.allowBackup).toBe(false);
     expect(resolve({}).android?.allowBackup).toBe(false);
   });
+
+  it('runs in portrait without requiring a portrait screen (Play device reach)', () => {
+    expect(app.expo.orientation).toBe('portrait');
+    expect(resolve({}).plugins).toContain('./plugins/portrait-optional/app.plugin.ts');
+  });
 });
