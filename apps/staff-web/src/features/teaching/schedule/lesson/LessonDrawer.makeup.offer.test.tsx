@@ -8,7 +8,7 @@ import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
   useRouter: () => undefined,
   Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (

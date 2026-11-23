@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { draftBody, submitProblem, valuesOf, type FormValues } from './form-values.js';
-import { reportDraftSchema, reportSubmitSchema } from './schema.js';
+import { reportDraftSchema, reportSubmitSchema } from './schema/index.js';
 import type { ReportView } from './views.js';
 
 // «البرنامج *» on «تقرير الحلقة» (docs/13-forms-spec.md form 2).

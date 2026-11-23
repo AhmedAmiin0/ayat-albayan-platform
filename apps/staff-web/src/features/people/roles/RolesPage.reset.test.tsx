@@ -7,7 +7,7 @@ import { RolesPage } from './RolesPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const P = t.permissions.page;
 const ADMIN: RoleView = {
@@ -72,7 +72,7 @@ describe('RolesPage «استعادة الافتراضي»', () => {
 
   it('shows the API refusal', async () => {
     const dialog = await openRole('المبيعات');
-    const { ApiError } = await import('@ab/web-kit/lib/http/api');
+    const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
     apiSend.mockRejectedValue(new ApiError(400, { code: 'not_system_role' }));
     fireEvent.click(dialog.getByRole('button', { name: P.reset }));
     fireEvent.click(dialog.getByRole('button', { name: P.resetConfirm }));

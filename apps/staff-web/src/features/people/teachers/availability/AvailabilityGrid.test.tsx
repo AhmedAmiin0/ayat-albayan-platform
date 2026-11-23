@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AvailabilityGrid } from './AvailabilityGrid';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiSend, apiFetch: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiSend, apiFetch: vi.fn() }));
 
 const CAIRO = 'Africa/Cairo';
 const SAT = t.enums.weekday[6];

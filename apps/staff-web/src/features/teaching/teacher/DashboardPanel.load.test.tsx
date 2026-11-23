@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { DashboardPanel, type DashboardPanelProps } from './DashboardPanel';
 
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(() => Promise.resolve([])),
 }));

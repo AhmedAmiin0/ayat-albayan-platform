@@ -9,7 +9,7 @@ import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
 const c = t.lessons.correct;
 const ENDED = '2000-01-01T10:00:00Z';

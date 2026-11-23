@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { E164_RE } from '@ab/core';
 import { baseMime } from '../../schemas/chat-media.js';
-import { isPdfMime } from '../chat/chat-files.js';
+import { isPdfMime } from '../chat/chat-files/index.js';
 import type { MessageDirection } from '@ab/catalog';
 
 // «رد» and «إعادة توجيه» in the inbox (owner 2026-10-25). Pure: the API, the web and the app share it.

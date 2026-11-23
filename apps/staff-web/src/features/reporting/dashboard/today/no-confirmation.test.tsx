@@ -9,7 +9,7 @@ import { lessonAt } from './today-fixture';
 import { TodayKpis } from './TodayKpis';
 import { TodayLessons } from './TodayLessons';
 
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));

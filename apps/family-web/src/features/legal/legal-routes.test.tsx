@@ -7,7 +7,7 @@ import { routeTree } from '@/routeTree.gen';
 
 // Google Play opens both pages from the listing and the Data safety form: no sign-in, no shell.
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 afterEach(() => {
   apiFetch.mockReset();

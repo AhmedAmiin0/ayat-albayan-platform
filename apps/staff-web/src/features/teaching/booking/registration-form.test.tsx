@@ -9,7 +9,7 @@ import { LeadStudentStep } from './steps/who/LeadStudentStep';
 import { PackageStep } from './steps/package/PackageStep';
 
 // استمارة تسجيل طالب جديد: the wizard's titles, options and stars are the Google Form's.
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => ({ total: 0, currency: 'SAR', fx: null })) }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => ({ total: 0, currency: 'SAR', fx: null })) }));
 
 const wrap = (ui: React.ReactNode) => <QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>;
 

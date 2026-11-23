@@ -9,7 +9,7 @@ import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/T
 import { ThreadRow } from '@/features/messaging/inbox/threads/list/ThreadRow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const GROUPED = '+966 50 123 4567';

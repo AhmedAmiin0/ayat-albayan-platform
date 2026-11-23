@@ -7,7 +7,7 @@ import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 import { TeacherConfirmedTag } from './TeacherConfirmedTag';
 
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(),
   apiSend: vi.fn(),

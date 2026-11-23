@@ -7,7 +7,7 @@ import { pageOf, recordingView } from './recordings-fixture';
 import { StudentRecordings } from './StudentRecordings';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const R = t.studentRecordings;
 const listCalls = () => apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.includes('/recordings'));

@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { GATE, GUARDIAN, json, OPEN_VIEW, showGate, stubApi } from './gate.test-kit';
 
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
-vi.mock('@ab/web-kit/auth/sign-in', () => ({ signOut }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signOut }));
 
 const G = t.shortLinks.gate;
 

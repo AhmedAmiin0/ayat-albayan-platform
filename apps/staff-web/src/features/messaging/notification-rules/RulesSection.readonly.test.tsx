@@ -5,7 +5,7 @@ import { findRow, openTab, overview, renderRules } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ manage: false }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: granted.manage ? ['settings.read', 'notifications.manage'] : ['settings.read'], can: () => true }),

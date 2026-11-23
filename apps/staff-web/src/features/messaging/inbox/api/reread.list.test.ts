@@ -9,7 +9,7 @@ import { rereadList } from './reread';
 // cancel), so one more read follows that load: the event's change never waits for the 20 s poll.
 
 const mockApiFetch = vi.fn();
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args) as unknown,
 }));

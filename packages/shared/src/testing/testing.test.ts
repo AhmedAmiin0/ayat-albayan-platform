@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as runtime from '../index.js';
 import { assistantTermsSchema } from '@ab/money';
-import { reportDraftSchema } from '../reports/schema.js';
+import { reportDraftSchema } from '../reports/schema/index.js';
 import { ASSISTANT, BALANCE, commission, FULL_GRADES, PAYMENT, reportView, statement, termsRowOf } from './index.js';
 
 describe('shared test fixtures', () => {

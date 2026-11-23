@@ -8,7 +8,7 @@ import { ASSISTANT, COMMISSION, STATEMENT, termsRowOf } from './fixtures';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const held = vi.hoisted(() => ({ list: [] as string[] }));
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: held.list, can: (p: string) => held.list.includes(p) }),
 }));

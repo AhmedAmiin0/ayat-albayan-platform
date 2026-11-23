@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useSettingsForm } from './use-settings-form';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const SAVED: AcademySettings = { ...SETTING_DEFAULTS, booking_horizon_weeks: 6 };
 const KEYS: SettingKey[] = ['booking_horizon_weeks', 'late_cancel_hours'];

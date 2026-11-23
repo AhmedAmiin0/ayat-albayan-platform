@@ -6,7 +6,7 @@ import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
 import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
 const posts = () => apiSend.mock.calls.filter((c) => c[1] === '/subscriptions').map((c) => c[2] as { clientRequestId: string });
 

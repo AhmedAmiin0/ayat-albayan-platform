@@ -27,7 +27,7 @@
       "count": 3
     }
   },
-  "src/messaging/calls/call-machine.ts": {
+  "src/messaging/calls/call-machine/call-machine.ts": {
     "max-len": {
       "count": 9
     }
@@ -47,7 +47,7 @@
       "count": 1
     }
   },
-  "src/messaging/chat/chat-files.ts": {
+  "src/messaging/chat/chat-files/chat-files.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -94,12 +94,12 @@
       "count": 1
     }
   },
-  "src/messaging/chat/thread-people.chips.test.ts": {
+  "src/messaging/chat/thread-people/tests/chips.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/messaging/chat/thread-people.ts": {
+  "src/messaging/chat/thread-people/thread-people.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -110,7 +110,7 @@
       "count": 2
     }
   },
-  "src/messaging/chat/thread-reopen.ts": {
+  "src/messaging/chat/thread-reopen/thread-reopen.ts": {
     "max-len": {
       "count": 1
     }
@@ -153,7 +153,7 @@
       "count": 2
     }
   },
-  "src/messaging/lesson/timing.ts": {
+  "src/messaging/lesson/timing/timing.ts": {
     "max-len": {
       "count": 1
     }
@@ -273,7 +273,7 @@
       "count": 3
     }
   },
-  "src/messaging/replies/saved-reply-text.ts": {
+  "src/messaging/replies/saved-reply-text/saved-reply-text.ts": {
     "max-len": {
       "count": 7
     }
@@ -321,7 +321,7 @@
       "count": 7
     }
   },
-  "src/messaging/templates/template-block.ts": {
+  "src/messaging/templates/template-block/template-block.ts": {
     "max-len": {
       "count": 9
     },
@@ -370,7 +370,7 @@
       "count": 1
     }
   },
-  "src/notifications/catalogue/catalogue-state.rules.test.ts": {
+  "src/notifications/catalogue/catalogue-state/tests/rules.test.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 4
     },
@@ -378,7 +378,7 @@
       "count": 6
     }
   },
-  "src/notifications/catalogue/catalogue-state.test.ts": {
+  "src/notifications/catalogue/catalogue-state/tests/catalogue-state.test.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 6
     },
@@ -386,7 +386,7 @@
       "count": 1
     }
   },
-  "src/notifications/catalogue/catalogue-state.ts": {
+  "src/notifications/catalogue/catalogue-state/catalogue-state.ts": {
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": {
       "count": 2
     },
@@ -528,12 +528,12 @@
       "count": 3
     }
   },
-  "src/people/students/status-flow.test.ts": {
+  "src/people/students/status-flow/tests/status-flow.test.ts": {
     "max-depth": {
       "count": 1
     }
   },
-  "src/people/students/status-flow.ts": {
+  "src/people/students/status-flow/status-flow.ts": {
     "complexity": {
       "count": 1
     },
@@ -634,12 +634,12 @@
       "count": 4
     }
   },
-  "src/reports/schema.test.ts": {
+  "src/reports/schema/tests/schema.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/reports/schema.ts": {
+  "src/reports/schema/schema.ts": {
     "complexity": {
       "count": 1
     },
@@ -919,7 +919,7 @@
       "count": 6
     }
   },
-  "src/sales/teacher-filter.ts": {
+  "src/sales/teacher-filter/teacher-filter.ts": {
     "max-len": {
       "count": 6
     }

@@ -5,7 +5,7 @@ import { PARITY_SAME } from './numbers.fixture';
 import { renderPanel } from './numbers-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: ['settings.read'], can: (p: string) => p === 'settings.read' }),
 }));

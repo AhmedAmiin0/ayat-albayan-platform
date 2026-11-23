@@ -7,7 +7,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // A chat starter imported from Meta (owner 2026-10-12): its key is its Meta name, not a TEMPLATE_KEYS one.
 const IMPORTED = template({

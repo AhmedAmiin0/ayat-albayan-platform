@@ -7,7 +7,7 @@ import { ShortLinksPage } from './ShortLinksPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ keys: [] as string[] }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ can: (k: string) => granted.keys.includes(k), loaded: true }),
 }));

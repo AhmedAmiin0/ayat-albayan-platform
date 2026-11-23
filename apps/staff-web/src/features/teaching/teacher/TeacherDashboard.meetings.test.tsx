@@ -7,7 +7,7 @@ import { setTeacherPages } from '@/lib/settings/teacher-pages-testing';
 import { TeacherDashboard } from './TeacherDashboard';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,

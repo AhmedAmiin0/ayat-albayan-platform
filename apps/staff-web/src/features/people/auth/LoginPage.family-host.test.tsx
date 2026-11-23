@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LoginPage } from './LoginPage';
-import type * as EnvModule from '@ab/web-kit/lib/http/env';
+import type * as EnvModule from '@ab/web-kit/lib/http/env/env';
 
-vi.mock('@ab/web-kit/lib/http/env', async (original) => {
+vi.mock('@ab/web-kit/lib/http/env/env', async (original) => {
   const real = await original<typeof EnvModule>();
   return { ...real, env: { ...real.env, familyOrigin: 'https://family.example.test' } };
 });

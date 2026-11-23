@@ -14,7 +14,7 @@ vi.mock('@tanstack/react-router', async () => ({
 }));
 
 const apiFetch = vi.hoisted(() => vi.fn(() => Promise.reject(new Error('offline'))));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const nav = (
   <nav aria-label={t.nav.label}>

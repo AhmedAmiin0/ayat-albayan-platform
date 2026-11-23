@@ -84,7 +84,7 @@ const slowChat = vi.fn(
       setTimeout(() => resolve(path.includes('?after=') ? delta : full), 400);
     }),
 );
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
   apiFetch: (path: string) => slowChat(path),
 }));

@@ -7,7 +7,7 @@ import { inboxLive } from './live';
 import { useLiveThread } from './thread-delta';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 // A fast delta tick for the test; the real one is 10 s down / 20 s live (inboxPollMs).
 vi.mock('./api', async (orig) => ({
   ...(await orig<object>()),

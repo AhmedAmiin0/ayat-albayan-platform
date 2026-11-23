@@ -9,7 +9,7 @@ import { ROW_DONE, ROW_PENDING, SUMMARY } from './feedback-fixture';
 import { FeedbackPage } from './FeedbackPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 function routes(path: string): unknown {
   if (path.startsWith('/feedback/summary')) return SUMMARY;

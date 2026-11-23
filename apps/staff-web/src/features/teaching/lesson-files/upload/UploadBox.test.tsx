@@ -7,7 +7,7 @@ import { UploadBox } from './UploadBox';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadSigned = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 vi.mock('@/lib/storage/upload-slot', () => ({ uploadSigned }));
 
 const F = t.lessonFiles;

@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PayPage } from './PayPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const P = t.paymentLinks.pay;
 const LINK: PublicPaymentLink = { status: 'open', first_name: 'أم سهيلة', amount: 261, currency: 'SAR', package: '8', lessons: 8, sandbox: true };

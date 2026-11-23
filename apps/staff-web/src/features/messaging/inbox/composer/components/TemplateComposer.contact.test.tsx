@@ -6,7 +6,7 @@ import { TemplateComposer } from './TemplateComposer';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // trial_reschedule's one variable is the recipient's name: it starts as the thread's display name.
 const RESCHEDULE = template({

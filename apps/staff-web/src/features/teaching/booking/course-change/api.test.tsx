@@ -6,7 +6,7 @@ import { courseChangeCheckQuery, type CourseChangeBody } from './api';
 import { CHECK, COURSE, MON } from './change-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const body: CourseChangeBody = {
   subscriptionId: COURSE.subscriptionId,

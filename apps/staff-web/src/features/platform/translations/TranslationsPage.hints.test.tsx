@@ -10,7 +10,7 @@ import { TranslationsPage } from './TranslationsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 
 const HINT_KEY = 'settings.hints.bookingHorizonWeeks';
 const HINT: TranslationKeyRow = { key: HINT_KEY, section: 'settings', ar: 'نص عربي', en: 'English hint', arOverride: 'وصف المدير', enOverride: null };

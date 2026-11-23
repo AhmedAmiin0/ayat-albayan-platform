@@ -7,7 +7,7 @@ const auth = vi.hoisted(() => ({ signInWithPassword: vi.fn(), signOut: vi.fn(), 
 const apiFetch = vi.hoisted(() => vi.fn());
 
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
 
 afterEach(() => {
   vi.useRealTimers();

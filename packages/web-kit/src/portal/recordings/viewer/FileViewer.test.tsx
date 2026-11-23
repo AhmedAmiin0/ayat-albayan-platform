@@ -6,7 +6,7 @@ import { lessonFile, signed } from '@ab/web-kit/portal/recordings/recordings.fix
 import { FileViewer } from './FileViewer';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const V = t.familyFiles;
 const files = [
