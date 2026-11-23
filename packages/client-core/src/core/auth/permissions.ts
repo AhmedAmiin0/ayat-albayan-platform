@@ -23,7 +23,7 @@ export function permissionsOf(me: unknown): Permission[] {
 }
 
 /**
- * The one permissions behaviour of web and mobile (docs/27 E2, owner D6): until /auth/me has answered
+ * The one permissions behaviour of web and mobile (docs/27 E2, D6): until /auth/me has answered
  * (loading, offline with nothing saved, signed out) nothing is granted, so actions stay hidden; then
  * only the listed keys. The API refuses anything not granted anyway.
  */

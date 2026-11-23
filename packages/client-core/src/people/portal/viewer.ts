@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 // Who sees what in the family portal (docs/50 §2, §4): a guardian and an adult student who is
 // their own contact see the package and its money; a child's own login never does (nor asks).
-// The teacher chat shows to every family login, a child's too (owner 2026-11-16), while
+// The teacher chat shows to every family login, a child's too, while
 // settings.family_chat_enabled is on.
 
 export type PortalViewer = 'guardian' | 'adult' | 'child';
@@ -15,7 +15,7 @@ const BY_KIND: Readonly<Record<PortalKind, PortalViewer>> = {
 };
 
 /**
- * The student's contact_is_self first (owner 2026-11-16): an adult who registered themselves reads
+ * The student's contact_is_self first: an adult who registered themselves reads
  * as an adult whichever path they signed in by (a guardian who also studies, too); else the
  * login's kind (GET /portal/me).
  */
@@ -62,7 +62,7 @@ export const FAMILY_MEETINGS_SETTING = 'family_meetings_in_app';
 /** settings.family_meetings_in_app; off (the browser) while unknown. */
 export const familyMeetingsOn = publicFlag(FAMILY_MEETINGS_SETTING);
 
-/** The child screen's tabs, in order (docs/50 §6; «التسجيلات» owner 2026-11-17). */
+/** The child screen's tabs, in order (docs/50 §6). */
 export const CHILD_TABS = ['upcoming', 'attended', 'absent', 'recordings', 'package', 'chat'] as const;
 export type ChildTab = (typeof CHILD_TABS)[number];
 

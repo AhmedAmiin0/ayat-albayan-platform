@@ -1,6 +1,6 @@
 import { isFamilyActionable, isOpenLesson, type PortalLesson } from '@ab/shared';
 
-// What «خيارات الحلقة» offers on one lesson, and what its card says (owner 2026-11-17). Pure,
+// What «خيارات الحلقة» offers on one lesson, and what its card says. Pure,
 // shared by the family app and the web portal.
 
 export type LessonOption = 'confirm' | 'request' | 'decline' | 'withdraw';
