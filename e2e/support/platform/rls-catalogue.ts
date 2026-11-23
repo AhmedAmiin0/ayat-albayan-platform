@@ -17,14 +17,14 @@ export async function tablesWithoutRls(tx: Tx): Promise<string[]> {
 }
 
 /**
- * What anon can read: a table it may select with a permissive read policy for anon or public, a
+ * What anon can read (a column grant counts): a table it may select with a permissive read policy for anon or public, a
  * view that runs as its owner (RLS of the tables below does not apply), or a materialized view.
  */
 export async function anonReadable(tx: Tx): Promise<string[]> {
   const rows = await tx.unsafe<{ name: string }[]>(`select c.relname as name
     from pg_class c join pg_namespace n on n.oid = c.relnamespace
     where n.nspname = 'public' and c.relkind in ('r', 'p', 'v', 'm')
-      and has_table_privilege('anon', c.oid, 'select') and ${notExtension('c.oid')}
+      and has_any_column_privilege('anon', c.oid, 'select') and ${notExtension('c.oid')}
       and (c.relkind = 'm'
         or (c.relkind = 'v' and not coalesce('security_invoker=true' = any (c.reloptions)
           or 'security_invoker=on' = any (c.reloptions), false))
@@ -35,12 +35,16 @@ export async function anonReadable(tx: Tx): Promise<string[]> {
   return rows.map((r) => r.name);
 }
 
-/** SECURITY DEFINER functions in public that `role` may execute, as `name(arg types)`. */
+/**
+ * SECURITY DEFINER functions in public that `role` may execute, as `name(arg types)`. Trigger
+ * functions are left out: Postgres refuses to call them outside a trigger.
+ */
 export async function callableDefiners(tx: Tx, role: 'anon' | 'authenticated'): Promise<string[]> {
   const rows = await tx.unsafe<{ name: string }[]>(
     `select p.proname || '(' || pg_get_function_identity_arguments(p.oid) || ')' as name
     from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-    where n.nspname = 'public' and p.prosecdef and has_function_privilege($1, p.oid, 'execute')
+    where n.nspname = 'public' and p.prosecdef and p.prorettype <> 'trigger'::regtype
+      and has_function_privilege($1, p.oid, 'execute')
       and ${notExtension('p.oid')}
     order by 1`,
     [role],

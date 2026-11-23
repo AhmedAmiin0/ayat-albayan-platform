@@ -64,9 +64,9 @@ test.describe('RLS and grants across the public schema', () => {
 
   test('no SECURITY DEFINER function outside the allow-lists is callable by a client', async () => {
     await rolledBack(async (tx) => {
-      expect(outside(await callableDefiners(tx, 'anon'), ANON_DEFINERS)).toEqual([]);
+      expect.soft(outside(await callableDefiners(tx, 'anon'), ANON_DEFINERS)).toEqual([]);
       const signedIn = await callableDefiners(tx, 'authenticated');
-      expect(outside(signedIn, AUTHENTICATED_DEFINERS)).toEqual([]);
+      expect.soft(outside(signedIn, AUTHENTICATED_DEFINERS)).toEqual([]);
     });
   });
 
