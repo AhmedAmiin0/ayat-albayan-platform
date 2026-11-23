@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { TestAccountsRepo } from './test-accounts.repo';
 
 const ID = '0b6a0b8e-6d1a-4c3e-9a51-6f1c7f0a2b11';

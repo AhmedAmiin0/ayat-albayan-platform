@@ -6367,7 +6367,7 @@
       "count": 4
     }
   },
-  "src/modules/people/guardians/fake-db.ts": {
+  "src/common/db/testing/fake-db.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
     },

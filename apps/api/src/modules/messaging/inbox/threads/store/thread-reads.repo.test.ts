@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { ThreadReadsRepo } from './thread-reads.repo';
 
 // A family's message to the calls number (docs/28 §10) never gets a read receipt (the calls number

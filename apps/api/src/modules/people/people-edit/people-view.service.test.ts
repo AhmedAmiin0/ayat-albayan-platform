@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { none } from '@/modules/people/people-edit/testing/people-edit.test-app';
 import { PeopleEditRepo } from './people-edit.repo';
 import { PeopleViewService } from './people-view.service';
