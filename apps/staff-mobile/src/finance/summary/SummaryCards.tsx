@@ -6,7 +6,7 @@ import { KpiCard } from './KpiCard';
 import { useTeacherDues } from '@/finance/shared/queries';
 import { summaryCards } from './summary-cards';
 import { summaryWarnings } from './summary-lines';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 /** The year's four totals (reporting currency) and the two balances: owed to teachers, owed by students. */
 export function SummaryCards({ finance }: { finance: DashboardResponse['finance'] | undefined }) {

@@ -1,4 +1,4 @@
-import type { ExpenseCategoryView } from '@ab/shared';
+import type { ExpenseCategoryView } from '@ab/money';
 import { t, locale } from '@ab/mobile-kit';
 
 const seeded: Record<string, string | undefined> = t.enums.expenseCategory;
