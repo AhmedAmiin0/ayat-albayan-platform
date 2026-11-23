@@ -25,7 +25,7 @@ test('a custom count, another country and an Arabic-keypad discount: a valid POS
     discount: '١٢٫٥',
   });
   expect(pricing).toEqual({ duration: 60, discount: 12.5, country: 'AE', count: 10 });
-  const body = { studentId: STUDENT, pricing, startsOn: '2026-10-03' };
+  const body = { studentId: STUDENT, pricing, startsOn: '2026-10-03', clientRequestId: STUDENT };
   expect(subscriptionCreateSchema.safeParse(body).success).toBe(true);
 });
 

@@ -547,6 +547,7 @@
     }
   },
   "developOnly": [
+    "platform/api-statement-timeout.sql.spec.ts",
     "teaching/apply-lesson-changes-v3.sql.spec.ts",
     "finance/assistant-commission-retro.sql.spec.ts",
     "finance/assistant-commission-started.sql.spec.ts",

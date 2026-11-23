@@ -62,7 +62,7 @@ const componentsOf = (body: Json): Json[] => (Array.isArray(body['components']) 
 
 /**
  * The WABA a created template lives on: the path's, when it is a configured line's (as on Meta, the
- * other number never lists it); a path no line owns (lenient single-line tests) = every WABA, as before.
+ * other number never lists it); a path no line owns (lenient single-line tests) = every WABA.
  */
 const ownWaba = (s: StubState, wabaId: string): string | undefined =>
   stubLines(s.opts).some((l) => l.wabaId === wabaId) ? wabaId : undefined;

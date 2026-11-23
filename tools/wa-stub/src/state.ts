@@ -51,7 +51,7 @@ export interface StubOptions {
   wabaId?: string;
   /** Meta app subscribed to the notifications WABA (diagnostics). */
   appId?: string;
-  /** Absent = single-line, exactly as before the chat line existed. */
+  /** Absent = single-line: the notifications line only. */
   chat?: ChatLineOptions;
   /** Free-form messages need an inbound from that number in the last 24 h (default true). */
   enforceWindow?: boolean;

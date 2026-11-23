@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
+import { REQUEST_ID, STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
@@ -66,7 +66,9 @@ describe('custom subscription price', () => {
 
   it('the admin’s POST /subscriptions: the custom price, no cap', async () => {
     vi.stubEnv('STRIPE_MAX_DISCOUNT_PCT', '10');
-    const body = { studentId: STUDENT_ID, startsOn: '2026-10-01', pricing: { tier: 'weekly' }, customPrice: 50 };
+    const pricing = { tier: 'weekly' };
+    const sent = { studentId: STUDENT_ID, startsOn: '2026-10-01', pricing, clientRequestId: REQUEST_ID };
+    const body = { ...sent, customPrice: 50 };
     expect((await call({ method: 'POST', url: '/subscriptions', body })).statusCode).toBe(201);
     const stored = expect.objectContaining({ price: 50, price_source: CUSTOM });
     expect(m.subs.insert).toHaveBeenCalledWith(stored);

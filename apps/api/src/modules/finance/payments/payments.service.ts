@@ -60,7 +60,7 @@ export class PaymentsService {
       receipt_path: input.receiptPath ?? null,
       recorded_by: actorId,
       note: input.note ?? null,
-      client_request_id: input.clientRequestId ?? null,
+      client_request_id: input.clientRequestId,
     });
     if (!row) return this.raced(input, actorId);
     await this.files.saveBooked(row.id, files, actorId); // never throws: before the follow-ups, so none can drop them
@@ -124,8 +124,8 @@ export class PaymentsService {
     return this.inputs.files;
   }
 
-  private async replayOf(clientRequestId: string | undefined): Promise<PaymentView | null> {
-    const row = clientRequestId ? await this.payments.byRequest(clientRequestId) : null;
+  private async replayOf(clientRequestId: string): Promise<PaymentView | null> {
+    const row = await this.payments.byRequest(clientRequestId);
     return row ? this.get(row.id) : null;
   }
 
