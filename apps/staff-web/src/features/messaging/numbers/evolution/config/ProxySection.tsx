@@ -10,7 +10,7 @@ import type { SecretSectionProps } from './config-draft';
 
 const p = t.numbers.evolution.config.proxy;
 
-/** «الوكيل» (Evolution's /proxy/set): host, port, protocol, user; the password is a secret. */
+/** The proxy password is stored as a secret. */
 export function ProxySection({ value, errors, onChange, view }: SecretSectionProps<'proxy'>) {
   return (
     <ConfigFieldset legend={t.numbers.evolution.config.sections.proxy}>

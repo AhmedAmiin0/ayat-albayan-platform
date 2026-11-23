@@ -4,7 +4,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useChatSearch } from './search-context';
 import { SEARCH_BAR_ID, SEARCH_TOGGLE_ID } from './to-newest';
 
-/** The chat header's «بحث» (as WhatsApp's): opens the bar, or closes it when open. */
 export function ChatSearchToggle() {
   const search = useChatSearch();
   if (!search) return null;

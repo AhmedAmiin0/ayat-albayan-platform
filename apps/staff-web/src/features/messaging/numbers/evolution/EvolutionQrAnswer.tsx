@@ -9,7 +9,7 @@ export interface EvolutionQrAnswerProps {
   label: string;
 }
 
-/** The QR (a PNG data URL only), the pairing code if Evolution gave one, or «لا يوجد رمز الآن». */
+/** Only a PNG data URL is accepted for the QR. */
 export function EvolutionQrAnswer({ answer, label }: EvolutionQrAnswerProps) {
   const src = qrImageOf(answer.qr);
   const [before, after = ''] = e.pairingCode.split('{{code}}');

@@ -6,10 +6,6 @@ import type { RuleRowState } from '@/features/messaging/notification-rules/table
 
 const r = t.notificationRules;
 
-/**
- * «عبر»: the row's channels. With an editable row the optional ones are checkboxes and the others
- * stay fixed («واتساب دائمًا»); otherwise the channels in words.
- */
 export function ChannelsPart({ entry, row }: { entry: NotificationEntryView; row: RuleRowState | null }) {
   const name = t.notificationCatalogue.entries[entry.key].name;
   if (!row || row.rule.optional_channels.length === 0) {

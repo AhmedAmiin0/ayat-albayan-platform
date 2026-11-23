@@ -44,7 +44,7 @@ export interface ThreadPaneProps {
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
   const headingId = useId();
-  // The lead panel's toasts live here (after «تسجيل الطالب» the aside becomes the family's panel).
+  // Toasts live here because after registering the aside becomes the family's panel.
   const [notice, setNotice] = useState<LeadNotice | null>(null);
   const phoneView = useBelowShell();
   const [sheet, setSheet] = useState(false);

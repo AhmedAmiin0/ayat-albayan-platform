@@ -17,12 +17,6 @@ import { WindowBanner } from './WindowBanner';
 import { CallButton } from '@/features/messaging/calls';
 import { ChatSearchBar, ChatSearchToggle } from '@/features/messaging/inbox/search';
 
-/**
- * The full-screen chat's header below 900px (owner 2026-10-05): one compact row (back to
- * the list, the initial, name and number, the client sheet's icon button or the sales actions as
- * icons plus «المزيد»), then the status chips (and the sales children line) on one line that
- * scrolls sideways instead of wrapping, ending with the times' city like ThreadHeader (principle 7).
- */
 export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action, line, lists, callable = false }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
