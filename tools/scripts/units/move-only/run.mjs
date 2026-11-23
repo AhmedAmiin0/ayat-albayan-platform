@@ -4,12 +4,14 @@
 import { parseArgs } from '../../ci-checks/comment-only/args.mjs';
 import { baseCommit, changes, gitIn } from '../../ci-checks/comment-only/git.mjs';
 import { moveFailures } from './entries.mjs';
+import { importFailures } from './imports.mjs';
 
 const TAG = 'guard:move-only:';
 const BRANCH = /^move\//;
 // The facade lane rewrites import sources and adds the owner package to package.json and the
 // lockfile, so it is not made of renames; unfacade's own tests and guard:packages cover it.
 const FACADE = /^move\/facade-/;
+const IMPORTS = /^move\/imports-/;
 
 /** Runs the gate; returns the exit code. */
 export function gate({ argv, env, cwd, log }) {
@@ -24,9 +26,12 @@ export function gate({ argv, env, cwd, log }) {
   }
   const git = gitIn(cwd);
   const base = baseCommit(git, guardBase);
-  const failures = moveFailures({ git, base, entries: changes(git, base) });
+  const imports = IMPORTS.test(branch);
+  const check = imports ? importFailures : moveFailures;
+  const failures = check({ git, base, entries: changes(git, base) });
   failures.forEach((f) => log(`${TAG} ${f}`));
-  const verdict = failures.length === 0 ? 'only moves' : `${failures.length} failing`;
+  const done = imports ? 'only import sources' : 'only moves';
+  const verdict = failures.length === 0 ? done : `${failures.length} failing`;
   log(`${TAG} ${branch} against ${base.slice(0, 12)}: ${verdict}.`);
   return failures.length === 0 ? 0 : 1;
 }

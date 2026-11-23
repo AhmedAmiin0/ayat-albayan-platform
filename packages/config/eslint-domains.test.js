@@ -8,7 +8,12 @@ const opts = { base: 'src', exempt: ['core', 'test'] };
 
 test('with no converted domain the regex and the route group are today’s mobile config', () => {
   assert.equal(domainModuleRegex(opts), 'src/(?!core/|test/)[^/]+');
-  assert.deepEqual(routeImportGroup({ prefix: '@/', exempt: ['core'] }), ['@/*/**', '!@/core/**']);
+  assert.deepEqual(routeImportGroup({ prefix: '@/', exempt: ['core'] }), [
+    '@/*/**',
+    '!@/*/index.ts',
+    '!@/*/index.tsx',
+    '!@/core/**',
+  ]);
 });
 
 test('a converted domain’s modules are two levels deep; the rest stay one level', () => {
@@ -28,8 +33,8 @@ test('folder names are kebab-case only (they go into a regex)', () => {
 });
 
 /** Lints one route import with the generated group, as apps/staff-mobile does. */
-async function routeErrors(spec, domains) {
-  const group = routeImportGroup({ prefix: '@/', exempt: ['core'], domains });
+async function routeErrors(spec, domains, prefix = '@/') {
+  const group = routeImportGroup({ prefix, exempt: ['core'], domains });
   const eslint = new ESLint({
     overrideConfigFile: true,
     overrideConfig: { rules: { 'no-restricted-imports': ['error', { patterns: [{ group, message: 'index only' }] }] } },
@@ -46,4 +51,16 @@ test('route files: a domain module through its index only; flat features and cor
   assert.equal(await routeErrors('@/inbox/thread/T', domains), 1);
   assert.equal(await routeErrors('@/core/ui/AppText', domains), 0);
   assert.equal(await routeErrors('@/sales/app', []), 1, 'not converted yet: @/sales/app is internals of @/sales');
+});
+
+test('route files on `#/` (package.json imports): the `#` is literal, a module index file is its index', async () => {
+  const domains = ['sales'];
+  const errors = (spec, d = domains) => routeErrors(spec, d, '#/');
+  assert.equal(await errors('#/sales/app/index.ts'), 0);
+  assert.equal(await errors('#/sales/app/screens/A.tsx'), 1);
+  assert.equal(await errors('#/inbox/index.ts'), 0);
+  assert.equal(await errors('#/inbox/index.tsx'), 0);
+  assert.equal(await errors('#/inbox/thread/T.tsx'), 1);
+  assert.equal(await errors('#/core/ui/AppText.tsx'), 0);
+  assert.equal(await errors('#/sales/app/index.ts', []), 1, 'not converted yet: internals of #/sales');
 });

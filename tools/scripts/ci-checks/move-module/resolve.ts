@@ -1,12 +1,18 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { posix } from 'node:path';
 import { ts } from 'ts-morph';
+import { z } from 'zod';
 
-/** A tsconfig `paths` alias such as `@/*` → `apps/staff-web/src/*`, for files under `scope`. */
+/**
+ * An app alias for files under `scope`: `#/*` → `./src/*` from its package.json `imports`
+ * (`exact`: the specifier names the file with its extension, docs/32 R12), or an older tsconfig
+ * `paths` one such as `@/*`.
+ */
 export interface Alias {
   prefix: string;
   dir: string;
   scope: string;
+  exact?: true;
 }
 /** How a specifier reached its file, so the rewritten one keeps the same style. */
 export type Style = 'exact' | 'js' | 'bare' | 'index';
@@ -45,11 +51,25 @@ function aliasesOf(root: string, scope: string): Alias[] {
   });
 }
 
-/** The `paths` aliases of every app and package tsconfig. */
+const subpath = z.union([z.string(), z.object({ types: z.string() })]);
+const manifest = z.object({ imports: z.record(z.string(), subpath).optional() });
+
+function importsAliasOf(root: string, scope: string): Alias[] {
+  const file = posix.join(root, scope, 'package.json');
+  if (!existsSync(file)) return [];
+  const imports = manifest.parse(JSON.parse(readFileSync(file, 'utf8'))).imports ?? {};
+  const target = imports['#/*'] ?? imports['#/*.ts'];
+  if (target === undefined) return [];
+  const folder = (typeof target === 'string' ? target : target.types).split('*')[0] ?? '';
+  return [{ prefix: '#/', dir: posix.join(scope, folder).replace(/\/$/, ''), scope, exact: true }];
+}
+
+/** The `#/` aliases of every package.json `imports`, then the `paths` aliases of every tsconfig. */
 export function loadAliases(root: string): Alias[] {
   return ['apps', 'packages', 'tools'].flatMap((group) => {
     if (!existsSync(posix.join(root, group))) return [];
-    return readdirSync(posix.join(root, group)).flatMap((n) => aliasesOf(root, posix.join(group, n)));
+    const scopes = readdirSync(posix.join(root, group)).map((n) => posix.join(group, n));
+    return scopes.flatMap((scope) => [...importsAliasOf(root, scope), ...aliasesOf(root, scope)]);
   });
 }
 
@@ -107,13 +127,12 @@ export function formatSpec(
   opts: { from: string; file: string; aliases?: Alias[] },
 ): string {
   const path = pathFor(target, opts.file);
+  const named = (a: Alias): string => a.prefix + posix.relative(a.dir, a.exact ? opts.file : path);
   const { alias } = target;
-  if (alias !== undefined && covers(alias, opts.from, path)) {
-    return alias.prefix + posix.relative(alias.dir, path);
-  }
+  if (alias !== undefined && covers(alias, opts.from, path)) return named(alias);
   const rel = posix.relative(posix.dirname(opts.from), path);
   if (rel === '') return '.';
   const app = rel.startsWith('../') ? opts.aliases?.find((a) => covers(a, opts.from, path)) : undefined;
-  if (app !== undefined) return app.prefix + posix.relative(app.dir, path);
+  if (app !== undefined) return named(app);
   return rel.startsWith('.') ? rel : `./${rel}`;
 }

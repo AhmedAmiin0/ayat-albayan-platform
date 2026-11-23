@@ -115,7 +115,7 @@ export function forbiddenImports({ files, ignores = [], bans }) {
 /**
  * Flat-config block: `ab/no-parent-imports` (eslint-parent-imports.js) for `files` of the
  * package at `root`, tests included (their imports and mock paths use the alias too); `dir`: the
- * `@/*` folder.
+ * `#/*` folder.
  */
 export function noParentImports({ root, files, dir = 'src', ignores = [] }) {
   const rules = { 'ab/no-parent-imports': ['error', { root, dir }] };

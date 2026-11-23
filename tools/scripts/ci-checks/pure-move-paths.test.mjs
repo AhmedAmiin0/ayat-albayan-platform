@@ -51,6 +51,11 @@ test('a move may write a `../` path as its `@/` alias (docs/32 R12), never anoth
   assert.equal(onlyPathsChanged(src, alias.replace('@/modules/a/f/e', '@/modules/a/d/e'), c), false, 'stale path');
 });
 
+test('`#/` is the importing workspace\'s src (package.json imports), with its extension', () => {
+  assert.equal(target('apps/family-web/src/a/b.ts', '#/lib/x.ts'), 'apps/family-web/src/lib/x.ts');
+  assert.equal(target('packages/web-kit/src/a.ts', '#/lib/index.ts'), 'packages/web-kit/src/lib/index.ts');
+});
+
 test('a workspace package resolves to its src index, digits in the name included', () => {
   assert.equal(target('apps/api/src/a.ts', '@ab/i18n'), 'packages/i18n/src/index.ts');
   assert.equal(target('apps/api/src/a.ts', '@ab/web-kit'), 'packages/web-kit/src/index.ts');

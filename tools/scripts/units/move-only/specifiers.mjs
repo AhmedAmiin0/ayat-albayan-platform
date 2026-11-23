@@ -38,20 +38,35 @@ const HOLDERS = {
   [SyntaxKind.NewExpression]: newPaths,
 };
 
+/** Module sources only: the own-folder paths (`new URL`, `join(__dirname, …)`) are not. */
+const SOURCES = {
+  ...HOLDERS,
+  [SyntaxKind.CallExpression]: (n, sf) => {
+    const name = callName(n, sf);
+    return name === 'import' || PATH_CALLS.test(name) ? texts([n.arguments[0]]) : [];
+  },
+  [SyntaxKind.NewExpression]: () => [],
+};
+
 /** Every path literal under `node`; forEachChild stops at a truthy return, so walk returns none. */
-function collect(node, sf, out) {
-  out.push(...(HOLDERS[node.kind]?.(node, sf) ?? []));
+function collect(node, ctx, out) {
+  out.push(...(ctx.holders[node.kind]?.(node, ctx.sf) ?? []));
   node.forEachChild((child) => {
-    collect(child, sf, out);
+    collect(child, ctx, out);
   });
   return out;
 }
 
-/** `text` with every path string emptied (quotes kept), so two sides compare without them. */
-export function maskSpecifiers(text, file) {
+function mask(text, { file, holders }) {
   const sf = parse(text, file);
-  return collect(sf, sf, [])
+  return collect(sf, { sf, holders }, [])
     .map((lit) => ({ start: lit.getStart(sf) + 1, end: lit.getEnd() - 1 }))
     .sort((a, b) => b.start - a.start)
     .reduce((acc, { start, end }) => acc.slice(0, start) + acc.slice(end), text);
 }
+
+/** `text` with every path string emptied (quotes kept), so two sides compare without them. */
+export const maskSpecifiers = (text, file) => mask(text, { file, holders: HOLDERS });
+
+/** `text` with its module sources emptied: an import rewrite changes nothing else. */
+export const maskSources = (text, file) => mask(text, { file, holders: SOURCES });

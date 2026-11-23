@@ -9,7 +9,7 @@ export interface WebConfigOptions {
   routes?: boolean;
   /** A second dev server's own Vite cache. */
   cacheDir?: string;
-  /** Absolute folder of @ab/web-kit: its src/ is aliased, its public/ and icons/ are served. */
+  /** Absolute folder of @ab/web-kit: its src/ holds the test setup, its public/ and icons/ are served. */
   kitDir: string;
   /** Absolute folder of @ab/catalog's brand marks, served at /brand/. */
   brandDir: string;
@@ -17,6 +17,8 @@ export interface WebConfigOptions {
   icons?: 'staff' | 'family';
   /** The app's name in its X-AB-Client tag, `<client>/<build>` (default 'web'). */
   client?: 'web' | 'family-web';
+  /** Path aliases of an app still on tsconfig `paths`; dropped once it uses package.json `imports`. */
+  alias?: Record<string, string>;
 }
 
 /** The Vite + Vitest config of a web workspace (docs/51 §2). */

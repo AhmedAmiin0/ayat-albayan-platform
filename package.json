@@ -35,7 +35,8 @@
     "guard:units": "node tools/scripts/units/guard.ts",
     "guard:move-only": "node tools/scripts/units/move-only/gate.mjs",
     "units:fold": "node tools/scripts/units/fold.ts",
-    "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs"
+    "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs",
+    "imports:kit": "node tools/scripts/imports/kit-entries.mjs"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {

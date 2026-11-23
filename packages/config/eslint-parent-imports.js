@@ -1,5 +1,5 @@
-// Imports use absolute paths. A module path never climbs out of its
-// folder with `../`: it names the workspace alias (`@/…` → `src/…`) instead; a sibling (`./x`)
+// Imports use absolute paths. A module path never climbs out of its folder with `../`: it names
+// the workspace alias (`#/…` → `src/…`, package.json `imports`) instead; a sibling (`./x`)
 // stays relative, and so does a path the alias cannot name (outside `src/`: mobile app/ routes,
 // app.json, web public/). Covers every place a path is written: imports, re-exports, `import()`,
 // `import('x').T`, `import x = require()`, require and the vi / jest mock calls.
@@ -37,7 +37,7 @@ const pathLiteral = (node) => {
 const rule = {
   meta: {
     type: 'problem',
-    docs: { description: 'Import through the workspace alias (@/…), never a parent-relative path (../).' },
+    docs: { description: 'Import through the workspace alias (#/…), never a parent-relative path (../).' },
     schema: [
       {
         type: 'object',
@@ -47,11 +47,11 @@ const rule = {
       },
     ],
     messages: {
-      parent: "Write '{{spec}}' through the workspace alias (@/…), not ../ (pnpm imports:absolute -- <file> --write).",
+      parent: "Write '{{spec}}' through the workspace alias (#/…), not ../ (pnpm imports:absolute -- <file> --write).",
     },
   },
   create(context) {
-    // `root`: the package folder; `dir`: the alias folder in it (`@/*` → `src/*`).
+    // `root`: the package folder; `dir`: the alias folder in it (`#/*` → `./src/*`).
     const { root, dir } = context.options[0];
     const opts = { file: context.filename, aliasDir: resolve(root, dir) };
     const check = (literal) => {

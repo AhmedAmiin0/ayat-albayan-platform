@@ -9,13 +9,15 @@ const TSX = ['src/**/*.tsx'];
 
 /**
  * `module`: the folders that reach each other only through their index.ts (docs/27 §1 rule 6;
- * none for the kit, whose files are imported by path). Every block else is the same for all.
+ * none for the kit, whose apps import it through its package.json `exports`). `alias`: the app's
+ * own prefix, `#/` (package.json `imports`) unless it still names `@/` (tsconfig `paths`).
+ * Every block else is the same for all.
  */
-export function webBlocks({ root, module }) {
-  const fenced = module ? [boundaries({ root, files: SRC, module, alias: { '@/': 'src/' } })] : [];
+export function webBlocks({ root, module, alias = '#/' }) {
+  const fenced = module ? [boundaries({ root, files: SRC, module, alias: { [alias]: 'src/' } })] : [];
   return [
     ...fenced,
-    // docs/32 R12: `@/…` (the kit: `@ab/web-kit/…`), never `../`.
+    // docs/32 R12: `#/…`, never `../`.
     noParentImports({ root, files: SRC }),
     // jsx-a11y recommended (role="admin" / "teacher" on our own components is a prop).
     { files: TSX, rules: a11yRules },

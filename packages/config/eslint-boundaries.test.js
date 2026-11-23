@@ -36,6 +36,15 @@ test('isDeep: another module internals are deep; its index, the same module and 
   assert.equal(isDeep('@nestjs/common', from), false);
 });
 
+test('isDeep on `#/` (package.json imports): a module through its index file, never its internals', () => {
+  const web = { cwd: '/w', module: 'src/features/[^/]+/[^/]+', alias: { '#/': 'src/' }, file: '/w/src/features/a/b/c.ts' };
+  assert.equal(isDeep('#/features/x/y/hooks/use-y.ts', web), true);
+  assert.equal(isDeep('#/features/x/y/index.ts', web), false);
+  assert.equal(isDeep('#/features/x/y/index.tsx', web), false);
+  assert.equal(isDeep('#/lib/query.ts', web), false);
+  assert.equal(isDeep('#/features/a/b/other.ts', web), false);
+});
+
 test('isDeep resolves an alias against the package root', () => {
   const web = { cwd: '/w', module: 'src/features/[^/]+/[^/]+', alias: { '@/': 'src/' }, file: '/w/src/features/a/b/c.ts' };
   assert.equal(isDeep('@/features/x/y/hooks/use-y', web), true);

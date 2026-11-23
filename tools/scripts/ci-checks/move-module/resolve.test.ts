@@ -9,11 +9,30 @@ const root = makeRepo({
   'apps/staff-web/src/ui/index.tsx': '',
   'apps/api/src/env.ts': '',
   'apps/api/src/x.js': '',
+  'apps/family-web/package.json': '{ "imports": { "#/*": "./src/*" } }',
+  'apps/family-web/src/lib/api.ts': '',
+  'apps/family-web/src/ui/index.tsx': '',
 });
 const r = (renamed: [string, string][] = []): Resolver => ({ root, aliases: loadAliases(root), renamed: new Map(renamed) });
 
-test('loads the @/ alias of an app tsconfig with comments', () => {
-  assert.deepEqual(loadAliases(root), [{ prefix: '@/', dir: 'apps/staff-web/src', scope: 'apps/staff-web' }]);
+test('loads the #/ alias of an app package.json and the @/ alias of an app tsconfig with comments', () => {
+  assert.deepEqual(loadAliases(root), [
+    { prefix: '#/', dir: 'apps/family-web/src', scope: 'apps/family-web', exact: true },
+    { prefix: '@/', dir: 'apps/staff-web/src', scope: 'apps/staff-web' },
+  ]);
+});
+
+test('#/ names the file with its extension, also when a move turns `../` into it', () => {
+  const from = 'apps/family-web/src/features/a.ts';
+  const t = resolveSpec(r(), from, '#/ui/index.tsx');
+  assert.deepEqual(t?.file, 'apps/family-web/src/ui/index.tsx');
+  assert.ok(t);
+  const moved = { from: 'apps/family-web/src/x/y/z.ts', file: 'apps/family-web/src/ui/Button/index.tsx' };
+  assert.equal(formatSpec(t, moved), '#/ui/Button/index.tsx');
+  const bare = resolveSpec(r(), from, '../lib/api');
+  assert.ok(bare);
+  const up = { from: 'apps/family-web/src/a/b/c.ts', file: 'apps/family-web/src/lib/api.ts', aliases: loadAliases(root) };
+  assert.equal(formatSpec(bare, up), '#/lib/api.ts', 'a climbing path takes the exact #/ form');
 });
 
 test('resolves bare, .js-for-.ts, exact, directory index and alias specifiers', () => {

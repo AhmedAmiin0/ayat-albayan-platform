@@ -1,49 +1,32 @@
-// The absolute-imports codemod: imports use absolute paths (docs/32
-// R12). Rewrites every parent-relative module path (`../x`) of a workspace with a `@/*` alias to
-// that alias (`@/x`): static imports, re-exports, `import()`, `import('x').T`, require and the
-// vi / jest mock paths (move-module/specifiers.ts finds them). A sibling (`./x`) and a path that
-// leaves the alias folder (`../package.json` from src/, `../(tabs)/x` in mobile app/) stay;
-// nothing else changes. Deterministic (sorted files, span edits only): a second run finds nothing.
+// The absolute-imports codemod (docs/32 R12): an app names its own files through `#/`, defined by
+// its package.json `imports`, with the file's extension (absolute-resolve.mjs). Rewrites every
+// parent-relative path (`../x`), every old tsconfig-paths `@/x` and every bare `#/x` to the
+// exact `#/x.ts`: static imports, re-exports, `import()`, `import('x').T`, require and the vi /
+// jest mock paths (move-module/specifiers.ts finds them). A sibling (`./x`) and a path that leaves
+// the alias folder (`../package.json` from src/, `../(tabs)/x` in mobile app/) stay; nothing else
+// changes. Deterministic (sorted files, span edits only): a second run finds nothing.
 // Usage: pnpm imports:absolute -- <workspace|paths…> [--write]   (dry run without --write)
 //   workspace: api, staff-web, staff-mobile or apps/<name>; paths: files or folders inside apps.
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { Project, ts } from 'ts-morph';
+import { Project } from 'ts-morph';
 import { applyEdits, specifierNodes } from '../ci-checks/move-module/specifiers.ts';
+import { absoluteSpec, aliasOf, isAppPath } from './absolute-resolve.mjs';
 
 const CODE = /\.[cm]?[jt]sx?$/;
 const SKIP = new Set(['node_modules', 'dist', 'coverage', '.expo', '.turbo', 'playwright-report', 'test-results']);
 
-/** `{ scope: 'apps/staff-web', dir: 'apps/staff-web/src' }` from the app tsconfig's `@/*` path. */
-export function aliasOf(root, scope) {
-  const file = posix.join(root, scope, 'tsconfig.json');
-  if (!existsSync(file)) return undefined;
-  const { config } = ts.parseConfigFileTextToJson(file, readFileSync(file, 'utf8'));
-  const target = config?.compilerOptions?.paths?.['@/*']?.[0];
-  if (typeof target !== 'string' || !target.endsWith('/*')) return undefined;
-  return { scope, dir: posix.join(scope, target.slice(0, -2)) };
-}
-
-/** The alias form of `spec` written in `file` (repo-relative), or null when it stays as it is. */
-export function absoluteSpec(alias, file, spec) {
-  if (spec !== '..' && !spec.startsWith('../')) return null;
-  const to = posix.normalize(posix.join(posix.dirname(file), spec)).replace(/\/$/, '');
-  if (!to.startsWith(`${alias.dir}/`)) return null;
-  return `@/${to.slice(alias.dir.length + 1)}`;
-}
-
-/** `file`'s text with its parent-relative paths rewritten; `kept`: the `../` ones left as is. */
+/** `file`'s text with its app paths rewritten; `kept`: the `../` / `@/` ones left as is. */
 export function rewriteText(project, alias, { file, text }) {
   const sf = project.createSourceFile(`/virtual/${file}`, text, { overwrite: true });
-  const parents = specifierNodes(sf).filter((s) => s.value === '..' || s.value.startsWith('../'));
+  const found = specifierNodes(sf).filter((s) => isAppPath(s.value));
   project.removeSourceFile(sf);
-  const edits = parents.flatMap((s) => {
-    const value = absoluteSpec(alias, file, s.value);
-    return value === null ? [] : [{ start: s.start, end: s.end, value }];
-  });
+  const all = found.map((s) => ({ ...s, to: absoluteSpec(alias, file, s.value) }));
+  const edits = all.flatMap((s) => (s.to === null ? [] : [{ start: s.start, end: s.end, value: s.to }]));
   const out = edits.length === 0 ? text : applyEdits(text, edits);
-  return { text: out, rewritten: edits.length, kept: parents.length - edits.length };
+  const kept = all.filter((s) => s.to === null && !s.value.startsWith('#/')).length;
+  return { text: out, rewritten: edits.length, kept };
 }
 
 /** Code files under `rel` (a file or a folder, repo-relative), sorted. */
@@ -73,7 +56,7 @@ const scopeOf = (rel) => /^apps\/[^/]+/.exec(rel)?.[0];
 function aliasFor(root, rel) {
   const scope = scopeOf(rel);
   const alias = scope === undefined ? undefined : aliasOf(root, scope);
-  if (alias === undefined) throw new Error(`${rel}: not inside an app with a tsconfig "@/*" path`);
+  if (alias === undefined) throw new Error(`${rel}: not inside an app with a package.json "imports" "#/*"`);
   return alias;
 }
 

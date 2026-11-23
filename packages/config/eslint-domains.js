@@ -19,15 +19,21 @@ export function domainModuleRegex({ base, exempt, domains = [] }) {
   return `${base}/(?:(?:${domains.join('|')})/[^/]+|${flat})`;
 }
 
+const INDEX = ['index.ts', 'index.tsx'];
+
 /**
  * `no-restricted-imports` patterns for route files (gitignore order: later lines win): a feature only through
- * its index (`@/inbox`, `@/sales/app`), never its internals; `exempt` folders are free.
+ * its index (`#/inbox/index.ts`, `#/sales/app/index.ts`), never its internals; `exempt` folders are free.
+ * Gitignore reads a leading `#` as a comment, so it is escaped.
  */
 export function routeImportGroup({ prefix, exempt, domains = [] }) {
   checked([...exempt, ...domains]);
+  const p = prefix.replace(/^#/, '\\#');
+  const domain = (d) => [`!${p}${d}/*`, `${p}${d}/*/**`, ...INDEX.map((i) => `!${p}${d}/*/${i}`)];
   return [
-    `${prefix}*/**`,
-    ...exempt.map((e) => `!${prefix}${e}/**`),
-    ...domains.flatMap((d) => [`!${prefix}${d}/*`, `${prefix}${d}/*/**`]),
+    `${p}*/**`,
+    ...INDEX.map((i) => `!${p}*/${i}`),
+    ...exempt.map((e) => `!${p}${e}/**`),
+    ...domains.flatMap(domain),
   ];
 }

@@ -14,6 +14,7 @@ testRule({ name: 'no-parent-imports', rule: noParentImportsRule, lang: 'ts' }, {
   valid: [
     ok("import { a } from './a';"),
     ok("import { a } from '@/common/a';"),
+    ok("import { a } from '#/common/a.ts';"),
     ok("import { a } from '@ab/shared';"),
     ok("export * from './b';"),
     ok("vi.mock('./c');"),

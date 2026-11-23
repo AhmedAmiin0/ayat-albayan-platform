@@ -3,6 +3,9 @@
   "compilerOptions": {
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    // `#/x.ts` (docs/32 R12): TypeScript resolves a package.json `imports` target exactly, so the
+    // specifier names the file with its extension.
+    "allowImportingTsExtensions": true
   }
 }

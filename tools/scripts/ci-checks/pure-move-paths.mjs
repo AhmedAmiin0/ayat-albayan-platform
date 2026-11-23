@@ -20,7 +20,10 @@ export function target(file, spec) {
   const pkg = /^@ab\/([a-z0-9-]+)$/.exec(spec);
   if (pkg) return `packages/${pkg[1]}/src/index.ts`;
   if (spec.startsWith('.')) return posix.normalize(posix.join(posix.dirname(file), spec)).replace(/\/$/, '');
-  // `@/*` → `./src/*` in each app's tsconfig, for every file of the app (mobile's app/ routes too).
+  // `#/*` → `./src/*` in each workspace's package.json `imports`, `@/*` → `./src/*` in an app
+  // tsconfig not yet moved: for every file of the workspace (mobile's app/ routes too).
+  const ws = /^((?:apps|packages)\/[^/]+)\//.exec(file);
+  if (spec.startsWith('#/') && ws) return posix.join(ws[1], 'src', spec.slice(2));
   const app = /^(apps\/[^/]+)\//.exec(file);
   if (spec.startsWith('@/') && app) return posix.join(app[1], 'src', spec.slice(2));
   return null;
