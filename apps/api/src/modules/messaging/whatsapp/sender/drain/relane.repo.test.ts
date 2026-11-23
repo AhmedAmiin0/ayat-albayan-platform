@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { relaneQueued } from './relane.repo';
 
 // #695 review, item 2: after «نقل إلى الرقم الآخر» a template's queued, unclaimed rows take its new
