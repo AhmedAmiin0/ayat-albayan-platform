@@ -3,7 +3,7 @@ import { fakeDb } from '@/modules/people/guardians/fake-db';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { AlertsRepo } from './alerts.repo';
 import { toBalance } from '@/modules/finance/subscriptions/money/balance.repo';
-import { cents, SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 describe('AlertsQueries: idempotent writes (rule 8)', () => {
   it('a task is insert … on conflict (dedup_key) do nothing', async () => {
@@ -107,15 +107,14 @@ describe('balances and payments sums', () => {
       payments: [
         {
           data: [
-            { subscription_id: 'a', amount: 0.1, currency: 'SAR' },
-            { subscription_id: 'a', amount: 0.2, currency: 'SAR' },
-            { subscription_id: 'a', amount: 50, currency: 'USD' },
+            { subscription_id: 'a', kind: 'payment', amount: 0.1, currency: 'SAR' },
+            { subscription_id: 'a', kind: 'payment', amount: 0.2, currency: 'SAR' },
+            { subscription_id: 'a', kind: 'payment', amount: 50, currency: 'USD' },
           ],
         },
       ],
     });
     const paid = await new SubscriptionsRepo(db).paid([{ id: 'a', currency: 'SAR' }, { id: 'b', currency: 'EGP' }]);
     expect(paid).toEqual(new Map([['a', 0.3], ['b', 0]]));
-    expect(cents(0.1, 0.2)).toBe(0.3);
   });
 });

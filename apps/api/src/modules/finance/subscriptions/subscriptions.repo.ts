@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import { round2 } from '@ab/shared';
+import { netPaidIn } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains } from '@/common/db/list-sort';
@@ -101,23 +101,17 @@ export class SubscriptionsRepo {
 
   /**
    * Net paid per package in its own currency: payments − refunds. A payment sent in another
-   * currency is stored converted (original kept apart), so every row is in the package currency.
+   * currency is stored converted (original kept apart); a legacy unconverted row is skipped.
    */
   async paid(subs: readonly Pick<SubRow, 'id' | 'currency'>[]): Promise<Map<string, number>> {
-    const sums = new Map(subs.map((s) => [s.id, 0]));
-    if (subs.length === 0) return sums;
+    if (subs.length === 0) return new Map();
     const { data, error } = await this.db
       .from('payments')
       .select('subscription_id, amount, currency, kind')
-      .in('subscription_id', [...sums.keys()]);
+      .in('subscription_id', subs.map((s) => s.id));
     if (error) throw dbError(error);
-    const currency = new Map(subs.map((s) => [s.id, s.currency]));
-    for (const p of data) {
-      if (currency.get(p.subscription_id) !== p.currency) continue;
-      const signed = p.kind === 'refund' ? -Number(p.amount) : Number(p.amount);
-      sums.set(p.subscription_id, cents(sums.get(p.subscription_id) ?? 0, signed));
-    }
-    return sums;
+    const rowsOf = (id: string) => data.filter((p) => p.subscription_id === id);
+    return new Map(subs.map((s) => [s.id, netPaidIn(rowsOf(s.id), s.currency)]));
   }
 
   /** The student and the guardian's country (the quote's default country, S2). */
@@ -130,9 +124,4 @@ export class SubscriptionsRepo {
     if (error) throw dbError(error);
     return data ? { id: data.id, country: data.guardian?.country ?? null } : null;
   }
-}
-
-/** Adds money without float drift (numeric(12,2)). */
-export function cents(a: number, b: number): number {
-  return round2(a + b);
 }

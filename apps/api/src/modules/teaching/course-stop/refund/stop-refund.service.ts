@@ -1,4 +1,5 @@
 import {
+  netPaid,
   refundAmountProblem,
   splitRefund,
   stopRefund,
@@ -31,9 +32,6 @@ interface Allowed {
   cards: CardState[];
   calc: StopRefund;
 }
-
-const net = (rows: readonly MoneyRow[]): number =>
-  rows.reduce((sum, r) => sum + (r.kind === 'refund' ? -r.amount : r.amount), 0);
 
 export type { RefundChoiceAsk } from './stop-refund.plan';
 
@@ -138,7 +136,7 @@ export class StopRefunds {
     const mineIds = cards.flatMap((c) => c.mine.map((r) => uuidFor(r.id)));
     const own = new Set([manualRefundKey(requestId), ...mineIds]);
     const pending = cards.reduce((n, c) => n + c.unrecorded, 0);
-    const paid = net(rows.filter((r) => !own.has(r.client_request_id ?? ''))) - pending;
+    const paid = netPaid(rows.filter((r) => !own.has(r.client_request_id ?? ''))) - pending;
     const ratePercent = settings.refund_attended_rate_percent;
     const calc = stopRefund({ ...pkg, paid, ratePercent, currency: sub.currency });
     return { pkg, rows, cards, calc };
