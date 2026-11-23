@@ -1,5 +1,5 @@
 // Which files the language check reads, and how their comments are found.
-import { CODE, FORBIDDEN } from '../comment-only/patterns.mjs';
+import { CODE, FORBIDDEN } from '../patterns.mjs';
 
 const CODE_ROOTS = /^(?:apps|packages|tools|e2e|docs\/design\/brand\/tools)\//;
 const HASH = /^\.github\/.*\.(?:ya?ml|sh)$/;

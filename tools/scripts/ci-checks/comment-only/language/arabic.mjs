@@ -1,5 +1,5 @@
 // Comments hold English only; Arabic belongs in UI strings (CLAUDE.md rule 24).
-import { commentsOf } from '../comment-only/comments.mjs';
+import { commentsOf } from '../comments.mjs';
 
 const ARABIC = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/;
 
