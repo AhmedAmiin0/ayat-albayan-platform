@@ -6,7 +6,7 @@ const tpl = 'templates.settings';
 export const COMMS_SOURCES = ['legacy', 'module'] as const;
 export type CommsSource = (typeof COMMS_SOURCES)[number];
 
-/** «الرسائل والواتساب» (migrations 142, 162; Phase 4 docs/12 §2): the sending switches and the quick-reply window. */
+/** «الرسائل والواتساب» (migrations 142, 162; docs/12 §2): the sending switches and the quick-reply window. */
 export const MESSAGING_SETTINGS = {
   messaging_enabled: {
     module: 'messaging', group: 'safety', ownedBy: 'messages_gate', reachesFamilies: true,
@@ -55,8 +55,8 @@ export const MESSAGING_SETTINGS = {
     labelKey: 'settings.quickReplyWindowHours', hintKey: 'settings.hints.quickReplyWindowHours',
   },
   /**
-   * The template sent once per 24 h before a staff text to a family whose chat window is closed
-   * (owner 2026-11-03: welcome_greeting). Only an approved chat-line template allowed for
+   * The template sent once per 24 h before a staff text to a family whose chat window is closed.
+   * Only an approved chat-line template allowed for
    * restricted roles (sales_starter) with no variables is ever sent; anything else sends nothing
    * and the held text fails with that reason (whatsapp/sender/window). Also the thread-open reopen.
    */
@@ -66,7 +66,7 @@ export const MESSAGING_SETTINGS = {
     labelKey: 'settings.chatReopenTemplate', hintKey: 'settings.hints.chatReopenTemplate',
   },
   /**
-   * The old CRM's storage host (owner 2026-10-27): a photo or voice note imported from it is fetched
+   * The old CRM's storage host: a photo or voice note imported from it is fetched
    * from this host once and cached (InboundMedia). Empty (the seed) = off: such a file is 410. The
    * value is the academy's own and never lives in the repo; the API checks the host exactly.
    */
@@ -76,7 +76,7 @@ export const MESSAGING_SETTINGS = {
     labelKey: 'settings.crmMediaHost', hintKey: 'settings.hints.crmMediaHost',
   },
   /**
-   * Owner 2026-10-27: while true (and crm_media_host is set), the API copies EVERY imported old-CRM
+   * While true (and crm_media_host is set), the API copies EVERY imported old-CRM
    * file into wa-media in small batches (CrmMediaCopyJob), not only those an admin opens; it turns
    * itself back off when none is left. Then the old CRM's chat-media bucket may be made private.
    */
@@ -85,7 +85,7 @@ export const MESSAGING_SETTINGS = {
     type: 'bool', default: false, labelKey: 'settings.crmMediaCopyAll', hintKey: 'settings.hints.crmMediaCopyAll',
   },
   /**
-   * The in-house short links' base (owner 2026-11-05, docs/19 «Short links»): «https://<host>/r/». Empty
+   * The in-house short links' base (docs/19 «Short links»): «https://<host>/r/». Empty
    * (the seed) = the API's public origin + /r/. A short domain later is this one value.
    */
   short_link_base: {
@@ -93,7 +93,7 @@ export const MESSAGING_SETTINGS = {
     type: 'string', default: '', minLength: 0, maxLength: 100,
     labelKey: 'settings.shortLinkBase', hintKey: 'settings.hints.shortLinkBase',
   },
-  /** Managed short links (owner 2026-11-17, docs/19): a new link's lifetime when none is given. */
+  /** Managed short links (docs/19): a new link's lifetime when none is given. */
   short_link_default_days: {
     module: 'messaging', group: 'reports', type: 'int', default: 7, min: 1, max: 365,
     labelKey: 'settings.shortLinkDefaultDays', hintKey: 'settings.hints.shortLinkDefaultDays',
