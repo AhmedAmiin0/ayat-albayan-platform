@@ -1,4 +1,6 @@
-import { normalizePhone, type CredentialMode, type LinkCandidate, type UserCreate, type UserRole } from '@ab/shared';
+import { type CredentialMode, type LinkCandidate, type UserCreate } from '@ab/shared';
+import { type UserRole } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
 
 export interface NewTeacherForm {
   display_name_ar: string;

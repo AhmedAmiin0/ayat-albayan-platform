@@ -1,4 +1,5 @@
-import { isFamilyActionable, isOpenLesson, type PortalLesson } from '@ab/shared';
+import { isFamilyActionable, type PortalLesson } from '@ab/shared';
+import { isOpenLesson } from '@ab/schedule';
 
 // What «خيارات الحلقة» offers on one lesson, and what its card says. Pure,
 // shared by the family app and the web portal.

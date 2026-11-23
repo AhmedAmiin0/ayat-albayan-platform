@@ -1,9 +1,6 @@
-import {
-  lessonStatusStyle,
-  needsConfirmation,
-  type LessonStatus,
-  type StatusStyle,
-} from '@ab/shared';
+import { type LessonStatus } from '@ab/catalog';
+import { lessonStatusStyle, type StatusStyle } from '@ab/money';
+import { needsConfirmation } from '@ab/schedule';
 
 // «يحتاج تأكيد» only while the academy requires a confirmation
 // (settings.lesson_confirmation_required,

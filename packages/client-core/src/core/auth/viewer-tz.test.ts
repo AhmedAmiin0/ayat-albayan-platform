@@ -1,4 +1,4 @@
-import { deviceTimeZone, resolveViewerTz } from '@ab/shared';
+import { deviceTimeZone, resolveViewerTz } from '@ab/time';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setViewerPersonTz, subscribeViewerTz, viewerTz, viewerTzFor } from './viewer-tz.js';
 

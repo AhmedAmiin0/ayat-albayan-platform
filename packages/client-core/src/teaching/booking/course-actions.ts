@@ -1,4 +1,5 @@
-import { counted, type CourseStopPreview, type PluralForm } from '@ab/shared';
+import { type CourseStopPreview } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
 import { ApiError } from '../../core/http/index.js';
 
 // The student profile's «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» (owner 2026-10-30)

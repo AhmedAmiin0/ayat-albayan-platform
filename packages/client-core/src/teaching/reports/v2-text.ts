@@ -1,4 +1,5 @@
-import { counted, rangeInfo, surahName, type Locale, type PluralForm, type SurahRange } from '@ab/shared';
+import { rangeInfo, surahName, type SurahRange } from '@ab/shared';
+import { counted, type Locale, type PluralForm } from '@ab/core';
 
 // The v2 report's range sentences («سورة الملك · الآيات 1–15», «15 آية · ص 562–563»), shared by
 // the web and mobile forms and the admin views. Each app injects its `t.reports.v2` (read per call).

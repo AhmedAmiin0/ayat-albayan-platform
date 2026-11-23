@@ -1,12 +1,7 @@
-import {
-  addDaysIn,
-  calendarDaysBetween,
-  counted,
-  localDateIn,
-  SETTING_DEFAULTS,
-  type PluralForm,
-  type ShortLinkRow,
-} from '@ab/shared';
+import { type ShortLinkRow } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
+import { SETTING_DEFAULTS } from '@ab/settings';
+import { addDaysIn, calendarDaysBetween, localDateIn } from '@ab/time';
 import { fillSlots } from '../../teaching/reports/index.js';
 
 // When a link ends, in the list's and the detail's words: «بعد 3 أيام», «غدًا», «اليوم» while

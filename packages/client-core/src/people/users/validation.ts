@@ -1,4 +1,5 @@
-import { DEFAULT_PASSWORD_MIN, needsExistingRecord, normalizePhone, passwordProblem } from '@ab/shared';
+import { DEFAULT_PASSWORD_MIN, needsExistingRecord, passwordProblem } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import type { CreateForm } from './create-form.js';
 import type { EditForm } from './edit-form.js';
 

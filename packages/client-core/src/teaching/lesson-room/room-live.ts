@@ -1,4 +1,4 @@
-import type { LessonRoomState } from '@ab/shared';
+import type { LessonRoomState } from '@ab/schedule';
 
 // «الحلقة جارية الآن · منذ ١٢ دقيقة» and «الطالب ينتظرك» from a lesson's `room`
 // (lessonRoomStateSchema).

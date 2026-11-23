@@ -1,4 +1,5 @@
-import { isOpenLesson, type JoinState, type JoinWindow, type PortalLesson } from '@ab/shared';
+import { type PortalLesson } from '@ab/shared';
+import { isOpenLesson, type JoinState, type JoinWindow } from '@ab/schedule';
 
 // The join window as the screen's own clock reads it (moved from the web's student link and portal
 // card, docs/50 §7): the API sends the window's edges; the page decides between them every tick.

@@ -1,4 +1,4 @@
-import { addDays, localDateIn, wallToUtc, weekStart } from '@ab/shared';
+import { addDays, localDateIn, wallToUtc, weekStart } from '@ab/time';
 
 // «جدولي» month view (owner 2026-11-14): a Saturday-first grid of whole academy weeks covering one
 // calendar month, in the teacher's zone. Plain calendar math on local dates «YYYY-MM-DD».

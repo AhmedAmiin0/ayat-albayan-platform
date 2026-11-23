@@ -1,5 +1,5 @@
 import { familyMeetingsOn } from '@ab/client-core';
-import { PUBLIC_CONFIG_QUERY_KEY } from '@ab/shared';
+import { PUBLIC_CONFIG_QUERY_KEY } from '@ab/settings';
 import { liveKitNative } from '@ab/mobile-kit/room';
 import { queryClient, usePublicConfig } from '@ab/mobile-kit';
 

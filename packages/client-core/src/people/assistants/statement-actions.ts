@@ -1,4 +1,5 @@
-import type { AssistantStatementView, PayoutStatus } from '@ab/shared';
+import type { PayoutStatus } from '@ab/catalog';
+import type { AssistantStatementView } from '@ab/money';
 
 // A statement's buttons in both apps (docs/36 f6): one ordered rule list per status instead of
 // an if-chain. Approving, reopening and un-paying are the approver's (assistantpay.approve, as

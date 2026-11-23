@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { ltr, t } from '@ab/mobile-kit';

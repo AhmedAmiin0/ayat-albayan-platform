@@ -1,4 +1,6 @@
-import { counted, formatAmount, type CourseCardPackage, type PluralForm } from '@ab/shared';
+import { type CourseCardPackage } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
+import { formatAmount } from '@ab/money';
 import { count, fill, type CountWords } from './course-card-text.js';
 
 // The headline and the package line of «الدورة والباقة» (owner 2026-11-17, boards CourseXActions

@@ -5,7 +5,7 @@ import {
   isOpenLesson,
   type JoinWindowConfig,
   type LessonView,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { reportSendState } from '../reports/index.js';
 import { teacherCanAct, teacherCanConfirm, teacherConfirmed } from './teacher-actions.js';
 

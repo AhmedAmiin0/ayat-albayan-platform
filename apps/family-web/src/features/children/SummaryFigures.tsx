@@ -1,5 +1,6 @@
 import { packageSummary, reportAt, type ChildSummary } from '@ab/client-core';
-import { dateText, type PortalMonth, type PortalPackage } from '@ab/shared';
+import { type PortalMonth, type PortalPackage } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Dot, Pill } from '@ab/web-kit/components/ui/surface/pill';

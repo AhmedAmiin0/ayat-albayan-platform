@@ -1,4 +1,6 @@
-import { clockOf, type ClockOptions, type LessonView, lessonWhenAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { type LessonView } from '@ab/schedule';
+import { clockOf, type ClockOptions } from '@ab/time';
 import type { LessonChange } from './lesson-changes.js';
 import type { TodayAlert } from './today-alerts.js';
 

@@ -1,5 +1,5 @@
 import { dayTile, type StripDay } from '@ab/client-core';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { followSelected } from '@ab/web-kit/lib/motion/slide-indicator';
 import { cn } from '@ab/web-kit/lib/utils';

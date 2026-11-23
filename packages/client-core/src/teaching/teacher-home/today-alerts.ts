@@ -1,4 +1,7 @@
-import { isOpenLesson, localDateIn, type LessonView, type NotificationItem, type AnyPushKind } from '@ab/shared';
+import { type NotificationItem } from '@ab/shared';
+import { type AnyPushKind } from '@ab/catalog';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
+import { localDateIn } from '@ab/time';
 import { reportStage, teacherCanConfirm, type ReportStage } from '../lessons/index.js';
 import type { AlertKind } from './home-prefs.js';
 import { lessonChange, type LessonChange } from './lesson-changes.js';

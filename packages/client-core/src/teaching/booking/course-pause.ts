@@ -1,4 +1,5 @@
-import { counted, type CoursePauseView, type PluralForm } from '@ab/shared';
+import { type CoursePauseView } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
 import { ApiError } from '../../core/http/index.js';
 
 // «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b) for web and mobile: the API paths, the query key and the

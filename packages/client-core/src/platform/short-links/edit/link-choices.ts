@@ -1,4 +1,5 @@
-import { addDaysIn, localDateIn, SHORT_LINK_MAX_DAYS, zonedInstant } from '@ab/shared';
+import { SHORT_LINK_MAX_DAYS } from '@ab/shared';
+import { addDaysIn, localDateIn, zonedInstant } from '@ab/time';
 import { roleKey, type RoleKey } from '../link-people.js';
 import {
   EXPIRY_DAY_CHOICES, expiresAtOf, type LinkClock, type LinkExpiry,

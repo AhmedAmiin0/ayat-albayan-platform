@@ -1,5 +1,5 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { describe, expect, it, vi } from 'vitest';
 import { ownProfileQuery } from './own-profile.js';
 import { profileFacts } from './profile-facts.js';

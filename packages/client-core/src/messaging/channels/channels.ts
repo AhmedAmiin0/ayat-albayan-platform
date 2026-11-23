@@ -1,4 +1,6 @@
-import { clockOf, dateText, localDateIn, type ChannelPage, type ClockCycle, type Locale } from '@ab/shared';
+import { type ChannelPage } from '@ab/shared';
+import { type Locale } from '@ab/core';
+import { clockOf, dateText, localDateIn, type ClockCycle } from '@ab/time';
 
 // The student channel (docs/31 §2) for web and mobile: who reads it through which API path.
 // teacher = «رسائل الطلاب»; portal = the family; admin = student_channels.monitor; sales = the owning assistant.

@@ -1,4 +1,5 @@
-import type { AssistantTermsView, PayoutStatus } from '@ab/shared';
+import type { PayoutStatus } from '@ab/catalog';
+import type { AssistantTermsView } from '@ab/money';
 
 // The «المساعدون» screens of web and mobile (apps/api assistant-pay).
 

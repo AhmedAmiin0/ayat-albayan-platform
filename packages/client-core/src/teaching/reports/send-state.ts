@@ -1,4 +1,4 @@
-import type { ReportStatus } from '@ab/shared';
+import type { ReportStatus } from '@ab/catalog';
 
 /**
  * Where a report stands on its way to the family, now (docs/46 D5, B5): `window` while the

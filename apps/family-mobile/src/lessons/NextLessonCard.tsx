@@ -1,5 +1,7 @@
 import { isLessonNow, lessonMinutes, liveRoom, windowStateAt } from '@ab/client-core';
-import { firstName, type ClockOptions, type PortalLesson, type PortalStudent } from '@ab/shared';
+import { type PortalLesson, type PortalStudent } from '@ab/shared';
+import { firstName } from '@ab/schedule';
+import { type ClockOptions } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { AppText, Notice, t, type, useNow, useTheme } from '@ab/mobile-kit';

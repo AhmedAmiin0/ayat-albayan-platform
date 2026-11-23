@@ -1,4 +1,5 @@
-import { lessonWhenAt, type ClockOptions, type ReportPageView } from '@ab/shared';
+import { lessonWhenAt, type ReportPageView } from '@ab/shared';
+import { type ClockOptions } from '@ab/time';
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 import { t } from '@ab/mobile-kit';

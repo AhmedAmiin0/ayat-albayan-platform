@@ -1,7 +1,8 @@
 import { dayTile, listenState, recordingMinutes } from '@ab/client-core';
-import {
-  clockOf, counted, teacherName, type PortalRecording, type PortalStudent,
-} from '@ab/shared';
+import { type PortalRecording, type PortalStudent } from '@ab/shared';
+import { counted } from '@ab/core';
+import { teacherName } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { locale, t, useResumeMap } from '@ab/mobile-kit';
