@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ApiError, reportEntryValues } from '@ab/client-core';
+import { draftBody } from '@ab/shared';
 import { onlineManager } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { backgroundThenActive, captureAppState } from '@/test/app-resume';
@@ -17,6 +19,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 const SLOW = { timeout: 3000 };
 const puts = () => mockApiSend.mock.calls.filter(([m]) => m === 'PUT');
 const offline = () => Promise.reject(new TypeError('Network request failed'));
+const serverBody = (report = reportView()) =>
+  JSON.stringify(draftBody(reportEntryValues(report, 'quran')));
+const storedBody = async () => (await readStoredDraft('r-1'))?.body ?? '{}';
 
 const open = (report = reportView()) =>
   renderHook(() => useReportEntry(report, 'quran'), {
@@ -39,7 +44,7 @@ async function failOnce() {
 
 test('a failed save is kept on the phone', async () => {
   await failOnce();
-  expect(JSON.parse((await readStoredDraft('r-1')) ?? '{}')).toMatchObject({ notes: 'ملاحظة' });
+  expect(JSON.parse(await storedBody())).toMatchObject({ notes: 'ملاحظة' });
 });
 
 test('a failed save, then a reconnect: exactly one PUT with the same body', async () => {
@@ -63,7 +68,7 @@ test('a failed save, then the app comes back to the front: one retry', async () 
 
 test('after an app restart the typed values are shown, then saved', async () => {
   const kept = { notes: 'محفوظ', recited: 'الملك 1-5', attendance: 'on_time' };
-  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': JSON.stringify(kept) }));
+  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': { body: JSON.stringify(kept), base: serverBody() } }));
   mockApiSend.mockImplementation(async () => reportView({ notes: 'محفوظ' }));
   const { result } = await open();
   await waitFor(() => expect(result.current.values.notes).toBe('محفوظ'));
@@ -73,7 +78,7 @@ test('after an app restart the typed values are shown, then saved', async () => 
 });
 
 test('a sent report ignores a stored draft', async () => {
-  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': '{"notes":"قديم"}' }));
+  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': { body: '{"notes":"قديم"}', base: serverBody() } }));
   const { result } = await open(reportView({ status: 'submitted', version: 1, notes: 'المرسل' }));
   await act(() => new Promise((done) => setTimeout(done, 50)));
   expect(result.current.values.notes).toBe('المرسل');
@@ -89,5 +94,24 @@ test('a successful send clears the stored draft', async () => {
   await waitFor(async () => expect(await readStoredDraft('r-1')).not.toBeNull(), SLOW);
   await act(() => result.current.send());
   await waitFor(() => expect(result.current.report.status).toBe('submitted'));
+  await waitFor(async () => expect(await readStoredDraft('r-1')).toBeNull());
+});
+
+test('a copy typed before the draft changed elsewhere never overwrites it', async () => {
+  const kept = { body: JSON.stringify({ notes: 'قديم' }), base: serverBody() };
+  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': kept }));
+  const { result } = await open(reportView({ notes: 'من الويب' }));
+  await act(() => new Promise((done) => setTimeout(done, 50)));
+  expect(result.current.values.notes).toBe('من الويب');
+  expect(await readStoredDraft('r-1')).toBeNull();
+  await new Promise((done) => setTimeout(done, 1000));
+  expect(puts()).toHaveLength(0);
+});
+
+test('a save the server refuses is not kept for a retry', async () => {
+  mockApiSend.mockImplementation(() => Promise.reject(new ApiError(422)));
+  const { result } = await open();
+  await act(() => result.current.set('notes', 'ملاحظة'));
+  await waitFor(() => expect(result.current.saveState.kind).toBe('failed'), SLOW);
   await waitFor(async () => expect(await readStoredDraft('r-1')).toBeNull());
 });

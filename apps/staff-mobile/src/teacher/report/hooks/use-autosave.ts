@@ -2,7 +2,7 @@ import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues, ty
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { pathKey } from '@ab/mobile-kit';
-import { dropStoredDraft, keepStoredDraft, useOnResume } from '@/teacher/report/drafts';
+import { dropIfRefused, dropStoredDraft, keepStoredDraft, useOnResume } from '@/teacher/report/drafts';
 import { saveDraft, withReport } from './api';
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };
@@ -39,7 +39,7 @@ export function useDraftAutosave(input: DraftSaver): { state: SaveState; flush: 
   const [result, setResult] = useState<SaveState>({ kind: 'idle' });
   const save = useMutation({
     mutationFn: async (b: string) => {
-      await keepStoredDraft(input.id, b);
+      await keepStoredDraft(input.id, { body: b, base: saved });
       return input.save(b);
     },
     onSuccess: (view, b) => {
@@ -49,7 +49,8 @@ export function useDraftAutosave(input: DraftSaver): { state: SaveState; flush: 
       setFailed(null);
       setResult({ kind: 'saved', at: new Date() });
     },
-    onError: (_e, b) => {
+    onError: (e, b) => {
+      void dropIfRefused(input.id, e);
       setFailed(b);
       setResult({ kind: 'failed' });
     },

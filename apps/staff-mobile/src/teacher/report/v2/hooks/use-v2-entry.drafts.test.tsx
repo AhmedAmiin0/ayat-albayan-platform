@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { v2DraftBody, v2ValuesOf } from '@ab/shared';
+import arBundle from '@ab/shared/i18n/ar.json';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { readStoredDraft, REPORT_DRAFTS_KEY } from '@/teacher/report/drafts';
@@ -18,6 +20,9 @@ const entry = () => {
   if (!first) throw new Error('fixture has one entry');
   return first;
 };
+const words = [arBundle.reports.v2.suggest, arBundle.reports.v2.suggest];
+const serverBody = () =>
+  JSON.stringify(v2DraftBody(v2ValuesOf(entry().report, entry().student.program, words)));
 const open = () =>
   renderHook(() => useV2Entry(entry()), { wrapper: queryWrapper(createTestQueryClient()) });
 
@@ -28,7 +33,7 @@ beforeEach(async () => {
 
 test('after an app restart the typed v2 content and notes are shown', async () => {
   const kept = { attendance: 'on_time', program: 'quran', content: { segments: [SEGMENT] }, notes: 'ممتاز' };
-  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': JSON.stringify(kept) }));
+  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': { body: JSON.stringify(kept), base: serverBody() } }));
   mockApiSend.mockImplementation(async () => reportView({ form_version: 2 }));
   const { result } = await open();
   await waitFor(() => expect(result.current.values.notes).toBe('ممتاز'));
@@ -37,7 +42,7 @@ test('after an app restart the typed v2 content and notes are shown', async () =
 });
 
 test('a successful v2 send clears the stored draft', async () => {
-  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': '{"notes":"x"}' }));
+  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': { body: '{"notes":"x"}', base: serverBody() } }));
   mockApiSend.mockImplementation(async (m: string) =>
     reportView({ form_version: 2, ...(m === 'POST' ? { status: 'submitted', version: 1 } : {}) }),
   );
