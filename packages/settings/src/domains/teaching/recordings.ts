@@ -1,7 +1,7 @@
 import type { SettingDef } from '../../defs.js';
 
 /**
- * Custom-config request (2026-10-05): the recording consent notice and the recordings' retention.
+ * The recording consent notice and the recordings' retention.
  * The consent notice and the recording retention have no consumer yet (the recordings PR adds them). Retention of recordings is OFF (null = keep forever):
  * deleting them is the owner's decision, never on by default.
  */

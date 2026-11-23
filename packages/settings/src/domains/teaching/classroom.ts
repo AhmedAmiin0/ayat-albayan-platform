@@ -21,7 +21,7 @@ export const CLASSROOM_SETTINGS = {
     labelKey: 'settings.defaultMeetingTitle', hintKey: 'settings.hints.defaultMeetingTitle',
   },
   /**
-   * Owner 2026-10-30 «close meetings longer than 2 hours»: MeetingMaxDurationJob closes a
+   * MeetingMaxDurationJob closes a
    * meeting or lesson room open longer than this. 0 = the job is off. No message to anyone.
    */
   meeting_max_minutes: {

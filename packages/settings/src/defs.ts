@@ -1,4 +1,4 @@
-// The settings registry's vocabulary (owner, 2026-10-05 «dynamic configurations»): one entry per
+// The settings registry's vocabulary: one entry per
 // row of public.settings. The PATCH schema, the read validators, the defaults, the typed
 // AcademySettings and the admin page's fields are all generated from these entries. Where a row
 // shows on /admin/settings is not part of its entry: layout.ts holds the page order.
@@ -22,7 +22,7 @@ interface Base {
   module?: string;
   /** Its «القيم» group (docs/26b §2). */
   group?: SettingGroup;
-  /** The confirmation asked before a change is saved (owner defaults, 2026-10-23). */
+  /** The confirmation asked before a change is saved. */
   confirm?: SettingConfirm;
   /** The module page that edits it when that is not «القيم» (the same owner as OWNED_SETTING_KEYS). */
   ownedBy?: SettingOwner;

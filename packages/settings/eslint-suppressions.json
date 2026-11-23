@@ -51,12 +51,7 @@
   },
   "src/domains/messaging.ts": {
     "max-len": {
-      "count": 7
-    }
-  },
-  "src/domains/notifications.test.ts": {
-    "max-len": {
-      "count": 1
+      "count": 6
     }
   },
   "src/domains/notifications.ts": {
@@ -66,7 +61,7 @@
   },
   "src/domains/sales.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/domains/teaching/classroom.ts": {

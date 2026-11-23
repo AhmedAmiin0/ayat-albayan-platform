@@ -3,7 +3,7 @@ import { settingSection } from '../layout.js';
 import { SETTING_DEFAULTS, SETTING_FIELD_OF, SETTINGS_REGISTRY } from '../registry.js';
 import { NOTIFICATION_SETTINGS } from './notifications.js';
 
-// R-NOT-03 (owner 2026-10-12): the teacher's WhatsApp messages can be switched off in /admin/settings.
+// R-NOT-03: the teacher's WhatsApp messages can be switched off in /admin/settings.
 describe('teacher WhatsApp switches', () => {
   it('are bool messaging fields shown in the generic form, ON by default (migration 382 seeds true)', () => {
     for (const key of ['teacher_whatsapp_new_student', 'teacher_whatsapp_lesson_reminder'] as const) {

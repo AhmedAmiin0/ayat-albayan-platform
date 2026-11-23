@@ -27,7 +27,7 @@ export const REPORT_SETTINGS = {
     labelKey: 'settings.reportTeacherEditHours', hintKey: `${h}.reportTeacherEditHours`,
   },
   /**
-   * The new lesson report form (owner 2026-10-26, docs/design/report-form). Off = the form and the
+   * The new lesson report form (docs/design/report-form). Off = the form and the
    * family report exactly as before; on = new drafts use the v2 form. Old reports never change.
    */
   report_form_v2: {

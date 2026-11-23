@@ -21,7 +21,7 @@ export const SCHEDULING_SETTINGS = {
     labelKey: 'settings.makeupWindowDays', hintKey: 'settings.hints.makeupWindowDays',
   },
   /**
-   * Owner 2026-10-12 (migration 320): booking treats every teacher as free 00:00–24:00 every day
+   * Migration 320: booking treats every teacher as free 00:00–24:00 every day
    * (AvailabilityQueries.bookableSlots). Lessons and time off still block; the saved grids stay.
    */
   teachers_always_available: {
@@ -30,16 +30,15 @@ export const SCHEDULING_SETTINGS = {
     labelKey: 'settings.teachersAlwaysAvailable', hintKey: 'settings.hints.teachersAlwaysAvailable',
   },
   /**
-   * Owner 2026-11-03: ON (default) = «يحتاج تأكيد»; after its end + the grace a confirmed lesson
-   * is completed, a reminded one with no «نعم» no_show (AutoHeldJob). OFF = held after the grace
-   * (owner 2026-11-02).
+   * ON (default) = «يحتاج تأكيد»; after its end + the grace a confirmed lesson is completed, a
+   * reminded one with no «نعم» no_show (AutoHeldJob). OFF = held after the grace.
    */
   lesson_confirmation_required: {
     module: 'scheduling', group: 'schedule',
     type: 'bool', default: true, public: true,
     labelKey: 'settings.lessonConfirmationRequired', hintKey: 'settings.hints.lessonConfirmationRequired',
   },
-  /** Minutes after a lesson's end before AutoHeldJob settles it (owner 2026-11-03, default 30). */
+  /** Minutes after a lesson's end before AutoHeldJob settles it. */
   lesson_outcome_grace_minutes: {
     module: 'scheduling', group: 'schedule',
     type: 'int', default: 30, min: 0, max: 720,

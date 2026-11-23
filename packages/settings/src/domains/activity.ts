@@ -1,6 +1,6 @@
 import type { SettingDef } from '../defs.js';
 
-/** «سجل النشاط»: how long the activity log is kept (custom-config request, 2026-10-05). */
+/** «سجل النشاط»: how long the activity log is kept. */
 export const ACTIVITY_SETTINGS = {
   /**
    * Read by SQL prune_activity_log() (migration 20261005000250) with its own fallback; the old fixed
