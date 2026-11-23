@@ -24,7 +24,7 @@ export function staffState(browser: Browser, input: { base: string; role: StaffR
     await page.goto(`${input.base}/login`);
     await page.getByLabel(ar.auth.email).fill(user.email);
     await page.getByLabel(ar.auth.password).fill(user.password);
-    await page.getByRole('button', { name: ar.auth.submit }).click();
+    await page.getByRole('button', { name: ar.auth.submit, exact: true }).click();
     await expect(page).not.toHaveURL(/\/login/, { timeout: 30_000 });
   });
 }
