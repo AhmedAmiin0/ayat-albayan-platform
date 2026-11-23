@@ -1,4 +1,5 @@
-import type { BookingTeacherOption, Gender, Program, SlotsResponse } from '@ab/shared';
+import type { Gender, Program } from '@ab/catalog';
+import type { BookingTeacherOption, SlotsResponse } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 import { bookingPath, useBookingMode } from './booking-mode';

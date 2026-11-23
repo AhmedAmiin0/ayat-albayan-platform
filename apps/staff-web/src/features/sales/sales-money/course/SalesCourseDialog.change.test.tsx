@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CHECK, routeChangeSend } from '@/features/teaching/booking/course-change/change-fixture';

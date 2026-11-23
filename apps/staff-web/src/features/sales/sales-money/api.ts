@@ -8,8 +8,8 @@ import type {
   SalesQuoteView,
   SalesReceiptCopied,
   SignedUpload,
-  SubscriptionPricing,
 } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';

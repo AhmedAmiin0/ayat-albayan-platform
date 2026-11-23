@@ -1,4 +1,4 @@
-import { ASSISTANT_COMMISSION_TYPES, type AssistantCommissionType } from '@ab/shared';
+import { ASSISTANT_COMMISSION_TYPES, type AssistantCommissionType } from '@ab/money';
 import { View } from 'react-native';
 import { t, Field, FilterPills, ErrorLine, Section, FormLabel } from '@ab/mobile-kit';
 import { CurrencyPills } from '@/assistants/list/CurrencyPills';

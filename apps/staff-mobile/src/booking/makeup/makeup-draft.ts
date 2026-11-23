@@ -1,4 +1,5 @@
-import { DURATIONS, teacherName, type Duration, type LessonView } from '@ab/shared';
+import { DURATIONS, type Duration } from '@ab/catalog';
+import { teacherName, type LessonView } from '@ab/schedule';
 import type { InvoiceDraft } from '@/booking/shared/contract';
 import { DEFAULT_MINUTES } from '@/booking/trial/lib/package-choice';
 import { locale } from '@ab/mobile-kit';

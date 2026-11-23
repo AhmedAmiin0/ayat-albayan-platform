@@ -1,4 +1,4 @@
-import { PUSH_KINDS, type PushKind } from '@ab/shared';
+import { PUSH_KINDS, type PushKind } from '@ab/catalog';
 import { z } from 'zod';
 
 // A push's `data` is PushService's { kind, ...event.data } (docs/12 §6): untrusted JSON, so every

@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t } from '@ab/mobile-kit';
 import { rowsView } from './lesson-rows-view';
 

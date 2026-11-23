@@ -1,4 +1,4 @@
-import type { Span } from '@ab/shared';
+import type { Span } from '@ab/schedule';
 
 // The «الجدول» spans (availability windows, free gaps) cut to the period on screen. Pure.
 

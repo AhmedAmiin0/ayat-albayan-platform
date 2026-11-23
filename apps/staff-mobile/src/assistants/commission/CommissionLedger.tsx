@@ -1,4 +1,5 @@
-import { ASSISTANT_COMMISSION_STATUSES, sumByCurrency } from '@ab/shared';
+import { sumByCurrency } from '@ab/core';
+import { ASSISTANT_COMMISSION_STATUSES } from '@ab/money';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@ab/mobile-kit';

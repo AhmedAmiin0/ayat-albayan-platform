@@ -1,4 +1,4 @@
-import { localizedName } from '@ab/shared';
+import { localizedName } from '@ab/core';
 import { View } from 'react-native';
 import { locale, Avatar } from '@ab/mobile-kit';
 import { DetailsLine } from './DetailsGroup';

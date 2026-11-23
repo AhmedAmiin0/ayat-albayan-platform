@@ -1,5 +1,6 @@
 import { PEOPLE_SEARCH_MIN, type LinkPick } from '@ab/client-core';
-import { formatPhone, type ShortLinkPerson } from '@ab/shared';
+import type { ShortLinkPerson } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useId, useState } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

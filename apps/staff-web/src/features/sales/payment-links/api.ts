@@ -4,8 +4,8 @@ import type {
   PaymentLinkView,
   PublicPaymentLink,
   StripeFeature,
-  SubscriptionPricing,
 } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';

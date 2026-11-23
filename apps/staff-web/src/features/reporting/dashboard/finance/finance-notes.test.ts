@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { financeNotes, rateLines } from './finance-notes';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 const finance = (over: Partial<DashboardResponse['finance']> = {}): DashboardResponse['finance'] => ({
   currency: 'SAR',

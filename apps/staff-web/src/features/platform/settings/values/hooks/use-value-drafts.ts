@@ -1,4 +1,4 @@
-import type { AcademySettings, SettingKey } from '@ab/shared';
+import type { AcademySettings, SettingKey } from '@ab/settings';
 import { useCallback, useState } from 'react';
 import { isDirty } from '@/features/platform/settings/registry-form/settings-dirty';
 import type { SettingsForm } from '@/features/platform/settings/registry-form/settings-form';

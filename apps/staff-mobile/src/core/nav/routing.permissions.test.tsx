@@ -1,6 +1,6 @@
 import { act, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
-import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH } from '@ab/settings';
 import { t, pathKey, queryClient } from '@ab/mobile-kit';
 import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../../app/(tabs)/_layout';

@@ -1,4 +1,4 @@
-import { isEditableValueKey, VALUE_CONFIRM, type SettingKey } from '@ab/shared';
+import { isEditableValueKey, VALUE_CONFIRM, type SettingKey } from '@ab/settings';
 import { useEffect, useState } from 'react';
 import { DiscardDialog } from '@/components/settings/dialogs/DiscardDialog';
 import { settingText } from '@/components/settings/search/setting-text';

@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { cachedEntry, configEntriesQuery, patchConfigEntry, storeEntry } from '@/lib/settings/config-entries-api';

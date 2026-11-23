@@ -1,4 +1,4 @@
-import type { OverviewTeacher, ScheduleOverview } from '@ab/shared';
+import type { OverviewTeacher, ScheduleOverview } from '@ab/schedule';
 import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
 
 // Test-only GET /lessons/overview rows for the week of Saturday 26 Sep 2026 (Riyadh UTC+3).

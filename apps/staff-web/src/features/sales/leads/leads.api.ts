@@ -3,7 +3,8 @@ import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ListUrlState } from '@/lib/list/list-url';
 import type { LeadSearch } from './types';
-import type { JobApplicantView, LeadView, Page } from '@ab/shared';
+import type { JobApplicantView, LeadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 export const PAGE_SIZE = 25;
 

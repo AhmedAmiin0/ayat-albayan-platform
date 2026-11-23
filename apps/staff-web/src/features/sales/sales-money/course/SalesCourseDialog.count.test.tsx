@@ -1,4 +1,5 @@
-import { counted, pickProgress } from '@ab/shared';
+import { counted } from '@ab/core';
+import { pickProgress } from '@ab/schedule';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, fillRow, next, pickSlot, pickWednesday } from '@/features/teaching/booking/wizard-fixture';

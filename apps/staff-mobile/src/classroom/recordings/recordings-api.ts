@@ -1,4 +1,4 @@
-import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
+import type { LessonRecordingView, RecordingStatus } from '@ab/schedule';
 import { queryOptions, useQuery, type QueryClient } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { apiFetch, pathKey } from '@ab/mobile-kit';

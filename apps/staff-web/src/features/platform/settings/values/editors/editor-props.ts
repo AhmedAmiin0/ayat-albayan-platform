@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { useId } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 

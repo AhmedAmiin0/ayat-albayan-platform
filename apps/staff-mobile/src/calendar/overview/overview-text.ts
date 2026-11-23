@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type ClockCycle, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
+import type { OverviewTeacher, OverviewTimeOff, Span } from '@ab/schedule';
+import { RIYADH_TZ, type ClockCycle } from '@ab/time';
 import { teacherLoad } from '@/booking/trial/components/TeacherStep';
 import { t, cityOf } from '@ab/mobile-kit';
 import { formatTimeOff } from '@/more/schedule';

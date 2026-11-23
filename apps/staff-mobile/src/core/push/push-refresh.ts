@@ -1,4 +1,4 @@
-import type { PushKind } from '@ab/shared';
+import type { PushKind } from '@ab/catalog';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { pathKey } from '@ab/mobile-kit';
 import type { PushTree } from './notification-route';

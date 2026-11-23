@@ -1,4 +1,4 @@
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import type { ReactNode } from 'react';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';

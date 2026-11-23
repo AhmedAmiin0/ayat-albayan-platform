@@ -1,4 +1,4 @@
-import type { ScheduleOverview } from '@ab/shared';
+import type { ScheduleOverview } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 

@@ -1,4 +1,5 @@
-import { GRADES, REPORT_RUBRICS, type Grade, type GradePoint, type Rubric } from '@ab/shared';
+import { REPORT_RUBRICS, type GradePoint, type Rubric } from '@ab/shared';
+import { GRADES, type Grade } from '@ab/catalog';
 
 // Geometry of the grade progress chart (R-REP-05): one series at a time on a 1..5 ordinal axis,
 // reports evenly spaced oldest → newest along the inline axis. Percentages, so the chart is fluid.

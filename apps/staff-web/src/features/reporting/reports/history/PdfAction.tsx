@@ -1,4 +1,6 @@
-import { pdfStatusStyle, type ReportSummaryView, type UserRole } from '@ab/shared';
+import type { ReportSummaryView } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import { pdfStatusStyle } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

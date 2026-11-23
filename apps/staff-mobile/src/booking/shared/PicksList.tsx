@@ -1,4 +1,4 @@
-import { wallParts } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
