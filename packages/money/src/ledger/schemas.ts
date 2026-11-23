@@ -56,7 +56,7 @@ export const subscriptionCreateSchema = z.object({
   notes: optionalText,
   /** Lessons taken before the platform: only with a past startsOn (usedBeforeProblem). */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
-  clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
+  clientRequestId: z.uuid(), // rule 8: a retry of the same form returns its package
   /** «مبلغ مخصص»: the price, in the quote's currency (kept in price_source). */
   customPrice: moneyAmount.optional(),
 });
@@ -101,7 +101,7 @@ export const paymentCreateSchema = z.object({
    * Made once per payment form and re-sent on every retry: a POST whose reply was lost returns
    * the payment already recorded instead of recording it twice (rule 8).
    */
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: z.uuid(),
 });
 
 /** PATCH /payments/:id: explicit optionals (a .partial() would re-apply defaults). */

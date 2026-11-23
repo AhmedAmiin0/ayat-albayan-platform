@@ -9,6 +9,7 @@ const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const input: SubscriptionCreate = {
   studentId: '5a000000-0000-4000-8000-000000000001',
   startsOn: '2026-10-01',
+  clientRequestId: '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a10',
   pricing: { tier: 'weekly', duration: 45, discount: 10 },
 };
 

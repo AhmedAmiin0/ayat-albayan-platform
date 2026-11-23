@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Module } from '@nestjs/common';
+import { Controller, Get, Module, NotFoundException, Post } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -17,6 +17,11 @@ class ThrowingController {
   repo(): never {
     // What a repo throws from postgrest's { error } (new Error(error.message)).
     throw new Error('DbTimeoutError: database call timed out after 15000 ms');
+  }
+
+  @Post('write')
+  write(): never {
+    throw new DbTimeoutError(15_000);
   }
 
   @Get('other')
@@ -51,6 +56,13 @@ describe('DbTimeoutFilter (a stalled database call → 503, everything else as b
     const res = await app.inject({ method: 'GET', url: `/t/${path}` });
     expect(res.statusCode).toBe(503);
     expect(res.json()).toEqual({ code: 'db_timeout', message: 'db_timeout' });
+    expect(res.headers['retry-after']).toBe('5');
+  });
+
+  it('a write that timed out may still commit → 503 db_outcome_unknown: resend the same request id', async () => {
+    const res = await app.inject({ method: 'POST', url: '/t/write' });
+    expect(res.statusCode).toBe(503);
+    expect(res.json()).toEqual({ code: 'db_outcome_unknown', message: 'db_outcome_unknown' });
     expect(res.headers['retry-after']).toBe('5');
   });
 

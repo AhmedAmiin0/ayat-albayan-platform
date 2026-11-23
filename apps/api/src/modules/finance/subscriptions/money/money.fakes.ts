@@ -11,6 +11,7 @@ export const PAYMENT_ID = '5c000000-0000-4000-8000-000000000001';
 export const PAYOUT_ID = '5d000000-0000-4000-8000-000000000001';
 export const TEACHER_ID = '5e000000-0000-4000-8000-000000000001';
 export const EXPENSE_ID = '5f000000-0000-4000-8000-000000000001';
+export const REQUEST_ID = '6a000000-0000-4000-8000-000000000001';
 
 /** The weekly package at the catalog price in Saudi Arabia (SAR 145, 4 × 90 min). */
 export const WEEKLY_SA: QuoteResponse = {
