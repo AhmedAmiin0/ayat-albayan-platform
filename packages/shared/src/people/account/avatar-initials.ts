@@ -1,4 +1,4 @@
-// The initials circle (owner 2026-10-28), the same on web and mobile: an Arabic name gives ONE letter,
+// The initials circle, the same on web and mobile: an Arabic name gives ONE letter,
 // its first word's first (a leading «ال» dropped: «الحسن علي» → «ح»; hamza forms as typed: «أحمد» → «أ»);
 // a Latin name up to two, upper-cased («sara ahmed» → «SA»). Words without a letter (an emoji, a «+966…»)
 // are skipped; no letter at all → '' (the circle shows the person glyph).

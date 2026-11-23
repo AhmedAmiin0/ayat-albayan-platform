@@ -3,8 +3,7 @@ import { inWeekOrder } from '../course/course-picks.js';
 import type { AttendanceKind } from './student-details.js';
 import type { SalesWeeklySlot } from './student-schedule.js';
 
-// «كل الطلاب» of the assistant (owner 2026-10-30: «Show all the students to the assistants with
-// their schedule and attendance»): each row's weekly slots in one short line and an attendance
+// «كل الطلاب» of the assistant: each row's weekly slots in one short line and an attendance
 // count. Pure.
 
 /** A row's weekly slot: the next start of each weekday (UTC) and the teacher; never a link. */

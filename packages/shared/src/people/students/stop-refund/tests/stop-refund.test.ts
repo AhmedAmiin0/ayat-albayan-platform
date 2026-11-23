@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fromMinor, minorScale, stopRefund, toMinor } from '../stop-refund.js';
 
-// «إلغاء مع استرداد» (owner 2026-11-02): refund = net paid − attended × price / lessons × rate.
+// «إلغاء مع استرداد»: refund = net paid − attended × price / lessons × rate.
 const base = {
   paid: 400,
   price: 400,

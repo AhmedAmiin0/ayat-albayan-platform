@@ -5,9 +5,9 @@ import type { SalesPackageSummary } from './student/student-package.js';
 import type { RosterAttendance, RosterSlot } from './student/student-roster.js';
 import type { SalesSubscriptionView } from './views.js';
 
-// The salesperson's assistant side (owner 2026-10-11, docs/16): the academy's teachers, every student and
-// a confirmed subscription's history. Whitelists: never a price, rate, phone or note. The one exception
-// (owner 2026-10-12): a teacher's fixed meeting link in «المعلمون», nowhere else (docs/16 rows 3, 10).
+// The salesperson's assistant side (docs/16): the academy's teachers, every student and
+// a confirmed subscription's history. Whitelists: never a price, rate, phone or note. The one exception:
+// a teacher's fixed meeting link in «المعلمون», nowhere else (docs/16 rows 3, 10).
 
 /** A student of a teacher in «المعلمون»: who, which program and status (trial included), the next lesson. */
 export interface SalesTeacherStudent {
@@ -34,7 +34,7 @@ export interface SalesTeacherView extends TeacherStudentCounts {
   lessons_today: number;
   /** A lesson of theirs is running now (start <= now < end, still open). */
   live_now: boolean;
-  /** teachers.meeting_link (owner 2026-10-12), null when unset; render it only when http(s). */
+  /** teachers.meeting_link, null when unset; render it only when http(s). */
   meeting_link: string | null;
   /**
    * usesPlatform(teachers.meeting_mode, settings.meeting_link_auto): families get the platform link.
@@ -55,15 +55,15 @@ export interface SalesStudentView {
   program: Program;
   teacher_name: string | null;
   guardian_name: string;
-  /** The guardian's E.164 phone (owner 2026-10-27: sales see every chat with its phone): the row opens that chat. */
+  /** The guardian's E.164 phone (sales see every chat with its phone): the row opens that chat. */
   guardian_phone: string | null;
   /** One of hers (the ownership of «الاشتراكات»): the row opens «تفاصيل الطالب». Absent in an old cache. */
   mine?: boolean;
-  /** The active weekly slots (owner 2026-10-30), read in the viewer's zone. Absent: old cache. */
+  /** The active weekly slots, read in the viewer's zone. Absent: old cache. */
   weekly?: RosterSlot[];
   /** Present / held in the current package, else the last 30 days. Absent: old cache. */
   attendance?: RosterAttendance;
-  /** The current package, hers or not (owner 2026-10-30), no price. null: none; absent: old. */
+  /** The current package, hers or not, no price. null: none; absent: old. */
   package?: SalesPackageSummary | null;
 }
 
@@ -86,7 +86,7 @@ export interface SalesHistoryEntry extends Omit<SalesSubscriptionView, 'student'
   lessons_used_before?: number;
   /** From the audit trail: when the status changed (`from` null = created). */
   status_changes: { at: string; from: SubscriptionStatus | null; to: SubscriptionStatus | null }[];
-  /** The payments linked to it: date, kind, amount and currency (owner 2026-10-11); never method, receipt or note. */
+  /** The payments linked to it: date, kind, amount and currency; never method, receipt or note. */
   payments: { id: string; paid_at: string; kind: PaymentKind; amount: number; currency: string }[];
 }
 

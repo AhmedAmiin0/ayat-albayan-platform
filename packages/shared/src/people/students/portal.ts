@@ -69,7 +69,7 @@ export const portalLessonSchema = z.object({
   /** Only for `external`, and only while the window is open. */
   meeting_url: z.string().nullable(),
   window: joinWindowSchema,
-  /** «خيارات الحلقة» (owner 2026-11-17); absent from an older API. */
+  /** «خيارات الحلقة»; absent from an older API. */
   family: portalLessonFamilySchema.optional(),
   /** Who is in the room now / «انتهت الحلقة» (lessonRoomStateSchema). Absent: an older API. */
   room: lessonRoomStateSchema.nullable().optional(),

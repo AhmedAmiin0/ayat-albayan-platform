@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { phoneE164 } from '@ab/core';
 import { loginCode } from '../people/users/index.js';
 
-// Managed short links (owner 2026-11-17, docs/19 «Short links»): the admin / sales bodies and the
+// Managed short links (docs/19 «Short links»): the admin / sales bodies and the
 // public gate's bodies, shared by the API (authoritative), the web and the mobile app.
 
 export const SHORT_LINK_STATUSES = ['active', 'expired', 'revoked'] as const;

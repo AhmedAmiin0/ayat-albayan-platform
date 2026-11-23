@@ -2,8 +2,7 @@ import { z } from 'zod';
 import { localDate } from '@ab/core';
 import { daysBefore, SALES_START_BACK_DAYS } from '../start-date.js';
 
-// «تعديل تاريخ البدء» (owner 2026-11-03: «i want to be able to change the start date as a special
-// assistant»): PATCH /subscriptions/:id/start-date, admins and assistants holding
+// «تعديل تاريخ البدء»: PATCH /subscriptions/:id/start-date, admins and assistants holding
 // subscriptions.edit_terms. Only starts_on changes (renews_on, lessons, rules, payments and
 // commissions stay). The range is the sales create's (salesStartDate with «بدأ الاشتراك سابقًا»):
 // any day from a year back on; with lessons counted before the platform (lessons_used_before > 0)

@@ -1,6 +1,6 @@
 import type { SalesScheduleLesson } from '../schedule.js';
 
-// «الجدول» of «تفاصيل الطالب» (owner 2026-10-27: «As an assistant i want to see the student schedule»):
+// «الجدول» of «تفاصيل الطالب»:
 // the student's weekly slots and the next lessons. Whitelist: never a meeting link, a price or money.
 
 /** One active weekly rule of the student: its days and wall-clock time in the rule's zone (imported: Riyadh). */

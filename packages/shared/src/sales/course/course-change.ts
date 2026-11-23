@@ -3,7 +3,7 @@ import type { Conflict } from '@ab/schedule';
 import { CONSUMING_LESSON_STATUSES } from '@ab/money';
 import type { BookedCourse } from './course-follow.js';
 
-// «تغيير أيام الحلقات» (owner 2026-10-18): how many lessons of the course are left at the change
+// «تغيير أيام الحلقات»: how many lessons of the course are left at the change
 // point. The balance views' rule (v_package_lessons + v_subscription_balance's open lessons, migration
 // 190): a lesson counts when its student is chargeable, it is not a makeup nor an instant lesson, and it
 // was held (completed / late / no_show / excused) or is still booked (scheduled / confirmed). A
@@ -52,7 +52,7 @@ export interface CourseChangeView {
   course: BookedCourse;
 }
 
-/** GET /students/:id/course-teacher|course-times/change (owner 2026-10-30). */
+/** GET /students/:id/course-teacher|course-times/change. */
 export interface ProfileCourseView extends CourseChangeView {
   /** The course's next open lesson (local date, course zone; its instant); null = none. */
   nextLesson: { startsOn: string; startsAt: string } | null;

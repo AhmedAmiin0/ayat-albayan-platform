@@ -24,7 +24,7 @@ const MONEY_PUSH_KINDS = [
   'payment_received',
 ] as const satisfies readonly AnyPushKind[];
 
-/** The student's chat with the teacher (owner 2026-11-16): every family reader, a child too. */
+/** The student's chat with the teacher: every family reader, a child too. */
 const CHAT_PUSH_KINDS = ['channel_message'] as const satisfies readonly AnyPushKind[];
 
 const among =

@@ -9,7 +9,7 @@ import {
 } from '../stop-choices.js';
 import { refundAmountProblem, stopRefund } from '../../stop-refund/index.js';
 
-// Owner 2026-11-06: the person stopping chooses the money outcome. 8 lessons for 400, 3 attended
+// The person stopping chooses the money outcome. 8 lessons for 400, 3 attended
 // at 100 % (charge 150).
 const pkg = { price: 400, lessonsTotal: 8, attended: 3, ratePercent: 100, currency: 'SAR' };
 const full = stopRefund({ ...pkg, paid: 400 });

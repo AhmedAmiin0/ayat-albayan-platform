@@ -1,7 +1,7 @@
 import type { BookingResult } from '@ab/schedule';
 import { z } from 'zod';
 
-// «اختر أيام الحلقات» before the payment (owner 2026-11-06): the assistant's weekly days for a
+// «اختر أيام الحلقات» before the payment: the assistant's weekly days for a
 // package that is unpaid with an open payment link are kept as a DRAFT on the package (nothing
 // booked, nobody told) and booked once it is paid; editable (saved again) until then.
 
