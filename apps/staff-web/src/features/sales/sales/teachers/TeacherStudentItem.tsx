@@ -1,4 +1,5 @@
-import { studentStatusStyle, type SalesTeacherStudent } from '@ab/shared';
+import type { SalesTeacherStudent } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { useClock } from '@ab/web-kit/lib/clock';
