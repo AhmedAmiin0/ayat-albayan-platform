@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { NumbersRepo } from './numbers.repo';
 
 const row = { label: 'رقم', purpose: 'chat' as const, provider: 'meta' as const, phone_number_id: '1000000002', enabled: false };

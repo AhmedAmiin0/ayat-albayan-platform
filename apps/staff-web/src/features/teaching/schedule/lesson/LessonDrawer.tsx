@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useRef, useState } from 'react';
 import { useFocusOnChange } from '@ab/web-kit/components/ui/overlay/use-focus-on-change';
 import { AdminCourseChange } from '@/features/teaching/booking/course-change/AdminCourseChange';

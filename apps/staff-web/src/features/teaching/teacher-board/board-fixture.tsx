@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
-import type { TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
 import { TeacherBoard } from './TeacherBoard';
 import { ME, MISSED, NEXT, NOW, PAST } from './board-fixture-data';
 

@@ -1,4 +1,4 @@
-import type { ExpenseCategoryView, ExpenseView } from '@ab/shared';
+import type { ExpenseCategoryView, ExpenseView } from '@ab/money';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

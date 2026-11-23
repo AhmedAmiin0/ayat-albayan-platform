@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { AssistantPaySettings } from '@/modules/finance/assistant-pay/shared/assistant-pay.settings';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { TermsRepo } from './terms.repo';
 
 // «عمولة التجديد» (owner 2026-11-01): the terms views show the share a renewal earns NOW,

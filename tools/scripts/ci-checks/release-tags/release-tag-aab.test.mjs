@@ -1,4 +1,4 @@
-// KIND aab (owner 2026-11-21): the family app's Google Play bundle, built by mobile.yml
+// KIND aab: the family app's Google Play bundle, built by mobile.yml
 // app=family profile=production. Its tags (aab-<profile>-v<version>-b<run>) never collide with
 // the APK tags (mobile-…) of the preview builds, and an APK tag never counts as an AAB one.
 import assert from 'node:assert/strict';

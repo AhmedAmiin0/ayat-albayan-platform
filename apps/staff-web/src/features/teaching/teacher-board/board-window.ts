@@ -1,4 +1,5 @@
-import { addDays, BOARD_DAYS, wallInstant } from '@ab/shared';
+import { BOARD_DAYS } from '@ab/shared';
+import { addDays, wallInstant } from '@ab/time';
 import type { Window } from '@/features/teaching/schedule';
 
 // docs/46 D4: the board reads ONE window of the teacher's lessons, 14 days back and 14 ahead, in

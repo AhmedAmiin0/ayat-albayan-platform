@@ -12,7 +12,7 @@ import { AuthModule } from '@/common/auth/auth.module';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, DbModule } from '@/common/db/db.module';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { GuardianPhonesService } from '@/modules/people/guardians';
 import { FamilyMoveService } from '@/modules/people/people-edit/family-move.service';
 import { PeopleEditController } from '@/modules/people/people-edit/people-edit.controller';
