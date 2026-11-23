@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { SYNC_START, SyncRepo } from './sync.repo';
 
 const AT = '2026-11-06T10:00:00.123456+00:00';

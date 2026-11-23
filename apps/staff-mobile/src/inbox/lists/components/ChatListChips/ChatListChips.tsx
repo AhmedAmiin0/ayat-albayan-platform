@@ -1,4 +1,5 @@
-import type { ChatList, LeadStatus } from '@ab/shared';
+import type { ChatList } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
 import { type ReactNode, useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useHolds, t } from '@ab/mobile-kit';

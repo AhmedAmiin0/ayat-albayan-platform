@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import type { StorageService } from '@/common/storage/storage.service';
 import type { PdfRenderer } from '@/modules/reporting/report-pdf/render/pdf-renderer';
