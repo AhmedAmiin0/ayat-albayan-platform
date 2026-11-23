@@ -1581,11 +1581,6 @@
       "count": 2
     }
   },
-  "src/modules/finance/expenses/expenses.service.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/expenses/expenses.settings.test.ts": {
     "max-len": {
       "count": 1
@@ -1714,7 +1709,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/modules/finance/payments/attachments/payment-files.ts": {
@@ -1779,11 +1774,6 @@
   "src/modules/finance/payments/payments.attachments.race.http.test.ts": {
     "max-len": {
       "count": 6
-    }
-  },
-  "src/modules/finance/payments/payments.attachments.read.http.test.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/finance/payments/payments.attachments.replay.http.test.ts": {
@@ -1866,7 +1856,7 @@
       "count": 1
     },
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
       "count": 9
@@ -5817,11 +5807,6 @@
     "ab/zod-inputs": {
       "count": 3
     },
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/relay/relay.keys.ts": {
     "complexity": {
       "count": 1
     }
