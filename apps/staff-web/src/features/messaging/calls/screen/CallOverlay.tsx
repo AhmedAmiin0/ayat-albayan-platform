@@ -1,5 +1,5 @@
 import type { PermissionAsk } from '@ab/client-core';
-import { type ActiveCallView } from '@ab/shared';
+import type { ActiveCallView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PermissionDialog } from '@/features/messaging/calls/header/PermissionDialog';

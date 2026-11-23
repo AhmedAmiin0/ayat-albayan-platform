@@ -1,4 +1,4 @@
-import { type PaymentKind, type PaymentMethod } from '@ab/catalog';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
 import { amountFromStripe, parseAmount } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

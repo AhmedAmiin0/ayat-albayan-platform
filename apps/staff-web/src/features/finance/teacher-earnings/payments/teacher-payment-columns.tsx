@@ -1,5 +1,5 @@
 import { PAYMENT_METHODS } from '@ab/catalog';
-import { type TeacherPaymentView } from '@ab/money';
+import type { TeacherPaymentView } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button } from '@ab/web-kit/components/ui/form/button';

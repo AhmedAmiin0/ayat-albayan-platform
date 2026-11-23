@@ -1,10 +1,6 @@
-import { type SignedDownload } from '@ab/shared';
-import { type PaymentMethod } from '@ab/catalog';
-import {
-  type PayoutGenerateResult,
-  type PayoutView,
-  type TeacherEarningsSummaryView,
-} from '@ab/money';
+import type { SignedDownload } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import type { PayoutGenerateResult, PayoutView, TeacherEarningsSummaryView } from '@ab/money';
 import { riyadhToday } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';

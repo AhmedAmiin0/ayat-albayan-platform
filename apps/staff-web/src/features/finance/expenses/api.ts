@@ -1,7 +1,7 @@
-import { type SignedDownload, type SignedUpload } from '@ab/shared';
-import { type PaymentMethod } from '@ab/catalog';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
 import { localizedName, round2 } from '@ab/core';
-import { type ExpenseCategoryView, type ExpenseView, type ExpenseYearView } from '@ab/money';
+import type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';

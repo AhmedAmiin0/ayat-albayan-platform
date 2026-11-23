@@ -10,7 +10,7 @@ import {
   type ThreadFile,
   type ThreadView,
 } from '@ab/shared';
-import { type LeadStatus } from '@ab/catalog';
+import type { LeadStatus } from '@ab/catalog';
 import { liveInterval, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';

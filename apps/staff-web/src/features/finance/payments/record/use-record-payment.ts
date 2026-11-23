@@ -1,4 +1,4 @@
-import { type PaymentKind } from '@ab/catalog';
+import type { PaymentKind } from '@ab/catalog';
 import { parseAmount } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import { type AccountProfile } from '@ab/shared';
+import type { AccountProfile } from '@ab/shared';
 import { avatarTone } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';

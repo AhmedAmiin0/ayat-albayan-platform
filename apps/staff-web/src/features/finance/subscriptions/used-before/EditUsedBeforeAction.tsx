@@ -1,5 +1,5 @@
 import { usedBeforeEditOffered } from '@ab/shared';
-import { type SubscriptionStatus } from '@ab/catalog';
+import type { SubscriptionStatus } from '@ab/catalog';
 import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

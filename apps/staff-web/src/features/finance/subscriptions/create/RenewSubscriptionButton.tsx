@@ -1,5 +1,5 @@
 import { isPackageEnded } from '@ab/shared';
-import { type StudentStatus } from '@ab/catalog';
+import type { StudentStatus } from '@ab/catalog';
 import { renewalPricing } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';

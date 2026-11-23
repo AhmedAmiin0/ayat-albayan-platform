@@ -1,4 +1,4 @@
-import { type RegistrationCheckView } from '@ab/shared';
+import type { RegistrationCheckView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';

@@ -1,4 +1,4 @@
-import { type ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useId } from 'react';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
