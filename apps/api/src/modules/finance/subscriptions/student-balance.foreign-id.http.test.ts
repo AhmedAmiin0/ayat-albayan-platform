@@ -2,7 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import type { TestingModuleBuilder } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { STUDENT_ID, subRow } from './money/money.fakes';
 import { StudentAccess } from './student-lifecycle/student-access';
