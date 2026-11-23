@@ -7,9 +7,9 @@ import {
   weekdayOfDate,
 } from '@ab/time';
 
-// A weekly package where each picked weekday has its own time (owner 2026-10-18: «اختر موعدًا لكل
-// يوم»). The DB keeps ONE schedule_rules row per distinct time (days sharing a time stay one rule,
-// like the imported HEART timetables), so a booking is grouped by time. Pure (the date-fns facade).
+// A weekly package where each picked weekday has its own time. The DB keeps ONE schedule_rules
+// row per distinct time (days sharing a time stay one rule, like the imported HEART timetables),
+// so a booking is grouped by time. Pure (the date-fns facade).
 
 /** A weekday whose time differs from the booking's startTimeLocal (0 = الأحد … 6 = السبت). */
 export interface DayTime {
@@ -118,7 +118,7 @@ export interface CourseEndInput {
 
 /**
  * The local date of the N-th lesson (N = lessonsTotal) counted over every group from startsOn: the
- * rules' ends_on, so exactly N lessons are generated (owner 2026-10-18 decision 1). Local dates do
+ * rules' ends_on, so exactly N lessons are generated. Local dates do
  * not move with DST. null when nothing can be counted.
  */
 export function courseEndsOn({ groups, startsOn, lessonsTotal }: CourseEndInput): string | null {

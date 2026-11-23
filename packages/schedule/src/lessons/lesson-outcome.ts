@@ -2,10 +2,9 @@ import type { LessonStatus } from '@ab/catalog';
 import { AUTO_HELD_REASON } from './auto-held.js';
 import { OPEN_LESSON_STATUSES } from './state-machine.js';
 
-// Owner 2026-11-03 («leave the default status to confirm and leave the logic as is, but count it on
-// used lessons, and if the student didn't reply after the reminder message mark him as absent»):
-// while settings.lesson_confirmation_required is ON, the job settles a lesson only once it ended
-// plus the grace (settings.lesson_outcome_grace_minutes), and only one that ended after the cutoff
+// A lesson the family did not confirm after the reminder is absent and counts as used: while
+// settings.lesson_confirmation_required is ON, the job settles a lesson only once it ended plus
+// the grace (settings.lesson_outcome_grace_minutes), and only one that ended after the cutoff
 // (lesson_outcomes_since(), the deploy of migration 1000): never a retro change.
 
 /** The audit row's `after.reason` of the job's «غائب» (the family never answered the reminder). */
@@ -22,7 +21,7 @@ export const AUTO_OUTCOME_REASONS = [
   OUTCOME_CORRECTION_REASON,
 ] as const;
 
-/** What staff may correct a lesson to (owner 2026-11-03), in button order. */
+/** What staff may correct a lesson to, in button order. */
 export const CORRECT_TO = [
   'completed',
   'no_show',

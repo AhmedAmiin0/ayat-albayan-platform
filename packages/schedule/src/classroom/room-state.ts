@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// The live state of a lesson's room (owner 2026-11-16, «الحلقة جارية الآن»): who is inside now and
+// The live state of a lesson's room («الحلقة جارية الآن»): who is inside now and
 // since when, from LiveKit's participant_joined / participant_left webhooks, and the «إنهاء الحلقة
 // للجميع» stamp (lessons.room_ended_at). Rides on the staff lesson rows and the portal lessons.
 
