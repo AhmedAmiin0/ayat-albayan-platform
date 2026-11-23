@@ -1,10 +1,6 @@
 import type { ReportView } from '@ab/shared';
 
-/**
- * Where one report's form stands for the teacher (owner 2026-11-06): a draft is filled and sent;
- * a sent report is read-only until «تعديل التقرير» opens it again (the same report, same id);
- * once the edit window is over it stays read-only, with the reason.
- */
+/** A sent report is read-only until edit reopens the same id; after the window it stays closed. */
 export type ReportFormMode = 'draft' | 'sent' | 'editing' | 'closed';
 
 type ModeReport = Pick<ReportView, 'status' | 'can_edit'>;
@@ -15,7 +11,7 @@ const BY_STATUS: Record<ModeReport['status'], (editing: boolean) => ReportFormMo
   submitted: sentMode,
 };
 
-/** The form's mode; `editing` is whether «تعديل التقرير» was pressed since the last send. */
+/** `editing` is whether edit was pressed since the last send. */
 export function reportFormMode(report: ModeReport, editing: boolean): ReportFormMode {
   if (!report.can_edit) return 'closed';
   return BY_STATUS[report.status](editing);

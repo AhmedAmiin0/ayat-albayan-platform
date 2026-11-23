@@ -15,7 +15,6 @@ export interface MaintenanceViewer {
   inRoom: boolean;
 }
 
-/** What a cover draws (web and phone): the view, whether a check is running, «أعد المحاولة». */
 export interface MaintenanceState {
   view: MaintenanceView;
   checking: boolean;

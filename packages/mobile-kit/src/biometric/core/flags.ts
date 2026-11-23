@@ -5,7 +5,7 @@ const ENABLED = 'ab.biometric.enabled';
 const DECLINED = 'ab.biometric.declined';
 const YES = '1';
 
-/** «الدخول بالبصمة» on this device, and «ليس الآن» once answered; in the OS keystore. */
+/** Stored in the OS keystore. */
 export interface BioFlags {
   enabled: () => Promise<boolean>;
   declined: () => Promise<boolean>;

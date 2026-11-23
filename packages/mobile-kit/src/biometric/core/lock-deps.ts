@@ -7,7 +7,7 @@ export interface BioSnapshot {
   lock: LockState;
   /** The device's method, once known (null: no biometrics, the feature hides). */
   kind: BioKind | null;
-  /** «استخدم البصمة للدخول في المرة القادمة؟» is waiting (a fresh sign-in, never declined). */
+  /** Offered only after a fresh sign-in when never declined. */
   offer: boolean;
 }
 

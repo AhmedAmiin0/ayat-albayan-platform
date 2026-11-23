@@ -8,7 +8,7 @@ const PENDING = 'pending:';
 /** The optimistic row's id for a send. */
 const pendingId = (clientId: string): string => `${PENDING}${clientId}`;
 
-/** Still on its way: no menu, no swipe, «جارٍ الإرسال…» and the clock tick. */
+/** Still sending: no menu and no swipe. */
 export const isPending = (m: Pick<ChannelMessageView, 'id'>): boolean => m.id.startsWith(PENDING);
 
 interface PendingInput {

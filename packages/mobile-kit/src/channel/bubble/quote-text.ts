@@ -1,7 +1,6 @@
 import type { ChannelReplyView } from '@ab/shared';
 import { t } from '../../lib/i18n/i18n';
 
-/** The quoted message's line: its first words, a file's kind, or «رسالة محذوفة». */
 export function quoteText(reply: Pick<ChannelReplyView, 'body' | 'kind' | 'deleted'>): string {
   if (reply.deleted) return t.studentChannel.reply.deleted;
   return reply.body || t.studentChannel.kinds[reply.kind];

@@ -1,11 +1,7 @@
 import type { CodesSide } from '@ab/client-core';
 import { t } from '../../lib/i18n/i18n';
 
-/**
- * Which reset: staff = the staff app's «نسيت كلمة المرور؟»; family = the family app's (a student
- * code, docs/50 §6); firstTime = «أول دخول؟», a student's first password with a code sent to the
- * guardian's WhatsApp. One flow, three sets of words (as the web's ResetFlow).
- */
+/** One flow, three word sets; firstTime sends the code to the guardian's WhatsApp (docs/50 §6). */
 export type ForgotMode = 'staff' | 'family' | 'firstTime';
 
 interface ForgotWords {

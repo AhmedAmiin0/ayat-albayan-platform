@@ -1,13 +1,4 @@
-// The ONE source of colour values (docs/07 §3, §12); apps/staff-web/src/styles/tokens.css carries the same
-// hex (tokens.test.ts there diffs the two). «Emerald Mint»: white pages, an emerald
-// action with white text on its fill, a light mint sidebar (dark green text) in light, a SOFT
-// green-grey dark mode (never near-black), no beige/cream. Green for «done/ok», amber only for «دورك»,
-// red for errors, gold for small ornament only. `lapis*` is the action token's historical name:
-// `lapis` is the action as TEXT (links, ghost buttons, focus), `lapisFill` the primary button's fill
-// and `lapisHover` its hover. The sidebar and login cover use cover/leather* with coverInk/goldOnCover.
-// `read` is the WhatsApp-like blue of read ticks, `tick` the grey of the others (non-text, 3:1 on our
-// bubble and a thread row; read vs tick ≥ 1.4 in both themes: WhatsApp tells them apart by colour).
-// theme.contrast.test.ts checks every text pair (AA).
+// The one source of colours (docs/07 §3, §12); tokens.css mirrors it and contrast tests check AA.
 export type ThemeName = 'light' | 'dark';
 
 const light = {

@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { evolutionBaseAllowed } from './evolution.js';
 
-// Object storage in «التكاملات» (docs/45): Supabase Storage keeps today's
-// files; MinIO (S3 API, self-hosted) keeps every new one once an admin switches STORAGE_DRIVER.
+// docs/45: Supabase keeps existing files; MinIO keeps new ones once STORAGE_DRIVER switches.
 
 /** Where new files are written. Reads follow each stored path's marker (@ab/shared stored-path). */
 export const STORAGE_DRIVERS = ['supabase', 'minio'] as const;

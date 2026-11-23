@@ -16,11 +16,10 @@ export interface FileWords {
 
 type FileFacts = Pick<LessonFileView, 'title' | 'kind' | 'media' | 'size'>;
 
-/** A file's name: its own title, else the word of its kind («ملف الواجب»). */
+/** Its own title, else the word for its kind. */
 export const fileTitleOf = (file: FileFacts, words: FileWords): string =>
   file.title ?? words.kinds[file.kind];
 
-/** «ملف الواجب · صورة · 0.9 ميغابايت». */
 export const fileLineOf = (file: FileFacts, words: FileWords): string =>
   [words.kinds[file.kind], words.media[file.media], words.sizeMb.replace('{n}', megabytes(file.size))]
     .join(' · ');

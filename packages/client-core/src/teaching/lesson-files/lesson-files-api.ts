@@ -12,8 +12,7 @@ import {
 } from '@ab/shared';
 import type { ApiClient } from '../../core/http/index.js';
 
-// «ملفات الحلقة» for staff (web and the staff app): the lesson's page read and its file writes,
-// every answer parsed with the shared schema (rule 12).
+// Every answer parsed with the shared schema (rule 12).
 
 const enc = encodeURIComponent;
 const lessonPath = (id: string) => `/lessons/${enc(id)}/files`;

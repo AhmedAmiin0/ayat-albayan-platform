@@ -1,7 +1,6 @@
 import { formatClock } from './player-math.js';
 import type { ListenState } from './resume.js';
 
-/** The list's words for a listen («جديد», «توقفت عند {at}», «استمعت إليه كاملًا»). */
 export interface ListenWords {
   isNew: string;
   stoppedAt: string;
