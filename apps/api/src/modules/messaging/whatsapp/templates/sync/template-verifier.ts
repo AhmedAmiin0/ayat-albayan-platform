@@ -1,7 +1,8 @@
 import { WA_LINES, type TemplateHealthView, type TemplateLineSync, type WaLine } from '@ab/shared';
 import {
   Inject, Injectable, Logger, Optional,
-  type OnApplicationBootstrap, type BeforeApplicationShutdown, type OnModuleInit,
+  type OnApplicationBootstrap, type BeforeApplicationShutdown, type OnModuleDestroy,
+  type OnModuleInit,
 } from '@nestjs/common';
 import { onLineSaved, type LineSaved } from '@/common/configuration/integrations/provider-saved';
 import { stopWithin, Ticker } from '@/common/jobs';
@@ -36,7 +37,7 @@ const failedLine = (l: TemplateLineSync): boolean => !l.ok && l.error !== CRM_MA
 @BackgroundJob({ name: 'template-boot-check' })
 @Injectable()
 export class TemplateVerifier
-  implements OnModuleInit, OnApplicationBootstrap, BeforeApplicationShutdown {
+  implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown {
   private readonly log = new Logger(TemplateVerifier.name);
   private off: (() => void) | null = null;
   private readonly ticker = new Ticker({
@@ -60,8 +61,12 @@ export class TemplateVerifier
     this.ticker.start();
   }
 
-  async beforeApplicationShutdown(): Promise<void> {
+  /** Not gated like the job hooks: an `api` process listens too and must stop on close. */
+  onModuleDestroy(): void {
     this.off?.();
+  }
+
+  async beforeApplicationShutdown(): Promise<void> {
     await stopWithin(this.ticker);
   }
 
