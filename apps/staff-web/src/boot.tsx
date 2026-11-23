@@ -1,4 +1,5 @@
 import { createRouter } from '@tanstack/react-router';
+import { returnSearchOf } from '@ab/web-kit/auth/return-to';
 import { signOut } from '@ab/web-kit/auth/sign-in';
 import { renderApp } from '@ab/web-kit/boot/render-app';
 import { notFoundState, routeStates } from '@ab/web-kit/boot/route-states';
@@ -9,9 +10,11 @@ import { routeTree } from './routeTree.gen';
 
 // Loaded by main.tsx once the translation overrides are in `t`: every screen module evaluates here.
 
+// After signing in again the person lands back on the page the ended session was showing.
 async function leave(): Promise<void> {
+  const back = router.state.location.href;
   await signOut(queryClient);
-  await router.navigate({ to: '/login' });
+  await router.navigate({ to: '/login', search: returnSearchOf(back) });
 }
 
 const queryClient = createQueryClient(queryErrorHandler(leave));
