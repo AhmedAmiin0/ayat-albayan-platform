@@ -1,5 +1,6 @@
 export { SubscriptionAlertsService } from './alerts/alerts.service';
-export { AlertsRepo, type Recipient, type RenewalMessage } from './alerts/alerts.repo';
+export { AlertsRepo } from './alerts/alerts.repo';
+export type { Recipient, RenewalMessage } from './alerts/alerts.types';
 export { UnpaidFlags } from './alerts/unpaid-flags.service';
 export { toFamilyBalance } from './money/balance.family';
 export { BalanceRepo, type BalanceRow, emptyBalance, toBalance } from './money/balance.repo';

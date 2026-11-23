@@ -1,4 +1,5 @@
-import { lessonWhenAt, type MeetingView } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Clock } from '@ab/web-kit/lib/clock';
 

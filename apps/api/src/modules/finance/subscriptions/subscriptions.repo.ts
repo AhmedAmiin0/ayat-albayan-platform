@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains } from '@/common/db/list-sort';
 import { dbError } from '@/common/http/http';
-import { readChunked } from '@/common/db/read-all';
+import { readChunked, readChunkedAll } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './list/subscriptions.list-query';
 import type { Page } from '@ab/shared';
 
@@ -34,7 +34,11 @@ export class SubscriptionsRepo {
   }
 
   async get(id: string): Promise<SubRow | null> {
-    const { data, error } = await this.db.from('subscriptions').select(SELECT).eq('id', id).maybeSingle();
+    const { data, error } = await this.db
+      .from('subscriptions')
+      .select(SELECT)
+      .eq('id', id)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
@@ -54,8 +58,15 @@ export class SubscriptionsRepo {
 
   /** Several students' packages (no join), FIFO order within each student. */
   async forStudents(studentIds: readonly string[]): Promise<Tables<'subscriptions'>[]> {
-    return readChunked(studentIds, (chunk) =>
-      this.db.from('subscriptions').select('*').in('student_id', chunk).order('starts_on').order('created_at').order('id'),
+    return readChunkedAll(studentIds, (chunk, from, to) =>
+      this.db
+        .from('subscriptions')
+        .select('*')
+        .in('student_id', chunk)
+        .order('starts_on')
+        .order('created_at')
+        .order('id')
+        .range(from, to),
     );
   }
 
@@ -69,7 +80,11 @@ export class SubscriptionsRepo {
 
   /** The package a subscribe form already created (its client_request_id), or null. */
   async byRequest(clientRequestId: string): Promise<SubRow | null> {
-    const { data, error } = await this.db.from('subscriptions').select(SELECT).eq('client_request_id', clientRequestId).maybeSingle();
+    const { data, error } = await this.db
+      .from('subscriptions')
+      .select(SELECT)
+      .eq('client_request_id', clientRequestId)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
@@ -104,12 +119,14 @@ export class SubscriptionsRepo {
    * currency is stored converted (original kept apart); a legacy unconverted row is skipped.
    */
   async paid(subs: readonly Pick<SubRow, 'id' | 'currency'>[]): Promise<Map<string, number>> {
-    if (subs.length === 0) return new Map();
-    const { data, error } = await this.db
-      .from('payments')
-      .select('subscription_id, amount, currency, kind')
-      .in('subscription_id', subs.map((s) => s.id));
-    if (error) throw dbError(error);
+    const data = await readChunked(
+      subs.map((s) => s.id),
+      (chunk) =>
+        this.db
+          .from('payments')
+          .select('subscription_id, amount, currency, kind')
+          .in('subscription_id', chunk),
+    );
     const rowsOf = (id: string) => data.filter((p) => p.subscription_id === id);
     return new Map(subs.map((s) => [s.id, netPaidIn(rowsOf(s.id), s.currency)]));
   }

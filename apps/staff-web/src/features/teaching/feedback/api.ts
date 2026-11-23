@@ -11,7 +11,8 @@ import {
   type TeacherFeedbackSummary,
   type TeacherFeedbackView,
 } from './types';
-import type { FeedbackRowView, FeedbackSubmit, Page } from '@ab/shared';
+import type { FeedbackRowView, FeedbackSubmit } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 export const FEEDBACK_KEY = ['feedback'] as const;
 export const FEEDBACK_PAGE_SIZE = 20;

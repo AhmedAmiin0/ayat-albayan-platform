@@ -1,5 +1,6 @@
 import { statusRoute, type StatusRoute } from '@ab/client-core';
-import type { CourseCardView, StudentStatus } from '@ab/shared';
+import type { CourseCardView } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

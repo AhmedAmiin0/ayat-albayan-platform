@@ -1,4 +1,4 @@
-import { mayInvitePhones } from '@ab/shared';
+import { mayInvitePhones } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { meQuery } from '@ab/web-kit/auth/me';
 
