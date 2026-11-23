@@ -16,6 +16,7 @@ function setup(msg: MediaMessage, host = CRM_HOST) {
   let stored = msg;
   const queries = {
     message: vi.fn(async () => stored),
+    setRefusal: vi.fn(),
     setPath: vi.fn(async (_id: string, path: string) => void (stored = { ...stored, media_path: path })),
   };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
@@ -95,7 +96,11 @@ describe('InboundMedia: files imported from the old CRM', () => {
   });
 
   it('without the CRM provider (a bare InboundMedia) such a row is 410', async () => {
-    const queries = { message: vi.fn().mockResolvedValue(crmRow()), setPath: vi.fn() };
+    const queries = {
+      message: vi.fn().mockResolvedValue(crmRow()),
+      setRefusal: vi.fn(),
+      setPath: vi.fn(),
+    };
     const media = new InboundMedia(queries as unknown as InboundMediaRepo, {} as WhatsappLines, {} as StorageService);
     await expect(media.cache(await media.loadChat('m-crm-1'))).rejects.toMatchObject({ status: 410 });
   });

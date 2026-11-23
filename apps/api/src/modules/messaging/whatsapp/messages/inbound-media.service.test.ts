@@ -22,7 +22,7 @@ const msg = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 });
 
 function setup(row: MediaMessage | null) {
-  const queries = { message: vi.fn().mockResolvedValue(row), setPath: vi.fn().mockResolvedValue(undefined) };
+  const queries = { message: vi.fn().mockResolvedValue(row), setRefusal: vi.fn(), setPath: vi.fn().mockResolvedValue(undefined) };
   const client = { getMedia: vi.fn().mockResolvedValue({ bytes: new Uint8Array([1, 2, 3]), mime: 'image/jpeg' }) };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const lines = { notifications: client, chat: client };

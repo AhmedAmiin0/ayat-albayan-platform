@@ -26,7 +26,7 @@ const verify: TokenVerifier = async (token) => {
 
 describe('W6 file of a message imported from the old CRM', () => {
   let app: NestFastifyApplication;
-  const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
+  const queries = { message: vi.fn(), recent: vi.fn(), setRefusal: vi.fn(), setPath: vi.fn() };
   const teachers = { teacher: vi.fn(), phones: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path), signedDownload: vi.fn() };

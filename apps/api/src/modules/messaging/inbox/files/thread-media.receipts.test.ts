@@ -27,7 +27,7 @@ const sticker = () => msg({ media_mime: 'image/webp', interactive_payload: { typ
 const pdf = (over: Partial<MediaMessage> = {}) =>
   msg({ media_mime: 'application/pdf', interactive_payload: { type: 'document' }, ...over });
 
-const queries = { receipts: vi.fn(), message: vi.fn(), setPath: vi.fn() };
+const queries = { receipts: vi.fn(), message: vi.fn(), setRefusal: vi.fn(), setPath: vi.fn() };
 const media = { cache: vi.fn() };
 const storage = { signedDownload: vi.fn() };
 const service = new ThreadMediaService(

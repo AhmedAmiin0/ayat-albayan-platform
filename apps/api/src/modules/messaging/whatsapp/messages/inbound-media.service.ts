@@ -5,6 +5,7 @@ import { StorageService } from '@/common/storage/storage.service';
 import { CrmHistoryMedia } from './crm-history/crm-history-media';
 import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { InboundMediaRepo, type MediaMessage } from './inbound-media.repo';
+import { keepingRefusal, rejectStored, withinCap } from './media-refusal/media-refusal';
 import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
 import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
 import { CRM_NO_MEDIA, mediaHttpError } from '@/modules/messaging/whatsapp/drivers/media-errors';
@@ -109,14 +110,14 @@ export class InboundMedia {
   /**
    * The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10 MB):
    * from WhatsApp, or an old-CRM file from the CRM's storage (CrmHistoryMedia; no 29-day limit).
+   * A final refusal is kept on the row and answered from it later (media-refusal.ts).
    */
   async cache(msg: MediaMessage): Promise<InboundFile> {
     const mime = baseMime(msg.media_mime);
     if (msg.media_path) return { bucket: BUCKETS.waMedia, path: msg.media_path, mime };
-    const file = await this.fetch(msg);
-    if (file.bytes.byteLength > chatFileMaxBytes(mime)) {
-      throw waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
-    }
+    rejectStored(msg.media_refusal);
+    const fetched = async () => withinCap(await this.fetch(msg), chatFileMaxBytes(mime));
+    const file = await keepingRefusal(fetched, (r) => this.queries.setRefusal(msg.id, r));
     const key = waMediaPath({ messageId: msg.id, mime });
     const path = await this.storage.upload({ bucket: BUCKETS.waMedia, path: key, body: file.bytes, contentType: mime });
     await this.queries.setPath(msg.id, path);

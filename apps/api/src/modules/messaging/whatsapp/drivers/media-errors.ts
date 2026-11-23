@@ -30,7 +30,10 @@ function driverAnswer(e: WaError): Error | null {
   return refused ? waHttpError(refused, HttpStatus.BAD_GATEWAY) : null;
 }
 
-const isClientError = (status: number): boolean => status >= 400 && status < 500;
+/** A timeout or a rate limit is a 4xx a retry fixes: it never means the file is gone. */
+const RETRYABLE = new Set([408, 429]);
+const isGone = (status: number): boolean =>
+  status >= 400 && status < 500 && !RETRYABLE.has(status);
 
 /** crm_no_media, kapso_auth, evolution_auth, a dead Meta token, or gone (410); else as is. */
 export function mediaHttpError(e: WaError): Error {
@@ -38,5 +41,5 @@ export function mediaHttpError(e: WaError): Error {
   if (own) return own;
   const code = e.info.code;
   if (isWaAuthError(code)) return waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: code });
-  return isClientError(e.info.status) ? waHttpError('media_expired', HttpStatus.GONE) : e;
+  return isGone(e.info.status) ? waHttpError('media_expired', HttpStatus.GONE) : e;
 }

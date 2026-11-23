@@ -89,7 +89,12 @@ function parsedBy<S extends z.ZodType>(schema: S): OnResponse<z.output<S>> {
   };
 }
 
-function cappedBy(c: BytesCall): OnResponse<{ bytes: Uint8Array; mime: string | null }> {
+interface Capped {
+  bytes: Uint8Array<ArrayBuffer>;
+  mime: string | null;
+}
+
+function cappedBy(c: BytesCall): OnResponse<Capped> {
   return async (res) => {
     const declared = Number(res.headers.get('content-length') ?? 0);
     if (declared > c.maxBytes) {
