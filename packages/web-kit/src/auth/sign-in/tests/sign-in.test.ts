@@ -1,3 +1,4 @@
+import { ApiError } from '@ab/client-core';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -48,7 +49,7 @@ describe('signIn (R-AUTH-01)', () => {
 
   it('signs out and says so when the account is disabled (403 account_disabled)', async () => {
     auth.signInWithPassword.mockResolvedValue({ error: null });
-    apiFetch.mockRejectedValue(Object.assign(new Error('API 403'), { status: 403, body: { code: 'account_disabled' } }));
+    apiFetch.mockRejectedValue(new ApiError(403, { code: 'account_disabled' }));
     const result = await signIn(creds, new QueryClient());
     expect(result).toEqual({ ok: false, error: t.users.errors.account_disabled });
     expect(auth.signOut).toHaveBeenCalled();

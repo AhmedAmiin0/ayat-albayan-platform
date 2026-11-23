@@ -61,16 +61,7 @@
     "@typescript-eslint/only-throw-error": {
       "count": 2
     },
-    "ab/no-shape-checks": {
-      "count": 5
-    },
     "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -404,11 +395,6 @@
       "count": 1
     }
   },
-  "src/classroom/room/livekit/livekit-room/tests/livekit-room.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
     "@typescript-eslint/no-meaningless-void-operator": {
       "count": 2
@@ -423,17 +409,12 @@
       "count": 1
     }
   },
+  "src/classroom/room/livekit/livekit-room/tests/livekit-room.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
   "src/classroom/room/livekit/media-attach.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/livekit/snapshot/tests/share.test.ts": {
-    "max-len": {
-      "count": 4
-    }
-  },
-  "src/classroom/room/livekit/snapshot/tests/snapshot.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -444,6 +425,16 @@
     },
     "max-len": {
       "count": 3
+    }
+  },
+  "src/classroom/room/livekit/snapshot/tests/share.test.ts": {
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/classroom/room/livekit/snapshot/tests/snapshot.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/classroom/room/livekit/stage.ts": {
@@ -534,17 +525,17 @@
       "count": 1
     }
   },
-  "src/components/channel/ChannelThread/tests/live.test.tsx": {
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 2
-    }
-  },
   "src/components/channel/ChannelThread/tests/ChannelThread.test.tsx": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/components/channel/ChannelThread/tests/live.test.tsx": {
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 2
     }
   },
   "src/components/channel/api.ts": {
@@ -805,11 +796,6 @@
       "count": 1
     }
   },
-  "src/lib/http/api/tests/api.test.ts": {
-    "@typescript-eslint/no-base-to-string": {
-      "count": 1
-    }
-  },
   "src/lib/http/api/api.ts": {
     "@typescript-eslint/unbound-method": {
       "count": 1
@@ -818,8 +804,8 @@
       "count": 1
     }
   },
-  "src/lib/http/env/tests/env.test.ts": {
-    "max-len": {
+  "src/lib/http/api/tests/api.test.ts": {
+    "@typescript-eslint/no-base-to-string": {
       "count": 1
     }
   },
@@ -833,6 +819,11 @@
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/lib/http/env/tests/env.test.ts": {
     "max-len": {
       "count": 1
     }
