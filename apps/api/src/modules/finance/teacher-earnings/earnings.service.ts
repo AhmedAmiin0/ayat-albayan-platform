@@ -87,8 +87,8 @@ export class EarningsService {
     return this.receipts.download(row.receipt_path);
   }
 
-  private async replayOf(teacherId: string, requestId: string | undefined): Promise<TeacherPaymentView | null> {
-    const row: PaymentRow | null = requestId ? await this.queries.byRequest(requestId) : null;
+  private async replayOf(teacherId: string, requestId: string): Promise<TeacherPaymentView | null> {
+    const row: PaymentRow | null = await this.queries.byRequest(requestId);
     if (!row) return null;
     if (row.teacher_id !== teacherId) throw conflict('request_reused');
     return toPaymentView(row);
@@ -104,7 +104,7 @@ function payload(ctx: Pay, input: TeacherPaymentCreate, items: { earning_id: str
   return {
     actor: ctx.actorId,
     teacher_id: ctx.teacherId,
-    client_request_id: input.clientRequestId ?? null,
+    client_request_id: input.clientRequestId,
     amount: input.amount,
     method: input.method,
     paid_at: input.paidAt,

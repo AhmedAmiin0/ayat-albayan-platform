@@ -10,7 +10,7 @@ const queries = {
 const receipts = { check: vi.fn(), uploadUrl: vi.fn(), download: vi.fn() };
 const service = () => new EarningsService(queries as never, receipts as never);
 const ctx = { teacherId: TEACHER, actorId: ACTOR };
-const base = { amount: 100, method: 'bank' as const, paidAt: '2026-10-01T09:00:00Z' };
+const base = { amount: 100, method: 'bank' as const, paidAt: '2026-10-01T09:00:00Z', clientRequestId: REQUEST };
 const code = (p: Promise<unknown>) => p.then(() => 'ok', (e: { response?: { code?: string } }) => e.response?.code);
 
 beforeEach(() => {

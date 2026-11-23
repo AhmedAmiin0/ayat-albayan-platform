@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { STUDENT_ID, subRow, WEEKLY_SA } from './money/money.fakes';
+import { REQUEST_ID, STUDENT_ID, subRow, WEEKLY_SA } from './money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from './test-app';
 
 // POST /subscriptions lessonsUsedBefore (owner 2026-10-28, migration 932): only with a start before
@@ -30,7 +30,7 @@ describe('POST /subscriptions lessonsUsedBefore', () => {
   });
 
   const create = (patch: object) =>
-    call({ method: 'POST', url: '/subscriptions', body: { studentId: STUDENT_ID, pricing: { tier: 'weekly' }, ...patch } });
+    call({ method: 'POST', url: '/subscriptions', body: { studentId: STUDENT_ID, pricing: { tier: 'weekly' }, clientRequestId: REQUEST_ID, ...patch } });
 
   it('a past start: stored, audited, returned', async () => {
     const res = await create({ startsOn: '2026-10-27', lessonsUsedBefore: 1 });

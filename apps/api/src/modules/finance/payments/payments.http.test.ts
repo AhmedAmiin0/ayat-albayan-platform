@@ -1,11 +1,18 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { PAYMENT_ID, paymentRow, REQUEST_ID, STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 const SUB = { id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR' };
 const RECEIPT = `${SUB_ID}/0f0e0d0c-0000-4000-8000-000000000001.jpg`;
-const body = { subscriptionId: SUB_ID, amount: 145, currency: 'SAR', method: 'bank', paidAt: '2026-10-01T09:00:00Z' };
+const body = {
+  subscriptionId: SUB_ID,
+  amount: 145,
+  currency: 'SAR',
+  method: 'bank',
+  paidAt: '2026-10-01T09:00:00Z',
+  clientRequestId: REQUEST_ID,
+};
 
 describe('payments routes (P1–P7, R-PAY-01)', () => {
   let app: NestFastifyApplication;

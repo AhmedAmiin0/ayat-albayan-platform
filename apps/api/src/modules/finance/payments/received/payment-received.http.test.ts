@@ -2,7 +2,7 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import type { TestingModuleBuilder } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PushService } from '@/common/push/push.service';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { PAYMENT_ID, paymentRow, REQUEST_ID, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
 import { ADMIN, moneyApp, resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { PAY, salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 
@@ -12,6 +12,7 @@ const BODY = {
   currency: 'SAR',
   method: 'bank',
   paidAt: '2026-10-01T09:00:00Z',
+  clientRequestId: REQUEST_ID,
 };
 interface Told {
   kind: string;
