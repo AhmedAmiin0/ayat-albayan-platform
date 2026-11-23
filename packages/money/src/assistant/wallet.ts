@@ -4,7 +4,7 @@ import type { AssistantCommissionStatus } from './commission.js';
 import type { AssistantCommissionKind } from './kind.js';
 import { monthOf } from './statement.js';
 
-// «محفظتي» (owner 2026-10-29): the salesperson's own commissions as a wallet. A commission is owed until a
+// «محفظتي»: the salesperson's own commissions as a wallet. A commission is owed until a
 // PAID statement holds it; a draft is the admin's work in progress, so it reads as owed. Commissions only:
 // the salary and the admin's own adjustments stay in «الكشوف». Per currency, never summed across them.
 

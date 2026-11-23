@@ -35,7 +35,7 @@ export interface PackageLesson {
 export interface PackageSubscription {
   id: string;
   lessonsTotal: number;
-  /** Taken before the platform (migration 932, owner 2026-10-28): counted as used, never booked. */
+  /** Taken before the platform (migration 932): counted as used, never booked. */
   lessonsUsedBefore?: number;
   /** A stopped package (migration 991): lessonsUsed at the stop (≤ lessonsTotal), its capacity. */
   lessonsUsedAtStop?: number;

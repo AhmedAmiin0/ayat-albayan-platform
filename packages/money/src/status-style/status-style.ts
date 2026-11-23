@@ -54,7 +54,7 @@ export const leadStatusStyle: Record<LeadStatus, StatusStyle> = {
   lost: { tone: 'neutral', glyph: 'struck' },
 };
 
-/** new: book a trial; pending_subscription: collect the payment; expired: renew (owner 2026-10-15). */
+/** new: book a trial; pending_subscription: collect the payment; expired: renew. */
 export const studentStatusStyle: Record<StudentStatus, StatusStyle> = {
   new: { tone: 'act', glyph: 'hollow' },
   trial: { tone: 'neutral', glyph: 'hollow' },
@@ -111,7 +111,7 @@ export const gradeStyle: Record<Grade, GradeStyle> = {
   needs_review: { tone: 'act', pips: 1 },
 };
 
-// Phase 3 (R-REP-02/03, R-PAY-02). A failed PDF is the admin's to retry, hence act.
+// R-REP-02/03, R-PAY-02. A failed PDF is the admin's to retry, hence act.
 export const reportStatusStyle: Record<ReportStatus, StatusStyle> = {
   draft: { tone: 'neutral', glyph: 'hollow' },
   submitted: { tone: 'ok', glyph: 'fill' },

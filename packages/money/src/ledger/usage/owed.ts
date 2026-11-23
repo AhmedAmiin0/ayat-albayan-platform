@@ -1,7 +1,7 @@
 import { toCents } from '@ab/core';
 import { partPaid } from './payment-state.js';
 
-// What a package is owed for (owner 2026-11-06, «for the refund make me choose what I need»):
+// What a package is owed for:
 // its price, except a STOPPED course («إلغاء الاشتراك»), which owes what the person stopping it
 // chose and the stop stored (subscriptions.stop_owed_amount, migration 20261106000100). Old stops
 // were backfilled with their price, so nothing changed on deploy; a stop with a refund stored the

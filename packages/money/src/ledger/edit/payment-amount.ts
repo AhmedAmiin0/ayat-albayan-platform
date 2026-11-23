@@ -4,7 +4,7 @@ import { round2 } from '@ab/core';
 import { moneyAmount } from '../schemas.js';
 
 /**
- * «تعديل المبلغ» (owner 2026-11-02): PATCH /sales/payments/:id/amount takes the new amount only, in
+ * «تعديل المبلغ»: PATCH /sales/payments/:id/amount takes the new amount only, in
  * the payment's (the package's) currency. The admin's PATCH /payments/:id keeps its own body.
  */
 export const paymentAmountSchema = z.strictObject({ amount: moneyAmount });

@@ -818,14 +818,6 @@
       "count": 1
     }
   },
-  "src/lib/http/client-tag.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/lib/http/env.test.ts": {
     "max-len": {
       "count": 1
