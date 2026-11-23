@@ -1,4 +1,4 @@
-import { isTimeZone } from '@ab/shared';
+import { isTimeZone } from '@ab/core';
 
 // GET /auth/me `tz` (docs/34 §2): the signed-in person's own zone, which every screen reads times
 // in before the device's. Pure.

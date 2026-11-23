@@ -1,4 +1,4 @@
-import type { ListSort } from '@ab/shared';
+import type { ListSort } from '@ab/core';
 
 // Server-side sort + text filter for paginated lists (R-NFR-08). The client sends an allowlisted
 // key (`listSortShape`), never a column name; the spec maps it to the column.

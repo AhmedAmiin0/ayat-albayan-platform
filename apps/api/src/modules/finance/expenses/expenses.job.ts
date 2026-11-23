@@ -1,4 +1,5 @@
-import { addCalendarMonths, localDateIn, SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
+import { addCalendarMonths, localDateIn } from '@ab/time';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { ExpensesRepo } from './expenses.repo';
 import { ExpensesSettings } from './expenses.settings';

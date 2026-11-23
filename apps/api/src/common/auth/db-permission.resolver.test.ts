@@ -1,4 +1,4 @@
-import { GRANTABLE_PERMISSIONS } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
 import { dbPermissionResolver } from './db-permission.resolver';

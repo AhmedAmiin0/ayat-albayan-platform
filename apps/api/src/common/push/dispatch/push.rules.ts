@@ -1,4 +1,5 @@
-import { notificationEntry, type NotificationKey, type AnyPushKind } from '@ab/shared';
+import { notificationEntry, type NotificationKey } from '@ab/shared';
+import type { AnyPushKind } from '@ab/catalog';
 import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 import { ruleOf } from '@/common/rules/rule-of';
 

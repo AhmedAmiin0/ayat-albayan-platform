@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import { isCommissionKind, type AssistantCommissionView } from '@ab/shared';
+import { isCommissionKind, type AssistantCommissionView } from '@ab/money';
 import { reasonText } from '@/modules/finance/assistant-pay/shared/reasons';
 
 export type CommissionRow = Tables<'assistant_commissions'> & {

@@ -1,4 +1,9 @@
-import type { AssistantAdjustmentInput, AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
+import type {
+  AssistantAdjustmentInput,
+  AssistantCommissionView,
+  BroughtByInput,
+  BroughtByResult,
+} from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { CommissionBell } from '@/modules/finance/subscriptions';
 import type { CommissionsQuery } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';

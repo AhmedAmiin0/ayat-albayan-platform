@@ -1,4 +1,5 @@
-import { clipText, type AnyPushKind } from '@ab/shared';
+import { clipText } from '@ab/shared';
+import type { AnyPushKind } from '@ab/catalog';
 import { pushText, type PushText } from '@/common/push/expo/expo-push';
 
 // What a device shows on its lock screen (owner 2026-10-25): no more personal data than the alert

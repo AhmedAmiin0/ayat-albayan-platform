@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ATTACHMENT_MIMES, RECEIPT_MIMES } from '@ab/shared';
+import { ATTACHMENT_MIMES } from '@ab/shared';
+import { RECEIPT_MIMES } from '@ab/money';
 import {
   attachmentPath,
   BUCKETS,

@@ -1,4 +1,4 @@
-import { customConfigUpsertSchema, customKeySchema, type CustomConfigView } from '@ab/shared';
+import { customConfigUpsertSchema, customKeySchema, type CustomConfigView } from '@ab/settings';
 import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '@/common/http/http';

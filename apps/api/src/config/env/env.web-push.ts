@@ -1,4 +1,4 @@
-import { vapidPublicKey, vapidSubject } from '@ab/shared';
+import { vapidPublicKey, vapidSubject } from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset } from './env.blank';

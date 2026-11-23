@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import { PERMISSION_TTL_MS, PermissionCache } from '@/common/auth/permission.cache';
 import type { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
