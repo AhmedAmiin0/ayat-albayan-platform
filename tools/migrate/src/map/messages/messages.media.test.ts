@@ -1,4 +1,4 @@
-// mapMessages: an inbound file keeps its CRM link as the body (the receipt bug, owner 2026-10-29);
+// mapMessages: an inbound file keeps its CRM link as the body (the receipt bug);
 // every other row gets no media_name key, so its payload hash stays the same.
 import { describe, expect, it } from 'vitest';
 import { SA, bundle, contact, crm, message } from '../leads/fixtures.ts';
