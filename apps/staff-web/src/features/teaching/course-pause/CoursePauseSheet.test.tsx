@@ -1,5 +1,6 @@
 import { coursePausePreviewText } from '@ab/client-core';
-import { addDays, daysBefore, riyadhToday } from '@ab/shared';
+import { daysBefore } from '@ab/shared';
+import { addDays, riyadhToday } from '@ab/time';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';

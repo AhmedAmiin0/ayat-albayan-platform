@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { palette } from '@ab/shared';
+import { palette } from '@ab/catalog';
 import { inboxLive } from './inbox-live';
 import { LiveDot } from './LiveDot';
 

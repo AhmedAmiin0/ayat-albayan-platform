@@ -1,4 +1,4 @@
-import { DURATIONS, type Duration } from '@ab/shared';
+import { DURATIONS, type Duration } from '@ab/catalog';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

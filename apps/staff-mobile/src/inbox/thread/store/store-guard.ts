@@ -5,7 +5,8 @@ import {
   type SyncPlan,
   type SyncState,
 } from '@ab/client-core';
-import type { MessageStatus, MessageView, SyncMessage } from '@ab/shared';
+import type { MessageView, SyncMessage } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import type { SqlPort } from './sql-port';
 import { changedPhones, type StoreChange } from './store-change';
 import { readHeld, readRows, readState, readThreadsOf } from './store-read';

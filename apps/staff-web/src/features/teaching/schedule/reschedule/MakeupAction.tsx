@@ -1,4 +1,5 @@
-import { type LessonView, lessonWhenAt, makeupOffer } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { type LessonView, makeupOffer } from '@ab/schedule';
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';

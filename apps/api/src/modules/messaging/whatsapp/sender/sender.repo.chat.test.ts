@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { SenderRepo } from './sender.repo';
 
 // Review A, C1 (docs/12 §13.3): while the chat client is not configured, chat-stamped session

@@ -1,4 +1,5 @@
-import { studentStatusStyle, type TeacherStudentHead } from '@ab/shared';
+import type { TeacherStudentHead } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

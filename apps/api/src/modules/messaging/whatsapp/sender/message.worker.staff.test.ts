@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';

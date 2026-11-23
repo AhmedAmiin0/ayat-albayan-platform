@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeOwnNumbers, OWN_NOT_IN } from '@/modules/messaging/numbers/own/own-numbers.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { SalesAssignRepo } from './sales-assign.repo';
 
 describe('SalesAssignQueries — the academy’s own numbers', () => {

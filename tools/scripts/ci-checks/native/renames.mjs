@@ -1,4 +1,4 @@
-// The Expo apps moved folders (owner 2026-11-15): apps/mobile → apps/staff-mobile, apps/family →
+// The Expo apps moved folders: apps/mobile → apps/staff-mobile, apps/family →
 // apps/family-mobile. The last APK may predate the move, so native-changes.mjs reads that build's
 // files at their old paths, names them by the new ones and compares by content: a file that only
 // moved is no change.

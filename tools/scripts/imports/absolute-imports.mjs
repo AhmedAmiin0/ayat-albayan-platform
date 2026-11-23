@@ -1,4 +1,4 @@
-// The absolute-imports codemod (owner 2026-10-30: «use the absolute paths for imports», docs/32
+// The absolute-imports codemod: imports use absolute paths (docs/32
 // R12). Rewrites every parent-relative module path (`../x`) of a workspace with a `@/*` alias to
 // that alias (`@/x`): static imports, re-exports, `import()`, `import('x').T`, require and the
 // vi / jest mock paths (move-module/specifiers.ts finds them). A sibling (`./x`) and a path that
