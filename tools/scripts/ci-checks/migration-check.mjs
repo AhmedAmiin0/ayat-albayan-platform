@@ -16,6 +16,72 @@ export function stripSql(sql) {
     .replace(/'(?:[^']|'')*'/g, 'STR');
 }
 
+// Safety rules for added files, which go straight to production (docs/57 OPS-6, SPT-14).
+const TABLE = String.raw`((?:"?\w+"?\.)?"?\w+"?)`;
+const ALTER = String.raw`\balter\s+table\s+(?:if\s+exists\s+)?(?:only\s+)?`;
+const named = (prefix, suffix = '') => new RegExp(`${prefix}${TABLE}${suffix}`, 'gi');
+const CREATE_TABLE = named(
+  String.raw`\bcreate\s+(?:unlogged\s+)?table\s+(?:if\s+not\s+exists\s+)?`,
+);
+const ALTER_TABLE = named(ALTER);
+const RLS_ON = named(ALTER, String.raw`\s+enable\s+row\s+level\s+security`);
+const CREATE_INDEX = named(String.raw`\bcreate\s+(?:unique\s+)?index\b[^;]*?\bon\s+(?:only\s+)?`);
+const DROP_LOCKING = /\bdrop\s+(?:table|index)\b/i;
+// `alter table t drop x` drops a column too: COLUMN is optional in Postgres.
+const KEPT_DROPS = String.raw`(?!constraint\b|default\b|not\s+null\b|expression\b|identity\b)`;
+const DESTRUCTIVE = new RegExp(
+  String.raw`\bdrop\s+(?:table|schema|column)\b|\brename\s+(?:to|column)\b`
+    + String.raw`|\balter\s+table\b[^;]*?[\s,]drop\s+${KEPT_DROPS}\w`,
+  'i',
+);
+const LOCK_TIMEOUT = /\bset\s+local\s+lock_timeout\b/i;
+const SEARCH_PATH = /\bset\s+search_path\b/i;
+const REVOKE_PUBLIC = /\brevoke\s+(?:all|execute)\b[^;]*?\bfrom\s+public\s*,[^;]*?\banon\b/i;
+const MARKER = /--\s*destructive:\s*\S/i;
+const DEFINER = /\bsecurity\s+definer\b/i;
+
+const bare = (name) => name.replaceAll('"', '').replace(/^public\./i, '').toLowerCase();
+const targets = (re, sql) => [...sql.matchAll(re)].map((m) => bare(m[1]));
+const withoutComments = (sql) => sql.replace(/--[^\n]*/g, '').replace(/\/\*[\s\S]*?\*\//g, '');
+
+function tablesWithoutRls(body) {
+  const rlsOn = new Set(targets(RLS_ON, body));
+  return targets(CREATE_TABLE, body).filter((t) => !rlsOn.has(t));
+}
+
+function touchesExistingTable(body) {
+  const created = new Set(targets(CREATE_TABLE, body));
+  const touched = [...targets(ALTER_TABLE, body), ...targets(CREATE_INDEX, body)];
+  return DROP_LOCKING.test(body) || touched.some((t) => !created.has(t));
+}
+
+// Per statement: one definer function with search_path must not cover another without it.
+const definersWithoutPath = (body) => body.split(';')
+  .some((s) => DEFINER.test(s) && !SEARCH_PATH.test(s));
+
+function definerProblems({ body, code }) {
+  const missing = [
+    [definersWithoutPath(body), 'security definer needs set search_path'],
+    [!REVOKE_PUBLIC.test(code), 'security definer needs revoke execute … from public, anon'],
+  ];
+  return missing.filter(([bad]) => bad).map(([, message]) => message);
+}
+
+const RULES = [
+  ({ body }) => tablesWithoutRls(body)
+    .map((t) => `create table ${t} needs enable row level security`),
+  (sql) => (DEFINER.test(sql.body) ? definerProblems(sql) : []),
+  ({ body }) => (touchesExistingTable(body) && !LOCK_TIMEOUT.test(body)
+    ? ['ddl on an existing table needs set local lock_timeout'] : []),
+  ({ body, raw }) => (DESTRUCTIVE.test(body) && !MARKER.test(raw)
+    ? ['drop or rename needs a -- destructive: <reason> marker'] : []),
+];
+
+function ruleErrors({ name, raw, body }) {
+  const sql = { raw, body, code: withoutComments(raw) };
+  return RULES.flatMap((rule) => rule(sql)).map((e) => `${name}: ${e}`);
+}
+
 export function lintSql(name, sql) {
   const errors = [];
   if (!sql.trim()) return [`${name}: empty file`];
@@ -26,7 +92,7 @@ export function lintSql(name, sql) {
   if (body.includes('$')) errors.push(`${name}: unterminated dollar-quoted string`);
   if (/'/.test(body)) errors.push(`${name}: unterminated string literal`);
   if (!/;\s*$/.test(body.trim())) errors.push(`${name}: last statement does not end with ;`);
-  return errors;
+  return [...errors, ...ruleErrors({ name, raw: sql, body })];
 }
 
 export function checkNames(files, baseFiles = []) {
