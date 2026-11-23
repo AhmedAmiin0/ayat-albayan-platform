@@ -616,6 +616,7 @@
     "messaging/thread-summaries.sql.spec.ts",
     "messaging/trial-no-teacher-chat.sql.spec.ts",
     "people/users-control.sql.spec.ts",
+    "platform/rls-catalogue.sql.spec.ts",
     "messaging/wa-line-health.sql.spec.ts",
     "messaging/whatsapp-lines.sql.spec.ts",
     "messaging/whatsapp-lines.windows.sql.spec.ts"
