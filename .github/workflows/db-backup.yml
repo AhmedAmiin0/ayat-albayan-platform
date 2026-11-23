@@ -3,7 +3,9 @@
 # kept as a workflow artifact for 90 days. The repository is public: only the encrypted file is
 # ever stored, and the log never shows the URL, the host or any row.
 # Switched off until the owner adds the SUPABASE_DB_URL secret and the BACKUP_AGE_RECIPIENT
-# variable to the db-backup environment: until then every run ends green with a notice.
+# variable to the db-backup environment: until then every run ends green with a notice, unless the
+# repository variable BACKUP_REQUIRED is true: then a missing secret fails the run, and GitHub
+# emails the owner about the failed scheduled run.
 name: db-backup
 
 on:
@@ -29,11 +31,17 @@ jobs:
       AGE_RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
       # Supabase runs Postgres 17: pg_dump must be at least the server's version.
       PG_MAJOR: ${{ vars.BACKUP_PG_MAJOR || '17' }}
+      BACKUP_REQUIRED: ${{ vars.BACKUP_REQUIRED }}
+      # The Free plan caps the database at 500 MB: warn while there is still room to act.
+      SIZE_WARN_MB: 400
+      SIZE_CAP_MB: 500
     steps:
       - name: Check the switch
         id: switch
         run: |
           if [ -n "${DB_URL:-}" ] && [ -n "${AGE_RECIPIENT:-}" ]; then echo "on=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          missing="the SUPABASE_DB_URL secret or the BACKUP_AGE_RECIPIENT variable is missing from the db-backup environment (docs/backups.md)"
+          [ "${BACKUP_REQUIRED:-}" = "true" ] && { echo "::error::db-backup is required (BACKUP_REQUIRED=true) but $missing"; exit 1; }
           echo "::notice::db-backup is off: add the SUPABASE_DB_URL secret and the BACKUP_AGE_RECIPIENT variable to the db-backup environment (docs/backups.md)"
           echo "on=false" >> "$GITHUB_OUTPUT"
 
@@ -47,7 +55,19 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq "postgresql-client-${PG_MAJOR}" age > /dev/null
           echo "PG_DUMP=/usr/lib/postgresql/${PG_MAJOR}/bin/pg_dump" >> "$GITHUB_ENV"
+          echo "PSQL=/usr/lib/postgresql/${PG_MAJOR}/bin/psql" >> "$GITHUB_ENV"
           "/usr/lib/postgresql/${PG_MAJOR}/bin/pg_dump" --version
+
+      - name: Log the database size
+        if: ${{ steps.switch.outputs.on == 'true' }}
+        run: |
+          # psql's own message may name the host: it is dropped, the dump step reports the failure.
+          bytes="$("$PSQL" --dbname="$DB_URL" -Atc 'select pg_database_size(current_database())' 2> /dev/null || true)"
+          [[ "$bytes" =~ ^[0-9]+$ ]] || { echo "::warning::could not read the database size"; exit 0; }
+          mb=$(( bytes / 1024 / 1024 ))
+          echo "database size: ${mb} MB"
+          [ "$bytes" -gt $(( SIZE_WARN_MB * 1024 * 1024 )) ] || exit 0
+          echo "::warning::the database is ${mb} MB, above ${SIZE_WARN_MB} MB: the Supabase Free plan turns the database read-only past ${SIZE_CAP_MB} MB (docs/backups.md)"
 
       - name: Dump and encrypt
         if: ${{ steps.switch.outputs.on == 'true' }}
