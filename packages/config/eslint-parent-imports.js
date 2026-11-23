@@ -1,4 +1,4 @@
-// Owner 2026-10-30: «use the absolute paths for imports». A module path never climbs out of its
+// Imports use absolute paths. A module path never climbs out of its
 // folder with `../`: it names the workspace alias (`@/…` → `src/…`) instead; a sibling (`./x`)
 // stays relative, and so does a path the alias cannot name (outside `src/`: mobile app/ routes,
 // app.json, web public/). Covers every place a path is written: imports, re-exports, `import()`,

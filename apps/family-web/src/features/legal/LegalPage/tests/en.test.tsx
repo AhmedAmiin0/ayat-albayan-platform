@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { renderAt } from '@/test/render-at';
-import { LegalPage } from './LegalPage';
+import { LegalPage } from '@/features/legal/LegalPage/LegalPage';
 
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
