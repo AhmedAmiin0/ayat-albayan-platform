@@ -3,7 +3,7 @@ import type { ReportView } from '@ab/shared';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { reportView } from '@/teacher/report/testing/fixtures';
-import { useReportEntry } from './use-report-entry';
+import { useReportEntry } from '@/teacher/report/hooks/use-report-entry/use-report-entry';
 
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

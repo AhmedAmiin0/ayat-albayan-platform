@@ -14,9 +14,9 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { dropStoredDraft, useStoredDraft, viewWithDraft } from '@/teacher/report/drafts';
-import { refreshAfterSubmit, submitReport } from './api';
-import { useAutosave } from './use-autosave';
-import { useFormMode } from './use-form-mode';
+import { refreshAfterSubmit, submitReport } from '@/teacher/report/hooks/api';
+import { useAutosave } from '@/teacher/report/hooks/use-autosave';
+import { useFormMode } from '@/teacher/report/hooks/use-form-mode';
 
 /** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
 const entryValuesOf = reportEntryValues;

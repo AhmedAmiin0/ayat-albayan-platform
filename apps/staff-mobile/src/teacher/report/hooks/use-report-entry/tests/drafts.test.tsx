@@ -7,7 +7,7 @@ import { backgroundThenActive, captureAppState } from '@/test/app-resume';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { readStoredDraft, REPORT_DRAFTS_KEY } from '@/teacher/report/drafts';
 import { reportView } from '@/teacher/report/testing/fixtures';
-import { useReportEntry } from './use-report-entry';
+import { useReportEntry } from '@/teacher/report/hooks/use-report-entry/use-report-entry';
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
