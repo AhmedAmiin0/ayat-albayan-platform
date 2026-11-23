@@ -6,7 +6,7 @@ import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from './MessageBubble';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 const NOW = new Date('2026-10-01T12:00:00Z');
 const KIND: Record<MessageStatus, string> = {

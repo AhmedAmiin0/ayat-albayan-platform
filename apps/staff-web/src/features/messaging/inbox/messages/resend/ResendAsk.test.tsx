@@ -10,7 +10,7 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { ResendAsk } from './ResendAsk';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
 // Meta's 131060 on a new number's first message (owner 2026-10-27): «اطلب إعادة الإرسال».
 const unavailable = message({

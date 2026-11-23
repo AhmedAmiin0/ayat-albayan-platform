@@ -8,7 +8,7 @@ import { PaymentsHistory } from './PaymentsHistory';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const VOIDED = { ...PAYMENT, id: 'p2', voided_at: '2026-10-05T09:00:00Z', void_reason: 'مبلغ خطأ' };
 

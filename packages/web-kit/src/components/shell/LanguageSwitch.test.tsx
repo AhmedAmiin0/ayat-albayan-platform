@@ -9,7 +9,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: session.current } }) } },
 }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 afterEach(() => {
   localStorage.clear();

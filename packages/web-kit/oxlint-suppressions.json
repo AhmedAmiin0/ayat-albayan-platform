@@ -51,7 +51,7 @@
       "count": 2
     }
   },
-  "src/auth/me.ts": {
+  "src/auth/me/me.ts": {
     "complexity": {
       "count": 1
     },
@@ -97,7 +97,7 @@
       "count": 1
     }
   },
-  "src/auth/sign-in.ts": {
+  "src/auth/sign-in/sign-in.ts": {
     "typescript/no-deprecated": {
       "count": 1
     }
@@ -208,7 +208,7 @@
       "count": 1
     }
   },
-  "src/classroom/board/model/reducer.ts": {
+  "src/classroom/board/model/reducer/reducer.ts": {
     "complexity": {
       "count": 1
     },
@@ -292,7 +292,7 @@
       "count": 3
     }
   },
-  "src/classroom/room/components/ClassroomRoom.boardRequest.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/boardRequest.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -300,27 +300,27 @@
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.en.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/en.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.mute.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/mute.test.tsx": {
     "typescript/consistent-type-imports": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.recordingOff.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/recordingOff.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.share.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/share.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/components/ClassroomRoom.shareRequest.test.tsx": {
+  "src/classroom/room/components/ClassroomRoom/tests/shareRequest.test.tsx": {
     "typescript/consistent-type-imports": {
       "count": 1
     },
@@ -401,12 +401,12 @@
       "count": 1
     }
   },
-  "src/classroom/room/livekit/livekit-room.test.ts": {
+  "src/classroom/room/livekit/livekit-room/tests/livekit-room.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/classroom/room/livekit/livekit-room.ts": {
+  "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
     "max-lines-per-function": {
       "count": 1
     },
@@ -422,17 +422,17 @@
       "count": 1
     }
   },
-  "src/classroom/room/livekit/snapshot.share.test.ts": {
+  "src/classroom/room/livekit/snapshot/tests/share.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
   },
-  "src/classroom/room/livekit/snapshot.test.ts": {
+  "src/classroom/room/livekit/snapshot/tests/snapshot.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/livekit/snapshot.ts": {
+  "src/classroom/room/livekit/snapshot/snapshot.ts": {
     "complexity": {
       "count": 1
     },
@@ -528,12 +528,12 @@
       "count": 1
     }
   },
-  "src/components/channel/ChannelThread.live.test.tsx": {
+  "src/components/channel/ChannelThread/tests/live.test.tsx": {
     "typescript/no-unnecessary-condition": {
       "count": 2
     }
   },
-  "src/components/channel/ChannelThread.test.tsx": {
+  "src/components/channel/ChannelThread/tests/ChannelThread.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -681,7 +681,7 @@
       "count": 1
     }
   },
-  "src/components/ui/layout/tabs.tsx": {
+  "src/components/ui/layout/tabs/tabs.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
@@ -742,7 +742,7 @@
       "count": 1
     }
   },
-  "src/components/ui/overlay/more-menu.tsx": {
+  "src/components/ui/overlay/more-menu/more-menu.tsx": {
     "jsx-a11y/click-events-have-key-events": {
       "count": 1
     },
@@ -794,12 +794,12 @@
       "count": 1
     }
   },
-  "src/lib/http/api.test.ts": {
+  "src/lib/http/api/tests/api.test.ts": {
     "typescript/no-base-to-string": {
       "count": 1
     }
   },
-  "src/lib/http/api.ts": {
+  "src/lib/http/api/api.ts": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -807,12 +807,12 @@
       "count": 1
     }
   },
-  "src/lib/http/env.test.ts": {
+  "src/lib/http/env/tests/env.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/lib/http/env.ts": {
+  "src/lib/http/env/env.ts": {
     "stylistic/max-len": {
       "count": 1
     },

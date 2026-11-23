@@ -8,7 +8,7 @@ import { LessonDrawer } from './LessonDrawer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const L = lesson({ id: 'l-1', starts_at: '2026-10-04T14:00:00.000Z' }); // Sun 17:00 Riyadh
 const BUSY = '2026-10-05T14:00:00.000Z'; // Mon 17:00, another lesson there

@@ -10,7 +10,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const PHONE = '+966501234567';
 const PHOTO: ThreadMediaItem = { message_id: 'm-photo', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: 'التحويل', expired: false };

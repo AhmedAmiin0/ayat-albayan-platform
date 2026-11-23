@@ -9,7 +9,7 @@ import { syncView } from '@/features/messaging/numbers/evolution/sync/sync.fixtu
 import { EvolutionConfigDialog } from './EvolutionConfigDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const e = t.numbers.evolution;
 const c = e.config;

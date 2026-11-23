@@ -11,7 +11,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } },
 }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // «إعادة فتح المحادثة» (owner 2026-11-14): the academy template picked and filled, reopen: true.
 // The API is faked: nothing reaches WhatsApp.

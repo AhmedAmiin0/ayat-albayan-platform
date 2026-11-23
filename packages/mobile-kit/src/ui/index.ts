@@ -11,7 +11,7 @@ export { Notice } from './feedback/Notice';
 export { PresenceLabel } from './feedback/PresenceLabel';
 export { SkeletonCard } from './feedback/SkeletonCard';
 export { WarnLine } from './feedback/WarnLine';
-export type { WarnLineProps } from './feedback/WarnLine.types';
+export type { WarnLineProps } from './feedback/WarnLine';
 export { StatusChip, type StatusChipProps, toneColors } from './feedback/StatusChip';
 export { AppearancePicker } from './form/AppearancePicker';
 export { Field, type FieldProps } from './form/Field';

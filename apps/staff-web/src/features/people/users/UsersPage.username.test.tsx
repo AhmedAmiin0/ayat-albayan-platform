@@ -7,7 +7,7 @@ import { fakeApi, granted, renderWithClient, SARA, YOUSEF } from './users-test-k
 // The users list shows a teacher's sign-in username (docs/30 §7).
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [...granted], can: (p: string) => granted.has(p) }) }));
 
 const OMAR = { ...SARA, id: 'u3', email: null, full_name: 'أ. عمر', role: 'teacher' as const, username: 'ustadh.omar' };

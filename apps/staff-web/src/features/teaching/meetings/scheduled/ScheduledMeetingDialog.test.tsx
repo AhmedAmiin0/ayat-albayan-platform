@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ScheduledMeetingDialog } from './ScheduledMeetingDialog';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: api.fetch, apiSend: api.send }));
 
 const L = t.meetingInvites;
 const STUDENT_ID = '22222222-2222-4222-8222-222222222222';

@@ -7,9 +7,9 @@ import { renderAt } from '@/test/render-at';
 import { WithPick } from './WithPick';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 // The profile the pick is saved under (the shell's guard reads the rest of the module).
-vi.mock('@ab/web-kit/auth/me', async (orig) => ({
+vi.mock('@ab/web-kit/auth/me/me', async (orig) => ({
   ...(await orig<object>()),
   meQuery: { queryKey: ['me'], queryFn: () => ({ id: 'g1', role: 'guardian', permissions: [] }) },
 }));

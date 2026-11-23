@@ -8,7 +8,7 @@ import type { DashboardSearch } from './search';
 import { setConfirmationRequired } from '@ab/web-kit/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
 const DUES = { currency: 'EGP', rows: [], totals: { earned: 900, paid: 300, owed: 600, teachers_owed: 2 } };

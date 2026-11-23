@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { reopenDedupKey } from '../../messaging/chat/thread-reopen.js';
+import { reopenDedupKey } from '../../messaging/chat/thread-reopen/index.js';
 import { dayBeforeSendAt, localDayStart } from '../../messaging/lesson/timing.day-before.js';
-import { reminderDue } from '../../messaging/lesson/timing.js';
+import { reminderDue } from '../../messaging/lesson/timing/index.js';
 import { riyadhToday, zonedInstant } from '@ab/time';
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
 

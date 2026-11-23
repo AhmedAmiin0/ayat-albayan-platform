@@ -7,7 +7,7 @@ import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 import { setConfirmationRequired } from '@ab/web-kit/lib/settings/confirmation-testing';
 
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 const PENDING = { id: 'p1', proposed_starts_at: '2026-10-06T15:30:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
 

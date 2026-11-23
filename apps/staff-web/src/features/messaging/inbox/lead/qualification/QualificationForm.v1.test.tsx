@@ -6,7 +6,7 @@ import { QualificationForm } from './QualificationForm';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 afterEach(() => apiSend.mockReset());
 
 describe('«بيانات الطالب»: the first registration form\'s questions (research-forms 8–9)', () => {

@@ -11,7 +11,7 @@ import { QuoteDialog } from './QuoteDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const PHONE = '+966501234567';
 const SA = '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=0';
@@ -89,7 +89,7 @@ it('outside the 24 h window: send and edit are disabled with the closed note; co
 });
 
 it('a 409 session_closed refetches the thread so the sheet locks send and edit', async () => {
-  const { ApiError } = await import('@ab/web-kit/lib/http/api');
+  const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
   apiSend.mockRejectedValue(new ApiError(409, { code: 'session_closed' }));
   const client = renderWithClient(<QuoteDialog thread={thread({ phone_e164: PHONE, session_open: true })} onClose={vi.fn()} onFilled={vi.fn()} />);
   const refetch = vi.spyOn(client, 'invalidateQueries');

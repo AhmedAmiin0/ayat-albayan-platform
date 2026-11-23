@@ -10,7 +10,7 @@ import { routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const READ_SEND: Permission[] = ['inbox.read', 'inbox.send', 'messages.read'];

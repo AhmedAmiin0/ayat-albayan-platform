@@ -7,7 +7,7 @@ import { fakeClient } from '@ab/web-kit/classroom/room/livekit/fake-client';
 import { StaffClassroomPage } from './StaffClassroomPage';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const JOIN = { url: 'wss://lk', token: 'staff', room: 'lesson-9', role: 'teacher' };
 

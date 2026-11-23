@@ -8,7 +8,7 @@ import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // docs/19: the WABA name («اسم القالب في واتساب») is edited on crm and meta lines' rows (every driver sends
 // it, «CRM → Meta»); a save replaces the row and closes.

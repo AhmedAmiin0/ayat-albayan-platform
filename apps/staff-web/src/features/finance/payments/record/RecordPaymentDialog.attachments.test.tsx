@@ -8,7 +8,7 @@ import { RecordPaymentDialog } from './RecordPaymentDialog';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
 
 const posts = () => apiSend.mock.calls.filter(([, path]) => path === '/payments').map((c) => c[2] as Record<string, unknown>);

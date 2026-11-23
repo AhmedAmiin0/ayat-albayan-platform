@@ -12,7 +12,7 @@ import { threadQuery } from './thread-query';
 // stale one in flight and lands exactly what the server sent.
 
 const mockApiFetch = vi.fn();
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args) as unknown,
 }));

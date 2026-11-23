@@ -13,7 +13,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 const C24 = { cycle: '24', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // What sales gets in pages[0].people: the children, their packages nulled.
 const PEOPLE: ThreadPeople = {

@@ -12,7 +12,7 @@ import { TodayLessons } from './today/TodayLessons';
 import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
 const wrap = (ui: ReactNode) =>

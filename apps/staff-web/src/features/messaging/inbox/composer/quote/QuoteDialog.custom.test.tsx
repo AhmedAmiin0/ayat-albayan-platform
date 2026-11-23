@@ -11,7 +11,7 @@ import { QuoteDialog } from './QuoteDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => new Set<string>());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [...granted], can: (p: string) => granted.has(p) }),
 }));

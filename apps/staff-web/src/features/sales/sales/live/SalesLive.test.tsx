@@ -7,7 +7,7 @@ import { SalesLive } from './SalesLive';
 import { SalesLiveStrip } from './SalesLiveStrip';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 const live = (rows: unknown[]) => apiFetch.mockImplementation(async (path: string) => (path === '/sales/live' ? rows : {}));
 
 afterEach(() => apiFetch.mockReset());

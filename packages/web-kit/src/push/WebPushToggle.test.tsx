@@ -11,7 +11,7 @@ const push = vi.hoisted(() => ({ rebindWebPush: vi.fn(), subscribeWebPush: vi.fn
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('./web-push-support', async (orig) => ({ ...(await orig<object>()), readPushEnv: () => env.current }));
 vi.mock('./web-push', () => push);
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 beforeEach(() => {
   vi.resetAllMocks();
