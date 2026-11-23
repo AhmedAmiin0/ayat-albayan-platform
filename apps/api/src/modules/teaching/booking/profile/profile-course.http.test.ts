@@ -1,8 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BODY, profileApp, RESULT, S1, SALES, SUB_ID, T_NEW } from './profile-course.fakes';
 
-// «تغيير موعد الحلقات» / «تغيير المعلم» from the student's profile (owner 2026-10-30): who may, and
-// the codes.
 type App = Awaited<ReturnType<typeof profileApp>>;
 const TIMES = `/students/${S1}/course-times/change`;
 const TEACHER = `/students/${S1}/course-teacher/change`;

@@ -46,7 +46,7 @@ export class SalesMoneyScope {
     return this.rule.scope(user);
   }
 
-  /** 403 not_your_student unless hers (while enforced), whatever the key («إلغاء الباقة», a link's teacher). */
+  /** 403 not_your_student unless hers while enforced, whatever the key. */
   async assertOwns(user: AuthUser, studentId: string): Promise<void> {
     const own = await this.ownership(user);
     if (own) assertOwnStudent(own, studentId);

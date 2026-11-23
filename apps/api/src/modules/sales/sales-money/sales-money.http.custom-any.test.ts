@@ -4,9 +4,7 @@ import { REQUEST_ID, STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscr
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
-// «مبلغ مخصص»: any amount > 0 for the assistant too (owner 2026-11-18: «i want to enter any
-// custom amount»; the 2026-11-05 floor at the deepest pill's price is gone), like the admin's
-// POST /subscriptions. The weekly SA quote is 145.
+// Any custom amount above 0 for the assistant too, like the admin's; the weekly SA quote is 145.
 const post = (customPrice: number) => ({
   method: 'POST' as const,
   url: '/sales/subscriptions',

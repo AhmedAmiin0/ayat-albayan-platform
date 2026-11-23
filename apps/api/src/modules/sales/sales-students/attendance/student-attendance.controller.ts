@@ -6,10 +6,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { monthOf, StudentAttendanceService } from './student-attendance.service';
 
-/**
- * «سجل الحضور» in «تفاصيل الطالب» (owner 2026-10-28): any student, like GET /sales/students/:id;
- * `mine` (her student) lets a sent report open. `?month=YYYY-MM` (Riyadh), 404 student_not_found.
- */
+/** Any student; `mine` lets a sent report open; month is in Riyadh. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('self.sales_academy')

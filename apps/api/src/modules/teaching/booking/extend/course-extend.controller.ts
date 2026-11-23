@@ -12,12 +12,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseExtend } from './course-extend.service';
 
-/**
- * «مدّ الجدول» from the student's file (owner 2026-11-17): courses.reschedule (system admin and
- * sales by default), an assistant her own students while the ownership rule holds (403
- * not_your_student). 404 subscription_not_found / course_not_found; 409 already_cancelled /
- * course_paused.
- */
+/** courses.reschedule; own students while the ownership rule holds; 404 and 409 codes. */
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('courses.reschedule')

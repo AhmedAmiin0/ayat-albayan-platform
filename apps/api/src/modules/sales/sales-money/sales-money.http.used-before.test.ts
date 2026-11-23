@@ -6,7 +6,7 @@ import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
-// «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932). The weekly package has 4 lessons.
+// Migration 932; the weekly package has 4 lessons.
 const NOW = new Date('2026-10-28T10:00:00Z'); // Riyadh today = 2026-10-28
 const URL = '/sales/subscriptions';
 const PAST = { startsOn: '2026-10-27', alreadyStarted: true };

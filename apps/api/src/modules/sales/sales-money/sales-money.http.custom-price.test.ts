@@ -6,7 +6,6 @@ import { CREATE, salesDefaults } from './sales-money.fakes';
 
 const CUSTOM = { ...WEEKLY_SA, source: 'custom', quoted: WEEKLY_SA.afterDiscount };
 
-// «مبلغ مخصص» on the bank-transfer package (owner 2026-11-02): the assistant's and the admin's.
 describe('custom subscription price', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

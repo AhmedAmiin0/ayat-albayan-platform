@@ -5,8 +5,7 @@ import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app
 import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 import { editApp, URL } from '@/modules/finance/subscriptions/used-before-edit/used-before-edit.test-util';
 
-// «اشتراط التعيين» ON (resetMocks' enforced settings, SalesOwnershipRule): an assistant edits
-// «حلقات مستخدمة من الباقة» on her own students' packages only; the admin is never bound.
+// Rule on: own students' packages only; the admin is never bound.
 describe('/subscriptions/:id/lessons-used-before while the ownership rule is enforced', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

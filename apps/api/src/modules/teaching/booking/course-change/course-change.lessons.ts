@@ -14,7 +14,7 @@ interface CourseLesson extends CourseLessonFact {
   local_date: string | null;
 }
 
-/** The lessons of a course «تغيير أيام الحلقات» reads (service role; ownership is checked by CourseChange). */
+/** Service role; ownership is checked by CourseChange. */
 @Injectable()
 export class CourseLessonRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

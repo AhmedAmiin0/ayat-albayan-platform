@@ -10,8 +10,7 @@ import {
 } from '@/modules/finance/subscriptions/test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 
-// POST /sales/packages/:id/cancel «إلغاء الباقة» by the assistant (owner 2026-11-02): ANY student,
-// the admin's rules, write, audit and recompute (SubscriptionCancel).
+// Any student, with the admin's rules, write, audit and recompute.
 
 const url = `/sales/packages/${SUB_ID}/cancel`;
 const cancelled = subRow({ status: 'cancelled', cancelled_by: SALES_B.id });
@@ -26,7 +25,7 @@ describe('POST /sales/packages/:id/cancel', () => {
   beforeEach(() => {
     resetMocks(m);
     salesDefaults(m);
-    m.settings.all.mockResolvedValue(SETTING_DEFAULTS); // «اشتراط التعيين» OFF: any student
+    m.settings.all.mockResolvedValue(SETTING_DEFAULTS); // Ownership rule off: any student.
     m.subs.get.mockReset().mockResolvedValueOnce(subRow()).mockResolvedValue(cancelled);
     m.cancels.cancel.mockResolvedValue({ row: cancelled });
   });

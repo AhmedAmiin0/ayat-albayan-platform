@@ -4,8 +4,7 @@ import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fake
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
 
-// «اشتراط التعيين» ON (resetMocks' ENFORCED_SETTINGS, SalesOwnershipRule): the assistant cancels
-// only her own students' packages; the system admin is never bound by the rule.
+// Rule on: only her own students' packages; the system admin is never bound.
 
 const url = `/sales/packages/${SUB_ID}/cancel`;
 const cancelled = subRow({ status: 'cancelled' });

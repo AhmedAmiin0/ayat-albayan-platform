@@ -9,8 +9,7 @@ import { SalesTeacherAssign } from './sales-teacher-assign';
 
 const TEACHER = '7a000000-0000-4000-8000-000000000001';
 
-// «المعلم/ة» in the assistant's subscribe step (owner 2026-10-29): saved to students.teacher_id
-// (assign_student_teacher: audit row, no-op when unchanged), only for her own student (self.sales_money).
+// Saved via assign_student_teacher (audited, no-op when unchanged), own students only.
 describe('POST /sales/subscriptions with teacherId; GET /sales/subscriptions/teachers', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
