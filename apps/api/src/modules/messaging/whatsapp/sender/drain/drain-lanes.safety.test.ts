@@ -55,6 +55,19 @@ describe('drainLanes — safety', () => {
     expect(t.worker.process).not.toHaveBeenCalled();
   });
 
+  it('stopping: the row in flight ends, the next row is not claimed (BE-14)', async () => {
+    let down = false;
+    const t = setup(async () => {
+      down = true;
+      return 'sent';
+    });
+    const deps = { ...t.deps, stopping: () => down };
+    const items = [item('s1', 'chat', '+966500000041'), item('s2', 'chat', '+966500000042')];
+    await drainLanes(deps, t.run, items);
+    expect(t.worker.process).toHaveBeenCalledTimes(1);
+    expect(t.run.summary.sent).toBe(1);
+  });
+
   it('concurrency 4: two chat rows never overlap; one phone never overlaps in the pooled lane', async () => {
     const o = overlap();
     const t = setup(o.process);

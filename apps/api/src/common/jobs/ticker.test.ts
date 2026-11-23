@@ -45,7 +45,7 @@ describe('Ticker (single flight, rule 8)', () => {
     expect(run).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(300_000);
     expect(run).toHaveBeenCalledTimes(2);
-    ticker.stop();
+    await ticker.stop();
     await vi.advanceTimersByTimeAsync(900_000);
     expect(run).toHaveBeenCalledTimes(2);
   });

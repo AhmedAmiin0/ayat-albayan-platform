@@ -34,6 +34,7 @@ export class Ticker {
   private readonly timers: NodeJS.Timeout[] = [];
   private running: Promise<void> | null = null;
   private again = false;
+  private stopped = false;
   private readonly beats: BeatSink;
 
   constructor(private readonly opts: TickerOptions) {
@@ -52,14 +53,22 @@ export class Ticker {
     if (everyMs !== undefined) this.beats.register({ name: this.opts.name, firstMs, everyMs });
   }
 
-  stop(): void {
+  /** Stops the timers and new runs; settles once the run in flight ends (BE-14). */
+  stop(): Promise<void> {
+    this.stopped = true;
     this.beats.forget(this.opts.name);
     this.timers.forEach(clearTimeout);
     this.timers.length = 0;
+    return this.running ?? Promise.resolve();
   }
 
-  /** Run now, or join the run in progress. */
+  get stopping(): boolean {
+    return this.stopped;
+  }
+
+  /** Run now, or join the run in progress; nothing once stopped. */
   tick(): Promise<void> {
+    if (this.stopped) return this.running ?? Promise.resolve();
     this.running ??= this.passes().finally(() => {
       this.running = null;
     });
@@ -93,6 +102,6 @@ export class Ticker {
 
   /** Read through a call: a kick() during the awaited run sets it. */
   private queued(): boolean {
-    return this.again;
+    return this.again && !this.stopped;
   }
 }

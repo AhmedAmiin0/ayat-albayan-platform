@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { emptyDraft, type DraftVar } from '@/features/messaging/templates/create/template-draft';
 import { VariableFields } from '@/features/messaging/templates/create/VariableFields';
 import type { EditButton } from './edit-draft';

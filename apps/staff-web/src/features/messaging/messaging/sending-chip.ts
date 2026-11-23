@@ -1,4 +1,5 @@
-import type { Glyph, SendGateView, Tone } from '@ab/shared';
+import type { SendGateView } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**

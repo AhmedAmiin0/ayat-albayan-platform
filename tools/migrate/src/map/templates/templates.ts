@@ -83,7 +83,7 @@ function mapTemplate(row: CrmRow): Mapped {
     buttons,
     status,
     meta_id: text(row, 'meta_template_id'),
-    // The CRM's templates are on the main number's WABA = the chat line (owner 2026-10-12). Only a
+    // The CRM's templates are on the main number's WABA = the chat line. Only a
     // new row takes it: the platform's own rows (matched by meta_name + language) keep their line.
     line: 'chat',
   };

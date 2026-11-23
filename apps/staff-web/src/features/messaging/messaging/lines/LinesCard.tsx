@@ -1,4 +1,5 @@
-import { type LineCheckView, WA_LINES } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import { WA_LINES } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

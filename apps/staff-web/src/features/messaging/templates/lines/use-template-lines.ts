@@ -1,4 +1,5 @@
-import type { LineCheckView, TemplateLineView, WaLine } from '@ab/shared';
+import type { LineCheckView, TemplateLineView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { linesCheckQuery } from '@/features/messaging/messaging/api';

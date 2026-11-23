@@ -1,4 +1,5 @@
-import { clockOf, dateText, intlLocale, localDateIn } from '@ab/shared';
+import { intlLocale } from '@ab/core';
+import { clockOf, dateText, localDateIn } from '@ab/time';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

@@ -1,4 +1,14 @@
-import type { CRM_TEMPLATE_STATUSES, TemplateCreateInput, TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateNumberSetView, TemplateView, WaLine } from '@ab/shared';
+import type {
+  CRM_TEMPLATE_STATUSES,
+  TemplateCreateInput,
+  TemplateHealthView,
+  TemplateLineSync,
+  TemplateLineView,
+  TemplateMoveView,
+  TemplateNumberSetView,
+  TemplateView,
+} from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 import { errorCode } from '@/features/teaching/schedule';

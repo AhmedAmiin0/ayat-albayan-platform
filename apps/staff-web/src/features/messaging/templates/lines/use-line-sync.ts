@@ -1,4 +1,5 @@
-import type { TemplateLineSync, WaLine } from '@ab/shared';
+import type { TemplateLineSync } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

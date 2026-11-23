@@ -1,4 +1,4 @@
-// When a «تقويم الحجوزات» row runs, from the import date (`--from`) on (owner 2026-10-26). Only the
+// When a «تقويم الحجوزات» row runs, from the import date (`--from`) on. Only the
 // statuses the old Apps Script mirrors to Google are imported: مؤكد, مشترك and يحتاج تأكيد (the
 // last as scheduled lessons nobody confirmed yet); مبدئي, تمت, ملغي have no calendar event. Pure.
 import { hhmm, num, text, ymd } from '../../sources/sheets/cells.ts';

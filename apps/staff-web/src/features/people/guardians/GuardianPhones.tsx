@@ -1,4 +1,5 @@
-import { formatPhone, secondPhoneOf } from '@ab/shared';
+import { secondPhoneOf } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

@@ -1,4 +1,4 @@
-import { WA_LINES } from '@ab/shared';
+import { WA_LINES } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TemplateLineBlock } from './TemplateLineBlock';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';

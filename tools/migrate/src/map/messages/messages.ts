@@ -65,10 +65,10 @@ function check(row: CrmRow, ctx: Ctx): Valid | Pick<RowIssue, 'code' | 'field'> 
 
 /**
  * An inbound file (a mime and a CRM link): the body is the link, which the API fetches once
- * (crm-history-url), never the text. A document's content_text is its file name (the receipt bug,
- * owner 2026-10-29): kept as media_name (DB check: 1-200 chars). Every other row adds no key, so its
- * payload hash, and the plan of a re-run, stays the same. ponytail: an imported photo's caption is
- * lost; add a caption column if the owner wants it.
+ * (crm-history-url), never the text. A document's content_text is its file name (the receipt
+ * bug): kept as media_name (DB check: 1-200 chars). Every other row adds no key, so its payload
+ * hash, and the plan of a re-run, stays the same. An imported photo's caption is lost; add a
+ * caption column if the owner wants it.
  */
 function inboundFile(row: CrmRow, v: Valid): Record<string, ColumnValue> {
   const mime = text(row, 'media_type');

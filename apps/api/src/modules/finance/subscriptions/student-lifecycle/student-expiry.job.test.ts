@@ -78,7 +78,7 @@ describe('StudentExpiryJob.runOnce: pending_renewal → expired after N days (ow
 describe('StudentExpiryJob timers', () => {
   afterEach(() => vi.useRealTimers());
 
-  it('first run delayed (not on boot), then daily; cleared on destroy', () => {
+  it('first run delayed (not on boot), then daily; cleared on shutdown', async () => {
     vi.useFakeTimers();
     const t = setup();
     const run = vi.spyOn(t.job, 'runOnce').mockResolvedValue({ students: 0, expired: 0, failed: 0 });
@@ -86,7 +86,7 @@ describe('StudentExpiryJob timers', () => {
     expect(run).not.toHaveBeenCalled();
     vi.advanceTimersByTime(10 * 60_000);
     expect(run).toHaveBeenCalledTimes(1);
-    t.job.onModuleDestroy();
+    await t.job.beforeApplicationShutdown();
     vi.advanceTimersByTime(86_400_000);
     expect(run).toHaveBeenCalledTimes(1);
   });

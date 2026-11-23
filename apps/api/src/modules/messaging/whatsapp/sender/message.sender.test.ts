@@ -89,7 +89,7 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
     expect(queries.due).toHaveBeenCalledTimes(2);
   });
 
-  it('boot schedules the timers (unref’d) and destroy clears them', () => {
+  it('boot schedules the timers (unref’d) and shutdown clears them', async () => {
     vi.useFakeTimers();
     try {
       queries.due.mockResolvedValue([]);
@@ -97,7 +97,8 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
       s.onApplicationBootstrap();
       vi.advanceTimersByTime(30_000);
       expect(gate.open).toHaveBeenCalled();
-      s.onModuleDestroy();
+      await s.beforeApplicationShutdown();
+      expect(vi.getTimerCount()).toBe(0);
     } finally {
       vi.useRealTimers();
     }

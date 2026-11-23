@@ -19,7 +19,7 @@ describe('CoursePauseJob timers (Ticker)', () => {
     expect(run).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(3_600_000);
     expect(run).toHaveBeenCalledTimes(2);
-    job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(5 * 3_600_000);
     expect(run).toHaveBeenCalledTimes(2);
   });

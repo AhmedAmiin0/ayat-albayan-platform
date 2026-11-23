@@ -24,7 +24,7 @@ describe('RecordingMaintenanceJob timers (Ticker)', () => {
     finish();
     await vi.advanceTimersByTimeAsync(HOUR_MS);
     expect(run).toHaveBeenCalledTimes(2);
-    job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(3 * HOUR_MS);
     expect(run).toHaveBeenCalledTimes(2);
   });

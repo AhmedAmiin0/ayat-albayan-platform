@@ -1,4 +1,4 @@
-// Calendar bookings from the import date on (owner 2026-10-26): يحتاج تأكيد → active rule whose
+// Calendar bookings from the import date on: يحتاج تأكيد → active rule whose
 // lessons the platform generates unconfirmed; «حتى» → ends_on; nothing before --from.
 import { describe, expect, it } from 'vitest';
 import { studentRow } from '../../sources/sheets/fixtures.ts';

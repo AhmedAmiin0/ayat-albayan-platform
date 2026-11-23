@@ -2,7 +2,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { apiErrorText } from '@/features/finance/subscriptions';
 
 /** Earned is settled money (fill); voided is struck, in the danger tone: @ab/shared since docs/27 E6. */
-export { commissionStatusStyle } from '@ab/shared';
+export { commissionStatusStyle } from '@ab/money';
 
 /** The API's P0001 codes and the schema's messages, in Arabic. */
 export const errorText = (e: unknown): string => apiErrorText(e, { ...t.assistants.error });
