@@ -11,7 +11,7 @@ export {
   maintenanceFacts,
   maintenancePollMs,
   maintenanceView,
-} from './maintenance.js';
+} from './maintenance/index.js';
 export { MaintenanceOnSchema } from './maintenance.schema.js';
 export type {
   MaintenanceFacts,
@@ -19,4 +19,4 @@ export type {
   MaintenanceState,
   MaintenanceView,
   MaintenanceViewer,
-} from './maintenance.types.js';
+} from './maintenance/index.js';

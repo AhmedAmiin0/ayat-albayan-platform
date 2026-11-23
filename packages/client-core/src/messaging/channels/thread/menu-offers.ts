@@ -1,4 +1,4 @@
-import { channelBubbleActions } from '../channel-edits.js';
+import { channelBubbleActions } from '../channel-edits/index.js';
 import type { ChannelAudience } from '../channels.js';
 import type { ChannelMessageView } from '@ab/shared';
 import { isPending } from './pending.js';

@@ -19,7 +19,7 @@ export {
   UNREAD_COUNT_PATH,
   unreadTotal,
 } from './inbox-live.js';
-export { connectInboxLive, type LiveChannel, type LiveClient, type LiveConnection } from './live-connect.js';
+export { connectInboxLive, type LiveChannel, type LiveClient, type LiveConnection } from './live-connect/index.js';
 export {
   applyLiveRows,
   LIVE_ROWS_MAX,
@@ -35,7 +35,7 @@ export {
   type InboxLive,
   type InboxLiveOptions,
   type LiveTargets,
-} from './live-store.js';
+} from './live-store/index.js';
 export { createThrottle, type Throttle } from './throttle.js';
 export {
   patchMessage,

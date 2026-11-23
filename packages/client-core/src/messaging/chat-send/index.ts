@@ -16,4 +16,4 @@ export {
   SEND_UNCONFIRMED,
   type SentText,
   type TextAnswer,
-} from './unconfirmed.js';
+} from './unconfirmed/index.js';
