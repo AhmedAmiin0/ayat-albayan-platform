@@ -15,7 +15,7 @@ The owner asked for: **use workflows (multi-agent) to build faster, Playwright f
 
 ### Phase 0 — Scaffold (single agent, no workflow)
 - `pnpm dlx create-turbo@latest` → restructure to layout in `04-architecture.md §2`.
-- `packages/config`: eslint (max-lines 150, max-params 3), tsconfig strict, prettier, vitest preset.
+- `packages/config`: eslint (max-lines 150, max-params 3), prettier (strict tsconfig options: root `tsconfig.base.json`), vitest preset.
 - `packages/db`: `supabase init`, first migration = enums + `profiles`, `teachers`, `guardians`, `students`, `leads`. Generate types.
 - `apps/api`: Nest + Fastify, Supabase JWT guard, health endpoint, OpenAPI.
 - `apps/web`: Vite + TanStack Router + Tailwind RTL + shadcn; login page.
