@@ -7,12 +7,12 @@
       "count": 7
     }
   },
-  "src/classroom/join-window.config.test.ts": {
+  "src/classroom/join-window/tests/config.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/classroom/join-window.ts": {
+  "src/classroom/join-window/join-window.ts": {
     "no-nested-ternary": {
       "count": 1
     },
@@ -35,7 +35,7 @@
       "count": 1
     }
   },
-  "src/classroom/moderation.ts": {
+  "src/classroom/moderation/moderation.ts": {
     "stylistic/max-len": {
       "count": 4
     },
@@ -74,12 +74,12 @@
       "count": 1
     }
   },
-  "src/engine/conflicts.always.test.ts": {
+  "src/engine/conflicts/tests/always.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/engine/conflicts.ts": {
+  "src/engine/conflicts/conflicts.ts": {
     "typescript/consistent-type-definitions": {
       "count": 3
     },
@@ -95,17 +95,17 @@
       "count": 1
     }
   },
-  "src/engine/free-slots.always.test.ts": {
+  "src/engine/free-slots/tests/always.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/engine/free-slots.time-off.test.ts": {
+  "src/engine/free-slots/tests/time-off.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/engine/free-slots.ts": {
+  "src/engine/free-slots/free-slots.ts": {
     "typescript/consistent-type-definitions": {
       "count": 3
     },
@@ -135,7 +135,7 @@
       "count": 1
     }
   },
-  "src/engine/occurrences.ts": {
+  "src/engine/occurrences/occurrences.ts": {
     "typescript/consistent-type-definitions": {
       "count": 3
     },
@@ -192,7 +192,7 @@
       "count": 1
     }
   },
-  "src/lessons/state-machine.ts": {
+  "src/lessons/state-machine/state-machine.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -239,7 +239,7 @@
       "count": 1
     }
   },
-  "src/schemas/scheduling.ts": {
+  "src/schemas/scheduling/scheduling.ts": {
     "stylistic/max-len": {
       "count": 2
     },

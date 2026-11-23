@@ -1,5 +1,5 @@
 import type { Permission } from './catalog.js';
-import type { UserRole } from './roles.js';
+import type { UserRole } from './roles/index.js';
 
 /**
  * The portal roles' FIXED grants (docs/50 §5 item 6): what a guardian or student login holds beside

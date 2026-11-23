@@ -1,5 +1,5 @@
 import type { WaLine } from '../enums/messaging.js';
-import type { IntegrationKey, WaProvider } from './keys.js';
+import type { IntegrationKey, WaProvider } from './keys/index.js';
 import type { IntegrationConfigItem } from './views.js';
 
 // What a line needs to send under each driver (docs/19), by key NAME: the phone's readiness before a

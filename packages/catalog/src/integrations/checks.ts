@@ -4,7 +4,7 @@ import {
   WA_LINE_PROVIDERS,
   type IntegrationPlainKey,
   type IntegrationSecretKey,
-} from './keys.js';
+} from './keys/index.js';
 import { evolutionBase, evolutionInternalHosts } from './evolution.js';
 import { parseAllowedRecipients } from './recipients.js';
 import { STORAGE_VALUE_CHECKS } from './storage.js';

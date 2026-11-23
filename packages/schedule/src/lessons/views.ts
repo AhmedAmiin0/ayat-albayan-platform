@@ -1,6 +1,6 @@
 import type { Attendance, Gender, LessonStatus, Program, ReportStatus, StudentStatus } from '@ab/catalog';
 import type { Conflict } from './conflicts.js';
-import type { LessonEvent } from './state-machine.js';
+import type { LessonEvent } from './state-machine/index.js';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';
 import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
 import type { LessonRoomState } from '../classroom/index.js';
