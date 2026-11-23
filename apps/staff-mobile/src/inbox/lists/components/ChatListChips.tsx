@@ -22,16 +22,12 @@ const listOf = (choice: ChatChoice): string | null =>
 export interface ChatListChipsProps {
   value: ChatChoice;
   onChange: (choice: ChatChoice) => void;
-  /** The academy's lists in the row (admin and sales); a teacher's row is «الكل» · «غير مقروءة» only. */
+  /** A teacher's row has no lists. */
   lists?: boolean;
-  /** More choices after the lists, before «＋» (staff: «بانتظار ردّك» and the lead stages, threads-list/LeadChips). */
   children?: ReactNode;
 }
 
-/**
- * The row's lists: only for a holder of inbox.lists where the caller wants them. An active list
- * that is gone (deleted, or the lists are off) falls back to «الكل».
- */
+/** Only for inbox.lists holders; a vanished active list falls back to all chats. */
 function useRowLists({ wanted, value, onChange }: Omit<ChatListChipsProps, 'lists' | 'children'> & { wanted: boolean }) {
   const allowed = useHolds('inbox.lists') && wanted;
   const query = useChatLists(allowed);
@@ -65,14 +61,7 @@ function ListExtras({ active, loadError, creating, editing, onCreated, onClose }
   );
 }
 
-/**
- * The chats' ONE chip row (docs/22 §5, owner 2026-10-27, like WhatsApp: All · Unread · lists · +):
- * «الكل», «غير مقروءة», the academy's lists oldest first (her own lists stay in reach), the caller's
- * extra choices, then «＋» (a new list). It scrolls sideways
- * (RTL order). The lists only for a holder of inbox.lists outside teacher mode. An active list that
- * is gone (deleted here or by another assistant) falls back to «الكل». Loading or failing stays
- * quiet: the chats never wait for the lists.
- */
+/** docs/22 §5: lists need inbox.lists outside teacher mode; loading never blocks the chats. */
 export function ChatListChips({ value, onChange, lists: wanted = false, children }: ChatListChipsProps) {
   const { allowed, query, lists, listId, gone } = useRowLists({ wanted, value, onChange });
   const [creating, setCreating] = useState(false);

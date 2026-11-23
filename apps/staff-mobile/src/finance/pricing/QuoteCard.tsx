@@ -8,7 +8,6 @@ import type { QuoteResponse } from './use-quote';
 const p = t.pricing;
 const DURATIONS: Readonly<Record<string, string>> = p.durations;
 
-/** «12 حلقة - 45 دقيقة للحلقة», the same words as the WhatsApp offer. */
 function planLine(q: QuoteResponse): { name: string; detail: string } {
   const { name, sessions } =
     q.package === 'custom'
@@ -38,7 +37,7 @@ function FactRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** «الباقة المناسبة للعميل»: every number is the API's quote, shown in Western digits. */
+/** Every number is the API's quote, shown in Western digits. */
 export function QuoteCard({ quote: q }: { quote: QuoteResponse }) {
   const { color } = useTheme();
   const money = (n: number) => `${ltr(formatAmount(n))} ${p.currencies[q.currency]}`;

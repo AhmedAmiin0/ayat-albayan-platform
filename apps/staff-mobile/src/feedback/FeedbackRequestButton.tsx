@@ -33,13 +33,7 @@ function RequestFor({ lessonId, studentId, name, many, approved }: RequestForPro
   );
 }
 
-/**
- * «ابعت طلب الرأي» on a finished (مكتملة / متأخرة) lesson: one outlined full-width button per student
- * (docs/07 §6: never a shrink-wrapped row), an explicit
- * admin send of the WhatsApp «رأيك يهمّنا» link to that student's guardian (not to one who missed
- * the lesson). Off, with the reason, until WhatsApp approved the template; «اتبعت» once queued; the
- * API's refusals (already answered) show in words.
- */
+/** Explicit admin send per student (docs/07 §6), never to an absent student. */
 export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
   const students = askable(lesson);
   if (students.length === 0) return null;

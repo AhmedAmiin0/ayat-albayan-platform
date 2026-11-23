@@ -19,10 +19,7 @@ import type { FeedbackRowView } from './types';
 const keyOf = (row: FeedbackRowView) => row.id;
 const renderRow = ({ item }: { item: FeedbackRowView }) => <FeedbackRow row={item} />;
 
-/**
- * «رأيك يهمّنا» for admins: each teacher's average, answers and «نعم» share on top, then every
- * request and answer, newest first. Read-only; the request itself is sent from the lesson.
- */
+/** Admin read-only view, newest first; the request itself is sent from the lesson. */
 export function FeedbackScreen() {
   const list = useFeedbackList();
   const summary = useFeedbackSummary();

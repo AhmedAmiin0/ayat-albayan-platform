@@ -5,8 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder, thread } from '@/inbox/shared/thread-fixtures';
 import { ReopenSlot } from './ReopenSlot';
 
-// «إعادة فتح المحادثة» (owner 2026-11-14): the button opens the sheet on the academy's template,
-// prefilled and editable, and the send is marked as the reopen. Fakes only: nothing is sent.
+// The reopen sheet opens on the academy template, editable; fakes only, nothing is sent.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

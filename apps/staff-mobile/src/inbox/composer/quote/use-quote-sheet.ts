@@ -15,12 +15,7 @@ function initialSelection(phone: string): PricingSelection {
   return { ...DEFAULT_PRICING, country: pricingCountryOfPhone(phone) ?? 'other' };
 }
 
-/**
- * The sheet's choice and its quote from GET /pricing/quote. `text` is the calculator's own offer
- * (offerText with ar.pricing: the guardian reads Arabic whatever the UI language); null while the
- * first quote loads. `stale`: the card still holds the previous choice's price, so nothing may leave.
- * `custom`: «مبلغ مخصص» (useQuoteCustom); while its amount is not valid, `invalid` holds all.
- */
+/** The offer text is always Arabic for the guardian; while stale or invalid nothing may leave. */
 export function useQuoteSheet(phone: string) {
   const [selection, setSelection] = useState(() => initialSelection(phone));
   const quote = useQuote(selection);
@@ -36,13 +31,7 @@ export function useQuoteSheet(phone: string) {
   };
 }
 
-/**
- * «أرسل العرض»: the text through the chat's own POST /threads/:phone/text (shown in the log at once).
- * After no answer its id is pinned per chat until an answer (docs/44 BUG7, also across the sheet
- * closing); a replay answered with the first offer keeps the sheet open with the note. While any send of this chat is in flight (the box's too, or a sheet
- * reopened meanwhile: the shared mutation key) nothing else goes; a second tap before the re-render is
- * held by the ref. `onSent` closes the sheet; the sheet stays open while sending.
- */
+/** After no answer the id is pinned per chat (docs/44 BUG7); one send per chat at a time. */
 export function useQuoteSend(phone: string, onSent: () => void) {
   const send = useSendMessage(phone);
   const busy = useRef(false);

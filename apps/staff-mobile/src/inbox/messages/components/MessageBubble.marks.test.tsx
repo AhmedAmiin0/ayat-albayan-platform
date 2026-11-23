@@ -5,8 +5,6 @@ import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from './MessageBubble';
 import { delivered, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 
-// WhatsApp's edits and deletes (owner 2026-10-30): an edited message shows its new text and
-// «تم التعديل»; a deleted one only «تم حذف هذه الرسالة»; Kapso's «errors» echo is the ad's welcome.
 const show = (m: MessageView) => renderWithQuery(<MessageBubble message={m} phone={PHONE} />);
 
 test('edited: the new text with «تم التعديل» by the time', async () => {

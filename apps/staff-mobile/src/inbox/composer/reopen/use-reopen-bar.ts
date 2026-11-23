@@ -14,7 +14,6 @@ import { useComposerDraft } from '@/inbox/composer/draft-store';
 import { PINS } from '@/inbox/thread/send/pinned-send';
 import { audienceOf, reopenAllowed } from './reopen-choices';
 
-/** Which sheet is open: «إعادة فتح المحادثة», «أرسِل الآن داخل قالب», or none. */
 type Picking = 'reopen' | 'carry' | null;
 
 interface ReopenBarState {
@@ -24,7 +23,6 @@ interface ReopenBarState {
   tick: MessageStatus | null;
   /** A chat-line template this user may send exists (the button shows). */
   canReopen: boolean;
-  /** «أرسِل الآن داخل قالب» (owner 2026-11-14): a draft, and academy_message usable here. */
   carrying: boolean;
   /** The chat's unsent draft (the box), carried into academy_message's {{1}}. */
   draft: string;

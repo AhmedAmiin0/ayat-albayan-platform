@@ -1821,7 +1821,7 @@
   },
   "src/edit-time/EditTime.entry.test.tsx": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/edit-time/EditTime.flow.test.tsx": {
@@ -1921,7 +1921,7 @@
   },
   "src/edit-time/lib/edit-time-text.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/edit-time/lib/queries.ts": {
@@ -1931,7 +1931,7 @@
   },
   "src/feedback/AverageCard.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/feedback/FeedbackRequestButton.tsx": {
@@ -1939,7 +1939,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1947,7 +1947,7 @@
   },
   "src/feedback/FeedbackRow/FeedbackRow.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -1963,7 +1963,7 @@
   },
   "src/feedback/feedback-text.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -1990,11 +1990,6 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/finance/expenses/ExpenseRow.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -2073,7 +2068,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -2094,7 +2089,7 @@
   },
   "src/finance/payouts/PayoutPayForm.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/finance/payouts/PayoutRow.tsx": {
@@ -2115,12 +2110,12 @@
   },
   "src/finance/payouts/UnpayConfirm.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/finance/payouts/payout-actions.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/finance/payouts/use-payout-move.ts": {
@@ -2149,7 +2144,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/finance/pricing/QuoteCard.tsx": {
@@ -2224,7 +2219,7 @@
   },
   "src/finance/summary/MonthRow.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -2235,11 +2230,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/finance/summary/SummaryMonths.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -2323,7 +2313,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 3
     }
   },
   "src/inbox/composer/ComposerInput.tsx": {
@@ -2338,7 +2328,7 @@
   },
   "src/inbox/composer/TemplateForm.starter.test.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/composer/TemplateForm.tsx": {
@@ -2349,7 +2339,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -2367,7 +2357,7 @@
   },
   "src/inbox/composer/TemplatePicker.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -2386,7 +2376,7 @@
   },
   "src/inbox/composer/TemplatePreview.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/inbox/composer/attach/use-pick-send.ts": {
@@ -2396,7 +2386,7 @@
   },
   "src/inbox/composer/draft-store.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -2414,7 +2404,7 @@
   },
   "src/inbox/composer/pill/ComposerPill.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/composer/quote/QuoteActions.test.tsx": {
@@ -2422,20 +2412,10 @@
       "count": 2
     }
   },
-  "src/inbox/composer/quote/QuoteActions.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/composer/quote/QuoteButton.access.test.tsx": {
     "no-nested-ternary": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/inbox/composer/quote/QuoteButton.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2464,12 +2444,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/inbox/composer/quote/use-quote-sheet.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/inbox/composer/send-file.camera.test.ts": {
@@ -2508,7 +2488,7 @@
   },
   "src/inbox/composer/use-composer-send.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -2519,7 +2499,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-floating-promises": {
       "count": 2
@@ -2589,7 +2569,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -2615,7 +2595,7 @@
   },
   "src/inbox/composer/voice/voice-support.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/composer/voice/voice-test-kit.tsx": {
@@ -2641,11 +2621,6 @@
       "count": 3
     }
   },
-  "src/inbox/index.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/leads/detail/AssignUnassigned.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -2654,7 +2629,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -2676,7 +2651,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -2716,7 +2691,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/inbox/leads/list/LeadRow.tsx": {
@@ -2727,11 +2702,6 @@
       "count": 1
     }
   },
-  "src/inbox/leads/list/LeadsFilterBar.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/inbox/leads/list/LeadsList.tsx": {
     "complexity": {
       "count": 1
@@ -2740,18 +2710,13 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 5
     },
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
   "src/inbox/leads/list/lead-filters.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/leads/list/lead-row.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2767,9 +2732,6 @@
     }
   },
   "src/inbox/leads/sales/SalesChatActions.tsx": {
-    "stylistic/max-len": {
-      "count": 5
-    },
     "ab/module-boundaries": {
       "count": 3
     }
@@ -2782,9 +2744,6 @@
   "src/inbox/leads/sales/register-href.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/inbox/lists/components/AutoListNote.test.tsx": {
@@ -2793,11 +2752,6 @@
     }
   },
   "src/inbox/lists/components/AutoListNote.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/inbox/lists/components/ChatListChips.access.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2814,7 +2768,7 @@
   },
   "src/inbox/lists/components/ChatListChips.tsx": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 5
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -2861,7 +2815,7 @@
   },
   "src/inbox/lists/lib/use-chat-lists.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-untyped-api-calls": {
       "count": 3
@@ -2904,7 +2858,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 13
+      "count": 6
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -2923,7 +2877,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 4
     }
   },
   "src/inbox/messages/components/MessageList.band.test.tsx": {

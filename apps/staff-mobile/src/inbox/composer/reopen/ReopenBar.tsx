@@ -11,10 +11,9 @@ interface ReopenBarProps {
   tick: MessageStatus | null;
   /** Staff may still type (a Kapso chat line): the text is held until the reply. */
   held: boolean;
-  /** A chat-line template may be picked: «إعادة فتح المحادثة» shows. */
   canReopen: boolean;
   onReopen: () => void;
-  /** «أرسِل الآن داخل قالب» (2026-11-14): shown when set (a draft, academy_message usable). */
+  /** Shown only with a draft and academy_message usable. */
   onCarry?: (() => void) | null;
 }
 
@@ -27,12 +26,7 @@ const TEXT: Record<ClosedBar, string> = {
 const tickLine = (tick: MessageStatus | null): string | null =>
   tick ? t.inbox.reopenBar.status.replace('{status}', t.enums.messageStatus[tick]) : null;
 
-/**
- * The 24 h window closed (owner 2026-11-14, «like Kapso»): one gold-washed bar over (or in place
- * of) the box. «reopen»: why, and «إعادة فتح المحادثة» opening the template sheet; «sent»: the
- * template went, the chat opens on the family's reply (its tick; typed texts are held);
- * «none_allowed»: what this user can do, no button.
- */
+/** Shown when the 24 h window has closed. */
 export function ReopenBar(props: ReopenBarProps) {
   const { bar, tick, held, canReopen, onReopen, onCarry } = props;
   const { color } = useTheme();

@@ -6,7 +6,7 @@ import type {
   TeacherFeedbackView,
 } from '@ab/shared';
 
-// «رأيك يهمّنا» (student feedback): the contract is packages/shared/src/schemas/feedback.ts.
+// The contract is packages/shared/src/schemas/feedback.ts.
 export type { FeedbackKind, FeedbackRecommend, FeedbackRowView, TeacherFeedbackSummary, TeacherFeedbackView };
 
 /** What the average card reads: a teacher's average, or none before the first answer. */

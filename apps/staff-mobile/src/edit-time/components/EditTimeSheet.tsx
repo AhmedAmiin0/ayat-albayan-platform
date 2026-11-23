@@ -9,11 +9,6 @@ interface EditTimeSheetProps {
   onClose: () => void;
 }
 
-/**
- * «عدّل الوقت» as a page sheet over whichever screen opened it (Today, a teacher's calendar,
- * «الجدول»), like «غيّر الميعاد»: that screen and its tab stay underneath. A held lesson's title
- * says «تصحيح»; a new lesson starts a fresh form.
- */
 export function EditTimeSheet({ lesson, onClose }: EditTimeSheetProps) {
   const correcting = lesson !== null && editMode(lesson) === 'correct';
   return (

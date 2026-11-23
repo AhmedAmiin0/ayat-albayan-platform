@@ -22,7 +22,6 @@ export function payoutLockOf(error: unknown): PayoutLock | null {
   };
 }
 
-/** «مستحقات المعلم/ة لشهر سبتمبر 2026 اتعتمدت، فمينفعش تغيّر مدة الحلقة دي». */
 export function lockedText(lock: PayoutLock): string {
   const status = lock.status ? statuses[lock.status] : undefined;
   if (!lock.month || !status) return t.editTime.error.payout_locked;

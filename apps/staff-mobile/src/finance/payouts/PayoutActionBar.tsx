@@ -13,7 +13,7 @@ import { UnpayConfirm } from './UnpayConfirm';
 import { usePayoutMove } from './use-payout-move';
 
 type Move = 'approve' | 'reopen' | 'unpay';
-/** docs/07 §6: the filled one («اعتماد» / «تأكيد الدفع») sits alone; the rest share ONE ButtonRow. */
+/** docs/07 §6: the primary action sits alone; the rest share one ButtonRow. */
 const isPrimary = (a: string) => a === 'approve' || a === 'pay';
 interface PayoutActionBarProps {
   payout: PayoutView;

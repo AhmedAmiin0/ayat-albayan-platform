@@ -13,6 +13,6 @@ export function leadStatusChip(status: string): StatusStyle & { label: string } 
   return { ...style, label: word ?? status };
 }
 
-/** «إعلان فيسبوك», or the raw value. */
+/** Falls back to the raw value. */
 export const leadSourceWord = (source: string): string =>
   (t.enums.leadSource as Record<string, string | undefined>)[source] ?? source;

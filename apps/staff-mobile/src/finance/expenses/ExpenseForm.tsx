@@ -16,7 +16,6 @@ interface ExpenseFormProps {
   onDone: () => void;
 }
 
-/** «مصروف جديد»: category, amount (EGP), paid day, vendor, method, note and the receipt photo. */
 export function ExpenseForm({ categories, onDone }: ExpenseFormProps) {
   const now = useNow();
   const add = useAddExpense();

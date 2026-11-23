@@ -4,10 +4,7 @@ import { ApiError, t, StatusChip, type, useTheme, AppText, ErrorLine } from '@ab
 import { useOptimisticStatus } from '@/core/lib/query/use-optimistic-status';
 import type { LeadView } from '@ab/shared';
 
-/**
- * «تغيير الحالة»: one chip button per move the API allows from the current status (R-LEAD-01).
- * The chip changes everywhere at once and rolls back on failure. A terminal lead shows nothing.
- */
+/** Only moves the API allows (R-LEAD-01); optimistic with rollback; terminal leads show nothing. */
 export function LeadStatusChanger({ lead }: { lead: LeadView }) {
   const { color } = useTheme();
   const change = useOptimisticStatus<LeadStatus>({ path: '/leads' });

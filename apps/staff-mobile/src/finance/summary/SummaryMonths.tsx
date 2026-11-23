@@ -4,7 +4,7 @@ import { MonthRow } from './MonthRow';
 import { activeMonths } from './summary-lines';
 import type { DashboardResponse } from '@ab/shared';
 
-/** «الإيرادات والتكلفة حسب الشهر»: months with money, newest first; «لا توجد بيانات» for a quiet year. */
+/** Only months with money, newest first. */
 export function SummaryMonths({ finance }: { finance: DashboardResponse['finance'] }) {
   const months = activeMonths(finance.by_month);
   return (

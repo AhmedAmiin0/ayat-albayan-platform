@@ -27,11 +27,7 @@ function zonesOf(lesson: LessonView): string[] {
   return [...new Set([lesson.teacher.tz, ...lesson.students.map((s) => s.tz)])];
 }
 
-/**
- * «تصحيح»: the starts a held lesson may be corrected to, as UTC instants on the quarter hour (and
- * the recorded start itself): on the same local day in every zone, and over by `now` once
- * `durationMin` long. Empty when the lesson ended too recently for any other start.
- */
+/** Correction starts as UTC quarter-hour instants on the same local day, over by now. */
 export function correctStarts(lesson: LessonView, durationMin: number, now: Date): string[] {
   const own = Date.parse(lesson.starts_at);
   const first = Math.ceil((own - REACH) / STEP) * STEP;

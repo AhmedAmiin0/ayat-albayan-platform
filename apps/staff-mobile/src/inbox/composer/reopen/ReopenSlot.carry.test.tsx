@@ -6,8 +6,7 @@ import { plainReminder, thread } from '@/inbox/shared/thread-fixtures';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { ReopenSlot } from './ReopenSlot';
 
-// «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft goes now inside academy_message, as the
-// phone's reopen, and leaves the box. Fakes only: nothing is sent.
+// The draft goes now inside academy_message and leaves the box; fakes only, nothing is sent.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

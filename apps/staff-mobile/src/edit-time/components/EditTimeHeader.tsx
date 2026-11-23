@@ -13,10 +13,7 @@ interface EditTimeHeaderProps {
   tz: string;
 }
 
-/**
- * Who, when now and for how long, so a migrated 40-minute lesson (no length pill is selected for
- * it) still says what it is. A move says up front that «غيّر الميعاد» is the one for a series.
- */
+/** Shows the current length so a migrated odd-length lesson still reads right. */
 export function EditTimeHeader({ lesson, mode, tz }: EditTimeHeaderProps) {
   const cycle = useClockCycle();
   const viewerZone = useViewerTz();

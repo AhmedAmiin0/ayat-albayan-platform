@@ -9,10 +9,7 @@ import { StaleNote } from '@/finance/shared/StateNote';
 import { SummaryCards } from './SummaryCards';
 import { SummaryMonths } from './SummaryMonths';
 
-/**
- * «الملخص المالي» (admin; web /admin/finance «المالية»): pick a year, read the main numbers as
- * cards and the months below them. No chart library: the numbers are the answer.
- */
+/** No chart library: the numbers are the answer. */
 export function SummaryScreen() {
   const years = summaryYears();
   const [year, setYear] = useState(years[0] ?? '');

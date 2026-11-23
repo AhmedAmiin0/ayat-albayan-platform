@@ -4,7 +4,7 @@ import { paidAtFor } from '@/core/lib/money/paid-day';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { localDate } from '@/today/lib/timeline';
 
-/** What the admin entered in «مصروف جديد». The tracker is in EGP (web: the default currency). */
+/** The expense tracker is in EGP, the web's default currency. */
 export interface ExpenseDraft {
   category: string;
   amountText: string;

@@ -12,11 +12,7 @@ export function runtimeRecords(runtime: string | null | undefined): boolean {
   return major > 0 || minor >= 3;
 }
 
-/**
- * Voice notes can be recorded here (owner 2026-10-27): Android (iOS is not built), an APK runtime
- * that records, and expo-audio's native recorder present. Anything missing → no microphone: the round
- * button stays «أرسل», as before.
- */
+/** Needs Android, a recording APK runtime and expo-audio's native recorder; else no microphone. */
 export function voiceSupported(): boolean {
   try {
     const recorder: unknown = (AudioModule as { AudioRecorder?: unknown } | undefined)?.AudioRecorder;

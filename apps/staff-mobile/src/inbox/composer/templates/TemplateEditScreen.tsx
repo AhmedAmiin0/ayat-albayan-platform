@@ -57,7 +57,6 @@ function EditForm({ template, mode }: EditFormProps) {
   );
 }
 
-/** «تعديل» (owner 2026-11-14): one template of the list, by its key (the route's param). */
 export function TemplateEditScreen({ templateKey }: { templateKey: string }) {
   const mode = useTemplateMode();
   const list = useTemplateList(mode);

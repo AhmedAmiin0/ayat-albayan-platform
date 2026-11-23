@@ -10,24 +10,18 @@ export interface EditTimeConfirmProps {
   mode: TimeEditMode;
   state: EditState;
   now: Date;
-  /** The month's payout is locked: «المدة اتغيرت…» would be a promise the save cannot keep. */
+  /** The payout is locked, so a length-change notice would promise what the save cannot do. */
   payoutLocked: boolean;
   onNotify: (notify: boolean) => void;
 }
 
-/**
- * Before «احفظ التعديل»: nothing changed yet says so (a disabled button needs its reason), else
- * «{من} ← {إلى}» on the viewer's clock, the teacher's own clock for the new start, that it is the
- * same lesson, and for a correction what it leaves alone (attendance, status) and what it moves
- * (the teacher's payout when the length changed, the report file). The guardian toggle appears
- * only when a WhatsApp confirmation would go out (a move to a later start).
- */
+/** A correction leaves attendance and status alone; guardian toggle only for a later start. */
 export function EditTimeConfirm({ lesson, mode, state, now, payoutLocked, onNotify }: EditTimeConfirmProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
-  if (!isBookable(state.durationMin)) return null; // «اختار مدة الحلقة الأول» already says it
+  if (!isBookable(state.durationMin)) return null;
   if (!isChanged(lesson, state)) return <AppText style={text}>{t.editTime.unchanged}</AppText>;
   const correct = mode === 'correct';
   return (

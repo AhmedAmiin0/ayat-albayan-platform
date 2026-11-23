@@ -1,11 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import type { Href } from 'expo-router';
 
-/**
- * A salesperson's «تسجيل طالب جديد» from a chat (docs/16, the web's SalesRegisterAction): only on a
- * lead still in the funnel (not a family, a teacher, a converted or a lost lead). It opens the trial
- * wizard in sales mode with what the thread knows: the lead, the number, the WhatsApp name, the source.
- */
+/** docs/16: only on a lead still in the funnel, never a family, teacher, converted or lost lead. */
 export function registerHref(th: ThreadView | null): Href | null {
   if (!th?.lead_id || th.guardian_id || th.teacher_id) return null;
   if (th.lead_status === 'converted' || th.lead_status === 'lost') return null;

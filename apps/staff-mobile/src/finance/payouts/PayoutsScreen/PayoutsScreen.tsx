@@ -12,11 +12,7 @@ import { PayoutRow } from '@/finance/payouts/PayoutRow';
 import { usePayouts } from '@/finance/shared/queries';
 import { StaleNote, StateNote } from '@/finance/shared/StateNote';
 
-/**
- * «مستحقات المعلمين الشهرية» (admin; web /admin/payouts): pick a month, read the teachers'
- * statements, open one to approve, pay, reopen or cancel the payment. The server owns every rule.
- * The statements sit in one inset card (owner 2026-10-28: one container rule).
- */
+/** The server owns every payout rule. */
 export function PayoutsScreen() {
   const [month, setMonth] = useState(currentMonth());
   const [openId, setOpenId] = useState<string | null>(null);

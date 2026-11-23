@@ -2,8 +2,7 @@ import type { AuthorTemplate } from '@ab/client-core';
 import { templateStatusStyle, type Glyph, type TemplateStatus, type Tone } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
-// The author's status chip (owner 2026-11-14): «قيد المراجعة / معتمد / مرفوض», anything else
-// «غير متاح» (never sent, paused, disabled, missing).
+// Anything other than pending, approved or rejected shows as unavailable.
 
 type Shown = 'pending' | 'approved' | 'rejected' | 'other';
 
