@@ -1,4 +1,4 @@
-// The imported student status (owner 2026-10-27, docs/06 «Student status»): «مشترك» (active) only
+// The imported student status (docs/06 «Student status»): «مشترك» (active) only
 // with evidence of a CURRENT subscription. Pure; the evidence is gathered in facts.ts.
 import type { StudentStatus } from '@ab/catalog';
 import { SETTINGS_REGISTRY } from '@ab/settings';

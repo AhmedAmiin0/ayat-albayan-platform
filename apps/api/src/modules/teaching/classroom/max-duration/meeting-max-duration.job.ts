@@ -1,6 +1,6 @@
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BackgroundJob } from '@/config/role/background-job';
-import { Ticker } from '@/common/jobs';
+import { Ticker, TickerJob } from '@/common/jobs';
 import {
   meetingTarget,
   roomNameOf,
@@ -36,9 +36,9 @@ const why = (e: unknown): string => (e instanceof Error ? e.message : String(e))
  */
 @BackgroundJob({ name: 'meeting-max-duration' })
 @Injectable()
-export class MeetingMaxDurationJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class MeetingMaxDurationJob extends TickerJob {
   private readonly log = new Logger(MeetingMaxDurationJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: MeetingMaxDurationJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: EVERY_MS,
@@ -50,14 +50,8 @@ export class MeetingMaxDurationJob implements OnApplicationBootstrap, OnModuleDe
     private readonly rooms: RoomCloser,
     private readonly meetings: MeetingAutoEnd,
     private readonly settings: MaxDurationSettings,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  ) {
+    super();
   }
 
   /** One pass. Never throws. */

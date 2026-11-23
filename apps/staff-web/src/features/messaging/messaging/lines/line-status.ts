@@ -1,4 +1,5 @@
-import type { Glyph, LineCheckView, Tone } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 
 /** The Graph fields of a phone number whose raw word gets a tone (docs/12 §13.10). */
 export type LineField = 'status' | 'quality_rating' | 'name_status' | 'code_verification_status';

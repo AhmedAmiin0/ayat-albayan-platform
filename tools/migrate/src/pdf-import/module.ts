@@ -14,8 +14,8 @@ function text(ctx: WriteContext, col: string): string {
 
 /**
  * Upload first (idempotent: an existing object is kept, so a rolled-back batch re-runs cleanly),
- * then point the report at it. ponytail: an `update` (other zip file chosen) keeps the object
- * already uploaded; delete it in Storage first if the owner wants the other file.
+ * then point the report at it. An `update` (other zip file chosen) keeps the object already
+ * uploaded; delete it in Storage first if the owner wants the other file.
  */
 export async function writeReportPdf(ctx: WriteContext): Promise<WriteResult> {
   if (!ctx.storage || !ctx.readZipEntry) {

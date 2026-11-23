@@ -1,4 +1,5 @@
-import type { TeacherMe, ThreadDetail } from '@ab/shared';
+import type { ThreadDetail } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
 import { screen, within } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

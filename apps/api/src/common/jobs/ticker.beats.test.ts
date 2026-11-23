@@ -13,21 +13,21 @@ function fakeBeats() {
 }
 
 describe('Ticker heartbeats (docs/09 «Readiness»)', () => {
-  it('start() registers an interval job with the timing it runs on', () => {
+  it('start() registers an interval job with the timing it runs on', async () => {
     const beats = fakeBeats();
     const ticker = new Ticker({ name: 'j', firstMs: 5, everyMs: 60, run: async () => undefined, beats });
     ticker.start({ firstMs: 7, everyMs: 90 });
     expect(beats.register).toHaveBeenCalledWith({ name: 'j', firstMs: 7, everyMs: 90 });
-    ticker.stop();
+    await ticker.stop();
     expect(beats.forget).toHaveBeenCalledWith('j');
   });
 
-  it('a one-shot job (no interval) has no heartbeat', () => {
+  it('a one-shot job (no interval) has no heartbeat', async () => {
     const beats = fakeBeats();
     const ticker = new Ticker({ name: 'boot', firstMs: 5, run: async () => undefined, beats });
     ticker.start();
     expect(beats.register).not.toHaveBeenCalled();
-    ticker.stop();
+    await ticker.stop();
   });
 
   it('each finished pass is a success, a rejected one an error', async () => {

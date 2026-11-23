@@ -15,7 +15,7 @@ describe('LaneTickers', () => {
     expect(run.mock.calls.map((c) => c.join(':')).sort()).toEqual(['chat:false', 'main:false']);
     await vi.advanceTimersByTimeAsync(100);
     expect(run).toHaveBeenCalledTimes(4);
-    tickers.stop();
+    await tickers.stop();
     await vi.advanceTimersByTimeAsync(500);
     expect(run).toHaveBeenCalledTimes(4);
   });

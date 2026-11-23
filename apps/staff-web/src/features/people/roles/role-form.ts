@@ -1,4 +1,12 @@
-import { isEditableSystemRole, permissionGroups, type Permission, type RoleCreate, type RoleUpdate, type RoleView, type StaffRole } from '@ab/shared';
+import {
+  isEditableSystemRole,
+  permissionGroups,
+  type Permission,
+  type RoleCreate,
+  type RoleUpdate,
+  type RoleView,
+  type StaffRole,
+} from '@ab/catalog';
 
 // The role dialog's state and its pure edits: one checkbox per permission, «تحديد الكل» per area.
 

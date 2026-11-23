@@ -113,7 +113,7 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
       r.onApplicationBootstrap();
       await vi.advanceTimersByTimeAsync(5_000);
       expect(client.getTemplates).toHaveBeenCalledTimes(1);
-      r.onModuleDestroy();
+      await r.beforeApplicationShutdown();
     } finally {
       vi.useRealTimers();
     }

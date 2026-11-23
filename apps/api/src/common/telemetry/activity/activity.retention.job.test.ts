@@ -18,13 +18,13 @@ describe('ActivityRetentionJob (180 days)', () => {
     expect(await new ActivityRetentionJob(dbWith(rejecting)).runOnce()).toBe(0);
   });
 
-  it('does not run on boot, and clears its timers on shutdown', () => {
+  it('does not run on boot, and clears its timers on shutdown', async () => {
     vi.useFakeTimers();
     const rpc = vi.fn().mockResolvedValue({ data: 0, error: null });
     const job = new ActivityRetentionJob(dbWith(rpc));
     job.onApplicationBootstrap();
     expect(rpc).not.toHaveBeenCalled();
-    job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
     vi.advanceTimersByTime(48 * 3_600_000);
     expect(rpc).not.toHaveBeenCalled();
     vi.useRealTimers();

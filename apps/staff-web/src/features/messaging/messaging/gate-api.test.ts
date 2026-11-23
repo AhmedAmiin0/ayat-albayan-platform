@@ -1,4 +1,4 @@
-import { GATE_CONFIRM_TEXT, SETTING_DEFAULTS } from '@ab/shared';
+import { GATE_CONFIRM_TEXT, SETTING_DEFAULTS } from '@ab/settings';
 import ar from '@ab/shared/i18n/ar.json';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { sendGateChange } from './gate-api';

@@ -17,6 +17,8 @@ interface DrainDeps {
   /** Lane keys that may run `size` rows at once (pooled.ts); every other lane runs one. */
   pooled: ReadonlySet<string>;
   size: number;
+  /** True once shutdown began: no further row is claimed (BE-14). */
+  stopping?: () => boolean;
   /** ms clock (tests replace it); absent = Date.now. */
   clock?: () => number;
 }
@@ -48,6 +50,8 @@ function switchesOf(gate: SendGate): Promise<Switches> {
   });
 }
 
+const stopped = (deps: DrainDeps): boolean => deps.stopping?.() === true;
+
 /**
  * One row: the switches (one UNCACHED read, docs/09, docs/26 26-P4) right before it, so OFF stops
  * every lane at its next row; then the worker. A broken token (or Meta's 131042) stops ITS lane.
@@ -55,7 +59,7 @@ function switchesOf(gate: SendGate): Promise<Switches> {
  * rows) still claims with a lease in the future (#695 review, item 1).
  */
 async function rowStep(deps: DrainDeps, lane: Lane, item: PassItem): Promise<Step> {
-  const gate = await switchesOf(deps.gate);
+  const gate = stopped(deps) ? CLOSED : await switchesOf(deps.gate);
   if (!gate.open) return 'closed';
   const now = new Date(item.job.now.getTime() + lane.shift());
   const outcome = await deps.worker.process({ ...item.job, now, autoOn: gate.automaticOn });

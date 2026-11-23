@@ -1,4 +1,4 @@
-import { permissionGroups, type Permission } from '@ab/shared';
+import { permissionGroups, type Permission } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { groupState, type GroupState } from './role-form';
 

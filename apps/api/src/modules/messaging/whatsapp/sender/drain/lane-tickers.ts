@@ -29,8 +29,13 @@ export class LaneTickers {
     this.lanes.forEach((lane) => this.tickers[lane].start(timing));
   }
 
-  stop(): void {
-    this.lanes.forEach((lane) => this.tickers[lane].stop());
+  /** Settles once every lane's run in flight has ended. */
+  async stop(): Promise<void> {
+    await Promise.all(this.lanes.map((lane) => this.tickers[lane].stop()));
+  }
+
+  get stopping(): boolean {
+    return this.lanes.some((lane) => this.tickers[lane].stopping);
   }
 
   /** The named lane (or both); settles once each kicked lane's queued run is done. */

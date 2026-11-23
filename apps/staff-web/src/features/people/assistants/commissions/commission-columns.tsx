@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';

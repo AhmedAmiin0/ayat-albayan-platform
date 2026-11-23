@@ -1,5 +1,5 @@
 import { uploadOnce } from '@ab/client-core';
-import type { PaymentMethod } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';

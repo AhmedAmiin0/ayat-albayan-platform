@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS, type PaymentMethod } from '@ab/shared';
+import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

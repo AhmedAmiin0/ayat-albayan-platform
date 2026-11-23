@@ -1,4 +1,4 @@
-import { PAYOUT_STATUSES } from '@ab/shared';
+import { PAYOUT_STATUSES } from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';

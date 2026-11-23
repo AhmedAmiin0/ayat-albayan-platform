@@ -1,4 +1,5 @@
-import type { TemplateView, WaLine } from '@ab/shared';
+import type { TemplateView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { templateName } from '@/features/messaging/templates/template-cells';

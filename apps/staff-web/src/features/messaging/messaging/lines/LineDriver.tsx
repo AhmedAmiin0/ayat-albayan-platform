@@ -1,4 +1,5 @@
-import { isIntegrationKey, type LineCheckView } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import { isIntegrationKey } from '@ab/catalog';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { integrationText, optionText } from '@/features/platform/integrations/integrations-form';

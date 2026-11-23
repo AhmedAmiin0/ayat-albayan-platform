@@ -21,7 +21,7 @@ describe('JobWatchJob (the worker checks its own beats every minute)', () => {
     job.onApplicationBootstrap();
     await vi.advanceTimersByTimeAsync(WATCH_FIRST_MS + WATCH_EVERY_MS);
     expect(check).toHaveBeenCalledTimes(2);
-    job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(WATCH_EVERY_MS * 2);
     expect(check).toHaveBeenCalledTimes(2);
     vi.useRealTimers();
