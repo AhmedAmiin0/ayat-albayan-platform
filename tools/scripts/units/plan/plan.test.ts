@@ -35,7 +35,10 @@ const SKIPS: [string, Parameters<typeof planFolders>[0], string][] = [
   ],
   [
     'cap',
-    input([...unit('apps/w/src/f'), ...Array.from({ length: 12 }, (_, i) => `apps/w/src/f/s${i}/a.ts`)]),
+    input([
+      ...unit('apps/w/src/f'),
+      ...Array.from({ length: 12 }, (_, i) => `apps/w/src/f/s${i}/a.ts`),
+    ]),
     'apps/w/src/f would hold 13 sub-folders (max 12)',
   ],
 ];

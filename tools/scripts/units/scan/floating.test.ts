@@ -23,7 +23,10 @@ test('in its own folder a unit floats only while 2+ of its tests sit beside it (
     two.map((u) => [u.name, u.action]),
     [['usage', 'tests']],
   );
-  assert.deepEqual(floatingIn('pkg/src/usage', ['usage.ts', 'usage.test.ts', 'usage.types.ts']), []);
+  assert.deepEqual(
+    floatingIn('pkg/src/usage', ['usage.ts', 'usage.test.ts', 'usage.types.ts']),
+    [],
+  );
 });
 
 test('3 code files without tests float too; 2 files never do', () => {

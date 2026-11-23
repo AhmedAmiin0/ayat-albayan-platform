@@ -12,6 +12,7 @@
     "ci-checks/move-module/**/*.ts",
     "ci-checks/deploy/**/*.ts",
     "imports/**/*.ts",
-    "automerge/**/*.ts"
+    "automerge/**/*.ts",
+    "units/**/*.ts"
   ]
 }

@@ -12,7 +12,8 @@ const SPECS: Record<ExtStyle, (name: string) => string> = {
   js: (name) => `${name.replace(CODE_EXT, '')}.js`,
 };
 
-const isTypeDecl = (d: Node): boolean => Node.isInterfaceDeclaration(d) || Node.isTypeAliasDeclaration(d);
+const isTypeDecl = (d: Node): boolean =>
+  Node.isInterfaceDeclaration(d) || Node.isTypeAliasDeclaration(d);
 
 /** Names the file declares as types only (interfaces and type aliases). */
 function typeNames(file: string, text: string): Set<string> {
@@ -25,7 +26,9 @@ function typeNames(file: string, text: string): Set<string> {
 /** `export { a, type B } from './x';`, wrapped like prettier when it is too long. */
 function exportLine(names: string[], spec: string): string {
   const one = `export { ${names.join(', ')} } from '${spec}';`;
-  return one.length <= WIDTH ? one : `export {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '${spec}';`;
+  return one.length <= WIDTH
+    ? one
+    : `export {\n${names.map((n) => `  ${n},`).join('\n')}\n} from '${spec}';`;
 }
 
 /** The unit's index.ts: one export line per unit file, export-only, no logic. */

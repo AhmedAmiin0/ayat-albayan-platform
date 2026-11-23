@@ -11,8 +11,20 @@ const TEXTS: Record<string, string> = {
 const use = (style: BarrelUse['style']): BarrelUse => ({
   style,
   files: new Map([
-    ['u/A.types.ts', new Map([['Mode', false], ['AProps', false]])],
-    ['u/A.tsx', new Map([['K', true], ['A', false]])],
+    [
+      'u/A.types.ts',
+      new Map([
+        ['Mode', false],
+        ['AProps', false],
+      ]),
+    ],
+    [
+      'u/A.tsx',
+      new Map([
+        ['K', true],
+        ['A', false],
+      ]),
+    ],
   ]),
 });
 
@@ -23,10 +35,13 @@ test('barrelText re-exports exactly the imported names; types by declaration or 
   );
 });
 
-test('barrelText keeps the importers\' extension style', () => {
+test("barrelText keeps the importers' extension style", () => {
   const text = barrelText(use('exact'), (f) => TEXTS[f] ?? '');
   assert.match(text, /from '\.\/A\.tsx';\nexport .* from '\.\/A\.types\.ts';\n$/);
-  assert.match(barrelText(use('js'), (f) => TEXTS[f] ?? ''), /from '\.\/A\.js';/);
+  assert.match(
+    barrelText(use('js'), (f) => TEXTS[f] ?? ''),
+    /from '\.\/A\.js';/,
+  );
 });
 
 test('a long line wraps like prettier', () => {

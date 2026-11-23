@@ -12,7 +12,14 @@ const FOLDER = [
   'Card.styles.ts',
   'index.ts',
 ];
-const STEMS = ['env', 'env.blank', 'ThreadPane', 'ThreadPane.types', 'ThreadPaneWide', 'Card.props'];
+const STEMS = [
+  'env',
+  'env.blank',
+  'ThreadPane',
+  'ThreadPane.types',
+  'ThreadPaneWide',
+  'Card.props',
+];
 
 const CASES: [string, string | undefined][] = [
   ['env.ts', 'env'],

@@ -5,7 +5,7 @@ import { isPathJson } from '../write/json-paths.ts';
 /** Files that name other files by path: a move would leave them pointing at nothing. */
 const CONFIG =
   /(?:^|\/)(?:package\.json|tsconfig[^/]*\.json|turbo\.json|knip\.json|[^/]+\.config\.[cm]?[jt]s)$|^\.github\/workflows\/[^/]+\.ya?ml$/;
-const PATHLIKE = /[\w@$()[\].\/-]+\.[cm]?[jt]sx?(?![\w.])/g;
+const PATHLIKE = /[\w@$()[\]./-]+\.[cm]?[jt]sx?(?![\w.])/g;
 const REPO_PATH = /^(?:apps|packages|tools|e2e)\//;
 
 const tokens = (text: string): string[] => [...text.matchAll(PATHLIKE)].map((m) => m[0]);
@@ -21,9 +21,14 @@ const codeTargets = (text: string): string[] => tokens(text).filter((t) => REPO_
  * File → the other files that name it by path (configs, workflows, tests that read a path).
  * Import specifiers and the baselines a fold renames (write/json-paths.ts) are not counted.
  */
-export function pathRefs(files: readonly string[], read: (file: string) => string): Map<string, string[]> {
+export function pathRefs(
+  files: readonly string[],
+  read: (file: string) => string,
+): Map<string, string[]> {
   const out = new Map<string, string[]>();
-  const sources = files.filter((f) => !isPathJson(f) && (CONFIG.test(f) || isCode(posix.basename(f))));
+  const sources = files.filter(
+    (f) => !isPathJson(f) && (CONFIG.test(f) || isCode(posix.basename(f))),
+  );
   for (const file of sources) {
     const text = read(file);
     const targets = CONFIG.test(file) ? configTargets(file, text) : codeTargets(text);

@@ -10,13 +10,17 @@ const usable = (names: NameUse[]): NameUse[] | undefined =>
 function importNames(d: ImportDeclaration): NameUse[] | undefined {
   if (d.getDefaultImport() !== undefined || d.getNamespaceImport() !== undefined) return undefined;
   const whole = d.isTypeOnly();
-  return usable(d.getNamedImports().map((e) => ({ name: e.getName(), typeOnly: whole || e.isTypeOnly() })));
+  return usable(
+    d.getNamedImports().map((e) => ({ name: e.getName(), typeOnly: whole || e.isTypeOnly() })),
+  );
 }
 
 function exportNames(d: ExportDeclaration): NameUse[] | undefined {
   if (d.isNamespaceExport()) return undefined;
   const whole = d.isTypeOnly();
-  return usable(d.getNamedExports().map((e) => ({ name: e.getName(), typeOnly: whole || e.isTypeOnly() })));
+  return usable(
+    d.getNamedExports().map((e) => ({ name: e.getName(), typeOnly: whole || e.isTypeOnly() })),
+  );
 }
 
 /** Specifier start → the names its declaration imports or re-exports by name. */
@@ -24,7 +28,10 @@ function namedSpecs(sf: SourceFile): Map<number, NameUse[]> {
   const out = new Map<number, NameUse[]>();
   for (const s of sf.getStatements()) {
     const names = namesOf(s);
-    const spec = Node.isImportDeclaration(s) || Node.isExportDeclaration(s) ? s.getModuleSpecifier() : undefined;
+    const spec =
+      Node.isImportDeclaration(s) || Node.isExportDeclaration(s)
+        ? s.getModuleSpecifier()
+        : undefined;
     if (names !== undefined && spec !== undefined) out.set(spec.getStart() + 1, names);
   }
   return out;

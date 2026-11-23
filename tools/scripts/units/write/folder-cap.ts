@@ -1,12 +1,21 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { z } from 'zod';
+import { parseJson } from '../json.ts';
 
 /** As tools/scripts/ci-checks/folder-cap.mjs measures a folder. */
 const MAX = 12;
 const CODE = /\.[cm]?[jt]sx?$/;
 const TEST = /\.(test|spec)\.[cm]?[jt]sx?$/;
-const SKIP = new Set(['node_modules', 'dist', 'build', 'coverage', '.turbo', '.expo', '__snapshots__']);
+const SKIP = new Set([
+  'node_modules',
+  'dist',
+  'build',
+  'coverage',
+  '.turbo',
+  '.expo',
+  '__snapshots__',
+]);
 const DIR = posix.join('refactor', 'folder-cap');
 
 const allowList = z.record(z.string(), z.object({ files: z.number(), dirs: z.number() }));
@@ -37,7 +46,7 @@ export function updateFolderCap(root: string, changed: readonly string[]): void 
   for (const name of readdirSync(abs).filter((n) => n.endsWith('.json'))) {
     const file = posix.join(abs, name);
     const text = readFileSync(file, 'utf8');
-    const next = updated(root, allowList.parse(JSON.parse(text)), dirs);
+    const next = updated(root, parseJson(text, allowList), dirs);
     if (next !== text) writeFileSync(file, next);
   }
 }

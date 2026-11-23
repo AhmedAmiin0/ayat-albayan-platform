@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { posix } from 'node:path';
-import type { FoldArgs } from './args.schemas.ts';
+import type { FoldArgs } from './args/index.ts';
 import type { FolderPlan } from '../plan/plan.types.ts';
 import { openPrDirs, readOpenPrs } from '../plan/open-prs.ts';
 import { planFolders } from '../plan/plan.ts';
@@ -8,18 +8,15 @@ import { pathRefs } from '../plan/refs.ts';
 import { folderLines, summaryLines, treeLines } from '../plan/report.ts';
 import { trackedFiles } from '../scan/tree.ts';
 import { applyPlans } from '../write/apply.ts';
-import { parseFoldArgs } from './args.ts';
+import { parseFoldArgs } from './args/index.ts';
+import type { FoldIo } from './cli.types.ts';
 
-export interface FoldIo {
-  root: string;
-  cwd: string;
-  log: (line: string) => void;
-}
-
-const readIn = (root: string) => (file: string): string => {
-  const abs = posix.join(root, file);
-  return existsSync(abs) ? readFileSync(abs, 'utf8') : '';
-};
+const readIn =
+  (root: string) =>
+  (file: string): string => {
+    const abs = posix.join(root, file);
+    return existsSync(abs) ? readFileSync(abs, 'utf8') : '';
+  };
 
 function plansOf(args: FoldArgs, io: FoldIo): FolderPlan[] {
   const paths = trackedFiles(io.root);
@@ -36,7 +33,8 @@ function dryRun(plans: FolderPlan[], args: FoldArgs, io: FoldIo): void {
 }
 
 function write(plans: FolderPlan[], io: FoldIo): void {
-  plans.filter((p) => p.skip !== undefined).forEach((p) => io.log(`skipped ${p.dir}: ${p.skip?.why}`));
+  const skipped = plans.flatMap((p) => (p.skip ? [`skipped ${p.dir}: ${p.skip.why}`] : []));
+  skipped.forEach((l) => io.log(l));
   const done = applyPlans(io.root, plans);
   io.log(`units:fold: ${done.moved} files moved, ${done.rewritten} files rewritten`);
   done.barrels.forEach((f) => io.log(`  index: ${f}`));

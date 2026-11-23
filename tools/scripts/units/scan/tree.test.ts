@@ -3,7 +3,13 @@ import { test } from 'node:test';
 import { exclusionOf, foldersOf, workspaceOf } from './tree.ts';
 
 test('foldersOf groups tracked paths of apps, packages and tools by folder', () => {
-  const paths = ['apps/web/src/a.ts', 'apps/web/src/b.ts', 'packages/x/src/c/d.ts', 'docs/a.ts', 'e.ts'];
+  const paths = [
+    'apps/web/src/a.ts',
+    'apps/web/src/b.ts',
+    'packages/x/src/c/d.ts',
+    'docs/a.ts',
+    'e.ts',
+  ];
   assert.deepEqual(Object.fromEntries(foldersOf(paths)), {
     'apps/web/src': ['a.ts', 'b.ts'],
     'packages/x/src/c': ['d.ts'],

@@ -1,4 +1,4 @@
-/** `fold`: the unit moves into its own folder; `tests`: its folder exists, its tests go to tests/. */
+/** `fold`: the unit moves into its own folder; `tests`: its tests move to tests/ in its folder. */
 export type UnitAction = 'fold' | 'tests';
 
 /** A unit that is not in place yet: `dir` is its folder today, `files` its file names there. */

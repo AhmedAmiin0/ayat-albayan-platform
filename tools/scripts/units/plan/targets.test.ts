@@ -41,13 +41,21 @@ test('fold with one test keeps it beside the code', () => {
   const plan = planUnit({ ...u, tests: ['ThreadPane.test.tsx'] }, new Set());
   assert.deepEqual(
     plan.moves.map((m) => m.to),
-    ['ThreadPane.tsx', 'ThreadPane.types.ts', 'ThreadPane.test.tsx'].map((n) => `${DIR}/ThreadPane/${n}`),
+    ['ThreadPane.tsx', 'ThreadPane.types.ts', 'ThreadPane.test.tsx'].map(
+      (n) => `${DIR}/ThreadPane/${n}`,
+    ),
   );
 });
 
 test('tests: only the tests move, into tests/ of the folder they are in', () => {
   const tests = ['usage.stop.test.ts', 'usage.test.ts'];
-  const u = unit({ dir: 'p/usage', name: 'usage', files: ['usage.ts', ...tests], tests, action: 'tests' });
+  const u = unit({
+    dir: 'p/usage',
+    name: 'usage',
+    files: ['usage.ts', ...tests],
+    tests,
+    action: 'tests',
+  });
   assert.deepEqual(planUnit(u, new Set()), {
     unit: u,
     home: 'p/usage',

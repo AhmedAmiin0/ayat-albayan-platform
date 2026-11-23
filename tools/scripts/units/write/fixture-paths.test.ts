@@ -9,7 +9,11 @@ const run = (text: string, ctx: Omit<Parameters<typeof fixtureEdits>[1], 'sf'>):
   return applyEdits(text, fixtureEdits(sf, ctx));
 };
 
-const MOVED = { file: 'p/A.x.test.ts', to: 'p/A/tests/x.test.ts', renamed: new Map<string, string>() };
+const MOVED = {
+  file: 'p/A.x.test.ts',
+  to: 'p/A/tests/x.test.ts',
+  renamed: new Map<string, string>(),
+};
 
 test('a moved file keeps reading the same fixtures', () => {
   const src = [
@@ -34,7 +38,10 @@ test('a moved file keeps reading the same fixtures', () => {
 test('a path to a moved file follows it, moved reader or not', () => {
   const renamed = new Map([['p/A.tsx', 'p/A/A.tsx']]);
   const src = "readFileSync(new URL('./A.tsx', import.meta.url));";
-  assert.equal(run(src, { ...MOVED, renamed }), "readFileSync(new URL('../A.tsx', import.meta.url));");
+  assert.equal(
+    run(src, { ...MOVED, renamed }),
+    "readFileSync(new URL('../A.tsx', import.meta.url));",
+  );
   const still = { file: 'p/b.test.ts', to: 'p/b.test.ts', renamed };
   assert.equal(run(src, still), "readFileSync(new URL('./A/A.tsx', import.meta.url));");
 });

@@ -23,7 +23,9 @@ const existing = (c: Ctx): string | undefined =>
 function namedByPath(c: Ctx): string | undefined {
   const moved = c.units.flatMap((u) => u.moves.map((m) => m.from));
   const hit = moved.find((f) => c.input.refs.has(f));
-  return hit === undefined ? undefined : `${hit} is named by path in ${c.input.refs.get(hit)?.join(', ')}`;
+  return hit === undefined
+    ? undefined
+    : `${hit} is named by path in ${(c.input.refs.get(hit) ?? []).join(', ')}`;
 }
 
 function openPrs(c: Ctx): string | undefined {
@@ -36,7 +38,15 @@ const SKIPS: [SkipKind, (c: Ctx) => string | undefined][] = [
   ['excluded', (c) => exclusionOf(c.dir)?.why],
   ['open PR', openPrs],
   ['exists', existing],
-  ['cap', (c) => capReason(c.under, c.units.flatMap((u) => u.moves), barrels(c.units))],
+  [
+    'cap',
+    (c) =>
+      capReason(
+        c.under,
+        c.units.flatMap((u) => u.moves),
+        barrels(c.units),
+      ),
+  ],
   ['named by path', namedByPath],
 ];
 

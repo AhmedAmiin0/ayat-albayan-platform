@@ -8,10 +8,12 @@ const P = 'apps/web/src/pane';
 
 const FILES: Record<string, string> = {
   'apps/web/tsconfig.json': '{ "compilerOptions": { "paths": { "@/*": ["./src/*"] } } }',
-  'apps/web/eslint-suppressions.json': '{\n  "src/pane/Pane.tsx": {\n    "max-len": {\n      "count": 1\n    }\n  }\n}\n',
+  'apps/web/eslint-suppressions.json':
+    '{\n  "src/pane/Pane.tsx": {\n    "max-len": {\n      "count": 1\n    }\n  }\n}\n',
   [`${P}/Pane.tsx`]: "import { w } from './Wide';\nexport const Pane = w;\n",
   [`${P}/Pane.a.test.tsx`]: "import { Pane } from './Pane';\nvi.mock('./Wide');\n",
-  [`${P}/Pane.test.tsx`]: "import { Pane } from './Pane';\nnew URL('./data.json', import.meta.url);\n",
+  [`${P}/Pane.test.tsx`]:
+    "import { Pane } from './Pane';\nnew URL('./data.json', import.meta.url);\n",
   [`${P}/Wide.tsx`]: 'export const w = 1;\n',
   [`${P}/data.json`]: '{}',
   'apps/web/src/app.tsx': "import { Pane } from './pane/Pane';\n",
@@ -19,7 +21,8 @@ const FILES: Record<string, string> = {
 
 const gitRepo = (): string => {
   const root = makeRepo(FILES);
-  const git = (...args: string[]): string => execFileSync('git', args, { cwd: root, encoding: 'utf8' });
+  const git = (...args: string[]): string =>
+    execFileSync('git', args, { cwd: root, encoding: 'utf8' });
   git('init', '-q');
   git('add', '.');
   git('-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qm', 'base');
@@ -43,7 +46,10 @@ test('--write moves with git mv and rewrites references, barrels and baseline ke
   const root = gitRepo();
   fold(root, ['--write', '--paths', P]);
   const s = snapshot(root);
-  assert.equal(s[`${P}/Pane/Pane.tsx`], "import { w } from '@/pane/Wide';\nexport const Pane = w;\n");
+  assert.equal(
+    s[`${P}/Pane/Pane.tsx`],
+    "import { w } from '@/pane/Wide';\nexport const Pane = w;\n",
+  );
   assert.equal(
     s[`${P}/Pane/tests/a.test.tsx`],
     "import { Pane } from '@/pane/Pane/Pane';\nvi.mock('@/pane/Wide');\n",

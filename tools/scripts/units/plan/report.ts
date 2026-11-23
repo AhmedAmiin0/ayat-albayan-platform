@@ -15,7 +15,12 @@ const filesOf = (p: FolderPlan): number => p.units.reduce((n, u) => n + u.unit.f
 
 function addPlan(row: Row, p: FolderPlan): Row {
   if (p.skip === undefined) {
-    return { ...row, units: row.units + p.units.length, files: row.files + filesOf(p), folders: row.folders + 1 };
+    return {
+      ...row,
+      units: row.units + p.units.length,
+      files: row.files + filesOf(p),
+      folders: row.folders + 1,
+    };
   }
   const kind = p.skip.kind;
   return { ...row, skipped: { ...row.skipped, [kind]: (row.skipped[kind] ?? 0) + 1 } };
@@ -33,7 +38,9 @@ const line = (name: string, r: Row): string =>
 /** A markdown-ready table: per workspace, what folds and which folders are skipped. */
 export function summaryLines(plans: readonly FolderPlan[]): string[] {
   const rows = new Map<string, Row>();
-  plans.forEach((p) => rows.set(workspaceOf(p.dir), addPlan(rows.get(workspaceOf(p.dir)) ?? empty(), p)));
+  plans.forEach((p) =>
+    rows.set(workspaceOf(p.dir), addPlan(rows.get(workspaceOf(p.dir)) ?? empty(), p)),
+  );
   const total = plans.reduce(addPlan, empty());
   const skipped = Object.values(total.skipped).reduce((n, c) => n + c, 0);
   return [

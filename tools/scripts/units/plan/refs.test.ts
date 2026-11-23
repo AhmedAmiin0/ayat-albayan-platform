@@ -3,7 +3,8 @@ import { test } from 'node:test';
 import { pathRefs } from './refs.ts';
 
 const TEXTS: Record<string, string> = {
-  'packages/config/package.json': '{ "exports": { "./eslint": "./eslint.js", "./x": "./src/x.ts" } }',
+  'packages/config/package.json':
+    '{ "exports": { "./eslint": "./eslint.js", "./x": "./src/x.ts" } }',
   'apps/web/vite.config.ts': "export default { test: { setupFiles: ['src/test-setup.ts'] } };",
   '.github/workflows/ci.yml': 'run: node tools/scripts/units/fold.ts',
   'tools/scripts/a.test.mjs': "const p = 'apps/web/src/lib/env.ts'; import x from './b.ts';",

@@ -47,11 +47,17 @@ export function applyPlans(root: string, plans: readonly FolderPlan[]): Applied 
   moves.forEach((m) => gitMove(root, m));
   const written = [...barrels].map(([home, use]) => {
     const file = posix.join(home, 'index.ts');
-    writeFileSync(posix.join(root, file), barrelText(use, (f) => readText(root, f)));
+    writeFileSync(
+      posix.join(root, file),
+      barrelText(use, (f) => readText(root, f)),
+    );
     return file;
   });
   if (written.length > 0) git(root, ['add', '--', ...written]);
   const json = renameJsons(root, moves);
-  updateFolderCap(root, active.map((p) => p.dir));
+  updateFolderCap(
+    root,
+    active.map((p) => p.dir),
+  );
   return { moved: moves.length, rewritten: texts.size, barrels: written, json };
 }

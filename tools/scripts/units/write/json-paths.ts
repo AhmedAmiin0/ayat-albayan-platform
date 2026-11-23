@@ -7,7 +7,7 @@ const GUARDS = /^refactor\/guards\/[^/]+\.json$/;
 /** JSON baselines keyed or listed by file path; a move renames their paths, never their counts. */
 export const isPathJson = (file: string): boolean => SUPPRESSIONS.test(file) || GUARDS.test(file);
 
-/** A suppression file's keys are relative to its package (docs/31b §4); guard lists use repo paths. */
+/** Suppression keys are relative to their package (docs/31b §4); guard lists use repo paths. */
 const baseOf = (file: string): string => (SUPPRESSIONS.test(file) ? posix.dirname(file) : '.');
 
 function relativePairs(file: string, moves: readonly Move[]): [string, string][] {

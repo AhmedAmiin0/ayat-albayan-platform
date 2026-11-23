@@ -21,7 +21,13 @@ test('specUses: named imports and re-exports carry their names; the rest is exac
   const sf = project.createSourceFile('/v/a.ts', SOURCE);
   const got = specUses(sf).map((s) => [s.value, s.names]);
   assert.deepEqual(got, [
-    ['./x', [{ name: 'a', typeOnly: false }, { name: 'B', typeOnly: true }]],
+    [
+      './x',
+      [
+        { name: 'a', typeOnly: false },
+        { name: 'B', typeOnly: true },
+      ],
+    ],
     ['./d', [{ name: 'D', typeOnly: true }]],
     ['./e', undefined],
     ['./g', undefined],

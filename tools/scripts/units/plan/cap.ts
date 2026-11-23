@@ -37,7 +37,8 @@ const over = (after: number, before: number): boolean => after > MAX && after > 
 
 function reasonAt(dir: string, after: Count, before: Count | undefined): string | undefined {
   const was = before ?? { files: 0, dirs: new Set<string>() };
-  if (over(after.files, was.files)) return `${dir} would hold ${after.files} code files (max ${MAX})`;
+  if (over(after.files, was.files))
+    return `${dir} would hold ${after.files} code files (max ${MAX})`;
   return over(after.dirs.size, was.dirs.size)
     ? `${dir} would hold ${after.dirs.size} sub-folders (max ${MAX})`
     : undefined;
