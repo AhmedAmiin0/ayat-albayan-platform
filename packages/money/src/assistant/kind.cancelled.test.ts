@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { commissionKindOf, type OrderFact } from './kind.js';
 
-// Twin of subscription_commission_kind after migration 934 (owner 2026-10-28).
+// Twin of subscription_commission_kind after migration 934.
 describe('commissionKindOf: a cancelled package', () => {
   const mistake: OrderFact = { id: 'x', price: 145, created_at: '2026-10-28T09:00:00Z', status: 'cancelled' };
   const right: OrderFact = { id: 'b', price: 145, created_at: '2026-10-28T09:02:00Z', status: 'unpaid' };

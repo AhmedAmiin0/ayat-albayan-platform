@@ -13,9 +13,9 @@ export interface AssistantTermsView {
   commission: { type: AssistantCommissionType; value: number; currency: string | null; starts_on: string } | null;
   salary: { amount: number; currency: string; starts_on: string } | null;
   /**
-   * The share of the commission earned on each renewal now (owner 2026-10-26):
-   * settings.renewal_commission_percent, 0 while «عمولة التجديد» is off (renewalShareNow,
-   * owner 2026-11-01); the screens then say it is paused.
+   * The share of the commission earned on each renewal now:
+   * settings.renewal_commission_percent, 0 while «عمولة التجديد» is off (renewalShareNow); the
+   * screens then say it is paused.
    */
   renewal_share_percent: number;
 }
@@ -93,7 +93,7 @@ export interface MyStudentRow {
   code: string;
   name: string;
   brought_at: string;
-  /** The guardian's E.164 phone (owner 2026-10-27), null without one; never another contact. */
+  /** The guardian's E.164 phone, null without one; never another contact. */
   guardian_phone: string | null;
   /** Has any of their subscriptions been paid in full? (No price, no amounts.) */
   first_subscription_paid: boolean;

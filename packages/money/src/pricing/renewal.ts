@@ -11,7 +11,7 @@ import {
 } from './catalog.js';
 import { SITE_COUNTRIES, type SiteCountry } from './currency.js';
 
-// «جدّد الاشتراك» (owner 2026-10-15, docs/18): the new package starts from the student's last one,
+// «جدّد الاشتراك» (docs/18): the new package starts from the student's last one,
 // read from the quote it was priced from (price_source); a row without a usable quote keeps its
 // lesson count. Shared by the web dialog and the mobile subscribe screen. Pure.
 

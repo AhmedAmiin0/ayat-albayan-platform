@@ -54,10 +54,10 @@ export const subscriptionCreateSchema = z.object({
   startsOn: localDate,
   renewsOn: localDate.nullish(),
   notes: optionalText,
-  /** Lessons taken before the platform (owner 2026-10-28): only with a past startsOn (usedBeforeProblem). */
+  /** Lessons taken before the platform: only with a past startsOn (usedBeforeProblem). */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
-  /** «مبلغ مخصص» (owner 2026-11-02): the price, in the quote's currency (kept in price_source). */
+  /** «مبلغ مخصص»: the price, in the quote's currency (kept in price_source). */
   customPrice: moneyAmount.optional(),
 });
 
@@ -72,7 +72,7 @@ export const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 3
   message: 'paid_at_future',
 });
 
-/** «المرفقات» of a bank transfer (owner 2026-10-12): at most this many files per payment, all optional. */
+/** «المرفقات» of a bank transfer: at most this many files per payment, all optional. */
 export const PAYMENT_ATTACHMENTS_MAX = 5;
 /**
  * Paths from the receipt upload URL (receipts/{subscription_id}/…). Accepted ONLY when the method is 'bank'

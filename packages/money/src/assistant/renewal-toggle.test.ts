@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { SubscriptionFact } from './first-paid.js';
 import { planRenewalCommission, renewalShareNow } from './renewal.js';
 
-// «عمولة التجديد» off (owner 2026-11-01, migration 20261101000996): a new renewal earns nothing;
+// «عمولة التجديد» off (migration 20261101000996): a new renewal earns nothing;
 // the percent is kept.
 interface At {
   created: string;

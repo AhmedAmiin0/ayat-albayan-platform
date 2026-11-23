@@ -35,7 +35,7 @@ function packageLine(q: Quote, t: OfferLabels): string {
 }
 
 /**
- * The offer, one line per item. `total`: a «مبلغ مخصص» typed on the quote (owner 2026-11-15);
+ * The offer, one line per item. `total`: a «مبلغ مخصص» typed on the quote;
  * it is the only total said, so the discount lines, which would contradict it, are dropped.
  */
 export function offerText(q: Quote, t: OfferLabels, total?: number): string {

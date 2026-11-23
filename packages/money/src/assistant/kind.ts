@@ -1,6 +1,6 @@
 import type { SubscriptionStatus } from '@ab/catalog';
 
-// Renewal commission (owner 2026-10-26, migrations 20261027000750-751): which kind a subscription's commission
+// Renewal commission (migrations 20261027000750-751): which kind a subscription's commission
 // is. Pure twin of subscription_commission_kind: decided by subscription ORDER, never by payment order.
 
 export const ASSISTANT_COMMISSION_KINDS = ['first', 'renewal'] as const;
