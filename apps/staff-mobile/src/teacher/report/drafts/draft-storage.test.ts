@@ -42,8 +42,23 @@ test('a stored value of the wrong shape reads as nothing', async () => {
 test('unreadable or full storage never throws', async () => {
   const io = new Error('io');
   jest.spyOn(AsyncStorage, 'getItem').mockRejectedValueOnce(io).mockRejectedValueOnce(io);
-  jest.spyOn(AsyncStorage, 'setItem').mockRejectedValueOnce(io).mockRejectedValueOnce(io);
+  jest.spyOn(AsyncStorage, 'setItem').mockRejectedValueOnce(io);
   await expect(readStoredDraft('r-1')).resolves.toBeNull();
   await expect(keepStoredDraft('r-1', 'a')).resolves.toBeUndefined();
   await expect(dropStoredDraft('r-1')).resolves.toBeUndefined();
+});
+
+test("a failed read never overwrites the other reports' drafts", async () => {
+  await keepStoredDraft('r-1', 'a');
+  jest.spyOn(AsyncStorage, 'getItem').mockRejectedValueOnce(new Error('io'));
+  await keepStoredDraft('r-2', 'b');
+  expect(await readStoredDraft('r-1')).toBe('a');
+});
+
+test('one malformed entry does not cost the valid ones', async () => {
+  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, '{"r-1": 5, "r-2": "b"}');
+  expect(await readStoredDraft('r-2')).toBe('b');
+  await keepStoredDraft('r-3', 'c');
+  expect(await readStoredDraft('r-2')).toBe('b');
+  expect(await readStoredDraft('r-1')).toBeNull();
 });

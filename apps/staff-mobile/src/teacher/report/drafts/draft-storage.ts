@@ -7,7 +7,14 @@ import { z } from 'zod';
 
 export const REPORT_DRAFTS_KEY = 'ab.report-drafts';
 
-const draftsSchema = z.record(z.string(), z.string());
+const bodySchema = z.string();
+const isBody = (entry: [string, unknown]): entry is [string, string] =>
+  bodySchema.safeParse(entry[1]).success;
+
+// One bad entry is dropped alone: the other reports' unsent bodies stay.
+const draftsSchema = z
+  .record(z.string(), z.unknown())
+  .transform((all): Drafts => Object.fromEntries(Object.entries(all).filter(isBody)));
 
 type Drafts = Record<string, string>;
 
@@ -23,11 +30,12 @@ export function parseStored<T>(schema: z.ZodType<T>, raw: string | null): T | nu
   }
 }
 
-async function readAll(): Promise<Drafts> {
+// null = storage could not be read: a write must then skip, never replace the record with {}.
+async function readAll(): Promise<Drafts | null> {
   try {
     return parseStored(draftsSchema, await AsyncStorage.getItem(REPORT_DRAFTS_KEY)) ?? {};
   } catch {
-    return {};
+    return null;
   }
 }
 
@@ -37,7 +45,9 @@ let queue: Promise<void> = Promise.resolve();
 function update(change: (drafts: Drafts) => Drafts): Promise<void> {
   queue = queue.then(async () => {
     try {
-      await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify(change(await readAll())));
+      const drafts = await readAll();
+      if (drafts === null) return;
+      await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify(change(drafts)));
     } catch {
       return;
     }
@@ -47,7 +57,7 @@ function update(change: (drafts: Drafts) => Drafts): Promise<void> {
 
 export async function readStoredDraft(id: string): Promise<string | null> {
   await queue;
-  return (await readAll())[id] ?? null;
+  return (await readAll())?.[id] ?? null;
 }
 
 export const keepStoredDraft = (id: string, body: string): Promise<void> =>
