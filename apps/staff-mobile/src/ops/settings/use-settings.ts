@@ -4,7 +4,7 @@ import { apiFetch, pathKey } from '@ab/mobile-kit';
 
 const PATH = '/settings';
 
-/** GET /settings (admin). «القيم» saves one key at a time (values/use-save-value). */
+/** Values save one key at a time. */
 export function useSettings() {
   return useQuery({ queryKey: pathKey(PATH), queryFn: () => apiFetch<AcademySettings>(PATH) });
 }

@@ -2,8 +2,7 @@ import { integrationBool, type IntegrationConfigItem, type IntegrationSecretKey 
 import { t } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales';
 
-// «الدفع الإلكتروني» in a Stripe build (docs/30): the same switch as the web's «التكاملات»
-// (STRIPE_ENABLED), saved through the same audited PUT /settings/integrations.
+// docs/30: the same STRIPE_ENABLED switch as the web, through the audited integrations PUT.
 
 const KEYS: readonly IntegrationSecretKey[] = ['STRIPE_API_KEY', 'STRIPE_WEBHOOK_SECRET'];
 

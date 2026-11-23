@@ -23,7 +23,7 @@ import { ValuesTable } from '@/ops/values/table/ValuesTable';
 
 type Chip = GroupId | typeof GOOGLE_GROUP;
 
-/** The chips: every group, then «مزامنة Google» for the admins who may read its status. */
+/** Google sync appears only for admins who may read its status. */
 function useChips(): { value: Chip; label: string; count: number }[] {
   const holds = useHolds('settings.read');
   const admin = useIsAdmin();
@@ -36,7 +36,7 @@ function useChips(): { value: Chip; label: string; count: number }[] {
   return google ? [...items, { value: GOOGLE_GROUP, label: t.mobileValues.groups.google, count: 3 }] : items;
 }
 
-/** While GET /settings has not answered: a busy region, so «القيم» is never blank. */
+/** A busy region so the screen is never blank. */
 function Loading() {
   const { color } = useTheme();
   return (
@@ -46,12 +46,7 @@ function Loading() {
   );
 }
 
-/**
- * «القيم» on the phone (docs/26b §2 phone, §4; R-MSG-01): one group at a time in a two-column table;
- * a row opens its bottom sheet. Scalars are edited there with settings.write, one key per save;
- * shapes, lists, module-owned keys and «مزامنة Google» are read-only («عدّلها من الموقع»).
- * Descriptions are edited in the sheet too («عدّل الوصف», PUT /config/entries/:key/description).
- */
+/** docs/26b §2, §4; R-MSG-01: scalars need settings.write, one key per save; the rest read-only. */
 export function ValuesScreen() {
   const query = useSettings();
   const meta = useConfigMeta().data?.meta;

@@ -2,7 +2,7 @@ import type { SalesTeacherOption } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/mobile-kit';
 
-/** GET /sales/subscriptions/teachers: «المعلم/ة»'s choices (the active teachers, names only). */
+/** Active teachers, names only. */
 export function useSalesTeachers() {
   return useQuery({
     queryKey: ['sales', 'subscriptions', 'teachers'],

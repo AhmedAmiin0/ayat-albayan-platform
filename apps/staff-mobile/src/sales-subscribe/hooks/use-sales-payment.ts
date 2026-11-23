@@ -8,13 +8,7 @@ import { refreshFamily } from '@/sales-subscribe/lib/family';
 import type { TransferInput } from '@/sales-subscribe/lib/transfer-form';
 import { uploadSalesReceipt } from './upload-sales-receipt';
 
-/**
- * «سجّل التحويل» → POST /sales/payments (R-ASST-04). Each photo of «المرفقات» goes up first, once
- * per file (a retry after a failed POST reuses its path); a chat file is already copied. None is
- * fine (owner 2026-10-12). ONE clientRequestId per open screen, so a retry after a lost reply never
- * records the transfer twice (rule 8). Never sends kind, method or invoiceId: the API's bank
- * transfer. `bind`: the chat's phone for a child not hers (chatBinding). Then the chat and the family refetch.
- */
+/** R-ASST-04, rule 8: one id per screen; each photo uploads once; the API sets the bank method. */
 export function useSalesPayment(phone: string, bind: { phone?: string } = {}) {
   const client = useQueryClient();
   const [clientRequestId] = useState(requestId);

@@ -36,7 +36,6 @@ export interface EntriesAnswer {
   entries: ConfigEntry[] | Error;
 }
 
-/** GET answers for «القيم» with GET /config/entries too. */
 export const entriesAnswer =
   ({ permissions, entries }: EntriesAnswer) =>
   (path: string): Promise<unknown> => {

@@ -3,11 +3,7 @@ import { t, EmptyState, ListRow, StatusChip, InsetGroup, Section } from '@ab/mob
 import { Note } from '@/core/ui/feedback/Note';
 import type { RegistrationCheckBy } from '@ab/shared';
 
-/**
- * The answer: «مسجّل: n طالب» and each child (name, code, status — any of the eight, expired and churned
- * included —, teacher or «لم يُحدَّد معلم بعد»), «أول 10 نتائج فقط» when there were more; else
- * «لا يوجد طالب…» for the mode searched. With `onPick` each child is a button (the link-family picker).
- */
+/** Any of the eight statuses may show; results are capped at 10; `onPick` makes rows buttons. */
 export function RegistrationResults({ view, by, onPick }: {
   view: RegistrationCheckView;
   by: RegistrationCheckBy;

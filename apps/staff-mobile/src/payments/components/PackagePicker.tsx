@@ -10,7 +10,6 @@ interface PackagePickerProps {
   onChange: (subscriptionId: string) => void;
 }
 
-/** «الاشتراك»: which package the money is for, and how much of its price is already paid. */
 export function PackagePicker({ packages, value, onChange }: PackagePickerProps) {
   const { color } = useTheme();
   const line = (weight: 500 | 600, ink: string) => ({

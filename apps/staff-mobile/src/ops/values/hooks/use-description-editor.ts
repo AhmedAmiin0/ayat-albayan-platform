@@ -10,7 +10,6 @@ export interface SheetDescription {
   entry: ConfigEntry | undefined;
   /** The full description the sheet shows (undefined: none). */
   text: string | undefined;
-  /** «عدّل الوصف» is offered. */
   canEdit: boolean;
 }
 
@@ -30,7 +29,7 @@ export interface DescriptionEditorOptions {
   valueKey: SettingKey;
   /** The text shown now: the editor starts from it. */
   initial: string;
-  /** After a write the server took: the message to show («تم حفظ الوصف» / «أُعيد الوصف الأصلي»). */
+  /** Called only after the server accepted the write. */
   onDone: (message: string) => void;
 }
 
@@ -67,7 +66,7 @@ export function useDescriptionEditor({ valueKey, initial, onDone }: DescriptionE
       setError(null);
     },
     submit,
-    /** «أعد الوصف الأصلي»: null clears the admin's text and its override. */
+    /** Null clears the admin's text and its override. */
     restore: () => send(null, d.restored),
   };
 }

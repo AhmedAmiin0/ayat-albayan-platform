@@ -1,7 +1,7 @@
 import { DESCRIPTION_MAX, type ConfigEntry, type Locale, type Permission } from '@ab/shared';
 import { ApiError, t } from '@ab/mobile-kit';
 
-// «القيم» on the phone: a key's description (docs/26 §3) and who may edit it (§2f, §5).
+// docs/26 §3 for descriptions; §2f and §5 for who may edit.
 
 interface DescriptionSource {
   /** The row of GET /config/entries; undefined on an older API (no route) or while loading. */
@@ -11,10 +11,7 @@ interface DescriptionSource {
   locale: Locale;
 }
 
-/**
- * The text the sheet shows. Arabic: the admin's description, else the hint (with overrides), else the
- * seed. English: the hint only (English descriptions are edited on «الترجمات», docs/26 §3).
- */
+/** English shows the hint only; English descriptions are edited on translations (docs/26 §3). */
 export function descriptionOf({ entry, hint, locale }: DescriptionSource): string | undefined {
   if (locale !== 'ar' || !entry) return hint;
   return entry.description ?? hint ?? entry.descriptionSeed ?? undefined;
@@ -27,12 +24,7 @@ interface DescribeAccess {
   admin: boolean;
 }
 
-/**
- * «عدّل الوصف»: settings.write, and on a module-owned key that module's permission
- * (messages_gate → settings.write, communications → numbers.manage, google_sync → base admin,
- * notifications → notifications.manage).
- * Without a row (older API) there is nothing to edit.
- */
+/** Module-owned keys also need that module's permission; without a row there is nothing to edit. */
 export function canDescribe({ entry, can, admin }: DescribeAccess): boolean {
   if (!entry || !can('settings.write')) return false;
   if (entry.ownedBy === 'communications') return can('numbers.manage');

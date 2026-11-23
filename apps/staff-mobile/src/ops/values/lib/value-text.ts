@@ -2,8 +2,7 @@ import { shapeParts, valueTextBy, type ValueTextTable } from '@ab/client-core';
 import { settingDef, tzOptionLabel, type SettingKey } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
-// «القيم» on the phone: a setting's words (label, description, value as text) from the registry's
-// dotted i18n paths, so the phone reads the same strings as the web.
+// Reads the registry's dotted i18n paths so the phone uses the web's strings.
 
 /** A dotted ar.json / en.json path ('settings.hints.uploadMaxMb') → its string, or undefined. */
 export function textAt(path: string): string | undefined {
@@ -74,7 +73,7 @@ export function valueText(key: SettingKey, value: unknown): string {
   return valueTextBy(VALUE_TEXT, key, value);
 }
 
-/** «من 1 إلى 12» for a number; nothing for other kinds. */
+/** Nothing for non-number kinds. */
 export function boundsOf(key: SettingKey): string | undefined {
   const def = settingDef(key);
   if (def.type !== 'int' && def.type !== 'int_list') return undefined;

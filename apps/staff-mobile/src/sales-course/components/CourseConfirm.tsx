@@ -16,20 +16,15 @@ interface CourseConfirmProps {
   view: SalesCourseView;
   teacherName: string;
   picks: readonly string[];
-  /** The request «احجز» sends; null until a teacher and a day are picked. */
+  /** Null until a teacher and a day are picked. */
   body: BookingRequest | null;
   booking: { busy: boolean; failure: BookFailure | null; submit: () => void };
   onChangeSlot: () => void;
-  /** The previous course's days as prefilled («تابِع بنفس الأيام»): a clash on one still kept names its day. */
+  /** A clash on a prefilled day still kept names that day. */
   prefilled?: readonly string[];
 }
 
-/**
- * «المراجعة» of the course: the student, the teacher, the plan, each day with its time and when the
- * course ends (its courseLessonCount-th lesson: lessons_total − lessons_used_before). «احجز» waits for exactly the plan's days a week and a
- * clean series check (POST /sales/booking/check). Prefilled from the previous course, a clash names its
- * day(s) («موعد الخميس لم يعد متاحًا»); «اختر موعدًا آخر» keeps the other picks.
- */
+/** Booking waits for exactly the plan's weekly days and a clean series check. */
 export function CourseConfirm(props: CourseConfirmProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -61,14 +56,13 @@ export function CourseConfirm(props: CourseConfirmProps) {
   );
 }
 
-/** «احجز» refused: the clash (other times), or the API's line for its code. */
 function BookError({ failure, onChangeSlot }: { failure: BookFailure | null; onChangeSlot: () => void }) {
   if (!failure) return null;
   if (failure.kind === 'conflict') return <ConflictNotice lines={failure.lines} onChangeSlot={onChangeSlot} />;
   return <ErrorLine message={failure.kind === 'duplicate' ? t.common.error : failure.text} />;
 }
 
-/** «موعد الخميس لم يعد متاحًا…», one line per still-prefilled day the series check found taken. */
+/** One line per still-prefilled day the series check found taken. */
 interface TakenLinesProps {
   taken: TakenInput;
   /** The series check's answer, once in. */

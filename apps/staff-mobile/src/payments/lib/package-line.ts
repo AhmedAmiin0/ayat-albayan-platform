@@ -5,12 +5,8 @@ import { t } from '@ab/mobile-kit';
 export const RENEWAL_DEFAULT = SETTING_DEFAULTS.renewal_alert_remaining;
 
 export interface PackageLine {
-  /** «فاضل حلقتين», «الباقة خلصت», «حضر حلقة زيادة عن الباقة». */
   label: string;
-  /**
-   * Saffron «دورك» (docs/07 §1.2): exactly when the renewal / unpaid alert is due (alertFor), so at
-   * or under the threshold and never for a paused or trial package.
-   */
+  /** docs/07 §1.2: exactly when alertFor is due, never for a paused or trial package. */
   alert: boolean;
 }
 

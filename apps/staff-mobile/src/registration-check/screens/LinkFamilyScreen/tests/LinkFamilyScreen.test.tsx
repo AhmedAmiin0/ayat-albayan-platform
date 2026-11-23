@@ -5,7 +5,6 @@ import { ApiError, t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { LinkFamilyScreen } from '@/registration-check/screens/LinkFamilyScreen/LinkFamilyScreen';
 
-// «ربط بطالب موجود» (owner 2026-10-29): search by name or code, pick, confirm, POST { code }.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -53,7 +52,7 @@ test('the hint, then the search by name: the children as buttons; picking one as
   expect(screen.getByText(confirmOf('سلمى', 'AB-0202'))).toBeTruthy();
   expect(screen.queryByText('ريم')).toBeNull();
   expect(screen.queryByText(lf.hint)).toBeNull();
-  // «إلغاء» goes back to the children, nothing sent.
+  // Cancel sends nothing.
   await fireEvent.press(screen.getByRole('button', { name: t.common.cancel }));
   expect(await screen.findByText('ريم')).toBeTruthy();
   expect(screen.getByText(lf.hint)).toBeTruthy();

@@ -27,15 +27,7 @@ function studentLists(studentId: string) {
   };
 }
 
-/**
- * «سجّل دفعة» (R-PAY-01, R-MOB-02): the receipt or a bank transfer's attachments go up first (signed
- * URLs), then POST /payments.
- * Optimistic (R-MOB-03): the student's payments lists show the row and the package its new `paid`
- * at once; a failure puts the snapshot back; either way both refetch. A receipt that went up is
- * remembered, so retrying after a failed POST does not upload it again; and the form's
- * clientRequestId is re-sent until a payment is recorded, so a retry after a lost reply returns the
- * payment the API already has instead of recording the money twice (rule 8).
- */
+/** R-MOB-03 optimistic; one upload and one clientRequestId per payment so retries never double. */
 export function useRecordPayment(studentId: string) {
   const client = useQueryClient();
   const [receiptOnce] = useState(() => uploadOnce<string>());

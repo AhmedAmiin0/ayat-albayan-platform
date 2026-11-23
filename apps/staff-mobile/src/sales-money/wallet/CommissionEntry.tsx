@@ -5,11 +5,7 @@ import { StatusChip, AppText, type, useTheme } from '@ab/mobile-kit';
 import { commissionDay, commissionLine, walletMoney, walletStateText } from '@/sales-money/lib/money-text';
 import { useViewerTz } from '@/core/lib/clock';
 
-/**
- * One commission of «عمولاتي» in two lines (WhatsApp-compact, ≥ 44pt): «+50 ج.م», the day and its state chip,
- * then code · student · kind · how it was paid, in short words so it fits 360dp. A voided one: the amount
- * struck through with no sign, then why. Its list's inset card draws the fill and the rules.
- */
+/** A voided entry shows the amount struck without a sign, then why. */
 export const CommissionEntry = memo(function CommissionEntry({ entry }: { entry: MyCommissionRow }) {
   const tz = useViewerTz();
   const { color } = useTheme();

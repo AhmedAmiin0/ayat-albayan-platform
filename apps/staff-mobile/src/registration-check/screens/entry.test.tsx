@@ -6,7 +6,6 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { AllStudentsScreen } from '@/sales/sales/screens/AllStudentsScreen';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// The two ways in: the sales chat header (the number filled in) and the «الطلاب» tab header.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

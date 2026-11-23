@@ -7,7 +7,7 @@ import {
 } from '@ab/shared';
 import { textAt } from './value-text';
 
-/** The chip strip: the editable groups, then the module-owned ones (read-only, «للاطلاع»). */
+/** Module-owned groups come after the editable ones and are read-only. */
 export type GroupId = ValueGroupId | keyof typeof OWNED_VALUE_GROUPS;
 
 export const GROUP_IDS: readonly GroupId[] = [
@@ -22,7 +22,6 @@ export function groupKeys(id: GroupId): readonly SettingKey[] {
   return isOwnedGroup(id) ? OWNED_VALUE_GROUPS[id] : VALUE_GROUPS[id];
 }
 
-/** The chip's name: the old page's section title where one exists, else «القيم»'s own. */
 export function groupLabel(id: GroupId): string {
   return textAt(`settings.sections.${id}`) ?? textAt(`mobileValues.groups.${id}`) ?? id;
 }

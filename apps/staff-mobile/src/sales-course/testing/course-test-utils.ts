@@ -30,7 +30,6 @@ export const press = async (role: 'button' | 'checkbox', name: string | RegExp) 
 export const isDisabled = (name: string) =>
   screen.getByRole('button', { name }).props.accessibilityState?.disabled === true;
 
-/** Press a button once it is enabled (e.g. «تابِع» waits for the previous teacher to be confirmed). */
 export async function pressEnabled(name: string) {
   await screen.findByRole('button', { name });
   await waitFor(() => expect(isDisabled(name)).toBe(false));
@@ -39,7 +38,6 @@ export async function pressEnabled(name: string) {
 
 export { pickLesson };
 
-/** The teacher, then the Sunday 17:00 and Thursday 18:00 picks, then «التالي» → the review. */
 export async function walkToReview() {
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   await pickLesson(0, { date: '2026-10-04', time: '17:00' }); // SUN_17, Riyadh

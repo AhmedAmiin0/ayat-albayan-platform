@@ -2,8 +2,7 @@ import type { LeadFamilyLinked } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError, apiSend, t, pathKey } from '@ab/mobile-kit';
 
-// «ربط بطالب موجود» (owner 2026-10-29): the lead chat's number becomes the second number of an existing
-// student's family. POST /leads/:id/link-family { code } → 200 { linked }; never an id or a phone.
+// The API takes the student code only, never an id or a phone.
 
 type LinkErrorCode = keyof typeof t.inbox.linkFamily.errors;
 
@@ -17,10 +16,7 @@ export function linkFamilyErrorText(error: unknown): string {
   return isLinkError(code) ? t.inbox.linkFamily.errors[code] : t.common.error;
 }
 
-/**
- * Links the lead's number to the family of the student with this code. Then the chat (it now carries the
- * family: no «تسجيل طالب جديد» in «⋮», the family's pills), the chats list, the leads and the family views refetch.
- */
+/** The chat, chats list, leads and family views refetch since the chat now carries the family. */
 export function useLinkFamily(leadId: string) {
   const client = useQueryClient();
   return useMutation({

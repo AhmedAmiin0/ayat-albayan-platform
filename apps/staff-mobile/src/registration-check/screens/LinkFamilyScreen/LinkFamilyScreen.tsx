@@ -29,11 +29,10 @@ import { checkErrorText, searchOf, useRegistrationCheck } from '@/registration-c
 /** The chat's number and its lead (ThreadView.lead_id), from the chat's «⋮» menu. */
 type Params = { phone?: string; leadId?: string };
 
-/** «ربط الرقم بعائلة {name} ({code})؟», the code kept left-to-right inside the Arabic sentence. */
+/** The code stays left-to-right inside the Arabic sentence. */
 const confirmText = (m: RegistrationMatch) =>
   t.inbox.linkFamily.confirm.replace('{name}', m.name).replace('{code}', ltr(m.code));
 
-/** After the answer: «رُبط الرقم…» (added now) or «مرتبط بهذه العائلة من قبل», then back to the chat. */
 function LinkDone({ linked, onBack }: { linked: boolean; onBack: () => void }) {
   const { color } = useTheme();
   return (

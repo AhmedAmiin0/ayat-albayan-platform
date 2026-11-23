@@ -98,11 +98,7 @@ export function parseDraft(key: SettingKey, draft: Draft): Parsed {
 export const sameValue = (a: unknown, b: unknown): boolean =>
   JSON.stringify(a) === JSON.stringify(b);
 
-/**
- * Which question «احفظ» asks first: a plain dialog for the academy-wide switches; typed days only
- * when a retention can delete more data than before: turned on (from off) or made shorter than the
- * stored period. Lengthening it, or turning it off, deletes nothing and saves without typing.
- */
+/** Typed days only when a retention would delete more data: turned on or shortened. */
 export function confirmOf(
   key: SettingKey,
   value: unknown,
