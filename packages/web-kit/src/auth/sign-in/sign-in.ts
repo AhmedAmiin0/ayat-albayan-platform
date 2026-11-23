@@ -1,4 +1,9 @@
-import { isEmailIdentifier, setViewerPersonTz, signInError } from '@ab/client-core';
+import {
+  isAccountDisabled,
+  isEmailIdentifier,
+  setViewerPersonTz,
+  signInError,
+} from '@ab/client-core';
 import { HOME_BY_ROLE, type CodeSession, type PasswordSession } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -6,7 +11,7 @@ import { forgetTabMemories } from '@ab/web-kit/lib/session/session-end';
 import { forgetWebPush } from '@ab/web-kit/push/web-push';
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 import { authApi, signInErrorText } from '@ab/web-kit/auth/login/auth-api';
-import { isAccountDisabled, meQuery } from '@ab/web-kit/auth/me';
+import { meQuery } from '@ab/web-kit/auth/me';
 import { reportSession } from '@ab/web-kit/auth/session-activity';
 
 /**

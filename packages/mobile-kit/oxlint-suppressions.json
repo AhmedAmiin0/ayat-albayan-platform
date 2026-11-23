@@ -49,9 +49,6 @@
   "src/auth/login-notice.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/auth/role-claim.ts": {
@@ -248,7 +245,7 @@
   },
   "src/lib/query/query-client.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "typescript/dot-notation": {
       "count": 1
@@ -463,11 +460,6 @@
       "count": 2
     }
   },
-  "src/ui/form/Field/tests/Field.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/ui/form/Field/Field.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -477,6 +469,11 @@
     },
     "stylistic/max-len": {
       "count": 3
+    }
+  },
+  "src/ui/form/Field/tests/Field.test.tsx": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/ui/layout/KeyboardFrame.test.tsx": {
@@ -500,7 +497,13 @@
       "count": 7
     }
   },
-  "src/ui/layout/Screen/tests/inset.test.tsx": {
+  "src/ui/layout/Screen/Screen.tsx": {
+    "complexity": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 8
+    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -510,13 +513,7 @@
       "count": 1
     }
   },
-  "src/ui/layout/Screen/Screen.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 8
-    },
+  "src/ui/layout/Screen/tests/inset.test.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
     }
