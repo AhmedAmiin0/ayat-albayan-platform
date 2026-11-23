@@ -1,0 +1,1 @@
+export { SalesTransferScreen } from './SalesTransferScreen';
