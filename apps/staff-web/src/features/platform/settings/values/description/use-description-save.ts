@@ -1,4 +1,4 @@
-import { applyStrings } from '@ab/shared';
+import { applyStrings } from '@ab/i18n';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { putConfigDescription, storeEntry } from '@/lib/settings/config-entries-api';
 import { BUNDLES, t } from '@ab/web-kit/lib/i18n/i18n';

@@ -1,4 +1,4 @@
-import type { TranslationKeyRow } from '@ab/shared';
+import type { TranslationKeyRow } from '@ab/i18n';
 import { describe, expect, it } from 'vitest';
 import { changesFor, draftProblems, draftsOf, effectiveText } from './translation-edit';
 

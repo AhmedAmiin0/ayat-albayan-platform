@@ -1,13 +1,13 @@
+import type { Locale } from '@ab/shared';
 import {
   flattenStrings,
   missingPlaceholders,
   sectionOf,
   type FlatStrings,
-  type Locale,
   type TranslationKeyRow,
   type TranslationKeysPage,
   type TranslationKeysQuery,
-} from '@ab/shared';
+} from '@ab/i18n';
 import { BUNDLES } from '@/common/infra/i18n/server-text';
 import { VALUES_HINT_KEYS } from './values-owned';
 

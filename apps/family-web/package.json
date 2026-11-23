@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ab/client-core": "workspace:*",
+    "@ab/i18n": "workspace:*",
     "@ab/shared": "workspace:*",
     "@ab/web-kit": "workspace:*",
     "@tanstack/react-query": "^5.104.0",
