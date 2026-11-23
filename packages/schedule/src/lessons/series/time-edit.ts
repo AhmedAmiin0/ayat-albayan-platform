@@ -33,6 +33,7 @@ export const TIME_EDIT_ERRORS = [
   'date_in_future',
   'correction_cross_day',
   'reason_required',
+  'teacher_clash',
 ] as const;
 export type TimeEditError = (typeof TIME_EDIT_ERRORS)[number];
 
