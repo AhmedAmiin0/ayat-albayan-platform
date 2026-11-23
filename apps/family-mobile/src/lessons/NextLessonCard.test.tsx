@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { lesson, student } from '@/portal/portal.fixtures';
+import { lesson, student } from '#/portal/portal.fixtures.ts';
 import { NextLessonCard } from './NextLessonCard';
 
 jest.mock('@ab/mobile-kit/room', () => ({

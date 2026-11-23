@@ -1,7 +1,7 @@
 import type { PortalFileInput } from '@ab/client-core';
 import { useMutation } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { portalSend } from '@/portal';
+import { portalSend } from '#/portal/index.ts';
 
 /**
  * A sent report's PDF or a visible recording: a fresh signed link (5 minutes / an hour) opened in

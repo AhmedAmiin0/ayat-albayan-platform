@@ -1,1 +1,1 @@
-export { ProfileScreen as default } from '@/profile';
+export { ProfileScreen as default } from '#/profile/index.ts';

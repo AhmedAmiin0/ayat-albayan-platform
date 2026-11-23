@@ -1,10 +1,10 @@
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 import { t } from '@ab/mobile-kit';
-import { dateLine, rangeText } from '@/lessons';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { studentOf, useFamilyClock, usePortalMe } from '@/portal';
-import { LoadState } from '@/ui';
+import { dateLine, rangeText } from '#/lessons/index.ts';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { studentOf, useFamilyClock, usePortalMe } from '#/portal/index.ts';
+import { LoadState } from '#/ui/index.ts';
 import { LessonBody } from './LessonBody';
 import { useLessonAssets } from './use-assets';
 

@@ -4,9 +4,9 @@ import { openAlert, PROFILE_HREF, reportHref } from './hrefs';
 const mockMark = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn() } }));
 let mockInApp = false;
-jest.mock('@/portal', () => ({ markReportSeen: (id: string) => mockMark(id) }));
-jest.mock('@/room', () => ({
-  roomHref: jest.requireActual('@/room/room-way').roomHref,
+jest.mock('#/portal/index.ts', () => ({ markReportSeen: (id: string) => mockMark(id) }));
+jest.mock('#/room/index.ts', () => ({
+  roomHref: jest.requireActual('#/room/room-way.ts').roomHref,
   roomsInAppNow: () => mockInApp,
 }));
 

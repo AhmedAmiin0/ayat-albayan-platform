@@ -1,7 +1,7 @@
 import { pushTarget } from '@ab/client-core';
 import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
-import { openAlert } from '@/nav';
+import { openAlert } from '#/nav/index.ts';
 
 /**
  * The tapped push that started the app, forgotten as it is read so a later mount never replays

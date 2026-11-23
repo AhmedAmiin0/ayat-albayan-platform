@@ -1,1 +1,1 @@
-export { ChildScreen as default } from '@/child';
+export { ChildScreen as default } from '#/child/index.ts';

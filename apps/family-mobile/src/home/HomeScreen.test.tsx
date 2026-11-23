@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react-native';
 import { PICKED_CHILD_KEY } from '@ab/client-core';
 import { pathKey, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { student } from '@/portal/portal.fixtures';
+import { student } from '#/portal/portal.fixtures.ts';
 import { HomeScreen } from './HomeScreen';
 
 // «الرئيسية» of a guardian of two (owner 2026-11-16): the child this profile picked on this phone

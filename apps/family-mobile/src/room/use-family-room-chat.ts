@@ -2,7 +2,7 @@ import { familyChatOn } from '@ab/client-core';
 import { router } from 'expo-router';
 import type { RoomChat } from '@ab/mobile-kit/room';
 import { usePublicConfig } from '@ab/mobile-kit';
-import { useChildUnread } from '@/portal';
+import { useChildUnread } from '#/portal/index.ts';
 import { roomChatHref } from './room-way';
 
 /**

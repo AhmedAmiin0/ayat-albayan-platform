@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t, PUSH_OPT_OUT_KEY } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { PROFILE_HREF } from '@/nav';
+import { PROFILE_HREF } from '#/nav/index.ts';
 import { AccountScreen } from './AccountScreen';
 
 const mockRegister = jest.fn(async () => undefined);

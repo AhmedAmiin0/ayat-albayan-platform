@@ -1,5 +1,5 @@
-import { FamilyTabs } from '@/nav';
-import { usePushTaps } from '@/push';
+import { FamilyTabs } from '#/nav/index.ts';
+import { usePushTaps } from '#/push/index.ts';
 import { ChildSwitchSheet } from './ChildSwitchSheet';
 
 /**

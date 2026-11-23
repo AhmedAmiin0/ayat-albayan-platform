@@ -1,9 +1,9 @@
 import type { PortalHome } from '@ab/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { EmptyState, t } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { studentOf, usePortalMe, useRefreshPortal } from '@/portal';
+import { LoadState } from '#/ui/index.ts';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { studentOf, usePortalMe, useRefreshPortal } from '#/portal/index.ts';
 import { ChildBody } from './ChildBody';
 
 /** The child's tabs, or the «not linked» note for an id that is not this login's. */

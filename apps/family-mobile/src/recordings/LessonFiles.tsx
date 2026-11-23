@@ -1,6 +1,6 @@
 import type { PortalLessonFile } from '@ab/shared';
 import { ErrorLine, InsetGroup, ListRow, Section, t } from '@ab/mobile-kit';
-import { useOpenFile } from '@/report';
+import { useOpenFile } from '#/report/index.ts';
 import { LessonFileRow } from './LessonFileRow';
 import { useOpenLessonFile } from './use-assets';
 

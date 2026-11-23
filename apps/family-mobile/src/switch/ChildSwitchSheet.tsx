@@ -1,6 +1,6 @@
 import { BottomSheet } from '@expo/ui';
 import { useTheme } from '@ab/mobile-kit';
-import { closeChildSwitch, useChildSwitch } from '@/nav';
+import { closeChildSwitch, useChildSwitch } from '#/nav/index.ts';
 import { ChildSwitchList } from './ChildSwitchList';
 
 /**

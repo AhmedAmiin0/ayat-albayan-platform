@@ -5,8 +5,8 @@ import {
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { locale, t, useResumeMap } from '@ab/mobile-kit';
-import { DateTile, PressCard, RowText, type RowNote } from '@/ui';
-import { useFamilyClock } from '@/portal';
+import { DateTile, PressCard, RowText, type RowNote } from '#/ui/index.ts';
+import { useFamilyClock } from '#/portal/index.ts';
 import { lessonHref } from './hrefs';
 import { listenNote } from './listen-note';
 

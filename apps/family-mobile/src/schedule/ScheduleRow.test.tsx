@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { lesson, student } from '@/portal/portal.fixtures';
+import { lesson, student } from '#/portal/portal.fixtures.ts';
 import { ScheduleRow } from './ScheduleRow';
 
 // A week row's live line (owner 2026-11-16, canvas RoomXLivePush).

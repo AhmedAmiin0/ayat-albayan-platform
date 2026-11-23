@@ -1,6 +1,6 @@
 import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-import { useRoomsInApp } from '@/room';
+import { useRoomsInApp } from '#/room/index.ts';
 import { optionsTitle } from './lesson-text';
 import { LessonOptions } from './options/LessonOptions';
 

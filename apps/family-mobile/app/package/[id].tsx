@@ -1,1 +1,1 @@
-export { PackageScreen as default } from '@/package';
+export { PackageScreen as default } from '#/package/index.ts';

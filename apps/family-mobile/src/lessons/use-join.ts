@@ -1,8 +1,8 @@
 import type { PortalLesson, PortalWayIn } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { Linking, Vibration } from 'react-native';
-import { portalSend } from '@/portal';
-import { enterRoom, joinWay, useRoomsInApp, type JoinWay } from '@/room';
+import { portalSend } from '#/portal/index.ts';
+import { enterRoom, joinWay, useRoomsInApp, type JoinWay } from '#/room/index.ts';
 
 // «ادخل الحلقة» (docs/50 §2, mirrors the web portal's LessonAction): a Meet lesson opens its own
 // link; our classroom opens inside the app while settings.family_meetings_in_app is on (owner

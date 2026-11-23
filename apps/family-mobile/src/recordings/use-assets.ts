@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { useScreenFocused } from '@ab/mobile-kit';
-import { portalSend } from '@/portal';
+import { portalSend } from '#/portal/index.ts';
 import { assets } from './api';
 
 /** A signed link lasts an hour; it is minted again after 50 minutes. */

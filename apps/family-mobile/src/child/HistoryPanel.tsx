@@ -1,8 +1,8 @@
 import { historyMonths, historyRows } from '@ab/client-core';
 import type { PortalHistory, PortalHistoryStatus, PortalStudent } from '@ab/shared';
 import { AppText, Button, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
-import { LoadState, MonthSection } from '@/ui';
-import { useChildHistory } from '@/portal';
+import { LoadState, MonthSection } from '#/ui/index.ts';
+import { useChildHistory } from '#/portal/index.ts';
 import { HistoryRow } from './HistoryRow';
 
 interface HistoryPanelProps {

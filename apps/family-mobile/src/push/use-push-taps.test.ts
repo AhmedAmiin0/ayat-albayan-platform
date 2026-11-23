@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { usePushTaps } from './use-push-taps';
 
 const mockOpen = jest.fn();
-jest.mock('@/nav', () => ({ openAlert: (target: unknown) => mockOpen(target) }));
+jest.mock('#/nav/index.ts', () => ({ openAlert: (target: unknown) => mockOpen(target) }));
 jest.mock('expo-notifications', () => ({
   getLastNotificationResponse: jest.fn(() => null),
   clearLastNotificationResponse: jest.fn(),

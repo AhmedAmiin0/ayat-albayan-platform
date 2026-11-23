@@ -2,6 +2,9 @@
   "name": "family-mobile",
   "private": true,
   "main": "index.ts",
+  "imports": {
+    "#/*": "./src/*"
+  },
   "scripts": {
     "start": "expo start",
     "dev": "expo start",

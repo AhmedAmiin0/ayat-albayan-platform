@@ -1,8 +1,8 @@
 import { checkPhone, type Country, defaultCountry, splitInternational } from '@ab/client-core';
 import { authApi, useA11yPref, useCodeSignIn, useStepMotion } from '@ab/mobile-kit';
 import { useState } from 'react';
-import { feel } from '@/sign-in/feedback';
-import { phoneRegion } from '@/sign-in/phone/countries';
+import { feel } from '#/sign-in/feedback.ts';
+import { phoneRegion } from '#/sign-in/phone/countries.ts';
 
 export type WhatsAppStep = 'phone' | 'code';
 

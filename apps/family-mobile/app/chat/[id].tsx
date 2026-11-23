@@ -1,1 +1,1 @@
-export { FamilyChatScreen as default } from '@/chat';
+export { FamilyChatScreen as default } from '#/chat/index.ts';

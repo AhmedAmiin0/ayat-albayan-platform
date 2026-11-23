@@ -1,1 +1,1 @@
-export { ReportScreen as default } from '@/report';
+export { ReportScreen as default } from '#/report/index.ts';

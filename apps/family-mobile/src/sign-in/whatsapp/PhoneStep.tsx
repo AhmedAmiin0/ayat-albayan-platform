@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { AuthAlert, AuthHint, Button, t } from '@ab/mobile-kit';
-import { CountryPicker } from '@/sign-in/phone/CountryPicker';
-import { PhoneField } from '@/sign-in/phone/PhoneField';
-import { progressIcon } from '@/sign-in/progress';
+import { CountryPicker } from '#/sign-in/phone/CountryPicker.tsx';
+import { PhoneField } from '#/sign-in/phone/PhoneField.tsx';
+import { progressIcon } from '#/sign-in/progress.tsx';
 import type { WhatsAppSignIn } from './use-whatsapp-sign-in';
 
 /**

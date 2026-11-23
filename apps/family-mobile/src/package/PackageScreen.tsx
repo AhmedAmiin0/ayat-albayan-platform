@@ -2,9 +2,9 @@ import { portalViewer, seesMoney } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { EmptyState, t } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { studentOf, usePortalMe, useRefreshPortal } from '@/portal';
+import { LoadState } from '#/ui/index.ts';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { studentOf, usePortalMe, useRefreshPortal } from '#/portal/index.ts';
 import { PackageBody } from './PackageBody';
 
 /** The package of a student whose login sees money; else the note, and no request is made. */

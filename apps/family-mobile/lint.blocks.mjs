@@ -23,13 +23,13 @@ export default {
   blocks: [
     { ignores: ['*.cjs'] },
     ...reactRestrictions({ files: CODE, effects: VIEWS, compiler: true, react19: true }),
-    // Another feature folder only through its index.ts; `@/…`, never `../` (docs/32 R12).
+    // Another feature folder only through its index.ts; `#/…`, never `../` (docs/32 R12).
     boundaries({
       root,
       files: CODE,
       // root/ is the app's frame: only app/_layout imports it.
       module: domainModuleRegex({ base: 'src', exempt: ['root'] }),
-      alias: { '@/': 'src/' },
+      alias: { '#/': 'src/' },
     }),
     noParentImports({ root, files: CODE }),
     // RTL: a raw Text with no textAlign can sit at the physical left (docs/07 §14.1).

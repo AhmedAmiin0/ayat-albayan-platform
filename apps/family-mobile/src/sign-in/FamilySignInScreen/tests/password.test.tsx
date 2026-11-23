@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
+import { FamilySignInScreen } from '#/sign-in/FamilySignInScreen/FamilySignInScreen.tsx';
 
 // docs/50 §4: the student code + password one tap from WhatsApp («أول دخول؟» / «نسيت» as before);
 // while WhatsApp codes are off the screen opens on it, with one quiet line and no WhatsApp.

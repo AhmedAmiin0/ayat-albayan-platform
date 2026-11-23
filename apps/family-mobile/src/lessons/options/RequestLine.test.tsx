@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { lesson } from '@/portal/portal.fixtures';
+import { lesson } from '#/portal/portal.fixtures.ts';
 import { LessonChip } from './LessonChip';
 import { RequestLine } from './RequestLine';
 

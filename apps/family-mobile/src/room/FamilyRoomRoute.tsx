@@ -10,7 +10,7 @@ import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useState } from 'react';
 import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
-import { portalSend, useChildLessons } from '@/portal';
+import { portalSend, useChildLessons } from '#/portal/index.ts';
 import { parseRoomParams, type RoomLink } from './room-way';
 import { useFamilyRoomChat } from './use-family-room-chat';
 

@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { AuthHint, Button, StepStage, t, useA11yPref, useStepMotion } from '@ab/mobile-kit';
-import { StudentSignIn } from '@/sign-in/password';
-import { WhatsAppSignIn } from '@/sign-in/whatsapp';
+import { StudentSignIn } from '#/sign-in/password/index.ts';
+import { WhatsAppSignIn } from '#/sign-in/whatsapp/index.ts';
 import { firstWay, OTHER_WAY, type SignInWay, WAY_DIRECTION } from '@ab/client-core';
 
 const WAYS: Record<SignInWay, (codes: boolean) => ReactNode> = {

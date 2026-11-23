@@ -3,9 +3,9 @@ import type { PortalKind, PortalStudent } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { AppText, Avatar, Ltr, t, type, useNow, useTheme } from '@ab/mobile-kit';
 import Svg, { Path } from 'react-native-svg';
-import { whenText } from '@/lessons';
-import { NewMark } from '@/ui';
-import { useChildLessons, useChildReports, useFamilyClock, useSeenReports } from '@/portal';
+import { whenText } from '#/lessons/index.ts';
+import { NewMark } from '#/ui/index.ts';
+import { useChildLessons, useChildReports, useFamilyClock, useSeenReports } from '#/portal/index.ts';
 
 /** ✓ beside the child in view (decorative: the row's name says it). */
 function Check({ color }: { color: string }) {

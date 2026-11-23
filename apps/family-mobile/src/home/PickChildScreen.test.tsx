@@ -4,7 +4,7 @@ import { PICKED_CHILD_KEY } from '@ab/client-core';
 import { router } from 'expo-router';
 import { pathKey, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { student } from '@/portal/portal.fixtures';
+import { student } from '#/portal/portal.fixtures.ts';
 import { PickChildScreen } from './PickChildScreen';
 
 // «اختر الطالب» (owner 2026-11-16): a card per child; a press saves the pick under this profile

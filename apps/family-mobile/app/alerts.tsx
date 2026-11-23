@@ -1,1 +1,1 @@
-export { AlertsScreen as default } from '@/nav';
+export { AlertsScreen as default } from '#/nav/index.ts';

@@ -16,7 +16,7 @@ import {
   useTheme,
   whenText,
 } from '@ab/mobile-kit';
-import { useFamilySlots } from '@/portal';
+import { useFamilySlots } from '#/portal/index.ts';
 
 interface AskTimeSheetProps {
   lesson: PortalLesson;

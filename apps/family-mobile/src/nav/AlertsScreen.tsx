@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { Button, t, useMarkRead, useNotifications } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
+import { LoadState } from '#/ui/index.ts';
 import { AlertSections } from './AlertSections';
 import { FamilyHeader } from './FamilyHeader';
 import { FamilyPage } from './FamilyPage';

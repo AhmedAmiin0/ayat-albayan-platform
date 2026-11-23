@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/shared';
 import { Fragment, type ReactNode, useState } from 'react';
 import { View } from 'react-native';
 import { AppText, AuthAlert, Button, ltr, ResendButton, t, type, useTheme } from '@ab/mobile-kit';
-import { progressIcon } from '@/sign-in/progress';
+import { progressIcon } from '#/sign-in/progress.tsx';
 import { CodeBoxes } from './CodeBoxes';
 import { CODE_STEP_ACTIONS, type CodeStepAction, isWholeCode } from '@ab/client-core';
 import type { WhatsAppSignIn } from './use-whatsapp-sign-in';

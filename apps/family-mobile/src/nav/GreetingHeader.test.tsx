@@ -3,7 +3,7 @@ import { fireEvent, renderHook, screen, waitFor } from '@testing-library/react-n
 import { PICKED_CHILD_KEY } from '@ab/client-core';
 import { pathKey, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { student } from '@/portal/portal.fixtures';
+import { student } from '#/portal/portal.fixtures.ts';
 import { GreetingHeader } from './GreetingHeader';
 import { closeChildSwitch, useChildSwitch } from './switch-store';
 

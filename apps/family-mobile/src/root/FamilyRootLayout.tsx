@@ -11,7 +11,7 @@ import {
   useRootBoot,
   useTheme,
 } from '@ab/mobile-kit';
-import { useFamilyCodes } from '@/sign-in';
+import { useFamilyCodes } from '#/sign-in/index.ts';
 import { isFamilySignedIn } from './family-gate';
 import { ROOM_CHAT_SCREEN, ROOM_SCREEN } from './room-screen';
 import { screenAnimation } from './screen-animation';

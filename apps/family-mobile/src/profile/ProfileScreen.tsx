@@ -1,9 +1,9 @@
 import { profileFacts, whoLine } from '@ab/client-core';
 import type { AccountProfile, PortalHome } from '@ab/shared';
 import { t, useMyProfile } from '@ab/mobile-kit';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { ownStudent, usePortalMe } from '@/portal';
-import { LoadState } from '@/ui';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { ownStudent, usePortalMe } from '#/portal/index.ts';
+import { LoadState } from '#/ui/index.ts';
 import { ChildrenLinks } from './ChildrenLinks';
 import { ProfileDetails } from './ProfileDetails';
 import { ProfileHero } from './ProfileHero';

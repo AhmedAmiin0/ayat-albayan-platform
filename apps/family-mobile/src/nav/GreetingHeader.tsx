@@ -14,7 +14,7 @@ import {
 } from '@ab/mobile-kit';
 import { FamilyBell } from './FamilyBell';
 import { openChildSwitch } from './switch-store';
-import { useFamilyClock, usePickedChild } from '@/portal';
+import { useFamilyClock, usePickedChild } from '#/portal/index.ts';
 
 interface GreetingHeaderProps {
   /** The big line: «أهلًا بك», or the student's name under it. */

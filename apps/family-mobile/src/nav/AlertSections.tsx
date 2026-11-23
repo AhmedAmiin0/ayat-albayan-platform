@@ -11,7 +11,7 @@ import {
   useNow,
   useTheme,
 } from '@ab/mobile-kit';
-import { useFamilyClock } from '@/portal';
+import { useFamilyClock } from '#/portal/index.ts';
 import { AlertRow } from './AlertRow';
 import { openAlert } from './hrefs';
 

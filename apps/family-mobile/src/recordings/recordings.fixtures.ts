@@ -1,5 +1,5 @@
 import type { PortalLessonAssets, PortalRecording } from '@ab/shared';
-import { student } from '@/portal/portal.fixtures';
+import { student } from '#/portal/portal.fixtures.ts';
 
 // Sample recordings for the app's tests (names made up).
 

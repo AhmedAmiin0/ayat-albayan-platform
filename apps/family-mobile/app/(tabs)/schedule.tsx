@@ -1,1 +1,1 @@
-export { ScheduleScreen as default } from '@/schedule';
+export { ScheduleScreen as default } from '#/schedule/index.ts';

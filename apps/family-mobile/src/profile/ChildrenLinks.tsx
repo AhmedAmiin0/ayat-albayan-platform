@@ -1,7 +1,7 @@
 import type { PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { Avatar, InsetGroup, ListRow, Section, t } from '@ab/mobile-kit';
-import { childHref } from '@/nav';
+import { childHref } from '#/nav/index.ts';
 
 /** «الأبناء» on a guardian's profile: each child → their page. */
 export function ChildrenLinks({ students }: { students: readonly PortalStudent[] }) {

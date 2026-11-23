@@ -1,7 +1,7 @@
 import { partsByLesson, recordingMonths } from '@ab/client-core';
 import type { PortalRecordings, PortalStudent } from '@ab/shared';
 import { AppText, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
-import { MonthSection } from '@/ui';
+import { MonthSection } from '#/ui/index.ts';
 import { RecordingRow } from './RecordingRow';
 
 interface RecordingsListProps {

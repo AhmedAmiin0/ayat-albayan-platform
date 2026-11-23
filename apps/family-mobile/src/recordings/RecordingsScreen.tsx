@@ -1,9 +1,9 @@
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 import { t } from '@ab/mobile-kit';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { studentOf, usePortalMe } from '@/portal';
-import { LoadState } from '@/ui';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { studentOf, usePortalMe } from '#/portal/index.ts';
+import { LoadState } from '#/ui/index.ts';
 import { RecordingsList } from './RecordingsList';
 import { useChildRecordings } from './use-assets';
 

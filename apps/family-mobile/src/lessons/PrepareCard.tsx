@@ -2,8 +2,8 @@ import { prepareCard, type PrepareCard as Prepare } from '@ab/client-core';
 import type { PortalLessons, PortalStudent } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-import { openReport } from '@/nav';
-import { useFamilyClock } from '@/portal';
+import { openReport } from '#/nav/index.ts';
+import { useFamilyClock } from '#/portal/index.ts';
 import { dateLine } from './lesson-text';
 
 interface PrepareCardProps {

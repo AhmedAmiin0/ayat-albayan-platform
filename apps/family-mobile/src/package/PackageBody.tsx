@@ -2,8 +2,8 @@ import { paymentInstructions } from '@ab/client-core';
 import type { PortalPackageView, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
-import { useChildPackage } from '@/portal';
+import { LoadState } from '#/ui/index.ts';
+import { useChildPackage } from '#/portal/index.ts';
 import { PackageCard } from './PackageCard';
 import { PaymentsList } from './PaymentsList';
 

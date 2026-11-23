@@ -2,10 +2,10 @@ import { dayTile, isNewReport, reportAt } from '@ab/client-core';
 import type { PortalReport, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { t, } from '@ab/mobile-kit';
-import { DateTile, NewMark, PressCard, RowText } from '@/ui';
-import { teacherText } from '@/lessons';
-import { openReport } from '@/nav';
-import { useFamilyClock, useSeenReports } from '@/portal';
+import { DateTile, NewMark, PressCard, RowText } from '#/ui/index.ts';
+import { teacherText } from '#/lessons/index.ts';
+import { openReport } from '#/nav/index.ts';
+import { useFamilyClock, useSeenReports } from '#/portal/index.ts';
 
 interface ReportRowProps {
   report: PortalReport;

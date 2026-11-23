@@ -3,9 +3,9 @@ import type { PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { AppText, t, type, useA11yPref, useTheme } from '@ab/mobile-kit';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { useFamilyPick, usePickChild, usePortalMe, useRefreshPortal } from '@/portal';
-import { Rise } from '@/ui';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { useFamilyPick, usePickChild, usePortalMe, useRefreshPortal } from '#/portal/index.ts';
+import { Rise } from '#/ui/index.ts';
 import { ChildSummaryCard } from './ChildSummaryCard';
 import { StudentsBody } from './StudentsBody';
 

@@ -3,8 +3,8 @@ import { act, fireEvent, renderHook, screen, waitFor } from '@testing-library/re
 import { PICKED_CHILD_KEY } from '@ab/client-core';
 import { pathKey, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { closeChildSwitch, openChildSwitch, useChildSwitch } from '@/nav';
-import { lesson, student } from '@/portal/portal.fixtures';
+import { closeChildSwitch, openChildSwitch, useChildSwitch } from '#/nav/index.ts';
+import { lesson, student } from '#/portal/portal.fixtures.ts';
 import { ChildSwitchList } from './ChildSwitchList';
 
 // The children sheet (owner 2026-11-16, canvas SwitchSheet, SwitchDone, Adult).

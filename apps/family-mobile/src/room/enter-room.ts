@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { handOff } from '@ab/mobile-kit/room';
-import { portalSend } from '@/portal';
+import { portalSend } from '#/portal/index.ts';
 import { roomHref, type RoomLink } from './room-way';
 
 /**

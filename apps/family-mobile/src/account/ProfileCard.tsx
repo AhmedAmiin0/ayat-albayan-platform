@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { AppText, Avatar, Chevron, t, type, useTheme } from '@ab/mobile-kit';
-import { PROFILE_HREF } from '@/nav';
-import { PressCard } from '@/ui';
+import { PROFILE_HREF } from '#/nav/index.ts';
+import { PressCard } from '#/ui/index.ts';
 
 interface ProfileCardProps {
   name: string;

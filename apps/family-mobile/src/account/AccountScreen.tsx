@@ -8,8 +8,8 @@ import {
   useMyProfile,
   useTheme,
 } from '@ab/mobile-kit';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { ownStudent, usePickedChild, usePortalMe } from '@/portal';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { ownStudent, usePickedChild, usePortalMe } from '#/portal/index.ts';
 import { accountCard } from './account-card';
 import { AccountSettings } from './AccountSettings';
 import { LegalLinks } from './LegalLinks';

@@ -2,10 +2,10 @@ import { dayTile, isNewReport } from '@ab/client-core';
 import type { PortalHistoryRow, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { raisedCard, t, useTheme } from '@ab/mobile-kit';
-import { DateTile, NewMark, PressCard, RowText, type RowNote } from '@/ui';
-import { rangeText, teacherText } from '@/lessons';
-import { openReport } from '@/nav';
-import { useFamilyClock, useSeenReports } from '@/portal';
+import { DateTile, NewMark, PressCard, RowText, type RowNote } from '#/ui/index.ts';
+import { rangeText, teacherText } from '#/lessons/index.ts';
+import { openReport } from '#/nav/index.ts';
+import { useFamilyClock, useSeenReports } from '#/portal/index.ts';
 
 interface HistoryRowProps {
   row: PortalHistoryRow;

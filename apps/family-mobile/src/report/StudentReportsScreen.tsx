@@ -1,7 +1,7 @@
 import { EmptyState, t } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { ownPage, useFamilyPick, usePickedChild, usePortalMe, useRefreshPortal } from '@/portal';
+import { LoadState } from '#/ui/index.ts';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { ownPage, useFamilyPick, usePickedChild, usePortalMe, useRefreshPortal } from '#/portal/index.ts';
 import { OwnReports } from './OwnReports';
 
 /**

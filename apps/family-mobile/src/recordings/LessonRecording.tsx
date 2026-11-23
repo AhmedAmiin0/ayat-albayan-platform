@@ -1,5 +1,5 @@
 import { AudioPlayer, Section, t } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
+import { LoadState } from '#/ui/index.ts';
 import { createAudioSource } from './player/expo-audio-source';
 import { useRecordingUrl } from './use-assets';
 

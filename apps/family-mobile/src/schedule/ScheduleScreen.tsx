@@ -1,6 +1,6 @@
 import { t } from '@ab/mobile-kit';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { usePickedChild, useRefreshPortal } from '@/portal';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { usePickedChild, useRefreshPortal } from '#/portal/index.ts';
 import { useWeek } from './use-week';
 import { WeekBody } from './WeekBody';
 import { WeekNav } from './WeekNav';

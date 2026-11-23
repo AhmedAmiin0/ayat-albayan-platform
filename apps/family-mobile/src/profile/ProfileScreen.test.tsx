@@ -3,8 +3,8 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { ltr, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { childHref } from '@/nav';
-import { student } from '@/portal/portal.fixtures';
+import { childHref } from '#/nav/index.ts';
+import { student } from '#/portal/portal.fixtures.ts';
 import { ProfileScreen } from './ProfileScreen';
 
 const mockAnswers: Record<string, unknown> = {};

@@ -2,9 +2,9 @@ import { lessonWait, lessonWaitText } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-import { useFamilyClock } from '@/portal';
-import { JoinButton } from '@/lessons/JoinButton';
-import { useJoin } from '@/lessons/use-join';
+import { useFamilyClock } from '#/portal/index.ts';
+import { JoinButton } from '#/lessons/JoinButton.tsx';
+import { useJoin } from '#/lessons/use-join.ts';
 
 interface JoinActionProps {
   lesson: PortalLesson;

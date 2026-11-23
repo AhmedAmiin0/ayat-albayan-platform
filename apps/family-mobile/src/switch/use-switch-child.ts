@@ -1,8 +1,8 @@
 import { isSelfChild } from '@ab/client-core';
 import { firstName, type PortalKind, type PortalStudent } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
-import { showSwitched } from '@/nav';
-import { usePickChild } from '@/portal';
+import { showSwitched } from '#/nav/index.ts';
+import { usePickChild } from '#/portal/index.ts';
 
 /** «تُعرض الآن صفحة يوسف»; a guardian's own row: «تُعرض الآن صفحتك». */
 const noticeOf = (kind: PortalKind, student: PortalStudent): string =>

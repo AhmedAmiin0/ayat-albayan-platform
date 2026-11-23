@@ -2,7 +2,7 @@ import { scheduleWeek, weekSchedule } from '@ab/client-core';
 import { calendarDayText, type PortalStudent } from '@ab/shared';
 import { useState } from 'react';
 import { locale, useNow } from '@ab/mobile-kit';
-import { ownPage, useChildrenLessons, useFamilyClock, useFamilyPick, usePortalMe } from '@/portal';
+import { ownPage, useChildrenLessons, useFamilyClock, useFamilyPick, usePortalMe } from '#/portal/index.ts';
 
 /** The join button lights up within a few seconds of the window. */
 const TICK_MS = 5000;

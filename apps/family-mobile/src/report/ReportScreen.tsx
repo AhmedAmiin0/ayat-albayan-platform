@@ -2,9 +2,9 @@ import { lessonWhenAt, type ClockOptions, type ReportPageView } from '@ab/shared
 import { useLocalSearchParams } from 'expo-router';
 import { z } from 'zod';
 import { t } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
-import { FamilyHeader, FamilyPage } from '@/nav';
-import { useFamilyClock, useReportPage } from '@/portal';
+import { LoadState } from '#/ui/index.ts';
+import { FamilyHeader, FamilyPage } from '#/nav/index.ts';
+import { useFamilyClock, useReportPage } from '#/portal/index.ts';
 import { ReportBody } from './ReportBody';
 import { ReportFiles } from './ReportFiles';
 

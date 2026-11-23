@@ -1,8 +1,8 @@
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
-import { ChildBody } from '@/child';
-import { FamilyPage, GreetingHeader } from '@/nav';
-import { ownPage, useRefreshPortal } from '@/portal';
+import { ChildBody } from '#/child/index.ts';
+import { FamilyPage, GreetingHeader } from '#/nav/index.ts';
+import { ownPage, useRefreshPortal } from '#/portal/index.ts';
 
 interface StudentHomeProps {
   student: PortalStudent;

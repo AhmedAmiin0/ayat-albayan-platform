@@ -1,7 +1,7 @@
 import { FAMILY_TABS, hasFamilyTab, type FamilyTab } from '@ab/client-core';
 import { Redirect } from 'expo-router';
 import { AppNativeTabs, t, type TabIconName, type TabItem } from '@ab/mobile-kit';
-import { useFamilyPick } from '@/portal';
+import { useFamilyPick } from '#/portal/index.ts';
 import { PICK_HREF } from './hrefs';
 
 /** Each tab's route under app/(tabs) and its icon. */

@@ -1,1 +1,1 @@
-export { LessonScreen as default } from '@/recordings';
+export { LessonScreen as default } from '#/recordings/index.ts';

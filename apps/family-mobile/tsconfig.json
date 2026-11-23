@@ -12,7 +12,8 @@
     "erasableSyntaxOnly": true,
     "resolveJsonModule": true,
     "types": ["jest"],
-    "paths": { "@/*": ["./src/*"] }
+    // `#/x.ts` (docs/32 R12): Metro and TypeScript resolve a package.json `imports` target exactly.
+    "allowImportingTsExtensions": true
   },
   "include": [
     "**/*.ts",

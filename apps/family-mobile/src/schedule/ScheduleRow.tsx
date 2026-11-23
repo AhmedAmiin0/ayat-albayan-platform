@@ -2,10 +2,10 @@ import { lessonMinutes, liveRoom, type WeekLesson } from '@ab/client-core';
 import { firstName, type ClockOptions } from '@ab/shared';
 import { View } from 'react-native';
 import { t, useTheme } from '@ab/mobile-kit';
-import { RowText } from '@/ui';
+import { RowText } from '#/ui/index.ts';
 import {
   JoinAction, LessonChip, LiveLine, OptionsRow, rangeText, RequestLine, teacherText,
-} from '@/lessons';
+} from '#/lessons/index.ts';
 
 interface ScheduleRowProps {
   entry: WeekLesson;

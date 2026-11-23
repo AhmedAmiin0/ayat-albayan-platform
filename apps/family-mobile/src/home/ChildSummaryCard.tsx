@@ -2,10 +2,10 @@ import { isSelfChild, packageSummary, reportAt } from '@ab/client-core';
 import type { ClockOptions, PortalKind, PortalReport, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, Chevron, t, type, useTheme } from '@ab/mobile-kit';
-import { Figure, NewMark, PressCard, StudentIdentity } from '@/ui';
-import { dateLine } from '@/lessons';
-import { UsedBar } from '@/package';
-import { useChildPackage, useChildSummary, useFamilyClock } from '@/portal';
+import { Figure, NewMark, PressCard, StudentIdentity } from '#/ui/index.ts';
+import { dateLine } from '#/lessons/index.ts';
+import { UsedBar } from '#/package/index.ts';
+import { useChildPackage, useChildSummary, useFamilyClock } from '#/portal/index.ts';
 import { ChildNextLine } from './ChildNextLine';
 
 const count = (n: number | null): string => (n === null ? '–' : String(n));

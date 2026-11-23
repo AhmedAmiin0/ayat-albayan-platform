@@ -2,7 +2,7 @@ import { FAMILY_NOTICE, lessonOptions, type FamilyAction, type LessonOption } fr
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { Button, t } from '@ab/mobile-kit';
-import { useFamilyAction } from '@/portal';
+import { useFamilyAction } from '#/portal/index.ts';
 import { AskTimeSheet } from './AskTimeSheet';
 import { OptionsMenu, type OptionsTitle } from './OptionsMenu';
 

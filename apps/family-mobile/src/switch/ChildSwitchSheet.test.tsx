@@ -1,7 +1,7 @@
 import { act, renderHook, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { closeChildSwitch, openChildSwitch, useChildSwitch } from '@/nav';
+import { closeChildSwitch, openChildSwitch, useChildSwitch } from '#/nav/index.ts';
 import { ChildSwitchSheet } from './ChildSwitchSheet';
 
 // The children sheet is the native @expo/ui BottomSheet (jest.setup.cjs stands in for it).

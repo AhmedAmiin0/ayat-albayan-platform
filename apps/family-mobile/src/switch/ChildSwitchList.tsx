@@ -1,7 +1,7 @@
 import { familyChildren } from '@ab/client-core';
 import { View } from 'react-native';
 import { AppText, InsetGroup, t, type, useTheme } from '@ab/mobile-kit';
-import { useFamilyPick, usePortalMe } from '@/portal';
+import { useFamilyPick, usePortalMe } from '#/portal/index.ts';
 import { ChildSwitchRow } from './ChildSwitchRow';
 import { useSwitchChild } from './use-switch-child';
 

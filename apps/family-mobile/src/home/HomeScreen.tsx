@@ -1,7 +1,7 @@
 import { EmptyState, SkeletonCard, t } from '@ab/mobile-kit';
-import { LoadState } from '@/ui';
-import { FamilyPage, GreetingHeader } from '@/nav';
-import { useFamilyPick, usePortalMe } from '@/portal';
+import { LoadState } from '#/ui/index.ts';
+import { FamilyPage, GreetingHeader } from '#/nav/index.ts';
+import { useFamilyPick, usePortalMe } from '#/portal/index.ts';
 import { StudentHome } from './StudentHome';
 
 /**

@@ -2,8 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking, Vibration } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { lesson, student } from '@/portal/portal.fixtures';
-import { JoinAction } from '@/lessons/JoinAction/JoinAction';
+import { lesson, student } from '#/portal/portal.fixtures.ts';
+import { JoinAction } from '#/lessons/JoinAction/JoinAction.tsx';
 
 const mockSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

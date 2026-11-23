@@ -1,1 +1,1 @@
-export { FamilySignInScreen as default } from '@/sign-in';
+export { FamilySignInScreen as default } from '#/sign-in/index.ts';

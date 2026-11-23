@@ -4,8 +4,8 @@ import { router } from 'expo-router';
 import { Linking, Vibration } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { lesson, student } from '@/portal/portal.fixtures';
-import { JoinAction } from '@/lessons/JoinAction/JoinAction';
+import { lesson, student } from '#/portal/portal.fixtures.ts';
+import { JoinAction } from '#/lessons/JoinAction/JoinAction.tsx';
 
 // «ادخل الحلقة» inside the app (owner 2026-11-16): our classroom while
 // settings.family_meetings_in_app is on and LiveKit is in the binary; else the browser as before.

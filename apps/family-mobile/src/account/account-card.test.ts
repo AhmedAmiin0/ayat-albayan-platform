@@ -1,4 +1,4 @@
-import { student } from '@/portal/portal.fixtures';
+import { student } from '#/portal/portal.fixtures.ts';
 import { accountCard } from './account-card';
 
 const profile = {

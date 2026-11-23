@@ -3,7 +3,7 @@ import { firstName, type ClockOptions, type PortalLesson, type PortalStudent } f
 import { useState } from 'react';
 import { View } from 'react-native';
 import { AppText, Notice, t, type, useNow, useTheme } from '@ab/mobile-kit';
-import { useFamilyClock } from '@/portal';
+import { useFamilyClock } from '#/portal/index.ts';
 import { CardFooter, SOFT_INK } from './CardFooter';
 import { Countdown } from './Countdown';
 import { JoinAction } from './JoinAction';

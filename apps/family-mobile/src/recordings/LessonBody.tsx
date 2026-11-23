@@ -1,8 +1,8 @@
 import type { PortalLessonAssets } from '@ab/shared';
 import { Section, t } from '@ab/mobile-kit';
-import { useReportPage } from '@/portal';
-import { ReportBody } from '@/report';
-import { LoadState } from '@/ui';
+import { useReportPage } from '#/portal/index.ts';
+import { ReportBody } from '#/report/index.ts';
+import { LoadState } from '#/ui/index.ts';
 import { LessonFiles } from './LessonFiles';
 import { LessonRecording } from './LessonRecording';
 

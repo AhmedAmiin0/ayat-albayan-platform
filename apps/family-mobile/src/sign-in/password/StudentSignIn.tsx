@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, ForgotPassword, PasswordSignIn, t } from '@ab/mobile-kit';
-import { feel } from '@/sign-in/feedback';
+import { feel } from '#/sign-in/feedback.ts';
 import { studentCodeOnTrack } from '@ab/client-core';
 
 /** password: student code + password; family (forgot) / firstTime: a code to the guardian. */

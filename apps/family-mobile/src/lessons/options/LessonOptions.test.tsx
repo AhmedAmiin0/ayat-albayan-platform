@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { lesson, student } from '@/portal/portal.fixtures';
+import { lesson, student } from '#/portal/portal.fixtures.ts';
 import { LessonOptions } from './LessonOptions';
 
 const mockSend = jest.fn();

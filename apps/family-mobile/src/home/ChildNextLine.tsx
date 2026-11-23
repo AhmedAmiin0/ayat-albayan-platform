@@ -2,8 +2,8 @@ import { nextLesson } from '@ab/client-core';
 import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, t, type, useNow, useTheme } from '@ab/mobile-kit';
-import { teacherText, whenText } from '@/lessons';
-import { useChildLessons } from '@/portal';
+import { teacherText, whenText } from '#/lessons/index.ts';
+import { useChildLessons } from '#/portal/index.ts';
 
 const panel = { gap: 2, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12 } as const;
 

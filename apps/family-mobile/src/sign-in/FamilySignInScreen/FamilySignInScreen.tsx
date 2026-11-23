@@ -1,7 +1,7 @@
 import { LanguageRow, SignInFrame, t } from '@ab/mobile-kit';
-import { SignInLockup } from '@/sign-in/SignInLockup';
-import { SignInWays } from '@/sign-in/SignInWays';
-import { useFamilyCodes } from '@/sign-in/use-family-codes';
+import { SignInLockup } from '#/sign-in/SignInLockup.tsx';
+import { SignInWays } from '#/sign-in/SignInWays.tsx';
+import { useFamilyCodes } from '#/sign-in/use-family-codes.ts';
 
 /**
  * The family app's sign-in (docs/50 §4–5): the mark and wordmark, a line of welcome, then one
