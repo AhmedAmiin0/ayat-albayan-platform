@@ -1,4 +1,5 @@
-import { BODY_SLOTS, type CREATE_REPLY_INTENTS, type WaLine } from '@ab/shared';
+import { BODY_SLOTS, type CREATE_REPLY_INTENTS } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 
 // «قالب جديد» (owner 2026-10-31): the form's state as typed, and the body it posts. The variables
 // follow the body: one row per {{n}} it holds, kept by position while the text changes.

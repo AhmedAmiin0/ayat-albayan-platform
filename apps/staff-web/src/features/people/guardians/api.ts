@@ -1,4 +1,5 @@
-import type { FamilyPhone, LeadSource } from '@ab/shared';
+import type { FamilyPhone } from '@ab/shared';
+import type { LeadSource } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 

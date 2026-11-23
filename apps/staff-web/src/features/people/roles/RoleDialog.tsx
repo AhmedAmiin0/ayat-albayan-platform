@@ -1,4 +1,4 @@
-import { STAFF_ROLES } from '@ab/shared';
+import { STAFF_ROLES } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

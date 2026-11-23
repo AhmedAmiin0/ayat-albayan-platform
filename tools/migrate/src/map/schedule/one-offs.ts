@@ -1,5 +1,5 @@
 // One-off «تقويم الحجوزات» rows (no «التكرار») dated on or after the import date, status مؤكد /
-// مشترك / يحتاج تأكيد → one upcoming lesson + its lesson_students rows (owner 2026-10-26), the free
+// مشترك / يحتاج تأكيد → one upcoming lesson + its lesson_students rows, the free
 // trial included (not chargeable). The lesson is created `scheduled`, never confirmed, and carries
 // only its time. Its key names the booking, not the time (the calendar event id, else the local
 // day), so a booking re-timed in the sheet stays one lesson: a full apply moves it, --creates-only

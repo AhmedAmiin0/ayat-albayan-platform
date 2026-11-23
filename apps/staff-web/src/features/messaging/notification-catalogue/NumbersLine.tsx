@@ -1,4 +1,6 @@
-import { formatPhone, WA_LINES, type LineHealthView } from '@ab/shared';
+import type { LineHealthView } from '@ab/shared';
+import { WA_LINES } from '@ab/catalog';
+import { formatPhone } from '@ab/core';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { formatDateTime } from '@/features/sales/leads/format';

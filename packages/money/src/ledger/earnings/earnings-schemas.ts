@@ -18,7 +18,7 @@ export const teacherPaymentCreateSchema = z.object({
   receiptPath: z.string().min(1).nullish(),
   note: optionalText,
   /** Once per pay dialog, re-sent on every retry (rule 8). */
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: z.uuid(),
 });
 
 export const teacherReceiptUploadSchema = z.object({

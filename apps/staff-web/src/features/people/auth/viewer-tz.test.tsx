@@ -1,5 +1,5 @@
 import { setViewerPersonTz, viewerTz } from '@ab/client-core';
-import { deviceTimeZone, resolveViewerTz } from '@ab/shared';
+import { deviceTimeZone, resolveViewerTz } from '@ab/time';
 import { QueryClient } from '@tanstack/react-query';
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { REQUEST_ID, STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
@@ -36,7 +36,8 @@ describe('the custom price has no sales floor', () => {
 
   it('the admin (POST /subscriptions): created at any amount too', async () => {
     const pricing = { tier: 'weekly' };
-    const body = { studentId: STUDENT_ID, startsOn: '2026-10-01', pricing, customPrice: 1 };
+    const sent = { studentId: STUDENT_ID, startsOn: '2026-10-01', pricing, clientRequestId: REQUEST_ID };
+    const body = { ...sent, customPrice: 1 };
     expect((await call({ method: 'POST', url: '/subscriptions', body })).statusCode).toBe(201);
     expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ price: 1 }));
   });

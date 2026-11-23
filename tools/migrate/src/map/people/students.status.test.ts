@@ -1,4 +1,4 @@
-// Imported status (owner 2026-10-27, docs/06 «Student status»): active only with a current paid
+// Imported status (docs/06 «Student status»): active only with a current paid
 // period or a running «مشترك» series; past payments → pending_renewal / expired; attended → pending_
 // subscription; else new, whatever HUB «الحالة» says. Never trial. Invented rows; import date 10-02.
 import { describe, expect, it } from 'vitest';

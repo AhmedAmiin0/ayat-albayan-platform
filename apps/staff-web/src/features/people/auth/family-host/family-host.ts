@@ -1,4 +1,4 @@
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
 import { meQuery } from '@ab/web-kit/auth/me';
 import { signOut } from '@ab/web-kit/auth/sign-in';

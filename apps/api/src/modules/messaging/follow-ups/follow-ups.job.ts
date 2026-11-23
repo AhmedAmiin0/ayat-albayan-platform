@@ -1,16 +1,11 @@
 import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ruleOf, timingOf } from '@/common/rules/rule-of';
-import { Ticker } from '@/common/jobs';
+import { Ticker, TickerJob } from '@/common/jobs';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
 import {
-  followUpDedupKey,
-  followUpRow,
-  followUpStep,
-  leadZone,
-  pickTwoSlots,
-  sameInstant,
+  followUpDedupKey, followUpRow, followUpStep, leadZone, pickTwoSlots, sameInstant,
   type FollowUpLeadRow,
 } from './follow-ups.plan';
 import { FollowUpsSettings } from './follow-ups.settings';
@@ -48,9 +43,9 @@ interface Tick {
  */
 @BackgroundJob({ name: 'follow-ups' })
 @Injectable()
-export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class FollowUpsJob extends TickerJob {
   private readonly log = new Logger(FollowUpsJob.name);
-  private readonly ticker = new Ticker({
+  protected readonly ticker = new Ticker({
     name: FollowUpsJob.name,
     firstMs: FIRST_RUN_MS,
     everyMs: EVERY_MS,
@@ -62,14 +57,8 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
     private readonly slots: FollowUpSlots,
     private readonly settings: FollowUpsSettings,
     private readonly policy: NotificationPolicy,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.ticker.start();
-  }
-
-  onModuleDestroy(): void {
-    this.ticker.stop();
+  ) {
+    super();
   }
 
   kick(): Promise<unknown> {

@@ -1999,7 +1999,7 @@
   },
   "src/modules/finance/payments/payments.retry.http.test.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/finance/payments/payments.service.ts": {
@@ -3112,7 +3112,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/teacher-earnings/summary/corrections.repo.ts": {

@@ -1,4 +1,4 @@
-import { intlLocale } from '@ab/shared';
+import { intlLocale } from '@ab/core';
 import { describe, expect, it } from 'vitest';
 import { notificationStamp, notificationTime } from './format';
 

@@ -60,7 +60,7 @@ export async function findStale(o: {
 
 /**
  * Pure: drop stale refs on nullable columns; skip a create whose stale ref is required.
- * ponytail: the import item keeps the planned hash, so a later full run with those rows restored
+ * The import item keeps the planned hash, so a later full run with those rows restored
  * will not re-link these records; re-link by hand (or drop their import items) if that ever happens.
  */
 export function dropStaleRefs(o: { plan: PlanWithChanges; stale: Stale; tableOf: TableOf }) {
