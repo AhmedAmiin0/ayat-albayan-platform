@@ -1,6 +1,6 @@
 import type { PortalHome, PortalKind, PortalStudent } from '@ab/shared';
 
-// The children a guardian chooses between (owner 2026-11-16, canvas Adult, SwitchSheet): a
+// The children a guardian chooses between (canvas Adult, SwitchSheet): a
 // guardian who also studies has their own student row (contact_is_self), named «أنا» and first.
 
 type SelfFlag = Pick<PortalStudent, 'contact_is_self'>;

@@ -10,7 +10,7 @@ import type { ApiClient } from '../../../core/http/index.js';
 import { pathKey } from '../../../core/keys/index.js';
 import type { PortalRead } from '../portal-api.js';
 
-// «خيارات الحلقة» (owner 2026-11-17), shared by the family app and the web portal: the family's
+// «خيارات الحلقة», shared by the family app and the web portal: the family's
 // own confirm, excuse, «اطلب موعدًا آخر» with its free times, and «سحب الطلب». Every answer is
 // parsed (rule 12); after a write the caller refreshes PORTAL_KEY.
 

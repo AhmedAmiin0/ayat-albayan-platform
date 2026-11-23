@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { SeenStorage } from './seen-store.js';
 
-// «اختر الطالب» remembered on the phone (owner 2026-11-16): the student a guardian works as, under
+// «اختر الطالب» remembered on the phone: the student a guardian works as, under
 // the profile that picked it, so another account signed in on the same phone never inherits it
 // (family-pick.ts asks again). An external store like seen-store.ts: read once on first use and
 // `ready` once that read is done or failed; a pick shows at once and is then saved.
