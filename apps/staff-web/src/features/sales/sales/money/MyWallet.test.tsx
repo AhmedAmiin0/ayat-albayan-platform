@@ -1,4 +1,5 @@
-import type { MyCommissionRow, MyEarnings, NotificationItem } from '@ab/shared';
+import type { NotificationItem } from '@ab/shared';
+import type { MyCommissionRow, MyEarnings } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

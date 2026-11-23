@@ -1,4 +1,5 @@
-import type { Duration, InstantLessonRequest, Program } from '@ab/shared';
+import type { Duration, Program } from '@ab/catalog';
+import type { InstantLessonRequest } from '@ab/schedule';
 
 /** A student picked for the instant lesson (from the student search). */
 export interface MeetingStudent {

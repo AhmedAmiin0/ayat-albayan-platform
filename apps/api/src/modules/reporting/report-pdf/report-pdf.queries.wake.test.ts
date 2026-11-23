@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { onSenderWake, resetSenderWake } from '@/common/jobs';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { pdfQueries } from './report-pdf.fakes';
 import type { ReportReadyMessage } from './report-ready';
 
