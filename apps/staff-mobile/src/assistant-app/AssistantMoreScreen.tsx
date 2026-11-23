@@ -12,7 +12,6 @@ import {
 } from '@ab/mobile-kit';
 import { ClockFormatPicker } from '@/more';
 
-/** The classroom assistant's «المزيد»: «حسابي» (R-ACC-01), the appearance, the language and sign-out. */
 export function AssistantMoreScreen() {
   return (
     <Screen scroll>

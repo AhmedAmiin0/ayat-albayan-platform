@@ -3,10 +3,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { assistantTabItems } from './assistant-tabs';
 
-/**
- * The phone app of the classroom assistant («مساعد حلقة», owner 2026-10-12): its own tree under
- * /assistant, mirroring the web /assistant/ page. Push (and the bell) only with notifications.push.
- */
+/** Its own tree under /assistant; push and the bell only with notifications.push. */
 export function AssistantTabs() {
   usePushRegistration('assistant');
   const can = usePermissions();
