@@ -1,5 +1,5 @@
+import { normalizePhone } from '@ab/core';
 import {
-  normalizePhone,
   SETTING_FIELD_OF,
   SETTINGS_LAYOUT,
   settingDef,
@@ -10,7 +10,7 @@ import {
   type SettingField,
   type SettingKey,
   type SettingsUpdate,
-} from '@ab/shared';
+} from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // /admin/settings form ↔ PATCH /settings, generated from the settings registry. Numbers are typed

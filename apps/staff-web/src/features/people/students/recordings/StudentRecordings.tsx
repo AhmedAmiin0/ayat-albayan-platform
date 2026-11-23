@@ -1,4 +1,5 @@
-import type { StudentRecordingFilters, StudentRecordingView, UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import type { StudentRecordingFilters, StudentRecordingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

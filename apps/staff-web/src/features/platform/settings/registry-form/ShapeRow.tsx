@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
+import { SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/settings';
 import { useId } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
 import type { RowExtras } from '@/components/settings/fields/SettingRow';

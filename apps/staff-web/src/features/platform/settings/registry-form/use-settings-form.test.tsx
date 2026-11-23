@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, type AcademySettings, type SettingKey } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings, type SettingKey } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';

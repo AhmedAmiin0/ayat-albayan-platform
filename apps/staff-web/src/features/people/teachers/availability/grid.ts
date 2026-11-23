@@ -1,4 +1,5 @@
-import { WEEKDAYS, type AvailabilitySlot, type Weekday } from '@ab/shared';
+import { WEEKDAYS, type Weekday } from '@ab/catalog';
+import type { AvailabilitySlot } from '@ab/schedule';
 
 /** Rows of the editor: السبت → الجمعة (docs/07 §8), the one order shared with mobile. */
 export { WEEK_ORDER } from '@ab/shared';

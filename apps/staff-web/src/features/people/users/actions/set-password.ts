@@ -1,4 +1,4 @@
-import { HOME_BY_ROLE, type UserRole } from '@ab/shared';
+import { HOME_BY_ROLE, type UserRole } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
 import { meQuery } from '@ab/web-kit/auth/me';
 import { reportSession } from '@ab/web-kit/auth/session-activity';

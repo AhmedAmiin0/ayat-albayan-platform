@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';

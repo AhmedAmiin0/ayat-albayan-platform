@@ -1,4 +1,4 @@
-import type { GoogleStatusView } from '@ab/shared';
+import type { GoogleStatusView } from '@ab/catalog';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

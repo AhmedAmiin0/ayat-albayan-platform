@@ -1,4 +1,4 @@
-import type { CustomConfigUpsert, CustomConfigView } from '@ab/shared';
+import type { CustomConfigUpsert, CustomConfigView } from '@ab/settings';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';

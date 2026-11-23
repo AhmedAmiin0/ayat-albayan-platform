@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';

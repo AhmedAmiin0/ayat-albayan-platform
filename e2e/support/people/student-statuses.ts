@@ -5,9 +5,9 @@ import { API, bearer } from '../core/messages';
 import { startedToday } from '../finance/money';
 import { addDays, nextWeekSaturday, riyadh, withSql } from '../core/schedule';
 
-// Helpers of the student status pipeline spec (owner 2026-10-15, docs/18): students.status, its
-// status_change audit trail, the admin profile chip, and the API calls that move a student along.
-// Real API (:3100) and database; WhatsApp is tools/wa-stub, never Meta.
+// Helpers of the student status pipeline spec (docs/18): students.status, its status_change audit
+// trail, the admin profile chip, and the API calls that move a student along. Real API (:3100) and
+// database; WhatsApp is tools/wa-stub, never Meta.
 
 interface StatusStep {
   from: string | null;

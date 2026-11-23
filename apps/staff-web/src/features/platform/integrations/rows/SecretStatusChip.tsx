@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem } from '@ab/shared';
+import type { IntegrationConfigItem } from '@ab/catalog';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { formatDateTime } from '@/features/sales/leads/format';

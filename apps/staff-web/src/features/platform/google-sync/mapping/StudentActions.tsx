@@ -1,4 +1,4 @@
-import type { GoogleStudentMapInput, GoogleStudentMapRow } from '@ab/shared';
+import type { GoogleStudentMapInput, GoogleStudentMapRow } from '@ab/catalog';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

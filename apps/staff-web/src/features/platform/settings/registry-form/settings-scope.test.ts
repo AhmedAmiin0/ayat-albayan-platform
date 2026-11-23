@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { settingsForm, settingsUpdate } from './settings-form';
 import { afterSave, changedKeys, fieldsOf, invalidKeys, movedKeys, refreshed } from './settings-scope';

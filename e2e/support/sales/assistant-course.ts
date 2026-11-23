@@ -3,8 +3,8 @@ import { ar, expect } from '../core/fixtures';
 import { withSql } from '../core/schedule';
 import { fillLessonRow } from '../teaching/lesson-rows';
 
-// «أيام الحلقات» in journey 7 (owner 2026-10-18): right after «اشتراك جديد» the assistant books the weekly
-// course of the subscription she sold: the plan's days a week (the weekly plan = 1), each with its time from
+// «أيام الحلقات» in journey 7: right after «اشتراك جديد» the assistant books the weekly course of
+// the subscription she sold: the plan's days a week (the weekly plan = 1), each with its time from
 // a date and a time input; the course stops after the plan's lessons (ends_on on every rule).
 
 const B = ar.booking;

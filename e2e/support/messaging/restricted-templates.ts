@@ -6,11 +6,11 @@ import { dropTemplate } from '../sales/sales-portal';
 import { withSql } from '../core/schedule';
 import { syncNumber } from './template-numbers';
 
-// The restricted template allow-list (owner 2026-10-12): every role without templates.manage or
-// templates.send_all (teachers, sales…) lists and sends only the flagged rows. The stub's chat WABA
-// has free_trial_invite, welcome_greeting and academy_welcome (tools/wa-stub defaultChatTemplates);
-// the chat number's «مزامنة مع Meta» imports all three and flags only the first two. The third default,
-// trial_reschedule (owner 2026-10-18), is seeded flagged and listed once Meta approves it on the chat WABA.
+// The restricted template allow-list: every role without templates.manage or templates.send_all
+// (teachers, sales…) lists and sends only the flagged rows. The stub's chat WABA has
+// free_trial_invite, welcome_greeting and academy_welcome (tools/wa-stub defaultChatTemplates); the
+// chat number's «مزامنة مع Meta» imports all three and flags only the first two. The third default,
+// trial_reschedule, is seeded flagged and listed once Meta approves it on the chat WABA.
 
 /** The imported defaults; with RESCHEDULE, the three restricted defaults. */
 const IMPORTED = ['free_trial_invite', 'welcome_greeting'] as const;

@@ -1,9 +1,9 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from './fixtures';
 
-// The shell below 900px (owner, 2026-10-05: "make it simpler"): ONE compact top bar; the section
-// nav, theme, language and logout sit behind «القائمة» in a sheet. The mobile project's Pixel 7
-// (412px) and any spec that sizes a phone/tablet viewport reach them the same way.
+// The shell below 900px: ONE compact top bar; the section nav, theme, language and logout sit
+// behind «القائمة» in a sheet. The mobile project's Pixel 7 (412px) and any spec that sizes a
+// phone/tablet viewport reach them the same way.
 
 type Dict = Pick<typeof ar, 'nav'>;
 

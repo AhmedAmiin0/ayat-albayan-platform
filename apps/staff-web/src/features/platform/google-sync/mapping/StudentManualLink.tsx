@@ -1,4 +1,4 @@
-import type { GoogleStudentMapInput } from '@ab/shared';
+import type { GoogleStudentMapInput } from '@ab/catalog';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';
