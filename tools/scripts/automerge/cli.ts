@@ -1,7 +1,7 @@
 // lane-automerge: what to do with one PR. Usage: node tools/scripts/automerge/cli.ts <dir>
 // <dir> holds what the workflow gathered with gh: pr, checks, status, annotations, files,
-// compare and comments (.json). Prints action=merge|comment|skip, sha= and reason= for
-// $GITHUB_OUTPUT and writes subject.txt and body.txt (merge) or comment.txt (comment).
+// compare, comments, events and suites (.json). Prints action=merge|comment|skip, sha= and
+// reason= for $GITHUB_OUTPUT and writes subject.txt and body.txt (merge) or comment.txt (comment).
 import { writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
@@ -11,7 +11,16 @@ import { decide } from './decide.ts';
 import { combinedStatusSchema, factsSchema, type Facts } from './facts.schemas.ts';
 import { staleComment } from './lockfile.ts';
 
-const NAMES = ['pr', 'checks', 'annotations', 'files', 'compare', 'comments'] as const;
+const NAMES = [
+  'pr',
+  'checks',
+  'annotations',
+  'files',
+  'compare',
+  'comments',
+  'events',
+  'suites',
+] as const;
 
 // Node's own JSON loader (no hand JSON.parse, docs/36 Z-2); zod checks what it read.
 const load = createRequire(import.meta.url);

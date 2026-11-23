@@ -44,6 +44,14 @@ test('lane-automerge: re-checks, squashes on the checked head and dispatches ci 
   assert.match(script, /layer|annotations/);
 });
 
+test('lane-automerge: gathers the reviewed path facts from GitHub, not from git dates', () => {
+  assert.match(script, /issues\/\$n\/events\?per_page=100" --paginate/);
+  assert.match(script, /select\(\.event == "labeled" or \.event == "head_ref_force_pushed"\)/);
+  assert.match(script, /commits\/\$sha\/check-suites\?per_page=100" --paginate/);
+  assert.match(script, /\{filename, previous_filename\}/);
+  for (const f of ['events', 'suites']) assert.match(script, new RegExp(`> "\\$d/${f}\\.json"`));
+});
+
 /** deploy-staging's preflight `if`, evaluated for one ci run (GitHub `==` on these strings). */
 function preflight(run, eventName = 'workflow_run') {
   const github = { event_name: eventName, repository: 'o/r', event: { workflow_run: run } };
