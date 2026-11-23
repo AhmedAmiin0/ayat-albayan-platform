@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import type { AssistantStatementView, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { AssistantStatementView, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
 import { call, dayOffset, family, makeAssistant, paymentBy, thisMonth, tokenOf, type Assistant, type Family } from '../../support/sales/assistant-api';
 import { money } from '../../support/finance/assistant-money';
 import { USERS } from '../../support/core/users';

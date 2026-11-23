@@ -1,6 +1,6 @@
 // A4: one sheet row naming several children («هالة وتالا», «تالا و هاله», «Hala & Tala»).
 // Pure. Splits only shapes that are unambiguous enough; every split is flagged for the owner.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 
 // First names that start with «و»: «محمد وليد» is a person (name + father), not two children.
 const WAW_NAMES = new Set(

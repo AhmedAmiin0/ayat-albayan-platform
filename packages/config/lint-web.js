@@ -15,7 +15,7 @@ export function webBlocks({ root, module }) {
   const fenced = module ? [boundaries({ root, files: SRC, module, alias: { '@/': 'src/' } })] : [];
   return [
     ...fenced,
-    // Owner 2026-10-30, docs/32 R12: `@/…` (the kit: `@ab/web-kit/…`), never `../`.
+    // docs/32 R12: `@/…` (the kit: `@ab/web-kit/…`), never `../`.
     noParentImports({ root, files: SRC }),
     // jsx-a11y recommended (role="admin" / "teacher" on our own components is a prop).
     { files: TSX, rules: a11yRules },

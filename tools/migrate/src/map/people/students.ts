@@ -1,6 +1,6 @@
 // students ← collectPeople (HUB «الطلاب» ∪ «ردود التسجيل» ∪ confirmed bookings ∪ HEART), checked
 // against SUBS and the ATT folders (subs.ts) and what the lesson reports say (taught.ts).
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keyId, keys } from '../../keys.ts';
 import { personTz } from '../../sources/sheets/cells.ts';

@@ -1,0 +1,43 @@
+import { t, ltr } from '@ab/mobile-kit';
+import { paidLine, paidOf, partPaidLine, shortfallLine } from '@/core/lib/money/format/format';
+
+// Owner 2026-10-28 («Why is this unpaid»): 81 SAR with 80 received stays unpaid; the line says why.
+const SAR = t.pricing.currencies.SAR;
+
+test('80 of 81: «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1», Western digits isolated', () => {
+  expect(partPaidLine({ paid: 80, price: 81, currency: 'SAR' })).toBe(
+    t.packagePayment.partPaid
+      .replace('{paid}', ltr('80'))
+      .replace('{price}', ltr('81'))
+      .replace('{currency}', SAR)
+      .replace('{due}', ltr('1')),
+  );
+});
+
+test('nothing paid, or all of it: no part-paid line', () => {
+  expect(partPaidLine({ paid: 0, price: 81, currency: 'SAR' })).toBeNull();
+  expect(partPaidLine({ paid: 81, price: 81, currency: 'SAR' })).toBeNull();
+  expect(partPaidLine({ paid: 90, price: 81, currency: 'SAR' })).toBeNull();
+});
+
+test('a receipt of 80 against 81 due warns by 1; one that covers it, or no amount yet, says nothing', () => {
+  expect(shortfallLine({ amount: 80, due: 81, currency: 'SAR' })).toBe(
+    t.packagePayment.shortfall.replace('{amount}', ltr('1')).replace('{currency}', SAR),
+  );
+  expect(shortfallLine({ amount: 81, due: 81, currency: 'SAR' })).toBeNull();
+  expect(shortfallLine({ amount: 100, due: 81, currency: 'SAR' })).toBeNull();
+  expect(shortfallLine({ amount: null, due: 81, currency: 'SAR' })).toBeNull();
+});
+
+test('a stopped course: «دُفع X من Y» names what it is owed for, never its price (review 2026-11-06)', () => {
+  const stopped = {
+    paid: 290,
+    price: 400,
+    currency: 'SAR',
+    cancel_kind: 'stopped',
+    stop_owed_amount: 290,
+  };
+  expect(paidOf(stopped)).toBe(`دُفع ${ltr('290')} من ${ltr('290')} ${SAR}`);
+  expect(paidLine(stopped)).toBe(paidOf(stopped));
+  expect(paidOf({ ...stopped, cancel_kind: null })).toContain(ltr('400'));
+});

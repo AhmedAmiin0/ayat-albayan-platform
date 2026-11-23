@@ -9,9 +9,14 @@
     "screens": "node scripts/screens.ts"
   },
   "devDependencies": {
+    "@ab/catalog": "workspace:*",
     "@ab/config": "workspace:*",
+    "@ab/core": "workspace:*",
     "@ab/money": "workspace:*",
+    "@ab/schedule": "workspace:*",
+    "@ab/settings": "workspace:*",
     "@ab/shared": "workspace:*",
+    "@ab/time": "workspace:*",
     "@playwright/test": "^1.63.0",
     "@supabase/supabase-js": "^2.117.2",
     "@types/node": "^24.0.0",
@@ -19,7 +24,7 @@
     "api": "workspace:*",
     "eslint": "^10.0.0",
     "postgres": "^3.4.9",
-    "typescript": "~6.0.3",
-    "staff-web": "workspace:*"
+    "staff-web": "workspace:*",
+    "typescript": "~6.0.3"
   }
 }

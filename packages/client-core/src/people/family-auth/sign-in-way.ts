@@ -1,4 +1,4 @@
-// The family sign-in's two ways (docs/50 §4, owner 2026-11-15), shared by the family app and the
+// The family sign-in's two ways (docs/50 §4), shared by the family app and the
 // family web pages: one sign-in for guardians and students, WhatsApp first.
 
 /** Which way a switch moves the form (the app's step motion, the web's slide). */

@@ -1,5 +1,5 @@
 // A6: Lorem-ipsum / test rows mixed with production data. Pure.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import type { Cell } from '../../types.ts';
 import { text } from './cells.ts';
 

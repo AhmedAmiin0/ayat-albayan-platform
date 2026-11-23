@@ -1,4 +1,4 @@
-import { dateText } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { API, bearer, setSetting } from '../../support/core/messages';
 import {

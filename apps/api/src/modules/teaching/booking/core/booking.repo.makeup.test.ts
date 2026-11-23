@@ -41,6 +41,12 @@ describe('BookingQueries.createBooking — makeup and invoice errors (R-SCH-10)'
     expect(await failure(run())).toMatchObject({ status: 409, body: { code: 'course_exists' } });
   });
 
+  it('P0001 teacher_clash (the teacher was booked at this time meanwhile) → 409 teacher_clash', async () => {
+    const { run, calls } = book([{ error: { code: 'P0001', message: 'teacher_clash' } }]);
+    expect(await failure(run())).toMatchObject({ status: 409, body: { code: 'teacher_clash' } });
+    expect(calls).toHaveLength(1);
+  });
+
   it('23505 lessons_makeup_of_key (another admin booked it a moment ago) → 409 makeup_exists', async () => {
     const message = 'duplicate key value violates unique constraint "lessons_makeup_of_key"';
     const { run, calls } = book([{ error: { code: '23505', message } }]);

@@ -36,7 +36,7 @@ jest.mock('@/core/auth', () => ({
   tabOpen: () => true,
 }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
-jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
+jest.mock('@/core/push/usePushRegistration/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('@ab/mobile-kit/ui/tabs/AppNativeTabs', () => ({ AppNativeTabs: () => null }));
 
 beforeEach(() => mockRealtime.mockClear());

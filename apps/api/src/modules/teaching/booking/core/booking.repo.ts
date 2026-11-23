@@ -35,6 +35,12 @@ export type MakeupOriginalRow = {
   lesson_students: { student_id: string; chargeable: boolean }[];
 };
 
+/**
+ * create_booking's raised codes: the lesson changed (makeup_not_eligible), the package got its
+ * course (course_exists, migration 20261106000501) or the teacher was booked at this time
+ * (teacher_clash, migration 20261123000200) between the API's read and the write.
+ */
+const BOOKING_RAISED = ['makeup_not_eligible', 'course_exists', 'teacher_clash'] as const;
 const STUDENT_COLUMNS = `id, name, program, teacher_gender_pref, meeting_link_override, guardian:guardians!inner(id, phone_e164, tz)`;
 
 /** Every DB touch of the booking wizard (service role; the controller is admin-only). */
@@ -128,13 +134,8 @@ export class BookingRepo {
     // Two replays at once: the loser hits client_request_id's unique key; the retry returns the
     // winner's booking (migration 111).
     if (error?.code === '23505' && error.message.includes('client_request_id')) ({ data, error } = await call());
-    if (error?.code === 'P0001' && error.message.includes('makeup_not_eligible')) {
-      throw domainError(HttpStatus.CONFLICT, 'makeup_not_eligible');
-    }
-    // The package got its course a moment ago (migration 20261106000501).
-    if (error?.code === 'P0001' && error.message.includes('course_exists')) {
-      throw domainError(HttpStatus.CONFLICT, 'course_exists');
-    }
+    const raised = error?.code === 'P0001' ? BOOKING_RAISED.find((c) => error.message.includes(c)) : undefined;
+    if (raised) throw domainError(HttpStatus.CONFLICT, raised);
     // Another admin booked the same missed lesson a moment ago (lessons_makeup_of_key).
     if (error?.code === '23505' && error.message.includes('lessons_makeup_of_key')) {
       throw domainError(HttpStatus.CONFLICT, 'makeup_exists');

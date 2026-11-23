@@ -1,4 +1,4 @@
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import postgres from 'postgres';
 import { USERS } from './users';
 

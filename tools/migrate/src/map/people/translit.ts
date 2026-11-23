@@ -2,7 +2,7 @@
 // consonant skeletons tells siblings on one phone apart (هالة → hl ← Hala). Pure.
 // ponytail: crude skeleton (vowels, ع, و/ي dropped; emphatics folded); only used as a tie-break
 // between the children of one guardian phone, never to find a student on its own.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 
 const AR: Record<string, string> = {
   ب: 'b',

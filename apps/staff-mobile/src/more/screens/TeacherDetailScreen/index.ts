@@ -1,0 +1,1 @@
+export { TeacherDetailScreen } from './TeacherDetailScreen';

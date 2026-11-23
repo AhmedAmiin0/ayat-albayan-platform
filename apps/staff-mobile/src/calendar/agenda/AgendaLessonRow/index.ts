@@ -1,0 +1,1 @@
+export { AgendaLessonRow } from './AgendaLessonRow';
