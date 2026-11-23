@@ -9,9 +9,10 @@ import { stubSent } from '../core/wa-stub';
 
 export { fromChatMore } from '../messaging/chat-more';
 
-// Helpers of journey 7 (owner 2026-10-15): the assistant's (base role sales) whole student cycle. Real API
-// (:3100), local Supabase and tools/wa-stub; every number is a fake. The status is read three ways: the
-// students row, its newest status_change audit row (docs/18) and «تحقق من التسجيل» in the assistant's chat.
+// Helpers of journey 7: the assistant's (base role sales) whole student cycle. Real API (:3100),
+// local Supabase and tools/wa-stub; every number is a fake. The status is read three ways: the
+// students row, its newest status_change audit row (docs/18) and «تحقق من التسجيل» in the
+// assistant's chat.
 
 const R = ar.registrationCheck;
 

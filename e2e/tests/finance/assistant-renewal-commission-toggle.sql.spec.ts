@@ -2,10 +2,10 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, commissionOf, generate, iso, one, openMonth, pay, renewalOf, subscription } from '../../support/sales/assistant';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// «عمولة التجديد» on / off (owner 2026-11-01, migration 20261101000996): off = no NEW renewal
-// commission on any earn path; an existing one settles as before (a payment correction never takes
-// it away); a renewal fully paid since the switch-off never earns, even once it is on again; one
-// paid before it still can; the first commission is unchanged. Each case is rolled back.
+// «عمولة التجديد» on / off (migration 20261101000996): off = no NEW renewal commission on any earn
+// path; an existing one settles as before (a payment correction never takes it away); a renewal
+// fully paid since the switch-off never earns, even once it is on again; one paid before it still
+// can; the first commission is unchanged. Each case is rolled back.
 // settings.updated_at is now() (the transaction start): a payment of `iso(-1)` is before
 // the switch-off.
 

@@ -3,9 +3,9 @@ import { expect, test } from '@playwright/test';
 import { change, changeOf, CHANGE, seedCourse } from '../../support/finance/change-course';
 import { BASE, iso, rolledBack, type Tx } from '../../support/edit-time';
 
-// change_course (migration 20261018000480, owner 2026-10-18 «تغيير أيام الحلقات»): the old rules of an
-// assistant course end, their future lessons move, the new rules keep the course tie, in one
-// transaction, idempotent on client_request_id. Rolled back.
+// change_course (migration 20261018000480, «تغيير أيام الحلقات»): the old rules of an assistant
+// course end, their future lessons move, the new rules keep the course tie, in one transaction,
+// idempotent on client_request_id. Rolled back.
 
 const DAY = 864e5;
 type RuleRow = { id: string; ends_on: string; status: string; subscription_id: string | null; first_rule_id: string | null; client_request_id: string | null };

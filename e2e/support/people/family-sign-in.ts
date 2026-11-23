@@ -7,7 +7,7 @@ import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from '../core/wa
 // code as the stub captured it. Example data only; «Meta» is tools/wa-stub.
 
 const TEMPLATE = 'account_code';
-/** Codes leave from the CHAT line (owner 2026-10-29): the template lives on the chat WABA (= playwright.config.ts). */
+/** Codes leave from the CHAT line: the template lives on the chat WABA (= playwright.config.ts). */
 const CHAT_WABA = 'e2e-chat-waba';
 
 /** Codes can go out (two-line runs only: no chat line = no codes): the template exists and is approved (stub + DB), sending and family sign-in are on. */

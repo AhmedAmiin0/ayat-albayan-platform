@@ -562,11 +562,6 @@
       "count": 1
     }
   },
-  "seed/seed-test-account.data.mjs": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "seed/seed-test-account.mjs": {
     "stylistic/max-len": {
       "count": 1

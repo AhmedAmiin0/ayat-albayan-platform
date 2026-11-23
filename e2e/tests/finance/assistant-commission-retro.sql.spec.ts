@@ -19,7 +19,7 @@ test.describe('assistant commission: nothing retroactive, re-attribution (202610
       await tx`select public.set_student_brought_by(${kid}, ${a}, null)`; // brought today, paid three days ago
       expect(await commissionOf(tx, kid)).toBeUndefined();
       const second = await subscription(tx, kid, { price: 200 });
-      await pay(tx, second, 200); // the first package was paid before: no first; the second is a renewal (owner 2026-10-26)
+      await pay(tx, second, 200); // the first package was paid before: no first; the second is a renewal
       expect(await commissionOf(tx, kid)).toBeUndefined();
       expect(await renewalOf(tx, second)).toMatchObject({ amount: '10.00', share_percent: 50 });
     });

@@ -9,9 +9,9 @@ import { USERS } from '../../support/core/users';
 
 // The money journey of an assistant through the REAL API and database (R-ASST-01, R-ASST-02): she
 // registers a student from her chat (POST /sales/booking, her as the actor), the student is credited
-// to her, and the commission follows the payments: none while partly paid, once when fully paid (each later
-// package a renewal at half, owner 2026-10-26),
-// never twice, voided when a payment is deleted. Two terms: 10 percent and a fixed 50 SAR.
+// to her, and the commission follows the payments: none while partly paid, once when fully paid
+// (each later package a renewal at half), never twice, voided when a payment is deleted. Two terms:
+// 10 percent and a fixed 50 SAR.
 
 type Reg = { student: string; phone: string };
 const need = <T>(v: T | undefined): T => {
