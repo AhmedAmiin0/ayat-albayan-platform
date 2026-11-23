@@ -22,7 +22,7 @@
   },
   "src/classroom/meeting-invites.ts": {
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/classroom/meeting-mode.ts": {
