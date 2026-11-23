@@ -135,3 +135,13 @@ test('a test renamed to a name no runner picks up fails', () => {
     assert.match(out, /no longer a test/, to);
   }
 });
+
+test('move/facade-* (import rewrites) skips the rename proof; other move/* fail closed', () => {
+  const edit = ({ write }) => write({ 'apps/w/src/use.ts': "import { A } from './p/A';\nA;\n" });
+  const facade = run(edit, 'move/facade-api-1');
+  assert.equal(facade.code, 0, facade.out);
+  assert.match(facade.out, /facade lane/);
+  for (const branch of ['move/units-p', 'move/facadeless', 'move/x-facade-1']) {
+    assert.equal(run(edit, branch).code, 1, branch);
+  }
+});
