@@ -1,5 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { DbTimeoutError } from '@/common/db/db-timeout';
 import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
@@ -70,10 +71,20 @@ describe('POST /payments retried with the same clientRequestId', () => {
     expect(m.payments.insert).not.toHaveBeenCalled();
   });
 
-  it('without an id every POST is a new payment (older app builds)', async () => {
-    await call({ method: 'POST', url: '/payments', body: { ...body, clientRequestId: undefined } });
-    expect(m.payments.byRequest).not.toHaveBeenCalled();
-    expect(m.payments.insert).toHaveBeenCalledWith(expect.objectContaining({ client_request_id: null }));
+  it('a write that timed out but committed: 503 db_outcome_unknown, the resend returns that one row', async () => {
+    m.payments.insert.mockRejectedValueOnce(new DbTimeoutError(15_000));
+    const lost = await call({ method: 'POST', url: '/payments', body });
+    expect([lost.statusCode, lost.json().code]).toEqual([503, 'db_outcome_unknown']);
+    m.payments.byRequest.mockResolvedValue(paymentRow({ client_request_id: REQUEST }));
+    const resend = await call({ method: 'POST', url: '/payments', body });
+    expect([resend.statusCode, resend.json().id]).toEqual([201, PAYMENT_ID]);
+    expect(m.payments.insert).toHaveBeenCalledTimes(1);
+  });
+
+  it('400 without an id: a retry could not be told from a new payment', async () => {
+    const res = await call({ method: 'POST', url: '/payments', body: { ...body, clientRequestId: undefined } });
+    expect(res.statusCode).toBe(400);
+    expect(m.payments.insert).not.toHaveBeenCalled();
   });
 
   it('400 when the id is not a uuid', async () => {

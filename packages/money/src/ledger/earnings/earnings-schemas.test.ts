@@ -7,12 +7,16 @@ import {
 } from './earnings-schemas.js';
 
 const ID = '5a000000-0000-4000-8000-000000000001';
-const base = { amount: 100, method: 'bank', paidAt: '2026-10-01T09:00:00Z' };
+const base = { amount: 100, method: 'bank', paidAt: '2026-10-01T09:00:00Z', clientRequestId: ID };
 
 describe('teacherPaymentCreateSchema', () => {
   it('accepts a payment with and without chosen sessions', () => {
     expect(teacherPaymentCreateSchema.safeParse(base).success).toBe(true);
-    expect(teacherPaymentCreateSchema.safeParse({ ...base, earningIds: [ID], clientRequestId: ID }).success).toBe(true);
+    expect(teacherPaymentCreateSchema.safeParse({ ...base, earningIds: [ID] }).success).toBe(true);
+  });
+
+  it.each([['missing', undefined], ['not a uuid', 'x']])('refuses a clientRequestId that is %s', (_c, id) => {
+    expect(teacherPaymentCreateSchema.safeParse({ ...base, clientRequestId: id }).success).toBe(false);
   });
 
   it('refuses zero, negative, three decimals, a future date, an empty selection, a bad method', () => {

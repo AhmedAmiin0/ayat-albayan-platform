@@ -12,10 +12,17 @@ import {
 import { expenseCreateSchema } from './expense-schemas.js';
 
 const SUB = '00000000-0000-4000-8000-000000000001';
-const payment = { subscriptionId: SUB, amount: 120, currency: 'SAR', method: 'bank', paidAt: '2026-10-01T09:00:00Z' };
+const payment = {
+  subscriptionId: SUB,
+  amount: 120,
+  currency: 'SAR',
+  method: 'bank',
+  paidAt: '2026-10-01T09:00:00Z',
+  clientRequestId: SUB,
+};
 
 describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typed)', () => {
-  const base = { studentId: SUB, startsOn: '2026-10-01' };
+  const base = { studentId: SUB, startsOn: '2026-10-01', clientRequestId: SUB };
   it('a package: duration defaults to 45, discount to 0', () => {
     const r = subscriptionCreateSchema.parse({ ...base, pricing: { tier: 'starter', country: 'sa' } });
     expect(r.pricing).toEqual({ tier: 'starter', country: 'SA', duration: 45, discount: 0 });
@@ -54,6 +61,16 @@ describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typ
   it('update: dates and notes only; no pause flag (the course pause, docs/11 §7b)', () => {
     expect(subscriptionUpdateSchema.parse({ paused: true })).toEqual({});
     expect(subscriptionUpdateSchema.parse({ renewsOn: null })).toEqual({ renewsOn: null });
+  });
+});
+
+// Rule 8: a write the server timed out on may still commit; only the same id makes a resend safe.
+describe.each([
+  ['POST /subscriptions', subscriptionCreateSchema, { studentId: SUB, startsOn: '2026-10-01', pricing: { tier: 'starter' } }],
+  ['POST /payments', paymentCreateSchema, payment],
+] as const)('%s needs its clientRequestId', (_route, schema, body) => {
+  it.each([['missing', undefined], ['not a uuid', 'x']])('refuses an id that is %s', (_c, id) => {
+    expect(schema.safeParse({ ...body, clientRequestId: id }).success).toBe(false);
   });
 });
 

@@ -1,12 +1,19 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { PAYMENT_ID, paymentRow, REQUEST_ID, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 // An unused-cancelled package (owner 2026-10-28) takes no money: 409 before anything is written (migration 934
 // too). A stopped one (2026-10-30, migration 991) keeps taking it.
 
-const body = { subscriptionId: SUB_ID, amount: 145, currency: 'SAR', method: 'bank', paidAt: '2026-10-01T09:00:00Z' };
+const body = {
+  subscriptionId: SUB_ID,
+  amount: 145,
+  currency: 'SAR',
+  method: 'bank',
+  paidAt: '2026-10-01T09:00:00Z',
+  clientRequestId: REQUEST_ID,
+};
 
 describe('POST /payments on a cancelled package', () => {
   let app: NestFastifyApplication;

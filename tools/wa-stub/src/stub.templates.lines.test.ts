@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { bearer, closeAll, post, startStub, templateBody, TWO_LINES } from './test-server.ts';
 
-// Templates per WABA (owner 2026-10-12, docs/12 §13.12): the chat WABA has its own starter, which
+// Templates per WABA (docs/12 §13.12): the chat WABA has its own starter, which
 // the notifications number cannot send; the academy's 8 are on both, as on the real main number.
 
 afterEach(closeAll);
