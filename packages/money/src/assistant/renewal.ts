@@ -1,4 +1,4 @@
-import { planOn, type CommissionContext, type PlannedCommission, type SubscriptionFact } from './first-paid.js';
+import { planOn, type CommissionContext, type PlannedCommission, type SubscriptionFact } from './first-paid/index.js';
 import { commissionKindOf, RENEWAL_CUTOFF } from './kind.js';
 
 // Renewal commission (migration 20261027000751 assistant_commission_plan): «half of the
