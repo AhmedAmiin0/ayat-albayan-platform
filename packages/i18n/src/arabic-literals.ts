@@ -1,5 +1,5 @@
-// Guard for «nothing untranslated» (owner, 2026-10-05): finds Arabic text in source code outside
-// comments, i.e. in string literals or JSX text. UI copy belongs in ar.json / en.json.
+// Guard that nothing is left untranslated: finds Arabic text in source code outside comments, i.e.
+// in string literals or JSX text. UI copy belongs in ar.json / en.json.
 
 /** Arabic, Arabic Supplement and the presentation forms (code points, so the source stays ASCII). */
 const ARABIC = new RegExp(`[${[[0x600, 0x6ff], [0x750, 0x77f], [0xfb50, 0xfdff], [0xfe70, 0xfefe]]
