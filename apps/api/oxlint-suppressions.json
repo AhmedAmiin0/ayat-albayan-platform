@@ -2078,18 +2078,6 @@
     }
   },
   "src/modules/finance/payouts/payouts.mapper.ts": {
-    "typescript/consistent-indexed-object-style": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 3
-    },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
     }
