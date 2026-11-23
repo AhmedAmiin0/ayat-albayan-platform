@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { bearer, closeAll, post, startStub, templateBody, TWO_LINES } from './test-server.ts';
 
-// Per-number template tests stay honest (2026-10-18): a created template lives on the WABA it was
+// Per-number templates: a created template lives on the WABA it was
 // created on only, the review control route can pick the WABA, and Meta's rejected_reason is listed.
 
 afterEach(closeAll);

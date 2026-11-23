@@ -59,7 +59,7 @@ const WELCOME = 'أهلًا بك في أكاديمية آيات البيان ي�
 const TRIAL = 'السلام عليكم {{1}}، ندعوكم إلى حلقة تجريبية مجانية مع أكاديمية آيات البيان. هل يناسبكم موعد قريب؟';
 
 /**
- * The chat line's approved templates (owner 2026-10-12): only on the chat WABA, so only the chat
+ * The chat line's approved templates: only on the chat WABA, so only the chat
  * number can send them. The API's health check imports all three, and flags only the restricted
  * defaults (free_trial_invite, welcome_greeting): academy_welcome arrives unflagged.
  */
