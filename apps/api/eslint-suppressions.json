@@ -5821,11 +5821,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/relay/relay.keys.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/restricted-templates.migration.test.ts": {
     "max-len": {
       "count": 1

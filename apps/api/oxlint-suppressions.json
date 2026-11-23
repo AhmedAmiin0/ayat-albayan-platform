@@ -6638,11 +6638,6 @@
       "count": 3
     }
   },
-  "src/modules/messaging/whatsapp/relay/relay.keys.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/relay/relay.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
