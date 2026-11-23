@@ -4,12 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const S = t.familyApp.signIn;
 
-/**
- * The top of a page with no app shell, as the family app (docs/50 §5, #748): the academy emblem
- * (docs/design/brand/logo-mark.png, the kit Mark) on the deep-green tile in both themes, the
- * wordmark «Ayat Al-Bayan» over «آيات البيان», then the page's own line (`children`). The family
- * sign-in and the short-link gate /l/<code> (boards docs/design/short-links/LinkXGate*).
- */
+/** Header for pages without a shell (docs/50 §5, #748); same emblem in both themes. */
 export function BrandLockup({ children }: { children?: ReactNode }) {
   return (
     <header className="grid justify-items-center gap-3 text-center">

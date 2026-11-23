@@ -3,7 +3,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 // The chat's connecting bar (S23, the phone's ConnectingBar on the web): the browser's own
 // online / offline events. Loaded messages stay; a send while offline fails with its line.
 
-/** «جارٍ الاتصال…», then the hint after 10 s, «تم الاتصال» for a moment once back, else nothing. */
+/** The connecting hint follows after 10 s; back shows briefly once reconnected. */
 export type ConnectionPhase = 'hidden' | 'connecting' | 'slow' | 'back';
 
 const subscribe = (onChange: () => void): (() => void) => {

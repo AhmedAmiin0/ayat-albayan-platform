@@ -14,7 +14,6 @@ const GLYPHS: Readonly<Record<ChannelMessageKind, ReactNode>> = {
   voice: <ChatGlyph name="play" className="size-3.5" />,
 };
 
-/** The quoted words: «رسالة محذوفة», the text's first words, else the file's kind. */
 const quoted = (r: ChannelReplyView): string =>
   r.deleted ? c.reply.deleted : r.body || c.kinds[r.kind];
 

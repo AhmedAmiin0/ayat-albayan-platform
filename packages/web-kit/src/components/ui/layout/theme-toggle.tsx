@@ -9,7 +9,7 @@ const OPTIONS: { value: ThemePref; label: string }[] = [
   { value: 'dark', label: t.theme.dark },
 ];
 
-/** المظهر: تلقائي / فاتح / ليلي. Saved per browser; «تلقائي» follows the OS. */
+/** Saved per browser; automatic follows the OS. */
 export function ThemeToggle({ className }: { className?: string }) {
   const [pref, setPref] = useState<ThemePref>(readThemePref);
   return (

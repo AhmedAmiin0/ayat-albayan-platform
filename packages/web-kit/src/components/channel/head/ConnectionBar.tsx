@@ -13,7 +13,7 @@ const LOOK: Readonly<Record<Exclude<ConnectionPhase, 'hidden'>, { tone: string; 
     back: { tone: 'bg-ok-soft text-ok', hint: false },
   };
 
-/** The three gold dots of «جارٍ الاتصال…» (still: the bar itself is the live sign). */
+/** Still dots: the bar itself is the live sign. */
 function Dots() {
   return (
     <span aria-hidden="true" className="flex gap-1">
@@ -24,11 +24,7 @@ function Dots() {
   );
 }
 
-/**
- * The connecting bar under the chat's head (FamChatWebOffline): «جارٍ الاتصال…» with the gold dots
- * once the browser goes offline, «تحقّق من اتصالك بالإنترنت» after 10 s, then «تم الاتصال» with a
- * check before it goes. It fades in; the messages and the draft stay.
- */
+/** The hint follows after 10 s offline; messages and the draft stay. */
 export function ConnectionBar() {
   const phase = useConnectionPhase();
   if (phase === 'hidden') return null;

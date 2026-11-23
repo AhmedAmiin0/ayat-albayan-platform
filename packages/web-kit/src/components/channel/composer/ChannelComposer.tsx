@@ -5,12 +5,7 @@ import { RecordingBar } from './RecordingBar';
 import { ReplyBar } from './ReplyBar';
 import { useComposer, type ComposerInput } from './use-composer';
 
-/**
- * The chat's composer (FamChatWebThread): the reply bar, the send and file errors, then the pill
- * (emoji, the box, attach) beside the round button (the microphone while empty, «أرسل» once
- * typed); while recording the pill is the recording bar. Text up to CHANNEL_BODY_MAX characters
- * (the API trims and checks again).
- */
+/** Text up to CHANNEL_BODY_MAX characters; the API trims and checks again. */
 export function ChannelComposer(props: ComposerInput) {
   const s = useComposer(props);
   const submit = (e: SubmitEvent) => {

@@ -3,10 +3,7 @@ import { prepareCard } from '@ab/client-core';
 import type { PortalLessons } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «ما المطلوب للحلقة القادمة» (docs/50 §2): the newest sent report's homework and next plan; an
- * empty text is left out, and with nothing to prepare there is no card.
- */
+/** docs/50 §2: empty texts are left out, and nothing to prepare means no card. */
 export function PrepareCard({ lessons }: { lessons: Pick<PortalLessons, 'prepare'> }) {
   const card = prepareCard(lessons);
   if (!card) return null;

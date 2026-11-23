@@ -3,7 +3,7 @@ import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** Live E.164 preview under the phone input: «هيتحفظ كده: +966…» (docs/07 §6, R-STU-02). */
+/** Live E.164 preview under the phone input (docs/07 §6, R-STU-02). */
 export function PhonePreview({ value }: { value: string }) {
   const r = normalizePhone(value);
   if (!r.ok) return null;

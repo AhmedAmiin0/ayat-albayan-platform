@@ -11,10 +11,7 @@ const TONE: Record<Shown, string> = {
   startsIn: 'bg-act-soft text-act',
 };
 
-/**
- * The live countdown to the window, then to the start; «الحلقة جارية الآن» while it runs. A timer,
- * not a live region: it is never read out every second.
- */
+/** A timer, not a live region, so it is never read out every second. */
 export function LessonCountdown({ lesson, now }: { lesson: PortalLesson; now: Date }) {
   const clock = lessonClock(lesson, now);
   if (!clock) return null;
