@@ -1,5 +1,5 @@
-// Clock format (owner 2026-10-27, «add using 12/24 hour based»): times show in 12-hour or 24-hour
-// form. Same model as the language: the device decides by default; one override per device.
+// Clock format: times show in 12-hour or 24-hour form.
+// Same model as the language: the device decides by default; one override per device.
 // Display only: the DB, API payloads and stored «HH:MM» values stay 24 h (rule 6).
 
 export const CLOCK_PREFS = ['auto', '12', '24'] as const;

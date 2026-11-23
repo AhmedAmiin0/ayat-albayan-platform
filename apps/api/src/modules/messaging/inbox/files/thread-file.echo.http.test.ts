@@ -30,7 +30,7 @@ const echo = (over: Partial<MediaMessage> = {}) => row({ direction: 'outbound', 
 
 describe('W6 bubble files: echoes of the WhatsApp Business app', () => {
   let app: NestFastifyApplication;
-  const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
+  const queries = { message: vi.fn(), recent: vi.fn(), setRefusal: vi.fn(), setPath: vi.fn() };
   const teachers = { teacher: vi.fn(), phones: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path), signedDownload: vi.fn() };

@@ -1,8 +1,8 @@
 import { addCalendarDays } from './calendar.js';
 import { wallInstant } from './zoned.js';
 
-// Local wall clock → UTC instant in an IANA zone, for prefilled picks (owner 2026-10-18: «تابِع بنفس
-// الأيام», «تغيير أيام الحلقات»). Pure; the date-fns facade (zoned.ts) does the zone math, by
+// Local wall clock → UTC instant in an IANA zone, for prefilled picks (continue on the
+// same days, change the lesson days). Pure; the date-fns facade (zoned.ts) does the zone math, by
 // the same two-pass rule as the API's zonedToUtc (goldens: @ab/shared time/golden).
 
 /** The ISO instant a wall clock (`date` "YYYY-MM-DD", `time` "HH:MM") happens in `tz`; DST-safe. */

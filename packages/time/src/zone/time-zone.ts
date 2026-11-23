@@ -5,7 +5,7 @@ import { offsetMinutesIn } from './zoned.js';
 // City labels live in ar.json `tz.<id>`; this module holds no Arabic.
 
 /**
- * Where the academy's families and teachers live. ponytail: a short curated list instead of the
+ * Where the academy's families and teachers live. A short curated list instead of the
  * ~420 IANA ids; add a zone here together with its ar.json city label.
  */
 export const TZ_OPTIONS = [
@@ -54,7 +54,7 @@ export function utcOffsetMinutes(tz: string, at: Date): number {
 
 /**
  * The next UTC-offset change of `tz` within `days` after `now`, or null (docs/07 §8 DST note:
- * «من الجمعة 30 أكتوبر القاهرة بترجع ساعة»). ponytail: an hourly scan (≤720 offset reads);
+ * «من الجمعة 30 أكتوبر القاهرة بترجع ساعة»). An hourly scan (≤720 offset reads);
  * fine for one note per screen.
  */
 export function nextDstTransition(tz: string, now: Date, days = 30): DstShift | null {

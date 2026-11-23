@@ -2,7 +2,7 @@ import { Passthrough } from './failure';
 
 // A body read that stops the moment it passes the cap (modelled on crm-media.fetch.ts readCapped).
 
-function concat(chunks: readonly Uint8Array[], total: number): Uint8Array {
+function concat(chunks: readonly Uint8Array[], total: number): Uint8Array<ArrayBuffer> {
   const out = new Uint8Array(total);
   chunks.reduce((at, chunk) => {
     out.set(chunk, at);
@@ -23,7 +23,7 @@ export async function readCapped(
   body: ReadableStream<Uint8Array> | null,
   max: number,
   tooLarge: () => Error,
-): Promise<Uint8Array> {
+): Promise<Uint8Array<ArrayBuffer>> {
   if (!body) return new Uint8Array();
   const reader = body.getReader();
   const chunks: Uint8Array[] = [];

@@ -2,9 +2,12 @@ import type { Facts } from '../facts.schemas.ts';
 
 export const HEAD = 'a'.repeat(40);
 export const DEVELOP = 'd'.repeat(40);
+export const HEAD_AT = '2026-11-23T00:00:00Z';
+export const REVIEWED_AT = '2026-11-23T00:45:00Z';
 
 type Pr = Facts['pr'];
 type Run = Facts['checks'][number];
+type Event = Facts['events'][number];
 
 export const aRun = (name: string, over: Partial<Run> = {}): Run => ({
   name,
@@ -36,6 +39,8 @@ export function aFacts(): Facts {
     files: [{ filename: 'packages/shared/src/a.ts' }],
     compare: { base_commit: { sha: DEVELOP }, merge_base_commit: { sha: DEVELOP } },
     comments: [],
+    events: [],
+    suites: [{ created_at: HEAD_AT }],
   };
 }
 
@@ -44,3 +49,15 @@ export const withPr = (over: Partial<Pr>): Facts => {
   const facts = aFacts();
   return { ...facts, pr: { ...facts.pr, ...over } };
 };
+
+export const labelled = (createdAt: string, label = 'reviewed'): Event[] => [
+  { event: 'labeled', label, created_at: createdAt },
+];
+
+/** A non-lane PR reviewed after its head was pushed: merges through the reviewed path. */
+export function aReviewedFacts(): Facts {
+  const facts = aFacts();
+  const labels = [{ name: 'auto-merge' }, { name: 'reviewed' }];
+  const pr = { ...facts.pr, headRefName: 'fix/wa-lane-hold', labels };
+  return { ...facts, pr, events: labelled(REVIEWED_AT) };
+}

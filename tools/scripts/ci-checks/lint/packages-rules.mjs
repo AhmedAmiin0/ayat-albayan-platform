@@ -4,7 +4,7 @@ import { appsOf, validateTable, widened } from './packages-table.mjs';
 
 const CONFIG = '@ab/config';
 const SHOWN = 3;
-const COUNTS = { reexports: 're-exports', dbScope: 'db scope' };
+const COUNTS = { reexports: 're-exports', dbScope: 'db scope', facade: 'facade imports' };
 const WIDENED =
   "::warning title=guard:packages::layer table widened: merge only with the repository owner's go";
 
@@ -48,14 +48,14 @@ export function judge(table, facts) {
 
 const rises = (head, base) =>
   Object.entries(COUNTS).flatMap(([k, label]) =>
-    Object.entries(head[k])
-      .filter(([ws, n]) => n > (base[k][ws] ?? 0))
-      .map(([ws, n]) => `${label} ${ws}: ${n} > the base branch's ${base[k][ws] ?? 0}`),
+    Object.entries(head[k] ?? {})
+      .filter(([ws, n]) => n > (base[k]?.[ws] ?? 0))
+      .map(([ws, n]) => `${label} ${ws}: ${n} > the base branch's ${base[k]?.[ws] ?? 0}`),
   );
 
 const countLines = (counts) =>
   Object.entries(COUNTS).map(([k, label]) => {
-    const nonZero = Object.entries(counts[k]).filter(([, n]) => n > 0);
+    const nonZero = Object.entries(counts[k] ?? {}).filter(([, n]) => n > 0);
     const total = nonZero.reduce((s, [, n]) => s + n, 0);
     return `${label}: ${total} ${JSON.stringify(Object.fromEntries(nonZero))}`;
   });

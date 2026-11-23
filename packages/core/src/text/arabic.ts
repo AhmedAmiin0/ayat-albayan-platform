@@ -32,7 +32,7 @@ function sameToken(a: string, b: string): boolean {
 /**
  * True when two names likely denote the same person: every word of the shorter name appears in
  * the longer one after normalisation (سهيلة ~ سهيله ~ جود وسهيله, فاطمة ~ فاطمه محمد).
- * TODO(R-STU-03): no typo/edit-distance matching; owner to confirm whether it is needed.
+ * No typo/edit-distance matching (R-STU-03); whether it is needed is open with the owner.
  */
 export function arabicNameSimilar(a: string, b: string): boolean {
   const ta = tokens(a);
