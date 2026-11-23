@@ -6,7 +6,7 @@
   },
   "src/enums/messaging.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/google/enums.ts": {
@@ -77,7 +77,7 @@
   },
   "src/permissions/catalog.data.ts": {
     "stylistic/max-len": {
-      "count": 23
+      "count": 14
     }
   },
   "src/permissions/catalog.ts": {
@@ -85,7 +85,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -102,11 +102,6 @@
     }
   },
   "src/theme/avatar-tones.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/theme/theme.brand.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -126,7 +121,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   }
 }

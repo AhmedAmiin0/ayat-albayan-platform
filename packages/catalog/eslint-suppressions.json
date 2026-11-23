@@ -6,7 +6,7 @@
   },
   "src/enums/messaging.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/google/enums.ts": {
@@ -77,7 +77,7 @@
   },
   "src/permissions/catalog.data.ts": {
     "max-len": {
-      "count": 23
+      "count": 14
     }
   },
   "src/permissions/catalog.ts": {
@@ -88,7 +88,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/permissions/roles.ts": {
@@ -102,11 +102,6 @@
     }
   },
   "src/theme/avatar-tones.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/theme/theme.brand.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -126,7 +121,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   }
 }
