@@ -35,7 +35,7 @@ const LABEL: Record<Mode, string> = {
   courseChange: t.booking.courseChange.changeDays,
 };
 
-/** The drawer's form; «اختر موعدًا آخر» of a family's request opens the move on the asked week. */
+/** A family's request opens the move on the asked week. */
 function useDrawerMode() {
   const [mode, setMode] = useState<Mode>('view');
   const [near, setNear] = useState<string | undefined>(undefined);
@@ -46,17 +46,12 @@ function useDrawerMode() {
   return { mode, setMode, near, reschedule };
 }
 
-/** «تصحيح حالة الحلقة» under the actions (owner 2026-11-03; the admin's page, lessons.write). */
+/** Admin page only, needs lessons.write. */
 function CorrectSlot({ lesson }: { lesson: LessonView }) {
   return <CorrectOutcome lesson={{ ...lesson, auto: lesson.auto_held === true }} area="admin" />;
 }
 
-/**
- * Admin lesson drawer (R-SCH-03, R-SCH-07, R-SCH-08): details, a teacher's pending proposal, then
- * confirm / attendance, «تغيير الميعاد» (slot picker, conflict → message → another slot) and
- * «إلغاء الحلقة» (scope, by whom, reason), the booking's invoice and «حجز تعويضي» on a missed
- * lesson (R-SCH-10, R-PAY-03), «تصحيح حالة الحلقة» on an ended or auto-settled one (owner 2026-11-03), «عدّل الوقت» (same lesson, new time; R-SCH-11) and, on an assistant course's lesson, «تغيير أيام الحلقات» (owner 2026-10-18). Switching form moves focus to it (it replaced the button that had focus).
- */
+/** Switching form moves focus to it, since it replaced the button that had focus. */
 export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
   const { mode, setMode, near, reschedule } = useDrawerMode();
   const panel = useRef<HTMLDivElement>(null);

@@ -1,6 +1,6 @@
 import type { LessonTimeEdit, TimeEditMode } from '@ab/shared';
 import { addDays, lessonDuration, wallInstant, zonedPartsIn } from '@ab/shared';
-// «عدّل الوقت» form logic (R-SCH-11): picked days and times, never typed. Pure, unit-tested.
+// Time-edit logic (R-SCH-11): days and times are picked, never typed; pure.
 
 const STEP = 15;
 const MIN = 60_000;
@@ -64,10 +64,7 @@ export function changeOf(old: { startsAt: string; durationMin: number }, c: Time
   return { start: startsAtOf(c) !== new Date(old.startsAt).toISOString(), duration: c.durationMin !== old.durationMin };
 }
 
-/**
- * Whether «ابعت تأكيد الميعاد الجديد» applies: only a move to a later start in the future (a length
- * change alone says nothing the WhatsApp text shows). The API queues it unless `notify: false`.
- */
+/** Only a move to a later future start notifies; the API queues it unless `notify: false`. */
 export function willNotify(mode: TimeEditMode, change: Change, c: TimeChoice & { now: Date }): boolean {
   return mode === 'move' && change.start && startOf(c) > c.now;
 }

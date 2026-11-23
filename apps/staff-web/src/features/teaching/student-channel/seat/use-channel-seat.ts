@@ -8,7 +8,7 @@ import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
 const seats = channelSeats({ apiFetch, apiSend });
 
-/** One student's seat, «تولَّ المحادثة» and «مغادرة المحادثة»; each write re-reads the seat. */
+/** Each write re-reads the seat. */
 export function useChannelSeat(studentId: string) {
   const client = useQueryClient();
   const done = () => client.invalidateQueries({ queryKey: channelSeatKey(studentId) });

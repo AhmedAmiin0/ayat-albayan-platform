@@ -1,7 +1,7 @@
 import type { AttendanceKind, StatusStyle } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** «حضر» settled green, «غاب» struck red, «اعتذر» / «أُلغيت» neutral, «لم يُسجَّل» waits on her. */
+/** Only an unmarked lesson waits on her; present is green, absent red, the rest neutral. */
 const STYLE: Record<AttendanceKind, StatusStyle> = {
   unmarked: { tone: 'act', glyph: 'hollow' },
   present: { tone: 'ok', glyph: 'fill' },

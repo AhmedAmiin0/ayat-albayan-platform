@@ -31,11 +31,11 @@ export interface SlotsParams extends Window {
   teacherId: string;
   durationMin: number;
   studentIds: readonly string[];
-  /** «تغيير أيام الحلقات»: this course's lessons (subscription id) are moving, so they are not busy. */
+  /** This course's lessons are being moved, so they are not busy. */
   excludeCourse?: string | undefined;
-  /** «موعد تجريبي جديد»: the upcoming trial the new date moves, so it is not busy. */
+  /** The upcoming trial the new date moves, so it is not busy. */
   excludeLessonId?: string | undefined;
-  /** The assistant's «تغيير الموعد» of ANY lesson (/sales/booking/slots): the lesson she moves. */
+  /** The lesson the assistant moves via /sales/booking/slots. */
   lessonId?: string | undefined;
 }
 
@@ -77,11 +77,11 @@ export const cancelLesson = ({ id, body }: { id: string; body: CancelRequest }) 
 export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleRequest }) =>
   apiSend<LessonView>('POST', `/lessons/${id}/reschedule`, body);
 
-/** PATCH /lessons/:id/time «عدّل الوقت» (R-SCH-11): the same lesson, new start and length. Admin only. */
+/** Admin only (R-SCH-11): the same lesson with a new start and length. */
 export const editLessonTime = ({ id, body }: { id: string; body: LessonTimeEdit }) =>
   apiSend<TimeEditResult>('PATCH', `/lessons/${id}/time`, body);
 
-/** GET /lesson-proposals: a teacher's or a family's pending «اقترح موعدًا آخر» (R-SCH-08). */
+/** Pending alternative-time proposals of a teacher or family (R-SCH-08). */
 export const proposalsQuery = queryOptions({
   queryKey: [...LESSONS_KEY, 'proposals'],
   queryFn: () => apiFetch<LessonView[]>('/lesson-proposals'),
@@ -91,7 +91,7 @@ export const proposalsQuery = queryOptions({
 export const approveProposal = ({ id, override }: { id: string; override?: string }) =>
   apiSend<LessonView>('POST', `/lesson-proposals/${id}/approve`, override ? { override: { reason: override } } : {});
 
-/** `note`: the answer the family reads with a declined «اطلب موعدًا آخر» (owner 2026-11-17). */
+/** `note` is the answer the family reads with a declined request. */
 export const rejectProposal = ({ id, note }: { id: string; note?: string }) =>
   apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`, note ? { note } : {});
 

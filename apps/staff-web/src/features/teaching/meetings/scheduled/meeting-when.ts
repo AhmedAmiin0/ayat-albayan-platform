@@ -4,15 +4,14 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 
 const L = t.meetingInvites.list;
 
-/** «الأحد 4 أكتوبر 17:00» on the viewer's clock (UTC from the API, rule 6). */
+/** On the viewer's clock (UTC from the API, rule 6). */
 export const whenText = (iso: string, tz: string, clock: Clock): string => lessonWhenAt(new Date(iso), { tz, ...clock });
 
-/** «الموعد: …» for a scheduled meeting, «اجتماع فوري» for an instant one. */
 export function scheduleLine(m: Pick<MeetingView, 'starts_at'>, tz: string, clock: Clock): string {
   return m.starts_at ? L.scheduledFor.replace('{when}', whenText(m.starts_at, tz, clock)) : L.instant;
 }
 
-/** «يُفتح الدخول …» while a scheduled meeting's window has not opened yet; else null. */
+/** Null once the window opened. */
 export function opensLine(m: Pick<MeetingView, 'window' | 'cancelled_at'>, tz: string, clock: Clock): string | null {
   if (m.cancelled_at || m.window?.state !== 'early') return null;
   return L.opensAt.replace('{when}', whenText(m.window.opens_at, tz, clock));

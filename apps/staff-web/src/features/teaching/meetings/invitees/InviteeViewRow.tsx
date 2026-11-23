@@ -18,10 +18,7 @@ interface Props {
   mayInvitePhones: boolean;
 }
 
-/**
- * One invitee with its status; a family (or, for admin and sales, a phone) gets «أعد الإرسال» (a new
- * personal link and text, shown once). A phone row without a name (hidden from the caller) reads «رقم هاتف».
- */
+/** Resend makes a new personal link and text, shown once; phones for admin and sales only. */
 export function InviteeViewRow({ meetingId, invitee, mayInvitePhones }: Props) {
   const queryClient = useQueryClient();
   // One id per click: a retry after a lost answer reuses it, a success starts a new one.

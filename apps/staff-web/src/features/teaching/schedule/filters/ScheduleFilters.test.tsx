@@ -55,7 +55,7 @@ describe('ScheduleFilters on the shared toolbar', () => {
   it('every set filter is a chip with its own wording; each removes only itself', () => {
     const onSearch = renderFilters({ teachers: ['t-nour', 't-abrar'], program: 'quran', gender: 'female', status: 'confirmed', closed: true });
     const chips = screen.getByRole('list', { name: t.table.activeFilters });
-    expect(chips.querySelectorAll('li')).toHaveLength(6); // five chips + «مسح الكل»
+    expect(chips.querySelectorAll('li')).toHaveLength(6);
     fireEvent.click(screen.getByRole('button', { name: chip(t.schedule.teacherFilter, counted(t.schedule.teachersPicked, 2)) }));
     expect(onSearch).toHaveBeenLastCalledWith({ teachers: undefined });
     fireEvent.click(screen.getByRole('button', { name: chip(t.schedule.statusFilter, t.enums.lessonStatus.confirmed) }));

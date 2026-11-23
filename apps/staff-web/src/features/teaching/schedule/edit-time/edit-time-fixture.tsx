@@ -6,13 +6,13 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
 
-// Test data only (imported by EditTime*.test.tsx): the drawer opened on «عدّل الوقت».
+// Test data only: the drawer opened on the time edit.
 
 /** Sat 3 Oct 2026, 12:00 in Cairo (UTC+3 until 29 Oct) and Riyadh. */
 export const NOW = '2026-10-03T09:00:00.000Z';
-/** A scheduled lesson tomorrow, Sun 17:00: «عدّل الوقت» moves it. */
+/** A scheduled lesson tomorrow, Sun 17:00, which the edit moves. */
 export const SCHEDULED = lesson({ id: 'l-1', starts_at: '2026-10-04T14:00:00.000Z', time_edit_mode: 'move' });
-/** A completed 45-minute lesson this morning, 10:00: «عدّل الوقت» corrects it. */
+/** A completed 45-minute lesson this morning, 10:00, which the edit corrects. */
 export const HELD = lesson({ id: 'l-9', status: 'completed', starts_at: '2026-10-03T07:00:00.000Z', time_edit_mode: 'correct' });
 
 export const SAVED: TimeEditResult = { lesson: SCHEDULED, notified: 0, payout: 'none', pdf_refresh: false };
@@ -26,7 +26,6 @@ export function fakeNow(): void {
   afterEach(() => vi.useRealTimers());
 }
 
-/** The drawer on `l`, with «عدّل الوقت» pressed when the lesson offers it. */
 export function openEditTime(l: LessonView) {
   const onDone = vi.fn();
   const onClose = vi.fn();
@@ -51,6 +50,6 @@ export const pick = {
   save: () => fireEvent.click(screen.getByRole('button', { name: t.lessons.timeEdit.submit })),
 };
 
-/** The «قبل ← بعد» paragraph: each side sits in its own nowrap span, so match on the paragraph's text. */
+/** Each side sits in its own nowrap span, so match on the paragraph's text. */
 export const confirmLine = (re: RegExp) =>
   screen.getByText((_, el) => el?.tagName === 'P' && re.test(el.textContent ?? ''));

@@ -3,10 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 import { needsConfirmCount } from './lesson/lessons';
 
-/**
- * «5 حلقات» and, in saffron (دورك), «2 يحتاج تأكيد» (only while a confirmation is required). No
- * lessons shows nothing, never «0 حلقة».
- */
+/** Needs-confirmation only while required; no lessons shows nothing, never zero. */
 export function ScheduleCounts({ shown }: { shown: readonly LessonView[] }) {
   const waiting = needsConfirmCount(shown, useLessonStatusText().required);
   if (shown.length === 0) return null;

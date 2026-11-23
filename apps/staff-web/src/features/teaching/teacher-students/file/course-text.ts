@@ -9,13 +9,11 @@ import {
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// What «ملف الطالب» says about the course (docs/47 owner call 1): its start, how it ends, and the
-// lessons used. Dates only, never money; the word is «الدورة», never «الباقة».
+// Course wording (docs/47): dates only, never money; it says course, never package.
 
 const f = t.teacherFile;
 const fill = (text: string, date: string): string => text.replace('{date}', date);
 
-/** An instant's calendar day in the viewer's zone, «3 أكتوبر 2026». */
 const dayIn = (iso: string, tz: string): string => dateLabel(zonedPartsIn(new Date(iso), tz).date);
 
 const END_TEXT: Record<CourseEndKey, (end: CourseEnd, tz: string) => string> = {

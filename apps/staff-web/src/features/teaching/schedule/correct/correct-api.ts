@@ -15,10 +15,7 @@ const REFETCH: Record<CorrectArea, readonly string[]> = {
   sales: ['sales', 'schedule'],
 };
 
-/**
- * POST …/lessons/:id/correct { to } (owner 2026-11-03, «تصحيح حالة الحلقة»). Success or a 409, the
- * schedule re-reads so the drawer's lesson and the package counts are current.
- */
+/** On success or 409 the schedule re-reads so the drawer and package counts are current. */
 export function useCorrectLesson(lessonId: string, area: CorrectArea) {
   const client = useQueryClient();
   return useMutation({

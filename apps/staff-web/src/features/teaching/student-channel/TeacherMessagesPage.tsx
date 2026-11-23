@@ -17,10 +17,7 @@ interface Props {
   onPick: (studentId: string | null) => void;
 }
 
-/**
- * /teacher/messages «رسائل الطلاب» (docs/31 §2): the channels with the families of my current students. On
- * a phone the list and the thread take turns («كل الطلاب» goes back); from 900px they sit side by side.
- */
+/** Family channels (docs/31 §2); on a phone list and thread take turns, side by side from 900px. */
 export function TeacherMessagesPage({ studentId, onPick }: Props) {
   const tz = useViewerTz();
   const list = useQuery(teacherChannelsQuery);

@@ -13,7 +13,6 @@ import type { FactsById } from './student-facts';
 
 export type BoardStudent = TeacherMe['students'][number];
 
-/** One row of «طلابي»: the student and her lessons in the window. */
 export interface BoardRow {
   student: BoardStudent;
   summary: StudentLessons;
@@ -47,7 +46,7 @@ export interface SearchInput {
   facts: FactsById;
 }
 
-/** The fields one search box matches: name, code (any case) and the facts line («تجويد»). */
+/** Search matches name, code (any case) and the facts line. */
 const fieldsOf = (row: BoardRow, facts: FactsById): string[] =>
   [row.student.name, row.student.code, facts.get(row.student.id) ?? ''];
 

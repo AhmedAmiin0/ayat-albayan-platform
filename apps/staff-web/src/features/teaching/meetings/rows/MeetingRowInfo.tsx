@@ -6,7 +6,6 @@ import { useClock } from '@ab/web-kit/lib/clock';
 const L = t.meetingInvites.list;
 const chip = 'rounded-full border border-rule px-2 py-0.5 text-xs';
 
-/** The row's title and facts: when (or «اجتماع فوري»), state, invitees, «أنت مدعو», «ملغى», «يُفتح الدخول …». */
 export function MeetingRowInfo({ meeting, tz }: { meeting: MeetingView; tz: string }) {
   const clock = useClock();
   const opens = opensLine(meeting, tz, clock);

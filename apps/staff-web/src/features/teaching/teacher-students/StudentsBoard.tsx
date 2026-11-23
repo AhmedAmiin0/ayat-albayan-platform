@@ -6,10 +6,7 @@ import { boardWindow, TeacherBoard } from '@/features/teaching/teacher-board';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { cn } from '@ab/web-kit/lib/utils';
 
-/**
- * The board with her lessons of the board window (14 days back and ahead, her zone): the same
- * query key as the home «طلابي» tab, so both share the 30 s poll. Dimmed while the window moves.
- */
+/** Same query key as the home tab, so both share the 30 s poll. */
 export function StudentsBoard({ me }: { me: TeacherMe }) {
   const now = useNow();
   const today = zonedPartsIn(now, me.tz).date;

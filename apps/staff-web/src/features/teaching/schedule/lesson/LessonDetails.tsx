@@ -17,13 +17,7 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
-/**
- * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in the viewer's zone
- * with every student's and the teacher's own clock when it differs, the teacher, the copied meeting link (or «via the classroom»
- * when the lesson's teacher holds it in the platform classroom), any reason, and the
- * clashes the daily job found when it generated the lesson (R-SCH-04). `onEditTime` adds
- * «عدّل الوقت» under the time (R-SCH-11).
- */
+/** Times in the viewer's zone plus differing clocks; job-found clashes shown (R-SCH-04). */
 export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEditTime?: () => void }) {
   const clock = useClock();
   const tz = useViewerTz();
@@ -78,7 +72,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           {platform ? (
             <span className="text-ink-2">{t.lessons.viaClassroom}</span>
           ) : lesson.meeting_link ? (
-            // docs/07 «الأزرار»: the URL on its own line (one line, cut, selectable), then the full-width link button.
+            // docs/07: the URL on its own one-line selectable row, then the full-width link button.
             <span className="grid gap-1.5">
               <Ltr className="block max-w-full truncate text-xs text-ink-3">{lesson.meeting_link.replace(/^https?:\/\//, '')}</Ltr>
               <a href={lesson.meeting_link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary' })}>

@@ -13,8 +13,7 @@ import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MEETINGS_KEY } from '@/features/teaching/meetings/internal/internal-api';
 
-// Scheduled meetings and invitations (R-MEET-01..03, owner 2026-10-12): POST /meetings with a time
-// and invitees, PATCH (reschedule), cancel, the invitees and «أعد الإرسال».
+// Scheduled meetings and invitations (R-MEET-01..03).
 
 /** POST /meetings: instant (no startsAt) or scheduled; one result per invitee. */
 export const createMeetingWith = (body: CreateMeeting) => apiSend<MeetingCreateResult>('POST', '/meetings', body);

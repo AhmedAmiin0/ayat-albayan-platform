@@ -21,7 +21,7 @@ function renderDrawer(l: LessonView) {
 
 const button = (name: string) => screen.getByRole('button', { name });
 
-/** docs/07 «الأزرار»: peers share one ButtonRow (equal cells), the first named sits at the reading start. */
+/** docs/07: peers share one ButtonRow of equal cells, the first named at the reading start. */
 function expectRow(first: HTMLElement, second: HTMLElement) {
   const row = first.parentElement;
   expect(row).toBe(second.parentElement);

@@ -48,7 +48,7 @@ interface HintInput {
   time: string;
 }
 
-/** «= 17:00 بتوقيتك» when the picked teacher-clock time reads differently on the viewer's clock, else nothing. */
+/** Shown only when the teacher-clock time reads differently for the viewer. */
 function viewerHint(p: HintInput, clock: Clock): string | undefined {
   if (p.tz === p.viewer) return undefined;
   const at = wallInstant(p.date, p.time, p.tz);
@@ -57,11 +57,7 @@ function viewerHint(p: HintInput, clock: Clock): string | undefined {
   return t.lessons.timeEdit.viewerEquiv.replace('{time}', clockOf(at, { ...clock, tz: p.viewer }));
 }
 
-/**
- * «عدّل الوقت» fields (R-SCH-11), all picked, none typed: day chips + «تاريخ تاني» (move) or the
- * lesson's own day (correct), the start in 15-minute steps on the teacher's clock, the length and
- * the reason (required for a correction). An odd migrated length is flagged until a valid one is picked.
- */
+/** All picked, none typed (R-SCH-11); reason required for a correction; odd lengths flagged. */
 export function EditTimeFields({ mode, tz, value, onChange, times, days, reasonMissing }: EditTimeFieldsProps) {
   const clock = useClock();
   const viewer = useViewerTz();

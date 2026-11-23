@@ -19,15 +19,11 @@ export interface ProposalBoxProps {
   lesson: LessonView;
   /** Toast text after the answer; the drawer closes. */
   onDone: (message: string) => void;
-  /** «اختر موعدًا آخر»: the move form, opened on this week (the asked time). */
+  /** Opens the move form on this week, at the asked time. */
   onPickOther: (near: string) => void;
 }
 
-/**
- * The «اقترح موعدًا آخر» of the teacher, or the family's «اطلب موعدًا آخر» (owner 2026-11-17),
- * waiting on this lesson (R-SCH-08): the time asked, the note, «وافق» (a reschedule, so a clash
- * shows the usual notice and needs a reason) or «ارفض» — a family's with a note they read.
- */
+/** Accepting is a reschedule, so a clash shows the usual notice and needs a reason (R-SCH-08). */
 export function ProposalBox({ lesson, onDone, onPickOther }: ProposalBoxProps) {
   const queryClient = useQueryClient();
   const [note, setNote] = useState('');

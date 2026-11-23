@@ -21,9 +21,9 @@ export interface SlotPickerProps {
   onPick: (slot: SlotView) => void;
   /** With nothing picked yet, open on this instant's week (the lesson being moved). */
   near?: string;
-  /** «تغيير أيام الحلقات»: the course (subscription id) whose own lessons are not shown busy. */
+  /** The course (subscription id) whose own lessons are not shown busy. */
   excludeCourse?: string;
-  /** «موعد تجريبي جديد»: the trial being moved is not shown busy. */
+  /** The trial being moved is not shown busy. */
   excludeLessonId?: string | undefined;
   /** The assistant's move (sales mode): the lesson she moves, whose students the grid names. */
   lessonId?: string | undefined;

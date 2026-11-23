@@ -12,19 +12,16 @@ export interface ScheduleFiltersProps {
   /** Every teacher of the overview, for the picker (the filters run on the client). */
   teachers: readonly OverviewTeacher[];
   onSearch: (patch: Partial<ScheduleSearch>) => void;
-  /** The lessons shown after the filters: «عرض النتائج (14)». Unknown while the week loads. */
+  /** Unknown while the week loads. */
   resultCount?: number | undefined;
 }
 
 const pick = <T extends string>(list: readonly T[], value: string): T | undefined => list.find((x) => x === value);
 const all = (label: string) => ({ value: '', label });
 
-/**
- * Teachers / program / gender / status filters + «إظهار الملغاة…» (R-SCH-01) on the shared toolbar
- * (owner, 2026-10-05): one «تصفية» button with the set filters as chips under it, the same as the tables.
- */
+/** Schedule filters (R-SCH-01) as chips under one filter button, the same as the tables. */
 export function ScheduleFilters({ search, teachers, onSearch, resultCount }: ScheduleFiltersProps) {
-  // `scheduled` stays an option: «مجدولة» while no confirmation is required (owner 2026-11-02).
+  // `scheduled` stays an option while no confirmation is required.
   const statusLabel = useLessonStatusText().label;
   const fields = (
     <>

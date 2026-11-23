@@ -23,11 +23,7 @@ const weekday: Record<string, string> = t.enums.weekday;
 /** Today's day / this week are the defaults, so they stay out of the URL. */
 const orDefault = (value: string, fallback: string) => (value === fallback ? undefined : value);
 
-/**
- * «اليوم | الأسبوع», a day or a week back and forward, «النهارده» / «الأسبوع ده», and the date
- * shown (the viewer's zone, R-SCH-01). Day → week opens that day's week; week → day opens today
- * when it is in that week, else its Saturday.
- */
+/** Viewer's zone (R-SCH-01); day to week opens that week; week to day opens today or Saturday. */
 export function ScheduleNav({ search, today, onSearch }: ScheduleNavProps) {
   const thisWeek = weekStart(today);
   const isDay = search.view === 'day';

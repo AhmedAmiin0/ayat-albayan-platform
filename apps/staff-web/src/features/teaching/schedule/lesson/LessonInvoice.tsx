@@ -4,11 +4,7 @@ import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
 import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * The admin-only «الفاتورة» row of the lesson drawer (R-PAY-03): the booking's payment proof, from
- * GET /invoices?ruleId (a trial has none). Teachers never get this component, and the endpoint
- * refuses them anyway.
- */
+/** Admin only (R-PAY-03); a trial has none; the endpoint refuses teachers anyway. */
 export function LessonInvoice({ lesson }: { lesson: LessonView }) {
   const ruleId = lesson.rule_id;
   const invoices = useQuery({ ...invoicesQuery({ ruleId: ruleId ?? '' }), enabled: !!ruleId && !lesson.trial });

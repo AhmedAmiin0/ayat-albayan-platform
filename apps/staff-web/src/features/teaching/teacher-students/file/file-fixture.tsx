@@ -5,7 +5,7 @@ import type { Mock } from 'vitest';
 import { TeacherStudentFile } from './TeacherStudentFile';
 import { HEAD, LOG, PENDING, RECORDINGS } from './file-data';
 
-// Test helper (not a test): renders «ملف الطالب» with every read answered from file-data.ts.
+// Test helper, not a test: every read answered from file-data.ts.
 
 type Answer = readonly [match: (path: string) => boolean, body: () => unknown];
 

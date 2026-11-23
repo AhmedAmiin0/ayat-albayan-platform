@@ -8,7 +8,6 @@ export interface LessonCellProps {
   lesson: LessonView | null;
   /** Her zone: the one zone of the board. */
   tz: string;
-  /** «آخر حلقة»: the student's attendance on it. */
   studentId?: string;
 }
 

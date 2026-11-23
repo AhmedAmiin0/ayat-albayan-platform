@@ -33,11 +33,7 @@ const viewOf = (segmentRows: number, shown: number): View =>
     ['noMatch', shown === 0],
   ] as const).find(([, holds]) => holds)?.[0] ?? 'table';
 
-/**
- * «طلابي» (docs/46 C1, D4; docs/48): her current students «مشترك · تجريبي · الكل» with a search,
- * each one's last and next lesson, last report and attendance in the window, soonest next lesson
- * first. The same board serves /teacher/students and the home tab; a row opens «ملف الطالب».
- */
+/** Soonest next lesson first (docs/46 C1, D4; docs/48); shared by students page and home tab. */
 export function TeacherBoard({ me, lessons, now }: TeacherBoardProps) {
   const [segment, setSegment] = useState<BoardSegment>(DEFAULT_SEGMENT);
   const [q, setQ] = useState('');

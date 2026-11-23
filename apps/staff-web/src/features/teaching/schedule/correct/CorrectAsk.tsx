@@ -10,10 +10,7 @@ interface CorrectAskProps {
   onBack: () => void;
 }
 
-/**
- * «ستُسجَّل الحلقة «غائب». يُحسب الغياب من الباقة.» (owner 2026-11-17): a correction says whether
- * the lesson counts from the package before it is saved, with «تأكيد» beside «رجوع».
- */
+/** A correction says whether the lesson counts from the package before it is saved. */
 export function CorrectAsk({ to, busy, onConfirm, onBack }: CorrectAskProps) {
   const c = t.lessons.correct;
   return (

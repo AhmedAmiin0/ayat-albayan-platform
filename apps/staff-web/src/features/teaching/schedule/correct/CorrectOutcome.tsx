@@ -14,12 +14,7 @@ export interface CorrectOutcomeProps {
   area: CorrectArea;
 }
 
-/**
- * «تصحيح حالة الحلقة» (owner 2026-11-03): on an ended lesson still «يحتاج تأكيد», or one the job
- * settled, «انعقدت» | «غائب» | «اعتذر الطالب» | «ألغاها المعلم/ة» (never its current status).
- * Renders nothing when correctionTargets offers none; the API decides again (409 in words). A
- * choice asks first whether the lesson counts from the package (owner 2026-11-17).
- */
+/** Never offers the current status; renders nothing when none applies; the API re-checks (409). */
 export function CorrectOutcome({ lesson, area }: CorrectOutcomeProps) {
   const now = useNow();
   const correct = useCorrectLesson(lesson.id, area);

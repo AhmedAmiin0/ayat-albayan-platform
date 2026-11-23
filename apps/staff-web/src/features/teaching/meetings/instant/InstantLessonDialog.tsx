@@ -26,10 +26,7 @@ interface Props {
 
 const durations: Record<string, string> = t.enums.duration;
 
-/**
- * «حلقة فورية» (POST /lessons/instant): students, teacher and duration, then the lesson starts now
- * with its room open. A clash comes back 409 with the list; the admin may start anyway with a reason.
- */
+/** Starts now with the room open; a 409 clash lets the admin start anyway with a reason. */
 export function InstantLessonDialog({ onClose, onStarted }: Props) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const [draft, setDraft] = useState<InstantDraft>({ students: [], teacherId: '', durationMin: DEFAULT_DURATION, reason: '' });

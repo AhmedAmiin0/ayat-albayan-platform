@@ -31,14 +31,10 @@ function Note({ children }: { children: string }) {
   );
 }
 
-/** Each side of «قبل ← بعد» breaks as a unit, so «(60 دقيقة)» never splits across lines. */
+/** Each side breaks as a unit, so the length never splits across lines. */
 const Side = ({ children }: { children: string }) => <span className="whitespace-nowrap">{children}</span>;
 
-/**
- * What saving does, before the admin presses it (R-SCH-11): «قبل ← بعد» in the viewer's time with the
- * teacher's and students' clocks, that it is the same lesson, and for a correction the effects on
- * the teacher's payout and the report file. Shown once something differs.
- */
+/** Shown once something differs (R-SCH-11); corrections show payout and report effects. */
 export function EditTimeConfirm(p: EditTimeConfirmProps) {
   const tz = useViewerTz();
   const clock = { ...useClock(), tz };

@@ -17,7 +17,6 @@ interface SeatView extends SeatRow {
 
 const S = t.studentChannel.seat;
 
-/** «في عهدة {name}»: who follows the chat now (gender-neutral MSA). */
 const heldBy = (name: string) => (
   <span className="text-sm text-ink-3">{S.heldBy.replace('{name}', name)}</span>
 );
@@ -42,11 +41,7 @@ const VIEW: Readonly<Record<SeatState, (v: SeatView) => ReactNode>> = {
   held: (v) => heldBy(v.holder),
 };
 
-/**
- * The chat cell of «كل الطلاب» and «طلابي» (owner 2026-11-16: «any assistant can subscribe to the
- * chating channel but only 1», «who brought the student have the priority»): one assistant seat
- * per student chat. Empty while the seat loads or cannot be read.
- */
+/** One assistant seat per student chat; the bringer has priority; empty while unreadable. */
 export function ChannelSeatCell(row: SeatRow) {
   const seat = useChannelSeat(row.studentId);
   const data = seat.query.data;

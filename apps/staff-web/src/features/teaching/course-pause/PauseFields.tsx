@@ -44,7 +44,7 @@ export function PauseFields({ studentId, today, draft, onChange }: PauseFieldsPr
 interface PausePreviewLineProps {
   studentId: string;
   from: string;
-  /** null = until «استئناف». */
+  /** Null means until resumed. */
   until: string | null;
 }
 
@@ -52,7 +52,7 @@ interface PausePreviewLineProps {
 const linesOf = (data: CoursePausePreview, tz: string): string[] =>
   data.starts ? pauseLines(data, tz) : [coursePausePreviewText(t.coursePause.preview, data.lessons)];
 
-/** «ما سيحدث»: the lessons cancelled and the extension, re-read as the dates change (valid dates only). */
+/** Re-read as the dates change, valid dates only. */
 function PausePreviewLine({ studentId, from, until }: PausePreviewLineProps) {
   const tz = useViewerTz();
   const preview = useQuery(coursePausePreviewQuery({ studentId, from, until }));

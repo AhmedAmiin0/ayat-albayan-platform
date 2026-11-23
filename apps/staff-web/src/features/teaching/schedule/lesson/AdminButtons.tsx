@@ -22,12 +22,7 @@ const shownOf = ({ events, ...open }: AdminButtonsProps) => ({
   cancel: open.onCancel !== undefined && cancellable(events),
 });
 
-/**
- * One ButtonRow: «غيّر الميعاد» (its caption under the row says what it does: closes this lesson,
- * opens a new one, can cover the series), «تغيير أيام الحلقات» of a course and «إلغاء الحلقة»
- * (danger), only where the caller opens their forms and the status allows. Moved out of
- * LessonActions unchanged (docs/48).
- */
+/** Only where the caller opens their forms and the status allows (docs/48). */
 export function AdminButtons(props: AdminButtonsProps) {
   const { size, onCancel, onReschedule, onChangeCourse } = props;
   const { reschedule, course, cancel } = shownOf(props);

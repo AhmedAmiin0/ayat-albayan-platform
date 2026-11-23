@@ -13,10 +13,9 @@ export interface AverageItem {
 /** 4.6 with one decimal, Western digits. */
 export const avgText = (avg: number): string => avg.toFixed(1);
 
-/** «نسبة الترشيح»: a whole percent. */
 export const pctText = (pct: number): string => `${Math.round(pct)}%`;
 
-/** The average rating, the number of answers and «نسبة الترشيح» per teacher (admin) or mine (teacher). */
+/** Per teacher for the admin, or mine for a teacher. */
 export function TeacherAverages({ items }: { items: readonly AverageItem[] }) {
   if (items.length === 0) return null;
   return (

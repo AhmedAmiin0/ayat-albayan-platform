@@ -31,12 +31,7 @@ export interface FeedbackFormProps {
   onDone: (outcome: 'sent' | PublicProblem) => void;
 }
 
-/**
- * «رأيك يهمّنا», the Google Form's fields in its order: the teacher (prefilled, fixed), «نوع الحلقة»
- * (the lesson's own, fixed), «تقييمك للحلقة *», «هل ترشّح الأكاديمية لصديق أو قريب؟ *»,
- * «ملاحظة أو اقتراح» and «رقم واتساب للتواصل» (prefilled from the link, editable). The server sets
- * kind and teacher; only rating, recommend, note and phone are sent.
- */
+/** The server sets kind and teacher; only rating, recommend, note and phone are sent. */
 export function FeedbackForm({ token, form, onDone }: FeedbackFormProps) {
   const [rating, setRating] = useState<FeedbackRating | null>(null);
   const [recommend, setRecommend] = useState<FeedbackRecommend | null>(null);

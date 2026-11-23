@@ -22,34 +22,24 @@ export interface LessonActionsProps {
   /** Admin only: open the cancel / reschedule forms. Teachers get neither (docs/10 §3 guards). */
   onCancel?: () => void;
   onReschedule?: () => void;
-  /** Admin: «تغيير أيام الحلقات» of the lesson's assistant course (course_subscription_id). */
+  /** Admin: change the days of the lesson's assistant course (course_subscription_id). */
   onChangeCourse?: () => void;
-  /** The drawer's pending proposal «موافقة» is the primary above: the confirm is outlined. */
+  /** A pending proposal's accept is the primary above, so the confirm is outlined. */
   proposalLeads?: boolean;
-  /**
-   * The teacher's card: her own «سأحضر» replaces the family-style confirm (docs/46 D1), and the
-   * pre-start «اعتذر مسبقًا» (a charged student cancel) is the admin's alone (docs/48 Q4).
-   */
+  /** The teacher confirms her own attendance (docs/46 D1); pre-start excuses are admin-only. */
   teacher?: boolean;
-  /** 48px on phones either way (docs/07 «الأزرار»); teacher surfaces keep 48px on desktop too. */
+  /** 48px on phones either way (docs/07); teacher surfaces keep 48px on desktop too. */
   size?: 'md' | 'lg';
 }
 
-/**
- * Outcomes before the start are refused by the API (409 not_started); only «اعتذر» is early, and
- * never on the teacher's card (docs/48 Q4).
- */
+/** The API refuses outcomes before the start (409 not_started); only excuse is early. */
 function eventsNow(lesson: LessonView, at: { now: number; teacher: boolean }): StatusRouteEvent[] {
   const started = Date.parse(lesson.starts_at) <= at.now;
   const early = (e: StatusRouteEvent) => e === 'excuse' && !at.teacher;
   return STATUS_ROUTE_EVENTS.filter((e) => lesson.allowed_events.includes(e) && (started || early(e)));
 }
 
-/**
- * The lesson's next steps from `allowed_events` (R-SCH-03, R-SCH-07, R-SCH-08), docs/07 «الأزرار»: confirm
- * full width (the one primary; a secondary while «ادخل الحلقة» is live or a proposal's «موافقة» waits above it), the attendance outcomes
- * as one ButtonRow, then the admin's ButtonRow «تغيير الميعاد» | «تغيير أيام الحلقات» | «إلغاء الحلقة» (danger).
- */
+/** Next steps from `allowed_events` (R-SCH-03/07/08); one primary, which steps down when needed. */
 export function LessonActions(props: LessonActionsProps) {
   const { lesson, onDone, onCancel, onReschedule, onChangeCourse, size = 'md' } = props;
   const queryClient = useQueryClient();
@@ -65,11 +55,11 @@ export function LessonActions(props: LessonActionsProps) {
   const live = useNow();
   const outcomes = eventsNow(lesson, { now: live.getTime(), teacher: props.teacher === true });
   const win = useJoinWindow();
-  // No «تأكيد» while the academy requires none (owner 2026-11-02); a family's «نعم» still confirms.
+  // No confirm while none is required; a family's yes still confirms.
   const required = usePublicConfig().lesson_confirmation_required;
   const confirmable =
     required && props.teacher !== true && lesson.allowed_events.includes('confirm');
-  // One filled button: «ادخل الحلقة» (live clock, as EnterButton) or a pending proposal's «موافقة» leads.
+  // One filled button: join (live clock) or a pending proposal's accept leads.
   const stepDown = (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
 
   return (

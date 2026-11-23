@@ -1,7 +1,7 @@
 import { CoursePauseSheet } from './CoursePauseSheet';
 import { ResumeCourseDialog } from './ResumeCourseDialog';
 
-/** Which student's course a list row pauses or resumes; subscriptionId: the package row's (sent with «استئناف»). */
+/** subscriptionId is the package row's, sent with resume. */
 export type CoursePauseTarget = { studentId: string; resume: boolean; subscriptionId?: string } | null;
 
 interface CoursePauseDialogsProps {
@@ -10,7 +10,6 @@ interface CoursePauseDialogsProps {
   onDone: (message: string) => void;
 }
 
-/** A list's «إيقاف مؤقت» (the sheet) or «استئناف» (the confirm) for one row's student. */
 export function CoursePauseDialogs({ target, onClose, onDone }: CoursePauseDialogsProps) {
   if (!target) return null;
   const props = { studentId: target.studentId, onClose, onDone };

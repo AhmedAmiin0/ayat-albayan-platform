@@ -104,7 +104,6 @@ interface DayFactsProps {
   now: Date;
 }
 
-/** Above a day's chips: the mini 08–24 track and «فاضي 3:30», or one «إجازة» note for a day off. */
 function DayFacts({ teacher, day, lessons, now }: DayFactsProps) {
   const facts = teacherDay(teacher, { day, lessons, now, tz: useViewerTz() });
   if (facts.dayOff) {

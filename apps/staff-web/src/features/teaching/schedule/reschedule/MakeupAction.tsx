@@ -7,12 +7,7 @@ import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 import { useClock } from '@ab/web-kit/lib/clock';
 
-/**
- * «حجز تعويضي» on a missed lesson (R-SCH-10): opens the booking wizard for that student with the
- * lesson preselected. One link per student, named when the lesson was a group's; a student whose
- * makeup is already booked gets «التعويض محجوز · <date>» instead (makeupOffer, shared with mobile:
- * charged miss, within settings.makeup_window_days, not a trial or a makeup). Admin only: the drawer is the admin's.
- */
+/** Admin only (R-SCH-10); eligibility via makeupOffer, shared with mobile. */
 export function MakeupAction({ lesson }: { lesson: LessonView }) {
   const clock = useClock();
   const tz = useViewerTz();

@@ -7,7 +7,6 @@ export interface CancelByRadiosProps {
   onChange: (by: CancelBy) => void;
 }
 
-/** «من الذي ألغى؟»: the teacher, the admin or the student (an excuse), as the form offers them. */
 export function CancelByRadios({ options, value, onChange }: CancelByRadiosProps) {
   return (
     <fieldset className="grid gap-1">

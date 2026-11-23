@@ -9,7 +9,7 @@ import {
 import { dayIn } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** The sheet's fields: dates "YYYY-MM-DD", an empty until = until «استئناف». */
+/** Dates are YYYY-MM-DD; an empty until means until resumed. */
 export interface PauseDraft {
   from: string;
   until: string;
@@ -30,11 +30,9 @@ export function startBody(draft: PauseDraft): CoursePauseStart {
   return { fromDate: draft.from, untilDate: draft.until || null, ...(reason ? { reason } : {}) };
 }
 
-/** «ما سيحدث» of a pause (owner 2026-11-17): the lessons with their dates, then the extension. */
 export const pauseLines = (preview: CoursePausePreview, tz: string): string[] =>
   pausePreviewLines({ preview, words: t.coursePause, day: dayIn(tz) });
 
-/** «استئناف الدورة الآن؟»: the lessons back with their dates and the days the package moves. */
 export const resumeLines = (preview: CourseResumePreview, tz: string): string[] =>
   resumePreviewLines({
     preview,

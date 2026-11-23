@@ -16,19 +16,13 @@ export interface CancelFormProps {
   lesson: LessonView;
   onBack: () => void;
   onDone: (message: string) => void;
-  /**
-   * «لم تنعقد؟» (owner 2026-11-02): this lesson only, by its teacher or the student (`correction`
-   * preselected); the API records it, or corrects a lesson held automatically.
-   */
+  /** This lesson only, preselected by `correction`; the API records or corrects auto-held. */
   correction?: CorrectBy | undefined;
 }
 
 const DONE: Record<Scope, string> = { one: t.lessons.cancelled, rule: t.lessons.seriesCancelled };
 
-/**
- * «إلغاء الحلقة» (R-SCH-07): this lesson or it and every later one of its rule, who cancelled and
- * why. Whether it consumes the package is the API's call (teacher/admin never; student per setting).
- */
+/** Package consumption is the API's call: teacher/admin never, student per setting (R-SCH-07). */
 export function CancelForm({ lesson, onBack, onDone, correction }: CancelFormProps) {
   const queryClient = useQueryClient();
   const [scope, setScope] = useState<Scope>('one');
@@ -77,7 +71,7 @@ export function CancelForm({ lesson, onBack, onDone, correction }: CancelFormPro
         )}
       </Field>
       {cancel.isError && <FormAlert>{lessonErrorText(cancel.error)}</FormAlert>}
-      {/* docs/07 «الأزرار» Forms: submit at the reading start, «رجوع» secondary. This form IS the confirm step, so the solid danger stays. */}
+      {/* This form is the confirm step, so the solid danger button stays (docs/07). */}
       <ButtonRow>
         <Button type="submit" variant="danger" disabled={cancel.isPending}>
           {t.lessons.cancelSubmit}
