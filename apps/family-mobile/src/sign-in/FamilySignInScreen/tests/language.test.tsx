@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { setLocale, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { FamilySignInScreen } from './FamilySignInScreen';
+import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
 
 // Signed out, the other language is one quiet tap under the sign-in (no «اللغة» section): an
 // English phone that wants Arabic, or the other way round, need not sign in first.

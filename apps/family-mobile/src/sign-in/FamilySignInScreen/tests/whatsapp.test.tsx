@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
-import { FamilySignInScreen } from './FamilySignInScreen';
+import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
 
 // docs/50 §4: ONE sign-in; the default is WhatsApp number → code → signed in, with a haptic on
 // every answer. The API decides whose account a number is (the guardian row's main number).
