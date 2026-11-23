@@ -1,7 +1,7 @@
 // How people rows merge (pure): field fill with visible conflicts, legacy codes, look-alikes.
 // Nothing is dropped silently: a value that loses to another row's value is a `conflict` issue
 // naming the row that won (review for the teacher — it becomes students.teacher_id — else warn).
-import { arabicNameSimilar, normalizeArabic } from '@ab/shared';
+import { arabicNameSimilar, normalizeArabic } from '@ab/core';
 import { personName } from '../../keys.ts';
 import { issuesFor } from '../../sources/sheets/issues.ts';
 import { leadSource, teacherFromText } from '../../sources/values.ts';

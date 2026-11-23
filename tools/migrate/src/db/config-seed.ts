@@ -1,7 +1,7 @@
 // docs/26 §2b: `pnpm migrate:apply` runs the same settings seeder as an API boot, so a target that
 // was filled by the import has every settings row's metadata before the API first starts.
 // config_seed writes metadata and the seeded description only, never a value.
-import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/shared';
+import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/settings';
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import type { TargetDb } from './target.ts';
 

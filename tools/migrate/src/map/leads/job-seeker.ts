@@ -3,7 +3,7 @@
 // Bare «معلمة» / «محفظة» are not enough: parents write «عايزة معلمة لبنتي». They count only as a
 // self-description («انا محفظه») or next to work words.
 // ponytail: keyword heuristic; precision unknown (no labelled CRM job seekers had matching texts).
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 
 const ROLE = '(?:معلم|معلمه|محفظ|محفظه|مدرس|مدرسه|مجاز|مجازه)';
 const PATTERNS: Readonly<Record<string, RegExp>> = {

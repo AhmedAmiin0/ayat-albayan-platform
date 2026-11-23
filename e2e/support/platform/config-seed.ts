@@ -1,4 +1,4 @@
-import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/shared';
+import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/settings';
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import type { Sql, TransactionSql } from 'postgres';
 import { withSql } from '../core/schedule';

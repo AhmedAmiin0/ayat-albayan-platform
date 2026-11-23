@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { withSql } from '../core/schedule';
 import { stub, stubSent, type StubSent } from '../core/wa-stub';
 

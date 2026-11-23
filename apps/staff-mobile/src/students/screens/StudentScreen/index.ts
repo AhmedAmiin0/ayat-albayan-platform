@@ -1,0 +1,1 @@
+export { StudentScreen } from './StudentScreen';

@@ -11,7 +11,7 @@ jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({
   ...jest.requireActual('@ab/mobile-kit/auth/use-permissions'),
   usePermissions: () => (p: Permission) => mockHeld.includes(p),
 }));
-jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
+jest.mock('@/core/push/usePushRegistration/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
 jest.mock('@/inbox', () => ({ useInboxRealtime: () => undefined }));
 
