@@ -24,10 +24,7 @@ function stateOf(admin: boolean, query: { data?: StaffPresence; isError: boolean
   return staff.length === 0 ? 'empty' : 'ready';
 }
 
-/**
- * «حالة الفريق» (docs/33 §2, admin only): every staff login's last seen from the API, re-read every
- * minute while shown, and who is online now over the socket (at most PRESENCE_WATCH_MAX watched).
- */
+/** Admin only (docs/33 §2): last seen re-read every minute, online over the socket, capped. */
 export function useStaffPresence() {
   const admin = useIsAdmin();
   const focused = useScreenFocused();

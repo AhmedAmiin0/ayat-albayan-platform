@@ -6,10 +6,7 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 type Props = { file: File | null; onChange: (file: File | null) => void; error?: string | null };
 
-/**
- * The receipt picker («إرفاق الإيصال», the native input stays for keyboard and screen readers but
- * its English chrome is hidden) with a local preview, image or the PDF's name, before any upload.
- */
+/** The native input stays for keyboard and screen readers with its English chrome hidden. */
 export function ReceiptField({ file, onChange, error }: Props) {
   const id = useId();
   const preview = useMemo(() => (file?.type.startsWith('image/') ? URL.createObjectURL(file) : null), [file]);

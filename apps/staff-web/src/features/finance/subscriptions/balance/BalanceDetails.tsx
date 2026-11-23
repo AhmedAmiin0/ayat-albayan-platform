@@ -5,7 +5,7 @@ import type { StudentBalanceView, SubscriptionView } from '@/features/finance/su
 import { moneyText, packageName, studentProgress } from '@/features/finance/subscriptions/format';
 import { partPaidText } from '@/features/finance/subscriptions/payment-lines';
 
-/** «الباقة خلصت يوم …» once used up, else «متوقع تخلص يوم …» from the booked lessons (R-SUB-03). */
+/** Expected end from the booked lessons (R-SUB-03). */
 export function endLine(s: SubscriptionView): string {
   if (s.balance.ended_at) return t.subscriptions.endedAt.replace('{date}', formatDate(s.balance.ended_at));
   if (s.balance.projected_end_at)

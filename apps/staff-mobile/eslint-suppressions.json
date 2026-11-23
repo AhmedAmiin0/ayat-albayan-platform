@@ -9007,7 +9007,7 @@
   },
   "src/users/panels/PanelButtons.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/users/panels/ResetPasswordPanel.tsx": {
@@ -9055,7 +9055,7 @@
   },
   "src/users/screens/UsersScreen/UsersScreen.tsx": {
     "max-len": {
-      "count": 4
+      "count": 2
     },
     "no-nested-ternary": {
       "count": 1
