@@ -1,6 +1,6 @@
 // Natural keys per entity (README §Natural keys). The only place keys are built: a key that changes
 // between runs creates a second row, so every builder imports from here and never concatenates by hand.
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import type { EntityName, NaturalKey } from './types.ts';
 
 // Honorifics dropped from person keys (docs/06 step 3). «أم/ام» stays: «ام ليلى» is a different

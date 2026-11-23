@@ -1,4 +1,4 @@
-import { DISCOUNTS } from '@ab/shared';
+import { DISCOUNTS } from '@ab/money';
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 import { fillStable } from '../core/fill';

@@ -1,4 +1,4 @@
-import { normalizeArabic } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import type { Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 import { FAMILY_URL } from '../core/family-host';

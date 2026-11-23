@@ -1,5 +1,5 @@
 // Sheet cell → typed value helpers shared by every sheet mapper. Pure.
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import type { Cell } from '../../types.ts';
 
 // Bidi marks WhatsApp/Sheets paste around numbers and names.

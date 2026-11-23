@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openThread } from '../../support/messaging/inbox';
 import { freshDigits } from '../../support/core/messages';

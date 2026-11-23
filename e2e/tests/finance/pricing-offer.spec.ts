@@ -1,4 +1,5 @@
-import { LOCALE_STORAGE_KEY, offerText, quote } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
+import { offerText, quote } from '@ab/money';
 import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
