@@ -1,4 +1,4 @@
-// Plans the backfill of the old marker rows (owner 2026-10-30): outbound rows stored from the
+// Plans the backfill of the old marker rows: outbound rows stored from the
 // WhatsApp Business app's echoes and Kapso's history with a placeholder body («[edit]», «[image]»,
 // …) become what the API stores today (echoPayload, migration 20261030000992). Pure: rows in,
 // updates out.
