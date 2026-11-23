@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { GRADES } from '@ab/catalog';
 import { isAyah, SURAH_COUNT } from '../quran/quran.js';
 
-// The v2 lesson report's structured content (owner 2026-10-26, docs/design/report-form): stored
+// The v2 lesson report's structured content (docs/design/report-form): stored
 // whole in lesson_reports.content (jsonb, form_version 2, migration 20261028000940).
 
 /** The three Quran tracks of a lesson, in the form's order (التسميع · الحفظ الجديد · المراجعة). */

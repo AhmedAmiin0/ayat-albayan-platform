@@ -11,7 +11,7 @@ const LESSON = [
   'course_resumed',
 ] as const;
 const MONEY = ['payment_due', 'payment_received', 'commission_earned'] as const;
-// Owner 2026-11-16: everyone in the student's chat hears its messages, a child login too.
+// Everyone in the student's chat hears its messages, a child login too.
 const FAMILY_NEWS = [...FAMILY_PUSH_KINDS, ...LESSON, 'channel_message' as const];
 
 describe('pushReaderOf', () => {

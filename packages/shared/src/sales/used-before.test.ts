@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { usedBeforeMax, usedBeforeProblem } from './start-date.js';
 
-// Owner 2026-10-28: «i need a way to add number of used lessons if start date switch is on».
-// Owner 2026-11-02: «why is the maximum amount of used lessons 6 dont put limit».
+// Used lessons come with a past start date, up to every lesson but one: no fixed cap.
 const base = { startsOn: '2026-10-27', today: '2026-10-28', canSet: true, lessonsTotal: 8 };
 
 describe('usedBeforeProblem', () => {

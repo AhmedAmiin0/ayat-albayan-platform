@@ -1,9 +1,9 @@
 import type { NotificationEntry } from './catalogue.types.js';
 
-// A lesson moved or cancelled, a course paused or resumed (owner 2026-10-30: «notify both teacher
-// and student»): the family (guardian) and the lesson's teacher, by WhatsApp on the notifications
-// line and in the bell / app. Sent because a person acted, so never automatic (that switch is for
-// the scheduled reminders); the send gate (messaging_enabled) and the template's approval hold it.
+// A lesson moved or cancelled, a course paused or resumed: the family (guardian) and the lesson's
+// teacher, by WhatsApp on the notifications line and in the bell / app. Sent because a person
+// acted, so never automatic (that switch is for the scheduled reminders); the send gate
+// (messaging_enabled) and the template's approval hold it.
 
 const SCHEDULE = {
   audience: 'guardian',

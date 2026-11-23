@@ -23,7 +23,7 @@ export interface SalesMoneySubscriptionView {
   package: PackageSize | null;
   duration: Duration;
   lessons_total: number;
-  /** Taken before the platform (owner 2026-10-28); absent from older APIs. */
+  /** Taken before the platform; absent from older APIs. */
   lessons_used_before?: number;
   price: number;
   currency: string;
@@ -54,7 +54,7 @@ export interface SalesFamilyStudent extends SalesStudentRef {
   status: StudentStatus;
   /**
    * false: not hers, listed through sales.renew_any (subscribe / renew / transfer / course days). Absent from old APIs = hers.
-   * true for every child while SalesOwnershipRule does not enforce ownership (owner 2026-11-02).
+   * true for every child while SalesOwnershipRule does not enforce ownership.
    */
   mine?: boolean;
   open: SalesMoneySubscriptionView[];

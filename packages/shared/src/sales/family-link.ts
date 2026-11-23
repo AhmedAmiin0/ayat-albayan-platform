@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { ThreadView } from '../messaging/index.js';
 import type { FamilyPhone } from '../people/students/index.js';
 
-// «ربط بطالب موجود» (owner 2026-10-29): a lead chat's number becomes the SECOND number of an existing student's
+// «ربط بطالب موجود»: a lead chat's number becomes the SECOND number of an existing student's
 // family (public.guardian_phones). POST /leads/:id/link-family { code } → 200 { linked }, behind leads.link_family.
 // The answer never carries an id or a phone. Linking never makes anyone an owner of that family.
 

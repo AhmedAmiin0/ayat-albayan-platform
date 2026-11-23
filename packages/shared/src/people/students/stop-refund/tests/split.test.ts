@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { refundAmountProblem, splitRefund } from '../stop-refund.js';
 
-// «إلغاء مع استرداد» (owner 2026-11-02): card first, the rest manual; the cap.
+// «إلغاء مع استرداد»: card first, the rest manual; the cap.
 describe('splitRefund: card first, the rest manual', () => {
   const cards = [
     { id: 'a', refundable: 100 },

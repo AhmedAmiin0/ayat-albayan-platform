@@ -2,7 +2,7 @@ import type { StudentStatus } from '@ab/catalog';
 import { DISCOUNTS, renewalPricing, type LastPackage, type RenewalPricing } from '@ab/money';
 import { isPackageEnded } from '../people/students/index.js';
 
-// «جدّد الاشتراك» from the sales chat (owner 2026-10-26): which of her students is due for a renewal,
+// «جدّد الاشتراك» from the sales chat: which of her students is due for a renewal,
 // and the calculator inputs it opens with (the admin's renewalPricing, from the last priced package).
 // Pure; GET /sales/money/family returns both per student.
 

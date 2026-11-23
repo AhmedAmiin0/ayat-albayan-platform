@@ -3,7 +3,7 @@ import { ATTENDANCES, GRADES, PROGRAMS } from '@ab/catalog';
 import { REPORT_RUBRICS, type Rubric } from './rules.js';
 import { reportContentSchema } from './v2/content.js';
 
-// The report's live page (owner 2026-11-06): https://app.ayatalbayan.com/report/<public_id>, read
+// The report's live page: https://app.ayatalbayan.com/report/<public_id>, read
 // from the SAVED report (never the PDF), with the teacher's files and the PDF download.
 
 /** lesson_reports.public_id: 32 hex characters (migration 20261106001400). */

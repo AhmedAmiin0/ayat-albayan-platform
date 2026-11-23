@@ -7,7 +7,7 @@ import { entryView, type CatalogueInputs } from './catalogue-state/index.js';
 import { notificationEntry } from './catalogue.js';
 import { SCHEDULE_ENTRIES } from './catalogue.schedule.js';
 
-// The schedule-change rows (owner 2026-10-30): the guardian AND the teacher, WhatsApp + bells.
+// The schedule-change rows: the guardian AND the teacher, WhatsApp + bells.
 
 const KEYS = SCHEDULE_ENTRIES.map((e) => e.key);
 const ON: AcademySettings = { ...SETTING_DEFAULTS, messaging_enabled: true };
