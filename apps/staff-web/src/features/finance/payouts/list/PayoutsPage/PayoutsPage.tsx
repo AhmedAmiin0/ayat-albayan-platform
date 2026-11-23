@@ -22,11 +22,11 @@ import {
   payoutsQuery,
   type PayoutGenerateResult,
 } from '@/features/finance/payouts/api';
-import { MissingRates } from './MissingRates';
+import { MissingRates } from '@/features/finance/payouts/list/MissingRates';
 import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
-import { payoutColumns } from './payout-columns';
+import { payoutColumns } from '@/features/finance/payouts/list/payout-columns';
 import { PayoutDialogs, type PayoutDialog } from '@/features/finance/payouts/pay/PayoutDialogs';
-import { TeacherDuesSummary } from './TeacherDuesSummary';
+import { TeacherDuesSummary } from '@/features/finance/payouts/list/TeacherDuesSummary';
 
 type Props = { month: string; onMonth: (month: string) => void };
 

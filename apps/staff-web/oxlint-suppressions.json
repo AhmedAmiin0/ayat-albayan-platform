@@ -904,12 +904,12 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/list/PayoutsPage.test.tsx": {
+  "src/features/finance/payouts/list/PayoutsPage/tests/PayoutsPage.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/features/finance/payouts/list/PayoutsPage.tsx": {
+  "src/features/finance/payouts/list/PayoutsPage/PayoutsPage.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
