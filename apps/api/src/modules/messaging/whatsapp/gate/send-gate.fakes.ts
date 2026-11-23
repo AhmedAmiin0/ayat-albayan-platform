@@ -1,5 +1,5 @@
 import type { Db } from '@/common/db/db.module';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { SendGate } from './send-gate';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
 

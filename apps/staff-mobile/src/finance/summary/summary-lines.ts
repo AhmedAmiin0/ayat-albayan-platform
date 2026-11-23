@@ -1,5 +1,5 @@
 import { t } from '@ab/mobile-kit';
-import type { DashboardResponse, MonthFinance } from '@ab/shared';
+import type { DashboardResponse, MonthFinance } from '@ab/money';
 
 /** Months with any money, newest first; the API sends all twelve. */
 export const activeMonths = (months: readonly MonthFinance[]): MonthFinance[] =>

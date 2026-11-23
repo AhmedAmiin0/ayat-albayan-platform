@@ -1,4 +1,4 @@
-import { subscriptionStatusStyle } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
 import { t, isolate, ltr, money } from '@ab/mobile-kit';
 import { partPaidLine } from '@/core/lib/money/format';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from './people-fixtures';

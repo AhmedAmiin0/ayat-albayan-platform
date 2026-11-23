@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { CLAIM_LEASE_MS, UNCERTAIN } from './send-plan';
 import { SenderRepo } from './sender.repo';
 
