@@ -367,8 +367,8 @@ begin
     select (x ->> 'teacher_id')::uuid from jsonb_array_elements(coalesce(p -> 'lessons', '[]'::jsonb)) x
     union
     select l.teacher_id from public.lessons l
-     where l.id in (select (c ->> 'id')::uuid
-                      from jsonb_array_elements(coalesce(p -> 'changes', '[]'::jsonb)) c)));
+     where l.id in (select (ch ->> 'id')::uuid
+                      from jsonb_array_elements(coalesce(p -> 'changes', '[]'::jsonb)) ch)));
 
   if p ? 'end_rule' then
     -- Ended now when nothing is left: the last day is before today or before the rule starts.
