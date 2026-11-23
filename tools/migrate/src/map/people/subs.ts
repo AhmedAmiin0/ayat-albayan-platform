@@ -1,7 +1,4 @@
-// SUBS «الطلاب» (the subscribed-students register) and the ATT attendance folders, checked against
-// the students being built (pure). A subscribed child the registry does not know is a review row
-// (the owner adds them before apply, or their reports and PDFs cannot be linked); a known child
-// with more than one lesson in SUBS is active, not trial.
+// A subscribed child the registry lacks is a review row; more than one SUBS lesson means active.
 import type { SourceBundle } from '../../entities/contract.ts';
 import { keyId, personName } from '../../keys.ts';
 import type { Desired } from '../../plan/resolve.ts';
@@ -13,7 +10,7 @@ import type { RowIssue, SourceRow } from '../../types.ts';
 import { type StudentIndex, findStudent, studentIndex } from './match.ts';
 
 interface SubsFacts {
-  /** student keyIds with SUBS «عدد الحلقات» > 1. */
+  /** student keyIds with SUBS lesson count > 1. */
   active: Set<string>;
   issues: RowIssue[];
 }
@@ -25,7 +22,7 @@ interface Folder {
   rows: number;
 }
 
-/** ATT rows by student folder («تقارير آيات البيان/<student>/سجل حضور — <student>.xlsx»). */
+/** ATT rows by student folder in the reports zip. */
 function attFolders(rows: readonly SourceRow[]): Map<string, Folder> {
   const out = new Map<string, Folder>();
   for (const r of rows) {

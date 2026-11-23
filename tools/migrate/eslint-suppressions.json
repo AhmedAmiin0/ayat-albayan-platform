@@ -206,9 +206,6 @@
     },
     "@typescript-eslint/no-base-to-string": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/map/messages/messages.test.ts": {
@@ -361,9 +358,6 @@
   "src/map/people/students.status.test.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 5
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/map/people/students.test.ts": {
@@ -479,9 +473,6 @@
       "count": 7
     },
     "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -788,16 +779,6 @@
       "count": 2
     }
   },
-  "src/sources/headers/headers.hub.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/sources/headers/headers.ops.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/sources/headers/headers.ts": {
     "max-len": {
       "count": 2
@@ -811,9 +792,6 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -851,17 +829,11 @@
   "src/sources/values.schedule.ts": {
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/sources/values.ts": {
     "ab/no-shape-checks": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/sources/zip.ts": {

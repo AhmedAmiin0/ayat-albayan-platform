@@ -6,7 +6,7 @@ import { text } from './cells.ts';
 // Words of the Lorem generator found in the export (names, teachers, lesson numbers, packages).
 const LOREM =
   /\b(?:lorem|ipsum|dolor|amet|consectetur|adipisicing|architecto|laborum|pariatur|mollit|officiis|recusandae|veniam|occaec\w*|consequatur|placeat|nobis|maiores|facilis|omnis|ratione|rerum|nemo|test)\b/i;
-// Arabic test markers, only checked in name/teacher cells («اختبار» is a real word in notes).
+// Arabic test markers, only checked in name and teacher cells since one is a real word in notes.
 const AR_TEST = /(?:تجربه|اختبار|نمنم)/;
 
 /** Placeholder numbers used while testing the forms (docs/06 step 6). */
