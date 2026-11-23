@@ -9,6 +9,7 @@ import type { DemoLesson, DemoReport, StoreFamily } from './store.types';
 // names and text only, written to the CI database the workflow starts and throws away.
 
 const HOUR = 3_600_000;
+const DAY = 24 * HOUR;
 const LESSON_MS = 45 * 60_000;
 const RIYADH_MS = 3 * HOUR;
 
@@ -22,6 +23,16 @@ function nextLessonAt(now: Date): Date {
   const soon = tomorrow.getTime() - now.getTime() < 20 * HOUR;
   return soon ? riyadh(addDays(riyadhToday(now), 2), '18:00') : tomorrow;
 }
+
+/** The Saturday that opens the academy week of a «YYYY-MM-DD» day (getUTCDay: Saturday = 6). */
+function weekStart(day: string): number {
+  const at = new Date(`${day}T00:00:00Z`);
+  return at.getTime() - ((at.getUTCDay() + 1) % 7) * DAY;
+}
+
+/** On a Friday (or a late Thursday) the next lesson already sits in the next academy week. */
+const weekOf = (next: Date, now: Date): StoreFamily['week'] =>
+  weekStart(riyadhToday(next)) > weekStart(riyadhToday(now)) ? 'next' : 'this';
 
 async function uploadPdf(path: string): Promise<void> {
   const url = process.env.SUPABASE_URL ?? '';
@@ -76,7 +87,7 @@ async function addPackage(studentId: string, now: Date): Promise<void> {
     if (!sub) throw new Error('subscription not written');
     await sql`insert into public.payments (subscription_id, amount, currency, method, paid_at)
       values (${sub.id}, ${offer.afterDiscount}, ${offer.currency}, 'bank',
-        ${new Date(now.getTime() - 10 * 24 * HOUR)})`;
+        ${new Date(now.getTime() - 10 * DAY)})`;
   });
 }
 
@@ -105,5 +116,6 @@ export async function seedStoreFamily(now = new Date()): Promise<StoreFamily> {
     first: { id: firstId, name: DEMO.first },
     second: { id: secondId, name: DEMO.second },
     frozenAt: new Date(Math.floor(now.getTime() / HOUR) * HOUR),
+    week: weekOf(next, now),
   };
 }

@@ -37,11 +37,23 @@ function pngSize(png: Buffer): { width: number; height: number } {
   return { width: png.readUInt32BE(16), height: png.readUInt32BE(20) };
 }
 
-/** Network idle, every web font in, no skeleton left; then the PNG, checked for its size. */
+/** A page wider than the phone makes mobile Chromium zoom the whole page out (shot at 1/3). */
+async function fitsWidth(page: Page): Promise<void> {
+  const overflow = await page.evaluate<number>(
+    'document.documentElement.scrollWidth - document.documentElement.clientWidth',
+  );
+  expect(overflow, 'the page is no wider than the phone').toBeLessThanOrEqual(0);
+}
+
+/**
+ * Network idle, every web font in, no skeleton left, nothing wider than the phone; then the PNG,
+ * checked for its size.
+ */
 export async function shoot(page: Page, name: Shot): Promise<void> {
   await page.waitForLoadState('networkidle');
   await page.waitForFunction('document.fonts.status === "loaded"');
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await fitsWidth(page);
   await page.mouse.move(0, 0);
   const png = await page.screenshot({
     path: join(OUT_DIR, `${name}.png`),
