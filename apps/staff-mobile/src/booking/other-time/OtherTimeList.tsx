@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, FilterPills, freeSlotDays, Note, SlotButton, WarnLine } from '@ab/mobile-kit';
 import { useViewerClock } from '@/core/lib/clock';
-import type { OtherTimeProps } from './OtherTime.types';
+import type { OtherTimeProps } from './OtherTime';
 import { OtherTimeStatus } from './OtherTimeStatus';
 import { useOutsideSlots } from './use-outside-slots';
 

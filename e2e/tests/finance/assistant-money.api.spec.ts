@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
-import type { AssistantCommissionView, BookingResult } from '@ab/shared';
+import type { AssistantCommissionView } from '@ab/money';
+import type { BookingResult } from '@ab/schedule';
 import { call, dayOffset, freshPhone, leadOf, makeAssistant, tokenOf, trialBody, type Assistant } from '../../support/sales/assistant-api';
 import { cents, money } from '../../support/finance/assistant-money';
 import { resetAbrar, setAvailability, withSql } from '../../support/core/schedule';

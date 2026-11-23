@@ -1,4 +1,4 @@
-import { basePrice } from '@ab/shared';
+import { basePrice } from '@ab/money';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 

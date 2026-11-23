@@ -1,7 +1,6 @@
 import type {
   AdminTaskKind,
   Duration,
-  LessonStatus,
   PackageSize,
   PaymentKind,
   PaymentMethod,
@@ -9,7 +8,7 @@ import type {
   SubscriptionStatus,
 } from '@ab/catalog';
 import type { QuoteResponse } from '../pricing/quote/index.js';
-import type { PayoutLine } from './earnings/payout.js';
+import type { PayoutBreakdownView } from './earnings/payout-breakdown.schemas.js';
 
 // Money responses (docs/11 §5–9). snake_case rows; instants ISO UTC; money as numbers
 // with at most 2 decimals; local dates YYYY-MM-DD; months YYYY-MM.
@@ -116,7 +115,7 @@ export interface PayoutView {
   status: PayoutStatus;
   approved_at: string | null;
   paid_at: string | null;
-  breakdown: { lines: PayoutLine[]; lesson_ids: string[]; statuses: LessonStatus[] };
+  breakdown: PayoutBreakdownView;
   /** Open payouts only: already paid per session in the ledger (docs/11 §10), so due = amount − ledger_paid. */
   ledger_paid?: number;
   /** How a paid payout was paid (migration 20261005000201). */

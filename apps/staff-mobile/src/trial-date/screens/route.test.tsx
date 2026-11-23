@@ -7,7 +7,7 @@ import TrialDateRoute from '../../../app/(tabs)/students/trial-date/[studentId]'
 // From the admin student file: its own screen in the Students tab's stack (behind the root's admin gate).
 jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
-jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
+jest.mock('@/core/push/usePushRegistration/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('./TrialDateFlow', () => ({
   TrialDateFlow: (p: { studentId: string; name: string; program: string }) => {
     const { Text: T } = jest.requireActual('react-native');

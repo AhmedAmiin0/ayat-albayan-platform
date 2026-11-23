@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
-import type { PaymentAttachmentView, SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesMoneySubscriptionView } from '@ab/shared';
+import type { PaymentAttachmentView } from '@ab/money';
 import { call, makeAssistant, tokenOf, type Assistant } from '../../support/sales/assistant-api';
 import { freshDigits } from '../../support/core/messages';
 import { PNG, trialFamily, uploadReceipt } from '../../support/sales/sales-money';

@@ -1,4 +1,5 @@
-import { REPORT_RUBRICS, type Grade, type Rubric } from '@ab/shared';
+import { REPORT_RUBRICS, type Rubric } from '@ab/shared';
+import type { Grade } from '@ab/catalog';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar } from '../../support/core/schedule';
