@@ -25,11 +25,7 @@ const keyOf = (p: PaymentView) => p.id;
 // Keyed by the payment: its receipt viewers hold state (open, loading) that a recycled row must not carry over.
 const renderPayment = ({ item }: { item: PaymentView }) => <PaymentItem key={item.id} payment={item} />;
 
-/**
- * «كل المدفوعات» (web /admin/payments): newest first, filtered by type and month, with the period's
- * net and each payment's receipt. Read-only: editing or voiding stays on the web (no mobile form).
- * The list screens' compact top (owner 2026-10-28): «كل المدفوعات · 40» on the title's line, 8pt apart.
- */
+/** Read-only: editing or voiding stays on the web. */
 export function PaymentsScreen() {
   const { color } = useTheme();
   const [kind, setKind] = useState<PaymentKind | 'all'>('all');

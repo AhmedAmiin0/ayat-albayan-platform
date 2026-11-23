@@ -1,11 +1,8 @@
 import { counted, type Glyph, type SendGateView, type Tone } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
-// The server's send gate (GET /messages/gate) in words for the overview: the same words the inbox
-// GateNote and the web sending chip use, so the phone never says «يعمل» while the server holds messages
-// or sends to the allowed numbers only.
+// Uses the same words as the inbox GateNote and the web chip so the phone never disagrees.
 
-/** «الإرسال يعمل» / «يعمل للأرقام المسموح بها فقط» / «الإرسال متوقف» as a chip (the web sendingChip's words). */
 export function gateChip(gate: Pick<SendGateView, 'open' | 'restricted'>): { tone: Tone; glyph: Glyph; label: string } {
   const s = t.templates.settings;
   if (!gate.open) return { tone: 'neutral', glyph: 'struck', label: s.off };

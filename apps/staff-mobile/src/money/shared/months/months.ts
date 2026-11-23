@@ -13,7 +13,7 @@ export function monthRange(ym: string): { from: string; to: string } {
   return { from: `${ym}-01`, to: addCalendarDays(addCalendarMonths(ym, 1), -1) };
 }
 
-/** «أكتوبر 2026», Western digits. */
+/** Western digits. */
 export function monthLabel(ym: string): string {
   return monthText(ym, locale);
 }

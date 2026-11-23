@@ -27,10 +27,7 @@ function StartButtons({ allow, onPick }: StartProps) {
   );
 }
 
-/**
- * «اجتماع جديد» (now) and «اجتماع مجدول» (a time and invitees), for every staff login holding
- * meetings.write. Then the link to share and each invitee's outcome with its own share button.
- */
+/** Needs meetings.write. */
 export function CreateMeeting({ allow = ALL }: { allow?: MeetingAllow }) {
   const [mode, setMode] = useState<Mode>(null);
   const client = useQueryClient();

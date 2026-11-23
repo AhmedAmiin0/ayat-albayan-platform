@@ -31,10 +31,7 @@ export function useReceiptUrl(paymentId: string, enabled: boolean) {
   });
 }
 
-/**
- * GET `path` (/payments/:id/attachments, or /sales/me/payments/:id/attachments for her own): the
- * payment's «المرفقات», signed for an hour, so cached for 30 minutes. Only asked once opened (`enabled`).
- */
+/** URLs are signed for an hour, so cached for 30 minutes; fetched only once opened. */
 export function usePaymentAttachments(path: string, enabled: boolean) {
   return useQuery({
     queryKey: pathKey(path),

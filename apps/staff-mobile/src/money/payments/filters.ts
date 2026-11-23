@@ -2,7 +2,7 @@ import type { PaymentKind } from '@ab/shared';
 import type { SubscriptionFilter } from '@ab/client-core';
 import { monthRange } from '@/money/shared/months';
 
-/** GET /subscriptions query: «مدفوعة جزئيًا» is `paid=partial`, a status is `status=`, `student` is the name search. */
+/** Partial maps to `paid=partial`; `student` is the name search. */
 export function subscriptionParams(
   filter: SubscriptionFilter | 'all',
   student: string,

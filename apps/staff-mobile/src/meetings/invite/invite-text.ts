@@ -8,21 +8,18 @@ const errors: Record<string, string | undefined> = L.errors;
 const extra: Record<string, string | undefined> = { meeting_ended: t.classroom.error.meeting_ended };
 
 
-/** «الموعد: …» for a scheduled meeting, «اجتماع فوري» for an instant one. */
 export function scheduleLine(meeting: Pick<MeetingView, 'starts_at'>, tz: string, cycle: ClockCycle): string {
   return meeting.starts_at ? L.list.scheduledFor.replace('{when}', whenIn(new Date(meeting.starts_at), tz, cycle)) : L.list.instant;
 }
 
-/** «يُفتح الدخول …» while a scheduled meeting's room is not open yet; null otherwise. */
+/** Null unless a scheduled meeting's room is not open yet. */
 export function opensLine(meeting: Pick<MeetingView, 'window' | 'cancelled_at' | 'state'>, tz: string, cycle: ClockCycle): string | null {
   if (meeting.cancelled_at || meeting.state !== 'open' || meeting.window?.state !== 'early') return null;
   return L.list.opensAt.replace('{when}', whenIn(new Date(meeting.window.opens_at), tz, cycle));
 }
 
-/** «الأوقات بتوقيت الرياض». */
 export const tzNote = (tz: string): string => L.tzNote.replace('{tz}', cityOf(tz));
 
-/** «60 دقيقة». */
 export const minutesText = (n: number): string => L.minutes.replace('{n}', String(n));
 
 type Outcome = Pick<MeetingInviteResult, 'status' | 'channel'> & { error_code?: string | null };
@@ -51,7 +48,7 @@ export function inviteError(error: unknown, fallback: string = L.error): string 
 
 const CHIP = { weekday: 'short', day: 'numeric', month: 'short' } as const;
 
-/** A date chip: «اليوم» for the first, else «الأحد 4 أكتوبر» (a calendar day, formatted at UTC noon). */
+/** A calendar day formatted at UTC noon. */
 export function dayChipLabel(date: string, isToday: boolean): string {
   if (isToday) return L.mobile.today;
   return dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, CHIP).replace(/[،,]\s*/, ' ');

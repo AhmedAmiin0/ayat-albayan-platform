@@ -12,7 +12,7 @@ interface MessageHitRowProps {
   /** The list's one clock (useToday). */
   now: Date;
   onOpen: (hit: MessageSearchHit) => void;
-  /** A teacher's list: never the family's number (as her chats' rows), «رقم غير مسجل» instead. */
+  /** A teacher never sees the family's number. */
   teacher: boolean;
 }
 
@@ -20,10 +20,7 @@ interface MessageHitRowProps {
 const nameOf = (hit: MessageSearchHit, teacher: boolean): string =>
   hit.display_name ?? (teacher ? t.inbox.unknownNumber : ltr(formatPhone(hit.phone_e164)));
 
-/**
- * One hit under «الرسائل» (docs/37): the chat's avatar and name (or its number), the message's
- * day or clock as the chats' rows, and the snippet with the words marked. Tap → that chat at it.
- */
+/** docs/37. */
 export function MessageHitRow({ hit, q, now, onOpen, teacher }: MessageHitRowProps) {
   const { color } = useTheme();
   const cycle = useClockCycle();

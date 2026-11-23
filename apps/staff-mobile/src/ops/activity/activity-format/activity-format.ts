@@ -5,7 +5,6 @@ import { t, locale, isolate } from '@ab/mobile-kit';
 
 // The log's times read in the viewer's zone (docs/34), 12 or 24 h as they chose, Western digits.
 
-/** «03/10/2026، 16:30» / «… 4:30 م» on the clock of the viewer's `tz`. */
 export function formatAt(iso: string, cycle: ClockCycle, tz: string): string {
   const day = dateText(new Date(iso), { tz, locale }, { dateStyle: 'medium' });
   return dateWithClock(day, clockIn(new Date(iso), tz, cycle));
@@ -36,12 +35,10 @@ export const resultStyle = (status: number): StatusStyle =>
 export const resultLabel = (status: number): string =>
   status >= 400 ? t.activity.error.replace('{status}', String(status)) : t.activity.ok;
 
-/** «سارة · الإدارة»: who did it, with their role. */
 export function actorLine(row: Pick<ActivityView, 'actor_name' | 'actor_role'>): string {
   return `${row.actor_name ? isolate(row.actor_name) : t.activity.unknownUser} · ${roleLabel(row.actor_role)}`;
 }
 
-/** «الإدارة · طالب · 3 أكتوبر 2026 16:30»: the second line of a row. */
 export function metaLine(row: Pick<ActivityView, 'entity' | 'at'>, cycle: ClockCycle, tz: string): string {
   return [row.entity ? entityLabel(row.entity) : null, formatAt(row.at, cycle, tz)]
     .filter((p): p is string => p !== null)

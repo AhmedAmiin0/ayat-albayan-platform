@@ -1,3 +1,3 @@
 export { NotificationsScreen, type NotificationsScreenProps } from './NotificationsScreen';
-// «محفظتي» refreshes when the bell gets a new «عمولة جديدة» (owner 2026-10-29).
+// The wallet refreshes when the bell gets a new commission.
 export { useBellSignal } from './use-bell-signal';

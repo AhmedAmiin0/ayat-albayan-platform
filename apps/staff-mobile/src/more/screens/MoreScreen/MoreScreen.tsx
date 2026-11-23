@@ -23,10 +23,7 @@ import { ClassroomSection } from '@/more/sections/ClassroomSection';
 import { FinanceSection } from '@/more/sections/FinanceSection';
 import { MoneySection } from '@/more/sections/MoneySection';
 
-/**
- * «المزيد» (R-MOB-02): the read-only lists that don't earn a tab («الجدول» is its own tab now),
- * the price calculator, «حسابي» (R-ACC-01), the appearance, the language, sign-out.
- */
+/** R-MOB-02, R-ACC-01. */
 export function MoreScreen({ can = () => true }: { can?: (permission: Permission) => boolean }) {
   const [leaving, setLeaving] = useState(false);
   const logout = () => {
@@ -38,7 +35,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
     <Screen scroll>
       <ScreenHeader title={t.mobile.more} trailing={<AccountHeaderAvatar href="/more/account" />} />
       <InsetGroup>
-        {/* «حسابي» for every role (sales included: they share these tabs); the rest by permission. */}
+        {/* The account entry is for every role; the rest by permission. */}
         <AccountRow href="/more/account" />
         {/* Dynamic roles: each list shows only when the held role grants it. */}
         {can('teachers.read') && <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />}

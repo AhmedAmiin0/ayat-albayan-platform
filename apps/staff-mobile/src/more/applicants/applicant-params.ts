@@ -4,7 +4,7 @@ import type { ListParams } from '@ab/mobile-kit';
 
 export type ApplicantStatusFilter = 'all' | JobApplicantStatus;
 
-/** The «ترتيب الطلبات» choices; '' is the API's default (newest first). `key:desc` = descending. */
+/** Empty string is the API default (newest first); `key:desc` is descending. */
 export const applicantSortChoices = (): { value: string; label: string }[] => [
   { value: '', label: t.leads.sort.newest },
   { value: 'created_at', label: t.leads.sort.oldest },

@@ -7,7 +7,7 @@ interface NotificationRowProps {
   onPress: (item: NotificationItem) => void;
 }
 
-/** One bell row: title, body, how long ago, and «غير مقروء» (glyph + word, never colour alone). */
+/** Unread is shown with glyph and word, never colour alone. */
 export function NotificationRow({ item, onPress }: NotificationRowProps) {
   const { color } = useTheme();
   const tags = (

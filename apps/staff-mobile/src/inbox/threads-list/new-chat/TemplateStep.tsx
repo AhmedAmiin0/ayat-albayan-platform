@@ -24,11 +24,7 @@ function SendStatus({ error, pending }: { error: string | null; pending: boolean
   return pending ? <Note>{t.inbox.newChat.sending}</Note> : null;
 }
 
-/**
- * Steps 2–3: the caller's allowed templates (GET /messaging/templates: the allow-list for sales and
- * assistants; none → «noAllowed» and nothing to send), then the picked one's params and preview
- * (TemplateForm, the chat's own) and «أرسل». The header's back goes one step.
- */
+/** Sales and assistants only see their allow-list; with none there is nothing to send. */
 export function TemplateStep({ found, onBack, onClose, onSent }: TemplateStepProps) {
   const templates = useApprovedTemplates(true);
   const [chosen, setChosen] = useState<TemplateView | null>(null);

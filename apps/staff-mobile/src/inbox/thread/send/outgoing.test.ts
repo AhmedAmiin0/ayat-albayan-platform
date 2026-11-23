@@ -1,6 +1,6 @@
 import { sendBody } from './outgoing';
 
-// «إعادة فتح المحادثة» (owner 2026-11-14): the picked template carries reopen; others do not.
+// Only the picked reopen template carries reopen.
 const out = { kind: 'template' as const, key: 'welcome_greeting', params: {}, preview: 'أهلًا' };
 
 test('a reopen template: reopen true beside its key and request id', () => {

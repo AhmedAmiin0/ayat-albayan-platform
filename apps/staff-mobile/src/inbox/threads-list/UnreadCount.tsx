@@ -5,11 +5,7 @@ import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 /** The drawn count: the number, «99+» above 99. */
 export const unreadText = (n: number): string => (n > 99 ? '99+' : String(n));
 
-/**
- * A chat's unread count as WhatsApp draws it (owner 2026-10-28): a small green circle with the number at the
- * row's end, so the name keeps its width (the «١ رسالة جديدة» chip squeezed it to one letter). The reader
- * hears the words («رسالة جديدة واحدة»). Its text does not scale: the 22pt circle would clip it.
- */
+/** The text does not scale since the 22pt circle would clip it. */
 export function UnreadCount({ n }: { n: number }) {
   const { color } = useTheme();
   return (

@@ -6,10 +6,7 @@ import { usePermissions, apiSend, t, Field, AppText, Button, type, useTheme } fr
 import { Note } from '@/core/ui/feedback/Note';
 import type { Teacher } from '@ab/shared';
 
-/**
- * «اسم المستخدم» of the teacher's login (docs/30 §7), for teachers.write: LTR, lower-cased on blur and save,
- * sent only when it changed (empty clears it). Without a login it is read-only with the «المستخدمون» note.
- */
+/** docs/30 §7: needs teachers.write; lower-cased, sent only when changed, empty clears it. */
 export function TeacherUsername({ teacher }: { teacher: Teacher }) {
   const T = t.familyAuth.teacherUsername;
   const { color } = useTheme();

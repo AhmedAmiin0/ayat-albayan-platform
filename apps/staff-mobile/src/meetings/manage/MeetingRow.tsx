@@ -9,7 +9,6 @@ import { MeetingActions } from './MeetingActions';
 const L = t.meetings.internal;
 const M = t.meetingInvites.list;
 
-/** The second line: «الموعد: …» or «اجتماع فوري · 5 أكتوبر 14:30», then the invitees and «أنت مدعو». */
 function detailLine(meeting: MeetingView, tz: string, cycle: ClockCycle): string {
   const when = meeting.starts_at ? scheduleLine(meeting, tz, cycle) : `${M.instant} · ${meetingWhen(meeting.created_at, tz, cycle)}`;
   const count = meeting.invitees_count > 0 ? M.inviteesCount.replace('{n}', String(meeting.invitees_count)) : null;

@@ -11,14 +11,11 @@ export interface Kpi {
   tab?: WorkTab;
 }
 
-/** «يحتاج تأكيد» exists only while the academy requires a confirmation (no 0 tile otherwise). */
+/** Present only while the academy requires confirmation, so there is no zero tile. */
 const confirmTile = (s: DashboardCounts, required: boolean): Omit<Kpi, 'act'>[] =>
   required ? [{ key: 'needsConfirm', value: s.needs_confirmation, label: t.enums.lessonStatus.scheduled }] : [];
 
-/**
- * The web's KPI strip (reports, unpaid, tasks, «يحتاج تأكيد» when `required`, settings
- * .lesson_confirmation_required) plus the active students.
- */
+/** The confirmation tile appears only when settings.lesson_confirmation_required is on. */
 export function kpisOf(s: DashboardCounts, required: boolean): Kpi[] {
   const rows: Omit<Kpi, 'act'>[] = [
     ...confirmTile(s, required),

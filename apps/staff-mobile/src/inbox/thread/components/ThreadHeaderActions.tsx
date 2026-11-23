@@ -16,7 +16,6 @@ interface ThreadHeaderActionsProps {
   phone: string;
   /** The cached thread: its newest page carries the chat's `lists`. */
   data: ThreadCache | undefined;
-  /** A salesperson (self.sales): «تسجيل طالب جديد» on a lead and «تحقق من التسجيل» too. */
   sales: boolean;
 }
 
@@ -27,18 +26,13 @@ interface MenuOptions {
   openLists: () => void;
 }
 
-/** «تسجيل طالب جديد» on a lead still in the funnel: the trial wizard in sales mode, prefilled from the thread. */
+/** Only on a lead still in the funnel; opens the trial wizard in sales mode, prefilled. */
 function registerItem(base: TreeBase, thread: ThreadView | null): ThreadMenuItem[] {
   const href = registerHref(thread);
   return href ? [{ label: t.inbox.registerNew, onPress: () => router.push(inTree(base, href)) }] : [];
 }
 
-/**
- * The menu's actions, each behind its own key: a salesperson's «تسجيل طالب جديد» FIRST on a lead still in
- * the funnel (owner 2026-10-30: out of the pill strip; registerHref), «بحث» (2026-11-02), «نسخ الرقم», «القوائم» (inbox.lists),
- * «تحقق من التسجيل», and «ربط بطالب موجود» (leads.link_family, owner 2026-10-29) on a lead's chat with no
- * family and no teacher.
- */
+/** Registration comes first, and only on a lead still in the funnel (registerHref). */
 function useMenuItems({ phone, sales, thread, openLists }: MenuOptions) {
   const base = useTreeBase();
   const { showCopy } = useBubbleChatActions();
@@ -65,12 +59,7 @@ function useMenuItems({ phone, sales, thread, openLists }: MenuOptions) {
   return { items, lists };
 }
 
-/**
- * After the call button in an admin or assistant chat header (never a teacher's): ONE «⋮» that opens
- * the chat's menu (review 2026-10-29 #13): a salesperson's «تسجيل طالب جديد» on a lead (the trial wizard in
- * sales mode), «نسخ الرقم», «القوائم» with inbox.lists (docs/22), a salesperson's «تحقق من التسجيل» for this
- * number, and «ربط بطالب موجود» on a lead's chat in either tree. The lists' checklist sheet opens from it.
- */
+/** Never in a teacher's header; one overflow menu keeps room for the name. */
 export function ThreadHeaderActions({ phone, data, sales }: ThreadHeaderActionsProps) {
   const { color } = useTheme();
   const [menu, setMenu] = useState(false);

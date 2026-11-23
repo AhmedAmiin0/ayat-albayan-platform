@@ -25,11 +25,7 @@ const keyOf = (applicant: JobApplicant) => applicant.id;
 // Keyed by the applicant: its links hold a «failed» line that a recycled row must not carry over.
 const renderRow = ({ item }: { item: JobApplicant }) => <ApplicantRow key={item.id} applicant={item} />;
 
-/**
- * «طلبات التوظيف», read-only (R-LEAD-04, as the web list): status filter, order, name + LTR phone +
- * status, and the CV and recitation links. Rows are not buttons: moving an applicant through the
- * pipeline stays on the web for now. The list screens' compact top (owner 2026-10-28), 8pt apart.
- */
+/** R-LEAD-04: read-only; moving an applicant through the pipeline stays on the web. */
 export function JobApplicantsScreen() {
   const [status, setStatus] = useState<ApplicantStatusFilter>('all');
   const [sort, setSort] = useState('');

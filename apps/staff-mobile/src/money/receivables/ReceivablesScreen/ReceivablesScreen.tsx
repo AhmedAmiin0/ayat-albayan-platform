@@ -21,11 +21,7 @@ import { ReceivablesSummary } from '@/money/receivables/ReceivablesSummary';
 
 const renderRow = ({ item }: ListRenderItemInfo<ReceivableRow>) => <ReceivableItem row={item} />;
 
-/**
- * «المستحقات» (web /admin/receivables): who still owes on a package, the biggest debt first as the
- * API sorts it. The list is one answer, so the search narrows it here. A row opens the payment form.
- * The list screens' compact top and one inset card of rows (owner 2026-10-28): «المستحقات · 12».
- */
+/** Sorted by the API, biggest debt first; the list is one answer so search filters locally. */
 export function ReceivablesScreen() {
   const { color } = useTheme();
   const bar = useTabBarInset();

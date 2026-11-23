@@ -6,17 +6,11 @@ import { SendState } from './SendState';
 import { WhatIsSent } from './WhatIsSent';
 
 interface CommsOverviewProps {
-  /** A «ماذا يُرسل الآن» row: open «الإشعارات» on that audience. */
   onOpenAudience: (audience: NotificationAudience) => void;
-  /** «افتح «الأرقام»»: the numbers tab. */
   onOpenNumbers: () => void;
 }
 
-/**
- * «نظرة عامة» on the phone (docs/23 §2d mobile, docs/26b §6b): the send state and the server's gate
- * (read-only), each line's sending provider (switched after a confirm, docs/19), the numbers with their
- * health, «ماذا يُرسل الآن» per audience, the number shown to families; where the rest is managed is in the send state's web note. Only the provider switch writes.
- */
+/** docs/23 §2d, docs/26b §6b: only the provider switch writes, after a confirm (docs/19). */
 export function CommsOverview({ onOpenAudience, onOpenNumbers }: CommsOverviewProps) {
   return (
     <>

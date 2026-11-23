@@ -13,7 +13,6 @@ interface Asked {
   index: number;
 }
 
-/** «بحث» inside a chat (client-core's chatSearchPages over this app's fetch) and its hits. */
 export function useChatSearchResults({ phone, q, typing, index }: Asked) {
   const query = useInfiniteQuery(chatSearchPages(phone, q, (path) => apiFetch(path)));
   const { hits, total } = searchHits(typing ? undefined : query.data?.pages);

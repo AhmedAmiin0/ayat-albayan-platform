@@ -12,7 +12,7 @@ const rows = () =>
     { route: 'invoices', title: t.mobileFinance.rows.invoices, href: '/more/finance/invoices' },
   ] as const;
 
-/** «الحسابات» on «المزيد» (admin): the money screens of the web «المالية» menu, one row each. */
+/** Admin only. */
 export function FinanceSection({ can = () => true }: { can?: Can }) {
   const shown = allowedRows(can, rows());
   if (shown.length === 0) return null;

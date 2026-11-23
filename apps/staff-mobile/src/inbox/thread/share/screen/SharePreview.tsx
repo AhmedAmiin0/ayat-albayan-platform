@@ -25,7 +25,6 @@ function Line({ text, lines }: { text: string; lines: number }) {
   );
 }
 
-/** «3 ملفات · scan.pdf», with the first photo's thumbnail from its cached copy. */
 function FilesPreview({ files, first }: { files: readonly SharedFile[]; first: SharedFile }) {
   const { color } = useTheme();
   const count = counted(s.files, files.length);
