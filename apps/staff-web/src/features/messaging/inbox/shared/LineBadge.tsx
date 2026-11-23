@@ -1,4 +1,4 @@
-import type { NumberPurpose } from '@ab/shared';
+import type { NumberPurpose } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**

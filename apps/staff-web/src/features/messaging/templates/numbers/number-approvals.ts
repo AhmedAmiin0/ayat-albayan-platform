@@ -1,4 +1,5 @@
-import type { NumberView, TemplateStatus, TemplateView } from '@ab/shared';
+import type { NumberView, TemplateView } from '@ab/shared';
+import type { TemplateStatus } from '@ab/catalog';
 
 // Per-number approval of one template (docs/23c decisions 3–4), for the «يُرسل من» cell. Pure.
 

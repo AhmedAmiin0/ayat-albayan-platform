@@ -3,9 +3,8 @@ import {
   type EvolutionSyncPart,
   type EvolutionSyncState,
   type EvolutionSyncView,
-  type Glyph,
-  type Tone,
 } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 
 /** The whole push in one word: «متزامن», «غير متزامن» or «لم تُزامن بعد». */
 export type SyncWord = 'synced' | 'unsynced' | 'never';

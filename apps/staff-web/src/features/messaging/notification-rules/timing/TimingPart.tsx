@@ -1,4 +1,5 @@
-import { VALUE_GROUP_IDS, VALUE_GROUPS, type NotificationEntryView } from '@ab/shared';
+import type { NotificationEntryView } from '@ab/shared';
+import { VALUE_GROUP_IDS, VALUE_GROUPS } from '@ab/settings';
 import { Link } from '@tanstack/react-router';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

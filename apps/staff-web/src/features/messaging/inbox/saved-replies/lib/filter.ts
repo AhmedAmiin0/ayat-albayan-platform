@@ -1,4 +1,5 @@
-import { matchesQuery, type SavedReply, type SavedReplyScope } from '@ab/shared';
+import type { SavedReply, SavedReplyScope } from '@ab/shared';
+import { matchesQuery } from '@ab/core';
 
 // The picker's pure parts: which list, the search, and the «/» trigger of the composer.
 

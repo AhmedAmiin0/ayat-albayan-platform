@@ -1,4 +1,5 @@
-import { type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
+import type { TemplateLineView, TemplateView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { fullTime } from '@/features/messaging/inbox/format';

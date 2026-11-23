@@ -1,4 +1,5 @@
-import { formatPhone, type MessageSearchHit } from '@ab/shared';
+import type { MessageSearchHit } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

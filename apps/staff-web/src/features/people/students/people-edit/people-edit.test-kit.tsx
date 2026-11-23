@@ -1,4 +1,5 @@
-import type { Permission, PeopleEditView } from '@ab/shared';
+import type { PeopleEditView } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import type { Mock } from 'vitest';
