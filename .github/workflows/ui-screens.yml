@@ -1,0 +1,92 @@
+name: ui-screens
+
+# Screenshots of every page of both web apps (staff-web, family-web) as every role that reaches
+# it, taken on demo data in the local Supabase this job starts: e2e/tests/screens/ui-screens.spec.ts
+# with UI_SHOTS=1. Never staging or production, no secrets. Same setup as ci.yml «e2e».
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - e2e/tests/screens/**
+      - e2e/support/screens/**
+      - .github/workflows/ui-screens.yml
+
+concurrency:
+  group: ui-screens-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  shots:
+    name: ui screens
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      SUPABASE_EXCLUDE: studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
+      # The default registry (public.ecr.aws) rate-limits pulls: ci.yml «e2e».
+      SUPABASE_INTERNAL_IMAGE_REGISTRY: docker.io
+    steps:
+      # Supabase's host ports sit in Linux's ephemeral range: reserved before any socket opens.
+      - run: sudo sysctl -qw net.ipv4.ip_local_reserved_ports=54320-54329
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - uses: ./.github/actions/pnpm-store
+      - run: pnpm i --frozen-lockfile
+      - name: Start local Supabase (background)
+        run: |
+          nohup bash -c 'up() { pnpm supabase start -x "$SUPABASE_EXCLUDE"; }
+            up || { pnpm supabase stop --no-backup; up; }
+            echo $? > "$RUNNER_TEMP/supabase.rc"' > "$RUNNER_TEMP/supabase.log" 2>&1 &
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(pnpm --filter e2e exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - name: Cache the Playwright browser
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - name: Install the browser (only on a cache miss)
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter e2e exec playwright install chromium
+      # Arabic text needs the system fonts the browser falls back to.
+      - name: Install the browser's system libraries
+        run: pnpm --filter e2e exec playwright install-deps chromium
+      - name: Build what the e2e servers run
+        run: pnpm turbo build --filter=e2e^...
+      - name: Wait for local Supabase
+        run: |
+          for _ in $(seq 1 300); do [ -f "$RUNNER_TEMP/supabase.rc" ] && break; sleep 1; done
+          cat "$RUNNER_TEMP/supabase.log"
+          test "$(cat "$RUNNER_TEMP/supabase.rc" 2>/dev/null)" = 0
+      - run: pnpm env:local
+      # Playwright directly, not turbo: turbo's strict env would drop UI_SHOTS. No retry: a retried
+      # test would seed the demo data twice.
+      - name: UI screenshots
+        env:
+          CI: 'true'
+          UI_SHOTS: '1'
+        run: >-
+          pnpm --filter e2e exec playwright test --project=desktop --retries=0 --trace=off
+          screens/ui-screens.spec.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-screens
+          path: e2e/ui-screens/
+          if-no-files-found: error
+          include-hidden-files: false
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ui-screens-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 7

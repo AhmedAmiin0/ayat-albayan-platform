@@ -602,6 +602,7 @@
     "reporting/report-outcome.sql.spec.ts",
     "people/roles-permissions.sql.spec.ts",
     "store/store-screenshots.spec.ts",
+    "screens/ui-screens.spec.ts",
     "messaging/saved-replies.sql.spec.ts",
     "teaching/student-recordings-rls.sql.spec.ts",
     "finance/teacher-corrections.sql.spec.ts",
