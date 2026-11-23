@@ -1,4 +1,10 @@
-import { DEFAULT_RENEWAL_PRICING, quote, type SalesFamilyStudent, type SalesMoneySubscriptionView, type SalesPaymentView, type SalesQuoteView } from '@ab/shared';
+import type {
+  SalesFamilyStudent,
+  SalesMoneySubscriptionView,
+  SalesPaymentView,
+  SalesQuoteView,
+} from '@ab/shared';
+import { DEFAULT_RENEWAL_PRICING, quote } from '@ab/money';
 
 // Test rows shaped like the sales money endpoints (docs/16). Not imported by app code.
 

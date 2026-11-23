@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, settingDef } from '@ab/shared';
+import { SETTING_FIELD_OF, settingDef } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { cn } from '@ab/web-kit/lib/utils';

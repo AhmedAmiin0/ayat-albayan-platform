@@ -1,4 +1,4 @@
-import type { SourceRow } from '@ab/shared';
+import type { SourceRow } from '@ab/money';
 import { ScrollX } from '@ab/web-kit/components/ui/layout/scroll-x';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';

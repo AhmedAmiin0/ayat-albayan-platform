@@ -5,13 +5,13 @@ import {
   v2Problem,
   v2SubmitBody,
   v2ValuesOf,
-  type Program,
   type ReportAttachmentView,
   type ReportContent,
   type ReportV2DraftBody,
   type ReportView,
   type V2Values,
 } from '@ab/shared';
+import type { Program } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';

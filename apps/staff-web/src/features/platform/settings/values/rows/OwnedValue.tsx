@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { OWNER_PAGE } from '@/features/platform/settings/values/lib/value-groups-view';
-import type { OwnedValueGroupId } from '@ab/shared';
+import type { OwnedValueGroupId } from '@ab/settings';
 
 /** A module-owned value: text, and the link to the page that edits it (never an editor). */
 export function OwnedValue({ text, group }: { text: string; group: OwnedValueGroupId }) {

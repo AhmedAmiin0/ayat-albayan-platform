@@ -1,4 +1,5 @@
-import { CURRENCY_ISOS, SETTING_FIELD_OF, settingDef } from '@ab/shared';
+import { CURRENCY_ISOS } from '@ab/money';
+import { SETTING_FIELD_OF, settingDef } from '@ab/settings';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { str } from '@/features/platform/settings/registry-form/settings-form';

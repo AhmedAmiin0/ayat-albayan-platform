@@ -1,4 +1,4 @@
-import type { GoogleSyncSettings } from '@ab/shared';
+import type { GoogleSyncSettings } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { DefaultCell, LastCell } from '@/features/platform/settings/values/cells/InfoCells';
 import { keyItem } from '@/features/platform/settings/values/cells/key-item';

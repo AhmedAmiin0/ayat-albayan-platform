@@ -4,7 +4,7 @@ import { cn } from '@ab/web-kit/lib/utils';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { financeNotes, rateLines } from './finance-notes';
 import { amount, currencyLabel } from '@/features/reporting/dashboard/shared/format';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 /** The period's four money totals (Plex, not the KPI Amiri: these are data) and the FX notes. */
 export function FinanceTotals({ finance }: { finance: DashboardResponse['finance'] }) {

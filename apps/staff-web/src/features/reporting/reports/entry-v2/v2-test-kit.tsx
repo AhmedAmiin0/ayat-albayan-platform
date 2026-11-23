@@ -1,4 +1,5 @@
-import { emptyContent, type MemoryView, type ReportContent, type ReportView, type UserRole } from '@ab/shared';
+import { emptyContent, type MemoryView, type ReportContent, type ReportView } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';

@@ -8,7 +8,7 @@ import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
-import type { PendingReportRow } from '@ab/shared';
+import type { PendingReportRow } from '@ab/money';
 
 export const workItem = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2.5 last:border-b-0';
 export const workLink = 'ms-auto text-xs font-semibold text-lapis underline-offset-4 hover:underline';

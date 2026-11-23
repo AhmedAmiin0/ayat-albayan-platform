@@ -1,4 +1,6 @@
-import type { ConfigEntry, Locale, Permission, SettingOwner } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
+import type { Locale } from '@ab/core';
+import type { ConfigEntry, SettingOwner } from '@ab/settings';
 
 // «الوصف» of a value (docs/26 §3): what the row's muted line shows, and who may edit it.
 

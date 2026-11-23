@@ -1,4 +1,4 @@
-import { EDITABLE_VALUE_KEYS } from '@ab/shared';
+import { EDITABLE_VALUE_KEYS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { GROUP_IDS, groupKeys, groupLabel, groupOfKey, isOwnedGroup, OWNER_PAGE, resolveGroup } from './value-groups-view';

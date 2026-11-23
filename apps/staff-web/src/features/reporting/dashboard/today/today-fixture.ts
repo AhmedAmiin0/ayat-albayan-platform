@@ -1,4 +1,5 @@
-import type { LessonStatus, LessonView } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import type { LessonView } from '@ab/schedule';
 
 // Test fixture (not a test): one lesson of today as GET /lessons returns it.
 

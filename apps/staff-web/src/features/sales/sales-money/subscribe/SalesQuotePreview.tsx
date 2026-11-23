@@ -1,4 +1,4 @@
-import type { SubscriptionPricing } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
