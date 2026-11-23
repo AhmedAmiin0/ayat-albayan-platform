@@ -22,12 +22,12 @@
       "count": 3
     },
     "max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/assistant/kind.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/assistant/renewal.test.ts": {
@@ -37,7 +37,7 @@
   },
   "src/assistant/renewal.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/assistant/schemas.test.ts": {
@@ -60,7 +60,7 @@
   },
   "src/assistant/started.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/assistant/statement.test.ts": {
@@ -96,7 +96,7 @@
   },
   "src/assistant/wallet.ts": {
     "max-len": {
-      "count": 18
+      "count": 17
     }
   },
   "src/ledger/alerts.test.ts": {
@@ -186,7 +186,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/ledger/usage/package-cancel.ts": {
@@ -194,7 +194,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/ledger/usage/package-progress.ts": {
@@ -215,7 +215,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/ledger/usage/tiers.ts": {
@@ -225,7 +225,7 @@
   },
   "src/ledger/usage/usage.before.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ledger/usage/usage.instant.test.ts": {
@@ -256,7 +256,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/pricing/currency.ts": {
@@ -314,7 +314,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   }
 }
