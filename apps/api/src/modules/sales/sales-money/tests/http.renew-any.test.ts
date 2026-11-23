@@ -3,7 +3,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type InjectArgs, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type InjectArgs, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, FAMILY_PHONE, MSG, NONE, PAY, salesDefaults } from './sales-money.fakes';
 
 // «تجديد اشتراك أي طالب» (docs/16 row 38; owner 2026-11-01: «renew to any one without
@@ -24,8 +25,8 @@ const now = new Date().toISOString();
 const chatPhoto = { id: MSG, phone_e164: FAMILY_PHONE, direction: 'inbound', media_id: 'm', media_mime: 'image/jpeg', media_path: null, body: null, created_at: now, line: 'chat', interactive_payload: { type: 'image' } };
 
 function suite(resolver: PermissionResolver) {
-  const ctx = {} as { app: NestFastifyApplication; m: Mocks; call: Awaited<ReturnType<typeof moneyApp>>['call'] };
-  beforeAll(async () => Object.assign(ctx, await moneyApp(resolver)));
+  const ctx = {} as { app: NestFastifyApplication; m: Mocks; call: Awaited<ReturnType<typeof salesMoneyApp>>['call'] };
+  beforeAll(async () => Object.assign(ctx, await salesMoneyApp(resolver)));
   afterAll(() => ctx.app.close());
   beforeEach(() => {
     resetMocks(ctx.m);

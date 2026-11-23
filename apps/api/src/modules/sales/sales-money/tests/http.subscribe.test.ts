@@ -1,7 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, REQ, salesDefaults } from './sales-money.fakes';
 
 const SUB_KEYS = ['currency', 'due', 'duration', 'id', 'lessons_total', 'lessons_used_before', 'package', 'paid', 'price', 'starts_on', 'status', 'student'];
@@ -9,9 +10,9 @@ const SUB_KEYS = ['currency', 'due', 'duration', 'id', 'lessons_total', 'lessons
 describe('POST /sales/subscriptions(/quote): her student, the admin’s SubscriptionCreator, a whitelisted view', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);

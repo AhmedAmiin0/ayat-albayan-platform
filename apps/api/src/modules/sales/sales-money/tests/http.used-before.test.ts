@@ -3,7 +3,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
 // «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932). The weekly package has 4 lessons.
@@ -14,11 +15,11 @@ const withoutSetStart: PermissionResolver = async (user) =>
   (await systemResolver(user)).filter((p) => p !== 'subscriptions.set_start_date');
 
 function suite(resolver: PermissionResolver) {
-  const ctx = {} as { app: NestFastifyApplication; m: Mocks; call: Awaited<ReturnType<typeof moneyApp>>['call'] };
+  const ctx = {} as { app: NestFastifyApplication; m: Mocks; call: Awaited<ReturnType<typeof salesMoneyApp>>['call'] };
   beforeAll(async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
-    Object.assign(ctx, await moneyApp(resolver));
+    Object.assign(ctx, await salesMoneyApp(resolver));
   });
   afterAll(async () => {
     await ctx.app.close();

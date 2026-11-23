@@ -1,7 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
 const CUSTOM = { ...WEEKLY_SA, source: 'custom', quoted: WEEKLY_SA.afterDiscount };
@@ -10,9 +11,9 @@ const CUSTOM = { ...WEEKLY_SA, source: 'custom', quoted: WEEKLY_SA.afterDiscount
 describe('custom subscription price', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);

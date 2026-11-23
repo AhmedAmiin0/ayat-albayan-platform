@@ -3,7 +3,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 // GET /sales/money/family with sales.renew_any (owner 2026-10-29, docs/16 row 38): every child, `mine` says whose.
@@ -26,10 +27,10 @@ function twoChildren(m: Mocks): void {
 describe('GET /sales/money/family and sales.renew_any', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
   const family = async (token: 'salesA' | 'salesB') => (await call({ method: 'GET', url: URL, token })).json().students;
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp(withRenewAny)));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp(withRenewAny)));
   afterAll(() => app.close());
   beforeEach(() => twoChildren(m));
 
@@ -48,9 +49,9 @@ describe('GET /sales/money/family and sales.renew_any', () => {
 describe('GET /sales/money/family without sales.renew_any: unchanged', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => twoChildren(m));
 

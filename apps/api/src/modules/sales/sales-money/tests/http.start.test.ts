@@ -1,6 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
 // 2026-10-12 13:00 in Riyadh: today = 2026-10-12.
@@ -10,12 +11,12 @@ const URL = '/sales/subscriptions';
 describe('POST /sales/subscriptions with subscriptions.set_start_date (docs/16 row 24)', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
   beforeAll(async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
-    ({ app, m, call } = await moneyApp());
+    ({ app, m, call } = await salesMoneyApp());
   });
   afterAll(async () => {
     await app.close();

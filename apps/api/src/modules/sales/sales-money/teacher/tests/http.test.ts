@@ -1,7 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { badRequest } from '@/common/http/errors';
 import { CREATE, salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 import { SalesMoney } from '@/modules/sales/sales-money/sales-money.service';
@@ -14,13 +15,13 @@ const TEACHER = '7a000000-0000-4000-8000-000000000001';
 describe('POST /sales/subscriptions with teacherId; GET /sales/subscriptions/teachers', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
   let assign: MockInstance<SalesTeacherAssign['assign']>;
   let active: MockInstance<SalesTeacherAssign['ensureActive']>;
   let subscribe: MockInstance<SalesMoney['subscribe']>;
 
   beforeAll(async () => {
-    ({ app, m, call } = await moneyApp());
+    ({ app, m, call } = await salesMoneyApp());
     const service = app.get(SalesTeacherAssign);
     assign = vi.spyOn(service, 'assign').mockResolvedValue(true);
     vi.spyOn(service, 'options').mockResolvedValue([{ id: TEACHER, name: 'أبرار' }]);

@@ -2669,7 +2669,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/finance/subscriptions/trial/student-trial-status.test.ts": {
@@ -8825,9 +8825,11 @@
     }
   },
   "src/modules/sales/sales-money/chat/sales-chat-files.ts": {
-    "ab/module-boundaries": {
+    "max-len": {
       "count": 1
-    },
+    }
+  },
+  "src/modules/sales/sales-money/chat/sales-chat-receipts.http.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -8837,15 +8839,14 @@
       "count": 6
     }
   },
-  "src/modules/sales/sales-money/shared/sales-family.repo.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 3
-    },
+  "src/modules/sales/sales-money/package-cancel/sales-package-cancel.ts": {
     "max-len": {
-      "count": 6
+      "count": 3
+    }
+  },
+  "src/modules/sales/sales-money/package-cancel/tests/http.cancel.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/reads/sales-money-reads.controller.ts": {
@@ -8869,29 +8870,6 @@
       "count": 4
     }
   },
-  "src/modules/sales/sales-money/sales-money.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 7
-    },
-    "max-len": {
-      "count": 13
-    }
-  },
-  "src/modules/sales/sales-money/tests/sales-money.fakes.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/sales/sales-money/package-cancel/tests/http.cancel.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-money/chat/sales-chat-receipts.http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-money/reads/tests/http.renew-any-family.test.ts": {
     "max-len": {
       "count": 2
@@ -8902,32 +8880,44 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-money/tests/http.start-locked.test.ts": {
+  "src/modules/sales/sales-money/sales-money.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 7
+    },
     "max-len": {
-      "count": 1
+      "count": 13
     }
   },
-  "src/modules/sales/sales-money/tests/http.used-before.test.ts": {
+  "src/modules/sales/sales-money/sales-money.service.ts": {
     "max-len": {
-      "count": 1
+      "count": 11
     }
   },
-  "src/modules/sales/sales-money/shared/tests/mapper.test.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
+  "src/modules/sales/sales-money/sales-start.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/modules/sales/sales-money/shared/sales-family.repo.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 3
+    },
+    "max-len": {
+      "count": 6
     }
   },
   "src/modules/sales/sales-money/shared/sales-money.mapper.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.module.ts": {
-    "ab/module-boundaries": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 5
     }
   },
   "src/modules/sales/sales-money/shared/sales-money.scope.ts": {
@@ -8936,11 +8926,6 @@
     },
     "max-len": {
       "count": 8
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.service.ts": {
-    "max-len": {
-      "count": 13
     }
   },
   "src/modules/sales/sales-money/shared/sales-money.services.ts": {
@@ -8956,29 +8941,8 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-money/package-cancel/sales-package-cancel.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/sales/sales-money/sales-start.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
-  "src/modules/sales/sales-money/teacher/tests/http.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/sales-money/teacher/tests/assign.test.ts": {
-    "max-len": {
+  "src/modules/sales/sales-money/shared/tests/mapper.test.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -8988,6 +8952,31 @@
     },
     "max-len": {
       "count": 4
+    }
+  },
+  "src/modules/sales/sales-money/teacher/tests/assign.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/teacher/tests/http.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/tests/http.start-locked.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/tests/http.used-before.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/tests/sales-money.fakes.ts": {
+    "max-len": {
+      "count": 3
     }
   },
   "src/modules/sales/sales-registration/sales-registration.controller.ts": {

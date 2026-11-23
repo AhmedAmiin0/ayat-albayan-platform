@@ -2,12 +2,8 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import {
-  moneyApp,
-  resetMocks,
-  SALES_B,
-  type Mocks,
-} from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 // POST /sales/packages/:id/cancel «إلغاء الباقة» by the assistant (owner 2026-11-02): ANY student,
@@ -19,9 +15,9 @@ const cancelled = subRow({ status: 'cancelled', cancelled_by: SALES_B.id });
 describe('POST /sales/packages/:id/cancel', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);

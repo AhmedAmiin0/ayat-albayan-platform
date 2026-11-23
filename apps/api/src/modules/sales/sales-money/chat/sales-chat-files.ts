@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
+import { ThreadMediaService } from '@/modules/messaging/inbox';
 import { badRequest } from '@/common/http/errors';
 
 /**

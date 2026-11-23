@@ -1,7 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type InjectArgs, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type InjectArgs, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { AUTO_ASSIGN_OFF, CREATE, MSG, PAY, salesDefaults } from './sales-money.fakes';
 
 const ROUTES: InjectArgs[] = [
@@ -17,9 +18,9 @@ const ROUTES: InjectArgs[] = [
 describe('/sales money routes: self.sales_money, and only for her own students while the rule enforces', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);

@@ -3,7 +3,8 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 // GET /sales/packages/:id/cancel (whether «إلغاء الباقة» shows) and the key: subscriptions.stop,
@@ -14,9 +15,9 @@ const url = `/sales/packages/${SUB_ID}/cancel`;
 describe('GET /sales/packages/:id/cancel', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);
@@ -62,9 +63,9 @@ describe('without subscriptions.stop (a role it was switched off for)', () => {
     (user.role ? systemPermissionsOf(user.role) : []).filter((p) => p !== 'subscriptions.stop');
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp(withoutStop)));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp(withoutStop)));
   afterAll(() => app.close());
   beforeEach(() => resetMocks(m));
 

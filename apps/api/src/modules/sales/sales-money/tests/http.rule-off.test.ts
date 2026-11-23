@@ -2,13 +2,8 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import {
-  moneyApp,
-  resetMocks,
-  SALES_B,
-  type InjectArgs,
-  type Mocks,
-} from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, SALES_B, type InjectArgs, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { AUTO_ASSIGN_OFF, CREATE, FAMILY_PHONE, NONE, PAY } from './sales-money.fakes';
 import { salesDefaults } from './sales-money.fakes';
 
@@ -36,9 +31,9 @@ const REQUIRE_OFF = SETTING_DEFAULTS;
 describe('the ownership rule off: any student’s money, as her, commission untouched', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);

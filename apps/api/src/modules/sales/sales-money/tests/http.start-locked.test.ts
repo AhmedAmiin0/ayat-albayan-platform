@@ -2,7 +2,8 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 
 const NOW = new Date('2026-10-12T10:00:00Z'); // Riyadh today = 2026-10-12
@@ -14,12 +15,12 @@ const withoutSetStart: PermissionResolver = async (user) =>
 describe('POST /sales/subscriptions without subscriptions.set_start_date: always today', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
   beforeAll(async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
-    ({ app, m, call } = await moneyApp(withoutSetStart));
+    ({ app, m, call } = await salesMoneyApp(withoutSetStart));
   });
   afterAll(async () => {
     await app.close();

@@ -2,7 +2,8 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { CUSTOM_COUNT_DEFAULT, quote } from '@ab/shared';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { ENFORCED_SETTINGS, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { ENFORCED_SETTINGS, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 const SIBLING = '5a000000-0000-4000-8000-0000000000aa';
@@ -13,10 +14,10 @@ const used = (remaining: number) => ({ subscription_id: SUB_ID, student_id: STUD
 describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10-26)', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
   const family = async () => (await call({ method: 'GET', url: URL, token: 'salesA' })).json().students;
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);

@@ -1,6 +1,7 @@
 // HTTP test harness for the money controllers (test-only, excluded from the build). Real
 // controllers, guards and services; every DB / storage / pricing facing class is a mock.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+import type { Type } from '@nestjs/common';
 import { Test, type TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '@/app.module';
 import { AuditService } from '@/common/audit/audit.service';
@@ -55,13 +56,21 @@ const verify: TokenVerifier = async (token) => {
 export type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teacher' | 'salesA' | 'salesB'; body?: object };
 
+type More = (b: TestingModuleBuilder) => TestingModuleBuilder;
+const same: More = (b) => b;
+
 /**
  * Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key;
  * `more`: a module's own overrides on top (the Stripe module's queries and client).
  */
-export async function moneyApp(resolver: PermissionResolver = systemResolver, more: (b: TestingModuleBuilder) => TestingModuleBuilder = (b) => b) {
+export function moneyApp(resolver: PermissionResolver = systemResolver, more: More = same) {
+  return moneyAppOf(AppModule, resolver, more);
+}
+
+/** The same harness on a smaller root module (a feature's own test app, e.g. salesMoneyApp). */
+export async function moneyAppOf(root: Type, resolver = systemResolver, more: More = same) {
   const m = mocks();
-  const builder = Test.createTestingModule({ imports: [AppModule] })
+  const builder = Test.createTestingModule({ imports: [root] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SubscriptionsRepo).useValue(m.subs)
     .overrideProvider(SubscriptionCancelRepo).useValue(m.cancels)
