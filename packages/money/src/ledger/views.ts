@@ -8,7 +8,7 @@ import type {
   PayoutStatus,
   SubscriptionStatus,
 } from '@ab/catalog';
-import type { QuoteResponse } from '../pricing/quote.js';
+import type { QuoteResponse } from '../pricing/quote/index.js';
 import type { PayoutLine } from './earnings/payout.js';
 
 // Money responses (docs/11 §5–9). snake_case rows; instants ISO UTC; money as numbers

@@ -2804,12 +2804,12 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/NewThread.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/NewThread/tests/NewThread.test.tsx": {
     "max-len": {
       "count": 3
     }
   },
-  "src/features/messaging/inbox/threads/pane/NewThread.tsx": {
+  "src/features/messaging/inbox/threads/pane/NewThread/NewThread.tsx": {
     "max-len": {
       "count": 3
     },
@@ -2822,12 +2822,12 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadHeader.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadHeader/tests/ThreadHeader.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadHeader.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadHeader/ThreadHeader.tsx": {
     "complexity": {
       "count": 1
     },
@@ -2843,17 +2843,17 @@
       "count": 2
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.chat.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/chat.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.focus.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/focus.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.lists.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/lists.test.tsx": {
     "max-len": {
       "count": 1
     },
@@ -2861,27 +2861,27 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.messages.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/messages.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.narrow.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/narrow.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.permissions.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/permissions.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.phone.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/phone.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.privacy.en.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/privacy.en.test.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
     },
@@ -2889,7 +2889,7 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.privacy.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/privacy.test.tsx": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 3
     },
@@ -2897,7 +2897,7 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.rating.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/rating.test.tsx": {
     "@typescript-eslint/dot-notation": {
       "count": 1
     },
@@ -2908,17 +2908,17 @@
       "count": 2
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.reply.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/reply.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.subscription.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/subscription.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadPane.tsx": {
+  "src/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane.tsx": {
     "ab/module-boundaries": {
       "count": 2
     },
