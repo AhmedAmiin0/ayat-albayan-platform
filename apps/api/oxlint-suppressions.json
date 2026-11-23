@@ -7313,9 +7313,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
     }
   },
   "src/modules/people/guardians/guardian-phones.service.ts": {
