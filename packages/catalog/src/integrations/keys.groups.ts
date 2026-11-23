@@ -1,4 +1,4 @@
-import type { IntegrationGroup, IntegrationKey } from './keys.js';
+import type { IntegrationGroup, IntegrationKey } from './keys/index.js';
 
 // Beside keys.ts (its 150-line cap): the group of every integration key. keys.ts builds
 // INTEGRATION_KEYS from it; this file imports types only from there, so no runtime cycle.

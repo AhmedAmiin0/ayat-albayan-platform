@@ -1,4 +1,4 @@
-import type { UserRole } from './roles.js';
+import type { UserRole } from './roles/index.js';
 import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';
 import { PORTAL_FIXED_GRANTS } from './catalog.portal.js';
 
