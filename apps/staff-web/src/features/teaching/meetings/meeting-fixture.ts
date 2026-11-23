@@ -1,4 +1,4 @@
-import type { MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
 
 /** A MeetingView for the tests: an open instant meeting I manage, unless overridden. */
 export const meetingRow = (over: Partial<MeetingView> = {}): MeetingView => ({

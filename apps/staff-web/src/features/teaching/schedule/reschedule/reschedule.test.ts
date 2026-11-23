@@ -1,4 +1,4 @@
-import { rescheduleRequestSchema } from '@ab/shared';
+import { rescheduleRequestSchema } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { familyTz, rescheduleBody, seriesDays } from './reschedule';

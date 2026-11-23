@@ -1,5 +1,6 @@
 import { coursePauseBanner } from '@ab/client-core';
-import { riyadhToday, type CoursePauseView } from '@ab/shared';
+import type { CoursePauseView } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { dateLabel } from '@/features/teaching/schedule';

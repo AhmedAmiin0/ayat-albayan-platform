@@ -1,4 +1,4 @@
-import type { MeetingCreateResult } from '@ab/shared';
+import type { MeetingCreateResult } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
