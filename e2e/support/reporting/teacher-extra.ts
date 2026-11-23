@@ -1,4 +1,5 @@
-import { REPORT_RUBRICS, type Attendance, type Grade, type ReportFormResponse, type TextKey } from '@ab/shared';
+import { REPORT_RUBRICS, type ReportFormResponse, type TextKey } from '@ab/shared';
+import type { Attendance, Grade } from '@ab/catalog';
 import { expect, type Locator, type Page } from '@playwright/test';
 import { ar } from '../core/fixtures';
 import { API, bearer } from '../core/messages';

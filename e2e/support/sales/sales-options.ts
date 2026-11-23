@@ -1,5 +1,5 @@
 import type { APIRequestContext } from '@playwright/test';
-import type { RoleView } from '@ab/shared';
+import type { RoleView } from '@ab/catalog';
 import { API, call } from './assistant-api';
 
 // Helpers of the sales options specs (owner 2026-10-12, docs/16 rows 23–26): the system sales role's

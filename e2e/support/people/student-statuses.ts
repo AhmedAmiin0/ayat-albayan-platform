@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { quote } from '@ab/shared';
+import { quote } from '@ab/money';
 import type { Locator, Page } from '@playwright/test';
 import { API, bearer } from '../core/messages';
 import { startedToday } from '../finance/money';

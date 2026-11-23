@@ -12,7 +12,7 @@ import { lesson, yusuf } from '@/today/testing/fixtures';
 // The tabs' permission and badge reads need the API: allow everything, no badge, in this routing test.
 jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
-jest.mock('@/core/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
+jest.mock('@/core/push/usePushRegistration/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('@/booking/makeup/MakeupWizard', () => ({
   MakeupWizard: ({ source }: { source: { studentName: string; durationMin: number } }) => {
     const { Text: T } = jest.requireActual('react-native');

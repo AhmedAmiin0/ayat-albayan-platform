@@ -1,4 +1,4 @@
-import { quote } from '@ab/shared';
+import { quote } from '@ab/money';
 import { seedFamily, withSql, type Family } from '../core/schedule';
 
 // Seed for journeys 2 and 3 (docs/03 §5): «أبرار» has a lesson today that has already started,
