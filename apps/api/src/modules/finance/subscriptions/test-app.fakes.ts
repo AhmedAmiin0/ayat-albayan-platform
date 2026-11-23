@@ -94,7 +94,7 @@ export function resetMocks(m: Mocks): void {
   m.payments.byInvoice.mockResolvedValue(null);
   m.earnings.byRequest.mockResolvedValue(null);
   m.earnings.settlePayout.mockResolvedValue(null);
-  m.earnings.paidOnLessons.mockResolvedValue(0);
+  m.earnings.paidOnLessons.mockResolvedValue(new Map());
   m.subs.byRequest.mockResolvedValue(null);
   m.cancels.linkedLessons.mockResolvedValue(0);
   m.cancels.laterCommission.mockResolvedValue(false);

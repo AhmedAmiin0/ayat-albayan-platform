@@ -53,7 +53,7 @@ describe('monthly payouts × per-session ledger', () => {
   });
 
   it('an open payout shows ledger_paid (what per-session payments already covered); a paid one does not', async () => {
-    m.earnings.paidOnLessons.mockResolvedValue(40);
+    m.earnings.paidOnLessons.mockResolvedValue(new Map([['l1', 3000], ['l2', 1000]]));
     m.payouts.forMonth.mockResolvedValue([payoutRow(), payoutRow({ status: 'paid', id: 'x', paid_at: '2026-10-01T09:00:00Z' })]);
     const [open, paid] = (await call({ method: 'GET', url: '/payouts?month=2026-09' })).json();
     expect(open).toMatchObject({ amount: 140, ledger_paid: 40 });
@@ -64,7 +64,7 @@ describe('monthly payouts × per-session ledger', () => {
   it('a teacher’s own payouts carry ledger_paid too', async () => {
     m.teachers.idByProfile.mockResolvedValue('5e000000-0000-4000-8000-000000000001');
     m.payouts.forTeacher.mockResolvedValue([payoutRow({ status: 'approved' })]);
-    m.earnings.paidOnLessons.mockResolvedValue(70);
+    m.earnings.paidOnLessons.mockResolvedValue(new Map([['l1', 7000]]));
     const res = await call({ method: 'GET', url: '/teachers/me/payouts', token: 'teacher' });
     expect(res.json()[0]).toMatchObject({ status: 'approved', ledger_paid: 70 });
   });
