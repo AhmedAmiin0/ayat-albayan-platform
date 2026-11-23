@@ -9,9 +9,9 @@ import { renderPortal } from '@ab/web-kit/portal/portal.render';
 import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 const seen = vi.hoisted(() => ({ props: null as ClassroomRoomProps | null }));
-vi.mock('@ab/web-kit/classroom/room/components/ClassroomRoom', () => ({
+vi.mock('@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom', () => ({
   ClassroomRoom: (props: ClassroomRoomProps) => {
     seen.props = props;
     return <p>{props.join.token}</p>;

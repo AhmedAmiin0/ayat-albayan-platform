@@ -1,4 +1,4 @@
-import { arabicLiterals } from '@ab/shared';
+import { arabicLiterals } from '@ab/i18n';
 import allow from './i18n-literals.allow.json';
 
 // «Nothing untranslated» (owner, 2026-10-05): no Arabic in string literals or JSX text of the

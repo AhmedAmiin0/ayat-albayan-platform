@@ -270,7 +270,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/test-server.ts": {

@@ -7,7 +7,7 @@ import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 // «أرسل عبر واتساب» in the bubble's menu (⋯): the same action as the bubble's line.
 

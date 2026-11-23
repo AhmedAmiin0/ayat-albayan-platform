@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
 const AHEAD = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z' });
 const w = t.teacherBoard;

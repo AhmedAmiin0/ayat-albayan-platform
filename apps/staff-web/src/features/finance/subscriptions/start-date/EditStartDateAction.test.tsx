@@ -1,4 +1,5 @@
-import { daysBefore, riyadhToday } from '@ab/shared';
+import { daysBefore } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -9,7 +10,7 @@ import { EditStartDateAction } from './EditStartDateAction';
 // «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms only; a native date input.
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiSend,
 }));

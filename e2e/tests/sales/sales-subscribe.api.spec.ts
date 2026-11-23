@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
-import type { MyPaymentRow, SalesChatReceipt, SalesMoneySubscriptionView, SalesPaymentView, SalesQuoteView } from '@ab/shared';
+import type {
+  SalesChatReceipt,
+  SalesMoneySubscriptionView,
+  SalesPaymentView,
+  SalesQuoteView,
+} from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { call, makeAssistant, type Assistant } from '../../support/sales/assistant-api';
 import { stubInboundMedia } from '../../support/messaging/inbox';
 import { freshDigits, setSetting } from '../../support/core/messages';

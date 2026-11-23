@@ -1,5 +1,6 @@
 import { pathKey, setViewerPersonTz } from '@ab/client-core';
-import type { Permission, ThreadLesson } from '@ab/shared';
+import type { ThreadLesson } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -12,7 +13,7 @@ import { setConfirmationRequired } from '@ab/web-kit/lib/settings/confirmation-t
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 // The admin's form is its own feature's (RescheduleForm tests): here only that it opens on the right lesson.
 vi.mock('@/features/teaching/schedule', async (orig) => ({
   ...(await orig<object>()),

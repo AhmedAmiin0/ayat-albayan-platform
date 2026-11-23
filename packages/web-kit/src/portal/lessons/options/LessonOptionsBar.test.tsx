@@ -7,7 +7,7 @@ import { LessonOptionsBar } from './LessonOptionsBar';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch }));
 
 const NOW = new Date('2026-10-26T10:00:00.000Z');
 const A = t.portal.actions;

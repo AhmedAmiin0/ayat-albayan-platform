@@ -1,6 +1,6 @@
 import type { FamilyPick } from './family-pick.js';
 
-// The family app's bottom tabs (owner 2026-11-15, 2026-11-16, docs/50 §6): every login works as
+// The family app's bottom tabs (docs/50 §6): every login works as
 // one student at a time (a guardian picks a child: family-pick.ts), so the bar is the student's,
 // الرئيسية · الجدول · التقارير · حسابي. «التقارير» waits for that student (none: never shown).
 

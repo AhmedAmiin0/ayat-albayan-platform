@@ -3,7 +3,7 @@ import {
   SAVED_REPLY_PLACEHOLDERS,
   type SavedReplyPlaceholder,
   type SavedReplyValues,
-} from './saved-reply-text.js';
+} from './saved-reply-text/index.js';
 
 // Fill-in blanks of a saved reply (owner 2026-10-27): «[المبلغ]» in a reply is a blank the sender
 // fills when using it, before the text goes into the box (still editable there). The auto

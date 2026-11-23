@@ -1,6 +1,6 @@
 import { EMPTY_STUDENT, type CreateStudentValues } from '@/features/people/students/create/create-student';
 import type { Clock } from '@ab/web-kit/lib/clock';
-import { clockRange } from '@ab/shared';
+import { clockRange } from '@ab/time';
 import { hhmmText } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';

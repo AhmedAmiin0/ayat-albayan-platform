@@ -9,7 +9,7 @@ import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/sha
 
 // Stickers and GIFs in the chat (owner 2026-11-01): shown at once, a sticker with no bubble.
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 
 const SIGNED = 'https://storage.test/wa-media/m-1.webp?token=x';
 const NOW = new Date('2026-11-01T12:00:00Z');

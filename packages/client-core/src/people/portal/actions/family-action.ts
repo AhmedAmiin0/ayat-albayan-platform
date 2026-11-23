@@ -2,7 +2,7 @@ import type { PortalActionResult } from '@ab/shared';
 import { apiErrorCode } from '../../../core/http/index.js';
 import type { FamilyLessonInput, PortalLessonSends } from './lesson-sends.js';
 
-// One family lesson action (owner 2026-11-17), as the family app and the web portal send it, and
+// One family lesson action, as the family app and the web portal send it, and
 // the notice each says once it lands (portal.actions.<notice>).
 
 export type FamilyAction =

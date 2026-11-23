@@ -1,4 +1,5 @@
-import type { Locale, TranslationKeyRow } from '@ab/shared';
+import type { Locale } from '@ab/shared';
+import type { TranslationKeyRow } from '@ab/i18n';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

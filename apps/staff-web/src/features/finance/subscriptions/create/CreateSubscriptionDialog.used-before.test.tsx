@@ -1,4 +1,6 @@
-import { daysBefore, lessonsOf, riyadhToday } from '@ab/shared';
+import { daysBefore } from '@ab/shared';
+import { lessonsOf } from '@ab/money';
+import { riyadhToday } from '@ab/time';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -9,7 +11,7 @@ import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.set_start_date'] }));
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 vi.mock('@/features/people/auth', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),

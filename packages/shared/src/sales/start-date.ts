@@ -1,6 +1,6 @@
 import { addCalendarDays } from '@ab/time';
 
-// The subscription start day of the sales subscribe (owner 2026-10-12, docs/16 row 24). Pure: the API
+// The subscription start day of the sales subscribe (docs/16 row 24). Pure: the API
 // enforces it, web and mobile use it to show the same error before posting.
 // Without subscriptions.set_start_date: the default day (today, Riyadh: the admin form's default too); an
 // explicit other day is 403 start_date_not_allowed. With it: today or later, or a PAST day only when
@@ -40,10 +40,10 @@ export function salesStartDate(input: SalesStartInput): SalesStartResult {
   return { ok: true, startsOn };
 }
 
-// «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932): lessons the student took before the
+// «حلقات مستخدمة من الباقة» (migration 932): lessons the student took before the
 // platform, counted as used; the course books only the rest. Only with a past start (the «بدأ الاشتراك
 // سابقًا» path, subscriptions.set_start_date) and never the whole package (subscriptions check): every
-// lesson but one, whatever the days a week (owner 2026-11-02 «dont put limit»; the course books the rest).
+// lesson but one, whatever the days a week (no other limit; the course books the rest).
 
 export type UsedBeforeProblem = 'used_before_not_allowed' | 'used_before_needs_past_start' | 'used_before_too_many';
 
@@ -66,7 +66,7 @@ export function usedBeforeProblem(input: UsedBeforeInput): UsedBeforeProblem | n
 }
 
 /**
- * The stepper's last value: every lesson but one (owner 2026-11-02), whatever the course days; with
+ * The stepper's last value: every lesson but one, whatever the course days; with
  * fewer lessons left than days a week the course books just those (planSeries drops the later days).
  */
 export function usedBeforeMax(lessonsTotal: number): number {

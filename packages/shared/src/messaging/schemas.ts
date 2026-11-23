@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { WA_LINES } from '@ab/catalog';
 import { leadQualificationSchema } from '../people/schemas/leads.js';
-import { CHAT_FILE_MIMES, WA_CAPTION_MAX } from './chat/chat-files.js';
+import { CHAT_FILE_MIMES, WA_CAPTION_MAX } from './chat/chat-files/index.js';
 import { BODY_SLOTS, type BodySlot } from './templates/templates.js';
 
 // Phase 4 request bodies (docs/12 §4). Commands are camelCase, like every other request.

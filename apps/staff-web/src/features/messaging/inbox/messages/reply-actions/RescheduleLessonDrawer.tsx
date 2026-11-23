@@ -1,5 +1,6 @@
 import { readLessonAt } from '@ab/client-core';
-import type { LessonView, ReplyLesson } from '@ab/shared';
+import type { ReplyLesson } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { Drawer, RescheduleForm, studentNames } from '@/features/teaching/schedule';
 import { apiFetch } from '@ab/web-kit/lib/http/api';

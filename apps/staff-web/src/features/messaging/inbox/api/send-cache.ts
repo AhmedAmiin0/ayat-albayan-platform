@@ -8,7 +8,8 @@ import {
   touchedThread,
   type ThreadPages,
 } from '@ab/client-core';
-import type { MessageView, Page, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import type { QueryClient } from '@tanstack/react-query';
 import { threadPage, threadPath } from './api';
 import { threadQuery } from './thread-query';

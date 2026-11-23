@@ -1,5 +1,6 @@
+import { randomUUID } from 'node:crypto';
 import type { APIRequestContext } from '@playwright/test';
-import type { AssistantCommissionView } from '@ab/shared';
+import type { AssistantCommissionView } from '@ab/money';
 import { call, dayOffset } from '../sales/assistant-api';
 
 // Admin-side money steps of the assistant API specs: a package for a student, a payment, the ledger.
@@ -21,14 +22,22 @@ export function money(request: APIRequestContext, admin: string) {
      * Riyadh: a UTC day (behind Riyadh from 21:00 UTC) reads as a course already started, which earns nothing.
      */
     async subscribe(studentId: string, country: 'SA' | 'US'): Promise<Sub> {
-      const body = { studentId, pricing: { tier: 'starter', country }, startsOn: dayOffset(0) };
+      const pricing = { tier: 'starter', country };
+      const body = { studentId, pricing, startsOn: dayOffset(0), clientRequestId: randomUUID() };
       const res = await as<Sub>('POST', '/subscriptions', body);
       if (res.status !== 201) throw new Error(`subscription ${res.status} ${JSON.stringify(res.body)}`);
       return res.body;
     },
     /** POST /payments in the package's currency; returns the payment id. */
     async payIn(sub: Sub, amount: number): Promise<string> {
-      const body = { subscriptionId: sub.id, amount: cents(amount), currency: sub.currency, method: 'bank', paidAt: new Date().toISOString() };
+      const body = {
+        subscriptionId: sub.id,
+        amount: cents(amount),
+        currency: sub.currency,
+        method: 'bank',
+        paidAt: new Date().toISOString(),
+        clientRequestId: randomUUID(),
+      };
       const res = await as<{ id: string }>('POST', '/payments', body);
       if (res.status !== 201) throw new Error(`payment ${res.status} ${JSON.stringify(res.body)}`);
       return res.body.id;

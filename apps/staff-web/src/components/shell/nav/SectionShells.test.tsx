@@ -1,4 +1,4 @@
-import { USER_ROLES } from '@ab/shared';
+import { USER_ROLES } from '@ab/catalog';
 import type { ReactNode } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';

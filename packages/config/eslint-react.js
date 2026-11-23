@@ -1,4 +1,4 @@
-// React rules (owner 2026-10-30, docs/31a §3.2): no pre-React-19 idioms, effects only in named hooks.
+// React rules (docs/31a §3.2): no pre-React-19 idioms, effects only in named hooks.
 // One no-restricted-syntax list per file: flat config replaces a rule's options per block, so the effect
 // block repeats the other selectors instead of adding a second block that would drop them.
 

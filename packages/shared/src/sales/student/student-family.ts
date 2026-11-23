@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { STUDENT_STATUSES } from '@ab/catalog';
 
-// «العائلة» of «تفاصيل الطالب» (owner 2026-11-02): who the student's guardian is and the
+// «العائلة» of «تفاصيل الطالب»: who the student's guardian is and the
 // guardian's other students, so the staff open the family from the profile.
 
 /** One brother or sister: the same guardian, another student. */

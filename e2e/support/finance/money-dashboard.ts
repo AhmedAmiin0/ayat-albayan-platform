@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { freshDigits, seedLead } from '../core/messages';
 import { riyadhToday, thisMonthStart } from './money-extra';
 import { seedPackageStudent } from './money';

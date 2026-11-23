@@ -1845,7 +1845,7 @@
   },
   "src/modules/finance/payments/payments.retry.http.test.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/finance/payments/payments.service.ts": {
@@ -1904,19 +1904,7 @@
     }
   },
   "src/modules/finance/payouts/payouts.mapper.ts": {
-    "@typescript-eslint/consistent-indexed-object-style": {
-      "count": 1
-    },
-    "@typescript-eslint/dot-notation": {
-      "count": 3
-    },
     "@typescript-eslint/no-unnecessary-type-conversion": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -2782,7 +2770,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/teacher-earnings/summary/corrections.repo.ts": {
@@ -11995,7 +11983,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/scheduling/rules/rule-extend.service.test.ts": {

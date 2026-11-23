@@ -8,7 +8,7 @@ import { openFilters } from '@/test/open-filters';
 import { MyPayouts } from './MyPayouts';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const payout = (over: Partial<PayoutView>): PayoutView => ({
   id: 'p-1',

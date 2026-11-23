@@ -9,7 +9,7 @@ import { useTeacherCancel } from './use-teacher-cancel';
 import { useTeacherConfirm } from './use-teacher-confirm';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiSend,
 }));

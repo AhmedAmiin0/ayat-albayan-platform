@@ -18,7 +18,7 @@ vi.mock('@tanstack/react-router', async () => ({
     select({ location: { pathname: '/teacher' } }),
   useNavigate: () => vi.fn(),
 }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }),
 }));

@@ -7,7 +7,7 @@ import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { AllStudents } from './AllStudents';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/lib/clock-text', async (orig) => ({ ...(await orig<object>()), viewerZone: () => 'Asia/Riyadh' }));
 
 afterEach(() => apiFetch.mockReset());

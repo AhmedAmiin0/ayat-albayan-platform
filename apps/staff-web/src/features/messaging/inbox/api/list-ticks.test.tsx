@@ -1,4 +1,4 @@
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -11,7 +11,7 @@ import { useThreads, useTicksInLists } from './list-ticks';
 // docs/43 §2 (the owner's «pending in the list»), web: a list row follows its chat's tick.
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const LIST = threadsQuery({ page: 1 }).queryKey;
 const page = (last_status: MessageStatus) => ({

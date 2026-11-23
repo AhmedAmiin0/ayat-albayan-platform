@@ -1,13 +1,20 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { PAYMENT_ID, paymentRow, REQUEST_ID, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
 // Payments re-managed (owner, 2026-10-05): filters + period totals, refunds, invoice as receipt.
 
 const INVOICE = '1f000000-0000-4000-8000-000000000001';
 const inv = { rule_id: null, kind: 'package', mime: 'image/png', size_bytes: 10, source: 'upload', created_at: '2026-10-01T09:00:00Z', storage_path: 'r/x.png' };
-const body = { subscriptionId: SUB_ID, amount: 145, currency: 'SAR', method: 'bank', paidAt: '2026-10-01T09:00:00Z' };
+const body = {
+  subscriptionId: SUB_ID,
+  amount: 145,
+  currency: 'SAR',
+  method: 'bank',
+  paidAt: '2026-10-01T09:00:00Z',
+  clientRequestId: REQUEST_ID,
+};
 
 describe('payments v2 routes', () => {
   let app: NestFastifyApplication;

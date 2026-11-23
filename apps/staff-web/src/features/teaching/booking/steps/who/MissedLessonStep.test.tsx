@@ -7,7 +7,7 @@ import { MissedLessonStep } from './MissedLessonStep';
 import { ABRAR, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const NO_SHOW: MakeupCandidate = {
   lesson_id: 'l-1',

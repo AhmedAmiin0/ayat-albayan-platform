@@ -16,15 +16,6 @@ export function payoutStatuses(input: { countLate: boolean; countNoShow: boolean
   ];
 }
 
-export interface PayoutLine {
-  /** Minutes: 30/45/60/90, or another length pro-rated from the nearest rate (pay-rule.ts). */
-  duration: number;
-  lessons: number;
-  /** null = the teacher has no rate for this duration (see missingRates). */
-  rate: number | null;
-  amount: number;
-}
-
 /** draft → approved → paid. Only a draft is regenerated; approved and paid rows are frozen. */
 export const PAYOUT_TRANSITIONS: Record<PayoutStatus, readonly PayoutStatus[]> = {
   draft: ['approved'],

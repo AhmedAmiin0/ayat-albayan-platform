@@ -2,8 +2,8 @@
 
 /**
  * The actions under «تحقّق», in this order on every code step: «أعد إرسال الرمز», then «غيّر الرقم»
- * (or the reset's «رجوع»), one centred column (owner 2026-11-15: side by side, an English pair
- * wrapped unevenly).
+ * (or the reset's «رجوع»), one centred column (side by side, an English
+ * pair wrapped unevenly).
  */
 export const CODE_STEP_ACTIONS = ['resend', 'back'] as const;
 export type CodeStepAction = (typeof CODE_STEP_ACTIONS)[number];

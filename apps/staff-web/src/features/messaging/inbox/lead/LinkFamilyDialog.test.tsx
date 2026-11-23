@@ -1,4 +1,5 @@
-import { formatPhone, type RegistrationCheckView } from '@ab/shared';
+import type { RegistrationCheckView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
@@ -8,7 +9,7 @@ import { LinkFamilyDialog } from './LinkFamilyDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const L = t.inbox.linkFamily;
 const R = t.registrationCheck;

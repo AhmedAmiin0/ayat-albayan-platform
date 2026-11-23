@@ -4,7 +4,7 @@ import { wallParts } from '@ab/schedule';
 import type { CourseDraftInfo } from './course-draft.js';
 import { continueFrom, type BookedCourse } from './course-follow.js';
 
-// The assistant books the weekly course of a subscription she sold (owner 2026-10-18, R-ASST-01):
+// The assistant books the weekly course of a subscription she sold (R-ASST-01):
 // exactly the plan's lesson count, the plan's days a week, each day with its own time.
 
 /** Why the assistant cannot book the course herself (null = she can). */
@@ -18,12 +18,12 @@ export interface CourseSubscription {
   package: PackageSize | null;
   duration: Duration;
   lessons_total: number;
-  /** Taken before the platform (owner 2026-10-28): the course books the rest only; absent = 0. */
+  /** Taken before the platform: the course books the rest only; absent = 0. */
   lessons_used_before?: number;
   starts_on: string;
 }
 
-/** How many lessons the course books (owner 2026-10-28): lessons_total − lessons_used_before. */
+/** How many lessons the course books: lessons_total − lessons_used_before. */
 export const courseLessonCount = (sub: Pick<CourseSubscription, 'lessons_total' | 'lessons_used_before'>): number =>
   sub.lessons_total - (sub.lessons_used_before ?? 0);
 
@@ -63,7 +63,7 @@ export interface SalesCourseView {
   blocked: CourseBlock | null;
   /**
    * The student's latest course of an earlier subscription, while the newest one has no course yet
-   * (a renewal: «تابِع بنفس الأيام», owner 2026-10-18); null otherwise. Absent from an older API.
+   * (a renewal: «تابِع بنفس الأيام»); null otherwise. Absent from an older API.
    */
   previous?: BookedCourse | null;
   /**
@@ -72,7 +72,7 @@ export interface SalesCourseView {
    */
   current?: BookedCourse | null;
   /**
-   * Hold mode (owner 2026-11-06): the package is unpaid with an open payment link, so «احجز» saves
+   * Hold mode: the package is unpaid with an open payment link, so «احجز» saves
    * the picks as a draft (PUT /sales/booking/course/draft) booked on payment. Absent = false.
    */
   hold?: boolean;

@@ -9,7 +9,7 @@ import { MON, NOW, routeCourse, routeSend, SUB } from './course-actions-fixture'
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const day = (n: 0 | 1 | 3) =>
   screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[n]} `) });

@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { TeacherLessonRow } from './TeacherLessonRow';
 
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 // 4 Oct 14:00Z, 45 min, on her own Meet link (not platform): the lead is a link when it joins.
 const L = lesson({ id: 'l-7', starts_at: '2026-10-04T14:00:00.000Z', platform_classroom: false });

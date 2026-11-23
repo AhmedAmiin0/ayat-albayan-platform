@@ -41,7 +41,7 @@ export {
   channelMessagePath,
   channelReadsPath,
   threadHidePath,
-} from './channel-edits.js';
+} from './channel-edits/index.js';
 export {
   channelPresenceKey,
   PRESENCE_SELF_PATH,

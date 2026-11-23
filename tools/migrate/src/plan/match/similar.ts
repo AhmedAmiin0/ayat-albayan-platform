@@ -1,6 +1,6 @@
 // In-import look-alikes that resolve() cannot see because their keys differ. Pure. Never merges:
 // every hit is a review issue and both records are still planned (docs/06 step 4, issue A1).
-import { arabicNameSimilar } from '@ab/shared';
+import { arabicNameSimilar } from '@ab/core';
 import type { RowIssue } from '../../types.ts';
 import type { Desired } from '../resolve.ts';
 

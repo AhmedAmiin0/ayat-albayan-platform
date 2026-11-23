@@ -7,7 +7,7 @@ import { evolutionView } from '@/features/messaging/numbers/numbers.fixture';
 import { EvolutionQrDialog } from './EvolutionQrDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const e = t.numbers.evolution;
 const PNG = 'data:image/png;base64,iVBORw0KGgo=';

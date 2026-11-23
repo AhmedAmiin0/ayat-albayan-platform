@@ -9,7 +9,7 @@ import { invoiceProblem } from './invoice-file';
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
 
 const SIGNED = { bucket: 'invoices', path: 'req-1/abc.png', token: 'tok', signed_url: 'https://x' };

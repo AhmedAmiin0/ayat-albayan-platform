@@ -7,7 +7,7 @@ import { InstantLessonDialog } from './InstantLessonDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const STUDENT = { id: 's-1', code: 'AB-0001', name: 'سهيلة محمد', status: 'active', program: 'quran', tz: 'Asia/Riyadh', created_at: '', guardian_name: 'أم سهيلة', guardian_phone: '', teacher_name: null };
 const TEACHER = { id: 't-1', display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Asia/Riyadh', meeting_link: null, students_count: 1, max_students: null, has_availability: true };

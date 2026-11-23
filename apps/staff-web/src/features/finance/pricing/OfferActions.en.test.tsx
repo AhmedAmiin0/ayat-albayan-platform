@@ -1,4 +1,4 @@
-import { offerText, quote } from '@ab/shared';
+import { offerText, quote } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
 import { render, screen } from '@testing-library/react';

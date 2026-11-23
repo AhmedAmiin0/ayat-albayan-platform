@@ -7,7 +7,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { AdminSessions } from './AdminSessions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const iso = (min: number) => new Date(Date.now() + min * 60_000).toISOString();
 const lesson = (id: string, start: number, status = 'confirmed') => ({

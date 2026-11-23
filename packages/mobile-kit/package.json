@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@ab/client-core": "workspace:*",
+    "@ab/i18n": "workspace:*",
     "@ab/shared": "workspace:*",
     "@ab/time": "workspace:*",
     "@supabase/supabase-js": "^2.117.2",

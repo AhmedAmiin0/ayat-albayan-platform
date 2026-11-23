@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
@@ -8,7 +8,7 @@ import { PAYMENT } from '@/features/finance/subscriptions/money-fixture';
 import { PaymentDialogs } from '@/features/finance/payments/PaymentDialogs';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const T = t.payments.editAmount;
 const boxName = T.newAmount.replace('{currency}', 'ر.س');

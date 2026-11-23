@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from './money/money.fakes';
+import { REQUEST_ID, STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from './money/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from './test-app';
 
 describe('subscriptions routes (S1–S6, R-SUB-01)', () => {
@@ -12,7 +12,7 @@ describe('subscriptions routes (S1–S6, R-SUB-01)', () => {
   afterAll(() => app.close());
   beforeEach(() => resetMocks(m));
 
-  const create = { studentId: STUDENT_ID, startsOn: '2026-10-01', pricing: { tier: 'weekly' } };
+  const create = { studentId: STUDENT_ID, startsOn: '2026-10-01', pricing: { tier: 'weekly' }, clientRequestId: REQUEST_ID };
 
   it('S2: priced from the catalog quote with the guardian country, never the body', async () => {
     m.subs.studentForQuote.mockResolvedValue({ id: STUDENT_ID, country: 'SA' });

@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { renderPortal } from '@ab/web-kit/portal/portal.render';
 import { RoomOverlay } from './RoomOverlay';
 
-vi.mock('@ab/web-kit/classroom/room/components/ClassroomRoom', () => ({
+vi.mock('@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom', () => ({
   ClassroomRoom: () => <p>room</p>,
 }));
 

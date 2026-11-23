@@ -1,4 +1,5 @@
-import { avatarTone, type AccountProfile } from '@ab/shared';
+import type { AccountProfile } from '@ab/shared';
+import { avatarTone } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
@@ -13,7 +14,7 @@ vi.mock('@tanstack/react-router', async () => ({
   useNavigate: () => vi.fn(),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const PROFILE: AccountProfile = {
   id: 'u1',

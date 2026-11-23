@@ -8,7 +8,7 @@ import { LeadsInbox } from './LeadsInbox';
 import type { LeadSearch } from './types';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: ReactNode }) => <a href={to}>{children}</a>,
 }));

@@ -39,7 +39,7 @@ export function webConfig(options) {
     plugins: [
       ...(routes ? [tanstackRouter({ target: 'react', autoCodeSplitting: true })] : []),
       react(),
-      // React Compiler (owner 2026-10-30): automatic memoization, so no useMemo / useCallback /
+      // React Compiler: automatic memoization, so no useMemo / useCallback /
       // memo by hand. Default target 19: React 19 ships the compiler runtime.
       babel({ presets: [reactCompilerPreset()] }),
       tailwindcss(),

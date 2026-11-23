@@ -2,7 +2,7 @@ import { outsideSlotsResponseSchema } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey, toQueryString } from '@ab/mobile-kit';
 import { bookingPath, useBookingMode } from '@/booking/shared/booking-mode';
-import type { OutsideParams } from './OtherTime.types';
+import type { OutsideParams } from './OtherTime';
 
 /**
  * GET /booking/outside-slots (sales: /sales/booking/outside-slots), «وقت آخر»: the server's next

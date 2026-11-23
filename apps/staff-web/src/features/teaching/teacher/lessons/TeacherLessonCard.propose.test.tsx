@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
 // Monday 5 Oct 16:00 Cairo (13:00Z); the teacher is in Cairo (UTC+3 until 29 Oct).
 const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' });

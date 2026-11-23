@@ -14,6 +14,7 @@ export * from './usage/payment-state.js';
 export * from './usage/owed.js';
 export * from './usage/receivables.js';
 export * from './earnings/payout.js';
+export * from './earnings/payout-breakdown.schemas.js';
 export * from './schemas.js';
 export * from './usage/tiers.js';
 export * from './usage/usage.js';

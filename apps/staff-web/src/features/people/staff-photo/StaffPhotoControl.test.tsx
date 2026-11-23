@@ -9,7 +9,7 @@ import { StaffPhotoControl, type StaffPhotoControlProps } from './StaffPhotoCont
 const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => new Set<string>());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ can: (p: string) => granted.has(p) }) }));
 

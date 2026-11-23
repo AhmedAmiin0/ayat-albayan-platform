@@ -1,4 +1,4 @@
-import { offerText, type Quote } from '@ab/shared';
+import { offerText, type Quote } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { cleanup, screen, waitFor } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -9,7 +9,7 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { QuoteDialog } from './QuoteDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const p = t.pricing;
 

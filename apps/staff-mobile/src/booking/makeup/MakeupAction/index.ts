@@ -1,0 +1,1 @@
+export { MakeupAction } from './MakeupAction';

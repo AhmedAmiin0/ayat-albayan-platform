@@ -3,7 +3,7 @@ import { localDate } from '@ab/core';
 import type { PaymentMethod } from '@ab/catalog';
 import { CURRENCY_ISOS, currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '@ab/money';
 
-// «رابط دفع» (owner 2026-10-28, docs/30-stripe-test.md; with FEATURE_STRIPE (test or live)): the assistant agrees an amount with
+// «رابط دفع» (docs/30-stripe-test.md; with FEATURE_STRIPE (test or live)): the assistant agrees an amount with
 // the family in the chat and sends a Stripe Checkout link; the verified webhook records the payment. Strict
 // objects, like the sales money commands: an unknown field is a 400, never silently dropped.
 
@@ -30,12 +30,12 @@ export const paymentLinkQuoteSchema = z.strictObject({ studentId: z.uuid(), pric
 
 /**
  * POST /sales/payment-links: the package as the sales subscribe flow takes it (pricing, start day, used
- * lessons, teacher: «اشتراك جديد» then «دفع إلكتروني», owner 2026-10-29) plus the agreed amount (free, > 0,
+ * lessons, teacher: «اشتراك جديد» then «دفع إلكتروني») plus the agreed amount (free, > 0,
  * at most settings max_discount_pct below the calculator price when set).
  */
 export const paymentLinkCreateSchema = z.strictObject({
   studentId: z.uuid(),
-  /** Optional (owner 2026-10-29): the API stores 'renewal' once the student has a priced package, else 'new'. */
+  /** Optional: the API stores 'renewal' once the student has a priced package, else 'new'. */
   kind: z.enum(PAYMENT_LINK_KINDS).optional(),
   pricing: subscriptionPricingSchema,
   startsOn: localDate.optional(),

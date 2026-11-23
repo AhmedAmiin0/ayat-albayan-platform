@@ -1,4 +1,5 @@
-import { formatPhone, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
+import type { RegistrationCheckView, RegistrationMatch } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent, type ReactNode } from 'react';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

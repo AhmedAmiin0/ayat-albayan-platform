@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
-import type { PaymentAttachmentView, SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesMoneySubscriptionView } from '@ab/shared';
+import type { PaymentAttachmentView } from '@ab/money';
 import { call, makeAssistant, tokenOf, type Assistant } from '../../support/sales/assistant-api';
 import { freshDigits } from '../../support/core/messages';
 import { PNG, trialFamily, uploadReceipt } from '../../support/sales/sales-money';
@@ -47,7 +48,8 @@ test.describe.serial('bank-transfer attachments (API + DB + storage)', () => {
   test('admin: a bank transfer with two attachments; listed with signed links; refused on cash', async ({ request }) => {
     const s = need(sub);
     const paths = [await adminUpload(request, { admin, subscriptionId: s.id }), await adminUpload(request, { admin, subscriptionId: s.id })];
-    const base = { subscriptionId: s.id, amount: 10, currency: s.currency, paidAt: new Date().toISOString() };
+    const paidAt = new Date().toISOString();
+    const base = { subscriptionId: s.id, amount: 10, currency: s.currency, paidAt, clientRequestId: randomUUID() };
     const cash = await call(request, { token: admin, method: 'POST', path: '/payments', body: { ...base, method: 'cash', attachments: paths } });
     expect([cash.status, cash.body['code']]).toEqual([400, 'attachments_not_allowed']);
     const bank = await call<{ id: string }>(request, { token: admin, method: 'POST', path: '/payments', body: { ...base, method: 'bank', attachments: paths } });

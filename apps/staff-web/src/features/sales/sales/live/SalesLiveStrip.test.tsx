@@ -7,7 +7,7 @@ import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLiveStrip } from './SalesLiveStrip';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 // The router's Link (a client-side move keeps the drafts); a plain <a href> would reload the page.
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children, ...rest }: { to: string; children: ReactNode }) => (

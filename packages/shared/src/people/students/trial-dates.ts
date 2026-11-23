@@ -1,8 +1,8 @@
 import { DURATIONS, type Attendance, type Duration, type Gender, type LessonStatus, type Program, type StudentStatus } from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
-import { isNotSubscribed } from './status-flow.js';
+import { isNotSubscribed } from './status-flow/index.js';
 
-// «موعد تجريبي جديد» (owner 2026-10-25): a new free-trial date for an existing student who has no
+// «موعد تجريبي جديد»: a new free-trial date for an existing student who has no
 // running subscription, and the history of every trial time picked for them. Pure.
 
 /**
@@ -12,7 +12,7 @@ import { isNotSubscribed } from './status-flow.js';
 export const TRIAL_OUTCOMES = ['upcoming', 'awaiting', 'attended', 'absent', 'cancelled', 'moved'] as const;
 export type TrialOutcome = (typeof TRIAL_OUTCOMES)[number];
 
-/** From this many dates on (the new one included) the form warns; never a block (owner 2026-10-25). */
+/** From this many dates on (the new one included) the form warns; never a block. */
 export const TRIAL_DATE_WARN_FROM = 3;
 
 /** One row of «مواعيد الحلقة التجريبية», newest pick first. Times are UTC instants. */
@@ -96,7 +96,7 @@ export const TRIAL_DEFAULT_MINUTES: Duration = 45;
 
 /**
  * «موعد تجريبي جديد» keeps the last trial's length (newest pick first) when it is one the slots
- * offer (30/45/60/90), else 45; the wizard may change it (owner 2026-11-02).
+ * offer (30/45/60/90), else 45; the wizard may change it.
  */
 export function trialLength(history: Pick<TrialHistory, 'items'>): Duration {
   const last = history.items[0];

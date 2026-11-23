@@ -7,7 +7,7 @@ import { ASSISTANT } from '@/features/people/assistants/fixtures';
 import { TermsEditor } from './TermsEditor';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
 const T = t.assistants.terms;
 const empty = { ...ASSISTANT, terms: { assistant_id: 'a1', salary: null, commission: null, renewal_share_percent: 50 } };

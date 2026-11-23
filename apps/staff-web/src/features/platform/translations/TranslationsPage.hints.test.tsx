@@ -1,4 +1,5 @@
-import { SEED_ENTRIES, type TranslationKeyRow } from '@ab/shared';
+import { SEED_ENTRIES } from '@ab/shared';
+import type { TranslationKeyRow } from '@ab/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -9,7 +10,7 @@ import { TranslationsPage } from './TranslationsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', () => ({ apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 
 const HINT_KEY = 'settings.hints.bookingHorizonWeeks';
 const HINT: TranslationKeyRow = { key: HINT_KEY, section: 'settings', ar: 'نص عربي', en: 'English hint', arOverride: 'وصف المدير', enOverride: null };

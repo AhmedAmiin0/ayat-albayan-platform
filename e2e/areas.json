@@ -201,6 +201,7 @@
         "teaching/schedule-cancel.spec.ts",
         "teaching/lessons-auto-held.sql.spec.ts",
         "teaching/teacher-confirm.sql.spec.ts",
+        "teaching/teacher-clash-lock.sql.spec.ts",
         "teaching/schedule-overview.spec.ts",
         "teaching/schedule-series.spec.ts",
         "teaching/schedule-stale.spec.ts",
@@ -546,6 +547,7 @@
     }
   },
   "developOnly": [
+    "platform/api-statement-timeout.sql.spec.ts",
     "teaching/apply-lesson-changes-v3.sql.spec.ts",
     "finance/assistant-commission-retro.sql.spec.ts",
     "finance/assistant-commission-started.sql.spec.ts",
@@ -616,6 +618,7 @@
     "messaging/thread-summaries.sql.spec.ts",
     "messaging/trial-no-teacher-chat.sql.spec.ts",
     "people/users-control.sql.spec.ts",
+    "platform/rls-catalogue.sql.spec.ts",
     "messaging/wa-line-health.sql.spec.ts",
     "messaging/whatsapp-lines.sql.spec.ts",
     "messaging/whatsapp-lines.windows.sql.spec.ts"

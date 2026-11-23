@@ -3,7 +3,7 @@ import { FAMILY_PUSH_KINDS } from '@ab/catalog';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { optionalChannels, resolveRule } from '../rules.effective.js';
 import { RULE_SETTING_KEYS, type RuleSettings } from '../rules.legacy.js';
-import { entryView } from './catalogue-state.js';
+import { entryView } from './catalogue-state/index.js';
 import { notificationEntry } from './catalogue.js';
 import { FAMILY_ENTRIES } from './catalogue.family.js';
 

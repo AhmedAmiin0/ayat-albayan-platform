@@ -5,7 +5,7 @@ export {
   type ApiClient,
   type ApiClientOptions,
   type SendMethod,
-} from './api-client.js';
+} from './api-client/index.js';
 export { CLIENT_HEADER } from './client-header.js';
 export { markSending, noAnswer, type StallStage, withDeadline } from './deadline.js';
 export { isNoAnswer } from './no-answer.js';

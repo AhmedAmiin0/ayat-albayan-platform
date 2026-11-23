@@ -10,9 +10,9 @@ interface Fake {
 const env = vi.hoisted(() => ({ familyOrigin: '' }));
 const me: Fake = vi.hoisted(() => ({ role: null, fails: false }));
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
-vi.mock('@ab/web-kit/lib/http/env', () => ({ env }));
-vi.mock('@ab/web-kit/auth/sign-in', () => ({ signOut }));
-vi.mock('@ab/web-kit/auth/me', () => ({
+vi.mock('@ab/web-kit/lib/http/env/env', () => ({ env }));
+vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signOut }));
+vi.mock('@ab/web-kit/auth/me/me', () => ({
   meQuery: {
     queryKey: ['me'],
     queryFn: async () => {

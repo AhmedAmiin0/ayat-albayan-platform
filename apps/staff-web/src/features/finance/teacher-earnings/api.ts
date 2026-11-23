@@ -1,13 +1,12 @@
+import type { SignedDownload, SignedUpload } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import type { Page } from '@ab/core';
 import type {
-  Page,
-  PaymentMethod,
-  SignedDownload,
-  SignedUpload,
   TeacherEarningsBalanceView,
   TeacherEarningView,
   TeacherPaymentResult,
   TeacherPaymentView,
-} from '@ab/shared';
+} from '@ab/money';
 import type { SessionFilter } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
@@ -16,7 +15,7 @@ import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // apps/api/src/modules/teacher-earnings (docs/11 §10). Teacher money is EGP.
-export type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/shared';
+export type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/money';
 
 export const EARNINGS_PAGE_SIZE = 20;
 /** Admin reads one teacher by id; a teacher always reads their own (the id comes from the token). */

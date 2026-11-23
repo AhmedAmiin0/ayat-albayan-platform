@@ -9,7 +9,7 @@ import { threadQuery } from './thread-query';
 // because the delta anchors on the newest row held and would skip a row that landed before it.
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const held = message({ id: 'm1', created_at: '2026-11-07T10:00:00Z' });
 const listFn = vi.fn(async () => ({ items: [thread()], total: 1 }));

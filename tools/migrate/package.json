@@ -9,7 +9,10 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@ab/catalog": "workspace:*",
+    "@ab/core": "workspace:*",
     "@ab/db": "workspace:*",
+    "@ab/settings": "workspace:*",
     "@ab/shared": "workspace:*",
     "@supabase/supabase-js": "^2.117.2",
     "fflate": "^0.8.3",

@@ -9,7 +9,7 @@ import { PaymentsHistory } from './payments/PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const by = (col: string) => t.table.filterBy.replace('{col}', col);
 const show = (node: ReactNode) => render(<QueryClientProvider client={new QueryClient()}>{node}</QueryClientProvider>);

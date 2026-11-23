@@ -3,7 +3,7 @@ import type { TemplateStatus, WaLine } from '@ab/catalog';
 import { TEMPLATE_KEYS } from '../../messaging/templates/templates.js';
 import { isSettingKey, SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
 import { CATALOGUE_SETTING_KEYS, type CatalogueSettings } from './catalogue-settings.js';
-import { catalogueViews } from './catalogue-state.js';
+import { catalogueViews } from './catalogue-state/index.js';
 import type { RowSwitchKey, TimingKey } from './catalogue.types.js';
 
 const templates = new Map(TEMPLATE_KEYS.map((k) => [k, { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine }]));

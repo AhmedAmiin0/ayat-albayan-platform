@@ -7,7 +7,7 @@ import { RolesPage } from './RolesPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 // The system guardian / student roles: the family portal's grants are fixed (the API answers 400
 // portal_role_fixed), so the dialog locks the matrix and a rename sends the names only.

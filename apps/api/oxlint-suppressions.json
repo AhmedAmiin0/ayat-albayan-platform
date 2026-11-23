@@ -1999,7 +1999,7 @@
   },
   "src/modules/finance/payments/payments.retry.http.test.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/finance/payments/payments.service.ts": {
@@ -2078,18 +2078,6 @@
     }
   },
   "src/modules/finance/payouts/payouts.mapper.ts": {
-    "typescript/consistent-indexed-object-style": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 3
-    },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
     }
@@ -3124,7 +3112,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/teacher-earnings/summary/corrections.repo.ts": {
@@ -14082,7 +14070,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 1

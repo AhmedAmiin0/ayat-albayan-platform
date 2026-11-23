@@ -10,7 +10,7 @@ import { useLiveThread } from './thread-delta';
 // thread is read again only when the delta leaves a gap (needsFullRead) or no row anchors it.
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('./api', async (orig) => ({ ...(await orig<object>()), inboxPollMs: () => 3_600_000 }));
 
 const PATH = '/threads/%2B966501234567';

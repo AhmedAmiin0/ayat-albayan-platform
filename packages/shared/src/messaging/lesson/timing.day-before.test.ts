@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayBeforeSendAt, reminderDue } from './timing.js';
+import { dayBeforeSendAt, reminderDue } from './timing/index.js';
 
 const at = (iso: string): Date => new Date(iso);
 const sendAt = (startsAt: string, tz: string, hhmm: string | null) => dayBeforeSendAt(at(startsAt), tz, hhmm).toISOString();

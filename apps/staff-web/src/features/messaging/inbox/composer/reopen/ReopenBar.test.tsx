@@ -9,7 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } },
 }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // Owner 2026-11-14 («like Kapso»): the closed window's bar. Nothing is sent from these tests.
 

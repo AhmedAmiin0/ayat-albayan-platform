@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -10,7 +10,7 @@ import { EditPaymentDialog } from '@/features/finance/payments/record/EditPaymen
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ keys: ['payments.read', 'payments.write'] as string[] }));
-vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({
     permissions: granted.keys,
