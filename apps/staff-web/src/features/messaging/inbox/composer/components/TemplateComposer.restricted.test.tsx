@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 import { TemplateComposer } from './TemplateComposer';
@@ -8,8 +8,8 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@/lib/http/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
 
 // Owner 2026-10-12: teachers, sales and every role without templates.send_all get only the allow-list.
 const INVITE = template({ key: 'free_trial_invite', meta_name: 'free_trial_invite', body_ar: 'أهلًا {{1}}، موعد {{2}}', params: ['var_1', 'var_2'], line: 'chat', sales_starter: true });

@@ -42,8 +42,8 @@ test('the automatic OTA only dispatches mobile.yml ota-update to preview on deve
   assert.doesNotMatch(run, /build-android-apk|production|force_ota|ios/i);
 });
 
-test('ci: check covers changes, every verify job, the guards and the refactor job; docs-only passes only when both were skipped', () => {
-  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor', 'image']);
+test('ci: check covers changes, every verify job, the guards, the refactor and secret-scan jobs; docs-only passes only when both were skipped', () => {
+  assert.deepEqual(ci.jobs.check.needs, ['changes', 'verify', 'guards', 'refactor', 'image', 'secret-scan']);
   const run = ci.jobs.check.steps.map((s) => s.run).join('\n');
   assert.match(run, /test "\$CHANGES" = success/);
   assert.match(run, /\[ "\$CODE" = false \] && \[ "\$VERIFY" = skipped \] && \[ "\$GUARDS" = skipped \]; then/);
@@ -79,7 +79,7 @@ test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   const fallback = JSON.parse(ci.jobs.e2e.strategy.matrix.match(/\|\| '(\{.*\})'\) \}\}$/)[1]);
   assert.deepEqual(
     fallback.include.map((m) => m.shard),
-    ['1', '2', '3', '4', '5', '6', '7', '8', 'single'],
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'single'],
   );
   assert.equal(ci.jobs.e2e.env.SHARDS, '${{ matrix.total }}');
   assert.ok(!('pull_request_target' in ci.on));
@@ -88,7 +88,7 @@ test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
 test('mobile.yml profile: preview by default (every automatic run), stripe-test only by hand, on its own channel', () => {
   const mobile = load('mobile.yml');
   const input = mobile.on.workflow_dispatch.inputs.profile;
-  assert.deepEqual([input.type, input.options, input.default], ['choice', ['preview', 'stripe-test'], 'preview']);
+  assert.deepEqual([input.type, input.options, input.default], ['choice', ['preview', 'stripe-test', 'production'], 'preview']);
   const dispatch = deploy.jobs.ota.steps.map((s) => s.run ?? '').join('\n');
   assert.doesNotMatch(dispatch, /profile|stripe/i, 'deploy-staging must leave the profile at preview');
   const step = (job, name) => mobile.jobs[job].steps.find((s) => s.name?.startsWith(name));
@@ -96,9 +96,11 @@ test('mobile.yml profile: preview by default (every automatic run), stripe-test 
   const guard = step('ota', 'Native-change guard');
   assert.match(guard.run, /--build-profile "\$PROFILE" --status finished/);
   assert.match(guard.run, /native-changes\.mjs "\$last" "\$PROFILE"/);
-  for (const s of [step('build', 'EAS build'), guard, step('ota', 'EAS update')]) {
-    assert.equal(s.env.PROFILE, "${{ inputs.app == 'family' && 'preview' || inputs.profile || 'preview' }}");
+  for (const s of [guard, step('ota', 'EAS update')]) {
+    assert.match(s.env.PROFILE, /^\$\{\{ inputs\.app == 'family' && .* \|\| inputs\.profile \|\| 'preview' \}\}$/);
   }
+  // The build also takes the family production profile (mobile-family-production.test.mjs).
+  assert.match(step('build', 'EAS build').env.PROFILE, / \|\| inputs\.profile \|\| 'preview' \}\}$/);
   const update = step('ota', 'EAS update').run;
   const [, side, normal] = update.split('exit 0'); // the family app's block first (mobile-family.test.mjs)
   assert.match(side, /if \[ "\$PROFILE" = stripe-test \]/);
@@ -121,10 +123,10 @@ test('release tags: only after a green release, no environment or secret, a fail
   assert.match(phone.if, /needs\.build\.result == 'success' \|\| needs\.ota\.result == 'success'/);
   const step = (job, kind) => job.steps.find((s) => s.env?.KIND === kind);
   assert.equal(step(app, 'app').env.SHA, '${{ github.event.workflow_run.head_sha || github.sha }}');
-  assert.equal(step(phone, 'apk').if, "${{ needs.build.result == 'success' }}");
+  assert.match(step(phone, 'apk').if, /^\$\{\{ needs\.build\.result == 'success' && /);
   assert.equal(step(phone, 'ota').if, "${{ needs.ota.result == 'success' }}");
   assert.equal(step(phone, 'ota').env.CHANNEL, mobile['run-name'].match(/\$\{\{ inputs\.app.*\}\}/)[0]);
-  for (const s of [step(app, 'app'), step(phone, 'apk'), step(phone, 'ota')]) {
+  for (const s of [step(app, 'app'), step(phone, 'apk'), step(phone, 'aab'), step(phone, 'ota')]) {
     assert.match(s.run, /node tools\/scripts\/ci-checks\/release-tags\/release-tag\.mjs$/);
   }
   // The EAS link goes through a tee: pipefail keeps a failed build red.

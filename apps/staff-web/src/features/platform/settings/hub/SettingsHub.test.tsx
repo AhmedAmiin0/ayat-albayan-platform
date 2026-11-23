@@ -1,12 +1,12 @@
 import { counted } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { answerHub, renderHub, settingsWith } from './hub-test-utils';
 import { SettingsHub } from './SettingsHub';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const H = t.settingsHub;
 const search = () => screen.getByRole('searchbox', { name: t.config.search.label });
@@ -24,7 +24,7 @@ describe('SettingsHub (/admin/settings, R-MSG-01, docs/26b §1)', () => {
     expect(search().getAttribute('placeholder')).toBe(H.placeholder);
     expect(screen.getByRole('table', { name: H.caption })).toBeTruthy();
     expect(screen.getAllByRole('rowheader')).toHaveLength(5);
-    expect(await screen.findByText(new RegExp(counted(H.valuesCount, 61)))).toBeTruthy();
+    expect(await screen.findByText(new RegExp(counted(H.valuesCount, 62)))).toBeTruthy();
   });
 
   it('says «5 أقسام» with the plural forms, and adds no frame of its own (the shell frames it)', () => {

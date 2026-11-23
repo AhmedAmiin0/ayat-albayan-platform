@@ -13,7 +13,8 @@ run-name: >-
   deploy-staging ${{ github.event.workflow_run.head_sha || github.sha }}${{ inputs.env_only && ' env-only'
   || (github.event_name == 'workflow_dispatch' && !inputs.migrate) && ' no-migrate' || '' }}
 on:
-  # Automatic: every merge into develop, once ci has passed on it (a red develop never ships).
+  # Automatic: every merge into develop, once ci has passed on it (a red develop never ships). A merge
+  # by lane-automerge starts no push run, so it dispatches ci on develop: preflight accepts that too.
   workflow_run:
     workflows: [ci]
     types: [completed]
@@ -43,7 +44,8 @@ jobs:
   preflight:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+      (github.event.workflow_run.conclusion == 'success'
+       && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')
        && github.event.workflow_run.head_branch == 'develop'
        && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
@@ -75,6 +77,9 @@ jobs:
   #  - ota: true only when apps/staff-mobile or packages/ (the JS the app bundles) changed since the last green
   #    preview OTA (else since the last deploy) AND native-changes.mjs finds no native change since the last
   #    APK (repository variable OTA_BASELINE_SHA, default c140b4cc). Anything unclear = no OTA.
+  #  - family_ota (lane L06): the same for the family app: apps/family-mobile or packages/ changed since its own
+  #    last green preview OTA (else its last green preview build), and no native change since that build
+  #    (deploy-baseline.mjs family_*_base). No family preview build known = no family OTA.
   plan:
     needs: preflight
     if: needs.preflight.outputs.ready == 'true'
@@ -86,6 +91,8 @@ jobs:
     outputs:
       migrations: ${{ steps.migrations.outputs.migrations }}
       ota: ${{ steps.ota.outputs.ota }}
+      family_ota: ${{ steps.family_ota.outputs.family_ota }}
+      api_base: ${{ steps.api.outputs.api_base }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -136,6 +143,35 @@ jobs:
             echo "::warning::native change since the last APK ($NATIVE_BASE): no automatic OTA. Build an APK by hand (mobile → build-android-apk), then set OTA_BASELINE_SHA."
           else ota=true; echo "mobile JS changed since ${BASE:0:7} and no native change: OTA to preview after the deploy"; fi
           echo "ota=$ota" >> "$GITHUB_OUTPUT"
+      # The family app (lane L06): compared with its own last OTA and build. APP_DIR tells native-changes.mjs.
+      - id: family_ota
+        if: ${{ !inputs.env_only }}
+        env:
+          BASE: ${{ steps.base.outputs.family_ota_base || steps.base.outputs.family_build_base }}
+          NATIVE_BASE: ${{ steps.base.outputs.family_build_base }}
+          APP_DIR: apps/family-mobile
+        run: |
+          ota=false
+          js() { git diff --name-only "$BASE" HEAD -- apps/family-mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
+            ':(glob,exclude)**/eslint-suppressions.json' ':(glob,exclude)**/oxlint-suppressions.json' \
+            ':(glob,exclude)**/lint.blocks.mjs' ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
+          if [ -z "$NATIVE_BASE" ]; then echo "::notice::no green family preview build known: no automatic family OTA (mobile → app family)"
+          elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no family OTA"
+          elif [ -z "$(js)" ]; then echo "no family JS change since ${BASE:0:7}: no family OTA"
+          elif ! node tools/scripts/ci-checks/native-changes.mjs "$NATIVE_BASE"; then
+            echo "::warning::family native change since its last preview build (${NATIVE_BASE:0:7}): no automatic family OTA. Build a family APK by hand (mobile → app family, build-android-apk)."
+          else ota=true; echo "family JS changed since ${BASE:0:7} and no native change: family OTA to preview after the deploy"; fi
+          echo "family_ota=$ota" >> "$GITHUB_OUTPUT"
+      # Did anything the API image depends on change since the last code deploy (tools/scripts/ci-checks/deploy:
+      # apps/api, its workspace packages, the Dockerfile, the lockfile, deploy/staging/, the PDF logo)? api_base = that
+      # deploy's commit when nothing did, else empty. «deploy» keeps the running image only when the server says it was
+      # built from exactly that commit. FAIL SAFE: unknown, a git or script error = empty = build, as before.
+      - id: api
+        if: ${{ !inputs.env_only }}
+        continue-on-error: true
+        env:
+          BASE: ${{ steps.base.outputs.code_base }}
+        run: node tools/scripts/ci-checks/deploy/api-changed.ts "$BASE" | tee -a "$GITHUB_OUTPUT"
 
   # Database first (environment staging-db: the owner's required reviewer gates it), then the API.
   # Automatic runs skip it only when «plan» proved no migration changed (any other plan result, a failed
@@ -176,6 +212,9 @@ jobs:
           node-version-file: .nvmrc
       - uses: ./.github/actions/pnpm-store
 
+      # Both web apps (docs/51): the staff app (app.) and the family app (family.), same VITE_* values.
+      # VITE_FAMILY_ORIGIN (a repository variable, unset until the owner's go-live) turns on the staff app's
+      # redirect of families to the family host; unset = no redirect, so this deploys before the host exists.
       - name: Build the web app
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
@@ -186,11 +225,18 @@ jobs:
           # when GET /stripe/feature says so («الدفع الإلكتروني» on and both keys saved); without the API's
           # FEATURE_STRIPE that route is 404 and nothing shows.
           VITE_FEATURE_STRIPE: "1"
+          VITE_FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
+          # The family app's «wrongApp» link for a staff account.
+          VITE_STAFF_ORIGIN: ${{ vars.VITE_STAFF_ORIGIN || 'https://app.ayatalbayan.com' }}
+          # Optional error tracker (docs/09 «Error tracker»): unset = nothing is reported.
+          VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN }}
         run: |
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
+          # family-web's workspace dependencies are a subset of staff-web's (client-core, shared, web-kit).
           pnpm --filter "staff-web^..." build >/dev/null
           pnpm --filter staff-web build
+          pnpm --filter family-web build
       - uses: actions/upload-artifact@v4
         with:
           name: staff-web-dist
@@ -198,9 +244,16 @@ jobs:
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: family-web-dist
+          path: apps/family-web/dist
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
 
   deploy:
-    needs: [preflight, migrate, web]
+    needs: [preflight, plan, migrate, web]
     # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy. The web build
     # must pass (skipped only on an env-only run).
     if: >-
@@ -243,6 +296,12 @@ jobs:
         with:
           name: staff-web-dist
           path: apps/staff-web/dist
+      - name: The family web app built by job «web»
+        if: ${{ !inputs.env_only }}
+        uses: actions/download-artifact@v4
+        with:
+          name: family-web-dist
+          path: apps/family-web/dist
 
       - name: SSH key
         env:
@@ -264,6 +323,7 @@ jobs:
           ssh target "test -d $DEST" || { echo "::error::$DEST missing on the server"; exit 1; }
 
       - name: Merge the server .env (key names only are logged)
+        id: env
         # API .env keys (apps/api/src/config/env/env.ts), scoped to this step only. The WhatsApp phone number id and
         # the messaging switch are deliberately NOT here: they stay whatever the server has.
         env:
@@ -304,9 +364,9 @@ jobs:
             RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL
             MINIO_EGRESS_ACCESS_KEY MINIO_EGRESS_SECRET_KEY"
           node tools/scripts/env/env-merge.mjs current.env $keys > new.env
-          if cmp -s current.env new.env; then echo "server .env unchanged"; else
+          if cmp -s current.env new.env; then echo "server .env unchanged"; echo "changed=false" >> "$GITHUB_OUTPUT"; else
             ssh target "cp $DEST/.env $DEST/.env.bak-\$(date +%F-%H%M%S) 2>/dev/null || true; umask 077; cat > $DEST/.env.new && mv $DEST/.env.new $DEST/.env" < new.env
-            echo "server .env updated (backup kept next to it)"; fi
+            echo "server .env updated (backup kept next to it)"; echo "changed=true" >> "$GITHUB_OUTPUT"; fi
           rm -f current.env new.env
 
       # docs/09 «Two API copies + one worker»: the code, the compose file, roll.sh, rollback.sh and the load balancer
@@ -316,12 +376,36 @@ jobs:
       # ayat-pdf only warns), reloads ayat-lb only when its validated config changed and prunes this project's old
       # images only (no global prune; the build cache is shared with the CRM and cannot be scoped to one project, so it
       # is left alone).
+      # Build the API image or keep it: «plan» gives api_base (the last code deploy's commit, when nothing the image
+      # depends on changed since); the image is kept only when the server's .api.sha (roll.sh writes it after a good roll
+      # and removes it before any roll or rollback) is that very commit. Kept: --env-only when the .env merge wrote a new
+      # .env (every container recreated, one at a time, each healthy first), else --no-build (compose recreates only what
+      # changed). Anything else (no file, another commit, plan failed) = build and roll everything, as before.
+      - name: Roll mode
+        id: mode
+        if: ${{ !inputs.env_only }}
+        env:
+          API_BASE: ${{ needs.plan.outputs.api_base }}
+          ENV_CHANGED: ${{ steps.env.outputs.changed }}
+        run: |
+          image=$(ssh target "cat $DEST/.api.sha 2>/dev/null" || true)
+          same=no; [ -z "$API_BASE" ] || [ "$image" != "$API_BASE" ] || same=yes
+          case "$same:$ENV_CHANGED" in
+            yes:false) args=--no-build ;;
+            yes:true) args=--env-only ;;
+            *) args= ;;
+          esac
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+          echo "::notice::API: ${args:-build} (image ${image:0:7}, unchanged since ${API_BASE:0:7}, .env changed ${ENV_CHANGED:-?})"
+
       - name: Ship the API code and the compose files
         id: ship
         if: ${{ !inputs.env_only }}
         run: |
           ssh target "rm -rf $DEST/src.new && mkdir -p $DEST/src.new $DEST/lb"
           git archive --format=tar HEAD | ssh target "tar --no-same-owner -x -C $DEST/src.new"
+          # The commit this src is; roll.sh copies it to .api.sha after a good roll (src.old keeps its own for a rollback).
+          git rev-parse HEAD | ssh target "cat > $DEST/src.new/.release-sha"
           scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml.new"
           scp -q deploy/staging/roll.sh "target:$DEST/roll.sh.new"
           scp -q deploy/staging/rollback.sh "target:$DEST/rollback.sh.new"
@@ -336,13 +420,15 @@ jobs:
       - name: Swap in and roll the API (one build, one container at a time)
         id: roll
         if: ${{ !inputs.env_only }}
+        env:
+          ROLL_ARGS: ${{ steps.mode.outputs.args }}
         run: |
           ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh -c '
             for f in docker-compose.yml roll.sh lb/Caddyfile; do [ ! -f \$f ] || cp \$f \$f.old; done &&
             rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src &&
             mv docker-compose.yml.new docker-compose.yml && mv roll.sh.new roll.sh && mv rollback.sh.new rollback.sh &&
             cat lb/Caddyfile.new > lb/Caddyfile && rm lb/Caddyfile.new || exit 4
-            { sh roll.sh || { sh rollback.sh || exit 3; exit 1; }; }' > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc" || {
+            { sh roll.sh $ROLL_ARGS || { sh rollback.sh || exit 3; exit 1; }; }' > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc" || {
             rc=$?
             case "$rc" in
               75) echo "::error::another deploy holds $DEST/.deploy.lock: nothing was changed" ;;
@@ -363,6 +449,38 @@ jobs:
           ssh target "cd $DEST && flock -n -E 75 .deploy.lock sh -c 'if [ -f roll.sh ] && grep -q ayat-lb roll.sh && grep -q \"^  ayat-lb:\" docker-compose.yml; then sh roll.sh --env-only; \
             else docker compose up -d --force-recreate --remove-orphans; fi'"
 
+      # The family app first (docs/51 §4): $DEST/family, its own atomic swap and family.old for the roll back. The
+      # host's Caddy serves it once the owner adds the family site. Nothing is uploaded before go-live
+      # (VITE_FAMILY_ORIGIN unset), so the server is untouched until then.
+      - name: Upload the family web app (atomic swap)
+        id: family
+        if: ${{ !inputs.env_only && vars.VITE_FAMILY_ORIGIN != '' }}
+        run: |
+          ssh target "rm -rf $DEST/family.new && mkdir -p $DEST/family.new"
+          tar -C apps/family-web/dist -cf - . | ssh target "tar --no-same-owner -x -C $DEST/family.new && chmod -R o+rX $DEST/family.new \
+            && rm -rf $DEST/family.old && { [ ! -d $DEST/family ] || mv $DEST/family $DEST/family.old; } && mv $DEST/family.new $DEST/family"
+
+      # Only once VITE_FAMILY_ORIGIN is set (the go-live): the family host answers, and the server's WEB_ORIGIN
+      # lists it (its API calls pass CORS), BEFORE the staff build that redirects families there goes live. Unset:
+      # skipped, so every deploy stays green without the family site.
+      - name: Family host check
+        id: family_check
+        if: ${{ !inputs.env_only && vars.VITE_FAMILY_ORIGIN != '' }}
+        env:
+          FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
+        run: |
+          origin="${FAMILY_ORIGIN%/}"
+          curl -fsS --retry 10 --retry-delay 5 --retry-all-errors -o /dev/null "$origin/portal"
+          ssh target "grep -E '^WEB_ORIGIN=' $DEST/.env" | grep -qF "$origin" \
+            || { echo "::error::the server WEB_ORIGIN does not list $origin: add it (app. first) before setting VITE_FAMILY_ORIGIN"; exit 1; }
+          echo "family host is up"
+
+      - name: Put the previous family web app back
+        if: ${{ failure() && steps.family_check.outcome == 'failure' }}
+        run: |
+          ssh target "cd $DEST && { [ ! -d family.old ] || { rm -rf family.bad && mv family family.bad && mv family.old family; }; }"
+          echo "::error::the family host check failed: the previous family build is back (bad one in family.bad); the staff app was not swapped"
+
       - name: Upload the web app (atomic swap)
         id: web
         if: ${{ !inputs.env_only }}
@@ -375,11 +493,16 @@ jobs:
         id: health
         env:
           API_URL: ${{ vars.API_URL || 'https://api.ayatalbayan.com' }}
+        # /health: the process answers (liveness, as the load balancer sees it). /ready: it can serve (the
+        # database answers within 2 s; Redis or a stale job only degrade it, still 200). /ready gets a few
+        # retries only: a 503 after them fails this step and the next one rolls back (docs/09 «Readiness»).
         run: |
           url="${API_URL}"
-          if [ -z "$url" ]; then ssh target "curl -fsS --retry 30 --retry-delay 5 --retry-all-errors http://127.0.0.1:3110/health"
-          else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health"; fi
-          echo; echo "staging is up"
+          ready="-fsS --retry 6 --retry-delay 5 --retry-all-errors --max-time 10"
+          if [ -z "$url" ]; then ssh target "curl -fsS --retry 30 --retry-delay 5 --retry-all-errors http://127.0.0.1:3110/health \
+            && echo && curl $ready http://127.0.0.1:3110/ready"
+          else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health" && echo && curl $ready "$url/ready"; fi
+          echo; echo "staging is up and ready"
 
       # The roll succeeded but the public health check failed: the same rollback.sh (under the deploy lock) puts the
       # previous code, compose files and Caddyfile back and rolls the previous layout; the web build is swapped back
@@ -389,11 +512,15 @@ jobs:
         if: ${{ failure() && steps.roll.outcome == 'success' && steps.health.outcome == 'failure' && !inputs.env_only }}
         env:
           WEB_SWAPPED: ${{ steps.web.outcome == 'success' || steps.web.outcome == 'failure' }}
+          FAMILY_SWAPPED: ${{ steps.family.outcome == 'success' || steps.family.outcome == 'failure' }}
         run: |
           # Detached like the roll (setsid, output in .deploy.log): an ssh drop or a cancel never stops it halfway.
           ssh target "cd $DEST && setsid -w flock -n -E 75 .deploy.lock sh rollback.sh > .deploy.log 2>&1 < /dev/null; rc=\$?; cat .deploy.log; exit \$rc"
           if [ "$WEB_SWAPPED" = "true" ]; then
             ssh target "cd $DEST && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; }"
+          fi
+          if [ "$FAMILY_SWAPPED" = "true" ]; then
+            ssh target "cd $DEST && { [ ! -d family.old ] || { rm -rf family.bad && mv family family.bad && mv family.old family; }; }"
           fi
           echo "::error::staging failed its health check: rolled back to the previous version (bad build kept in src.bad / web.bad)"
 
@@ -401,6 +528,7 @@ jobs:
         if: always()
         env:
           API_URL: ${{ vars.API_URL }}
+          FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
         run: |
           {
             echo "### Staging deploy: ${{ job.status }}"
@@ -410,6 +538,7 @@ jobs:
             echo "| Commit | \`$(git rev-parse --short HEAD)\` $(git log -1 --format=%s | head -c 90) |"
             echo "| Trigger | ${{ github.event_name }} |"
             echo "| Web | https://app.ayatalbayan.com |"
+            echo "| Family web | ${FAMILY_ORIGIN:-not live yet (\`$DEST/family\`)} |"
             echo "| API | ${API_URL:-https://api.ayatalbayan.com}/health |"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -418,13 +547,16 @@ jobs:
         run: rm -rf ~/.ssh/id_deploy
 
   # Automatic OTA (owner 2026-10-23): after a green deploy, when «plan» found mobile JS changes and no native
-  # change, start mobile.yml (ota-update → preview) through the API, exactly like the manual button: it runs on
+  # change, start mobile.yml (ota-update → preview; lane L06: app=family too, on its channel preview, each when
+  # its own plan says so) through the API, exactly like the manual button: it runs on
   # develop in the environment `mobile`, keeps its own native-change refusal, and never builds an APK, iOS or
   # production. Only when develop still points at the deployed commit (or only ci's [skip ci] baseline
   # commits followed it), so the OTA ships what passed ci.
   ota:
     needs: [plan, deploy]
-    if: ${{ !cancelled() && needs.deploy.result == 'success' && needs.plan.outputs.ota == 'true' }}
+    if: >-
+      ${{ !cancelled() && needs.deploy.result == 'success'
+      && (needs.plan.outputs.ota == 'true' || needs.plan.outputs.family_ota == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -434,6 +566,8 @@ jobs:
       - env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          STAFF: ${{ needs.plan.outputs.ota }}
+          FAMILY: ${{ needs.plan.outputs.family_ota }}
         run: |
           api="$GITHUB_API_URL/repos/$GITHUB_REPOSITORY"
           auth=(-H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json")
@@ -447,9 +581,13 @@ jobs:
           if [ "$head" != "$SHA" ]; then
             echo "::notice::develop moved on (${head:0:7}): no OTA now; the next deploy decides"; exit 0
           fi
-          curl -fsS -X POST "${auth[@]}" "$api/actions/workflows/mobile.yml/dispatches" \
-            -d '{"ref":"develop","inputs":{"action":"ota-update","branch":"preview"}}'
-          echo "### OTA to preview started (mobile.yml) for \`${SHA:0:7}\`" >> "$GITHUB_STEP_SUMMARY"
+          dispatch() {
+            # && (not a new line): set -e is off inside a function called after ||, so curl's status must be returned.
+            curl -fsS -X POST "${auth[@]}" "$api/actions/workflows/mobile.yml/dispatches" -d "$1" \
+              && echo "### OTA to preview started (mobile.yml $1) for \`${SHA:0:7}\`" >> "$GITHUB_STEP_SUMMARY"
+          }
+          [ "$STAFF" != true ] || dispatch '{"ref":"develop","inputs":{"action":"ota-update","branch":"preview"}}'
+          [ "$FAMILY" != true ] || dispatch '{"ref":"develop","inputs":{"action":"ota-update","app":"family"}}'
 
   # Release tag + GitHub Release (owner 2026-10-30, docs/09 «Release tags»): v<UTC day>-<n> on the deployed commit
   # after a green code deploy (never env_only; a failed or rolled-back deploy fails «deploy» first), skipped when

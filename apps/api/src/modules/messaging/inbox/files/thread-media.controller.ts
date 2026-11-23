@@ -1,10 +1,10 @@
-import { phoneE164, type ThreadMediaItem } from '@ab/shared';
+import { phoneE164, type ThreadFile, type ThreadMediaItem } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
-import { ThreadMediaService, type ThreadFile } from './thread-media.service';
+import { ThreadMediaService } from './thread-media.service';
 
 /**
  * R-MSG-06: the images and PDFs a guardian sent in a chat. Admin only (a teacher never sees a

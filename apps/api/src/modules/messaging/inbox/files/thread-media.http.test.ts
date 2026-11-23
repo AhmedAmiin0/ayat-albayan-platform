@@ -33,7 +33,7 @@ const row = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 
 describe('thread media routes (R-MSG-06): admin only', () => {
   let app: NestFastifyApplication;
-  const queries = { message: vi.fn(), receipts: vi.fn(), setPath: vi.fn() };
+  const queries = { message: vi.fn(), receipts: vi.fn(), setRefusal: vi.fn(), setPath: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const chatClient = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path), signedDownload: vi.fn() };

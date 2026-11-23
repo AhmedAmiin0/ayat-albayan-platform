@@ -1,4 +1,6 @@
 import { Logger } from '@nestjs/common';
+import { jobBeats } from './beats/beat-book';
+import type { BeatSink } from './beats/beat-book.types';
 
 /** When the first run comes after boot and how often the next ones do. */
 interface TickerTiming {
@@ -14,6 +16,8 @@ interface TickerOptions extends TickerTiming {
   run: () => Promise<unknown>;
   /** What a timer calls: `tick` joins a run in progress (default), `kick` queues one more. */
   timer?: 'tick' | 'kick';
+  /** Where each pass is recorded (the process's heartbeats; a fake in tests). */
+  beats?: BeatSink;
 }
 
 const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
@@ -30,9 +34,11 @@ export class Ticker {
   private readonly timers: NodeJS.Timeout[] = [];
   private running: Promise<void> | null = null;
   private again = false;
+  private readonly beats: BeatSink;
 
   constructor(private readonly opts: TickerOptions) {
     this.log = new Logger(opts.name);
+    this.beats = opts.beats ?? jobBeats;
   }
 
   /** Starts the timers; `timing` replaces the options' one (read at boot, e.g. from env). */
@@ -41,9 +47,13 @@ export class Ticker {
     const fire = () => void this[method]();
     const every = timing.everyMs === undefined ? [] : [setInterval(fire, timing.everyMs).unref()];
     this.timers.push(setTimeout(fire, timing.firstMs).unref(), ...every);
+    // Interval jobs only: a one-shot boot job has no interval to be late against.
+    const { everyMs, firstMs } = timing;
+    if (everyMs !== undefined) this.beats.register({ name: this.opts.name, firstMs, everyMs });
   }
 
   stop(): void {
+    this.beats.forget(this.opts.name);
     this.timers.forEach(clearTimeout);
     this.timers.length = 0;
   }
@@ -68,8 +78,17 @@ export class Ticker {
   private async passes(): Promise<void> {
     do {
       this.again = false;
-      await this.opts.run().catch((e: unknown) => this.log.error(`run aborted: ${messageOf(e)}`));
+      this.beats.begin(this.opts.name);
+      await this.opts.run().then(
+        () => this.beats.ok(this.opts.name),
+        (e: unknown) => this.failed(e),
+      );
     } while (this.queued());
+  }
+
+  private failed(e: unknown): void {
+    this.log.error(`run aborted: ${messageOf(e)}`);
+    this.beats.fail(this.opts.name, e);
   }
 
   /** Read through a call: a kick() during the awaited run sets it. */

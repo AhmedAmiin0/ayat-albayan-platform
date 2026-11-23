@@ -33,7 +33,7 @@ const row = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 
 describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and sales (docs/20)', () => {
   let app: NestFastifyApplication;
-  const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
+  const queries = { message: vi.fn(), recent: vi.fn(), setRefusal: vi.fn(), setPath: vi.fn() };
   const teachers = { teacher: vi.fn(), phones: vi.fn() };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path), signedDownload: vi.fn() };

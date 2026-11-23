@@ -2,11 +2,11 @@ import { earningStatusStyle, type TeacherEarningView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import { createContext, useContext } from 'react';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { formatDateTime } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, TeacherEarningView>();
 

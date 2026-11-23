@@ -1,15 +1,14 @@
-import { leadStatusStyle, type LeadStatus } from '@ab/shared';
+import { allowedNextStatuses, type LeadStatus, leadStatusStyle } from '@ab/shared';
 import { Pressable, View } from 'react-native';
 import { ApiError, t, StatusChip, type, useTheme, AppText, ErrorLine } from '@ab/mobile-kit';
 import { useOptimisticStatus } from '@/core/lib/query/use-optimistic-status';
-import { allowedNextStatuses } from './allowed-next-statuses';
-import type { Lead } from '@/inbox/shared/types';
+import type { LeadView } from '@ab/shared';
 
 /**
  * «تغيير الحالة»: one chip button per move the API allows from the current status (R-LEAD-01).
  * The chip changes everywhere at once and rolls back on failure. A terminal lead shows nothing.
  */
-export function LeadStatusChanger({ lead }: { lead: Lead }) {
+export function LeadStatusChanger({ lead }: { lead: LeadView }) {
   const { color } = useTheme();
   const change = useOptimisticStatus<LeadStatus>({ path: '/leads' });
   const next = allowedNextStatuses(lead.status);

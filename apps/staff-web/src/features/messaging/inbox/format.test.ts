@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { clockText, errorText, fullTime, listTime, mediaKind, previewText, sessionUntil, threadKind, threadName, unreadLabel } from './format';
 import { PHONE, thread } from './testing/inbox-fixture';
-import { locale } from '@/lib/i18n/locale';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

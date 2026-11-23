@@ -2,7 +2,8 @@
 
 `heuristic-evaluation`, `design-qa-checklist`, `critique-brand-consistency`: Copyright (c) MC Dean
 (github.com/Owl-Listener/designer-skills). `supabase`, `supabase-postgres-best-practices`: Copyright (c)
-Supabase (github.com/supabase/agent-skills). Both are released under the MIT License:
+Supabase (github.com/supabase/agent-skills). `animate`: Copyright (c) 2026 Emil Kowalski
+(github.com/emilkowalski/skills). All are released under the MIT License:
 
 MIT License
 

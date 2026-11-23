@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { L1, lessonRow, portalApp, S1, S2, S3, type Who } from './portal.fakes';
+import { GUARDIAN, L1, lessonRow, portalApp, S1, S2, S3, type Who } from './portal.fakes';
 
 type App = Awaited<ReturnType<typeof portalApp>>;
 const ROUTES: ['GET' | 'POST', string][] = [
@@ -36,8 +36,19 @@ describe('/portal scope over HTTP', () => {
       students: [expect.objectContaining({ id: S1, name: 'سلمى' }), expect.objectContaining({ id: S2, name: 'يوسف' })],
       renew_url: 'https://wa.me/966500000000',
       locale: 'ar',
+      guardian: GUARDIAN,
     });
     expect(t.scope.studentsOf).toHaveBeenCalledWith('g-a');
+    expect(t.guardian.ownOf).toHaveBeenCalledWith('g-a');
+  });
+
+  it("GET /portal/me: a student login gets no guardian; a guardian's failed read is null", async () => {
+    expect((await t.call('GET', '/portal/me', 'student1')).json().guardian).toBeNull();
+    expect(t.guardian.ownOf).not.toHaveBeenCalled();
+    t.guardian.ownOf.mockResolvedValueOnce(null);
+    const res = await t.call('GET', '/portal/me', 'guardianB');
+    expect([res.statusCode, res.json().guardian]).toEqual([200, null]);
+    expect(t.guardian.ownOf).toHaveBeenCalledWith('g-b');
   });
 
   it('a student login sees only itself', async () => {

@@ -6,7 +6,7 @@ import {
   type SettingKey,
   type ValueGroupId,
 } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // «القيم»'s group list (docs/26b §2): the editable groups, «قيم مخصصة», then under «تُدار من صفحة
 // أخرى» the module-owned views. «الكل» is not a group: it is only the result of a search or filter.
@@ -49,6 +49,7 @@ const NEW_LABEL: Partial<Record<ValuesGroupId, string>> = {
   sending: g.sending,
   google: g.google,
   family: g.family,
+  system: g.system,
 };
 
 /** The group's name (today's section words where they exist). */

@@ -1,7 +1,7 @@
 import { formatPhone, type ThreadView } from '@ab/shared';
 import { useId } from 'react';
-import { Ltr } from '@/components/ui/display/ltr';
-import { t } from '@/lib/i18n/i18n';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useMaySend } from '@/features/messaging/inbox/shared/may-send';
 import { showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
 

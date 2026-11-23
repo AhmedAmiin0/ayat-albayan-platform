@@ -2,6 +2,7 @@ import type { Browser } from '@playwright/test';
 import { family, makeAssistant, message, TAG } from '../../support/sales/assistant-api';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { lastOutbound } from '../../support/messaging/inbox';
+import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { salesNav, seedBooked, seedMine, setSalesStarter, signInSales } from '../../support/sales/sales-portal';
 
 // Sales double role (owner 2026-10-11, docs/16): the salesperson also does the classroom assistant's job.
@@ -113,7 +114,10 @@ async function startsWithTemplate(browser: Browser): Promise<void> {
   expect(sent.dedup_key).toMatch(new RegExp(`^sales:${me.id}:`));
 
   // The family replies: inside the 24 h window she writes plain text.
-  await message({ phone: booked.phone, guardian: booked.guardian, direction: 'inbound', body: names.reply });
+  // On the chat line (chat first, docs/23c decision 6: a notifications inbound opens no reply).
+  const line = SINGLE_LINE ? undefined : ('chat' as const);
+  const reply = { phone: booked.phone, guardian: booked.guardian, body: names.reply };
+  await message({ ...reply, direction: 'inbound', ...(line ? { line } : {}) });
   await page.reload();
   await expect(log.getByText(names.reply)).toBeVisible();
   await page.getByRole('textbox', { name: composer.messageLabel }).fill(`أهلًا ${TAG}`);

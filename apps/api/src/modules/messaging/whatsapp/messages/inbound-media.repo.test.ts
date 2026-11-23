@@ -86,4 +86,20 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
       ['media_path', 'like', 'minio:out/%'],
     ]);
   });
+
+  it('setRefusal: only while no copy is stored; an update error throws', async () => {
+    const { db, argsOf } = fakeDb({ [M]: [{ data: null }, { error: { message: 'denied' } }] });
+    const q = new InboundMediaRepo(db);
+    await q.setRefusal('m1', 'invoice_too_large');
+    expect(argsOf(M, 'update')).toEqual([{ media_refusal: 'invoice_too_large' }]);
+    expect(argsOf(M, 'eq')).toEqual(['id', 'm1']);
+    expect(argsOf(M, 'is')).toEqual(['media_path', null]);
+    await expect(q.setRefusal('m1', 'media_expired')).rejects.toThrow('denied');
+  });
+
+  it('message reads the stored refusal', async () => {
+    const { db, calls } = fakeDb({ [M]: [{ data: null }] });
+    await new InboundMediaRepo(db).message('m1');
+    expect(calls.find((c) => c.method === 'select')?.args[0]).toContain('media_refusal');
+  });
 });

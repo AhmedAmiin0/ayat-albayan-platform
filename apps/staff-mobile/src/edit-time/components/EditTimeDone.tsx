@@ -1,6 +1,6 @@
+import type { TimeEditResult } from '@ab/shared';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Button, NuqtaGlyph, whenText } from '@ab/mobile-kit';
-import type { TimeEditResult } from '@/edit-time/lib/types';
 import { useViewerClock } from '@/core/lib/clock';
 
 export interface EditTimeDoneProps {

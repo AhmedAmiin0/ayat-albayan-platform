@@ -27,6 +27,7 @@ const CONFIG_GROUPS: Record<string, string[]> = {
     'teacher_statements_enabled', 'teacher_feedback_enabled', 'teacher_internal_meetings_enabled',
     'teacher_scheduled_meetings_enabled'],
   family: ['family_chat_enabled', 'family_meetings_in_app', 'family_payment_instructions'],
+  system: ['maintenance_mode'],
 };
 /** docs/26 §1: the 8 notification keys (owned by «الإشعارات» from 23-P4) and the send-gate keys. */
 const NOTIFICATION_KEYS = [
@@ -44,9 +45,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(missing).toEqual([]);
   });
 
-  it('the 48 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, lesson_outcome_grace_minutes, + short_link_base, + refund_attended_rate_percent, + report_teacher_edit_minutes, docs/46, + the 7 teacher page switches, + the 3 family app keys, docs/50, + the 3 managed short link keys, docs/19) sit in their «القيم» group, scope config', () => {
+  it('the 48 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, lesson_outcome_grace_minutes, + short_link_base, + refund_attended_rate_percent, + report_teacher_edit_minutes, docs/46, + the 7 teacher page switches, + the 3 family app keys, docs/50, + the 3 managed short link keys, docs/19, + maintenance_mode) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
-    expect(config).toHaveLength(61);
+    expect(config).toHaveLength(62);
     for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });
@@ -69,7 +70,7 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
 
   it('confirmations are exactly the owner defaults', () => {
     expect(keysWhere((e) => e.confirm === 'typed')).toEqual(['activity_retention_days', 'recording_retention_days']);
-    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['crm_media_copy_all', 'family_chat_enabled', 'family_login_enabled', 'meeting_link_auto', 'report_form_v2', 'sales_auto_assign', 'sales_require_assignee', 'teachers_always_available', 'whatsapp_calls_enabled']);
+    expect(keysWhere((e) => e.confirm === 'simple')).toEqual(['crm_media_copy_all', 'family_chat_enabled', 'family_login_enabled', 'maintenance_mode', 'meeting_link_auto', 'report_form_v2', 'sales_auto_assign', 'sales_require_assignee', 'teachers_always_available', 'whatsapp_calls_enabled']);
   });
 
   it('reachesFamilies marks what families see or receive, and only that', () => {

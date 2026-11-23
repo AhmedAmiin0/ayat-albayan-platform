@@ -173,11 +173,6 @@
       "count": 7
     }
   },
-  "src/seed/google-settings-keys.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/seed/seed-entries.metadata.test.ts": {
     "stylistic/max-len": {
       "count": 3

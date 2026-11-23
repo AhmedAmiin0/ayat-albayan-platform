@@ -1,9 +1,9 @@
 import { isOpenLesson, lessonWhenAt, type LessonView, subscriptionStatusStyle } from '@ab/shared';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { LessonTags, studentNames, studentTimes } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import type { LessonStatusChip } from '@/lib/settings/lesson-status-text';
-import { useClock } from '@/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { LessonStatusChip } from '@ab/web-kit/lib/settings/lesson-status-text';
+import { useClock } from '@ab/web-kit/lib/clock';
 import { CopyStudentLink } from './CopyStudentLink';
 
 export interface TeacherCardHeadProps {

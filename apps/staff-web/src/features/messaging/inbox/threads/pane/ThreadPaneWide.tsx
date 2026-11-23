@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface ThreadPaneWideProps {
   /** The heading's id (ThreadHeader's h2): the section's accessible name. */

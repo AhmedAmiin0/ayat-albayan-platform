@@ -1,5 +1,5 @@
 import type { CancelBy } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * «لم تنعقد؟» (owner 2026-11-02): a lesson not held after all was cancelled by its teacher

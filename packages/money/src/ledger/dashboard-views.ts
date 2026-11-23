@@ -45,3 +45,30 @@ export interface DashboardSummary {
     fx_missing: string[];
   };
 }
+
+/** One month of the range (Riyadh months), in the reporting currency. */
+export interface MonthFinance {
+  month: string;
+  revenue: number;
+  teacher_cost: number;
+  expenses: number;
+  gross_margin: number;
+}
+
+/** GET /dashboard/summary: the docs/11 D1 contract plus monthly and per-category finance. */
+export type DashboardResponse = DashboardSummary & {
+  finance: DashboardSummary['finance'] & {
+    by_month: MonthFinance[];
+    expenses_by_category: Record<string, number>;
+    /** Units of each currency per 1 reporting unit, as used (the reporting currency is 1). */
+    fx_rates: Record<string, number>;
+    /** Paid lessons whose teacher has no rate for that duration: their cost is not counted. */
+    unrated_lessons: number;
+  };
+};
+
+/** The KPI strip's counts, the part of GET /dashboard/summary a client reads for its badges. */
+export type DashboardCounts = Pick<
+  DashboardSummary,
+  'active_students' | 'needs_confirmation' | 'pending_reports' | 'unpaid_subscriptions' | 'open_tasks'
+>;

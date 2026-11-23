@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@ab/web-kit/lib/utils';
 
 /**
  * The fixed-height box a list screen's table lives in (owner, 2026-10-05: "make tables have a

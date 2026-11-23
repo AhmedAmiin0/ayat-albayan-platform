@@ -1,6 +1,6 @@
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { paymentLinkErrorText } from '@/features/sales/payment-links';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * An API failure of the sales money writes as text: the domain code (not_your_student, start_date_past,

@@ -10,13 +10,13 @@ const listing = (data: unknown[]) => ({ 'GET webhooks': { status: 200, body: { d
 const OLD = [endpoint(IDS.old1), endpoint(IDS.other, 'https://elsewhere.example/hook'), endpoint(IDS.old2)];
 
 describe('CrmWebhookRegistrar.register', () => {
-  it('creates one message.status_updated endpoint at <API_PUBLIC_URL>/webhooks/wacrm', async () => {
+  it('creates one ticks + received endpoint at <API_PUBLIC_URL>/webhooks/wacrm', async () => {
     const kit = registrarKit();
     const result = await kit.registrar.register();
     expect(result).toEqual({
       id: IDS.created,
       url: TARGET,
-      events: ['message.status_updated'],
+      events: ['message.status_updated', 'message.received'],
       replaced: 0,
     });
     expect(kit.crm.calls).toEqual([
@@ -24,7 +24,7 @@ describe('CrmWebhookRegistrar.register', () => {
       {
         method: 'POST',
         path: 'webhooks',
-        body: { url: TARGET, events: ['message.status_updated'] },
+        body: { url: TARGET, events: ['message.status_updated', 'message.received'] },
       },
     ]);
   });

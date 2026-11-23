@@ -1,7 +1,7 @@
 import type { PaymentAttachmentView, ReceivablesView, SignedDownload } from '@ab/shared';
+import type { PeriodTotal } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
-import type { PeriodTotal } from './types';
 
 const MINUTE = 60_000;
 

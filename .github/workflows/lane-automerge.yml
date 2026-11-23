@@ -1,0 +1,112 @@
+name: lane-automerge
+# Low-risk lane PRs, and PRs labelled `reviewed` after their last push, merge themselves into
+# develop once every check on their head is green (docs/09 «Lane auto-merge»; the conditions are tools/scripts/automerge/decide.ts). Remove the
+# auto-merge label from a PR to stop its merge. No secret: the built-in token only.
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+  pull_request:
+    types: [labeled]
+  # Backstop for a missed event.
+  schedule:
+    - cron: '7,37 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lane-automerge
+  cancel-in-progress: false
+
+jobs:
+  automerge:
+    # checks.ts ignores this job's own check run by this name.
+    name: lane automerge
+    if: >-
+      github.event_name == 'schedule'
+      || (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request')
+      || (github.event_name == 'pull_request' && github.event.label.name == 'auto-merge'
+          && github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      actions: write
+      statuses: read
+    steps:
+      # The decision script comes from develop, never from the PR being merged.
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - uses: ./.github/actions/pnpm-store
+      - run: pnpm i --frozen-lockfile --filter @ab/scripts
+      - name: Merge the green lane PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # Everything the merge conditions read, for PR $1 into folder $2 (cli.ts parses it with zod).
+          gather() {
+            local n=$1 d=$2 sha id
+            rm -rf "$d" && mkdir -p "$d"
+            gh pr view "$n" --repo "$REPO" > "$d/pr.json" --json \
+              number,title,body,isDraft,isCrossRepository,baseRefName,headRefName,headRefOid,mergeable,labels
+            sha=$(jq -r .headRefOid "$d/pr.json")
+            gh api "repos/$REPO/commits/$sha/check-runs?per_page=100" --paginate \
+              --jq '.check_runs[] | {id, name, status, conclusion, n: .output.annotations_count}' \
+              | jq -s . > "$d/runs.json"
+            jq '[.[] | {name, status, conclusion}]' "$d/runs.json" > "$d/checks.json"
+            gh api "repos/$REPO/commits/$sha/status?per_page=100" --paginate \
+              --jq '.statuses[] | {context, state}' | jq -s '{statuses: .}' > "$d/status.json"
+            # The guard:packages «layer table widened» warning is a check-run annotation.
+            for id in $(jq -r '.[] | select(.n > 0) | .id' "$d/runs.json"); do
+              gh api "repos/$REPO/check-runs/$id/annotations?per_page=100" --paginate \
+                --jq '.[] | {title, message}'
+            done | jq -s . > "$d/annotations.json"
+            gh api "repos/$REPO/pulls/$n/files?per_page=100" --paginate \
+              --jq '.[] | {filename, previous_filename}' | jq -s . > "$d/files.json"
+            # The reviewed path (reviewed.ts): GitHub's own times of the label, force pushes and head.
+            gh api "repos/$REPO/issues/$n/events?per_page=100" --paginate \
+              --jq '.[] | select(.event == "labeled" or .event == "head_ref_force_pushed")
+                | {event, label: .label.name, created_at}' | jq -s . > "$d/events.json"
+            gh api "repos/$REPO/commits/$sha/check-suites?per_page=100" --paginate \
+              --jq '.check_suites[] | {created_at}' | jq -s . > "$d/suites.json"
+            gh api "repos/$REPO/compare/develop...$sha?per_page=1" \
+              --jq '{base_commit: {sha: .base_commit.sha}, merge_base_commit: {sha: .merge_base_commit.sha}}' \
+              > "$d/compare.json"
+            gh api "repos/$REPO/issues/$n/comments?per_page=100" --paginate --jq '.[] | {body}' \
+              | jq -s . > "$d/comments.json"
+          }
+          decide() {
+            gather "$1" "$2"
+            node tools/scripts/automerge/cli.ts "$2" > "$2/out.txt"
+            action=$(sed -n 's/^action=//p' "$2/out.txt")
+            sha=$(sed -n 's/^sha=//p' "$2/out.txt")
+            echo "#$1: $action ($(sed -n 's/^reason=//p' "$2/out.txt"))"
+          }
+          prs=$(gh pr list --repo "$REPO" --base develop --label auto-merge --state open --limit 100 \
+            --json number --jq '.[].number')
+          for n in $prs; do
+            d="$RUNNER_TEMP/pr-$n"
+            decide "$n" "$d"
+            if [ "$action" = comment ]; then gh pr comment "$n" --repo "$REPO" --body-file "$d/comment.txt"; fi
+            [ "$action" = merge ] || continue
+            # Re-check right before merging: an earlier merge in this run may have moved develop.
+            decide "$n" "$d"
+            [ "$action" = merge ] || continue
+            gh pr merge "$n" --repo "$REPO" --squash --match-head-commit "$sha" \
+              --subject "$(cat "$d/subject.txt")" --body-file "$d/body.txt" \
+              || { echo "::warning::#$n: merge refused"; continue; }
+            # A merge with the built-in token starts no push workflow: start ci on develop so that
+            # deploy-staging (ci workflow_run, event workflow_dispatch on develop) still deploys it.
+            gh workflow run ci.yml --repo "$REPO" --ref develop
+          done

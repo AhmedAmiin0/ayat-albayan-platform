@@ -71,7 +71,7 @@ test('deploy-staging: «web» builds the app beside plan/migrate; deploy needs i
   assert.deepEqual([deploy.web.needs, deploy.web.environment], ['preflight', 'develop']);
   const build = deploy.web.steps.find((s) => s.name === 'Build the web app');
   assert.match(build.run, /pnpm --filter staff-web build$/m);
-  assert.deepEqual(deploy.deploy.needs, ['preflight', 'migrate', 'web']);
+  assert.deepEqual(deploy.deploy.needs, ['preflight', 'plan', 'migrate', 'web']);
   assert.match(deploy.deploy.if, /needs\.web\.result == 'success' \|\| \(inputs\.env_only && needs\.web\.result == 'skipped'\)/);
   const get = deploy.deploy.steps.find((s) => s.uses === 'actions/download-artifact@v4');
   assert.deepEqual(get.with, { name: 'staff-web-dist', path: 'apps/staff-web/dist' });

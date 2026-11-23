@@ -5,7 +5,6 @@ export {
   type CreateSubscriptionBody,
   MONEY_KEY,
   openTasksQuery,
-  type Page,
   PAGE_SIZE,
   type QuoteResponse,
   quoteSubscription,
@@ -53,7 +52,6 @@ export {
   parseMonthSearch,
   parsePage,
   parseSubscriptionsSearch,
-  type SubscriptionFilter,
   subscriptionsTable,
   type SubscriptionsUrlSearch,
 } from './search';

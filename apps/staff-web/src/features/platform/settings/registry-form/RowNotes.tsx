@@ -1,7 +1,7 @@
 import type { SettingMeta } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { formatDateTime } from '@/features/sales/leads';
-import { useClock } from '@/lib/clock';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 /** Under a setting's hint: «معدَّل» while unsaved, and who changed it last when the server knows. */
 export function RowNotes({ dirty, meta }: { dirty: boolean; meta?: SettingMeta | undefined }) {

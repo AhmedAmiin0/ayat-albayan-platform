@@ -11,7 +11,7 @@ import {
   type Tone,
 } from '@ab/shared';
 import { accountStyle, fill } from '@/features/platform/google-sync/google-format';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The hub's «الحالة الآن» cells (docs/26b §1), as plain data: each cell draws one of these.
 

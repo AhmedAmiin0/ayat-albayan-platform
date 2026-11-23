@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Toast } from '@/components/ui/overlay/toast';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { INTEGRATIONS_PAGE_GROUPS } from '@/features/platform/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ModuleHead } from './ModuleHead';
 
 const h = t.communicationsHub;

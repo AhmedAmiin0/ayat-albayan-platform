@@ -7,10 +7,10 @@ import {
   sameClockAt,
   zonedPartsIn,
 } from '@ab/shared';
-import { tzCity } from '@/components/ui/form/time-zone-select';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
-import type { Clock } from '@/lib/clock';
+import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
+import type { Clock } from '@ab/web-kit/lib/clock';
 
 // Pure view logic for lesson lists (R-SCH-01, R-SCH-03). No React, unit-tested.
 

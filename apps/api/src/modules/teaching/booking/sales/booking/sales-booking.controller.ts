@@ -13,6 +13,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
 import {
+  outsideSlotsQuerySchema,
   slotsQuerySchema,
   teacherOptionsQuerySchema,
 } from '@/modules/teaching/booking/booking.dto';
@@ -74,5 +75,13 @@ export class SalesBookingOptionsController {
     @CurrentUser() user: AuthUser,
   ): Promise<SlotsResponse> {
     return this.options.slots(query, user);
+  }
+  /** «وقت آخر»: the same scope as her slots, over the server's next 14 days. */
+  @Get('outside-slots')
+  outsideSlots(
+    @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,
+    @CurrentUser() user: AuthUser,
+  ): ReturnType<SalesBookingOptions['outsideSlots']> {
+    return this.options.outsideSlots(query, user);
   }
 }

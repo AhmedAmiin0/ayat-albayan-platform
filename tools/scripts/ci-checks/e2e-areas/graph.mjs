@@ -6,9 +6,12 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
 import { ownExports, parseImports } from './parse.mjs';
+import { baseOf } from './spec-base.mjs';
 
 export const ROOTS = [
   'apps/staff-web/src',
+  'apps/family-web/src',
+  'packages/web-kit/src',
   'apps/api/src',
   'packages/core/src',
   'packages/i18n/src',
@@ -55,13 +58,9 @@ export function listFiles(root) {
 
 /** Repo-relative file a specifier points at, or null (a package, an asset, a JSON bundle). */
 export function resolveSpec(files, from, spec) {
-  let base;
   if (ALIAS[spec]) return ALIAS[spec];
-  const app = /^apps\/[^/]+\/src\//.exec(from)?.[0];
-  // `@/x` → the importing app's src/x (web and api, tsconfig `paths`; docs/32 R12).
-  if (spec.startsWith('@/') && app) base = posix.join(app, spec.slice(2));
-  else if (spec.startsWith('.')) base = posix.join(posix.dirname(from), spec);
-  else return null;
+  const base = baseOf(from, spec);
+  if (base === null) return null;
   const bare = base.replace(/\.(js|mjs|ts|tsx)$/, '');
   for (const c of [
     base,

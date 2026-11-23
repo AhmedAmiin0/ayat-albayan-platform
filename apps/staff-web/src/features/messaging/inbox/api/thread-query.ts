@@ -1,6 +1,6 @@
 import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import { infiniteQueryOptions } from '@tanstack/react-query';
-import { env } from '@/lib/http/env';
+import { env } from '@ab/web-kit/lib/http/env';
 import { threadPage, threadPath } from './api';
 
 /**
@@ -23,3 +23,6 @@ export const threadQuery = (phone: string) =>
     getNextPageParam: threadNextParam,
     refetchInterval: () => (document.hasFocus() ? env.threadFullRefreshMs : false),
   });
+
+/** The open chat's delta (thread-delta.ts). Outside ['threads']: a send never runs it. */
+export const threadDeltaKey = (phone: string) => ['thread-delta', phone] as const;

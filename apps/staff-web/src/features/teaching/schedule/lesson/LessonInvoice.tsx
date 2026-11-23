@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
 import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * The admin-only «الفاتورة» row of the lesson drawer (R-PAY-03): the booking's payment proof, from

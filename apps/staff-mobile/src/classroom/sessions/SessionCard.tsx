@@ -1,10 +1,10 @@
 import { teacherName, type LessonView } from '@ab/shared';
+import type { SessionGroup } from '@ab/client-core';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t, locale, shape, type, useTheme, AppText, StatusChip, Avatar } from '@ab/mobile-kit';
 import { lessonClock, studentNames, viewerDayHint } from '@/today';
 import { SessionActions } from './SessionActions';
-import type { SessionGroup } from './sessions';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 
 /** The card's chip: «بدأت» / «انتهت» by the room, otherwise the lesson's own status. */

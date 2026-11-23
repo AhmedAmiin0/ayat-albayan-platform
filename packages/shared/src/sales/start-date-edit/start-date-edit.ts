@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localDate } from '@ab/schedule';
+import { localDate } from '@ab/core';
 import { daysBefore, SALES_START_BACK_DAYS } from '../start-date.js';
 
 // «تعديل تاريخ البدء» (owner 2026-11-03: «i want to be able to change the start date as a special

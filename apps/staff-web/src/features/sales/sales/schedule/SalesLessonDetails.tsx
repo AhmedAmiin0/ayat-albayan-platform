@@ -1,17 +1,17 @@
 import { lessonWhenAt, sameClockAt, type SalesScheduleLesson } from '@ab/shared';
-import { Ltr } from '@/components/ui/display/ltr';
-import { StatusChip } from '@/components/ui/display/status-chip';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
 import { durationMin, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
 import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
 import { TeacherConfirmedTag } from '@/features/teaching/schedule';
 import { lengthText } from '@/features/teaching/schedule/edit-time/edit-time-text';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { LessonMeetingLink } from './LessonMeetingLink';
-import { type Clock, useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
-import { useLessonStatusText } from '@/lib/settings/lesson-status-text';
+import { type Clock, useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /**
  * «عند الطالب 16:00 بتوقيت القاهرة» per student zone, then the teacher's, each only when its clock

@@ -75,3 +75,11 @@ test('off unregisters the token and is remembered; on registers again', async ()
   await waitFor(() => expect(mockRegister).toHaveBeenCalled());
   expect(await AsyncStorage.getItem(PUSH_OPT_OUT_KEY)).toBeNull();
 });
+
+test('the privacy policy and the deletion page, on «حسابي» for guardians and students', async () => {
+  await show();
+  expect(await screen.findByText('أم سارة')).toBeTruthy();
+  const privacy = screen.getByRole('button', { name: new RegExp(t.legal.links.privacy) });
+  const deletion = screen.getByRole('button', { name: new RegExp(t.legal.links.deleteAccount) });
+  expect([privacy, deletion].every(Boolean)).toBe(true);
+});

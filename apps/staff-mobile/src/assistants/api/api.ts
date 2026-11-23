@@ -1,5 +1,6 @@
 import { addCalendarMonths } from '@ab/shared';
-import type { AssistantCommissionView, AssistantStatementView, AssistantTermsRow, AssistantTermsView, PayoutStatus } from '@ab/shared';
+import type { AssistantCommissionView, AssistantStatementView, AssistantTermsRow } from '@ab/shared';
+import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/mobile-kit';
 
@@ -8,12 +9,6 @@ import { apiFetch } from '@ab/mobile-kit';
 
 /** Every query and write of this module lives under it: one invalidation re-reads all (as the web). */
 export const ASSISTANTS_KEY = ['assistant-pay'] as const;
-
-/** One salesperson of the list: the profile and its terms (null parts are not set yet). */
-export type AssistantRow = { id: string; name: string; terms: AssistantTermsView };
-
-export type LedgerFilter = { assistantId: string; month: string; status: '' | 'earned' | 'voided' };
-export type StatementFilter = { assistantId: string; month: string; status: '' | PayoutStatus };
 
 const qs = (params: Record<string, string>): string => {
   const q = Object.entries(params)

@@ -3,13 +3,13 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { currentMonth } from '@/features/finance/payouts/api';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ASSISTANT, STATEMENT } from '@/features/people/assistants/fixtures';
 import { StatementsPanel } from './StatementsPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const ALL = { write: true, approve: true };
 const B = { ...ASSISTANT, id: 'a2', name: 'سارة' };

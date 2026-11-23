@@ -4,14 +4,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { t } from '@/lib/i18n/i18n';
-import { publicConfigQuery } from '@/lib/settings/public-config';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 import { reloadHomePrefs } from './home-prefs';
 import { TodayAlerts } from './TodayAlerts';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn(() => Promise.resolve(undefined)));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({ can: () => true }),

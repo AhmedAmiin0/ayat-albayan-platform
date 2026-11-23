@@ -1,5 +1,5 @@
 import { adWelcomeOf, messageNote, noteText, type MessageView } from '@ab/shared';
-import { LinkedBody } from '@/components/ui/display/linked-body';
+import { LinkedBody } from '@ab/web-kit/components/ui/display/linked-body';
 import { NOTE_WORDS } from '@/features/messaging/inbox/format';
 
 /**

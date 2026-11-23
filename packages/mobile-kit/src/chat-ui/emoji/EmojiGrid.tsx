@@ -1,7 +1,7 @@
 import { Pressable, ScrollView } from 'react-native';
 import { shape, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
-import { EMOJI } from './emoji-list';
+import { EMOJI } from '@ab/client-core';
 
 const GRID = { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' } as const;
 

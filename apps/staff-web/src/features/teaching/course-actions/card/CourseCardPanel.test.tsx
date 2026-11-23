@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CourseCardPanel } from './CourseCardPanel';
 
 const perms = vi.hoisted(() => ({ list: [] as string[] }));
@@ -10,7 +10,7 @@ vi.mock('@/features/people/auth', async (orig) => ({
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 // «الدورة والباقة» on the admin's file (owner 2026-11-17).
 const c = t.courseCard;

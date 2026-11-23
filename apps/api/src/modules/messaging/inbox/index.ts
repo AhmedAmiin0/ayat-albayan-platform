@@ -1,4 +1,4 @@
-export { type ThreadFile, ThreadMediaService } from './files/thread-media.service';
+export { ThreadMediaService } from './files/thread-media.service';
 export { InboxModule } from './inbox.module';
 export { Outbox, type Sent } from './send/outbox';
 export { dedupKey, outboundBase } from './send/thread-send.service';

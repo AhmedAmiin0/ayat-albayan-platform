@@ -1,4 +1,4 @@
-import type { Json } from '@ab/db';
+import type { Json } from '@ab/core';
 
 /** One custom entry as the admin API returns it (GET /config/custom). */
 export interface CustomConfigView {

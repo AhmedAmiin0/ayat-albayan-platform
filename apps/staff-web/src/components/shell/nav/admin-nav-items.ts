@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
-import type { IconName } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n/i18n';
+import type { IconName } from '@ab/web-kit/components/ui/display/icon';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The fihris (surah index) nav, docs/07 §7: the ONE list of admin pages, rendered by the sidebar
 // (≥ 900px) and by the «القائمة» sheet below it; `visibleGroups` (dynamic roles) filters it once.
@@ -9,6 +9,10 @@ export const ADMIN_NAV_GROUPS = [
   [
     { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'phone', permission: 'leads.read' },
     { key: 'inbox', to: '/admin/inbox', label: t.nav.inbox, icon: 'chat', permission: 'inbox.read' },
+    {
+      key: 'shortLinks', to: '/admin/short-links', label: t.nav.shortLinks, icon: 'link',
+      permission: 'short_links.manage',
+    },
     { key: 'jobApplicants', to: '/admin/job-applicants', label: t.nav.jobApplicants, icon: 'brief', permission: 'applicants.read' },
   ],
   [

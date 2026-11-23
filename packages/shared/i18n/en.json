@@ -118,7 +118,8 @@
       },
       "home": {
         "greeting": "Welcome",
-        "open": "Open {name}'s page"
+        "open": "Open {name}'s page",
+        "noMore": "No other lessons in the coming days."
       },
       "lesson": {
         "today": "Today",
@@ -156,7 +157,22 @@
         "prev": "Previous week",
         "next": "Next week",
         "today": "Today · {day}",
-        "empty": "No lessons this week."
+        "empty": "No lessons this week.",
+        "days": "Days of the week",
+        "dayLabel": "{date}: {count}",
+        "noLessons": "No lessons",
+        "lessonCount": {
+          "one": "1 lesson",
+          "two": "2 lessons",
+          "few": "{n} lessons",
+          "other": "{n} lessons"
+        },
+        "summary": "Week summary",
+        "lessons": "Lessons",
+        "awaiting": "Awaiting your confirmation",
+        "teachers": "Teacher",
+        "tzNote": "All times are on your clock ({zone}).",
+        "joinNote": "Joining opens shortly before the lesson starts."
       },
       "children": {
         "lastReport": "Last report · {date}",
@@ -198,7 +214,11 @@
         "settings": "Settings",
         "pushGuardian": "Lesson times, new reports and schedule changes",
         "pushStudent": "Lesson times and new reports",
-        "version": "Version {v}"
+        "version": "Version {v}",
+        "roleGuardian": "Guardian",
+        "roleStudent": "Student",
+        "code": "Student code {code}",
+        "inView": "In view"
       },
       "profile": {
         "title": "Profile",
@@ -296,7 +316,8 @@
         "date_in_past": "That time has passed; pick another one.",
         "group_lesson": "This is a group lesson; contact the academy to change it."
       }
-    }
+    },
+    "roomTitle": "Lesson room"
   },
   "mobile": {
     "pushTitle": "Turn on notifications",
@@ -435,7 +456,8 @@
     "templates": "WhatsApp templates",
     "feedback": "Your opinion matters",
     "activity": "Activity log",
-    "roles": "Roles and permissions"
+    "roles": "Roles and permissions",
+    "shortLinks": "Short links"
   },
   "students": {
     "title": "Students",
@@ -959,6 +981,12 @@
     "noDays": "Pick at least one day",
     "slotsError": "We couldn't load the free times. Try again.",
     "pickSlotFirst": "Pick one of the free times",
+    "otherTime": "Another time",
+    "otherTimeHide": "Hide other times",
+    "otherTimeHint": "Every free time in the next two weeks, inside and outside the teacher's hours",
+    "otherTimeDay": "Pick the day",
+    "otherTimeEmpty": "No free times in the next two weeks",
+    "outsideHours": "This time is outside the teacher's available hours. Check with the teacher before booking.",
     "slotLegend": "The large time is Riyadh time; the small one is the student's time in {city}",
     "slotLegendViewer": "The large time is your time; the small one is the student's time in {city}",
     "trialFor": "Book a trial lesson for {name}",
@@ -4175,6 +4203,7 @@
       "crm_auth": "The CRM refused its API key or the key lacks the send scope — update «CRM API key» in «Communications» → «Safety»; the messages wait in the queue",
       "crm_rate_limited": "Sending hit the CRM's limit (120 requests a minute) — the messages will go out shortly",
       "wa_payment_hold": "The WhatsApp Business account has no valid payment method — the messages wait in the queue and go out automatically once the admin fixes billing in Meta",
+      "wa_line_down": "The WhatsApp provider is unreachable for now — the messages wait in the queue and go out automatically once it is back",
       "crm_meta_error": "Meta refused the message sent through the CRM — see the details",
       "crm_template_malformed": "The CRM's template does not match the values sent — check the template in the CRM",
       "crm_whatsapp_not_configured": "WhatsApp is not connected in the CRM",
@@ -4686,7 +4715,8 @@
       "teacherStatementsEnabled": "When on, teachers see «Monthly statements» and its link in «My earnings». When off, the page and the link are hidden and teachers cannot open them; the statements stay as they are.",
       "teacherFeedbackEnabled": "When on, teachers see the ratings and feedback of their students. When off, the page is hidden on the website and in the mobile app and teachers cannot open it; the feedback stays saved.",
       "teacherInternalMeetingsEnabled": "When on, teachers can start an instant internal meeting from their page. When off, the button is hidden on the website and in the mobile app; admins, sales and assistants keep it.",
-      "teacherScheduledMeetingsEnabled": "When on, teachers can schedule an internal meeting from their page. When off, the button is hidden on the website and in the mobile app. With both meeting buttons off, the teacher's meetings list is hidden too."
+      "teacherScheduledMeetingsEnabled": "When on, teachers can schedule an internal meeting from their page. When off, the button is hidden on the website and in the mobile app. With both meeting buttons off, the teacher's meetings list is hidden too.",
+      "maintenanceMode": "When on, an \"under maintenance\" screen shows to everyone on both websites and both apps except administrators, who can still sign in to check things and turn it off. WhatsApp messages and payment notices keep arriving, reminders and other automatic jobs keep running, and a lesson in progress is not stopped. When turned off, the platform reopens for everyone within about a minute."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -4728,7 +4758,8 @@
     "teacherStatementsEnabled": "Teacher «Monthly statements» page",
     "teacherFeedbackEnabled": "Teacher «Student feedback» page",
     "teacherInternalMeetingsEnabled": "Teacher «Internal meeting» button",
-    "teacherScheduledMeetingsEnabled": "Teacher «Scheduled meeting» button"
+    "teacherScheduledMeetingsEnabled": "Teacher «Scheduled meeting» button",
+    "maintenanceMode": "Maintenance mode"
   },
   "language": {
     "label": "Language",
@@ -6388,7 +6419,7 @@
     "secretCleared": "Secret cleared",
     "crmWebhook": {
       "button": "Link CRM delivery ticks automatically",
-      "hint": "Creates the delivery-status webhook in the CRM with the notifications line's key and stores its secret here, unseen by anyone.",
+      "hint": "Creates the delivery-status and inbound-message webhook in the CRM with the notifications line's key and stores its secret here, unseen by anyone.",
       "pending": "Linking…",
       "done": "CRM delivery ticks linked",
       "errors": {
@@ -6517,7 +6548,7 @@
       },
       "WACRM_WEBHOOK_SECRET": {
         "label": "CRM webhook signing secret",
-        "hint": "Set by the «Link CRM delivery ticks automatically» button below: it registers the API origin followed by /webhooks/wacrm in the CRM for the event message.status_updated and stores its secret here so delivery ticks arrive."
+        "hint": "Set by the «Link CRM delivery ticks automatically» button below: it registers the API origin followed by /webhooks/wacrm in the CRM for the events message.status_updated and message.received and stores its secret here so delivery ticks and messages to the notifications number arrive."
       },
       "WA_ALLOWED_RECIPIENTS": {
         "label": "Allowed recipients",
@@ -7780,7 +7811,8 @@
       "retention": "Logs and retention",
       "notifications": "Notifications",
       "sending": "Sending and safety",
-      "teachers": "Teacher pages"
+      "teachers": "Teacher pages",
+      "system": "System"
     }
   },
   "settingsValues": {
@@ -7817,7 +7849,8 @@
       "sending": "Sending and safety",
       "google": "Google sync",
       "teachers": "Teacher pages",
-      "family": "Family app"
+      "family": "Family app",
+      "system": "System"
     },
     "all": "All",
     "clearSearch": "Clear search",
@@ -8037,7 +8070,8 @@
       "sending": "Sending and safety (view only)",
       "google": "Google sync (view only)",
       "teachers": "Teacher pages",
-      "family": "Family app"
+      "family": "Family app",
+      "system": "System"
     },
     "name": "Name",
     "value": "Value",
@@ -8634,7 +8668,14 @@
       }
     },
     "keyboard": "Keyboard",
-    "closeChat": "Close the chat"
+    "closeChat": "Close the chat",
+    "web": {
+      "sendKey": "to send,",
+      "lineKey": "for a new line",
+      "micDenied": "The microphone is not allowed. Allow it in the browser settings, then try again.",
+      "closePhoto": "Close the photo",
+      "download": "Download the file"
+    }
   },
   "packagePayment": {
     "partPaid": "Partly paid: {paid} of {price} {currency} · {due} left",
@@ -9053,7 +9094,281 @@
     "earliest": "Earliest allowed date: {date}"
   },
   "shortLinks": {
-    "notFound": "This link is not valid or has expired."
+    "notFound": "This link is not valid or has expired.",
+    "title": "Short links",
+    "intro": "Share a short link or a QR code. The link opens only after signing in or confirming a WhatsApp number.",
+    "new": "New link",
+    "state": {
+      "active": "Active",
+      "full": "Limit reached",
+      "expired": "Expired",
+      "revoked": "Stopped"
+    },
+    "send": {
+      "queued": "Sending",
+      "failed": "Failed",
+      "not_sent": "Not sent yet"
+    },
+    "audience": {
+      "anyone": "Anyone",
+      "listed": "Selected people"
+    },
+    "list": {
+      "count": {
+        "one": "1 link",
+        "two": "2 links",
+        "few": "{n} links",
+        "other": "{n} links"
+      },
+      "search": "Search",
+      "searchPlaceholder": "Search by link title",
+      "owner": "Owner",
+      "allOwners": "All owners",
+      "allStaff": "All staff",
+      "mine": "My links",
+      "you": "You",
+      "clearFilters": "Clear filters",
+      "status": "Status",
+      "all": "All",
+      "columns": {
+        "title": "Title",
+        "shortUrl": "Short link",
+        "users": "People",
+        "visitors": "Visitors / limit",
+        "expires": "Expires",
+        "status": "Status",
+        "owner": "Owner"
+      },
+      "opens": "Opens: {host}",
+      "visits": "Visits",
+      "usedOf": "{used} of {max}",
+      "usedUnlimited": "{used} · no limit",
+      "ownerLine": "Owner: {name}",
+      "expiresOn": "Expires {date}",
+      "pageOf": "{from}–{to} of {total}",
+      "previous": "Previous",
+      "next": "Next",
+      "empty": "No links yet. Create your first short link.",
+      "emptyFiltered": "No links match the filters.",
+      "loadError": "Could not load the links. Try again.",
+      "retry": "Try again"
+    },
+    "expiry": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "inDays": {
+        "one": "In 1 day",
+        "two": "In 2 days",
+        "few": "In {n} days",
+        "other": "In {n} days"
+      },
+      "ended": "Ended {date} · deleted {purge}",
+      "revoked": "Stopped · deleted {purge}",
+      "purgeOn": "Deleted {date}"
+    },
+    "form": {
+      "title": "New link",
+      "intro": "It gets a short link and a QR code.",
+      "close": "Close",
+      "titleLabel": "Title",
+      "titleHint": "Shown to whoever opens the link after confirming who they are.",
+      "target": "Original link",
+      "targetHint": "Allowed: the academy's sites, Google Meet and the hosts the admin adds in «Values». Nobody sees it before confirming who they are.",
+      "targetAllowed": "Allowed site: {host}",
+      "expiry": "Valid for",
+      "days": {
+        "one": "1 day",
+        "two": "2 days",
+        "few": "{n} days",
+        "other": "{n} days"
+      },
+      "otherDate": "Another date",
+      "endsAt": "Ends {date}",
+      "purgeNote": "The link stops when it expires and is deleted with its visit log after {days}.",
+      "maxUsers": "Allowed number of people",
+      "unlimited": "No limit",
+      "maxUsersHint": "The number of different people who open the link.",
+      "maxUsersCap": "No more than the selected people ({n}).",
+      "audience": "Who can open the link",
+      "listed": "Selected ({n})",
+      "listedPeople": {
+        "one": "1 person",
+        "two": "2 people",
+        "few": "{n} people",
+        "other": "{n} people"
+      },
+      "listedHint": "Only these people can open it, by signing in or by confirming their number on WhatsApp.",
+      "andPhone": "and a phone number",
+      "addPeople": "Add platform users",
+      "add": "Add",
+      "addPhone": "Add a number",
+      "phoneHint": "For another country, type the full number starting with +.",
+      "unregistered": "Unregistered number",
+      "remove": "Remove {name}",
+      "sendWhatsapp": "Send on WhatsApp",
+      "sendWhatsappHint": "Each selected person gets the link in a message from the notifications number.",
+      "sendTo": {
+        "one": "Sent with the approved notifications template to 1 person after the link is created.",
+        "two": "Sent with the approved notifications template to 2 people after the link is created.",
+        "few": "Sent with the approved notifications template to {n} people after the link is created.",
+        "other": "Sent with the approved notifications template to {n} people after the link is created."
+      },
+      "cancel": "Cancel",
+      "create": "Create link",
+      "createAndSend": "Create and send",
+      "creating": "Creating…",
+      "created": "Link created.",
+      "errors": {
+        "title_invalid": "Type a title for the link (up to 120 characters).",
+        "target_invalid": "Type a full link starting with https://.",
+        "target_not_allowed": "This host is not allowed.",
+        "expiry_invalid": "Pick a valid expiry within a year.",
+        "expiry_past": "Pick an expiry in the future.",
+        "max_users_invalid": "Type a whole number from 1 to 10000, or leave it empty for no limit.",
+        "users_required": "Pick at least one person or add a number.",
+        "phone_invalid": "One of the numbers is not valid. Type a WhatsApp number with its country code.",
+        "too_many_users": "No more than 200 selected people.",
+        "not_found": "This link was not found. It may have been deleted.",
+        "generic": "Could not save the link. Try again."
+      }
+    },
+    "people": {
+      "title": "Who can open the link",
+      "search": "Search by name or number",
+      "searchMin": "Type at least two characters to search.",
+      "empty": "No matching people.",
+      "filters": {
+        "all": "All",
+        "guardians": "Guardians",
+        "students": "Students",
+        "teachers": "Teachers",
+        "staff": "Staff"
+      },
+      "notOnPlatform": "A WhatsApp number not on the platform",
+      "picked": "Selected",
+      "done": "Done · {n}",
+      "doneOf": "Done · {n} of {max} allowed",
+      "results": "Search results"
+    },
+    "detail": {
+      "back": "Short links",
+      "extend": "Extend",
+      "extendTitle": "Extend the link",
+      "extendHint": "An expired link becomes active again until the new date.",
+      "save": "Save",
+      "resend": "Resend",
+      "resendFailed": "Resend to failed ({n})",
+      "revoke": "Stop link",
+      "revokeTitle": "Stop the link?",
+      "revokeBody": "The link stops at once for everyone who has it, and cannot be turned on again.",
+      "revokeConfirm": "Stop link",
+      "revoked": "Link stopped.",
+      "expiresAt": "Expires",
+      "owner": "Owner",
+      "createdAt": "Created",
+      "audience": "Audience",
+      "qr": "QR code",
+      "downloadPng": "Download PNG",
+      "saveImage": "Save image",
+      "share": "Share",
+      "copy": "Copy",
+      "copyLink": "Copy link",
+      "copied": "Link copied.",
+      "visitors": "Visitors",
+      "users": "People",
+      "notOpened": {
+        "one": "1 person has not opened the link yet",
+        "two": "2 people have not opened the link yet",
+        "few": "{n} people have not opened the link yet",
+        "other": "{n} people have not opened the link yet"
+      },
+      "remaining": "Remaining",
+      "until": "Until {date}",
+      "target": "Original link",
+      "whatsapp": "WhatsApp sending",
+      "whatsappHint": "Sent with the approved notifications template.",
+      "sendResult": "Sent to {queued}; could not send to {failed}.",
+      "usersCount": {
+        "one": "1 person",
+        "two": "2 people",
+        "few": "{n} people",
+        "other": "{n} people"
+      },
+      "usersHint": "From the academy platform or by their phone numbers.",
+      "noUsers": "The link is open to anyone who confirms who they are.",
+      "columns": {
+        "person": "Person",
+        "send": "Sending",
+        "opened": "Opened",
+        "visitor": "Visitor",
+        "lastVisit": "Last visit",
+        "opens": "Times"
+      },
+      "notOpenedYet": "Not opened",
+      "visitorLog": "Visitor log",
+      "visitorsOf": "{n} visitors of {max}",
+      "visitorsHint": "Each visitor counts once. Numbers are confirmed with a WhatsApp code.",
+      "noVisitors": "Nobody has opened the link yet.",
+      "matches": "Matches: {name}",
+      "family": "Family: {name}",
+      "via": {
+        "account": "Signed in",
+        "whatsapp": "Confirmed on WhatsApp"
+      },
+      "sendErrors": {
+        "template_not_approved": "The notifications template is not approved yet",
+        "no_phone": "This person has no WhatsApp number",
+        "unknown": "Could not send ({code})"
+      },
+      "errors": {
+        "generic": "Could not do that. Try again.",
+        "not_found": "This link was not found. It may have been deleted."
+      }
+    },
+    "gate": {
+      "fromAcademy": "A link from Ayat Al-Bayan Academy",
+      "linkFrom": "A link from the academy",
+      "continueAs": "Continue as",
+      "notYou": "Not you?",
+      "signOut": "Sign out",
+      "phoneTitle": "To continue, confirm your number on WhatsApp",
+      "phoneLabel": "WhatsApp number",
+      "phoneHint": "You will get a six-digit code on WhatsApp. For another country, type the full number starting with +.",
+      "sendCode": "Send code",
+      "sending": "Sending…",
+      "haveAccount": "Have an academy account?",
+      "signIn": "Sign in",
+      "codeTitle": "Enter the code",
+      "codeSentTo": "Code sent to",
+      "changePhone": "Change number",
+      "codeLabel": "Verification code",
+      "codeDigit": "Digit {n} of the verification code",
+      "resendIn": "You can resend in {seconds} s",
+      "resend": "Resend code",
+      "verify": "Verify and open the link",
+      "verifying": "Verifying…",
+      "opening": "Opening the link…",
+      "openManually": "If the link does not open by itself, tap here.",
+      "fullTitle": "This link has reached its limit",
+      "fullBody": "The number of people who opened this link reached the limit its sender set. Ask the sender for a new link.",
+      "restrictedTitle": "This link is for specific people",
+      "restrictedBody": "This link was not meant for your number or account. If you got it on another number, confirm that number.",
+      "otherPhone": "Confirm another number",
+      "expiredTitle": "This link has expired",
+      "expiredBody": "This link's time is over. Ask the sender for a new link.",
+      "revokedTitle": "This link was cancelled",
+      "revokedBody": "This link no longer works. If you need it, contact the sender.",
+      "notFoundTitle": "We could not find this link",
+      "notFoundBody": "Make sure you opened the full link as you received it, or ask the sender for a new link.",
+      "errors": {
+        "invalid_phone": "Type a valid WhatsApp number with its country code.",
+        "too_many_requests": "Too many attempts. Wait a little and try again.",
+        "codes_unavailable": "WhatsApp codes are not available right now. Try later or sign in with your account.",
+        "invalid_code": "The code is wrong or has expired. Ask for a new code.",
+        "code_incomplete": "Type all six digits.",
+        "generic": "Could not connect. Try again."
+      }
+    }
   },
   "courseDue": {
     "paidTitle": "Paid: book the lesson days",
@@ -9195,6 +9510,24 @@
     "cancel": "Cancel",
     "settingHint": "The app locks when opened and after five minutes in the background, and opens only with your biometrics."
   },
+  "familyWeb": {
+    "moved": {
+      "title": "The family pages have moved",
+      "body": "Guardians and students now have their own address. Open it and sign in again, then add it to your Home Screen to get notifications.",
+      "open": "Open the family pages"
+    },
+    "loginLink": "Family and students sign-in",
+    "loginLinkHint": "Guardians and students sign in on their own pages.",
+    "nav": "Family pages sections",
+    "toStaffApp": "Open the academy team's platform",
+    "familySignIn": "Family and student sign-in",
+    "routeError": {
+      "title": "This page could not be opened",
+      "body": "The connection may have dropped. Try again, or go back to the home page.",
+      "retry": "Try again",
+      "home": "Home page"
+    }
+  },
   "audioPlayer": {
     "play": "Play",
     "pause": "Pause",
@@ -9298,6 +9631,24 @@
     "size": "Size: {size}",
     "waiting": "Waiting"
   },
+  "familyFiles": {
+    "download": "Download",
+    "openTab": "Open in a new tab",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomLevel": "{n}%",
+    "prevFile": "Previous file",
+    "nextFile": "Next file",
+    "pageOf": "{n} of {total}",
+    "pdfFrame": "Preview of {title}",
+    "playing": "Playing",
+    "fullscreen": "Full screen",
+    "videoMark": "Video",
+    "audioMark": "Audio",
+    "videoChip": "Video recording · {minutes} min",
+    "watched": "Watched in full",
+    "mixedHint": "Audio and video recordings of lessons held in the academy room. They open in the app and resume where you stopped."
+  },
   "testAccounts": {
     "chip": "Test",
     "userSwitch": "Test account",
@@ -9309,5 +9660,177 @@
     "cancel": "Cancel",
     "mismatch": "A family cannot mix a test account with a real student.",
     "failed": "The change could not be saved. Try again."
+  },
+  "roomFlow": {
+    "title": "{student}'s lesson with {teacher}",
+    "check": {
+      "title": "Before you join",
+      "hint": "Try your camera and microphone, then join.",
+      "starting": "Starting the camera and microphone…",
+      "camDenied": "Camera not allowed",
+      "micPick": "Microphone",
+      "camPick": "Camera"
+    },
+    "waiting": {
+      "title": "Waiting for the teacher…",
+      "body": "The teacher's camera will show here when they join."
+    },
+    "panel": {
+      "people": "Participants · {n}",
+      "close": "Close the panel"
+    },
+    "ended": {
+      "body": "It can't be joined again.",
+      "card": "The lesson ended at {time} and can't be joined again."
+    }
+  },
+  "backgroundJobs": {
+    "staleTitle": "A background job has stopped",
+    "staleReason": "The background job «{name}» has not succeeded for {minutes} minutes; it normally runs every {every} minutes. Last error: {error}. Check the worker container's logs (ayat-worker).",
+    "noError": "none"
+  },
+  "maintenance": {
+    "planned": {
+      "title": "The platform is under maintenance",
+      "body": "We are updating the platform right now. It will open by itself as soon as maintenance ends, and your data is safe."
+    },
+    "outage": {
+      "title": "The platform is not responding right now",
+      "body": "The cause may be an update we are running right now. We keep retrying on our own, and the platform will open as soon as it is back."
+    },
+    "retry": "Try again",
+    "checking": "Checking…"
+  },
+  "crash": {
+    "title": "This page could not be shown",
+    "body": "Something unexpected went wrong in the app. Tap «Try again» to restart it; your data is safe on the platform.",
+    "retry": "Try again"
+  },
+  "legal": {
+    "links": {
+      "privacy": "Privacy policy",
+      "deleteAccount": "Delete account and data",
+      "opensBrowser": "Opens in the browser",
+      "signIn": "Sign in",
+      "nav": "Legal pages"
+    },
+    "updated": "Last updated: {date}",
+    "contactFallback": "Contact the academy on the WhatsApp number you usually reach it on.",
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "This policy explains what data the Ayat Al-Bayan app for families and students and the family web portal use, why, how we protect it, and how to ask for it to be deleted.",
+      "sections": {
+        "who": {
+          "title": "Who runs the app",
+          "body": "The app and the family portal are run by Ayat Al-Bayan, an academy that teaches the Quran online. The academy is responsible for your data; you can reach it at the address at the end of this page."
+        },
+        "data": {
+          "title": "The data we use and why",
+          "body": "We use only the data needed to hold and follow up lessons:",
+          "items": {
+            "people": "The guardian's name and phone (WhatsApp) number, the student's own number if they have one, country and time zone, and the student's age, gender, programme and level. The academy records them at registration to plan lessons and choose a suitable teacher.",
+            "signIn": "Sign-in data: the phone number, to send a sign-in code on WhatsApp, or the student code and password. We never store the code itself, only an encrypted fingerprint of it, and passwords only in encrypted form.",
+            "lessons": "Lessons and their times, attendance and absence (with the reason if you give one), lesson reports (PDF), homework and the next lesson's plan, the package and the payment history (date and amount only).",
+            "recordings": "Audio recordings of lessons held in the academy's online classroom (sound only, no video); a «Recording» mark shows while recording. Families only see recordings the academy makes available.",
+            "chat": "If the academy turns chat on: messages with the teacher, voice notes, and photos and PDF files sent in it. Location and other photo data (EXIF) are removed before a photo is sent.",
+            "push": "Your device's or browser's notification token, to send lesson, report and message alerts. You can turn notifications off on «Account».",
+            "technical": "Technical logs: the IP address and app or browser type of each change you send, and when you were last seen in the app, to protect accounts and fix errors."
+          }
+        },
+        "devices": {
+          "title": "Camera, microphone and photos",
+          "body": "The app asks for the camera, microphone or photos only when you use them: to take part with sound or video in lessons inside the app, to take or choose a photo to send, and to record a voice note. Unlocking with a fingerprint or face stays on your device; no biometric data reaches us. We do not collect your location."
+        },
+        "children": {
+          "title": "Children",
+          "body": "The app is used by guardians and by students of all ages, including children under 13. A guardian registers the student with the academy and may ask for a login of the student's own; a child never creates an account on their own.",
+          "items": {
+            "noAds": "There are no ads in the app, and we do not use the device's advertising ID.",
+            "noTracking": "We use no analytics or tracking tools, and we never sell data or share it for marketing.",
+            "guardian": "A guardian may see, correct or ask us to delete their child's data at any time."
+          }
+        },
+        "sharing": {
+          "title": "Who processes data with us",
+          "body": "We do not sell your data. We rely on service providers who process it on our behalf and only to run the service:",
+          "items": {
+            "hosting": "Hosting of the app's servers and of the online classroom the academy runs.",
+            "database": "Supabase: the database, file storage and sign-in.",
+            "whatsapp": "WhatsApp (Meta): sign-in codes, reminders and lesson reports.",
+            "push": "Expo, Google Firebase Cloud Messaging and the browsers' push services: delivering notifications.",
+            "payments": "Stripe: the payment page, if the academy sends you a payment link (nothing is paid inside the app)."
+          },
+          "note": "We may disclose data where the law requires it."
+        },
+        "retention": {
+          "title": "How long we keep data",
+          "body": "We keep data while the student is enrolled with the academy, and delete it when you ask, as described on «Delete account and data». In detail:",
+          "items": {
+            "codes": "Sign-in codes are valid for ten minutes; their old records are deleted after about seven days.",
+            "logs": "Technical logs (including the IP address) are deleted automatically after the period the academy sets, 180 days unless changed.",
+            "recordings": "Lesson recordings are kept until the academy deletes them or an automatic deletion period it sets ends, and are deleted when you ask.",
+            "chat": "Chat messages and their files are kept while the account exists, and are deleted when you ask.",
+            "payments": "Payment records may be kept for as long as accounting and legal obligations require."
+          }
+        },
+        "security": {
+          "title": "How we protect data",
+          "body": "Data travels between the app and our servers encrypted (HTTPS and WSS). Each account reaches only its own data and that of the students linked to it, and files and recordings open through short-lived links. The app keeps a temporary copy of your data on your device to show it quickly; it is wiped when you sign out."
+        },
+        "rights": {
+          "title": "Your rights",
+          "body": "You may ask for a copy of your data, to correct it or to delete it, and you can turn notifications off on «Account». To ask for deletion, follow the steps on «Delete account and data»."
+        },
+        "changes": {
+          "title": "Changes to this policy",
+          "body": "We may update this policy when the app changes, and publish the new version on this page with its last-updated date."
+        },
+        "contact": {
+          "title": "Contact us",
+          "body": "For any question about privacy or your data, contact the academy:"
+        }
+      }
+    },
+    "deletion": {
+      "title": "Delete account and data",
+      "intro": "At any time you can ask us to delete a family account or a student's account in the Ayat Al-Bayan app and family portal, with the data linked to it. You do not need to sign in to ask.",
+      "sections": {
+        "steps": {
+          "title": "How to ask",
+          "items": {
+            "write": "Write to the academy at the contact address at the end of this page, with the subject «Account deletion request».",
+            "phone": "Give the phone number registered with the academy in full, with its country code, and the student's name and code (such as AB-1234) if there is one.",
+            "scope": "Say what you want deleted: one student's account, the whole family account, or only some data (such as recordings or chats).",
+            "verify": "We check that the request comes from the number's owner with a WhatsApp message to the registered number, then carry it out and tell you."
+          }
+        },
+        "deleted": {
+          "title": "What is deleted",
+          "items": {
+            "account": "The login, its password and its notification tokens.",
+            "profile": "The student's and guardian's data: names, phone numbers and registration details.",
+            "lessons": "Lessons, attendance, reports and homework.",
+            "recordings": "Lesson recordings.",
+            "chat": "Chat messages, voice notes, photos and files."
+          }
+        },
+        "kept": {
+          "title": "What we may keep, and why",
+          "items": {
+            "payments": "Payment and subscription records, only for as long as accounting and legal obligations require.",
+            "logs": "Technical logs until they are deleted automatically (180 days unless the academy changes the period).",
+            "proof": "A short record showing that we carried out the deletion."
+          }
+        },
+        "timing": {
+          "title": "How long it takes",
+          "body": "We confirm your request within seven days and complete the deletion within thirty days of verifying it."
+        },
+        "contact": {
+          "title": "Contact address",
+          "body": "Send your deletion request to:"
+        }
+      }
+    }
   }
 }

@@ -2,6 +2,7 @@ import { WA_ERROR } from '@ab/shared';
 import { z } from 'zod';
 import type { ErrorTable } from '@/common/infra/http/errors';
 import type { HttpFailure } from '@/common/infra/http/failure';
+import { reachInfo, TIMEOUT_INFO } from '@/modules/messaging/whatsapp/drivers/transport-info';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Evolution API's failures → WaError, as a table (docs/19 «Evolution driver», docs/36 H-3).
@@ -89,13 +90,8 @@ const shape = (uncertain: boolean) => (): WaError =>
 export function evolutionTable(at: { sent: boolean; cloud: boolean }): ErrorTable<WaError> {
   return {
     network: (f) =>
-      new WaError('Evolution request failed', {
-        code: null,
-        status: 0,
-        uncertain: f.kind === 'network' && f.reached,
-      }),
-    timeout: () =>
-      new WaError('Evolution request timed out', { code: null, status: 0, uncertain: true }),
+      new WaError('Evolution request failed', reachInfo(f.kind === 'network' && f.reached)),
+    timeout: () => new WaError('Evolution request timed out', TIMEOUT_INFO),
     shape: shape(at.sent),
     default: (f) => evolutionError(f, at.cloud),
   };

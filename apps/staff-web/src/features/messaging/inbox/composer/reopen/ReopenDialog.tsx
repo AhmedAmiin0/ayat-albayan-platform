@@ -1,10 +1,10 @@
 import { messageTemplate, reopenChoices } from '@ab/client-core';
 import { freeTextSlot, MESSAGE_TEMPLATE, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { templatesQuery } from '@/features/messaging/templates';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import {
   allowedTemplates,
   useReadsMessaging,

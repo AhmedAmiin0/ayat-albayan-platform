@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeClient } from '@/features/teaching/classroom/room/livekit/fake-client';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { fakeClient } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { meetingJoinProblem } from './rows/meeting-join-errors';
 import { MeetingGuestPage } from './MeetingGuestPage';
-import { locale } from '@/lib/i18n/locale';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

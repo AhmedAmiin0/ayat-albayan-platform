@@ -7,7 +7,7 @@ import {
   WACRM_GROUPS,
 } from '@/features/platform/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CrmCutoverCard } from '@/features/platform/settings/pages/communications/CrmCutoverCard';
 
 /**

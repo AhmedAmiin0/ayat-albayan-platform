@@ -3,7 +3,8 @@ import { router } from 'expo-router';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { TeachersScreen } from './TeachersScreen';
-import type { TeacherListItem } from '@/core/lib/staff/types';
+import type { TeacherListRow } from '@ab/shared';
+import { teacherRowFixture } from '@ab/shared/testing';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -12,17 +13,16 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const teacher = (id: string, over: Partial<TeacherListItem> = {}): TeacherListItem => ({
-  id,
-  display_name_ar: 'أ. فاطمة الزهراء',
-  phone_e164: '+966552147730',
-  status: 'active',
-  tz: 'Asia/Riyadh',
-  active_count: 0,
-  trial_count: 0,
-  ...over,
-});
-const page = (items: TeacherListItem[], total = items.length) => ({ items, total, page: 1, pageSize: 25 });
+const teacher = (id: string, over: Partial<TeacherListRow> = {}): TeacherListRow =>
+  teacherRowFixture({
+    id,
+    display_name_ar: 'أ. فاطمة الزهراء',
+    phone_e164: '+966552147730',
+    status: 'active',
+    tz: 'Asia/Riyadh',
+    ...over,
+  });
+const page = (items: TeacherListRow[], total = items.length) => ({ items, total, page: 1, pageSize: 25 });
 // The rows are on page 1; the list asks for page 2 at its end (a total over 25), which is empty.
 const byPage = (first: ReturnType<typeof page>) => async (path: string) =>
   path.includes('page=1&') ? first : { ...first, items: [], page: 2 };

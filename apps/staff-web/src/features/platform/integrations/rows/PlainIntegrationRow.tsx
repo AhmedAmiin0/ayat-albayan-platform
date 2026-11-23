@@ -1,8 +1,8 @@
 import { integrationEnum, type IntegrationConfigItem } from '@ab/shared';
 import { SettingRow } from '@/components/settings/fields/SettingRow';
-import { Input } from '@/components/ui/form/input';
-import { Select } from '@/components/ui/form/select';
-import { t } from '@/lib/i18n/i18n';
+import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { DeveloperKey } from './DeveloperKey';
 import { enumEmptyLabel, integrationText, optionText } from '@/features/platform/integrations/integrations-form';
 import { IntegrationSourceNote } from '@/features/platform/integrations/IntegrationSourceNote';

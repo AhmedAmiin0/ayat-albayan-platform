@@ -3,8 +3,7 @@ import {
   isWaLine, type NumberPurpose, type TemplateParams, type WaLine, type WaSendKind,
 } from '@ab/shared';
 
-// WhatsappClient contract (docs/12 §3): B1 implements it over WA_API_BASE (wa-stub locally, e2e);
-// B2/B3 inject it with `@Inject(WHATSAPP_CLIENT)`. Foundation-owned: change it via the contract.
+// WhatsappClient contract (docs/12 §3): drivers implement it, the sender injects WHATSAPP_CLIENT.
 export const WHATSAPP_CLIENT = Symbol('WHATSAPP_CLIENT');
 /** One client per line (docs/12 §13.4); WHATSAPP_CLIENT = its notifications client. */
 export const WHATSAPP_LINES = Symbol('WHATSAPP_LINES');
@@ -130,8 +129,9 @@ export class WaError extends Error {
     message: string,
     readonly info: {
       code: number | null; status: number; details?: string;
-      /** The request may have reached Meta (timeout, connection lost mid-call): a resend could duplicate it. */
-      uncertain?: boolean;
+      uncertain?: boolean; // the request may have reached Meta: a resend could duplicate it
+      timedOut?: boolean; // the deadline fired (uncertain too): 3 in a row hold the lane
+      lineDown?: boolean; // the provider is down or unreachable, nothing sent: the lane is held
       /** Kapso refused the line's project key, or the CRM its API key (docs/19): held like Meta's 190, in its own words. */
       credential?: 'kapso' | 'crm' | 'evolution';
       missingScope?: string; // the scope the CRM's 403 named («templates:read», docs/39)

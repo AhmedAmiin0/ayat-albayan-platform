@@ -10,7 +10,7 @@ export { RoundAction, type RoundActionProps } from './composer/RoundAction';
 export { DayChip } from './days/DayChip';
 export { chatDayLabel, chatRowTime } from './days/day-label';
 export { EmojiGrid } from './emoji/EmojiGrid';
-export { insertAt } from './emoji/emoji-list';
+export { insertAt } from '@ab/client-core';
 export { FloatingDay } from './days/FloatingDay';
 export {
   CHIP_BOX,

@@ -28,7 +28,7 @@ const fakeClient = () => ({
 });
 
 function setup(row: MediaMessage) {
-  const queries = { message: vi.fn().mockResolvedValue(row), setPath: vi.fn().mockResolvedValue(undefined) };
+  const queries = { message: vi.fn().mockResolvedValue(row), setRefusal: vi.fn(), setPath: vi.fn().mockResolvedValue(undefined) };
   const notifications = fakeClient();
   const chat = fakeClient();
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };

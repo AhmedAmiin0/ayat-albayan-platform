@@ -14,17 +14,13 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { orNotFound, pageQuerySchema, type Page } from '@/common/http/http';
+import { orNotFound, pageQuerySchema } from '@/common/http/http';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
-import { withMeeting, type MeetingFields } from './meeting-view';
-import { TeachersRepo, withoutPath, type Teacher, type TeacherListRow } from './teachers.repo';
+import { withMeeting } from './meeting-view';
+import { TeachersRepo, withoutPath, type Teacher } from './teachers.repo';
 import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
-
-/** A teacher as the API returns it: meeting_mode raw and platform_classroom effective (migration 490). */
-type TeacherView = Omit<Teacher, 'meeting_mode' | 'avatar_path'> &
-  MeetingFields & { username: string | null; avatar_url: string | null };
-type TeacherListView = Omit<TeacherListRow, 'meeting_mode'> & MeetingFields;
+import type { Page, Teacher as TeacherView, TeacherListRow as TeacherListView } from '@ab/shared';
 
 /** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
 const listQuery = pageQuerySchema.extend({

@@ -9,21 +9,18 @@ import type {
   UserUpdate,
   UserWithCredential,
 } from '@ab/shared';
+import type { UsersView } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
 // apps/api/src/modules/users: «المستخدمون». users.read lists and opens, users.write does the rest.
 export const USERS_KEY = ['users'] as const;
 export const USERS_PAGE_SIZE = 20;
 
-export interface UsersView {
-  q: string;
-  role: string;
-  status: string;
-  page: number;
-}
+/** The list's filters and the web's page (the table pages by hand). */
+export type UsersPageView = UsersView & { page: number };
 
-export const userListQuery = (view: UsersView) =>
+export const userListQuery = (view: UsersPageView) =>
   queryOptions({
     queryKey: [...USERS_KEY, 'list', view],
     queryFn: () => {

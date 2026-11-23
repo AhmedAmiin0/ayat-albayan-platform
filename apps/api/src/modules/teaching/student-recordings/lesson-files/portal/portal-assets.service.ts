@@ -14,6 +14,16 @@ interface StudentCall {
   studentId: string;
 }
 
+interface FileCall extends StudentCall {
+  fileId: string;
+  /** The name a «تنزيل» link saves under. */
+  download?: string | undefined;
+}
+
+/** «تنزيل»: the link's saving name, when one was asked for. */
+const saveAs = (call: FileCall): { download?: string } =>
+  call.download ? { download: call.download } : {};
+
 /**
  * «التسجيلات» and the family's lesson page (docs/31 scope: PortalScopes first, 404 for anyone
  * else's student). A lesson's assets reach the family once its report was sent to them.
@@ -56,13 +66,16 @@ export class PortalAssetsService {
     };
   }
 
-  /** A 1-hour link (an audio player range-reads it) to one visible file the family may open. */
-  async fileUrl(call: StudentCall & { fileId: string }): Promise<PortalFileUrl> {
+  /**
+   * A 1-hour link (an audio player range-reads it) to one visible file the family may open; with
+   * `download` it saves under that name instead.
+   */
+  async fileUrl(call: FileCall): Promise<PortalFileUrl> {
     await this.scopes.student(call.user, call.studentId);
     const row = await this.files.byId(call.fileId);
     const sent = row?.visible_to_family ? await this.reports.sentLessons(call.studentId) : null;
     if (!row || !sent?.has(row.lesson_id)) throw notFound('lesson_file_not_found');
     const ref = { bucket: BUCKETS.attachments, path: row.storage_path };
-    return this.storage.signedDownload({ ...ref, seconds: SIGNED_URL_SECONDS.ui });
+    return this.storage.signedDownload({ ...ref, seconds: SIGNED_URL_SECONDS.ui, ...saveAs(call) });
   }
 }

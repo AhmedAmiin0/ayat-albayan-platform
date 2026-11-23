@@ -1,11 +1,13 @@
-import { channelKey } from '@ab/client-core';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { channelKey, pendingMessage, withPending } from '@ab/client-core';
+import type { ChannelPage } from '@ab/shared';
+import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useChannelSettle, type ChannelRef } from '../channel-api';
 import type { ChannelPickedFile } from '../media-port';
 import { uploadChannelFile } from './channel-file';
 import { postChannelMessage, type ChannelSendInput } from './channel-post';
-import { type ChannelPages, withPending } from './optimistic';
-import { pendingMessage } from './pending';
+
+/** The thread's cached pages (useChannel): the newest page first. */
+type ChannelPages = InfiniteData<ChannelPage, string | undefined>;
 
 /**
  * A text (or a caption) to POST …/messages: shown at once as a pending row keyed by its

@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { Skeleton } from '@/components/ui/display/skeleton';
-import { Toast } from '@/components/ui/overlay/toast';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AccountHead } from './AccountHead';
 import { profileQuery } from './api';
 import { AvatarSection } from './sections/AvatarSection';

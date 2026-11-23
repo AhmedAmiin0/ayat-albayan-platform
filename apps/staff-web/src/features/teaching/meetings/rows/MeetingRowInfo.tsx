@@ -1,7 +1,7 @@
 import type { MeetingView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { opensLine, scheduleLine } from '@/features/teaching/meetings/scheduled/meeting-when';
-import { useClock } from '@/lib/clock';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 const L = t.meetingInvites.list;
 const chip = 'rounded-full border border-rule px-2 py-0.5 text-xs';

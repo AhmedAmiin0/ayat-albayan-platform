@@ -8,6 +8,18 @@ const T0 = new Date('2026-10-30T08:00:00Z');
 const at = (min: number) => new Date(T0.getTime() + min * MIN);
 
 describe('LineHolds', () => {
+  it('its own span: 1, 2, 4 … up to 30 min (the outage hold)', () => {
+    const h = new LineHolds({ minMs: MIN, maxMs: 30 * MIN });
+    const lengths: number[] = [];
+    let now = T0;
+    for (let i = 0; i < 7; i += 1) {
+      const set = h.hold('k', now);
+      lengths.push((set.until - now.getTime()) / MIN);
+      now = new Date(set.until);
+    }
+    expect(lengths).toEqual([1, 2, 4, 8, 16, 30, 30]);
+  });
+
   it('first hold 30 min, then doubled at each renewal up to 6 h', () => {
     const h = new LineHolds();
     const lengths: number[] = [];

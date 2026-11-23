@@ -1,10 +1,10 @@
-import { isAhead } from '@ab/client-core';
+import { dayTile, isAhead } from '@ab/client-core';
 import { firstName, type PortalLesson, type PortalStudent } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, InsetGroup, t, type, useTheme } from '@ab/mobile-kit';
 import { DateTile } from '@/ui';
 import { useFamilyClock } from '@/portal';
-import { dayTile, rangeText, teacherText } from './lesson-text';
+import { rangeText, teacherText } from './lesson-text';
 import { LessonChip } from './options/LessonChip';
 import { RequestLine } from './options/RequestLine';
 import { OptionsRow } from './OptionsRow';

@@ -1,7 +1,7 @@
 import { t, ltr } from '@ab/mobile-kit';
-import type { AvailabilityRow } from '@/core/lib/staff/types';
 import { lesson } from '@/today/testing/fixtures';
 import { agendaDays, availabilityLine, headerLine, teacherClock } from './agenda';
+import type { AvailabilityRow } from '@ab/shared';
 
 // Winter week (Cairo back on UTC+2 since 30 Oct): Saturday 31 Oct → Friday 6 Nov 2026.
 const VIEWER = { cycle: '24', tz: 'Asia/Riyadh' } as const;

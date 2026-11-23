@@ -1,9 +1,9 @@
 import type { MeetingView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { copyText, endMeeting, MEETINGS_KEY, newMeetingLink } from '@/features/teaching/meetings/internal/internal-api';
 import { MeetingLinkBox } from './MeetingLinkBox';
 import { MeetingManageButtons } from './MeetingManageButtons';

@@ -35,7 +35,7 @@ describe('CrmWebhookController', () => {
     const kit = controllerKit();
     const res = await kit.controller.register(ADMIN);
     expect(res).toEqual({
-      data: { id: IDS.created, url: TARGET, events: ['message.status_updated'], replaced: 0 },
+      data: { id: IDS.created, url: TARGET, events: ['message.status_updated', 'message.received'], replaced: 0 },
     });
     expect(JSON.stringify(res)).not.toContain(FAKE_SECRET);
   });

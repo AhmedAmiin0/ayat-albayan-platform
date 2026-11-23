@@ -1,14 +1,14 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { activeRow, CallProbe, CONFIG, fakeRtc } from './call-test-kit';
 import { CallProvider } from './CallProvider';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@/lib/http/supabase', () => {
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => {
   const ch = { on: () => ch, subscribe: () => ch };
   return { supabase: { channel: () => ch, removeChannel: vi.fn(async () => 'ok') } };
 });

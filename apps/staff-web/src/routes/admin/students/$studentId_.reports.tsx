@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router';
 import { StudentReportsPage } from '@/features/reporting/reports/history/StudentReportsPage';
 import { studentQuery } from '@/features/people/students/api';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /**
  * /admin/students/$studentId/reports — «سجل التقارير» + grade chart (R-REP-05, issue D2).

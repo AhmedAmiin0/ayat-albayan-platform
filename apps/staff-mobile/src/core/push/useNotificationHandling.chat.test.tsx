@@ -51,8 +51,8 @@ beforeEach(() => {
 });
 
 test('over the admin chat, a payment due pops back to the tabs at that student; no push', async () => {
-  await tapIn('admin', { kind: 'payment_due', studentId: 's9' });
-  expect(mockDismissTo).toHaveBeenCalledWith('/students/s9');
+  await tapIn('admin', { kind: 'payment_due', studentId: '5a000000-0000-4000-8000-000000000009' });
+  expect(mockDismissTo).toHaveBeenCalledWith('/students/5a000000-0000-4000-8000-000000000009');
   expect(mockPush).not.toHaveBeenCalled();
 });
 
@@ -74,8 +74,8 @@ test.each([
 
 test('with the tabs on top (no chat open), a tap is a push, as before', async () => {
   mockTop.name = '(tabs)';
-  await tapIn('admin', { kind: 'payment_due', studentId: 's9' });
-  expect(mockPush).toHaveBeenCalledWith('/students/s9');
+  await tapIn('admin', { kind: 'payment_due', studentId: '5a000000-0000-4000-8000-000000000009' });
+  expect(mockPush).toHaveBeenCalledWith('/students/5a000000-0000-4000-8000-000000000009');
   expect(mockDismissTo).not.toHaveBeenCalled();
 });
 
@@ -83,14 +83,14 @@ test.each(['room/[kind]/[id]', 'room-chat/[studentId]'])(
   'in the live room (%s), a tap waits (#bug: tabs stacked over it) and opens once it is left',
   async (top) => {
     mockTop.name = top;
-    await tapIn('admin', { kind: 'payment_due', studentId: 's9' });
+    await tapIn('admin', { kind: 'payment_due', studentId: '5a000000-0000-4000-8000-000000000009' });
     expect(mockPush).not.toHaveBeenCalled();
     expect(mockDismissTo).not.toHaveBeenCalled();
     await act(async () => mockState.listener?.());
     expect(mockPush).not.toHaveBeenCalled();
     mockTop.name = '(tabs)';
     await act(async () => mockState.listener?.());
-    expect(mockPush).toHaveBeenCalledWith('/students/s9');
+    expect(mockPush).toHaveBeenCalledWith('/students/5a000000-0000-4000-8000-000000000009');
     await act(async () => mockState.listener?.());
     expect(mockPush).toHaveBeenCalledTimes(1);
   },

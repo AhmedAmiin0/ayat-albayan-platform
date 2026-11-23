@@ -1,10 +1,8 @@
-import { NOTIFICATION_AUDIENCES, type NotificationAudience, type NotificationEntryView } from '@ab/shared';
-import { t } from '@/lib/i18n/i18n';
+import { NOTIFICATION_AUDIENCES, type AudienceTab, type NotificationEntryView } from '@ab/shared';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // «ماذا يُرسل ومتى» one audience at a time (docs/26b §3, mockup notifications.html): ولي الأمر ·
 // المعلم/ة · العميل · فريق الأكاديمية, then «يدوي» (the messages a person sends) when there are any.
-
-export type AudienceTab = NotificationAudience | 'manual';
 
 /** The rows of one tab: an audience's automatic/event rows, or every manual row. */
 export function rowsOf(entries: readonly NotificationEntryView[], tab: AudienceTab): NotificationEntryView[] {

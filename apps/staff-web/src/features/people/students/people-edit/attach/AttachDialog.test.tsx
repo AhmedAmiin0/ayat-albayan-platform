@@ -1,12 +1,12 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ALL, renderActions } from '@/features/people/students/people-edit/people-edit.test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const E = t.peopleEdit;
 const OTHER = {

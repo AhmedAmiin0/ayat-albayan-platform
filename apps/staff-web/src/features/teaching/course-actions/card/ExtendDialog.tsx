@@ -1,9 +1,9 @@
 import { courseExtendErrorCode } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { extendPreviewQuery, useExtendCourse } from './api';
 import { extendDoneText } from './card-text';
 import { ExtendPreviewList } from './ExtendPreviewList';

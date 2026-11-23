@@ -2,12 +2,12 @@ import type { PublicPaymentLink } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PayPage } from './PayPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const P = t.paymentLinks.pay;
 const LINK: PublicPaymentLink = { status: 'open', first_name: 'أم سهيلة', amount: 261, currency: 'SAR', package: '8', lessons: 8, sandbox: true };

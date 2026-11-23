@@ -1,3 +1,4 @@
+import { CrashScreen } from '@ab/mobile-kit';
 import { AccountSetupScreen, useNeedsSetup } from '@/core/auth';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { TeacherTabs } from '@/teacher';
@@ -11,3 +12,5 @@ export default function TeacherLayout() {
   const setup = useNeedsSetup();
   return setup ? <AccountSetupScreen /> : <TeacherTabs />;
 }
+
+export const ErrorBoundary = CrashScreen;

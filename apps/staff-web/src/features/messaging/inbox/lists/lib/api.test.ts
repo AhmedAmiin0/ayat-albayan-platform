@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { listErrorText } from './api';
 
 describe('listErrorText (docs/22 §3)', () => {

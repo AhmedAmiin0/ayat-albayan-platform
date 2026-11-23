@@ -1,13 +1,20 @@
-import { ScrollX } from '@/components/ui/layout/scroll-x';
+import { ScrollX } from '@ab/web-kit/components/ui/layout/scroll-x';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { LessonsByStatus } from './LessonsByStatus';
 import { TeacherLoad } from './TeacherLoad';
-import type { DashboardData, DayRange } from '@/features/reporting/dashboard/types';
+import type { DayRange } from '@/features/reporting/dashboard/search';
+import type { DashboardResponse } from '@ab/shared';
 
 /** «الأسبوع ده» (Saturday → Friday, Riyadh): lessons by status and teacher load (R-RPT-01). */
-export function WeekSection({ week, data }: { week: DayRange; data: DashboardData | undefined }) {
+export function WeekSection({
+  week,
+  data,
+}: {
+  week: DayRange;
+  data: DashboardResponse | undefined;
+}) {
   const span = t.dashboard.weekOf.replace('{from}', dayMonthLabel(week.from)).replace('{to}', dayMonthLabel(week.to));
   return (
     <section aria-labelledby="dash-week" className="grid grid-cols-1 gap-4">

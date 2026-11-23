@@ -10,6 +10,7 @@ import { NotificationPolicy } from '@/modules/messaging/notification-rules/polic
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';
 import { BackgroundJob } from '@/config/role/background-job';
+import { beatTick } from '@/common/jobs/beats';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */
@@ -56,7 +57,8 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
   ) {}
 
   onApplicationBootstrap(): void {
-    const tick = () => void this.kick();
+    const plan = { name: ReportPdfJob.name, firstMs: FIRST_RUN_MS, everyMs: POLL_MS };
+    const tick = beatTick(plan, () => this.kick());
     this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, POLL_MS).unref());
   }
 

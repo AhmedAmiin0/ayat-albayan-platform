@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { t, ListRow } from '@ab/mobile-kit';
 import { commissionText, salaryText } from '@/sales-money/lib/money-text';
-import type { AssistantRow } from '@/assistants/api/api';
+import type { AssistantRow } from '@ab/client-core';
 
 /** One salesperson (web assistant-columns): name, salary and commission; taps open their page. */
 export function AssistantItem({ assistant: a }: { assistant: AssistantRow }) {

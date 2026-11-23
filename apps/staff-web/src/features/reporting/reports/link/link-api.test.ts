@@ -1,7 +1,7 @@
 import type { ReportV2SubmitBody, SubmitBody } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { reportView } from '@/features/reporting/reports/report-fixture';
 import { linkProblem, linkReportApi, linkReportFormQuery } from './link-api';
 

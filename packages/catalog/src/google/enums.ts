@@ -1,13 +1,12 @@
 // Google Calendar + Drive + Sheets sync alongside the old Apps Script (docs/24, owner 2026-10-22).
 // One way only, platform → Google, into the SAME calendars, folders and sheets the script uses.
-import type { Enums } from '@ab/db';
 
 /** google_sync_items.kind: one mirrored object each (docs/24 §3). */
-export const GOOGLE_SYNC_KINDS = ['teacher_event', 'main_event', 'report_pdf', 'attendance_row', 'summary_row'] as const satisfies readonly Enums<'google_sync_kind'>[];
+export const GOOGLE_SYNC_KINDS = ['teacher_event', 'main_event', 'report_pdf', 'attendance_row', 'summary_row'] as const;
 export type GoogleSyncKind = (typeof GOOGLE_SYNC_KINDS)[number];
 
 /** google_sync_items.state: the outbox's states. `gone` = deleted by someone in Google; never recreated by itself. */
-export const GOOGLE_SYNC_STATES = ['pending', 'synced', 'gone', 'failed', 'skipped'] as const satisfies readonly Enums<'google_sync_state'>[];
+export const GOOGLE_SYNC_STATES = ['pending', 'synced', 'gone', 'failed', 'skipped'] as const;
 export type GoogleSyncState = (typeof GOOGLE_SYNC_STATES)[number];
 
 /** settings.google_sync_mode: `dry_run` records the planned request and writes nothing in Google. */

@@ -1,16 +1,16 @@
-import type { StudentRecordingView, UserRole } from '@ab/shared';
+import type { StudentRecordingFilters, StudentRecordingView, UserRole } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Pager } from '@/components/ui/layout/pager';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
-import { teacherLabel } from '@/lib/i18n/teacher-label';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Pager } from '@ab/web-kit/components/ui/layout/pager';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { RecordingFiltersBar, type TeacherChoice } from './RecordingFiltersBar';
-import { studentRecordingsQuery, type RecordingFilters } from './recordings-api';
+import { studentRecordingsQuery } from './recordings-api';
 import { StudentRecordingRow } from './StudentRecordingRow';
 import { teacherOptionsQuery } from '@/features/people/students/api';
 
@@ -29,13 +29,13 @@ function choices(items: StudentRecordingView[], all: TeacherChoice[]): TeacherCh
  * serves the admin's student profile and the teacher's view (`role` decides who may delete).
  */
 export function StudentRecordings({ studentId, role }: { studentId: string; role: UserRole }) {
-  const [filters, setFilters] = useState<RecordingFilters>({});
+  const [filters, setFilters] = useState<StudentRecordingFilters>({});
   const [page, setPage] = useState(1);
   const list = useQuery(studentRecordingsQuery({ studentId, filters, page }));
   const teachers = useQuery({ ...teacherOptionsQuery, enabled: role === 'admin' });
   const all = (teachers.data ?? []).map((x) => ({ id: x.id, name: teacherLabel(x) }));
   const filtered = Object.values(filters).some(Boolean);
-  const change = (next: RecordingFilters) => {
+  const change = (next: StudentRecordingFilters) => {
     setFilters(next);
     setPage(1);
   };

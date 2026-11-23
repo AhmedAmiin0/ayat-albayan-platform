@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-family",
     "owner": "holdmycup",
     "scheme": "ayatalbayanfamily",
-    "version": "0.3.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -17,9 +17,12 @@
     },
     "android": {
       "package": "com.ayatalbayan.family",
+      "allowBackup": false,
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
-        "android.permission.FOREGROUND_SERVICE"
+        "android.permission.FOREGROUND_SERVICE",
+        "com.google.android.gms.permission.AD_ID",
+        "android.permission.READ_MEDIA_IMAGES"
       ],
       "adaptiveIcon": {
         "backgroundColor": "#064E3B",
@@ -95,7 +98,7 @@
       "reactCompiler": true
     },
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "fingerprint"
     },
     "updates": {
       "checkAutomatically": "ON_LOAD",

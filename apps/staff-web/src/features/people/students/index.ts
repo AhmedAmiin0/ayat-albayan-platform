@@ -42,18 +42,9 @@ export { LessonRecording } from './recordings/LessonRecording';
 export {
   deleteRecording,
   recordedLessonIdsQuery,
-  type RecordingFilters,
   RECORDINGS_KEY,
   RECORDINGS_PAGE_SIZE,
   setRecordingVisible,
   studentRecordingsQuery,
 } from './recordings/recordings-api';
-export {
-  type DuplicateBody,
-  type Page,
-  type StudentListItem,
-  type StudentProfile,
-  type StudentRef,
-  type TeacherOption,
-} from './types';
 export { PeopleEditActions } from './people-edit';

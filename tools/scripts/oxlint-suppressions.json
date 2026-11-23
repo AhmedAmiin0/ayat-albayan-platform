@@ -155,7 +155,7 @@
   },
   "ci-checks/e2e-areas/plan.mjs": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 1

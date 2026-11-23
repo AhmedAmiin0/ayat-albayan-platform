@@ -49,11 +49,11 @@ test('a tapped push opens its screen: a message â†’ that thread, a payment due â
   expect(app.pathname()).toBe(`/inbox/thread/${GUARDIAN_PHONE}`);
   expect(app.stack()).toEqual(['(tabs)', '(admin-chat)']); // the chat, above the tabs
 
-  await fire({ kind: 'payment_due', studentId: 's9' });
+  await fire({ kind: 'payment_due', studentId: '5a000000-0000-4000-8000-000000000009' });
   expect(await screen.findByText(t.subscriptions.empty)).toBeTruthy();
-  expect(app.pathname()).toBe('/students/s9');
+  expect(app.pathname()).toBe('/students/5a000000-0000-4000-8000-000000000009');
   expect(app.stack()).toEqual(['(tabs)']); // the chat closed into the one tab host, no second (tabs)
-  expect(backend.sent('GET /students/:id').at(-1)?.path).toBe('/students/s9');
+  expect(backend.sent('GET /students/:id').at(-1)?.path).toBe('/students/5a000000-0000-4000-8000-000000000009');
 });
 
 test('the tap that started the app opens its thread at boot; a push that is not ours stays put', async () => {

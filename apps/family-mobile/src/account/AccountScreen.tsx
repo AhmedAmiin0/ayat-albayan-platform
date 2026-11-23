@@ -12,6 +12,7 @@ import { FamilyHeader, FamilyPage } from '@/nav';
 import { ownStudent, usePickedChild, usePortalMe } from '@/portal';
 import { accountCard } from './account-card';
 import { AccountSettings } from './AccountSettings';
+import { LegalLinks } from './LegalLinks';
 import { ProfileCard } from './ProfileCard';
 
 /** «الإصدار 1.0.0». */
@@ -21,7 +22,8 @@ const versionLine = (): string =>
 /**
  * «حسابي» (docs/50 §6, canvas Account / StudentAccount): the card that opens the profile (where a
  * guardian's children are; a guardian of several switches from the header), this phone's
- * notifications, the appearance; a student also changes their password. Sign out last.
+ * notifications, the appearance; a student also changes their password; the privacy policy and
+ * the deletion page (browser). Sign out last.
  */
 export function AccountScreen() {
   const { color } = useTheme();
@@ -37,6 +39,7 @@ export function AccountScreen() {
       <ProfileCard {...accountCard(profile.data, own)} />
       <AccountSettings student={own !== null} />
       {own ? <PasswordSection /> : null}
+      <LegalLinks />
       <SignOutButton />
       <AppText style={{ fontSize: type.size['2xs'], color: color.ink3, textAlign: 'center' }}>
         {versionLine()}

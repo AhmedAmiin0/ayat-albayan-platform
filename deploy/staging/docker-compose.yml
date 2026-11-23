@@ -15,6 +15,18 @@ x-log: &log
     max-size: 10m
     max-file: "3"
 
+# The app containers (worker, API copies) log to the host journal instead: their lines survive the
+# container being recreated by every deploy (json-file logs go with the container). `docker logs`
+# still reads them; after a deploy: journalctl CONTAINER_TAG=ayat-api-a --since -2h (docs/09 «Logs»).
+# The journal's own size cap (journald.conf SystemMaxUse; by default 10 % of the disk, at most 4 GB)
+# bounds them. non-blocking: a slow journal drops a line rather than stalling a request.
+x-app-log: &app-log
+  driver: journald
+  options:
+    tag: "{{.Name}}"
+    mode: non-blocking
+    max-buffer-size: 4m
+
 x-app: &app
   # One image per deploy (built by ayat-worker's build:), reused by every app service. Never pulled:
   # a registry image of this name is not ours.
@@ -22,7 +34,7 @@ x-app: &app
   pull_policy: never
   env_file: .env
   restart: unless-stopped
-  logging: *log
+  logging: *app-log
   # SIGTERM: Fastify stops taking connections and finishes the requests in flight (main.ts).
   stop_grace_period: 30s
   # Every 30 s once healthy (it was 5 s: three containers × node -e ≈ 10 % of a core around the clock on a 2-vCPU

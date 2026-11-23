@@ -1,7 +1,7 @@
 import { SETTING_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { searchHub } from './hub-search';
 
 const H = t.settingsHub;
@@ -13,8 +13,8 @@ describe('searchHub (docs/26b §1: labels, descriptions, keys and module pages)'
     expect(searchHub('   ')).toEqual([]);
   });
 
-  it('every one of the 73 settings is found by its key and links somewhere under «القيم»', () => {
-    expect(SETTING_KEYS).toHaveLength(73);
+  it('every one of the 74 settings is found by its key and links somewhere under «القيم»', () => {
+    expect(SETTING_KEYS).toHaveLength(74);
     for (const key of SETTING_KEYS) {
       const hit = byId(key, `setting:${key}`);
       expect(hit?.href, key).toMatch(/^\/admin\/settings\/values\?group=/);

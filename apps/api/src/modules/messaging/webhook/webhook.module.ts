@@ -41,6 +41,13 @@ import {
   CrmConfirmSweepJob,
   liveCrmConfirmSource,
 } from './crm-confirm';
+import {
+  CRM_INBOUND_SOURCE,
+  CrmInbound,
+  CrmInboundJob,
+  CrmInboundRepo,
+  liveCrmInboundSource,
+} from './crm-inbound';
 import { InboundCatchUpJob } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.job';
 import { InboundCatchUpRepo } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.repo';
 import { InboundCatchUp } from '@/modules/messaging/webhook/external/inbound/inbound-catchup.service';
@@ -96,6 +103,11 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
     CrmConfirmRepo,
     CrmConfirm,
     CrmConfirmSweepJob,
+    // A message to the notifications number, mirrored from the CRM into the inbox (2026-11-21).
+    { provide: CRM_INBOUND_SOURCE, useFactory: liveCrmInboundSource },
+    CrmInboundRepo,
+    CrmInbound,
+    CrmInboundJob,
     // Evolution API numbers (docs/19 «Evolution driver»): inbound, ticks, connection state.
     EvolutionWebhookService,
     EvolutionStateRepo,

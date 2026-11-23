@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch, t, pathKey, ErrorState, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { groupByWeekday, gridTz, tzLabel } from '@/more/schedule';
-import type { AvailabilityRow, Teacher } from '@/core/lib/staff/types';
 import { WeekdayRow } from './WeekdayRow';
+import type { AvailabilityRow, Teacher } from '@ab/shared';
 
 /** «المواعيد المتاحة», read-only: the weekly grid by day in one inset card, in the zone it was saved in. R-TCH-02. */
 export function WeeklyAvailability({ teacher }: { teacher: Pick<Teacher, 'id' | 'tz'> }) {

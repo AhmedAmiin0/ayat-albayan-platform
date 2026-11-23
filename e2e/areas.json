@@ -81,7 +81,10 @@
         "sales/chat-subscribe.spec.ts",
         "platform/config-parity.api.spec.ts",
         "teaching/edit-session-time.spec.ts",
+        "people/family-lesson-files.spec.ts",
+        "people/family-chat.spec.ts",
         "people/family-portal.spec.ts",
+        "people/family-profile-package.spec.ts",
         "people/family-sign-in.api.spec.ts",
         "people/family-sign-in.spec.ts",
         "reporting/feedback.spec.ts",
@@ -237,6 +240,7 @@
         "teaching/classroom-live-phone.spec.ts",
         "teaching/classroom-live.moderation.spec.ts",
         "teaching/classroom-live.spec.ts",
+        "teaching/family-room-live.spec.ts",
         "platform/config-parity.api.spec.ts",
         "platform/google-sync.spec.ts",
         "teaching/internal-meeting.spec.ts",
@@ -317,7 +321,8 @@
         "apps/api/src/modules/people/me/",
         "apps/api/src/modules/people/portal/",
         "apps/api/src/modules/people/presence/",
-        "apps/staff-web/src/routes/portal.tsx"
+        "apps/staff-web/src/routes/portal.tsx",
+        "apps/family-web/src/routes/"
       ],
       "specs": [
         "people/account.api.spec.ts",
@@ -325,7 +330,11 @@
         "people/account.spec.ts",
         "sales/assistant-scope.api.spec.ts",
         "people/assistants-admin.spec.ts",
+        "people/family-lesson-files.spec.ts",
+        "people/family-chat.spec.ts",
         "people/family-portal.spec.ts",
+        "people/family-profile-package.spec.ts",
+        "teaching/family-room-live.spec.ts",
         "people/family-sign-in.api.spec.ts",
         "people/family-sign-in.spec.ts",
         "platform/forms-parity.spec.ts",
@@ -501,10 +510,20 @@
         "platform/settings-gate.api.spec.ts",
         "platform/settings-switches.spec.ts",
         "messaging/teacher-restricted-templates.spec.ts",
+        "platform/maintenance.spec.ts",
         "messaging/template-numbers.spec.ts",
         "messaging/templates.spec.ts",
         "messaging/wa-lines-check.spec.ts"
       ]
+    },
+    "shortLinks": {
+      "about": "managed short links: the admin and sales list, create and detail pages and their API",
+      "paths": [
+        "apps/staff-web/src/routes/admin/short-links/",
+        "apps/staff-web/src/routes/sales/short-links/",
+        "apps/api/src/modules/platform/short-links-admin/"
+      ],
+      "specs": ["platform/short-links-admin.spec.ts"]
     },
     "translations": {
       "about": "the translations page and the catalogue of every UI string (any ar.json/en.json key change runs it)",
@@ -513,6 +532,17 @@
         "apps/api/src/modules/platform/translations/"
       ],
       "specs": ["platform/locale.spec.ts", "platform/translations.spec.ts"]
+    },
+    "shortLinkGate": {
+      "about": "the public short-link gate /l/<code> (docs/19 «Gate flow») and its API",
+      "paths": [
+        "apps/staff-web/src/routes/(public)/l.$code.tsx",
+        "apps/api/src/modules/platform/short-links-admin/gate/"
+      ],
+      "specs": [
+        "platform/short-link-gate.spec.ts",
+        "platform/short-link-gate-code.spec.ts"
+      ]
     }
   },
   "developOnly": [

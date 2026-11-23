@@ -1,8 +1,8 @@
 import type { TemplateLineView, TemplateView, WaLine } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/button';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CreateTemplateDialog } from './CreateTemplateDialog';
 
 const S = t.templates.create;

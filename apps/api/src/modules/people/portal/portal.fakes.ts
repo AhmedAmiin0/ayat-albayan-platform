@@ -1,5 +1,5 @@
 // Test fixtures and HTTP harness for the family portal (test-only, excluded from the build by *.fakes.ts).
-import type { PortalStudent } from '@ab/shared';
+import type { PortalGuardian, PortalStudent } from '@ab/shared';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
@@ -15,6 +15,7 @@ import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission'
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { PortalHistoryRepo } from './history/portal-history.repo';
 import { ChatNumber } from './home/chat-number';
+import { PortalGuardianRepo } from './home/portal-guardian.repo';
 import type { PortalLessonRow, PortalRequestRow } from './lessons/portal-lessons.repo';
 import { PortalLessonsRepo } from './lessons/portal-lessons.repo';
 import { PortalPackageRepo } from './package/portal-package.repo';
@@ -31,6 +32,7 @@ export const S3 = '51000000-0000-4000-8000-000000000003';
 export const L1 = 'e1000000-0000-4000-8000-000000000001';
 export const R1 = 'f1000000-0000-4000-8000-000000000001';
 export const REC = 'fa000000-0000-4000-8000-000000000001';
+export const GUARDIAN: PortalGuardian = { name: 'أحمد', phone: '+966511111111' };
 
 const kid = (id: string, name: string): PortalStudent => ({ id, code: 'AB-0201', name, tz: 'Africa/Cairo', contact_is_self: false });
 const FAMILIES: Record<string, PortalStudent[]> = {
@@ -91,6 +93,7 @@ export async function portalApp() {
   };
   const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${ref.seconds}` })) };
   const chat = { e164: vi.fn(async (): Promise<string | null> => '+966500000000') };
+  const guardian = { ownOf: vi.fn(async (): Promise<PortalGuardian | null> => GUARDIAN) };
   const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PortalScopeRepo).useValue(scope)
     .overrideProvider(PortalLessonsRepo).useValue(lessons)
@@ -103,6 +106,7 @@ export async function portalApp() {
     .overrideProvider(FAMILY_JOIN_SECRET).useValue(FAMILY_SECRET)
     .overrideProvider(StorageService).useValue(storage)
     .overrideProvider(ChatNumber).useValue(chat)
+    .overrideProvider(PortalGuardianRepo).useValue(guardian)
     .overrideProvider(RoomInsideRepo).useValue({ inside: async () => [] })
     .overrideProvider(MeZoneRepo).useValue({ zoneOf: async () => null, localeOf: async () => 'ar' })
     .overrideProvider(SettingsService).useValue(fakeSettings(SETTINGS));
@@ -110,7 +114,7 @@ export async function portalApp() {
   const call = (method: 'GET' | 'POST', url: string, who?: Who) =>
     app.inject({ method, url, headers: who ? { authorization: `Bearer ${who}` } : {} });
   const fakes = { scope, lessons, reports, packages, money, history, classroom, admission };
-  return { app, call, ...fakes, storage, chat };
+  return { app, call, ...fakes, storage, chat, guardian };
 }
 
 /** Every key at any depth of a JSON value. */

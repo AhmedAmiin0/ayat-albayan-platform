@@ -1,4 +1,4 @@
-import type { Json } from '@ab/db';
+import type { Json } from '@ab/core';
 import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '../public.js';
 
 // GET /settings/public (no login): the composite read model the apps load before and after login.

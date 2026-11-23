@@ -2,7 +2,7 @@
 import type { MessageView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog';
 import { TextComposer } from '@/features/messaging/inbox/composer/components/TextComposer';
 import { renderAs, SALES, type Who } from '@/features/messaging/inbox/messages/hide/hide.testing';

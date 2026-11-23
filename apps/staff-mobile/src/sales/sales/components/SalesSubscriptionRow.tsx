@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { pushInTab } from '@/core/nav/back-within';
 import { t, Button, ListRow } from '@ab/mobile-kit';
-import type { SalesSubscription } from '@/sales/sales/lib/sales-api';
+import type { SalesSubscriptionView } from '@ab/shared';
 import { useSalesHrefs } from '@/sales/sales/lib/sales-href';
 import { startsLine, subscriptionSubtitle } from '@/sales/sales/lib/sales-text';
 import { Note } from '@/core/ui/feedback/Note';
@@ -14,7 +14,7 @@ import { MoneyActionButton } from '@/sales/sales/money-action';
  * details like every student row (owner 2026-10-28). A pending one carries its student's one money action
  * instead («تسجيل تحويل» for its owed package, else «تجديد»; UX review #9), when there is one.
  */
-export function SalesSubscriptionRow({ sub, withHistory }: { sub: SalesSubscription; withHistory: boolean }) {
+export function SalesSubscriptionRow({ sub, withHistory }: { sub: SalesSubscriptionView; withHistory: boolean }) {
   const starts = startsLine(sub);
   const href = useSalesHrefs();
   const base = useTreeBase();

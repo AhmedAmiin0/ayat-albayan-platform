@@ -1,10 +1,10 @@
 import type { UserDetail } from '@ab/shared';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { Ltr } from '@/components/ui/display/ltr';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { formatDateTime } from '@/features/sales/leads';
 import { TestChip } from '@/features/people/test-accounts';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 const L = t.users.link;
 

@@ -6,7 +6,7 @@ import {
   READ_ITEM,
   renderWithClient,
 } from '@/features/messaging/notifications/notifications-test-kit';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MenuBar } from './MenuBar';
 import { WideHeader } from '@/components/shell/layout/TopBarLayout';
 
@@ -18,8 +18,8 @@ vi.mock('@tanstack/react-router', async () => ({
     select({ location: { pathname: '/teacher' } }),
   useNavigate: () => vi.fn(),
 }));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/features/people/auth/use-permissions', () => ({
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }),
 }));
 

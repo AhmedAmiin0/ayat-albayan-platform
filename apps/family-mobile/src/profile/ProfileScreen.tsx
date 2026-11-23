@@ -1,13 +1,12 @@
+import { profileFacts, whoLine } from '@ab/client-core';
 import type { AccountProfile, PortalHome } from '@ab/shared';
 import { t, useMyProfile } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
 import { ownStudent, usePortalMe } from '@/portal';
 import { LoadState } from '@/ui';
 import { ChildrenLinks } from './ChildrenLinks';
-import { profileFacts } from './profile-facts';
 import { ProfileDetails } from './ProfileDetails';
 import { ProfileHero } from './ProfileHero';
-import { whoLine } from './who-line';
 
 interface ProfileData {
   profile: AccountProfile;
@@ -21,11 +20,11 @@ function ProfileBody({ profile, me }: ProfileData) {
     <>
       <ProfileHero
         name={profile.full_name}
-        line={whoLine(own)}
+        line={whoLine(own, t.portal.app.account)}
         photo={profile.avatar_url}
         seed={own?.id ?? null}
       />
-      <ProfileDetails facts={profileFacts(profile, own)} />
+      <ProfileDetails facts={profileFacts(profile, own, t.portal.app.profile)} />
       <ChildrenLinks students={own ? [] : me.students} />
     </>
   );

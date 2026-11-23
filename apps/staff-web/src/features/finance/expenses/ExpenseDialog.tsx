@@ -1,19 +1,19 @@
 import { uploadOnce } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { categoriesQuery, saveExpense, uploadExpenseReceipt, type ExpenseView } from './api';
 import { AddCategory } from './AddCategory';
 import { expenseBody, expenseForm, type ExpenseForm } from './expense-form';
 import { ExpenseFields } from './ExpenseFields';
-import { useUploadMaxBytes } from '@/lib/settings/public-config';
+import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 
 type Props = { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void };
 

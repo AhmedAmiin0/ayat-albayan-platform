@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { patchQualification, type InboxLead } from '@/features/messaging/inbox/api/api';
 import { RequestFields } from './FamilyFields';
 import { PreferenceFields } from './PreferenceFields';

@@ -1,10 +1,10 @@
 import type { LessonView } from '@ab/shared';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { wasText } from './edit-time-text';
 import { timeEditInfo, timeEditMode } from './edit-time.contract';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /**
  * Under the time in the drawer (R-SCH-11): «كان: …» and «السبب: …» once it was edited (the

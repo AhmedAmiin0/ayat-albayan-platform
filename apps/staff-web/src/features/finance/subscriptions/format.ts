@@ -1,6 +1,5 @@
 import {
   counted,
-  formatAmount,
   livePackages,
   packageProgress,
   type AdminTaskView,
@@ -8,23 +7,14 @@ import {
   type PackageProgress,
   type StudentBalanceView,
 } from '@ab/shared';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { currencySymbol, moneyText } from '@ab/web-kit/lib/money-text';
 import type { SubscriptionView } from './api';
 
 // Display text for the money screens. Wording from ar.json, Western digits (docs/07 §2).
 
-const symbols: Readonly<Record<string, string>> = { ...t.pricing.currencies, EGP: t.payouts.currency };
-
-/** The currency's Arabic symbol («ر.س», «ج.م»), else its ISO code. */
-export function currencySymbol(iso: string): string {
-  return symbols[iso] ?? iso;
-}
-
-/** «145 ر.س» as plain text (aria labels, CSV-free places). */
-export function moneyText(amount: number, currency: string): string {
-  return `${formatAmount(amount)} ${currencySymbol(currency)}`;
-}
+export { currencySymbol, moneyText };
 
 /** docs/07 §6 package line: «فاضل حلقتين», tone act at the R-SUB-02 threshold. */
 export function progressOf(b: Pick<BalanceView, 'lessons_used' | 'lessons_total'>, threshold?: number): PackageProgress {

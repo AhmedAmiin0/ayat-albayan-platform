@@ -1,7 +1,7 @@
 import { callEntryText as entryText } from '@ab/client-core';
 import { formatPhone, type CallEntryKind, type CallView } from '@ab/shared';
-import type { IconName } from '@/components/ui/display/icon';
-import { t } from '@/lib/i18n/i18n';
+import type { IconName } from '@ab/web-kit/components/ui/display/icon';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { showsPhone, type InboxMode } from '@/features/messaging/inbox';
 
 /** «مكالمة صوتية صادرة · 2:14», «مكالمة واردة · 0:40», «مكالمة فائتة», «لم يُرَدّ», «مكالمة جارية». */

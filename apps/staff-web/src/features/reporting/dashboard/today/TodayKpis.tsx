@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Skeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n/i18n';
-import { usePublicConfig } from '@/lib/settings/public-config';
-import { cn } from '@/lib/utils';
+import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface TodayKpisProps {
   /** Today's lessons and how many rooms are open now; undefined while the day loads. */

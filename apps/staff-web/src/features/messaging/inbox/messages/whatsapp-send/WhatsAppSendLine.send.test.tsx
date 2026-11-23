@@ -1,12 +1,12 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { anchoredThreadPrefix } from '@ab/client-core';
-import { ApiError, apiSend } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { action, fakeTab, held, renderBubble } from './whatsapp-send.test-util';
 
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
 const refused = (status: string, error_code: string | null = null) =>
   new ApiError(409, { code: 'not_app_send', message: 'not_app_send', status, error_code });
@@ -38,13 +38,16 @@ describe('«أرسل عبر واتساب» in the web bubble: app-send, then ope
     expect(tab.opener).toBeNull();
   });
 
-  it('settled: the chat and its anchored windows are read again', async () => {
+  it('settled: this chat, the lists, the badge and the anchored windows read', async () => {
     vi.mocked(apiSend).mockResolvedValue(message(held));
     const client = renderBubble({});
     const invalidate = vi.spyOn(client, 'invalidateQueries');
     fireEvent.click(action() as HTMLElement);
-    await waitFor(() => expect(invalidate).toHaveBeenCalledTimes(2));
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads'] });
+    await waitFor(() => expect(invalidate).toHaveBeenCalledTimes(4));
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'detail', '+966500000001'] });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: anchoredThreadPrefix('+966500000001') });
   });
 

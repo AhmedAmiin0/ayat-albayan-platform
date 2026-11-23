@@ -1,9 +1,9 @@
 import { type LessonView, lessonWhenAt } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@/components/ui/form/button';
+import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { studentNames } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import { useClock } from '@/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 export interface NextLessonProps {
   /** nextOpenLesson over the home's window (14 days ahead), or null. */

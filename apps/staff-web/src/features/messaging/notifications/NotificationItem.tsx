@@ -1,12 +1,12 @@
 import { webNotificationPath, type NotificationItem as Item } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { meQuery } from '@/features/people/auth/me';
-import { t } from '@/lib/i18n/i18n';
-import { cn } from '@/lib/utils';
-import { useMarkRead } from './api';
+import { meQuery } from '@ab/web-kit/auth/me';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { cn } from '@ab/web-kit/lib/utils';
+import { useMarkRead } from '@ab/web-kit/push/notifications-api';
 import { notificationStamp, notificationTime } from './format';
-import { useClock } from '@/lib/clock';
+import { useClock } from '@ab/web-kit/lib/clock';
 
 export interface NotificationItemProps {
   item: Item;

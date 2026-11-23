@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActionsProvider';
 import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog';
@@ -9,7 +9,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const M = message({ id: 'b3f0e7a2-5d1c-4e8b-9a6f-0c2d4e6f8a10', body: 'رابط الحلقة', replyable: true, forwardable: true });
 const phoneOf = (i: number) => `+96650000000${i}`;
@@ -84,7 +84,9 @@ describe('«إعادة توجيه» (owner 2026-10-25)', () => {
     expect(toast.textContent).toContain(t.inbox.forward.result.replace('{sent}', '1').replace('{skipped}', '1'));
     expect(toast.textContent).toContain(`محادثة 1: ${t.inbox.forward.skip.session_closed}`);
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads'] });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
   });
 
   it('an error keeps the dialog with the error line; the retry reuses the request id', async () => {

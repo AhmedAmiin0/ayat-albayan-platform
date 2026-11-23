@@ -2,15 +2,13 @@ import { z } from 'zod';
 import { DURATIONS, PACKAGE_SIZES } from '@ab/catalog';
 import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../lessons/state-machine.js';
 import { bookingExtras } from './booking-extras.js';
-import { requiredText, timeOfDay, timeZone } from '@ab/core';
+import { instant, localDate, requiredText, timeOfDay, timeZone } from '@ab/core';
 import { dayTimesSchema } from './day-times.js';
 
 // Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; POST /booking's
 // schema joins the people row schemas in @ab/shared (k5a). Times are never free text (rule 6):
 // wall-clock "HH:MM" + IANA tz, local dates "YYYY-MM-DD", instants ISO-8601 with offset.
 
-export const localDate = z.iso.date();
-export const instant = z.iso.datetime({ offset: true });
 /** A one-lesson move's optional reason (docs/47 owner call 4), written on the moved-away row. */
 export const moveReasonSchema = z.string().trim().min(1).max(500).optional();
 export const lessonDuration = z.literal(DURATIONS);

@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { Logo } from '@/components/ui/display/mark';
-import { Page } from '@/components/ui/layout/page';
-import { RunningHead } from '@/components/ui/layout/running-head';
-import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
-import { meQuery } from '@/features/people/auth/me';
+import { Logo } from '@ab/web-kit/components/ui/display/mark';
+import { Page } from '@ab/web-kit/components/ui/layout/page';
+import { RunningHead } from '@ab/web-kit/components/ui/layout/running-head';
+import { ThemeToggle } from '@ab/web-kit/components/ui/layout/theme-toggle';
+import { meQuery } from '@ab/web-kit/auth/me';
 import { NotificationBell } from '@/features/messaging/notifications/NotificationBell';
-import { cn } from '@/lib/utils';
+import { cn } from '@ab/web-kit/lib/utils';
 import { AccountChip } from '@/components/shell/account/AccountChip';
-import { LanguageSwitch } from '@/components/shell/account/LanguageSwitch';
+import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { LogoutButton } from '@/components/shell/account/LogoutButton';
 import { MenuBar } from '@/components/shell/header/MenuBar';
 

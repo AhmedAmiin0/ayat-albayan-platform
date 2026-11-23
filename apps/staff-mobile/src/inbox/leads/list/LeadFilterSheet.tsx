@@ -14,7 +14,8 @@ import {
 } from '@ab/mobile-kit';
 import { AssignUnassigned } from '@/inbox/leads/detail/AssignUnassigned';
 import { activeFilterCount, NO_FILTERS, type LeadFilters } from './lead-filters';
-import { leadSortChoices, leadSortFromValue, leadSortValue } from './lead-sort';
+import { leadSortFromValue, leadSortValue } from '@ab/client-core';
+import { leadSortChoices } from './lead-sort';
 
 interface LeadFilterSheetProps {
   visible: boolean;

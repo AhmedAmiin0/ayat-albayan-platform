@@ -5,8 +5,11 @@ import { z } from 'zod';
 // GET/PATCH/DELETE {base}/webhooks/{id}, scope webhooks:manage. The envelope's `data` is parsed
 // here.
 
-/** The only event the platform reads from the CRM: delivery ticks (POST /webhooks/wacrm). */
-export const CRM_TICK_EVENTS = ['message.status_updated'] as const;
+/**
+ * The events the platform reads from the CRM (POST /webhooks/wacrm): delivery ticks, and a family's
+ * message to the notifications number, mirrored into the inbox (owner 2026-11-21).
+ */
+export const CRM_WEBHOOK_EVENTS = ['message.status_updated', 'message.received'] as const;
 
 /** Where the CRM delivers: the API's own receiver, on the public origin. */
 export const WACRM_RECEIVER_PATH = '/webhooks/wacrm';

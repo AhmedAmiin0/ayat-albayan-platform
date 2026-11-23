@@ -1,11 +1,8 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createRouter, RouterProvider } from '@tanstack/react-router';
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { bindWebPushToSession } from './features/messaging/notifications/web-push/web-push-session';
-import { t } from './lib/i18n/i18n';
-import { supabase } from './lib/http/supabase';
-import { watchSystemTheme } from './lib/theme';
+import { QueryClient } from '@tanstack/react-query';
+import { createRouter } from '@tanstack/react-router';
+import { renderApp } from '@ab/web-kit/boot/render-app';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { rememberUntilSessionEnd } from './features/messaging/inbox';
 import { routeTree } from './routeTree.gen';
 
 // Loaded by main.tsx once the translation overrides are in `t`: every screen module evaluates here.
@@ -19,16 +16,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
-watchSystemTheme();
-bindWebPushToSession(supabase.auth);
-document.title = t.app.name;
-
-const root = document.getElementById('root');
-if (!root) throw new Error('#root missing');
-createRoot(root).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </StrictMode>,
-);
+// The inbox's unsent replies and drafts go when the session ends (sign-out, another tab).
+rememberUntilSessionEnd();
+// «تحت الصيانة» (owner 2026-11-21): a lesson room is never covered; the sign-in stays open so an
+// admin can get in while the switch is on.
+const maintenance = {
+  staff: true,
+  rooms: /^\/(classroom|meeting|join|s|m)\//,
+  signIn: /^\/(login|set-password)\/?$/,
+};
+renderApp({ router, queryClient, title: t.app.name, maintenance });

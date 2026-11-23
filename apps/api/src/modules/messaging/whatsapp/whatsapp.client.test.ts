@@ -47,7 +47,8 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
       timeoutMs: 5,
       fetch: (_u, init) => new Promise((_r, reject) => init.signal?.addEventListener('abort', () => reject(init.signal?.reason))),
     });
-    const info = { code: null, status: 0, uncertain: true, template: templateRow().meta_name };
+    const template = templateRow().meta_name;
+    const info = { code: null, status: 0, uncertain: true, timedOut: true, template };
     expect(await send(slow).catch((e: WaError) => e.info)).toEqual(info);
     const reset = new TypeError('fetch failed', { cause: Object.assign(new Error('socket'), { code: 'ECONNRESET' }) });
     await expect(send(client(reset).c)).rejects.toMatchObject({ info: { uncertain: true } });

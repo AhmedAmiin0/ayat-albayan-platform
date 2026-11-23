@@ -4,3 +4,4 @@ export * from './assistants.js';
 export * from './earnings.js';
 export * from './reports.js';
 export * from './golden-sweep.js';
+export * from './teachers.js';

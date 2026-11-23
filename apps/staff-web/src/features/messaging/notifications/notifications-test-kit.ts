@@ -1,7 +1,4 @@
 import type { NotificationItem, NotificationsPage } from '@ab/shared';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
-import { createElement, type ReactElement } from 'react';
 
 // Shared by the bell tests (not a test itself): fixtures and a render wrapper.
 
@@ -26,7 +23,4 @@ export const page = (items: NotificationItem[], unread = items.filter((i) => !i.
   unread,
 });
 
-export function renderWithClient(ui: ReactElement) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return { client, ...render(createElement(QueryClientProvider, { client }, ui)) };
-}
+export { renderWithClient } from '@ab/web-kit/testing/query-render';

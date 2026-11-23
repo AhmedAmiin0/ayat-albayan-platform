@@ -1,13 +1,18 @@
-import type { ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { Page, ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
-import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
 import { InboxSettings, renewalThreshold } from '@/modules/messaging/inbox/inbox.settings';
 import { familyTag, type FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
-import { asRead, isFirstPage, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
+import {
+  asRead,
+  isFirstPage,
+  pageRows,
+  stampRead,
+  type ThreadPageQuery,
+} from '@/modules/messaging/inbox/reads/thread-page';
 import { toThreadView, type ThreadRow } from './threads.mapper';
 import { ThreadsRepo, type ThreadListFilter } from './threads.repo';
 

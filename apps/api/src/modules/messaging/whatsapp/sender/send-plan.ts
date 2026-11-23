@@ -6,6 +6,7 @@ import {
 import { ar } from '@/common/infra/i18n/server-text';
 import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 import { driverCode } from '@/modules/messaging/whatsapp/drivers/driver-codes';
+import { lineDownHold } from './hold/line-down';
 import { paymentHold, type HoldRow } from './hold/payment-hold';
 import { isWindowClosedError } from './window/window-rules';
 import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
@@ -23,9 +24,7 @@ export const UNCERTAIN = 'uncertain';
 export const HANDED_OFF = 'handed_off';
 /** An expired / revoked token holds the queue this long before the next try (no attempt counted). */
 export const AUTH_HOLD_MS = 15 * 60_000;
-export {
-  KAPSO_AUTH, CRM_AUTH, EVOLUTION_AUTH,
-} from '@/modules/messaging/whatsapp/drivers/driver-codes';
+export { KAPSO_AUTH, CRM_AUTH, EVOLUTION_AUTH } from '@/modules/messaging/whatsapp/drivers/driver-codes';
 export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 const ERROR_TEXT_MAX = 500;
 
@@ -58,12 +57,13 @@ function errorText(error: unknown): string {
 }
 
 /**
- * Throttling, Meta outages and connection errors retry with backoff (1 min, 5 min, …) until
- * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, the window
- * closed: Meta 131047 / Kapso 422 = window_closed, bad parameters) fails at once. A timeout /
- * dropped connection (`uncertain`: Meta may have sent it) fails at once too, for the admin to
- * check instead of a blind resend. An auth
- * error (190 / 10 / 200, or Kapso / the CRM refusing its key) holds the row, uncounted: the credential is broken.
+ * Meta's throttling and outage codes retry with backoff (1 min, 5 min, …) until MAX_SEND_ATTEMPTS;
+ * anything else (131026 not on WhatsApp, 132001 template missing, the window closed: Meta 131047 /
+ * Kapso 422 = window_closed, bad parameters) fails at once. A timeout / dropped connection
+ * (`uncertain`: Meta may have sent it) fails at once too, for the admin to check instead of a
+ * blind resend. The provider down (lineDown: a 5xx with no code, a refused connection) holds the
+ * row, uncounted, as its lane's probe (hold/line-down). An auth error (190 / 10 / 200, or Kapso /
+ * the CRM refusing its key) holds the row, uncounted: the credential is broken.
  * Meta's 131042 (no payment method on the WABA; meta, kapso) holds it too (hold/payment-hold).
  * The crm driver: a 429 waits for its Retry-After (uncounted); any other CRM error code fails at once.
  * `attempts` counts this try.
@@ -87,12 +87,13 @@ export function failurePlan(input: PlanInput): FailurePlan {
 /** Failed for good with its code (a retry overrides status and next_attempt_at). */
 const plain = (error: unknown, error_text: string): FailurePlan => ({ status: 'failed', next_attempt_at: null, error_code: errorCode(error), error_text });
 
-/** The account, not the message: a refused credential (15 min) or Meta's 131042 (payment hold). */
+/** The account or the line, not the message: a refused credential, an outage, Meta's 131042. */
 interface HoldInput extends PlanInput { info: WaError['info'] | null; error_text: string }
 
 function accountHold(h: HoldInput): FailurePlan | null {
   const until = new Date(h.now.getTime() + AUTH_HOLD_MS).toISOString();
-  return isWaAuthFailure(h.info) ? authHold({ ...h, until }) : paymentHold(h);
+  if (isWaAuthFailure(h.info)) return authHold({ ...h, until });
+  return lineDownHold(h) ?? paymentHold(h);
 }
 
 /** The token is broken, not the message: back in the queue, this try not counted. */

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { pagePermission } from '@/features/people/auth/admin-access';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AdminNav, visibleGroups } from './AdminNav';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -26,7 +26,7 @@ describe('AdminNav — dynamic roles', () => {
   });
 
   it('shows everything to the system admin (default)', () => {
-    expect(visibleGroups(() => true).flat()).toHaveLength(22);
+    expect(visibleGroups(() => true).flat()).toHaveLength(23);
   });
 
   it('gives every item the same permission the /admin route guard checks for its page', () => {

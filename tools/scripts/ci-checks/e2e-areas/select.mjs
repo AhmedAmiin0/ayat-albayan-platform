@@ -21,23 +21,26 @@ const NO_E2E =
 const FULL = [
   /^tools\/scripts\/(ci-checks\/e2e-shards\.mjs|ci-checks\/e2e-areas\/|env\/)/,
   /^apps\/staff-web\/src\/(routeTree\.gen\.ts|components\/shell\/|features\/people\/auth\/)/,
+  /^packages\/web-kit\/src\/(auth|boot)\//,
 ];
 /**
  * Unit tests, lint and code-health baselines, env examples, the API's permission parity fixtures
  * (read only by permissions.parity.test.ts and route-walk.test-util.ts): nothing e2e runs.
  */
 const UNIT =
-  /\.test\.(ts|tsx|mjs)$|^apps\/api\/src\/common\/auth\/parity\/|\/__snapshots__\/|^apps\/staff-web\/src\/(test\/|test-setup\.ts$|i18n-literals\.allow\.json$)|(^|\/)((eslint|oxlint)-suppressions\.json|eslint\.config\.(js|mjs)|lint\.blocks\.mjs|\.env\.example)$|^refactor\/|^knip\.json$/;
+  /\.test\.(ts|tsx|mjs)$|^apps\/api\/src\/common\/auth\/parity\/|\/__snapshots__\/|^apps\/staff-web\/src\/(test\/|test-setup\.ts$|i18n-literals\.allow\.json$)|^packages\/web-kit\/src\/testing\/|(^|\/)((eslint|oxlint)-suppressions\.json|eslint\.config\.(js|mjs)|lint\.blocks\.mjs|\.env\.example)$|^refactor\/|^knip\.json$/;
 /** Code followed through the import graph. */
 const GRAPHED =
-  /^(apps\/staff-web\/src\/(features|components|routes)\/|apps\/api\/src\/modules\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/)/;
+  /^(apps\/(staff|family)-web\/src\/(features|components|routes)\/|packages\/web-kit\/src\/|apps\/api\/src\/modules\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/)/;
 const ROUTES = 'apps/staff-web/src/routes/';
+/** The family web app's pages (docs/51): their area lists the whole folder. */
+const FAMILY_ROUTES = 'apps/family-web/src/routes/';
 const SPEC = /^e2e\/tests\/(?:[^/]+\/)*[^/]+\.spec\.ts$/;
 /** Registries that import every route / module: not a use (the route or module itself is). */
-const REGISTRY = /^apps\/staff-web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
+const REGISTRY = /^apps\/(staff|family)-web\/src\/routeTree\.gen\.ts$|^apps\/api\/src\/app\.module\.ts$/;
 /** Code between a changed file and a page or module: followed further, never decides by itself. */
 const PASS =
-  /^(apps\/staff-web\/src\/(features|components|lib)\/|apps\/api\/src\/scripts\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
+  /^(apps\/(staff|family)-web\/src\/(features|components|lib)\/|packages\/web-kit\/src\/|apps\/api\/src\/scripts\/|packages\/(core|i18n|time|catalog|settings|money|schedule|shared|client-core)\/src\/|e2e\/(scripts|support\/(?!(?:[^/]+\/)*(?:global-setup|durations-reporter)))|e2e\/tests\/(?:[^/]+\/)*(?![^/]*\.setup\.)[^/]+\.ts$)/;
 
 /** A changed spec runs itself (a deleted one: nothing). */
 function takeSpec(sel, f) {
@@ -80,7 +83,8 @@ function areaReasons(sel, c, routes) {
   });
 }
 
-const isPageOrModule = (c) => c.startsWith(ROUTES) || c.startsWith('apps/api/src/modules/');
+const isPageOrModule = (c) =>
+  c.startsWith(ROUTES) || c.startsWith(FAMILY_ROUTES) || c.startsWith('apps/api/src/modules/');
 
 /** One file that uses the change: the full-suite reasons it gives. */
 function useReasons(sel, c, routes) {

@@ -9,9 +9,9 @@ test.each([
   [{ kind: 'new_message', phone: PHONE }, THREAD],
   [{ kind: 'reminder_failed', phone: PHONE, messageId: 'm3' }, THREAD],
   [{ kind: 'lesson_needs_confirmation', lessonId: 'l1' }, '/'],
-  [{ kind: 'report_submitted', studentId: 's-1' }, '/students/s-1'],
-  [{ kind: 'payment_due', studentId: 's-1', subscriptionId: 'sub1' }, '/students/s-1'],
-  [{ kind: 'new_student', lessonId: 'l1', studentId: 's-1' }, '/students/s-1'],
+  [{ kind: 'report_submitted', studentId: '5a000000-0000-4000-8000-000000000001' }, '/students/5a000000-0000-4000-8000-000000000001'],
+  [{ kind: 'payment_due', studentId: '5a000000-0000-4000-8000-000000000001', subscriptionId: 'sub1' }, '/students/5a000000-0000-4000-8000-000000000001'],
+  [{ kind: 'new_student', lessonId: 'l1', studentId: '5a000000-0000-4000-8000-000000000001' }, '/students/5a000000-0000-4000-8000-000000000001'],
   [{ kind: 'meeting_invite', meetingId: 'm1' }, '/more/live/meetings'],
   [{ kind: 'google_sync_alert' }, '/more/ops/settings'],
   [{ kind: 'commission_earned' }, '/'],
@@ -53,10 +53,10 @@ test('pushKind and pushPhone read only well-formed values', () => {
 test('a push into a tab the role cannot see opens «المزيد» instead of nowhere', () => {
   const only = (held: string) => (p: string) => p === held;
   expect(routeFor({ kind: 'new_message', phone: PHONE }, only('students.read'))).toBe('/more');
-  expect(routeFor({ kind: 'report_submitted', studentId: 's-1' }, only('inbox.read'))).toBe('/more');
+  expect(routeFor({ kind: 'report_submitted', studentId: '5a000000-0000-4000-8000-000000000001' }, only('inbox.read'))).toBe('/more');
   expect(routeFor({ kind: 'lesson_needs_confirmation' }, only('inbox.read'))).toBe('/more');
   expect(routeFor({ kind: 'new_message', phone: PHONE }, only('leads.read'))).toBe(THREAD);
-  expect(routeFor({ kind: 'report_submitted', studentId: 's-1' }, only('students.read'))).toBe('/students/s-1');
+  expect(routeFor({ kind: 'report_submitted', studentId: '5a000000-0000-4000-8000-000000000001' }, only('students.read'))).toBe('/students/5a000000-0000-4000-8000-000000000001');
   expect(routeFor({ kind: 'meeting_invite' }, only('students.read'))).toBe('/more');
   expect(routeFor({ kind: 'meeting_invite' }, only('meetings.read'))).toBe('/more/live/meetings');
   expect(routeFor({ kind: 'google_sync_alert' }, only('students.read'))).toBe('/more');

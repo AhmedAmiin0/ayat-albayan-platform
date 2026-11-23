@@ -1,10 +1,10 @@
 import { warnsTrialDate } from '@ab/shared';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { TrialDateDraft } from '@/features/teaching/booking/draft/draft';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
-import { useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface TrialDateNotesProps {
   trial: TrialDateDraft;

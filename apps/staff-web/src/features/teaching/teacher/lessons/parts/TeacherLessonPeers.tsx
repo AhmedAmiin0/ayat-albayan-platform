@@ -1,9 +1,9 @@
 import { teacherCanPropose, type PlanAction } from '@ab/client-core';
 import { isOpenLesson, type LessonView } from '@ab/shared';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/form/button';
-import { ButtonRow } from '@/components/ui/layout/button-row';
-import { t } from '@/lib/i18n/i18n';
+import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeacherCancelDialog } from '@/features/teaching/teacher/lessons/TeacherCancelDialog';
 import { TeacherProposal } from '@/features/teaching/teacher/proposals/TeacherProposal';
 import { TeacherLessonLead } from './TeacherLessonLead';

@@ -20,7 +20,6 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@ab/catalog": "workspace:*",
     "@ab/config": "workspace:*",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "eslint": "^10.0.0",
@@ -29,7 +28,6 @@
   },
   "dependencies": {
     "@ab/core": "workspace:*",
-    "@ab/db": "workspace:*",
     "zod": "^4.6.5"
   }
 }

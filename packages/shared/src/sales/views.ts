@@ -31,6 +31,8 @@ export interface SalesPersonView {
 }
 
 export const salesSubscriptionsQuerySchema = z.object({ kind: z.enum(['pending', 'confirmed']) });
+/** GET /sales/subscriptions?kind=: my pending or my confirmed subscriptions. */
+export type SalesSubscriptionKind = z.output<typeof salesSubscriptionsQuerySchema>['kind'];
 
 const DAY_MS = 86_400_000;
 /** ISO instants, at most 31 days apart. */

@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { fileDiff, optionsOf, oxlintRulesFor, summarize } from './config-parity.mjs';
+import { matchesGlob } from 'node:path';
+import {
+  fileDiff,
+  matchesFast,
+  optionsOf,
+  oxlintRulesFor,
+  summarize,
+} from './config-parity.mjs';
 
 const config = {
   rules: { eqeqeq: 'error' },
@@ -50,4 +57,23 @@ test('fileDiff + summarize: a rule off in Oxlint, or with other options, per rul
     'other options: complexity (1 files, e.g. apps/staff-web/a.ts)',
     'not linted by Oxlint: apps/staff-web/b.ts',
   ]);
+});
+
+test('matchesFast: the same answer as matchesGlob for every file and glob shape', () => {
+  const globs = [
+    'apps/api/**/*.ts', 'apps/api/src/*.ts', 'apps/api.ts', 'apps/@(api|web)/**',
+    'apps/+(api)/**',
+    './apps/api/**', '/apps/api/**', '**/*.test.ts', 'apps/*/src/**', 'apps/{api,web}/**',
+    'apps/api/../web/**', 'apps/./api/**', 'e2e/.lint/**', 'apps/api-x/**', 'apps/a?i/**',
+    'apps/[a]pi/**',
+  ];
+  const files = [
+    'apps/api/src/a.ts', 'apps/api/src/x/a.test.ts', 'apps/api.ts', 'apps/web/a.ts',
+    'apps/api-x/a.ts', 'e2e/.lint/a.ts', 'apps/apis/a.ts', 'packages/shared/a.ts',
+  ];
+  for (const glob of globs) {
+    for (const file of files) {
+      assert.equal(matchesFast(file, glob), matchesGlob(file, glob), `${file} ~ ${glob}`);
+    }
+  }
 });

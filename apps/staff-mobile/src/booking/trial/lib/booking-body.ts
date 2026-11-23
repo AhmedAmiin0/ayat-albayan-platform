@@ -1,7 +1,8 @@
 import { bookingInvoiceInput } from '@ab/client-core';
 import { dayTimesFromPicks, normalizePhone, registrationStatus } from '@ab/shared';
-import type { BookingBody, InvoiceDraft, InvoiceInput } from '@/booking/shared/contract';
-import type { StudentChoice, TrialDraft } from './draft';
+import type { BookingRequest } from '@ab/shared';
+import type { InvoiceDraft, InvoiceInput } from '@/booking/shared/contract';
+import { isOutside, type StudentChoice, type TrialDraft } from './draft';
 import { picksOf } from '@/booking/shared/picks';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
@@ -35,7 +36,7 @@ function ruleTiming(d: TrialDraft, startsAt: string) {
  * positive payment makes it active), and carries the form's age and gender; the guardian its
  * «عرفت عننا منين؟». Unanswered optional questions are left out.
  */
-export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingBody | null {
+export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingRequest | null {
   const phone = normalizePhone(d.phone);
   if (!d.teacher || !d.startsAt || !phone.ok) return null;
   const base = {
@@ -48,6 +49,7 @@ export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingBody | n
     package: d.pkg,
     clientRequestId: o.requestId,
     leadId: d.leadId,
+    ...(isOutside(d) ? { outsideHours: true } : {}),
     // The API answers 400 invoice_required when a package arrives without one.
     ...(d.kind !== 'trial' && d.invoice ? { invoice: toInvoiceInput(d.invoice) } : {}),
   };

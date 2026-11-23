@@ -10,6 +10,7 @@ import type { BookingTeacher } from '@/modules/teaching/booking/core/booking.rep
 import type { Occurrence } from '@ab/shared';
 import { planSeries } from './booking.series-plan';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
+import { assertNotPast, bookableConflicts } from './outside-hours';
 
 export type Prepared = {
   payload: BookingPayload;
@@ -108,15 +109,16 @@ export class BookingPlanner {
     const [plan, ...siblings] = plans;
     const first = plan?.occurrences[0];
     if (!plan || !first) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+    assertNotPast(req, new Date());
     const tzs = [req.tz, ctx.teacher.tz];
     const probe = single ? [] : plans.flatMap((p) => probeAfter(p, tzs));
-    const conflicts = await this.checker.check({
+    const found = await this.checker.check({
       teacherId: ctx.teacher.id,
       studentIds: ctx.who.student_ids,
       proposed: [...plans.flatMap((p) => p.occurrences), ...probe],
       excludeIds: [...(ctx.exclude ?? [])],
     });
-    return { plan, siblings, first, conflicts };
+    return { plan, siblings, first, conflicts: bookableConflicts(found, req) };
   }
 }
 

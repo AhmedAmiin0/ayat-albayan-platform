@@ -44,11 +44,11 @@ describe('the seated assistant in the student chat over HTTP', () => {
     expect(seen).toEqual([['m1', false, 'guardian'], ['b', true, 'sales']]);
   });
 
-  it('read marks and unread: hers counts the teacher and the family', async () => {
+  it('read marks and unread: hers counts everyone else\'s', async () => {
     expect((await t.post(`${SALES}/read`, 'sales', {})).statusCode).toBe(204);
     expect(t.queries.setReadMark).toHaveBeenCalledWith(expect.objectContaining({ profileId: 'p-sa' }));
     expect((await t.call('GET', `${SALES}/unread`, 'sales')).json()).toEqual({ unread: 2 });
-    const countRoles = ['teacher', 'guardian', 'student'];
+    const countRoles = ['teacher', 'guardian', 'student', 'sales'];
     expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-sa', studentIds: [ST], countRoles });
   });
 
@@ -71,11 +71,11 @@ describe('the seated assistant in the student chat over HTTP', () => {
     expect(t.queries.insert).not.toHaveBeenCalled();
   });
 
-  it('closed: she still reads the history (read-only) and cannot write', async () => {
+  it('closed: she still reads the history (read-only); a write is 409 channel_not_open', async () => {
     t.queries.isOpen.mockResolvedValue(false);
     const page = (await t.call('GET', `${SALES}/messages`, 'sales')).json();
     expect([page.open, page.read_only, page.messages.length]).toEqual([false, true, 1]);
-    expect((await t.post(`${SALES}/messages`, 'sales', { body: 'x' })).statusCode).toBe(403);
+    expect((await t.post(`${SALES}/messages`, 'sales', { body: 'x' })).statusCode).toBe(409);
     expect(t.queries.insert).not.toHaveBeenCalled();
   });
 

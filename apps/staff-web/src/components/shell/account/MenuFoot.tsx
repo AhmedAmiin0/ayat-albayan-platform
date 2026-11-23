@@ -1,7 +1,7 @@
-import { ClockToggle } from '@/components/ui/layout/clock-toggle';
-import { ThemeToggle } from '@/components/ui/layout/theme-toggle';
+import { ClockToggle } from '@ab/web-kit/components/ui/layout/clock-toggle';
+import { ThemeToggle } from '@ab/web-kit/components/ui/layout/theme-toggle';
 import { AccountChip } from './AccountChip';
-import { LanguageSwitch } from './LanguageSwitch';
+import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 
 /**

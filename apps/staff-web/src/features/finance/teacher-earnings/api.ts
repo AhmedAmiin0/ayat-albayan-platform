@@ -1,4 +1,5 @@
 import type {
+  Page,
   PaymentMethod,
   SignedDownload,
   SignedUpload,
@@ -7,9 +8,10 @@ import type {
   TeacherPaymentResult,
   TeacherPaymentView,
 } from '@ab/shared';
+import type { SessionFilter } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { MONEY_KEY, type Page } from '@/features/finance/subscriptions/api';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
@@ -19,7 +21,6 @@ export type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView
 export const EARNINGS_PAGE_SIZE = 20;
 /** Admin reads one teacher by id; a teacher always reads their own (the id comes from the token). */
 export type Scope = { kind: 'admin'; teacherId: string } | { kind: 'mine' };
-export type SessionFilter = 'all' | 'unpaid' | 'paid';
 
 const base = (s: Scope) => (s.kind === 'admin' ? `/teacher-earnings/${s.teacherId}` : '/teachers/me/earnings');
 export const earningsKey = (s: Scope) => [...MONEY_KEY, 'teacher-earnings', s.kind === 'admin' ? s.teacherId : 'me'] as const;

@@ -1,19 +1,20 @@
 import type { BookingResult } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Input } from '@/components/ui/form/input';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Input } from '@ab/web-kit/components/ui/form/input';
 import { conflictsOf, errorCode, lessonErrorText, LESSONS_KEY } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/people/students/api';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { createBooking } from '@/features/teaching/booking/api';
 import { CourseCheckNotice } from './CourseCheckNotice';
 import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { DuplicateNotice } from './DuplicateNotice';
 import { useBookingMode, useCourseHeld } from '@/features/teaching/booking/mode';
 import { ReviewSummary } from './ReviewSummary';
+import { OutsideNote } from '@/features/teaching/booking/steps/slots/other-time';
 import { isSeriesClean, useSeriesCheck } from './SeriesCheck';
 
 const INVOICE_ERRORS = new Set(['invoice_required', 'invoice_type', 'invoice_too_large', 'invoice_path', 'invoice_message', 'media_expired']);
@@ -67,6 +68,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
   return (
     <div className="grid gap-5">
       <ReviewSummary draft={draft} />
+      <OutsideNote draft={draft} />
       {mode === 'admin' && (
         <div className="sm:max-w-[460px]">
           <Field label={t.booking.meetingLink} hint={t.booking.meetingLinkHint}>

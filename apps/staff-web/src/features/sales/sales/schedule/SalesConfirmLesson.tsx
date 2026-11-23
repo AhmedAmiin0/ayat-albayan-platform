@@ -1,10 +1,10 @@
 import type { SalesLessonMoved } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { errorCode, lessonErrorText } from '@/features/teaching/schedule';
-import { apiSend } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { apiSend } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The confirm's own wording for lesson_ended and invalid_transition; the lessons wording otherwise. */
 export function confirmErrorText(error: unknown): string {

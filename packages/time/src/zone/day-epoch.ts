@@ -1,10 +1,10 @@
 import { weekdayOfDate } from './calendar.js';
 import { localDateIn, offsetMinutesIn, wallToUtc } from './zoned.js';
 
-// Local days as numbers (docs/34 §7; row k3b, formerly the api's availability/zoned-time.ts): a
-// «local day» is the UTC-midnight epoch ms of a calendar date in some zone (y/m/d only). Occurrence
-// generation, booking, payouts and the `?from&to` windows count in these; the goldens
-// (shared time/golden/day-epoch, occurrences.golden) pin every instant to the pre-date-fns code.
+// Local days as numbers (docs/34 §7, row k3b): a «local day» is the UTC-midnight epoch ms of a
+// calendar date in some zone (y/m/d only). Occurrence generation, booking, payouts and the
+// `?from&to` windows count in these; the goldens (shared time/golden/day-epoch,
+// occurrences.golden) pin every instant to the pre-date-fns code.
 
 export const MINUTE_MS = 60_000;
 /** One calendar day between two local days (both UTC midnights): never a DST-length day. */

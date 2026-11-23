@@ -17,6 +17,8 @@ export function renameTable(renames) {
 
 /** The repo path a specifier points at from `file` (null for a package). */
 export function target(file, spec) {
+  const pkg = /^@ab\/([a-z0-9-]+)$/.exec(spec);
+  if (pkg) return `packages/${pkg[1]}/src/index.ts`;
   if (spec.startsWith('.')) return posix.normalize(posix.join(posix.dirname(file), spec)).replace(/\/$/, '');
   // `@/*` → `./src/*` in each app's tsconfig, for every file of the app (mobile's app/ routes too).
   const app = /^(apps\/[^/]+)\//.exec(file);

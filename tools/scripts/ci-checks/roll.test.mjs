@@ -85,7 +85,7 @@ test('the workflow swaps and rolls under the deploy lock, and a failed roll runs
   assert.match(block, /mv src\.new src &&/);
   assert.match(block, /mv docker-compose\.yml\.new docker-compose\.yml && mv roll\.sh\.new roll\.sh && mv rollback\.sh\.new rollback\.sh/);
   assert.match(block, /cat lb\/Caddyfile\.new > lb\/Caddyfile/, 'same inode: ayat-lb mounts the directory');
-  assert.match(block, /rm lb\/Caddyfile\.new \|\| exit 4\n\s*\{ sh roll\.sh \|\| \{ sh rollback\.sh \|\| exit 3; exit 1; \}; \}' > \.deploy\.log 2>&1 < \/dev\/null/);
+  assert.match(block, /rm lb\/Caddyfile\.new \|\| exit 4\n\s*\{ sh roll\.sh \$ROLL_ARGS \|\| \{ sh rollback\.sh \|\| exit 3; exit 1; \}; \}' > \.deploy\.log 2>&1 < \/dev\/null/);
   assert.match(block, /setsid -w flock/, 'an ssh drop never stops the roll or its rollback halfway');
   for (const rc of ['75', '1', '3', '4', '255']) assert.match(workflow, new RegExp(`\\n\\s*${rc}\\) echo "::error::`), `exit ${rc} has its own message`);
   assert.match(workflow, /setsid -w flock -n -E 75 \.deploy\.lock sh rollback\.sh > \.deploy\.log 2>&1 < \/dev\/null/, 'the health-check rollback too, detached');

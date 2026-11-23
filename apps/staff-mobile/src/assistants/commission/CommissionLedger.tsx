@@ -3,13 +3,14 @@ import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
-import { useCommissions, type AssistantRow, type LedgerFilter } from '@/assistants/api/api';
+import { useCommissions } from '@/assistants/api/api';
 import { AssistantPills } from '@/assistants/list/AssistantPills';
 import { commissionStatusStyle } from './commission-style';
 import { CommissionItem } from './CommissionItem';
 import { CurrencyTotalsLine } from './CurrencyTotalsLine';
 import { MonthFilter } from './MonthFilter';
 import { StatusPills } from '@/assistants/list/StatusPills';
+import type { AssistantRow, LedgerFilter } from '@ab/client-core';
 
 interface CommissionLedgerProps {
   /** The list for the salesperson filter; omit on one salesperson's page and pass `assistantId`. */

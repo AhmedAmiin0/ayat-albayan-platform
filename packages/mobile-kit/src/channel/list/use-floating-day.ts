@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, type LayoutChangeEvent, type ViewToken } from 'react-native';
 import { topDay } from './day-cover';
-import type { ChannelRow } from './list-rows';
+import type { ChannelRow } from '@ab/client-core';
 import { useDayCover } from './use-day-cover';
 
 /** How long the floating chip stays after the scroll stops. */

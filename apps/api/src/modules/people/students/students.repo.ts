@@ -1,7 +1,8 @@
 import { STUDENT_STATUSES, searchDigits, type StudentListFilters, type StudentStatus } from '@ab/shared';
+import type { TeacherOption } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
-import { dbError, pageRange, type ListQuery, type Page } from '@/modules/people/guardians/http';
+import { dbError, pageRange, type ListQuery } from '@/modules/people/guardians/http';
 import { applySort } from '@/common/db/list-sort';
 import { applyStudentFilters } from './students.filters';
 import {
@@ -13,7 +14,13 @@ import {
   type StudentListRow,
   type StudentProfile,
 } from './students.mapper';
-import { applyStudentColumnFilters, STUDENT_SORT, type StudentColumnFilters, type StudentListSort } from './students.sort';
+import {
+  applyStudentColumnFilters,
+  STUDENT_SORT,
+  type StudentColumnFilters,
+  type StudentListSort,
+} from './students.sort';
+import type { Page } from '@ab/shared';
 
 // One literal each: supabase-js infers the row type from the select string.
 const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
@@ -93,7 +100,6 @@ export async function getStudentProfile(db: Db, id: string): Promise<StudentProf
   return toProfile(data);
 }
 
-export type TeacherOption = { id: string; display_name_ar: string; meeting_link: string | null };
 
 /** Active teachers for the profile's teacher picker. ponytail: move to teachers module later. */
 export async function listTeacherOptions(db: Db): Promise<TeacherOption[]> {

@@ -25,6 +25,7 @@ export function cacheStoreFromEnv(guard: CacheGuard, source: NodeJS.ProcessEnv =
     { provide: CACHE_STORE, inject: [CacheGuard], useFactory: (guard: CacheGuard) => cacheStoreFromEnv(guard) },
     SharedCache,
   ],
-  exports: [SharedCache],
+  // The store and guard too: the job heartbeats share them (common/jobs/beats).
+  exports: [SharedCache, CACHE_STORE, CacheGuard],
 })
 export class CacheModule {}

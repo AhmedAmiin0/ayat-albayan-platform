@@ -1,7 +1,7 @@
 import { counted, dateText } from '@ab/shared';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import { locale } from '@/lib/i18n/locale';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // What the «جدولي» month view says (owner 2026-11-14): its title, the weekday heads, a day's name.
 

@@ -1,27 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@/components/ui/form/button';
-import { Cartouche } from '@/components/ui/display/cartouche';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { PageHead } from '@/components/ui/layout/page';
-import { Tabs } from '@/components/ui/layout/tabs';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
-import { t } from '@/lib/i18n/i18n';
-import { salesSubscriptionsQuery, type SubscriptionKind } from '@/features/sales/sales/api';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Tabs } from '@ab/web-kit/components/ui/layout/tabs';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { SalesSubscriptionKind } from '@ab/shared';
+import { salesSubscriptionsQuery } from '@/features/sales/sales/api';
 import { historyColumn } from './history-column';
 import { salesSubscriptionColumns } from './sales-subscription-columns';
 import { SubscriptionHistory } from './SubscriptionHistory';
 
-const KINDS = (): { value: SubscriptionKind; label: string }[] => [
+const KINDS = (): { value: SalesSubscriptionKind; label: string }[] => [
   { value: 'pending', label: t.sales.subscriptions.pending },
   { value: 'confirmed', label: t.sales.subscriptions.confirmed },
 ];
 
 export interface SalesSubscriptionsProps {
   /** The open list, from the route (`?kind=confirmed`; pending is the default). */
-  kind: SubscriptionKind;
-  onKind: (kind: SubscriptionKind) => void;
+  kind: SalesSubscriptionKind;
+  onKind: (kind: SalesSubscriptionKind) => void;
   /** «مؤكدة» only: the subscription whose history is open (`?history=`), and how to open / close it. */
   history?: string | undefined;
   onHistory?: (id: string | null) => void;

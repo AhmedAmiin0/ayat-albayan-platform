@@ -51,6 +51,13 @@ describe('a thread page as the apps read it (docs/31 §2)', () => {
     expect(channelPageSchema.safeParse({ ...page, messages: [sales] }).success).toBe(true);
   });
 
+  it('one sales row and one unknown role never fail the page (review finding 1)', () => {
+    const rows = [{ ...message, id: 'a', sender_role: 'sales' }, { ...message, id: 'b', sender_role: 'x' }];
+    const parsed = channelPageSchema.safeParse({ ...page, messages: rows });
+    expect(parsed.success).toBe(true);
+    expect(parsed.data?.messages.map((m) => m.sender_role)).toEqual(['sales', 'unknown']);
+  });
+
   it('an older API: every new field gets its default (text, no file, no quote, not read)', () => {
     const parsed = channelPageSchema.parse(oldPage);
     expect(parsed.closed_reason).toBeNull();

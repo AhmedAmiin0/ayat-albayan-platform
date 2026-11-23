@@ -1,9 +1,9 @@
 import type { MeetingInviteeView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MEETINGS_KEY } from '@/features/teaching/meetings/internal/internal-api';
 import { InviteResultRow } from './InviteResultRow';
 import { inviteeName, inviteStatusText, mayResend, nameDir } from './invite-status';

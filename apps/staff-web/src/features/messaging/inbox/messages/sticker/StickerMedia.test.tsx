@@ -2,14 +2,14 @@ import type { MessageView } from '@ab/shared';
 import { cleanup, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 
 // Stickers and GIFs in the chat (owner 2026-11-01): shown at once, a sticker with no bubble.
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 
 const SIGNED = 'https://storage.test/wa-media/m-1.webp?token=x';
 const NOW = new Date('2026-11-01T12:00:00Z');

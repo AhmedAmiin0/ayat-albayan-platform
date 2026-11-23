@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/shared';
 import { SectionLinks, type SectionLink } from '@/components/shell/nav/SectionLinks';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // The salesperson's pages (base role sales, shown «المبيعات»): chats (where a new student is registered),
 // students («طلابي» is a filter inside), teachers, running lessons, the academy's schedule (read-only),
@@ -15,6 +15,7 @@ export const SALES_NAV_ITEMS = [
   { to: '/sales/schedule', label: t.sales.nav.academySchedule, icon: 'calendar', permission: 'self.sales_academy' },
   { to: '/sales/subscriptions', label: t.sales.nav.subscriptions, icon: 'receipt', permission: 'self.sales' },
   { to: '/sales/templates', label: t.templates.author.nav, icon: 'template', permission: 'templates.author' },
+  { to: '/sales/short-links', label: t.nav.shortLinks, icon: 'link', permission: 'short_links.manage' },
   { to: '/sales/meetings', label: t.meetingInvites.list.title, icon: 'calendar', permission: 'meetings.read' },
   { to: '/sales/earnings', label: t.assistantPortal.nav.earnings, icon: 'wallet', permission: 'self.sales_earnings' },
 ] as const satisfies readonly SectionLink[];

@@ -1,14 +1,15 @@
 import {
   appendMessage,
   markUnconfirmed,
+  mergeDelta,
   refreshNewest,
   removeMessage,
   replaceMessage,
   touchedThread,
+  type ThreadPages,
 } from '@ab/client-core';
-import type { MessageView, ThreadView } from '@ab/shared';
+import type { MessageView, Page, ThreadView } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
-import type { Page } from '@/features/sales/leads';
 import { threadPage, threadPath } from './api';
 import { threadQuery } from './thread-query';
 
@@ -18,7 +19,7 @@ import { threadQuery } from './thread-query';
 
 const listKey = ['threads', 'list'];
 /** The lists and the nav badge (a send no longer re-reads every ['threads'] query). */
-const refreshLists = (client: QueryClient): void => {
+export const refreshSentLists = (client: QueryClient): void => {
   for (const queryKey of [listKey, ['threads', 'nav-count']]) {
     void client.invalidateQueries({ queryKey });
   }
@@ -35,7 +36,7 @@ function touchLists(client: QueryClient, row: MessageView): void {
 
 /** The open chat's newest page (one GET, merged), and the lists in the background. */
 function refreshSentChat(client: QueryClient, row: MessageView, own: string[]): Promise<void> {
-  refreshLists(client);
+  refreshSentLists(client);
   const { queryKey } = threadQuery(row.phone_e164);
   return refreshNewest({
     own,
@@ -67,11 +68,38 @@ export function showSent(client: QueryClient, id: string, row: MessageView): voi
 /** A refused send: its bubble goes (the text is back in the box), the lists read the truth. */
 export function dropSending(client: QueryClient, phone: string, id: string): void {
   client.setQueryData(threadQuery(phone).queryKey, (old) => removeMessage(old, id));
-  refreshLists(client);
+  refreshSentLists(client);
 }
 
 /** No answer (deadline, network, 5xx): the bubble stays, «unconfirmed»; only the lists re-read. */
 export function holdSending(client: QueryClient, phone: string, id: string): void {
   client.setQueryData(threadQuery(phone).queryKey, (old) => markUnconfirmed(old, id));
-  refreshLists(client);
+  refreshSentLists(client);
+}
+
+const holds = (data: ThreadPages | undefined, id: string): boolean =>
+  data?.pages.some((p) => p.messages.some((m) => m.id === id)) === true;
+
+/**
+ * A send's or a bubble action's answer: its row takes the cached one's place by id, or joins the
+ * open chat's newest page; the lists and the badge read again. A row new to the chat becomes the
+ * delta's `after` anchor, so the newest page is read too: a row that landed first is not skipped.
+ */
+export function showAnswer(client: QueryClient, row: MessageView): void {
+  const { queryKey } = threadQuery(row.phone_e164);
+  const known = holds(client.getQueryData(queryKey), row.id);
+  const answer = { messages: [row], pending: [], has_more: false };
+  client.setQueryData(queryKey, (old) => mergeDelta(old, answer));
+  touchLists(client, row);
+  const reread = known ? refreshSentLists : () => void refreshSentChat(client, row, [row.id]);
+  reread(client);
+}
+
+/**
+ * A send with no row to write (a refusal that may have changed the chat, its window closed): this
+ * chat, the lists and the badge read again.
+ */
+export function rereadSentChat(client: QueryClient, phone: string): Promise<void> {
+  refreshSentLists(client);
+  return client.invalidateQueries({ queryKey: threadQuery(phone).queryKey });
 }

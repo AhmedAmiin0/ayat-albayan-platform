@@ -66,12 +66,19 @@ describe('two lines on the inbox (docs/12 §13.3, §13.7; R-LEAD-02, R-MSG-05)',
     expect((await t.call({ method: 'GET', url: URL })).json().thread).toMatchObject({ last_inbound_line: 'notifications', reply_line: 'chat' });
   });
 
-  it('H3 the chat window closed, the notifications one open: notifications', async () => {
+  it('chat first (2026-11-21): chat closed, notifications open → 409, never notifications', async () => {
     chatConfigured();
     const row = { last_inbound_line: 'notifications' as const, last_chat_inbound_at: '2026-01-01T00:00:00Z', last_notifications_inbound_at: FRESH };
     t.queries.thread.mockResolvedValue(threadRow({ ...row, last_inbound_at: FRESH }));
-    expect((await t.call(TEXT)).statusCode).toBe(201);
-    expect(enqueued()).toMatchObject({ line: 'notifications' });
+    const res = await t.call(TEXT);
+    expect([res.statusCode, res.json().code]).toEqual([409, 'session_closed']);
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+  });
+
+  it('chat first: reply_line is null (not notifications) while only that window is open', async () => {
+    chatConfigured();
+    thread('notifications');
+    expect((await t.call({ method: 'GET', url: URL })).json().thread.reply_line).toBeNull();
   });
 
   it('H3 a thread whose newest inbound is on chat: the text is queued with line chat', async () => {
@@ -81,12 +88,11 @@ describe('two lines on the inbox (docs/12 §13.3, §13.7; R-LEAD-02, R-MSG-05)',
     expect(enqueued()).toMatchObject({ line: 'chat', body: 'أهلًا', dedup_key: `admin:${PHONE}:${REQ}` });
   });
 
-  it('H3 a notifications thread is stamped notifications; a single line queues no line key', async () => {
+  it('H3 a notifications thread: 409 with a chat line; a single line queues no line key', async () => {
     chatConfigured();
     thread('notifications');
-    expect((await t.call(TEXT)).statusCode).toBe(201);
-    expect(enqueued()).toMatchObject({ line: 'notifications' });
-    t.queries.enqueue.mockClear();
+    expect((await t.call(TEXT)).statusCode).toBe(409);
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
     vi.stubEnv('WA_CHAT_WABA_ID', '');
     thread('notifications');
     expect((await t.call(TEXT)).statusCode).toBe(201);

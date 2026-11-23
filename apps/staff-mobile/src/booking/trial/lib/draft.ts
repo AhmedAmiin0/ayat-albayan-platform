@@ -12,15 +12,15 @@ import {
   type Program,
 } from '@ab/shared';
 import { qualForm } from '@/inbox/qualification/lib/qualification-form';
-import type { Lead } from '@/inbox/shared/types';
 import type { BookingKind, InvoiceDraft } from '@/booking/shared/contract';
 import { DEFAULT_MINUTES } from './package-choice';
+import type { LeadView } from '@ab/shared';
 
 // «حجز حلقة تجريبية» (or a package, from the chat's «اشترك») for a lead (R-MOB-02, R-LEAD-06):
 // the wizard's state. Pure; the screens only edit a TrialDraft (booking-body.ts sends it).
 
 /** What the wizard needs of the lead: a cached GET /leads row (with its answers), or the chat's lead. */
-export type BookingLead = Pick<Lead, 'id' | 'name' | 'phone_e164'> & {
+export type BookingLead = Pick<LeadView, 'id' | 'name' | 'phone_e164'> & {
   source?: LeadSource;
   /** leads.qualification (jsonb): «بيانات الطالب» prefill the child (R-LEAD-03). */
   qualification?: unknown;
@@ -51,6 +51,8 @@ export interface TrialDraft {
   teacher: BookingTeacherOption | null;
   /** The picked free slot (UTC instant); a package's earliest pick (picks.ts). */
   startsAt: string | null;
+  /** «وقت آخر»: `startsAt` lies outside the teacher hours; the booking sends outsideHours. */
+  outsideHours?: boolean;
   /** «نوع الحجز»: a trial or a package (a makeup has its own wizard: makeup-draft.ts). */
   kind: Exclude<BookingKind, 'makeup'>;
   /** 'trial' for a trial, else a paid size (8, 12…); set together with `kind` (kindPatch). */
@@ -62,6 +64,10 @@ export interface TrialDraft {
   /** A paid package's other picks (one per family-tz weekday, each with its own time), sorted. */
   extra: string[];
 }
+
+/** «وقت آخر» goes with a trial only: a package's day rows never set it. */
+export const isOutside = (d: Pick<TrialDraft, 'outsideHours' | 'kind'>): boolean =>
+  d.outsideHours === true && d.kind !== 'package';
 
 /** The answer to 409 duplicate_student: book that existing child, or create the new one anyway. */
 export type StudentChoice = { existingId: string } | { force: true } | null;

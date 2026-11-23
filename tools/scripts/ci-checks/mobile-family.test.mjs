@@ -21,12 +21,17 @@ test('mobile.yml app: staff by default (every automatic run), family by hand in 
   for (const s of [step('build', 'EAS build'), step('ota', 'Native-change guard'), step('ota', 'EAS update')]) {
     assert.equal(s['working-directory'], '${{ env.APP_DIR }}');
   }
+  // deploy-staging's staff dispatch sends no app; the family one (lane L06): deploy-family-ota.
   const dispatch = deploy.jobs.ota.steps.map((s) => s.run ?? '').join('\n');
-  assert.doesNotMatch(dispatch, /"app"|family/, 'deploy-staging must leave the app at staff');
+  assert.match(dispatch, /dispatch '\{"ref":"develop","inputs":\{"action":"ota-update","branch":"preview"\}\}'/);
 });
 
 test('a family run is titled «... family-preview»: never the staff preview OTA deploy-baseline looks for', () => {
-  assert.match(mobile['run-name'], /^mobile \$\{\{ inputs\.action \}\} \$\{\{ inputs\.app == 'family' && 'family-preview' \|\| /);
+  // 2026-11-21: the family Google Play build (profile production) is «... family-production» first.
+  const family = String.raw`inputs\.app == 'family' && inputs\.profile == 'production' && 'family-production'`;
+  const start = String.raw`^mobile \$\{\{ inputs\.action \}\} \$\{\{ `;
+  const preview = String.raw`\s+\|\| inputs\.app == 'family' && 'family-preview'\s+\|\| `;
+  assert.match(mobile['run-name'], new RegExp(`${start}${family}${preview}`));
 });
 
 test('eas init links or creates the family EAS project before every EAS call, and exports its id', () => {
@@ -47,11 +52,11 @@ test('eas init links or creates the family EAS project before every EAS call, an
   assert.match(sh, />> "\$GITHUB_STEP_SUMMARY"/);
 });
 
-test('the family OTA goes to its own channel preview, without the staff app Stripe flag or Firebase secret', () => {
+test('the family OTA goes to its own channel (= profile), without the staff Stripe flag or Firebase secret', () => {
   const [family] = step('ota', 'EAS update').run.split('exit 0');
   assert.match(family, /if \[ "\$APP" = family \]/);
   assert.match(family, /unset EXPO_PUBLIC_FEATURE_STRIPE/);
-  assert.match(family, /update --channel preview --environment preview/);
+  assert.match(family, /update --channel "\$PROFILE" --environment "\$PROFILE"/);
   assert.match(step('ota', 'Write the Firebase file').if, /inputs\.app != 'family'/);
   const builds = mobile.jobs.ota.steps.filter((s) => /--filter "(staff-mobile|family-mobile)\^\.\.\." build/.test(s.run));
   assert.deepEqual(builds.map((s) => s.if), ["${{ inputs.app != 'family' }}", "${{ inputs.app == 'family' }}"]);
@@ -61,7 +66,7 @@ test('family release tags: mobile-family-v… for the APK, ota-family-preview-�
   const tag = (kind) => mobile.jobs.release.steps.find((s) => s.env?.KIND === kind);
   assert.equal(tag('apk').env.PROFILE, "${{ inputs.app == 'family' && 'family' || inputs.profile || 'preview' }}");
   assert.match(tag('apk').run, /"\$APP_DIR\/app\.json"/);
-  assert.match(tag('ota').env.CHANNEL, /^\$\{\{ inputs\.app == 'family' && 'family-preview' \|\| /);
+  assert.match(tag('ota').env.CHANNEL, /\|\| inputs\.app == 'family' && 'family-preview'\s+\|\| /);
 });
 
 test('forcesRTL stays out of both apps', () => {
@@ -73,8 +78,13 @@ test('forcesRTL stays out of both apps', () => {
 test('ci: the family app and @ab/mobile-kit get tests and a Metro bundle', () => {
   const rows = ci.jobs.verify.strategy.matrix.include;
   const row = (name) => rows.find((r) => r.name === name);
-  // test others runs them (no exclusion); typecheck + bundles bundles every app with a bundle task.
-  assert.equal(row('test others').filter, '--filter=!staff-web --filter=!api --filter=!staff-mobile');
+  // test others runs them (no exclusion); family-web and @ab/web-kit have their own row («test
+  // family web», docs/51 §2); typecheck + bundles bundles every app with a bundle task.
+  assert.equal(
+    row('test others').filter,
+    '--filter=!staff-web --filter=!api --filter=!staff-mobile --filter=!family-web --filter=!@ab/web-kit',
+  );
+  assert.equal(row('test family web').filter, '--filter=family-web --filter=@ab/web-kit');
   assert.deepEqual(row('typecheck + bundles'), { name: 'typecheck + bundles', task: 'typecheck bundle' });
   const family = JSON.parse(read('apps/family-mobile/package.json'));
   assert.match(family.scripts.bundle, /^expo export --platform android /);

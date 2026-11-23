@@ -3,7 +3,7 @@ import { canOpen, tabOpen, type TabRoute } from '@/core/auth/route-permissions';
 import type { Can } from '@ab/mobile-kit';
 import { threadHref } from '@/inbox/thread/hooks/thread-cache';
 import { assistantRouteFor, salesRouteFor } from './notification-route.roles';
-import { pushField, pushKind, pushPhone } from './push-data';
+import { pushKind, pushPhone, pushStudentId } from './push-data';
 
 // Where a tapped push (or a bell row) opens (R-MOB-01, R-NOT-01); the data is checked in push-data.
 
@@ -18,8 +18,8 @@ const toThread = (data: unknown) => {
 };
 
 const toStudent = (data: unknown) => {
-  const student = pushField(data, 'studentId');
-  return student && /^[\w-]+$/.test(student) ? `/students/${student}` : '/students';
+  const student = pushStudentId(data);
+  return student ? `/students/${student}` : '/students';
 };
 
 /** The internal meetings list (the room itself opens from there, in the browser). */
@@ -82,8 +82,8 @@ const TEACHER_TODAY = '/teacher/today';
 
 /** A family's message in a student channel (docs/31 §2) → «رسائل الطلاب» on that student. */
 const toTeacherChannel = (data: unknown) => {
-  const student = pushField(data, 'studentId');
-  return student && /^[\w-]+$/.test(student) ? `/teacher/more/messages/${student}` : '/teacher/more/messages';
+  const student = pushStudentId(data);
+  return student ? `/teacher/more/messages/${student}` : '/teacher/more/messages';
 };
 
 const toTeacherThread = (data: unknown, can: Can) => {

@@ -1,7 +1,7 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { canManageNotifications, ruleFailure } from './rules-api';
 import {
   approvalWord,

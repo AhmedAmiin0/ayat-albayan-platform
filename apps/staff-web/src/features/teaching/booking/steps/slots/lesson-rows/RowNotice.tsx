@@ -1,12 +1,12 @@
 import type { PickState } from '@ab/client-core';
 import { clockOf, wallParts, type Conflict } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { Button } from '@/components/ui/form/button';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Button } from '@ab/web-kit/components/ui/form/button';
 import { conflictText } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
-import { type Clock, useClock } from '@/lib/clock';
-import { useViewerTz } from '@/lib/viewer-tz';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { type Clock, useClock } from '@ab/web-kit/lib/clock';
+import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface RowNoticeProps {
   state: PickState;

@@ -6,7 +6,8 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { renameTable } from './pure-move-paths.mjs';
-import { classify, isBarrel, onlyPathsChanged, parseNameStatus } from './pure-move-check.mjs';
+import { classify, isBarrel, onlyPathsChanged } from './pure-move-check.mjs';
+import { parseNameStatus } from './pure-move/git.mjs';
 
 const BEFORE = `import { a, b } from '../teachers/http';
 import type { T } from "./t";

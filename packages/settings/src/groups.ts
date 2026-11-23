@@ -4,7 +4,7 @@
  */
 export const CONFIG_GROUPS = [
   'schedule', 'classroom', 'reports', 'accounts', 'payouts', 'uploads', 'academy', 'messaging', 'sales', 'retention',
-  'teachers', 'family',
+  'teachers', 'family', 'system',
 ] as const;
 export const MODULE_GROUPS = ['notifications', 'safety', 'google'] as const;
 export const SETTING_GROUPS = [...CONFIG_GROUPS, ...MODULE_GROUPS] as const;

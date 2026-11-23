@@ -40,4 +40,3 @@ export const pageQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(25),
 });
 export type PageQuery = z.output<typeof pageQuerySchema>;
-export type Page<T> = { items: T[]; total: number; page: number; pageSize: number };

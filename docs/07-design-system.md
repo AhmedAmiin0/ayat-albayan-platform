@@ -2,7 +2,7 @@
 
 Implementation spec for `apps/staff-web` (Tailwind v4 + shadcn/ui + TanStack Table), `apps/staff-mobile` (Expo / React Native) and the lesson-report PDF worker.
 
-**Brand alignment (2026-10-02).** The layout system below (jadwal frame, cartouche, nuqta glyphs, fihris, saffron = «دورك») is unchanged. Its colours and logo are now the academy's own brand: the palette `T` of the Apps Script «Brand» library (the one that already styles the PDF reports, emails and Sheets) and the real logo, the open Mushaf on a green rahle inside a gold eight-point star (`docs/design/brand/`, also on ayatalbayan.com). The source of truth for every colour value is `packages/catalog/src/theme/theme.ts`; `apps/staff-web/src/styles/tokens.css` carries the same hex and a test diffs the two.
+**Brand alignment (2026-10-02).** The layout system below (jadwal frame, cartouche, nuqta glyphs, fihris, saffron = «دورك») is unchanged. Its colours and logo are now the academy's own brand: the palette `T` of the Apps Script «Brand» library (the one that already styles the PDF reports, emails and Sheets) and the real logo, the open Mushaf on a green rahle inside a gold eight-point star (`docs/design/brand/`, also on ayatalbayan.com). The source of truth for every colour value is `packages/catalog/src/theme/theme.ts`; `packages/web-kit/src/styles/tokens.css` carries the same hex and a test diffs the two.
 `docs/design/ink-and-gold.html` and `docs/design/logo*.svg` predate this: their layout still applies, but their lapis/navy palette and rosette mark are superseded.
 
 **Copy language (owner, 2026-10-03).** UI copy is clear Modern Standard Arabic, not Egyptian dialect (CLAUDE.md rule 10). Arabic examples quoted in this document may still show the earlier Egyptian wording; `packages/shared/i18n/ar.json` is the source of truth for every string.
@@ -45,7 +45,7 @@ Amiri, the revival of Cairo's Bulaq/Amiriya press Naskh, sets titles. IBM Plex S
 | Role | Family | Weights | Where |
 |---|---|---|---|
 | Display | **Amiri** | 700 only | Page cartouche titles, section titles, dialog titles, empty-state titles, PDF headings, wordmark, KPI numerals |
-| UI and data | **IBM Plex Sans Arabic** | 400, 500, 600, 700 | Everything else. It is already `--font-sans` in `apps/staff-web/src/index.css` |
+| UI and data | **IBM Plex Sans Arabic** | 400, 500, 600, 700 | Everything else. It is already `--font-sans` in `packages/web-kit/src/index.css` |
 
 Google Fonts URL (two families, Amiri 400 dropped because nothing uses it):
 
@@ -107,7 +107,7 @@ Rules:
 
 ---
 
-## 3. Tailwind v4 tokens (`apps/staff-web/src/styles/tokens.css` + `index.css`)
+## 3. Tailwind v4 tokens (`packages/web-kit/src/styles/tokens.css` + `index.css`)
 
 ### Brand palette
 
@@ -721,9 +721,10 @@ Derived by `node docs/design/brand/tools/build.mjs` (no dependencies: a node:zli
 |---|---|
 | `docs/design/brand/logo-mark-transparent.png` | Master: the emblem on transparency, cropped tight. The paper **outside** the emblem is removed by a flood fill from the border (plus the two pockets the swirl ornaments enclose), and the band where strokes meet paper is un-blended, so the anti-aliasing is kept. The emblem keeps its own ivory (star field, pages), because it is the same colour as the paper and a colour key would hollow out the Mushaf |
 | `docs/design/brand/logo-mushaf-transparent.png` | The Mushaf on its rahle alone, star field cleared above the pages: the mark for small sizes |
-| `apps/staff-web/public/brand/mark.png`, `mark-small.png` | What `<Mark>` shows (192px tall / 96px wide) |
-| `apps/staff-web/public/favicon.ico` (16, 32, 48), `favicon-16.png`, `favicon-32.png` | Tab icons: the Mushaf crop at 16 and 32, the full emblem at 48 |
-| `apps/staff-web/public/apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` | The emblem on brand paper `#FDF8F0`, 80% of the square |
+| `packages/catalog/brand/mark.png`, `mark-small.png` (both web apps, `/brand/`; the report PDF) | What `<Mark>` shows (192px tall / 96px wide) |
+| `packages/web-kit/icons/staff/favicon.ico` (16, 32, 48), `favicon-16.png`, `favicon-32.png` | Tab icons: the Mushaf crop at 16 and 32, the full emblem at 48 |
+| `packages/web-kit/icons/staff/apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` | The emblem on brand paper `#FDF8F0`, 80% of the square |
+| `packages/web-kit/icons/family/*` (same names + `icon-maskable-512.png`) | The family web set: the same emblem on the brand-green tile `#064E3B` (rounded tab tiles; 66% of the square like the app icon; maskable at 62%) |
 | `apps/staff-mobile/assets/icon.png` | 1024² app icon: emblem on brand paper, opaque (iOS refuses alpha) |
 | `apps/staff-mobile/assets/android-icon-foreground.png` / `-background.png` / `-monochrome.png` | Adaptive icon: the emblem at 50% (inside the 66dp safe circle) over solid paper; the monochrome is its line art for Android 13 themed icons |
 | `apps/staff-mobile/assets/splash-icon.png` | The emblem on transparency, 1024², for the splash on `#FDF8F0` |
@@ -754,7 +755,7 @@ Put them in `packages/shared/assets/` and render them via an icon sprite (web) a
 ## 12. React Native (Expo) theme
 
 - RN has no oklch, so these are the same tokens as sRGB hex, read from the rendered page.
-- Keep **one** source: `packages/catalog/src/theme/theme.ts` exports this object. `apps/staff-web/src/styles/tokens.css` carries the same hex, and `tokens.test.ts` fails if any colour differs. CI runs the contrast matrix and the brand/hue checks against both themes (section 3).
+- Keep **one** source: `packages/catalog/src/theme/theme.ts` exports this object. `packages/web-kit/src/styles/tokens.css` carries the same hex, and `tokens.test.ts` fails if any colour differs. CI runs the contrast matrix and the brand/hue checks against both themes (section 3).
 - Needs `react-native-svg` (Nuqta, rosette; the mark is the brand PNG, section 11) and `@expo-google-fonts/amiri` + `@expo-google-fonts/ibm-plex-sans-arabic`.
 
 ```ts

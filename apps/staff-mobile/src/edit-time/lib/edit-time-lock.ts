@@ -1,8 +1,8 @@
+import type { LessonView } from '@ab/shared';
 import { ApiError, t } from '@ab/mobile-kit';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { lengthOf, type EditState } from './edit-time-body';
 import { failureCode } from './edit-time-errors';
-import type { EditableLesson } from './types';
 
 /** 409 `payout_locked {month, status}`: the teacher's payout for that month is approved or paid. */
 export interface PayoutLock {
@@ -33,5 +33,5 @@ export function lockedText(lock: PayoutLock): string {
  * The payout is locked and the picked length is not the recorded one: saving would be refused
  * again. A start-only correction (the recorded length) still goes through.
  */
-export const lengthLocked = (lock: PayoutLock | null, lesson: EditableLesson, s: EditState): boolean =>
+export const lengthLocked = (lock: PayoutLock | null, lesson: LessonView, s: EditState): boolean =>
   lock !== null && s.durationMin !== lengthOf(lesson);

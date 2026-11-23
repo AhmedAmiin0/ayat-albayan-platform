@@ -1,13 +1,13 @@
 import { needsLesson, sendsAllTemplates, type TemplateView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Field } from '@/components/ui/form/field';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Select } from '@/components/ui/form/select';
-import { meQuery } from '@/features/people/auth/me';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Select } from '@ab/web-kit/components/ui/form/select';
+import { meQuery } from '@ab/web-kit/auth/me';
 import { templatesQuery } from '@/features/messaging/templates/api';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { sendTemplate } from '@/features/messaging/inbox/api/api';
 import { LessonPicker } from '@/features/messaging/inbox/lead/LessonPicker';
@@ -16,6 +16,7 @@ import { TemplateParamFields } from './TemplateParamFields';
 import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
+import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 const NAMES: Record<string, string | undefined> = t.templates.names;
 
@@ -78,11 +79,11 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
   const send = useMutation({
     mutationFn: sendTemplate,
     onMutate: sendStart,
-    onSuccess: async (view, sent, start) => {
+    onSuccess: (view, sent, start) => {
       settleOwnSend(sent.phone, view.id, start);
       pick('');
       reopen?.onSent(sent.key);
-      await queryClient.invalidateQueries({ queryKey: ['threads'] });
+      showAnswer(queryClient, view);
     },
   });
   const pickLesson = (id: string) => {

@@ -1,6 +1,7 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
-import type { DashboardData, DashboardWork, DayRange } from './types';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import type { DayRange } from './search';
+import type { DashboardResponse, DashboardWork } from '@ab/shared';
 
 // The /admin dashboard (docs/11 §9 D1; R-RPT-01, R-RPT-02).
 
@@ -10,7 +11,7 @@ export const DASHBOARD_KEY = ['dashboard'] as const;
 export const summaryQuery = (r: DayRange) =>
   queryOptions({
     queryKey: [...DASHBOARD_KEY, 'summary', r.from, r.to],
-    queryFn: () => apiFetch<DashboardData>(`/dashboard/summary?${new URLSearchParams(r)}`),
+    queryFn: () => apiFetch<DashboardResponse>(`/dashboard/summary?${new URLSearchParams(r)}`),
     placeholderData: keepPreviousData,
     staleTime: 60_000,
   });

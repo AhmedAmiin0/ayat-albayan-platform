@@ -6,6 +6,7 @@ import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
 import { BackgroundJob } from '@/config/role/background-job';
+import { beatTick } from '@/common/jobs/beats';
 
 /** An outbound call nobody answered within this is ended (and terminated on WhatsApp). */
 export const UNANSWERED_MS = 45_000;
@@ -66,7 +67,8 @@ export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
   ) {}
 
   onApplicationBootstrap(): void {
-    this.timer = setInterval(() => void this.tick(), EVERY_MS).unref();
+    const plan = { name: CallsSweeper.name, firstMs: EVERY_MS, everyMs: EVERY_MS };
+    this.timer = setInterval(beatTick(plan, () => this.tick()), EVERY_MS).unref();
   }
 
   onModuleDestroy(): void {

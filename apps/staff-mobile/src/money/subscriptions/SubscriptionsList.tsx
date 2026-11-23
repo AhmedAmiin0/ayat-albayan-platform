@@ -6,10 +6,11 @@ import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { useRenewalThreshold } from '@/payments/hooks/queries';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { subscriptionParams, type SubscriptionFilter } from '@/money/payments/filters';
+import type { SubscriptionFilter } from '@ab/client-core';
+import { subscriptionParams } from '@/money/payments/filters';
 import { SubscriptionItem } from './SubscriptionItem';
 
-const PILLS: FilterPill<SubscriptionFilter>[] = [
+const PILLS: FilterPill<SubscriptionFilter | 'all'>[] = [
   { value: 'all', label: t.mobileMoney.filterAll },
   ...SUBSCRIPTION_STATUSES.map((s) => ({
     value: s,
@@ -24,7 +25,7 @@ const keyOf = (s: SubscriptionView) => s.id;
 /** «الباقات»: GET /subscriptions with a status chip row and a server-side student-name search. */
 export function SubscriptionsList() {
   const { color } = useTheme();
-  const [filter, setFilter] = useState<SubscriptionFilter>('all');
+  const [filter, setFilter] = useState<SubscriptionFilter | 'all'>('all');
   const [search, setSearch] = useState('');
   const threshold = useRenewalThreshold();
   const list = usePagedList<SubscriptionView>({

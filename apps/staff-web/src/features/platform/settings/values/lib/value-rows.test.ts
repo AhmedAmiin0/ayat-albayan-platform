@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SETTINGS } from '@/test/settings-fixture';
 import { allRows, groupRows, rowKey, rowMatches, rowWords, valueCounts, type ValueRow } from './value-rows';
 
@@ -45,7 +45,7 @@ describe('«القيم» rows', () => {
 
   it('counts the editable values', () => {
     const counts = valueCounts({ ...SETTINGS, booking_horizon_weeks: 4 });
-    expect(counts.total).toBe(61);
+    expect(counts.total).toBe(62);
     expect(counts.modified).toBe(1);
     expect(counts.public).toBeGreaterThan(0);
     const [row] = groupRows('schedule', []);

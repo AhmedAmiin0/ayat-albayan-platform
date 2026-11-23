@@ -1,8 +1,8 @@
 import type { NumberView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
-import { usePermissions } from '@/features/people/auth/use-permissions';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { syncNumberTemplates } from '@/features/messaging/numbers/numbers-api';
 import { syncErrorText, syncResultText } from './template-sync-text';

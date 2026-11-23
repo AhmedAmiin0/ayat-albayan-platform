@@ -1,15 +1,15 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { findRow, openTab, overview, renderRules } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async (orig) => ({ ...(await orig<object>()), Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
-vi.mock('@/features/people/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: ['notifications.manage'], can: () => true }) }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: ['notifications.manage'], can: () => true }) }));
 
 const r = t.notificationRules;
 const words = t.notificationCatalogue.entries;

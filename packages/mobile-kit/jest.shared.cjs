@@ -42,6 +42,13 @@ jest.mock('./src/lib/http/supabase', () => ({
   },
 }));
 
+// «تحت الصيانة» (owner 2026-11-21): the root's maintenance probe would call fetch every 10 s in
+// every suite that mounts the real root; here the app is always open. Its own test uses requireActual.
+jest.mock('./src/root/use-maintenance', () => ({
+  maintenanceQuery: { queryKey: ['maintenance'] },
+  useMaintenance: () => ({ view: 'open', checking: false, retry: () => undefined }),
+}));
+
 // The connection probe loop would call fetch (stealing a test's mocked responses) and flip TanStack's
 // onlineManager: a still store here. The connectivity tests build their own with createConnectivity.
 jest.mock('./src/lib/connectivity/connectivity', () => {
@@ -69,7 +76,16 @@ jest.mock('./src/lib/i18n/i18n-overrides', () => ({
 // CI machine's zone must not change an expectation, so every suite starts as a Riyadh viewer on a
 // Riyadh phone (a signed-in flow whose /auth/me has no tz falls back to the device's); a test that
 // needs another viewer calls setViewerPersonTz itself and resets it after.
-jest.mock('@ab/shared', () => ({ ...jest.requireActual('@ab/shared'), deviceTimeZone: () => 'Asia/Riyadh' }));
+// '@ab/time' owns deviceTimeZone and '@ab/shared' still re-exports it: both read the one fake
+// (src/testing/device-zone), so setDeviceZone moves the phone whichever path the code imports.
+jest.mock('@ab/time', () => ({
+  ...jest.requireActual('@ab/time'),
+  deviceTimeZone: () => require('./src/testing/device-zone').deviceZone(),
+}));
+jest.mock('@ab/shared', () => ({
+  ...jest.requireActual('@ab/shared'),
+  deviceTimeZone: () => require('./src/testing/device-zone').deviceZone(),
+}));
 require('@ab/client-core').setViewerPersonTz('Asia/Riyadh');
 
 // The biometric lock (src/biometric): a still store with no biometrics on the device, so the apps'

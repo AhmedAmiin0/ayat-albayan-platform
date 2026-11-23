@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { decode, encode } from './png.mjs';
 import { crop, extract, monochrome, opaqueBox } from './image.mjs';
 import { place } from './resample.mjs';
+import { familyIcons, ico } from './web-icons.mjs';
 
 const ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 const BRAND = 'docs/design/brand';
@@ -43,25 +44,6 @@ function mushafOf(master) {
   return crop(m, opaqueBox(m, 2));
 }
 
-/** ICO holding PNG frames (Vista+ format): what browsers fetch at /favicon.ico. */
-function ico(frames) {
-  const head = Buffer.alloc(6 + 16 * frames.length);
-  head.writeUInt16LE(1, 2);
-  head.writeUInt16LE(frames.length, 4);
-  let offset = head.length;
-  frames.forEach(({ size, png }, i) => {
-    const e = 6 + 16 * i;
-    head[e] = size % 256;
-    head[e + 1] = size % 256;
-    head.writeUInt16LE(1, e + 4);
-    head.writeUInt16LE(32, e + 6);
-    head.writeUInt32LE(png.length, e + 8);
-    head.writeUInt32LE(offset, e + 12);
-    offset += png.length;
-  });
-  return Buffer.concat([head, ...frames.map((f) => f.png)]);
-}
-
 /**
  * Paper under fully clear pixels: resamplers that skip premultiplying (Expo's Android mipmaps) blend
  * the hidden RGB into the edge, and paper is what every icon background is.
@@ -91,17 +73,20 @@ const wide = (img, w) => matte(place(img, { w, h: Math.round((img.height * w) / 
 write(`${BRAND}/logo-mark-transparent.png`, encode(matte(crop(master, opaqueBox(master)))));
 write(`${BRAND}/logo-mushaf-transparent.png`, encode(matte(crop(mushaf, opaqueBox(mushaf)))));
 
-// Web: favicons (≤ 32 px is the Mushaf crop; the full emblem is illegible there), touch + PWA icons
-// on the brand paper, and the two <Mark> images (components/ui/mark.tsx).
+// Web (one brand package, docs/51 §1): favicons (≤ 32 px is the Mushaf crop; the full emblem is
+// illegible there), touch + PWA icons on the brand paper (staff) or the green tile (family), and
+// the two <Mark> images (components/ui/display/mark.tsx): @ab/catalog owns them (also the report
+// PDF's logo) and both apps serve them at /brand/.
 const fav16 = small({ w: 16 }), fav32 = small({ w: 32 }), fav48 = emblem({ w: 48 });
-write('apps/staff-web/public/favicon.ico', ico([{ size: 16, png: fav16 }, { size: 32, png: fav32 }, { size: 48, png: fav48 }]));
-write('apps/staff-web/public/favicon-16.png', fav16);
-write('apps/staff-web/public/favicon-32.png', fav32);
-write('apps/staff-web/public/apple-touch-icon.png', emblem({ w: 180, fill: 0.8, bg: PAPER }));
-write('apps/staff-web/public/icon-192.png', emblem({ w: 192, fill: 0.8, bg: PAPER }));
-write('apps/staff-web/public/icon-512.png', emblem({ w: 512, fill: 0.8, bg: PAPER }));
-write('apps/staff-web/public/brand/mark.png', encode(tall(master, 192)));
-write('apps/staff-web/public/brand/mark-small.png', encode(wide(mushaf, 96)));
+write('packages/web-kit/icons/staff/favicon.ico', ico([{ size: 16, png: fav16 }, { size: 32, png: fav32 }, { size: 48, png: fav48 }]));
+write('packages/web-kit/icons/staff/favicon-16.png', fav16);
+write('packages/web-kit/icons/staff/favicon-32.png', fav32);
+write('packages/web-kit/icons/staff/apple-touch-icon.png', emblem({ w: 180, fill: 0.8, bg: PAPER }));
+write('packages/web-kit/icons/staff/icon-192.png', emblem({ w: 192, fill: 0.8, bg: PAPER }));
+write('packages/web-kit/icons/staff/icon-512.png', emblem({ w: 512, fill: 0.8, bg: PAPER }));
+write('packages/catalog/brand/mark.png', encode(tall(master, 192)));
+write('packages/catalog/brand/mark-small.png', encode(wide(mushaf, 96)));
+familyIcons({ master, mushaf }, write);
 
 // Expo: iOS icon must be opaque; the adaptive foreground keeps the emblem inside the 66 dp safe
 // circle of the 108 dp canvas (fill 0.5); monochrome is the line art Android 13 tints.

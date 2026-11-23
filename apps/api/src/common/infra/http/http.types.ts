@@ -44,7 +44,7 @@ export type BytesCall = HttpRequest & { maxBytes: number; tooLarge: () => Error 
 export interface Http {
   /** The body parsed by `schema`; throws the profile table's error otherwise. */
   json<S extends z.ZodType>(call: JsonCall<S>): Promise<z.output<S>>;
-  bytes(call: BytesCall): Promise<{ bytes: Uint8Array; mime: string | null }>;
+  bytes(call: BytesCall): Promise<{ bytes: Uint8Array<ArrayBuffer>; mime: string | null }>;
   /** Any status, body discarded; never consults the table for a status (network/timeout only). */
   status(call: HttpRequest): Promise<number>;
 }

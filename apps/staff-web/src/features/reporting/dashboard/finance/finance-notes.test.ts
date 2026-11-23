@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { financeNotes, rateLines } from './finance-notes';
-import type { DashboardData } from '@/features/reporting/dashboard/types';
+import type { DashboardResponse } from '@ab/shared';
 
-const finance = (over: Partial<DashboardData['finance']> = {}): DashboardData['finance'] => ({
+const finance = (over: Partial<DashboardResponse['finance']> = {}): DashboardResponse['finance'] => ({
   currency: 'SAR',
   revenue: 0,
   teacher_cost: 0,

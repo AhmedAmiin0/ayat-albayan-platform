@@ -1,3 +1,4 @@
+import { onSessionEnd } from '@ab/web-kit/lib/session/session-end';
 import { clearAllDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { clearOwnSends } from '@/features/messaging/inbox/composer/lib/own-send';
 import { quotePins } from '@/features/messaging/inbox/composer/quote/quote-id';
@@ -15,4 +16,9 @@ export function clearTabMemories(): void {
   clearOwnSends();
   quotePins.clear();
   registerDrafts.clearAll();
+}
+
+/** Boot: the kit's session end (sign-out, another tab, a disabled account) forgets these too. */
+export function rememberUntilSessionEnd(): void {
+  onSessionEnd(clearTabMemories);
 }

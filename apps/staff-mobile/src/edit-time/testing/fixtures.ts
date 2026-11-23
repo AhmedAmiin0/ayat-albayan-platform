@@ -1,6 +1,6 @@
+import type { LessonView, TimeEditResult } from '@ab/shared';
 import { SLOTS, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { done, lesson } from '@/today/testing/fixtures';
-import type { EditableLesson, TimeEditResult } from '@/edit-time/lib/types';
 
 export { NOW, SLOTS, SAT_17, SUN_17 } from '@/teaching/reschedule/fixtures';
 
@@ -8,13 +8,13 @@ export { NOW, SLOTS, SAT_17, SUN_17 } from '@/teaching/reschedule/fixtures';
 // Riyadh (reschedule/fixtures NOW); the teacher is in Cairo (also UTC+3 in October).
 
 /** Sunday 4 Oct 17:00 Riyadh, 45 min, waiting for the guardian: the edit moves it. */
-export const upcoming: EditableLesson = {
+export const upcoming: LessonView = {
   ...lesson({ id: 'l-up', starts_at: SUN_17, ends_at: '2026-10-04T14:45:00.000Z' }),
   time_edit_mode: 'move',
 };
 
 /** Thursday 1 Oct 10:00 Riyadh, held for 45 min: the edit corrects what was recorded. */
-export const held: EditableLesson = { ...done, time_edit_mode: 'correct' };
+export const held: LessonView = { ...done, time_edit_mode: 'correct' };
 
 /** The slots response with the grid the sheet asks for. */
 export const GRID = { ...SLOTS, step_min: 15 };

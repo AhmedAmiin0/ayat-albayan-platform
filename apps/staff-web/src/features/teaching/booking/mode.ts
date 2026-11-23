@@ -1,9 +1,8 @@
+import type { BookingMode } from '@ab/client-core';
 import { createContext, useContext } from 'react';
 
 // Booking mode: the same wizard under /admin/book (admin) and in a sales chat's «تسجيل طالب جديد»
 // dialog (the assistant, base role sales). Admin is the default, so /admin/book needs no provider.
-
-export type BookingMode = 'admin' | 'sales';
 
 export const BookingModeContext = createContext<BookingMode>('admin');
 

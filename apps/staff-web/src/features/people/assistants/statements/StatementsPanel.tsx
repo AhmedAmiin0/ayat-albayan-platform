@@ -3,19 +3,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
-import { Button } from '@/components/ui/form/button';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { ListSkeleton } from '@/components/ui/display/skeleton';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { currentMonth } from '@/features/finance/payouts/api';
-import { t } from '@/lib/i18n/i18n';
-import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery, type AssistantRow, type StatementFilter } from '@/features/people/assistants/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery } from '@/features/people/assistants/api';
 import { FilterBar } from '@/features/people/assistants/students/FilterBar';
 import { generateTargets } from './generate-targets';
 import { statementColumns } from './statement-columns';
 import type { StatementCan } from './StatementActions';
 import { StatementDialogs, type StatementDialog } from './StatementDialogs';
 import { errorText } from '@/features/people/assistants/status';
+import type { AssistantRow, StatementFilter } from '@ab/client-core';
 
 type Props = {
   assistants: readonly AssistantRow[];

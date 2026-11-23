@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Dialog } from '@/components/ui/overlay/dialog';
-import { SegmentedControl } from '@/components/ui/form/segmented-control';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { studentQuery } from '@/features/people/students/api';
 import type { CreateStudentValues } from '@/features/people/students/create/create-student';
 import { DuplicateCompare } from './DuplicateCompare';
-import { FormAlert } from '@/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { SiblingsStrip } from './SiblingsStrip';
-import type { StudentRef } from '@/features/people/students/types';
+import type { StudentRef } from '@ab/shared';
 
 export type DuplicateDialogProps = {
   typed: CreateStudentValues;

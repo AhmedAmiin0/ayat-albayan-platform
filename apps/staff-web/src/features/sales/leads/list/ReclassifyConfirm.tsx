@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { Icon } from '@/components/ui/display/icon';
-import { NuqtaGlyph } from '@/components/ui/display/nuqta-glyph';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface ReclassifyConfirmProps {
   /** The move request is in flight. */

@@ -1047,14 +1047,6 @@
       "count": 1
     }
   },
-  "tests/platform/responsive.spec.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
   "tests/platform/settings-academy.spec.ts": {
     "max-len": {
       "count": 3

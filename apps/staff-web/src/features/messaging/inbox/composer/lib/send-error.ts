@@ -1,7 +1,7 @@
 import { isNoAnswer, SEND_REPLAYED, SEND_UNCONFIRMED } from '@ab/client-core';
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** The send's codes, and «تعديل»'s refusals (400 not_correctable, 403 not_your_message…). */
 const ERRORS: Record<string, string | undefined> = {

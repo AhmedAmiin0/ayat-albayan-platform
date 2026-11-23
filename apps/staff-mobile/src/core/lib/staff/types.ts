@@ -1,34 +1,7 @@
-import type { AvailabilitySlot, JobApplicantStatus, TeacherStatus, TeacherStudentCounts } from '@ab/shared';
+import type { JobApplicantStatus } from '@ab/shared';
 
-// The fields of apps/api responses this tab shows (R-TCH-01, R-TCH-02, R-LEAD-04). Nothing else.
-
-/** GET /teachers, GET /teachers/:id */
-export interface Teacher {
-  id: string;
-  display_name_ar: string;
-  phone_e164: string | null;
-  status: TeacherStatus;
-  tz: string;
-  /** The teacher's login (null = none yet, created on «المستخدمون») and its sign-in username (docs/30). */
-  profile_id?: string | null;
-  username?: string | null;
-  /** The teacher's photo, a short-lived signed URL; null/absent = initials (owner 2026-10-28). */
-  avatar_url?: string | null;
-}
-
-/** GET /teachers row: the teacher and their current students by kind («مشترك n · تجريبي n»). */
-export type TeacherListItem = Teacher & TeacherStudentCounts;
-
-/** GET /teachers/:id/availability: wall-clock «HH:MM» in `tz`, weekday 0 = الأحد. */
-export type AvailabilityRow = AvailabilitySlot & { id: string };
-
-/** GET /teachers/:id/time-off: UTC instants, newest first. */
-export interface TimeOff {
-  id: string;
-  starts_at: string;
-  ends_at: string;
-  reason: string | null;
-}
+// The fields of apps/api responses this tab shows (R-LEAD-04). Nothing else. The teacher shapes
+// (Teacher, TeacherListRow, AvailabilityRow, TimeOff) live in @ab/shared.
 
 /** GET /job-applicants */
 export interface JobApplicant {

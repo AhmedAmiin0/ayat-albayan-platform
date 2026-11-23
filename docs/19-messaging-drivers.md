@@ -255,7 +255,27 @@ than 5 minutes from now = 401 (replay); unset secret = every POST 401. Deduped o
 per instance, 10 min; a duplicate elsewhere is harmless, statuses only move forward; a failed write answers
 500 and forgets the id). `message.status_updated` → the existing delivery-status path by `wa_message_id`
 (ticks; the CRM's conversation id is never stored on a row, only kept on the event for the confirm below).
-`message.received` / `conversation.created` → logged, 200.
+`message.received` (owner 2026-11-21: «if the user sent a message to the notification line send it to
+chatline») → mirrored into the inbox, below. `conversation.created` → logged, 200.
+
+**Messages to the notifications number → the inbox** (`webhook/crm-inbound/`). The CRM's `data` is
+`{conversation_id, contact_id, whatsapp_message_id, content_type, text}` (no phone). The receiver parses it
+(zod), stores it in `crm_inbound_queue` keyed by the wamid (migration `20261121000100`, RLS, service role
+only; a re-sent delivery is a no-op) and answers 200 (500 only when that insert fails), then kicks
+`CrmInboundJob` (worker; also every minute). The job reads `GET /contacts/{contact_id}` (phone → E.164 by the
+shared normaliser, name); a phone on an active teacher (`teachers.phone_e164`, status active) is not
+mirrored (owner 2026-11-22: «teachers can only use platform chat»): its row is deleted and the message
+stays only in the CRM (which auto-replies). Otherwise, for a file, `GET /conversations/{id}/messages` (its `media_url`, the CRM's public
+`chat-media` copy; the mime from the link's extension), then `InboundService.handle` with line
+`notifications` (stamped only while the chat line is configured; module mode: the crm notifications number):
+the person's existing thread (a new person → a new lead), unread, the staff push, the usual line marker
+«خط الإشعارات». A file is stored as an imported CRM file (body = the link, fetched from `crm_media_host`;
+legacy rows without a number too); its caption is not kept. A failed lookup or write keeps the row
+(`attempts`, `next_at`: 30 s doubling, at most 1 h), never dropped; the row is deleted once stored. A
+duplicate never makes a second row (`messages.wa_message_id`). Replies go out from the chat line (docs/23c
+decision 6, «Chat first»). Owner step: after deploy press «ربط علامات التسليم من نظام CRM تلقائيًا» once:
+the endpoint is re-registered with `['message.status_updated', 'message.received']`
+(`CRM_WEBHOOK_EVENTS`); the key needs `contacts:read`, `conversations:read`, `messages:read`.
 Never sends anything. Checked against wacrm `98b5bd2` (`src/lib/webhooks/sign.ts`, `deliver.ts`): same header,
 same `t=…,v1=…` format, the HMAC key is the whole `whsec_…` string (never base64-decoded), 300 s tolerance,
 envelope `{id, event, occurred_at, account_id, data:{whatsapp_message_id, conversation_id, status}}`.
@@ -425,7 +445,8 @@ which replaces the old one; kept rows keep their send state) · `POST /short-lin
 **Gate flow**: `GET /r/<code>` of a managed link answers 302 to the web gate `<WEB_ORIGIN>/l/<code>` (system links
 keep the direct 302; an expired or revoked link is the usual 404). The gate's public API (60 a minute per IP, 20 per
 IP and code; never cached; unknown and system codes are the same 404 `short_link_not_found`):
-`GET /public/short-links/:code` (title, `state` open | gone, `needs: sign_in_or_code`, `codesAvailable`; never the
+`GET /public/short-links/:code` (title, `state` open | gone, `goneReason` expired | revoked | null,
+`needs: sign_in_or_code`, `codesAvailable`; never the
 target) · `POST …/open` with the caller's JWT (a signed-in user: the visit by profile) · `POST …/otp/start`
 `{ phone }` (any country; always 202; a code goes out only while the link is live and, for a listed link, only to
 a listed phone) · `POST …/otp/verify` `{ phone, code }` (401 `invalid_code`). The codes are the family sign-in's
@@ -559,8 +580,8 @@ made in the CRM dashboard; the CRM must hold **the same template names and langu
 `crm_name` / `crm_language` / the old script's default), and
 **the same buttons in the same order** (`buttonParams` is keyed by the button's index); no
 inbound media; no idempotency (an uncertain send is the admin's call); a document header or the report PDF goes
-as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقرير-الحلقة.pdf` is lost); best-effort webhooks (a missed tick stays «sent»). Follow-up: mirror the CRM's
-`message.received` into our inbox (the CRM owns that number's conversations today).
+as a link and the CRM shows its own file name, not ours (`AB-nnnn_<date>_تقرير-الحلقة.pdf` is lost); best-effort webhooks (a missed tick stays «sent»). The CRM's
+`message.received` is mirrored into our inbox (2026-11-21, above); the CRM's own bot reply is unchanged.
 
 ### Switching the notifications line to the CRM (owner steps)
 

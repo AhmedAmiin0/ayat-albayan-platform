@@ -1,8 +1,8 @@
 import { CREDENTIAL_MODES, DEFAULT_PASSWORD_MIN, type CredentialMode } from '@ab/shared';
-import { Field } from '@/components/ui/form/field';
-import { RadioChips } from '@/components/ui/form/radio-chips';
-import { PasswordInput } from '@/features/people/auth/PasswordInput';
-import { t } from '@/lib/i18n/i18n';
+import { Field } from '@ab/web-kit/components/ui/form/field';
+import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
+import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const C = t.users.credential;
 

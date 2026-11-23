@@ -1,15 +1,16 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
-import type { TeacherListRow } from './api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeachersPage } from './TeachersPage';
+import type { TeacherListRow } from '@ab/shared';
+import { teacherRowFixture } from '@ab/shared/testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
-const ABRAR: TeacherListRow = {
+const ABRAR: TeacherListRow = teacherRowFixture({
   id: 't-abrar',
   display_name_ar: 'أبرار',
   display_name_en: null,
@@ -28,7 +29,7 @@ const ABRAR: TeacherListRow = {
   max_students: 12,
   active_count: 7,
   trial_count: 2,
-};
+});
 
 function renderPage() {
   apiFetch.mockResolvedValue({ items: [ABRAR], total: 1, page: 1, pageSize: 25 });

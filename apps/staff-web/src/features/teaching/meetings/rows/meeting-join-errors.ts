@@ -1,9 +1,9 @@
-import { classroomErrorText, opensAtOf } from '@/features/teaching/classroom/room/livekit/errors';
+import { classroomErrorText, opensAtOf } from '@ab/web-kit/classroom/room/livekit/errors';
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { whenText } from '@/features/teaching/meetings/scheduled/meeting-when';
-import type { Clock } from '@/lib/clock';
+import type { Clock } from '@ab/web-kit/lib/clock';
 
 const R = t.meetings.internal.refusal;
 

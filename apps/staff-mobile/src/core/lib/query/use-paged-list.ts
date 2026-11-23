@@ -2,7 +2,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { apiFetch, toQueryString, listKey, type ListParams } from '@ab/mobile-kit';
 import { usePagedActions, withTracked } from './paged-result';
-import { flattenPages, nextPageParam, type Page, type WithId } from './paging';
+import { flattenPages, nextPageParam, type WithId } from './paging';
+import type { Page } from '@ab/shared';
 
 interface PagedListOptions {
   /** List endpoint, e.g. '/leads'. Also the query key: ['leads', 'list', params]. */

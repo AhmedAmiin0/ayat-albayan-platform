@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { setConfirmationRequired } from '@/lib/settings/confirmation-testing';
-import { t } from '@/lib/i18n/i18n';
+import { setConfirmationRequired } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 import { TeacherConfirmedTag } from './TeacherConfirmedTag';
 
-vi.mock('@/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(),
   apiSend: vi.fn(),

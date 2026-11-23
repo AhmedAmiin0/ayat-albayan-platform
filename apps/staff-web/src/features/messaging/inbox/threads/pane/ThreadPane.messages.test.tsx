@@ -3,14 +3,14 @@ import { lessonWhenAt } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { detail, lead, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from './ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const LINK = 'https://wa.me/966501234567?text=x';
@@ -93,7 +93,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     expect(await screen.findByText(t.messages.retryQueued)).toBeTruthy();
   });
 
-  it('a held row asks «بعتّها؟» from its own state (survives a refresh): yes = sent by hand, no = back to the queue', async () => {
+  it('a held row asks «بعتّها؟» from its own state; yes = sent by hand, and the answer shows', async () => {
     renderThread();
     await screen.findByRole('log');
     const held = bubble('رسالة باليد');
@@ -103,6 +103,14 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     apiSend.mockResolvedValue({ ...HANDED, status: 'sent_manually' });
     fireEvent.click(within(ask).getByRole('button', { name: t.messages.markSentManually }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/sent-manually'));
+    await waitFor(() => expect(held.queryByRole('group', { name: t.messages.markSentManually })).toBeNull());
+  });
+
+  it('a held row: no = back to the queue', async () => {
+    renderThread();
+    await screen.findByRole('log');
+    const ask = bubble('رسالة باليد').getByRole('group', { name: t.messages.markSentManually });
+    apiSend.mockResolvedValue({ ...HANDED, status: 'queued' });
     fireEvent.click(within(ask).getByRole('button', { name: t.messages.undoHandOff }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/retry'));
   });

@@ -1,15 +1,15 @@
 import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { scheduleLesson } from '@/features/sales/sales/academy.fixtures';
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLessonDrawer } from './SalesLessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ confirm: true }));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
-vi.mock('@/features/people/auth/use-permissions', () => ({
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => p === 'lessons.confirm' && granted.confirm }),
 }));
 

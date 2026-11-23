@@ -1,7 +1,7 @@
 import { newestOfKind, type PushKind } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { notificationsQuery } from './api';
+import { notificationsQuery } from '@ab/web-kit/push/notifications-api';
 
 /**
  * Invalidates `refresh` once the bell shows a new row of `kind` (owner 2026-10-29: «محفظتي» moves when a

@@ -1,10 +1,10 @@
 import { QueryClient } from '@tanstack/react-query';
 import { isRedirect } from '@tanstack/react-router';
 import { describe, expect, it, vi } from 'vitest';
-import { meQuery, requireRole, type Me } from '@/features/people/auth/me';
+import { meQuery, requireRole, type Me } from '@ab/web-kit/auth/me';
 import { requireTeacherPortal } from './setup-guards';
 
-vi.mock('@/lib/http/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
 
 // owner 2026-11-14: the teacher's report link is the signed-in page; the guard carries it through
 // /login (and /account-setup) as ?redirect= so she lands on it after signing in.

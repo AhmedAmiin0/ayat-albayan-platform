@@ -1,8 +1,8 @@
+import type { AudienceTab } from '@ab/shared';
 import { formatPhone, WA_LINES, type NotificationsOverview } from '@ab/shared';
 import { t, ErrorState, ltr, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { numberLine } from './catalogue-words';
-import type { AudienceTab } from '@/ops/notif-rules/lib/audience-tabs';
 import { CatalogueAudience } from '@/ops/notif-rules/components/CatalogueAudience';
 import { ruleOf } from '@/ops/notif-rules/lib/rule-words';
 import { TypedOffSheet } from '@/ops/notif-rules/components/TypedOffSheet';

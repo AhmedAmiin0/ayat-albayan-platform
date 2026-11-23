@@ -26,6 +26,10 @@ const binding = async (tx: Tx) =>
   (await tx<{ profile_id: string; device_key_hash: string | null; contested: boolean }[]>`select profile_id,
     device_key_hash, contested_at is not null contested from public.push_device_sessions where token = ${T}`)[0];
 
+const renewed = async (tx: Tx) =>
+  (await tx<{ r: boolean }[]>`select created_at = now() r from public.push_device_sessions
+    where token = ${T}`)[0]?.r;
+
 test.describe('claim_push_device (migration 730)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
@@ -70,6 +74,24 @@ test.describe('claim_push_device (migration 730)', () => {
       expect(await claim(tx, { user: admin, session: await session(tx, admin), fresh: H2 })).toBe('in_use');
       expect(await claim(tx, { user: teacher, session: own, fresh: H2 })).toBe('bound');
       expect(await binding(tx)).toEqual({ profile_id: teacher, device_key_hash: H2, contested: false });
+    });
+  });
+
+  // One transaction: now() is fixed, so the binding is backdated first. A late receipt prunes only
+  // bindings made before its push (migration 20261122000200).
+  test('the holder registering again renews created_at; a refused claim does not', async () => {
+    await rolledBack(async (tx) => {
+      const teacher = await userId(tx, USERS.teacher.email);
+      const admin = await userId(tx, USERS.admin.email);
+      const own = await session(tx, teacher);
+      await claim(tx, { user: teacher, session: own, fresh: H1 });
+      await tx`update public.push_device_sessions set created_at = now() - interval '1 day'
+        where token = ${T}`;
+      const other = await session(tx, admin);
+      expect(await claim(tx, { user: admin, session: other, fresh: H2 })).toBe('in_use');
+      expect(await renewed(tx)).toBe(false);
+      expect(await claim(tx, { user: teacher, session: own, fresh: H2 })).toBe('bound');
+      expect(await renewed(tx)).toBe(true);
     });
   });
 

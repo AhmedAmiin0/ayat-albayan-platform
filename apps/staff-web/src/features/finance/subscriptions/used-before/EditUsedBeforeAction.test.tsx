@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { t } from '@/lib/i18n/i18n';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { EditUsedBeforeAction } from './EditUsedBeforeAction';
 
 // «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): admins and assistants
@@ -10,7 +10,7 @@ import { EditUsedBeforeAction } from './EditUsedBeforeAction';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));
-vi.mock('@/lib/http/api', async (importOriginal) => ({
+vi.mock('@ab/web-kit/lib/http/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch,
   apiSend,

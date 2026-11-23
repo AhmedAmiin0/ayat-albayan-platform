@@ -13,7 +13,7 @@ import type {
 } from '@ab/shared';
 import { moneyText } from '@/features/finance/subscriptions';
 import { dateLabel, dayIn } from '@/features/teaching/schedule';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // What «الدورة والباقة» and its previews say on web: the shared lines (@ab/client-core) with the
 // app's words and day formats (the viewer's zone for an instant). Pure.

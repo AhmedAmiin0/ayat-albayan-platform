@@ -11,3 +11,4 @@ export * from './rules.legacy.js';
 export * from './rules.effective.js';
 export * from './push-wake.js';
 export * from './push-readers.js';
+export * from './text-clip.js';

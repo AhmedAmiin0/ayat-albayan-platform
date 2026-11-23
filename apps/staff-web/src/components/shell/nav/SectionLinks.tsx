@@ -1,7 +1,7 @@
 import type { Permission } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Icon, type IconName } from '@/components/ui/display/icon';
-import { cn } from '@/lib/utils';
+import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
+import { cn } from '@ab/web-kit/lib/utils';
 
 export interface SectionLink {
   to: string;

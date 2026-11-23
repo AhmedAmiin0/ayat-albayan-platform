@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { outbound } from '@/modules/messaging/webhook/webhook.fakes';
 import { wacrmSign, webhookApp } from '@/modules/messaging/webhook/test-app';
 
-// POST /webhooks/wacrm (docs/19 «crm driver»): signed + fresh, deduped on the delivery id; ticks only.
+// POST /webhooks/wacrm (docs/19 «crm driver»): signed + fresh, deduped on the delivery id; ticks and
+// message.received (queued for the inbox mirror, owner 2026-11-21).
 
 let ctx: Awaited<ReturnType<typeof webhookApp>> | undefined;
 afterEach(async () => {
@@ -12,6 +13,15 @@ afterEach(async () => {
 
 const delivery = (id: string, status = 'delivered') =>
   JSON.stringify({ id, event: 'message.status_updated', occurred_at: '2026-10-25T08:00:00.000Z', account_id: 'acct', data: { whatsapp_message_id: 'wamid.crm-1', conversation_id: 'crm-conv', status } });
+
+const received = (id: string) =>
+  JSON.stringify({
+    id,
+    event: 'message.received',
+    occurred_at: '2026-11-21T08:00:00.000Z',
+    account_id: 'acct',
+    data: { conversation_id: 'cv-1', contact_id: 'ct-1', whatsapp_message_id: 'wamid.in-1', content_type: 'text', text: 'سلام' },
+  });
 
 describe('POST /webhooks/wacrm', () => {
   it('message.status_updated moves our row by its wamid (the delivery-status path); the CRM conversation id is not stored', async () => {
@@ -44,12 +54,25 @@ describe('POST /webhooks/wacrm', () => {
     expect(ctx.queries.outboundByWaId).not.toHaveBeenCalled();
   });
 
-  it('message.received is logged only (the CRM owns that conversation): 200, nothing stored or sent', async () => {
+  it('message.received is queued by its wamid (the mirror looks it up later): 200 at once', async () => {
     ctx = await webhookApp();
-    const body = JSON.stringify({ id: 'd-4', event: 'message.received', occurred_at: '2026-10-25T08:00:00.000Z', account_id: 'a', data: { text: 'x' } });
-    expect((await ctx.postWacrm(body)).statusCode).toBe(200);
+    expect((await ctx.postWacrm(received('d-4'))).statusCode).toBe(200);
+    expect(ctx.crmQueue.enqueue).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ waMessageId: 'wamid.in-1', contactId: 'ct-1', contentType: 'text' }),
+    );
     expect(ctx.queries.stored).toEqual([]);
     expect(ctx.queries.outboundByWaId).not.toHaveBeenCalled();
+  });
+
+  it('a message.received without its ids is not queued; a failed queue write answers 500', async () => {
+    ctx = await webhookApp();
+    const odd = JSON.stringify({ id: 'd-6', event: 'message.received', account_id: 'a', data: { text: 'x' } });
+    expect((await ctx.postWacrm(odd)).statusCode).toBe(200);
+    expect(ctx.crmQueue.enqueue).not.toHaveBeenCalled();
+    ctx.crmQueue.enqueue.mockRejectedValueOnce(new Error('db down'));
+    expect((await ctx.postWacrm(received('d-7'))).statusCode).toBe(500);
+    expect((await ctx.postWacrm(received('d-7'))).statusCode).toBe(200);
+    expect(ctx.crmQueue.enqueue).toHaveBeenCalledTimes(2);
   });
 
   it('a failed status write answers 500 and the same delivery may come again', async () => {

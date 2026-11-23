@@ -1,7 +1,7 @@
 import type { ReportFormEntry, ReportFormResponse } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@/components/ui/form/button';
-import { t } from '@/lib/i18n/i18n';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ReportEntryV2 } from '@/features/reporting/reports/entry-v2/ReportEntryV2';
 import { ReportV2View } from './ReportV2View';
 

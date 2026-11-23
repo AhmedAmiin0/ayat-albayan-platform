@@ -1,10 +1,10 @@
 import type { AcademySettings } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@/components/settings/dialogs/ConfirmSwitchDialog';
-import { Button } from '@/components/ui/form/button';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { StatusChip } from '@/components/ui/display/status-chip';
-import { t } from '@/lib/i18n/i18n';
+import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useGateSwitch } from './gate-api';
 
 const s = t.templates.settings;

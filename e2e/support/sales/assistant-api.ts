@@ -106,11 +106,22 @@ export async function paymentBy(subscriptionId: string, by: string, amount: numb
     values (${subscriptionId}, ${amount}, (select currency from public.subscriptions where id = ${subscriptionId}), 'bank', now(), 'payment', ${by})`);
 }
 
+interface ChatMessage {
+  phone: string;
+  guardian: string;
+  direction: 'inbound' | 'outbound';
+  body: string;
+  template?: string;
+  /** The receiving line of an inbound (none = unstamped, the notifications window). */
+  line?: 'chat' | 'notifications';
+}
+
 /** A chat message of a number (guardian_id links it to the family); a template key makes it a template send. */
-export async function message(input: { phone: string; guardian: string; direction: 'inbound' | 'outbound'; body: string; template?: string }): Promise<void> {
+export async function message(input: ChatMessage): Promise<void> {
   await withSql(async (sql) => {
     const { direction: d, phone, guardian, body, template } = input;
-    if (d === 'inbound') await sql`insert into public.messages (direction, phone_e164, guardian_id, body) values ('inbound', ${phone}, ${guardian}, ${body})`;
+    if (d === 'inbound') await sql`insert into public.messages (direction, phone_e164, guardian_id, body, line)
+      values ('inbound', ${phone}, ${guardian}, ${body}, ${input.line ?? null})`;
     else await sql`insert into public.messages (direction, phone_e164, guardian_id, body, template_key, status) values ('outbound', ${phone}, ${guardian}, ${body}, ${template ?? null}, 'sent')`;
   });
 }

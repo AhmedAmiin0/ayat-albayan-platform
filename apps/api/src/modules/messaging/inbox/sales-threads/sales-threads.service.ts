@@ -1,7 +1,6 @@
-import type { ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { Page, ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
-import type { Page } from '@/common/http/http';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
 import { InboxSettings, renewalThreshold } from '@/modules/messaging/inbox/inbox.settings';
@@ -10,7 +9,13 @@ import { toThreadView, type ThreadRow } from '@/modules/messaging/inbox/threads/
 import type { PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
 import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
-import { asRead, isFirstPage, pageRows, stampRead, type ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-page';
+import {
+  asRead,
+  isFirstPage,
+  pageRows,
+  stampRead,
+  type ThreadPageQuery,
+} from '@/modules/messaging/inbox/reads/thread-page';
 
 const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 

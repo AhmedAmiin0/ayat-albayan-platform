@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { t, ListRow, StatusChip, InsetGroup } from '@ab/mobile-kit';
 import { useStudentHref } from '@/core/nav/tree-base';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
-import type { StudentRef } from '@/students/shared/types';
+import type { StudentRef } from '@ab/shared';
 
 /** Other students on the same guardian phone; a tap opens that student's quick view. */
 export function SiblingsList({ siblings }: { siblings: StudentRef[] }) {

@@ -1,9 +1,9 @@
 import type { AuthorTemplate } from '@ab/client-core';
 import { useId, useState } from 'react';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { Dialog } from '@/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { SaveActions } from '@/features/messaging/templates/create/SaveActions';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { editErrorText, type EditMode } from './edit-api';
 import { canSave, editState } from './edit-state';
 import { EditNotes } from './EditNotes';

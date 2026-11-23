@@ -158,7 +158,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "ci-checks/e2e-areas/select-bundle.mjs": {

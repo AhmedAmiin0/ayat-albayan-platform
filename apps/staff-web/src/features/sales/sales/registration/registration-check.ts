@@ -1,16 +1,14 @@
 import { registrationCheckQuerySchema } from '@ab/shared';
+import type { RegistrationCheckBy, RegistrationCheckCode } from '@ab/shared';
 
 // «التحقق من التسجيل» (docs/16 row 23): the same query rules as the API, checked before any request.
 
-export type CheckBy = 'phone' | 'name';
-export type CheckErrorCode = 'query_too_short' | 'invalid_phone' | 'one_of';
+const CODES: readonly RegistrationCheckCode[] = ['query_too_short', 'invalid_phone', 'one_of'];
 
-const CODES: readonly CheckErrorCode[] = ['query_too_short', 'invalid_phone', 'one_of'];
-
-export type CheckRequest = { ok: true; by: CheckBy; path: string } | { ok: false; code: CheckErrorCode };
+export type CheckRequest = { ok: true; by: RegistrationCheckBy; path: string } | { ok: false; code: RegistrationCheckCode };
 
 /** The GET path for a phone (normalised to E.164) or a name / code, or why it cannot be asked. */
-export function checkRequest(by: CheckBy, value: string): CheckRequest {
+export function checkRequest(by: RegistrationCheckBy, value: string): CheckRequest {
   const parsed = registrationCheckQuerySchema.safeParse(by === 'phone' ? { phone: value } : { q: value });
   if (!parsed.success) {
     const message = parsed.error.issues[0]?.message;

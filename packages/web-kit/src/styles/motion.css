@@ -1,0 +1,105 @@
+/* Motion (owner, 2026-10-05: "add animations"; 2026-11-19: "dynamic interactive touches"): short
+   ease-out moves on ONE curve (--ease-ink) and the named durations below, no bounce, no loops but
+   the skeleton's sweep. `prefers-reduced-motion: reduce` turns all of it off: index.css kills every
+   animation and transition, and the transforms below only apply under `no-preference`. */
+@theme static {
+  --ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Pressed feedback (buttons, rows, cards). */
+  --duration-press: 120ms;
+  /* Colour and opacity changes: hover, a selected tab, a cross-fade. */
+  --duration-quick: 160ms;
+  /* Entrances: a panel, a card, a line that just appeared. */
+  --duration-enter: 200ms;
+  /* A selection indicator sliding to its new place (tabs, the week strip). */
+  --duration-move: 240ms;
+  /* The agenda's «you are here» ring after a jump: outlasts the scroll so the eye lands on it. */
+  --duration-flash: 700ms;
+}
+
+@theme {
+  --animate-fade-up: ab-fade-up 200ms var(--ease-ink) both;
+  --animate-fade-in: ab-fade-in 160ms var(--ease-ink) both;
+  --animate-pop-in: ab-pop-in 180ms var(--ease-ink) both;
+  --animate-drawer-in: ab-drawer-in 220ms var(--ease-ink) both;
+  --animate-toast-in: ab-toast-in 200ms var(--ease-ink) both;
+  /* A strip that comes from the top edge (the room's «جارٍ إعادة الاتصال…»). */
+  --animate-drop-in: ab-drop-in 200ms var(--ease-ink) both;
+  --animate-shimmer: ab-shimmer 1.2s linear infinite;
+
+  @keyframes ab-fade-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ab-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes ab-pop-in {
+    from { opacity: 0; transform: translateY(4px) scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+  /* From the inline-end: the left edge in RTL (the default), the right in LTR (--ab-from below). */
+  @keyframes ab-drawer-in {
+    from { opacity: 0.6; transform: translateX(var(--ab-from, -100%)); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ab-toast-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ab-drop-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ab-shimmer {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+  }
+}
+
+@layer components {
+  [dir='ltr'] .animate-drawer-in {
+    --ab-from: 100%;
+  }
+  /* Skeleton bar for loading lists: a soft sweep across the sunk tone. */
+  .ab-skeleton {
+    background: linear-gradient(90deg, var(--sunk) 25%, var(--neutral-wash) 50%, var(--sunk) 75%) 0 0 / 200% 100%;
+  }
+  /* Hover lift for clickable cards and rows: a hairline rise and a soft shadow. */
+  .ab-lift {
+    transition:
+      transform var(--duration-quick) var(--ease-ink),
+      box-shadow var(--duration-quick) var(--ease-ink),
+      background-color var(--duration-quick) var(--ease-ink);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .ab-lift:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--elev-toast);
+    }
+  }
+}
+
+@layer components {
+  /* Pressed feedback for a tappable row or card (Button has its own): it sinks a little under the
+     finger. No hover motion, so nothing fires on a touch screen's false hover. */
+  .ab-press {
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform var(--duration-press) var(--ease-ink),
+      background-color var(--duration-quick) var(--ease-ink);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ab-press:active:not(:disabled, [aria-disabled='true']) {
+      transform: scale(0.98);
+    }
+  }
+  /* The room's speaking ring: fades in and out so quick speaker changes never flicker. */
+  .ab-ring {
+    transition: outline-color var(--duration-press) var(--ease-ink);
+  }
+  /* A selection indicator (slide-indicator.ts): placed at once, then it slides between choices. */
+  .ab-indicator[data-placed] {
+    transition: transform var(--duration-move) var(--ease-ink);
+  }
+}

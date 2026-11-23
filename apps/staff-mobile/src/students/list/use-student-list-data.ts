@@ -1,10 +1,9 @@
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus, TeacherOption } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString } from '@ab/mobile-kit';
 import { countParams, type StudentFilters } from './student-filters';
 
 type StatusCounts = Record<StudentStatus, number>;
-export type TeacherOption = { id: string; display_name_ar: string; display_name_en?: string | null };
 
 /** GET /students/status-counts: students per status under the other filters, for the pill counts. */
 export const useStatusCounts = (filters: StudentFilters) =>

@@ -1005,6 +1005,45 @@ export type Database = {
           },
         ];
       };
+      crm_inbound_queue: {
+        Row: {
+          attempts: number;
+          body: string | null;
+          contact_id: string;
+          content_type: string;
+          conversation_id: string;
+          created_at: string;
+          last_error: string | null;
+          next_at: string;
+          received_at: string;
+          wa_message_id: string;
+        };
+        Insert: {
+          attempts?: number;
+          body?: string | null;
+          contact_id: string;
+          content_type: string;
+          conversation_id: string;
+          created_at?: string;
+          last_error?: string | null;
+          next_at?: string;
+          received_at: string;
+          wa_message_id: string;
+        };
+        Update: {
+          attempts?: number;
+          body?: string | null;
+          contact_id?: string;
+          content_type?: string;
+          conversation_id?: string;
+          created_at?: string;
+          last_error?: string | null;
+          next_at?: string;
+          received_at?: string;
+          wa_message_id?: string;
+        };
+        Relationships: [];
+      };
       crm_media_copy_failures: {
         Row: {
           attempts: number;
@@ -3050,6 +3089,7 @@ export type Database = {
           media_mime: string | null;
           media_name: string | null;
           media_pages: number | null;
+          media_refusal: string | null;
           number_id: string | null;
           media_path: string | null;
           next_attempt_at: string | null;
@@ -3106,6 +3146,7 @@ export type Database = {
           media_mime?: string | null;
           media_name?: string | null;
           media_pages?: number | null;
+          media_refusal?: string | null;
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
@@ -3162,6 +3203,7 @@ export type Database = {
           media_mime?: string | null;
           media_name?: string | null;
           media_pages?: number | null;
+          media_refusal?: string | null;
           number_id?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
@@ -3665,6 +3707,7 @@ export type Database = {
           read_at: string | null;
           sent_at: string | null;
           ticket_ids: string[];
+          ticket_tokens: NonNullable<Json>;
           title: string;
         };
         Insert: {
@@ -3679,6 +3722,7 @@ export type Database = {
           read_at?: string | null;
           sent_at?: string | null;
           ticket_ids?: string[];
+          ticket_tokens?: NonNullable<Json>;
           title: string;
         };
         Update: {
@@ -3693,6 +3737,7 @@ export type Database = {
           read_at?: string | null;
           sent_at?: string | null;
           ticket_ids?: string[];
+          ticket_tokens?: NonNullable<Json>;
           title?: string;
         };
         Relationships: [

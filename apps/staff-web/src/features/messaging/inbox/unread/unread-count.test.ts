@@ -1,7 +1,7 @@
 import { INBOX_FALLBACK_MS } from '@ab/client-core';
 import { afterEach, describe, expect, it } from 'vitest';
-import { ApiError } from '@/lib/http/api';
-import { env } from '@/lib/http/env';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { env } from '@ab/web-kit/lib/http/env';
 import { inboxLive } from '@/features/messaging/inbox/api/live';
 import { unreadCountQuery, unreadPollMs, unreadRetry } from './unread-count';
 

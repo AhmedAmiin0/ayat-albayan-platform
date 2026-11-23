@@ -1,19 +1,17 @@
+import type { BookingMode } from '@ab/client-core';
+import type { LessonTimeEdit, TimeEditResult } from '@ab/shared';
 import type { CancelRequest, Conflict, LessonView, RescheduleRequest, SlotsResponse, StatusRouteEvent, ScheduleOverview } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@/lib/http/api';
-import { bookingBase, type BookingMode } from '@/features/teaching/booking/mode';
-import { t } from '@/lib/i18n/i18n';
-import type { LessonTimeEdit, TimeEditResult } from './edit-time/edit-time.contract';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { errorCode } from '@ab/web-kit/lib/http/error-code';
+import { bookingBase } from '@/features/teaching/booking/mode';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { Window } from '@ab/web-kit/schedule/slots';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
 
 /** Invalidate after any lesson write: the week grid, the teacher dashboard and slot pickers. */
 export const LESSONS_KEY = ['lessons'] as const;
-
-export interface Window {
-  from: Date;
-  to: Date;
-}
 
 /**
  * GET /lessons/overview?from&to (≤ 31 days): every teacher with hours, time off, load and free
@@ -97,12 +95,7 @@ export const approveProposal = ({ id, override }: { id: string; override?: strin
 export const rejectProposal = ({ id, note }: { id: string; note?: string }) =>
   apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`, note ? { note } : {});
 
-/** Domain error code of an API failure (`{ code }`, docs/10 §3), else null. */
-export function errorCode(error: unknown): string | null {
-  if (!(error instanceof ApiError)) return null;
-  const body = error.body as { code?: unknown } | null;
-  return typeof body?.code === 'string' ? body.code : null;
-}
+export { errorCode };
 
 /** The clashes of a 409 `{ code: 'conflict', conflicts }`, else null. */
 export function conflictsOf(error: unknown): Conflict[] | null {

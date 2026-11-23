@@ -11,7 +11,7 @@ import type {
   SubscriptionPricing,
 } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,

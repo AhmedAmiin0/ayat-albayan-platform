@@ -1,8 +1,8 @@
 import type { LessonAssetRecording } from '@ab/shared';
-import { FormAlert } from '@/components/ui/form/form-alert';
-import { t } from '@/lib/i18n/i18n';
-import { recordingLine } from './file-words';
-import { AudioPlayer } from './player/AudioPlayer';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { recordingLine } from '@ab/web-kit/lesson-files/file-words';
+import { AudioPlayer } from '@ab/web-kit/lesson-files/AudioPlayer';
 import { useRecordingVisibility } from './use-lesson-files';
 import { VisibleBox } from './VisibleBox';
 

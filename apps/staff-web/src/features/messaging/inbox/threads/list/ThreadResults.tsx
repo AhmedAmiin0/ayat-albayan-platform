@@ -1,7 +1,7 @@
 import type { ThreadView } from '@ab/shared';
-import { EmptyState } from '@/components/ui/display/empty-state';
-import { t } from '@/lib/i18n/i18n';
-import { useNow } from '@/lib/time/use-now';
+import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useNow } from '@ab/web-kit/lib/time/use-now';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { ThreadRow } from './ThreadRow';
 import { emptyTitle } from './empty-title';

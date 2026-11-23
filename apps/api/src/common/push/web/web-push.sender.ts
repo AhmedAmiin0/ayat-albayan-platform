@@ -1,3 +1,4 @@
+import { clipText } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { HttpFailure } from '@/common/infra/http/failure';
@@ -14,7 +15,7 @@ export const WEB_PUSH_TRANSPORT = Symbol('WEB_PUSH_TRANSPORT');
 export const WEB_PUSH_KEYS = Symbol('WEB_PUSH_KEYS');
 export type WebPushKeysSource = () => VapidKeys | null;
 
-/** What apps/staff-web/public/sw.js shows: a same-origin `url` opened on click; `tag` folds. */
+/** What packages/web-kit/public/sw.js shows: a same-origin `url` opened on click; `tag` folds. */
 export interface WebPushPayload {
   title: string;
   body: string;
@@ -53,8 +54,7 @@ export const fetchTransport: WebPushTransport = async ({ url, headers, body }) =
  */
 const GONE: ReadonlySet<number> = new Set([400, 403, 404, 410, 413]);
 
-const clip = (text: string) =>
-  text.length > WEB_PUSH_BODY_MAX ? `${text.slice(0, WEB_PUSH_BODY_MAX - 1)}…` : text;
+const clip = (text: string) => clipText(text, WEB_PUSH_BODY_MAX);
 
 /**
  * Browser push (R-NOT-02): one encrypted POST per subscription of the profile bound to a live session. Off (no call at all)

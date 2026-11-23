@@ -1,7 +1,7 @@
 import { crmJson, type CrmConn, WaError } from '@/modules/messaging/whatsapp';
 import { CRM_WEBHOOK_ERRORS } from './crm-webhook.errors';
 import {
-  CRM_TICK_EVENTS,
+  CRM_WEBHOOK_EVENTS,
   crmCreatedSchema,
   crmEndpointListSchema,
   crmEndpointSchema,
@@ -46,7 +46,7 @@ export async function deleteEndpoint(conn: CrmConn, id: string): Promise<void> {
  * crm_bad_answer.
  */
 export async function createEndpoint(conn: CrmConn, url: string): Promise<CrmCreated> {
-  const body = { url, events: [...CRM_TICK_EVENTS] };
+  const body = { url, events: [...CRM_WEBHOOK_EVENTS] };
   const data = await crmJson(conn, { path: 'webhooks', method: 'POST', body });
   const created = crmCreatedSchema.safeParse(data);
   if (created.success) return created.data;

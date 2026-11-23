@@ -3,6 +3,7 @@ import type {
   BookingResult,
   BookingTeacherOption,
   Conflict,
+  OutsideSlotsResponse,
   SlotsResponse,
 } from '@ab/shared';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
@@ -12,7 +13,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { clientRequest } from './core/booking.payload';
-import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
+import { outsideSlotsQuerySchema, slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { BookingService } from './core/booking.service';
 import { bookingBodySchema } from './plan/package-size';
 import { SlotsService } from './plan/slots.service';
@@ -42,6 +43,14 @@ export class BookingController {
     @ZodQuery(slotsQuerySchema) query: z.output<typeof slotsQuerySchema>,
   ): Promise<SlotsResponse> {
     return this.slotsService.slots(query);
+  }
+
+  /** «وقت آخر»: the next 14 days of the server clock, inside the teacher hours or not. */
+  @Get('outside-slots')
+  outsideSlots(
+    @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,
+  ): Promise<OutsideSlotsResponse> {
+    return this.slotsService.outside(query);
   }
 
   /** The same body as POST /booking; 200 { conflicts } of the whole series, nothing written. */

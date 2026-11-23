@@ -15,6 +15,14 @@ describe('http timing log', () => {
     expect(maskedWhere('evolution POST /chat/check/+966501234567')).toBe('evolution POST /chat/check/:id');
   });
 
+  it('masks a Google calendar email and long Drive / Sheets ids', () => {
+    const cal = 'google PUT /calendar/v3/calendars/owner%40gmail.com/events/abcdefghijklmnopqrstuv';
+    expect(maskedWhere(cal)).toBe('google PUT /calendar/v3/calendars/:id/events/:id');
+    const sheet = 'google POST /v4/spreadsheets/1AbCdEfGhIjKlMnOpQrStUvWxYz_-x/values/A1:append';
+    expect(maskedWhere(sheet)).toBe('google POST /v4/spreadsheets/:id/values/A1:append');
+    expect(maskedWhere('google GET /drive/v3/files')).toBe('google GET /drive/v3/files');
+  });
+
   it('the line has exactly evt, where, status and ms', () => {
     const line = JSON.parse(httpLine({ where: 'kapso POST /x/123456/messages', status: 200, ms: 12 })) as unknown;
     expect(line).toEqual({ evt: 'http', where: 'kapso POST /x/:id/messages', status: 200, ms: 12 });

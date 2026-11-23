@@ -7,18 +7,25 @@ import { dirname, join } from 'node:path';
 import { readJson } from '../json-file.mjs';
 import { compare, countsOf, pruned } from './baseline.mjs';
 import { baselineFile, oxlintReport } from './schemas.mjs';
+import { scoped } from './scope.mjs';
 
 export const BASELINE = 'oxlint-suppressions.json';
 const DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
 
-/** The packages Oxlint lints: every folder with a lint.blocks.mjs (oxlint.full.config.ts). */
+/**
+ * The packages Oxlint lints: every folder with a lint.blocks.mjs (oxlint.full.config.ts), kept
+ * by LINT_SCOPE (scope.mjs; unset = all).
+ */
 export const packageDirs = (root) =>
-  globSync(
-    DIRS.map((dir) => `${dir}/lint.blocks.mjs`),
-    { cwd: root },
-  )
-    .map(dirname)
-    .sort();
+  scoped(
+    globSync(
+      DIRS.map((dir) => `${dir}/lint.blocks.mjs`),
+      { cwd: root },
+    )
+      .map(dirname)
+      .sort(),
+    process.env.LINT_SCOPE,
+  );
 
 /** ESLint-linted packages with no lint.blocks.mjs: Oxlint and the parity check would skip them. */
 export const unlistedDirs = (root) =>

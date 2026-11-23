@@ -1,11 +1,15 @@
-import { clickToChatLink, type PortalHome } from '@ab/shared';
+import { clickToChatLink, type PortalGuardian, type PortalHome } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { ChatNumber } from './chat-number';
+import { PortalGuardianRepo } from './portal-guardian.repo';
 
-/** GET /portal/me: the switcher (my students, or myself), the login's language, renewal link. */
+/**
+ * GET /portal/me: the switcher (my students, or myself), the login's language, renewal link, and a
+ * guardian login's own name and number («حسابي»).
+ */
 @Injectable()
 export class PortalHomeService {
   private readonly log = new Logger(PortalHomeService.name);
@@ -14,13 +18,24 @@ export class PortalHomeService {
     private readonly scopes: PortalScopes,
     private readonly chat: ChatNumber,
     @Inject(MeZoneRepo) private readonly me: MeZoneRepo,
+    @Inject(PortalGuardianRepo) private readonly guardians: PortalGuardianRepo,
   ) {}
 
   /** `locale`: null while the login never chose one (the app keeps its own). */
   async home(user: AuthUser): Promise<PortalHome> {
-    const reads = [this.scopes.of(user), this.renewUrl(), this.me.localeOf(user.id)] as const;
-    const [scope, renew_url, locale] = await Promise.all(reads);
-    return { kind: scope.kind, students: scope.students, renew_url, locale };
+    const reads = [
+      this.scopes.of(user),
+      this.renewUrl(),
+      this.me.localeOf(user.id),
+      this.guardianOf(user),
+    ] as const;
+    const [scope, renew_url, locale, guardian] = await Promise.all(reads);
+    return { kind: scope.kind, students: scope.students, renew_url, locale, guardian };
+  }
+
+  /** Only a guardian login has a guardian row; a student login gets null. */
+  private guardianOf(user: AuthUser): Promise<PortalGuardian | null> {
+    return user.role === 'guardian' ? this.guardians.ownOf(user.id) : Promise.resolve(null);
   }
 
   /** A failed number read never breaks the page: the link is simply not shown. */

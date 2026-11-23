@@ -1,13 +1,13 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { hasRecoverySession, savePassword, setPasswordError } from './set-password';
 
 const auth = vi.hoisted(() => ({ getSession: vi.fn(), updateUser: vi.fn() }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@/features/people/auth/session-activity', () => ({ reportSession: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
+vi.mock('@ab/web-kit/lib/http/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn() }));
 
 describe('set-password', () => {
   beforeEach(() => {

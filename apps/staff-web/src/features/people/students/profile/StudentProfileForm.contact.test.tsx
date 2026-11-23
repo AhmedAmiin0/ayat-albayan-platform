@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider, queryOptions } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@/lib/i18n/i18n';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { StudentProfileForm } from './StudentProfileForm';
 import { toProfileValues, toStudentPatch } from './profile-form';
-import type { StudentProfile } from '@/features/people/students/types';
+import type { StudentProfile } from '@ab/shared';
 
 // «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1, a docs/13 deviation) on the profile edit.
 
