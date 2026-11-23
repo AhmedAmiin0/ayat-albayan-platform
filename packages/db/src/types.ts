@@ -1124,6 +1124,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      domain_events: {
+        Row: {
+          attempts: number;
+          claimed_at: string | null;
+          claimed_by: string | null;
+          id: string;
+          kind: string;
+          last_error: string | null;
+          next_attempt_at: string;
+          occurred_at: string;
+          parked_at: string | null;
+          payload: Json;
+          processed_at: string | null;
+        };
+        Insert: {
+          attempts?: number;
+          claimed_at?: string | null;
+          claimed_by?: string | null;
+          id?: string;
+          kind: string;
+          last_error?: string | null;
+          next_attempt_at?: string;
+          occurred_at?: string;
+          parked_at?: string | null;
+          payload?: Json;
+          processed_at?: string | null;
+        };
+        Update: {
+          attempts?: number;
+          claimed_at?: string | null;
+          claimed_by?: string | null;
+          id?: string;
+          kind?: string;
+          last_error?: string | null;
+          next_attempt_at?: string;
+          occurred_at?: string;
+          parked_at?: string | null;
+          payload?: Json;
+          processed_at?: string | null;
+        };
+        Relationships: [];
+      };
       drive_backup_archives: {
         Row: {
           bytes_compressed: number;
@@ -6068,6 +6110,10 @@ export type Database = {
       booking_result: { Args: { p_rule: string }; Returns: Json };
       build_assistant_statement: { Args: { p_statement: string }; Returns: Json };
       change_course: { Args: { p: Json }; Returns: Json };
+      claim_domain_events: {
+        Args: { p_limit: number; p_stale_before: string; p_token: string };
+        Returns: Database['public']['Tables']['domain_events']['Row'][];
+      };
       claim_push_device: {
         Args: {
           p_new_hash: string;
@@ -6117,7 +6163,12 @@ export type Database = {
         Returns: Database['public']['Enums']['teacher_earning_status'];
       };
       edit_lesson_time: { Args: { p: Json }; Returns: undefined };
+      enqueue_domain_event: {
+        Args: { p_id?: string; p_kind: string; p_payload: Json };
+        Returns: string;
+      };
       evaluate_assistant_commission: { Args: { p_subscription: string }; Returns: string };
+      finish_domain_events: { Args: { p_results: Json; p_token: string }; Returns: number };
       generate_assistant_statement: {
         Args: { p_actor: string; p_assistant: string; p_month: string };
         Returns: Json;

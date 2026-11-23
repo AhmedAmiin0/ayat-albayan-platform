@@ -8,3 +8,4 @@ export * from './short-links.js';
 export * from './short-link-views.js';
 export * from './outside-slots.js';
 export * from './readiness.js';
+export * from './events/index.js';

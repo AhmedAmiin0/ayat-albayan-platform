@@ -17,6 +17,7 @@ import { RECORDING_SHAPE } from './env.recording';
 import { STRIPE_SHAPE } from './env.stripe';
 import { STORAGE_SHAPE } from './env.storage';
 import { SENDER_SHAPE } from './whatsapp/env.sender';
+import { EVENTS_SHAPE } from '@/common/infra/domain-events/events-transport.schemas';
 import { webOrigin } from '@/common/http/public-origin';
 import { DB_TIMEOUT_DEFAULT_MS } from '@/common/db/db-timeout';
 
@@ -88,7 +89,7 @@ const schema = z.object({
   ...LOGIN_CODE_SHAPE, ...LIVEKIT_SHAPE,
   GIPHY_API_KEY: optionalSecret,
   ...STRIPE_SHAPE,
-  ...STORAGE_SHAPE, ...SENDER_SHAPE, ...RECORDING_SHAPE,
+  ...STORAGE_SHAPE, ...SENDER_SHAPE, ...RECORDING_SHAPE, ...EVENTS_SHAPE,
   /**
    * How long the academy settings stay cached in memory (ms, default 30 s). A PATCH /settings on
    * this instance clears the cache at once; the TTL covers other instances and direct SQL writes.

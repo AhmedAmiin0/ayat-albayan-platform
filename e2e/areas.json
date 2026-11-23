@@ -572,6 +572,7 @@
     "sales/course-one-per-package.sql.spec.ts",
     "finance/course-pause-resume.sql.spec.ts",
     "finance/course-pause.sql.spec.ts",
+    "platform/domain-events-outbox.sql.spec.ts",
     "teaching/edit-time.sql.spec.ts",
     "platform/google-calendar-handover.sql.spec.ts",
     "platform/google-sync.sql.spec.ts",
