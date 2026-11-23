@@ -1,9 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 
-// «المظهر» (تلقائي / فاتح / ليلي). The override is the OS one, Appearance.setColorScheme: useTheme()
-// reads useColorScheme(), which follows it, and so do the status bar, alerts and the keyboard.
-// It does not survive a restart, so the choice is saved and re-applied on boot (restoreAppearance).
+// Appearance.setColorScheme does not survive a restart, so the choice is restored on boot.
 
 export type AppearancePref = 'auto' | 'light' | 'dark';
 export const APPEARANCE_PREFS: readonly AppearancePref[] = ['auto', 'light', 'dark'];

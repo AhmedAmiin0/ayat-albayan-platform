@@ -11,11 +11,7 @@ interface BackButtonProps {
   testID?: string;
 }
 
-/**
- * A screen's «رجوع» as an icon (owner 2026-11-06: «Make the back button an icon»): the 44pt
- * IconButton with a chevron pointing to the inline-start (right in Arabic, left in English), named
- * «رجوع» for screen readers. ScreenHeader's `leading` puts it before the title.
- */
+/** Chevron points to the inline-start; named back for screen readers. */
 export function BackButton({ onPress, busy = false, disabled = false, testID }: BackButtonProps) {
   const { color } = useTheme();
   return (

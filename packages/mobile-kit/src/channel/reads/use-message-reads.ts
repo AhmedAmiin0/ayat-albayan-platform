@@ -4,10 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '../../lib/http/api';
 import type { ChannelRef } from '../channel-api';
 
-/**
- * «من قرأ الرسالة» (GET …/messages/:id/reads): who of the chat has read one message and when, and
- * who not yet. Read while its sheet is open (`messageId` null: nothing).
- */
+/** Read only while its sheet is open; a null `messageId` reads nothing. */
 export function useMessageReads(ref: ChannelRef, messageId: string | null) {
   return useQuery({
     queryKey: [...channelKey(ref.audience, ref.studentId), 'reads', messageId],

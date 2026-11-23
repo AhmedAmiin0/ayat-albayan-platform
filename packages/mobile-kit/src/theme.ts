@@ -19,10 +19,7 @@ const themes: Record<ThemeName, Theme> = {
   dark: { name: 'dark', color: palette.dark, elevation: elevation.dark, glass: glass.dark },
 };
 
-/**
- * Follows the colour scheme (app.json userInterfaceStyle: automatic); stable object per scheme.
- * Manual «تلقائي / فاتح / ليلي» override: src/more/appearance.ts (Appearance.setColorScheme).
- */
+/** Stable object per scheme; the manual override uses Appearance.setColorScheme. */
 export function useTheme(): Theme {
   return themes[useColorScheme() === 'dark' ? 'dark' : 'light'];
 }

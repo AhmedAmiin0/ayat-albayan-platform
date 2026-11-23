@@ -3,11 +3,7 @@ import { shape, type, useTheme } from '../../theme';
 import { AppText } from '../primitives/AppText';
 import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
 
-/**
- * The inverse note after a lesson change lands (docs/07 §10 toast look, inline: «الحلقة اتلغت»).
- * Announced politely; it goes when the action hook resets it.
- * TODO(R-MOB-02): «تراجع» needs an undo route (confirmed → scheduled is not a move today).
- */
+/** docs/07 §10 toast look, inline; undo is not offered yet (R-MOB-02: no undo route). */
 export function Notice({ message }: { message: string }) {
   const { color, elevation } = useTheme();
   return (

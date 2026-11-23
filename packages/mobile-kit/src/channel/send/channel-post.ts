@@ -26,7 +26,7 @@ function postBody(input: ChannelSendInput): Partial<ChannelPost> {
 export const postChannelMessage = (ref: ChannelRef, input: ChannelSendInput): Promise<unknown> =>
   apiSend('POST', channelMessagesPath(ref), postBody(input));
 
-/** The API's refusal in words (closed, the chat off, a reply gone…), else «تعذّر الإرسال». */
+/** The API's refusal in words, else a generic send failure. */
 export function sendErrorText(e: unknown): string {
   const errors: Readonly<Record<string, string>> = t.studentChannel.actions.errors;
   return errors[apiErrorCode(e) ?? ''] ?? t.studentChannel.sendFailed;

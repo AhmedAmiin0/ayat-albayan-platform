@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { shape, useTheme } from '../../theme';
 
-/** Under a full-screen viewer, on a raised pill (the chat's «تنزيل»). */
 export function ViewerFooter({ children }: { children?: ReactNode }) {
   const { color } = useTheme();
   return (

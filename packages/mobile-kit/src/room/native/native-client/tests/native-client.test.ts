@@ -39,10 +39,10 @@ test('events rebuild the tiles and reach the listeners; reconnecting and back', 
 test.each([
   [2, 'duplicate'],
   [4, 'removed'],
-  // DeleteRoom: «إنهاء الحلقة للجميع» or the max-duration job (meeting_max_minutes).
+  // DeleteRoom: end for everyone or the max-duration job (meeting_max_minutes).
   [5, 'ended'],
   [10, 'ended'],
-  // The network, a server restart: dropped, with «ادخل مرة أخرى».
+  // The network or a server restart: dropped, with a rejoin offer.
   [3, 'dropped'],
   [undefined, 'dropped'],
 ] as const)('a disconnect (reason %s) closes as %s', (reason, status) => {

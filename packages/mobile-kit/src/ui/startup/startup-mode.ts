@@ -2,8 +2,7 @@ import type { QueryClient } from '@tanstack/react-query';
 
 // What the branded startup screen says while the first connection is pending (session + /auth/me).
 
-/** quiet: saved data is on disk (or still being read), the app opens on it in a moment: the mark only.
- *  loading: nothing to show yet: «جارٍ الاتصال» from the start, «إعادة المحاولة» after 10 s. */
+/** quiet: saved data opens shortly, mark only; loading: connecting at once, retry after 10 s. */
 export type StartupMode = 'quiet' | 'loading';
 export type StartupStage = 'mark' | 'connecting' | 'retry';
 
@@ -17,7 +16,7 @@ export function startupMode({ restoring, hasSaved }: { restoring: boolean; hasSa
   return restoring || hasSaved ? 'quiet' : 'loading';
 }
 
-/** The stage `elapsed` ms after the screen appeared (or after the last «إعادة المحاولة»). */
+/** Measured from when the screen appeared or the last retry. */
 export function startupStage(mode: StartupMode, elapsed: number): StartupStage {
   if (elapsed >= RETRY_AFTER_MS) return 'retry';
   return elapsed >= (mode === 'quiet' ? QUIET_TEXT_AFTER_MS : TEXT_AFTER_MS) ? 'connecting' : 'mark';

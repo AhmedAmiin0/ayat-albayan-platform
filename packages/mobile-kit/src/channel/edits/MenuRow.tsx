@@ -7,7 +7,6 @@ import { AppText } from '../../ui/primitives/AppText';
 interface MenuRowProps {
   label: string;
   Icon: ComponentType<ChatIconProps>;
-  /** «حذف للجميع»: the row in the danger colour. */
   danger?: boolean;
   onPress: () => void;
 }

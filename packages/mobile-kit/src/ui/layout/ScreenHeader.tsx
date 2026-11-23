@@ -14,18 +14,14 @@ const TITLE = type.size.h4;
 interface ScreenHeaderProps {
   /** Amiri title, e.g. t.mobile.today. Mobile has no cartouche: this is the screen's one title. */
   title: string;
-  /** One line under it (date line, «عرض 25 من 107»…), 13pt ink-2, tabular digits. */
   subtitle?: string;
-  /**
-   * A list's total ON the title's line, «كل الطلاب · 233» (owner 2026-10-28: no separate count line):
-   * only a number the API returned; undefined while it loads.
-   */
+  /** Only a number the API returned; undefined while it loads. */
   count?: number;
   /** At the inline-end; defaults to the small gold mark. */
   trailing?: ReactNode;
   /** Before the title at the inline-start (the right in Arabic): the screen's BackButton. */
   leading?: ReactNode;
-  /** h1 for a screen (the reconnecting bar shows under it); a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
+  /** A sheet or dialog takes h2 so the title fits beside close (docs/07 §6). */
   size?: 'h1' | 'h2';
   /** The title's node, e.g. to move screen-reader focus to it when a sheet changes mode. */
   titleRef?: Ref<AppTextNode>;
