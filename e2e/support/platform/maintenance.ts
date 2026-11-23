@@ -1,6 +1,6 @@
 import type { Page, Response } from '@playwright/test';
 
-/** GET /settings/public, the one request the cover asks (owner 2026-11-21, «تحت الصيانة»). */
+/** GET /settings/public, the one request the cover asks («تحت الصيانة»). */
 export const PUBLIC_SETTINGS = '**/settings/public';
 
 /**

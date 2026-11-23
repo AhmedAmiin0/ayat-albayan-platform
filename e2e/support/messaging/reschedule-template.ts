@@ -3,9 +3,9 @@ import { API } from '../core/messages';
 import { withSql } from '../core/schedule';
 import { stubTemplateStatus } from '../core/wa-stub';
 
-// trial_reschedule (owner 2026-10-18), seeded by migration 460 on the chat line, not submitted, on the
-// allow-list. Only the admin's explicit submit sends it to the chat number's WABA; the stub then plays
-// Meta's approval on THAT WABA only (playwright.config.ts WA_CHAT_WABA_ID).
+// trial_reschedule, seeded by migration 460 on the chat line, not submitted, on the allow-list.
+// Only the admin's explicit submit sends it to the chat number's WABA; the stub then plays Meta's
+// approval on THAT WABA only (playwright.config.ts WA_CHAT_WABA_ID).
 
 export const RESCHEDULE = 'trial_reschedule';
 export const CHAT_WABA = 'e2e-chat-waba';

@@ -3,9 +3,9 @@ import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 import { fillStable } from '../core/fill';
 
-// The assistant's buttons in a sales chat, driven like a person would (journey 7, owner 2026-10-15):
-// «تسجيل طالب جديد» (the booking wizard in sales mode: a free trial only), «اشتراك جديد» / «جدّد الاشتراك»
-// (the calculator with the site's discount pills) and «سجّل التحويل البنكي» (receipt optional).
+// The assistant's buttons in a sales chat, driven like a person would (journey 7): «تسجيل طالب
+// جديد» (the booking wizard in sales mode: a free trial only), «اشتراك جديد» / «جدّد الاشتراك» (the
+// calculator with the site's discount pills) and «سجّل التحويل البنكي» (receipt optional).
 
 const SM = ar.salesMoney;
 
