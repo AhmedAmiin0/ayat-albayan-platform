@@ -2,13 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dehydrate, focusManager, QueryClient, QueryObserver } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/react-native';
 import { AppState } from 'react-native';
+import { shouldRetry } from '@ab/client-core';
 import { ApiError } from '../http/api';
 import {
   clearQueryCaches,
   persistOptions,
   persister,
   queryClient,
-  shouldRetry,
   signOutOnAuthError,
 } from './query-client';
 
@@ -40,13 +40,8 @@ test('back in the foreground, mounted queries refetch (RN has no window focus ev
   client.clear();
 });
 
-test('4xx is final, 5xx retries up to three times, no answer is left to the connection probe', () => {
-  expect(shouldRetry(0, new ApiError(401))).toBe(false);
-  expect(shouldRetry(0, new ApiError(404))).toBe(false);
-  expect(shouldRetry(0, new ApiError(503))).toBe(true);
-  expect(shouldRetry(2, new ApiError(503))).toBe(true);
-  expect(shouldRetry(3, new ApiError(503))).toBe(false);
-  expect(shouldRetry(0, new TypeError('Network request failed'))).toBe(false);
+test('the client retries with the shared rule: a 4xx is final', () => {
+  expect(queryClient.getDefaultOptions().queries?.retry).toBe(shouldRetry);
 });
 
 test('offline, a query still tries once (its error keeps the saved list note); a save is never parked', () => {
