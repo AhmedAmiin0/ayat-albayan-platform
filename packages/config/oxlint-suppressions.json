@@ -16,7 +16,7 @@
   },
   "eslint-react.js": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "eslint.js": {
