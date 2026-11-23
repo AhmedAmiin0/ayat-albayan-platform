@@ -66,7 +66,6 @@ function fakeCrm(answers: Partial<Record<string, Answer>> = {}) {
   return { fetch, calls };
 }
 
-/** The registrar over a fake CRM and a fake «التكاملات» store. */
 interface KitOpts {
   answers?: Partial<Record<string, Answer>>;
   line?: WhatsappEnv | null;

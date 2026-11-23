@@ -45,9 +45,7 @@ export const sentViaCrm =
     return p.known.has(id) ? p.numbers.has(id) : p.lines.has(row.line ?? '');
   };
 
-/**
- * What the confirm reads: the places (env + «التكاملات», per call) and the fetch (a fake in tests).
- */
+/** Places are read per call from env and integrations; the fetch is faked in tests. */
 export interface CrmConfirmSource {
   places: () => CrmPlaces;
   fetch: FetchLike;

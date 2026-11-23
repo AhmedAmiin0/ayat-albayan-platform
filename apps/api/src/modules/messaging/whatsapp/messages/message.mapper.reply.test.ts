@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { toMessageView } from './message.mapper';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
-// «رد» / «إعادة توجيه» flags on a MessageView (owner 2026-10-25).
-
 const view = (over: Parameters<typeof messageRow>[0]) =>
   toMessageView({ row: messageRow({ template_key: null, template_params: null, body: 'أهلًا', ...over }), template: null });
 

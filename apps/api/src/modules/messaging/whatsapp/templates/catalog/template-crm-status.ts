@@ -5,7 +5,6 @@ import { onCrm } from './template-env';
 import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
 import type { TemplatesRepo } from './templates.repo';
 
-/** «معتمد في نظام CRM» (approved) or «غير متاح في نظام CRM» (missing). */
 export type CrmTemplateStatus = (typeof CRM_TEMPLATE_STATUSES)[number];
 
 /**

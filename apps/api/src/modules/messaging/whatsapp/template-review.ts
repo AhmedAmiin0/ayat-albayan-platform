@@ -38,8 +38,7 @@ export function templateProblem(row: Pick<TemplateRow, 'body_ar' | 'params'>): s
   return null;
 }
 
-// «نموذج تقرير حلقة»: a 1 KB one-page PDF, built once by hand (Latin text: the PDF base fonts have
-// no Arabic glyphs, and embedding one would be tens of KB). Meta only shows it to the reviewer.
+// Latin text only: base PDF fonts have no Arabic glyphs and embedding one costs tens of KB.
 const SAMPLE_REPORT_B64 = [
   'JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUg',
   'L1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAg',

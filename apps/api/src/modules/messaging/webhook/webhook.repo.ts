@@ -22,7 +22,7 @@ export class WebhookRepo {
     private readonly settings: WebhookSettings,
   ) {}
 
-  /** settings.quick_reply_window_hours in ms: how far back a typed «نعم» looks for our lesson message. */
+  /** How far back a typed yes looks for our lesson message. */
   async replyWindowMs(): Promise<number> {
     return (await this.settings.read()).quick_reply_window_hours * 3_600_000;
   }
@@ -118,10 +118,7 @@ export class WebhookRepo {
     return (data ?? []).length > 0;
   }
 
-  /**
-   * docs/12 §3.5: the open lesson of the latest sent outbound row with a lesson_id, from `since`
-   * (48 h) up to `until` (the reply: never a later message, e.g. a back-filled «نعم»); else null.
-   */
+  /** docs/12 §3.5: never a message after the reply, e.g. a back-filled yes; else null. */
   async recentLessonOutbound(input: ReplyWindow): Promise<string | null> {
     const { data, error } = await this.db
       .from('messages')
