@@ -1,4 +1,3 @@
-import { COUNTS_FOR_MONEY } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -32,7 +31,7 @@ describe('TermsRepo.uncommissioned shape', () => {
     expect(sub('select')).toEqual([['id']]);
     expect(sub('in')).toEqual([['student_id', ['s1', 's2']]]);
     expect(sub('gt')).toEqual([['price', 0]]);
-    expect(sub('or')).toEqual([[COUNTS_FOR_MONEY]]);
+    expect(sub('or')).toEqual([['status.neq.cancelled,cancel_kind.eq.stopped']]);
     expect(sub('order')).toEqual([['created_at'], ['id']]);
     expect([...sub('limit'), ...sub('range'), ...on(calls, 'students')('range')]).toEqual([]);
     expect(trips).toEqual(['students', 'assistant_commissions', 'subscriptions']);
