@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { sendGateQuery } from '@/features/messaging/messaging/api';

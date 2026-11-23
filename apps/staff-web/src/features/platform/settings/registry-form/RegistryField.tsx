@@ -1,4 +1,5 @@
-import { CURRENCY_ISOS, SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/shared';
+import { CURRENCY_ISOS } from '@ab/money';
+import { SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/settings';
 import { CheckField } from '@/components/settings/fields/CheckField';
 import { NumberField } from '@/components/settings/fields/NumberField';
 import { settingText } from '@/components/settings/search/setting-text';

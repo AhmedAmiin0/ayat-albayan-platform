@@ -1,4 +1,4 @@
-import type { GoogleStatusView } from '@ab/shared';
+import type { GoogleStatusView } from '@ab/catalog';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { googleItems, googleStatus, googleStudents, googleTeachers } from './google.fixture';

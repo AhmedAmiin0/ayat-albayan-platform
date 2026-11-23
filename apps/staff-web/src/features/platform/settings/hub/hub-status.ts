@@ -1,15 +1,12 @@
+import type { GoogleStatusView, IntegrationConfigItem, IntegrationGroup } from '@ab/catalog';
+import { counted } from '@ab/core';
+import type { Glyph, Tone } from '@ab/money';
 import {
-  counted,
   EDITABLE_VALUE_KEYS,
   PUBLIC_SETTING_KEYS,
   SETTING_DEFAULTS,
   type AcademySettings,
-  type Glyph,
-  type GoogleStatusView,
-  type IntegrationConfigItem,
-  type IntegrationGroup,
-  type Tone,
-} from '@ab/shared';
+} from '@ab/settings';
 import { accountStyle, fill } from '@/features/platform/google-sync/google-format';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

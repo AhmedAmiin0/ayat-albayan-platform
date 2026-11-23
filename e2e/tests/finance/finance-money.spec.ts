@@ -5,9 +5,9 @@ import { uniqueName } from '../../support/finance/money-extra';
 import { openNav } from '../../support/core/nav';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 
-// «المالية» (owner, 2026-10-05): a part payment shows «مدفوع جزئيًا» and is found by that filter,
-// the rest is owed on «مستحق على الطلاب»; a refund («استرداد») counts against what was paid;
-// the money pages sit under «المالية» and the yearly summary renders.
+// «المالية»: a part payment shows «مدفوع جزئيًا» and is found by that filter, the rest is owed on
+// «مستحق على الطلاب»; a refund («استرداد») counts against what was paid; the money pages sit under
+// «المالية» and the yearly summary renders.
 
 const kinds = (subscriptionId: string) =>
   withSql((sql) => sql<{ kind: string; amount: number }[]>`
@@ -27,7 +27,7 @@ test.describe('finance: part payments, receivables, refunds', () => {
     await pay.getByLabel(new RegExp(ar.payments.amount)).fill('100');
     await pay.getByRole('button', { name: ar.payments.record, exact: true }).click();
     await expect(page.getByRole('status')).toHaveText(ar.payments.saved);
-    // Owner 2026-10-28: the status cell says what was paid and what is left («مدفوعة جزئيًا: 100 من …»).
+    // The status cell says what was paid and what is left («مدفوعة جزئيًا: 100 من …»).
     const partPaid = ar.packagePayment.partPaid.replace('{paid}', '100').split(' من ')[0] ?? '';
     await expect(row.getByText(partPaid)).toBeVisible();
     const filters = await openFilters(page);

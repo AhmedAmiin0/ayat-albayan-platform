@@ -2,9 +2,9 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, openMonth, paidStatement, pay, renewalOf, subscription } from '../../support/sales/assistant';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// Renewal commission (migrations 20261027000750-751, owner 2026-10-26): «half of the value» = half of her
-// NORMAL commission on each renewal (settings.renewal_commission_percent, default 50), kind decided by
-// subscription order, never by payment order. Each case is rolled back. Twin: @ab/shared assistant/renewal.ts.
+// Renewal commission (migrations 20261027000750-751): half of her NORMAL commission on each renewal
+// (settings.renewal_commission_percent, default 50), kind decided by subscription order, never by
+// payment order. Each case is rolled back. Twin: @ab/shared assistant/renewal.ts.
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
 const FIXED = { commission_type: 'fixed', commission_value: 30, commission_currency: 'EGP', commission_starts_on: '2000-01-01' } as const;

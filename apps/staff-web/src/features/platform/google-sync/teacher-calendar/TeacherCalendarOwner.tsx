@@ -1,4 +1,4 @@
-import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner } from '@ab/shared';
+import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner } from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

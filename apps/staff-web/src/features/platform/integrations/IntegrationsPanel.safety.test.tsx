@@ -1,4 +1,4 @@
-import { INTEGRATION_KEYS } from '@ab/shared';
+import { INTEGRATION_KEYS } from '@ab/catalog';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

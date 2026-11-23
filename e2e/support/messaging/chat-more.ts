@@ -20,7 +20,7 @@ async function expectInChatMore(page: Page, name: string, count = 1): Promise<vo
   await chatMore(page).click();
 }
 
-/** «جدّد الاشتراك», the chat header's visible action while her student is due (owner 2026-10-26). */
+/** «جدّد الاشتراك», the chat header's visible action while her student is due. */
 export const chatRenew = (page: Page) => page.getByRole('button', { name: ar.students.renew, exact: true });
 
 /** Due for renewal: «جدّد الاشتراك» is visible, «اشتراك جديد» moved into «المزيد». */

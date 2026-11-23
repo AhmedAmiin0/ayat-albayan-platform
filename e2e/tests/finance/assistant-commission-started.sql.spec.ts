@@ -2,9 +2,10 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, commissionOf, pay, renewalOf, riyadhDay, subscription } from '../../support/sales/assistant';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// «If the course already started so dont give commission» (owner 2026-10-28, migration 20261028000942): a
-// package whose starts_on is before the Riyadh day of its created_at, or with lessons_used_before > 0, earns
-// no assistant commission, 'first' or 'renewal'. Each case is rolled back. Twin: @ab/shared assistant/started.ts.
+// No commission once the course has started (migration 20261028000942): a package whose starts_on
+// is before the Riyadh day of its created_at, or with lessons_used_before > 0, earns no assistant
+// commission, 'first' or 'renewal'. Each case is rolled back. Twin: @ab/shared
+// assistant/started.ts.
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
 const rows = async (tx: Tx, s: string) =>

@@ -1,7 +1,7 @@
 // The one outbound HTTP client of tools/scripts (docs/36 H-1, row ht): one JSON call, its 2xx
 // body parsed by the caller's zod schema. Errors name «service METHOD /path», the status and the
 // error body's code only: never the host, the query, a header value or a body (they may hold a
-// key, a password or a family's data). No retries and no timeout, as before (CLI scripts).
+// key, a password or a family's data). No retries and no timeout (CLI scripts).
 import { z } from 'zod';
 
 /** «name METHOD /path»: never the host or the query. */

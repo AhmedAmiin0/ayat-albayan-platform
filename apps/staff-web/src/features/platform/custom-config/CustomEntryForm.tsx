@@ -4,7 +4,7 @@ import { controlClass, Input } from '@ab/web-kit/components/ui/form/input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { parseDraft, type CustomDraft, type CustomDraftErrors } from './custom-form';
-import type { CustomConfigUpsert } from '@ab/shared';
+import type { CustomConfigUpsert } from '@ab/settings';
 
 const c = t.config.custom;
 
