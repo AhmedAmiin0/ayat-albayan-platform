@@ -26,14 +26,7 @@ const isAdmin = (user: AuthUser): boolean => user.role === 'admin';
 /** Notes stay the admin's (owner 2026-10-27): anyone else's `notes` key answers 400. */
 const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) : notesFreeSchema);
 
-/**
- * «تعديل البيانات» of a student and their family (owner 2026-11-02), the assistant's and the
- * admin's: people.edit, never students.write / guardians.write (those also create, delete and
- * merge). Any student or family. 400 for an admin-only field (status, program, teacher, meeting
- * link, source) and for notes from anyone but the admin, 404 student_not_found /
- * guardian_not_found, 409 phone_taken; a student's own number also 409 teacher_number /
- * student_login_phone (owner 2026-11-17).
- */
+/** people.edit only, never students.write; admin-only fields and notes are refused with 400. */
 @ApiTags('people')
 @ApiBearerAuth()
 @Permissions('people.edit')
@@ -47,10 +40,11 @@ export class PeopleEditController {
   ) {}
 
   @Get('students/:id')
-  view(
+  async view(
     @ZodParam('id', peopleIdSchema) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<PeopleEditView> {
+    await this.owners.student(user, id);
     return this.views.view(id, isAdmin(user));
   }
 

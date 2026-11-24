@@ -24,12 +24,7 @@ interface ExternalInput {
 const plainText = (msg: ExternalMessage): msg is ExternalMessage & { body: string } =>
   msg.body !== null && msg.templateName === null && msg.mediaId === null && msg.payload === null;
 
-/**
- * «أرسل عبر واتساب» (owner 2026-11-06, docs/19): an external outbound text confirms the row staff
- * tapped (its wamid and status, so WhatsApp's later statuses move it) instead of a second bubble,
- * and the family's queued reopen template goes when no other text waits (ReopenCancel). true =
- * attached; false = no such row (or another message took it): the caller stores it as today.
- */
+/** An external text confirms the tapped row, not a second bubble (docs/19); false: store it. */
 @Injectable()
 export class ManualEcho {
   constructor(

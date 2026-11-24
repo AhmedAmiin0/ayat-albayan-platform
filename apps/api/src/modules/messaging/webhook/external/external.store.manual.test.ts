@@ -4,9 +4,7 @@ import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import { fakeQueries } from '@/modules/messaging/webhook/webhook.fakes';
 import { externalServices, kapsoText } from './external.fakes';
 
-// «أرسل عبر واتساب» (owner 2026-11-06, docs/19): EVERY external outbound text (the app's echo,
-// Kapso's status of an unknown wamid, the catch-up job) first tries the row it confirms
-// (ManualEcho), never a second bubble; anything else is stored as before.
+// Every external outbound text first tries the row it confirms (docs/19), never a second bubble.
 
 const from = { line: 'chat' as const, numberId: 'num-chat' };
 const text = () => kapsoText({ id: 'wamid.APP1', kapso: undefined });

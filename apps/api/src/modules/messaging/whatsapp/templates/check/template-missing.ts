@@ -5,11 +5,7 @@ import { REGISTRY_ENTITY_ID } from '@/modules/messaging/whatsapp/templates/catal
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «تحقق من القالب» (owner 2026-10-31). The CRM's public API cannot list its templates (docs/19), so
-// a crm line's statuses are set by hand and can go stale: a teacher reminder failed with Meta
-// #132001 while our row said approved. The first send Meta refuses that way marks the row missing
-// at once, so the sender stops reading its rows (sender.queries.ts due()) and «القوالب» shows which
-// ones to fix. A meta line does the same (docs/19 «CRM → Meta»), until its next sync.
+// The CRM cannot list its templates (docs/19), so a #132001 refusal marks the row missing.
 
 /** Meta's «template name does not exist in the translation» (#132001), as the CRM passes it on. */
 const ABSENT = /\b132001\b|does not exist in the translation/i;
@@ -78,15 +74,7 @@ export class TemplateMissing {
     }
   }
 
-  /**
-   * An approved row of the line it went from → missing, compare-and-set: one write and one audit
-   * row however many sends fail at once. A row on another line (moved meanwhile) or already not
-   * approved stays as it is. The admin marks it approved again once the CRM holds it («علِّمه
-   * معتمدًا»), a meta line's sync does. Only the key's own WABA name (crmTemplateName) counts: a
-   * row that went by a fallback
-   * (crm-body.ts crmRowName: meta_name teacher_lesson_reminder_meet, not the CRM's
-   * teacher_lesson_reminder) fails alone, or every later row of that key would stop.
-   */
+  /** Compare-and-set: one write and audit however many fail; only the own WABA name counts. */
   private async mark(m: Absent): Promise<void> {
     const row = await this.queries.get(m.key);
     if (row?.status !== 'approved' || row.line !== m.line) return;

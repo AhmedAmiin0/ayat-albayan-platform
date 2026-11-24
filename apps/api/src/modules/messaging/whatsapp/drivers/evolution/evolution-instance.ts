@@ -5,9 +5,7 @@ import type { FetchLike } from '@/common/infra/http/failure';
 import { evolutionHttp, evolutionPath } from './evolution-http';
 import { connectSchema, qrOf, stateSchema, type EvolutionQr } from './evolution-shapes';
 
-// The admin's two read calls on an instance (docs/19 «Evolution driver»): «افحص الاتصال»
-// (connectionState) and the QR panel (connect). Never a send. The key is the instance token, or
-// the server's global key when the number has no token saved yet.
+// Read calls only (docs/19), never a send; the instance token, else the server's global key.
 
 const TIMEOUT_MS = 10_000;
 
