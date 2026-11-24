@@ -1,4 +1,7 @@
-import { NO_TEACHER, teacherName, PROGRAMS, STUDENT_PACKAGE_FILTERS, tzChoices, tzOptionLabel } from '@ab/shared';
+import { NO_TEACHER, STUDENT_PACKAGE_FILTERS } from '@ab/shared';
+import { PROGRAMS } from '@ab/catalog';
+import { teacherName } from '@ab/schedule';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import { View } from 'react-native';
 import { t, FilterPills, locale } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
@@ -10,7 +13,7 @@ const L = t.mobileStudentFile.list;
 const cities: Record<string, string | undefined> = t.tz;
 type Pill = { value: string; label: string };
 
-/** Each select filter's options, «الكل» first (value '' = no filter), as the web's studentFilterOptions. */
+/** The all option comes first with value '' meaning no filter. */
 function filterOptions(teachers: TeacherOption[], tz: string): Record<Exclude<FilterKey, 'status'>, Pill[]> {
   return {
     teacher: [{ value: '', label: S.teacherAll }, { value: NO_TEACHER, label: S.teacherNone }, ...teachers.map((x) => ({ value: x.id, label: teacherName(x, locale) }))],

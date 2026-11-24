@@ -9,10 +9,7 @@ import { stubSent } from '../core/wa-stub';
 
 export { fromChatMore } from '../messaging/chat-more';
 
-// Helpers of journey 7: the assistant's (base role sales) whole student cycle. Real API (:3100),
-// local Supabase and tools/wa-stub; every number is a fake. The status is read three ways: the
-// students row, its newest status_change audit row (docs/18) and «تحقق من التسجيل» in the
-// assistant's chat.
+// Journey 7: status read from students, its newest status_change audit row (docs/18) and the chat.
 
 const R = ar.registrationCheck;
 
@@ -48,7 +45,6 @@ export async function openChat(page: Page, phone: string): Promise<void> {
   await expect(chatMore(page)).toBeVisible({ timeout: 30_000 });
 }
 
-/** «تحقق من التسجيل» in the open chat: `expected` is visible in the answer, then the dialog is closed. */
 export async function checkRegistration(page: Page, expected: string): Promise<void> {
   await fromChatMore(page, R.action);
   const dialog = page.getByRole('dialog', { name: R.title });
@@ -68,10 +64,6 @@ export interface Expected {
   via?: string;
 }
 
-/**
- * students.status is `to`, the newest audit row is the move from → to with its reason, and the assistant's
- * «تحقق من التسجيل» shows the Arabic status (the chat is reopened first).
- */
 export async function expectStatus(page: Page, who: Family & { studentId: string }, want: Expected): Promise<void> {
   await expect.poll(() => studentStatusOf(who.studentId), { timeout: 20_000 }).toBe(want.to);
   const row = await lastStatusRow(who.studentId);

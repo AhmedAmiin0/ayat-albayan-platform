@@ -8,7 +8,9 @@ import {
   type LinkFieldErrors,
   type LinkTone,
 } from '@ab/client-core';
-import { weekdayDayMonth, type ClockCycle, type ShortLinkRow, type Tone } from '@ab/shared';
+import type { ShortLinkRow } from '@ab/shared';
+import type { Tone } from '@ab/money';
+import { weekdayDayMonth, type ClockCycle } from '@ab/time';
 import { locale, t } from '@ab/mobile-kit';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 
@@ -22,15 +24,12 @@ export const TONE: Readonly<Record<LinkTone, Tone>> = {
   danger: 'bad',
 };
 
-/** «الثلاثاء 24 نوفمبر» in the viewer's zone. */
 const dayText = (iso: string, tz: string): string =>
   weekdayDayMonth(new Date(iso), { tz, locale });
 
-/** «الثلاثاء 24 نوفمبر، 9:00 ص» in the viewer's zone and clock. */
 export const whenText = (iso: string, tz: string, cycle: ClockCycle): string =>
   dateWithClock(dayText(iso, tz), clockIn(new Date(iso), tz, cycle));
 
-/** «7 من 12» / «23 · بلا حد». */
 export const usageLine = (row: Pick<ShortLinkRow, 'maxUsers' | 'visitors'>): string =>
   usageText(row, t.shortLinks.list);
 
@@ -39,7 +38,6 @@ interface Viewer {
   tz: string;
 }
 
-/** «بعد 3 أيام», «غدًا», «انتهى الثلاثاء 10 نوفمبر · يُحذف 10 ديسمبر». */
 export function expiryLine(row: Pick<ShortLinkRow, 'status' | 'expiresAt'>, viewer: Viewer) {
   const parts = expiryParts(row, { ...viewer, purgeDays: SHORT_LINK_PURGE_DAYS });
   return expiryText(parts, {

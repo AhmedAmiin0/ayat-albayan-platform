@@ -22,14 +22,12 @@ export interface Gate {
   /** The view could not be read (not a 404): the loading screen says so. */
   failed: boolean;
   signedIn: boolean;
-  /** «متابعة باسم <name>». */
   name: string;
-  /** The target once the outcome is open («إن لم يُفتح الرابط تلقائيًا…»). */
+  /** The target once the outcome is open, for the manual fallback link. */
   target: string | null;
   opening: boolean;
   openFailed: boolean;
   open: () => void;
-  /** «أكّد رقمًا آخر». */
   otherPhone: () => void;
   signOut: () => Promise<void>;
   phone: GatePhone;
@@ -44,7 +42,7 @@ function shownOf(data: GateViewResult | undefined): Pick<Gate, 'title' | 'codesA
   return { title: known?.title ?? null, codesAvailable: known?.codesAvailable ?? true };
 }
 
-/** «متابعة باسم <name>»: the profile's name, else the login's email. */
+/** The profile's name, else the login's email. */
 const nameOf = (profile: AccountProfile | undefined, me: Me | null | undefined): string =>
   profile?.full_name ?? me?.email ?? '';
 

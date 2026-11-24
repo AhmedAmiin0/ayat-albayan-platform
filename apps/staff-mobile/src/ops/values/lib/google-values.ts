@@ -1,7 +1,7 @@
-import type { GoogleSyncSettings } from '@ab/shared';
+import type { GoogleSyncSettings } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 
-/** The chip after the module-owned groups: «مزامنة Google», read from GET /admin/google/status. */
+/** Read from GET /admin/google/status. */
 export const GOOGLE_GROUP = 'google';
 
 interface GoogleValue {
@@ -9,10 +9,7 @@ interface GoogleValue {
   value: string;
 }
 
-/**
- * «مزامنة Google»'s three values as the web's «القيم» shows them (GoogleValueRow): the switch, the
- * mode and the calendar window; «—» before the status loads. Read-only: edited on its own page.
- */
+/** Read-only, edited on its own page; a dash shows before the status loads. */
 export function googleValues(s: GoogleSyncSettings | undefined): GoogleValue[] {
   const gs = t.googleSync.switches;
   const none = '—';

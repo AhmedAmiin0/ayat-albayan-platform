@@ -2,9 +2,7 @@ import type { ConfigEntryConflict } from '@ab/settings';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { serverMessage } from './save-result';
 
-// How «القيم» reads a refused PATCH /config/entries/:key (docs/26 §2f): 409 conflict (someone saved
-// first), 409 owned_by_module (a module page edits it), 428 (the typed confirmation is missing or
-// wrong), 422 / 404 / anything else (a failed save with the server's words).
+// How a refused PATCH reads (docs/26 §2f): 409 conflict or owned_by_module, 428, else failed save.
 
 export type RowStatus =
   | { state: 'idle' }
@@ -29,7 +27,7 @@ export function isConflict(body: unknown): body is ConfigEntryConflict {
 }
 
 export interface FailureInput {
-  /** The value this save sent (the conflict row shows it as «قيمتك»). */
+  /** The value this save sent, shown on the conflict row. */
   mine: unknown;
   /** Was a typed confirmation sent? A 428 then means it did not match. */
   typed: boolean;

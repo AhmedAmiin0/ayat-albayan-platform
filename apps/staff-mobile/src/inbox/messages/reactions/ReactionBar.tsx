@@ -13,7 +13,7 @@ interface ReactionBarProps {
   onMore: () => void;
 }
 
-/** Its spoken name: «تفاعل بـإعجاب», the emoji itself when it has no name. */
+/** Falls back to the emoji itself when it has no name. */
 export function emojiLabel(emoji: string): string {
   const name = reactionName(emoji);
   return t.inbox.reactions.withEmoji.replace('{name}', name ? t.inbox.reactions[name] : emoji);
@@ -23,11 +23,7 @@ export function emojiLabel(emoji: string): string {
 const ROW = shape.control.touch + 12;
 const clampTop = (y: number) => Math.max(48, y - ROW - 8);
 
-/**
- * «تفاعل» (owner 2026-10-27): the 6 quick emoji and «+», each a 44pt button with a spoken name; ours is
- * marked (selected) and a tap on it removes it. A row (flexDirection row) mirrors with the language, so
- * the first emoji sits at the inline start in Arabic and in English.
- */
+/** A tap on our own reaction removes it; the row mirrors with the language. */
 export function ReactionBar({ message: m, top, onReact, onMore }: ReactionBarProps) {
   const { color } = useTheme();
   const ours = m.reactions?.ours ?? null;

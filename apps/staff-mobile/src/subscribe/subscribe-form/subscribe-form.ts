@@ -1,5 +1,4 @@
 import {
-  addCalendarDays,
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
   parseDiscount,
@@ -7,24 +6,24 @@ import {
   type PricingDuration,
   type SiteCountry,
   type SubscriptionPricing,
-} from '@ab/shared';
+} from '@ab/money';
+import { addCalendarDays } from '@ab/time';
 import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { localDate } from '@/today/lib/timeline';
 
-// «اشتراك جديد» from a chat (R-SUB-01): the calculator inputs for ONE student and the package's
-// first day. Pure. The price is never computed here: POST /subscriptions(/quote) prices it.
+// One student per package (R-SUB-01); pure, the API computes the price.
 
 export interface SubscribeForm {
   /** 'guardian' = left out, so the API prices in the guardian's country (USD outside the five). */
   country: SiteCountry | 'guardian';
-  /** A pill value (FilterPills are strings); ignored for «باقة الحلقة الأسبوعية». */
+  /** Ignored for the weekly package. */
   duration: `${PricingDuration}`;
   plan: PlanChoice;
   /** Lessons for 'custom' only. */
   count: number;
-  /** A pill's value or what was typed («12.5», «١٢٫٥»); parsed when sent. */
+  /** Parsed when sent; Arabic digits allowed. */
   discount: string;
 }
 

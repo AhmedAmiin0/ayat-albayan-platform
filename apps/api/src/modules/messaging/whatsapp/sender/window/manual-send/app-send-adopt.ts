@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { AppSendAdoptRepo } from './app-send-adopt.repo';
 import { ReopenCancel } from './reopen-cancel';
 
-/** The held «أرسل عبر واتساب» row as the adopt reads it. */
 export type HeldRow = Pick<
   Tables<'messages'>,
   'id' | 'phone_e164' | 'body' | 'line' | 'number_id' | 'created_at' | 'lead_id' | 'dedup_key'

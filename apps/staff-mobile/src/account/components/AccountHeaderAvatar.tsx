@@ -3,10 +3,7 @@ import { Pressable } from 'react-native';
 import { t, shape, useTheme, Mark, Avatar, useMyProfile } from '@ab/mobile-kit';
 import type { AccountHref } from './AccountRow';
 
-/**
- * The More screens' header end (R-ACC-05): the user's photo or initials, a 44pt button to «حسابي».
- * Until the profile loads (or without one) the usual gold mark stays.
- */
+/** R-ACC-05: until the profile loads, the usual gold mark stays. */
 export function AccountHeaderAvatar({ href }: { href: AccountHref }) {
   const { color } = useTheme();
   const profile = useMyProfile().data;

@@ -33,13 +33,12 @@ const sameChannels = (a: readonly NotificationChannel[], b: readonly Notificatio
 export interface DraftInput {
   rule: NotificationRuleView;
   draft: RuleDraft;
-  /** The number's name for the «لم يُحفظ» line (null = the template's number). */
+  /** Null means the template's number. */
   numberName: (id: string | null) => string;
   /** The cycle the row renders with (useClock), for the timing words. */
   clock: Clock;
 }
 
-/** The changed fields as a PATCH body and in words («قبل الحلقة بـ45 دقيقة بدلًا من 60…»), or the first problem. */
 export function draftResult({ rule, draft, numberName, clock }: DraftInput): DraftResult {
   const r = t.notificationRules;
   const patch: Omit<RulePatchInput, 'enabled' | 'confirmText'> = {};

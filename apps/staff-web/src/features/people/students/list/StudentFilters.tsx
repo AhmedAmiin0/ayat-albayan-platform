@@ -19,7 +19,7 @@ export interface StudentFiltersProps {
 const s = t.students;
 type SelectKey = Exclude<keyof StudentsFilters, 'status'>;
 
-/** Each select filter's options, «الكل» first (value '' = no filter); the teachers come from the API. */
+/** Value '' means no filter. */
 export function studentFilterOptions(teachers: { id: string; display_name_ar: string; display_name_en?: string | null }[], tz = ''): Record<SelectKey, FilterOption[]> {
   return {
     teacher: [
@@ -46,7 +46,7 @@ export const STUDENT_SELECT_LABELS: Record<SelectKey, string> = {
   tz: s.tz,
 };
 
-/** The list filters (R-STU-01) in the «تصفية» panel: status chips, then teacher, program, package, weekly, tz. */
+/** R-STU-01. */
 export function StudentFilters({ value, onChange }: StudentFiltersProps) {
   const teachers = useQuery(teacherOptionsQuery);
   const options = studentFilterOptions(teachers.data ?? [], value.tz);

@@ -1,5 +1,5 @@
 import { type AlertAction, fillSlots } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { t, ListRow, AppText, type, useTheme } from '@ab/mobile-kit';
 import type { AlertRowView } from './use-today-alerts';
 
@@ -14,7 +14,6 @@ const LABEL: Record<AlertAction, string> = {
   report: t.reports.open,
   read: t.teacherAlerts.markRead,
 };
-/** «أكمل التقرير» / «عدّل التقرير» by the report's stage (write: «اكتب التقرير»). */
 const REPORT_LABEL: Partial<Record<string, string>> = {
   resume: t.reports.resume,
   window: t.reports.edit,
@@ -30,7 +29,6 @@ function withLesson(row: AlertRowView, run: (lesson: LessonView) => void): void 
   if (row.alert.kind !== 'bell') run(row.alert.lesson);
 }
 
-/** The row's one action: the lesson sheet, the report, or «تحديد كمقروء». */
 const RUN: Record<AlertAction, Run> = {
   open: (row, h) => {
     withLesson(row, h.onOpen);
@@ -45,7 +43,6 @@ const RUN: Record<AlertAction, Run> = {
   },
 };
 
-/** The second line: the bell row's body as sent, or «السبب: …» for a change. */
 const detailOf = (row: AlertRowView): string | undefined => {
   const detail = row.parts.detail ?? undefined;
   const reason = detail && row.parts.text !== 'bell';

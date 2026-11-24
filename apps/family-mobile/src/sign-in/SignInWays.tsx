@@ -15,11 +15,7 @@ const SWITCH: Record<SignInWay, () => string> = {
   password: () => t.familyApp.signIn.withPassword,
 };
 
-/**
- * One sign-in for guardians and students (docs/50 §4, no «ولي الأمر / الطالب» tabs): WhatsApp
- * first, the student code + password one plain tap away; the two trade places on a spring. While
- * WhatsApp codes are off: the password form, and one quiet line saying why there is no WhatsApp.
- */
+/** docs/50 §4: one sign-in for guardians and students; WhatsApp first, password one tap away. */
 export function SignInWays({ codes }: { codes: boolean }) {
   const still = useA11yPref('reduceMotion');
   const motion = useStepMotion<SignInWay>(firstWay(codes), still);

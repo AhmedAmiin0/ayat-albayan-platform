@@ -6,7 +6,7 @@ import {
   minioUrl,
   STORAGE_DRIVERS,
   type StorageDriver,
-} from '@ab/shared';
+} from '@ab/catalog';
 import { z } from 'zod';
 import { blankIsUnset, optionalSecret } from './env.blank';
 

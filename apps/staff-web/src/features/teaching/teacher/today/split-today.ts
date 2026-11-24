@@ -1,10 +1,7 @@
-import { isClosedLesson, isOpenLesson, type LessonView } from '@ab/shared';
+import { isClosedLesson, isOpenLesson, type LessonView } from '@ab/schedule';
 
-// docs/48 «Day rows rule»: «بقية اليوم» = today's lessons not closed and not ended, the hero out;
-// ended ones fold under «انتهت n حلقات اليوم». Web lessonsOnDay keeps closed lessons (unlike mobile
-// lessonsOn), so the split drops them itself: a cancelled or moved slot never shows as a row.
+// docs/48 day rows rule: web lessonsOnDay keeps closed lessons, so the split drops them itself.
 
-/** What the «اليوم» panel shows under the hero. */
 export type DayKind = 'empty' | 'rows' | 'heroOnly' | 'quiet';
 
 export interface TodaySplit<L> {
@@ -12,7 +9,7 @@ export interface TodaySplit<L> {
   rest: L[];
   /** Ended today (excused kept: its report is due). */
   done: L[];
-  /** The tab's «اليوم n»: today's open-to-come lessons, hero included. */
+  /** Today's not-yet-ended lessons, hero included. */
   open: number;
   kind: DayKind;
 }
@@ -20,10 +17,7 @@ export interface TodaySplit<L> {
 type DayLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'ends_at'>;
 
 const past = (iso: string, now: Date) => Date.parse(iso) <= now.getTime();
-/**
- * Over for her day: ended, or started and already held (marked «تمت» early, excused, no-show):
- * its report then waits in the pending block only, never on a row too (docs/48).
- */
+/** Started and held lessons count as over; their report waits in the pending block (docs/48). */
 const endedAt = (l: DayLesson, now: Date) =>
   past(l.ends_at, now) || (past(l.starts_at, now) && !isOpenLesson(l.status));
 
@@ -39,10 +33,7 @@ interface KindInput {
   hero: boolean;
 }
 
-/**
- * Splits today's lessons (already on her calendar day) around the hero: `heroId` null when there
- * is none. All ended with no hero is «انتهت حلقات اليوم» (`quiet`).
- */
+/** `heroId` is null when there is no hero; all ended with no hero is `quiet`. */
 export function splitToday<L extends DayLesson>(
   lessons: readonly L[],
   at: { now: Date; heroId: string | null },

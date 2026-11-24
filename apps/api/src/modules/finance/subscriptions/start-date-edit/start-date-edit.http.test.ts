@@ -4,7 +4,7 @@ import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fake
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { dayFromToday, startDateApp, URL } from './start-date-edit.test-util';
 
-// «تعديل تاريخ البدء» (owner 2026-11-03): only starts_on, the create's range, audited.
+// Only starts_on is written, within the create's range, audited.
 describe('PATCH /subscriptions/:id/start-date: what', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

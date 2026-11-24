@@ -15,7 +15,7 @@ interface ResetPasswordPanelProps {
   onBack: () => void;
 }
 
-/** «إعادة تعيين كلمة السر»: typed, generated or an invite link; a generated one is shown once. */
+/** A generated password is shown once. */
 export function ResetPasswordPanel({ user, onBack }: ResetPasswordPanelProps) {
   const R = t.users.reset;
   const [mode, setMode] = useState<CredentialMode>('generate');

@@ -1,4 +1,5 @@
-import { GENDERS, type Program, type SalesTeacherFilter } from '@ab/shared';
+import type { SalesTeacherFilter } from '@ab/shared';
+import { GENDERS, type Program } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, FilterPills } from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';
@@ -9,7 +10,6 @@ interface TeacherFiltersBarProps {
   onChange: (next: SalesTeacherFilter) => void;
 }
 
-/** «المعلمون» filters (the web's): the pill search by name, then a row of programs and one of genders, 8pt apart. */
 export function TeacherFiltersBar({ value, programs, onChange }: TeacherFiltersBarProps) {
   return (
     <View style={{ gap: 8 }}>

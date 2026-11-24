@@ -31,7 +31,7 @@ const HOME: Partial<Record<GateStatus, Href>> = {
   teacher: '/teacher/today',
 };
 
-/** «رجوع» when there is nothing to share into: the tree's own landing (never the admin's tabs). */
+/** Back goes to the tree's own landing, never the admin's tabs. */
 export function shareHome(gate: GateStatus): Href {
   return HOME[gate] ?? '/';
 }

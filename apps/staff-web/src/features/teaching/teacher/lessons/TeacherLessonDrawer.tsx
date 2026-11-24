@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { LessonFilesSection } from '@/features/teaching/lesson-files';
 import { Drawer, studentNames } from '@/features/teaching/schedule';
 import { TeacherLessonCard } from './TeacherLessonCard';
@@ -15,10 +15,6 @@ export interface TeacherLessonDrawerProps {
   onDone: (message: string) => void;
 }
 
-/**
- * The full lesson (docs/48): TeacherLessonCard with every action, found by id in the poll, then
- * «ملفات الحلقة» (the recording, the report PDF, the files the teacher adds).
- */
 export function TeacherLessonDrawer(props: TeacherLessonDrawerProps) {
   const { lessons, openId, tz, fallbackLink, notice, onClose, onDone } = props;
   const open = lessons.find((l) => l.id === openId);

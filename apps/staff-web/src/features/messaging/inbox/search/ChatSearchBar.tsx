@@ -28,7 +28,6 @@ const ARROWS: { dir: SearchStep; label: 'older' | 'newer'; turn: string }[] = [
   { dir: 'newer', label: 'newer', turn: '' },
 ];
 
-/** The bar under the chat header while «بحث» is open: the words, «N من M», ↑ ↓ and close. */
 export function ChatSearchBar() {
   const s = useChatSearch();
   if (!s?.state.open) return null;

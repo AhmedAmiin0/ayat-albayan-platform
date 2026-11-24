@@ -5,10 +5,7 @@ import { signIn } from '@ab/web-kit/auth/sign-in';
 import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «الدخول برمز الطالب وكلمة المرور» (docs/50 §4): the student code, checked while typed
- * (client-core studentCodeOnTrack, the server's own rule), and the password (POST /auth/login).
- */
+/** docs/50 §4: the student code is checked while typed with the server's own rule. */
 export function useStudentSignIn() {
   const queryClient = useQueryClient();
   const land = useLandAfterSignIn();

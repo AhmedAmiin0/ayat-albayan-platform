@@ -1,4 +1,4 @@
-import { isPermission, systemPermissionsOf, USER_ROLES, type UserRole } from '@ab/shared';
+import { isPermission, systemPermissionsOf, USER_ROLES, type UserRole } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { accessBefore, walkRoutes, type BeforeAccess, type RouteAccess } from './route-walk.test-util';
 

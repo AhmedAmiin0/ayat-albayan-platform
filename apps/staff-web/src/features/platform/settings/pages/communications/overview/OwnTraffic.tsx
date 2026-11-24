@@ -4,11 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const h = t.communicationsHub;
 
-/**
- * «رسائل بين أرقام الأكاديمية» (owner 2026-10-27): how many messages reached one academy number from
- * another in the last 7 days (the old system's reminders). They are kept but hidden from every chat and
- * lead list, so this line is where the owner sees that the old system still sends.
- */
+/** Inter-academy messages are hidden from chats, so this shows the old system still sends. */
 export function OwnTraffic() {
   const traffic = useQuery(ownTrafficQuery);
   return (

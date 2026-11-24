@@ -5,10 +5,7 @@ import { useFamilyPick, usePortalMe } from '@/portal';
 import { ChildSwitchRow } from './ChildSwitchRow';
 import { useSwitchChild } from './use-switch-child';
 
-/**
- * The children sheet's content (canvas SwitchSheet): «اختر الطالب» over one row per child, the
- * guardian's own first («أنا»); a row works as that child and closes the sheet.
- */
+/** The guardian's own row first; a row switches to that child and closes the sheet. */
 export function ChildSwitchList() {
   const { color } = useTheme();
   const me = usePortalMe().data;

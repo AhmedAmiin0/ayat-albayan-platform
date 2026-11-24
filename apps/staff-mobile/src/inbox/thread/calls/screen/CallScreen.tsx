@@ -34,12 +34,7 @@ interface CallScreenProps {
   actions: CallActions;
 }
 
-/**
- * The call, full screen like WhatsApp's (docs/28 §5): the big initials, the name, «جارٍ الاتصال…» →
- * «يرنّ…» → the m:ss timer, and كتم / مكبر الصوت / إنهاء (red). Shown in CallOverlay's one Modal, whose
- * back and «تصغير» keep the call going in the bar. The phase is announced on a change only; the
- * ticking timer is not read out. كتم keeps its word and reads out «selected» while on.
- */
+/** docs/28 §5: the phase is announced on change only; the ticking timer is not read out. */
 export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();

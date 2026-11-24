@@ -10,7 +10,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const col = createColumnHelper<DataTableFeatures, MyStudentRow>();
 
-/** «مستحقة» is settled money (ok); «ملغاة» was taken back (neutral, struck). */
+/** Settled is ok; voided was taken back (neutral, struck). */
 export function CommissionChip({ status }: { status: AssistantCommissionStatus }) {
   return status === 'earned' ? (
     <StatusChip size="sm" tone="ok" glyph="fill" label={t.assistantPortal.commission.earned} />
@@ -24,8 +24,7 @@ const paidOptions = [
   { value: 'unpaid', label: t.assistantPortal.students.unpaid },
 ];
 
-// «طلابي»: the students I brought. Only the date, whether the first subscription is paid, and my own
-// commission: never a price or another person's money. Stacked under 640px.
+// Only my own commission, never a price or another person's money; stacked under 640px.
 export const myStudentColumns = col.columns([
   col.accessor((s) => `${s.name} ${s.code}`, {
     id: 'student',

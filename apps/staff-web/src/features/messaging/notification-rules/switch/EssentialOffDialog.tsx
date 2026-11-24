@@ -18,10 +18,7 @@ export interface EssentialOffDialogProps {
   onClose: () => void;
 }
 
-/**
- * An essential row («أساسي»: booking confirmation, report PDF) turns off only with the typed word
- * «إيقاف» (docs/23 owner answer 3): the button stays disabled until it matches; «إلغاء» is focused.
- */
+/** An essential row turns off only after typing the confirm word (docs/23 owner answer 3). */
 export function EssentialOffDialog({ name, pending, error, onYes, onClose }: EssentialOffDialogProps) {
   const id = useId();
   const hintId = useId();

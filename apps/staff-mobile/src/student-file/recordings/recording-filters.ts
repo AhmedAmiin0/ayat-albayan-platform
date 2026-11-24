@@ -1,4 +1,4 @@
-import type { StudentRecordingStatus } from '@ab/shared';
+import type { StudentRecordingStatus } from '@ab/schedule';
 import { addDays } from '@/calendar/lib/week';
 import { monthRange } from '@/money/shared/months';
 

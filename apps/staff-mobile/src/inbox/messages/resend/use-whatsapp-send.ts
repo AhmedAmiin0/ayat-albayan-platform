@@ -31,7 +31,7 @@ async function openWhatsApp(m: MessageView): Promise<boolean> {
   return true;
 }
 
-/** A 409's words come from the row's status in its body: never «تُرسل الآن» for a sent row. */
+/** A 409's wording follows the row's status in its body, so a sent row never reads as sending. */
 const REFUSALS: Record<AppSendRefusal, () => string> = {
   sending: () => t.messages.alreadySending,
   sent: () => t.messages.whatsappSend.alreadySent,
@@ -44,12 +44,7 @@ export function sendErrorText(e: unknown): string {
   return refusal ? REFUSALS[refusal]() : t.common.error;
 }
 
-/**
- * «أرسل عبر واتساب» (owner 2026-11-06, docs/19): POST /messages/:id/app-send first (the platform
- * then never sends the row for a few minutes), then wa.me. Nothing is marked sent: the app's echo
- * confirms it. The app-send action puts the pending row in the thread cache and, settled, re-reads
- * the chat and its anchored windows (refreshInbox with the phone). A second tap extends the window.
- */
+/** docs/19: app-send first so the platform holds the row, then wa.me; the echo marks it sent. */
 export function useWhatsAppSend(phone: string): (m: MessageView, opts?: SendOpts) => void {
   const appSend = useMessageAction(phone, 'app-send');
   const send = useMutation({
@@ -64,7 +59,6 @@ export function useWhatsAppSend(phone: string): (m: MessageView, opts?: SendOpts
     send.mutate({ message }, { onError: (e) => opts?.onError?.(sendErrorText(e)) });
 }
 
-/** The last «أرسل عبر واتساب» of this row in this session (the bubble's line or the sheet). */
 export function useWhatsAppSendState(id: string): SendState | undefined {
   const mine = (vars: unknown): boolean => (vars as SendVars | undefined)?.message.id === id;
   const states = useMutationState({

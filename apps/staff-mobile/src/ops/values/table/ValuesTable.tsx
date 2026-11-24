@@ -1,4 +1,4 @@
-import type { AcademySettings, SettingKey } from '@ab/shared';
+import type { AcademySettings, SettingKey } from '@ab/settings';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, InsetGroup } from '@ab/mobile-kit';
@@ -14,10 +14,7 @@ export interface ValuesTableProps {
   onOpen: (key: SettingKey) => void;
 }
 
-/**
- * The two-column frame (الاسم | القيمة): a header hidden from screen readers (each row says both) over
- * the rows' one inset card (owner 2026-10-28: one container rule), the heads aligned with the cells.
- */
+/** The header is hidden from screen readers since each row says both. */
 export function TableFrame({ children }: { children: ReactNode }) {
   const { color } = useTheme();
   const head = {

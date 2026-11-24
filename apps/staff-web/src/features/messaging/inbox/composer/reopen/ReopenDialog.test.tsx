@@ -13,7 +13,6 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({
 }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «إعادة فتح المحادثة» (owner 2026-11-14): the academy template picked and filled, reopen: true.
 // The API is faked: nothing reaches WhatsApp.
 
 const chat = { line: 'chat' as const, sales_starter: true, params: ['contact_name'], body_ar: 'أهلًا {{1}}' };

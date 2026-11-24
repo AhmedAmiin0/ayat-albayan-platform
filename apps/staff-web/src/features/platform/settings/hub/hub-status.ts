@@ -10,7 +10,7 @@ import {
 import { accountStyle, fill } from '@/features/platform/google-sync/google-format';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// The hub's «الحالة الآن» cells (docs/26b §1), as plain data: each cell draws one of these.
+// docs/26b §1.
 
 const H = t.settingsHub;
 
@@ -34,7 +34,6 @@ export function sameValue(a: unknown, b: unknown): boolean {
 
 const PUBLIC: ReadonlySet<string> = new Set(PUBLIC_SETTING_KEYS);
 
-/** «28 قيمة · 5 معدَّلة · 8 عامة»: the editable values of «القيم», the changed ones, the public ones. */
 export function valuesSummary(settings: AcademySettings): string {
   const modified = EDITABLE_VALUE_KEYS.filter((k) => !sameValue(settings[k], SETTING_DEFAULTS[k])).length;
   const open = EDITABLE_VALUE_KEYS.filter((k) => PUBLIC.has(k)).length;
@@ -45,7 +44,7 @@ export function valuesSummary(settings: AcademySettings): string {
   ].join(' · ');
 }
 
-/** The services «التكاملات» sets up (docs/26b §1): online lessons, mobile and browser push, exchange rates. */
+/** docs/26b §1. */
 export const HUB_SERVICES = ['livekit', 'expo', 'web_push', 'fx'] as const satisfies readonly IntegrationGroup[];
 
 /** Set up = every secret of the service is set (a service without a secret: every key). */
@@ -56,7 +55,6 @@ function serviceSet(items: readonly IntegrationConfigItem[], group: IntegrationG
   return needed.length > 0 && needed.every((i) => i.set);
 }
 
-/** «3 خدمات مضبوطة» + «أسعار الصرف غير مضبوطة» (one missing, by name) or «2 خدمتان غير مضبوطتين». */
 export function integrationChips(items: readonly IntegrationConfigItem[]): HubChip[] {
   const missing = HUB_SERVICES.filter((g) => !serviceSet(items, g));
   const ok = HUB_SERVICES.length - missing.length;
@@ -71,7 +69,6 @@ export function integrationChips(items: readonly IntegrationConfigItem[]): HubCh
   return chips;
 }
 
-/** «متصل» + «تجربة بدون كتابة» / «كتابة فعلية» / «المزامنة متوقفة»; the client not set up says only that. */
 export function googleChips(status: GoogleStatusView): HubChip[] {
   if (!status.configured) return [{ tone: 'neutral', glyph: 'hollow', label: H.googleNotConfigured }];
   const account = status.connection.status;

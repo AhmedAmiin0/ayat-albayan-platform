@@ -13,7 +13,7 @@ const target = (over = {}) => ({
   ...over,
 });
 
-// «حذف من المنصة» (owner 2026-10-30): staff only, never sent to WhatsApp, audited.
+// Hiding is staff only, never sent to WhatsApp, and audited.
 describe('POST/DELETE /threads/:phone/messages/:id/hide', () => {
   let t: App;
   beforeAll(async () => {

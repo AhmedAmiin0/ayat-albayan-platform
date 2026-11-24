@@ -7,7 +7,6 @@ import { LoadRetry } from '@/features/teaching/teacher/LoadRetry';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeacherAvailability } from './TeacherAvailability';
 
-/** /teacher/availability «المواعيد المتاحة» (owner 2026-11-14): her own page, read-only. */
 export function TeacherAvailabilityPage() {
   const me = useQuery(teacherMeQuery);
   const body = me.data ? <TeacherAvailability me={me.data} /> : <ListSkeleton />;

@@ -2,8 +2,7 @@ import { memoryPort } from '@/test/node-sql';
 import { createMessageStore } from '@/inbox/thread/store/message-store/message-store';
 import { A, applyAs, plan, row } from '@/inbox/thread/store/store-fixtures';
 
-// «تعديل» (owner 2026-11-07): the phone store keeps a row's whole view as json, so a correction's
-// link and its sender come back from disk as the API sent them (no column, no user_version bump).
+// The store keeps the whole view as json, so new fields round-trip without a schema bump.
 test('corrects_id and sent_by_id round-trip through the store', async () => {
   const store = createMessageStore(memoryPort().port);
   await store.open('user-a');

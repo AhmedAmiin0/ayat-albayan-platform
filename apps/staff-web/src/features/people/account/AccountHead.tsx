@@ -7,7 +7,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { avatarSeed } from './avatar-file';
 import { roleLabel } from './role-label';
 
-/** The one cartouche «حسابي», the subtitle, and who is signed in: photo, name, role, email (R-ACC-01). */
 export function AccountHead({ profile }: { profile?: AccountProfile }) {
   return (
     <>

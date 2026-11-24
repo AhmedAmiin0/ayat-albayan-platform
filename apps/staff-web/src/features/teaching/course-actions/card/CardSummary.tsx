@@ -12,7 +12,7 @@ interface Row {
 }
 const QUIET = 'text-ink-2';
 
-/** «8 حلقات · 3 من 8 حلقة · دُفع … من …» and «يُتوقع أن تنتهي يوم …» (when known). */
+/** The expected end only when known. */
 function packageRows(card: CourseCardView, tz: string): Row[] {
   const pkg = card.package ? packageLines(card.package, tz) : null;
   if (!pkg) return [];
@@ -20,7 +20,6 @@ function packageRows(card: CourseCardView, tz: string): Row[] {
   return [{ text: pkg.line, tone: `${QUIET} tabular-nums` }, ...end];
 }
 
-/** The days and times, «المعلم/ة · آخر حلقة في …», «بقيت حلقتان بلا مواعيد» (act ink). */
 function courseRows(course: Course, days: string): Row[] {
   const lines = cardLines(course);
   const unbooked = lines.unbooked ? [{ text: lines.unbooked, tone: 'font-semibold text-act' }] : [];

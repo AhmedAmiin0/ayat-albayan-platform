@@ -12,8 +12,8 @@ import type { SessionFilter } from '@ab/client-core';
 import { useEarningsBalance } from '@/earnings/hooks/queries';
 
 /**
- * «مستحقات» of a teacher (admin: More > المعلمين > teacher): the balance, the sessions with ticks,
- * the payments, and «سجّل دفعة» for the ticked sessions (or everything outstanding).
+ * A teacher's earnings (admin: More > teachers > teacher): the balance, the sessions with ticks,
+ * the payments, and the payment form for the ticked sessions (or everything outstanding).
  */
 export function TeacherEarningsScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();

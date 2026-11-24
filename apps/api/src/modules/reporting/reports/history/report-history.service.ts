@@ -2,8 +2,8 @@ import type { PendingReportView, StudentReportsResponse } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PageQuery } from '@/common/http/http';
-import { ReportAccess } from '@/modules/reporting/reports/report-access';
-import { ReportsSettings } from '@/modules/reporting/reports/reports.settings';
+import { ReportAccess } from '@/modules/reporting/reports/shared/report-access';
+import { ReportsSettings } from '@/modules/reporting/reports/shared/reports.settings';
 import { historyResponse, pendingViews } from './report-history.mapper';
 import { ReportHistoryQueries } from './report-history.queries';
 
@@ -38,7 +38,7 @@ export class ReportHistoryService {
     return historyResponse({ rows, lessons, seq, page, window: reader });
   }
 
-  /** R11 (R-TCH-03): «تقارير لسه ما اتكتبتش», oldest first. */
+  /** R11 (R-TCH-03): oldest first. */
   async pending(user: AuthUser): Promise<PendingReportView[]> {
     const teacherId = await this.access.teacherId(user);
     return pendingViews(await this.queries.pending(teacherId, new Date()));

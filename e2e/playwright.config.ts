@@ -24,7 +24,7 @@ const E2E_WA_CHAT_KEYS = {
   WA_CHAT_WABA_ID: 'e2e-chat-waba',
   WA_CHAT_ACCESS_TOKEN: 'e2e-chat-token',
   WA_CHAT_APP_SECRET: 'e2e-chat-secret',
-  // The stub's chat app (subscribed_apps) = the API's: «افحص الخطوط» shows the chat webhook as ours.
+  // The stub's chat app equals the API's, so the line check shows the chat webhook as ours.
   WA_CHAT_APP_ID: 'e2e-chat-app',
 };
 /**
@@ -32,10 +32,7 @@ const E2E_WA_CHAT_KEYS = {
  * fallback). Inert until a spec switches a line to kapso in the database (kapso-driver.spec.ts).
  */
 const E2E_KAPSO = { KAPSO_API_KEY: 'e2e-kapso-key', KAPSO_WEBHOOK_SECRET: 'e2e-kapso-webhook-secret' };
-/**
- * Google sync (docs/24): tools/google-stub on its own port is Google for the API; a fake OAuth
- * client so «اربط حساب Google» is enabled, and this API's own callback. Nothing reaches Google.
- */
+/** Google sync (docs/24): a local stub with a fake OAuth client; nothing reaches Google. */
 const GOOGLE_STUB_PORT = 4120; // = support/google.ts GOOGLE_STUB
 const E2E_GOOGLE = {
   GOOGLE_CLIENT_ID: '123456789012-e2estub.apps.googleusercontent.com',

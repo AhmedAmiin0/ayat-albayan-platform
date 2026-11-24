@@ -10,7 +10,7 @@ import {
   type ReportStage,
   type WayIn,
 } from '@ab/client-core';
-import { isOpenLesson, type LessonView } from '@ab/shared';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { useJoinWindow, usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 
@@ -23,10 +23,7 @@ export interface TeacherPlan extends LessonPlan {
   now: Date;
 }
 
-/**
- * The lesson's lead and peers for the teacher (docs/48), from the pure client-core model on the
- * live clock: «سأحضر» until the join window opens, «ادخل الحلقة» until ends_at, then the report.
- */
+/** Confirm until the join window opens, join until ends_at, then the report (docs/48). */
 export function useTeacherPlan(lesson: LessonView): TeacherPlan {
   const now = useNow();
   const win = useJoinWindow();

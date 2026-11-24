@@ -9,15 +9,7 @@ import { SmallHeading } from './SmallHeading';
 
 const L = t.studentLists;
 
-/**
- * «رابط الحلقة الثابت» on the sales teacher's page (owner 2026-10-12: the one place sales sees a
- * meeting link besides the schedule's lesson link, web parity): the URL as selectable LTR text,
- * «انسخ الرابط» (core/lib/clipboard: React Native core's clipboard, the share sheet when it fails),
- * «شارك الرابط» (the phone's share sheet) and «افتح الرابط». Only an http(s)
- * URL is shown, anything else reads «لا يوجد رابط ثابت». When the teacher holds her lessons in our
- * classroom (SalesTeacherView.platform_classroom, per-teacher meeting mode) a line says families get
- * the platform link instead.
- */
+/** Only an http(s) URL is shown; a platform-classroom teacher's families get the platform link. */
 export function TeacherMeetingLink({ link, platform }: { link: string | null; platform: boolean }) {
   const { color } = useTheme();
   const [failed, setFailed] = useState(false);

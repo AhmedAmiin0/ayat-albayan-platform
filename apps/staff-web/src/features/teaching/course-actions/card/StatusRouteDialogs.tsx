@@ -12,10 +12,7 @@ interface StatusRouteDialogsProps {
   onDone: (message: string) => void;
 }
 
-/**
- * The status field's dialogs (owner 2026-11-17): «موقوف مؤقتًا» opens «إيقاف الدورة مؤقتًا» and
- * «متوقف» opens «إلغاء الاشتراك» of the current package (useStatusPick), never a bare change.
- */
+/** Paused opens the pause, stopped opens the current package's cancel; never a bare change. */
 export function StatusRouteDialogs({ ask, chatPhone, ...shared }: StatusRouteDialogsProps) {
   if (ask?.route === 'pause') return <CoursePauseSheet {...shared} />;
   if (ask?.route !== 'stop') return null;

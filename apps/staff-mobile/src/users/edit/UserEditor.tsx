@@ -21,11 +21,7 @@ export interface UserEditorProps {
   canWrite: boolean;
 }
 
-/**
- * One user (the web's UserEditor): the summary and the fields, and with users.write «حفظ
- * التعديلات» and the account actions. An action that needs a step (disable, reset, delete) takes
- * the screen until it is done or cancelled; what it did is said at the top.
- */
+/** Write actions need users.write; a stepped action takes the screen until done or cancelled. */
 export function UserEditor({ user, options, canWrite }: UserEditorProps) {
   const queryClient = useQueryClient();
   const [form, setForm] = useState<EditForm>(() => initialEditForm(user, options));

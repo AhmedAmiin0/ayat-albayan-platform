@@ -1,4 +1,5 @@
-import type { LessonProposalRequest, LessonView, PayoutView, TeacherMe } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
+import type { LessonProposalRequest, LessonView, TeacherMe } from '@ab/schedule';
 import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { LESSONS_KEY, type Window } from '@/features/teaching/schedule';
@@ -28,7 +29,7 @@ export const myLessonsQuery = (w: Window) => {
   });
 };
 
-/** POST /lessons/:id/propose — «اقترح ميعاد تاني» for the admin to approve (R-SCH-08). */
+/** POST /lessons/:id/propose: a new time for the admin to approve (R-SCH-08). */
 export const proposeLesson = ({ id, body }: { id: string; body: LessonProposalRequest }) =>
   apiSend<LessonView>('POST', `/lessons/${id}/propose`, body);
 

@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { packageSlot, type SlotPackage } from './pdf-model';
 
-// Migration 991: a stopped package keeps the lessons it used at the stop; the next package's first
-// lesson is «1 من 8», never the stopped package's unused ones.
+// Migration 991: a stopped package keeps its used lessons; the next starts at one.
 const stopped: SlotPackage = {
   id: 'a',
   lessonsTotal: 8,

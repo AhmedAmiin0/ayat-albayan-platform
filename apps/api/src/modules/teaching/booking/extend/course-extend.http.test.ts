@@ -2,8 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { REQUIRE_ON } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
 import { profileApp, S1, SUB_ID } from '@/modules/teaching/booking/profile/profile-course.fakes';
 
-// «مدّ الجدول» (owner 2026-11-17): admins and assistants book the package's lessons left without
-// a date after the course's planned end (RULE_A Mon / RULE_B Wed 17:00 Riyadh, ending 10 Nov).
+// Lessons without a date are booked after the planned end.
 type App = Awaited<ReturnType<typeof profileApp>>;
 const URL = `/students/${S1}/course-extend`;
 const held = (n: number) =>

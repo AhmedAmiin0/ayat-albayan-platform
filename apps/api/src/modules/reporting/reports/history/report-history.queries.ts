@@ -71,7 +71,7 @@ export class ReportHistoryQueries {
     return out;
   }
 
-  /** lesson_id → «رقم الحلقة» of this student (v_lesson_sequence, completed lessons). */
+  /** Completed lessons only (v_lesson_sequence). */
   async sequence(studentId: string): Promise<Map<string, number>> {
     const rows = await readAll((from, to) =>
       this.db.from('v_lesson_sequence').select('lesson_id, seq').eq('student_id', studentId).order('seq').range(from, to),

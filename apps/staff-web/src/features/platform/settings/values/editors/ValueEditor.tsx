@@ -20,7 +20,7 @@ function BoolEditor({ settingKey, ids, sheet }: EditorProps) {
       checked={flag(api.drafts.form(settingKey), field)}
       labelledBy={ids.label}
       disabled={api.status(settingKey).state === 'saving'}
-      // In the table a switch saves at once (after its confirmation); in the sheet «احفظ» saves.
+      // In the table a switch saves at once (after confirmation); in the sheet the button saves.
       onChange={(on) =>
         sheet
           ? api.drafts.edit(settingKey, { [field]: on })
@@ -71,7 +71,6 @@ function Control(props: EditorProps) {
   return <Editor {...props} />;
 }
 
-/** The row's editor by type (docs/26b §2 «القيمة»), with its error and save result under it. */
 export function ValueEditor(props: EditorProps) {
   return (
     <div className="grid min-w-0 gap-1">

@@ -10,13 +10,7 @@ interface TransferDoneProps {
   onDone: () => void;
 }
 
-/**
- * The transfer is recorded: «أصبح الطالب مشتركًا» when the student is now active (a paid trial),
- * else «تم تسجيل التحويل»; then «تم» back to the chat (the one filled button, alone), and ONE ButtonRow
- * «احجز أيام الحلقات الآن» (the package's weekly days, R-ASST-01),
- * «مدفوعاتي» (her recorded payments: a tab's screen, so dismissTo pops the chat group back to the
- * tabs; a push would stack a second tab host).
- */
+/** dismissTo pops the chat group back to the tabs; a push would stack a second tab host. */
 export function TransferDone({ payment, onDone }: TransferDoneProps) {
   const { color } = useTheme();
   const m = t.salesMoney;

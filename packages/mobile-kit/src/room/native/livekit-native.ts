@@ -18,36 +18,36 @@ const modules: Record<string, unknown> = NativeModules;
 
 /**
  * Does this binary carry LiveKit's native module? An APK built before docs/35 does not: its rooms
- * open in the browser. Checked before the SDK's JS is required.
+ * open in the browser. Checked before the SDK's JS is imported.
  */
 const nativeRoomAvailable = (): boolean => modules.LivekitReactNativeModule != null;
 
-let cached: LiveKitNative | null | undefined;
-
-function load(): LiveKitNative | null {
+/**
+ * Imported on first use, never at boot: a module whose top level throws rejects its import, so
+ * a bad native build reads as «no LiveKit». livekit-client needs the globals registered first.
+ */
+async function load(): Promise<LiveKitNative | null> {
   if (!nativeRoomAvailable()) return null;
   try {
-    // Loaded lazily (after the module check), never at boot: an APK without it never loads it.
-    // oxlint-disable-next-line typescript/no-require-imports -- lazy native module
-    const sdk = require('@livekit/react-native') as Sdk;
+    const sdk = await import('@livekit/react-native');
     sdk.registerGlobals();
-    return {
-      sdk,
-      // oxlint-disable-next-line typescript/no-require-imports -- after registerGlobals
-      lk: require('livekit-client') as Client,
-      // oxlint-disable-next-line typescript/no-require-imports -- the fork the SDK runs on
-      rtc: require('@livekit/react-native-webrtc') as Rtc,
-    };
+    const [lk, rtc] = await Promise.all([
+      import('livekit-client'),
+      import('@livekit/react-native-webrtc'),
+    ]);
+    return { sdk, lk, rtc };
   } catch {
     return null;
   }
 }
 
+let cached: Promise<LiveKitNative | null> | undefined;
+
 /**
  * The SDK with its globals registered once, or null where the native module is missing or fails to
  * load.
  */
-export function liveKitNative(): LiveKitNative | null {
+export function liveKitNative(): Promise<LiveKitNative | null> {
   cached ??= load();
   return cached;
 }

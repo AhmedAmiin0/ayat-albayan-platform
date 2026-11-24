@@ -6,11 +6,7 @@ import { stripeSwitch, switchNote, switchValues } from './stripe-switch';
 
 const S = t.paymentLinks.settings;
 
-/**
- * «الدفع الإلكتروني» in «الإعدادات», a Stripe build only (docs/30): the switch of «التكاملات»
- * (STRIPE_ENABLED, off by default) and what it still lacks. Nothing, and no request, in preview /
- * production or for a non-admin; nothing on a server without Stripe (it lists no Stripe key).
- */
+/** docs/30: Stripe build only; no request in preview or production, for non-admins, or w/o keys. */
 export function StripeSwitchRow() {
   const reads = useHolds('settings.read');
   const admin = useIsAdmin();

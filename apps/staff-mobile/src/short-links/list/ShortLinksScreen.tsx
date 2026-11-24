@@ -35,7 +35,7 @@ interface ShortLinksScreenProps {
 
 const L = () => t.shortLinks.list;
 
-/** The pills and the search as client-core's list view: «روابطي» is the viewer's own id. */
+/** The mine pill maps to the viewer's own id. */
 const viewOf = (view: ListView, me: string): LinkListView => ({
   tab: view.status,
   owner: ownerIdOf(view.owner, me),
@@ -55,10 +55,7 @@ function Loading() {
   return <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />;
 }
 
-/**
- * «الروابط المختصرة» (board LinkXStaffList, docs/19) for the admin and sales: their links (every
- * link with short_links.all, then the owner pills), search, state pills, «رابط جديد».
- */
+/** Short links (docs/19); every link and owner pills only with short_links.all. */
 export function ShortLinksScreen({ can, base }: ShortLinksScreenProps) {
   const [view, setView] = useState<ListView>(FIRST_VIEW);
   const me = useMeId(true);

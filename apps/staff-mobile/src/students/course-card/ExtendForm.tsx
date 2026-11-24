@@ -17,17 +17,12 @@ interface ExtendFormProps {
   onDone: (text: string) => void;
 }
 
-/** «حُجزت حلقتان» with the new last day, and the clashes line when some were stored. */
 function doneText(result: CourseExtendResult): string {
   const words = { ...t.courseCard.extend, endsOn: t.courseActions.endsOn };
   return extendDoneLines({ result, words, date: localDay }).join('\n');
 }
 
-/**
- * «مدّ الجدول حتى نهاية الباقة؟» (owner 2026-11-17): the lessons it books on the course's own days
- * with their dates and the new last day (GET …/course-extend), that nobody is told, then
- * «مدّ الجدول» beside «رجوع».
- */
+/** Books on the course's own days; nobody is told. */
 export function ExtendForm({ sub, onClose, onDone }: ExtendFormProps) {
   const tz = useViewerTz();
   const preview = useExtendPreview(sub);

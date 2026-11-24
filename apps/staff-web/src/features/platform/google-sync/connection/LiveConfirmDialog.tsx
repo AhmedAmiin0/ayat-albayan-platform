@@ -15,10 +15,7 @@ interface Props {
   onConfirm: () => void;
 }
 
-/**
- * «بدء الكتابة الفعلية في Google؟» names exactly where it writes: the main calendar, every mapped
- * teacher calendar and the reports folder (or says none is confirmed). Cancel is the default.
- */
+/** Names exactly where it writes; cancel is the default. */
 export function LiveConfirmDialog({ status, pending, failed, onCancel, onConfirm }: Props) {
   const { main_calendar: main, teacher_calendars: teachers } = status.targets;
   const folder = status.drive.root_folder_name;

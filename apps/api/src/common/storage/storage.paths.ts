@@ -9,7 +9,7 @@ export const BUCKETS = {
   reports: 'reports',
   attachments: 'report-attachments',
   receipts: 'receipts',
-  /** The فاتورة of a non-trial booking (migration 170). */
+  /** The invoice of a non-trial booking (migration 170). */
   invoices: 'invoices',
   /** Inbound WhatsApp media downloaded on demand (migration 170). */
   waMedia: 'wa-media',

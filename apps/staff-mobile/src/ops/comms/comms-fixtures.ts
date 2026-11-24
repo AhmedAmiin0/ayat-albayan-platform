@@ -2,8 +2,6 @@ import type { NotificationAudience, SendGateView } from '@ab/shared';
 import { catalogue, settings } from '@/ops/shared/fixtures';
 import { numbers } from '@/ops/numbers/numbers-fixtures';
 
-// GET answers for the «نظرة عامة» tests: settings with the public number, the catalogue, three numbers, a closed gate.
-
 export const PUBLIC_PHONE = '+966566101447';
 export const closedGate: SendGateView = { open: false, reason: 'switch_off', queued: 3 };
 const threeNumbers = [...numbers, { ...numbers[0], id: 'num-3', label: 'Spare line', is_default: false }];

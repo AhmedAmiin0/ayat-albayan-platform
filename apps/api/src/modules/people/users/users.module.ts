@@ -17,10 +17,7 @@ import { UserProfileWriter } from './update/users.profile-writer';
 import { UsersUpdateService } from './update/users.update.service';
 import { AUTH_ADMIN, USERS_CONFIG, type UsersConfig } from './store/users.store';
 
-/**
- * «المستخدمون» (owner, 2026-10-06), with the test-account switches (TestAccountsModule).
- * PermissionCache comes from AuthModule, AuditService from AuditModule.
- */
+/** PermissionCache comes from AuthModule, AuditService from AuditModule. */
 @Module({
   imports: [RolesModule, TestAccountsModule],
   controllers: [UsersController, StaffPhotoController],

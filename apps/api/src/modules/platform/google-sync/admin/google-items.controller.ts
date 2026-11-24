@@ -8,7 +8,7 @@ import { GoogleItemsQueries } from '@/modules/platform/google-sync/sync/google-i
 import { GoogleLogQueries } from './google-log.queries';
 import { GoogleSyncJob } from '@/modules/platform/google-sync/sync/google-sync.job';
 
-/** The sync log, «إعادة المحاولة» and «زامن الآن» (docs/24 §3). */
+/** docs/24 §3. */
 @ApiTags('google-sync')
 @ApiBearerAuth()
 @Permissions('settings.write')

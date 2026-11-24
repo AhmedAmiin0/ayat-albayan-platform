@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const p = t.numbers.parity;
 
-/** One side's value: a secret is only «محفوظ» (never its value), nothing is «—». */
+/** A secret is never shown by value. */
 function Value({ cell, side }: { cell: ParityCell; side: 'legacy' | 'module' }) {
   const v = cell[side];
   if (v === null) return <span>—</span>;
@@ -13,10 +13,7 @@ function Value({ cell, side }: { cell: ParityCell; side: 'legacy' | 'module' }) 
   return <Ltr className="whitespace-normal break-all font-mono">{v}</Ltr>;
 }
 
-/**
- * «مطابقة الإعداد» (docs/23 §2e step 4): «مطابق» when nothing differs; else, role by role, each
- * differing field with its state and the legacy vs module values.
- */
+/** docs/23 §2e step 4: each differing field with legacy vs module values. */
 export function ParityList({ parity }: { parity: ParityView }) {
   const roles = parity.roles
     .map((r) => ({ ...r, cells: r.fields.filter((f) => f.state !== 'same') }))

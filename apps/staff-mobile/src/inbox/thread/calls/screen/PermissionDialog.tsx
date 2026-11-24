@@ -11,16 +11,10 @@ import { leadAge } from '@/inbox/shared/format';
 interface PermissionDialogProps {
   ask: PermissionAsk;
   onClose: () => void;
-  /** The request went out (its bubble shows in the chat): the provider says «أُرسل طلب الإذن». */
   onSent: () => void;
 }
 
-/**
- * No permission to call this number yet (docs/28 §3.1): inside the 24 h window «اطلب إذن الاتصال»
- * sends WhatsApp's own permission request; from a calls number (docs/28 §10) outside its window,
- * the approved template of the settings (unset: no button, the sheet says why). The family's last
- * answer on the calls number shows under it. Nothing is sent until the button is pressed.
- */
+/** docs/28 §3.1, §10: nothing is sent until the button is pressed. */
 export function PermissionDialog({ ask: sheet, onClose, onSent }: PermissionDialogProps) {
   const { phone, state } = sheet;
   const { color } = useTheme();

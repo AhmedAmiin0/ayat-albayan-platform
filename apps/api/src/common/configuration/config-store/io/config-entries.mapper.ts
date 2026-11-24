@@ -1,4 +1,4 @@
-import type { ConfigEntry, ConfigEntryConflict, SeedEntry, SettingDef } from '@ab/shared';
+import type { ConfigEntry, ConfigEntryConflict, SeedEntry, SettingDef } from '@ab/settings';
 import { defaultOf } from '@/common/configuration/config-store/store/config-defs';
 import { ownerOf } from '@/common/configuration/config-store/boundaries/config-ownership';
 import { neverWritten, type ConfigRow } from '@/common/configuration/config-store/config-store.types';

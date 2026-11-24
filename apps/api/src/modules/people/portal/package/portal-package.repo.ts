@@ -7,10 +7,7 @@ import { dbError } from '@/common/http/http';
 const PAYMENTS_LIMIT = 100;
 const PAYMENT_SELECT = 'paid_at, amount, currency, kind, subscription:subscriptions!inner(student_id)';
 
-/**
- * «الباقة» reads (service role, the student already scoped). The balance itself is the staff one
- * (PackagesService.studentBalance → toFamilyBalance).
- */
+/** The balance itself is the staff one, mapped for the family. */
 @Injectable()
 export class PortalPackageRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

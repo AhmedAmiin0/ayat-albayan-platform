@@ -4,7 +4,7 @@ import { renderWithQuery } from '@/test/query';
 import { salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
 
-// Owner 2026-10-28: a transfer of 80 on a package of 81 leaves it «غير مدفوعة»; she is told before saving.
+// A transfer below the package price leaves it unpaid, and she is told before saving.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => {
   const f = jest.requireActual('@/sales-subscribe/testing/fixtures');

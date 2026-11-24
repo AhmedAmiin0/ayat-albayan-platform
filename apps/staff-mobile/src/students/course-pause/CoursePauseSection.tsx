@@ -8,11 +8,7 @@ import { CoursePauseBanner } from './CoursePauseBanner';
 import { CoursePauseForm } from './CoursePauseForm';
 import { PauseSheetFrame } from './PauseSheetFrame';
 
-/**
- * «إيقاف مؤقت» in the admin's student file and sales' «تفاصيل الطالب» (owner 2026-10-28), ANY student: the
- * banner while a pause is open, else the action (courses.pause) that opens «إيقاف الدورة مؤقتًا». Nothing
- * until GET …/course-pause answers (or when it fails). The family gets no message; the sheet says so.
- */
+/** Any student; nothing until the pause state answers or when it fails; no family message. */
 export function CoursePauseSection({ studentId }: { studentId: string }) {
   const state = useCoursePause(studentId);
   const holds = useHolds('courses.pause');

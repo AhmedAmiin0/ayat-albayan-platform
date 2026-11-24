@@ -32,11 +32,7 @@ function answer(res: Reply, target: string | null): string {
   return target ? '' : ar.shortLinks.notFound;
 }
 
-/**
- * GET /join/:token (no login, owner 2026-11-06): teacher_lesson_v3's «ادخل الحلقة». A signed,
- * expiring token for one lesson → 302 to that lesson's own room (its stored link or our classroom
- * page). Invalid, expired or no longer the teacher's → the «invalid link» page. Rate-limited.
- */
+/** Signed expiring token for one lesson redirects to its room; invalid shows an error page. */
 @ApiTags('lesson-links')
 @Public()
 @Controller('join')

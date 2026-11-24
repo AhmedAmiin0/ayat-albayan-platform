@@ -23,17 +23,12 @@ export interface SalesSubscriptionsProps {
   /** The open list, from the route (`?kind=confirmed`; pending is the default). */
   kind: SalesSubscriptionKind;
   onKind: (kind: SalesSubscriptionKind) => void;
-  /** «مؤكدة» only: the subscription whose history is open (`?history=`), and how to open / close it. */
+  /** Confirmed only: the subscription whose history is open (`?history=`). */
   history?: string | undefined;
   onHistory?: (id: string | null) => void;
 }
 
-/**
- * /sales/subscriptions «الاشتراكات»: my subscriptions in two separate lists, «في الانتظار» and
- * «مؤكدة», never mixed. Only the selected kind is fetched; every column sorts and filters locally.
- * No price, no payment. On «مؤكدة» each row opens its history («السجل»: the student's subscriptions,
- * status changes, lessons and payment dates; docs/16).
- */
+/** Two lists never mixed, only the selected kind fetched; no price or payment (docs/16). */
 export function SalesSubscriptions({ kind, onKind, history, onHistory }: SalesSubscriptionsProps) {
   const list = useQuery(salesSubscriptionsQuery(kind));
   const withHistory = kind === 'confirmed' && onHistory !== undefined;

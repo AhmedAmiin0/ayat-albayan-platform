@@ -1,4 +1,4 @@
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { profile } from '@/students/shared/test-data';
@@ -6,7 +6,6 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { historyOf, trialRow } from '@/trial-date/testing/fixtures';
 import { TrialDateSection } from './TrialDateSection';
 
-// The admin student file: «موعد تجريبي جديد» + «مواعيد الحلقة التجريبية» (R-STU-05).
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

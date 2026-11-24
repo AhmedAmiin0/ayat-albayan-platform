@@ -4,7 +4,6 @@ import type { Favourite, StickerRow } from './sticker.repo';
 
 // The sticker panel's lists (owner 2026-11-01), as pure functions over the rows StickerRepo reads.
 
-/** «الأحدث»: at most this many stickers, after one per sticker. */
 export const RECENT_MAX = 30;
 
 /** A sticker the API can still copy: a stored file (ours or cached), or one WhatsApp keeps. */

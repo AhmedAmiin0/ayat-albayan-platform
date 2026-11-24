@@ -7,7 +7,6 @@ import { Money } from './Money';
 
 const col = createColumnHelper<DataTableFeatures, Quote>();
 
-/** «المدة» filter: the site's lesson lengths. */
 const durationOptions = Object.keys(t.pricing.durations).map((m) => ({ value: m, label: durationLabel(Number(m)) }));
 
 // Stacked under 640px: plan name, then lessons · duration, then the two prices.
@@ -49,7 +48,6 @@ const columns = col.columns([
   }),
 ]);
 
-/** «أسعار كل الخطط» for the picked country and duration (GET /pricing/catalog); sortable, filterable. */
 export function PlansTable({ packages }: { packages: Quote[] }) {
   return <DataTable stacked clientSort clientFilter columns={columns} data={packages} getRowId={(q) => q.package} />;
 }

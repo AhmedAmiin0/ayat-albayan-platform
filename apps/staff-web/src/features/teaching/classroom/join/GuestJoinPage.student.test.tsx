@@ -5,8 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { fakeClient } from '@ab/web-kit/classroom/room/livekit/fake-client';
 import { GuestJoinPage } from './GuestJoinPage';
 
-// The family app's signed /join link names the (lesson, student): a known student is never asked
-// to type a name (the API takes the student's), only «ادخل» and the recording notice.
+// A known student from the signed link is never asked to type a name; the API uses theirs.
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 

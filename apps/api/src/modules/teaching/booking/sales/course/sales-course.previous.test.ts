@@ -11,7 +11,7 @@ import { SalesCourse } from './sales-course.service';
 /** No payment link held and no draft (owner 2026-11-06). */
 const noDrafts = { held: async () => false, get: async () => null };
 
-// A renewal continues the course on the same days (owner 2026-10-18, «تابِع بنفس الأيام»).
+// A renewal continues the course on the same days.
 const S1 = 'c0000000-0000-4000-8000-000000000001';
 const USER: AuthUser = { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' };
 const NEW_SUB: CourseSubscription = { id: 'sub2', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-20' };

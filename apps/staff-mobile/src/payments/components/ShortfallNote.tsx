@@ -1,4 +1,4 @@
-import { parseAmount } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 import { Note } from '@/more';
 import { shortfallLine } from '@/core/lib/money/format';
 
@@ -10,10 +10,7 @@ interface ShortfallNoteProps {
   currency: string;
 }
 
-/**
- * Before saving (owner 2026-10-28): a receipt below what is due leaves the package «غير مدفوعة», so it
- * says so. Never blocks the save: a family may pay in parts.
- */
+/** Never blocks the save since a family may pay in parts. */
 export function ShortfallNote({ amountText, due, currency }: ShortfallNoteProps) {
   const line = shortfallLine({ amount: parseAmount(amountText), due, currency });
   return line ? <Note>{line}</Note> : null;

@@ -12,10 +12,7 @@ interface Props {
 
 const h = t.inbox.hide;
 
-/**
- * «حذف من المنصة» asked from a bubble's menu: the confirm says plainly that it is hidden for staff
- * only and still on the customer's phone; nothing goes to WhatsApp.
- */
+/** Hidden for staff only; it stays on the customer's phone and nothing goes to WhatsApp. */
 export function HideConfirm({ message, open, onClose }: Props) {
   const calls = useHide(useChatActions().chat.phone);
   if (!open) return null;

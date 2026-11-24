@@ -8,14 +8,7 @@ import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { UsedBeforeEdit } from '@/modules/finance/subscriptions';
 import { UsedBeforeAccess } from './used-before-access';
 
-/**
- * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): subscriptions.edit_terms «تعديل بيانات
- * الباقة» (owner 2026-11-03), every change to an EXISTING package: the system admin, and an
- * assistant only when her role holds it (never sales by default). The create keeps
- * subscriptions.set_start_date. Teachers and families never. An assistant edits ANY student's
- * package unless «اشتراط التعيين» enforces her own (UsedBeforeAccess, SalesOwnershipRule:
- * 403 not_your_student).
- */
+/** Needs subscriptions.edit_terms; never teachers or families; own students only if enforced. */
 @ApiTags('subscriptions')
 @ApiBearerAuth()
 @Permissions('subscriptions.edit_terms')

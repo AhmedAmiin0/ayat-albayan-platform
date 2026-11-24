@@ -15,7 +15,6 @@ import {
   usePeopleWrite,
 } from '@/students/people-edit/people-edit-api';
 
-/** The writes of «تحويل» (the web's useConvert): the state here, the logic in convertModel. */
 export function useConvert(view: PeopleEditView, onDone: PeopleDone): ConvertModel {
   const [asking, setAsking] = useState<Conversion | null>(null);
   const handlers = convertDone(view, onDone, t.peopleEdit);

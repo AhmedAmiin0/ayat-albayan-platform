@@ -13,8 +13,8 @@ import { reportFileName } from '@/modules/reporting/report-pdf/report-ready';
 import { badRequest, conflict } from '@/common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
 import type { ReportRow } from '@/modules/reporting/reports/report-row';
-import { ReportGate } from '@/modules/reporting/reports/submit/report-gate';
-import { callerActor, type ReportCaller } from '@/modules/reporting/reports/report-access';
+import { ReportGate } from '@/modules/reporting/reports/shared/report-gate';
+import { callerActor, type ReportCaller } from '@/modules/reporting/reports/shared/report-access';
 
 /** A signed-in user, or the lesson's teacher through their report link (owner 2026-11-06). */
 type FileRef = { id: string; user: ReportCaller };
@@ -29,15 +29,12 @@ export class ReportFilesService {
     private readonly storage: StorageService,
   ) {}
 
-  /**
-   * R6: 1 h signed URL to reports/{student_id}/{lesson_id}.pdf, saved as the file name the
-   * guardian gets on WhatsApp («AB-0183_2026-09-29_تقرير-الحلقة.pdf»); 409 pdf_not_ready before.
-   */
+  /** R6: 1 h signed URL saved under the name the guardian gets; 409 pdf_not_ready before. */
   async pdfUrl({ id, user }: FileRef): Promise<SignedDownload> {
     return this.signPdf(await this.gate.load(id, user));
   }
 
-  /** Sales' «تفاصيل الطالب» (docs/16 row 36): the caller checked the student is hers; another student's report is 404. */
+  /** docs/16 row 36: the caller checked the student is hers; another student's report is 404. */
   async studentPdfUrl({ id, studentId }: { id: string; studentId: string }): Promise<SignedDownload> {
     const row = await this.gate.row(id);
     if (!row || row.student_id !== studentId || row.status !== 'submitted') throw new NotFoundException();

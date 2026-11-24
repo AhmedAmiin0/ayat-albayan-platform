@@ -2,7 +2,7 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 
-// «مبلغ مخصص» on the package price (owner 2026-11-02): below the admin's lowest amount.
+// The custom package price is below the admin's lowest amount.
 const messages: Record<string, string | undefined> = {
   ...t.salesMoney.error,
   discount_too_large: t.paymentLinks.error.discount_too_large,

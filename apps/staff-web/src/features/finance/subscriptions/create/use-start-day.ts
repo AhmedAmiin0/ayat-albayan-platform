@@ -3,11 +3,7 @@ import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { usePermissions } from '@/features/people/auth';
 
-/**
- * The admin's first day (default today, Riyadh) and «حلقات مستخدمة من الباقة» (owner 2026-10-28): asked
- * only for a day before today with subscriptions.set_start_date, clamped to every lesson but one of the package
- * (usedBeforeMax); moving the day to today or later puts it back to 0. `extra` is what the body adds (> 0 only).
- */
+/** Default today in Riyadh; used lessons only for a past day, capped, reset to 0 otherwise. */
 export function useStartDay(lessonsTotal: number) {
   const canSet = usePermissions().can('subscriptions.set_start_date');
   // academy day (docs/34 b): the API checks starts_on / used-before against the Riyadh day

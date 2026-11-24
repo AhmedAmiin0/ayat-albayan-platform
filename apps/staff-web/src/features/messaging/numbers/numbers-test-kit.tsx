@@ -5,14 +5,11 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { NUMBERS, PARITY_SAME } from './numbers.fixture';
 import { NumbersPanel } from './NumbersPanel';
 
-// Shared by the «الأرقام» tests (not app code).
-
 export interface PanelRoutes {
   numbers?: NumberView[];
   parity?: ParityView;
 }
 
-/** «الأرقام» with GET /admin/numbers and the parity answered from fixtures. */
 export function renderPanel(apiFetch: Mock, routes: PanelRoutes = {}): { client: QueryClient; onSaved: Mock } {
   routeFetch(apiFetch, [
     ['/admin/numbers', routes.numbers ?? NUMBERS],

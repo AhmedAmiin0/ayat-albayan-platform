@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { screen, waitFor } from '@testing-library/react-native';
 import { maryam, MON_19 } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';
@@ -55,7 +55,7 @@ test('the days come prefilled from today, the course’s own lessons not busy; �
   await screen.findByTestId('lesson-date-0');
   expect(screen.getByText(dayLine(THU_1, TZ, R24))).toBeTruthy();
   expect(screen.getByText(dayLine(SUN_4, TZ, R24))).toBeTruthy();
-  // Nothing changed yet: only the series check knows (its 400 no_change), so «التالي» is open.
+  // Only the series check knows nothing changed (400 no_change), so next stays enabled.
   expect(isDisabled(t.booking.next)).toBe(false);
   await pickLesson(1, { date: '2026-10-05', time: '19:00' }); // Sunday → Monday 19:00
   expect(screen.getByText(dayLine(MON_19, TZ, R24))).toBeTruthy();

@@ -1,7 +1,7 @@
 import { t, useTheme, IconButton } from '@ab/mobile-kit';
 import { PriceIcon } from '@/inbox/shared/chat-icons';
 
-/** «عرض سعر» in the composer row (admin and sales with pricing.read, never a teacher): opens the sheet. */
+/** Admin and sales with pricing.read only, never a teacher. */
 export function QuoteButton({ onPress, compact }: { onPress: () => void; compact?: boolean }) {
   const { color } = useTheme();
   return (

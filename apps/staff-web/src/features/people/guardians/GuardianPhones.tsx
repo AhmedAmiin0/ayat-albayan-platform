@@ -14,17 +14,12 @@ const G = t.guardians;
 
 interface GuardianPhonesProps {
   guardian: GuardianDetail;
-  /** «أُزيل الرقم الثاني»: the dialog closes and shows it, like a save. */
   onDone: (notice: string) => void;
 }
 
 const failure = (e: unknown) => (e instanceof ApiError && e.status === 404 ? G.phoneNotFound : t.common.error);
 
-/**
- * The family's numbers (owner 2026-10-29): the main one, then the second one that «ربط بطالب موجود» added from a
- * lead chat, with «إزالة الرقم الثاني» and an inline confirm (DELETE /guardians/:id/phones/:phone, admin only).
- * The main number is edited in the form below. Nothing shows while the family has no second number.
- */
+/** Removing the second number is admin only; nothing shows without one. */
 export function GuardianPhones({ guardian, onDone }: GuardianPhonesProps) {
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);

@@ -1,4 +1,4 @@
-import { systemPermissionsOf } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import { systemResolver, type PermissionResolver } from '@/common/auth/permissions';
 import type { Db } from '@/common/db/db.module';

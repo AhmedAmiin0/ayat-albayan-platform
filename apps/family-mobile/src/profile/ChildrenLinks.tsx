@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { Avatar, InsetGroup, ListRow, Section, t } from '@ab/mobile-kit';
 import { childHref } from '@/nav';
 
-/** «الأبناء» on a guardian's profile: each child → their page. */
 export function ChildrenLinks({ students }: { students: readonly PortalStudent[] }) {
   if (students.length === 0) return null;
   return (

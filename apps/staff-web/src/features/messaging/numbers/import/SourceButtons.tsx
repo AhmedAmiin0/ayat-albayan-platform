@@ -10,7 +10,7 @@ export interface SourceButtonsProps {
   onPick: (next: CommsSource) => void;
 }
 
-/** To «الأرقام» (disabled while a difference remains, and says why) or back to the current setup (always). */
+/** Switching to the numbers source is disabled while a parity difference remains. */
 export function SourceButtons({ parity, onPick }: SourceButtonsProps) {
   if (parity.source === 'module') {
     return <Button size="sm" variant="secondary" onClick={() => onPick('legacy')}>{s.toLegacy}</Button>;

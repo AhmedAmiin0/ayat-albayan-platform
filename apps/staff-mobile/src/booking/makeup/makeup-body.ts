@@ -3,11 +3,7 @@ import { toInvoiceInput } from '@/booking/trial/lib/booking-body';
 import type { MakeupDraft } from './makeup-draft';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
-/**
- * POST /booking for «حجز تعويضي»: one lesson of the missed lesson's student, linked to it. No
- * package, lead or new child; one-lesson rule like a trial (its weekday, ending that day). The
- * invoice rides along (the API answers 400 invoice_required without it).
- */
+/** One lesson linked to the missed one; one-lesson rule like a trial; 400 without the invoice. */
 export function makeupRequest(d: MakeupDraft, requestId: string): BookingRequest | null {
   if (!d.startsAt) return null;
   const { source } = d;

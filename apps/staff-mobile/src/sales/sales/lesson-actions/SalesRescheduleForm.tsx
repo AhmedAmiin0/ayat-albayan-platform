@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type SalesScheduleLesson } from '@ab/shared';
+import type { SalesScheduleLesson } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking';
@@ -14,16 +15,10 @@ import {
 } from '@/teaching';
 import { useSalesReschedule } from './lesson-actions-api';
 
-/**
- * Sales' «تغيير الموعد» of ONE lesson (docs/16 row 37): who and when now, a free slot of the same
- * teacher (her scoped GET /sales/booking/slots), then the move. This lesson only (no series, no
- * substitute, no booking over a clash: a 409 asks for another slot), with an optional «سبب تغيير
- * الموعد» the teacher sees in her file (docs/47). The admin's success panel follows;
- * its «تم» closes the lesson's details too (they would show the old time with its actions still live).
- */
+/** One lesson only (docs/16 row 37), same teacher's free slot; a clash answers 409. */
 interface SalesRescheduleFormProps {
   lesson: SalesScheduleLesson;
-  /** «تم» on the success panel: closes this sheet and «تفاصيل الحلقة» under it. */
+  /** Done closes this sheet and the lesson details under it. */
   onDone: () => void;
 }
 

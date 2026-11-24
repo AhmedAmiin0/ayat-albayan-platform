@@ -21,12 +21,12 @@ async function toReview(answers: unknown[], count = 1) {
   routeTrialSend(apiSend, { base: '/booking', answers });
   const onClose = vi.fn();
   renderWithClient(<TrialDateDialog student={STUDENT} mode="admin" onClose={onClose} />);
-  // The last trial's teacher is preselected (the hint), so «التالي» opens the slot grid.
+  // The last trial's teacher is preselected, so next opens the slot grid.
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
   await waitFor(() => expect(abrar).toHaveProperty('checked', true));
   expect(screen.getByText(t.trialDate.lastTeacher)).toBeTruthy();
   next();
-  next(); // «مدة الحلقة»: the last trial's length, kept
+  next(); // The last trial's length is kept.
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
   fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
   next();

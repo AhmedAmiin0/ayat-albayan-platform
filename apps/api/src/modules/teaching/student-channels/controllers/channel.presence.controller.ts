@@ -12,12 +12,7 @@ import {
 
 const UUID = new ParseUUIDPipe();
 
-/**
- * «متصل الآن» / «آخر ظهور» in the chat header (docs/33 §2): each audience's route runs the same
- * access check as its messages route (another family, teacher or assistant: 404), then the
- * presence rule keeps only the people this caller may see. The monitor route is the admin's alone:
- * a custom role holding student_channels.monitor reads the chat but sees nobody's presence (§2).
- */
+/** Presence (docs/33 §2): same access check as messages; a custom monitor role sees no presence. */
 @ApiTags('student-channels')
 @ApiBearerAuth()
 @Controller()

@@ -22,15 +22,11 @@ const SHEETS: Record<PeopleActionKind, PeopleSheetEntry> = {
 
 interface PeopleEditSectionProps {
   studentId: string;
-  /** «تحويل إلى ولي أمر» removed the student row: the screen leaves it. */
+  /** Converting to a guardian removed the student row, so the screen leaves it. */
   onRemoved?: () => void;
 }
 
-/**
- * «تعديل البيانات» · «ربط بولي أمر آخر» · «تحويل إلى طالب / ولي أمر» (owner 2026-11-02) in sales'
- * «تفاصيل الطالب» and the admin's student file: only the actions the role holds, each a page sheet
- * over the loaded edit view; the last success shows above the buttons.
- */
+/** Only the actions the role holds, each a page sheet over the loaded edit view. */
 export function PeopleEditSection({ studentId, onRemoved }: PeopleEditSectionProps) {
   const can = usePermissions();
   const [open, setOpen] = useState<PeopleActionKind | null>(null);

@@ -19,11 +19,7 @@ interface ForwardPickerProps {
   onDone: () => void;
 }
 
-/**
- * Search (name / number, debounced: GET /threads?search=), the newest chats first, up to five picked.
- * «أرسل» posts the forward; the answer becomes the chat's notice (sent, and each skipped chat and why).
- * A failed post keeps the picks and says so; sending again reuses the same clientRequestId.
- */
+/** A failed post keeps the picks; sending again reuses the same clientRequestId. */
 export function ForwardPicker({ message, from, onDone }: ForwardPickerProps) {
   const { say } = useChatActions();
   const [picked, setPicked] = useState<ThreadView[]>([]);

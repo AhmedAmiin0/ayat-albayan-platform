@@ -10,7 +10,6 @@ import { courseCardQuery } from './api';
 export type StatusAsk = { route: 'pause' } | { route: 'stop'; subscriptionId: string } | null;
 type PickState = 'idle' | 'pending' | 'failed';
 
-/** The status field's line: the note, «جارٍ التحميل» while the card is read, or the error. */
 const HINT: Record<PickState, string> = {
   idle: t.courseCard.statusNote,
   pending: t.common.loading,
@@ -19,11 +18,7 @@ const HINT: Record<PickState, string> = {
 /** The card is fresh enough when the file's panel read it a moment ago. */
 const CARD_FRESH_MS = 30_000;
 
-/**
- * Where a status pick leads (owner 2026-11-17): «موقوف مؤقتًا» opens the pause; «متوقف» reads the
- * card (the panel's copy when fresh) and opens the stop of its package, or, with no package, sets
- * the status at once as mobile does; the rest are set at once. `set` puts the pick in the field.
- */
+/** Stopped without a package sets the status at once as mobile does; `set` fills the field. */
 export function useStatusPick(studentId: string) {
   const client = useQueryClient();
   const [ask, setAsk] = useState<StatusAsk>(null);

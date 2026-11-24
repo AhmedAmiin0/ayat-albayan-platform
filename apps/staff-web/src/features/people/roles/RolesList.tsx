@@ -6,7 +6,6 @@ const P = t.permissions.page;
 const TH = 'px-3 py-2 text-start text-xs font-semibold text-ink-3';
 const TD = 'px-3 py-2 align-middle';
 
-/** «الأدوار»: system roles first (marked), then custom ones; each opens the side panel. */
 export function RolesList({ roles, onEdit }: { roles: readonly RoleView[]; onEdit: (role: RoleView) => void }) {
   return (
     <table className="w-full border-collapse text-sm">

@@ -14,10 +14,7 @@ const renderRow = ({ item }: ListRenderItemInfo<TeacherChannelRow>): ReactElemen
   <TeacherChannelItem item={item} />
 );
 
-/**
- * «رسائل الطلاب» (docs/31 §2): one row per current student, newest activity first, my unread count;
- * the count on the title's line, the rows in one inset card inside the gutter (owner 2026-10-28).
- */
+/** Student messages (docs/31 §2): one row per current student, newest activity first. */
 export function TeacherChannelsScreen() {
   const inset = useTabBarInset();
   const list = useTeacherChannels();

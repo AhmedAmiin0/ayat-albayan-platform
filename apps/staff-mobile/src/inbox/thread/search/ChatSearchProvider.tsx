@@ -10,12 +10,7 @@ import { ChatSearchContext, type ChatSearchValue } from './search-context';
 import { useSearchBack } from './use-search-back';
 import { useSettledText } from './use-settled-text';
 
-/**
- * «بحث» inside the open chat (owner 2026-11-02), as WhatsApp: the header's «بحث» turns the header
- * into a search field, typing (debounced) asks the API, each step jumps to its message
- * (useSearchJump in the list) and the bubbles light up the words; back closes it and returns to
- * the newest message. Lives with ChatActionsProvider, keyed by the phone.
- */
+/** Keyed by the phone alongside ChatActionsProvider; closing returns to the newest message. */
 export function ChatSearchProvider({ phone, children }: { phone: string; children: ReactNode }) {
   const [state, dispatch] = useReducer(chatSearchReducer, CHAT_SEARCH_CLOSED);
   const [closed, setClosed] = useState(0);
@@ -30,7 +25,7 @@ export function ChatSearchProvider({ phone, children }: { phone: string; childre
     setClosed((n) => n + 1);
   };
   useSearchBack(state.open, close);
-  // «بحث في الرسائل» on the student's details: the bar opens here (docs/37 NEW 2).
+  // docs/37 NEW 2.
   useSearchRequest(phone, () => dispatch({ type: 'open' }));
   const value: ChatSearchValue = {
     ...found,

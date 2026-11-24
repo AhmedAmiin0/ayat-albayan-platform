@@ -1,21 +1,19 @@
 import { nextOpenLesson, pickHero, type Hero } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { lessonsOn } from '@/teacher/lib/day';
 
-// The teacher's «اليوم» from ONE padded aheadWindow read (docs/48 «Day rows rule»). Pure.
+// One padded aheadWindow read (docs/48); pure.
 
 /** The day-end card: no lessons today at all, or every one of them ended. */
 export type DayEndKind = 'empty' | 'done';
 
 interface TeacherDay {
   hero: Hero<LessonView> | null;
-  /** «بقية اليوم»: today's open, not-ended lessons, the hero excluded. */
+  /** Today's open, not-ended lessons, the hero excluded. */
   rest: LessonView[];
-  /** Ended today: folded into «انتهت n حلقات اليوم». */
   ended: LessonView[];
   /** The day-end card, or null while something is still ahead (or nothing is loaded yet). */
   dayEnd: DayEndKind | null;
-  /** Only the hero is left and nothing ended: «لا توجد حلقات أخرى اليوم». */
   noOther: boolean;
   /** Her next open lesson within the window (the day-end pointer). */
   next: LessonView | null;

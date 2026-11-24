@@ -38,12 +38,7 @@ interface PortalRoomInput {
   userIsTest: boolean;
 }
 
-/**
- * «الحلقات القادمة» (docs/31): the caller's student's lessons of the next PORTAL_LESSON_DAYS days (and the
- * one running now), with the way in. A classroom lesson's «ادخل الحلقة» is the student-link guest join
- * (StudentLinkService.portalJoin: same window, same (lesson, student) row, no token handed out).
- * «ما المطلوب» and this month's counts ride along (PortalLessonExtras, docs/50).
- */
+/** docs/31: a classroom join is the student-link guest join; no token handed out. */
 @Injectable()
 export class PortalLessonsService {
   constructor(
@@ -77,20 +72,11 @@ export class PortalLessonsService {
     return { lessons: rows.map(lesson), ...extras };
   }
 
-  /**
-   * «ادخل الحلقة» of a classroom lesson: the guest admission itself (the room's token), as the student's
-   * link gives it. 404 lesson_not_found / no_lesson, 409 not_classroom_lesson, 403 join_not_open_yet,
-   * 410 join_closed, 429, 503 classroom_not_configured.
-   */
   async join(call: RoomCall, now = new Date()): Promise<RoomJoinResult> {
     return this.rooms.portalJoin(await this.classroomLesson(call), now);
   }
 
-  /**
-   * The family app's «ادخل الحلقة» in the phone's browser (docs/50 §2, §7): a signed /join link of
-   * the lesson, no second sign-in, until its room closes. Same checks as join(), before the window
-   * too (the guest page refuses early joins): 404 lesson_not_found / no_lesson, 409, 410, 429, 503.
-   */
+  /** docs/50 §2, §7: a signed link with no second sign-in until the room closes. */
   async roomLink(call: RoomCall, now = new Date()): Promise<PortalRoomLink> {
     return this.rooms.portalRoomLink(await this.classroomLesson(call), now);
   }

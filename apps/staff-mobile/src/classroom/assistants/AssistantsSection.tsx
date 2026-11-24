@@ -20,10 +20,7 @@ const A = t.classroom.assistants;
 export const freeAssistants = (all: readonly AssistantView[], mine: readonly AssistantView[]): AssistantView[] =>
   all.filter((a) => !mine.some((m) => m.profile_id === a.profile_id));
 
-/**
- * «المساعدون» on the student screen (admin): who may enter this student's lessons; add and remove.
- * A read that failed with nothing cached (offline) leaves the section out: the profile stays quiet.
- */
+/** A failed read with nothing cached leaves the section out so the profile stays quiet. */
 export function AssistantsSection({ studentId }: { studentId: string }) {
   const can = usePermissions();
   const client = useQueryClient();

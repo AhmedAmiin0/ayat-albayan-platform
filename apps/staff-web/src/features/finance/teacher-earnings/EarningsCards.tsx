@@ -16,7 +16,6 @@ function Card({ label, amount, hint, strong }: CardProps) {
   );
 }
 
-/** «إجمالي المستحق | اللي اتدفع | المتبقي» (earned, paid, outstanding) for one teacher. */
 export function EarningsCards({ balance }: { balance: TeacherEarningsBalanceView }) {
   const count = (key: 'sessionsCount' | 'unpaidCount', n: number) => t.earnings[key].replace('{count}', String(n));
   return (

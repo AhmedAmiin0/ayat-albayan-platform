@@ -21,10 +21,7 @@ import { LessonFilesService } from './lesson-files.service';
 
 const ID = z.uuid();
 
-/**
- * «ملفات الحلقة» for staff (owner 2026-11-17): recordings.read to look, recordings.manage to add,
- * show/hide and remove (admin and teacher by default); the services keep a teacher to own lessons.
- */
+/** recordings.read to look, recordings.manage to change; services keep a teacher to own lessons. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('recordings.read')

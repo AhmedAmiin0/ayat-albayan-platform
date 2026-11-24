@@ -13,17 +13,11 @@ const L = t.studentLists;
 
 interface TeacherStudentsSectionProps {
   teacherId: string;
-  /** The `status` route param (a tapped count on «المعلمين»); none opens on «مشترك». */
+  /** Absent opens on subscribed students. */
   status?: string;
 }
 
-/**
- * «طلاب المعلم/ة» (owner 2026-10-12): «مشترك · تجريبي · الكل» with the API's counts (GET
- * /students/status-counts?teacher=; «تجريبي» = new + trial + pending_subscription), the list from GET /students?teacher=&status= («الكل» sends no
- * status: every status, paused and stopped too). A row opens the student's file. Not the web admin
- * panel's behaviour (TeacherStudentsPanel opens on trial + active with status chips): this opens on
- * «مشترك»; aligning them awaits an owner decision.
- */
+/** The trial count is new, trial and pending_subscription; the web panel differs, undecided. */
 export function TeacherStudentsSection({ teacherId, status }: TeacherStudentsSectionProps) {
   const [kind, setKind] = useState<StudentListKind>(() => presetKind(status));
   const counts = useStatusCounts({ ...NO_FILTERS, teacher: teacherId });

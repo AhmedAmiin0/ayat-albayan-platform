@@ -18,10 +18,7 @@ interface TransferFormProps {
   onDone: (payment: SalesPaymentView) => void;
 }
 
-/**
- * The bank transfer for one package: «المرفقات» (optional, up to 5), amount (the due, prefilled) in the
- * package currency (shown, never asked), day, note. Errors show once a save was tried; a refused save keeps everything entered.
- */
+/** Currency is the package's, never asked; a refused save keeps everything entered. */
 export function TransferForm({ sub, phone, bind = {}, onDone }: TransferFormProps) {
   const now = useNow();
   const pay = useSalesPayment(phone, bind);

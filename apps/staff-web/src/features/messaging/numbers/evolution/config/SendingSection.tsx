@@ -6,9 +6,7 @@ import type { SectionProps } from './config-draft';
 
 const c = t.numbers.evolution.config;
 
-/**
- * «الإرسال»: the link preview. No typing delay (owner 2026-11-06: families never see «يكتب…»).
- */
+/** No typing delay, so families never see a typing indicator. */
 export function SendingSection({ value, onChange }: SectionProps<'sending'>) {
   return (
     <ConfigFieldset legend={c.sections.sending}>
@@ -21,7 +19,7 @@ export function SendingSection({ value, onChange }: SectionProps<'sending'>) {
   );
 }
 
-/** «حدود الإرسال» (the platform's own pacing): the gap between two sends and the daily cap. */
+/** The platform's own pacing, not Evolution's. */
 export function LimitsSection({ value, errors, onChange }: SectionProps<'limits'>) {
   return (
     <ConfigFieldset legend={c.sections.limits}>

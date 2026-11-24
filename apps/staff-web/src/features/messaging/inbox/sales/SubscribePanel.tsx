@@ -15,12 +15,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SearchFromProfile } from '@/features/messaging/inbox/search';
 import { dueText, packageChipProps, packageLine, subscribeLabel } from './subscription';
 
-/**
- * The guardian's children beside the chat (R-SUB-01): each one's package line («8 حلقات في الشهر —
- * فاضل 3 حلقات», «عليه 290 ر.س») and «اشتراك جديد» / «جدّد الاشتراك» for that child. The rows are
- * the picker: a family with several children gets one button per child. Each name opens the
- * child's file, beside the code, the status and the teacher (owner 2026-11-02, «العائلة»).
- */
+/** A family with several children gets one subscribe button per child (R-SUB-01). */
 export function SubscribePanel({ people }: { people: ThreadPeople }) {
   const queryClient = useQueryClient();
   const [picked, setPicked] = useState<PickedStudent | null>(null);
@@ -28,8 +23,7 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
   const saved = async () => {
     setPicked(null);
     setToast(t.subscriptions.saved);
-    // The dialog refreshes the money screens; the chip, the lines and the list tag live under
-    // threads; the family's lead may have just become «مشترك» (R-LEAD-01).
+    // The family's lead may have just become subscribed (R-LEAD-01), so threads and leads refresh.
     for (const key of ['threads', 'leads'])
       await queryClient.invalidateQueries({ queryKey: [key] });
   };

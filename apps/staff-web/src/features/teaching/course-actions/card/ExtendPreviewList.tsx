@@ -3,7 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { extendLines } from './card-text';
 
-/** «مدّ الجدول»'s lines: the lessons with their dates and the new last day (loading until then). */
+/** Loading until the preview arrives. */
 export function ExtendPreviewList({ preview }: { preview: CourseExtendPreview | undefined }) {
   const tz = useViewerTz();
   if (!preview) return <p className="text-ink-3">{t.common.loading}</p>;

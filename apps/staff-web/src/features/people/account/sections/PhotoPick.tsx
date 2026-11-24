@@ -4,7 +4,6 @@ import { cn } from '@ab/web-kit/lib/utils';
 import { AVATAR_ACCEPT } from '@/features/people/account/avatar-file';
 
 export interface PhotoPickProps {
-  /** The button's text («اختيار صورة», «تغيير الصورة»). */
   label: string;
   disabled: boolean;
   onPick: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -12,10 +11,6 @@ export interface PhotoPickProps {
   inputRef?: Ref<HTMLInputElement>;
 }
 
-/**
- * A photo picker drawn as a secondary button: the label of a visually hidden JPG/PNG/WebP file
- * input, showing the input's focus ring (peer-focus-visible). «حسابي» and the admin's staff photo.
- */
 export function PhotoPick({ label, disabled, onPick, inputRef }: PhotoPickProps) {
   const inputId = useId();
   return (

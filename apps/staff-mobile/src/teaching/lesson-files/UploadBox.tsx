@@ -16,7 +16,6 @@ const PROBLEM: Record<UploadProblem, string> = {
 };
 const KINDS = LESSON_FILE_KINDS.map((k) => ({ value: k, label: F.kinds[k] }));
 
-/** «أضف ملفًا للحلقة» (canvas RecXStaffUpload): the kind, who sees it, then a picker. */
 export function UploadBox({ lessonId }: { lessonId: string }) {
   const { color } = useTheme();
   const small = { fontSize: type.size.xs };

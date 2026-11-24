@@ -8,7 +8,7 @@ import { assignRole, roleName, ROLES_KEY, type RoleView, type StaffUserView } fr
 const P = t.permissions.page;
 const TH = 'px-3 py-2 text-start text-xs font-semibold text-ink-3';
 
-/** «المستخدمون»: every staff profile with a role selector (assigning sets their base role too). */
+/** Assigning a role sets the user's base role too. */
 export function UsersList({ users, roles }: { users: readonly StaffUserView[]; roles: readonly RoleView[] }) {
   const queryClient = useQueryClient();
   const assign = useMutation({

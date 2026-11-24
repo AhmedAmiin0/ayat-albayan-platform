@@ -14,14 +14,7 @@ type TrialStudent = Pick<SalesStudentDetails['student'], 'id' | 'name' | 'status
 /** The latest trial still ahead is changed (moved); otherwise a new date is booked. */
 const CHANGES: Partial<Record<TrialOutcome, true>> = { upcoming: true };
 
-/**
- * «الحلقة التجريبية» (owner 2026-10-28): one compact line per trial date, newest first — when (Riyadh),
- * the teacher and the outcome chip of «مواعيد الحلقة التجريبية» (حضر / غاب / أُلغيت / قادمة / نُقلت…).
- * An old cache without it shows nothing. For her student without a running subscription (the
- * chat pill's gate: self.sales_money) the chat's trial-date screen opens (owner 2026-11-02):
- * «تعديل الموعد التجريبي» while the latest trial is still ahead (date, time, length, teacher,
- * link), else «موعد تجريبي جديد». `student`: hers (the ownership rule), else null (no action).
- */
+/** Trial edit only for her student without a running subscription; null means no action. */
 export function TrialSection({ trial, student }: { trial: readonly SalesTrialLesson[] | undefined; student: TrialStudent | null }) {
   const { color } = useTheme();
   const cycle = useClockCycle();

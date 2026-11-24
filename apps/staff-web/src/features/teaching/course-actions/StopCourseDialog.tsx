@@ -19,19 +19,11 @@ export interface CourseActionDialogProps {
 }
 
 interface StopCourseDialogProps extends CourseActionDialogProps {
-  /** The done block's «فتح محادثة ولي الأمر» (absent: no button). */
+  /** Absent means no open-chat button. */
   chat?: StopChat | undefined;
 }
 
-/**
- * «إلغاء الاشتراك» (owner 2026-10-30): stop the course, keep the money. The sheet says what
- * happens (the lessons and their dates, who is told), asks a short reason (owner 2026-11-17: a
- * clear error when it is empty), then ONE danger «تأكيد الإلغاء» beside «رجوع»; one idempotency
- * key per opening.
- * The money is the person's choice (owner 2026-11-06): «إلغاء فقط» with what the family still
- * owes, or (subscriptions.refund, something paid) «إلغاء مع استرداد» with the refund amount.
- * Then the done block (StopDoneDialog); its «تم» leaves the head as the caller's toast.
- */
+/** Stops the course, keeps the money unless refunded; one idempotency key per opening. */
 export function StopCourseDialog(props: StopCourseDialogProps) {
   const { studentId, subscriptionId, onClose } = props;
   const formId = useId();
