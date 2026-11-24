@@ -14,14 +14,9 @@ import { INITIAL_FORM, type SubscribeForm } from './subscribe-form';
 // The subscribe screen's route params → its first form (R-SUB-01). Route params are untrusted
 // strings: each one is validated and an unusable value keeps the default. Pure.
 
-export interface FormPrefill {
-  pkg?: string;
-  plan?: string;
-  count?: string;
-  minutes?: string;
-  discount?: string;
-  country?: string;
-}
+export type FormPrefill = Partial<
+  Record<'pkg' | 'plan' | 'count' | 'minutes' | 'discount' | 'country', string>
+>;
 
 const PLANS: readonly PlanChoice[] = [...PACKAGE_IDS, 'custom'];
 
