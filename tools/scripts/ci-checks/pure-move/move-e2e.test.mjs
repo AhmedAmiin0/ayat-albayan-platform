@@ -24,6 +24,18 @@ test('ci: the step runs move-e2e then pure-move-check, and only its «false» wi
   assert.match(job.steps.find((s) => s.id === 'e2e').if, /steps\.move\.outputs\.e2e != 'false'/);
 });
 
+test('ci: a chore/comments-* branch skips e2e before the move check (guard:comments gates it)', () => {
+  assert.equal(step.env.HEAD_REF, '${{ github.head_ref }}');
+  const lines = step.run.split('\n');
+  const branch = lines.findIndex((l) => l.includes('if [[ "$HEAD_REF" == chore/comments-* ]]; then'));
+  assert.ok(branch >= 0);
+  assert.match(lines[branch + 1], /echo "e2e=false" \| tee -a "\$GITHUB_OUTPUT"/);
+  assert.match(lines[branch + 2], /exit 0/);
+  assert.ok(branch < lines.findIndex((l) => l.includes('move-e2e.mjs')));
+  const guards = ci.jobs.guards.steps.map((s) => s.run ?? '').join('\n');
+  assert.match(guards, /guard:comments|comment-only\/run\.mjs/);
+});
+
 test('plain folder moves with a map may skip e2e', () => {
   assert.deepEqual(verdict([MAP, FOLDER, IMPORTER]), { skip: true, reason: 'plain folder moves' });
   assert.equal(verdict([MAP, FOLDER], { renames: {} }).skip, true);
