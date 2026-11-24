@@ -1,4 +1,5 @@
-import { USER_ROLES, type UserRole, type UserRoleOption } from '@ab/shared';
+import type { UserRoleOption } from '@ab/shared';
+import { USER_ROLES, type UserRole } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Choice } from '@/users/shared/Choice';

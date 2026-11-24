@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { screen, waitFor } from '@testing-library/react-native';
 import { booked, SUN_17 } from '@/booking/testing/fixtures';
 import { t } from '@ab/mobile-kit';

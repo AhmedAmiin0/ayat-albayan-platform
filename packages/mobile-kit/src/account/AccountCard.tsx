@@ -20,7 +20,7 @@ interface AccountCardProps {
   notice?: string;
 }
 
-/** One «حسابي» section on a mobile card (docs/07 §4: raised, 1px rule, radius 12, no shadow). */
+/** docs/07 §4: raised, 1px rule, radius 12, no shadow. */
 export function AccountCard({ title, children, onSave, pending = false, ...p }: AccountCardProps) {
   const { color } = useTheme();
   return (

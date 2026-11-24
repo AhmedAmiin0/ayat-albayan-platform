@@ -1,4 +1,4 @@
-import type { StorageDriver } from '@ab/shared';
+import type { StorageDriver } from '@ab/catalog';
 import { Injectable } from '@nestjs/common';
 import { StorageService } from '@/common/storage/storage.service';
 

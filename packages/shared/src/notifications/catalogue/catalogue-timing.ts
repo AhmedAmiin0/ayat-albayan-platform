@@ -24,7 +24,7 @@ function fromRules(entry: NotificationEntry, rules: ReadonlyMap<string, Effectiv
   return undefined;
 }
 
-/** When it is sent: the governing setting and its current value as text («60», «24، 72»). */
+/** When it is sent: the governing setting and its current value as text. */
 export function timingOf(
   entry: NotificationEntry,
   settings: CatalogueSettings,

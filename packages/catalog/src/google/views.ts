@@ -16,7 +16,7 @@ export interface GoogleSyncSettings {
   window_days: number;
 }
 
-/** The Drive root «تقارير آيات البيان» and the summary sheet «سجل الطلاب المشتركين», once an admin confirmed them. */
+/** The Drive root and summary sheet, once an admin confirmed them. */
 export interface GoogleDriveView {
   root_folder_id: string | null;
   root_folder_name: string | null;
@@ -40,7 +40,6 @@ export interface GoogleDiscoveryView {
 
 /** GET /admin/google/status (admin; the mobile card reads it too). */
 export interface GoogleStatusView {
-  /** GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set («التكاملات»). */
   configured: boolean;
   connection: GoogleConnectionView;
   settings: GoogleSyncSettings;
@@ -52,7 +51,7 @@ export interface GoogleStatusView {
   counts: Record<GoogleSyncState, number>;
   /** Items skipped because a teacher or a student is not mapped yet. */
   warnings: { teacher_unmapped: number; student_unmapped: number; drive_unconfirmed: number };
-  /** For the «كتابة فعلية» confirmation: the calendars it will write into. */
+  /** The calendars a live write will touch, for its confirmation. */
   targets: { main_calendar: string; teacher_calendars: string[] };
   last_run_at: string | null;
 }
@@ -64,7 +63,7 @@ export interface GoogleTeacherMapRow {
   calendar_id: string | null;
   calendar_name: string | null;
   confirmed_at: string | null;
-  /** By name, from the last discovery: «آيات البيان — <teacher>». */
+  /** Matched by name from the last discovery. */
   suggestion: GoogleFound | null;
 }
 
@@ -75,7 +74,7 @@ export interface GoogleStudentMapRow {
   name: string;
   folder_id: string | null;
   attendance_sheet_id: string | null;
-  /** Confirmed with no folder: the platform creates «<student>» and «سجل حضور — <student>» on the first report. */
+  /** Confirmed with no folder: the platform creates folder and sheet on the first report. */
   create_new: boolean;
   confirmed_at: string | null;
   /** From the summary sheet, matched by normalised Arabic name. */

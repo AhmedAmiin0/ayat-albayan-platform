@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, uploadMaxBytes } from '@ab/shared';
+import { SETTING_DEFAULTS, uploadMaxBytes } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { PaymentsSettings } from './payments.settings';

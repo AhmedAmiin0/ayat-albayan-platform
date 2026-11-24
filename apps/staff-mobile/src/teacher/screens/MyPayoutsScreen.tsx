@@ -1,4 +1,4 @@
-import { payoutStatusStyle, type PayoutView } from '@ab/shared';
+import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import {

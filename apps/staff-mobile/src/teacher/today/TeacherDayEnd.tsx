@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';

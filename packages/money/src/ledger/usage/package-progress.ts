@@ -7,11 +7,9 @@ import { counted, type PluralForm } from '@ab/core';
 type Forms = Readonly<Record<PluralForm, string>>;
 
 export interface PackageProgressForms {
-  /** «الباقة خلصت» (= enums.subscriptionStatus.expired). */
   zero: string;
-  /** «فاضل حلقة» · «فاضل حلقتين» · «فاضل {n} حلقات» (3–10) · «فاضل {n} حلقة» (11+). */
   left: Forms;
-  /** Attended past the package (negative remaining): «حضر {n} حلقات زيادة عن الباقة». */
+  /** Attended past the package (negative remaining). */
   over: Forms;
 }
 
@@ -20,7 +18,7 @@ export interface PackageProgress {
   total: number;
   remaining: number;
   remainingLabel: string;
-  /** act (saffron «دورك») at or under the R-SUB-02 threshold, including used up / over. */
+  /** act at or under the R-SUB-02 threshold, including used up or over. */
   tone: 'act' | 'neutral';
 }
 

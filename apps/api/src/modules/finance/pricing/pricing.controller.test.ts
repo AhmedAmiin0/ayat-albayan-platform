@@ -1,4 +1,4 @@
-import { PACKAGE_IDS } from '@ab/shared';
+import { PACKAGE_IDS } from '@ab/money';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fxRow, hoursAgo, NOW } from '@/modules/finance/fx/fx.fakes';
 import { pricingApp } from './pricing.test-app';

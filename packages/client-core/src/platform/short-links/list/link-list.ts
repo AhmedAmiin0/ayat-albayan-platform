@@ -4,11 +4,9 @@ import type { ShortLinkListFilter } from '../short-links-api.js';
 // The list's filters both apps show (boards LinkXWebList, LinkXStaffList): the status chips,
 // the owner (short_links.all) and the search, as the API's query.
 
-/** «الكل» and each server status: the list's status chips. */
 export const LINK_STATUS_TABS = ['all', ...SHORT_LINK_STATUSES] as const;
 export type LinkStatusTab = (typeof LINK_STATUS_TABS)[number];
 
-/** The API's status for a chip: none for «الكل». */
 export const linkStatusOf = (tab: LinkStatusTab): { status?: ShortLinkStatus } =>
   tab === 'all' ? {} : { status: tab };
 
@@ -30,11 +28,10 @@ export function listFilterOf(view: LinkListView): ShortLinkListFilter {
   };
 }
 
-/** Any filter set («مسح التصفية» and the empty state's words). */
 export const isListFiltered = (view: LinkListView): boolean =>
   Object.keys(listFilterOf(view)).length > 0;
 
-/** An owner chip: «كل الموظفين» (`all`), «روابطي» (`mine`), or an owner's profile id. */
+/** `all`, `mine`, or an owner's profile id. */
 export type OwnerPick = string;
 
 const OWNER_OF: Readonly<Record<string, (me: string) => string | undefined>> = {

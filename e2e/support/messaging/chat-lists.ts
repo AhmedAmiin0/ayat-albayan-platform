@@ -2,17 +2,13 @@ import type { Page } from '@playwright/test';
 import { ar } from '../core/fixtures';
 import { withSql } from '../core/schedule';
 
-// «القوائم» (docs/22): the chip row above the conversations and the database rows behind it.
-
 const L = ar.inbox.lists;
 
-/** The chip row («الكل», the lists, «قائمة جديدة»). */
 export const listsRow = (page: Page) => page.getByRole('list', { name: L.rowLabel });
 
 /** A list's chip (its name, then its count). */
 export const listChip = (page: Page, name: string) => listsRow(page).getByRole('button', { name: new RegExp(`^${name}`) });
 
-/** Creates a list from the chip row's «قائمة جديدة» dialog. */
 export async function createListFromRow(page: Page, name: string): Promise<void> {
   await listsRow(page).getByRole('button', { name: L.new }).click();
   const dialog = page.getByRole('dialog', { name: L.new });

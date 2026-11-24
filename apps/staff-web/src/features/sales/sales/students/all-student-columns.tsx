@@ -13,11 +13,7 @@ import { RosterScheduleCell } from './RosterScheduleCell';
 
 const col = createColumnHelper<DataTableFeatures, SalesStudentView>();
 
-// «كل الطلاب» (sales, read-only): who, which teacher and program, the status chip, the
-// guardian's name and phone (owner 2026-10-27: sales see every chat with its phone). Never a
-// price, payment, note or meeting link. The server pages and searches. Every student's current
-// package (size, status, lessons used / left, dates), weekly schedule and attendance count
-// (owner 2026-10-30), hers or not.
+// Sales see every student read-only, never a price, payment, note or meeting link; server-paged.
 export const allStudentColumns = col.columns([
   col.accessor('name', {
     header: () => t.sales.allStudents.student,
@@ -78,8 +74,7 @@ export const allStudentColumns = col.columns([
     header: () => t.sales.allStudents.attendance,
     meta: { className: 'text-sm text-ink-2 max-sm:order-9 max-sm:basis-full' },
   }),
-  // docs/31 §2: any student's chat, one assistant seat (owner 2026-11-16 «… but only 1»):
-  // mine → the chat, free or my own student → «تولَّ المحادثة», else who follows it.
+  // One assistant seat per chat (docs/31 §2): mine opens it, a free one can be taken, else owner.
   col.display({
     id: 'channel',
     header: () => t.studentChannel.open,
@@ -90,7 +85,7 @@ export const allStudentColumns = col.columns([
   }),
 ]);
 
-/** Owner 2026-11-02: «تعديل البيانات» · «ربط بولي أمر آخر» · «تحويل», with people.edit. */
+/** Edit, link to another guardian and transfer, with people.edit. */
 export const peopleEditColumn = col.display({
   id: 'people',
   header: () => t.peopleEdit.editData,

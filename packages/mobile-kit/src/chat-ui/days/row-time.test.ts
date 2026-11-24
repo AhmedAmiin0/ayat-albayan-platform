@@ -1,6 +1,6 @@
 import { chatDayLabel, chatRowTime } from './day-label';
 
-// A chat row's time (the inbox list and «رسائل الطلاب»): the clock today, else the day's words.
+// The clock today, else the day's words.
 
 const now = new Date('2026-11-17T12:00:00Z');
 const clock = { now, tz: 'UTC', cycle: '24' as const };

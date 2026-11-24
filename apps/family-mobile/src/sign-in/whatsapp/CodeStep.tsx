@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { Fragment, type ReactNode, useState } from 'react';
 import { View } from 'react-native';
 import { AppText, AuthAlert, Button, ltr, ResendButton, t, type, useTheme } from '@ab/mobile-kit';

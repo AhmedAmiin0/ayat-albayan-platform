@@ -1,4 +1,4 @@
-import type { Duration } from '@ab/shared';
+import type { Duration } from '@ab/catalog';
 import { View } from 'react-native';
 import { DurationPills, SlotStep } from '@/booking';
 

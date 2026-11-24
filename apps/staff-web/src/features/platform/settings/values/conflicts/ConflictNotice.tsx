@@ -9,11 +9,7 @@ import { useValues } from '@/features/platform/settings/values/values-context';
 
 const c = t.settingsValues.conflict;
 
-/**
- * Someone saved this value first (409 conflict): saffron, because the save waits for the admin's
- * choice («دورك»). The edit stays; «احفظ قيمتي» saves it over the newer version, «اعتمد القيمة
- * الجديدة» drops it. Nothing when the row has no conflict.
- */
+/** Someone saved first (409): the edit stays until the admin keeps it or takes the newer value. */
 export function ConflictNotice({ settingKey }: { settingKey: SettingKey }) {
   const api = useValues();
   const s = api.status(settingKey);

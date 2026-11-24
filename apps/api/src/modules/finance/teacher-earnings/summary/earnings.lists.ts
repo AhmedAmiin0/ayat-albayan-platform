@@ -1,10 +1,10 @@
+import type { Page } from '@ab/core';
 import type {
   EARNING_SORT_KEYS,
   EarningsListQuery,
-  Page,
   TEACHER_PAYMENT_SORT_KEYS,
   TeacherPaymentListQuery,
-} from '@ab/shared';
+} from '@ab/money';
 import type { Db } from '@/common/db/db.module';
 import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
 import { dbError } from '@/common/http/http';

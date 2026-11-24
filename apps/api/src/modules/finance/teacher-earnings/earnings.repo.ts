@@ -1,16 +1,13 @@
 import type { Json, Tables } from '@ab/db';
-import {
-  toCents,
-  type EarningsListQuery,
-  type TeacherPaymentListQuery,
-} from '@ab/shared';
+import { toCents } from '@ab/core';
+import type { EarningsListQuery, TeacherPaymentListQuery } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readChunked } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 import { ledgerError } from './earnings.errors';
 import { paymentsPage, sessionsPage } from './summary/earnings.lists';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 export type EarningRow = Tables<'teacher_session_earnings'>;
 export type SessionRow = EarningRow & {

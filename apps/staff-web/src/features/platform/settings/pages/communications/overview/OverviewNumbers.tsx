@@ -13,7 +13,6 @@ import { CELL, LINK, TH } from './overview-table';
 const h = t.communicationsHub;
 const n = t.numbers;
 
-/** The last check as a glyph and a word (the card on «الأرقام» says when and the quality). */
 function Health({ view }: { view: NumberView }) {
   if (!view.health || !view.checked_at) {
     return (
@@ -34,10 +33,7 @@ function Health({ view }: { view: NumberView }) {
 
 const COLS = [n.chips.phone, n.fields.purpose, n.fields.provider, h.colHealth] as const;
 
-/**
- * «الأرقام وحالتها» on «نظرة عامة» (docs/23 §2d): each number in one row — name, phone (LTR), role,
- * provider, last check — read-only from GET /admin/numbers (the same query «الأرقام» edits).
- */
+/** Read-only from the same query the numbers page edits (docs/23 §2d). */
 export function OverviewNumbers() {
   const numbers = useQuery(numbersQuery);
   return (

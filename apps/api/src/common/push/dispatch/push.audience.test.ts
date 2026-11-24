@@ -1,4 +1,4 @@
-import { systemPermissionsOf } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import { AccountDisabledError, systemResolver, type PermissionResolver } from '@/common/auth/permissions';
 import { fakePushDb, fakeWeb, flushPushes, pushService } from '@/common/push/push.fakes';

@@ -1,10 +1,10 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { subRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
-import { editApp, URL } from '@/modules/finance/subscriptions/used-before-edit/used-before-edit.test-util';
+import { editApp, URL } from '@/modules/finance/subscriptions/used-before-edit/tests/used-before-edit.test-util';
 
 // Rule off: an assistant with edit_terms edits any student's package.
 describe('/subscriptions/:id/lessons-used-before while the ownership rule is off', () => {

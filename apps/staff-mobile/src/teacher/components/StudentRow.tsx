@@ -1,4 +1,6 @@
-import { isPackageEnded, studentStatusStyle, type ClockCycle, type TeacherStudentView } from '@ab/shared';
+import { isPackageEnded, type TeacherStudentView } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
+import type { ClockCycle } from '@ab/time';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { router } from 'expo-router';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';

@@ -17,7 +17,7 @@ interface Props {
   join: RoomJoinResult;
   context: RoomContext | null;
   onJoin: (pick: JoinPick) => void;
-  /** «رجوع»: back to the page, without joining. */
+  /** Back to the page, without joining. */
   onBack?: (() => void) | undefined;
 }
 
@@ -40,11 +40,7 @@ function Problems({ check }: { check: DeviceCheckController }) {
   );
 }
 
-/**
- * «قبل الدخول» (boards FamRoomWebCheck / FamRoomPhoneCheck): one's own camera and microphone
- * before connecting, with their switches and device lists; a refused or missing device says so
- * with «حاول مرة أخرى»; the consent line unless this room records nothing; «انضم الآن».
- */
+/** A refused or missing device offers a retry; consent line unless the room records nothing. */
 export function DeviceCheck({ join, context, onJoin, onBack }: Props) {
   const check = useDeviceCheck(FIRST);
   return (

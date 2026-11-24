@@ -2,10 +2,7 @@ import type { SettingDef } from '../../defs.js';
 
 const h = 'settings.hints';
 
-/**
- * «التقارير» (R-REP-02/03): the teacher's edit window after the first submit (the report goes to the
- * family when it closes), the no-login report link's lifetime, and the form version.
- */
+/** R-REP-02/03: edit window after first submit (then sent to family), link lifetime. */
 export const REPORT_SETTINGS = {
   /**
    * docs/46 D5: minutes a teacher may edit a submitted report, counted from the FIRST submit (edits

@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { attachmentUploadSchema } from '../schema/index.js';
 
-// «ملفات الحلقة» (migration 20261117150200): files staff add to a lesson, kept
-// in the report-attachments bucket (same types and 25 MiB cap), each shown to the family or not.
+// Lesson files (migration 20261117150200) in the report-attachments bucket, 25 MiB cap.
 
 /** A homework sheet, a teacher's voice note, a whiteboard snapshot, or other teacher material. */
 export const LESSON_FILE_KINDS = ['homework', 'voice_note', 'whiteboard', 'material'] as const;
@@ -49,6 +48,6 @@ export const lessonFileRegisterSchema = lessonFileUploadSchema.extend({
 });
 export type LessonFileRegister = z.output<typeof lessonFileRegisterSchema>;
 
-/** PATCH /lesson-files/:id/visibility: «يراه الطالب وولي الأمر» on or off. */
+/** Toggles whether the student and guardian see the file. */
 export const lessonFileVisibilitySchema = z.object({ visible: z.boolean() });
 export type LessonFileVisibility = z.output<typeof lessonFileVisibilitySchema>;

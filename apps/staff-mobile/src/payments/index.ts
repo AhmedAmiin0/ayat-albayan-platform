@@ -2,18 +2,15 @@ export { PaymentScreen } from './screens/PaymentScreen';
 // The chat's camera and gallery (inbox/composer) reuse the receipt picker and its camera permission.
 export { pickReceipt } from '@/core/lib/receipts/receipt';
 export { ensureCameraPermission } from '@/core/lib/receipts/camera-permission';
-// «إلغاء الباقة»: the admin's package rows and her transfer screen (sales-subscribe).
 export { CancelPackage } from './components/CancelPackage';
 // A package's part-paid line and the receipt's shortfall note (owner 2026-10-28), for the money and sales screens.
 export { partPaidLine } from '@/core/lib/money/format';
 export { ShortfallNote } from './components/ShortfallNote';
-// «رابط دفع» (sales-subscribe/payment-link, with FEATURE_STRIPE (test or live)): the agreed amount and its money lines.
+// Payment link requires FEATURE_STRIPE (test or live).
 export { AmountField } from './components/AmountField';
-// «مبلغ مخصص»: the payment link's amount and the package price (subscribe, sales-subscribe).
 export { CustomAmountPill } from './components/CustomAmountPill';
 export { instantDay, localDay } from '@/core/lib/money/format';
-// «تعديل المبلغ» (owner 2026-11-02): «كل المدفوعات» (money) and «مدفوعاتي» (sales-money).
 export { AdminAmountEdit } from './amount-edit/AdminAmountEdit';
 export { SalesAmountEdit } from './amount-edit/SalesAmountEdit';
-// «جدّد الاشتراك» in «الدورة والباقة» waits for the balance (owner 2026-11-17).
+// Renewal waits for the balance.
 export { useStudentBalance } from './hooks/queries';

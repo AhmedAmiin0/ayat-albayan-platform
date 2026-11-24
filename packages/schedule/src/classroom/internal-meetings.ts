@@ -8,9 +8,7 @@ import {
   type MyMeetingInvite,
 } from './meeting-invites.js';
 
-// «اجتماع داخلي»: a standalone room for internal talks (migration 193). No lesson and no teacher: a
-// title, a creator, and a link /m/<token> anyone may open with a name. Since migration 410 it may be
-// scheduled (starts_at, planned_end_at) and have invitees (meeting-invites.ts); unscheduled = «الآن».
+// Internal meeting (migration 193): no lesson or teacher; schedulable since migration 410.
 
 /** The default title when none is typed (also the column default). */
 export const DEFAULT_MEETING_TITLE = 'اجتماع';
@@ -51,9 +49,9 @@ export interface MeetingView {
   planned_end_at: string | null;
   cancelled_at: string | null;
   state: MeetingState;
-  /** The join window of a scheduled meeting; null for an instant one (open until «إنهاء»). */
+  /** The join window of a scheduled meeting; null for an instant one, open until ended. */
   window: JoinWindow | null;
-  /** «ادخل» is shown: open, not cancelled and (scheduled) inside its window. */
+  /** Join is shown when open, not cancelled and, if scheduled, inside its window. */
   can_join: boolean;
   invitees_count: number;
   my_invite: MyMeetingInvite | null;
@@ -84,14 +82,14 @@ export function meetingWindow(row: MeetingTimes, now: Date, win: JoinWindowConfi
   return joinWindow({ starts_at: row.starts_at, ends_at: row.planned_end_at }, now, win);
 }
 
-/** Ended once «إنهاء» stamped ends_at, it was cancelled or revoked, or a scheduled one's window closed. */
+/** Ended once ends_at is stamped, cancelled or revoked, or a scheduled one's window closed. */
 export function meetingState(row: MeetingTimes, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): MeetingState {
   if (row.revoked || row.cancelled_at) return 'ended';
   if (row.ends_at !== null && Date.parse(row.ends_at) <= now.getTime()) return 'ended';
   return meetingWindow(row, now, win)?.state === 'closed' ? 'ended' : 'open';
 }
 
-/** «ادخل» now: open and, when scheduled, inside the window. */
+/** Joinable now: open and, when scheduled, inside the window. */
 export function canJoinMeeting(row: MeetingTimes, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): boolean {
   if (meetingState(row, now, win) === 'ended') return false;
   const w = meetingWindow(row, now, win);

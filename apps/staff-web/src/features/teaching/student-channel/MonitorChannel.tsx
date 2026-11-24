@@ -5,10 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';
 
-/**
- * A monitor's way into a student's channel (the admin's student page, the assistant's «طلابي»): closed
- * until asked for, then the thread read-only with its «للاطلاع فقط» note.
- */
+/** Closed until asked for, then read-only. */
 export function MonitorChannel({ studentId, audience }: { studentId: string; audience: Extract<ChannelAudience, 'admin' | 'sales'> }) {
   const tz = useViewerTz();
   const [open, setOpen] = useState(false);

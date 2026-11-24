@@ -28,7 +28,6 @@ const problemText = (error: unknown, cycle: ClockCycle): string => {
   return opens ? opensAtText(opens, cycle) : classroomErrorText(error);
 };
 
-/** «حلقتك القادمة / الآن»: when (viewer's clock), with whom, an optional name and the big «ادخل الحلقة». */
 export function StudentLessonPanel({ lesson, firstName, now, pending, error, onJoin }: Props) {
   const clock = useClock();
   const tz = useViewerTz();

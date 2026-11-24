@@ -64,7 +64,7 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
       <PageHead>
         <Cartouche>{t.schedule.title}</Cartouche>
         {overview.data && <ScheduleCounts shown={shown} />}
-        {/* «حجز حلقة» is the page's one filled primary; «اجتماع جديد» stays on the dashboard and «الحلقات عبر الإنترنت» on phones. */}
+        {/* Booking is the page's one filled primary; other entries live elsewhere. */}
         <HeadActions
           primary={
             <Link to="/admin/book" className={buttonVariants()}>

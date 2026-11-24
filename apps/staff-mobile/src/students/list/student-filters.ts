@@ -1,4 +1,5 @@
-import { STUDENT_FILTER_KEYS, STUDENT_STATUSES, type StudentSortKey, type StudentStatus } from '@ab/shared';
+import { STUDENT_FILTER_KEYS, type StudentSortKey } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 
 /** The server's default (newest) or one column ascending (GET /students ?sort=&dir=). */
 export const SORT_CHOICES = ['newest', 'name', 'code', 'remaining'] as const;

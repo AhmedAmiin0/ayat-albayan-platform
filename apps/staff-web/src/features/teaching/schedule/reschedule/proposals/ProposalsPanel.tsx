@@ -13,12 +13,7 @@ import { RequesterTag } from './RequesterTag';
 /** The viewer's time; `clock.tz` is the viewer's zone (useViewerTz()). */
 const when = (iso: string, clock: Clock & { tz: string }) => lessonWhenAt(new Date(iso), clock);
 
-/**
- * «طلبات تغيير الموعد» above the week (R-SCH-08): every lesson a teacher proposed, or a family
- * asked (owner 2026-11-17), to move, in any week, as «من الأسرة سهيلة · أبرار: الأحد 4 أكتوبر
- * 17:00 ← الاثنين 5 أكتوبر 18:00». Opening one shows the
- * drawer with «وافق» / «ارفض». Nothing pending → nothing rendered.
- */
+/** Pending move requests from teachers or families in any week (R-SCH-08); none renders nothing. */
 export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => void }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const proposals = useQuery(proposalsQuery);

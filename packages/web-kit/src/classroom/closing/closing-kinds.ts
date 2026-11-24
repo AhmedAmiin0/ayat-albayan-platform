@@ -3,22 +3,14 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RoomVariant } from '@ab/web-kit/classroom/flow/room-variant';
 import type { RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
 
-/**
- * Why the call is over (the app's RoomEnd, boards FamRoomWebLeft / FamRoomWebEnded):
- * - `left`: left on purpose, or the connection went: the lesson may still run, so «ادخل مرة أخرى»;
- * - `closed`: LiveKit closed the room (the teacher ended it, or the server's closer): a rejoin
- *   tells whether it is final;
- * - `final`: a rejoin came back 410 lesson_ended: «انتهت الحلقة», only «رجوع»;
- * - `removed` / `duplicate`: the teacher removed this person / the same join opened elsewhere;
- * - `failed`: could not connect (its own words).
- */
+/** left may rejoin; closed checks on rejoin; final is 410 lesson_ended; failed never connected. */
 export type ClosingKind = 'left' | 'closed' | 'final' | 'removed' | 'duplicate' | 'failed';
 
 export interface ClosingSpec {
   icon: IconName;
   title: string;
   body: string | null;
-  /** «ادخل مرة أخرى» makes sense (the page passed a rejoin). */
+  /** Rejoining makes sense (the page passed a rejoin). */
   rejoin: boolean;
   /** Who is in the room now (the page's presence line). */
   presence: boolean;
@@ -33,10 +25,7 @@ export const CLOSINGS: Readonly<Record<ClosingKind, ClosingSpec>> = {
   failed: { icon: 'x', title: t.classroom.error.connect_failed, body: null, rejoin: true, presence: false },
 };
 
-/**
- * Staff keep their plain screens: «خرجت من الحلقة» with «ادخل مرة أخرى» after leaving and after
- * «إنهاء الحلقة للجميع» alike, and never the family's «الحلقة ما زالت جارية…» line.
- */
+/** Staff keep plain left screens with rejoin, never the family's still-running line. */
 const STAFF_LEFT: ClosingSpec = { ...CLOSINGS.left, body: null, presence: false };
 const BY_VARIANT: Readonly<Record<RoomVariant, Partial<Record<ClosingKind, ClosingSpec>>>> = {
   staff: { left: STAFF_LEFT, closed: STAFF_LEFT },

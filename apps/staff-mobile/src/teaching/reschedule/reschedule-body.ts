@@ -1,10 +1,6 @@
-import {
-  DURATIONS,
-  RIYADH_TZ,
-  shiftByday,
-  type LessonView,
-  type RescheduleRequest,
-} from '@ab/shared';
+import { DURATIONS } from '@ab/catalog';
+import { shiftByday, type LessonView, type RescheduleRequest } from '@ab/schedule';
+import { RIYADH_TZ } from '@ab/time';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
 // Reschedule bodies (R-SCH-07, docs/10 route 8), as the web builds them; mobile has no override.

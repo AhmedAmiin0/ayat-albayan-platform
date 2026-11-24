@@ -28,7 +28,7 @@ import type {
   TemplateCategory,
   TemplateStatus,
   UserRole,
-} from '@ab/shared';
+} from '@ab/catalog';
 import { describe, expectTypeOf, it } from 'vitest';
 
 // The domain packages derive these from their own arrays; the api typecheck is what catches drift

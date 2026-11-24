@@ -11,10 +11,7 @@ interface LeaveSheetProps {
   onStay: () => void;
 }
 
-/**
- * «تغادر الحلقة؟» (canvas RoomXLeave): «غادر» and Android's back ask first, so a slip never drops
- * the lesson. Stacked full width: «غادر» (danger) first, then «ابقَ في الحلقة».
- */
+/** Leave and Android back ask first so a slip never drops the lesson. */
 export function LeaveSheet({ onLeave, onStay }: LeaveSheetProps) {
   const { color } = useTheme();
   return (

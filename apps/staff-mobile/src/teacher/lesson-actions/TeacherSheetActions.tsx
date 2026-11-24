@@ -1,5 +1,5 @@
 import { joinPhase, wayIn, type JoinPhase } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { JoinClassroomButton } from '@/classroom';
 import { usePlatformClassroom, useJoinWindow } from '@/core/lib/query/public-config';

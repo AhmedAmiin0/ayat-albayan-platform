@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { subscribeViewerTz, viewerTz } from '@ab/client-core';
-import type { ClockOptions } from '@ab/shared';
+import type { ClockOptions } from '@ab/time';
 import { locale, useClockCycle } from '@ab/mobile-kit';
 
 /**

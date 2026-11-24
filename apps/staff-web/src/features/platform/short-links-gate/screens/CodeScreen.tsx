@@ -17,11 +17,6 @@ const BOX_ERRORS = new Set(['invalid_code', 'code_incomplete']);
 /** The countdown reads in the quiet ink, not a faded green (board LinkXGateCode). */
 const RESEND = 'justify-self-center disabled:text-ink-3 disabled:opacity-100';
 
-/**
- * Boards LinkXGateCode / CodeError: the title still hidden, «أدخل الرمز», the number the code
- * went to with «غيّر الرقم», the six boxes (the kit's), the resend countdown, then
- * «تحقّق وافتح الرابط».
- */
 export function CodeScreen({ gate }: { gate: Gate }) {
   const { phone } = gate;
   const error = errorText(phone.error);

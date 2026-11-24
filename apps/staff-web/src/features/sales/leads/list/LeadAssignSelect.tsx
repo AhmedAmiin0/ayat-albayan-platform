@@ -4,7 +4,6 @@ import { assignLead, salesPeopleQuery } from '@/features/sales/sales/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { LeadView } from '@ab/shared';
 
-/** «مسؤول المبيعات» of one lead: the salespeople from GET /sales/people, or «من غير مسؤول». */
 export function LeadAssignSelect({ lead }: { lead: LeadView }) {
   const queryClient = useQueryClient();
   const people = useQuery(salesPeopleQuery);

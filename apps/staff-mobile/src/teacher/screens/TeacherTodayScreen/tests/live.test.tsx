@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { z } from 'zod';
 import { t } from '@ab/mobile-kit';

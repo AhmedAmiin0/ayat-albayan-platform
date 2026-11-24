@@ -6,10 +6,7 @@ import { resetAbrar, withSql } from '../core/schedule';
 import { seedPackageStudent } from '../finance/money';
 import { codeSentTo, codesSent, post } from './family-sign-in';
 
-// The family portal (docs/50): a guardian with two children taught by «أبرار». The first child
-// has a paid package (a payment on file), a lesson running now, a completed lesson three days ago
-// with a SENT report, and a missed lesson (no_show, absent) five days ago; the second child has a
-// lesson tomorrow. Invented names only; a fresh family (and phone) per call.
+// Family portal seed (docs/50): invented names only, a fresh family and phone per call.
 
 const MINUTE = 60_000;
 const DAY = 86_400_000;
@@ -20,7 +17,6 @@ interface PortalFamily {
   second: { id: string; name: string };
 }
 
-/** One more past or future lesson of «أبرار» with this student and its attendance. */
 async function addLesson(input: {
   teacherId: string;
   studentId: string;

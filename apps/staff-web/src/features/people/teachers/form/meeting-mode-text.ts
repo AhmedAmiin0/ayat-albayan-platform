@@ -1,14 +1,14 @@
 import type { TeacherMeetingMode } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** A radio value per teachers.meeting_mode: null is «حسب إعداد الأكاديمية» (radios need a string). */
+/** Null maps to the academy default because radios need a string. */
 export type MeetingModeChoice = TeacherMeetingMode | 'academy';
 
 export const toChoice = (mode: TeacherMeetingMode | null): MeetingModeChoice => mode ?? 'academy';
 export const fromChoice = (choice: MeetingModeChoice): TeacherMeetingMode | null =>
   choice === 'academy' ? null : choice;
 
-/** «حسب إعداد الأكاديمية (حاليًا: …)»: the academy option with what it resolves to now (bare when unknown). */
+/** Bare when the academy setting is unknown. */
 export const academyOptionText = (platform: boolean | null): string =>
   platform === null
     ? t.teachers.meetingModeOption.academy
@@ -19,11 +19,7 @@ export function meetingModeText(mode: TeacherMeetingMode | null, platform: boole
   return mode === null ? academyOptionText(platform) : t.teachers.meetingModeOption[mode];
 }
 
-/**
- * settings.meeting_link_auto as far as the form can tell: GET /settings/public's answer (`loaded`), else
- * — loading or failed — an academy-mode teacher's platform_classroom, which the API resolved from that
- * same setting. null = unknown: the academy option has no «حاليًا» and no note is shown.
- */
+/** Null means unknown: the academy option shows no current value and no note. */
 export function knownAcademyAuto(
   loaded: boolean | undefined,
   teacher: { meeting_mode: TeacherMeetingMode | null; platform_classroom: boolean } | null,

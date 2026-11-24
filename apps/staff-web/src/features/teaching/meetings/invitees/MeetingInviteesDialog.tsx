@@ -15,7 +15,7 @@ interface Props {
   onClose: () => void;
 }
 
-/** «المدعوون» (creator or admin): GET /meetings/:id/invitees, each with its status and «أعد الإرسال». */
+/** Creator or admin only. */
 export function MeetingInviteesDialog({ meetingId, title, onClose }: Props) {
   const invitees = useQuery(meetingInviteesQuery(meetingId));
   const mayInvitePhones = useMayInvitePhones();

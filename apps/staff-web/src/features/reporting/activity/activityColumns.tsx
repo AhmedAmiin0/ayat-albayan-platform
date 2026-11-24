@@ -47,11 +47,7 @@ function AtCell({ iso }: { iso: string }) {
   return <span className="tabular-nums text-ink-2">{formatAt(iso, clock)}</span>;
 }
 
-/**
- * «سجل النشاط» columns. Time, action, result and duration sort server-side; user (by role),
- * action (key prefix), entity and result filter (R-NFR-08). Under 640px: action + result, then
- * user and time.
- */
+/** Time, action, result and duration sort server-side; user, action, entity, result filter. */
 export const activityColumns = col.columns([
   col.accessor('at', {
     header: () => t.activity.at,

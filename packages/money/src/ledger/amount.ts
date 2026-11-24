@@ -1,10 +1,7 @@
 import { asciiDigits } from '@ab/core';
 import { moneyAmount } from './schemas.js';
 
-/**
- * Arabic-Indic (٠-٩) and Persian (۰-۹) digits to Western, «٫» and «,» to «.»: an Arabic keypad
- * (phone or desktop) types them. Used by every money input (web and mobile, R-PAY-01).
- */
+/** Arabic-Indic and Persian digits to Western for every money input (R-PAY-01). */
 export function westernDigits(text: string): string {
   return asciiDigits(text.trim()).replace(/[٫,]/g, '.');
 }
@@ -20,6 +17,6 @@ export function parseAmount(text: string): number | null {
   return parsed.success ? parsed.data : null;
 }
 
-/** parseAmount with 0 accepted (the stop sheet's «مبلغ مخصص» runs from 0). */
+/** parseAmount with 0 accepted, since the stop sheet's custom amount runs from 0. */
 export const parseAmountFromZero = (text: string): number | null =>
   /^0+(\.0{1,2})?$/.test(westernDigits(text)) ? 0 : parseAmount(text);

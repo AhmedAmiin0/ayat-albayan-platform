@@ -13,7 +13,7 @@ interface ListPagerProps {
   onPage: (page: number) => void;
 }
 
-/** «1–10 من 14» with «السابق» / «التالي» (board LinkXWebList); nothing for an empty list. */
+/** Nothing for an empty list. */
 export function ListPager({ page = 1, pageSize, total = 0, onPage }: ListPagerProps) {
   if (total === 0) return null;
   const from = (page - 1) * pageSize + 1;

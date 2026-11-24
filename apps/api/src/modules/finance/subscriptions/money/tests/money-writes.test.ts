@@ -1,0 +1,68 @@
+import { describe, expect, it, vi } from 'vitest';
+import type { AuditService } from '@/common/audit/audit.service';
+import type { SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import type { MoneyFollowUps } from '@/modules/finance/subscriptions/money/money-follow-ups';
+import { causeOf, MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
+import type { PackageEvents } from '@/common/infra/events/lesson-events';
+
+function setup() {
+  const order: string[] = [];
+  const audit = { record: vi.fn(async () => void order.push('audit')) };
+  const alerts = { evaluateStudents: vi.fn(async () => void order.push('evaluate')), closeTasksOf: vi.fn() };
+  const follow = { after: vi.fn(async () => void order.push('follow')) };
+  const packages = { paid: vi.fn(async () => void order.push('paid')) };
+  const asAlerts = alerts as unknown as SubscriptionAlertsService;
+  const w = new MoneyWrites(audit as unknown as AuditService, asAlerts, follow as unknown as MoneyFollowUps, packages as unknown as PackageEvents);
+  return { order, audit, alerts, follow, w, packages };
+}
+const CREATE = { actorId: 'a1', entity: 'payments', entityId: 'p1', action: 'create', after: { kind: 'payment', amount: 290 } };
+
+describe('MoneyWrites: audit → follow-ups (flip / revert) → recompute + the renewal rule', () => {
+  it('runs in that order, the payment id as the renewal cause', async () => {
+    const t = setup();
+    await t.w.done(CREATE, 's1');
+    expect(t.order).toEqual(['audit', 'follow', 'evaluate']);
+    expect(t.follow.after).toHaveBeenCalledWith(CREATE, { studentId: 's1', actorId: 'a1' });
+    expect(t.alerts.evaluateStudents).toHaveBeenCalledWith(['s1'], { actorId: 'a1', cause: { via: 'payment', paymentId: 'p1' } });
+  });
+
+  it('a replayed payment form re-runs the follow-ups and the recompute, never a second audit row', async () => {
+    const t = setup();
+    await t.w.replayed(CREATE, 's1');
+    expect(t.order).toEqual(['follow', 'evaluate']);
+    expect(t.audit.record).not.toHaveBeenCalled();
+  });
+
+  it('recorded: a write audited by its own RPC (stop_course) closes the tasks and follows up, no audit row', async () => {
+    const t = setup();
+    const stop = { actorId: 'a1', entity: 'subscriptions', entityId: 'sub1', action: 'cancel', after: {} };
+    await t.w.recorded(stop, 's1');
+    expect(t.order).toEqual(['follow', 'evaluate']);
+    expect(t.alerts.closeTasksOf).toHaveBeenCalledWith('sub1');
+    expect(t.audit.record).not.toHaveBeenCalled();
+  });
+
+  it('no student → only the audit', async () => {
+    const t = setup();
+    await t.w.done(CREATE, null);
+    await t.w.replayed(CREATE, null);
+    expect(t.order).toEqual(['audit']);
+  });
+
+  it('causeOf: only a positive payment create carries its id', () => {
+    expect(causeOf(CREATE)).toEqual({ via: 'payment', paymentId: 'p1' });
+    expect(causeOf({ ...CREATE, after: { kind: 'refund', amount: 1 } })).toEqual({ via: 'event' });
+    expect(causeOf({ ...CREATE, action: 'delete' })).toEqual({ via: 'event' });
+    expect(causeOf({ ...CREATE, entity: 'subscriptions' })).toEqual({ via: 'event' });
+  });
+
+  it('an incoming payment on a package tells PackageEvents last (its drafted days are booked, owner 2026-11-06)', async () => {
+    const t = setup();
+    const sub = '0c000000-0000-4000-8000-000000000001';
+    await t.w.done({ ...CREATE, after: { ...CREATE.after, subscription_id: sub } }, 's1');
+    expect(t.order).toEqual(['audit', 'follow', 'evaluate', 'paid']);
+    expect(t.packages.paid).toHaveBeenCalledWith(sub);
+    await t.w.done({ ...CREATE, after: { kind: 'refund', amount: 10, subscription_id: sub } }, 's1');
+    expect(t.packages.paid).toHaveBeenCalledTimes(1);
+  });
+});

@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';

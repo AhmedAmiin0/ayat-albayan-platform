@@ -17,11 +17,9 @@ export interface CourseActionsProps {
   mode: BookingMode;
   /** The page's toast. */
   onDone: (message: string) => void;
-  /** «مدّ الجدول»: lessons of the package have no date (owner 2026-11-17). */
   extend?: boolean;
-  /** false: no «تغيير المعلم» / «تغيير موعد الحلقات» (no course booked yet: no dead end). */
+  /** False hides teacher and time changes when no course is booked yet (no dead end). */
   moves?: boolean;
-  /** The card's group (owner 2026-11-17): «الدورة» (moves) or «الباقة والمدفوعات» (stop). */
   group?: Group;
   /** The guardian's phone: the stop's done block opens the chat. */
   chatPhone?: string | undefined;
@@ -55,12 +53,7 @@ function moveItems(can: Can, props: Pick<CourseActionsProps, 'moves' | 'extend' 
   return items.filter((i) => i.on);
 }
 
-/**
- * The student profile's course actions (owner 2026-10-30), each behind its own key, with what it
- * does under it (owner 2026-11-17): «تغيير المعلم» (students.change_teacher), «تغيير موعد
- * الحلقات» and «مدّ الجدول» (courses.reschedule), «إلغاء الاشتراك» (subscriptions.stop).
- * Admins and sales, any student; not teachers.
- */
+/** Each action behind its own permission key; admins and sales, any student, not teachers. */
 export function CourseActions(props: CourseActionsProps) {
   const { studentId, subscriptionId, mode, onDone, chatPhone } = props;
   const { can } = usePermissions();

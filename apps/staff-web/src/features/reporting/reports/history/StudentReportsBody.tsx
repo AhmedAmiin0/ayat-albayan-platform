@@ -23,10 +23,7 @@ export interface StudentReportsBodyProps {
 
 const isForbidden = (error: unknown) => error instanceof ApiError && error.status === 403;
 
-/**
- * The grade chart, then every report of one student, a page at a time (R-REP-05): the body of
- * «سجل التقارير» and of the teacher board's «التقارير» tab (docs/46 C1).
- */
+/** Paged reports (R-REP-05), shared with the teacher board's reports tab (docs/46 C1). */
 export function StudentReportsBody({ studentId, role, tz }: StudentReportsBodyProps) {
   const [page, setPage] = useState(1);
   const reports = useQuery({

@@ -22,11 +22,7 @@ interface SalesRescheduleFormProps {
   onDone: () => void;
 }
 
-/**
- * The assistant's «تغيير الموعد» in the /sales drawer (docs/16 row 37): the admin's slot grid and
- * clash notice over her scoped GET /sales/booking/slots (naming this lesson), this lesson only, no
- * clash override (pick another slot). The move itself is the admin's service on the API side.
- */
+/** Scoped slots for this lesson only (docs/16 row 37), no clash override; the API does the move. */
 export function SalesRescheduleForm({ lesson, onBack, onDone }: SalesRescheduleFormProps) {
   const [startsAt, setStartsAt] = useState<string | null>(null);
   const [reason, setReason] = useState('');

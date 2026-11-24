@@ -4,11 +4,7 @@ import { GateIcon } from './GateIcon';
 
 const G = t.shortLinks.gate;
 
-/**
- * The link's card on the gate (boards LinkXGateSignedIn, LinkXGatePhone): «رابط من الأكاديمية»
- * over the title once the visitor is known; before that the title stays hidden and the card
- * says only «رابط من أكاديمية آيات البيان» (`title` null).
- */
+/** The title stays hidden until the visitor is known (`title` null). */
 export function LinkCard({ title }: { title: string | null }) {
   const id = useId();
   return (

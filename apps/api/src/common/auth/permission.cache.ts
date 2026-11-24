@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { PERMISSION_PREFIX, permissionKey } from '@/common/infra/cache/cache-keys';
 import type { SharedCache } from '@/common/infra/cache/shared-cache';
 

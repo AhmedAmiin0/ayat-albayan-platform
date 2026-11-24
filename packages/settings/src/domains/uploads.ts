@@ -2,7 +2,7 @@ import type { SettingDef } from '../defs.js';
 
 const h = 'settings.hints';
 
-/** «الملفات المرفوعة»: one limit for receipts and booking invoices, at most the buckets' 10 MB (migrations 122, 170). */
+/** One limit for receipts and booking invoices, at most 10 MB (migrations 122, 170). */
 export const UPLOAD_SETTINGS = {
   upload_max_mb: {
     module: 'uploads', group: 'uploads',

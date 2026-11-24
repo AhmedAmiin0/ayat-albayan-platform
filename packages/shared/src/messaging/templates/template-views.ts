@@ -35,7 +35,7 @@ export interface TemplateView {
   /** The CRM's name / language when its line is on crm (docs/19); null = the default. Absent from older APIs. */
   crm_name?: string | null;
   crm_language?: string | null;
-  /** Who wrote it here (sales authoring, owner 2026-11-14); null = seeded or imported. */
+  /** Who wrote it here (sales authoring); null = seeded or imported. */
   created_by?: string | null;
   /** Its edits on Meta while approved, last 30 days (Meta's edit limits, edit-limits.ts). */
   approved_edits?: string[];

@@ -12,7 +12,7 @@ export function reportFormHref(input: { role: UserRole; lessonId: string; studen
     : `/teacher/report/${input.lessonId}`;
 }
 
-/** «سجل التقارير»: the admin's page, or the teacher's student file (docs/49: per lesson). */
+/** The admin's page, or the teacher's student file (docs/49: per lesson). */
 export function reportHistoryHref(role: UserRole, studentId: string): string {
   return role === 'admin'
     ? `/admin/students/${studentId}/reports`

@@ -8,10 +8,7 @@ const isUnsafe = (c: string): boolean =>
 const clean = (s: string): string =>
   Array.from(s, (c) => (isUnsafe(c) ? ' ' : c)).join('').replace(/\s+/g, ' ').trim();
 
-/**
- * «<student> — <yyyy-mm-dd>.pdf» as the old report flow names it; « (المنصة)» before .pdf when the
- * old script already has a report of that student and date in the attendance sheet (§2.5).
- */
+/** Names like the old report flow, with a platform suffix when the sheet already has one (§2.5). */
 export function pdfName(input: { student: string; date: string; alreadyInSheet: boolean }): string {
   const suffix = input.alreadyInSheet ? DRIVE.pdfPlatformSuffix : '';
   return `${clean(input.student)}${DRIVE.pdfSeparator}${input.date}${suffix}.pdf`;

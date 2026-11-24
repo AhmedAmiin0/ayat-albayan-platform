@@ -5,7 +5,7 @@ import { copyText } from '@/features/teaching/meetings/internal/internal-api';
 
 const L = t.meetings.internal;
 
-/** The meeting's link, selectable, with «انسخ الرابط» (the clipboard may be blocked: the URL stays to copy by hand). */
+/** The clipboard may be blocked, so the URL stays selectable to copy by hand. */
 export function MeetingLinkBox({ url, note }: { url: string; note?: string }) {
   const [copied, setCopied] = useState(false);
   return (

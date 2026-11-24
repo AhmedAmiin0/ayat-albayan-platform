@@ -1,9 +1,8 @@
-import { systemPermissionsOf, USER_ROLES } from '@ab/shared';
+import { systemPermissionsOf, USER_ROLES } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { accessBefore, walkRoutes, type RouteAccess } from './route-walk.test-util';
 
-// Owner 2026-10-29 «رقم ثانٍ للعائلة»: linking a lead chat's number to a family is its own key, the admin's only
-// by default (grantable from the matrix, never a sales default); removing a second number is guardians.write.
+// Linking a chat's number to a family is its own admin-only key; removing one is guardians.write.
 describe('«رقم ثانٍ للعائلة» routes', () => {
   let routes: RouteAccess[];
   beforeAll(async () => {

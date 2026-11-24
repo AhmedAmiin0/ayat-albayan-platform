@@ -1,4 +1,5 @@
-import { isWaLine, mergeWindows, replyNumber, type NumberWindow, type WaLine } from '@ab/shared';
+import { mergeWindows, replyNumber, type NumberWindow } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/catalog';
 import { Logger } from '@nestjs/common';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { pickSendLine, type SendLineCode } from './send-line';

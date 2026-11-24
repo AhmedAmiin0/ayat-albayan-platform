@@ -5,10 +5,7 @@ import { signInSales } from '../../support/sales/sales-portal';
 import { withSql } from '../../support/core/schedule';
 import { dropFilterStudents, filterSeed, seedFilterStudents, type FilterSeed } from '../../support/people/student-filters';
 
-// «مشترك / تجريبي»: the sales «المعلمون» drawer splits a teacher's students and
-// shows the teacher's fixed link; the admin teachers list counts link to the filtered students list;
-// the students list has a quick switch on the same `status` URL filter. One seeded teacher with an
-// active, a trial and a paused student (support/student-filters).
+// Subscribed/trial splits share the same `status` URL filter.
 
 const STAMP = `${String(Date.now()).slice(-5)}7`;
 const LINK = `https://meet.example.org/e2e-fixed-${STAMP}`;
@@ -20,7 +17,6 @@ function seeded(): FilterSeed {
   return state.seed;
 }
 
-/** The «الكل · مشترك · تجريبي» group and one of its segments (label, then its count). */
 const kindSwitch = (scope: Page | Locator) => scope.getByRole('group', { name: L.kinds });
 const segment = (group: Locator, label: string) => group.getByRole('button', { name: new RegExp(`^${label}`) });
 
@@ -87,7 +83,7 @@ test.describe('student lists «مشترك / تجريبي»', () => {
     await expect(segment(kinds, L.all)).toHaveAttribute('aria-pressed', 'true');
     await expectNames(page, [names.active, names.trial, names.paused], []);
 
-    // «تجريبي» = not subscribed yet (docs/18): new, trial and pending_subscription.
+    // Trial means not subscribed yet (docs/18): new, trial and pending_subscription.
     await segment(kinds, L.trial).click();
     await expect(page).toHaveURL(/status=new(,|%2C)trial(,|%2C)pending_subscription(&|$)/);
     await expect(page).toHaveURL(new RegExp(`teacher=${teacherId}`));

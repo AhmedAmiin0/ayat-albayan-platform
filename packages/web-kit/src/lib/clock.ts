@@ -11,8 +11,7 @@ import {
 import { useMemo, useSyncExternalStore } from 'react';
 import { locale } from './i18n/locale';
 
-// «تنسيق الوقت» (owner 2026-10-27): follow the browser's locale, or 12 h / 24 h saved in this
-// browser (localStorage, like the language). A change re-renders every time on screen, no reload.
+// Follow the browser's locale, or a 12 h/24 h pick saved in localStorage; changes need no reload.
 
 function readPref(): ClockPref {
   try {

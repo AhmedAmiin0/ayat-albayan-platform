@@ -21,11 +21,7 @@ function closingOf(outcome: 'sent' | PublicProblem | null, loadProblem: PublicPr
   return null;
 }
 
-/**
- * «رأيك يهمّنا» for the guardian (no login, the token in the link): mobile first, one column, the
- * brand and language switch on top, then the title. It opens only on a valid link: a wrong or expired one, and one
- * already used, get their own closing screen; too many tries or a server hiccup keep a retry.
- */
+/** No login; wrong, expired or used links get a closing screen; throttling keeps a retry. */
 export function FeedbackPublicPage({ token }: { token: string }) {
   const query = useQuery(publicFeedbackQuery(token));
   const [outcome, setOutcome] = useState<'sent' | PublicProblem | null>(null);

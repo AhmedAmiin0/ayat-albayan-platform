@@ -35,7 +35,7 @@ function open(stripe: boolean) {
 
 const asked = (path: string) => apiFetch.mock.calls.some(([p]) => String(p).startsWith(path));
 
-/** The one «اشتراك جديد» (no separate «رابط دفع» anywhere, owner 2026-10-29), its step open. */
+/** There is only one new-subscription action, no separate payment-link entry. */
 async function subscribe() {
   fireEvent.click(await screen.findByRole('button', { name: t.salesMoney.newSubscription }));
   return within(await screen.findByRole('dialog', { name: t.salesMoney.newSubscription }));

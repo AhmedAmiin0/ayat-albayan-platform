@@ -1,7 +1,4 @@
-// guardians ← collectPeople grouped by E.164 phone (docs/06 step 1): one guardian per phone,
-// including families whose rows name no child (kept, the child is a review row). «اسم ولي الأمر»
-// is filled in one row of the export, so the name falls back to the first child's name, else the
-// phone (the owner renames in the app); issues are reported once, by the students module.
+// One guardian per phone (docs/06 step 1); the name falls back to the first child, else the phone.
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { personTz } from '../../sources/sheets/cells.ts';

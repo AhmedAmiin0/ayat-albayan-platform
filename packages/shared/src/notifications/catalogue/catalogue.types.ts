@@ -31,7 +31,7 @@ export interface NotificationEntry<K extends string = string> {
   templates: readonly TemplateKey[];
   /** The bell / push kind it writes (push_notifications.kind). */
   pushKind?: AnyPushKind;
-  /** Governed by «الرسائل التلقائية» (settings.auto_messages_enabled). */
+  /** Governed by settings.auto_messages_enabled. */
   automatic: boolean;
   /** Sent only when a person presses a button: listed, never switched. */
   manual: boolean;

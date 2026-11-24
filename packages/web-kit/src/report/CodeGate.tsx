@@ -23,10 +23,7 @@ const noticeOf = (access: ReportAccessView): Notice | null =>
     { when: access.to.length === 0, notice: 'noPhone' as const },
   ].find((r) => r.when)?.notice ?? null;
 
-/**
- * «للاطلاع على التقرير…»: a WhatsApp code to one of the numbers on file (masked: the page never
- * says whose), then the code. Too many tries, a wrong code and codes being off each say so.
- */
+/** The code goes to a masked number on file; the page never says whose. */
 export function CodeGate({ publicId, onVerified }: CodeGateProps) {
   const g = t.reportPage.gate;
   const access = useQuery(accessQuery(publicId));

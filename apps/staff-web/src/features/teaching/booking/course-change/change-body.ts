@@ -1,8 +1,7 @@
 import { changePicks, dayTimesKeeping, type BookedCourse, type PrefilledPick } from '@ab/shared';
 import type { CourseChangeBody } from './api';
 
-// «تغيير أيام الحلقات» (owner 2026-10-18): the dialog's picks (one slot per weekday, each at its own
-// time, in the course's zone) and the request they make. Pure.
+// One slot per weekday, each at its own time in the course's zone; pure.
 
 /**
  * The current days as picks, each with its day's own time, in their first future week from

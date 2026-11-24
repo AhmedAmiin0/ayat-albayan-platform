@@ -18,7 +18,7 @@ describe('text / num', () => {
   it('trims, drops bidi marks and treats dashes and lone commas as empty', () => {
     expect(text('  ‪ليان‬ ')).toBe('ليان');
     expect(text('—')).toBeNull();
-    expect(text(',')).toBeNull(); // empty multi-select «المصدر»
+    expect(text(',')).toBeNull(); // empty multi-select source
     expect(text(null)).toBeNull();
     expect(text(45)).toBe('45');
   });

@@ -1,14 +1,13 @@
 import {
   AFTER_FIELDS,
-  ATTENDANCES,
   DONE_FIELDS,
-  PROGRAMS,
   REPORT_RUBRICS,
   textRequired,
   type ReportFormEntry,
   type ReportFormResponse,
   type TextKey,
 } from '@ab/shared';
+import { ATTENDANCES, PROGRAMS } from '@ab/catalog';
 import type { RefObject } from 'react';
 import type { ScrollView } from 'react-native';
 import { View } from 'react-native';

@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
 import { minutesLeft, reportSendState, type SendReport, type SendState } from './send-state.js';
 
 /** The texts the lines are made of (reports.editUntil, reports.familySend.*, the minute forms). */

@@ -1,7 +1,8 @@
-import { OWNED_SETTING_KEYS, SETTINGS_REGISTRY, type Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
+import { OWNED_SETTING_KEYS, SETTINGS_REGISTRY } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { SEED_ENTRIES } from '@ab/shared';
+import { SEED_ENTRIES } from '@ab/settings';
 import { boundsOf, changedBy } from '@/common/configuration/config-store/io/config-entries.mapper';
 import { isModuleOwned, mayDescribe, mayView, ownerOf, OWNER_MAY_DESCRIBE } from './config-ownership';
 import { configRow } from '@/common/configuration/config-store/config-store.fakes';

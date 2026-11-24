@@ -9,10 +9,7 @@ import { useA11yPref } from '../../ui/primitives/use-a11y-pref';
 import { bioLock } from '../core/bio-lock';
 import type { BioKind } from '../core/device';
 
-/**
- * «استخدم البصمة للدخول في المرة القادمة؟», once after a fresh sign-in, naming the device's method.
- * «تفعيل» asks for one biometric confirmation; «ليس الآن» (or Android's back) never asks again.
- */
+/** Shown once after a fresh sign-in; declining (or Android back) never asks again. */
 export function BiometricOffer({ kind, visible }: { kind: BioKind; visible: boolean }) {
   const { color } = useTheme();
   const still = useA11yPref('reduceMotion');

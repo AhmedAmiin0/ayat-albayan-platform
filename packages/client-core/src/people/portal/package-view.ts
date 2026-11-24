@@ -1,10 +1,5 @@
-import type {
-  PaymentKind,
-  PortalAmount,
-  PortalPackage,
-  PortalPackageView,
-  PortalPayment,
-} from '@ab/shared';
+import type { PortalAmount, PortalPackage, PortalPackageView, PortalPayment } from '@ab/shared';
+import type { PaymentKind } from '@ab/catalog';
 
 // «الباقة» for a guardian or an adult student (docs/50 §2): «8 من 12», what is left, the renewal,
 // the amount due (shown only when something is owed), the payments and the transfer text.

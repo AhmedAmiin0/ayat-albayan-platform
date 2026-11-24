@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { studentStatusStyle } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';

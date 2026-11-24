@@ -9,8 +9,7 @@ import {
 import type { ApiClient } from '../../core/http/index.js';
 import { pathKey } from '../../core/keys/index.js';
 
-// The family's «التسجيلات» and lesson page (web portal and the family app), under the portal's
-// key so the portal's one invalidation refreshes them too.
+// Under the portal's key so the portal's one invalidation refreshes them too.
 
 const enc = encodeURIComponent;
 const student = (id: string) => `/portal/students/${enc(id)}`;
@@ -32,7 +31,6 @@ interface LessonFileInput {
   download?: string;
 }
 
-/** `?download=<name>` when the link should save the file («تنزيل»). */
 const saveAs = (name?: string): string =>
   name ? `?${new URLSearchParams({ download: name }).toString()}` : '';
 

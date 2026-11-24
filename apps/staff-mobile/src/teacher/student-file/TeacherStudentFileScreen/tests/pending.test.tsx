@@ -1,4 +1,5 @@
-import { counted, type PendingReportView } from '@ab/shared';
+import type { PendingReportView } from '@ab/shared';
+import { counted } from '@ab/core';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { refreshAfterSubmit } from '@/teacher/report/hooks/api';

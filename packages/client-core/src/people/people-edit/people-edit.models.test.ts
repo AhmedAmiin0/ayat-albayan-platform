@@ -7,7 +7,7 @@ import {
   emptyFamily,
   type AttachState,
 } from '../../index.js';
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { VIEW } from './people-edit.fixtures.js';
 
 const write = () => ({ mutate: vi.fn(), isPending: false, errorText: null as string | null });

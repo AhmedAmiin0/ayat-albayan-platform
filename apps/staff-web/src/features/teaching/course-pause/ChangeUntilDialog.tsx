@@ -18,7 +18,7 @@ interface ChangeUntilDialogProps {
   onDone: (message: string) => void;
 }
 
-/** «تغيير نهاية الإيقاف»: one date (empty = until «استئناف»), PATCH …/course-pause/until. */
+/** One date (empty means until resumed), PATCH course-pause/until. */
 export function ChangeUntilDialog({ studentId, pause, onClose, onDone }: ChangeUntilDialogProps) {
   const formId = useId();
   const [until, setUntil] = useState(pause.until_date ?? '');

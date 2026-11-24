@@ -7,7 +7,7 @@ export interface SectionHeaderProps {
   title: string;
   /** For `aria-labelledby` on the section it heads. */
   id?: string;
-  /** One quiet action at the inline-end («عرض الكل», a switch). */
+  /** One quiet action at the inline-end. */
   action?: ReactNode;
   /** The outline level; the look stays the same (h2 under a page title, h3 inside a card). */
   level?: keyof typeof HEADING;

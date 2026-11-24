@@ -1,9 +1,7 @@
 import { GENDERS } from '@ab/catalog';
 import { z } from 'zod';
 
-// The /people/* answers (people.edit, students.attach_guardian, people.switch_role): what
-// «تعديل البيانات», «ربط بولي أمر آخر» and «تحويل» read, on web and mobile, for the assistant and
-// the admin alike. The apps parse them; phones are E.164 (rule 7), the code generated (AB-nnnn).
+// The /people/* answers for assistant and admin; phones E.164 (rule 7), code generated (AB-nnnn).
 
 const text = z.string().nullable();
 const gender = z.enum(GENDERS).nullable();
@@ -29,7 +27,7 @@ export const peopleEditStudentSchema = z.object({
   /** The student's own WhatsApp (sign-in), E.164; null = none. */
   phone_e164: z.string().nullable(),
   has_login: z.boolean(),
-  /** Lessons, packages, money, reports, messages…: «تحويل إلى ولي أمر» is refused. */
+  /** Any lessons, packages, money, reports or messages refuse the switch to guardian. */
   has_records: z.boolean(),
 });
 export type PeopleEditStudent = z.infer<typeof peopleEditStudentSchema>;
@@ -75,5 +73,5 @@ export const familyOptionsSchema = z.array(familyOptionSchema);
 export const convertedStudentSchema = z.object({ id: z.string(), code });
 export type ConvertedStudent = z.infer<typeof convertedStudentSchema>;
 
-/** A move or «تحويل إلى ولي أمر»: the family the student is in now, or that remains. */
+/** After a move or switch: the family the student is in now, or that remains. */
 export const familyReplySchema = z.object({ guardian_id: z.string() });

@@ -35,7 +35,6 @@ const PASSES: Record<Audience, readonly GateStatus[]> = {
 /** The lesson room and its chat are never covered. */
 const ROOM = /^\/room(-chat)?\//;
 
-/** The cover's verdict for this phone (owner 2026-11-21, «تحت الصيانة»). */
 export function useMaintenance(): MaintenanceState {
   const facts = useQuery(maintenanceQuery);
   const gate = useRootGate();

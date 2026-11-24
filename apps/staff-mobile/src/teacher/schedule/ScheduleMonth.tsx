@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { RefreshControl, ScrollView } from 'react-native';
 import { AgendaDayView, headerLine, useLessonDetails } from '@/calendar';
 import { PeriodSwitcher } from '@ab/mobile-kit';

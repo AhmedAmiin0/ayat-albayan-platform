@@ -3,7 +3,7 @@ import type { MessageStatus } from '@ab/catalog';
 import type { MessageView } from '../chat/views.js';
 import { isPayloadOfType, lenientText, parseOrNull, payloadOfType } from '../payload/index.js';
 
-// WhatsApp message reactions (owner 2026-10-27: «hold a message to react»). WhatsApp is 1:1: one
+// WhatsApp message reactions: hold a message to react. WhatsApp is 1:1: one
 // reaction from the contact (theirs) and one from the academy (ours) per message. Pure: the API,
 // the web and the app share it.
 

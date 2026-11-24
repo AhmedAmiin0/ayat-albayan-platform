@@ -1,4 +1,4 @@
-import { cancelOffered, subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
 import {
   apiSend,

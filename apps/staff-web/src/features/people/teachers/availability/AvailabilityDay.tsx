@@ -27,7 +27,7 @@ type Props = {
   onChange: (ranges: Range[]) => void;
 };
 
-/** The error line, in ONE inline run (docs/07 §14.3): «… من 17:30 لحد 18:00» for an overlap. */
+/** One inline run (docs/07 §14.3). */
 function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Range[], clock: Clock): string {
   if (problem === 'endBeforeStart') return t.common.endBeforeStart;
   const clash = overlaps(ranges)[0];

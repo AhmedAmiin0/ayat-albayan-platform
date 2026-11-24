@@ -8,7 +8,7 @@ import {
   type ReportStage,
   type WayIn,
 } from '@ab/client-core';
-import { isOpenLesson, type LessonView } from '@ab/shared';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { usePlatformClassroom, useJoinWindow } from '@/core/lib/query/public-config';
 import { useNow } from '@ab/mobile-kit';
 import { useTeacherActs, type TeacherActs } from '@/teacher/lesson-actions';

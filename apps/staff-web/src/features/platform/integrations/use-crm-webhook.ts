@@ -34,10 +34,7 @@ export function crmWebhookProblem(e: unknown): string {
   return parsed.success ? s.errors[parsed.data.message] : s.errors.unknown;
 }
 
-/**
- * «ربط علامات التسليم من نظام CRM تلقائيًا»: registers the CRM's delivery-ticks webhook; the secret
- * stays on the server. After it, «التكاملات» is read again (WACRM_WEBHOOK_SECRET now saved).
- */
+/** The webhook secret stays on the server. */
 export function useCrmWebhook() {
   const queryClient = useQueryClient();
   return useMutation({

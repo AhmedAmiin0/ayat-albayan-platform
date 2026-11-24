@@ -18,11 +18,7 @@ interface Props {
 const fieldClass = 'w-full font-mono text-sm sm:w-[300px]';
 const selectClass = 'w-full text-sm sm:w-[300px]';
 
-/**
- * A plain integration value, prefilled with the value in use: free text (an id, a URL, a list) in
- * LTR, or a select for a key with fixed values (the provider, the template sync switch), whose empty
- * choice clears it. Labelled in Arabic; the server's key name only under «للمطوّر».
- */
+/** An empty choice in a fixed-values select clears the value. */
 export function PlainIntegrationRow({ item, value, invalid, onChange }: Props) {
   const words = integrationText(item.key);
   const options = integrationEnum(item.key);

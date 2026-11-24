@@ -16,18 +16,14 @@ export interface InvoiceFieldProps {
   value: InvoiceDraft | null;
   /** The wizard's request id: the upload path belongs to it. */
   requestId: string;
-  /** The family's WhatsApp number; «من الشات» shows only with it. */
+  /** The family's WhatsApp number; picking from the chat shows only with it. */
   chatPhone: string | null;
   onChange: (invoice: InvoiceDraft | null) => void;
 }
 
 const FOCUS = 'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid has-[:focus-visible]:outline-(--lapis)';
 
-/**
- * «الفاتورة *» (R-PAY-03): a photo or PDF of the payment proof, uploaded from the device (straight
- * to the private bucket at once) or saved from the family's chat (R-MSG-06). Picking a new one
- * replaces the old only once it has landed; the form is not ready while an upload runs.
- */
+/** Payment proof (R-PAY-03, R-MSG-06): a new pick replaces the old only once landed. */
 export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceFieldProps) {
   const id = useId();
   const maxBytes = useUploadMaxBytes();

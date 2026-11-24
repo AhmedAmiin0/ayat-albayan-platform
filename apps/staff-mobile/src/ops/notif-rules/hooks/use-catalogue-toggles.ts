@@ -7,7 +7,7 @@ import { useToggleRule } from './use-toggle-rule';
 
 type Key = NotificationEntryView['key'];
 
-/** The question open now: family ON (inline, under its row) or the typed «إيقاف» bottom sheet. */
+/** Family ON asks inline under its row; typed OFF uses a bottom sheet. */
 type OpenAsk = { key: Key; kind: 'family' | 'typed' } | null;
 
 /** The line after a save, announced here once (no live region repeats it); also shown above the list. */
@@ -66,7 +66,7 @@ export function useCatalogueToggles() {
     pendingKey: toggle.isPending ? (toggle.variables?.key ?? null) : null,
     request,
     send,
-    /** «إلغاء» / close: the question and its error go; the switch never moved. */
+    /** Cancelling clears the question and its error; the switch never moved. */
     cancel: () => {
       if (ask) setError(ask.key, null);
       setAsk(null);

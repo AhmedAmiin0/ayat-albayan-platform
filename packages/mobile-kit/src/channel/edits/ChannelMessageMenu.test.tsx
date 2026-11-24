@@ -8,7 +8,7 @@ import { palette } from '../../theme';
 import { ChannelThread } from '../ChannelThread';
 import { channelMessage, channelPage } from '../testing/channel-fixtures';
 
-// Owner 2026-10-30: «تعديل» (15 min) and «حذف للجميع» (48 h) for the sender; the admin deletes any.
+// The sender may edit for 15 min and delete for everyone for 48 h; the admin deletes any.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('../../lib/http/api', () => ({
@@ -102,7 +102,7 @@ async function noMenu(audience: 'teacher' | 'sales', m: ChannelMessageView) {
   expect(screen.queryByTestId('channel-message-menu')).toBeNull();
 }
 
-/** Someone else's message: «ردّ» only, never edit or delete (the API refuses them). */
+/** Someone else's message offers reply only; the API refuses edit and delete. */
 async function replyOnly(audience: 'teacher' | 'sales', m: ChannelMessageView) {
   const menu = await hold(audience, m);
   expect(menu.getByRole('button', { name: t.studentChannel.reply.action })).toBeTruthy();

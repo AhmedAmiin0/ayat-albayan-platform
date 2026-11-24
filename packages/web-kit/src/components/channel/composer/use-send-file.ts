@@ -42,10 +42,6 @@ export const pickedFile = (file: File): ChannelFileToSend => ({
 
 const errors: Readonly<Record<string, string>> = t.studentChannel.actions.errors;
 
-/**
- * A refused file in words: too large (its type's cap), a type not taken, the API's reason (the
- * chat closed…), else «تعذّر رفع الملف».
- */
 function fileSendProblem(e: unknown, mime: string): string {
   const media = t.studentChannel.media;
   if (e instanceof ChannelFileError) {
@@ -60,11 +56,7 @@ export interface FileSend {
   replyToId?: string | undefined;
 }
 
-/**
- * A photo, PDF or voice note: the upload first, then the message that carries it (its own
- * client_id, the quoted message if any); the thread and the counts re-read after. «جارٍ رفع
- * الملف…» while it goes, the refusal in words if it fails.
- */
+/** Uploads first, then sends the message carrying it; thread and counts re-read after. */
 export function useSendFile(refs: ChannelRef) {
   const client = useQueryClient();
   const [mime, setMime] = useState('');

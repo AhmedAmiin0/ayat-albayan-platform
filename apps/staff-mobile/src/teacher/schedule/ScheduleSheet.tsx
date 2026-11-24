@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { LessonDetailsSheet } from '@/calendar';
 import { JoinClassroomButton } from '@/classroom';
 import { TeacherLessonTools, useTimedNotice } from '@/teacher/lesson-actions';

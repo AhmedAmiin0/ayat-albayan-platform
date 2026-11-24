@@ -18,7 +18,7 @@ export function storageProbeProblem(e: unknown): string {
   return parsed.success ? s.errors[parsed.data.message] : s.errors.unknown;
 }
 
-/** «اختبار الاتصال»: MinIO with the saved settings; nothing on the page changes. */
+/** Nothing on the page changes. */
 export function useStorageProbe() {
   return useMutation({
     mutationFn: async () => answerSchema.parse(await probeStorage()).data,

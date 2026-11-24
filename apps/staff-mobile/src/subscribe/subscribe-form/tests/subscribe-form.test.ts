@@ -1,4 +1,4 @@
-import { subscriptionCreateSchema } from '@ab/shared';
+import { subscriptionCreateSchema } from '@ab/money';
 import { ApiError, t } from '@ab/mobile-kit';
 import {
   INITIAL_FORM,

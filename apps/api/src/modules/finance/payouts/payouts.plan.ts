@@ -1,5 +1,6 @@
-import { monthRangeIn } from '@ab/shared';
-import type { LessonStatus, PayoutLine, PayoutStatus } from '@ab/shared';
+import { monthRangeIn } from '@ab/time';
+import type { LessonStatus, PayoutStatus } from '@ab/catalog';
+import type { PayoutLine } from '@ab/money';
 
 // Pure payout decisions (R-PAY-02, R-TCH-04, issue E3): the month window in the teacher's tz, and
 // what generate does with a teacher's row. WHICH lessons count and WHAT each pays is not decided

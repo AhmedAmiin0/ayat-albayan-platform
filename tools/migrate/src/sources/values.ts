@@ -1,5 +1,4 @@
-// Sheet vocabulary → target enums. Texts are the distinct values found in the export (2026-10-02).
-// Lookups go through normalizeArabic so spelling variants (أ/ا, ة/ه, ى/ي) match one entry.
+// Distinct values found in the export; lookups go through normalizeArabic for spelling variants.
 import type { Enums } from '@ab/db';
 import { normalizeArabic } from '@ab/core';
 import { teacherSlug } from '../keys.ts';
@@ -36,7 +35,7 @@ export function lookup<T>(table: Record<string, T>): (raw: string | null) => T |
       : undefined;
 }
 
-/** «كل المحادثات» / «الردود الجاهزة» status. 'job_applicant' → job_applicants; 'skip' → not imported. */
+/** 'job_applicant' goes to job_applicants; 'skip' is not imported. */
 export const sheetLeadStatus = lookup<Enums<'lead_status'> | 'job_applicant' | 'skip'>({
   'مهتم بدون ميعاد': 'interested_no_slot',
   'حجز مؤكد': 'trial_booked',
@@ -47,7 +46,7 @@ export const sheetLeadStatus = lookup<Enums<'lead_status'> | 'job_applicant' | '
   'جروب حلقة': 'skip',
 });
 
-/** «المصدر» / «عرفت عننا منين؟». 'skip' = internal rows (جروب حلقة, داخلي). */
+/** 'skip' means internal rows. */
 export const leadSource = lookup<Enums<'lead_source'> | 'skip'>({
   'إعلان فيسبوك': 'facebook_ad',
   'إعلان انستجرام': 'instagram_ad',
@@ -89,7 +88,7 @@ export const gender = lookup<Enums<'gender'>>({
   معلم: 'male',
 });
 
-/** «الباقة المطلوبة» / «نوع الحلقة». Unlisted texts (170 دينار / 16 حلقة, نظام جماعي …) → review. */
+/** Unlisted texts go to review. */
 export const packageSize = lookup<Enums<'package_size'>>({
   'حلقة تجريبية مجانية بس': 'trial',
   'حلقة تجريبية مجانية': 'trial',

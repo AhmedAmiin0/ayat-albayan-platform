@@ -6,8 +6,7 @@ import { quickReplyPayload, type QuickReplyIntent } from '../replies/quick-reply
 import type { OutboundTemplate } from '../templates/templates.js';
 import { lenientString, parseOrNull } from '../payload/index.js';
 
-// «تقييم الحلقة» by WhatsApp buttons (migration 195): the lesson_rating template's three quick
-// replies. A tap is an inbound message, so it reopens the 24 h window (docs/12 §3.5).
+// Rating buttons (migration 195); a tap reopens the 24 h window (docs/12 §3.5).
 
 export const LESSON_RATINGS = ['excellent', 'good', 'needs_work'] as const;
 export type LessonRating = (typeof LESSON_RATINGS)[number];
@@ -59,7 +58,7 @@ const ratedButtonSchema = z
 export const ratingOfInteractive = (payload: unknown): LessonRating | null =>
   parseOrNull(ratedButtonSchema, payload);
 
-/** {{2}}: «الأحد 4 أكتوبر», the lesson's day in the guardian's tz (Western digits). */
+/** {{2}}: the lesson's day in the guardian's tz, Western digits. */
 export function lessonDateText(startsAt: Date, tz: string): string {
   return weekdayDayMonth(startsAt, { tz, locale: 'ar' });
 }

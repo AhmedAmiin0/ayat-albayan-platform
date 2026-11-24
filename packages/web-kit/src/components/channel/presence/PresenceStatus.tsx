@@ -2,7 +2,7 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 interface Props {
   online: boolean;
-  /** «متصل الآن» / «آخر ظهور …» / «آخر رسالة …»; '' shows nothing. */
+  /** '' shows nothing. */
   text: string;
   className?: string;
 }

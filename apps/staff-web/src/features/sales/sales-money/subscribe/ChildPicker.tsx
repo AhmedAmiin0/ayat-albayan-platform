@@ -6,7 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 type Props = { students: SalesFamilyStudent[]; value: string; onChange: (id: string) => void };
 
-/** «اختر الطالب»: only her students of this family (the API's family view), the code beside each name. */
+/** Only her students of this family (the API's family view). */
 export function ChildPicker({ students, value, onChange }: Props) {
   if (students.length === 0) return <p className="text-sm text-ink-2">{t.salesMoney.noOwnStudents}</p>;
   return (

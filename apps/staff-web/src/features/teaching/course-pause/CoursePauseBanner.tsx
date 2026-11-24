@@ -12,13 +12,12 @@ interface CoursePauseBannerProps {
   studentId: string;
   /** The open pause (started or starting later). */
   pause: CoursePauseView;
-  /** courses.pause: «استئناف» and «تغيير نهاية الإيقاف». */
+  /** Resume and change the end need courses.pause. */
   canEdit: boolean;
   /** A toast for the parent (the banner itself goes once the course is resumed). */
   onDone: (message: string) => void;
 }
 
-/** «الدورة موقوفة مؤقتًا حتى …» / «حتى الاستئناف», «يبدأ الإيقاف في …» before it starts, the reason, the actions. */
 export function CoursePauseBanner({ studentId, pause, canEdit, onDone }: CoursePauseBannerProps) {
   const [open, setOpen] = useState<'resume' | 'until' | null>(null);
   // academy day (docs/34 b): the API's pause days are Riyadh days

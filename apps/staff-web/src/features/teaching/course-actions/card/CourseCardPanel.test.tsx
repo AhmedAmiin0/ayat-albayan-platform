@@ -12,7 +12,6 @@ vi.mock('@/features/people/auth', async (orig) => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-// «الدورة والباقة» on the admin's file (owner 2026-11-17).
 const c = t.courseCard;
 const PKG = {
   ...{ status: 'active', lessonsTotal: 8, used: 3, left: 5, paid: 240, owed: 240, currency: 'SAR' },

@@ -26,7 +26,7 @@
   },
   "src/defs.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/domains/activity.ts": {
@@ -51,7 +51,7 @@
   },
   "src/domains/messaging.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/domains/notifications.ts": {
@@ -59,22 +59,12 @@
       "count": 4
     }
   },
-  "src/domains/sales.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/domains/teaching/classroom.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/domains/teaching/recordings.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/domains/teaching/reports.ts": {
     "max-len": {
       "count": 1
     }
@@ -86,7 +76,7 @@
   },
   "src/domains/uploads.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/gate.ts": {
@@ -101,7 +91,7 @@
   },
   "src/groups.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/index.ts": {
@@ -170,7 +160,7 @@
   },
   "src/seed/seed-entries.metadata.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/seed/seed-entries.sql-keys.test.ts": {
@@ -254,7 +244,7 @@
   },
   "src/value-groups/tests/registry.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   }
 }

@@ -1,11 +1,11 @@
 import { MAKEUP_WINDOW_DAYS, makeupEligible } from '../schemas/booking-extras.js';
 import type { LessonStudentView, LessonView } from './views.js';
 
-/** Who a lesson's «حجز تعويضي» is for: a makeup to book, and a makeup already booked. */
+/** Who a lesson's makeup is for: a makeup to book, and a makeup already booked. */
 export interface MakeupOffer {
   /** Eligible (makeupEligible: charged miss, within the makeup window, not a trial or a makeup) with no active makeup yet. */
   open: LessonStudentView[];
-  /** Eligible, and a makeup is already booked for them: «التعويض محجوز · <date>». */
+  /** Eligible students whose makeup is already booked. */
   booked: (LessonStudentView & { makeup: NonNullable<LessonStudentView['makeup']> })[];
 }
 

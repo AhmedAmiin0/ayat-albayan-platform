@@ -2,7 +2,7 @@ import type { Permission } from '@ab/catalog';
 import type { Locale } from '@ab/core';
 import type { ConfigEntry, SettingOwner } from '@ab/settings';
 
-// «الوصف» of a value (docs/26 §3): what the row's muted line shows, and who may edit it.
+// A value's description (docs/26 §3): what the row's muted line shows, and who may edit it.
 
 /** A dotted ar.json / en.json path → its string in `bundle`; undefined when it is not a string. */
 export function textIn(bundle: object, path: string | null | undefined): string | undefined {
@@ -20,10 +20,7 @@ export interface DescriptionInput {
   bundle: object;
 }
 
-/**
- * The text shown. Arabic: the admin's description, else t(hintKey) (t already holds the override),
- * else the seeded text. English: t(hintKey) only (English is edited on «الترجمات»).
- */
+/** Arabic: admin description, else t(hintKey), else seeded text; English: t(hintKey) only. */
 export function shownDescription({ entry, hintKey, locale, bundle }: DescriptionInput): string | undefined {
   const hint = textIn(bundle, entry?.hintKey ?? hintKey);
   if (locale === 'en') return hint;

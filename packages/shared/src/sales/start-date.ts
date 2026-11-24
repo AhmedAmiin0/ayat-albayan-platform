@@ -1,12 +1,8 @@
 import { addCalendarDays } from '@ab/time';
 
-// The subscription start day of the sales subscribe (docs/16 row 24). Pure: the API
-// enforces it, web and mobile use it to show the same error before posting.
-// Without subscriptions.set_start_date: the default day (today, Riyadh: the admin form's default too); an
-// explicit other day is 403 start_date_not_allowed. With it: today or later, or a PAST day only when
-// «بدأ الاشتراك سابقًا» is ticked (a student who subscribed before the platform), at most a year back.
+// Sales start day (docs/16 row 24): past days only when already started, at most a year back.
 
-/** How far back «بدأ الاشتراك سابقًا» may go. */
+/** How far back an already-started subscription may start. */
 export const SALES_START_BACK_DAYS = 365;
 
 export type SalesStartProblem = 'start_date_not_allowed' | 'start_date_past' | 'start_date_too_old';
@@ -40,10 +36,7 @@ export function salesStartDate(input: SalesStartInput): SalesStartResult {
   return { ok: true, startsOn };
 }
 
-// «حلقات مستخدمة من الباقة» (migration 932): lessons the student took before the
-// platform, counted as used; the course books only the rest. Only with a past start (the «بدأ الاشتراك
-// سابقًا» path, subscriptions.set_start_date) and never the whole package (subscriptions check): every
-// lesson but one, whatever the days a week (no other limit; the course books the rest).
+// Used before the platform (migration 932): only with a past start, never the whole package.
 
 export type UsedBeforeProblem = 'used_before_not_allowed' | 'used_before_needs_past_start' | 'used_before_too_many';
 

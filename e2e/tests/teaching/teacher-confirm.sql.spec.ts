@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { BASE, edit, HOUR, rolledBack, seed, type Tx } from '../../support/edit-time';
 
-// teacher_confirm_lesson + edit_lesson_time (migration 20261111000200, docs/46 C4 «سأحضر»)
-// against the real database, each case in a transaction that is rolled back.
+// teacher_confirm_lesson and edit_lesson_time (migration 20261111000200, docs/46 C4).
 
 type Seeded = Awaited<ReturnType<typeof seed>>;
 

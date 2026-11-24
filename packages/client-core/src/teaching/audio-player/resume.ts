@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { clampPosition } from './player-math.js';
 
-// «تتابع من حيث توقفت»: where a listener stopped in each recording, kept on the device (the app's
-// AsyncStorage, the browser's localStorage). A position near the end counts as heard in full.
+// Positions are kept on the device; one near the end counts as heard in full.
 
 /** The device key of the positions map. */
 export const RESUME_KEY = 'ab.player.resume';
@@ -29,7 +28,6 @@ function safeJson(raw: string | null): unknown {
   }
 }
 
-/** A listen's state as the list shows it: «جديد», «توقفت عند 12:40», «استمعت إليه كاملًا». */
 export type ListenState = { kind: 'new' } | { kind: 'partial'; at: number } | { kind: 'done' };
 
 export function listenState(map: ResumeMap, id: string): ListenState {

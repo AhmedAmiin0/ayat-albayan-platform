@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import {
   cancelAnswerSchema,
   confirmedChipShown,

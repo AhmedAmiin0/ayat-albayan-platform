@@ -1,4 +1,4 @@
-import { asciiDigits, type Locale, matchesQuery } from '@ab/shared';
+import { asciiDigits, type Locale, matchesQuery } from '@ab/core';
 import { COUNTRIES, type Country, nameOf, USUAL } from './countries.js';
 
 /** «+٩٦٦», «966» → «966»: a search by calling code; anything else (a name) → null. */

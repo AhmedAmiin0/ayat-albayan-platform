@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { monthText } from '@ab/shared';
+import { monthText } from '@ab/time';
 import { AppText, locale, type, useTheme } from '@ab/mobile-kit';
 
 /** «نوفمبر 2026» over that month's rows (past lessons, reports). */

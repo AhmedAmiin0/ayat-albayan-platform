@@ -10,7 +10,7 @@ export type WebPushView = Exclude<WebPushSupport, 'ready'> | 'not-configured' | 
 export interface WebPushState {
   view: WebPushView;
   busy: boolean;
-  /** The last enable / disable failed («تعذّر تغيير إشعارات المتصفح»). */
+  /** The last enable or disable failed. */
   failed: boolean;
   enable: () => void;
   disable: () => void;
@@ -59,7 +59,7 @@ export function useWebPush(): WebPushState {
       .then(setSubscribed, () => setFailed(true))
       .finally(() => {
         setBusy(false);
-        setSupport(webPushSupport(readPushEnv())); // a refused prompt turns into «محظورة»
+        setSupport(webPushSupport(readPushEnv())); // a refused prompt turns into blocked
       });
   };
   return {

@@ -7,7 +7,6 @@ import type { TileView } from './room-types';
 interface Props {
   tile: TileView;
   attach: (tileKey: string, el: HTMLVideoElement) => () => void;
-  /** A corner action, e.g. «إخراج من الحلقة». */
   action?: ReactNode;
   className?: string;
 }

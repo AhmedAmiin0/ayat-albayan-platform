@@ -1,4 +1,5 @@
-import { dateText, type PortalStudent } from '@ab/shared';
+import type { PortalStudent } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { Pressable, View } from 'react-native';
 import {
   AppText,

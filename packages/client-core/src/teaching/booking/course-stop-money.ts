@@ -2,7 +2,6 @@ import {
   fromMinor,
   owedAmountProblem,
   owedByChoice,
-  parseAmountFromZero,
   refundAmountProblem,
   refundByChoice,
   toMinor,
@@ -12,6 +11,7 @@ import {
   type StopRefund,
   type StopRefundChoice,
 } from '@ab/shared';
+import { parseAmountFromZero } from '@ab/money';
 import type { RefundChoice } from './course-refund.js';
 
 // The stop sheet's money (owner 2026-11-06) for web and mobile: the mode, the chosen option, the

@@ -40,7 +40,7 @@ function Strip({ tabs, value, onChange, unread }: Omit<Props, 'studentId'> & { u
   );
 }
 
-/** «المحادثة مع المعلم/ة» carries the family's unread count; read only while the tab exists. */
+/** Unread is read only while the tab exists. */
 function ChatStrip(props: Props) {
   const unread = useQuery(portalUnreadQuery(props.studentId)).data?.unread ?? 0;
   return <Strip {...props} unread={unread} />;

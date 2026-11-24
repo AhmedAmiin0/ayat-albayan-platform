@@ -15,15 +15,10 @@ const post: (method: 'POST', path: string) => Promise<unknown> = apiSend;
 const confirmAttendance = async (lessonId: string) =>
   confirmAnswerSchema.safeParse(await post('POST', teacherLessonPaths.confirm(lessonId))).data;
 
-/** One key per lesson: the row and the drawer read the same «سأحضر» refusal. */
+/** One key per lesson so the row and the drawer read the same confirm refusal. */
 const confirmKey = (lessonId: string) => ['teacher-confirm', lessonId] as const;
 
-/**
- * «سأحضر» (docs/46 C4, D1): POST /teachers/me/lessons/:id/confirm-attendance. Optimistic (docs/48):
- * her cached lists say «حضورك مؤكَّد» at once, a refusal puts them back, and the lessons re-read
- * either way. Nothing under ['teachers','me'] changes, so it is not refetched. `onConfirmed` is
- * the mutation's own callback: it still runs after the optimistic patch unmounts the button.
- */
+/** Optimistic (docs/48); `onConfirmed` still runs after the patch unmounts the button. */
 export function useTeacherConfirm(lessonId: string, onConfirmed?: () => void) {
   const client = useQueryClient();
   return useMutation({
@@ -40,10 +35,7 @@ export function useTeacherConfirm(lessonId: string, onConfirmed?: () => void) {
   });
 }
 
-/**
- * The last «سأحضر» refusal of this lesson, or null: a rolled-back confirm re-mounts the button, so
- * the alert is read from the mutation cache, not from the unmounted button's own hook.
- */
+/** Read from the mutation cache because a rolled-back confirm re-mounts the button. */
 export function useConfirmError(lessonId: string): unknown {
   const states = useMutationState({
     filters: { mutationKey: confirmKey(lessonId) },

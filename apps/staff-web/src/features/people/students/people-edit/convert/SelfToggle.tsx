@@ -11,7 +11,6 @@ export interface SelfToggleProps {
   onToggle: (value: boolean) => void;
 }
 
-/** «الطالب هو ولي الأمر» (students.contact_is_self), with why it may be locked. */
 export function SelfToggle({ on, locked, busy, onToggle }: SelfToggleProps) {
   const hintId = useId();
   return (

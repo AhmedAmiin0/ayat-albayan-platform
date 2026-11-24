@@ -2,7 +2,7 @@ import { participantMeta } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { mayShareScreen, snapshotOf, type ParticipantLike } from '@ab/web-kit/classroom/room/livekit/snapshot/snapshot';
 
-// «اطلب مشاركة الشاشة»: who may share comes from LiveKit's live permission, never a guess.
+// Who may share comes from LiveKit's live permission, never a guess.
 
 const person = (identity: string, o: Partial<ParticipantLike> = {}): ParticipantLike => ({
   identity,

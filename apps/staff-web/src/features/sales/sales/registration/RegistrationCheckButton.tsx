@@ -5,7 +5,7 @@ import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RegistrationCheckDialog } from './RegistrationCheckDialog';
 
-/** The «تحقق من التسجيل» button alone: the sales chat holds its dialog above the width switch (m13). */
+/** The button alone: the sales chat holds its dialog above the width switch (m13). */
 export function RegistrationCheckTrigger({ onClick }: { onClick: () => void }) {
   return (
     <Button type="button" size="sm" variant="secondary" onClick={onClick}>
@@ -15,10 +15,7 @@ export function RegistrationCheckTrigger({ onClick }: { onClick: () => void }) {
   );
 }
 
-/**
- * «تحقق من التسجيل» («الطلاب» page): opens the check, prefilled with `phone` when given. Renders
- * nothing without students.check_registration (the API checks it too).
- */
+/** Renders nothing without students.check_registration (the API checks it too). */
 export function RegistrationCheckButton({ phone }: { phone?: string }) {
   const [open, setOpen] = useState(false);
   if (!usePermissions().can('students.check_registration')) return null;

@@ -12,13 +12,7 @@ export interface CrmStatusActionsProps {
   onSet: (tpl: TemplateView, status: CrmTemplateStatus) => void;
 }
 
-/**
- * A crm line's template (docs/19): the CRM holds it, so the admin says by hand whether it is approved there.
- * Only the status the row does not have is offered. Marking it approved lets messages go out with it at
- * once, so that takes a second, explicit «تأكيد الاعتماد» (its consequence beside it; focus lands on the safe
- * «إلغاء», like SecretIntegrationRow). A fragment: the
- * buttons share RowActions' one wrapping row.
- */
+/** Approving lets messages go out at once, so it needs a second explicit confirm (docs/19). */
 export function CrmStatusActions({ tpl, busy, onSet }: CrmStatusActionsProps) {
   const s = t.templates.crmStatus;
   const name = templateName(tpl.key);

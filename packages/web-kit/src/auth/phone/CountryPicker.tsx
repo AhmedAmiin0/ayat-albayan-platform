@@ -18,11 +18,7 @@ const S = t.familyApp.signIn;
 const ROW =
   'flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start hover:bg-sunk aria-[current=true]:font-semibold';
 
-/**
- * «اختر الدولة» (#752, as the family app): every country (flag, name, calling code), the
- * browser's region and the academy's usual ones first, searchable by Arabic or English name or
- * by calling code (client-core). Render it conditionally: closing drops the search.
- */
+/** Render it conditionally: closing drops the search. */
 export function CountryPicker({ current, onPick, onClose }: Props) {
   const [query, setQuery] = useState('');
   const all = orderCountries(browserRegion(navigator.language), locale);

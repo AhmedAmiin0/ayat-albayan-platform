@@ -10,7 +10,7 @@ export type GuestJoin = z.output<typeof guestJoinSchema>;
 /** The same through the family app's signed link: no name needed, the API takes the student's. */
 export const familyGuestJoinSchema = z.object({ name: guestJoinSchema.shape.name.optional() });
 
-/** POST …/participants/:identity/share: «سماح» (true) or «إيقاف مشاركة» (false) for a guest's screen. */
+/** Allow (true) or stop (false) a guest's screen share. */
 export const shareGrantSchema = z.object({ allow: z.boolean() });
 export type ShareGrant = z.output<typeof shareGrantSchema>;
 

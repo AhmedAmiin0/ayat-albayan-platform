@@ -1,4 +1,5 @@
-import { USER_ROLES, USER_STATUSES } from '@ab/shared';
+import { USER_STATUSES } from '@ab/shared';
+import { USER_ROLES } from '@ab/catalog';
 import { t, FilterPills } from '@ab/mobile-kit';
 import { roleText, statusStyle } from '@/users/shared/format';
 import type { UsersView } from '@ab/client-core';

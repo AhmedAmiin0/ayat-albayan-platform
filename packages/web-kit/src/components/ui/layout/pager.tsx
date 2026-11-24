@@ -13,11 +13,7 @@ export interface PagerProps {
   onPage: (page: number) => void;
 }
 
-/**
- * Server-side pagination (R-NFR-08, docs/07 §6): «عرض 8 من 64», page numbers with the current
- * one in the rosette, السابق / التالي. Same props as the Phase 1 feature Pagers. Nothing renders
- * for an empty list; the numbers and steps only when there is more than one page.
- */
+/** R-NFR-08, docs/07 §6; nothing for an empty list, steps only with more than one page. */
 export function Pager({ page, total, pageSize, onPage }: PagerProps) {
   if (total === 0) return null;
   const pages = pageCount(total, pageSize);

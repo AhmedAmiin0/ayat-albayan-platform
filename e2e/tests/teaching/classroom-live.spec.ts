@@ -1,10 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { BOARD, boardInk, drawStroke, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, roomPage, shot, videoWidth } from '../../support/teaching/classroom-live';
 
-// The classroom against a real LiveKit (owner, 2026-10-05: «السبورة ومشاركة الشاشة لا تعملان»). Runs only
-// with LIVEKIT_URL (+ key/secret) in the env, e.g. `docker run … livekit/livekit-server --dev` and
-// LIVEKIT_URL=ws://localhost:7880 LIVEKIT_API_KEY=devkey LIVEKIT_API_SECRET=secret; skipped in CI.
-// Root cause it guards: a signed-in teacher who opened the shared /m/<token> link joined as a guest.
+// Needs LIVEKIT_URL, skipped in CI; guards a signed-in teacher joining via /m/<token> as a guest.
 
 const C = ar.classroom;
 const SR = C.shareRequest;
@@ -37,7 +34,6 @@ test('staff via the shared link: connected, the pen, strokes, board share, scree
   await admin.getByRole('button', { name: BOARD.toggle, exact: true }).click(); // closes it for everyone
   await expect(teacher.getByRole('img', { name: BOARD.title })).toHaveCount(0);
 
-  // «شارك الشاشة» (fake capture), then the teacher maximises the shared screen and comes back.
   await admin.getByRole('button', { name: C.shareOn }).click();
   await expect(admin.getByRole('button', { name: C.shareOff })).toBeVisible();
   const screenTile = teacher.getByRole('listitem', { name: C.screenOf.replace('{name}', ADMIN) });
@@ -91,7 +87,7 @@ test('a guest asks to share the screen, the teacher allows it, then stops it', a
   await expect(teacher.getByRole('listitem', { name: C.screenOf.replace('{name}', 'سهيلة') })).toHaveCount(0, { timeout: 15_000 });
   await expect(guest.getByRole('button', { name: SR.request })).toBeVisible();
 
-  // «مشاركة السبورة»: the guest hides the board on their own screen and sees the teacher's shared board.
+  // The guest hides the board locally and still sees the teacher's shared board.
   await teacher.getByRole('button', { name: BOARD.toggle, exact: true }).click();
   await teacher.getByRole('button', { name: BOARD.shareOn }).click();
   await expect(teacher.getByRole('button', { name: BOARD.shareOff })).toBeVisible();

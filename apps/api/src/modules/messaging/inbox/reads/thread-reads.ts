@@ -1,4 +1,5 @@
-import type { MessageView, Page, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';

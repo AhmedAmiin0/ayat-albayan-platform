@@ -1,5 +1,5 @@
 import { roleActions } from '@ab/client-core';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { View } from 'react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';

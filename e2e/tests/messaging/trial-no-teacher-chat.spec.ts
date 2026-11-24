@@ -2,10 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, withSql } from '../../support/core/schedule';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// Owner, 2026-10-11: «for the trial session, students and teachers cannot chat together; they will
-// need the sales to manage between them, or the system». «أبرار» teaches a trial student and an
-// active one: only the active family is in «المحادثات», the trial family's thread answers
-// not_your_thread, and the trial student's file says the family is reached through sales.
+// Trial students and teachers cannot chat; the family is reached through sales.
 
 const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name);
 

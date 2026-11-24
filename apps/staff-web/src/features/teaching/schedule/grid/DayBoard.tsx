@@ -84,7 +84,7 @@ interface FreeGapsProps {
   day: string;
 }
 
-/** «فاضي 17:00 – 19:00»: dashed outline links (never filled, docs/07 rule 1), ≥ 44px on phones. */
+/** Dashed outline links, never filled (docs/07 rule 1), at least 44px on phones. */
 function FreeGaps({ teacherId, gaps, day }: FreeGapsProps) {
   const clock = useClock();
   const tz = useViewerTz();

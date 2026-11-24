@@ -14,7 +14,6 @@ const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-/** «03/10/2026، 14:05»: the day, then the clock in the viewer's cycle (12 or 24 h). */
 export function formatDateTime(iso: string | null, clock: Clock): string {
   return iso ? dateAndClock(new Date(iso), { ...clock, tz: viewerZone() }, DATE_ONLY) : '—';
 }
@@ -24,7 +23,7 @@ export function formatDate(iso: string | null): string {
   return iso ? dateText(new Date(iso), { tz: viewerZone(), locale }, DATE_ONLY) : '—';
 }
 
-/** Lead age as relative time ("قبل 3 أيام"): minutes under an hour, hours under a day. */
+/** Minutes under an hour, hours under a day. */
 export function formatAge(iso: string, now: Date = new Date()): string {
   const ms = now.getTime() - new Date(iso).getTime();
   if (ms < HOUR) return relative.format(-Math.floor(ms / MINUTE), 'minute');

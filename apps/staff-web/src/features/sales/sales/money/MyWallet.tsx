@@ -25,12 +25,7 @@ function Failed({ retry }: { retry: () => unknown }) {
   );
 }
 
-/**
- * «العمولات» of «محفظتي» on /sales/earnings (owner 2026-10-29): the balance per currency, then my
- * commissions newest first, 20 a page. A new «عمولة جديدة» on the bell refreshes both (useBellSignal, no
- * extra request); the window's focus refetches as every query does. Read-only: the admin pays. The balance
- * has its own skeleton and retry: the entries never show under a blank header.
- */
+/** Balance per currency; a new-commission bell signal refreshes both without extra requests. */
 export function MyWallet() {
   const [page, setPage] = useState(1);
   const earnings = useQuery(myEarningsQuery);

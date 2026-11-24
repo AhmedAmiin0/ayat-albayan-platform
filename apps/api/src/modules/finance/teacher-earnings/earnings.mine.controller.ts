@@ -1,11 +1,11 @@
+import type { SignedDownload } from '@ab/shared';
 import {
   earningsListQuery,
   teacherPaymentListQuery,
-  type SignedDownload,
   type TeacherEarningsBalanceView,
   type TeacherEarningView,
   type TeacherPaymentView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -14,7 +14,7 @@ import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { EarningsService } from './earnings.service';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 /**
  * The signed-in teacher's own earnings (read only). The teacher id always comes from the token

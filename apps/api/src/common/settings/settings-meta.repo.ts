@@ -1,4 +1,4 @@
-import type { SettingMeta } from '@ab/shared';
+import type { SettingMeta } from '@ab/settings';
 import { Inject, Injectable } from '@nestjs/common';
 import { neverWritten } from '@/common/configuration/config-store/config-store.types';
 import { DB, type Db } from '@/common/db/db.module';

@@ -1,5 +1,5 @@
 import type { HomePrefs } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import type { teacherDay } from './teacher-day';
 
 // A hidden hero leaves its lesson first in the rest of the day; hidden ended drops the fold; pure.

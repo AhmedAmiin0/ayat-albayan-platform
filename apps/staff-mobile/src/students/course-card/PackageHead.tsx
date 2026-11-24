@@ -1,4 +1,5 @@
-import { subscriptionStatusStyle, type CourseCardPackage } from '@ab/shared';
+import type { CourseCardPackage } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
 import { AppText, StatusChip, t, type, useTheme } from '@ab/mobile-kit';
 import { useViewerTz } from '@/core/lib/clock';

@@ -1,5 +1,4 @@
-// A weekly package's picks (owner 2026-10-18: «اختر موعدًا لكل يوم»), shared by both booking wizards (docs/27 E5):
-// the draft keeps the earliest pick as `startsAt` and the others in `extra`. Pure.
+// Both booking wizards (docs/27 E5): the earliest pick is `startsAt`, the others `extra`.
 
 /** The picked slots of a booking draft: the earliest (the first lesson) and the others' UTC instants, sorted. */
 export interface BookingPickFields {

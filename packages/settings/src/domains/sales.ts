@@ -1,13 +1,6 @@
 import type { SettingDef } from '../defs.js';
 
-/**
- * «فريق المبيعات» (migration 187): its own switch. «نسبة عمولة التجديد»: the share of
- * the assistant's normal commission she earns on each renewal; SQL reads it (renewal_commission_share,
- * migration 20261027000751) with its own coalesce default: a default change needs a migration too.
- * «عمولة التجديد»: off = no new renewal commission
- * (renewal_commission_enabled, migration 20261101000996, same rule for its default); a renewal
- * commission already earned keeps settling at the percent.
- */
+/** SQL reads the renewal settings with own defaults: a default change needs a migration. */
 export const SALES_SETTINGS = {
   sales_auto_assign: { module: 'sales', group: 'sales', confirm: 'simple', type: 'bool', default: true, form: false, labelKey: 'sales.assign.auto', hintKey: 'sales.assign.autoHint' },
   // Off (default) = any assistant acts on any lead or student (docs/16 row 39).

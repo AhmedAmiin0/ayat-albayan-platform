@@ -16,11 +16,7 @@ interface Props extends TileSlots {
 
 const S = t.classroom.stage;
 
-/**
- * The shared screen (or a shared board) on the stage, never cropped. Click / tap it, or focus it
- * and press Enter / Space, for «تكبير الشاشة»: the whole viewport (Fullscreen API, or a fixed
- * overlay where only <video> can go fullscreen). «تصغير», Esc or another click bring it back.
- */
+/** Never cropped; maximize falls back to a fixed overlay where only <video> goes fullscreen. */
 export function StageScreen({ screen, strip, attach, actionFor }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const max = useMaximize(box);

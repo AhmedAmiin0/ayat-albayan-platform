@@ -1,5 +1,6 @@
 import { logReportAction, type LogReportAction } from '@ab/client-core';
-import type { AttendanceTableRow, ClockCycle, StudentAttendanceTable } from '@ab/shared';
+import type { AttendanceTableRow, StudentAttendanceTable } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';

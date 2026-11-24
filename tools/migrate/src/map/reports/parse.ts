@@ -1,5 +1,4 @@
-// One «تقارير الحلقات» row → a completed lesson + its report, or why not (A2, A3, A5, A6). Pure.
-// Student and teacher: parse.who.ts.
+// One report row to a completed lesson and its report, or why not (A2, A3, A5, A6); pure.
 import type { Enums } from '@ab/db';
 import { keys } from '../../keys.ts';
 import { dateTime, text, ymd } from '../../sources/sheets/cells.ts';

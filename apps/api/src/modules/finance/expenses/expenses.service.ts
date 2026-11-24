@@ -1,4 +1,5 @@
-import { sameStoredObject, type ExpenseCreate, type ExpenseUpdate, type ExpenseView } from '@ab/shared';
+import { sameStoredObject } from '@ab/shared';
+import type { ExpenseCreate, ExpenseUpdate, ExpenseView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { notFound } from '@/common/http/errors';

@@ -24,11 +24,7 @@ export interface ShortLinksPageProps {
   onSearch: (next: LinkListSearch) => void;
 }
 
-/**
- * «الروابط المختصرة» (owner 2026-11-17, board LinkXWebList): the user's own links, every link
- * with an owner column and filter for short_links.all; «رابط جديد» opens the create panel and a
- * new link opens on its own page.
- */
+/** Own links, or every link with an owner column and filter for short_links.all. */
 export function ShortLinksPage({ section, search, onSearch }: ShortLinksPageProps) {
   const showOwner = usePermissions().can('short_links.all');
   const navigate = useNavigate();

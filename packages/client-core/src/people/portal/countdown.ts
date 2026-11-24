@@ -1,8 +1,7 @@
 import type { PortalLesson } from '@ab/shared';
 import { isAhead, isLessonNow, windowStateAt } from './lesson-window.js';
 
-// The live countdown on a lesson card (docs/50 §6): the app re-renders every second and writes the
-// parts in its own words; «الآن» while the lesson runs.
+// docs/50 §6: the app re-renders every second and words the parts itself.
 
 export interface CountdownParts {
   days: number;

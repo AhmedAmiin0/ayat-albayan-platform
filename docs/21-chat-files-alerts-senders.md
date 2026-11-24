@@ -492,7 +492,7 @@ async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): 
   - no owners gives all sales;
   - the dedup key is `new_message:{subject}:{id}`, and a second identical call writes no row;
   - a throw from `salesIds` is swallowed.
-- `apps/api/src/modules/messaging/webhook/inbound/webhook.inbound.owners.test.ts`:
+- `apps/api/src/modules/messaging/webhook/inbound/tests/owners.test.ts`:
   - lead owner A gives owners `['A']`;
   - a guardian whose children were brought by A and B, plus converted-lead owner C, gives A, B, C;
   - unowned gives `[]`;

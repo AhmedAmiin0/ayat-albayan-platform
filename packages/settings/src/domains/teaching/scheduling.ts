@@ -1,6 +1,6 @@
 import type { SettingDef } from '../../defs.js';
 
-/** «الجدول والحلقات» (R-SCH-02, R-SCH-07, R-SCH-10). */
+/** Schedule and lessons (R-SCH-02, R-SCH-07, R-SCH-10). */
 export const SCHEDULING_SETTINGS = {
   booking_horizon_weeks: {
     module: 'scheduling', group: 'schedule',
@@ -29,10 +29,7 @@ export const SCHEDULING_SETTINGS = {
     type: 'bool', default: true,
     labelKey: 'settings.teachersAlwaysAvailable', hintKey: 'settings.hints.teachersAlwaysAvailable',
   },
-  /**
-   * ON (default) = «يحتاج تأكيد»; after its end + the grace a confirmed lesson is completed, a
-   * reminded one with no «نعم» no_show (AutoHeldJob). OFF = held after the grace.
-   */
+  /** On: confirmed completes after the grace, reminded unanswered is no_show; off: held. */
   lesson_confirmation_required: {
     module: 'scheduling', group: 'schedule',
     type: 'bool', default: true, public: true,

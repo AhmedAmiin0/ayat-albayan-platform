@@ -1,4 +1,4 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';

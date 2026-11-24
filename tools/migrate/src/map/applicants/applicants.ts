@@ -1,7 +1,4 @@
-// job_applicants ← «كل المحادثات» rows with «توظيف / عرض خدمة» (HUB + BOOK copies) ∪ HUB
-// «ردود التوظيف» (C4). `job-applications-clean.xlsx` is the owner's own job search, not academy
-// applicants (excluded in headers.ts). «ردود التوظيف › الرسالة» is the academy's outgoing reply,
-// so notes come from the conversation Summary. One applicant per phone. Pure.
+// Job applicants from the conversation and hiring-reply tabs (C4); one per phone; pure.
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { phoneCell, text } from '../../sources/sheets/cells.ts';

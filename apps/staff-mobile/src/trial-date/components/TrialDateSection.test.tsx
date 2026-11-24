@@ -1,4 +1,4 @@
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { profile } from '@/students/shared/test-data';

@@ -30,12 +30,7 @@ const chatControl = (kit: RoomKit, ui: RoomUi): ChatControl | undefined =>
     ? { unread: kit.chat.unread, on: ui.panel === 'chat', open: () => ui.toggle('chat') }
     : undefined;
 
-/**
- * The call itself, one screen tall: the top line, the stage (or the grid, or «بانتظار المعلم/ة…»)
- * with the family's chat / people panel beside it, and the control bar pinned at the bottom. The
- * board, «إخراج من الحلقة» and «التسجيلات» hang off it by role (an internal meeting's room too). A
- * trial lesson's room has no text chat (join.chat false; the data hook drops the chat topic).
- */
+/** A trial lesson's room has no text chat (join.chat false). */
 export function LiveRoom({ room, join, kit = STAFF_KIT }: Props) {
   const { snap } = room;
   const tools = useRoomTools(room, join);

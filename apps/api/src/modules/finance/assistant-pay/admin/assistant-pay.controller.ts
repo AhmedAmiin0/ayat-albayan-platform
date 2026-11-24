@@ -8,7 +8,7 @@ import {
   type AssistantTermsView,
   type BroughtByResult,
   type BroughtByView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -50,7 +50,6 @@ export class AssistantPayController {
     return this.terms.set({ assistantId, terms: parseOrThrow(assistantTermsSchema, body), actorId: user.id });
   }
 
-  /** The student profile's «جُلب بواسطة»; 404 student_not_found. */
   @Get('brought-by/:studentId')
   @Permissions('assistantpay.read')
   broughtByOf(@Param('studentId', ParseUUIDPipe) studentId: string): Promise<BroughtByView> {

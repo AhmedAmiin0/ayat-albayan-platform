@@ -1,4 +1,4 @@
-import { asciiDigits } from '@ab/shared';
+import { asciiDigits } from '@ab/core';
 import { COUNTRIES, type Country } from './countries.js';
 
 /** The main country of a shared calling code (+1 → US, +7 → RU, +44 → GB…). */

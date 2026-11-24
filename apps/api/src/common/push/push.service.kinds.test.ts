@@ -1,4 +1,5 @@
-import { notificationEntry, PUSH_KIND_PERMISSIONS, PUSH_KINDS, type PushKind } from '@ab/shared';
+import { notificationEntry, PUSH_KIND_PERMISSIONS } from '@ab/shared';
+import { PUSH_KINDS, type PushKind } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from './push.fakes';
 import type { PushTransport } from './push.service';

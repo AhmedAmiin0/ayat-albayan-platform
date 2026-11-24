@@ -25,10 +25,7 @@ function loadError(error: unknown): string {
   return reportErrorText(error);
 }
 
-/**
- * «تقرير الحلقة» for one lesson (R-REP-01/02/04): opened from the lesson, identity prefilled. A
- * new-form report (form_version 2) is the new form for the teacher; the admin reads it and may edit it.
- */
+/** Opened from the lesson (R-REP-01/02/04); form version 2 is editable by the teacher and admin. */
 export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProps) {
   const form = useQuery(reportFormQuery(lessonId));
   const viewer = useViewerTz();

@@ -16,7 +16,6 @@ export interface SegmentPartProps {
   invalid: boolean;
 }
 
-/** One surah part of a track: its range (opens the picker), meta, five grades and «احذف». */
 export function SegmentPart({ name, segment, onPick, onGrade, onRemove, invalid }: SegmentPartProps) {
   const v2 = t.reports.v2;
   return (

@@ -19,13 +19,7 @@ const r = t.mobileNotificationRules;
 const anyEditable = (data: NotificationsOverview | undefined): boolean =>
   (data?.entries ?? []).some((e) => ruleOf(e)?.editable === true);
 
-/**
- * «الإشعارات» on the phone (docs/23 §3 phase 1, docs/26b §4): one audience at a time, each
- * notification with its state and the first blocker in words. With notifications.manage and a v2 answer, editable rows get
- * a switch (family ON and essential OFF ask first); otherwise read-only as before. The key carries
- * the settings' fetch time (useCatalogue). `initialAudience` opens on that pill (the overview's rows). The saved line is announced once,
- * by the toggles (announceForAccessibility), not again by a live region.
- */
+/** docs/23 §3, docs/26b §4: switches need notifications.manage and v2; save announced once. */
 export function NotificationCatalogue({ initialAudience }: { initialAudience?: AudienceTab } = {}) {
   const query = useCatalogue();
   const manage = useCanManageNotifications();

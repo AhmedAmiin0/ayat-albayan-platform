@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { AgendaLessonRow } from '@/calendar';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

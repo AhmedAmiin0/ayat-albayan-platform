@@ -7,11 +7,9 @@ import { AppText } from '../primitives/AppText';
 import { Button } from '../primitives/Button';
 
 interface InlineConfirmProps {
-  /** The question, e.g. «يبدو أنها طلب توظيف وليست طالبًا.» */
   message: string;
-  /** Primary action, named by its verb («نقل لطلبات التوظيف»); defaults to «تأكيد». */
+  /** Named by its verb; defaults to confirm. */
   confirmLabel?: string;
-  /** Secondary way out («أبقِها هنا»); defaults to «إلغاء». */
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
@@ -26,11 +24,7 @@ interface InlineConfirmProps {
   confirmRef?: Ref<View>;
 }
 
-/**
- * docs/07 §9 inline confirm strip: the question, then ONE ButtonRow (docs/07 §6 «الأزرار»): the
- * confirm (primary) at the reading start, the way out (secondary) beside it; they stack when they
- * do not fit.
- */
+/** docs/07 §9 and §6: one ButtonRow, confirm first; they stack when they do not fit. */
 export function InlineConfirm(props: InlineConfirmProps) {
   const { message, onConfirm, onCancel, busy = false, confirmRef } = props;
   const { color } = useTheme();

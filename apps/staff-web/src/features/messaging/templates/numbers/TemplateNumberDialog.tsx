@@ -19,11 +19,7 @@ export interface TemplateNumberDialogProps {
   onClose: () => void;
 }
 
-/**
- * «تغيير رقم الإرسال» confirm: the template must be approved on that number's WABA, or the message
- * goes out from the next number in order (docs/23c decision 3). Cancel keeps the old number;
- * Cancel / Escape wait while the save is in flight.
- */
+/** Unapproved on that WABA, the message goes from the next number (docs/23c decision 3). */
 export function TemplateNumberDialog({ pick, numbers, busy, onConfirm, onClose }: TemplateNumberDialogProps) {
   const name = templateName(pick.template.key);
   const number = pick.numberId === null ? undefined : numbers?.find((n) => n.id === pick.numberId);

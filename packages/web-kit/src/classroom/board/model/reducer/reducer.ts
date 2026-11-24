@@ -48,17 +48,13 @@ function sync(state: BoardState, { msg, from }: BoardInput): BoardState {
   return { ...merged, studentsCanDraw: msg.studentsCanDraw, open: msg.open, allowed: msg.allowed };
 }
 
-/** «سماح» adds one guest to the drawers, «إيقاف كتابة» takes them out (staff only). */
+/** Allow adds one guest to the drawers, stop removes them (staff only). */
 function allowOne(state: BoardState, { who, allow }: { who: string; allow: boolean }): BoardState {
   const others = state.allowed.filter((x) => x !== who);
   return { ...state, allowed: allow ? [...others, who] : others };
 }
 
-/**
- * The board after one message. Permissions are checked here, on receive, not only when sending:
- * a stroke must be the sender's own and the sender must be allowed to draw; clear / open belong to
- * the staff, «السماح للطلاب بالكتابة» to the teacher or admin; anything else leaves the board as is.
- */
+/** Permissions are checked on receive too, not only when sending. */
 export function boardReducer(state: BoardState, { msg, from }: BoardInput): BoardState {
   switch (msg.t) {
     case 'draw':

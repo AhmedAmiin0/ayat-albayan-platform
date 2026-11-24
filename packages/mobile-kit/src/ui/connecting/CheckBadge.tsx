@@ -12,11 +12,7 @@ const POP_MS = 320;
 const DRAW_MS = 360;
 const DRAW_DELAY_MS = 120;
 
-/**
- * «تم الاتصال»'s 20 pt badge: it pops in (0.6 → 1.12 → 1, 320 ms) while its tick draws (dash offset
- * 24 → 0, 360 ms after 120 ms). The pop runs on the native driver; an SVG dash offset cannot.
- * Reduce Motion: the finished badge, no pop.
- */
+/** The pop runs on the native driver, the SVG dash cannot; Reduce Motion shows it finished. */
 export function CheckBadge({ still }: { still: boolean }) {
   const { color } = useTheme();
   const [scale] = useState(() => new Animated.Value(still ? 1 : 0.6));

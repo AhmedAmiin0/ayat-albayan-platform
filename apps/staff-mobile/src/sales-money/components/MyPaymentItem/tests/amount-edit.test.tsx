@@ -1,11 +1,11 @@
-import type { MyPaymentRow } from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey, money } from '@ab/mobile-kit';
 import { myPayment } from '@/sales-money/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { MyPaymentItem } from '@/sales-money/components/MyPaymentItem/MyPaymentItem';
 
-// «تعديل المبلغ» on «مدفوعاتي» with subscriptions.edit_terms (owner 2026-11-02).
+// Needs subscriptions.edit_terms.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

@@ -31,7 +31,6 @@ describe('teacher ↔ calendar mapping', () => {
     );
     await waitFor(() => expect(onNote).toHaveBeenCalledWith(t.googleSync.common.saved));
     const after = await rowOf('Teacher A');
-    // The chip now names the confirmed calendar (beside its option) and «تأكيد» rests until a change.
     await waitFor(() => expect(within(after).getAllByText('Calendar Teacher A')).toHaveLength(2));
     expect((within(after).getByRole('button', { name: t.googleSync.common.confirm }) as HTMLButtonElement).disabled).toBe(true);
   });

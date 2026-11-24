@@ -1,5 +1,6 @@
 import { notOpenedCount, sendLook, userLook, visitOf } from '@ab/client-core';
-import { counted, type ShortLinkDetail, type ShortLinkUser } from '@ab/shared';
+import type { ShortLinkDetail, ShortLinkUser } from '@ab/shared';
+import { counted } from '@ab/core';
 import { View } from 'react-native';
 import { t, ErrorLine, InsetGroup, Note, Section } from '@ab/mobile-kit';
 import { LinkChip } from '@/short-links/ui/LinkChip';

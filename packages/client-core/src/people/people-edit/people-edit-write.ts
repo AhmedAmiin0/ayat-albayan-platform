@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 
 /** One /people write as the apps build it (a react-query mutation plus its MSA refusal). */
 export interface PeopleWrite<I> {

@@ -8,7 +8,7 @@ interface ToggleProps {
   onPress: () => void;
 }
 
-/** «كتم»: read out «selected» while muted, like the calls' (docs/28 §5). */
+/** Read out as selected while muted, like calls (docs/28 §5). */
 export function MicButton({ on, onPress }: ToggleProps) {
   return (
     <RoundButton
@@ -21,7 +21,6 @@ export function MicButton({ on, onPress }: ToggleProps) {
   );
 }
 
-/** «الكاميرا»: filled while on. */
 export function CameraButton({ on, onPress }: ToggleProps) {
   return (
     <RoundButton

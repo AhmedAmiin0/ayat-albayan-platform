@@ -14,10 +14,7 @@ async function issue(studentId: string): Promise<string> {
   return url;
 }
 
-/**
- * «رابط دخول الطالب» on the student profile (admin): the student's long-lived classroom link,
- * created (or replaced: only its hash is kept, so it cannot be shown again) and copied, like «انسخ رابط الطالب».
- */
+/** Only its hash is kept, so a link cannot be shown again; creating replaces it. */
 export function StudentJoinLink({ studentId }: { studentId: string }) {
   const make = useMutation({ mutationFn: issue });
   return (

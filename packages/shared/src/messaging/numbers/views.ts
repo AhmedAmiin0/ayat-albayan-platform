@@ -2,8 +2,7 @@ import type { IntegrationSource, NumberPurpose, WaLine, WaProvider } from '@ab/c
 import type { CommsSource } from '@ab/settings';
 import type { NumberEvolutionView } from './evolution.js';
 
-// «الأرقام» (docs/23 §3 phase 3): a WhatsApp number as a record. Ids and labels only: no view here ever
-// carries a token or secret value (secrets are «set / not set» with a date).
+// Numbers (docs/23 §3): no view ever carries a token or secret value, only set or not with a date.
 
 export { NUMBER_SECRET_NAMES, type NumberSecretName } from './secret-names.js';
 import type { NumberSecretName } from './secret-names.js';
@@ -142,7 +141,7 @@ export interface CommsSourceView {
 }
 
 /**
- * GET /admin/numbers/own-traffic (owner 2026-10-27): inbound rows FROM one of the academy's own numbers
+ * GET /admin/numbers/own-traffic: inbound rows FROM one of the academy's own numbers
  * in the last 7 days (an old system still sending to us). Kept for audit, hidden from every list.
  */
 export interface OwnTrafficView {

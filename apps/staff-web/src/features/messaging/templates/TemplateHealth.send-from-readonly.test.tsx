@@ -13,8 +13,6 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: ['settings.read'], can: (p: string) => p === 'settings.read' }),
 }));
 
-// «يُرسل من» without templates.manage: the number as text, and the per-number approval chips.
-
 const s = t.templates.sendFrom;
 const st = t.enums.templateStatus;
 const NAME = t.templates.names.booking_confirmation_plain;

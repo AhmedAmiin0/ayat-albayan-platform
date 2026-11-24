@@ -1,4 +1,4 @@
-import { parseAmount } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 
 /** Nothing while the custom amount is off. */
 interface CustomPriceBody {

@@ -1,4 +1,4 @@
-import type { StudentRecordingsPage } from '@ab/shared';
+import type { StudentRecordingsPage } from '@ab/schedule';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { apiFetch, toQueryString, listKey } from '@ab/mobile-kit';

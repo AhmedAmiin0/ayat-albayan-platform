@@ -4,7 +4,7 @@
       "count": 9
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "scripts/screens.ts": {
@@ -36,7 +36,7 @@
   },
   "support/auto-lists.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "support/core/db.ts": {
@@ -102,7 +102,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "support/finance/course-pause.ts": {
@@ -188,11 +188,6 @@
       "count": 1
     }
   },
-  "support/messaging/chat-more.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "support/messaging/inbox.ts": {
     "ab/no-unchecked-json": {
       "count": 1
@@ -224,7 +219,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "support/messaging/template-registry.ts": {
@@ -271,7 +266,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "support/people/teacher-isolation.ts": {
@@ -344,17 +339,17 @@
   },
   "support/sales/assistant-course.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "support/sales/assistant-journey-ui.ts": {
     "max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "support/sales/assistant-journey.ts": {
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "support/sales/assistant.ts": {
@@ -380,7 +375,7 @@
   },
   "support/sales/sales-portal.ts": {
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "support/sales/trial-date.ts": {
@@ -402,7 +397,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "support/teaching/day-times.ts": {
@@ -410,7 +405,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "support/teaching/schedule-extra.ts": {
@@ -470,7 +465,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "tests/finance/course-pause.sql.spec.ts": {
@@ -486,7 +481,7 @@
   },
   "tests/finance/expenses.spec.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/finance/exports.spec.ts": {
@@ -520,7 +515,7 @@
   },
   "tests/finance/payments-receipt.spec.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "tests/finance/payouts.spec.ts": {
@@ -529,19 +524,11 @@
     },
     "ab/no-unchecked-json": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "tests/finance/pricing-offer.spec.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1
-    }
-  },
-  "tests/finance/subscriptions.spec.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "tests/finance/teacher-corrections.sql.spec.ts": {
@@ -597,7 +584,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "tests/messaging/chat-list-auto-triggers.sql.spec.ts": {
@@ -605,16 +592,8 @@
       "count": 4
     }
   },
-  "tests/messaging/chat-lists.spec.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "tests/messaging/chat-lists.sql.spec.ts": {
     "@typescript-eslint/use-unknown-in-catch-callback-variable": {
-      "count": 3
-    },
-    "max-len": {
       "count": 3
     }
   },
@@ -631,14 +610,9 @@
       "count": 3
     }
   },
-  "tests/messaging/inbox-failures.spec.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "tests/messaging/inbox-media.spec.ts": {
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "tests/messaging/inbox-push-owner.spec.ts": {
@@ -702,12 +676,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
-    }
-  },
-  "tests/messaging/saved-replies.sql.spec.ts": {
-    "max-len": {
-      "count": 1
+      "count": 3
     }
   },
   "tests/messaging/send-gate-boot.api.spec.ts": {
@@ -720,7 +689,7 @@
   },
   "tests/messaging/teacher-restricted-templates.spec.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/messaging/template-numbers.spec.ts": {
@@ -730,9 +699,6 @@
   },
   "tests/messaging/templates.spec.ts": {
     "complexity": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -758,7 +724,7 @@
   },
   "tests/messaging/wa-lines-check.spec.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "tests/messaging/wa-two-lines.reply.spec.ts": {
@@ -789,7 +755,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "tests/people/avatars.sql.spec.ts": {
@@ -853,17 +819,7 @@
       "count": 1
     }
   },
-  "tests/people/student-lists.spec.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "tests/people/student-profile.spec.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "tests/people/student-statuses.spec.ts": {
     "max-len": {
       "count": 1
     }
@@ -892,7 +848,7 @@
   },
   "tests/people/teacher-mode.spec.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "tests/people/teacher-rls.sql.spec.ts": {
@@ -903,12 +859,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
-    }
-  },
-  "tests/people/users-control.delete.spec.ts": {
-    "max-len": {
-      "count": 1
+      "count": 4
     }
   },
   "tests/people/users-control.invite.spec.ts": {
@@ -978,7 +929,7 @@
   },
   "tests/platform/forms-parity.spec.ts": {
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "tests/platform/google-calendar-handover.sql.spec.ts": {
@@ -1019,11 +970,6 @@
       "count": 1
     }
   },
-  "tests/platform/locale.spec.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "tests/platform/mobile-form-sheets.spec.ts": {
     "complexity": {
       "count": 2
@@ -1044,7 +990,7 @@
   },
   "tests/platform/settings-academy.spec.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "tests/platform/settings-gate.api.spec.ts": {
@@ -1060,7 +1006,7 @@
   },
   "tests/platform/settings-switches.spec.ts": {
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "tests/platform/shell-focus.spec.ts": {
@@ -1088,9 +1034,6 @@
   },
   "tests/reporting/report-admin.spec.ts": {
     "ab/no-unchecked-json": {
-      "count": 1
-    },
-    "max-len": {
       "count": 1
     }
   },
@@ -1139,7 +1082,7 @@
   },
   "tests/sales/assistant-portal.spec.ts": {
     "max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "tests/sales/assistant-reopen.sql.spec.ts": {
@@ -1175,7 +1118,7 @@
   },
   "tests/sales/journey-7-assistant-cycle.spec.ts": {
     "max-len": {
-      "count": 14
+      "count": 5
     }
   },
   "tests/sales/lead-register.spec.ts": {
@@ -1216,14 +1159,11 @@
   "tests/sales/sales-check-start.api.spec.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "tests/sales/sales-double-role.spec.ts": {
     "max-len": {
-      "count": 11
+      "count": 4
     }
   },
   "tests/sales/sales-meetings.spec.ts": {
@@ -1234,17 +1174,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
-    }
-  },
-  "tests/sales/sales-start-date-revoke.spec.ts": {
-    "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/sales/sales-starter.spec.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "tests/sales/sales-subscribe.api.spec.ts": {
@@ -1252,7 +1187,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "tests/teaching/apply-lesson-changes-v3.sql.spec.ts": {
@@ -1260,14 +1195,9 @@
       "count": 1
     }
   },
-  "tests/teaching/booking-day-times.spec.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "tests/teaching/booking-day-times.sql.spec.ts": {
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "tests/teaching/booking-group.spec.ts": {
@@ -1288,7 +1218,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "tests/teaching/booking-override.spec.ts": {
@@ -1308,7 +1238,7 @@
   },
   "tests/teaching/classroom-live.spec.ts": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "tests/teaching/edit-session-time.held.spec.ts": {
@@ -1316,7 +1246,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/teaching/edit-session-time.helpers.ts": {
@@ -1324,7 +1254,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "no-restricted-properties": {
       "count": 1
@@ -1347,12 +1277,12 @@
   },
   "tests/teaching/meetings.spec.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "tests/teaching/proposals-reject.spec.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/teaching/proposals.spec.ts": {
@@ -1380,7 +1310,7 @@
   },
   "tests/teaching/schedule-series.spec.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "tests/teaching/schedule-stale.spec.ts": {

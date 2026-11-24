@@ -11,10 +11,6 @@ export interface SubmitTargetProps {
   provider: TemplateLineView['provider'] | undefined;
 }
 
-/**
- * «يُرسَل إلى»: the number a template is submitted from (owner 2026-10-18) — its line, its phone
- * (an LTR island, or «افحص الخطوط لعرض الرقم») and its driver, inside the submit dialog's list.
- */
 export function SubmitTarget({ line, phone, provider }: SubmitTargetProps) {
   const fill = (part: string) =>
     part.replace('{line}', t.enums.waLine[line]).replace('{driver}', provider ? optionText(provider) : '—');

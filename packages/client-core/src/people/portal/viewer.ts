@@ -1,4 +1,5 @@
-import type { PortalKind, PortalStudent, PublicSettingKey } from '@ab/shared';
+import type { PortalKind, PortalStudent } from '@ab/shared';
+import type { PublicSettingKey } from '@ab/settings';
 import { z } from 'zod';
 
 // Who sees what in the family portal (docs/50 §2, §4): a guardian and an adult student who is

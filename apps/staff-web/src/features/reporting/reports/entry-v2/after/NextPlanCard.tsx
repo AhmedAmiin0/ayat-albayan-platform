@@ -11,7 +11,6 @@ export interface NextPlanCardProps {
   onChange: (plan: string) => void;
 }
 
-/** «الحلقة القادمة»: the suggested plan as text; «تعديل الخطة» makes it editable. */
 export function NextPlanCard({ value, edited, onChange }: NextPlanCardProps) {
   const v2 = t.reports.v2;
   const [editing, setEditing] = useState(edited);

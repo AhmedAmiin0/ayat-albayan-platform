@@ -1,5 +1,5 @@
 import type { PersonLook } from '@ab/client-core';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, ltr, shape, type, useTheme, AppText, Avatar, Note, PhoneIcon } from '@ab/mobile-kit';

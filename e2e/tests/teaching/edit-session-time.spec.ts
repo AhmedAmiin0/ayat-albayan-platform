@@ -2,9 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { addDays, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability } from '../../support/core/schedule';
 import { auditOf, autoMessages, cairo, fillForm, L, lessonRows, openForm, save } from './edit-session-time.helpers';
 
-// «عدّل الوقت» (R-SCH-11): edit ONE lesson in place (same id, report, payments), not «غيّر الموعد».
-// Needs the API's PATCH /lessons/:id/time (migration 174), so it only passes once that is merged.
-// Held lessons (correction, payout line, payout lock): edit-session-time.held.spec.ts.
+// R-SCH-11 edits ONE lesson in place (same id, report, payments), unlike reschedule.
 
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6].map((d): [number, string, string] => [d, '14:00', '20:00']);
 

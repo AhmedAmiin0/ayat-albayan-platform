@@ -1,4 +1,4 @@
-import type { ReceivableIn } from '@ab/shared';
+import type { ReceivableIn } from '@ab/money';
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { FxConverter } from '@/modules/reporting/dashboard/finance/fx-converter';
