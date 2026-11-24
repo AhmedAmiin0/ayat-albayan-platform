@@ -2,8 +2,7 @@ import type { CoursePauseView } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { ApiError } from '../../core/http/index.js';
 
-// «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b) for web and mobile: the API paths, the query key and the
-// sheet's / banner's lines. The words are injected (each app's `t.coursePause`); dates arrive already formatted.
+// Course pause (docs/11 §7b) for web and mobile; words are injected and dates arrive formatted.
 
 const base = (studentId: string): string => `/students/${studentId}/course-pause`;
 
@@ -25,7 +24,6 @@ export const coursePauseKey = (studentId: string): readonly ['course-pause', str
 /** `t.coursePause.preview`: a zero line and the four Arabic count forms. */
 export type PreviewWords = Readonly<Record<PluralForm | 'zero', string>>;
 
-/** «ستُلغى N حلقات، وتُمدَّد الباقة بعدد أيام الإيقاف». */
 export function coursePausePreviewText(words: PreviewWords, lessons: number): string {
   return lessons === 0 ? words.zero : counted(words, lessons);
 }
@@ -36,7 +34,6 @@ export interface BannerWords {
   bannerFrom: string;
 }
 
-/** «الدورة موقوفة مؤقتًا حتى …» (or «حتى الاستئناف»), and «يبدأ الإيقاف في …» while it has not started. */
 export function coursePauseBanner(input: {
   pause: Pick<CoursePauseView, 'from_date' | 'until_date'>;
   today: string;

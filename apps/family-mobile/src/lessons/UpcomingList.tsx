@@ -14,14 +14,9 @@ interface UpcomingListProps {
   lessons: readonly PortalLesson[];
   student: PortalStudent;
   now: Date;
-  /** A student's own page: «حلقاتك القادمة». */
   own?: boolean;
 }
 
-/**
- * «الحلقات القادمة» after the next one: the day, the time range and the teacher; a row opens
- * «خيارات الحلقة» (OptionsRow).
- */
 export function UpcomingList({ lessons, student, now, own = false }: UpcomingListProps) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };

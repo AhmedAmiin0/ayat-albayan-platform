@@ -2,20 +2,14 @@ import type { CourseStopResult } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
 import { fill } from './course-card-text.js';
 
-// What «إلغاء الاشتراك» did (owner 2026-11-17, boards CourseXStopDone and CourseXWebDone): the
-// head (with the refund), the student's status now, «الخطوة التالية» on its own, and who was
-// told (nobody by message; the admins get a bell for a manual transfer). Pure.
+// Pure; nobody is messaged, and admins get a bell for a manual refund transfer.
 
 export interface StopDoneWords {
-  /** «أُلغي الاشتراك وأُوقفت الدورة». */
   done: string;
-  /** «أُلغي الاشتراك وسُجّل استرداد {amount}». */
   doneRefund: string;
-  /** «حالة الطالب الآن: {status}». */
   doneStatus: string;
-  /** «حوّل {amount} للأسرة يدويًا، وأبلغ الأسرة والمعلم/ة في المحادثة.» */
   next: string;
-  /** «أبلغ الأسرة والمعلم/ة في المحادثة.» (nothing to transfer). */
+  /** Used when there is nothing to transfer. */
   nextTell: string;
   notifiedFamily: string;
   notifiedTeacher: string;

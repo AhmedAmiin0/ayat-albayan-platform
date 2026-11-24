@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { monthText } from '@ab/time';
 import { AppText, locale, type, useTheme } from '@ab/mobile-kit';
 
-/** «نوفمبر 2026» over that month's rows (past lessons, reports). */
 export function MonthSection({ month, children }: { month: string; children: ReactNode }) {
   const { color } = useTheme();
   return (

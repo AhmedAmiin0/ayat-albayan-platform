@@ -7,8 +7,7 @@ import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query'
 import { lesson, student } from '@/portal/portal.fixtures';
 import { JoinAction } from '@/lessons/JoinAction/JoinAction';
 
-// «ادخل الحلقة» inside the app (owner 2026-11-16): our classroom while
-// settings.family_meetings_in_app is on and LiveKit is in the binary; else the browser as before.
+// Join opens our classroom while settings.family_meetings_in_app is on and LiveKit is built in.
 
 const mockSend = jest.fn();
 const mockHandOff = jest.fn();

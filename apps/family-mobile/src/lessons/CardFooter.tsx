@@ -25,7 +25,7 @@ interface CardFooterProps {
   onNotice: (message: string) => void;
 }
 
-/** The full card's end: where our room opens, and «خيارات الحلقة» (owner 2026-11-17). */
+/** The full card's end: where our room opens, and the lesson options. */
 export function CardFooter({ lesson, student, clock, now, live, onNotice }: CardFooterProps) {
   const { color } = useTheme();
   const inApp = useRoomsInApp();
