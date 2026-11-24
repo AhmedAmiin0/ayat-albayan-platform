@@ -17,7 +17,6 @@ interface SalesLoadScreenProps {
   notFound: string;
 }
 
-/** A sales detail page before its data: the spinner, then the 404 words or the load error, each with «رجوع». */
 export function SalesLoadScreen({ title, query, notFound }: SalesLoadScreenProps) {
   const { color } = useTheme();
   const missing = query.error instanceof ApiError && query.error.status === 404;

@@ -10,8 +10,7 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": null,
-    "types": ["jest"],
-    "paths": { "@/*": ["./src/*"] }
+    "types": ["jest"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": [

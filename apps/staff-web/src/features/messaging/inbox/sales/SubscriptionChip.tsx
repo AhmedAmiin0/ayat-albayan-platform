@@ -3,7 +3,6 @@ import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { badgeStyle } from './subscription';
 
-/** «مشترك» / «اشتراكه خلص» / «مش مشترك» (docs/07 §6 nuqta chip). */
 export function SubscriptionChip({ badge, size }: { badge: SubscriptionBadge; size?: 'sm' }) {
   return <StatusChip size={size} {...badgeStyle[badge]} label={t.inbox.subscription.badge[badge]} />;
 }

@@ -9,16 +9,7 @@ import { ComposerPhone, type ComposerMode as Mode } from './ComposerPhone';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { useTextOnReply } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
-/**
- * Reply box (R-LEAD-02). Inside the 24 h window: a plain message, or a template. After it: the
- * fixed notice (inbox.sessionClosed) and approved templates only. While any send gate is closed a
- * note says messages wait in the queue — the admin's switch, or the server (env / WhatsApp not
- * configured), which the switch alone cannot open. A teacher gets the plain version of it.
- * Every width gets the compact chat composer (ComposerPhone, W2); the header chip counts the window down.
- * «رد» picked while the template toggle is on brings the message box back (a template quotes nothing).
- * Opening a closed chat sends nothing (owner 2026-11-07): the starter template goes on the first
- * send, held until the family replies; ComposerPhone's closed-window note says so.
- */
+/** Reply box (R-LEAD-02): plain or template inside the 24 h window, approved templates after it. */
 export function Composer({ thread, context: known }: { thread: ThreadView; context: PrefillContext }) {
   // contact_name starts as the name the header shows (guardian ?? lead's WhatsApp name ?? teacher).
   const context = { contactName: thread.display_name, ...known };

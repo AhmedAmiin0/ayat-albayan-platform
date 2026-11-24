@@ -11,22 +11,17 @@ import type { FilterChip } from './types';
 export interface TableToolbarProps {
   /** The one search box (page search or a column's text filter). */
   search?: ReactNode;
-  /** The panel's fields; no «تصفية» button without them. */
+  /** No filter button without fields. */
   fields?: ReactNode;
   chips: FilterChip[];
   onClearAll: () => void;
-  /** The rows the filters leave, when the page knows: «عرض النتائج (14)» and the screen-reader summary. */
   resultCount?: number | undefined;
   /** At the inline-end of the row (e.g. the page's primary action). */
   end?: ReactNode;
-  /**
-   * A narrow column (the inbox list, 300–400px): a smaller search basis and «تصفية» as an icon (its
-   * name kept for screen readers), so search, filter and `end` share one row.
-   */
+  /** In a narrow column the filter is an icon with its name kept for screen readers. */
   compact?: boolean;
 }
 
-/** The «تصفية» button's count of set filters (the number shown, «{n} مفعّلة» for screen readers). */
 function CountBadge({ count }: { count: number }) {
   if (count === 0) return null;
   return (
@@ -45,15 +40,9 @@ function CountBadge({ count }: { count: number }) {
 // Applied: the button takes the mint wash, a green edge and a green glyph, so a filtered table reads at a glance.
 const APPLIED = 'border-lapis bg-accent text-ink enabled:hover:bg-accent [&_svg]:text-lapis';
 
-/**
- * Above a table (owner, 2026-10-05: "the filters UI are too complicated"): one row with the search
- * box, «تصفية» (tinted, with the count of set filters) that opens every other filter in a panel, and
- * an optional action; under it the set filters as removable chips. The applied filters are announced
- * to screen readers as they change.
- */
 export function TableToolbar({ search, fields, chips, onClearAll, resultCount, end, compact = false }: TableToolbarProps) {
   const [open, setOpen] = useState(false);
-  // Where focus lands when a chip or «مسح الكل» takes the chip row away (WCAG 2.4.3).
+  // Focus target when a chip or clear all removes the chip row (WCAG 2.4.3).
   const filterButton = useRef<HTMLButtonElement>(null);
   // Clearing remounts the panel's search boxes, dropping a pending debounced keystroke.
   const [round, setRound] = useState(0);
@@ -67,7 +56,6 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
   return (
     <>
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        {/* Grows to 340px at most and shrinks to share the row with «تصفية» in a narrow column (the inbox list). */}
         {search && <div className={cn('min-w-0 flex-1 sm:max-w-[340px]', compact ? 'basis-24' : 'basis-44')}>{search}</div>}
         {fields && (
           <Button

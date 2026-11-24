@@ -16,7 +16,7 @@ const quotedLine = (q: QuotedPrice): string =>
     .replace('{amount}', formatAmount(q.afterDiscount))
     .replace('{currency}', currencySymbol(q.currency));
 
-/** «سعر الباقة (ر.س)»: only with «مبلغ مخصص» on; the quote's price is said under it. */
+/** Only with the custom amount on. */
 export function CustomPriceField({ price }: { price: CustomPrice }) {
   if (!price.on) return null;
   return (
@@ -26,7 +26,7 @@ export function CustomPriceField({ price }: { price: CustomPrice }) {
       error={price.error ?? undefined}
     >
       {(p) => (
-        // Text, not type=number: an Arabic keyboard types «١٤٥», which parseAmount reads.
+        // Text, not type=number, so Arabic-Indic digits typed on an Arabic keyboard still parse.
         <Input
           {...p}
           type="text"

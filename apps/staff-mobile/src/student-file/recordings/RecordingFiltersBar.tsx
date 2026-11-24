@@ -7,7 +7,6 @@ import {
 const F = t.mobileStudentFile.recordings.filters;
 const PRESET_LABEL: Record<DatePreset, string> = { all: F.dateAll, last7: F.last7, last30: F.last30, month: F.thisMonth };
 const S = t.studentRecordings;
-/** «كل الحالات», then «جارٍ التسجيل» · «جاهز» · «فشل التسجيل» · «محذوف». */
 const STATUSES: { value: StatusFilter; label: string }[] = [
   { value: '', label: S.filters.statusAll },
   ...STUDENT_RECORDING_STATUSES.map((s) => ({ value: s, label: S.status[s] })),

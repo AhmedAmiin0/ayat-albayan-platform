@@ -27,7 +27,7 @@ export interface ExtraFilters {
   /** Labelled fields, shown in the panel before the column filters. */
   fields: ReactNode;
   chips: FilterChip[];
-  /** «مسح الكل»: the page's own filters and these column filter keys, in one URL change. */
+  /** Page filters and these column keys in one URL change. */
   onClearAll: (columnKeys: string[]) => void;
 }
 
@@ -36,11 +36,7 @@ export interface TableToolbarOptions {
   /** The page's own search (e.g. name / phone / code); else a column text filter is the search. */
   search?: ReactNode;
   extra?: ExtraFilters;
-  /**
-   * The rows the filters leave, for «عرض النتائج (14)» and the screen-reader summary: a server
-   * list's `total` (DataTable cannot know it). A `clientFilter` table counts its own rows.
-   */
+  /** A server list's `total`, which DataTable cannot know; a `clientFilter` table counts itself. */
   total?: number | undefined;
-  /** After the «تصفية» button, at the inline-end. */
   end?: ReactNode;
 }

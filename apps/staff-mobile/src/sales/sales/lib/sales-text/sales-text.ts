@@ -33,18 +33,16 @@ export function statusLabel(status: string | null): string {
   return status ? (STATUS[status] ?? status) : '—';
 }
 
-/** A package size in words («8 حلقات»); an unknown one as sent; none as «—». */
+/** An unknown package size is shown as sent; none as a dash. */
 export function packageLabel(size: string | null): string {
   return size ? (PACKAGE[size] ?? size) : '—';
 }
 
-/** «الباقة · الحالة · 8 حلقة» under the student's name. */
 export function subscriptionSubtitle(sub: SalesSubscriptionView): string {
   const lessons = t.sales.subscriptions.lessons.replace('{n}', String(sub.lessons_total));
   return [packageLabel(sub.package), statusLabel(sub.status), lessons].join(' · ');
 }
 
-/** «تبدأ 2026-10-01», or nothing without a start day. */
 export function startsLine(sub: SalesSubscriptionView): string | undefined {
   return sub.starts_on ? t.sales.subscriptions.startsOn.replace('{date}', ltr(sub.starts_on)) : undefined;
 }
@@ -54,19 +52,17 @@ export function teacherLabel(teacher: SalesTeacherView): string {
   return localizedName({ ar: teacher.name, en: teacher.name_en }, locale);
 }
 
-/** «الجنس · البرامج» of a teacher. */
 export function teacherSubtitle(teacher: SalesTeacherView): string {
   const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator);
   return programs ? `${t.enums.gender[teacher.gender]} · ${programs}` : t.enums.gender[teacher.gender];
 }
 
-/** «الطلاب: 4 · حلقات اليوم: 2» of a teacher row. */
 export function teacherCounts(teacher: SalesTeacherView): string {
   const s = t.sales.teachers;
   return `${s.studentsCount.replace('{n}', String(teacher.students.length))} · ${s.lessonsToday.replace('{n}', String(teacher.lessons_today))}`;
 }
 
-/** «الحلقة القادمة: الاثنين 12 أكتوبر 18:00» (viewer), or «لا حلقة خلال الأيام الثمانية القادمة». */
+/** The next lesson in the viewer's zone, or a note that none falls within the next eight days. */
 export function nextLessonLine(
   student: Pick<SalesTeacherStudent, 'next_lesson_at'>,
   cycle: ClockCycle,
@@ -78,12 +74,10 @@ export function nextLessonLine(
 }
 
 
-/** «المعلم/ة · البرنامج» of a student (or «بلا معلم»). */
 export function studentSubtitle(student: SalesStudentView): string {
   return `${student.teacher_name ?? t.sales.allStudents.noTeacher} · ${t.enums.program[student.program]}`;
 }
 
-/** «ولي الأمر: …». */
 export function guardianLine(student: SalesStudentView): string {
   return t.sales.mobile.guardianLine.replace('{name}', student.guardian_name);
 }

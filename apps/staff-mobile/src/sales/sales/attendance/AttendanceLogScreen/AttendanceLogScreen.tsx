@@ -22,17 +22,11 @@ import { monthOf } from '@/sales/sales/attendance/attendance-log-text';
 
 const keyOf = (row: AttendanceTableRow) => row.lesson_id;
 
-/** 409 pdf_not_ready says so; anything else (offline, gone) the general error, as «التقارير». */
+/** 409 pdf_not_ready gets its own message; anything else the general error. */
 const pdfError = (e: unknown): string =>
   e instanceof ApiError && e.status === 409 ? t.reports.error.pdf_not_ready : t.common.error;
 
-/**
- * «سجل الحضور» of one student (owner 2026-10-28), from «تفاصيل الطالب» or the admin's student
- * file: the month pills (newest first), the month's totals and a compact striped table of every
- * past lesson (Riyadh day and time on the viewer's clock, teacher, status chip, report sent or not;
- * trial / makeup tags and the cancel reason under a row). A row with a sent report opens it, for
- * any student (owner 2026-10-30) as «التقارير» does. No money, link or notes.
- */
+/** A row with a sent report opens it for any student; no money, links or notes. */
 export function AttendanceLogScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const base = useTreeBase();

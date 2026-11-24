@@ -4,7 +4,6 @@ import { familyTargets, type FamilyStudent } from '@/common/push/family-readers'
 import { PushService, type PushTarget } from '@/common/push/push.service';
 import { LessonLiveRepo } from './lesson-live.repo';
 
-/** The lesson as «بدأت الحلقة» reads it. */
 export interface LiveLesson {
   id: string;
   starts_at: string;
@@ -13,11 +12,7 @@ export interface LiveLesson {
   students: readonly FamilyStudent[];
 }
 
-/**
- * «بدأت الحلقة» (lesson_live, owner 2026-11-16): one push per family login of an open lesson not
- * ended for everyone, keyed by the lesson, so only the teacher's FIRST arrival is told (rule 8);
- * data {kind, lessonId, studentId} opens the room straight in. Pure.
- */
+/** One push per family login, keyed by lesson so only the teacher's first arrival counts. */
 export function lessonLivePushes(lesson: LiveLesson): PushTarget[] {
   const told = isOpenLesson(lesson.status) && lesson.room_ended_at === null;
   if (!told) return [];

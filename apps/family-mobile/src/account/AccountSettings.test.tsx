@@ -3,7 +3,7 @@ import { setLocale, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
 import { AccountSettings } from './AccountSettings';
 
-// «حسابي» › «الإعدادات»: the language is picked here too, not only from the phone's.
+// The language is picked in settings too, not only from the phone's.
 
 jest.mock('@ab/mobile-kit/lib/i18n/locale-switch', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/i18n/locale-switch'),

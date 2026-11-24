@@ -1,6 +1,6 @@
 import { t } from '@ab/mobile-kit';
 
-/** The «الترتيب» choices: `key` (asc) or `key:desc`; '' = the default order. */
+/** Values are `key` (asc) or `key:desc`; empty string is the default order. */
 export const leadSortChoices = (): { value: string; label: string }[] => [
   { value: '', label: t.leads.sort.recent },
   { value: 'last_inbound', label: t.leads.sort.waiting },

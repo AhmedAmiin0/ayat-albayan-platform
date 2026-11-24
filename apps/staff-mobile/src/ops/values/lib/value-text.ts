@@ -1,5 +1,6 @@
 import { shapeParts, valueTextBy, type ValueTextTable } from '@ab/client-core';
-import { settingDef, tzOptionLabel, type SettingKey } from '@ab/shared';
+import { settingDef, type SettingKey } from '@ab/settings';
+import { tzOptionLabel } from '@ab/time';
 import { t } from '@ab/mobile-kit';
 
 // «القيم» on the phone: a setting's words (label, description, value as text) from the registry's

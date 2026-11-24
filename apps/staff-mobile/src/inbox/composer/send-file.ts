@@ -75,7 +75,7 @@ interface SendFileInput {
   id: string;
   /** The academy's upload limit (useUploadMaxBytes); an image also stays within Meta's 5 MB. */
   maxBytes: number;
-  /** The message it answers (owner 2026-10-25 «رد»): our row of the same chat. */
+  /** The answered message must be our row of the same chat. */
   replyToMessageId?: string;
 }
 

@@ -20,7 +20,7 @@ function playOn(el: HTMLAudioElement | null, stream: MediaStream): void {
 
 export interface CallProviderProps {
   children: ReactNode;
-  /** Teachers never see a family's number: an unnamed caller is «رقم غير معروف» for them. */
+  /** Teachers never see a family's number: an unnamed caller shows as unknown for them. */
   showsPhone?: boolean;
   /** Tests inject fakes; the app uses the browser's WebRTC. */
   rtc?: RtcDeps | null;

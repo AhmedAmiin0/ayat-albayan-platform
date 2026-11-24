@@ -79,7 +79,7 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   it('an outbound PDF we sent opens too, its link named by media_name', async () => {
     servePdf();
     renderAt(row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'جدول الحلقات.pdf' }));
-    // Page 1 is asked as the card shows (PdfCard); with no preview, today's «عرض ملف» stays.
+    // Page 1 is requested as the card shows; with no preview the plain view button stays.
     fireEvent.click(await screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) }));
     const link = await screen.findByRole('link', { name: 'جدول الحلقات.pdf' });
     expect(link.getAttribute('href')).toBe(SIGNED);

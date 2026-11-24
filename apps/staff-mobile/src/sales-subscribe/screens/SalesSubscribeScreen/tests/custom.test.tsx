@@ -6,7 +6,6 @@ import { familyOf, kid, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { linkQuote, paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// «مبلغ مخصص» beside the discount pills (owner 2026-11-01), «دفع إلكتروني» in the Stripe build.
 jest.mock('@/sales-subscribe/payment-link/flag', () => ({ STRIPE_FEATURE: true }));
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

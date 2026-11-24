@@ -106,7 +106,7 @@ export function config(root, ...extra) {
     tseslint.configs.strictTypeChecked,
     tseslint.configs.stylisticTypeChecked,
     {
-      linterOptions: { reportUnusedDisableDirectives: 'error' },
+      linterOptions: { noInlineConfig: true },
       plugins: { ab: boundariesPlugin },
       languageOptions: {
         globals: { ...globals.node },

@@ -12,7 +12,7 @@ import { ResendAsk } from './ResendAsk';
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 
-// Meta's 131060 on a new number's first message (owner 2026-10-27): «اطلب إعادة الإرسال».
+// Meta's 131060 on a new number's first message.
 const unavailable = message({
   direction: 'inbound',
   body: null,

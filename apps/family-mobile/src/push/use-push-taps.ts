@@ -23,11 +23,7 @@ function openTap(response: Notifications.NotificationResponse | null): void {
   if (target) openAlert(target);
 }
 
-/**
- * A tapped family push opens its screen (R-MOB-01): a report, the child, the package, the chat,
- * and «بدأت الحلقة» the live lesson (owner 2026-11-16), also when the tap started the app.
- * Mounted by the tabs, so the router is ready and the family is signed in.
- */
+/** R-MOB-01: also when the tap started the app; mounted by the tabs so the router is ready. */
 export function usePushTaps(): void {
   useEffect(() => {
     openTap(takeLastTap());

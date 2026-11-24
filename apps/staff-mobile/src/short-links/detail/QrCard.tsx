@@ -42,10 +42,6 @@ function QrCode({ url }: { url: string }) {
 
 const D = () => t.shortLinks.detail;
 
-/**
- * The short URL, its QR code, «يفتح: …», «مشاركة» (the phone's share sheet) and «نسخ» (board
- * LinkXStaffDetail).
- */
 export function QrCard({ link }: { link: Pick<ShortLinkDetail, 'shortUrl' | 'targetUrl'> }) {
   const { color } = useTheme();
   const [copied, setCopied] = useState(false);

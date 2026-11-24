@@ -5,7 +5,6 @@ interface SearchHeadProps {
   q: string;
   /** The words are long enough for the message search. */
   asked: boolean;
-  /** Chats and message hits both show: the chats get their «المحادثات» label. */
   both: boolean;
 }
 
@@ -22,10 +21,7 @@ const headOf = ({ q, asked, both }: SearchHeadProps): Head => {
 /** The head shows something (an empty box shows none: the list then gets no header gap). */
 export const hasSearchHead = (props: SearchHeadProps): boolean => headOf(props) !== 'none';
 
-/**
- * Above the chats while searching (docs/37, as the web's SearchHead): at 1–2 characters the hint
- * that the message search needs three; once both sections show, «المحادثات» over the chats.
- */
+/** docs/37: message search needs at least three characters. */
 export function SearchHead(props: SearchHeadProps) {
   const { color } = useTheme();
   const head = headOf(props);

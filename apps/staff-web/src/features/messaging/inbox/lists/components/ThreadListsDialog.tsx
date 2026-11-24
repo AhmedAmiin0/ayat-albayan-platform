@@ -20,10 +20,7 @@ export interface ThreadListsDialogProps {
   onClose: () => void;
 }
 
-/**
- * «القوائم» of one chat (docs/22 §4): every list as a checkbox (checked = the chat is in it), saved on
- * each toggle, then «قائمة جديدة», which creates a list and adds the chat to it in one go.
- */
+/** Saved on each toggle; creating a list also adds the chat to it in one go (docs/22 §4). */
 export function ThreadListsDialog({ phone, lists, onClose }: ThreadListsDialogProps) {
   const all = useQuery(chatListsQuery);
   const { member, toggle, failed } = useMembership(phone, lists);

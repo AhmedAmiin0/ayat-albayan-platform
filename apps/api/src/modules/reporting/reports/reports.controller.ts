@@ -11,7 +11,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow, sentOnly } from '@/common/http/http';
 import { ReportFilesService } from './files/report-files.service';
 import { ReportSubmitService } from './submit/report-submit.service';
-import { ReportsService } from './reports.service';
+import { ReportsService } from './shared/reports.service';
 
 /**
  * One report (docs/11 §4 R2, R3, R4, R6, R12): read, autosave, submit / edit, the PDF.

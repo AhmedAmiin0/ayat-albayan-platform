@@ -3,7 +3,6 @@ import { formatPhone } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface ForwardSummary {
-  /** «تم الإرسال: 2 · تم التخطي: 1», then one line per skipped chat: «أم سهيلة: السبب». */
   text: string;
   /** Nothing went out: the error toast. */
   tone: 'info' | 'error';

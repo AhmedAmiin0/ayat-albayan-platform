@@ -35,10 +35,7 @@ export interface NumberSecretRowProps {
   manage: boolean;
 }
 
-/**
- * «رمز الوصول» / «السر الخاص بالتطبيق» of one number: a set / not-set chip, a password field with
- * «حفظ» (never prefilled), and «حذف» after a confirm when it is saved.
- */
+/** The secret field is never prefilled; deleting asks first. */
 export function NumberSecretRow({ view, name, manage }: NumberSecretRowProps) {
   const [value, setValue] = useState('');
   const [confirming, setConfirming] = useState(false);

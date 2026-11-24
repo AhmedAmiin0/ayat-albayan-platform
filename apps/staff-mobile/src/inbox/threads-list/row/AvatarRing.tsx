@@ -36,6 +36,5 @@ export function AvatarRing({ ring, children }: AvatarRingProps) {
   );
 }
 
-/** The ring's word, read after the row's name (accessibilityHint): «مشترك» / «يحتاج إلى تجديد». */
 export const ringHint = (ring: FamilyRing | null | undefined): string | undefined =>
   ring ? t.inbox.ring[ring] : undefined;

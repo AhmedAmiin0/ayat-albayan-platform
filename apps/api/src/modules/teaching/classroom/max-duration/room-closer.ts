@@ -5,11 +5,7 @@ import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording
 import { roomNameOf, type RoomTarget } from '@/modules/teaching/classroom/recordings/recording-target';
 import { liveRooms, type LiveRoom } from './max-duration.rule';
 
-/**
- * The LiveKit side of MeetingMaxDurationJob: lists the rooms, and closes one the way «إنهاء» does
- * (DeleteRoom). A running recording is stopped first, like the last person leaving
- * (RecordingLifecycle), so its file is finished and kept. Every method throws on a failure.
- */
+/** A running recording is stopped first so its file is kept; every method throws on failure. */
 @Injectable()
 export class RoomCloser {
   constructor(

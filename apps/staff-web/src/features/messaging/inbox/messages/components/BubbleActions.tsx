@@ -23,7 +23,7 @@ export interface BubbleActionsProps {
   onMenu: (open: boolean) => void;
 }
 
-/** What this bubble's menu offers here (teacher mode: never «تنزيل», as MessageMedia). */
+/** Teacher mode never offers download. */
 export function useBubbleOffers(m: MessageView): BubbleOffers {
   const mode = useInboxMode();
   const teacher = mode === 'teacher';
@@ -33,17 +33,12 @@ export function useBubbleOffers(m: MessageView): BubbleOffers {
   return bubbleOffers(m, { teacher, react, hide: hide && !teacher, admin: mode === 'admin', me });
 }
 
-/** The bubble offers «رد», «نسخ», «إعادة توجيه» or «تنزيل» in this chat. */
 export function useHasBubbleActions(m: MessageView): boolean {
   const offers = useBubbleOffers(m);
   return useChatActions().enabled && offersAny(offers);
 }
 
-/**
- * «رد» and «خيارات الرسالة» beside a bubble (owner 2026-10-25; «نسخ» / «تنزيل» 2026-10-26): shown on hover and on keyboard
- * focus; on touch screens only the 44px ⋯ shows, always (its menu has «رد»). Outside the 24 h window
- * «رد» stays focusable but off, with the closed-window notice as its hint. Esc and a pick put focus back on ⋯.
- */
+/** On touch screens only the 44px menu button shows; outside the 24 h window reply is disabled. */
 export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) {
   const actions = useChatActions();
   const offers = useBubbleOffers(m);

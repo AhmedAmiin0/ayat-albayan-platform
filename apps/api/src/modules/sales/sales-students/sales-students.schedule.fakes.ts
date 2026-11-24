@@ -1,4 +1,4 @@
-// «الجدول» rows of «تفاصيل الطالب» as the database could return them, secrets present (test-only, *.fakes.ts).
+// Secrets present on purpose (test-only).
 import type { SalesScheduleRow } from '@/modules/sales/sales';
 import type { WeeklyRuleRow } from '@/modules/sales/sales';
 
@@ -8,7 +8,7 @@ export const ruleRow = (): WeeklyRuleRow & { meeting_link: string } => ({
   starts_on: '2026-01-01', ends_on: null, status: 'active', teacher: { display_name_ar: 'أبرار', display_name_en: 'Abrar' }, meeting_link: 'https://meet/secret',
 });
 
-/** A lesson of `student` a year ahead (always «قادمة»), with its link. */
+/** A year ahead, so always upcoming. */
 export const upcomingRow = (student: string): SalesScheduleRow => ({
   id: 'u1', starts_at: '2099-01-04T16:00:00+00:00', ends_at: '2099-01-04T16:45:00+00:00', status: 'scheduled', makeup_of_id: null,
   meeting_link: 'https://meet/secret', rule: { package: 'trial' },

@@ -6,10 +6,7 @@ import { apiSend } from '@ab/mobile-kit';
 import { expenseBody, type ExpenseDraft } from './expense-draft';
 import { uploadExpenseReceipt } from './upload-expense-receipt';
 
-/**
- * «حفظ المصروف»: the receipt photo goes up first, once (a retry after a failed POST does not upload
- * it again), then POST /expenses. A save refused by the API keeps the form as it was.
- */
+/** The receipt uploads once so a retry after a failed POST does not upload it again. */
 export function useAddExpense() {
   const client = useQueryClient();
   const [receiptOnce] = useState(() => uploadOnce<string>());

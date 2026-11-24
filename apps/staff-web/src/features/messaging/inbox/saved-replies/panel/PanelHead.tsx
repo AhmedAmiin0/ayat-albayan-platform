@@ -14,10 +14,7 @@ const TABS: { value: SavedReplyScope; label: string }[] = [
   { value: 'mine', label: S.tabMine },
 ];
 
-/**
- * The button's panel head: «المشتركة / ردودي», «إدارة» (her own replies' add / edit / delete, kept off
- * the pick list as WhatsApp does), close, and its own search driving the list (↑ ↓ Enter Esc).
- */
+/** Managing her own replies is kept off the pick list, as WhatsApp does. */
 export function PanelHead({ picker, listId }: { picker: RepliesPicker; listId: string }) {
   const { list, keys } = picker;
   return (

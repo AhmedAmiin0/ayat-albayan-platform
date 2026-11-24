@@ -11,10 +11,6 @@ import {
 } from '@ab/mobile-kit';
 import { PushSwitchRow } from './PushSwitchRow';
 
-/**
- * «الإعدادات»: this phone's notifications (what they cover for this login), the appearance and
- * the language.
- */
 export function AccountSettings({ student }: { student: boolean }) {
   const { color } = useTheme();
   const A = t.portal.app.account;

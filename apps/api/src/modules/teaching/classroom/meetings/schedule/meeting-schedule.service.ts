@@ -35,16 +35,7 @@ export class MeetingScheduleDeps {
 /** Same instant? '+00:00' (PostgREST) and '.000Z' (the API) spell one time two ways. */
 export const sameInstant = (a: string | null, b: string | null): boolean => a !== null && b !== null && Date.parse(a) === Date.parse(b);
 
-/**
- * PATCH /meetings/:id and POST /meetings/:id/cancel (R-MEET-01), the creator or an admin only (403).
- * A real move (another instant) drops the invitation texts still queued and re-notifies the invited
- * staff (a bell row with its own subject per move, so A→B→A still rings); a family whose text was
- * dropped before going out reads failed / stale and gets the new time with «أعد الإرسال». A duration-only
- * change or a re-save rings nothing. Cancelling stamps cancelled_at (nobody joins after it), closes the
- * room, clears every personal link, drops queued invitation texts, notifies the staff, and texts a family
- * it may reach (mayTell) only when the caller may chat (InvitePolicy) and its window is open (never a
- * template). Cancelling twice is a no-op; an ended meeting answers 410 meeting_ended and changes nothing.
- */
+/** R-MEET-01: a real move re-notifies staff; cancelling twice is a no-op; ended answers 410. */
 @Injectable()
 export class MeetingScheduleService {
   constructor(

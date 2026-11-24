@@ -3,11 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { profileQuery } from '@/features/people/account/api';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 
-/**
- * What a saved reply's placeholders become in this chat: {name} the name the header shows (guardian
- * ?? lead ?? WhatsApp name), {student} the family's first student else the lead's student, {assistant}
- * the signed-in user's own name («حسابي»). A missing one is removed by resolveSavedReply.
- */
+/** A missing placeholder value is removed by resolveSavedReply. */
 export function useReplyValues(thread: ThreadView, context: PrefillContext): SavedReplyValues {
   const me = useQuery(profileQuery).data;
   return {

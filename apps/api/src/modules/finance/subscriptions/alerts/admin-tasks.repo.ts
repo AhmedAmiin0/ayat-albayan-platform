@@ -60,7 +60,6 @@ export class AdminTasksRepo {
     return toTaskView(done, await this.studentsOf([done]));
   }
 
-  /** subscription id → its student, for the task wording «باقة {student} …». */
   private async studentsOf(rows: readonly TaskRow[]): Promise<Map<string, StudentRef>> {
     const ids = rows.filter((r) => r.subject_type === 'subscription').map((r) => r.subject_id);
     if (ids.length === 0) return new Map();

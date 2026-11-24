@@ -9,10 +9,7 @@ import { TrialDateRepo } from '@/modules/teaching/booking';
 /** A student of the same guardian (the student itself included; the mapper drops it). */
 export type FamilyStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;
 
-/**
- * Whitelisted: never notes, a balance or a meeting link; of the guardian the phone (owner
- * 2026-10-27), the name and its students' name / code / status («العائلة», owner 2026-11-02).
- */
+/** Whitelisted: never notes, a balance or a meeting link; guardian phone, name, siblings. */
 export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program' | 'tz'> & {
   contact_is_self?: boolean;
   teacher: { display_name_ar: string } | null;
@@ -22,7 +19,7 @@ export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' 
 const DETAILS_SELECT =
   'id, code, name, status, program, tz, contact_is_self, teacher:teachers(display_name_ar), guardian:guardians(phone_e164, name, students(id, code, name, status))' as const;
 
-/** «مدفوعة جزئيًا» (owner 2026-10-28): only for self.sales_money. */
+/** Only for self.sales_money. */
 export type PriceRow = Pick<
   Tables<'subscriptions'>,
   'id' | 'price' | 'currency' | 'cancel_kind' | 'stop_owed_amount'
@@ -60,10 +57,9 @@ interface Window {
   limit: number;
 }
 
-/** The latest past lessons shown in «الحضور». */
 const ATTENDANCE_LIMIT = 60;
 
-/** Sales' «تفاصيل الطالب» reads (service role; any student, owner 2026-10-28); `trialDates`: «مواعيد الحلقة التجريبية»'s. */
+/** Service role; any student. */
 @Injectable()
 export class SalesStudentRepo {
   constructor(@Inject(DB) private readonly db: Db, readonly trialDates: TrialDateRepo) {}

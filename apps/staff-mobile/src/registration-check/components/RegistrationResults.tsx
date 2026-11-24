@@ -1,4 +1,5 @@
-import { studentStatusStyle, type RegistrationCheckView, type RegistrationMatch } from '@ab/shared';
+import type { RegistrationCheckView, RegistrationMatch } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { t, EmptyState, ListRow, StatusChip, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import type { RegistrationCheckBy } from '@ab/shared';

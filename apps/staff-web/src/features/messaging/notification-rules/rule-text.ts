@@ -13,8 +13,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { blockerText } from '@/features/messaging/notification-catalogue/catalogue-text';
 import type { RuleFailure } from './rules-api';
 
-// The words of «الإشعارات» rows: timings as text, channels, approval, reach and save errors.
-
 const r = () => t.notificationRules;
 const fill = (text: string, values: Record<string, string | number>): string =>
   Object.entries(values).reduce((s, [k, v]) => s.split(`{${k}}`).join(String(v)), text);
@@ -56,7 +54,7 @@ const TIMING_TEXT: Readonly<Record<string, TimingWords>> = {
   follow_up_slots: followUpText,
 } satisfies Partial<Record<NotificationKey, TimingWords>>;
 
-/** A stored timing in words («قبل الحلقة بـ60 دقيقة»), clocks in the viewer's cycle (useClock); null without its own timing. */
+/** Clocks follow the viewer's cycle (useClock); null without its own timing. */
 export function timingText(key: string, timing: unknown, clock: Clock): string | null {
   const words = Object.hasOwn(TIMING_TEXT, key) ? TIMING_TEXT[key] : undefined;
   return words ? words(timing, clock) : null;
@@ -72,13 +70,11 @@ export function availableChannels(entry: NotificationEntryView): NotificationCha
   return NOTIFICATION_CHANNELS.filter((ch) => all.has(ch));
 }
 
-/** Channels in words: «واتساب، جرس المنصة». */
 export const channelWords = (channels: readonly NotificationChannel[]): string =>
   NOTIFICATION_CHANNELS.filter((ch) => channels.includes(ch))
     .map((ch) => t.notificationCatalogue.channels[ch])
     .join(t.common.listSeparator);
 
-/** The template status of a row: «معتمد», «معتمد جزئيًا», «غير معتمد», «دون قالب». */
 export function approvalWord(entry: Pick<NotificationEntryView, 'approval' | 'templates'>): {
   word: string;
   partly: boolean;
@@ -98,7 +94,7 @@ export function approvalWord(entry: Pick<NotificationEntryView, 'approval' | 'te
 export const reasonText = (entry: Pick<NotificationEntryView, 'blocker'>): string | null =>
   blockerText(entry);
 
-/** The phone row's short reason («الإرسال متوقف»); the sheet keeps the long one. */
+/** The sheet keeps the long reason. */
 export const shortReasonText = (entry: Pick<NotificationEntryView, 'blocker'>): string | null =>
   entry.blocker ? r().shortBlockers[entry.blocker] : null;
 
@@ -106,7 +102,6 @@ export const shortReasonText = (entry: Pick<NotificationEntryView, 'blocker'>): 
 export const isFamilyFacing = (entry: Pick<NotificationEntryView, 'audience'>): boolean =>
   entry.audience === 'guardian' || entry.audience === 'lead';
 
-/** «سيصل إلى N ولي أمر» / «… عميلًا», from the overview's reach counts. */
 export function reachText(
   entry: Pick<NotificationEntryView, 'audience'>,
   reach: NotificationsOverview['reach'],
@@ -124,7 +119,7 @@ export function failureText(failure: RuleFailure): string {
   return fill(r().errors[failure], { word: ESSENTIAL_OFF_TEXT });
 }
 
-/** «حفظ: تذكير الحلقة» (the button's accessible name names its row). */
+/** The accessible name names its row. */
 export const actionName = (action: string, name: string): string =>
   fill(r().actionName, { action, name });
 

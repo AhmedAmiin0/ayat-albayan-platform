@@ -70,7 +70,7 @@ export class SubscriptionsController {
     return this.subs.update(id, sentOnly(parseOrThrow(subscriptionUpdateSchema, body), body), user.id);
   }
 
-  /** «إلغاء الباقة» (owner 2026-10-28): the package stays, «ملغاة»; 409 already_cancelled / has_payments / has_lessons. */
+  /** The package stays, marked cancelled; 409 already_cancelled, has_payments or has_lessons. */
   @Post(':id/cancel')
   @HttpCode(200)
   @Permissions('subscriptions.write')

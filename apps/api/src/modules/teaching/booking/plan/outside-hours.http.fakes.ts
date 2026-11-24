@@ -1,4 +1,4 @@
-// Test-only: the whole AppModule with the «وقت آخر» grid and the booking service faked.
+// Test-only.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';

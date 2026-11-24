@@ -10,7 +10,7 @@ const rows = () =>
     { route: 'payments', title: t.mobileMoney.paymentsTitle, href: '/more/money/payments' },
   ] as const;
 
-/** «المالية» on «المزيد»: the money lists that mirror the web's admin pages; only the rows `can` allows. */
+/** Only the rows `can` allows. */
 export function MoneySection({ can = () => true }: { can?: Can }) {
   const shown = allowedRows(can, rows());
   if (shown.length === 0) return null;

@@ -20,7 +20,6 @@ const S = t.studentChannel.seat;
 
 const holderOf = (data: ChannelSeat): string => data.holder?.name ?? '';
 
-/** Why, «تولَّ المحادثة» or «انقل المحادثة إليك», and why it failed. */
 const takeBody = ({ take }: ChannelSeatApi, hint: string, label: string) => (
   <>
     <Note>{hint}</Note>
@@ -33,10 +32,7 @@ const takeBody = ({ take }: ChannelSeatApi, hint: string, label: string) => (
   </>
 );
 
-/**
- * Free (a former assistant's too) → «تولَّ المحادثة»; my own student's, held by a colleague →
- * who, and «انقل المحادثة إليك»; else who follows it.
- */
+/** Free seats can be taken; my own student's seat held by a colleague can move to me. */
 const BODY: Readonly<Record<SeatState, (seat: ChannelSeatApi, data: ChannelSeat) => ReactNode>> = {
   mine: () => null,
   held: (_seat, data) => <Note>{S.heldBy.replace('{name}', holderOf(data))}</Note>,
@@ -45,12 +41,7 @@ const BODY: Readonly<Record<SeatState, (seat: ChannelSeatApi, data: ChannelSeat)
     takeBody(seat, S.takeOverHint.replace('{name}', holderOf(data)), S.takeOver),
 };
 
-/**
- * A student chat that is not mine (owner 2026-11-16 «any assistant can subscribe to the chating
- * channel but only 1»): a calm card with who follows it, «تولَّ المحادثة» when it is free, or
- * «انقل المحادثة إليك» from the colleague named when I brought the student («who brought the
- * student have the priority»). Taken, the chat replaces it.
- */
+/** One assistant per student chat; the one who brought the student has priority. */
 export function SeatCard({ seat }: { seat: ChannelSeatApi }) {
   const { color } = useTheme();
   const { data, isError, isPending, refetch } = seat.query;

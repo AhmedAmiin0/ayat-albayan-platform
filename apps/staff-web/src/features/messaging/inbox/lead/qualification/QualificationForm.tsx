@@ -13,10 +13,7 @@ export interface QualificationFormProps {
   onDone: (message: string, tone?: 'error') => void;
 }
 
-/**
- * «بيانات الطالب» (R-LEAD-03, issue A9): the questions the deleted form asked, structured and
- * optional; opened from the aside's «تعديل البيانات» dialog, which carries the title. Saves only what changed (L1 merges; an emptied field is cleared).
- */
+/** Saves only what changed (L1 merges; an emptied field is cleared), R-LEAD-03. */
 export function QualificationForm({ lead, onDone }: QualificationFormProps) {
   const queryClient = useQueryClient();
   const [initial, setInitial] = useState(() => qualForm(lead.qualification));
@@ -49,7 +46,7 @@ export function QualificationForm({ lead, onDone }: QualificationFormProps) {
       <QualificationFields form={form} errors={errors} onChange={change} />
       <PreferenceFields form={form} errors={errors} onChange={change} />
       <RequestFields form={form} errors={errors} onChange={change} />
-      {/* Pinned to the bottom of the dialog's scroll, so «حفظ» is in reach from any field. */}
+      {/* Pinned to the dialog's scroll bottom so the save button is reachable from any field. */}
       <div className="sticky bottom-0 -mx-1 border-t border-rule bg-card px-1 py-2">
         <Button type="submit" variant="secondary" disabled={save.isPending}>
           {save.isPending ? t.common.saving : t.common.save}

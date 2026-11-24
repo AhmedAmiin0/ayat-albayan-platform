@@ -22,7 +22,6 @@ export type Outgoing =
       params: TemplateParamsInput;
       preview: string;
       lessonId?: string;
-      /** «إعادة فتح المحادثة» (owner 2026-11-14): this phone's reopen template. */
       reopen?: true;
     };
 
@@ -31,7 +30,7 @@ export interface SendInput {
   out: Outgoing;
   /** The provisional row's id and the clientRequestId (rule 8: a retry returns the first row). */
   id: string;
-  /** The sender that owns a pinned id after no answer: the box or «عرض سعر» (pinned-send). */
+  /** Which sender owns an id pinned after no answer. */
   pin?: PinKind;
 }
 
@@ -66,7 +65,7 @@ export function echoed(out: Outgoing): string {
 export function sendBody({ out, id }: SendInput) {
   if (out.kind === 'text') {
     const reply = out.replyTo ? { replyToMessageId: out.replyTo.id } : {};
-    // «تعديل» (owner 2026-11-07): the API adds the prefix and the reply to the original.
+    // The API adds the prefix and the reply to the original.
     const corrects = out.correctsId ? { correctsId: out.correctsId } : {};
     return { text: out.text, clientRequestId: id, ...reply, ...corrects };
   }

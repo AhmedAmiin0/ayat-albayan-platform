@@ -190,7 +190,14 @@ them off in ESLint, which keeps the type-aware, custom and react-hooks rules. Th
 Tsconfigs: the shared compiler options live in the root `tsconfig.base.json`. Every tsconfig extends only that
 file (by relative path) or a file in its own folder, never a package, and keeps only the options that differ
 for it (React, Nest or Expo ones). The mobile tsconfigs copy what `expo/tsconfig.base` sets apart from the root
-base, so an Expo upgrade re-checks them.
+base, so an Expo upgrade re-checks them. The `@/` alias is defined once, in the root base:
+`"paths": { "@/*": ["${configDir}/src/*"] }`, which TypeScript expands to each extending workspace's own `src`
+(tsgo, tsc and tsc-alias 1.9.7 do). No other tsconfig has `paths` or `baseUrl`. Runtime resolvers keep their
+own alias: Vite and Vitest (`@ab/config/vite`, api `vitest.config.mts`), jest (`moduleNameMapper`) and Metro
+(`@ab/mobile-kit/metro`; Expo 57's own tsconfig `paths` support expands `${configDir}` against the root, so
+app.json turns it off). Packages never import `@/`: an app compiles their source, where `@/` is the app's src.
+`@ab/web-kit/<path>` deep imports resolve through the kit's package.json `exports`. `pnpm guard:tsconfig` checks
+all of it.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.repo.ts` (class `XRepo`, the only injector of `DB`; no new `*.queries.ts`, docs/32 D2) + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 Unit folders: a unit with 3+ files (code, props, types, tests...) lives in its own folder named after it, with an `index.ts` that only re-exports; its tests go in `tests/` when it has 2+ (`ThreadPane.chat.test.tsx` → `ThreadPane/tests/chat.test.tsx`; `<Unit>.test.tsx` keeps its name); a plain code + test pair stays as it is. A file's unit is the longest non-test code stem it extends (`env.blank.test.ts` → `env.blank`); `X.<role>.ts` (props, types, styles, schemas, mapper, fakes, fixtures, constants, hooks, builder, variants) belongs to `X`. In apps/api each feature folder with a controller is its own Nest module. `pnpm units:fold -- --dry-run` plans the moves, `--write --paths <dir...>` makes them on a `move/*` branch.
 

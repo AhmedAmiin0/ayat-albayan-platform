@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { windowCheckFor } from './join-gate';
 
-// docs/56: a test login on a test lesson skips the join window, never «إنهاء الحلقة للجميع».
+// docs/56: a test login on a test lesson skips the join window, never the end-for-everyone stamp.
 const BOTH_TEST = { userIsTest: true, studentIsTest: true };
 const NOW = new Date('2026-11-17T08:00:00Z');
 const LATER = { starts_at: '2026-11-17T12:00:00Z', ends_at: '2026-11-17T13:00:00Z' };

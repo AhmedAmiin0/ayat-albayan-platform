@@ -7,7 +7,7 @@ import { addAttachments, type AttachmentProblem } from './attachments';
 
 type Props = { files: File[]; onChange: (files: File[]) => void; maxBytes: number };
 
-/** «المرفقات» of a bank payment (admin): up to five images / PDFs, optional, uploaded on save. */
+/** Bank payments only, up to five images or PDFs, uploaded on save. */
 export function AttachmentsField({ files, onChange, maxBytes }: Props) {
   const [problem, setProblem] = useState<AttachmentProblem | null>(null);
   const add = (picked: File[]) => {

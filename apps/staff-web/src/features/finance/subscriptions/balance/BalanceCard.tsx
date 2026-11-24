@@ -16,11 +16,7 @@ import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/creat
 import { packageName, unpaidFlagged } from '@/features/finance/subscriptions/format';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 
-/**
- * The student's packages (S6, R-SUB-01/03) on the profile: the package line (packageProgress),
- * «الباقة مش مدفوعة» (R-SUB-02), record a payment on the current package, cancel it when made by mistake
- * (nothing paid; owner 2026-10-28), or a new package.
- */
+/** Packages on the profile (R-SUB-01/02/03); cancel only when made by mistake with nothing paid. */
 export function BalanceCard({ student }: { student: PickedStudent }) {
   const balance = useQuery(studentBalanceQuery(student.id));
   const [dialog, setDialog] = useState<'pay' | 'new' | 'cancel' | null>(null);

@@ -13,10 +13,7 @@ import { ProfileCourseRepo } from '@/modules/teaching/booking/profile/profile-co
 
 type CardCourse = Pick<CourseCardView, 'course' | 'upcoming'>;
 
-/**
- * The card's course (owner 2026-11-17): its teacher, days, planned end, last booked lesson, the
- * lessons with no date («مدّ الجدول») and the next open lessons of one package. Read only.
- */
+/** Read only. */
 @Injectable()
 export class CourseCardCourse {
   constructor(

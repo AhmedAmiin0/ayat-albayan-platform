@@ -9,7 +9,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
-// «مزامنة القوالب مع هذا الرقم» (templates.manage, docs/23c decision 9): the result in a live region.
+// docs/23c decision 9: the result goes in a live region.
 
 const s = t.numbers.templateSync;
 const SYNC = { number_id: 'num-1', ok: true, checked_at: '2026-10-24T08:00:00Z', meta_count: 9, synced: 4, number_ids: ['num-1'] };

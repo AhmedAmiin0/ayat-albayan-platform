@@ -39,7 +39,7 @@ function toTrialDateResult(data: unknown): TrialDateResult {
   return { ...r, starts_at: iso(r.starts_at), ends_at: iso(r.ends_at) };
 }
 
-/** The reads and the one write of «موعد تجريبي جديد» (migration 20261025000660). */
+/** Migration 20261025000660. */
 @Injectable()
 export class TrialDateRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

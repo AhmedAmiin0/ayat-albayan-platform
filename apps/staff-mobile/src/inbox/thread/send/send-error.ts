@@ -2,10 +2,6 @@ import { t } from '@ab/mobile-kit';
 import { sendError } from '@/inbox/messages/hooks/message-text';
 import { unanswered } from './after-send';
 
-/**
- * A chat send's failure in words (useSendMessage: the box, «عرض سعر», a new chat, a resend): no
- * answer says the send is unconfirmed and safe to send again (its id is reused, docs/44 BUG7);
- * the API's refusal says why, as sendError does.
- */
+/** No answer is reported as unconfirmed and safe to resend with the same id (docs/44 BUG7). */
 export const chatSendError = (error: unknown): string =>
   unanswered(error) ? t.inbox.error.send_unconfirmed : sendError(error);

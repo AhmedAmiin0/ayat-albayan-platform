@@ -15,7 +15,7 @@ export function durationText(seconds: number | null): string {
   return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
 }
 
-/** `48 ميغابايت` / `1.2 غيغابايت` (one decimal over a gigabyte, whole megabytes below). */
+/** One decimal over a gigabyte, whole megabytes below. */
 export function sizeText(bytes: number | null): string {
   if (bytes === null) return R.unknown;
   if (bytes >= GB) return R.sizeGb.replace('{n}', (bytes / GB).toFixed(1));

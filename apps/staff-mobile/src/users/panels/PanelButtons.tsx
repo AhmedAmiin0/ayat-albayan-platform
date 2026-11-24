@@ -9,10 +9,7 @@ interface PanelButtonsProps {
   disabled?: boolean;
 }
 
-/**
- * A form's foot (docs/07 §6 «الأزرار»): ONE ButtonRow, the verb (primary) at the reading start, then
- * «إلغاء» (secondary: it only closes the step); they stack when the labels do not fit.
- */
+/** One ButtonRow (docs/07 §6), the verb first; cancel only closes the step. */
 export function PanelButtons({ confirmLabel, onConfirm, onCancel, busy = false, disabled = false }: PanelButtonsProps) {
   return (
     <ButtonRow>

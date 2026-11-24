@@ -6,16 +6,11 @@ import { ownPage, useRefreshPortal } from '@/portal';
 
 interface StudentHomeProps {
   student: PortalStudent;
-  /** Who reads it: the student or an adult («حضرتها»), or a guardian («حضرها»). */
+  /** Who reads it: the student or an adult, or a guardian; the wording differs. */
   kind: PortalKind;
 }
 
-/**
- * Home is the page of the student in view (docs/50 §6, canvas StudentHome): their avatar and name,
- * then «القادمة» / «حضرها» / «غاب عنها» and «الباقة» for a viewer who sees money (childTabs).
- * A student or an adult (contact_is_self) reads their own under «أهلًا بك»; a guardian the child
- * they work as under today's date (the greeting would hail the parent by the child's name).
- */
+/** A guardian sees today's date, since a greeting would hail the parent by the child's name. */
 export function StudentHome({ student, kind }: StudentHomeProps) {
   const refresh = useRefreshPortal();
   const over = ownPage(kind, student) ? t.portal.app.home.greeting : undefined;

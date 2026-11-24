@@ -2,7 +2,6 @@ import { tappedButton, type MessageView } from '@ab/shared';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** Theirs, from a tap on a template button: a small «ضغطة زرّ» mark over the tapped label (the body). */
 export function TappedLabel({ message: m }: { message: MessageView }) {
   if (m.direction !== 'inbound' || !tappedButton(m.interactive_payload)) return null;
   return (

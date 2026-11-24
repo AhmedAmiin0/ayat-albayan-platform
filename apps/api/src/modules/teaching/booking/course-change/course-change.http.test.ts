@@ -14,7 +14,6 @@ import { CourseLessonRepo } from './course-change.lessons';
 import { CourseChangeRepo } from './course-change.repo';
 import { CourseChangeWriter } from './course-change.writer';
 
-// «تغيير أيام الحلقات» over HTTP (owner 2026-10-18): the routes, their permissions and codes.
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const C = 'c1000000-0000-4000-8000-00000000000c';
 const USERS: Record<string, AuthUser> = {

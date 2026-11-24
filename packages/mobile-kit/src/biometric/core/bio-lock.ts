@@ -48,9 +48,10 @@ export function wireBioLock(lock: BioLockStore, wires: BioWires): void {
 }
 
 /** The app's one biometric lock (both apps, through @ab/mobile-kit). */
+const native = bioNative();
 export const bioLock = new Store({
-  native: bioNative(),
-  flags: bioFlags(bioNative()),
+  native,
+  flags: bioFlags(native),
   text: () => ({
     reason: t.biometric.promptReason,
     enableReason: t.biometric.enableReason,
