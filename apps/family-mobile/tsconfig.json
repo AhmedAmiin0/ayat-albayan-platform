@@ -13,12 +13,7 @@
     "types": ["jest"],
     "paths": { "@/*": ["./src/*"] }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    // `import x from './x.png'`: the declaration the shared kit's own marks use.
-    "../../packages/mobile-kit/assets/images.d.ts"
-  ],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": [
     "${configDir}/node_modules",
     "${configDir}/babel.config.js",
