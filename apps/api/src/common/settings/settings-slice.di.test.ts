@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
+import { SETTING_DEFAULTS, type SettingKey } from '@ab/settings';
 import { Injectable } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { describe, expect, it } from 'vitest';

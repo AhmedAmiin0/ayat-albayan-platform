@@ -1,10 +1,10 @@
+import { instant } from '@ab/core';
 import {
   ASSISTANT_COMMISSION_STATUSES,
   assistantStatementPaySchema,
   assistantStatementsQuery,
-  instant,
   teacherReceiptUploadSchema,
-} from '@ab/shared';
+} from '@ab/money';
 import { z } from 'zod';
 
 /** GET /assistant-pay/commissions: the ledger of every assistant, narrowed by assistant, status and when earned. */

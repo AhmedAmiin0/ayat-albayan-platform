@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it, vi } from 'vitest';
 import { configRow, fakeConfigStore } from '@/common/configuration/config-store/config-store.fakes';
 import type { Db } from '@/common/db/db.module';

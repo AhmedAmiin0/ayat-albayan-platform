@@ -1,4 +1,4 @@
-import { publicCustom, type PublicConfig } from '@ab/shared';
+import { publicCustom, type PublicConfig } from '@ab/settings';
 import { Controller, Get, Header } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';

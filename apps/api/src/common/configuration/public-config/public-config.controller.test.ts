@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';

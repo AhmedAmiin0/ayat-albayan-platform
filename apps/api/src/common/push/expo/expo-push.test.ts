@@ -1,4 +1,4 @@
-import { PUSH_KINDS } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { expoMessages, pushText, readTickets } from './expo-push';
 

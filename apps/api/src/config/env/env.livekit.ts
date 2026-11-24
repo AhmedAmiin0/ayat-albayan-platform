@@ -1,4 +1,4 @@
-import { livekitUrl } from '@ab/shared';
+import { livekitUrl } from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset, optionalSecret } from './env.blank';

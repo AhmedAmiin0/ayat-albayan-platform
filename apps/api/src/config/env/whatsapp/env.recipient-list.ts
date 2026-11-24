@@ -1,4 +1,4 @@
-import { parseAllowedRecipients } from '@ab/shared';
+import { parseAllowedRecipients } from '@ab/catalog';
 import { z } from 'zod';
 
 /** WA_ALLOWED_RECIPIENTS in the env schema: comma list → normalised E.164 list; any bad item fails the boot, naming it (fail closed). */

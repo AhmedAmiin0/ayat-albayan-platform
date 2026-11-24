@@ -1,14 +1,9 @@
 import type { Enums, Json as DbJson } from '@ab/db';
-import type {
-  AssistantCommissionStatus,
-  AssistantCommissionType,
-  BookingKind,
-  EarningStatus,
-  GoogleSyncKind,
-  GoogleSyncState,
-  Json,
-  LessonRating,
-} from '@ab/shared';
+import type { LessonRating } from '@ab/shared';
+import type { GoogleSyncKind, GoogleSyncState } from '@ab/catalog';
+import type { Json } from '@ab/core';
+import type { AssistantCommissionStatus, AssistantCommissionType, EarningStatus } from '@ab/money';
+import type { BookingKind } from '@ab/schedule';
 import { describe, expectTypeOf, it } from 'vitest';
 
 describe('schedule, money and messaging enums match the DB enums', () => {
