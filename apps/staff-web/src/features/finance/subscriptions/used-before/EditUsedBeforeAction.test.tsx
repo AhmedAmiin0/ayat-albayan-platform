@@ -5,8 +5,7 @@ import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { EditUsedBeforeAction } from './EditUsedBeforeAction';
 
-// «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): admins and assistants
-// (subscriptions.edit_terms); the dialog reads GET …/lessons-used-before first.
+// Needs subscriptions.edit_terms; the dialog reads the server state first.
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));

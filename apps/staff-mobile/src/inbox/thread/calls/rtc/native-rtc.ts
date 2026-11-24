@@ -28,11 +28,7 @@ const depsOf = (rtc: WebRtc): RtcDeps => ({
   getMic: async () => rtc.mediaDevices.getUserMedia({ audio: true, video: false }),
 });
 
-/**
- * The device's WebRTC (LiveKit's react-native-webrtc fork, docs/35; a native module), or null
- * where it is missing (the calls then say «هذا الجهاز لا يدعم المكالمات»). The family's audio plays by itself
- * once its track arrives; the shapes match media.ts structurally.
- */
+/** Null where the native module is missing, docs/35; the shapes match media.ts structurally. */
 export async function nativeRtc(): Promise<RtcDeps | null> {
   const rtc = await load();
   return rtc ? depsOf(rtc) : null;

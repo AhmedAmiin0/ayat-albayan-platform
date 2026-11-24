@@ -13,11 +13,7 @@ type PublicCall = { token: string; ip: string };
 const expired = () => new GoneException({ code: 'feedback_expired', message: 'feedback_expired' });
 const invalid = () => notFound('feedback_not_found');
 
-/**
- * The family's side of «رأيك يهمّنا» (no login): GET prefill and POST once. A wrong, tampered or
- * revoked (replaced by a resend) link is 404 feedback_not_found, an old one 410 feedback_expired,
- * a second answer 409 already_submitted. The client never says who the teacher is or what kind.
- */
+/** 404 wrong or revoked link, 410 expired, 409 already_submitted; never names the teacher. */
 @Injectable()
 export class FeedbackPublicService {
   constructor(

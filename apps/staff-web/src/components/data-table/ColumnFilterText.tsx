@@ -5,7 +5,6 @@ import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
 export const FILTER_DEBOUNCE_MS = 300;
 
 export interface ColumnFilterTextProps {
-  /** «تصفية حسب {col}». */
   ariaLabel: string;
   value: string;
   onChange: (value: string) => void;
@@ -13,12 +12,7 @@ export interface ColumnFilterTextProps {
   className?: string | undefined;
 }
 
-/**
- * A column's search box: typing reports the trimmed text after 300ms of quiet. A value changed
- * from outside (cleared, back button) replaces the draft; our own echo does not, so a server
- * round trip never eats what was typed meanwhile. Leaving the box sends a pending draft at once,
- * so «عرض النتائج» right after typing keeps it.
- */
+/** Debounced 300ms; our own echo never replaces the draft, and blur sends a pending draft. */
 export function ColumnFilterText({ ariaLabel, value, onChange, placeholder, className }: ColumnFilterTextProps) {
   const [draft, setDraft] = useState(value);
   const [seen, setSeen] = useState(value);

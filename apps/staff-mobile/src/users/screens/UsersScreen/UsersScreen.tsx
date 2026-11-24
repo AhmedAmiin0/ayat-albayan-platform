@@ -27,12 +27,7 @@ const keyOf = (u: UserView) => u.id;
 const openUser = (id: string) => router.push(`/more/users/${id}`);
 const renderRow = ({ item }: { item: UserView }) => <UserItem user={item} onOpen={openUser} />;
 
-/**
- * «المستخدمون» (users.read), the web's /admin/users: every login with its role, linked record and
- * status; search, role and status filters, 20 a page (more load on scroll). «مستخدم جديد» and
- * every action in a user need users.write. The list screens' compact top (owner 2026-10-28): «المستخدمون
- * · 120» on the title's line, «مستخدم جديد» a pill beside «رجوع», the pill search, the filters, 8pt apart.
- */
+/** Needs users.read; creating and every user action need users.write; 20 per page. */
 export function UsersScreen({ can }: { can: Can }) {
   const { color } = useTheme();
   const [view, setView] = useState<UsersView>(FIRST_VIEW);

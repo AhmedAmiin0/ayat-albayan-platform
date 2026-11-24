@@ -13,11 +13,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { yearRange } from './api';
 import { MoneyKpis } from './MoneyKpis';
 
-/**
- * /admin/finance «الملخص المالي»: a year's P&L by month — revenue − teacher cost − expenses = net,
- * all converted to the reporting currency (the dashboard's own numbers, the one pay rule for the
- * teacher cost), plus what teachers are owed and what families still owe.
- */
+/** Revenue minus teacher cost minus expenses, in the reporting currency. */
 export function FinanceSummaryPage() {
   const today = riyadhToday(); // academy day (docs/34 b): the year's ?from&to are Riyadh days
   const [year, setYear] = useState(today.slice(0, 4));

@@ -4,9 +4,8 @@ import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 export interface DiscardWords {
   title: string;
   body: string;
-  /** The danger action («أغلق دون حفظ», «تجاهل التغييرات»). */
   discard: string;
-  /** The safe default, focused first («تابع التعديل»). */
+  /** The safe default, focused first. */
   keep: string;
 }
 
@@ -16,10 +15,7 @@ export interface DiscardDialogProps {
   onKeep: () => void;
 }
 
-/**
- * Closing a phone sheet with an unsaved edit asks first (docs/26b §2 «Phone»): «تابع التعديل»
- * (focused, also Esc) or the discard. Shared by «القيم» and «الإشعارات».
- */
+/** Closing a phone sheet with an unsaved edit asks first (docs/26b §2); keep is focused and Esc. */
 export function DiscardDialog({ words, onDiscard, onKeep }: DiscardDialogProps) {
   return (
     <Dialog

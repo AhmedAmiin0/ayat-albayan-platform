@@ -2,9 +2,7 @@ import { chatDayKey, type ClockCycle } from '@ab/time';
 import { chatDayLabel, chatRowTime } from '@ab/mobile-kit';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 
-// The day separators of a chat, as WhatsApp (owner 2026-10-27): «اليوم», «أمس», the weekday within
-// the last 6 days, else «29 سبتمبر» (and the year when it is not this year). The device's zone, as
-// every time in the thread (stamp); the day logic is the shared chatDay.
+// Day labels use the device zone like every time in the thread; logic is the shared chatDay.
 
 interface DayOptions {
   now?: Date;

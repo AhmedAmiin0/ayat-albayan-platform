@@ -35,10 +35,7 @@ function StaffBody({ staff }: { staff: Staff }) {
   }
 }
 
-/**
- * «حالة الفريق» above the users list (docs/33 §4, admin only): «متصلون الآن: n», then each staff
- * member online first, then by last seen; loading, error, off and empty each say so.
- */
+/** Admin only (docs/33 §4); online first, then by last seen. */
 export function StaffPresenceSection() {
   const { color } = useTheme();
   const staff = useStaffPresence();

@@ -5,7 +5,7 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 type Props = { label: string; onPick: (files: File[]) => void; invalid?: boolean };
 
-/** «أضف مرفقًا»: a native multi-file input (kept for keyboard and screen readers, its chrome hidden). */
+/** A native input kept for keyboard and screen readers, its chrome hidden. */
 export function AttachmentPicker({ label, onPick, invalid }: Props) {
   const id = useId();
   return (

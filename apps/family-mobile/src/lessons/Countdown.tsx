@@ -11,10 +11,7 @@ interface CountdownProps {
   big?: boolean;
 }
 
-/**
- * The live countdown (docs/50 §6) on the next-lesson card: to the window, then to the start;
- * «الحلقة جارية الآن» while it runs. A timer, never read out every second.
- */
+/** A timer, never read out every second. */
 export function Countdown({ lesson, now, big = false }: CountdownProps) {
   const { color } = useTheme();
   const clock = lessonClock(lesson, now);

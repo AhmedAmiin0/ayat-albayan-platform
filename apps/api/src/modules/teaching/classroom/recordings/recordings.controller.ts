@@ -6,7 +6,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { MeetingRecordingListService } from './recording-list.service';
 import { RecordingStarter } from './recording.starter';
 
-/** «التسجيلات» of an internal meeting: the admin and the creator; 1-hour links to finished files. */
+/** Recordings of an internal meeting: the admin and the creator; 1-hour links to finished files. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.read')
@@ -21,7 +21,7 @@ export class MeetingRecordingsController {
   }
 }
 
-/** Whether rooms can be recorded at all, so the panels warn «التسجيل غير مفعّل على الخادم». */
+/** Whether rooms can be recorded at all, so the panels can warn that recording is disabled. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.read')
