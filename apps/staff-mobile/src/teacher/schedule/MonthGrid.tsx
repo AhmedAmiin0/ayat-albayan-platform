@@ -1,5 +1,5 @@
 import { monthCells, type MonthDayView } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { Pressable, View } from 'react-native';
 import { t, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 import { dayCellLabel, dayNumber, weekdayNarrow } from './month-text';

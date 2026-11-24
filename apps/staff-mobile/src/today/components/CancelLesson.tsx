@@ -1,4 +1,4 @@
-import { CANCEL_BY, type CancelBy, type CancelRequest, type LessonView } from '@ab/shared';
+import { CANCEL_BY, type CancelBy, type CancelRequest, type LessonView } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Field, FilterPills, ErrorLine } from '@ab/mobile-kit';

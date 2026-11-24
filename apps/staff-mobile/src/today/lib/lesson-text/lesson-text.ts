@@ -1,11 +1,11 @@
+import { teacherName } from '@ab/schedule';
 import {
   ACADEMY_TZ,
   formatRunningHead,
   otherZoneClock,
-  teacherName,
   weekdayOf,
   type ClockCycle,
-} from '@ab/shared';
+} from '@ab/time';
 import { clockIn } from '@/core/lib/clock';
 import { t, ltr, locale } from '@ab/mobile-kit';
 import { localDate } from '@/today/lib/timeline';

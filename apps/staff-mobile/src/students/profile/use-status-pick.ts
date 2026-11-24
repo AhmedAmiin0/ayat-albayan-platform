@@ -1,5 +1,5 @@
 import { statusRoute, type StatusRoute } from '@ab/client-core';
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { useState } from 'react';
 import { t } from '@ab/mobile-kit';
 import { useActionKeys } from '@/students/course-actions/ActionButtons';

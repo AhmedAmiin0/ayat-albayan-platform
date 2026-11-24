@@ -1,5 +1,5 @@
 import { type AlertAction, fillSlots } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { t, ListRow, AppText, type, useTheme } from '@ab/mobile-kit';
 import type { AlertRowView } from './use-today-alerts';
 

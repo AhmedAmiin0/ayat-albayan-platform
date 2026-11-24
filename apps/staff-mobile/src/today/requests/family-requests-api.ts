@@ -1,9 +1,5 @@
-import {
-  answeredLessonSchema,
-  familyRequestsSchema,
-  type AnsweredLesson,
-  type ProposalApprove,
-} from '@ab/shared';
+import { answeredLessonSchema, familyRequestsSchema, type AnsweredLesson } from '@ab/shared';
+import type { ProposalApprove } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 

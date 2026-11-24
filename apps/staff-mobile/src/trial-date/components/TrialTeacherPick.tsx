@@ -1,4 +1,5 @@
-import { teacherName, type BookingTeacherOption, type Gender, type Program } from '@ab/shared';
+import type { Gender, Program } from '@ab/catalog';
+import { teacherName, type BookingTeacherOption } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { TeacherStep } from '@/booking/trial/components/TeacherStep';

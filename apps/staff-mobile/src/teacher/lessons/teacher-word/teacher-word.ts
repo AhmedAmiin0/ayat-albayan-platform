@@ -6,7 +6,9 @@ import {
   teacherLessonState,
   type TeacherLessonState,
 } from '@ab/client-core';
-import { counted, type Glyph, type LessonView, type RoomPresence, type Tone } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { Glyph, Tone } from '@ab/money';
+import type { LessonView, RoomPresence } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 
 // One word per state (docs/48), the same on rows, hero and schedule; chips show dot and word.

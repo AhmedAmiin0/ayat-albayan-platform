@@ -1,4 +1,4 @@
-import { applyLessonEvent } from '@ab/shared';
+import { applyLessonEvent } from '@ab/schedule';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 
 interface HeroState {

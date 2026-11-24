@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, StatusChip, Button, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';

@@ -1,4 +1,4 @@
-import type { CorrectTo } from '@ab/shared';
+import type { CorrectTo } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, ErrorLine, InlineConfirm } from '@ab/mobile-kit';

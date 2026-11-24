@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { answer, evening, held, later, NOW, saturday } from '@/teacher/today/testing/day-fixtures';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { shortDate } from '@/today';
 import { TeacherTodayScreen } from '@/teacher/screens/TeacherTodayScreen/TeacherTodayScreen';
 

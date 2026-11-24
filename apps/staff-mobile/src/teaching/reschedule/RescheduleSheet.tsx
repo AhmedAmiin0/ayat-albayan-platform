@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { RescheduleFrame } from '@ab/mobile-kit';
 import { RescheduleForm } from './RescheduleForm';
 

@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Button, NuqtaGlyph, whenText } from '@ab/mobile-kit';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';

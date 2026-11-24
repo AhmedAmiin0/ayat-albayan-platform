@@ -1,4 +1,5 @@
-import { localDateIn, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { localDateIn } from '@ab/time';
 import type { TodayLesson } from './today-lesson';
 
 // Which lessons show and the summary counts (R-MOB-02, docs/29); pure.

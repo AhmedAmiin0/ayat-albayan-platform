@@ -1,4 +1,5 @@
-import { riyadhToday, startDateEditMax, startDateEditMin } from '@ab/shared';
+import { startDateEditMax, startDateEditMin } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import type { QueryKey } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';

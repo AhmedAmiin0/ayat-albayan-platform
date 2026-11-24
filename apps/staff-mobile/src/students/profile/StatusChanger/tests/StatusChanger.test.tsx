@@ -1,4 +1,4 @@
-import { STUDENT_STATUSES } from '@ab/shared';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';

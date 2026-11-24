@@ -1,4 +1,4 @@
-import type { QuoteResponse, SubscriptionPricing, SubscriptionView } from '@ab/shared';
+import type { QuoteResponse, SubscriptionPricing, SubscriptionView } from '@ab/money';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { apiSend } from '@ab/mobile-kit';

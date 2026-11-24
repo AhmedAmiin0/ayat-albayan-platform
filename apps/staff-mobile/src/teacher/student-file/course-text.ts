@@ -1,10 +1,5 @@
-import {
-  counted,
-  courseEndOf,
-  type CourseEnd,
-  type CourseEndKey,
-  type TeacherCourseView,
-} from '@ab/shared';
+import { courseEndOf, type CourseEnd, type CourseEndKey, type TeacherCourseView } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t } from '@ab/mobile-kit';
 import { instantDay, localDay } from '@/core/lib/money/format';
 import { fill } from '@/sales/sales';

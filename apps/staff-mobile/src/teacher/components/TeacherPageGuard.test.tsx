@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { screen, waitFor } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { t } from '@ab/mobile-kit';

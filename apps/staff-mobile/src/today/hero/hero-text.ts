@@ -1,4 +1,6 @@
-import { counted, teacherName, type ClockCycle } from '@ab/shared';
+import { counted } from '@ab/core';
+import { teacherName } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { t, locale } from '@ab/mobile-kit';
 import { durationLabel, studentTimes } from '@/today/lib/lesson-text';
 import type { TodayLesson } from '@/today/lib/today-lesson';

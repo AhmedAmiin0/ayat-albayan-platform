@@ -1,8 +1,6 @@
 import { fileLineOf, fileTitleOf, formatClock, megabytes } from '@ab/client-core';
-import {
-  clockOf, dateText, type ClockOptions, type LessonAssetRecording, type LessonAssets,
-  type LessonFileView,
-} from '@ab/shared';
+import type { LessonAssetRecording, LessonAssets, LessonFileView } from '@ab/shared';
+import { clockOf, dateText, type ClockOptions } from '@ab/time';
 import { t } from '@ab/mobile-kit';
 
 const F = t.lessonFiles;

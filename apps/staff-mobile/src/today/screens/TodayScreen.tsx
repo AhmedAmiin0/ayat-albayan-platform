@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { HeroCard } from '@/today/hero/HeroCard';
 import type { TodaySource } from '@/today/lib/today-source';
 import { useDayLessons } from '@/today/lib/use-day-lessons';

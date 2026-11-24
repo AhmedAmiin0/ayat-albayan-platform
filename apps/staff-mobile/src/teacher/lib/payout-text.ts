@@ -1,4 +1,5 @@
-import { dateText, type PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
+import { dateText } from '@ab/time';
 import { t, locale } from '@ab/mobile-kit';
 
 // Payout lines (R-TCH-04) in the UI language with Western digits; pure.
