@@ -5,10 +5,7 @@ export const DEFAULT_TTL_MS = 30_000;
 /** A cache older than this asks the database for the revision before it is used (docs/26 §2c). */
 export const REVISION_CHECK_MS = 2_000;
 
-/**
- * Optional hook (provided by TranslationsModule): reload the «الترجمات» overrides after a description
- * edit, since config_describe also writes the ar override of the row's hint key (docs/26 §3).
- */
+/** Reloads overrides after a description edit, which also writes the hint key (docs/26 §3). */
 export const OVERRIDES_REFRESH = Symbol('OVERRIDES_REFRESH');
 export type OverridesRefresh = () => Promise<unknown>;
 

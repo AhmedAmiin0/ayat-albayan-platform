@@ -23,7 +23,6 @@ export function stripeMocks() {
     events: { begin: vi.fn(), done: vi.fn() },
     limit: { check: vi.fn() },
     push: { notifyProfiles: vi.fn(), notifyAdmins: vi.fn(), notifySales: vi.fn() },
-    /** SalesTeacherAssign: «المعلم/ة» of the subscribe step, sent with a link too. */
     teachers: { ensureActive: vi.fn(), assign: vi.fn(), options: vi.fn() },
     stripe: {
       checkout: { sessions: { create: vi.fn(), retrieve: vi.fn(), expire: vi.fn(), list: vi.fn() } },
@@ -51,7 +50,7 @@ export function linkRow(patch: Partial<LinkRow> = {}): LinkRow {
   };
 }
 
-/** Gate ON («الدفع الإلكتروني» on, sandbox keys saved, no cap), the link open, no event seen yet. */
+/** Gate on (sandbox keys saved, no cap), link open, no event seen yet. */
 export function stripeDefaults(s: StripeMocks): void {
   for (const group of [s.links, s.events, s.limit, s.push, s.teachers, s.stripe.checkout.sessions, s.stripe.refunds])
     for (const fn of Object.values(group)) fn.mockReset();

@@ -12,11 +12,7 @@ type Visible = (rows: SearchRow[]) => SearchRow[];
 const ALL: Visible = (rows) => rows;
 const SALES: Visible = (rows) => rows.filter(visibleToSales);
 
-/**
- * «بحث» inside one chat (owner 2026-11-02) with the same visibility as reading it (ThreadReads,
- * resolved per request, rule 9): the admin any chat, a salesperson any chat without the link
- * templates, a teacher only the chats of their scope (403 not_your_thread before any read).
- */
+/** Same visibility as reading the chat, per request (rule 9); teachers 403 outside scope. */
 @Injectable()
 export class ChatSearchService {
   constructor(

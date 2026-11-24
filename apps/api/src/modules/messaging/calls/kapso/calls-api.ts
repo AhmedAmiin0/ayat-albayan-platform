@@ -31,10 +31,7 @@ export interface CallsApi {
   accept(line: CallingLine, input: { waCallId: string; sdp: string; ref: string }): Promise<void>;
   reject(line: CallingLine, waCallId: string): Promise<void>;
   terminate(line: CallingLine, waCallId: string): Promise<void>;
-  /**
-   * POST /{phone_number_id}/messages from the calls number: only «اطلب إذن الاتصال», one request,
-   * never retried.
-   */
+  /** Only the call-permission request: one request, never retried. */
   requestPermission(line: CallingLine, input: PermissionRequest): Promise<{ waMessageId: string }>;
 }
 

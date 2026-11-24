@@ -12,17 +12,7 @@ const FIRST_RUN_MS = 5 * 60_000;
 /** The first sweep after a boot also takes packages changed while the API was down. */
 const BOOT_LOOKBACK_MS = 24 * 60 * 60_000;
 
-/**
- * R-SUB-02 triggers: every lesson change (LessonEvents: attendance, cancel, move, a submitted
- * report) evaluates the lessons' students right away, awaited by the writer. The sweep (docs/11
- * §6) runs every 15 minutes over every student with a live package or one changed since the last
- * sweep, so a missed event (a failed listener, a direct DB edit) still raises its alert. The
- * sweep also moves a student whose renewal date passed to «بانتظار التجديد» (StudentRenewal),
- * leaving a status the admin set by hand. Idempotent through the dedup keys and the
- * compare-and-set. Each sweep also tells the staff of an active package still without its weekly
- * course 2 hours on (CourseDue). In-process timer on the single API instance, like HorizonJob;
- * pg_cron when it scales.
- */
+/** R-SUB-02: lesson events alert at once; a 15-minute idempotent sweep catches missed ones. */
 @BackgroundJob({ name: 'subscription-alerts' })
 @Injectable()
 export class AlertsJob extends TickerJob implements OnModuleInit {

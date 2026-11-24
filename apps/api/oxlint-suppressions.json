@@ -174,11 +174,6 @@
   },
   "src/common/configuration/config-store/config-store.types.ts": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/common/configuration/config-store/io/config-entries.audit.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -404,7 +399,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/common/db/list-sort.test.ts": {
@@ -546,7 +541,7 @@
   },
   "src/common/infra/i18n/server-text.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/common/push/dispatch/push.audience.ts": {
@@ -720,7 +715,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/return-await": {
       "count": 1
@@ -906,7 +901,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/forbidden-imports": {
       "count": 2
@@ -1235,7 +1230,7 @@
   },
   "src/modules/finance/assistant-pay/assistant-pay.module.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 2
@@ -1648,7 +1643,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/finance/invoices/invoices.settings.ts": {
@@ -1674,7 +1669,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 12
+      "count": 8
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1688,7 +1683,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -1706,7 +1701,7 @@
   },
   "src/modules/finance/payments/payment-attachments.migration.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/finance/payments/payment-inputs.ts": {
@@ -1818,7 +1813,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1828,11 +1823,6 @@
     }
   },
   "src/modules/finance/payments/payments.settings.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/payments/payments.status.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -1951,11 +1941,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/receivables/receivables.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/receivables/receivables.module.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -1996,7 +1981,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/modules/finance/stripe/links/link-create.ts": {
@@ -2004,12 +1989,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 17
+      "count": 8
     }
   },
   "src/modules/finance/stripe/links/link-deps.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/stripe/links/link-ids.ts": {
@@ -2022,12 +2007,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/finance/stripe/links/payment-links.controller.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/zod-inputs": {
       "count": 4
@@ -2035,7 +2020,7 @@
   },
   "src/modules/finance/stripe/links/payment-links.http.subscribe.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/finance/stripe/links/payment-links.http.test.ts": {
@@ -2091,7 +2076,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 1
     }
   },
   "src/modules/finance/stripe/pay/pay-limit.ts": {
@@ -2125,7 +2110,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 4
     },
     "ab/zod-inputs": {
       "count": 1
@@ -2153,7 +2138,7 @@
   },
   "src/modules/finance/stripe/testing/stripe-mocks.fakes.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/finance/stripe/webhook/link-fulfilment.ts": {
@@ -2166,7 +2151,7 @@
   },
   "src/modules/finance/stripe/webhook/link-refunds.ts": {
     "stylistic/max-len": {
-      "count": 11
+      "count": 8
     }
   },
   "src/modules/finance/stripe/webhook/stripe-events.repo.ts": {
@@ -2184,7 +2169,7 @@
   },
   "src/modules/finance/stripe/webhook/stripe-webhook.paid.http.test.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/finance/stripe/webhook/stripe-webhook.service.ts": {
@@ -2242,15 +2227,10 @@
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.fifo.http.test.ts": {
     "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/modules/finance/subscriptions/cancel/subscription-cancel.http.test.ts": {
-    "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/cancel/subscription-cancel.migration.test.ts": {
+  "src/modules/finance/subscriptions/cancel/subscription-cancel.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2273,12 +2253,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/finance/subscriptions/cancel/subscription-cancel.service.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 2
     }
   },
   "src/modules/finance/subscriptions/list/subscription-row.ts": {
@@ -2323,7 +2303,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 12
+      "count": 4
     },
     "ab/forbidden-imports": {
       "count": 2
@@ -2342,7 +2322,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 3
@@ -2355,12 +2335,12 @@
   },
   "src/modules/finance/subscriptions/money/money-writes.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/finance/subscriptions/money/packages.plan.cancelled.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/subscriptions/money/packages.plan.test.ts": {
@@ -2390,9 +2370,6 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/forbidden-imports": {
       "count": 2
     }
@@ -2415,9 +2392,6 @@
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-activation.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    },
     "ab/no-shape-checks": {
       "count": 3
     }
@@ -2474,7 +2448,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 6
     },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
@@ -2498,7 +2472,7 @@
   },
   "src/modules/finance/subscriptions/subscriptions.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/zod-inputs": {
       "count": 10
@@ -2542,9 +2516,6 @@
     }
   },
   "src/modules/finance/subscriptions/subscriptions.module.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -2572,7 +2543,7 @@
   },
   "src/modules/finance/subscriptions/test-app.fakes.ts": {
     "stylistic/max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/modules/finance/subscriptions/test-app.ts": {
@@ -2824,7 +2795,7 @@
   },
   "src/modules/messaging/calls/flow/call-permission.service.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 4
@@ -2876,7 +2847,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/messaging/calls/flow/outbound.test.ts": {
@@ -2978,11 +2949,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/chat-lists/chat-lists.module.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/chat-lists/chat-lists.repo.test.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -3061,11 +3027,6 @@
       "count": 2
     }
   },
-  "src/modules/messaging/follow-ups/follow-ups.settings.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/inbox/delta/delta.repo.ts": {
     "stylistic/max-len": {
       "count": 5
@@ -3090,11 +3051,6 @@
       "count": 12
     }
   },
-  "src/modules/messaging/inbox/files/download-name.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/inbox/files/forward-files.crm.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -3105,7 +3061,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 3
@@ -3260,7 +3216,7 @@
   },
   "src/modules/messaging/inbox/files/thread-file.controller.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -3317,7 +3273,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/files/thread-forward.http.test.ts": {
@@ -3343,7 +3299,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 12
+      "count": 10
     },
     "ab/module-boundaries": {
       "count": 3
@@ -3379,7 +3335,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 5
     },
     "ab/module-boundaries": {
       "count": 3
@@ -3410,7 +3366,7 @@
   },
   "src/modules/messaging/inbox/inbox.module.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 4
@@ -3480,7 +3436,7 @@
   },
   "src/modules/messaging/inbox/reactions/thread-reaction.controller.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/zod-inputs": {
       "count": 2
@@ -3498,7 +3454,7 @@
   },
   "src/modules/messaging/inbox/reactions/thread-reaction.service.test.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/reactions/thread-reaction.service.ts": {
@@ -3543,7 +3499,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     },
     "ab/module-boundaries": {
       "count": 2
@@ -3562,7 +3518,7 @@
   },
   "src/modules/messaging/inbox/sales-threads/sales-threads.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 1

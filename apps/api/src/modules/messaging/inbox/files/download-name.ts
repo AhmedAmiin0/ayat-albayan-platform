@@ -19,10 +19,7 @@ function ownName(file: NamedFile): string {
   return pdfWithout ? `${own}.pdf` : own;
 }
 
-/**
- * The name «تنزيل» saves a bubble's file under (owner 2026-10-26): a sent file's own name, else
- * «whatsapp-2026-10-26-1432.jpg» from the message's UTC time and type (WhatsApp sends no name for a photo).
- */
+/** A sent file keeps its name, else one from the UTC time and type (photos have none). */
 export function downloadName(file: NamedFile): string {
   const own = ownName(file);
   if (own) return own;
