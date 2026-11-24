@@ -4,7 +4,7 @@ import { netPaid } from '@ab/money';
 import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort } from '@/common/db/list-sort';
-import type { StudentRef } from '@/modules/finance/subscriptions/subscriptions.repo';
+import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { readAll } from '@/common/db/read-all';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';

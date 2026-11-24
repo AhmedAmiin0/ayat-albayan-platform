@@ -1,0 +1,73 @@
+import { describe, expect, it, vi } from 'vitest';
+import type { CommissionBell } from '@/modules/finance/subscriptions/money/commission-bell';
+import type { LeadConversion } from '@/modules/finance/subscriptions/student-lifecycle/lead-conversion';
+import { FollowUpEnv, MoneyFollowUps } from '@/modules/finance/subscriptions/money/money-follow-ups';
+import type { StudentActivation } from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
+import type { StudentDeactivation } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
+
+function setup() {
+  const order: string[] = [];
+  const step = (name: string) => vi.fn().mockImplementation(async () => void order.push(name));
+  const leads = { afterPackage: step('lead') };
+  const students = { afterPayment: step('activate') };
+  const revert = { afterDelete: step('revert') };
+  const bell = { notify: step('bell') };
+  const env = new FollowUpEnv(revert as unknown as StudentDeactivation, bell as unknown as CommissionBell);
+  const follow = new MoneyFollowUps(leads as unknown as LeadConversion, students as unknown as StudentActivation, env);
+  return { leads, students, revert, bell, follow, order };
+}
+const IDS = { studentId: 's1', actorId: 'u1' };
+const PAID = { id: 'p1', kind: 'payment', amount: 290 };
+
+describe('MoneyFollowUps: what a money write changes outside money', () => {
+  it('a new package converts the family’s lead, and never activates the student', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'subscriptions', action: 'create' }, IDS);
+    expect(t.leads.afterPackage).toHaveBeenCalledWith('s1', 'u1');
+    expect(t.students.afterPayment).not.toHaveBeenCalled();
+  });
+
+  it('a new payment (admin or sales path alike) activates a trial student, with the recorder and the payment id', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'create', after: PAID }, IDS);
+    expect(t.students.afterPayment).toHaveBeenCalledWith('s1', 'u1', 'p1');
+    expect(t.leads.afterPackage).not.toHaveBeenCalled();
+  });
+
+  it('deleting a positive payment runs the revert with the full before row and the deleting admin', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'delete', before: PAID }, IDS);
+    expect(t.revert.afterDelete).toHaveBeenCalledWith(PAID, IDS);
+    expect(t.students.afterPayment).not.toHaveBeenCalled();
+  });
+
+  it('a refund, an edit, a deleted refund or a deleted package changes nothing', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'create', after: { ...PAID, kind: 'refund' } }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'update', before: PAID, after: PAID }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'delete', before: { ...PAID, kind: 'refund' } }, IDS);
+    await t.follow.after({ entity: 'subscriptions', action: 'delete', before: PAID }, IDS);
+    expect(t.students.afterPayment).not.toHaveBeenCalled();
+    expect(t.revert.afterDelete).not.toHaveBeenCalled();
+    expect(t.leads.afterPackage).not.toHaveBeenCalled();
+  });
+});
+
+describe('MoneyFollowUps: «عمولة جديدة» (CommissionBell, owner 2026-10-29)', () => {
+  it('runs after every write of a payment or a package (it rings whatever the database just earned)', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'create', after: PAID }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'update', before: PAID, after: PAID }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'delete', before: PAID }, IDS);
+    await t.follow.after({ entity: 'subscriptions', entityId: 'sub1', action: 'update' }, IDS);
+    await t.follow.after({ entity: 'subscriptions', entityId: 'sub1', action: 'cancel' }, IDS);
+    expect(t.bell.notify).toHaveBeenCalledTimes(5);
+  });
+
+  it('after the lifecycle follow-ups of the same write', async () => {
+    const t = setup();
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'create', after: PAID }, IDS);
+    await t.follow.after({ entity: 'payments', entityId: 'p1', action: 'delete', before: PAID }, IDS);
+    expect(t.order).toEqual(['activate', 'bell', 'revert', 'bell']);
+  });
+});

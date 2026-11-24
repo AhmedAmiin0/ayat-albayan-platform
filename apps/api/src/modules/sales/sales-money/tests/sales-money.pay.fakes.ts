@@ -1,7 +1,7 @@
 // Fixtures of the payment scenario (test-only, excluded from the build).
-import { REQUEST_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+import { REQUEST_ID, SUB_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 
-export { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
+export { PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 
 /** The admin's own POST /payments body (no receipt: allowed for the admin). */
 export const ADMIN_PAY = {

@@ -5,7 +5,7 @@ import { PackagesService, type StudentState } from '@/modules/finance/subscripti
 import { manualWins, packageEnded, renewalTarget, subscriptionEnded, type EndPackage } from './student-renewal.plan';
 import { StudentStatusRepo } from './student-status.repo';
 import type { StudentTz } from './student-status.types';
-import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
 /** What triggered the evaluation: a payment create (its id), the periodic sweep, or any other write / lesson change. */
 export type RenewalCause = { via: 'payment'; paymentId: string } | { via: 'sweep' } | { via: 'event' };

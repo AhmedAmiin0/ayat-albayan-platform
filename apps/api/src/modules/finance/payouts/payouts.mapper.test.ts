@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { StoredJsonError } from '@/common/db/stored-json';
-import { payoutRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { payoutRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { toPayoutView } from './payouts.mapper';
 
 describe('toPayoutView breakdown (teacher_payouts.breakdown parsed, R-PAY-02)', () => {

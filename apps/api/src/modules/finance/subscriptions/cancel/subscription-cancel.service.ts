@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
-import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/shared/subscriptions.service';
 import { SubscriptionCancelRepo } from './subscription-cancel.repo';
 
 type CancelInput = CancelBody & { actorId: string; now?: Date };
