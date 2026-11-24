@@ -15,7 +15,6 @@ export function micShift(dx: number, rtl: boolean, max: number): number {
   return rtl ? Math.min(Math.max(dx, 0), max) : Math.max(Math.min(dx, 0), -max);
 }
 
-/** «اسحب للإلغاء» fades as the finger nears the cancel line. */
 export function hintOpacity(toStart: number, cancel: number): number {
   return Math.min(1, Math.max(0, 1 - toStart / cancel));
 }

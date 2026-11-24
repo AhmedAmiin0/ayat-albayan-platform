@@ -4,8 +4,6 @@ import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { fullAccessMe } from '@/test/staff-me';
 
-// «القوالب» tests (owner 2026-11-14): templates and a signed-in sales user or admin.
-
 export const ME = 'u-1';
 
 export const tpl = (over: Partial<AuthorTemplate> = {}): AuthorTemplate => ({

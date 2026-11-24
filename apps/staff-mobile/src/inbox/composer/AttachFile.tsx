@@ -10,17 +10,11 @@ interface AttachFileProps {
   onError: (message: string | null) => void;
   onTemplate: () => void;
   onReplies?: (() => void) | undefined;
-  /** «الرموز التعبيرية»: the pill opens its emoji sheet (insert at the caret). */
+  /** Inserts the emoji at the caret. */
   onEmoji: () => void;
 }
 
-/**
- * The pill's paperclip (owner 2026-10-19 #1/#2; 2026-10-27 as WhatsApp Business): its sheet sends a
- * photo (gallery or camera) or a PDF at once, and holds «قالب», «الردود السريعة» and the emoji
- * (owner 2026-10-27: only the price tag and the paperclip stay in the bar). Never in teacher mode
- * (teachers do not send files: the API answers 403 files_forbidden); the composer shows it only
- * while the 24 h window is open. Owner 2026-11-01: no camera in the bar; the sheet keeps its tile.
- */
+/** Never in teacher mode (API answers 403 files_forbidden); only while the 24 h window is open. */
 export function AttachFile({ phone, onError, ...actions }: AttachFileProps) {
   const { color } = useTheme();
   const teacher = useThreadMode().kind === 'teacher';

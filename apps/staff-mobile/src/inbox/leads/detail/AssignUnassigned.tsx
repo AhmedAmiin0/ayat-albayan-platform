@@ -4,10 +4,7 @@ import { View } from 'react-native';
 import { apiSend, t, pathKey, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 
-/**
- * «عيّن العملاء الذين بلا مسؤول» (admin, leads.assign): POST /leads/assign-unassigned spreads every
- * ownerless lead over the salespeople. It asks first (it moves many rows), then says how many moved.
- */
+/** Spreads every ownerless lead over the salespeople; asks first since it moves many rows. */
 export function AssignUnassigned({ owners }: { owners: number }) {
   const { color } = useTheme();
   const client = useQueryClient();

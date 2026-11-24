@@ -14,10 +14,7 @@ interface EditListSheetProps {
   onClose: () => void;
 }
 
-/**
- * «تعديل القائمة» (a long-press on its chip): rename with «حفظ», or «حذف القائمة» behind a
- * confirmation that says the chats themselves stay. After a delete the row falls back to «الكل».
- */
+/** Deleting a list keeps its chats; the row then falls back to all chats. */
 export function EditListSheet({ list, onClose }: EditListSheetProps) {
   const rename = useRenameList();
   const remove = useDeleteList();
