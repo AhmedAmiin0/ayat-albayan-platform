@@ -1,4 +1,4 @@
-import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW } from '@ab/schedule';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LESSON_ID, OPEN } from '@/modules/teaching/classroom/classroom.fakes';
 import { RoomCloser } from '@/modules/teaching/classroom/max-duration/room-closer';
