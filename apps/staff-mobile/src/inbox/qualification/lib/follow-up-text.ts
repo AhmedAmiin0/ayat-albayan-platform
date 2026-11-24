@@ -1,4 +1,5 @@
-import { FOLLOW_UP_STATUSES, type ClockCycle } from '@ab/shared';
+import { FOLLOW_UP_STATUSES } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { whenIn } from '@/core/lib/clock';
 import { t } from '@ab/mobile-kit';
 import type { LeadProfile } from './queries';

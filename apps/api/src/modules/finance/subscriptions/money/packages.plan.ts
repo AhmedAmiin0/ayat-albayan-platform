@@ -97,3 +97,19 @@ export function openTaskKeys(plan: AlertPlan | null): string[] {
   const renewal = alertDedupKey('renewal', plan.subscriptionId);
   return plan.alert === 'unpaid' ? [renewal, alertDedupKey('unpaid', plan.subscriptionId)] : [renewal];
 }
+
+interface TaskRef {
+  subject_id: string;
+  dedup_key: string;
+}
+interface TaskScope {
+  subjectIds: ReadonlySet<string>;
+  keep: ReadonlySet<string>;
+}
+
+/** The open tasks to close: about these packages, and not called for any more (openTaskKeys). */
+export function staleTaskKeys(open: readonly TaskRef[], scope: TaskScope): string[] {
+  const inScope = (t: TaskRef): boolean => scope.subjectIds.has(t.subject_id);
+  const kept = (t: TaskRef): boolean => scope.keep.has(t.dedup_key);
+  return open.filter((t) => inScope(t) && !kept(t)).map((t) => t.dedup_key);
+}

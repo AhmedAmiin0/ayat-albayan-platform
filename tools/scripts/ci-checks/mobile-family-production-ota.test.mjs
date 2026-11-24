@@ -1,4 +1,4 @@
-// Lane L06 (owner 2026-11-22): the family Google Play build gets OTAs. mobile.yml ota-update with
+// Lane L06: the family Google Play build gets OTAs. mobile.yml ota-update with
 // app=family profile=production ships to channel production (EAS environment production), by hand
 // only, behind the same native-change guard; the staff app, action both and automatic runs are
 // refused.

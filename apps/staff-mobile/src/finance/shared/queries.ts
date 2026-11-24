@@ -2,10 +2,10 @@ import type {
   DashboardResponse,
   ExpenseCategoryView,
   ExpenseView,
-  InvoiceView,
   PayoutView,
   TeacherEarningsSummaryView,
-} from '@ab/shared';
+} from '@ab/money';
+import type { InvoiceView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, listKey, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
