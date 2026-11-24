@@ -8214,7 +8214,7 @@
   },
   "src/teacher/report/v2/V2Footer/V2Footer.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/report/v2/V2Footer/tests/buttons.test.tsx": {
@@ -8316,9 +8316,6 @@
     }
   },
   "src/teacher/screens/TeacherMoreScreen/TeacherMoreScreen.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -8331,7 +8328,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/teacher/screens/TeacherReportsScreen/tests/TeacherReportsScreen.test.tsx": {

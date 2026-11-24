@@ -8178,7 +8178,7 @@
   },
   "src/teacher/report/v2/V2Footer/V2Footer.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teacher/report/v2/V2Footer/tests/buttons.test.tsx": {
@@ -8282,14 +8282,11 @@
   "src/teacher/screens/TeacherMoreScreen/TeacherMoreScreen.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/teacher/screens/TeacherReportsScreen/TeacherReportsScreen.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
