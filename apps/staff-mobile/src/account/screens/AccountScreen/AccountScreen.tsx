@@ -19,14 +19,11 @@ import { NameSection } from '@/account/sections/NameSection';
 import { PhoneSection } from '@/account/sections/PhoneSection';
 
 export interface AccountScreenProps {
-  /** The «المزيد» this screen was opened from, for «رجوع» on a cold deep link. */
+  /** The screen it was opened from, for back on a cold deep link. */
   home: '/more' | '/teacher/more' | '/sales/more' | '/assistant/more';
 }
 
-/**
- * «حسابي» (R-ACC-01..05): every signed-in role edits its OWN login here: photo, name, phone,
- * email, password. Opened from «المزيد» (admin, sales and teacher shells).
- */
+/** R-ACC-01..05: every signed-in role edits its own login here. */
 export function AccountScreen({ home }: AccountScreenProps) {
   const { color } = useTheme();
   const profile = useMyProfile();

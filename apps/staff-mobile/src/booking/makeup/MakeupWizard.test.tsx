@@ -66,7 +66,7 @@ test('missed lesson → teacher → slot of its length → invoice → «احج�
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain('durationMin=60'); // the original's length
 
-  // «الفاتورة *» is required for a makeup too; there is no «من المحادثة» (a lesson knows no guardian number).
+  // Invoice required for a makeup too; no from-chat since a lesson knows no guardian number.
   expect(screen.queryByRole('button', { name: t.booking.invoice.fromChat })).toBeNull();
   await press(t.booking.next);
   expect(await screen.findByText(t.booking.error.invoice_required)).toBeTruthy();

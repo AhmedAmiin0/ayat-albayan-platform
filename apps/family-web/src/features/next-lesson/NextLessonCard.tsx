@@ -10,14 +10,11 @@ const TITLE_ID = 'next-lesson-title';
 
 interface Props {
   student: PortalStudent;
-  /** A student or an adult reads their own: «حلقتك القادمة». */
+  /** A student or an adult reads their own wording. */
   own: boolean;
 }
 
-/**
- * «الرئيسية»'s first card (owner 2026-11-19): the next lesson with its countdown, its status and
- * «ادخل الحلقة», the card's one primary; a quiet line when nothing is booked in the next 14 days.
- */
+/** A quiet line when nothing is booked in the next 14 days. */
 export function NextLessonCard({ student, own }: Props) {
   const read = useNextLesson(student.id);
   const { next } = read;

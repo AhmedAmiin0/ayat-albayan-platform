@@ -6,13 +6,7 @@ import { usePublicConfig } from '@/core/lib/query/public-config';
 import { makeupParams } from '@/booking/makeup/makeup-draft';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 
-/**
- * «حجز تعويضي» under a missed lesson's row (R-SCH-10): for each student still charged for a
- * no_show / excused lesson (so a group lesson offers one per child), not a trial, not itself a
- * makeup, within 60 days (makeupOffer, shared with the web). It opens the makeup wizard for that
- * student and lesson; a student whose makeup is already booked sees «التعويض محجوز · <date>»
- * instead. Admin schedule only.
- */
+/** R-SCH-10: per still-charged student, not a trial or makeup, within 60 days; admin only. */
 export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?: (() => void) | undefined }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
