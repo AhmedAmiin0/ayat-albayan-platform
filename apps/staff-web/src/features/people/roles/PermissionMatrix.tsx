@@ -29,7 +29,6 @@ export interface PermissionMatrixProps {
   disabled?: boolean;
 }
 
-/** One fieldset per area (العملاء، الطلاب، المالية…), a checkbox per permission and «تحديد الكل». */
 export function PermissionMatrix({ value, onToggle, onToggleGroup, disabled = false }: PermissionMatrixProps) {
   return (
     <div className="grid gap-4">

@@ -1,4 +1,10 @@
-import { teacherGateOpen, teacherPageOn, withPublicDefaults, type TeacherGate, type TeacherPage } from '@ab/shared';
+import {
+  teacherGateOpen,
+  teacherPageOn,
+  withPublicDefaults,
+  type TeacherGate,
+  type TeacherPage,
+} from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { publicConfigQuery, usePublicConfig } from '@/core/lib/query/public-config';
 

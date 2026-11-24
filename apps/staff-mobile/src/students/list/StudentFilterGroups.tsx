@@ -1,4 +1,7 @@
-import { NO_TEACHER, teacherName, PROGRAMS, STUDENT_PACKAGE_FILTERS, tzChoices, tzOptionLabel } from '@ab/shared';
+import { NO_TEACHER, STUDENT_PACKAGE_FILTERS } from '@ab/shared';
+import { PROGRAMS } from '@ab/catalog';
+import { teacherName } from '@ab/schedule';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import { View } from 'react-native';
 import { t, FilterPills, locale } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';

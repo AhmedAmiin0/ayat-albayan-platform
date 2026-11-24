@@ -1,4 +1,5 @@
-import { mayReceivePush, type AnyPushKind, type UserRole } from '@ab/shared';
+import { mayReceivePush } from '@ab/shared';
+import type { AnyPushKind, UserRole } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   AccountDisabledError,

@@ -1,4 +1,6 @@
-import { isCancelledLesson, type LessonStatus, type StatusStyle } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import type { StatusStyle } from '@ab/money';
+import { isCancelledLesson } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';
 

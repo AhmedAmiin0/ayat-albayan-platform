@@ -6,13 +6,10 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** `onBookCourse`: «احجز أيام الحلقات الآن» for the paid package's student (owner 2026-10-18). */
+/** `onBookCourse` books the course days for the paid package's student. */
 type Props = { payment: SalesPaymentView; onClose: () => void; onBookCourse?: (() => void) | undefined };
 
-/**
- * The transfer is recorded and counts at once (R-ASST-04): «أصبح الطالب مشتركًا» when the student is
- * active now, else «تم تسجيل التحويل»; «مدفوعاتي» is the payments filter of «أرباحي».
- */
+/** The transfer is recorded and counts at once (R-ASST-04). */
 export function SalesDoneStep({ payment, onClose, onBookCourse }: Props) {
   const title = payment.student.status === 'active' ? t.salesMoney.becameSubscribed : t.salesMoney.transferSaved;
   return (

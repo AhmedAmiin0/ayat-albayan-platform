@@ -1,4 +1,5 @@
-import { counted, pickProgress } from '@ab/shared';
+import { counted } from '@ab/core';
+import { pickProgress } from '@ab/schedule';
 import { screen, waitFor } from '@testing-library/react-native';
 import { noAvailability } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';

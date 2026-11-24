@@ -7410,9 +7410,6 @@
     }
   },
   "src/subscribe/form-prefill.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
@@ -7519,11 +7516,6 @@
   },
   "src/teacher/report/components/ReportTextField/ReportTextField.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/teacher/report/components/RubricSection.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },

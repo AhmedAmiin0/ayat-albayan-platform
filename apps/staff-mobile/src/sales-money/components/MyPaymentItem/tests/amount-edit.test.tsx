@@ -1,4 +1,4 @@
-import type { MyPaymentRow } from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey, money } from '@ab/mobile-kit';
 import { myPayment } from '@/sales-money/testing/fixtures';

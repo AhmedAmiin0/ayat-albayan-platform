@@ -8,12 +8,12 @@ import {
   type CourseMoveKind,
 } from '@ab/client-core';
 import type {
-  BookingTeacherOption,
   CourseStopPreview,
   CourseStopRequest,
   CourseStopResult,
   ProfileCourseView,
 } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';

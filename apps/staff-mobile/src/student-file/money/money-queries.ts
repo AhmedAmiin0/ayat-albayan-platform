@@ -1,4 +1,5 @@
-import type { InvoiceView, SignedDownload } from '@ab/shared';
+import type { SignedDownload } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/mobile-kit';
 

@@ -1,4 +1,5 @@
-import type { AttendanceTableRow, ClockCycle } from '@ab/shared';
+import type { AttendanceTableRow } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { View } from 'react-native';
 import { t, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

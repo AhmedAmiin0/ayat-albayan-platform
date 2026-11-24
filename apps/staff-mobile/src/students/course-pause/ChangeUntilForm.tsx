@@ -1,4 +1,5 @@
-import { riyadhToday, type CoursePauseView } from '@ab/shared';
+import type { CoursePauseView } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, ErrorLine } from '@ab/mobile-kit';

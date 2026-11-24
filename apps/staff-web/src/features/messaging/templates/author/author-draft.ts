@@ -2,8 +2,7 @@ import { suggestedCategory, type AuthorCategory } from '@ab/shared';
 import { varsOf, type DraftVar } from '@/features/messaging/templates/create/template-draft';
 import type { EditButton } from '@/features/messaging/templates/edit/edit-draft';
 
-// «قالب جديد» for sales (owner 2026-11-14): text, variables with samples, quick replies. Its
-// category follows the text (MARKETING for an offer) until the author picks one.
+// Its category follows the text (MARKETING for an offer) until the author picks one.
 
 export interface AuthorDraft {
   key: string;

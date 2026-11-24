@@ -11,8 +11,6 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
-// «قالب جديد» (owner 2026-10-31): saved, then the existing «إرسال إلى ميتا» dialog for that row.
-
 const S = t.templates.create;
 const SAVED = template({ key: 'welcome_back', meta_name: 'welcome_back', status: 'not_submitted' });
 

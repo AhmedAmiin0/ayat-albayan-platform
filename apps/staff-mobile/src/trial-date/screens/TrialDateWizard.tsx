@@ -1,4 +1,5 @@
-import type { Program, TrialHistory } from '@ab/shared';
+import type { TrialHistory } from '@ab/shared';
+import type { Program } from '@ab/catalog';
 import { backOr } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';

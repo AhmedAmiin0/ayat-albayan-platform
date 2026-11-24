@@ -3,7 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
-/** «حسابي» (R-ACC-01..05): every /me call acts on the signed-in caller only. */
+/** Every /me call acts on the signed-in caller only (R-ACC-01..05). */
 export const PROFILE_KEY = ['me', 'profile'] as const;
 
 /** GET /me/profile (R-ACC-01): name, email, phone, photo and role of the signed-in user. */

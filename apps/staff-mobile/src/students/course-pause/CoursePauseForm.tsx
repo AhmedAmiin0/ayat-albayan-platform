@@ -1,4 +1,5 @@
-import { riyadhToday, type CoursePauseStart } from '@ab/shared';
+import type { CoursePauseStart } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { StartDayPicker } from '@/assistants';

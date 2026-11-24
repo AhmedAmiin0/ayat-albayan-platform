@@ -1,4 +1,5 @@
-import { localDateIn, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { localDateIn } from '@ab/time';
 import { SlotPicker, useSlotWeek } from '@ab/mobile-kit';
 import { useRescheduleSlots } from './queries';
 import { useViewerClock } from '@/core/lib/clock';

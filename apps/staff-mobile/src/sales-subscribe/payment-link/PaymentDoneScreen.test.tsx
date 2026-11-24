@@ -1,4 +1,5 @@
-import type { PaymentLinkView, UserRole } from '@ab/shared';
+import type { PaymentLinkView } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { focusManager } from '@tanstack/react-query';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';

@@ -4,7 +4,6 @@ import {
   withSegment,
   type ArabicContent,
   type ArabicSkill,
-  type Grade,
   type IslamicContent,
   type IslamicRate,
   type QuickNote,
@@ -13,6 +12,7 @@ import {
   type SurahRange,
   type TajweedTopic,
 } from '@ab/shared';
+import type { Grade } from '@ab/catalog';
 
 // Pure edits of the v2 form's content (one change each), so the screens stay declarative.
 

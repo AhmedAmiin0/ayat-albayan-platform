@@ -1,4 +1,4 @@
-import { PROGRAMS, type Program } from '@ab/shared';
+import { PROGRAMS, type Program } from '@ab/catalog';
 import type { Href } from 'expo-router';
 
 interface TrialDateTarget {

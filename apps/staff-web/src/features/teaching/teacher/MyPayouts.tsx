@@ -68,7 +68,7 @@ const COLUMNS = col.columns([
   }),
 ]);
 
-/** /teacher/payouts «كشوف الشهر» (R-TCH-04): every month calculated for me, newest first, in EGP; client sort + filter. */
+/** Every payout month calculated for the teacher, newest first, in EGP (R-TCH-04). */
 export function MyPayouts() {
   const list = useQuery(myPayoutsQuery);
   return (

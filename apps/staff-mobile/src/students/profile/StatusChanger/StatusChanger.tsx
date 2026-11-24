@@ -1,5 +1,6 @@
 import { apiErrorCode } from '@ab/client-core';
-import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
+import { studentStatusStyle } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ApiError, t, FilterPills, ErrorLine } from '@ab/mobile-kit';

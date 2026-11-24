@@ -11,10 +11,7 @@ const OPENER = { lead: ar.inbox.leadSheet, family: ar.inbox.subscriptionSheet } 
 /** True below the shell breakpoint (900px), where the open chat is full-screen and the panel a sheet. */
 const isPhone = (page: Page): boolean => (page.viewportSize()?.width ?? 1280) < 900;
 
-/**
- * The lead panel («العميل») or the family's packages («الاشتراك») of the open thread. On a phone
- * it opens the sheet first unless it is already open; elsewhere it is the inline aside.
- */
+/** On a phone it opens the sheet first unless open; elsewhere it is the inline aside. */
 export async function sidePanel(page: Page, kind: keyof typeof PANEL): Promise<Locator> {
   const panel = page.getByRole('complementary', { name: PANEL[kind] });
   if (!isPhone(page)) return panel;

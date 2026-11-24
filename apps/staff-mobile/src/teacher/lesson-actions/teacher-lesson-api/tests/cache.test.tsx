@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';

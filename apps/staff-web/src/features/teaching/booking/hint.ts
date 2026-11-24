@@ -8,7 +8,7 @@ import type { BookingDraft } from './draft/draft';
 export interface BookHint {
   teacherId: string;
   startsAt: string | null;
-  /** «تابِع بنفس الأيام»: the previous course's picks, brought with the hinted teacher (over startsAt). */
+  /** The previous course's picks, brought with the hinted teacher (over startsAt). */
   picks?: readonly string[];
 }
 
@@ -18,11 +18,7 @@ export function bookHint(search: BookSearch): BookHint | null {
 
 type TeacherChange = Partial<Pick<BookingDraft, 'program' | 'genderPref'>> & { teacher?: BookingTeacherOption | null };
 
-/**
- * The draft change for a teacher step edit. A start picked for one teacher never carries over to
- * another (their free time differs); picking the hinted teacher brings the hinted start, or the
- * hinted picks of a renewal («تابِع بنفس الأيام»).
- */
+/** A start never carries over to another teacher; the hinted teacher brings its start or picks. */
 export function teacherPatch(draft: BookingDraft, change: TeacherChange, hint: BookHint | null): Partial<BookingDraft> {
   if (change.teacher === undefined || change.teacher?.id === draft.teacher?.id) return change;
   const hinted = hint !== null && change.teacher?.id === hint.teacherId;

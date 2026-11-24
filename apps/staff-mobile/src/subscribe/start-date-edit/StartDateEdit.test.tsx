@@ -1,4 +1,5 @@
-import { addCalendarDays, daysBefore, riyadhToday } from '@ab/shared';
+import { daysBefore } from '@ab/shared';
+import { addCalendarDays, riyadhToday } from '@ab/time';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';

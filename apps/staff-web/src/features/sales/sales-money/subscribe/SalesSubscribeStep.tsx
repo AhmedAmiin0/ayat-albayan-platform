@@ -35,16 +35,7 @@ const METHODS: { value: PayMethod; label: string }[] = [
   { value: 'online', label: t.salesMoney.payOnline },
 ];
 
-/**
- * Step 1 «اشتراك جديد» (R-ASST-01): one of her students, the calculator's inputs, the API's quote and the
- * first day (only with subscriptions.set_start_date, else the API's default) → POST /sales/subscriptions.
- * One clientRequestId per body: a retry gets the first package back. A renewal (owner 2026-10-26) opens on
- * the student's last package (GET /sales/money/family `renewal`, the admin's renewalPricing); she may change
- * anything; the first day is the same default as any package (today, Riyadh), like the admin's renewal.
- * «المعلم/ة» (owner 2026-10-29): the student's teacher (the trial's) unless she picks another; sent as teacherId.
- * «طريقة الدفع» (owner 2026-10-29) only where both exist (a Stripe build with the API's switch on, her own
- * child): «تحويل بنكي» saves the package as above, «دفع إلكتروني» makes a payment link from the same fields.
- */
+/** One clientRequestId per body so a retry gets the first package back (R-ASST-01). */
 export function SalesSubscribeStep(props: SalesSubscribeStepProps) {
   const { students, phone = '', picked, renew = false, onClose, onSaved, onLinked } = props;
   const queryClient = useQueryClient();

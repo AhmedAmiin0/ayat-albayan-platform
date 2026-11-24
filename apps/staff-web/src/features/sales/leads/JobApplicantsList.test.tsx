@@ -38,7 +38,7 @@ describe('JobApplicantsList (R-LEAD-04)', () => {
     expect(screen.getByRole('heading', { level: 1, name: t.jobApplicants.title })).toBeTruthy();
     expect(screen.getByText(t.jobApplicants.count.replace('{n}', '1'))).toBeTruthy();
     expect(screen.getByText('+20 10 0123 4567').getAttribute('dir')).toBe('ltr');
-    // A new applicant is not the admin's «دورك»: neutral, never saffron (docs/07 §6).
+    // A new applicant is not the admin's turn: neutral, never saffron (docs/07 §6).
     const chip = within(screen.getByRole('table')).getByText(t.enums.jobApplicantStatus.new).closest('[data-tone]');
     expect(chip?.getAttribute('data-tone')).toBe('neutral');
     expect(screen.getByRole('link', { name: t.jobApplicants.cv }).getAttribute('href')).toBe(

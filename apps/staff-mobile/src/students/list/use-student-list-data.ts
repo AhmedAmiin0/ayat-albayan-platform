@@ -1,4 +1,5 @@
-import type { StudentStatus, TeacherOption } from '@ab/shared';
+import type { TeacherOption } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString } from '@ab/mobile-kit';
 import { countParams, type StudentFilters } from './student-filters';

@@ -18,11 +18,7 @@ const WORDS: SendWords = {
 
 type WindowReport = Pick<ReportView, 'status' | 'can_edit' | 'edit_until' | 'sent_at'>;
 
-/**
- * docs/46 B5, under a submitted report: «يمكنك تعديل التقرير حتى …» (or «انتهت مدة التعديل»), and
- * where it stands with the family: «سيُرسل إلى الأسرة بعد 12 دقيقة», «… الآن», «أُرسل إلى الأسرة».
- * Re-read every 15 s so the countdown moves by itself.
- */
+/** docs/46 B5: the edit window and family delivery lines, re-read every 15 s for the countdown. */
 export function WindowLines({ report, tz }: { report: WindowReport; tz: string }) {
   const clock = useClock();
   const now = useNow(TICK_MS);
@@ -42,11 +38,7 @@ export function WindowLines({ report, tz }: { report: WindowReport; tz: string }
 
 const PENDING: ReadonlySet<SendState> = new Set(['window', 'sending']);
 
-/**
- * A list row's short form (the teacher's sent reports): «تعديل التقرير» while the window is still
- * open on this clock (not the cached can_edit), else «عرض التقرير», and the family line only while
- * the report has not gone yet.
- */
+/** Uses the window on this clock, not the cached can_edit; family line only before it is sent. */
 export function RowWindow({ report, href }: { report: WindowReport; href: string }) {
   const now = useNow(TICK_MS);
   const lines = sendLines(report, { now, when: () => '', words: WORDS });

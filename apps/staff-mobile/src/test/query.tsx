@@ -1,4 +1,4 @@
-import { TEACHER_PAGE_SWITCH, type PublicSettings } from '@ab/shared';
+import { TEACHER_PAGE_SWITCH, type PublicSettings } from '@ab/settings';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ReactElement } from 'react';
 import {

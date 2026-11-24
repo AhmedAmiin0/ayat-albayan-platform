@@ -1,4 +1,6 @@
-import { packageProgress, teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import type { ReportFormEntry, ReportFormLesson } from '@ab/shared';
+import { packageProgress } from '@ab/money';
+import { teacherName } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { t, locale, shape, type, useTheme, AppText, ltr } from '@ab/mobile-kit';

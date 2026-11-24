@@ -14,10 +14,7 @@ import { type Clock, useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
-/**
- * «عند الطالب 16:00 بتوقيت القاهرة» per student zone, then the teacher's, each only when its clock
- * differs from the viewer's (`clock.tz`, useViewerTz()) at that instant.
- */
+/** Each line only when its clock differs from the viewer's (`clock.tz`) at that instant. */
 export function salesClockLines(
   lesson: SalesScheduleLesson,
   clock: Clock & { tz: string },

@@ -1,4 +1,4 @@
-import { teacherCancelSchema } from '@ab/shared';
+import { teacherCancelSchema } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Field, ErrorLine } from '@ab/mobile-kit';

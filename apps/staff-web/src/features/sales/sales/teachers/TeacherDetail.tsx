@@ -9,12 +9,7 @@ import { programList } from './teacher-view';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 import { TeacherStudentsByKind } from './TeacherStudentsByKind';
 
-/**
- * The drawer of one teacher in «المعلمون»: who they are, today's lessons, a link to their day in the
- * read-only schedule, the teacher's fixed link «رابط الحلقة الثابت», then their students split
- * «مشترك · تجريبي · الكل». Never pay, rates or phone (the API does not send them); the fixed link is the
- * one exception to «no meeting link in sales» (owner 2026-10-12), shown here only.
- */
+/** Never pay, rates or phone (the API omits them); the fixed link is the one sales exception. */
 export function TeacherDetail({ teacher }: { teacher: SalesTeacherView }) {
   const { students } = teacher;
   const platform = usePlatformClassroom(teacher.platform_classroom);

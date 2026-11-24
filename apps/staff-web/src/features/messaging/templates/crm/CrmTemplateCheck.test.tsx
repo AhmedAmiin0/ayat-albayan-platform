@@ -8,7 +8,7 @@ import { templateName } from '@/features/messaging/templates/template-cells';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CrmTemplateCheck } from './CrmTemplateCheck';
 
-// «تحقق من القالب» (owner 2026-10-31): a crm number lists the templates Meta refused with #132001.
+// A crm number lists the templates Meta refused with #132001.
 
 const s = t.templates.crmCheck;
 const REFUSED = 'Meta API error: (#132001) Template name does not exist in the translation';

@@ -1,4 +1,6 @@
-import type { LessonView, PayoutView, PendingReportView, TeacherMe } from '@ab/shared';
+import type { PendingReportView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
+import type { LessonView, TeacherMe } from '@ab/schedule';
 import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';

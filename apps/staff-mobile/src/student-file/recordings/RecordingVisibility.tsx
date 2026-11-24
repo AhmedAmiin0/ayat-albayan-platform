@@ -1,4 +1,4 @@
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import { Switch, View } from 'react-native';
 import { t, type, useTheme, AppText, ErrorLine } from '@ab/mobile-kit';
 import { useSetVisibility, visibilityError } from './recording-actions';

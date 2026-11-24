@@ -1,4 +1,4 @@
-import type { MyCommissionRow } from '@ab/shared';
+import type { MyCommissionRow } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { LazyList } from '@/core/ui/lists/LazyList';

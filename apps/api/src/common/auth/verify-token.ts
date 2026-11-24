@@ -1,4 +1,4 @@
-import { isUserRole, type Permission, type UserRole } from '@ab/shared';
+import { isUserRole, type Permission, type UserRole } from '@ab/catalog';
 import { createRemoteJWKSet, decodeProtectedHeader, jwtVerify, type JWTVerifyGetKey } from 'jose';
 
 export type Role = UserRole;

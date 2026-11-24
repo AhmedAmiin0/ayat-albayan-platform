@@ -1,4 +1,5 @@
-import { wallParts, type SalesStudentLesson } from '@ab/shared';
+import type { SalesStudentLesson } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
 import { useViewerTz } from '@/core/lib/clock';
 import { Fragment, useState } from 'react';
 import { View } from 'react-native';

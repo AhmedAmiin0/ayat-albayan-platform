@@ -1,12 +1,12 @@
-import {
-  localizedName,
-  wallParts,
-  type ClockCycle,
-  type SalesHistoryEntry,
-  type SalesStudentView,
-  type SalesTeacherStudent,
-  type SalesTeacherView,
+import type {
+  SalesHistoryEntry,
+  SalesStudentView,
+  SalesTeacherStudent,
+  SalesTeacherView,
 } from '@ab/shared';
+import { localizedName } from '@ab/core';
+import { wallParts } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { whenIn } from '@/core/lib/clock';
 import { t, locale, ltr, money } from '@ab/mobile-kit';
 import type { SalesSubscriptionView } from '@ab/shared';

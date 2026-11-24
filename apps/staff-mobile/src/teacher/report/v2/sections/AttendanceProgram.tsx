@@ -1,4 +1,4 @@
-import { ATTENDANCES, PROGRAMS } from '@ab/shared';
+import { ATTENDANCES, PROGRAMS } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, Section } from '@ab/mobile-kit';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';

@@ -4,11 +4,7 @@ import { StudentReportsPage } from '@/features/reporting/reports/history/Student
 import { studentQuery } from '@/features/people/students/api';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
-/**
- * /admin/students/$studentId/reports — «سجل التقارير» + grade chart (R-REP-05, issue D2).
- * `$studentId_` keeps it out of the profile page (no Outlet there); it renders inside the students
- * route, and is the parent of the admin's report form (renders it via Outlet).
- */
+/** `$studentId_` keeps it out of the profile page, which has no Outlet (R-REP-05, issue D2). */
 export const Route = createFileRoute('/admin/students/$studentId_/reports')({ component: AdminStudentReportsRoute });
 
 function AdminStudentReportsRoute() {

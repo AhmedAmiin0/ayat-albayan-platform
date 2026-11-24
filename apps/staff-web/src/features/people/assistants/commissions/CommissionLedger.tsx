@@ -24,7 +24,7 @@ type Props = {
 
 const STATUSES = ASSISTANT_COMMISSION_STATUSES.map((value) => ({ value, label: t.assistants.ledger.status[value] }));
 
-/** «العمولات» (R-ASST-02, R-ASST-05): the ledger with assistant / month / status filters and per-currency totals. */
+/** Totals are per currency (R-ASST-02, R-ASST-05). */
 export function CommissionLedger({ assistants, assistantId = '', canWrite }: Props) {
   const [filter, setFilter] = useState<Filter<'earned' | 'voided'>>({ assistantId, month: '', status: '' });
   const list = useQuery(commissionsQuery({ ...filter, assistantId: assistantId || filter.assistantId }));

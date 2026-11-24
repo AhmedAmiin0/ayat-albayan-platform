@@ -2,11 +2,11 @@ import {
   continueFits,
   courseOpensOn,
   prefillDays,
-  wallParts,
   type BookedCourse,
   type PrefilledPick,
   type SalesCourseView,
 } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure, dayStartUtc, LessonTimesStep } from '@/booking';

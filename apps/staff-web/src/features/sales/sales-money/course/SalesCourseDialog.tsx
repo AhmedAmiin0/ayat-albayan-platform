@@ -37,14 +37,10 @@ const wizardStart = (plan: ContinuePlan | null, continuing: boolean): ContinuePl
 
 type BookingProps = { view: SalesCourseView; draft: BookingDraft; onClose: () => void };
 
-/**
- * A renewal's «تابِع بنفس الأيام» choice, then the wizard (teacher → one time per day → review),
- * prefilled with the previous teacher and days when she continues, or adjusts them when they do not
- * fit the new plan's days a week («عدّل الأيام السابقة»: she adds or removes a day). «رجوع إلى اختيار الأيام» goes back to the choice.
- */
+/** When the previous days do not fit the new plan's days a week she adds or removes a day. */
 function CourseBooking({ view, draft, onClose }: BookingProps) {
   const [choice, setChoice] = useState<Choice>(null);
-  // Hold mode (owner 2026-11-06): «احجز» kept the picks as a draft, booked after the payment.
+  // Hold mode: the picks were kept as a draft, booked after the payment.
   const [saved, setSaved] = useState(false);
   const [now] = useState(() => new Date().toISOString());
   const plan = continuePlan(view, now);
@@ -74,7 +70,6 @@ function CourseBooking({ view, draft, onClose }: BookingProps) {
   );
 }
 
-/** The booking (or why not), under «تغيير أيام الحلقات» whenever the student has a course to change. */
 function CourseBody({ view, onClose }: { view: SalesCourseView; onClose: () => void }) {
   const draft = courseDraft(view);
   const current = view.current;
@@ -88,7 +83,6 @@ function CourseBody({ view, onClose }: { view: SalesCourseView; onClose: () => v
   );
 }
 
-/** The header's fixed facts: package and length, then «يبدأ الاشتراك في …». */
 function CourseFacts({ sub }: { sub: CourseSubscription }) {
   return (
     <>
@@ -98,20 +92,11 @@ function CourseFacts({ sub }: { sub: CourseSubscription }) {
   );
 }
 
-/**
- * «أيام الحلقات» (owner 2026-10-18, R-ASST-01): the assistant books the weekly course of a subscription
- * she sold, over the chat. Exactly the plan's days a week, each with its own time from the teacher's
- * free slots; the course stops after the plan's lessons. No invoice, no link, never over a clash. A
- * student without a subscription, with a course already, or with a custom count gets the reason instead;
- * a course to change (view.current: running, or booked ahead) offers «تغيير أيام الحلقات» beside the
- * rest, a renewal «تابِع بنفس الأيام» (owner 2026-10-18). «إلغاء الباقة» (owner 2026-11-02) of
- * that subscription while it is unused (no course booked on it, nothing paid).
- */
+/** Course booking (R-ASST-01): exactly the plan's days a week, never over a clash, no invoice. */
 export function SalesCourseDialog({ studentId, onClose }: Props) {
   const queryClient = useQueryClient();
   const course = useQuery(salesCourseQuery(studentId));
-  // The first bookable view stays while the dialog is open: a refetch after «احجز» (now
-  // course_exists) must not replace the booked panel with the refusal. Closing refreshes it.
+  // The first bookable view stays, so a refetch after booking (course_exists) cannot show refusal.
   const [held, setHeld] = useState<SalesCourseView | null>(null);
   if (!held && course.data && courseDraft(course.data)) setHeld(course.data);
   const view = held ?? course.data;

@@ -1,4 +1,4 @@
-import type { NumberPurpose, WaLine } from '@ab/shared';
+import type { NumberPurpose, WaLine } from '@ab/catalog';
 import type { WhatsappEnv } from '@/config/env/whatsapp/env.whatsapp';
 
 // Numbers as records (docs/23 §3 phase 3). null = settings.comms_source is legacy (or not loaded): loadEnv()

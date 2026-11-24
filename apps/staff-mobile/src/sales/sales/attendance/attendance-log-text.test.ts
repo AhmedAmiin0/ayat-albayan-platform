@@ -1,4 +1,4 @@
-import { lessonStatusStyle } from '@ab/shared';
+import { lessonStatusStyle } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
 import { lessonStatusText } from '@/core/ui/feedback/lesson-status';

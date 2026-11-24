@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { allowedLessonEvents } from '@ab/shared';
+import { allowedLessonEvents } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { lesson, muscat, pending } from '@/today/testing/fixtures';

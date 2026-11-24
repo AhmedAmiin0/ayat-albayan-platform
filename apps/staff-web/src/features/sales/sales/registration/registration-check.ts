@@ -1,7 +1,7 @@
 import { registrationCheckQuerySchema } from '@ab/shared';
 import type { RegistrationCheckBy, RegistrationCheckCode } from '@ab/shared';
 
-// «التحقق من التسجيل» (docs/16 row 23): the same query rules as the API, checked before any request.
+// The same query rules as the API (docs/16 row 23), checked before any request.
 
 const CODES: readonly RegistrationCheckCode[] = ['query_too_short', 'invalid_phone', 'one_of'];
 

@@ -33,7 +33,7 @@ describe('LoginPage tabs (docs/30 §7)', () => {
     expect(screen.getByLabelText(t.auth.email).getAttribute('type')).toBe('text');
     expect(screen.getByLabelText(t.auth.email).getAttribute('autocomplete')).toBe('username');
     expect(screen.queryByLabelText(t.familyAuth.phone)).toBeNull();
-    // Only the code status (the teacher's «الدخول برمز واتساب» link, docs/46 A6).
+    // Only the code status is fetched (docs/46 A6).
     expect(apiFetch.mock.calls).toEqual([['/auth/code/status']]);
   });
 
