@@ -8,7 +8,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
 import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
-import { SalesTrialDates } from '@/modules/teaching/booking/sales/course/sales-trial-date.service';
+import { SalesTrialDates } from '@/modules/teaching/booking/trial-date/sales-trial-date.service';
 import { TrialDates } from './trial-date.service';
 
 const historyQuery = z.object({ studentId: z.uuid() });
