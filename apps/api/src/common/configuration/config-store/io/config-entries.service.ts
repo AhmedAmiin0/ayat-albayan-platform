@@ -38,7 +38,6 @@ function known(key: string): Known {
   return { seed, def };
 }
 
-/** «القيم» (docs/26 §2f): list, per-key value save and description edit over ConfigStore. */
 @Injectable()
 export class ConfigEntriesService {
   private readonly log = new Logger(ConfigEntriesService.name);

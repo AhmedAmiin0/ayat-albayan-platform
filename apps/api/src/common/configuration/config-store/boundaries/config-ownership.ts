@@ -6,7 +6,7 @@ import { configDef, seedEntryOf } from '@/common/configuration/config-store/stor
 // Who owns a key is decided IN CODE (docs/26 §2a, §9 #6): OWNED_SETTING_KEYS and the registry's
 // `ownedBy` / `patch: false`, never a DB column.
 
-/** The module that owns `key`, or null for a «القيم» key. */
+/** The module that owns `key`, or null for a generic settings-values key. */
 export function ownerOf(key: string): SettingOwner | null {
   if (isOwnedSettingKey(key)) return OWNED_SETTING_KEYS[key];
   return seedEntryOf(key)?.ownedBy ?? null;

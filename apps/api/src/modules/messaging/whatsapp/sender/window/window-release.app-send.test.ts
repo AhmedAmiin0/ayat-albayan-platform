@@ -3,8 +3,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { reopenOf, windowFakes } from './window.fakes';
 import { WindowRepo } from './window.repo';
 
-// «أرسل عبر واتساب» (docs/19): a family reply never releases a text that had a tap (the release
-// never reads it, even after the window: AppSendExpiry fails it app_send_unconfirmed first).
+// A family reply never releases an app-sent text (docs/19).
 
 const NOW = new Date('2026-11-06T10:00:00Z');
 const A = '+966500000001';

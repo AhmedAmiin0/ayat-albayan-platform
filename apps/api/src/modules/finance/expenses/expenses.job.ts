@@ -15,11 +15,7 @@ export function nextMonthStart(now: Date, tz: string = SETTING_DEFAULTS.academy_
   return addCalendarMonths(localDateIn(now, tz), 1);
 }
 
-/**
- * «تكرار شهري»: every few hours, copies each recurring expense of this month into next month as a
- * draft (create_recurring_expense_drafts). Idempotent: unique (template_id, month), so the same
- * month is never pre-created twice. ponytail: in-process timer like AlertsJob; pg_cron when it scales.
- */
+/** Copies recurring expenses into next month as drafts; unique (template_id, month) dedups. */
 @BackgroundJob({ name: 'expenses' })
 @Injectable()
 export class ExpensesJob implements OnApplicationBootstrap, OnModuleDestroy {

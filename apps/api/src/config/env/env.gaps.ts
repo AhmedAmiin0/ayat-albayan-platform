@@ -5,7 +5,7 @@ import { evolutionGaps } from './whatsapp/env.evolution';
 import { duplicateChatPhone, kapsoGaps } from './whatsapp/env.kapso';
 import { chatKeyGaps, hasChatKeys, lineProvider } from './whatsapp/env.whatsapp';
 
-// What each line still lacks to send, for «افحص الخطوط» and the boot log (docs/19): key NAMES only.
+// What each line still lacks to send, for the line check and the boot log (docs/19): names only.
 
 const META_NOTIFICATION_KEYS = ['WA_API_BASE', 'WA_PHONE_NUMBER_ID', 'WA_WABA_ID', 'WA_ACCESS_TOKEN'] as const;
 
@@ -47,7 +47,7 @@ export function duplicatePhone(env: Env, line: WaLine): boolean {
   return bothOnCrm(env) || (lineProvider(env, 'chat') !== 'crm' && duplicateChatPhone(env));
 }
 
-/** The boot log's words for a duplicate chat phone id («افحص الخطوط» shows duplicate_chat_phone instead). */
+/** The boot log's words for a duplicate chat phone id; the line check shows a code instead. */
 export const DUPLICATE_CHAT_PHONE = 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)';
 /** The boot log's words when both lines are on crm. */
 const BOTH_ON_CRM = 'WA_CHAT_PROVIDER (crm, same as WA_PROVIDER)';
