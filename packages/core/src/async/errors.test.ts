@@ -23,6 +23,8 @@ describe('error helpers', () => {
   it('errorCode reads a string code, else null', () => {
     expect(errorCode(new CodedError('a'))).toBe('a');
     expect(errorCode({ code: 'b' })).toBe('b');
+    expect(errorCode(Object.assign(new Error('reset'), { code: 'ECONNRESET' }))).toBe('ECONNRESET');
+    expect(errorCode(undefined)).toBeNull();
     expect(errorCode({ code: 7 })).toBeNull();
     expect(errorCode(new Error('no code'))).toBeNull();
     expect(errorCode(null)).toBeNull();

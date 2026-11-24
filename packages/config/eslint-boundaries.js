@@ -1,8 +1,7 @@
 // docs/27 §1 rule 6: import another module only through its index.ts, never its internals.
-// A "module" is the first path under the package root that matches `module` (a regex source), e.g.
-// `src/modules/[^/]+/[^/]+` for the api. Imports inside the same module, and of shared folders that match
-// no module, are free. Existing deep imports live in each package's oxlint-suppressions.json; a new
-// one fails lint.
+// A "module" is the first path under the package root that matches `module` (a regex source),
+// e.g. `src/modules/[^/]+/[^/]+` for the api. Imports inside the same module, and of shared folders
+// that match no module, are free.
 import { dirname, relative, resolve } from 'node:path';
 import { forbiddenImportsRule } from './eslint-imports.js';
 import { maxParamsRule } from './eslint-params.js';
@@ -40,7 +39,7 @@ export function isDeep(spec, { file, cwd, alias, module }) {
 const moduleBoundariesRule = {
   meta: {
     type: 'problem',
-    docs: { description: "Import another module only through its index.ts (docs/27 §1 rule 6)." },
+    docs: { description: 'Import another module only through its index.ts (docs/27 §1 rule 6).' },
     schema: [
       {
         type: 'object',
@@ -63,7 +62,11 @@ const moduleBoundariesRule = {
       const spec = node?.source?.value;
       if (typeof spec !== 'string' || !isDeep(spec, opts)) return;
       const to = target(spec, opts) ?? '';
-      context.report({ node: node.source, messageId: 'deep', data: { spec, module: moduleOf(to, module) } });
+      context.report({
+        node: node.source,
+        messageId: 'deep',
+        data: { spec, module: moduleOf(to, module) },
+      });
     };
     return {
       ImportDeclaration: check,
@@ -87,15 +90,26 @@ export const boundariesPlugin = {
 };
 
 // Test code may import another module's fakes and fixtures and mock its internals by path.
-export const TESTS = ['**/*.test.*', '**/*.spec.*', '**/*.fake.ts', '**/*.fakes.ts', '**/*fixture*', '**/*test-app*.ts', '**/test/**', '**/testing/**'];
+export const TESTS = [
+  '**/*.test.*',
+  '**/*.spec.*',
+  '**/*.fake.ts',
+  '**/*.fakes.ts',
+  '**/*fixture*',
+  '**/*test-app*.ts',
+  '**/test/**',
+  '**/testing/**',
+];
 
-/** Flat-config block: the rule as an error for `files` of the package at `root` (its config's directory). */
+/** Flat-config block: the rule as an error for `files` of the package at `root` (config folder). */
 export function boundaries({ root, files, module, alias, ignores = [] }) {
   return {
     files,
     ignores: [...TESTS, ...ignores],
     plugins: { ab: boundariesPlugin },
-    rules: { 'ab/module-boundaries': ['error', alias ? { root, module, alias } : { root, module }] },
+    rules: {
+      'ab/module-boundaries': ['error', alias ? { root, module, alias } : { root, module }],
+    },
   };
 }
 

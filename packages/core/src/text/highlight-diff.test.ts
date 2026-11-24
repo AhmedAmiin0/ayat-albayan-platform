@@ -21,6 +21,13 @@ describe('diffRanges', () => {
     expect(diffRanges('عبـــدالله', 'عبدالله')).toEqual([]);
   });
 
+  it('ranges count code points, so a letter outside the BMP is one position', () => {
+    expect(diffRanges('𝐀سهيلة', 'سهيله')).toEqual([
+      { start: 0, end: 1 },
+      { start: 5, end: 6 },
+    ]);
+  });
+
   it('marks on a differing letter ride along with it', () => {
     expect(diffRanges('فاطمةُ', 'فاطمه')).toEqual([{ start: 4, end: 6 }]);
   });
