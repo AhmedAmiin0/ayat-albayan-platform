@@ -6,7 +6,7 @@ const NOW = new Date('2026-10-27T10:00:00Z');
 const AT = '2026-11-02T15:00:00.000Z';
 const ACTIONS = [['reschedule', { startsAt: AT }], ['cancel', { by: 'student', reason: 'سفر' }]] as const;
 
-// Owner 2026-11-02: while «اشتراط التعيين» enforces (SalesOwnershipRule), only her students'.
+// While the ownership rule enforces, only her students' lessons.
 describe('POST /sales/lessons/:id/reschedule and /cancel while the ownership rule enforces', () => {
   let t: App;
   beforeAll(async () => {

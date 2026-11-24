@@ -1,8 +1,7 @@
 import { DAY_MS, dayInZone, dayWallToUtc, minutesOfHhmm, weekdayOfDay } from '@ab/shared';
 import type { Tables } from '@ab/db';
 import type { SalesWeeklySlot } from '@ab/shared';
-// One weekly rule as sales read it («الجدول» of «تفاصيل الطالب», «كل الطلاب»'s row): never its
-// link, subscription or creator (migration 187).
+// Never its link, subscription or creator (migration 187).
 
 /** An active rule of a student: never its meeting_link, subscription or creator. */
 export type WeeklyRuleRow = Pick<

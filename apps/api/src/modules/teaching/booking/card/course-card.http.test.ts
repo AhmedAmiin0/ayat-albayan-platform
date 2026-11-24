@@ -2,8 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { profileApp, S1, SUB_ID } from '@/modules/teaching/booking/profile/profile-course.fakes';
 
-// «الدورة والباقة» (owner 2026-11-17): the course summary and the upcoming lessons, for the admin
-// (students.read) and every assistant (self.sales_academy), any student.
+// For the admin (students.read) and every assistant (self.sales_academy), any student.
 type App = Awaited<ReturnType<typeof profileApp>>;
 const COURSE = {
   subscriptionId: SUB_ID,

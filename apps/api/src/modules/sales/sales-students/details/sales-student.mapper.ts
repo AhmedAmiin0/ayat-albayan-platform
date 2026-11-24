@@ -34,10 +34,7 @@ interface DetailsParts {
 
 const iso = (at: string): string => new Date(at).toISOString();
 
-/**
- * «مدفوعة جزئيًا» per package (owner 2026-10-28): net paid against what it is owed for (owedFor: the
- * price, a stopped course's stored decision), only when 0 < paid < owed.
- */
+/** Only when 0 < net paid < owed (the price, or a stopped course's stored decision). */
 function partPaidOf(history: HistoryBundle, prices: readonly PriceRow[]): Map<string, SalesPartPaid> {
   return new Map(
     prices.flatMap((p) => {
@@ -84,10 +81,7 @@ function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): S
   });
 }
 
-/**
- * Whitelist of «تفاصيل الطالب» (docs/16 row 36): no payment, note or meeting link («الجدول» included); a
- * price only as `part_paid`. Any student, hers or not (owner 2026-10-30).
- */
+/** docs/16 row 36: no payment, note or meeting link; a price only as part_paid. */
 export function toStudentDetails(p: DetailsParts): SalesStudentDetails {
   const subscriptions = subscriptionsOf(p.history, p.prices ?? []);
   const reports = p.reports;

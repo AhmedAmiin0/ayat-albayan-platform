@@ -30,14 +30,11 @@ export function teacherCourseOf(
 const isoOrNull = (at: string | null | undefined): string | null =>
   at ? new Date(at).toISOString() : null;
 
-/** «توقفت الدورة»: when a stopped package was stopped; null for any other package. */
+/** Null for any other package. */
 const stoppedAt = (p: CoursePackageRow): string | null =>
   p.cancel_kind === 'stopped' ? isoOrNull(p.cancelled_at) : null;
 
-/**
- * Used and left; without a balance row nothing is used yet. Neither reads past the package
- * («10 من 8» would hint at unpaid lessons), and left never reads below 0.
- */
+/** Never reads past the package size, which would hint at unpaid lessons; left never below 0. */
 function counts(p: CoursePackageRow, b: CourseBalance | undefined) {
   const used = b?.lessons_used ?? 0;
   const remaining = b?.remaining ?? p.lessons_total - used;

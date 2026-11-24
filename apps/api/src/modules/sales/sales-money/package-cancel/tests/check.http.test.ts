@@ -7,8 +7,7 @@ import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
-// GET /sales/packages/:id/cancel (whether «إلغاء الباقة» shows) and the key: subscriptions.stop,
-// never subscriptions.write.
+// The key is subscriptions.stop, never subscriptions.write.
 
 const url = `/sales/packages/${SUB_ID}/cancel`;
 
@@ -22,7 +21,7 @@ describe('GET /sales/packages/:id/cancel', () => {
   beforeEach(() => {
     resetMocks(m);
     salesDefaults(m);
-    m.settings.all.mockResolvedValue(SETTING_DEFAULTS); // «اشتراط التعيين» OFF: any student
+    m.settings.all.mockResolvedValue(SETTING_DEFAULTS); // Ownership rule off: any student.
   });
 
   it('an unused package: block null; nothing written', async () => {

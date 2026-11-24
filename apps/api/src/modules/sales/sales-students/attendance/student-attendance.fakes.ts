@@ -1,4 +1,4 @@
-// «سجل الحضور» rows as the database could return them, secrets present (test-only, *.fakes.ts).
+// Secrets present on purpose (test-only).
 import type { Mock } from 'vitest';
 import type { AttendanceLessonRow } from './student-attendance.rows';
 

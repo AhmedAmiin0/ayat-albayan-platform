@@ -12,12 +12,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { AnyPackageCancel } from './any-package-cancel.service';
 
-/**
- * «إلغاء الباقة» in the assistant's «تفاصيل الطالب» (owner 2026-11-02), next to «إلغاء الاشتراك»:
- * subscriptions.stop (system admin and sales by default, migration 990); ANY student unless
- * «اشتراط التعيين» enforces her own (SalesOwnershipRule, 403 not_your_student); never
- * subscriptions.write (the admin's POST /subscriptions/:id/cancel). Teachers and families never.
- */
+/** subscriptions.stop (migration 990), never subscriptions.write; own students only if enforced. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('subscriptions.stop')
@@ -34,7 +29,7 @@ export class AnyPackageCancelController {
     return this.cancels.check(id, user);
   }
 
-  /** 200 «ملغاة»; 409 already_cancelled / has_payments / has_lessons / has_commission. */
+  /** 409 already_cancelled, has_payments, has_lessons or has_commission. */
   @Post(':id/cancel')
   @HttpCode(200)
   cancel(
