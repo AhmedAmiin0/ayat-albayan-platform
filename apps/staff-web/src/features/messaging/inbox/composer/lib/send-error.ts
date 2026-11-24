@@ -3,7 +3,7 @@ import { errorCode } from '@/features/teaching/schedule';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** The send's codes, and «تعديل»'s refusals (400 not_correctable, 403 not_your_message…). */
+/** Includes the edit refusals (400 not_correctable, 403 not_your_message). */
 const ERRORS: Record<string, string | undefined> = {
   ...t.inbox.error,
   ...t.inbox.correction.errors,
@@ -36,8 +36,6 @@ export const sendErrorCode = (error: unknown): string =>
 export const rereadsAfter = (error: unknown): boolean =>
   [SEND_UNCONFIRMED, SEND_REPLAYED, 'session_closed'].includes(sendErrorCode(error));
 
-/** An inbox.error key in words, else «لم تُرسل». */
 export const sendErrorCodeText = (code: string): string => ERRORS[code] ?? t.inbox.error.send_failed;
 
-/** The API's reason in words (a bare 403 «غير مسموح لك بالإرسال»), else «لم تُرسل». */
 export const sendErrorText = (error: unknown): string => sendErrorCodeText(sendErrorCode(error));

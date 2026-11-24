@@ -13,7 +13,7 @@ export interface CreateListDialogProps {
   onCreated: (list: ChatList) => void;
 }
 
-/** «قائمة جديدة» (docs/22 §4): the name and «إنشاء»; a taken name or the 30-list cap shows inline. */
+/** A taken name or the 30-list cap shows inline (docs/22 §4). */
 export function CreateListDialog({ onClose, onCreated }: CreateListDialogProps) {
   const formId = useId();
   const queryClient = useQueryClient();

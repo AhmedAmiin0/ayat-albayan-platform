@@ -13,12 +13,7 @@ export interface Membership {
   failed: boolean;
 }
 
-/**
- * The thread's «القوائم» checklist state (docs/22 §4): a toggle shows at once and saves (PUT / DELETE),
- * one save per box at a time, the last choice winning; a box with no save in flight follows the latest
- * cached membership. A failure puts that one box back and says so. Every box's last answer refreshes the
- * counts, the filtered list and the open chat's chips.
- */
+/** One save per box at a time, last choice wins; a failure reverts only that box (docs/22 §4). */
 export function useMembership(phone: string, cached: readonly ChatListRef[]): Membership {
   const queryClient = useQueryClient();
   const intents = useSyncExternalStore(subscribeMemberQueue, memberQueueSnapshot);

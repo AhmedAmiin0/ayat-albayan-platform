@@ -2,10 +2,6 @@ import type { TemplateHeader as Header } from '@ab/shared';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * The template's header over the body: a text one in bold; a media one is the message's own file
- * (MessageMedia) when it has one, else its kind («مستند»), as WhatsApp's placeholder.
- */
 export function TemplateHeader({ header, hasMedia }: { header: Header | null; hasMedia: boolean }) {
   if (!header) return null;
   if (header.type === 'text') {
