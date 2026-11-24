@@ -15,7 +15,6 @@ import { useChildSummary } from './use-child-summary';
 interface Props {
   student: PortalStudent;
   kind: PortalKind;
-  /** «اختر الطالب»: work as this child. */
   onChoose: () => void;
 }
 
@@ -25,7 +24,6 @@ interface HeadProps {
   newReports: number;
 }
 
-/** Who: the initials, the name («أنا» on a guardian's own row), the code; «جديد» to read. */
 function CardHead({ student, self, newReports }: HeadProps) {
   return (
     <header className="flex items-start justify-between gap-3">
@@ -48,7 +46,7 @@ function CardHead({ student, self, newReports }: HeadProps) {
   );
 }
 
-/** The next lesson: when, the teacher, «ادخل الحلقة» only while its window is open. */
+/** The join button shows only while its window is open. */
 function CardLesson({ student, read }: { student: PortalStudent; read: NextLessonRead }) {
   return (
     <section aria-label={t.portal.nextLesson} className="grid gap-2">
@@ -62,11 +60,6 @@ function CardLesson({ student, read }: { student: PortalStudent; read: NextLesso
   );
 }
 
-/**
- * One child on «اختر الطالب» (canvas Children, owner 2026-11-19): who, the next lesson, the last
- * report, this month and (a guardian's) the package. «افتح صفحة …» makes the pages this child's:
- * the card's primary, or its secondary while «ادخل الحلقة» is open above it.
- */
 export function ChildSummaryCard({ student, kind, onChoose }: Props) {
   const read = useChildSummary(student, kind);
   const lesson = useNextLesson(student.id);

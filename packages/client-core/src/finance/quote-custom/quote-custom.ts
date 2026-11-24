@@ -7,10 +7,9 @@ export interface QuotedTotal {
   currency: string;
 }
 
-/** The price «مبلغ مخصص» starts from: the admin's and the sales quote both carry these. */
+/** Both the admin and the sales quote carry these fields. */
 export type QuotedPrice = Pick<QuotedTotal, 'afterDiscount' | 'currency'>;
 
-/** The «مبلغ مخصص» toggle and its text (the app's useCustomPrice). */
 interface Typed {
   on: boolean;
   text: string;
@@ -25,12 +24,7 @@ interface QuoteCustomState {
 
 const OFF: QuoteCustomState = { total: undefined, valid: true, error: null };
 
-/**
- * «مبلغ مخصص» on the chat's «عرض سعر», web and mobile: any positive amount (parseAmount, Arabic
- * digits too) for every role, with no sales floor. Off: no `total` (the offer is today's), valid,
- * no error. On: `total` once the amount is valid; `valid` gates send, edit and copy; `error` is
- * `invalid` (the field's line) as soon as a non-amount is typed.
- */
+/** Custom price: any positive amount for every role, no sales floor; off means today's offer. */
 export function quoteCustom(typed: Typed, invalid: string): QuoteCustomState {
   if (!typed.on) return OFF;
   const amount = parseAmount(typed.text);

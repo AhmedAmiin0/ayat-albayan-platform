@@ -2,8 +2,7 @@ import { QUICK_REPLY_INTENTS, TEMPLATE_BUTTON_KINDS, TEMPLATE_HEADER_KINDS } fro
 import { TEMPLATE_CATEGORIES, TEMPLATE_STATUSES, WA_LINES } from '@ab/catalog';
 import { z } from 'zod';
 
-// A template as «القوالب» reads it (the API's TemplateView, the fields both apps draw), parsed at
-// the boundary (rule 12).
+// A template as the templates screen reads it, parsed at the boundary (rule 12).
 
 const button = z.union([
   z.object({

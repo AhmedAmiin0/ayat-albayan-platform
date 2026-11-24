@@ -10,7 +10,6 @@ interface ScheduleDayProps {
   now: Date;
 }
 
-/** One day of the week: «اليوم · الأحد 16» or «الثلاثاء 18», then its lessons in one card. */
 export function ScheduleDay({ day, clock, now }: ScheduleDayProps) {
   const { color } = useTheme();
   const first = day.lessons[0];

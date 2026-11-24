@@ -1,8 +1,7 @@
 import type { ReopenSent, TemplateView } from '@ab/shared';
 import type { MessageStatus } from '@ab/catalog';
 
-// «إعادة فتح المحادثة» (owner 2026-11-14, «like Kapso»): after the 24 h window the composer shows a
-// bar. Staff pick an approved chat-line template and send it; the chat then waits for the family.
+// After the 24 h window staff send an approved template to reopen the chat, then wait.
 
 /**
  * The bar over the composer: none (the window is open), «reopen» (closed, no template live: the

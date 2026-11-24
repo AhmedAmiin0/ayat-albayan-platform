@@ -2,8 +2,7 @@ import type { ChannelPage } from '@ab/shared';
 import type { Locale } from '@ab/core';
 import { clockOf, dateText, localDateIn, type ClockCycle } from '@ab/time';
 
-// The student channel (docs/31 §2) for web and mobile: who reads it through which API path.
-// teacher = «رسائل الطلاب»; portal = the family; admin = student_channels.monitor; sales = the owning assistant.
+// Student channel (docs/31 §2): who reads it through which API path.
 
 export type ChannelAudience = 'teacher' | 'portal' | 'admin' | 'sales';
 
@@ -63,7 +62,6 @@ export function threadMessages(pages: readonly ChannelPage[] | undefined): Chann
   return [...(pages ?? [])].reverse().flatMap((p) => p.messages);
 }
 
-/** A message's time on the viewer's clock (12 or 24 h): «14:05» today, «25 أكتوبر 14:05» on another day. */
 export function channelTimeText(input: { iso: string; tz: string; now: Date; locale: Locale; cycle: ClockCycle }): string {
   const at = new Date(input.iso);
   const clock = clockOf(at, input);

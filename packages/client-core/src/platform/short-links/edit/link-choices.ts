@@ -5,9 +5,6 @@ import {
   EXPIRY_DAY_CHOICES, expiresAtOf, type LinkClock, type LinkExpiry,
 } from '../link-form.js';
 
-// The pickers of «رابط جديد» (boards LinkXStaffCreate, LinkXStaffPeople): the people filter
-// chips and the lifetime chips with «تاريخ آخر» picked on a calendar.
-
 /** shortLinks.people.filters.<key>. */
 export const PEOPLE_FILTERS = ['all', 'guardians', 'students', 'teachers', 'staff'] as const;
 export type PeopleFilter = (typeof PEOPLE_FILTERS)[number];
@@ -27,7 +24,6 @@ const GROUP: Readonly<Record<RoleKey, Exclude<PeopleFilter, 'all'>>> = {
 export const inPeopleFilter = (filter: PeopleFilter, role: string): boolean =>
   filter === 'all' || GROUP[roleKey(role)] === filter;
 
-/** A lit chip: one of EXPIRY_DAY_CHOICES, or «تاريخ آخر». */
 export type ExpiryChip = (typeof EXPIRY_DAY_CHOICES)[number] | 'date';
 
 export function expiryChip(expiry: LinkExpiry): ExpiryChip {
@@ -35,7 +31,7 @@ export function expiryChip(expiry: LinkExpiry): ExpiryChip {
   return EXPIRY_DAY_CHOICES.find((d) => d === days) ?? 'date';
 }
 
-/** «تاريخ آخر» ends at the close of the picked day, in the viewer's zone. */
+/** A custom expiry date ends at the close of the picked day, in the viewer's zone. */
 const DAY_END = '23:59';
 
 /** A day picked on the calendar (YYYY-MM-DD, the viewer's zone): its 23:59 there. */
@@ -51,7 +47,7 @@ export interface ExpiryDayRange {
   max: string;
 }
 
-/** The days the calendar of «تاريخ آخر» offers (YYYY-MM-DD in the viewer's zone). */
+/** Days are YYYY-MM-DD in the viewer's zone. */
 export const expiryDayRange = (clock: LinkClock): ExpiryDayRange => ({
   min: localDateIn(clock.now, clock.tz),
   max: localDateIn(addDaysIn(clock.now, SHORT_LINK_MAX_DAYS - 1, clock.tz), clock.tz),
