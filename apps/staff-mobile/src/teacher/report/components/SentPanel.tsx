@@ -10,11 +10,10 @@ interface SentPanelProps {
   mode: ReportFormMode;
   onEdit: () => void;
   tz: string;
-  /** A send still settling: no «تعديل التقرير» until the sent version is in. */
+  /** No edit until the sent version is in. */
   busy: boolean;
 }
 
-/** «تم إرسال التقرير بنجاح» (or «تم حفظ التعديل بنجاح») with when, from the server's report. */
 function SentLine({ report, tz }: { report: ReportView; tz: string }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
@@ -33,10 +32,7 @@ function SentLine({ report, tz }: { report: ReportView; tz: string }) {
   );
 }
 
-/**
- * After a send (owner 2026-11-06): the confirmation, then «تعديل التقرير» while the edit window
- * is open; after it, SentNote says why it is closed.
- */
+/** Edit only while the edit window is open; after it, SentNote says why. */
 export function SentPanel({ report, mode, onEdit, tz, busy }: SentPanelProps) {
   if (mode !== 'sent' && mode !== 'closed') return null;
   return (

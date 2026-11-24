@@ -25,11 +25,7 @@ function EntryForm(p: ComponentProps<typeof ReportEntryCard>) {
 
 const back = () => backWithin('/teacher/reports');
 
-/**
- * «تقرير الحلقة» on the phone (R-REP-01/02, R-MOB-02): GET /lessons/:id/report-form, one card per
- * student (a group or siblings), the same questions, rules and API as the web form. Offline the
- * saved form still opens with its «آخر تحديث», and nothing claims to be sent until the API says so.
- */
+/** Same questions, rules and API as the web form (R-REP-01/02, R-MOB-02); offline sends nothing. */
 export function ReportFormScreen() {
   const cycle = useClockCycle();
   const { lessonId = '' } = useLocalSearchParams<{ lessonId: string }>();

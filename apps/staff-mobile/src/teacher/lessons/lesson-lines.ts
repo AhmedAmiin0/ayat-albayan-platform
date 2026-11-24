@@ -2,15 +2,14 @@ import { otherZoneClock, type ClockCycle, type LessonView } from '@ab/shared';
 import { t, locale } from '@ab/mobile-kit';
 import { durationLabel, studentTimes } from '@/today';
 
-// The teacher's lesson lines (docs/48): her row's «عند الطالب 15:00» and the hero's subtitle. The
-// zone is her own (docs/07 principle 7), so no «بتوقيتك» anywhere. Pure.
+// Her zone is the viewer's own (docs/07 principle 7), so no "your time" label; pure.
 
 interface Clock {
   tz: string;
   cycle: ClockCycle;
 }
 
-/** «عند الطالب 15:00» once per student zone whose clock differs from hers at the start. */
+/** Once per student zone whose clock differs from hers at the start. */
 export function studentClocks(lesson: LessonView, { tz, cycle }: Clock): string {
   const start = new Date(lesson.starts_at);
   return [...new Set(lesson.students.map((s) => s.tz))]
@@ -21,7 +20,7 @@ export function studentClocks(lesson: LessonView, { tz, cycle }: Clock): string 
     .join(' · ');
 }
 
-/** «تجريبية · 45 دقيقة · 21:00 بتوقيت مسقط»: the hero's subtitle (no teacher: it is her). */
+/** No teacher in the subtitle, since it is her. */
 export function heroLine(lesson: LessonView, { tz, cycle }: Clock): string {
   const kinds = [
     lesson.trial ? t.schedule.trialTag : undefined,

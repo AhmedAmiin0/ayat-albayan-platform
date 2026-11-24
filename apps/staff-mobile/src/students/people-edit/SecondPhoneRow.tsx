@@ -8,7 +8,7 @@ import { removeSecondPhone, usePeopleWrite } from './people-edit-api';
 
 const E = t.peopleEdit;
 
-/** The family's second number, «حذف الرقم الثاني» behind an inline confirm; nothing without one. */
+/** Removing it needs an inline confirm; nothing without a second number. */
 export function SecondPhoneRow({
   guardian,
   onDone,

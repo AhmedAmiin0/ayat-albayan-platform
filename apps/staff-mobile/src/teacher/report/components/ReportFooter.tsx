@@ -13,7 +13,6 @@ import { SentPanel } from './SentPanel';
 
 const ERRORS: Record<string, string> = t.reports.error;
 
-/** «بيتحفظ…» / «المسودة اتحفظت 17:42» / a failed save, while the report is a draft. */
 export function saveLine(state: SaveState, tz: string, cycle: ClockCycle): string | null {
   if (state.kind === 'saving') return t.reports.autosaving;
   if (state.kind === 'saved') return t.reports.draftSaved.replace('{time}', clockIn(state.at, tz, cycle));
@@ -29,11 +28,7 @@ const WORDS: SendWords = {
 /** The PDF chip once it says something (ready, or failed): not while it waits for the close. */
 const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 
-/**
- * «سُلِّم التقرير», its version, the PDF once ready, then the window lines (docs/46 B5): until when
- * it may still be edited, and «سيُرسل إلى الأسرة بعد 12 دقيقة» / «… الآن» / «أُرسل إلى الأسرة»,
- * live (useNow); at the close the form and the lists are fetched again (useWindowClose).
- */
+/** Window lines (docs/46 B5) are live; at the close the form and lists are fetched again. */
 export function SentNote({ report, tz }: { report: ReportView; tz: string }) {
   const cycle = useClockCycle();
   const now = useNow();
@@ -55,11 +50,6 @@ export function SentNote({ report, tz }: { report: ReportView; tz: string }) {
   );
 }
 
-/**
- * The end of a student's report: what stops the submit (validation, the lesson not started, an API
- * refusal or no connection), the sent state with its edit window, then «إرسال التقرير» /
- * «حفظ التعديل» and the autosave line.
- */
 export function ReportFooter({ s, block, tz }: { s: ReportEntryState; block: ReportFormResponse['submit_block']; tz: string }) {
   const cycle = useClockCycle();
   const { report } = s;

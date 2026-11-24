@@ -7,7 +7,6 @@ import { FxNote } from '@/finance/pricing/FxNote';
 const p = t.pricing;
 const minutes: Readonly<Record<string, string | undefined>> = p.durations;
 
-/** «الباقة المتقدمة · 12 حلقة · 45 دقيقة», the calculator's words. */
 export function planText(q: Pick<QuoteResponse, 'package' | 'lessons' | 'duration'>): string {
   const { name, sessions } =
     q.package === 'custom'

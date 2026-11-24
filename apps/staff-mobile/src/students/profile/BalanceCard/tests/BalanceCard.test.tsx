@@ -45,7 +45,7 @@ test('3 left: ink, the package, what is used and paid, the status («سجّل د
   expect(screen.getByText(`${t.enums.packageSize['4']} · 1 من 4 حلقة`)).toBeTruthy();
   expect(screen.getByText(/دُفع /)).toBeTruthy();
   expect(screen.getByText(t.enums.subscriptionStatus.active)).toBeTruthy();
-  // owner 2026-11-17: «سجّل دفعة» is a row of «الدورة والباقة» now (PayRow).
+  // Recording a payment is now a row of the course card (PayRow).
   expect(screen.queryByRole('button', { name: t.payments.mobile.record })).toBeNull();
 });
 
