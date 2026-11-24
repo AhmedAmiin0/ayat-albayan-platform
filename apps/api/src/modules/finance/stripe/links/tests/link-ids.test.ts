@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { integrationIdentifier, newLinkToken, uuidFor } from './link-ids';
+import { integrationIdentifier, newLinkToken, uuidFor } from '@/modules/finance/stripe/links/link-ids';
 
 describe('payment link ids', () => {
   it('a token is 43 url-safe characters and never repeats', () => {

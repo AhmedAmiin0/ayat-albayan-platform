@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { escapeHtml } from '@/modules/finance/stripe/pay/pay-html';
-import { apiPublicOrigin } from './link-views';
+import { apiPublicOrigin } from '@/modules/finance/stripe/links/link-views';
 
 describe('the family link host: API_PUBLIC_URL (the API serves /pay/<token> itself)', () => {
   it('the configured API host, without a trailing slash', () => {

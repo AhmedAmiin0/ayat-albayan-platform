@@ -2267,12 +2267,12 @@
       "count": 4
     }
   },
-  "src/modules/finance/stripe/links/payment-links.http.subscribe.test.ts": {
+  "src/modules/finance/stripe/links/tests/payment-links.http.subscribe.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/stripe/links/payment-links.http.test.ts": {
+  "src/modules/finance/stripe/links/tests/payment-links.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2355,7 +2355,7 @@
       "count": 4
     }
   },
-  "src/modules/finance/stripe/pay/pay.app-return.http.test.ts": {
+  "src/modules/finance/stripe/pay/tests/pay.app-return.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2374,12 +2374,12 @@
       "count": 1
     }
   },
-  "src/modules/finance/stripe/pay/pay.http.test.ts": {
+  "src/modules/finance/stripe/pay/tests/pay.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/stripe/stripe.migration.test.ts": {
+  "src/modules/finance/stripe/tests/stripe.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2442,7 +2442,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/stripe/webhook/stripe-webhook.paid.http.test.ts": {
+  "src/modules/finance/stripe/webhook/tests/stripe-webhook.paid.http.test.ts": {
     "stylistic/max-len": {
       "count": 6
     }

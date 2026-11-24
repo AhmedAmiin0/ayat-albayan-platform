@@ -4,7 +4,7 @@ import type { PushTransport } from '@/common/push/push.service';
 import { PaymentReceived, type PaymentReceivedRepo } from '@/modules/finance/payments';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 import type { CourseDue } from '@/modules/finance/subscriptions';
-import { LinkAlerts } from './link-alerts';
+import { LinkAlerts } from '@/modules/finance/stripe/webhook/link-alerts';
 
 // A paid link raises payment_received (bell and push); admins' alerts stay payment_due.
 

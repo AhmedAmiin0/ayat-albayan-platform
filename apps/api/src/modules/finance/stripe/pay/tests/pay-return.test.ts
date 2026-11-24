@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appCookie, appPlatform, appReturnUrl, fromApp } from './pay-return';
+import { appCookie, appPlatform, appReturnUrl, fromApp } from '@/modules/finance/stripe/pay/pay-return';
 
 const T = 'a'.repeat(32);
 const ORIGIN = 'https://api.test.example';

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { toPublicLink } from '@/modules/finance/stripe/links/payment-links.mapper';
 import { linkRow } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
-import { checkoutParams, sessionExpiry } from './checkout-params';
+import { checkoutParams, sessionExpiry } from '@/modules/finance/stripe/pay/checkout-params';
 
 const NOW = new Date('2026-10-28T10:00:00Z');
 const s = (iso: string) => Date.parse(iso) / 1000;

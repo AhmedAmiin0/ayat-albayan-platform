@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { PaymentLinksRepo } from './payment-links.repo';
+import { PaymentLinksRepo } from '@/modules/finance/stripe/links/payment-links.repo';
 
 type Calls = ReturnType<typeof fakeDb>['calls'];
 const argsAll = (calls: Calls, method: string) =>

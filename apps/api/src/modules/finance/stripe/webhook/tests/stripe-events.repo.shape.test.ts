@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { StripeEventsRepo } from './stripe-events.repo';
+import { StripeEventsRepo } from '@/modules/finance/stripe/webhook/stripe-events.repo';
 
 type Calls = ReturnType<typeof fakeDb>['calls'];
 const argsAll = (calls: Calls, method: string) =>
