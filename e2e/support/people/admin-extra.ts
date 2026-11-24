@@ -9,7 +9,7 @@ interface TeacherSeed {
   programs?: string[];
 }
 
-/** A teacher row without a login (so it never touches the e2e «أبرار»); returns its id. */
+/** A teacher row without a login, so it never touches the e2e teacher; returns its id. */
 export async function insertTeacher(seed: TeacherSeed): Promise<string> {
   return withSql(async (sql) => {
     const programs = `{${(seed.programs ?? ['quran']).join(',')}}`;

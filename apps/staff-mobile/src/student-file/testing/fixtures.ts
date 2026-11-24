@@ -1,4 +1,4 @@
-import type { StudentRecordingView, StudentRecordingsPage } from '@ab/shared';
+import type { StudentRecordingView, StudentRecordingsPage } from '@ab/schedule';
 
 // Test-only API answers for src/student-file/*.test.tsx.
 

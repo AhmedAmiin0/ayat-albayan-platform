@@ -1,10 +1,6 @@
-import {
-  formatPhone,
-  parseSalesFamily,
-  studentStatusStyle,
-  type FamilySibling,
-  type SalesStudentFamily,
-} from '@ab/shared';
+import { parseSalesFamily, type FamilySibling, type SalesStudentFamily } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { studentStatusStyle } from '@ab/money';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t, StatusChip, ListRow, InsetGroup } from '@ab/mobile-kit';

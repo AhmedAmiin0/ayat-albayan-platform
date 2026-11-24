@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type SalesScheduleLesson } from '@ab/shared';
+import type { SalesScheduleLesson } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice } from '@/booking';

@@ -1,4 +1,5 @@
-import { counted, type BookingRequest, type SalesCourseView } from '@ab/shared';
+import type { BookingRequest, SalesCourseView } from '@ab/shared';
+import { counted } from '@ab/core';
 import type { SummaryRow } from '@/booking/trial/lib/confirm-summary';
 import type { ViewerClock } from '@/core/lib/clock';
 import { t, whenText } from '@ab/mobile-kit';

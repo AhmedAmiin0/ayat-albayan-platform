@@ -24,7 +24,6 @@ export async function roomPage(browser: Browser, role: keyof typeof USERS | null
 
 export const shot = (page: Page, name: string) => page.screenshot({ path: `${SHOTS}/classroom-${name}.png` });
 
-/** «اجتماع داخلي» made by the admin: its shared link (/m/<token>). */
 export async function newMeeting(admin: Page, title: string): Promise<string> {
   const L = ar.meetings.internal;
   await admin.goto('/admin/classrooms');
@@ -39,7 +38,7 @@ export async function newMeeting(admin: Page, title: string): Promise<string> {
   return link;
 }
 
-/** In the room, connected, with `n` people (never stuck on «جارٍ إدخالك» / «جارٍ إعادة الاتصال»). */
+/** Connected with `n` people, never stuck on joining or reconnecting. */
 export async function expectConnected(page: Page, n: number): Promise<void> {
   await expect(page.getByText(ar.classroom.error.classroom_not_configured)).toHaveCount(0);
   await expect(page.getByText(ar.classroom.participants.replace('{n}', String(n)))).toBeVisible({ timeout: 20_000 });

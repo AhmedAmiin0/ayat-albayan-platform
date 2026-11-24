@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { GRANTABLE_PERMISSIONS, selfPermissionsOf } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS, selfPermissionsOf } from '@ab/catalog';
 import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';

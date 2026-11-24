@@ -1,4 +1,5 @@
-import type { PaymentLinkCreate, PaymentLinkQuoteView, PaymentLinkView, SubscriptionPricing } from '@ab/shared';
+import type { PaymentLinkCreate, PaymentLinkQuoteView, PaymentLinkView } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { apiFetch, apiSend } from '@ab/mobile-kit';

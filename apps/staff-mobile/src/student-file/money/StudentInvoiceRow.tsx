@@ -1,4 +1,4 @@
-import type { InvoiceView } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { memo, useState } from 'react';
 import { Linking, View } from 'react-native';
 import { invoiceSubtitle } from '@/finance/invoices/invoice-text';

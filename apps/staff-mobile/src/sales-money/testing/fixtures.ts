@@ -1,4 +1,4 @@
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
 
 // Test data shaped like GET /sales/me/* (the web's MyEarnings / MyStudents / MyPayments tests).
 

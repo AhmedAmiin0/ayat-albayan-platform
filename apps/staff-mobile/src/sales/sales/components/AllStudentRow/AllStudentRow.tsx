@@ -1,4 +1,5 @@
-import { studentStatusStyle, type SalesStudentView } from '@ab/shared';
+import type { SalesStudentView } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { pushInTab } from '@/core/nav/back-within';
 import { memo } from 'react';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';

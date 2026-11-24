@@ -2,8 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { seedSiblings, type DaySeed } from '../teaching/day-times';
 import { BASE, iso, MIN, type Tx } from '../edit-time';
 
-// Helpers of e2e/tests/pick-trial-date.sql.spec.ts: pick_trial_date (migration 20261025000660,
-// «موعد تجريبي جديد») with payloads in the shapes the API's trial-date.plan.ts builds, rolled back.
+// Helpers for pick_trial_date (migration 20261025000660), payloads as trial-date.plan.ts builds.
 
 const DAY = 24 * 60 * MIN;
 export type TrialSeed = DaySeed & { student: string; rule: string; lesson: string };

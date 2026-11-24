@@ -1,4 +1,4 @@
-import type { MyPaymentRow } from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, isolate, Ltr, money } from '@ab/mobile-kit';
 import { AttachmentsViewer } from '@/money/attachments/AttachmentsViewer';

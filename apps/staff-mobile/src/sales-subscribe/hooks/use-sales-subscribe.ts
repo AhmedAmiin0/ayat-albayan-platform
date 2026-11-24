@@ -1,4 +1,5 @@
-import type { SalesMoneySubscriptionView, SalesQuoteView, SubscriptionPricing } from '@ab/shared';
+import type { SalesMoneySubscriptionView, SalesQuoteView } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { apiSend } from '@ab/mobile-kit';

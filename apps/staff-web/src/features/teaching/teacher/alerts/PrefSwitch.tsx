@@ -6,7 +6,7 @@ export interface PrefSwitchProps {
   onChange: (checked: boolean) => void;
 }
 
-/** One «تخصيص» switch: the label, then the drawn switch over a real checkbox (44px row). */
+/** One customise switch: the label, then the drawn switch over a real checkbox (44px row). */
 export function PrefSwitch({ label, checked, onChange }: PrefSwitchProps) {
   return (
     <label className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-sm">

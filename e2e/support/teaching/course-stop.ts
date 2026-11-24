@@ -2,9 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { Tx } from '../core/rls';
 import { one, student, subscription } from '../sales/assistant';
 
-// Helpers of the «إلغاء الاشتراك» SQL specs (migration 991): a student whose weekly rule carries
-// no subscription_id (imported, calendar handover, admin booking: migration 470), its lessons, the
-// stop.
+// Course stop specs (migration 991): a weekly rule with no subscription_id (migration 470).
 
 /** A teacher row of its own (no login needed by the RPCs). */
 export async function teacher(tx: Tx): Promise<string> {

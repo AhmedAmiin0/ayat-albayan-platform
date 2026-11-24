@@ -2,8 +2,6 @@ import { expect } from '../core/fixtures';
 import { addDays, nextWeekSaturday, riyadh, seedFamily, seedLesson, withSql } from '../core/schedule';
 import { STUB_URL, stubSent, stubTemplateStatus } from '../core/wa-stub';
 
-// Seed and capture helpers for the «رأيك يهمّنا» journey (tests/feedback.spec.ts).
-
 export const TEMPLATE = 'lesson_feedback_request';
 
 /** The template exists on the stub and is approved there and in the DB (an explicit admin action in prod). */

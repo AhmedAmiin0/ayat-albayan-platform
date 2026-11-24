@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { durationText, sizeText, teacherLabel } from './recording-format';

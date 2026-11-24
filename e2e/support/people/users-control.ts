@@ -3,8 +3,7 @@ import { ar, expect } from '../core/fixtures';
 import { withSql } from '../core/schedule';
 import { AR_LOCALE } from '../core/locale';
 
-// Helpers of the «المستخدمون» specs (users-control*.spec.ts). Every run uses its own stamp, so the
-// desktop and mobile projects never share an email or a name.
+// Each run uses its own stamp so desktop and mobile projects never share an email or a name.
 
 export const stamp = (): string => `${Date.now() % 1_000_000}${Math.floor(Math.random() * 90 + 10)}`;
 

@@ -24,12 +24,7 @@ import { myLessonsQuery, teacherMeQuery } from '@/features/teaching/teacher/api'
 import { LoadRetry } from '@/features/teaching/teacher/LoadRetry';
 import { TeacherLessonCard } from './TeacherLessonCard';
 
-/**
- * /teacher/calendar «جدولي» (R-TCH-03, R-SCH-08): my lessons on my own week (docs/34), one
- * row, the same grid as the admin's (GET /teachers/me/lessons, own lessons only). A lesson opens
- * my lesson card: join, confirm / attendance, «اقترح ميعاد تاني», the report. `toggle`: the
- * «الأسبوع | الشهر» switch in the head (TeacherCalendar).
- */
+/** The teacher's own lessons on her week (R-TCH-03, R-SCH-08, docs/34), same grid as admin's. */
 export function MyWeek({ toggle }: { toggle?: ReactNode }) {
   const now = useNow();
   const tz = useViewerTz();
