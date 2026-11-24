@@ -40,7 +40,10 @@ test.describe('teachers available 24/7 (owner 2026-10-12)', () => {
     await next(); // package 8, 45 min
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
     await fillLessonRow(step, 1, { weekday: 0, time: '16:00' });
-    await expect(step.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى في هذا الموعد/)).toBeVisible();
+    // The series check list repeats the clash once it answers, so only the row notice's line is
+    // unique at any moment.
+    const busy = /المعلم\/ة مشغول\/ة بحلقة أخرى في هذا الموعد/;
+    await expect(step.getByRole('paragraph').filter({ hasText: busy })).toBeVisible();
     await fillLessonRow(step, 1, { weekday: 0, time: '03:00' });
     await expect(step.getByText(ar.lessonTimes.free)).toBeVisible();
     await next();

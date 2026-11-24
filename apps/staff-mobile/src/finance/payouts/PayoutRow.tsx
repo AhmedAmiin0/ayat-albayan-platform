@@ -1,4 +1,4 @@
-import { payoutStatusStyle, type PayoutView } from '@ab/shared';
+import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 import { amountText } from '@/finance/shared/format';
 
