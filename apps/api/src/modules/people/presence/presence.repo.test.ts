@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { PresenceRepo } from './presence.repo';
 
 const SEEN = '2026-10-30T09:00:00.000Z';

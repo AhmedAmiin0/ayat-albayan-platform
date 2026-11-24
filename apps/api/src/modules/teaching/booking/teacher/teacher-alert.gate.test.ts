@@ -1,6 +1,6 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { fakeTeacherAlert } from './teacher-alert.fakes';
 import { TeacherAlertRepo } from './teacher-alert.repo';

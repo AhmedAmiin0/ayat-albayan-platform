@@ -4,7 +4,7 @@ import { PackageEvents } from '@/common/infra/events/lesson-events';
 import type { PushService } from '@/common/push/push.service';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { StudentRenewal } from '@/modules/finance/subscriptions/student-lifecycle/student-renewal';
