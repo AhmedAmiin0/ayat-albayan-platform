@@ -27,7 +27,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-/** A row action is named with its students: «تأكيد — يوسف أحمد». */
+/** A row action is named with its students. */
 const action = (label: string, who: string) =>
   screen.findByRole('button', { name: `${label} — ${who}` });
 
@@ -37,7 +37,7 @@ test('«تأكيد» is in view on the row: «مؤكدة» at once, then the con
   await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await action(t.today.confirm, 'يوسف أحمد'));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
-  // يوسف's row says «مؤكدة» (with جنى's 17:00) before the server answers.
+  // The row shows confirmed before the server answers.
   await waitFor(() => expect(screen.getAllByText(t.enums.lessonStatus.confirmed)).toHaveLength(2));
   resolve({});
   expect(await screen.findByText(t.lessons.confirmed)).toBeTruthy();

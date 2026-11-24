@@ -6,10 +6,7 @@ import { agendaDays } from '@/calendar/agenda/agenda';
 import { addDays, zonedMidnight } from '@/calendar/lib/week';
 import { clip, clipAll, freeAhead, joined } from './spans';
 
-// «الجدول» for every teacher (R-SCH-01, R-TCH-02): the overview cut to one day of the viewer's
-// calendar (docs/34) or the whole week, filtered by program and gender. Rows come from the
-// teachers, so a teacher with nothing booked still shows. Windows and free time are the API's;
-// here they are only clipped (spans.ts).
+// R-SCH-01, R-TCH-02: rows come from teachers so empty ones still show; spans are the API's.
 
 export type ScheduleView = 'day' | 'week';
 
@@ -27,7 +24,7 @@ export type AgendaItem =
 export interface TeacherAgenda {
   teacher: OverviewTeacher;
   items: AgendaItem[];
-  /** Availability inside the period (the day view's «متاح» line). */
+  /** Availability inside the period. */
   windows: Span[];
   timeOff: OverviewTimeOff[];
 }

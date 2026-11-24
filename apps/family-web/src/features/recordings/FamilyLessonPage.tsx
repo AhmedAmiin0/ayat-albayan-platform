@@ -7,10 +7,7 @@ interface Props {
   studentId: string;
 }
 
-/**
- * `/lesson/<id>?studentId=…` (the app's lesson screen, docs/50 §6): a sent lesson's recording,
- * report lines and files, opened from a «حضرها» row or a recording; back where it came from.
- */
+/** docs/50 §6: a sent lesson's recording, report lines and files; back where it came from. */
 export function FamilyLessonPage({ lessonId, studentId }: Props) {
   const nav = useLessonNav(studentId);
   return (

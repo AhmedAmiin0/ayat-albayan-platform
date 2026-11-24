@@ -24,10 +24,7 @@ const missing = (): never => {
   throw new NotFoundException({ message: 'number_not_found' });
 };
 
-/**
- * «الأرقام» (docs/23 §3 phase 3): numbers as records. Writes go through the service role only; each is
- * audited and refreshes NumbersConfig. Nothing here reads or writes a sending switch.
- */
+/** docs/23 §3: service-role writes only, each audited; no sending switch is touched here. */
 @Injectable()
 export class NumbersService {
   constructor(

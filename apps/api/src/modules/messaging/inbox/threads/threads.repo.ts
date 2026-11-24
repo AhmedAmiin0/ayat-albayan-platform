@@ -29,11 +29,7 @@ export class ThreadsRepo {
     private readonly balances: BalanceRepo,
   ) {}
 
-  /**
-   * H1: one page of v_threads (of v_list_threads for a chat list «القوائم», docs/22); filters, then the
-   * requested order (default newest message first). The caller marks the rows (unsupported()), in
-   * parallel with its other per-page reads.
-   */
+  /** H1 (docs/22): default order is newest message first; the caller marks unsupported rows. */
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
     // The badge asks for `total` only: an indexed count, no page (threads-unread.queries.ts).
     if (isUnreadBadge(f)) return { items: [], total: await unreadThreadCount(this.db, f) };
@@ -87,7 +83,6 @@ export class ThreadsRepo {
     return knownNumber(this.db, phone);
   }
 
-  /** The page's guardians' «مشترك» / «مش مدفوع» tags and ring at `threshold` (thread-people.ts). */
   familyTags(guardianIds: readonly string[], threshold: number): Promise<Map<string, FamilyTag>> {
     const deps = { db: this.db, packages: this.packages, balances: this.balances };
     return familyTagsOf(deps, guardianIds, threshold);

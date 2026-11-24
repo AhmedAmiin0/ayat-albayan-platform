@@ -40,10 +40,7 @@ interface LazyListProps<T> extends Omit<FlashListProps<T>, 'style' | 'contentCon
   keyExtractor: (item: T, index: number) => string;
   /** Space after the last row, on top of the tab bar's clearance (a FAB over the list). */
   endSpace?: number;
-  /**
-   * The container rule (default): the rows sit in ONE rounded raised card, as Today's «بقية اليوم»,
-   * the first and last rounded, an inset rule between them. false: each row is its own card (pass `gap`).
-   */
+  /** Default: one rounded raised card; false makes each row its own card (pass gap). */
   inset?: boolean;
   /** false: the Screen (no `list`) or a sheet already stops above the floating tab bar: only `endSpace` at the end. */
   tabBar?: boolean;

@@ -13,12 +13,7 @@ interface Props {
   onTab: (tab: ChildTab) => void;
 }
 
-/**
- * «الرئيسية» (docs/50 §6, canvas StudentHome): the page of the student in view, its next lesson
- * first (owner 2026-11-19: when, countdown, «ادخل الحلقة»), then القادمة · حضرها ·
- * غاب عنها · التسجيلات (and الباقة for a viewer who sees money). A student or an adult reads their
- * own under «أهلًا بك»; a guardian the child's (the name on top switches: ChildSwitch).
- */
+/** docs/50 §6: next lesson first; a guardian sees the child's page, switched from the top. */
 export function HomePage({ student, kind, tab, onTab }: Props) {
   const own = readsOwn(portalViewer(kind, student));
   return (

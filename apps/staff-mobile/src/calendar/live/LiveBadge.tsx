@@ -3,7 +3,6 @@ import { t, StatusChip, useNow } from '@ab/mobile-kit';
 import { useJoinWindow } from '@/core/lib/query/public-config';
 import { livePhase } from './live-filter';
 
-/** «مباشر الآن» (filled dot + word) beside a row's time while the lesson is under way; else nothing. */
 export function LiveBadge({ lesson }: { lesson: LessonView }) {
   const now = useNow();
   const win = useJoinWindow();

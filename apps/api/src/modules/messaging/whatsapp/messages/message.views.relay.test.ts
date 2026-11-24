@@ -6,8 +6,7 @@ import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/temp
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { MessageViews } from './message.views';
 
-// Owner 2026-11-02: what the old script sent through the relay shows like our own template rows:
-// «قالب: …», the filled Arabic body and the buttons; a body that does not fit stays as it is.
+// Relay-sent templates show like our own; a body that does not fit stays as it is.
 
 const V2 = templateRow({
   key: 'teacher_lesson_v2',

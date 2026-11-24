@@ -19,13 +19,11 @@ test('a config that names only its own folder and the root base passes', () => {
     extends: '../../tsconfig.base.json',
     compilerOptions: { strict: true, types: ['jest'] },
     include: ['src', '**/*.tsx', './vite.config.ts'],
-    exclude: ['src/**/*.test.ts', '${configDir}/node_modules'],
+    exclude: ['src/**/*.test.ts'],
     files: ['src/env.d.ts'],
   };
   assert.deepEqual(check(own), []);
-  assert.deepEqual(check({ extends: '../tsconfig.base.json' }, 'e2e/tsconfig.json'), []);
   assert.deepEqual(check({ extends: './tsconfig.json' }, 'apps/api/tsconfig.build.json'), []);
-  assert.deepEqual(check({ extends: 'expo/tsconfig.base' }), []);
 });
 
 test('jsonc: comments and trailing commas parse', () => {
@@ -60,33 +58,50 @@ test('include, files and exclude entries that leave the folder fail', () => {
   ]);
 });
 
-test('extends: another file outside the folder, a package or an unknown preset fails', () => {
+const NOT_BASE = 'is not its own folder or the root tsconfig.base.json';
+
+test('extends: the root tsconfig.base.json passes from any depth', () => {
+  assert.deepEqual(check({ extends: '../../tsconfig.base.json' }), []);
+  assert.deepEqual(check({ extends: '../tsconfig.base.json' }, 'e2e/tsconfig.json'), []);
+  assert.deepEqual(check({ extends: './tsconfig.base.json' }, 'tsconfig.json'), []);
+});
+
+test('extends: a file outside the folder or any package fails, presets included', () => {
   const config = {
     extends: [
       '../../packages/config/tsconfig/base.json',
-      '../tsconfig.base.json',
-      '../../../tsconfig.base.json',
       '@ab/web-kit/tsconfig.json',
+      '@ab/config/tsconfig/base.json',
       '@ab/config/tsconfig/react.json',
+      'expo/tsconfig.base',
       '@tsconfig/node20/tsconfig.json',
       './tsconfig.json',
-      '../../tsconfig.base.json',
     ],
   };
   assert.deepEqual(check(config), [
-    'extends: "../../packages/config/tsconfig/base.json" is not its own folder or the root base',
-    'extends: "../tsconfig.base.json" is not its own folder or the root base',
-    'extends: "../../../tsconfig.base.json" is not its own folder or the root base',
-    'extends: "@ab/web-kit/tsconfig.json" is not its own folder or the root base',
-    'extends: "@ab/config/tsconfig/react.json" is not its own folder or the root base',
-    'extends: "@tsconfig/node20/tsconfig.json" is not its own folder or the root base',
+    `extends: "../../packages/config/tsconfig/base.json" ${NOT_BASE}`,
+    `extends: "@ab/web-kit/tsconfig.json" ${NOT_BASE}`,
+    `extends: "@ab/config/tsconfig/base.json" ${NOT_BASE}`,
+    `extends: "@ab/config/tsconfig/react.json" ${NOT_BASE}`,
+    `extends: "expo/tsconfig.base" ${NOT_BASE}`,
+    `extends: "@tsconfig/node20/tsconfig.json" ${NOT_BASE}`,
+  ]);
+});
+
+test('extends: a tsconfig.base.json that is not the root one fails', () => {
+  assert.deepEqual(check({ extends: '../tsconfig.base.json' }), [
+    `extends: "../tsconfig.base.json" ${NOT_BASE}`,
+  ]);
+  assert.deepEqual(check({ extends: '../../../tsconfig.base.json' }), [
+    `extends: "../../../tsconfig.base.json" ${NOT_BASE}`,
+  ]);
+  assert.deepEqual(check({ extends: '../../tsconfig.json' }), [
+    `extends: "../../tsconfig.json" ${NOT_BASE}`,
   ]);
 });
 
 test('extends: a bare relative name without ./ is resolved as a package, so it fails', () => {
-  assert.deepEqual(check({ extends: 'tsconfig.json' }), [
-    'extends: "tsconfig.json" is not its own folder or the root base',
-  ]);
+  assert.deepEqual(check({ extends: 'tsconfig.json' }), [`extends: "tsconfig.json" ${NOT_BASE}`]);
 });
 
 const ALIAS = { '@/*': ['${configDir}/src/*'] };

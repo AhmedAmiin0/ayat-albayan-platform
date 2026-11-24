@@ -1,8 +1,9 @@
-// A tsconfig names only its own folder and the root base (CLAUDE.md rule 13): apps and packages
-// link through package.json dependencies and `exports`/`imports`, never through compiler paths.
-// The one alias, `@/` → each app's own src, is declared once in the root tsconfig.base.json.
-// No baseline and no allow-list: every tsconfig.json and tsconfig.*.json outside node_modules
-// passes or CI fails, and so does any `@/` import under packages/ (alias.mjs).
+// A tsconfig names only its own folder (CLAUDE.md rule 13): apps and packages link through
+// package.json dependencies and `exports`/`imports`, never through compiler paths; shared compiler
+// options come only from the root tsconfig.base.json, never from a package. The one alias, `@/` →
+// each app's own src, is declared once in that root base. No baseline and no allow-list: every
+// tsconfig.json and tsconfig.*.json outside node_modules passes or CI fails, and so does any `@/`
+// import under packages/ (alias.mjs).
 // Usage: node tools/scripts/ci-checks/lint/tsconfig/gate.mjs
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -19,7 +20,6 @@ const WORKSPACE = /^(apps|packages)\//;
 const ROOT_BASE = 'tsconfig.base.json';
 const ALIAS = { '@/*': ['${configDir}/src/*'] };
 const PATHS = `compilerOptions.paths: only ${ROOT_BASE} at the root, exactly ${JSON.stringify(ALIAS)}`;
-const FRAMEWORK_PRESETS = new Set(['expo/tsconfig.base']);
 const LINKS = 'link apps and packages in package.json';
 
 const list = z.array(z.string()).optional();
@@ -40,10 +40,10 @@ const leavesFolder = (entry) => {
 };
 
 const ownFile = (entry) => entry.startsWith('./') && !leavesFolder(entry);
-const rootBase = (base, path) =>
-  base.startsWith('../') && posix.join(posix.dirname(path), base) === ROOT_BASE;
-const allowedBase = (base, path) =>
-  ownFile(base) || rootBase(base, path) || FRAMEWORK_PRESETS.has(base);
+const isRelative = (entry) => entry.startsWith('./') || entry.startsWith('../');
+const rootBase = (path, base) =>
+  isRelative(base) && posix.join(posix.dirname(path), base) === ROOT_BASE;
+const allowedBase = (path, base) => ownFile(base) || rootBase(path, base);
 
 const OPTIONS = ['rootDirs', 'typeRoots', 'baseUrl'];
 
@@ -60,11 +60,11 @@ const outside = (config) =>
       .map((entry) => `${field}: "${entry}" leaves its own folder`),
   );
 
-const bases = (config, path) =>
+const bases = (path, config) =>
   [config.extends ?? []]
     .flat()
-    .filter((base) => !allowedBase(base, path))
-    .map((base) => `extends: "${base}" is not its own folder or the root base`);
+    .filter((base) => !allowedBase(path, base))
+    .map((base) => `extends: "${base}" is not its own folder or the root ${ROOT_BASE}`);
 
 const isTheAlias = (paths, path) => path === ROOT_BASE && isDeepStrictEqual(paths, ALIAS);
 const pathsAllowed = (paths, path) => paths === undefined || isTheAlias(paths, path);
@@ -79,7 +79,7 @@ export function violations(path, text) {
     ...forbidden(config),
     ...aliasOnlyInBase(config, path),
     ...outside(config),
-    ...bases(config, path),
+    ...bases(path, config),
   ];
 }
 

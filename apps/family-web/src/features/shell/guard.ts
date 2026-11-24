@@ -50,7 +50,7 @@ interface PageGuard {
   visitor: Visitor;
 }
 
-/** «اختر الطالب» is a guardian of several children's (owner 2026-11-16); anyone else goes home. */
+/** The picker is for a guardian of several children only; anyone else goes home. */
 export async function requirePicker(guard: PageGuard): Promise<void> {
   if (guard.visitor !== 'family') return;
   const home = await guard.queryClient.query({ ...portalHomeQuery, staleTime: 'static' });

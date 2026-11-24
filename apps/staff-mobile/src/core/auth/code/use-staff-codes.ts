@@ -5,10 +5,7 @@ import { authApi } from '@ab/mobile-kit';
 /** GET /auth/code/status as this screen reads it: anything else is «closed». */
 const statusSchema = z.object({ staff: z.boolean() });
 
-/**
- * Can staff codes go out now (GET /auth/code/status `staff`, docs/46 A1)? false while loading or on
- * any failure: the login screen then simply shows no «الدخول برمز واتساب». Asked once per mount.
- */
+/** docs/46 A1: false while loading or on failure, so the code option simply hides. */
 export function useStaffCodes(): boolean {
   const [open, setOpen] = useState(false);
   useEffect(() => {

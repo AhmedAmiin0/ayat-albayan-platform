@@ -4,10 +4,7 @@ import { SetupFields } from './SetupFields';
 
 const S = t.teacherAuth.setup;
 
-/**
- * «أكمل حسابك» (docs/46 A4, A8): the teacher tree shows this instead of her tabs while her login is
- * the one a WhatsApp code made. One column like the login screen; «تسجيل الخروج» leaves.
- */
+/** docs/46 A4, A8: shown instead of the tabs while her login is the one a WhatsApp code made. */
 export function AccountSetupScreen() {
   const { color } = useTheme();
   const title = type.lineHeight(type.size.h2, true);

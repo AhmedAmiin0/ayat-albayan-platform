@@ -24,7 +24,7 @@ interface RowCorrectionProps {
   busy: boolean;
 }
 
-/** «تصحيح حالة الحلقة» for staff who edit lessons (owner 2026-11-03); nothing when none applies. */
+/** Nothing when no correction applies. */
 function RowCorrection({ lesson, action, busy }: RowCorrectionProps) {
   const now = useNow();
   const staff = usePermissions()('lessons.write');
@@ -40,20 +40,13 @@ interface LessonRowActionsProps {
   /** The screen's one confirm / cancel mutation (Today's, R-MOB-03). */
   action: ReturnType<typeof useLessonAction>;
   onReschedule: (lesson: LessonView) => void;
-  /** «عدّل الوقت» (R-SCH-11): opens the edit sheet; the button shows when the lesson allows it. */
+  /** R-SCH-11: shown when the lesson allows it. */
   onEditTime?: (lesson: LessonView) => void;
-  /** Inside the details sheet: closes it before an action navigates away (حجز تعويضي). */
+  /** Inside the details sheet: closes it before an action navigates away. */
   onLeave?: () => void;
 }
 
-/**
- * A «الجدول» row's actions (docs/07 §6 «الأزرار»): «تأكيد» full width, filled while the lesson is
- * still `scheduled` and «ادخل الحلقة» is not live, else outlined (never two filled buttons); then ONE
- * ButtonRow of equal cells: «عدّل الوقت» (this lesson, in place), «غيّر الميعاد» (closes it
- * and opens a new one), «إلغاء» (danger; opens Today's cancel form in place). Each shows only when the API
- * offered it and the state machine still allows it from the status on screen (maybe the optimistic one).
- * A finished lesson also offers «ابعت طلب الرأي» (FeedbackRequestButton).
- */
+/** docs/07 §6: each action shows only when the API offered it and the state machine allows it. */
 export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onLeave }: LessonRowActionsProps) {
   const [cancelling, setCancelling] = useState(false);
   const can = (e: LessonEvent) =>
@@ -62,7 +55,7 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime, onL
   const error = action.errorFor(lesson.id);
   const who = studentNames(lesson);
   const joinOpen = useJoinOpen(lesson);
-  // «تأكيد» only while the academy requires a confirmation (settings.lesson_confirmation_required);
+  // Confirm exists only while lesson_confirmation_required is on.
   const { required } = useLessonStatusText();
   const confirmable = required && can('confirm');
 
