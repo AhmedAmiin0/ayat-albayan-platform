@@ -16,16 +16,11 @@ const INBOX: Record<BookingMode, '/admin/inbox' | '/sales/inbox'> = {
 
 interface StopDoneDialogProps {
   done: StopDone;
-  /** «فتح محادثة ولي الأمر»; absent = no button. */
+  /** Absent means no button. */
   chat?: StopChat | undefined;
   onClose: () => void;
 }
 
-/**
- * After «إلغاء الاشتراك» (owner 2026-11-17, board CourseXWebDone): what was done, the student's
- * status now, «الخطوة التالية» in its own block, who was told, then «فتح محادثة ولي الأمر» beside
- * «تم».
- */
 export function StopDoneDialog({ done, chat, onClose }: StopDoneDialogProps) {
   const words = t.courseActions.stop;
   const actions = (

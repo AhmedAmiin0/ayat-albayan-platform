@@ -1,4 +1,5 @@
-import { teacherName, type SalesCourseView } from '@ab/shared';
+import type { SalesCourseView } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { TeacherStep } from '@/booking/trial/components/TeacherStep';

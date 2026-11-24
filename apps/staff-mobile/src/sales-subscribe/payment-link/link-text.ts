@@ -1,11 +1,5 @@
-import {
-  formatAmount,
-  linkAmountProblem,
-  parseAmount,
-  type PaymentLinkStatus,
-  type PaymentLinkView,
-  type StatusStyle,
-} from '@ab/shared';
+import { linkAmountProblem, type PaymentLinkStatus, type PaymentLinkView } from '@ab/shared';
+import { formatAmount, parseAmount, type StatusStyle } from '@ab/money';
 import { ApiError, t, ltr, currencyName } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales';
 

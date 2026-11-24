@@ -1,10 +1,5 @@
-import {
-  correctionTargets,
-  isOpenLesson,
-  type CorrectTo,
-  type SalesCancel,
-  type SalesScheduleLesson,
-} from '@ab/shared';
+import type { SalesCancel, SalesScheduleLesson } from '@ab/shared';
+import { correctionTargets, isOpenLesson, type CorrectTo } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 
 /** Who cancelled (the cancel endpoint's `by`); absent means the academy cancelled it. */

@@ -5,17 +5,13 @@ import { queryOptions } from '@tanstack/react-query';
 import { createContext, useContext } from 'react';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
-// «تغيير أيام الحلقات» (owner 2026-10-18): the admin's /booking/course/change* and the assistant's
-// mirror /sales/booking/course/change* (her own students, never over a clash).
+// The assistant's mirror routes cover her own students only, never over a clash.
 
 /** The routes' base of each mode. */
 export const courseChangeBase = (mode: BookingMode): string =>
   mode === 'sales' ? '/sales/booking/course' : '/booking/course';
 
-/**
- * Another route set for the same form (owner 2026-10-30: the student profile's «تغيير المعلم» /
- * «تغيير موعد الحلقات», `/students/:id/course-teacher|course-times`) and the new teacher.
- */
+/** Another route set for the same form, from the student profile, plus the new teacher. */
 export interface CourseChangeTarget {
   base: string;
   teacherId?: string | undefined;
@@ -51,11 +47,7 @@ export const courseChangeViewQuery = (subscriptionId: string) =>
 /** The check's key segment (left out of the refresh after a save). */
 export const CHECK_KEY = 'course-change-check';
 
-/**
- * POST /…/change/check: the clashes over the remaining course and what is left; keyed without the request id.
- * Dropped once unmounted (gcTime 0): the refresh leaves it alone, so a kept answer would show the old summary
- * and an enabled «احفظ» when the same days are picked again after a save.
- */
+/** gcTime 0: a kept answer would show the old summary and enable save when the same days repeat. */
 export const courseChangeCheckQuery = (
   body: CourseChangeBody,
   mode: BookingMode,

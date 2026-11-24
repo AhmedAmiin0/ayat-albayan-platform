@@ -1,4 +1,5 @@
-import { isRunningLesson, wallParts } from '@ab/shared';
+import { isRunningLesson } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
 import type { SalesScheduleLesson } from '@ab/shared';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 import { dayLabel } from '@/calendar';

@@ -1,4 +1,5 @@
-import type { SalesCourseView, SlotView } from '@ab/shared';
+import type { SalesCourseView } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { pickLesson } from '@/booking/testing/lesson-times';
 import { maryam, noAvailability, slot, slotsAnswer, SUN_17, THU_18 } from '@/booking/testing/fixtures';

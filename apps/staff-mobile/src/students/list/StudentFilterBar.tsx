@@ -1,4 +1,5 @@
-import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
+import { studentStatusStyle } from '@ab/money';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { t, FilterPills } from '@ab/mobile-kit';

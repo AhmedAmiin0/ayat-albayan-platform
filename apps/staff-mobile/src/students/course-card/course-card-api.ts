@@ -12,7 +12,8 @@ import {
   readLessonAt,
   type CardTree,
 } from '@ab/client-core';
-import type { CourseCardLesson, LessonView } from '@ab/shared';
+import type { CourseCardLesson } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 

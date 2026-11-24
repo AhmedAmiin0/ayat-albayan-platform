@@ -95,7 +95,7 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/booking/check', expect.objectContaining({ byday: [0, 3], dayTimes }));
     next();
 
-    // A paid package needs its invoice (R-PAY-03): «التالي» waits, the upload goes to the bucket.
+    // A paid package needs its invoice (R-PAY-03): next waits, the upload goes to the bucket.
     expect(screen.getByRole('region', { name: t.booking.steps.invoice })).toBeTruthy();
     expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
     expect(screen.getByText(t.booking.invoice.hint)).toBeTruthy();

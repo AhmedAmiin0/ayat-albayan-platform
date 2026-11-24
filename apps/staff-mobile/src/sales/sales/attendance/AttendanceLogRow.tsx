@@ -1,4 +1,5 @@
-import type { AttendanceTableRow, ClockCycle } from '@ab/shared';
+import type { AttendanceTableRow } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { memo } from 'react';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { clockIn, useViewerTz } from '@/core/lib/clock';

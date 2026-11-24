@@ -20,7 +20,6 @@ const PERIODS: Record<CalendarPeriod, (toggle: ReactNode) => ReactNode> = {
   month: (toggle) => <MyMonth toggle={toggle} />,
 };
 
-/** /teacher/calendar «جدولي»: «الأسبوع | الشهر» in the head (owner 2026-11-14). */
 export function TeacherCalendar({ period, onPeriod }: TeacherCalendarProps) {
   const toggle = (
     <SegmentedControl

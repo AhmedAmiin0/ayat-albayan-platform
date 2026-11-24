@@ -4,7 +4,6 @@ import { MyFeedback } from '@/features/teaching/teacher/reports/MyFeedback';
 import { parseServerListSearch } from '@/lib/list/server-list-search';
 import { TeacherPageGate } from '@/features/teaching/teacher';
 
-/** /teacher/feedback?page&sort&dir&f_<key> «آراء الطلاب» — what my students said, and my average. */
 export const Route = createFileRoute('/teacher/feedback')({
   validateSearch: (s: Record<string, unknown>) => parseServerListSearch(s, MY_FEEDBACK_LIST_KEYS),
   component: MyFeedbackRoute,

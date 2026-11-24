@@ -1,4 +1,4 @@
-import { addDays } from '@ab/shared';
+import { addDays } from '@ab/time';
 import { Switch, View } from 'react-native';
 import { StartDayPicker } from '@/assistants';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';

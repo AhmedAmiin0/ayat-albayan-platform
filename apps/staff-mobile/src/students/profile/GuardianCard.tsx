@@ -1,4 +1,5 @@
-import { clickToChatLink, formatPhone, secondPhoneOf } from '@ab/shared';
+import { secondPhoneOf } from '@ab/shared';
+import { clickToChatLink, formatPhone } from '@ab/core';
 import { router } from 'expo-router';
 import { Linking, Pressable, View } from 'react-native';
 import { inTree, useInChat, useTreeBase } from '@/core/nav/tree-base';

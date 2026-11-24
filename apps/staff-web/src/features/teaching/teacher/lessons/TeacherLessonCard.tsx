@@ -27,14 +27,7 @@ export interface TeacherLessonCardProps {
 /** The card draws the reports itself, one per student (docs/49 «Drawer rule»), never as a lead. */
 const cardLead = (lead: PlanAction | null) => (lead === 'report' ? null : lead);
 
-/**
- * One lesson for the teacher (R-TCH-03, R-SCH-08; docs/48): the head, ONE filled lead from
- * lessonPlan (join while live, «سأحضر», the report), the peers, and the outcomes only after the
- * start. Only this card lists the reports, one control per student (docs/49 «Drawer rule»).
- * The way in follows wayIn (owner Q3): our classroom (with «افتح الحلقة الآن» while early)
- * on a platform lesson or one with no link of its own; her own link otherwise, and then no
- * classroom and no «انسخ رابط الطالب». No family «تأكيد», no «اعتذر مسبقًا» (owner Q4).
- */
+/** One lesson for the teacher (R-TCH-03, R-SCH-08, docs/48); her own link replaces our room. */
 export function TeacherLessonCard(props: TeacherLessonCardProps) {
   const { lesson, tz, fallbackLink, onDone, leadFilled = true } = props;
   const clock = useClock();

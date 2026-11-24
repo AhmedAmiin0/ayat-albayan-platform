@@ -3,10 +3,7 @@ import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { SegmentedControl, type SegmentedControlProps } from '@ab/web-kit/components/ui/form/segmented-control';
 
-/**
- * A page title with its view filter beside it (owner 2026-10-12: «طلابي» and «مدفوعاتي» are filters, not
- * pages); `children` are the page's actions at the inline-end.
- */
+/** The view filter is a filter, not a page; `children` are actions at the inline-end. */
 export function ViewHead<V extends string>({ title, children, ...views }: { title: string; children?: ReactNode } & SegmentedControlProps<V>) {
   return (
     <PageHead>

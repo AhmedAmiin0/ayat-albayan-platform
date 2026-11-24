@@ -1,4 +1,4 @@
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';

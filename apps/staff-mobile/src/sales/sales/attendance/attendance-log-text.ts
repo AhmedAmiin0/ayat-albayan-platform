@@ -1,11 +1,6 @@
-import {
-  dateText,
-  monthText,
-  type AttendanceTableRow,
-  type AttendanceTotalKind,
-  type ClockCycle,
-  type StatusStyle,
-} from '@ab/shared';
+import type { AttendanceTableRow, AttendanceTotalKind } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
+import { dateText, monthText, type ClockCycle } from '@ab/time';
 import { whenIn } from '@/core/lib/clock';
 import { t, locale } from '@ab/mobile-kit';
 import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';

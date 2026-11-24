@@ -11,11 +11,7 @@ import { StatementCard } from '@/features/sales/sales/money/StatementCard';
 
 const p = t.assistantPortal.earnings;
 
-/**
- * «الكشوف» of «محفظتي» on /sales/earnings?view=statements (R-ASST-06), read-only: my terms, this month so
- * far and my monthly statements, every amount in its own currency (never summed across them). The balance
- * and the commissions are «العمولات» (MyWallet).
- */
+/** Read-only (R-ASST-06); every amount in its own currency, never summed across them. */
 export function MyEarnings() {
   const earnings = useQuery(myEarningsQuery);
   const d = earnings.data;

@@ -1,4 +1,5 @@
-import { cancelOffered, chatBinding, type SalesPaymentView } from '@ab/shared';
+import { chatBinding, type SalesPaymentView } from '@ab/shared';
+import { cancelOffered } from '@ab/money';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';

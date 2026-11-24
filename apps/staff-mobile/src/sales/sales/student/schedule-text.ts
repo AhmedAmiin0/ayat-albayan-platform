@@ -1,4 +1,7 @@
-import { inWeekOrder, localizedName, wallParts, type ClockCycle, type SalesWeeklySlot } from '@ab/shared';
+import { inWeekOrder, type SalesWeeklySlot } from '@ab/shared';
+import { localizedName } from '@ab/core';
+import { wallParts } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { hhmm, type ViewerClock } from '@/core/lib/clock';
 import { t, locale, ltr } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';

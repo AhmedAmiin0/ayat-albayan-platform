@@ -14,7 +14,7 @@ export function riyadhDay(at: Date): string {
   return new Date(at.getTime() + 3 * HOUR).toISOString().slice(0, 10);
 }
 
-/** Saturday that starts the Riyadh week (السبت → الجمعة) holding an instant. */
+/** Saturday that starts the Riyadh week (Saturday to Friday) holding an instant. */
 export function weekOf(at: Date): string {
   const shifted = new Date(at.getTime() + 3 * HOUR);
   return addDays(riyadhDay(at), -((shifted.getUTCDay() + 1) % 7));

@@ -9,7 +9,7 @@ import {
   SHORT_LINK_PURGE_DAYS,
   type LinkExpiry,
 } from '@ab/client-core';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import {

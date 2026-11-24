@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-// /teacher/calendar?period= «جدولي» (owner 2026-11-14): her week (the grid) or her month. A plain
-// link opens the week. Her availability is its own page now (/teacher/availability).
+// Her week (the grid) or her month; a plain link opens the week.
 
 export const CALENDAR_PERIODS = ['week', 'month'] as const;
 export type CalendarPeriod = (typeof CALENDAR_PERIODS)[number];
