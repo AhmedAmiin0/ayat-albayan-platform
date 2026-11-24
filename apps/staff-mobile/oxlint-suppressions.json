@@ -8010,11 +8010,6 @@
       "count": 1
     }
   },
-  "src/teacher/components/TeacherTabs/TeacherTabs.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/teacher/components/TeacherTabs/tests/TeacherTabs.test.tsx": {
     "stylistic/max-len": {
       "count": 1
