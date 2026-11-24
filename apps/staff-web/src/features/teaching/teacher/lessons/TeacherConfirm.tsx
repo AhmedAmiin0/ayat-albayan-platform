@@ -13,11 +13,7 @@ export interface TeacherConfirmProps {
   onDone: (message: string) => void;
 }
 
-/**
- * «سأحضر» (docs/46 C4, D1). The caller shows it only while teacherCanConfirm holds; the confirm is
- * optimistic (docs/48), so the word flips to «حضورك مؤكَّد» from the cache at once, and a refusal
- * (409 lesson_started) puts the button back with the reason. Never the family «تأكيد».
- */
+/** Optimistic confirm (docs/46 C4, docs/48); a 409 lesson_started refusal restores the button. */
 export function TeacherConfirm({ lesson, variant, size = 'lg', onDone }: TeacherConfirmProps) {
   const w = t.teacherBoard;
   const confirm = useTeacherConfirm(lesson.id, () => onDone(w.confirmedOk));

@@ -10,6 +10,5 @@ export const Route = createFileRoute('/admin')({
     const to = adminRedirect(me, location.pathname);
     if (to && to !== location.pathname) throw redirect({ to });
   },
-  // The permission-filtered sidebar / «القائمة» sheet (components/shell/SectionShells).
   component: AdminShell,
 });
