@@ -30,22 +30,11 @@ interface CourseWizardProps {
   /** A bookable course (courseBlock is null): a subscription and its weekly days are known. */
   view: SalesCourseView;
   onLeave: () => void;
-  /** On to the package's transfer (opened right after «احفظ الاشتراك»). */
   transfer?: (() => void) | undefined;
-  /** The student's course (view.current): «تغيير أيام الحلقات» beside the first step. */
   change?: CourseChangeEntry | undefined;
 }
 
-/**
- * The assistant's course (R-ASST-01, R-SCH-06): المعلم/ة (filtered by the student's program and
- * preference) → a date and a time per day, the plan's days a week (LessonTimesStep) → المراجعة
- * with the series check. The package, the length and the zone come from the subscription and the
- * student, never asked; the days are offered from its first day on (starts_on in the student's
- * zone, or the day after a previous course, never before today: courseOpensOn), or from now. A renewal
- * (view.previous) opens on «تابِع بنفس الأيام»: its teacher and days prefilled in the coming week
- * (prefillDays), straight to the review when they are the plan's days a week (continueFits), else to
- * the days to add or remove one. One clientRequestId per wizard (rule 8).
- */
+/** R-ASST-01, R-SCH-06: package, length and zone are never asked; rule 8 id per wizard. */
 export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

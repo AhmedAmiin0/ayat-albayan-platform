@@ -3,9 +3,7 @@ import { t } from '@ab/mobile-kit';
 import type { Attachment } from '@/payments/receipts/attachments';
 import { paidAtFor } from '@/core/lib/money/paid-day';
 
-// «سجّل تحويلًا بنكيًا» (R-ASST-04): what she entered, checked. Pure. The method is always the
-// bank's (the API sets it), the currency always the package's (owner 2026-10-12); «المرفقات» are
-// optional (owner 2026-10-12: an old student has no receipt), up to 5, from the chat or a photo.
+// R-ASST-04: the API sets the bank method; currency is the package's; attachments optional.
 
 /** From the chat: already copied under the package (its path). A photo: uploaded on save. */
 export type ReceiptChoice = Attachment;

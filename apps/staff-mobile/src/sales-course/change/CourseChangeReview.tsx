@@ -15,7 +15,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 interface CourseChangeReviewProps {
   course: BookedCourse;
   picks: readonly string[];
-  /** The request «احفظ الأيام الجديدة» sends; null until a day is picked. */
+  /** Null until a day is picked. */
   body: CourseChangeRequest | null;
   /** reason: the admin's clash override (target.override), else none. */
   saving: { busy: boolean; failure: BookFailure | null; submit: (reason?: string) => void };
@@ -23,11 +23,7 @@ interface CourseChangeReviewProps {
   target?: ChangeTarget | undefined;
 }
 
-/**
- * The change's review: «الأيام الحالية» and «الأيام الجديدة» together, how many lessons are left
- * and the new last day (POST …/course/change/check), then the first lesson on the new days. A clash blocks the assistant (no override, owner
- * 2026-10-18): its only way out is «اختر موعدًا آخر».
- */
+/** A clash blocks the assistant with no override; she must pick other times. */
 export function CourseChangeReview(props: CourseChangeReviewProps) {
   const { course, picks, body, saving, onChangeSlot, target } = props;
   const cycle = useClockCycle();
@@ -75,7 +71,6 @@ export function CourseChangeReview(props: CourseChangeReviewProps) {
   );
 }
 
-/** «احفظ» refused: a clash since the check (other times), or the API's line for its code. */
 function SaveError({ failure, onChangeSlot }: { failure: BookFailure | null; onChangeSlot: () => void }) {
   if (!failure) return null;
   if (failure.kind === 'conflict') return <ConflictNotice lines={failure.lines} onChangeSlot={onChangeSlot} />;
