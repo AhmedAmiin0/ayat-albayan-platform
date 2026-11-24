@@ -4,10 +4,10 @@ import type { StudentStatus } from '@ab/catalog';
 // transitions. The API applies them compare-and-set on the expected from-status and audits each move;
 // a status the admin sets by hand is never a from-status these rules expect, so it wins.
 
-/** «لم يشترك بعد»: no payment yet. The «تجريبي» list kind, trial chat rules, not-yet-subscribed checks. */
+/** No payment yet: the trial list kind, trial chat rules and not-yet-subscribed checks. */
 export const NOT_SUBSCRIBED_STATUSES = ['new', 'trial', 'pending_subscription'] as const satisfies readonly StudentStatus[];
 
-/** «انتهت الباقة»: the package ended and must be renewed (pending_renewal, then expired after N days). */
+/** The package ended and must be renewed (pending_renewal, then expired after N days). */
 export const PACKAGE_ENDED_STATUSES = ['pending_renewal', 'expired'] as const satisfies readonly StudentStatus[];
 
 /** What a positive payment moves to `active` (StudentActivation); paused / churned / active never. */
@@ -18,7 +18,7 @@ const among = (list: readonly StudentStatus[], s: StudentStatus | null | undefin
 /** true for new / trial / pending_subscription. */
 export const isNotSubscribed = (s: StudentStatus | null | undefined): boolean => among(NOT_SUBSCRIBED_STATUSES, s);
 
-/** true for pending_renewal / expired: the «جدّد الاشتراك» action shows. */
+/** True for pending_renewal or expired, when renewal is offered. */
 export const isPackageEnded = (s: StudentStatus | null | undefined): boolean => among(PACKAGE_ENDED_STATUSES, s);
 
 /** true when a positive payment makes this student `active`. */
@@ -63,7 +63,7 @@ export interface TrialFacts {
 export function trialMove(current: StudentStatus, facts: TrialFacts): StatusMovePlan | null {
   if (current !== 'new' && current !== 'trial') return null;
   if (facts.attended && facts.paid) return null;
-  // A trial date still ahead wins over an older attended one: «موعد تجريبي جديد».
+  // A trial date still ahead wins over an older attended one.
   if (facts.open) return current === 'new' ? { from: current, to: 'trial', reason: 'trial_booked' } : null;
   if (facts.attended) return { from: current, to: 'pending_subscription', reason: 'trial_attended' };
   return current === 'trial' ? { from: current, to: 'new', reason: 'trial_missed' } : null;

@@ -1,8 +1,7 @@
 import { LESSON_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 
-// «طلبات الأسر»: the families' «اطلب موعدًا آخر» waiting for an admin or the
-// owning assistant. GET /family-requests answers these, oldest first; parsed at the client.
+// Families' move requests waiting for an admin or the owning assistant, oldest first.
 
 export const familyRequestSchema = z.object({
   /** The proposal: POST /family-requests/:id/approve | reject. */
@@ -12,7 +11,6 @@ export const familyRequestSchema = z.object({
   ends_at: z.string(),
   status: z.enum(LESSON_STATUSES),
   proposed_starts_at: z.string(),
-  /** «ملاحظة الأسرة». */
   note: z.string().nullable(),
   created_at: z.string(),
   teacher: z.object({

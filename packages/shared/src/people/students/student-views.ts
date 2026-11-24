@@ -41,7 +41,6 @@ export interface TeacherOption {
 /** GET /students/:id. */
 export interface StudentProfile extends StudentRef {
   guardian_id: string;
-  /** «سن الطالب» / «النوع» from the registration form. */
   age: number | null;
   gender: Gender | null;
   program: Program;
@@ -53,7 +52,7 @@ export interface StudentProfile extends StudentRef {
   teacher_id: string | null;
   meeting_link_override: string | null;
   notes: string | null;
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent from an older API = «ولي الأمر». */
+  /** docs/30 §1; absent from an older API means the guardian's number. */
   contact_is_self?: boolean;
   /** A test student (docs/56); absent from an older API = real. */
   is_test?: boolean;

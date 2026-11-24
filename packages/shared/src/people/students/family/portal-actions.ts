@@ -3,14 +3,9 @@ import { instant } from '@ab/core';
 import { isOpenLesson } from '@ab/schedule';
 import { z } from 'zod';
 
-// The family's own lesson actions: «سأحضر» (confirm), «أعتذر عن الحلقة» (the student's cancel
-// under the late_cancel_hours rule) and «اطلب موعدًا آخر» (a family lesson_proposals row,
-// answered by staff), with «سحب الطلب». Whitelists: never a staff id or an internal reason.
+// The family's own lesson actions; whitelists, never a staff id or an internal reason.
 
-/**
- * Open and not started: the family may still confirm, excuse, ask or withdraw (the API's guard and
- * the apps' «خيارات الحلقة» read the same rule).
- */
+/** Open and not started; the API guard and the apps read the same rule. */
 export const isFamilyActionable = (
   l: { status: LessonStatus; starts_at: string },
   now: Date,
@@ -39,7 +34,6 @@ export const portalLessonFamilySchema = z.object({
 });
 export type PortalLessonFamily = z.infer<typeof portalLessonFamilySchema>;
 
-/** POST …/lessons/:lessonId/cancel: «سبب الاعتذار (اختياري)». */
 export const portalCancelSchema = z.object({ reason: z.string().trim().max(500).optional() });
 export type PortalCancel = z.infer<typeof portalCancelSchema>;
 

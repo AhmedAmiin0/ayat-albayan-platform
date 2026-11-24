@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { RoomFeatures } from './room-variant';
 
-/** What is open over (or beside) the call: «المشاركون», «المحادثة» or «التسجيلات». */
 export type RoomPanelName = 'people' | 'chat' | 'recordings';
 
 export interface RoomUi {
@@ -9,12 +8,12 @@ export interface RoomUi {
   open: (panel: RoomPanelName) => void;
   /** The same button again closes its panel (the chat). */
   toggle: (panel: RoomPanelName) => void;
-  /** «المشاركون»: opens the staff drawer; the family's side panel closes on the same button. */
+  /** Opens the staff drawer; the family's side panel closes on the same button. */
   people: () => void;
   close: () => void;
-  /** «تغادر الحلقة؟» is on screen. */
+  /** The leave confirm is on screen. */
   asking: boolean;
-  /** «اخرج من الحلقة»: asks first where the variant does, else leaves at once. */
+  /** Asks first where the variant does, else leaves at once. */
   leave: () => void;
   stay: () => void;
   confirmLeave: () => void;

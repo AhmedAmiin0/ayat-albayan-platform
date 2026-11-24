@@ -11,8 +11,7 @@ import { LESSON_RATINGS, type LessonRating } from '../messaging/lesson/rating.js
 import { listSortShape, phoneE164 } from '@ab/core';
 import type { Attendance, LessonStatus } from '@ab/catalog';
 
-// «رأيك يهمّنا» (docs/13-forms-spec.md form 3). camelCase commands, snake_case responses like the
-// rest of the API. The server fills teacher and kind from the signed link; the client never sends them.
+// Feedback (docs/13-forms-spec.md form 3): the server fills teacher and kind from the signed link.
 
 /** Blank → undefined, so an empty optional field is simply absent. */
 const blankIsAbsent = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
@@ -27,11 +26,7 @@ export const feedbackSubmitSchema = z.object({
 });
 export type FeedbackSubmit = z.output<typeof feedbackSubmitSchema>;
 
-/**
- * Whether «ابعت طلب الرأي» may go to this student: the lesson took place (completed, or the student
- * came late) and this student did not miss it (a sibling's lesson in a group does not count for an
- * absent or excused one). The API enforces it; web and mobile hide the button with the same rule.
- */
+/** Only when the lesson took place and this student did not miss it; API and clients share it. */
 export function feedbackEligible(status: LessonStatus, attendance: Attendance | null): boolean {
   return (status === 'completed' || status === 'late') && attendance !== 'absent' && attendance !== 'excused';
 }
@@ -50,7 +45,7 @@ export type FeedbackSortKey = (typeof FEEDBACK_SORT_KEYS)[number];
 /** GET /feedback filters (paged like every list); `student` and `note` are «contains» text. */
 export const feedbackQuerySchema = z.object({
   teacher: z.uuid().optional(),
-  /** One lesson's rows: the «اتبعت» state of its send button survives a reload. */
+  /** One lesson's rows, so the sent state survives a reload. */
   lesson: z.uuid().optional(),
   kind: z.enum(FEEDBACK_KINDS).optional(),
   rating: z.coerce.number().int().min(1).max(5).optional(),

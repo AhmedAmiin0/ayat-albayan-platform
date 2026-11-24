@@ -42,12 +42,12 @@ export function shiftCalendarMonths(date: string, months: number): string {
   return ymd(addMonths(atUtcMidnight(date), months));
 }
 
-/** 0 = الأحد … 6 = السبت of a calendar date. */
+/** 0 = Sunday ... 6 = Saturday of a calendar date. */
 export function weekdayOfDate(date: string): number {
   return getDay(atUtcMidnight(date));
 }
 
-/** The first day of `date`'s week; `weekStartsOn` 6 = the academy week (السبت → الجمعة). */
+/** `weekStartsOn` 6 is the academy week, Saturday to Friday. */
 export function weekStartOfDate(date: string, weekStartsOn: Day = 6): string {
   return ymd(startOfWeek(atUtcMidnight(date), { weekStartsOn }));
 }

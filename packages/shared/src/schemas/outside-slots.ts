@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { instant } from '@ab/core';
 
-// «وقت آخر»: every bookable start of the next 14 days counted from the SERVER
-// clock, inside the teacher's hours or not. The client only formats these instants (rule 6).
+// Starts for the next 14 days from the server clock; the client only formats them (rule 6).
 
 /** One start on the grid: UTC instants; inside_hours = within the teacher's weekly availability. */
 export const outsideSlotSchema = z.object({

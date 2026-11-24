@@ -13,7 +13,7 @@ export function riyadhToday(now: Date = new Date()): string {
 }
 
 export interface ZonedWhenWords {
-  /** The app's `t.enums.weekday`: "0" = الأحد … "6" = السبت. */
+  /** "0" = Sunday ... "6" = Saturday. */
   weekday: Readonly<Record<string, string | undefined>>;
   /** The UI language: the month's name. */
   locale: Locale;
@@ -23,7 +23,6 @@ export interface ZonedWhenWords {
   tz: string;
 }
 
-/** «الاثنين 12 أكتوبر 18:00»: weekday, day, month and clock of `instant` (ISO) in `words.tz`. */
 export function zonedWhenText(instant: string, words: ZonedWhenWords): string {
   const at = new Date(instant);
   const { tz } = words;

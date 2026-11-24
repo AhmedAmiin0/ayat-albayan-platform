@@ -1,10 +1,7 @@
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
 
-/**
- * «جارٍ إعادة الاتصال…» as a full-width strip under the top line: it drops in from the top (the
- * call is recovering, not frozen) and goes on reconnect. Words, not colour alone.
- */
+/** Words, not colour alone. */
 export function ReconnectStrip({ status }: { status: RoomStatus }) {
   if (status !== 'reconnecting') return null;
   return (

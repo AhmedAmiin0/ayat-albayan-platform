@@ -15,10 +15,7 @@ interface Props {
   ui: RoomUi;
 }
 
-/**
- * Over the call: staff's «المشاركون» drawer (mute, remove), «التسجيلات», the remove confirm, the
- * «كتمك المعلم» toasts, and «تغادر الحلقة؟». The family's people sit in the side panel instead.
- */
+/** The family's people sit in the side panel instead of the staff drawer. */
 export function RoomOverlays({ room, kit, tools, ui }: Props) {
   const { kick, mute, recordingsFor } = tools;
   const drawer = ui.panel === 'people' && !kit.features.sidePanel && !kick.target;

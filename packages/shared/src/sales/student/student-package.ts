@@ -1,8 +1,6 @@
 import type { PackageSize, SubscriptionStatus } from '@ab/catalog';
 
-// The current package of ANY student for the assistant: «كل الطلاب»'s rows and «تفاصيل الطالب».
-// Whitelist: never a price, currency, payment, receipt or commission (those stay for her own
-// students). Pure.
+// Any student's current package for the assistant; never price, payment or commission.
 
 /** Size, status, dates and lessons used / left (v_subscription_balance, lessons_used_before in). */
 export interface SalesPackageSummary {
@@ -28,7 +26,6 @@ export interface PackageWords {
   day: (iso: string) => string;
   /** A calendar day («2026-10-01») as shown (an LTR island). */
   date: (ymd: string) => string;
-  /** «استُخدمت {used} من {total}», «المتبقي: {n}», «البدء: {date}» … */
   used: string;
   remaining: string;
   starts: string;
@@ -46,7 +43,6 @@ function endPart(p: SalesPackageSummary, w: PackageWords): string[] {
   return [];
 }
 
-/** «8 حلقات · نشط», «استُخدمت 5 من 8», «المتبقي: 3», «البدء: 2026-10-01», «النهاية المتوقعة: …». */
 export function packageSummaryParts(p: SalesPackageSummary, w: PackageWords): string[] {
   return [
     `${w.size(p.package)} · ${w.status(p.status)}`,
@@ -57,7 +53,7 @@ export function packageSummaryParts(p: SalesPackageSummary, w: PackageWords): st
   ];
 }
 
-/** The row's line: the parts joined, «لا توجد باقة حالية» without one; null in an old cache. */
+/** The parts joined, or no current package; null in an old cache. */
 export function packageSummaryText(
   p: SalesPackageSummary | null | undefined,
   words: PackageWords & { noPackage: string },

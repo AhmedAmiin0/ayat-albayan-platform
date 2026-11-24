@@ -28,13 +28,13 @@ export function isAyah(ref: AyahRef): boolean {
   return Number.isInteger(ref.ayah) && ref.ayah >= 1 && ref.ayah <= ayahCount(ref.surah);
 }
 
-/** «الملك» (ar) or «Al-Mulk» (en); '' when the number is not a surah. */
+/** '' when the number is not a surah. */
 export function surahName(surah: number, lang: 'ar' | 'en' = 'ar'): string {
   const row = isSurah(surah) ? SURAHS[surah - 1] : undefined;
   return row ? row[lang === 'ar' ? 0 : 1] : '';
 }
 
-/** 1 = الفاتحة 1 … 6236 = الناس 6. Throws on a place that is not in the mushaf. */
+/** 1 = first ayah of the Quran ... 6236 = last; throws outside the mushaf. */
 export function globalAyah(ref: AyahRef): number {
   if (!isAyah(ref)) throw new RangeError(`not an ayah: ${ref.surah}:${ref.ayah}`);
   return (OFFSETS[ref.surah - 1] ?? 0) + ref.ayah;
@@ -68,7 +68,6 @@ export function juzPages(juz: number): { first: number; last: number; count: num
   return { first, last, count: last - first + 1 };
 }
 
-/** A surah range on the form: «7 آيات · ص 563 · ج 29». */
 export interface RangeInfo {
   ayahs: number;
   firstPage: number;
@@ -86,16 +85,13 @@ export function rangeInfo(range: { surah: number; from: number; to: number }): R
   };
 }
 
-/**
- * Where the next lesson starts after the last saved ayah: the next ayah of the same surah, or
- * ayah 1 of the next surah once it is finished; null after الناس 6.
- */
+/** The next ayah, or ayah 1 of the next surah; null after the last ayah of the Quran. */
 export function nextAyah(last: AyahRef): AyahRef | null {
   if (last.ayah < ayahCount(last.surah)) return { surah: last.surah, ayah: last.ayah + 1 };
   return last.surah < SURAH_COUNT ? { surah: last.surah + 1, ayah: 1 } : null;
 }
 
-/** Surah numbers matching a search: its number, or its Arabic / English name (tashkeel and «ال» ignored). */
+/** Matches number or Arabic or English name, ignoring tashkeel and the article. */
 export function searchSurahs(query: string): number[] {
   const q = query.trim();
   const all = Array.from({ length: SURAH_COUNT }, (_, i) => i + 1);

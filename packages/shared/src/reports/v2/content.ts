@@ -5,11 +5,11 @@ import { isAyah, SURAH_COUNT } from '../quran/quran.js';
 // The v2 lesson report's structured content (docs/design/report-form): stored
 // whole in lesson_reports.content (jsonb, form_version 2, migration 20261028000940).
 
-/** The three Quran tracks of a lesson, in the form's order (التسميع · الحفظ الجديد · المراجعة). */
+/** The three Quran tracks, in the form's order: recitation, new memorization, revision. */
 export const SEGMENT_KINDS = ['recited', 'new', 'revision'] as const;
 export type SegmentKind = (typeof SEGMENT_KINDS)[number];
 
-/** «الدرس النظري / التجويد» chips (optional, one). */
+/** Tajweed lesson topic chips (optional, one). */
 export const TAJWEED_TOPICS = ['noon_sakin', 'meem_sakin', 'madd', 'qalqala', 'makharij'] as const;
 export type TajweedTopic = (typeof TAJWEED_TOPICS)[number];
 
@@ -17,13 +17,12 @@ export type TajweedTopic = (typeof TAJWEED_TOPICS)[number];
 export const ARABIC_SKILLS = ['reading', 'writing', 'listening', 'grammar'] as const;
 export type ArabicSkill = (typeof ARABIC_SKILLS)[number];
 
-/** Islamic studies: «المجال» chips and the two graded rows. */
+/** Islamic studies domain chips and the two graded rows. */
 export const ISLAMIC_DOMAINS = ['aqeedah', 'fiqh', 'seerah', 'hadith', 'adab'] as const;
 export type IslamicDomain = (typeof ISLAMIC_DOMAINS)[number];
 export const ISLAMIC_RATES = ['comprehension', 'participation'] as const;
 export type IslamicRate = (typeof ISLAMIC_RATES)[number];
 
-/** Quick notes to the family (the chips above «ملاحظة للأسرة»). */
 export const QUICK_NOTES = ['keep_going', 'daily_revision', 'tajweed_focus'] as const;
 export type QuickNote = (typeof QUICK_NOTES)[number];
 

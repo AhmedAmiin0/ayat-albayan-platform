@@ -34,7 +34,7 @@ export interface SalesMoneySubscriptionView {
   due: number;
 }
 
-/** The transfer she recorded, and the student's status right after it («مشترك» once a trial pays). */
+/** The transfer she recorded and the student's status right after it. */
 export interface SalesPaymentView {
   id: string;
   subscription_id: string;
@@ -58,15 +58,15 @@ export interface SalesFamilyStudent extends SalesStudentRef {
    */
   mine?: boolean;
   open: SalesMoneySubscriptionView[];
-  /** «جدّد الاشتراك» is her primary action: the package ended, or an active one is down to the renewal alert. */
+  /** Renewal is her primary action: the package ended or is down to the renewal alert. */
   renew_due: boolean;
   /** The renewal's calculator inputs, from the last priced package (renewalPricing; pill discounts only). */
   renewal: RenewalPricing;
-  /** students.teacher_id (the trial's teacher until she picks another): «المعلم/ة»'s default. */
+  /** students.teacher_id (the trial's teacher until she picks another), the picker's default. */
   teacher_id: string | null;
 }
 
-/** GET /sales/subscriptions/teachers: the active teachers «المعلم/ة» offers (names only). */
+/** The active teachers offered (names only). */
 export interface SalesTeacherOption {
   id: string;
   name: string;

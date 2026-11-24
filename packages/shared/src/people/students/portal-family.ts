@@ -11,10 +11,9 @@ export const PACKAGE_GUARDIAN_ONLY = 'package_guardian_only';
 /** Every family channel route while settings.family_chat_enabled is off (403). */
 export const FAMILY_CHAT_OFF = 'family_chat_off';
 
-/** «حضرها» / «غاب عنها»: the two lists of past lessons. */
 export const PORTAL_HISTORY_STATUSES = ['attended', 'absent'] as const;
 export type PortalHistoryStatus = (typeof PORTAL_HISTORY_STATUSES)[number];
-/** A past lesson's outcome for the student: an excused absence is still «غاب عنها». */
+/** An excused absence still counts as absent. */
 export const PORTAL_OUTCOMES = ['attended', 'absent', 'excused'] as const;
 export type PortalOutcome = (typeof PORTAL_OUTCOMES)[number];
 /** Rows per page of the history. */
@@ -57,7 +56,7 @@ export const portalPackageSchema = z.object({
   package: z.enum(PACKAGE_SIZES).nullable(),
   duration: z.number(),
   lessons_total: z.number(),
-  /** Lessons taken over every live package («8 من 12»); absent from an older API. */
+  /** Lessons taken over every live package; absent from an older API. */
   lessons_used: z.number().optional(),
   remaining: z.number(),
   starts_on: z.string(),
