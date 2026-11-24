@@ -47,7 +47,7 @@ describe('PricingPage (docs/08)', () => {
   it('quotes another country in USD with the rate date and the attribution link', async () => {
     renderPage();
     pick(t.pricing.steps.country, t.pricing.otherCountry);
-    // Under the quote and under the «أسعار كل الخطط» table: both show converted prices.
+    // Both the quote and the catalog show converted prices, so each carries the attribution.
     const links = () => screen.queryAllByRole('link', { name: t.pricing.fx.attribution });
     await waitFor(() => expect(links()).toHaveLength(2));
     for (const link of links()) {

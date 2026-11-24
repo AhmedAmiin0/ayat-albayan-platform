@@ -109,11 +109,7 @@ export class CoursePauseRepo {
     return data.map((r) => r.lesson.starts_at).sort();
   }
 
-  /**
-   * Packages paused by the old package-only button (before 2026-10-28: no course_pauses row; it could pause ANY of
-   * the student's packages): every paused one back to the neutral 'unpaid' (the recompute derives its status), or
-   * only `subscriptionId` (a package row's «استئناف»). The ids lifted (empty: none was paused).
-   */
+  /** Lifts packages paused by the old package-only button (no course_pauses row) to 'unpaid'. */
   async liftLegacyPause(p: { studentId: string; subscriptionId?: string }): Promise<string[]> {
     let q = this.db.from('subscriptions').update({ status: 'unpaid' }).eq('student_id', p.studentId).eq('status', 'paused');
     if (p.subscriptionId) q = q.eq('id', p.subscriptionId);

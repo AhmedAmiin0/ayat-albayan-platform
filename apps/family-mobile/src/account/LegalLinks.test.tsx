@@ -3,8 +3,7 @@ import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { LegalLinks } from './LegalLinks';
 
-// «حسابي»: the privacy policy and the deletion page open on the family portal in the browser
-// (Google Play asks for both inside the app), signed in or not.
+// Google Play requires both pages reachable inside the app, signed in or not.
 
 const openURL = jest.spyOn(Linking, 'openURL');
 

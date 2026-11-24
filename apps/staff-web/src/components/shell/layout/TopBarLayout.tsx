@@ -20,13 +20,7 @@ export interface BarProps {
   title: string;
 }
 
-/**
- * The wide header (≥ 900px) of the top-bar layouts: logo, bell (staff), language, theme, «حسابي», logout.
- * `clocks` (the top-bar inbox): from 1340px the running head's calendars and clocks inline, between
- * the logo and the bell, instead of their own row (docs/07 §7 keeps all four). Measured with the real
- * fonts and the longest dates they need about 1190px (ar) and 1324px (en); narrower, they would wrap
- * or paint under the bell, so the layout shows its own row up to 1340px. overflow-hidden guards the rest.
- */
+/** Inline clocks need about 1324px with real fonts, so below 1340px they get their own row. */
 export function WideHeader({ clocks }: { clocks?: ReactNode } = {}) {
   return (
     <header className="hidden shrink-0 items-center gap-3 px-1.5 pt-4 shell:flex">
@@ -44,10 +38,6 @@ export function WideHeader({ clocks }: { clocks?: ReactNode } = {}) {
   );
 }
 
-/**
- * Guardian / assistant: one page, no nav. Below 900px the compact bar («القائمة» holds theme,
- * language and logout); from 900px the logo header. The browser page scrolls.
- */
 export function TopBarLayout({ bar, children }: { bar: BarProps; children: ReactNode }) {
   const { data: me } = useQuery(meQuery);
   return (

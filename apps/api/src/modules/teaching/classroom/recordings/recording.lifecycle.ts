@@ -25,11 +25,7 @@ export class RecordingLifecycle {
     private readonly starter: RecordingStarter,
   ) {}
 
-  /**
-   * After an egress ended normally (complete, limit reached): record again if anyone is still there.
-   * A failed egress is not retried, so a broken recorder cannot loop (the row shows «فشل التسجيل»;
-   * the next join tries again).
-   */
+  /** A failed egress is not retried, so a broken recorder cannot loop; next join retries. */
   async afterEgressEnded(input: { room: string | null; status: 'done' | 'failed' }): Promise<'restarted' | 'idle'> {
     const { room } = input;
     const target = targetOfRoom(room);

@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
-/** «شكل الرد»: the text as it will go into the box, updated with every keystroke. */
 export function FillPreview({ text }: { text: string }) {
   const { color } = useTheme();
   return (

@@ -9,7 +9,7 @@ import { dbError } from '@/common/http/http';
 /** Who may be invited as staff (base roles; never a guardian or a student login). */
 const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;
 const PICK_LIMIT = 20;
-/** «لم يشترك بعد» (new, trial, pending_subscription; owner 2026-10-15) as a PostgREST in-list. */
+/** Not yet subscribed (new, trial, pending_subscription) as a PostgREST in-list. */
 const NOT_SUBSCRIBED = `(${NOT_SUBSCRIBED_STATUSES.join(',')})`;
 
 /**

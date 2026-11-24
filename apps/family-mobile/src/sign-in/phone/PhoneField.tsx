@@ -8,18 +8,12 @@ interface PhoneFieldProps {
   country: Country;
   typed: string;
   onTyped: (typed: string) => void;
-  /** Opens «اختر الدولة». */
   onCountry: () => void;
   state: PhoneState;
-  /** «أرسل الرمز» from the keyboard. */
   onSubmit: () => void;
 }
 
-/**
- * «رقم الواتساب» (docs/50 §4): the country (flag + calling code, a button) and the national
- * number in one LTR field, 18 pt (no iOS zoom), the phone pad and the OS's phone autofill. The
- * edge turns green on focus and red once the number cannot be right (checked while typing).
- */
+/** docs/50 §4: one LTR field at 18 pt avoids iOS zoom; validated while typing. */
 export function PhoneField({ country, typed, onTyped, onCountry, ...p }: PhoneFieldProps) {
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);

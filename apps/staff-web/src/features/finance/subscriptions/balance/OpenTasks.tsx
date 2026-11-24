@@ -6,10 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { completeTask, MONEY_KEY, openTasksQuery } from '@/features/finance/subscriptions/api';
 import { taskText } from '@/features/finance/subscriptions/format';
 
-/**
- * R-SUB-02 admin tasks: «باقة سهيلة قربت تخلص» / «… خلصت ومحتاجة تجديد». Each is work
- * waiting for the admin (saffron «دورك» glyph), done with one click.
- */
+/** Admin renewal tasks (R-SUB-02), each done with one click. */
 export function OpenTasks() {
   const queryClient = useQueryClient();
   const tasks = useQuery(openTasksQuery);

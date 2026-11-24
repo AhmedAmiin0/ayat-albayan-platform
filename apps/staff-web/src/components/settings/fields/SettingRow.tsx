@@ -4,7 +4,6 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 /** What the settings page adds to a row: a notes line, a reset button and danger styling. */
 export interface RowExtras {
-  /** Under the hint: «معدَّل», who changed it last. */
   extra?: ReactNode;
   /** Beside the control: the per-field reset. */
   actions?: ReactNode;

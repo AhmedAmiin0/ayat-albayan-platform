@@ -10,8 +10,6 @@ import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { emojiLabel } from './ReactionBar';
 
-// «تفاعل» (owner 2026-10-27), Arabic (RTL): hold a bubble → the emoji row; a tap reacts once, a tap on
-// ours removes it; the pill opens who reacted. JS only; the API is a mock (no WhatsApp call).
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

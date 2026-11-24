@@ -13,11 +13,7 @@ const STEPS: Record<WhatsAppStep, (sign: Sign) => ReactNode> = {
   code: (sign) => <CodeStep sign={sign} />,
 };
 
-/**
- * «الدخول برقم الواتساب», the family app's default way in (docs/50 §4): number → code → signed
- * in, the two steps moving on a critically damped spring (Reduce Motion: a cross-fade). The auth
- * gate swaps the screen for home once the session is in; a staff number gets «wrongApp».
- */
+/** docs/50 §4: the default way in; Reduce Motion uses a cross-fade; staff numbers get wrongApp. */
 export function WhatsAppSignIn() {
   const sign = useWhatsAppSignIn();
   return (

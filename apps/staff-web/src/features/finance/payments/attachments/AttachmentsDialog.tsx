@@ -14,7 +14,7 @@ type Props = {
   onClose: () => void;
 };
 
-/** «عرض المرفقات»: the payment's files through 1-hour signed links (the legacy receipt first), each opened in a new tab. */
+/** 1-hour signed links, the legacy receipt first, each opened in a new tab. */
 export function AttachmentsDialog({ path, description, onClose }: Props) {
   const list = useQuery(attachmentsQuery(path));
   const labels = attachmentLabels(list.data ?? []);

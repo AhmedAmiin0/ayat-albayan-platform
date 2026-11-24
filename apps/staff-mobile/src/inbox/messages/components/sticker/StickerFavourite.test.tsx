@@ -5,7 +5,6 @@ import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { StickerFavourite } from './StickerFavourite';
 
-// «أضف إلى المفضلة» on a sticker bubble (owner 2026-11-01).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

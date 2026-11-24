@@ -9,7 +9,7 @@ import { OutcomeSettleService, type SettleSummary } from './outcome-settle.servi
 
 const MINUTE = 60_000;
 
-/** confirmation_required (the default): OutcomeSettleService; held_by_default: «انعقدت». */
+/** confirmation_required (default) goes to OutcomeSettleService; held_by_default marks it held. */
 export type AutoHeldSummary =
   | ({ mode: 'confirmation_required' } & SettleSummary)
   | { mode: 'held_by_default'; due: number; held: number; absent: 0 };
@@ -19,17 +19,7 @@ interface Pass {
   graceMs: number;
 }
 
-/**
- * Every ended lesson's outcome after the grace (settings.lesson_outcome_grace_minutes, 30 min).
- * settings.lesson_confirmation_required ON (owner 2026-11-03, the default): OutcomeSettleService
- * (confirmed → completed, reminded with no «نعم» → no_show, else left for the assistant).
- * OFF («انعقدت» by default, owner 2026-11-02): every lesson still scheduled / confirmed (14 days
- * back at most, never before lesson_outcomes_since() nor a student's current package) moves to
- * completed. Both write through
- * apply_lesson_changes with a compare-and-set on the status (the per-lesson dedup: a second pass,
- * or a report / cancel meanwhile, changes nothing), audited with actor null. LessonEvents then
- * runs the balance alerts, the trial → «بانتظار الاشتراك» move and the rating.
- */
+/** Settles ended lessons after the grace via compare-and-set (per-lesson dedup); actor null. */
 @Injectable()
 export class AutoHeldService {
   private readonly log = new Logger(AutoHeldService.name);

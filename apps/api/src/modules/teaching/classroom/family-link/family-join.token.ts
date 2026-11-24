@@ -1,11 +1,7 @@
 import { looksLikeFamilyToken } from '@ab/shared';
 import { signPair, verifyPair } from '@/common/http/pair-token';
 
-// The family app's «ادخل الحلقة» in the phone's browser (docs/50 §2, §7): /join/<token> on the web,
-// no second sign-in. It signs (lessonId, studentId, exp = the room's close) with
-// FEEDBACK_TOKEN_SECRET under its own context, so no other signed link verifies here. The pair
-// token's «body.sig» travels without its dot (70 url-safe characters: a dotted path could be taken
-// for a file by the web host); the fixed body length puts the dot back.
+// Family join token (docs/50 §2, §7): own signing context; the sig travels without its dot.
 
 const CONTEXT = 'family-join|';
 const BODY_CHARS = 48;
