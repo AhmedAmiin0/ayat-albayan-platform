@@ -384,7 +384,8 @@ jobs:
   # Equal or below passes with nothing to edit, so PRs never touch a baseline and never conflict on one. knip and
   # queries (and the floating units) keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
   # job «baselines» drops it on develop. Pushes print the counts (each change was compared on its PR). The e2e area
-  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
+  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). tsconfig has no
+  # baseline: a tsconfig that names anything outside its own folder fails. No secrets.
   guards:
     needs: changes
     if: needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'
@@ -415,6 +416,7 @@ jobs:
       - run: pnpm guard:queries
       - run: pnpm guard:cycles
       - run: pnpm guard:packages
+      - run: pnpm guard:tsconfig
       - run: pnpm guard:comments
       - run: pnpm guard:units
       - run: pnpm guard:move-only
