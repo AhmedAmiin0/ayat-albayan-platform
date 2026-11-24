@@ -1,4 +1,5 @@
-import { courseChangeCheckSchema, courseChangeSchema, type CourseChangeCheck, type CourseChangeResult, type SalesCourseView } from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult, SalesCourseView } from '@ab/shared';
+import { courseChangeCheckSchema, courseChangeSchema } from '@ab/schedule';
 import type { BookingRequest, CourseDraftSaved } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Put, Query } from '@nestjs/common';
 import { ZodBody } from '@/common/http/zod-inputs';

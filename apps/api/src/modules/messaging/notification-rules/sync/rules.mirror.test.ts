@@ -1,4 +1,5 @@
-import { RULE_SETTING_KEYS, SETTING_DEFAULTS, type NotificationRuleRow, type RuleSettings } from '@ab/shared';
+import { RULE_SETTING_KEYS, type NotificationRuleRow, type RuleSettings } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { canonical, moduleLegacyValues, ruleDifferences } from './rules.mirror';
 

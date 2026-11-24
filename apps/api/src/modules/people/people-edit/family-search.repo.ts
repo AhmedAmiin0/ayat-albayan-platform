@@ -1,5 +1,5 @@
 import type { FamilyOption } from '@ab/shared';
-import { searchDigits } from '@ab/shared';
+import { searchDigits } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';

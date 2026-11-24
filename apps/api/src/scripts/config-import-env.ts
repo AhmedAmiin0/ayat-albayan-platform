@@ -1,5 +1,5 @@
 import type { Database } from '@ab/db';
-import { isIntegrationSecretKey } from '@ab/shared';
+import { isIntegrationSecretKey } from '@ab/catalog';
 import { createClient } from '@supabase/supabase-js';
 import { IntegrationConfigRepo } from '@/common/configuration/integrations/integration-config.repo';
 import { loadEnv } from '@/config/env/env';

@@ -4,7 +4,7 @@ import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-o
 import { kapsoOverlay } from '@/modules/messaging/webhook/external/tests/external.fakes';
 import { kapsoChatNumbers } from '@/modules/messaging/webhook/external/kapso-numbers';
 import { lead } from '@/modules/sales/leads/leads.fakes';
-import type { InboundContact } from '@/modules/sales/leads/leads.service';
+import type { InboundContact } from '@/modules/sales/leads/leads.types';
 import { event } from '@/modules/messaging/webhook/tests/webhook.fakes';
 import { catchUpRig, FAMILY_WA, kapsoInbound, NOW, page } from './inbound.fakes';
 

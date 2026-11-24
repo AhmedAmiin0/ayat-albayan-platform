@@ -1,10 +1,11 @@
 import type { Tables } from '@ab/db';
-import { searchDigits, type GuardianCreate, type GuardianUpdate } from '@ab/shared';
+import type { GuardianCreate, GuardianUpdate } from '@ab/shared';
+import { searchDigits } from '@ab/core';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { guardianSearchFilter, toGuardianInsert, toGuardianPatch } from './guardians.mapper';
 import { dbError, pageRange, type ListQuery } from './http';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 export type Guardian = Tables<'guardians'>;
 type Sibling = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;

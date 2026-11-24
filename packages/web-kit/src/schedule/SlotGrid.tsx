@@ -1,4 +1,5 @@
-import { clockOf, type SlotView, weekDates, weekdayOf } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
+import { clockOf, weekDates, weekdayOf } from '@ab/time';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';

@@ -19,7 +19,8 @@ import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sende
 import { ReopenRequest } from '@/modules/messaging/whatsapp/sender/window/reopen-request';
 import { ReopenPick } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
-import { TemplatesRepo, type ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';

@@ -1,11 +1,6 @@
-import {
-  lessonCorrectSchema,
-  salesCancelSchema,
-  salesRescheduleSchema,
-  type LessonCorrect,
-  type LessonStatus,
-  type SalesLessonMoved,
-} from '@ab/shared';
+import { salesCancelSchema, salesRescheduleSchema, type SalesLessonMoved } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { lessonCorrectSchema, type LessonCorrect } from '@ab/schedule';
 import { z } from 'zod';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';

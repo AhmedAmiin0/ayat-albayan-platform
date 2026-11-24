@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { Ltr, ltr } from '../primitives/Ltr';

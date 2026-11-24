@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { GoogleSyncKind } from '@ab/shared';
+import type { GoogleSyncKind } from '@ab/catalog';
 import { CalendarWriter } from '@/modules/platform/google-sync/writers/calendar/calendar.writer';
 import { ReportPdfWriter } from '@/modules/platform/google-sync/writers/drive/report-pdf.writer';
 import { SheetRowsWriter } from '@/modules/platform/google-sync/writers/sheets/sheet-rows.writer';

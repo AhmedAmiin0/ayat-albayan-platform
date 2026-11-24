@@ -1,5 +1,6 @@
 import { historyMonths, historyRows } from '@ab/client-core';
-import { dateText, type PortalHistoryStatus, type PortalStudent } from '@ab/shared';
+import type { PortalHistoryStatus, PortalStudent } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { Button } from '@ab/web-kit/components/ui/form/button';

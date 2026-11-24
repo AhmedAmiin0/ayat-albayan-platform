@@ -7,6 +7,7 @@ import { readText } from '../../ci-checks/move-module/files.ts';
 import { barrelText } from './barrel.ts';
 import { updateFolderCap } from './folder-cap.ts';
 import { isPathJson, renameJsonText } from './json-paths.ts';
+import { loneBarrels } from './lone-barrel.ts';
 import { rewriteRepo } from './rewrite.ts';
 
 const git = (root: string, args: string[]): string =>
@@ -45,12 +46,11 @@ export function applyPlans(root: string, plans: readonly FolderPlan[]): Applied 
   const { texts, barrels } = rewriteRepo({ root, renamed, homes: homesOf(active) });
   texts.forEach((text, file) => writeFileSync(posix.join(root, file), text));
   moves.forEach((m) => gitMove(root, m));
-  const written = [...barrels].map(([home, use]) => {
+  const read = (f: string): string => readText(root, f);
+  const all = [...barrels, ...loneBarrels(active, barrels, read)];
+  const written = all.map(([home, use]) => {
     const file = posix.join(home, 'index.ts');
-    writeFileSync(
-      posix.join(root, file),
-      barrelText(use, (f) => readText(root, f)),
-    );
+    writeFileSync(posix.join(root, file), barrelText(use, read));
     return file;
   });
   if (written.length > 0) git(root, ['add', '--', ...written]);

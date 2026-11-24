@@ -1,4 +1,11 @@
-import { baseMime, chatFileProblem, uploadMaxBytes, type SignedUpload, type SavedReplyStaged, type SavedReplyUpload } from '@ab/shared';
+import {
+  baseMime,
+  chatFileProblem,
+  type SignedUpload,
+  type SavedReplyStaged,
+  type SavedReplyUpload,
+} from '@ab/shared';
+import { uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, chatOutPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

@@ -1,4 +1,5 @@
-import { mayInvitePhones, normalizePhone, type MeetingInviteeInput, type MeetingInviteeKind } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
+import { mayInvitePhones, type MeetingInviteeInput, type MeetingInviteeKind } from '@ab/schedule';
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

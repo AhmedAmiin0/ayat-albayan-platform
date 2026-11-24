@@ -1,4 +1,5 @@
-import { clickToChatLink, type MessageView } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
+import { clickToChatLink } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';

@@ -112,3 +112,14 @@ test('run: dry run counts and writes nothing; --write rewrites; an app without t
   assert.equal(readFileSync(join(root, 'apps/staff-web/src/x/y.ts'), 'utf8'), text.replace('../a', '@/a'));
   assert.throws(() => run(root, { targets: ['api'], write: false }), /tsconfig "@\/\*" path/);
 });
+
+test('aliasOf / run: an app takes `@/*` from the root tsconfig.base.json it extends', () => {
+  const root = fixture({
+    'tsconfig.base.json': '{ "compilerOptions": { "paths": { "@/*": ["${configDir}/src/*"] } } }',
+    'apps/staff-web/tsconfig.json': '{ "extends": "../../tsconfig.base.json" }',
+    'apps/staff-web/src/x/y.ts': "import { a } from '../a';\n",
+  });
+  assert.deepEqual(aliasOf(root, 'apps/staff-web'), ALIAS);
+  run(root, { targets: ['staff-web'], write: true });
+  assert.equal(readFileSync(join(root, 'apps/staff-web/src/x/y.ts'), 'utf8'), "import { a } from '@/a';\n");
+});

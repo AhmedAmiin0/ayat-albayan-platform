@@ -36,3 +36,12 @@ export interface PlanInput {
   /** Folder prefixes to plan; all folders when absent. */
   only?: readonly string[];
 }
+
+/** An open PR and the repo paths it changes. */
+export interface OpenPr {
+  number: number;
+  files: string[];
+}
+
+/** Runs `gh` with these arguments and returns its stdout. */
+export type GhRun = (args: readonly string[]) => string;

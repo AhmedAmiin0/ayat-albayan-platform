@@ -1,4 +1,5 @@
-import type { BookingRequest, BookingResult, CourseDraftSaved } from '@ab/shared';
+import type { BookingRequest, CourseDraftSaved } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { HttpException, HttpStatus, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PackageEvents } from '@/common/infra/events/lesson-events';

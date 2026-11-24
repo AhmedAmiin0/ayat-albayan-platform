@@ -1,5 +1,6 @@
 import { channelRows, threadMessages, unreadBand } from '@ab/client-core';
-import { chatDayKey, type ChannelPage } from '@ab/shared';
+import type { ChannelPage } from '@ab/shared';
+import { chatDayKey } from '@ab/time';
 import { phoneTz } from '../../lib/clock/phone-tz';
 import { useNow } from '../../lib/time/use-now';
 import { chatDayLabel } from '../../chat-ui/days/day-label';

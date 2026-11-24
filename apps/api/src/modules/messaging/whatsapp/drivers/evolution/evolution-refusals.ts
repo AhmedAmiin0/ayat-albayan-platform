@@ -1,4 +1,4 @@
-import { WA_ERROR } from '@ab/shared';
+import { WA_ERROR } from '@ab/catalog';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The Evolution driver's refusals made before any call (docs/19 «Evolution driver»).

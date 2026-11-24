@@ -1,4 +1,8 @@
-import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner, type TeacherCalendarView } from '@ab/shared';
+import {
+  TEACHER_CALENDAR_OWNERS,
+  type TeacherCalendarOwner,
+  type TeacherCalendarView,
+} from '@ab/catalog';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';

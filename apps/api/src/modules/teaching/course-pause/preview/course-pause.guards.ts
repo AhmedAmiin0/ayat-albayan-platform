@@ -1,4 +1,5 @@
-import { coursePauseProblem, riyadhToday } from '@ab/shared';
+import { coursePauseProblem } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { badRequest, notFound } from '@/common/http/errors';
 import type { CoursePauseRepo } from '@/modules/teaching/course-pause/course-pause.repo';
 

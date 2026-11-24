@@ -1,4 +1,5 @@
-import { changePicks, dayTimesKeeping, prefillDays, type BookedCourse, type CourseChangeRequest } from '@ab/shared';
+import { changePicks, dayTimesKeeping, prefillDays, type BookedCourse } from '@ab/shared';
+import type { CourseChangeRequest } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { errorCode } from '@/common/http/errors';
 import { assertStart } from './course-change.plan';

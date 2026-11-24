@@ -1,5 +1,6 @@
 import type { PackageSummary } from '@ab/client-core';
-import { dateText, type PortalAmount } from '@ab/shared';
+import type { PortalAmount } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { moneyText } from '@ab/web-kit/lib/money-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

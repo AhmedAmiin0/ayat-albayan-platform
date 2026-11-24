@@ -3,11 +3,11 @@ import {
   peopleGuardianPatchSchema,
   peopleStudentPatchSchema,
   peopleIdSchema,
-  phoneE164,
   type PeopleEditView,
   type PeopleGuardianPatch,
   type PeopleStudentPatch,
 } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

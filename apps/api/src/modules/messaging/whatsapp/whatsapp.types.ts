@@ -1,7 +1,6 @@
 import type { Tables } from '@ab/db';
-import {
-  isWaLine, type NumberPurpose, type TemplateParams, type WaLine, type WaSendKind,
-} from '@ab/shared';
+import type { TemplateParams, WaSendKind } from '@ab/shared';
+import { isWaLine, type NumberPurpose, type WaLine } from '@ab/catalog';
 
 // WhatsappClient contract (docs/12 §3): drivers implement it, the sender injects WHATSAPP_CLIENT.
 export const WHATSAPP_CLIENT = Symbol('WHATSAPP_CLIENT');

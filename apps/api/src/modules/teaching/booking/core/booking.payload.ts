@@ -1,5 +1,7 @@
-import { bookingKindOf, registrationStatus, type BookingKind, type BookingRequest, type Conflict, type LeadStatus, type PackageSize } from '@ab/shared';
-import type { Occurrence } from '@ab/shared';
+import { registrationStatus, type BookingRequest } from '@ab/shared';
+import type { LeadStatus, PackageSize } from '@ab/catalog';
+import { bookingKindOf, type BookingKind, type Conflict } from '@ab/schedule';
+import type { Occurrence } from '@ab/schedule';
 import {
   leadTarget,
   lessonRows,
@@ -11,7 +13,7 @@ import { courseAudit, courseTie, type CourseLabel } from './booking.course-label
 import { confirmationDrafts } from './booking.messages';
 import type { Resolved } from './booking.parties';
 import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
-import type { BookingTeacher } from './booking.repo';
+import type { BookingTeacher } from './types';
 
 export type { CourseLabel } from './booking.course-label';
 

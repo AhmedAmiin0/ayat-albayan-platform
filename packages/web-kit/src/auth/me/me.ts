@@ -1,5 +1,5 @@
 import { isAccountDisabled, meLocaleOf, pathKey, setViewerPersonTz } from '@ab/client-core';
-import type { Permission, UserRole } from '@ab/shared';
+import type { Permission, UserRole } from '@ab/catalog';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
 import { apiFetch } from '@ab/web-kit/lib/http/api';

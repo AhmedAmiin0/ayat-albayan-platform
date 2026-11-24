@@ -1,5 +1,6 @@
 import type { Json } from '@ab/db';
-import { reportBlock, type Attendance, type Program, type ReportSubmit, type ReportView } from '@ab/shared';
+import { reportBlock, type ReportSubmit, type ReportView } from '@ab/shared';
+import type { Attendance, Program } from '@ab/catalog';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { badRequest, conflict } from '@/common/http/errors';
 import { ReportFollowUp } from './report-follow-up';

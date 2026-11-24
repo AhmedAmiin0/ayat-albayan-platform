@@ -1,4 +1,11 @@
-import { effectivePermissions, GRANTABLE_PERMISSIONS, isGrantable, type Permission, type RoleView, type StaffUserView } from '@ab/shared';
+import {
+  effectivePermissions,
+  GRANTABLE_PERMISSIONS,
+  isGrantable,
+  type Permission,
+  type RoleView,
+  type StaffUserView,
+} from '@ab/catalog';
 import type { ProfileRecord, RoleRecord } from './roles.store';
 
 // Pure rules, including whether a change leaves nobody able to manage roles.

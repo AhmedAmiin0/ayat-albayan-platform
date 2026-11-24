@@ -1,11 +1,6 @@
-import {
-  bookingRequestSchema,
-  lessonsOf,
-  PACKAGE_IDS,
-  PACKAGE_SIZES,
-  type PackageId,
-  type PackageSize,
-} from '@ab/shared';
+import { bookingRequestSchema } from '@ab/shared';
+import { PACKAGE_SIZES, type PackageSize } from '@ab/catalog';
+import { lessonsOf, PACKAGE_IDS, type PackageId } from '@ab/money';
 import { z } from 'zod';
 
 const isPackageId = (v: unknown): v is PackageId => PACKAGE_IDS.some((id) => id === v);

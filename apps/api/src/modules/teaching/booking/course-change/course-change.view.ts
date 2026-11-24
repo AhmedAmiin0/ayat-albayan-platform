@@ -1,4 +1,5 @@
-import { wallParts, type BookedCourse, type CourseChangeView } from '@ab/shared';
+import type { BookedCourse, CourseChangeView } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';

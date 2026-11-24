@@ -1,4 +1,4 @@
-import type { AssistantLessonView, AssistantView } from '@ab/shared';
+import type { AssistantLessonView, AssistantView } from '@ab/schedule';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

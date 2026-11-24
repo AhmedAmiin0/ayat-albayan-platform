@@ -1,4 +1,11 @@
-import { canJoinNow, clockOf, DEFAULT_JOIN_WINDOW, joinWindow, type ClockCycle, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
+import {
+  canJoinNow,
+  DEFAULT_JOIN_WINDOW,
+  joinWindow,
+  type JoinWindowConfig,
+  type WindowLesson,
+} from '@ab/schedule';
+import { clockOf, type ClockCycle } from '@ab/time';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

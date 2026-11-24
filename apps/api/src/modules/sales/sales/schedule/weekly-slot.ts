@@ -1,4 +1,4 @@
-import { DAY_MS, dayInZone, dayWallToUtc, minutesOfHhmm, weekdayOfDay } from '@ab/shared';
+import { DAY_MS, dayInZone, dayWallToUtc, minutesOfHhmm, weekdayOfDay } from '@ab/time';
 import type { Tables } from '@ab/db';
 import type { SalesWeeklySlot } from '@ab/shared';
 // Never its link, subscription or creator (migration 187).

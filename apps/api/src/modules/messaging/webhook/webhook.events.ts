@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { NumberPurpose } from '@ab/shared';
+import type { NumberPurpose } from '@ab/catalog';
 
 // What the webhook reads out of Meta's envelope (webhook.parse.ts), one item per message / status.
 

@@ -1,4 +1,5 @@
-import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isChatViewMime } from '@ab/shared';
+import { baseMime, chatFileMaxBytes, isChatViewMime } from '@ab/shared';
+import { INVOICE_MIMES } from '@ab/schedule';
 import { HttpStatus, Inject, Injectable, Optional } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

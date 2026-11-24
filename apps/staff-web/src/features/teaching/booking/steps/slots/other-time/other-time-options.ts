@@ -4,7 +4,7 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 import { byLocalDay, zoneLabel } from '@ab/web-kit/schedule/slots';
 import { dayIn } from '@ab/web-kit/schedule/tz';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
-import type { OutsideParams } from './OtherTime.types';
+import type { OutsideParams } from './OtherTime';
 
 // Server instants as chips by the viewer's day; pure formatting, no clock read.
 

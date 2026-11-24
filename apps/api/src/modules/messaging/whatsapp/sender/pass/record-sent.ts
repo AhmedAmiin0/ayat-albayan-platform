@@ -1,4 +1,4 @@
-import { retry } from '@ab/shared';
+import { retry } from '@ab/core';
 import type { Logger } from '@nestjs/common';
 import { RECORD_DELAYS_MS } from '@/modules/messaging/whatsapp/sender/message.job';
 import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';

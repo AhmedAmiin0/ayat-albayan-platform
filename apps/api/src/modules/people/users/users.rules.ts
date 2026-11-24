@@ -1,4 +1,5 @@
-import type { LinkKind, Permission, UserRole } from '@ab/shared';
+import type { LinkKind } from '@ab/shared';
+import type { Permission, UserRole } from '@ab/catalog';
 import { isSystemAdmin, roleView } from '@/modules/people/roles/roles.logic';
 import type { RoleRecord } from '@/modules/people/roles/roles.store';
 import { forbidden } from '@/common/http/errors';

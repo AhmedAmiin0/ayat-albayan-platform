@@ -1,0 +1,106 @@
+import { isChatViewMime, isPdfMime, isPlayableMime, type MessageView } from '@ab/shared';
+import type { ThreadFile } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { errorCode } from '@/features/teaching/schedule';
+import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { threadFileQuery } from '@/features/messaging/inbox/api/api';
+import { mediaKind } from '@/features/messaging/inbox/format';
+import { DownloadButton } from '@/features/messaging/inbox/messages/components/DownloadButton';
+import { MediaPlayer } from '@/features/messaging/inbox/messages/components/MediaPlayer';
+import { PdfCard } from '@/features/messaging/inbox/messages/pdf/PdfCard';
+import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
+import { StickerMedia, stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
+
+/** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
+const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';
+
+/** An image the browser draws inline; HEIC is a named link like a PDF. */
+const inlineImage = (mime: string): boolean => mime.startsWith('image/') && mime !== 'image/heic';
+
+/** `forbidden`: refused to this user (teacher mode, 403), for good; else a file we do not keep yet. */
+function Label({ kind, forbidden = false }: { kind: string; forbidden?: boolean }) {
+  return (
+    <p className="text-xs font-semibold text-ink-2">
+      {kind} <span className="font-normal text-ink-3">· {forbidden ? t.inbox.mediaNotAllowed : t.inbox.mediaNotDownloaded}</span>
+    </p>
+  );
+}
+
+/** `fileName`: a sent file's name (media_name), the PDF link's text. */
+function Loaded({ file, kind, fileName }: { file: ThreadFile; kind: string; fileName: string | null }) {
+  const name = t.inbox.openMedia.replace('{kind}', kind);
+  if (isPlayableMime(file.mime)) return <MediaPlayer file={file} kind={kind} />;
+  if (!inlineImage(file.mime)) {
+    return (
+      <a href={file.url} target="_blank" rel="noopener noreferrer" className={LINK} dir="auto">
+        {fileName ?? name}
+      </a>
+    );
+  }
+  return (
+    <a href={file.url} target="_blank" rel="noopener noreferrer" className="block w-fit">
+      <img src={file.url} alt={name} className="max-h-48 max-w-full rounded-md border border-rule object-contain" />
+    </a>
+  );
+}
+
+/** Asked only after the click: polling the log never signs a URL (W6); a PDF has PdfCard. */
+function FileView({ message: m, kind }: { message: MessageView; kind: string }) {
+  const [asked, setAsked] = useState(false);
+  const file = useQuery({ ...threadFileQuery(m.phone_e164, m.id), enabled: asked });
+  if (!asked) {
+    return (
+      <Button size="sm" variant="ghost" className="-ms-3" onClick={() => setAsked(true)}>
+        {(isPlayableMime(m.media_mime) ? t.inbox.playMedia : t.inbox.viewMedia).replace('{kind}', kind)}
+      </Button>
+    );
+  }
+  // A loaded file stays even when a background refetch fails (the error is only for no file at all).
+  if (file.data) {
+    // A PDF reaches here only when its card had no page 1 (PdfCard): today's named link.
+    return (
+      <div className="grid gap-1">
+        <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />
+        <DownloadButton message={m} name={m.media_name ?? kind} />
+      </div>
+    );
+  }
+  if (file.isPending) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
+  // 403 media_forbidden (a role that may not open files): the label, as in teacher mode.
+  if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} forbidden />;
+  return (
+    <p role="status" className="text-xs font-semibold text-ink-2">
+      {fileErrorText(file.error)}
+    </p>
+  );
+}
+
+/** 410: gone from WhatsApp; 409 crm_no_media: the number runs through the CRM, which holds its files (docs/19). */
+function fileErrorText(error: unknown): string {
+  if (errorCode(error) === 'crm_no_media') return t.inbox.mediaInCrm;
+  return error instanceof ApiError && error.status === 410 ? t.inbox.mediaExpired : t.common.error;
+}
+
+/** Teacher mode gets the label only: the API refuses them the file (403 media_forbidden). */
+export function MessageMedia({ message: m }: { message: MessageView }) {
+  const kind = t.inbox.media[mediaKind(m.media_mime)];
+  const teacher = useInboxMode() === 'teacher';
+  // A sticker or a GIF shows itself at once (owner 2026-11-01).
+  const own = stickerOrGif(m, teacher);
+  if (own) return <StickerMedia message={m} kind={own} />;
+  if (m.media_url) {
+    return (
+      <a href={m.media_url} target="_blank" rel="noopener noreferrer" className={LINK}>
+        {t.inbox.openMedia.replace('{kind}', kind)}
+      </a>
+    );
+  }
+  const view = <FileView message={m} kind={kind} />;
+  // A PDF shows page 1 once on screen, as WhatsApp; it falls back to the view button if it cannot.
+  if (!teacher && isPdfMime(m.media_mime)) return <PdfCard message={m} fallback={view} />;
+  if (!teacher && isChatViewMime(m.media_mime)) return view;
+  return <Label kind={kind} forbidden={teacher} />;
+}

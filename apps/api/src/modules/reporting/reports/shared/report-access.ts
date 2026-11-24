@@ -1,4 +1,4 @@
-import type { UserRole as Role } from '@ab/shared';
+import type { UserRole as Role } from '@ab/catalog';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

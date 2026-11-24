@@ -1,13 +1,6 @@
 import { netPaidIn } from '@ab/money';
-import type {
-  AdminTaskKind,
-  LessonStatus,
-  PackageSize,
-  PendingReportRow,
-  TaskRow,
-  UnpaidRow,
-  WorkList,
-} from '@ab/shared';
+import type { AdminTaskKind, LessonStatus, PackageSize } from '@ab/catalog';
+import type { PendingReportRow, TaskRow, UnpaidRow, WorkList } from '@ab/money';
 import { round2 } from './conversion';
 import { WORK_ITEMS } from '@/modules/reporting/dashboard/dashboard.types';
 

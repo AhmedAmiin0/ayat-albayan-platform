@@ -1,4 +1,5 @@
-import { bookingKindOf, canPickTrialDate, type BookingRequest } from '@ab/shared';
+import { canPickTrialDate, type BookingRequest } from '@ab/shared';
+import { bookingKindOf } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { MovedTrial } from './trial-date.plan';

@@ -2,7 +2,8 @@ import type { TemplateNumberSetView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
-import type { ApprovalRow, NumberRef, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { ApprovalRow, NumberRef } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/23 phase 5, docs/23c: null is the role's default; never blocked, only a warning.

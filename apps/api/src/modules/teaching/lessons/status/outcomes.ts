@@ -1,10 +1,5 @@
-import {
-  isChargeable,
-  LESSON_EVENT_TARGET,
-  type Attendance,
-  type LessonStatus,
-  type StatusRouteEvent,
-} from '@ab/shared';
+import type { Attendance, LessonStatus } from '@ab/catalog';
+import { isChargeable, LESSON_EVENT_TARGET, type StatusRouteEvent } from '@ab/schedule';
 import type { LessonChange } from '@/modules/teaching/scheduling/change-set';
 
 /** Attendance recorded by each outcome event (docs/10 route 7). */

@@ -1,4 +1,12 @@
-import { guestJoinSchema, meetingRoomName, meetingState, meetingWindow, type JoinRole, type PublicMeetingView, type RoomJoinResult } from '@ab/shared';
+import {
+  guestJoinSchema,
+  meetingRoomName,
+  meetingState,
+  meetingWindow,
+  type JoinRole,
+  type PublicMeetingView,
+  type RoomJoinResult,
+} from '@ab/schedule';
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

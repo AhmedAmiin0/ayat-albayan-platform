@@ -1,10 +1,6 @@
-import type {
-  AssistantLessonView,
-  Page,
-  SalesStudentsQuery,
-  SalesStudentView,
-  SalesSubscriptionHistory,
-} from '@ab/shared';
+import type { SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { AssistantLessonView } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { chatPhone } from '@/common/auth/chat-phone';
 import type { AuthUser } from '@/common/auth/verify-token';

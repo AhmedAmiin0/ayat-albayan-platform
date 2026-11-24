@@ -1,5 +1,6 @@
 import type { Tables } from '@ab/db';
-import { OPEN_LESSON_STATUSES, type SalesStudentsQuery } from '@ab/shared';
+import type { SalesStudentsQuery } from '@ab/shared';
+import { OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { INTEGRATION_SECRET_KEYS, NUMBER_SECRET_NAMES } from '@ab/shared';
+import { NUMBER_SECRET_NAMES } from '@ab/shared';
+import { INTEGRATION_SECRET_KEYS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 
 // Migration 20261106000700 (docs/19 «Evolution driver»): expand-only, no row switched.

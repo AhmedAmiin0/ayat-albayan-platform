@@ -4,7 +4,8 @@ import {
   setViewerPersonTz,
   signInError,
 } from '@ab/client-core';
-import { HOME_BY_ROLE, type CodeSession, type PasswordSession } from '@ab/shared';
+import type { CodeSession, PasswordSession } from '@ab/shared';
+import { HOME_BY_ROLE } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { forgetTabMemories } from '@ab/web-kit/lib/session/session-end';

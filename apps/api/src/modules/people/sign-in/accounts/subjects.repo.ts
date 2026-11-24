@@ -2,17 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { conflict } from '@/common/http/errors';
-import {
-  isStaff,
-  type FamilyLogin,
-  type GuardianRec,
-  type LinkKind,
-  type NewProfile,
-  type ProfileRec,
-  type StudentRec,
-  type SubjectStore,
-  type TeacherRec,
+import type {
+  FamilyLogin,
+  GuardianRec,
+  LinkKind,
+  NewProfile,
+  ProfileRec,
+  StudentRec,
+  SubjectStore,
+  TeacherRec,
 } from '@/modules/people/sign-in/sign-in.ports';
+import { isStaff } from '@/modules/people/sign-in/sign-in.roles';
 import { familyByPhone } from './family-subjects.repo';
 import { teacherByPhone } from './teacher-subjects.repo';
 

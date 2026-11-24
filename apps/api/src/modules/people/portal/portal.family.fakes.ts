@@ -1,6 +1,8 @@
 // docs/50 fixtures for the family portal (test-only, excluded from the build by *.fakes.ts): the
 // staff balance the package reduces, the payments and the past lessons of the history.
-import type { Attendance, PortalPayment, StudentBalanceView, SubscriptionView } from '@ab/shared';
+import type { PortalPayment } from '@ab/shared';
+import type { Attendance } from '@ab/catalog';
+import type { StudentBalanceView, SubscriptionView } from '@ab/money';
 import { vi } from 'vitest';
 import type { PortalPastRow } from './history/portal-history.repo';
 

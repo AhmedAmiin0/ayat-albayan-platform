@@ -1,11 +1,11 @@
-import {
-  riyadhToday,
-  type CoursePauseResult,
-  type CoursePauseResume,
-  type CoursePauseStart,
-  type CoursePauseState,
-  type CoursePauseUntil,
+import type {
+  CoursePauseResult,
+  CoursePauseResume,
+  CoursePauseStart,
+  CoursePauseState,
+  CoursePauseUntil,
 } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
 import { assertPauseDates, assertStudent } from './preview/course-pause.guards';

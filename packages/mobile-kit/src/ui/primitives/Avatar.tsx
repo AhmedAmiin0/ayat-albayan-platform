@@ -1,4 +1,5 @@
-import { avatarInitials, avatarTone, avatarTones } from '@ab/shared';
+import { avatarInitials } from '@ab/shared';
+import { avatarTone, avatarTones } from '@ab/catalog';
 import { memo, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';

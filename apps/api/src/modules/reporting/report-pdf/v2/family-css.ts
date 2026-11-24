@@ -1,4 +1,4 @@
-import { palette } from '@ab/shared';
+import { palette } from '@ab/catalog';
 
 // The v2 family report's stylesheet (docs/design/report-form/ParentReport.dc.html): the light
 // tokens, A4 portrait, one calm column, 1em = 14px and nothing below 12px (docs/07 principle 5).

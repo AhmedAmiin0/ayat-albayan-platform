@@ -4,12 +4,21 @@ import type { Decl, Named } from './types.ts';
 export const FACADE = '@ab/shared';
 const WIDTH = 100;
 
-/** `import { a, type B } from 'x';`, wrapped one name per line past the print width. */
+const TYPE = 'type ';
+const isTyped = (e: string): boolean => e.startsWith(TYPE);
+const untyped = (e: string): string => (isTyped(e) ? e.slice(TYPE.length) : e);
+
+/**
+ * `import { a, type B } from 'x';`, wrapped one name per line past the print width. All names
+ * inline types: one `import type { … }`, since an inline-only import is kept at runtime.
+ */
 export function statementText(s: Omit<Named, 'decl' | 'elements'>, elements: string[]): string {
-  const head = `${s.keyword}${s.typeOnly ? ' type' : ''} {`;
-  const one = `${head} ${elements.join(', ')} } from '${s.spec}';`;
+  const typeOnly = s.typeOnly || elements.every(isTyped);
+  const names = typeOnly ? elements.map(untyped) : elements;
+  const head = `${s.keyword}${typeOnly ? ' type' : ''} {`;
+  const one = `${head} ${names.join(', ')} } from '${s.spec}';`;
   if (one.length <= WIDTH) return one;
-  return `${head}\n${elements.map((e) => `  ${e},`).join('\n')}\n} from '${s.spec}';`;
+  return `${head}\n${names.map((e) => `  ${e},`).join('\n')}\n} from '${s.spec}';`;
 }
 
 function importNamed(decl: ImportDeclaration): Named | undefined {

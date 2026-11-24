@@ -1,0 +1,74 @@
+import type { BookingMode } from '@ab/client-core';
+import type { TrialHistory } from '@ab/shared';
+import { useQuery, type UseQueryResult } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { BookingWizard } from '@/features/teaching/booking/BookingWizard';
+import type { BookingDraft, PickedStudent } from '@/features/teaching/booking/draft/draft';
+import type { BookHint } from '@/features/teaching/booking/hint';
+import { BookingModeContext, ChatReturnContext } from '@/features/teaching/booking/mode';
+import { trialHistoryQuery } from '@/features/teaching/booking/trial-date/api';
+import { trialDateDraft, trialHint, type TrialStudentFacts } from '@/features/teaching/booking/trial-date/dialog/draft';
+import { TrialHistoryBody, TrialHistoryTitle } from '@/features/teaching/booking/trial-date/history/TrialHistoryBody';
+
+export interface TrialDateDialogProps {
+  student: PickedStudent;
+  /** admin (the student file) or sales (the family chat): the booking base and the override. */
+  mode: BookingMode;
+  /** The admin's profile: program, teacher preference and zone; sales: none. */
+  facts?: TrialStudentFacts | undefined;
+  onClose: () => void;
+}
+
+const noop = () => undefined;
+type Start = { draft: BookingDraft; hint: BookHint | null };
+
+/** Collapsed so the wizard comes first. */
+function HistoryToggle({ query }: { query: UseQueryResult<TrialHistory> }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <section aria-label={t.trialDate.historyTitle} className="mb-4 grid gap-2 border-b border-rule pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <TrialHistoryTitle history={query.data} />
+        <Button type="button" size="sm" variant="ghost" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+          {open ? t.trialDate.web.hideHistory : t.trialDate.showHistory}
+        </Button>
+      </div>
+      {open && <TrialHistoryBody query={query} />}
+    </section>
+  );
+}
+
+/** For a student without a running subscription; the first draft is held so refetch keeps done. */
+export function TrialDateDialog({ student, mode, facts, onClose }: TrialDateDialogProps) {
+  const history = useQuery(trialHistoryQuery(student.id, mode));
+  const [start, setStart] = useState<Start | null>(null);
+  const data = history.data;
+  if (!start && data?.allowed) setStart({ draft: trialDateDraft({ student, history: data, facts }), hint: trialHint(data) });
+  const blocked = !start && data && !data.allowed;
+  return (
+    <Dialog title={t.trialDate.title.replace('{name}', student.name)} onClose={onClose} wide>
+      <div data-testid="trial-date-dialog">
+        <HistoryToggle query={history} />
+        {blocked && <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">{t.trialDate.notAllowed}</p>}
+        {!start && history.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
+        {!start && history.isError && (
+          <FormAlert>
+            {t.trialDate.loadError}{' '}
+            <Button type="button" size="sm" variant="ghost" onClick={() => void history.refetch()}>{t.trialDate.retry}</Button>
+          </FormAlert>
+        )}
+        {start && (
+          <BookingModeContext.Provider value={mode}>
+            <ChatReturnContext.Provider value={onClose}>
+              <BookingWizard initial={start.draft} primary={null} siblings={[]} onOpenStudent={noop} hint={start.hint} />
+            </ChatReturnContext.Provider>
+          </BookingModeContext.Provider>
+        )}
+      </div>
+    </Dialog>
+  );
+}

@@ -1,4 +1,4 @@
-import { participantMeta } from '@ab/shared';
+import { participantMeta } from '@ab/schedule';
 import { describe, expect, it, vi } from 'vitest';
 import { stopRevokedShare } from './stop-revoked';
 

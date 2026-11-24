@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
 
 // The English copy (en.json, ≈ 265 KB) is NOT in the main bundle: Arabic is the default, so the
 // English texts are their own chunk, fetched only when the chosen language is English

@@ -397,12 +397,7 @@
       "count": 1
     }
   },
-  "src/common/db/list-sort.test.ts": {
-    "typescript/prefer-return-this-type": {
-      "count": 1
-    }
-  },
-  "src/common/db/list-sort.ts": {
+  "src/common/db/list-sort/list-sort.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -411,6 +406,11 @@
     },
     "stylistic/max-len": {
       "count": 2
+    }
+  },
+  "src/common/db/list-sort/tests/list-sort.test.ts": {
+    "typescript/prefer-return-this-type": {
+      "count": 1
     }
   },
   "src/common/db/read-all.test.ts": {
@@ -508,12 +508,7 @@
       "count": 4
     }
   },
-  "src/common/infra/cache/shared-cache.fallback.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/common/infra/cache/shared-cache.ts": {
+  "src/common/infra/cache/shared-cache/shared-cache.ts": {
     "complexity": {
       "count": 2
     },
@@ -521,6 +516,11 @@
       "count": 10
     },
     "typescript/no-unnecessary-type-conversion": {
+      "count": 1
+    }
+  },
+  "src/common/infra/cache/shared-cache/tests/fallback.test.ts": {
+    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -539,7 +539,7 @@
       "count": 1
     }
   },
-  "src/common/push/dispatch/push.audience.ts": {
+  "src/common/push/dispatch/push.audience/push.audience.ts": {
     "stylistic/max-len": {
       "count": 3
     },
@@ -555,7 +555,7 @@
       "count": 2
     }
   },
-  "src/common/push/dispatch/push.lock-screen.ts": {
+  "src/common/push/dispatch/push.lock-screen/push.lock-screen.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -640,7 +640,7 @@
       "count": 1
     }
   },
-  "src/common/push/push.service.ts": {
+  "src/common/push/push.service/push.service.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -920,17 +920,17 @@
       "count": 1
     }
   },
-  "src/common/storage/storage.paths.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/common/storage/storage.paths.ts": {
+  "src/common/storage/storage.paths/storage.paths.ts": {
     "complexity": {
       "count": 1
     },
     "stylistic/max-len": {
       "count": 9
+    }
+  },
+  "src/common/storage/storage.paths/tests/storage.paths.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/common/storage/storage.service.test.ts": {
@@ -1174,7 +1174,7 @@
       "count": 9
     }
   },
-  "src/config/role/background-job.ts": {
+  "src/config/role/background-job/background-job.ts": {
     "stylistic/max-len": {
       "count": 6
     }
@@ -4138,7 +4138,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/numbers/import/numbers.import.test.ts": {
@@ -5463,10 +5463,10 @@
   },
   "src/modules/messaging/whatsapp/messages/wa-components.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/messages/wa-json.test.ts": {
@@ -7637,9 +7637,6 @@
     }
   },
   "src/modules/reporting/dashboard/finance/finance.service.ts": {
-    "typescript/no-import-type-side-effects": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -9121,13 +9118,13 @@
   },
   "src/modules/teaching/booking/core/booking.repo.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 5
+      "count": 1
     },
     "complexity": {
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     },
     "ab/module-boundaries": {
       "count": 1
@@ -11768,9 +11765,6 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.service.ts": {
-    "typescript/no-import-type-side-effects": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     },

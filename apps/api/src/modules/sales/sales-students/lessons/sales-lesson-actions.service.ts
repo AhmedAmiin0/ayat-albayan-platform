@@ -1,12 +1,6 @@
-import {
-  CANCEL_STATUS,
-  type CancelBy,
-  type LessonCorrect,
-  type LessonStatus,
-  type SalesCancel,
-  type SalesLessonMoved,
-  type SalesReschedule,
-} from '@ab/shared';
+import type { SalesCancel, SalesLessonMoved, SalesReschedule } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { CANCEL_STATUS, type CancelBy, type LessonCorrect } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';

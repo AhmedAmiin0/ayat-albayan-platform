@@ -1,5 +1,5 @@
 // Test-only fakes for BookingInvoices (R-PAY-03, R-MSG-06): Storage, InboundMedia and the queries are mocks.
-import { INVOICE_MAX_BYTES } from '@ab/shared';
+import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { HttpException } from '@nestjs/common';
 import { vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';

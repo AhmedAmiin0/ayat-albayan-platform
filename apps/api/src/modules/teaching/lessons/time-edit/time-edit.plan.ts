@@ -1,5 +1,7 @@
-import { MINUTE_MS, localDateOf } from '@ab/shared';
-import type { ConflictKind, LessonStatus, PayoutStatus, TimeEditMode } from '@ab/shared';
+import { localDateOf } from '@ab/schedule';
+import { MINUTE_MS } from '@ab/time';
+import type { LessonStatus, PayoutStatus } from '@ab/catalog';
+import type { ConflictKind, TimeEditMode } from '@ab/schedule';
 import { badRequest } from '@/common/http/errors';
 // Pure time-edit decisions (R-SCH-11, docs/10 §10): effects and payout-month blocking.
 

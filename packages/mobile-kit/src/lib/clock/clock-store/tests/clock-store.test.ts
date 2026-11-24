@@ -1,4 +1,4 @@
-import { CLOCK_STORAGE_KEY } from '@ab/shared';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { clockCycle, setClockPref, useClockCycle, useClockPref } from '../clock-store';

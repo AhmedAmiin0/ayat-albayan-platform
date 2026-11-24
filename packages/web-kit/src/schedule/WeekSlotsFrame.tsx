@@ -1,5 +1,5 @@
-import type { SlotView } from '@ab/shared';
-import { addDays } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
+import { addDays } from '@ab/time';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';

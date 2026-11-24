@@ -1,10 +1,5 @@
-import type {
-  BookingRequest,
-  BookingResult,
-  BookingTeacherOption,
-  Conflict,
-  SlotsResponse,
-} from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import type { BookingResult, BookingTeacherOption, Conflict, SlotsResponse } from '@ab/schedule';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

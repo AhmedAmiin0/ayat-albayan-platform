@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import type { Db } from '@/common/db/db.module';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { PdfAssets } from './pdf-assets';

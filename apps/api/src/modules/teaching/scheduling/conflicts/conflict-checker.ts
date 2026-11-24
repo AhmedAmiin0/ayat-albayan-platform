@@ -1,8 +1,8 @@
-import type { Conflict, Occurrence } from '@ab/shared';
+import type { Conflict, Occurrence } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
 import { BusyRepo } from './busy.repo';
-import { findConflicts } from '@ab/shared';
+import { findConflicts } from '@ab/schedule';
 import { RuleProjectionRepo } from '@/modules/teaching/scheduling/rules/rule-projection.repo';
 
 export type CheckInput = {

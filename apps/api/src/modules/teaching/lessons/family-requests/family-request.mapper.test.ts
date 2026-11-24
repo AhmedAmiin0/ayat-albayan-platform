@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { familyRequests } from './family-request.mapper';
 

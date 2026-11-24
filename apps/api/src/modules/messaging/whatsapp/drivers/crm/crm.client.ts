@@ -1,4 +1,4 @@
-import { WA_ERROR } from '@ab/shared';
+import { WA_ERROR } from '@ab/catalog';
 import { z } from 'zod';
 import { recipientAllowed, type CrmLineEnv } from '@/config/env/env';
 import { crmMediaBody, crmTemplateBody, crmTextBody, type CrmBody } from './crm-body';

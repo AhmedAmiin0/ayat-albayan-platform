@@ -1,5 +1,5 @@
 import { installErrorReporting, type UncaughtSource } from '@ab/client-core';
-import type { ErrorReporter, ReportTransport } from '@ab/shared';
+import type { ErrorReporter, ReportTransport } from '@ab/core';
 import { z } from 'zod';
 
 /** The build's DSN (Sentry or GlitchTip); unset in git and in every build = no reporting at all. */

@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { Injectable } from '@nestjs/common';
 import { readSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';

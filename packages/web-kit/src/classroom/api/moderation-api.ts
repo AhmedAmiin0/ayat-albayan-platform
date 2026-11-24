@@ -1,5 +1,5 @@
 import { lessonRemovePath } from '@ab/client-core';
-import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
+import type { LessonRecordingView, RecordingStatus } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { CLASSROOM_KEY } from './api';

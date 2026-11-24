@@ -1,4 +1,11 @@
-import { canGrantShare, JOIN_ROLES, lessonRoomName, meetingRoomName, shareGrantSchema, type JoinRole } from '@ab/shared';
+import {
+  canGrantShare,
+  JOIN_ROLES,
+  lessonRoomName,
+  meetingRoomName,
+  shareGrantSchema,
+  type JoinRole,
+} from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

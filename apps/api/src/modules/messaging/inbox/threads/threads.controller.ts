@@ -1,6 +1,5 @@
 import {
   PENDING_IDS_MAX,
-  phoneE164,
   sendsAllTemplates,
   threadTemplateSchema,
   threadTextSchema,
@@ -8,6 +7,7 @@ import {
   type ThreadTemplate,
   type ThreadText,
 } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

@@ -1,4 +1,5 @@
-import type { LineCheckView, WaLine, WaProvider } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import type { WaLine, WaProvider } from '@ab/catalog';
 import { duplicatePhone, lineGaps, lineProvider, type Env } from '@/config/env/env';
 
 // A line's driver part of POST /messaging/lines/check: the driver, the NAMES of what it still

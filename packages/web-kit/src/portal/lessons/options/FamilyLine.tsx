@@ -1,5 +1,6 @@
 import { confirmedLine, excusedLine, requestChip } from '@ab/client-core';
-import { firstName, lessonWhenAt, type PortalLesson, type PortalStudent } from '@ab/shared';
+import { lessonWhenAt, type PortalLesson, type PortalStudent } from '@ab/shared';
+import { firstName } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
 

@@ -1,4 +1,4 @@
-import { lessonRoomName, meetingRoomName } from '@ab/shared';
+import { lessonRoomName, meetingRoomName } from '@ab/schedule';
 
 /** What a recording belongs to: a lesson's room or an internal meeting's. */
 export interface RoomTarget {

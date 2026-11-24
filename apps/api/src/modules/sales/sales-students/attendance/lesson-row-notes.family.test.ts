@@ -1,4 +1,5 @@
-import { AUTO_NO_SHOW_REASON, COURSE_PAUSE_REASON } from '@ab/shared';
+import { COURSE_PAUSE_REASON } from '@ab/shared';
+import { AUTO_NO_SHOW_REASON } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { familyReason } from './lesson-row-notes';
 

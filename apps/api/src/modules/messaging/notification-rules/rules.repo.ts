@@ -1,11 +1,9 @@
 import {
-  isWaLine,
   NOTIFICATION_CATALOGUE,
   type LineHealthView,
   type NotificationsOverview,
-  type TemplateStatus,
-  type WaLine,
 } from '@ab/shared';
+import { isWaLine, type TemplateStatus, type WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.store';

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { RULE_LEGACY_MAP, RULE_SETTING_KEYS, SETTING_DEFAULTS, SETTINGS_REGISTRY } from '@ab/shared';
+import { RULE_LEGACY_MAP, RULE_SETTING_KEYS } from '@ab/shared';
+import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 

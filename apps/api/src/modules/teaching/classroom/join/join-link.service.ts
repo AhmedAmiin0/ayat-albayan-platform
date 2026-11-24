@@ -1,4 +1,4 @@
-import type { JoinLinkRequest, JoinLinkResult } from '@ab/shared';
+import type { JoinLinkRequest, JoinLinkResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { notFound } from '@/common/http/errors';

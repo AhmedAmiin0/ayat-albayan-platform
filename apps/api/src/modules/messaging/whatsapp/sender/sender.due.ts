@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { LessonStatus, WaLine } from '@ab/shared';
+import type { LessonStatus, WaLine } from '@ab/catalog';
 import type { Db } from '@/common/db/db.module';
 import { SENDING } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS, type StaleLead } from './send-stale';

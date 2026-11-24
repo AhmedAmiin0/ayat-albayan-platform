@@ -1,4 +1,4 @@
-import { chatOpen, type RoomJoinResult } from '@ab/shared';
+import { chatOpen, type RoomJoinResult } from '@ab/schedule';
 import type { RoomCredentials, RoomTarget } from './room-types';
 
 // The token the press already fetched, handed to the room screen in memory: never a route param, a

@@ -4,7 +4,7 @@ import {
   meetingWindow,
   type JoinWindowConfig,
   type MeetingInviteResult,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
 import { CLASSROOM_WEB_ORIGIN } from '@/modules/teaching/classroom/classroom.config';
 import type { MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';

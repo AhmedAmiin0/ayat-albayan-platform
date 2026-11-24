@@ -1,4 +1,5 @@
-import { guardianCreateSchema, PROGRAMS, STUDENT_STATUSES, studentCreateSchema } from '@ab/shared';
+import { guardianCreateSchema, studentCreateSchema } from '@ab/shared';
+import { PROGRAMS, STUDENT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 
 /**

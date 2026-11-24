@@ -1,4 +1,5 @@
-import { AUTO_HELD_REASON, AUTO_NO_SHOW_REASON, type LessonEvent, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { AUTO_HELD_REASON, AUTO_NO_SHOW_REASON, type LessonEvent } from '@ab/schedule';
 import type { Logger } from '@nestjs/common';
 import { errorCode } from '@/common/http/errors';
 import type { Commit, LessonStore } from '@/modules/teaching/lessons/store/lesson-store';

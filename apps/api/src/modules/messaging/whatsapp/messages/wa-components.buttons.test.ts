@@ -2,7 +2,8 @@ import { TEACHER_LESSON_V3 } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { crmTemplateBody } from '@/modules/messaging/whatsapp/drivers/crm/crm-body';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-import { buttonValues, submitPayload } from './wa-components';
+import { submitPayload } from './submit';
+import { buttonValues } from './wa-components';
 
 // teacher_lesson_v3 (owner 2026-11-06): two URL buttons, each with its own {{1}} suffix.
 

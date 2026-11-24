@@ -1,4 +1,12 @@
-import { canMute, JOIN_ROLES, lessonRoomName, meetingRoomName, muteSchema, type JoinRole, type MuteSource } from '@ab/shared';
+import {
+  canMute,
+  JOIN_ROLES,
+  lessonRoomName,
+  meetingRoomName,
+  muteSchema,
+  type JoinRole,
+  type MuteSource,
+} from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

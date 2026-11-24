@@ -1,13 +1,12 @@
 import {
-  addLocalDays,
   courseDaysPerWeek,
   courseLessonCount,
-  wallParts,
   type BookedCourse,
   type BookingRequest,
   type CourseSubscription,
-  type DayTime,
 } from '@ab/shared';
+import { wallParts, type DayTime } from '@ab/schedule';
+import { addLocalDays } from '@ab/time';
 import { createHash } from 'node:crypto';
 
 // Pure rules of a course draft picked before payment; local dates compare as strings.

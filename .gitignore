@@ -10,6 +10,7 @@ coverage/
 playwright-report/
 test-results/
 e2e/store-shots/
+e2e/ui-screens/
 e2e/.auth/
 packages/db/supabase/.temp/
 packages/db/supabase/.branches/

@@ -1,4 +1,5 @@
-import { phoneE164, threadRatingSchema, type MessageView } from '@ab/shared';
+import { threadRatingSchema, type MessageView } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

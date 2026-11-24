@@ -1,4 +1,5 @@
-import { guardianCreateSchema, guardianUpdateSchema, phoneE164 } from '@ab/shared';
+import { guardianCreateSchema, guardianUpdateSchema } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import {
   Controller,
   Delete,

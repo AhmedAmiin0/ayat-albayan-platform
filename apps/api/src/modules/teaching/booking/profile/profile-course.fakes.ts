@@ -1,5 +1,5 @@
 // HTTP harness of the profile course actions (test-only, excluded from the build by *.fakes.ts).
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';

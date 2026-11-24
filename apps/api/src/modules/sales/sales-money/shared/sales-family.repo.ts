@@ -1,4 +1,4 @@
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { familyOfPhone } from '@/common/db/family-of-phone';

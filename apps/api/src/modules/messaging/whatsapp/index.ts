@@ -92,12 +92,8 @@ export {
 } from './templates/catalog/template.mapper';
 export { TemplateRegistry } from './templates/catalog/template.registry';
 export { sendableTemplates } from './templates/gate/template-gate.repo';
-export {
-  type ApprovalRow,
-  type ApprovalWrite,
-  type NumberRef,
-  TemplatesRepo,
-} from './templates/catalog/templates.repo';
+export { TemplatesRepo } from './templates/catalog/templates.repo';
+export type { ApprovalRow, ApprovalWrite, NumberRef } from './templates/catalog/types';
 export { WhatsappModule } from './whatsapp.module';
 export { ReopenRequest } from './sender/window/reopen-request';
 export { capsOf, windowless } from './drivers/driver-caps';

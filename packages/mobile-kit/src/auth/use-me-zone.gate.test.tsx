@@ -1,6 +1,5 @@
 import { setViewerPersonTz, viewerTz } from '@ab/client-core';
-import { deviceTimeZone as sharedDeviceZone } from '@ab/shared';
-import { deviceTimeZone } from '@ab/time';
+import { deviceTimeZone, deviceTimeZone as sharedDeviceZone } from '@ab/time';
 import { act, renderHook } from '@testing-library/react-native';
 import { setDeviceZone } from '../testing/device-zone';
 import { useMeZone } from './use-me-zone';

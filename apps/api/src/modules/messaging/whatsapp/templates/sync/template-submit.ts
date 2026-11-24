@@ -1,6 +1,5 @@
-import {
-  crmTemplateLanguage, crmTemplateName, type TemplateStatus, type TemplateView,
-} from '@ab/shared';
+import { crmTemplateLanguage, crmTemplateName, type TemplateView } from '@ab/shared';
+import type { TemplateStatus } from '@ab/catalog';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import { lineProvider, loadEnv } from '@/config/env/env';

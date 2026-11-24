@@ -1,4 +1,4 @@
-import { chatDay, type ChatDay, clockOf, type ClockCycle, dateText, dayParts } from '@ab/shared';
+import { chatDay, type ChatDay, clockOf, type ClockCycle, dateText, dayParts } from '@ab/time';
 import { t } from '../../lib/i18n/i18n';
 import { locale } from '../../lib/i18n/locale';
 

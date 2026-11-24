@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import { arabicNameSimilar } from '@ab/shared';
+import { arabicNameSimilar } from '@ab/core';
 
 export type DuplicateCandidate = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;
 

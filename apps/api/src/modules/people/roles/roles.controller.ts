@@ -6,7 +6,7 @@ import {
   type PermissionGroup,
   type RoleView,
   type StaffUserView,
-} from '@ab/shared';
+} from '@ab/catalog';
 import {
   Controller,
   Delete,

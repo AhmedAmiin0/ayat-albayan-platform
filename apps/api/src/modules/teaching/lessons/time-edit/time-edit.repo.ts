@@ -1,4 +1,4 @@
-import type { PayoutStatus } from '@ab/shared';
+import type { PayoutStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';

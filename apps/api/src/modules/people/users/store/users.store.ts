@@ -1,4 +1,5 @@
-import type { LinkCandidate, LinkedRecord, LinkKind, UserRole, UsersListQuery } from '@ab/shared';
+import type { LinkCandidate, LinkedRecord, LinkKind, UsersListQuery } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import type { ProfileRecord } from '@/modules/people/roles/roles.store';
 
 // What the users module needs from the DB and from the Supabase Auth Admin API. UsersQueries and

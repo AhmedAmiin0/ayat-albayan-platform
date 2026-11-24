@@ -1,4 +1,4 @@
-import { systemPermissionsOf } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { replyId, repliesApp, row } from './saved-replies.fakes';

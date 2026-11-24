@@ -1,4 +1,5 @@
-import { SETTING_DEFAULTS, systemPermissionsOf } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { addDays } from '@ab/shared';
+import { addDays } from '@ab/time';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { SchedulingSettings } from '@/modules/teaching/scheduling/scheduling.settings';

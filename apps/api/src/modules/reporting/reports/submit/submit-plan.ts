@@ -1,13 +1,6 @@
-import {
-  applyLessonEvent,
-  ATTENDANCE_EVENT,
-  isChargeable,
-  isOpenLesson,
-  LESSON_EVENT_TARGET,
-  nextVersion,
-  type Attendance,
-  type LessonStatus,
-} from '@ab/shared';
+import { ATTENDANCE_EVENT, nextVersion } from '@ab/shared';
+import type { Attendance, LessonStatus } from '@ab/catalog';
+import { applyLessonEvent, isChargeable, isOpenLesson, LESSON_EVENT_TARGET } from '@ab/schedule';
 import type { Json } from '@ab/db';
 import { outcomeChange } from '@/modules/teaching/lessons/status/outcomes';
 import type { ChangeSet } from '@/modules/teaching/scheduling/change-set';

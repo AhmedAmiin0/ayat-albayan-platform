@@ -1,4 +1,6 @@
-import { GENDERS, instant, lessonDuration, PROGRAMS } from '@ab/shared';
+import { GENDERS, PROGRAMS } from '@ab/catalog';
+import { instant } from '@ab/core';
+import { lessonDuration } from '@ab/schedule';
 import { z } from 'zod';
 
 /** GET /booking/teachers?studentId | program & gender? (docs/10 §5 #12). */

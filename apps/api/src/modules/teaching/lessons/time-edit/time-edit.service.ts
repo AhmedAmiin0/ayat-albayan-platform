@@ -1,4 +1,9 @@
-import { timeEditMode, type Conflict, type LessonTimeEdit, type TimeEditResult } from '@ab/shared';
+import {
+  timeEditMode,
+  type Conflict,
+  type LessonTimeEdit,
+  type TimeEditResult,
+} from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';

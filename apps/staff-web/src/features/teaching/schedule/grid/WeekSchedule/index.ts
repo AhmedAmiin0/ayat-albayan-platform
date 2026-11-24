@@ -1,0 +1,1 @@
+export { WeekSchedule } from './WeekSchedule';

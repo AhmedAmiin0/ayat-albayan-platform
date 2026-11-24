@@ -2,12 +2,12 @@ import {
   REPORT_RUBRICS,
   RUBRIC_COLUMN,
   reportContentSchema,
-  type Grade,
   type ReportPageFile,
   type ReportPageReport,
   type ReportPageView,
   type Rubric,
 } from '@ab/shared';
+import type { Grade } from '@ab/catalog';
 import type { PageFacts, PageReportRow } from './report-page.types';
 
 /** What the storage signed: each attachment's URL by path, and the PDF's (null while not ready). */

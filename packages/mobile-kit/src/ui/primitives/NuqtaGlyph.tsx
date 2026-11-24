@@ -1,4 +1,4 @@
-import type { Glyph } from '@ab/shared';
+import type { Glyph } from '@ab/money';
 import Svg, { Path } from 'react-native-svg';
 
 // The calligrapher's rhombic dot (docs/07 §5–6, docs/design/motif-nuqta-glyphs.svg). Shape carries the

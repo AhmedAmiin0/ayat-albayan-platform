@@ -1,4 +1,4 @@
-import { chatOpen, dropsChat, type RoomJoinResult } from '@ab/shared';
+import { chatOpen, dropsChat, type RoomJoinResult } from '@ab/schedule';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { connectFailureText } from './connect-failure';
 import { mediaErrorText } from './errors';

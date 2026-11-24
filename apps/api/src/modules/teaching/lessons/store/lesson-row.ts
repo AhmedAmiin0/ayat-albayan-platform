@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { Attendance, LessonStatus, PackageSize, ReportStatus } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize, ReportStatus } from '@ab/catalog';
 
 const LESSON_COLUMNS =
   'id, rule_id, teacher_id, starts_at, ends_at, status, meeting_link, cancel_reason, override_reason, confirmed_at, teacher_confirmed_at, rescheduled_from_id, makeup_of_id, conflicts, time_edited_at, time_edit_reason, time_edit_was, room_opened_at, room_ended_at, instant' as const;

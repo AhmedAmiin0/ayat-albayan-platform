@@ -1,6 +1,5 @@
 import type { Tables } from '@ab/db';
 import {
-  clickToChatLink,
   fallbackText,
   isChatViewMime,
   renderTemplateBody,
@@ -10,6 +9,7 @@ import {
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
+import { clickToChatLink } from '@ab/core';
 import { isSentFilePath } from '@/common/storage/storage.paths';
 import { isCrmHistoryRow } from './crm-history/crm-history-url';
 import { mediaExpired } from './inbound-media.service';

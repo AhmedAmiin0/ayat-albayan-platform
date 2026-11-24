@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { LESSON_ID, lessonRow, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';

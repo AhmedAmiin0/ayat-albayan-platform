@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { CorrectTo, LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import type { CorrectTo } from '@ab/schedule';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';

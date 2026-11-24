@@ -1,4 +1,5 @@
-import { PLAYABLE_MIMES, type NumberPurpose } from '@ab/shared';
+import { PLAYABLE_MIMES } from '@ab/shared';
+import type { NumberPurpose } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { MediaRefusal } from './media-refusal/media-refusal.schemas';

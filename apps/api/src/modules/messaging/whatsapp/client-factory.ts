@@ -1,8 +1,9 @@
-import type { WaProvider } from '@ab/shared';
+import type { WaProvider } from '@ab/catalog';
 import { isGraphEnv, type WhatsappEnv } from '@/config/env/env';
 import { CrmWhatsappClient } from './drivers/crm/crm.client';
 import { EvolutionWhatsappClient } from './drivers/evolution/evolution.client';
-import { HttpWhatsappClient, type ClientOpts } from './whatsapp.client';
+import { HttpWhatsappClient } from './whatsapp.client';
+import type { ClientOpts } from './drivers/client-opts.types';
 import type { WhatsappClient } from './whatsapp.types';
 
 type Build = (env: WhatsappEnv, opts: ClientOpts) => WhatsappClient | null;

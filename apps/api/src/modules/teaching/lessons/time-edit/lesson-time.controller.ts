@@ -1,4 +1,4 @@
-import { lessonTimeEditSchema, type TimeEditResult } from '@ab/shared';
+import { lessonTimeEditSchema, type TimeEditResult } from '@ab/schedule';
 import { Controller, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

@@ -1,4 +1,5 @@
-import { LEAD_SOURCES, LEAD_STATUSES, leadColumnQueryShape, leadFollowUpSchema, leadQualificationPatchSchema } from '@ab/shared';
+import { leadColumnQueryShape, leadFollowUpSchema, leadQualificationPatchSchema } from '@ab/shared';
+import { LEAD_SOURCES, LEAD_STATUSES } from '@ab/catalog';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

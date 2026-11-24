@@ -1,14 +1,12 @@
-import {
-  addCalendarDays,
-  localDateIn,
-  wallToUtc,
-  type AssistantLessonView,
-  type AssistantView,
-  type JoinLinkResult,
-  type JoinLinkUrl,
-  type LessonView,
-  type RoomJoinResult,
-} from '@ab/shared';
+import type {
+  AssistantLessonView,
+  AssistantView,
+  JoinLinkResult,
+  JoinLinkUrl,
+  LessonView,
+  RoomJoinResult,
+} from '@ab/schedule';
+import { addCalendarDays, localDateIn, wallToUtc } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';

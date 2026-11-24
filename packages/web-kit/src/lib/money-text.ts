@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 // Money as text on both apps' screens. Wording from ar.json, Western digits (docs/07 §2).

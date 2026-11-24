@@ -5,7 +5,8 @@
   "scripts": {
     "e2e": "playwright test",
     "typecheck": "tsgo --noEmit",
-    "screens": "node scripts/screens.ts"
+    "screens": "node scripts/screens.ts",
+    "test": "node --test support/screens/tests/*.test.ts"
   },
   "devDependencies": {
     "@ab/catalog": "workspace:*",

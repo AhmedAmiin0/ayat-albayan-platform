@@ -1,4 +1,6 @@
-import type { CommsSource, CommsSourceView, ParityView, WaLine } from '@ab/shared';
+import type { CommsSourceView, ParityView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
+import type { CommsSource } from '@ab/settings';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
