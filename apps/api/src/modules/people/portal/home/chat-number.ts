@@ -6,13 +6,7 @@ import { dbError } from '@/common/http/http';
 import { lineNumbers, loadEnv } from '@/config/env/env';
 import { currentRows } from '@/modules/messaging/whatsapp';
 
-/**
- * The academy's CHAT line as E.164 («تواصل معنا للتجديد»), from the configured numbers, never typed in
- * code: in module mode (comms_source) the chat role's default number (wa_numbers.display_phone_e164);
- * under legacy the last good «افحص الخطوط» of the chat line (wa_line_health, kept only while its phone
- * id is still the line's). An academy on one number (no separate chat line) answers on the notifications
- * line, so that number is used then. null when not known yet: the portal then hides the link.
- */
+/** From configured numbers, never typed; a one-number academy uses the notifications line. */
 @Injectable()
 export class ChatNumber {
   constructor(@Inject(DB) private readonly db: Db) {}

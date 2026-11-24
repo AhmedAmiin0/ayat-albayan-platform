@@ -1,5 +1,6 @@
 import type { Decision } from './automerge.types.ts';
 import { widened } from './annotations.ts';
+import { titleProblems } from '../ci-checks/lint/commit-header/pr-title.ts';
 import { notGreen } from './checks.ts';
 import { notEligible } from './eligible.ts';
 import type { Facts } from './facts.schemas.ts';
@@ -16,6 +17,10 @@ const RULES: readonly ((f: Facts) => Decision | null)[] = [
   (f) => {
     const reason = notGreen(f);
     return reason === null ? null : skip(reason);
+  },
+  (f) => {
+    const [problem] = titleProblems(f.pr);
+    return problem === undefined ? null : skip(`title: ${problem}`);
   },
   (f) => (widened(f.annotations) ? skip('layer table widened: the owner merges it') : null),
   (f) => (f.pr.mergeable === 'MERGEABLE' ? null : skip(`mergeable is ${f.pr.mergeable}`)),

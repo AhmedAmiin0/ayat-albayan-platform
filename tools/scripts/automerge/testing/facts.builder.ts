@@ -18,7 +18,7 @@ export const aRun = (name: string, over: Partial<Run> = {}): Run => ({
 
 const aPr = (): Pr => ({
   number: 7,
-  title: 'Cut shared from db',
+  title: 'refactor(shared): cut shared from db',
   body: 'Summary\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)',
   isDraft: false,
   isCrossRepository: false,

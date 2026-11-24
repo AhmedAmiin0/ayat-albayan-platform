@@ -13,20 +13,7 @@ interface SelfInput {
   actorId: string;
 }
 
-/**
- * Guardian ↔ student (owner 2026-11-02), the smallest safe version:
- *  - «الطالب هو ولي الأمر»: students.contact_is_self, one child per family (409 family_has_self).
- *  - «تحويل إلى طالب»: the guardian who is really the learner gets a student row in their own
- *    family (contact_is_self). The guardian row stays: it holds the number, the chats and the
- *    family login, which the adult learner keeps using («حسابي»); no login changes role.
- *  - «تحويل إلى ولي أمر»: a student row that is really the parent. Only while it has no history at
- * all (409 student_has_records { tables }) and no login of its own (409 student_has_login: the
- * users module refuses a role change on a linked login, role_change_linked). A full audit copy is
- * written first (with the student's own number, which goes with the row), the history checked
- * again, then the empty row is removed and the family takes its name; the other children, the
- * family's numbers and the money stay as they are. Not one transaction (no
- * migration): the window between the last check and the delete is one round trip.
- */
+/** Not one transaction: the window between the last check and the delete is one round trip. */
 @Injectable()
 export class RoleSwitchService {
   constructor(
