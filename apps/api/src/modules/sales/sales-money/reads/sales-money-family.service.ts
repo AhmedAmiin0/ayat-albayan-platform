@@ -7,7 +7,7 @@ import { SalesMoneyReads } from './sales-money.reads';
 /** Her students of this chat's family, as SalesMoneyReads lists them. */
 @Injectable()
 export class SalesMoneyFamily {
-  // Explicit tokens keep these imports values: Oxlint's consistent-type-imports (docs/31b).
+  // Explicit tokens keep these classes value imports, so Nest DI can still resolve them.
   constructor(
     @Inject(SalesMoneyScope) private readonly scope: SalesMoneyScope,
     @Inject(SalesMoneyReads) private readonly reads: SalesMoneyReads,
