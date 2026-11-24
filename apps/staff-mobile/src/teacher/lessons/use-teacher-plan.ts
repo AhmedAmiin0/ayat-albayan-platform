@@ -34,11 +34,7 @@ interface PlanOptions {
   onReport: (lessonId: string) => void;
 }
 
-/**
- * One lesson's plan for the teacher (docs/48): the client-core model on the clock (useNow), the
- * academy's join window and her way in (owner Q3: her own link on a non-platform lesson), plus
- * «سأحضر» / «إلغاء الحلقة» from useTeacherActs. The row, the hero and «جدولي» all read it.
- */
+/** Her own link on a non-platform lesson is her way in; row, hero and schedule share it. */
 export function useTeacherPlan(lesson: LessonView, o: PlanOptions): TeacherPlan {
   const now = useNow();
   const win = useJoinWindow();

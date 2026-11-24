@@ -24,14 +24,13 @@ import { LogPane } from '@/teacher/student-file/LogPane';
 import { PendingBlock } from '@/teacher/student-file/PendingBlock';
 import { ReportsPane } from '@/teacher/student-file/ReportsPane';
 
-/** The file's two panes (docs/47): «الحلقات» first, then «التقارير». */
+/** Lessons pane first, then reports (docs/47). */
 type Pane = 'lessons' | 'reports';
 const panes = (): FilterPill<Pane>[] => [
   { value: 'lessons', label: t.teacherBoard.lessonsTab },
   { value: 'reports', label: t.teacherBoard.reportsTab },
 ];
 
-/** «AB-0182 · مشترك»: the code, then the student's status. */
 const subtitleOf = (head: TeacherStudentHead): string =>
   `${ltr(head.code)} · ${t.enums.studentStatus[head.status]}`;
 
@@ -43,13 +42,12 @@ interface WaitingProps {
   retry: () => void;
 }
 
-/** Before the head arrives: loading, «غير مسموح» for a student not hers, else a retry. */
+/** A student not hers answers not allowed. */
 function Waiting({ error, retry }: WaitingProps) {
   if (notHers(error)) return <EmptyState title={t.common.forbidden} />;
   return error ? <ErrorState onRetry={retry} /> : <Note>{t.common.loading}</Note>;
 }
 
-/** Name, then «AB-0182 · مشترك»; the file's title until the head arrives. */
 function FileHeader({ head }: { head: TeacherStudentHead | undefined }) {
   return (
     <ScreenHeader
@@ -88,12 +86,7 @@ function FileBody({ head, tz, teacherId }: FileBodyProps) {
   );
 }
 
-/**
- * The teacher's student file (docs/47 PR 1, /teacher/reports/student/:id): name, code and status,
- * the trial note, the course (start, end, lessons used), this student's pending reports, then the
- * pills: «الحلقات» (next 14 days, then the month log with outcomes, reasons and report actions)
- * and «التقارير» (recordings, then every sent report). Dates in her zone (teachers.tz).
- */
+/** Teacher's student file (docs/47); dates in her zone (teachers.tz). */
 export function TeacherStudentFileScreen() {
   const id = useLocalSearchParams<{ id?: string }>().id ?? '';
   const head = useTeacherStudentHead(id);

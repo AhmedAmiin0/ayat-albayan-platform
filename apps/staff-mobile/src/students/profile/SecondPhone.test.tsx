@@ -5,7 +5,6 @@ import { ApiError, t, pathKey, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { GuardianCard } from './GuardianCard';
 
-// The family's numbers on the admin student file (owner 2026-10-29, «ربط بطالب موجود»).
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

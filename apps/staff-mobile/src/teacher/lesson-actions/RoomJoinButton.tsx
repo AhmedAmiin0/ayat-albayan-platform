@@ -8,11 +8,7 @@ interface RoomJoinButtonProps {
   variant: ButtonVariant;
 }
 
-/**
- * «ادخل الحلقة» into our classroom in the variant the plan gives it: filled as the live lead,
- * outlined as a peer after the end (docs/48: the report leads then). The press is
- * useJoinClassroom's (the API first, then the room), with its busy line and refusal.
- */
+/** Filled as the live lead, outlined after the end when the report leads (docs/48). */
 export function RoomJoinButton({ lesson, variant }: RoomJoinButtonProps) {
   const join = useJoinClassroom(lesson);
   return (

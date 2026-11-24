@@ -9,12 +9,7 @@ import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { SecondPhone } from './SecondPhone';
 import type { StudentProfile } from '@ab/shared';
 
-/**
- * ولي الأمر: name, LTR phone, then ONE ButtonRow (docs/07 §6 «الأزرار»): «اتصال» (tel:, outlined) |
- * «واتساب» (wa.me, the academy's channel: the screen's one filled button). Both on the main number; a family
- * with a second number (owner 2026-10-29) labels the two, the second under the buttons (SecondPhone).
- * The name opens the family's chat in the app (owner 2026-11-02, «العائلة» from the profile).
- */
+/** One ButtonRow (docs/07 §6); WhatsApp is the screen's one filled button. */
 export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'] }) {
   const { color } = useTheme();
   const phone = guardian.phone_e164;
@@ -30,7 +25,7 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
       }}
     >
       <SectionLabel>{t.students.guardian}</SectionLabel>
-      {/* Opened above a chat, the chat is one «رجوع» away: a link would stack it twice. */}
+      {/* Opened above a chat, the chat is one back away; a link would stack it twice. */}
       <GuardianName name={guardian.name} phone={useInChat() ? null : phone} />
       {secondPhoneOf(guardian.phones) ? <SectionLabel>{t.guardians.mainPhone}</SectionLabel> : null}
       <Ltr
@@ -52,7 +47,6 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
   );
 }
 
-/** The guardian's name, a link to the family's chat in the app (owner 2026-11-02, «العائلة»). */
 function GuardianName({ name, phone }: { name: string; phone: string | null }) {
   const { color } = useTheme();
   const base = useTreeBase();

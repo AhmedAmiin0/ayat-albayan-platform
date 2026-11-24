@@ -4,7 +4,6 @@ import { renderWithQuery } from '@/test/query';
 import { balance, CHILD, profile, quote, saved } from '@/subscribe/fixtures';
 import { SubscribeScreen } from '@/subscribe/SubscribeScreen/SubscribeScreen';
 
-// «مبلغ مخصص» on the package price (owner 2026-11-02), the admin's «اشتراك جديد» / «جدّد الاشتراك».
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

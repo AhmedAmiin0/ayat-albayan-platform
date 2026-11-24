@@ -1,6 +1,6 @@
 import type { CoursePauseResult, CoursePauseState, CoursePauseView } from '@ab/shared';
 
-// «إيقاف مؤقت» as the API answers it (tests only). «Today» in these tests is Wednesday 28 October 2026 (Riyadh).
+// Tests only; today is Wednesday 28 October 2026 in Riyadh.
 
 export const TODAY = '2026-10-28';
 export const NOW = new Date('2026-10-28T09:00:00.000Z');

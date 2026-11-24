@@ -6,11 +6,7 @@ import { daysText } from '@/sales-course';
 import { cardLines } from './card-text';
 import { PackageHead } from './PackageHead';
 
-/**
- * The card's lines (owner 2026-11-17): «بقيت N حلقات» with the package line (PackageHead), the
- * days and times, «المعلم/ة · آخر حلقة في …», «بقيت حلقتان بلا مواعيد» in the act ink (it asks
- * for «مدّ الجدول»); before a course is booked the card says so.
- */
+/** Before a course is booked the card says so. */
 export function CourseSummary({ card }: { card: CourseCardView }) {
   const { color } = useTheme();
   const viewer = useViewerClock();

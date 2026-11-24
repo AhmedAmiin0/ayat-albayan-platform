@@ -18,10 +18,6 @@ interface TodayAlertsProps {
 const CUSTOMIZE_HREF = '/teacher/today/customize';
 const titleStyle = { fontFamily: type.ui[700], fontSize: 15, lineHeight: 24 } as const;
 
-/**
- * «تنبيهات اليوم» on her «اليوم» (owner 2026-11-14): her actionable items for today, one row and
- * one action each, and «تخصيص» to pick what shows. «لا تنبيهات اليوم» when none.
- */
 export function TodayAlerts({ lessons, now, tz, onOpen, onReport }: TodayAlertsProps) {
   const { color } = useTheme();
   const rows = useTodayAlerts({ lessons, now, tz });

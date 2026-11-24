@@ -41,7 +41,6 @@ test('the Google Form’s questions: identity read-only, الحضور, the done 
   expect(screen.getByText(ltr('AB-0182'))).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.enums.program.quran, checked: true })).toBeTruthy();
   for (const a of Object.values(t.enums.attendance)) expect(screen.getByRole('radio', { name: a })).toBeTruthy();
-  // Every grade row offers the form's five grades: six rubrics and التقدير العام.
   expect(screen.getAllByRole('radio', { name: t.enums.grade.needs_review })).toHaveLength(7);
   expect(screen.getByText(`${t.reports.overall} *`)).toBeTruthy();
   // Required in the form when attended: «*»; theory and next plan are not.

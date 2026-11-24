@@ -4,7 +4,7 @@ import { INITIAL_FORM } from './subscribe-form';
 test('after a booking: its package size and lesson length prefill the plan', () => {
   expect(formFrom({ pkg: '12', minutes: '60' })).toMatchObject({ plan: 'standard', duration: '60' });
   expect(formFrom({ pkg: '28', minutes: '30' })).toMatchObject({ plan: 'bulk', duration: '30' });
-  // 4 × 90 is «باقة الحلقة الأسبوعية»: its length is fixed, the pill keeps the default.
+  // The weekly package has a fixed length, so the pill keeps the default.
   expect(formFrom({ pkg: '4', minutes: '90' })).toMatchObject({ plan: 'weekly', duration: '45' });
   expect(formFrom({})).toEqual(INITIAL_FORM);
 });

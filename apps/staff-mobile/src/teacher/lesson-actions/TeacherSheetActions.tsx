@@ -19,11 +19,7 @@ const JOIN_TOP: Record<JoinPhase, (lesson: LessonView) => ReactNode> = {
   off: () => null,
 };
 
-/**
- * The teacher sheet's actions (docs/48): the classroom only when it is her way in (owner Q3: never
- * on a non-platform lesson with its own link, whose family never gets the classroom), by joinPhase;
- * then «سأحضر» / «إلغاء الحلقة», and a waiting join under them. The report is DetailsStudents'.
- */
+/** The classroom only when it is her way in, never on a non-platform lesson with its own link. */
 export function TeacherSheetActions({ lesson, onDone }: TeacherSheetActionsProps) {
   const now = useNow();
   const win = useJoinWindow();

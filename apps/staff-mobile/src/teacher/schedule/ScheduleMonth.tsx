@@ -13,13 +13,10 @@ import { useScheduleMonth } from './use-schedule-month';
 
 type Month = ReturnType<typeof useScheduleMonth>;
 
-/** A teacher has no «غيّر الميعاد» (the API never offers her `reschedule`), so it is idle. */
+/** The API never offers a teacher `reschedule`, so this is a no-op. */
 const noMove = () => undefined;
 
-/**
- * «جدولي» month (owner 2026-11-14): her lessons on a Saturday-first month in her own days, a count
- * dot per day; a tap on a day lists its lessons under the grid, a lesson opens «تفاصيل الحلقة».
- */
+/** Saturday-first month in her own days; a day tap lists its lessons under the grid. */
 export function ScheduleMonth({ head }: { head: (subtitle: string) => ReactNode }) {
   const cycle = useClockCycle();
   const m = useScheduleMonth();

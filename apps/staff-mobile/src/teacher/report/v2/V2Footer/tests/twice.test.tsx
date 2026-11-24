@@ -5,8 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { formResponseV2, reportView } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from '@/teacher/report/v2/ReportEntryCardV2';
 
-// Owner 2026-11-06: one send per tap, «تم استلام التقرير» and a read-only report, an edit
-// only through «تعديل التقرير» (the same report and its version).
+// One send per tap, then read-only; an edit only through the edit action and its version.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

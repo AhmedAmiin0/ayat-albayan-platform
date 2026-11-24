@@ -2,9 +2,7 @@ import { DEFAULT_HOME_PREFS, HOME_PREFS_KEY, type HomePrefs, parseHomePrefs } fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSyncExternalStore } from 'react';
 
-// «تخصيص» of the teacher's «اليوم» (owner 2026-11-14), saved on this device under the same
-// AsyncStorage as the language and the clock (a server copy is a later option). Unreadable
-// storage keeps the defaults: everything on, comfortable rows.
+// Saved on this device only; unreadable storage keeps the defaults.
 
 let prefs: HomePrefs = DEFAULT_HOME_PREFS;
 let restored = false;
