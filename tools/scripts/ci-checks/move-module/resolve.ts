@@ -1,6 +1,6 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, statSync } from 'node:fs';
 import { posix } from 'node:path';
-import { ts } from 'ts-morph';
+import { ownPaths, workspacePaths } from './tsconfig-paths.ts';
 
 /** A tsconfig `paths` alias such as `@/*` → `apps/staff-web/src/*`, for files under `scope`. */
 export interface Alias {
@@ -32,24 +32,30 @@ const JS_TO_TS: Record<string, string[]> = {
   '.cjs': ['.cts'],
 };
 
-function aliasesOf(root: string, scope: string): Alias[] {
-  const file = posix.join(root, scope, 'tsconfig.json');
-  if (!existsSync(file)) return [];
-  const { config } = ts.parseConfigFileTextToJson(file, readFileSync(file, 'utf8'));
-  const opts = (config?.compilerOptions ?? {}) as { baseUrl?: string; paths?: Record<string, string[]> };
-  return Object.entries(opts.paths ?? {}).flatMap(([key, targets]) => {
-    const target = targets[0];
-    if (!key.endsWith('/*') || target === undefined || !target.endsWith('/*')) return [];
-    const dir = posix.join(scope, opts.baseUrl ?? '.', target.slice(0, -2));
-    return [{ prefix: key.slice(0, -1), dir, scope }];
+/**
+ * An app takes the `@/*` its tsconfig inherits from the root base; a package or tool only its
+ * own paths, since packages never import `@/` (CLAUDE.md rule 13).
+ */
+const PATHS_OF: Record<string, typeof workspacePaths> = {
+  apps: workspacePaths,
+  packages: ownPaths,
+  tools: ownPaths,
+};
+
+function aliasesOf(root: string, group: string, scope: string): Alias[] {
+  const paths = (PATHS_OF[group] ?? ownPaths)(root, scope);
+  return paths.flatMap(({ key, target }) => {
+    if (!key.endsWith('/*') || !target.endsWith('/*')) return [];
+    return [{ prefix: key.slice(0, -1), dir: target.slice(0, -2), scope }];
   });
 }
 
 /** The `paths` aliases of every app and package tsconfig. */
 export function loadAliases(root: string): Alias[] {
-  return ['apps', 'packages', 'tools'].flatMap((group) => {
+  return Object.keys(PATHS_OF).flatMap((group) => {
     if (!existsSync(posix.join(root, group))) return [];
-    return readdirSync(posix.join(root, group)).flatMap((n) => aliasesOf(root, posix.join(group, n)));
+    const scopes = readdirSync(posix.join(root, group)).map((n) => posix.join(group, n));
+    return scopes.flatMap((scope) => aliasesOf(root, group, scope));
   });
 }
 
