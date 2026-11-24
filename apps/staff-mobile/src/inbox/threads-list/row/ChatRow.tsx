@@ -11,7 +11,6 @@ interface ChatRowProps {
   titleLtr: boolean;
   /** At the far end of line 1: the last message's time. */
   time: ReactNode;
-  /** Line 2: ticks or «مسوّدة:» then the preview, one line. */
   preview: ReactNode;
   /** At the far end of line 2: the unread count or the failed chip. */
   badge: ReactNode;
@@ -64,13 +63,7 @@ function RowTitle({ title, ltr }: { title: string; ltr: boolean }) {
   );
 }
 
-/**
- * One chat in «المحادثات» as WhatsApp's chat list (owner 2026-11-06: «remove the tags»):
- * two lines, the name and time, then the preview and badge; the family's state is the ring.
- * The name is a Text of its own (its own bidi paragraph: a long Arabic name ellipsizes at its
- * own end and never mixes with the phone); the ends follow the reading direction, so the row
- * mirrors with the phone.
- */
+/** The name is its own bidi paragraph so a long Arabic name never mixes with the phone. */
 export function ChatRow(p: ChatRowProps) {
   return (
     <Pressable

@@ -14,11 +14,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 const back = () => backWithin('/more');
 
-/**
- * «لوحة المتابعة» (R-RPT-01, R-RPT-02): the web's KPI strip for the current Riyadh week, then the
- * queue behind it. A tile with work behind it picks the list below. No charts (the web has them).
- * Offline the saved numbers stay with their «آخر تحديث».
- */
+/** R-RPT-01, R-RPT-02: the current Riyadh week; no charts; offline keeps saved numbers. */
 export function DashboardScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();

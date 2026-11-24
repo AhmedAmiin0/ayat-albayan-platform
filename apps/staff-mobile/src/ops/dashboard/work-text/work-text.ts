@@ -5,7 +5,7 @@ import { whenIn } from '@/core/lib/clock';
 import { t, isolate } from '@ab/mobile-kit';
 import type { PendingReportRow, TaskRow, UnpaidRow } from '@ab/money';
 
-/** «باقة سهيلة قاربت على الانتهاء: …» (dashboard.task.<kind>, same wording as the web). */
+/** Same wording as the web. */
 export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): string {
   const left = task.balance
     ? packageProgress(task.balance.used, task.balance.total, { forms: t.subscriptions.progress })
@@ -16,14 +16,13 @@ export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): s
     .replace('{left}', left);
 }
 
-/** «4 حلقات في الشهر», or the counted lessons of a custom package. */
 export function packageText(row: Pick<UnpaidRow, 'package' | 'lessons_total'>): string {
   return row.package
     ? t.enums.packageSize[row.package]
     : counted(t.pricing.customSessions, row.lessons_total);
 }
 
-/** «مع المعلمة · الخميس 1 أكتوبر 16:00», on the viewer's clock (docs/34). */
+/** On the viewer's clock (docs/34). */
 export function pendingSubtitle(
   row: Pick<PendingReportRow, 'teacher' | 'starts_at'>,
   cycle: ClockCycle,
@@ -35,10 +34,9 @@ export function pendingSubtitle(
 
 const currencies: Readonly<Record<string, string>> = t.pricing.currencies;
 
-/** «ر.س» for the site currencies, else the ISO code. */
+/** Falls back to the ISO code. */
 export const currencyLabel = (code: string): string => currencies[code] ?? code;
 
-/** «المتبقي عليها: 1,200 ر.س» or «دُفعت كاملة…», after the package. */
 export function unpaidSubtitle(row: UnpaidRow): string {
   const reason =
     row.reason === 'owes'

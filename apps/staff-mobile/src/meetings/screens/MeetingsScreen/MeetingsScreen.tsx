@@ -14,12 +14,7 @@ import { CreateMeeting, type MeetingAllow } from '@/meetings/create/CreateMeetin
 import { MeetingRow } from '@/meetings/manage/MeetingRow';
 import { useViewerTz } from '@/core/lib/clock';
 
-/**
- * «الاجتماعات الداخلية» (admin, teacher, assistant, sales): create now or scheduled with invitees,
- * then the newest (all for an admin, else mine and the ones I am invited to) with enter, share link,
- * reschedule, cancel, end and recordings. Times read in the viewer's zone; the room opens in the browser.
- * `allow` (default both): which start buttons show; only the teacher's route passes its switches.
- */
+/** Admins see all, others own and invited; times in the viewer's zone; `allow` gates starts. */
 export function MeetingsScreen({ allow }: { allow?: MeetingAllow }) {
   const meetings = useMeetings();
   const tz = useViewerTz();

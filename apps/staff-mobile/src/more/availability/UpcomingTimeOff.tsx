@@ -6,7 +6,7 @@ import { upcomingTimeOff } from '@/more/schedule';
 import { TimeOffRow } from './TimeOffRow';
 import type { TimeOff } from '@ab/shared';
 
-/** «الإجازات», read-only: only time-off that has not ended, soonest first, in one inset card. R-TCH-02. */
+/** R-TCH-02: read-only, only time off that has not ended, soonest first. */
 export function UpcomingTimeOff({ teacherId }: { teacherId: string }) {
   const path = `/teachers/${teacherId}/time-off`;
   const query = useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<TimeOff[]>(path) });
