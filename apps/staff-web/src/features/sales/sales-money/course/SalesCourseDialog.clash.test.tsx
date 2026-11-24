@@ -25,7 +25,7 @@ async function pickBothDays(): Promise<void> {
   pickWednesday();
 }
 
-/** She never books over a clash: no reason field, no «احجز رغم التعارض». */
+/** She never books over a clash: no reason field and no override button. */
 function expectNoOverride(): void {
   expect(screen.queryByRole('button', { name: t.booking.override })).toBeNull();
   expect(screen.queryByLabelText(new RegExp(t.booking.overrideReason))).toBeNull();

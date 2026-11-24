@@ -14,7 +14,7 @@ export interface LeadChipsOptions {
   onFilter: (patch: Record<string, unknown>) => void;
 }
 
-/** What the assignee chip says: «بدون مسؤول», the salesperson's name (the id is never shown). */
+/** The salesperson's id is never shown. */
 function assigneeText(assignee: string | undefined, people: LeadChipsOptions['people']): string | undefined {
   if (!assignee) return undefined;
   if (assignee === NO_ASSIGNEE) return t.sales.assign.none;
@@ -49,5 +49,5 @@ export function leadFilterChips({ search, people, onFilter }: LeadChipsOptions):
   ];
 }
 
-/** «مسح الكل»: the source, assignee and order (the search box keeps its text, like the tables). */
+/** The search box keeps its text, like the tables. */
 export const CLEAR_LEAD_FILTERS = { source: undefined, assignee: undefined, sort: undefined, dir: undefined };

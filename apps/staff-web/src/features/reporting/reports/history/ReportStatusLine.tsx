@@ -8,7 +8,7 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { WindowLines } from '@/features/reporting/reports/send/WindowLines';
 import { useWindowClose } from '@/features/reporting/reports/send/use-window-close';
 
-/** «بيتحفظ…» / «المسودة اتحفظت 17:42» / a failed save, while the report is a draft (R-REP-02). */
+/** Draft save status (R-REP-02). */
 export function SaveStatus({ state, tz }: { state: SaveState; tz: string }) {
   const clock = useClock();
   if (state.kind === 'idle') return null;
@@ -28,11 +28,7 @@ export function SaveStatus({ state, tz }: { state: SaveState; tz: string }) {
 /** The PDF chip once it says something (ready, or failed): not while it waits for the close. */
 const PDF_SHOWN: ReadonlySet<string> = new Set(['ready', 'failed']);
 
-/**
- * After a submit: «سُلِّم التقرير», the version, the PDF once ready, and the window lines
- * (WindowLines: how long the teacher may still edit, and when it goes to the family); at the
- * close the form and the lists are fetched again (useWindowClose).
- */
+/** At the edit window's close the form and the lists are fetched again (useWindowClose). */
 export function SubmittedNote({ report, tz }: { report: ReportView; tz: string }) {
   useWindowClose(report);
   if (report.status !== 'submitted') return null;

@@ -29,11 +29,11 @@ type Props = {
   phone?: string | undefined;
   /** The student already picked (a renewal); else the only one, or none. */
   picked?: string | undefined;
-  /** «جدّد الاشتراك»: only her students due for a renewal, the calculator prefilled from the picked one's. */
+  /** Only her students due for a renewal, the calculator prefilled from the picked one's. */
   renew?: boolean | undefined;
   onClose: () => void;
   onSaved: (sub: SalesMoneySubscriptionView) => void;
-  /** «دفع إلكتروني»: the link made (its unpaid package with it), to send in the chat. */
+  /** The link made, with its unpaid package, to send in the chat. */
   onLinked: (link: PaymentLinkView) => void;
 };
 
@@ -43,16 +43,7 @@ const METHODS: { value: Method; label: string }[] = [
   { value: 'online', label: t.salesMoney.payOnline },
 ];
 
-/**
- * Step 1 «اشتراك جديد» (R-ASST-01): one of her students, the calculator's inputs, the API's quote and the
- * first day (only with subscriptions.set_start_date, else the API's default) → POST /sales/subscriptions.
- * One clientRequestId per body: a retry gets the first package back. A renewal (owner 2026-10-26) opens on
- * the student's last package (GET /sales/money/family `renewal`, the admin's renewalPricing); she may change
- * anything; the first day is the same default as any package (today, Riyadh), like the admin's renewal.
- * «المعلم/ة» (owner 2026-10-29): the student's teacher (the trial's) unless she picks another; sent as teacherId.
- * «طريقة الدفع» (owner 2026-10-29) only where both exist (a Stripe build with the API's switch on, her own
- * child): «تحويل بنكي» saves the package as above, «دفع إلكتروني» makes a payment link from the same fields.
- */
+/** One clientRequestId per body so a retry gets the first package back (R-ASST-01). */
 export function SalesSubscribeStep({ students, phone = '', picked, renew = false, onClose, onSaved, onLinked }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
@@ -84,7 +75,7 @@ export function SalesSubscribeStep({ students, phone = '', picked, renew = false
   const pay = useLinkPay({ studentId: online ? studentId : '', pricing, onCreated: linked });
   const bind = chatBinding(students, { studentId, phone });
   const price = useSalesCustomPrice({ studentId: online ? '' : studentId, pricing, bind });
-  // A smaller package clamps «حلقات مستخدمة من الباقة» to every lesson but one.
+  // A smaller package clamps the used lessons to every lesson but one.
   const lessonsTotal = pricingLessons(pricing);
   const usedMax = usedBeforeMax(lessonsTotal);
   const startShown = { ...start, usedBefore: Math.min(start.usedBefore, usedMax) };

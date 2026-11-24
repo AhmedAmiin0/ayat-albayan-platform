@@ -17,10 +17,7 @@ type Props = {
   bind?: Bind | undefined;
 };
 
-/**
- * «اختر صورة الإيصال من المحادثة»: the family's images / PDFs (newest first, as the API sends them);
- * an expired one is disabled. Picking copies it into the package's receipts (receipt-from-chat).
- */
+/** Newest first as the API sends them; expired files disabled; a pick copies into the receipts. */
 export function ChatReceiptGrid({ sub, picked, onPicked, bind = {} }: Props) {
   const list = useQuery(chatReceiptsQuery(sub.student.id, bind));
   const copy = useMutation({

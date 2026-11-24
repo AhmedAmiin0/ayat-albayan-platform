@@ -10,11 +10,7 @@ export interface SalesCorrectLessonProps {
   autoHeld: boolean;
 }
 
-/**
- * «لم تنعقد الحلقة؟» in sales' lesson drawer (owner 2026-11-02): «ألغاها المعلم/ة» | «اعتذر
- * الطالب», then an optional reason and «تأكيد الإلغاء» → POST /sales/lessons/:id/cancel
- * { by, reason? }.
- */
+/** POST /sales/lessons/:id/cancel with { by, reason? }. */
 export function SalesCorrectLesson({ lessonId, autoHeld }: SalesCorrectLessonProps) {
   const [by, setBy] = useState<CorrectBy | null>(null);
   const cancel = useSalesCancelLesson(lessonId);

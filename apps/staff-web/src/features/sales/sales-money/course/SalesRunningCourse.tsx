@@ -8,7 +8,6 @@ import { SalesCourseActions } from './SalesCourseActions';
 
 export interface SalesRunningCourseProps {
   view: SalesCourseView;
-  /** The course «تغيير أيام الحلقات» changes (view.current). */
   current: BookedCourse;
   /** What the dialog shows besides the change (the renewal's choice, the wizard, a refusal); absent = only the change. */
   children?: ReactNode;
@@ -16,17 +15,11 @@ export interface SalesRunningCourseProps {
 
 type Stage = 'ask' | 'change' | 'done';
 
-/**
- * «أيام الحلقات» of a student with a course to change (view.current, owner 2026-10-18): a running one
- * (course_exists), or one booked ahead while a renewal waits. «تغيير أيام الحلقات» opens the change
- * form here, in the same dialog (her own student, never over a clash), then «تغيّرت أيام الحلقات»;
- * the rest of the dialog (children) stays below the entry until then.
- */
+/** A running course, or one booked ahead while a renewal waits; the change opens in this dialog. */
 export function SalesRunningCourse({ view, current, children }: SalesRunningCourseProps) {
   const [stage, setStage] = useState<Stage>('ask');
   const { id, name, code, tz } = view.student;
-  // A course booked ahead (a renewal) has not started yet: say so instead of «جارية». A course with a
-  // pending change still runs its old days (running, from the server), whatever its latest startsOn.
+  // A course booked ahead has not started; one with a pending change still runs its old days.
   const ahead = !current.running;
   if (stage === 'done') {
     return (

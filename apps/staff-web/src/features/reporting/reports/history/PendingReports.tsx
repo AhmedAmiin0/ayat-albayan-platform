@@ -22,11 +22,7 @@ export interface PendingReportsProps {
 /** Three rows show; the rest unfold in a native <details> (docs/48: no long pages). */
 const SHOWN = 3;
 
-/**
- * «تقارير لم تُكتب بعد» on /teacher (R11, R-TCH-03, docs/48): started lessons still missing a sent
- * report, oldest first, each opening the report. Nothing while loading and nothing when every
- * report is written; an error with «حاول مرة أخرى» only when nothing is cached.
- */
+/** Pending reports (R11, R-TCH-03, docs/48); the error shows only when nothing is cached. */
 export function PendingReports({ tz, studentId, except }: PendingReportsProps) {
   const pending = useQuery(pendingReportsQuery);
   const kept = (r: PendingReportView) =>

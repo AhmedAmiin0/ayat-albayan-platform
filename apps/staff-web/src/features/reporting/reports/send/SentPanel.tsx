@@ -9,16 +9,12 @@ export interface SentPanelProps {
   mode: ReportFormMode;
   onEdit: () => void;
   tz: string;
-  /** A send still settling: no «تعديل التقرير» until the sent version is in. */
+  /** A send still settling: no edit until the sent version is in. */
   busy: boolean;
 }
 
 const SHOWN: ReadonlySet<ReportFormMode> = new Set(['sent', 'closed']);
 
-/**
- * After a send (owner 2026-11-06): «تم إرسال التقرير بنجاح» with the time, then «تعديل التقرير»
- * while the edit window is open (the window line itself is in SubmittedNote).
- */
 export function SentPanel({ report, mode, onEdit, tz, busy }: SentPanelProps) {
   const clock = useClock();
   const moment = sentMoment(report);

@@ -21,20 +21,13 @@ export interface SalesLessonDrawerProps {
 interface StepsProps {
   lesson: SalesScheduleLesson;
   now: Date;
-  /** Under a running lesson's «ادخل الحلقة» the confirm is outlined (one filled button). */
+  /** Under a running lesson's join button the confirm is outlined (one filled button). */
   running: boolean;
-  /** Confirmed from this drawer: «أُكِّدت الحلقة». */
   confirmed: boolean;
   onConfirmed: () => void;
 }
 
-/**
- * What sales may do: «تأكيد الحلقة» on a scheduled lesson not ended (lessons.confirm), only while
- * the academy requires a confirmation; «لم تنعقد؟» (lessons.cancel) on an open one before its end
- * without the confirmation (owner 2026-11-02); «تصحيح حالة الحلقة» (lessons.cancel) on an ended
- * open lesson or a held / absent one (owner 2026-11-03); «تغيير الموعد» (lessons.reschedule) on an
- * open lesson not ended; else read-only.
- */
+/** Each action needs its permission and lesson state; confirm only while it is required. */
 function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: StepsProps) {
   const { confirmable, correctable, outcome, moves } = useSalesLessonRights(lesson, now);
   const readOnly = ![confirmable, confirmed, correctable, outcome, moves].some(Boolean);
@@ -56,12 +49,7 @@ function SalesLessonSteps({ lesson, now, running, confirmed, onConfirmed }: Step
   );
 }
 
-/**
- * The admin lesson drawer for sales (owner 2026-10-26): the same panel and details, and on a
- * running lesson «جارية الآن» with «ادخل الحلقة» (she joins as the classroom assistant, docs/16),
- * then SalesLessonSteps (owner 2026-10-28, 2026-11-02). No edit, invoice or report action.
- * Render it conditionally.
- */
+/** She joins a running lesson as the classroom assistant (docs/16); render it conditionally. */
 export function SalesLessonDrawer({ lesson, now, onClose }: SalesLessonDrawerProps) {
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
   const justConfirmed = confirmedId === lesson.id;

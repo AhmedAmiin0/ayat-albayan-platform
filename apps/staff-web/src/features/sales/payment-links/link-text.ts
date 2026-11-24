@@ -8,10 +8,9 @@ export function fillText(template: string, values: Record<string, string | numbe
   return template.replace(/\{(\w+)\}/g, (slot, name: string) => (name in values ? String(values[name]) : slot));
 }
 
-/** The `{amount} {currency}` pair of a paymentLinks string: «290» and «ر.س». */
 export const moneySlots = (amount: number, currency: string) => ({ amount: formatAmount(amount), currency: currencySymbol(currency) });
 
-/** «إرسال في المحادثة»: the text she sends herself, the link's url on its own line. */
+/** The text she sends herself, with the link's url on its own line. */
 export function linkMessage(link: Pick<PaymentLinkView, 'student' | 'lessons' | 'amount' | 'currency' | 'url'>): string {
   return fillText(t.paymentLinks.message, { student: link.student.name, lessons: link.lessons, ...moneySlots(link.amount, link.currency), url: link.url });
 }

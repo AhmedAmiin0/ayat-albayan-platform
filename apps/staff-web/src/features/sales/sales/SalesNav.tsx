@@ -2,11 +2,7 @@ import type { Permission } from '@ab/catalog';
 import { SectionLinks, type SectionLink } from '@/components/shell/nav/SectionLinks';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// The salesperson's pages (base role sales, shown «المبيعات»): chats (where a new student is registered),
-// students («طلابي» is a filter inside), teachers, running lessons, the academy's schedule (read-only),
-// subscriptions, meetings (owner 2026-10-12: instant and scheduled, with invitations; meetings.read), my
-// earnings («مدفوعاتي» is a filter inside). Each own-data page has its scope key; the assistant side
-// (docs/16) has self.sales_academy.
+// Each own-data page has its scope key; the assistant side (docs/16) has self.sales_academy.
 export const SALES_NAV_ITEMS = [
   { to: '/sales/inbox', label: t.sales.nav.chats, icon: 'chat', permission: 'inbox.read' },
   { to: '/sales/students', label: t.sales.nav.allStudents, icon: 'users', permission: 'self.sales_academy' },
@@ -22,11 +18,10 @@ export const SALES_NAV_ITEMS = [
 
 export interface SalesNavProps {
   can?: (permission: Permission) => boolean;
-  /** Unread chats: «{n} غير مقروءة» on «المحادثات» while non-zero. */
   unread?: number;
 }
 
-/** The salesperson's nav: a row of links from 900px, the «القائمة» sheet below (like TeacherNav). */
+/** A row of links from 900px, a menu sheet below (like TeacherNav). */
 export function SalesNav({ can, unread = 0 }: SalesNavProps) {
   const count = unread > 0 ? t.nav.unread.replace('{n}', String(unread)) : undefined;
   const items = SALES_NAV_ITEMS.map((item) => (item.to === '/sales/inbox' ? { ...item, count } : item));

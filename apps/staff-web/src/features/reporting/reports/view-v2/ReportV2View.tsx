@@ -15,10 +15,7 @@ export interface ReportV2ViewProps {
   tz: string;
 }
 
-/**
- * A new-form report as the admin reads it (read-only): the «النموذج الجديد» badge, then its lines
- * in the form's order (reportV2Lines, shared with the mobile app), the files and the PDF.
- */
+/** Read-only lines in form order via reportV2Lines, shared with the mobile app. */
 export function ReportV2View({ lesson, entry, tz }: ReportV2ViewProps) {
   const { report } = entry;
   const lines = reportV2Lines(report, { v2: t.reports.v2, grade: t.enums.grade, program: t.enums.program, lang: locale });
