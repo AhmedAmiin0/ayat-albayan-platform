@@ -6741,9 +6741,6 @@
   "src/sales/app/screens/SalesMoreScreen/SalesMoreScreen.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/sales/app/screens/SalesMoreScreen/tests/SalesMoreScreen.test.tsx": {
@@ -6839,7 +6836,7 @@
   },
   "src/sales/sales/components/AllStudentRow/AllStudentRow.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "no-restricted-syntax": {
       "count": 1
@@ -6939,7 +6936,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 1
     }
   },
   "src/sales/sales/lesson-actions/SalesLessonActions/tests/flow.test.tsx": {
@@ -6997,7 +6994,7 @@
   },
   "src/sales/sales/lib/sales-text/sales-text.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/sales/sales/lib/schedule-status.ts": {
@@ -7186,7 +7183,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 3
     }
   },
   "src/sales/sales/student/SalesStudentScreen/tests/SalesStudentScreen.test.tsx": {

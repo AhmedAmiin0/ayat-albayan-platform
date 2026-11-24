@@ -6772,9 +6772,6 @@
     }
   },
   "src/sales/app/screens/SalesMoreScreen/SalesMoreScreen.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -6872,7 +6869,7 @@
   },
   "src/sales/sales/components/AllStudentRow/AllStudentRow.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -6975,7 +6972,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 1
     }
   },
   "src/sales/sales/lesson-actions/SalesLessonActions/tests/flow.test.tsx": {
@@ -7033,7 +7030,7 @@
   },
   "src/sales/sales/lib/sales-text/sales-text.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/sales/sales/lib/schedule-status.ts": {
@@ -7219,7 +7216,7 @@
   },
   "src/sales/sales/student/SalesStudentScreen/SalesStudentScreen.tsx": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 3
     },
     "typescript/no-useless-default-assignment": {
       "count": 1
