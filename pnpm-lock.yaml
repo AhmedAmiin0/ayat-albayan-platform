@@ -48,6 +48,9 @@ importers:
       '@ab/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@ab/money':
+        specifier: workspace:*
+        version: link:../../packages/money
       '@ab/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
