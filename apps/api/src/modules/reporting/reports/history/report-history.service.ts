@@ -38,7 +38,7 @@ export class ReportHistoryService {
     return historyResponse({ rows, lessons, seq, page, window: reader });
   }
 
-  /** R11 (R-TCH-03): «تقارير لسه ما اتكتبتش», oldest first. */
+  /** R11 (R-TCH-03): oldest first. */
   async pending(user: AuthUser): Promise<PendingReportView[]> {
     const teacherId = await this.access.teacherId(user);
     return pendingViews(await this.queries.pending(teacherId, new Date()));

@@ -5,7 +5,7 @@ import { ReportFilesService } from './report-files.service';
 
 const SIGNED = { url: 'https://storage/signed', expires_at: '2026-10-04T16:00:00.000Z' };
 
-// Sales' «تفاصيل الطالب» (docs/16 row 36): the caller checked the student is hers; the report must be that student's.
+// docs/16 row 36: the report must belong to the caller's checked student.
 describe('ReportFilesService.studentPdfUrl', () => {
   let h: Awaited<ReturnType<typeof reportsApp>>;
   let files: ReportFilesService;

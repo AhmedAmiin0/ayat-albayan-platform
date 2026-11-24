@@ -8,11 +8,7 @@ import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { readsMoney, toPortalPackageView } from './portal-package.mapper';
 import { PortalPackageRepo } from './portal-package.repo';
 
-/**
- * «الباقة» (docs/31, docs/50 §5): the current package, the lessons used and left over every live
- * package and the amount due (FamilyBalanceView over the staff balance), the payments and the
- * academy's payment instructions. A child's own login is 403 package_guardian_only.
- */
+/** docs/31, docs/50 §5: a child's own login gets 403 package_guardian_only. */
 @Injectable()
 export class PortalPackageService {
   constructor(
