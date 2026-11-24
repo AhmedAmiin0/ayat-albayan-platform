@@ -1,4 +1,4 @@
-import type { FetchLike } from './drivers/meta/graph';
+import type { FetchLike } from './meta/graph';
 
 export interface ClientOpts {
   fetch?: FetchLike;

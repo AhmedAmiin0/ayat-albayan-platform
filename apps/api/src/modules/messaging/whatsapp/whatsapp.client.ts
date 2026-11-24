@@ -16,7 +16,7 @@ import { mediaMessage, readReceipt, textMessage, type GraphBody } from './messag
 import { reactionMessage } from './drivers/meta/meta-reaction';
 import { capsOf } from './drivers/driver-caps';
 import { graphVoice } from './drivers/meta/meta-voice';
-import type { ClientOpts } from './whatsapp.client.types';
+import type { ClientOpts } from './drivers/client-opts.types';
 import { WaError, type VoiceUpload, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
