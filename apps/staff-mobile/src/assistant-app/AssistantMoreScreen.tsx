@@ -12,6 +12,7 @@ import {
 } from '@ab/mobile-kit';
 import { ClockFormatPicker } from '@/more';
 
+/** The classroom assistant's More tab: account (R-ACC-01), appearance, language, sign-out. */
 export function AssistantMoreScreen() {
   return (
     <Screen scroll>

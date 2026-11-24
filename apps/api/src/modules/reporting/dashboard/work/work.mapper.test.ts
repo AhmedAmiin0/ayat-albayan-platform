@@ -44,7 +44,7 @@ describe('pendingList (R-RPT-01 pending reports)', () => {
 describe('unpaidList', () => {
   const row = { id: 'sub1', package: '4' as const, lessons_total: 4, price: 145, currency: 'SAR', starts_on: '2026-09-28', student: SUHAILA };
   it('money still owed: paid and owed from its payments', () => {
-    const l = unpaidList([{ ...row, payments: [{ amount: 100 }] }]);
+    const l = unpaidList([{ ...row, payments: [{ amount: 100, kind: 'payment' as const, currency: 'SAR' }] }]);
     expect(l).toEqual({
       total: 1,
       items: [{ ...row, student: SUHAILA, paid: 100, owed: 45, reason: 'owes' }],
@@ -52,12 +52,12 @@ describe('unpaidList', () => {
   });
 
   it('paid in full and used up → renewal_due, nothing owed (never chase a guardian who paid)', () => {
-    const [item] = unpaidList([{ ...row, payments: [{ amount: 100 }, { amount: 45 }] }]).items;
+    const [item] = unpaidList([{ ...row, payments: [{ amount: 100, kind: 'payment' as const, currency: 'SAR' }, { amount: 45, kind: 'payment' as const, currency: 'SAR' }] }]).items;
     expect(item).toMatchObject({ paid: 145, owed: 0, reason: 'renewal_due' });
   });
 
   it('a refund («استرداد») counts against what was paid', () => {
-    const [item] = unpaidList([{ ...row, payments: [{ amount: 145 }, { amount: 45, kind: 'refund' }] }]).items;
+    const [item] = unpaidList([{ ...row, payments: [{ amount: 145, kind: 'payment' as const, currency: 'SAR' }, { amount: 45, kind: 'refund' as const, currency: 'SAR' }] }]).items;
     expect(item).toMatchObject({ paid: 100, owed: 45, reason: 'owes' });
   });
 });
