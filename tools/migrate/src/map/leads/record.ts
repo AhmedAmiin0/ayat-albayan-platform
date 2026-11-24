@@ -10,10 +10,7 @@ import type { SheetLead } from './sheet-leads.ts';
 
 type LeadStatus = Enums<'lead_status'>;
 
-/**
- * The most informative status: a CRM status tag, else the sheet's, else 'new'. «جديد» is what the
- * CRM tags every new chat with, so it never hides a sheet status such as حجز مؤكد.
- */
+/** The CRM tags every chat as new, so that tag never hides a sheet status. */
 export function leadStatus(
   tags: readonly string[],
   sheet: SheetLead['status'] | undefined,
@@ -22,7 +19,7 @@ export function leadStatus(
   return [leadStatusFromTags(tags), fromSheet].find((s) => s && s !== 'new') ?? 'new';
 }
 
-/** Tags that are not statuses (whatsapp, imported, مشكلة تقنية) are kept for the owner. */
+/** Tags that are not statuses are kept for the owner. */
 const STATUS_TAGS: ReadonlySet<string> = new Set(TAG_PRECEDENCE);
 
 /** Last inbound (customer) and outbound (agent/bot) message times. */

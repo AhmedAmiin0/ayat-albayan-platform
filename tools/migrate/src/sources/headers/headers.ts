@@ -48,9 +48,7 @@ const EXCLUDED_FILES: readonly (string | RegExp)[] = [
   'Backup  keys.docx', // recovery codes: never open
   'data.zip', // Facebook account export: never open
   'SKILL.md.docx',
-  /\.json$/, // Apps Script projects (Brand, Sheet & Calendar Sync)
-  // The owner's own job-search log (date/company/title/resume_version/job_url) — NOT academy
-  // applicants, despite docs/06. Academy applicants: HUB «ردود التوظيف» + CRM/«كل المحادثات» توظيف.
+  /\.json$/, // The owner's own job-search log, not academy applicants despite docs/06.
   'job-applications-clean.xlsx',
   /^Ayat Al Bayan -- .+\.xlsx$/, // per-teacher sheets: empty
   /^Ayat ALBayan Heart\(\d\)\.xlsx$/, // older copies of HEART

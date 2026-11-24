@@ -15,25 +15,24 @@ interface Props {
   picked: boolean;
   /** One of the lesson's parts sounds now. */
   playing: boolean;
-  /** Some rows are video: each row then says «مرئي» or «صوتي». */
+  /** Some rows are video, so each row then says video or audio. */
   marks: boolean;
   onPick: () => void;
 }
 
-/** «مرئي» / «صوتي», and a watched video reads «شاهدته كاملًا». */
 const MEDIA: Record<PortalRecording['media'], { mark: string; heard: string }> = {
   audio: { mark: FF.audioMark, heard: t.lessonFiles.heard },
   video: { mark: FF.videoMark, heard: FF.watched },
 };
 
-/** Where the listener stopped; a lesson never heard is a «جديد» pill. */
+/** Where the listener stopped; a never-heard lesson gets a new pill. */
 function Heard({ state, heard }: { state: ListenState; heard: string }) {
   const text = listenText(state, { ...t.lessonFiles, heard });
   if (state.kind === 'new') return <Pill tone="act">{text}</Pill>;
   return <span className="text-xs text-ink-3">{text}</span>;
 }
 
-/** The live mark of the row that sounds («قيد التشغيل»): the one loop, a breathing dot. */
+/** The one loop, a breathing dot, on the row that plays. */
 function PlayingMark() {
   return (
     <span className="inline-flex animate-fade-in items-center gap-1.5 text-xs font-semibold text-lapis">
@@ -43,10 +42,7 @@ function PlayingMark() {
   );
 }
 
-/**
- * One lesson of «التسجيلات»: «حلقة الأحد 15 نوفمبر», «مع مريم · 17:00 · 44 دقيقة · جزءان», and
- * at the end where the listener stopped (or «قيد التشغيل»). A grid button of spans: it wraps.
- */
+/** A grid button of spans, so it wraps. */
 export function RecordingRowButton({ row, student, parts, picked, playing, marks, onPick }: Props) {
   const clock = { ...useClock(), tz: student.tz };
   const media = MEDIA[row.media];

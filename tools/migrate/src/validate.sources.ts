@@ -13,7 +13,7 @@ const tally = (keys: readonly string[]): Map<string, number> => {
   return m;
 };
 
-/** SUBS «الطلاب» rows per teacher slug ('?' = no or unknown teacher). */
+/** SUBS rows per teacher slug ('?' = no or unknown teacher). */
 export function subsByTeacher(rows: readonly SourceRow[]): Map<string, number> {
   return tally(rows.map((r) => teacherFromText(String(r.fields['teacher'] ?? '')) ?? '?'));
 }

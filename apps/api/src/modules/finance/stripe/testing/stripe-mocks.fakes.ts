@@ -3,8 +3,8 @@
 import Stripe from 'stripe';
 import { vi } from 'vitest';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
-import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { SALES_A } from '@/modules/finance/subscriptions/test-app';
+import { STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { SALES_A } from '@/modules/finance/subscriptions/tests/test-app';
 
 export const LINK_ID = '7a000000-0000-4000-8000-000000000001';
 export const TOKEN = 'tok_0123456789abcdefghijklmnopqrstuvwxyzABCDE';

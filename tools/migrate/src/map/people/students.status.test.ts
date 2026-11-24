@@ -1,6 +1,4 @@
-// Imported status (docs/06 «Student status»): active only with a current paid
-// period or a running «مشترك» series; past payments → pending_renewal / expired; attended → pending_
-// subscription; else new, whatever HUB «الحالة» says. Never trial. Invented rows; import date 10-02.
+// Imported status (docs/06): active only with a current paid period or running series; never trial.
 import { describe, expect, it } from 'vitest';
 import { bundleOf, pipeline, reportRow, row, studentRow } from '../../sources/sheets/fixtures.ts';
 import type { SourceRow } from '../../types.ts';

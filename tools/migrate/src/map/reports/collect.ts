@@ -1,6 +1,4 @@
-// All report rows → parsed reports, with A7 duplicate submissions collapsed once here so lessons,
-// lesson_students and lesson_reports stay consistent. HUB «تقارير الحلقات» is the source; REP
-// «Form Responses 1» rows only count when HUB lacks their timestamp (HUB holds all 60 today). Pure.
+// A7 duplicates collapse once here; REP rows count only when HUB lacks their timestamp; pure.
 import type { SourceBundle } from '../../entities/contract.ts';
 import { text } from '../../sources/sheets/cells.ts';
 import type { RowIssue, SourceRow } from '../../types.ts';

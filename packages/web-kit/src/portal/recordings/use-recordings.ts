@@ -26,10 +26,7 @@ export const useLessonFileUrl = (input: { studentId: string; fileId: string }) =
     staleTime: LINK_FRESH_MS,
   });
 
-/**
- * «تنزيل»: a link that saves the file under `name` (Content-Disposition: attachment), so the page
- * stays where it is while the browser saves it.
- */
+/** Content-Disposition: attachment, so the page stays while the browser saves. */
 export function useSaveLessonFile(studentId: string) {
   return useMutation({
     mutationFn: async (input: { fileId: string; name: string }) => {

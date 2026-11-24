@@ -8,7 +8,7 @@ export interface OtherPeople {
   /** A guardian's phone: link to the guardian (messages.guardian_id), never a lead. */
   guardians: ReadonlySet<string>;
   teachers: ReadonlySet<string>;
-  /** «توظيف / عرض خدمة» rows and «ردود التوظيف»: imported as job_applicants, never leads. */
+  /** Hiring rows are imported as job_applicants, never leads. */
   jobApplicants: ReadonlySet<string>;
 }
 

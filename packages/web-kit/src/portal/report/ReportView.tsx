@@ -13,15 +13,11 @@ interface Props {
   studentId: string;
   report: OpenReport;
   onBack: () => void;
-  /** The back button's words; «العودة إلى الحلقات» (the staff child page) by default. */
+  /** The back button's words; the staff child page's wording by default. */
   backLabel?: string;
 }
 
-/**
- * «تقرير الحلقة» (docs/50 §6): the same content as the parents' PDF from the report's live page
- * (with its PDF and the teacher's files), then the recording when staff made it visible. When the
- * page cannot be read, the PDF still opens by the portal's own signed link.
- */
+/** docs/50 §6: as the parents' PDF; if the page fails, the PDF opens by signed link. */
 export function ReportView({ studentId, report, onBack, backLabel }: Props) {
   const recording: PortalFile[] = report.recordingId
     ? [{ kind: 'recordings', id: report.recordingId }]
