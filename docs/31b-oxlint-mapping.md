@@ -102,6 +102,14 @@ left empty is deleted); a finding outside every package or a parse error always 
 followed): no count raised by hand, no new entry, no new file, no per-rule total above the base's, no
 entry whose file is gone. Nothing writes a baseline (`--suppress-all` is gone).
 
+Inline escapes (docs/59): Oxlint has no `noInlineConfig` (ESLint's switch that ignored `eslint-disable`
+comments), so a disable comment would still hide a finding; unused ones already fail
+(`--report-unused-disable-directives-severity=error`). `pnpm guard:escapes` finds every inline escape
+from the AST (`eslint-`/`oxlint-disable`, `@ts-` escapes, coverage, Stryker, jscpd, biome). Seven old
+ones remain, all `typescript/no-require-imports` on lazily required native modules (staff-mobile
+`native-rtc.ts`, mobile-kit `biometric/core/native.ts`, `room/native/livekit-native.ts`), a rule only
+Oxlint ever ran; the guard joins CI when that lane brings it to zero, and no PR adds one.
+
 ## 5. Parity check (removed)
 
 Until ESLint went, `pnpm lint:parity` compared ESLint's findings with Oxlint's and both configs file by
