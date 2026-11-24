@@ -9,9 +9,8 @@ import { dateLine } from './lesson-text';
 interface PrepareCardProps {
   lessons: PortalLessons;
   student: PortalStudent;
-  /** The child's «القادمة»: both parts under their titles and a link to the report. */
+  /** The child's upcoming tab: both parts under their titles and a link to the report. */
   full?: boolean;
-  /** A student's own page: «استعد لحلقتك». */
   own?: boolean;
 }
 
@@ -22,7 +21,6 @@ const partsOf = (card: Prepare) =>
     { key: 'next', title: t.portal.nextPlan, text: card.nextPlan },
   ].filter((p) => p.text !== null);
 
-/** «استعد لحلقتك» (a student's own page), «استعد للحلقة», or the home card's «ما المطلوب». */
 const TITLE: Record<'card' | 'child' | 'own', () => string> = {
   card: () => t.portal.prepareTitle,
   child: () => t.portal.app.lesson.prepare,
@@ -39,7 +37,6 @@ interface FromReportProps {
   at: string;
 }
 
-/** «من تقرير حلقة الخميس 13 نوفمبر» → that report. */
 function FromReport({ student, reportId, at }: FromReportProps) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
@@ -58,10 +55,7 @@ function FromReport({ student, reportId, at }: FromReportProps) {
   );
 }
 
-/**
- * «ما المطلوب للحلقة القادمة» (docs/50 §2): the newest sent report's homework and next plan, beside
- * a gold rule. On the home card one line; on the child's page both parts and «من تقرير …».
- */
+/** docs/50 §2: the newest sent report's homework and next plan. */
 export function PrepareCard({ lessons, student, full = false, own = false }: PrepareCardProps) {
   const { color } = useTheme();
   const card = prepareCard(lessons);

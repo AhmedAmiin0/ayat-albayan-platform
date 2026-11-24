@@ -65,7 +65,7 @@ export interface DriveBackupFactory {
   drive(refreshToken: string, signal?: AbortSignal): DriveBackupApi | null;
   /** `signal` aborts every MinIO read of the run (the job's deadline). */
   source(minio: MinioEnv, signal?: AbortSignal): BackupSource;
-  /** The storage config now («التكاملات» overlay or env). */
+  /** Integrations overlay, else env. */
   config(): StorageEnv;
 }
 export const DRIVE_BACKUP_FACTORY = Symbol('DRIVE_BACKUP_FACTORY');

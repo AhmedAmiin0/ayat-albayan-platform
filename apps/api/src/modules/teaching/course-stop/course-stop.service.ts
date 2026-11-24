@@ -57,7 +57,7 @@ export class CourseStop {
     const stopped = toStopped(sub);
     const [plan, paid] = await Promise.all([
       this.repo.plan(sub.id, new Date()),
-      this.repo.paid(sub.id),
+      this.repo.paid(sub),
     ]);
     if (stopped === null && plan.unattributed) throw conflict('course_unattributed');
     const live = stopped === null;

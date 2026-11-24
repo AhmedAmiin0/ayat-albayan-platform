@@ -1,4 +1,4 @@
-import type { MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
 import { router, useSegments } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';

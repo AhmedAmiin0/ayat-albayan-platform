@@ -1,4 +1,4 @@
-import type { PaymentAttachmentView } from '@ab/shared';
+import type { PaymentAttachmentView } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { attachmentRows, isPdfAttachment } from './attachments';
 

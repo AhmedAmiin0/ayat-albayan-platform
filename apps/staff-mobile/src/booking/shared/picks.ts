@@ -3,9 +3,7 @@ import { wallParts } from '@ab/schedule';
 import { hhmm, type ViewerClock } from '@/core/lib/clock';
 import { t, cityOf } from '@ab/mobile-kit';
 
-// A weekly package's picks (owner 2026-10-18: «اختر موعدًا لكل يوم»): one free slot per weekday of
-// the family's zone, each with its own time. The draft keeps the earliest as startsAt and the
-// others in `extra`, so a trial or a makeup (one slot) reads exactly as before.
+// One slot per weekday; earliest is startsAt, others in extra, so one-slot bookings are unchanged.
 
 /** The earliest pick (the first lesson) and the other picks' UTC instants (a package only), sorted. */
 export type PickFields = BookingPickFields;
@@ -18,10 +16,7 @@ export { bookingPicks as picksOf, bookingPicksFrom as fromPicks } from '@ab/clie
 
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
-/**
- * «الأحد الساعة 18:00» for a weekday and its time in `tz`, «… 18:00 بتوقيت دبي» when that is not
- * the `viewer`'s zone (the web's dayAtText).
- */
+/** Weekday and time in tz, naming the zone when it differs from the viewer's. */
 export function dayAtText(day: { weekday: number; time: string }, tz: string, viewer: ViewerClock): string {
   const clock = hhmm(day.time, viewer.cycle);
   const time = tz === viewer.tz ? clock : t.schedule.inCity.replace('{time}', clock).replace('{city}', cityOf(tz));

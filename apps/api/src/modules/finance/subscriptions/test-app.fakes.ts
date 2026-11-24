@@ -9,12 +9,12 @@ export function mocks() {
       update: vi.fn(), remove: vi.fn(), hasPayments: vi.fn(), paid: vi.fn(), studentForQuote: vi.fn(),
       byRequest: vi.fn(),
     },
-    cancels: { linkedLessons: vi.fn(), laterCommission: vi.fn(), cancel: vi.fn() }, // «إلغاء الباقة»
+    cancels: { linkedLessons: vi.fn(), laterCommission: vi.fn(), cancel: vi.fn() },
     leads: { afterPackage: vi.fn() },
     activation: { afterPayment: vi.fn() },
-    commissionBell: { notify: vi.fn() }, // «عمولة جديدة» after every money write
-    received: { adminIds: vi.fn(), ownerIds: vi.fn() }, // «تم استلام دفعة»: who is told
-    courseDue: { unbooked: vi.fn(), overdue: vi.fn() }, // «احجز أيام الحلقات» (owner 2026-11-06)
+    commissionBell: { notify: vi.fn() },
+    received: { adminIds: vi.fn(), ownerIds: vi.fn() },
+    courseDue: { unbooked: vi.fn(), overdue: vi.fn() },
     drafts: { get: vi.fn(), held: vi.fn() }, // course drafts: none unless a test sets one
     statuses: { student: vi.fn(), students: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
     trials: { studentsOfTrialLessons: vi.fn(), lessonsOf: vi.fn() },
@@ -60,10 +60,7 @@ export function mocks() {
 }
 export type Mocks = ReturnType<typeof mocks>;
 
-/**
- * The registry defaults with «اشتراط التعيين» ON: the assistant ownership rule enforces
- * (SalesOwnershipRule), as every money test before 2026-11-02 assumed; rule-off cases override it.
- */
+/** Registry defaults with sales_require_assignee on, so the assistant ownership rule enforces. */
 export const ENFORCED_SETTINGS = { ...SETTING_DEFAULTS, sales_require_assignee: true };
 
 /** Defaults: an empty student, no payments, ENFORCED_SETTINGS. Call in beforeEach. */

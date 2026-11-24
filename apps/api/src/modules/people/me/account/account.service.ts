@@ -14,15 +14,7 @@ import {
   type AccountStore,
 } from './account.ports';
 
-/**
- * «حسابي» (R-ACC-01..04): the CALLER's own profile, never another id. Profile writes take the
- * whitelisted columns only (selfWritable); a phone, email or password change re-checks the current
- * password. Teacher, guardian and student rows (what families see) stay admin-managed.
- *
- * Logging: the global ActivityInterceptor writes one activity_log row per request, field NAMES
- * only, a refused password included (status 400). No audit_log row: its actor_id has no ON DELETE,
- * so a self-edit would make the login undeletable (DELETE /users/:id → users_has_history).
- */
+/** No audit_log row: its actor_id has no ON DELETE, so self-edits would block deletion. */
 @Injectable()
 export class AccountService {
   constructor(

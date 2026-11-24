@@ -47,13 +47,7 @@ const sentOf = (rows: readonly ReopenBubble[], now: Date): ReopenFields['reopen_
   return live ? { id: live.id, template_key: live.template_key ?? '', status: live.status } : null;
 };
 
-/**
- * «إعادة فتح المحادثة» (owner 2026-11-14, «like Kapso»): a staff member picks the template that
- * reopens a closed chat. The picked send takes the next `reopen:<E.164>:<day>[:<try>]` key, the
- * same family the window hold reads (reopenLive), so the hold never queues a second, automatic
- * template for that window; a live one already there refuses it (409 reopen_live), so does a day
- * whose tries are used (409 reopen_tries_used). Only a chat-line template reopens the chat line.
- */
+/** The picked send takes the next reopen key, so the hold never queues a second template. */
 @Injectable()
 export class ReopenPick {
   private readonly log = new Logger('ReopenPick');
@@ -95,7 +89,7 @@ export class ReopenPick {
   }
 }
 
-/** The setting's key when it names a template («بدون قالب» names none). */
+/** The "no template" choice names none. */
 const preferred = (setting: string): Pick<ReopenFields, 'reopen_template'> => {
   const key = setting.trim();
   return key && reopenChoiceOf(key) === 'template' ? { reopen_template: key } : {};

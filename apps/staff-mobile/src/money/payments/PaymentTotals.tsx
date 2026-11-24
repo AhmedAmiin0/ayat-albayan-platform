@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText, money } from '@ab/mobile-kit';
-import type { PeriodTotal } from '@ab/shared';
+import type { PeriodTotal } from '@ab/money';
 
 /**
  * The filter's net per currency (payments minus refunds), and the refunds when there are any: a list's

@@ -2,10 +2,7 @@ import { lessonStatusLabel, lessonStatusLook, requestChip } from '@ab/client-cor
 import type { PortalLesson } from '@ab/shared';
 import { StatusChip, t, usePublicConfig } from '@ab/mobile-kit';
 
-/**
- * The lesson's chip (owner 2026-11-17): «بانتظار رد الأكاديمية» while the family's request waits,
- * else its status in the academy's words (settings.lesson_confirmation_required).
- */
+/** Pending family request wins; else the status per lesson_confirmation_required. */
 export function LessonChip({ lesson }: { lesson: PortalLesson }) {
   const required = usePublicConfig().lesson_confirmation_required;
   const waiting = requestChip(lesson) === 'pendingChip';

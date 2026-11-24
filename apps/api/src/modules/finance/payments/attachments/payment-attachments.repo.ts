@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-/** A path already held by a payment: one of its «المرفقات», or its single receipt. */
+/** A path already held by a payment, as an attachment or its single legacy receipt. */
 export type PathOwner = { path: string; paymentId: string };
 export type PaymentAttachmentRow = Pick<Tables<'payment_attachments'>, 'id' | 'path' | 'mime' | 'size' | 'created_at'>;
 

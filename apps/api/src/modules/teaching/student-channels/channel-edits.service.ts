@@ -62,15 +62,7 @@ function rowRefusal(row: ChannelMessageRow, ask: RowAsk): HttpException | null {
   return rules.find(([broken]) => broken)?.[1]() ?? null;
 }
 
-/**
- * «تعديل» / «حذف للجميع» in the student channel (owner 2026-10-30), every rule server-side: the
- * sender edits their own text within 15 minutes (a photo, PDF or voice note is never edited:
- * 403 not_a_text_message) and deletes their own message within 48 hours (channelActions), while
- * the channel is open (409 channel_not_open); the admin deletes any. Errors: 404
- * message_not_found, 409 message_deleted, 403 channel_read_only / not_your_message /
- * edit_window_closed / delete_window_closed. Each change is audited and rewrites the bell rows;
- * the earlier text goes to the history.
- */
+/** Sender edits own text within 15 min, deletes within 48 h; admin deletes any; audited. */
 @Injectable()
 export class ChannelEdits {
   constructor(

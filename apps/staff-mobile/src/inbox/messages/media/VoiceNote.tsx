@@ -15,11 +15,7 @@ interface VoiceNoteProps {
   onLongPress?: () => void;
 }
 
-/**
- * A voice note as WhatsApp shows it (owner 2026-10-27): the round play button, the waveform and its
- * length; ONE tap fetches it (W6: never before) and plays it once loaded. Expired, the old number's or
- * a teacher's stay a note; a failed fetch keeps the row, «اضغط لإعادة المحاولة». «تنزيل» under it.
- */
+/** One tap fetches it (W6: never before) and plays once loaded. */
 export function VoiceNote({ message: m, phone, kind, onLongPress }: VoiceNoteProps) {
   const { state, open, fail } = useFileOnTap(phone, m.id);
   const ended = state.step === 'problem' ? problemText(state.problem, kind) : null;

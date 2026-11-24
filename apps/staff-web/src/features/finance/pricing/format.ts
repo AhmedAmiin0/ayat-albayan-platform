@@ -8,25 +8,23 @@ import type { FxRate } from './api';
 
 const durations: Readonly<Record<string, string>> = t.pricing.durations;
 
-/** «45 دقيقة»; weekly comes back as 90. */
+/** Weekly comes back as 90. */
 export function durationLabel(minutes: number): string {
-  // a pro-rated payout line (pay-rule) can be any length: «50 دقيقة»
+  // A pro-rated payout line can be any length.
   return durations[String(minutes)] ?? t.earnings.minutes.replace('{count}', String(minutes));
 }
 
-/** «12 حلقة», or the counted form for a custom count («حلقتان», «7 حلقات»). */
 export function sessionsOf(q: Pick<Quote, 'package' | 'lessons'>): string {
   return q.package === 'custom'
     ? counted(t.pricing.customSessions, q.lessons)
     : t.pricing.packages[q.package].sessions;
 }
 
-/** Name + tagline of a site package or «باقة مخصّصة». */
 export function packageCopy(id: Quote['package']): { name: string; tagline: string } {
   return t.pricing.packages[id];
 }
 
-/** «3 مرات» (lessons a week, the site's wording); none for a custom count. */
+/** None for a custom count. */
 export function frequencyOf(id: Quote['package']): string | null {
   return id === 'custom' ? null : t.pricing.frequencies[id];
 }

@@ -8,7 +8,7 @@ const ERRORS: Record<string, string | undefined> = {
   not_a_guardian: r.noLesson,
 };
 
-/** The refusal's `code` in Arabic (as the web button says it), else «لم يُرسل طلب التقييم». */
+/** Maps the refusal code as the web button does, else a generic failure. */
 export function ratingError(error: unknown): string {
   const body = error instanceof ApiError ? error.body : null;
   const code = typeof body === 'object' && body !== null ? Reflect.get(body, 'code') : undefined;

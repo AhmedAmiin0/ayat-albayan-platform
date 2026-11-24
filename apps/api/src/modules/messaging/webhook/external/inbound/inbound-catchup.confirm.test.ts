@@ -6,7 +6,7 @@ import { GUARDIAN_ID, nobody } from '@/modules/messaging/webhook/webhook.fakes';
 import type { ReplyWindow } from '@/modules/messaging/webhook/webhook.types';
 import { catchUpRig, GAP_AT, kapsoInbound, NOW, page } from './inbound.fakes';
 
-// Finding 1 of PR #452: a back-filled «نعم» must answer only a lesson message sent BEFORE it.
+// A back-filled yes must answer only a lesson message sent before it.
 
 const RUN = { now: NOW, full: false };
 const FINISHED = '00000000-0000-4000-8000-0000000000f1';

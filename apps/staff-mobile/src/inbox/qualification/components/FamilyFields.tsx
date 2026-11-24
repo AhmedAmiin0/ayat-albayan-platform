@@ -10,11 +10,7 @@ const FILLED_BY_PILLS: FilterPill<FilledBy | ''>[] = [
   ...FILLED_BY.map((v) => ({ value: v, label: t.leads.filledByOption[v] })),
 ];
 
-/**
- * The registration form's family questions, after «الدولة» as it asked them (R-LEAD-03, the
- * deleted v1 questions): المدينة، بتملا الاستمارة بصفتك، اسم ولي الأمر، صلة القرابة، رقم تواصل بديل.
- * Relation stays free text: its options can't be rebuilt from the old answers.
- */
+/** R-LEAD-03: relation stays free text since its options cannot be rebuilt from old answers. */
 export function FamilyFields(props: QualFieldsProps) {
   return (
     <>

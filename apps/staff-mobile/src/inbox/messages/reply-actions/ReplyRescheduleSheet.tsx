@@ -8,7 +8,6 @@ import type { ReplyMove } from './reply-actions-context';
 interface SheetProps {
   lesson: ReplyLesson;
   onClose: () => void;
-  /** «تم» after the move. */
   onDone: () => void;
 }
 
@@ -33,10 +32,7 @@ function AdminSheet({ lesson, onClose, onDone }: SheetProps) {
   return <RescheduleSheet lesson={read.data} onClose={onClose} onDone={onDone} />;
 }
 
-/**
- * «تغيير الموعد» from a reply note (owner 2026-10-28): the sheet the viewer already uses elsewhere,
- * sales' one-lesson sheet (docs/16 row 37) or the admin's (R-SCH-07), on the lesson read fresh.
- */
+/** Reuses sales' one-lesson sheet (docs/16 row 37) or the admin's (R-SCH-07) on a fresh read. */
 export function ReplyRescheduleSheet({ move, onClose, onDone }: { move: ReplyMove; onClose: () => void; onDone: () => void }) {
   const props = { lesson: move.lesson, onClose, onDone };
   return move.flow === 'sales' ? <SalesSheet {...props} /> : <AdminSheet {...props} />;

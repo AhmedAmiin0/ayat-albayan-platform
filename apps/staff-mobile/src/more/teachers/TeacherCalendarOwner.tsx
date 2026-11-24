@@ -1,4 +1,8 @@
-import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner, type TeacherCalendarView } from '@ab/shared';
+import {
+  TEACHER_CALENDAR_OWNERS,
+  type TeacherCalendarOwner as Owner,
+  type TeacherCalendarView,
+} from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   useIsAdmin,

@@ -1,11 +1,13 @@
-import { normalizePhone, REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
+import { REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import type { RegistrationCheckBy, RegistrationCheckQuery } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString, t } from '@ab/mobile-kit';
 
-// «التحقق من التسجيل» (owner 2026-10-12, docs/16 row 23): is this family / child already a student?
-// GET /sales/registration-check by the guardian's phone (E.164) or a name / code. The checks the API
-// makes (one_of, invalid_phone, query_too_short) run here first so a short name never leaves the phone.
+// The registration check (docs/16 row 23): is this family / child already a student?
+// GET /sales/registration-check by the guardian's phone (E.164) or a name / code. The checks the
+// API makes (one_of, invalid_phone, query_too_short) run here first so a short name never leaves
+// the phone.
 
 export type CheckErrorCode = keyof typeof t.registrationCheck.error;
 type SearchResult = { search: RegistrationCheckQuery } | { error: CheckErrorCode };

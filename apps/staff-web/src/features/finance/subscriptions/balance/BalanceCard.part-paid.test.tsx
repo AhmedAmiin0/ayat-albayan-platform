@@ -8,7 +8,7 @@ import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixtur
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 
-// Owner 2026-10-28 («Why is this unpaid»): 81 SAR, 80 received → «غير مدفوعة» with what is left.
+// 81 due with 80 received is still unpaid and shows what is left.
 const PART = { ...WEEKLY, price: 81, paid: 80 };
 const LINE = 'مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1';
 const SHORT = 'المبلغ أقل من المستحق بـ 1 ر.س، ستبقى الباقة غير مدفوعة حتى يكتمل المبلغ';

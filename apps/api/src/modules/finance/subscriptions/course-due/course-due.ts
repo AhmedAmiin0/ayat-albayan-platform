@@ -26,13 +26,7 @@ const MISS_TEXT: Record<NonNullable<DraftMiss['reason']>, () => string> = {
 
 const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
-/**
- * «احجز أيام الحلقات» (owner 2026-11-06: a link sale left the package with no weekly course). A
- * paid link's assistant gets «تم الدفع: احجز أيام الحلقات», opening the course wizard; the
- * alerts sweep tells the admins and the package's assistant (bell + push, payment_due with its own
- * title) once per package (subject `course_unbooked:<id>`, PushService's dedup key) when an active
- * package has had no course for 2 hours. Never throws.
- */
+/** Staff told once per package after 2 hours active with no course; never throws. */
 @Injectable()
 export class CourseDue {
   private readonly log = new Logger(CourseDue.name);

@@ -1,4 +1,4 @@
-import { PUBLIC_CONFIG_QUERY_KEY } from '@ab/shared';
+import { PUBLIC_CONFIG_QUERY_KEY } from '@ab/settings';
 
 /**
  * The React Query keys of the settings family, named once: the academy settings (GET /settings),

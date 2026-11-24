@@ -6,7 +6,6 @@ import { LoadState } from '@/ui';
 import { LessonFiles } from './LessonFiles';
 import { LessonRecording } from './LessonRecording';
 
-/** «الجزء 1» … when a lesson was recorded in parts. */
 const partTitle = (i: number, total: number): string =>
   total > 1 ? t.lessonFiles.part.replace('{n}', String(i + 1)) : t.lessonFiles.recording;
 

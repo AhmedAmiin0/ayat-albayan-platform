@@ -9,16 +9,12 @@ interface FamilyHeaderProps {
   title: string;
   /** A line under the title. */
   subtitle?: string;
-  /** A pushed screen: «رجوع» before the title and no bell. A tab screen: the bell at the end. */
+  /** A pushed screen shows back and no bell; a tab screen shows the bell. */
   back?: boolean;
   /** A tab of a guardian of several: the child in view under the title, a switch. */
   child?: PortalStudent | null;
 }
 
-/**
- * The family app's screen header: its title, then «رجوع» (pushed) or the bell (a tab); under it
- * the child switch on a tab of a guardian of several (canvas SwitchReports).
- */
 export function FamilyHeader({ title, subtitle, back = false, child }: FamilyHeaderProps) {
   return (
     <View style={{ gap: 4 }}>

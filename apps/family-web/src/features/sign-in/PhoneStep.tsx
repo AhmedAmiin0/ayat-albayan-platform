@@ -12,10 +12,6 @@ const UNDER: Readonly<Record<PhoneState, () => string | undefined>> = {
   bad: () => t.familyApp.signIn.phoneBad,
 };
 
-/**
- * The WhatsApp number as the family app (#752): the kit's number field (country + national
- * number), then «أرسل الرمز» once it is a number.
- */
 export function PhoneStep({ sign }: { sign: WhatsAppSignIn }) {
   const error = UNDER[sign.check.state]() ?? sign.flow.error;
   return (

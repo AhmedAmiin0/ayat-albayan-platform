@@ -16,7 +16,6 @@ export interface PaymentFilterFieldsProps {
 
 const kindOptions = [{ value: '', label: t.finance.all }, ...PAYMENT_KINDS.map((k) => ({ value: k, label: t.enums.paymentKind[k] }))];
 
-/** The «تصفية» panel's own fields of /admin/payments: student (search), date range and kind. */
 export function PaymentFilterFields({ value, onChange, name, setPicked }: PaymentFilterFieldsProps) {
   return (
     <>

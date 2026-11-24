@@ -2,11 +2,7 @@ import type { Tables, TablesUpdate } from '@ab/db';
 import { APP_SEND_GRACE_MS, APP_SEND_MS, foldText } from '@ab/shared';
 import type { DeliveryStatus, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 
-// «أرسل عبر واتساب» (owner 2026-11-06, docs/19): staff tapped it (app_send_until set), then sent
-// the text from the WhatsApp Business app. The message comes back on any external path (the echo,
-// Kapso's status of an unknown wamid, the catch-up job): pure rules for which row it confirms.
-// Same phone (the read), same line / number, the same text after folding whitespace, a window set
-// around the message (appSendSpan), and no wamid on the row yet.
+// An external text confirms a row on same phone, line and folded text, in its window, no wamid.
 
 /** A row the tap opened a window on, as the attach reads it. */
 export type AppSendRow = Pick<
@@ -27,7 +23,7 @@ const sameOrigin = (row: AppSendRow, from: EchoOrigin): boolean =>
   agrees(row.number_id, from.numberId) && agrees(row.line, from.line);
 
 const untilOf = (row: AppSendRow): number => Date.parse(row.app_send_until ?? '');
-/** A row marked «نعم، أرسلتها» earlier comes after every queued / failed one (the tap's own). */
+/** Rows already marked sent manually rank after queued or failed ones. */
 const markedRank = (row: AppSendRow): number => (row.status === 'sent_manually' ? 1 : 0);
 const byOrder = (a: AppSendRow, b: AppSendRow): number =>
   markedRank(a) - markedRank(b) || untilOf(a) - untilOf(b);

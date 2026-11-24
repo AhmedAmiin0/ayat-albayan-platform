@@ -1,12 +1,7 @@
 import type { BookingMode } from '@ab/client-core';
 import { createContext, type ReactNode, useContext } from 'react';
 
-/**
- * Who books (the web's features/booking/mode.ts): the admin, or a salesperson registering a new
- * student from a chat («تسجيل طالب جديد», docs/16). The sales mirror under /sales/booking takes the
- * same bodies and answers the same shapes, scoped to her own leads: a trial only, no price, no
- * invoice, and the new student is credited to her (brought_by). Admin is the default.
- */
+/** docs/16: sales mirror is her own leads only: trial, no price or invoice, credited to her. */
 const BookingModeContext = createContext<BookingMode>('admin');
 
 export function BookingModeProvider({ value, children }: { value: BookingMode; children: ReactNode }) {

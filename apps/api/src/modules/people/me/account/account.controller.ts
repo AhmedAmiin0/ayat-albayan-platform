@@ -21,11 +21,7 @@ import { AccountAvatarService } from './account.avatar.service';
 import { AccountService } from './account.service';
 import { AccountSetupService } from './account.setup.service';
 
-/**
- * «حسابي» (R-ACC-01..05): every signed-in user (any role, custom roles, students, guardians) on
- * their OWN login: no id in any path, the token's subject is the profile. A disabled account is
- * still refused by the AuthGuard (403 account_disabled).
- */
+/** R-ACC-01..05: the caller's own login only, no id in any path; disabled accounts get 403. */
 @ApiTags('me')
 @ApiBearerAuth()
 @SignedIn()
@@ -38,7 +34,7 @@ export class AccountController {
     @Inject(MeZoneRepo) private readonly me: MeZoneRepo,
   ) {}
 
-  /** «اللغة» (owner 2026-11-16): the login's own language, read back by /auth/me and /portal/me. */
+  /** Read back by /auth/me and /portal/me. */
   @Patch('locale')
   async setLocale(
     @ZodBody(localeUpdateSchema) body: LocaleUpdate,

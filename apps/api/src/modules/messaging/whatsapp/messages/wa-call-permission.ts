@@ -1,8 +1,6 @@
 import { waTo, type GraphBody } from './wa-components';
 
-// «اطلب إذن الاتصال» (docs/28 §3.1): an interactive call_permission_request, a session message (24 h
-// window only). Queued like any staff send; messages.interactive_payload marks the row so the
-// dispatcher builds this body instead of a plain text (the row's body is the request's text).
+// docs/28 §3.1: a session message (24 h window); interactive_payload tells the dispatcher.
 
 export const CALL_PERMISSION_PAYLOAD = { type: 'call_permission_request' } as const;
 

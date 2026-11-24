@@ -6,10 +6,7 @@ import { MuteLimit } from './mute-limit';
 import { MeetingMuteService, MuteService } from './mute.service';
 import { targetOf } from './share-grant.controller';
 
-/**
- * {source: 'microphone' | 'camera'}: «كتم الميكروفون» / «إيقاف الكاميرا» for someone in a lesson
- * room. 204; 400, 403 cannot_mute, 404 participant_not_found, 429, 503, 502.
- */
+/** 204; 400, 403 cannot_mute, 404 participant_not_found, 429, 503, 502. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.moderate')
@@ -28,7 +25,7 @@ export class LessonMuteController {
   }
 }
 
-/** The same for «اجتماع داخلي»: any staff login with a role in it (the service then applies canMute). */
+/** The same for internal meetings; the service then applies canMute. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.write')
