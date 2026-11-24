@@ -4089,11 +4089,8 @@
     }
   },
   "src/inbox/thread/calls/rtc/native-rtc.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/inbox/thread/calls/rtc/ringtone.ts": {
@@ -4206,7 +4203,7 @@
   },
   "src/inbox/thread/calls/state/call-platform.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/thread/calls/state/call-test-kit.ts": {

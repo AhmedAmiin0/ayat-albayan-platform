@@ -46,7 +46,7 @@ export function CallProvider({ children, enabled = true, showsPhone = true, rtc 
   const config = useQuery({ ...callConfigQuery, enabled }).data;
   const live = enabled ? config : undefined;
   const foreground = useForeground();
-  const deps = useMemo(() => (rtc === undefined ? nativeRtc() : rtc), [rtc]);
+  const deps = useMemo(() => (rtc === undefined ? nativeRtc : () => Promise.resolve(rtc)), [rtc]);
   const s = useCallSession({ config: live, rtc: deps, foreground });
   const [ask, setAsk] = useState<PermissionAsk | null>(null);
   const [silenced, setSilenced] = useState<string | null>(null);
