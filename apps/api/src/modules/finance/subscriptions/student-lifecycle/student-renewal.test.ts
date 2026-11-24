@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { PackagesService, StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { StudentRenewal, type RenewalCause } from './student-renewal';
+import type { StudentTz } from './student-status.types';
 import type { StudentStatusRepo } from './student-status.repo';
 import type { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
@@ -14,18 +15,18 @@ function state(o: { remaining?: number; renews_on?: string | null; paid?: number
 }
 
 function setup(o: { status?: string; tz?: string; last?: unknown; moved?: boolean } = {}) {
+  const student = async () => ({ status: (o.status ?? 'active') as StudentTz['status'], tz: o.tz ?? 'Asia/Riyadh' });
   const statuses = {
-    student: vi.fn(async () => ({ status: o.status ?? 'active', tz: o.tz ?? 'Asia/Riyadh' })),
     lastStatusChange: vi.fn(async () => o.last ?? null),
     move: vi.fn(async () => o.moved ?? true),
   };
   const packages = { context: vi.fn(async () => state().ctx) };
   const subs = { forStudent: vi.fn(async () => state().rows) };
   const r = new StudentRenewal(statuses as unknown as StudentStatusRepo, packages as unknown as PackagesService, subs as unknown as SubscriptionsRepo);
-  return { statuses, r };
+  return { statuses, r, student };
 }
-const run = (t: ReturnType<typeof setup>, s: StudentState, cause: RenewalCause = { via: 'event' }) =>
-  t.r.apply({ studentId: 's1', state: s, actorId: null, now: NOW, cause });
+const run = async (t: ReturnType<typeof setup>, s: StudentState, cause: RenewalCause = { via: 'event' }) =>
+  t.r.apply({ studentId: 's1', student: await t.student(), state: s, actorId: null, now: NOW, cause });
 
 describe('StudentRenewal: active ↔ «بانتظار التجديد»', () => {
   it('lessons used up → pending_renewal, audited via subscription_ended (CAS from active)', async () => {

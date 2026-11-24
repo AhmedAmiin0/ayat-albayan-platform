@@ -1,4 +1,4 @@
-import type { MeetingCreateResult } from '@ab/shared';
+import type { MeetingCreateResult } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { InviteResults } from '@/features/teaching/meetings/invitees/InviteResults';
 import { MeetingLinkBox } from '@/features/teaching/meetings/rows/MeetingLinkBox';

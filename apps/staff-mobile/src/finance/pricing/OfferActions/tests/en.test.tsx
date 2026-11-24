@@ -1,4 +1,4 @@
-import { offerText } from '@ab/shared';
+import { offerText } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, render, screen } from '@testing-library/react-native';

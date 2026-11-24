@@ -1,5 +1,6 @@
-import type { LessonTimeEdit, TimeEditMode } from '@ab/shared';
-import { addDays, lessonDuration, wallInstant, zonedPartsIn } from '@ab/shared';
+import type { LessonTimeEdit, TimeEditMode } from '@ab/schedule';
+import { lessonDuration } from '@ab/schedule';
+import { addDays, wallInstant, zonedPartsIn } from '@ab/time';
 // «عدّل الوقت» form logic (R-SCH-11): picked days and times, never typed. Pure, unit-tested.
 
 const STEP = 15;

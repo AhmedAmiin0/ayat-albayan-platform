@@ -1,4 +1,5 @@
-import { durationText, type ClockCycle, type LessonView } from '@ab/shared';
+import { durationText, type LessonView } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { clockIn, whenIn, type ViewerClock } from '@/core/lib/clock';
 import { t, cityOf } from '@ab/mobile-kit';
 import { chosenStart, lengthOf, type EditState } from './edit-time-body';
