@@ -5,8 +5,7 @@ import {
 import { varsOf, type DraftVar } from '@/features/messaging/templates/create/template-draft';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «تعديل» (owner 2026-11-14): the form's state as typed, prefilled from the row. The buttons are
-// what WhatsApp shows (display), else the registry's; a quick reply keeps its action by index.
+// Buttons come from WhatsApp's display, else the registry; quick replies keep action by index.
 
 export type EditButton =
   | { type: 'url'; text: string; url: string }

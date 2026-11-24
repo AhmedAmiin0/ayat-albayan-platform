@@ -6,16 +6,13 @@ import { setTemplateNumber, templateErrorText, templatesQuery } from '@/features
 import { templateName } from '@/features/messaging/templates/template-cells';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';
 
-/** A number picked in «يُرسل من», waiting for its confirm (null = the role's default). */
+/** Null means the role's default. */
 export interface NumberPick {
   template: TemplateView;
   numberId: string | null;
 }
 
-/**
- * «يُرسل من» (docs/23c decision 9): the pick waits for its dialog, then PUT …/number and the list
- * refetches; a number the template is not approved on yet is saved with a warning toast.
- */
+/** A number the template is not yet approved on is saved with a warning (docs/23c decision 9). */
 export function useTemplateNumber(onNotice: (notice: Notice) => void) {
   const queryClient = useQueryClient();
   const [picking, setPicking] = useState<NumberPick | null>(null);

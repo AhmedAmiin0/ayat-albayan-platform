@@ -20,12 +20,7 @@ export interface StaffPhotoControlProps {
   className?: string;
 }
 
-/**
- * The admin's «تغيير الصورة» / «حذف الصورة» beside a staff member's photo (owner 2026-10-28):
- * teachers.write on a teacher, users.write on a staff login; nothing for anyone else. A picked
- * file uploads at once; remove asks first, in place (RemoveConfirm takes focus; on cancel or
- * remove focus returns to «تغيير الصورة»).
- */
+/** teachers.write for a teacher, users.write for a staff login; nothing for anyone else. */
 export function StaffPhotoControl(props: StaffPhotoControlProps) {
   const allowed = usePermissions().can(`${props.kind}.write`);
   return allowed ? <PhotoButtons {...props} /> : null;

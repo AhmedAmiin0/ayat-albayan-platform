@@ -12,7 +12,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
-// «يُرسل من» while the save is in flight: the dialog can't be dismissed and the selects wait.
+// While the save is in flight the dialog cannot be dismissed and the selects wait.
 
 const s = t.templates.sendFrom;
 const NAME = t.templates.names.booking_confirmation_plain;

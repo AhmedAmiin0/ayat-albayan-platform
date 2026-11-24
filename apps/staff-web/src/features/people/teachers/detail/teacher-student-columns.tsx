@@ -11,7 +11,6 @@ import type { StudentListItem } from '@ab/shared';
 const col = createColumnHelper<DataTableFeatures, StudentListItem>();
 const s = t.students;
 
-/** «3 حلقة متبقية», or «بدون باقة» without one. */
 export const remainingLabel = (n: number | null | undefined): string =>
   n === null || n === undefined ? s.noPackage : s.remainingN.replace('{n}', String(n));
 
@@ -22,12 +21,7 @@ const weeklyOptions = () => [
   { value: 'no', label: s.weeklyNo },
 ];
 
-/**
- * One teacher's students (R-TCH-03): code, name (→ profile), status, package left, weekly lesson.
- * Every column sorts server-side (R-NFR-08); status is filtered by the chips above, package left
- * and weekly by the list's «الباقة» / «حلقة أسبوعية» filters. Phones (stacked): name + status, then
- * code and package left.
- */
+/** Every column sorts server-side (R-TCH-03, R-NFR-08). */
 export const teacherStudentColumns = col.columns([
   col.accessor('code', {
     header: () => s.code,
@@ -66,7 +60,7 @@ export const teacherStudentColumns = col.columns([
     header: () => s.weekly,
     cell: (c) => (c.getValue() ? t.common.yes : t.common.no),
     meta: {
-      // A bare «نعم / لا» says nothing without its head: phones (stacked rows) leave it out.
+      // A bare yes/no says nothing without its head, so stacked phone rows omit it.
       className: 'text-xs text-ink-2 max-sm:hidden',
       sortKey: 'weekly',
       filter: { kind: 'select', options: weeklyOptions() },

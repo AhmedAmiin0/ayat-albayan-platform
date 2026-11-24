@@ -20,10 +20,7 @@ export interface TestFlagSwitchProps {
   enabled?: boolean;
 }
 
-/**
- * «حساب تجريبي» / «طالب تجريبي» (docs/56): the switch asks first (what a test account skips, and
- * that the whole family changes), then saves. A 409 says the family would mix test and real.
- */
+/** docs/56: the whole family changes; a 409 means it would mix test and real accounts. */
 export function TestFlagSwitch({ target, row, enabled = true }: TestFlagSwitchProps) {
   const [asked, setAsked] = useState<boolean | null>(null);
   const save = useSetTestFlag();

@@ -14,8 +14,6 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),
 }));
 
-// «يُرسل من» when the template's number is not in the list (deleted, unreadable, still loading).
-
 const s = t.templates.sendFrom;
 const NAME = t.templates.names.booking_confirmation_plain;
 const GONE = template({ number_id: 'n-gone', numbers: [] });

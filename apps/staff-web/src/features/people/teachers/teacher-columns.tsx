@@ -22,7 +22,6 @@ const text = { kind: 'text' } as const;
 const programOptions = () => PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 const statusOptions = () => TEACHER_STATUSES.map((st) => ({ value: st, label: t.enums.teacherStatus[st] }));
 
-/** The name cell: photo (or initials), the name as a button to the profile, «معلم / معلمة». Memoised per row. */
 const NameCell = memo(function NameCell({ teacher, onOpen }: { teacher: TeacherListRow; onOpen: Handlers['onOpen'] }) {
   return (
     <div className="flex items-center gap-2.5">
@@ -44,13 +43,7 @@ const NameCell = memo(function NameCell({ teacher, onOpen }: { teacher: TeacherL
   );
 });
 
-/**
- * Teacher list columns (R-TCH-01, docs/07 §6). The name is a button (keyboard path to the
- * profile); «تعديل» opens the dialog without following the row link. Under 640px the rows stack:
- * name + status, programs, phone, تعديل (DataTable `stacked`). Every data column sorts server-side;
- * name / phone have a search box, programs / status a select (R-NFR-08). «مشترك» / «تجريبي» (R-TCH-03,
- * owner 2026-10-12) are server counts, not sortable, each a link to the filtered students list.
- */
+/** Every data column sorts server-side (R-TCH-01, R-NFR-08); the counts are not sortable. */
 export function teacherColumns({ onEdit, onOpen }: Handlers) {
   return col.columns([
     col.accessor('display_name_ar', {

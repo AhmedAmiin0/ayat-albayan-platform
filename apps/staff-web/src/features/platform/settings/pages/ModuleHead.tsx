@@ -5,10 +5,7 @@ import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * The head of a module page under /admin/settings (docs/26b §3): the way back «الإعدادات › …»,
- * then the page's one title (the cartouche) and, beside it, what the page wants seen from every tab.
- */
+/** docs/26b §3. */
 export function ModuleHead({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <>

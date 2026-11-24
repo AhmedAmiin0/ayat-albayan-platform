@@ -11,10 +11,7 @@ import { PhoneSignIn } from '@ab/web-kit/auth/login/PhoneSignIn';
 const F = t.familyAuth;
 type View = 'phone' | 'username' | 'forgot' | 'firstTime';
 
-/**
- * «الأسرة والطلاب» (docs/30 §1): the guardian by WhatsApp code; a child by student code + password,
- * set at «أول دخول؟». Nothing of it shows while WhatsApp codes are off (docs/30 §4).
- */
+/** Hidden entirely while WhatsApp codes are off (docs/30 §4). */
 export function FamilyPanel() {
   return (
     <CodesGate fallback={<StatusNote>{F.familyUnavailable}</StatusNote>}>
@@ -34,7 +31,7 @@ function FamilyViews() {
       setSaved(ok);
       setView(ok ? 'username' : 'phone');
     };
-    // A key per mode: «أول دخول؟» after «نسيت» starts empty.
+    // A key per mode so switching between reset modes starts empty.
     return <ResetFlow key={view} mode={view} onDone={done} />;
   }
   return (

@@ -29,7 +29,7 @@ interface SelectProps {
   onChange: (value: string) => void;
 }
 
-/** The discovered calendars + «بدون تقويم»; a confirmed calendar no longer discovered stays listed. */
+/** A confirmed calendar that is no longer discovered stays listed. */
 export function CalendarSelect({ row, calendars, value, onChange }: SelectProps) {
   const id = useId();
   const stale = row.calendar_id !== null && !calendars.some((c) => c.id === row.calendar_id);

@@ -17,10 +17,7 @@ type DuplicateCompareProps = {
 
 const sub = 'w-full text-2xs font-normal text-ink-3';
 
-/**
- * The four-column compare (docs/07 §6 Dialog, R-STU-03): field | «اللي بتسجله دلوقتي» |
- * «متسجل من قبل AB-0183» | النتيجة. On phones: two value columns, the field as a row header.
- */
+/** docs/07 §6 Dialog, R-STU-03: on phones two value columns with the field as row header. */
 export function DuplicateCompare({ typed, candidate, profile }: DuplicateCompareProps) {
   const phone = normalizePhone(typed.guardianPhone);
   const e164 = phone.ok ? phone.e164 : typed.guardianPhone;
@@ -77,7 +74,6 @@ export function DuplicateCompare({ typed, candidate, profile }: DuplicateCompare
           profile && (
             <>
               <span>{t.enums.program[profile.program]}</span>
-              {/* TODO(R-LES-03): «، 14 حلقة تمت» once the profile carries the completed-lesson count. */}
               {teacher && <small className={sub}>{t.students.withTeacher.replace('{teacher}', teacher)}</small>}
             </>
           )

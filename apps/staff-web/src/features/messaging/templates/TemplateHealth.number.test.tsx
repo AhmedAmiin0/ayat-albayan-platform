@@ -12,8 +12,6 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «الرقم» (owner 2026-10-18): which number each template goes out from, and the submit dialog names it.
-
 const WELCOME = template({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', status: 'not_submitted' });
 const CHAT_PHONE = '+966 50 000 0000';
 const rowOf = (text: string) => {

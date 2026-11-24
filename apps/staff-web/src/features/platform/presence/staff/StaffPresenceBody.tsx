@@ -13,7 +13,6 @@ interface Props {
   clock: Clock & { now: Date };
 }
 
-/** The opened panel: loading, the error, «متوقف» (presence_enabled off), empty, or the rows. */
 export function StaffPresenceBody({ query, rows, clock }: Props) {
   const p = t.presence;
   if (query.isPending) return <ListSkeleton rows={3} />;

@@ -1,7 +1,7 @@
 import { WEEKDAYS, type Weekday } from '@ab/catalog';
 import type { AvailabilitySlot } from '@ab/schedule';
 
-/** Rows of the editor: السبت → الجمعة (docs/07 §8), the one order shared with mobile. */
+/** Saturday to Friday (docs/07 §8), the one order shared with mobile. */
 export { WEEK_ORDER } from '@ab/shared';
 
 /** Weekly availability editor model (R-TCH-02): weekday → wall-clock "HH:MM" ranges. */

@@ -35,7 +35,7 @@ export const checkTemplateHealth = (line?: WaLine) =>
     ? apiSend<TemplateHealthView>('POST', '/messaging/templates/health', { line })
     : apiSend<TemplateHealthView>('POST', '/messaging/templates/health');
 
-/** «قالب جديد» (owner 2026-10-31): a new row, not submitted; 409 template_exists. */
+/** Creates a new unsubmitted row; 409 template_exists when the key is taken. */
 export const createTemplate = (input: TemplateCreateInput) => apiSend<TemplateView>('POST', '/messaging/templates', input);
 
 /** T3: not_submitted / rejected / missing → pending, on the WABA of the row's own line. */
@@ -50,14 +50,11 @@ export const moveTemplateLine = ({ key, line }: { key: string; line: WaLine }) =
 export const setTemplateNumber = ({ key, number_id }: { key: string; number_id: string | null }) =>
   apiSend<TemplateNumberSetView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/number`, { number_id });
 
-/**
- * «متاح للمعلمين والمبيعات» (the restricted allow-list, owner 2026-10-12, docs/16): the admin offers a
- * template to teachers, sales and the other limited roles, or stops.
- */
+/** Toggles the restricted allow-list that teachers, sales and limited roles may send (docs/16). */
 export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
   apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, { sales_starter: on });
 
-/** A crm line's template status by hand (docs/19): «معتمد في نظام CRM» / «غير متاح في نظام CRM»; audited. */
+/** Set by hand for a crm line's template and audited (docs/19). */
 export const setCrmStatus = ({ key, status }: { key: string; status: CrmTemplateStatus }) =>
   apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-status`, { status });
 
@@ -123,6 +120,5 @@ type FailedSync = Pick<TemplateLineSync, 'line' | 'error' | 'message'>;
 /** One number's failed sync in words (its code, Meta's message for meta_error, its line). */
 export const lineSyncErrorText = (sync: FailedSync): string => codeText({ code: sync.error, detail: sync.message, line: sync.line });
 
-/** «تعذّرت مزامنة {line}: {error}» for one number's failed sync. */
 export const syncFailedText = (sync: FailedSync): string =>
   t.templates.perNumber.syncFailed.replace('{line}', t.enums.waLine[sync.line]).replace('{error}', lineSyncErrorText(sync));

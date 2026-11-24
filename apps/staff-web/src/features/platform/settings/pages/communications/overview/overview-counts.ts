@@ -2,7 +2,6 @@ import { NOTIFICATION_AUDIENCES, type NotificationAudience, type NotificationEnt
 import { rowsOf } from '@/features/messaging/notification-catalogue/catalogue-tabs';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** One row of «ماذا يُرسل الآن»: an audience and how many of its notifications send now / do not. */
 export interface AudienceCount {
   audience: NotificationAudience;
   label: string;
@@ -10,12 +9,7 @@ export interface AudienceCount {
   off: number;
 }
 
-/**
- * Counts per audience, in the order and with the names of «الإشعارات»' audience tabs (manual rows,
- * which a person sends, are not counted). «تُرسل الآن» is the row's own effective state from GET
- * /admin/notifications (`state: 'on'`); every other automatic row counts as «لا تُرسل». A row that
- * reaches two audiences (a schedule change: the guardian and the teacher) counts under each.
- */
+/** Manual rows are not counted; a row reaching two audiences counts under each. */
 export function audienceCounts(entries: readonly NotificationEntryView[]): AudienceCount[] {
   return NOTIFICATION_AUDIENCES.map((audience) => {
     const rows = rowsOf(entries, audience);
