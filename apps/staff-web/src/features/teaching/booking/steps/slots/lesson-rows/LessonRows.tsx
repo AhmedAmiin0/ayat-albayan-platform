@@ -1,5 +1,5 @@
 import { patchRow, rowsFromPicks, type LessonRow } from '@ab/client-core';
-import type { SlotsResponse } from '@ab/shared';
+import type { SlotsResponse } from '@ab/schedule';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

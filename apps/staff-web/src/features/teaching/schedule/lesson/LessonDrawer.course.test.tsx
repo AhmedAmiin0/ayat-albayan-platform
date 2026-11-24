@@ -1,4 +1,5 @@
-import { counted, type LessonView } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { LessonView } from '@ab/schedule';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CHECK, COURSE, NOW, routeChange, routeChangeSend, swapSundayForMonday } from '@/features/teaching/booking/course-change/change-fixture';

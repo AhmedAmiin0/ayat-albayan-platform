@@ -1,4 +1,5 @@
-import { PAYMENT_METHODS, type ExpenseCategoryView } from '@ab/shared';
+import { PAYMENT_METHODS } from '@ab/catalog';
+import type { ExpenseCategoryView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, Field, FilterPills, ErrorLine, useNow, FormLabel } from '@ab/mobile-kit';

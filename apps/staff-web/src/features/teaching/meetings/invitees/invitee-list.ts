@@ -1,4 +1,9 @@
-import { MAX_MEETING_INVITEES, normalizePhone, type MeetingInviteeInput, type MeetingInviteeOption } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
+import {
+  MAX_MEETING_INVITEES,
+  type MeetingInviteeInput,
+  type MeetingInviteeOption,
+} from '@ab/schedule';
 
 // The invitees picked in the dialog: a staff profile, a student (the API resolves the guardian's
 // phone) or a typed phone (E.164 only, rule 7). At most 30, each once.

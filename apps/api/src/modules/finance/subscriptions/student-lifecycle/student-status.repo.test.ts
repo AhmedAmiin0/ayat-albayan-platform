@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { StudentStatusRepo } from './student-status.repo';
 
 function setup(results: Record<string, FakeResult[]>) {
@@ -54,5 +54,13 @@ describe('StudentStatusQueries: compare-and-set moves, audited only when they ch
   it('student: status and tz', async () => {
     const t = setup({ students: [{ data: { status: 'active', tz: 'Asia/Riyadh' } }] });
     expect(await t.q.student('s1')).toEqual({ status: 'active', tz: 'Asia/Riyadh' });
+  });
+
+  it('students: one read for many, keyed by id; none → no read', async () => {
+    const t = setup({ students: [{ data: [{ id: 's1', status: 'active', tz: 'Asia/Riyadh' }] }] });
+    expect(await t.q.students([])).toEqual(new Map());
+    expect(await t.q.students(['s1', 's2'])).toEqual(new Map([['s1', { status: 'active', tz: 'Asia/Riyadh' }]]));
+    expect(t.trips).toEqual(['students']);
+    expect(t.argsOf('students', 'in')).toEqual(['id', ['s1', 's2']]);
   });
 });

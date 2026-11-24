@@ -4,7 +4,7 @@ import {
   STATUS_ROUTE_EVENTS,
   type LessonView,
   type StatusRouteEvent,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

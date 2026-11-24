@@ -1,4 +1,5 @@
-import type { StudentProfile, StudentStatus } from '@ab/shared';
+import type { StudentProfile } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
