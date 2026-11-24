@@ -1,5 +1,4 @@
-// students ← collectPeople (HUB «الطلاب» ∪ «ردود التسجيل» ∪ confirmed bookings ∪ HEART), checked
-// against SUBS and the ATT folders (subs.ts) and what the lesson reports say (taught.ts).
+// Students from collectPeople, checked against SUBS, the ATT folders and the lesson reports.
 import { normalizeArabic } from '@ab/core';
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keyId, keys } from '../../keys.ts';
@@ -88,7 +87,7 @@ function mapStudents(bundle: SourceBundle): Mapped[] {
   const out = legacyFirst.map(({ p, columns, refs, issues: own }) => {
     const id = keyId(p.key);
     const t = reportTeacher({ p, refs, slug: taught.teacher.get(id) });
-    // «مشترك» only with a current subscription (docs/06 «Student status», status/rules.ts).
+    // Subscribed only with a current subscription (docs/06, status/rules.ts).
     const { status, issue } = statusOf(p);
     return accepted({
       key: p.key,

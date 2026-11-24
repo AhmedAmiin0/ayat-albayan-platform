@@ -3,12 +3,9 @@ import { BOTH_ON, type MediaChoice } from '@ab/web-kit/classroom/room/components
 import { readSavedChoice, saveChoice, type JoinPick } from './saved-choice';
 
 export interface RoomEntry {
-  /** What the room connects with; null while «قبل الدخول» is still on screen. */
+  /** null while the pre-join check is still on screen. */
   media: MediaChoice | null;
-  /**
-   * «انضم الآن»: remembered (unless a device had a problem), so the next join (and «ادخل مرة
-   * أخرى») goes straight in.
-   */
+  /** Remembered unless a device had a problem, so the next join goes straight in. */
   choose: (pick: JoinPick) => void;
 }
 

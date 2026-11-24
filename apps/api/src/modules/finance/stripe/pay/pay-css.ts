@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { palette } from '@ab/shared';
+import { palette } from '@ab/catalog';
 
 const c = palette.light;
 

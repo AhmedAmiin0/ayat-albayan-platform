@@ -1,8 +1,4 @@
-// The Quran's fixed metadata in the Madani mushaf (Hafs ʿan ʿĀṣim): 114 surahs, 604 pages, 30 ajzāʾ.
-// Public facts of the printed mushaf; the numbers come from the Tanzil Project metadata
-// (https://tanzil.net/docs/quran_metadata) as packaged by quran-meta 7.0.0 (MIT,
-// https://github.com/quran-center/quran-meta, HafsLists + surah names). Ayah positions are global:
-// 1 = الفاتحة 1 … 6236 = الناس 6. Generated once; checked by quran.test.ts.
+// Madani mushaf metadata from Tanzil via quran-meta 7.0.0 (MIT); ayah positions global 1-6236.
 
 /** [Arabic name, English name, ayah count]; index 0 = surah 1. */
 export const SURAHS: readonly (readonly [string, string, number])[] = [

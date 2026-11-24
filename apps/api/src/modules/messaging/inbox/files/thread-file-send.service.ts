@@ -3,12 +3,11 @@ import {
   CHAT_FILE_MIMES,
   CHAT_VOICE_MIME,
   chatFileProblem,
-  SETTING_DEFAULTS,
-  uploadMaxBytes,
   type SignedUpload,
   type ThreadFileSendInput,
   type ThreadFileUpload,
 } from '@ab/shared';
+import { SETTING_DEFAULTS, uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, chatOutPath, isChatOutPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

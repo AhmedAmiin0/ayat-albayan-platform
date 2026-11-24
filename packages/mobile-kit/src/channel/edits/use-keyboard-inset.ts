@@ -7,11 +7,7 @@ const EVENTS =
     ? ({ show: 'keyboardWillShow', hide: 'keyboardWillHide' } as const)
     : ({ show: 'keyboardDidShow', hide: 'keyboardDidHide' } as const);
 
-/**
- * How tall the keyboard is over a bottom sheet (0 when closed): the sheet pads its foot by it, so
- * «تعديل الرسالة»'s box (autofocused) stays above the keyboard. A Modal is outside the screen's
- * KeyboardFrame, and with edge to edge the window is not resized.
- */
+/** A Modal is outside KeyboardFrame and edge to edge does not resize the window, so pad by hand. */
 export function useKeyboardInset(): number {
   const [inset, setInset] = useState(0);
   useEffect(() => {

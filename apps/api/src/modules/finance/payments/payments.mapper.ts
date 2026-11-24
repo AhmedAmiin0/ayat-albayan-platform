@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import type { PaymentRow } from './payments.repo';
 

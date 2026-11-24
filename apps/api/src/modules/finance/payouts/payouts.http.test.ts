@@ -1,8 +1,8 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYOUT_ID, payoutRow, TEACHER_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { PAYOUT_ID, payoutRow, TEACHER_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 
 const TEACHER = { id: TEACHER_ID, tz: 'Africa/Cairo', display_name_ar: 'أبرار' };
 /** A v_teacher_payable_lessons row as PayoutsQueries.lessons maps it (amount null = no rate). */

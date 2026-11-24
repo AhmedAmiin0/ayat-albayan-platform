@@ -4,11 +4,7 @@ import { useEffect } from 'react';
 import { meQuery } from '../../auth/use-permissions';
 import { followProfileLocale } from './profile-locale';
 
-/**
- * A live answer: a fetch that succeeded. Not the persisted copy of an earlier run (a
- * restore is no fetch), which may predate a «اللغة» switch and would switch straight back, and not
- * a setQueryData (manual).
- */
+/** Not a restored copy (may predate a language switch and revert it), nor a manual setQueryData. */
 const isLiveSuccess = (event: QueryCacheNotifyEvent): boolean =>
   event.type === 'updated' && event.action.type === 'success' && event.action.manual !== true;
 

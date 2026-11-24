@@ -22,12 +22,7 @@ interface ChannelListProps {
 /** The rows' gutter: the list itself runs edge to edge, so the unread band spans the screen. */
 const GUTTER = 16;
 
-/**
- * The thread's messages in an inverted list, so it opens on the newest message and a new one
- * lands in view: day chips, the floating day while scrolling, «n غير مقروءة» over the first unread
- * when it opened; «الرسائل الأقدم» at the top pages back. Times in the phone's zone; `now` ticks
- * by the minute (useNow), which also closes the 15-minute edit window on screen.
- */
+/** Inverted to open on the newest; `now` ticks per minute, closing the 15-minute edit window. */
 export function ChannelList({ refs, query, mode, actions, heldId }: ChannelListProps) {
   const { rows, clock } = useChannelRows({
     pages: query.data?.pages,

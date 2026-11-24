@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/sales/sales-money/tests/sales-money.pay.fakes';
 
 const OTHER = '5c000000-0000-4000-8000-0000000000ff';

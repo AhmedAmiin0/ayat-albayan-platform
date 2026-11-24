@@ -15,7 +15,6 @@ const SPEED_OF = Object.fromEntries(PLAYER_SPEEDS.map((s) => [`${s}`, s])) as Re
   PlayerSpeed
 >;
 
-/** «10 ↺» · play/pause · «↻ 10», then «السرعة» as three choices 1× · 1.5× · 2×. */
 export function PlayerControls({ player }: { player: AudioPlayerControls }) {
   const { color } = useTheme();
   const playing = player.state.status === 'playing';

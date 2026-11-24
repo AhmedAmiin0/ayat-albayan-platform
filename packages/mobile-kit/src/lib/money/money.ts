@@ -7,12 +7,12 @@ import { ltr } from '../../ui/primitives/Ltr';
 
 const currencyNames: Record<string, string | undefined> = t.pricing.currencies;
 
-/** «ر.س» for the site currencies, else the isolated ISO code («EGP»). */
+/** The site currencies get a local symbol, others the isolated ISO code. */
 export function currencyName(currency: string): string {
   return currencyNames[currency] ?? ltr(currency);
 }
 
-/** «145 ر.س»: the isolated amount, then the currency. */
+/** The isolated amount, then the currency. */
 export function money(amount: number, currency: string): string {
   return `${ltr(formatAmount(amount))} ${currencyName(currency)}`;
 }

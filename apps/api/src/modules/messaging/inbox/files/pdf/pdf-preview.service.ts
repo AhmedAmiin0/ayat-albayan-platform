@@ -1,4 +1,5 @@
-import { INVOICE_MAX_BYTES, isPdfMime, PDF_PREVIEW_PAGES, type ThreadPdfPage } from '@ab/shared';
+import { isPdfMime, PDF_PREVIEW_PAGES, type ThreadPdfPage } from '@ab/shared';
+import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS, pdfPagePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

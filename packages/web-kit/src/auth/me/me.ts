@@ -18,7 +18,7 @@ export interface Me {
   tz?: string | null;
   /** The login's UI language (profiles.locale); read through meLocaleOf (zod). */
   locale?: string | null;
-  /** A test account (docs/56): the «تجريبي» chip; absent from an older API = real. */
+  /** A test account (docs/56); absent from an older API means real. */
   is_test?: boolean;
 }
 

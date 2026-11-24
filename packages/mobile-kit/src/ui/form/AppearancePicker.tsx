@@ -10,7 +10,7 @@ const appearancePills = (): readonly FilterPill<AppearancePref>[] => [
   { value: 'dark', label: t.theme.dark },
 ];
 
-/** «المظهر»: تلقائي / فاتح / ليلي, saved on the device. */
+/** Saved on the device. */
 export function AppearancePicker() {
   const [pref, choose] = useAppearancePref();
   return (

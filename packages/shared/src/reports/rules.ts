@@ -4,10 +4,7 @@ import { gradeStyle } from '@ab/money';
 
 const MINUTE = 60_000;
 
-/**
- * The six «تقييم البنود» rows of the «تقرير الحلقة» Google Form, in form order (R-REP-02).
- * Labels: ar.json reports.rubric.<key>. Columns: lesson_reports.grade_<key>.
- */
+/** The six rubric rows in form order (R-REP-02); columns lesson_reports.grade_<key>. */
 export const REPORT_RUBRICS = [
   'recitation',
   'memorization',
@@ -40,7 +37,7 @@ export function attended(attendance: Attendance): boolean {
   return attendance === 'on_time' || attendance === 'late';
 }
 
-/** Ordinal score for the progress chart (R-REP-05): the grade's pips, 5 = ممتاز … 1. */
+/** Ordinal score for the progress chart (R-REP-05): the grade's pips, 5 = excellent ... 1. */
 export function gradeScore(grade: Grade | null): number | null {
   return grade === null ? null : gradeStyle[grade].pips;
 }

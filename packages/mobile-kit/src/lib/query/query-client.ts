@@ -27,21 +27,14 @@ focusManager.setEventListener((setFocused) => {
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({ onError: signOutOnAuthError }),
   mutationCache: new MutationCache({ onError: signOutOnAuthError }),
-  // gcTime must be ≥ the persist maxAge, or restored queries are collected before a screen reads them.
-  // Offline (lib/connectivity sets onlineManager): a query still tries once, so its error keeps the
-  // saved list's «آخر تحديث» note and the offline messages; a 5xx retry waits for the connection, and
-  // the reconnect refetches. Saves are never parked: they fail at once with their offline message.
+  // gcTime must be at least the persist maxAge, or restored queries are collected before use.
   defaultOptions: {
     queries: { gcTime: DAY, retry: shouldRetry, networkMode: 'offlineFirst' },
     mutations: { networkMode: 'always' },
   },
 });
 
-/**
- * Back in the foreground the inbox re-reads through ONE path, resumeInbox (docs/43 AU3): it
- * cancels a read stuck across the background and re-reads the chats, lists, badge and
- * «القوائم». A focus refetch of the same queries would only start reads it cancels at once.
- */
+/** Foreground re-reads use resumeInbox only (docs/43 AU3); a focus refetch would be cancelled. */
 export const RESUME_OWNED: readonly string[][] = [['threads'], ['chat-lists']];
 const NO_FOCUS_REFETCH = { refetchOnWindowFocus: false } as const;
 for (const queryKey of RESUME_OWNED) queryClient.setQueryDefaults(queryKey, NO_FOCUS_REFETCH);

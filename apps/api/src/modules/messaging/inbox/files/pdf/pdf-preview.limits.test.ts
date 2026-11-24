@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES } from '@ab/shared';
+import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ask, jpgs, PDF_BYTES, setup, status } from './pdf-preview.fakes';
 import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';

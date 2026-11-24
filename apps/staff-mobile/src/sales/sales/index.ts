@@ -1,4 +1,4 @@
-export { AllStudentsScreen, type StudentsView } from './screens/AllStudentsScreen';
+export { AllStudentsScreen, type StudentsView } from './screens/AllStudentsScreen/AllStudentsScreen';
 export { SalesLiveScreen } from './screens/SalesLiveScreen';
 export { AttendanceLogScreen } from './attendance/AttendanceLogScreen';
 export { SalesStudentScreen } from './student/SalesStudentScreen';

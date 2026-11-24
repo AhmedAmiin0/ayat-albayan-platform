@@ -1,11 +1,11 @@
-import { livePackages, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
+import { livePackages, type StudentBalanceView, type SubscriptionView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { PackageEvents } from '@/common/infra/events/lesson-events';
 import { BalanceRepo } from './balance.repo';
 import { statusChanges, withChanges } from './packages.plan';
 import { toStudentBalance, toSubscriptionView, type SubContext } from '@/modules/finance/subscriptions/subscriptions.mapper';
-import { SubscriptionsRepo, type SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
+import { SubscriptionsRepo, type SubRow } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
 type PackageRow = Omit<SubRow, 'student'>;
 export interface StudentState {

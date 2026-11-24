@@ -13,10 +13,7 @@ interface ParticipantGridProps {
   actions: Pick<TileActions, 'front' | 'switchCamera'>;
 }
 
-/**
- * The grid (docs/35 §3): a shared screen on its own row first, the cameras one or two per row.
- * «تكبير» gives a shared screen the whole grid until «تصغير» (or the share stops).
- */
+/** docs/35 §3: zoom gives a shared screen the whole grid until unzoom or the share stops. */
 export function ParticipantGrid({ tiles, Video, actions }: ParticipantGridProps) {
   const { color } = useTheme();
   const [zoomed, setZoomed] = useState<string | null>(null);

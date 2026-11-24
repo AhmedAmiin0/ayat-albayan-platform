@@ -4,7 +4,7 @@ import type { SalesTeacherView } from '../academy.js';
 import type { SalesScheduleLesson } from '../schedule.js';
 import { isOpenLesson } from '@ab/schedule';
 
-// «المعلمون» and «جدول الحلقات» of the salesperson, the same rules on web and mobile (owner rule: in sync).
+// The salesperson's teachers and schedule, same rules on web and mobile.
 
 export interface SalesTeacherFilter {
   q: string;
@@ -31,16 +31,13 @@ export function teacherPrograms(list: readonly SalesTeacherView[], order: readon
   return order.filter((p) => list.some((tc) => tc.programs.includes(p)));
 }
 
-/** start <= now < end and still open: the lesson is running (it gets «ادخل الحلقة»). */
+/** start <= now < end and still open: the lesson is running and joinable. */
 export function isRunningLesson(lesson: Pick<SalesScheduleLesson, 'status' | 'starts_at' | 'ends_at'>, now: Date): boolean {
   const at = now.getTime();
   return isOpenLesson(lesson.status) && Date.parse(lesson.starts_at) <= at && at < Date.parse(lesson.ends_at);
 }
 
-/**
- * «تأكيد الحلقة» for sales: ANY lesson still scheduled that has not ended, with
- * lessons.confirm (`holds`). Web and mobile show the button by it; the API checks again.
- */
+/** Any still-scheduled, unended lesson with lessons.confirm; the API checks again. */
 export function canSalesConfirm(lesson: Pick<SalesScheduleLesson, 'status' | 'ends_at'>, input: { now: Date; holds: boolean }): boolean {
   return input.holds && lesson.status === 'scheduled' && Date.parse(lesson.ends_at) > input.now.getTime();
 }

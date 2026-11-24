@@ -14,10 +14,7 @@ const BODY = type.size.body;
 /** A crash in the root layout can come before Noto Sans Arabic is registered (iOS rejects it). */
 const font = (family: string) => (isLoaded(family) ? family : undefined);
 
-/**
- * Every root and role layout's ErrorBoundary: it may render outside the root's providers, so it
- * reads nothing from them. Same frame as «تحت الصيانة»; `t` already follows the login's language.
- */
+/** May render outside the root's providers, so it reads nothing from them. */
 export function CrashScreen({ retry }: CrashScreenProps) {
   const { color } = useTheme();
   return (

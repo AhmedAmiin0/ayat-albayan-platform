@@ -1,9 +1,9 @@
-import type { LeadStatus } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import { canTransitionLead } from '@ab/shared';
+import { canTransitionLead } from '@ab/catalog';
 
 type LeadRef = { id: string; status: LeadStatus; converted_guardian_id: string | null };
 

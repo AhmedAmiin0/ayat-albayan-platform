@@ -8,17 +8,13 @@ export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
 interface ButtonProps {
   label: string;
   onPress: () => void;
-  /**
-   * docs/07 §6 «الأزرار». primary: the ONE filled green button of a sheet or section. secondary:
-   * outlined with the 3:1 input edge (a peer action). danger: outlined in the bad tone («إلغاء الحلقة»).
-   * ghost: green text, only for a tertiary header action («إغلاق», «تسجيل الخروج»).
-   */
+  /** docs/07 §6: primary is the ONE filled button of a sheet or section. */
   variant?: ButtonVariant;
-  /** Work in flight: disabled and announced busy; pass the label that says so («جاري الحفظ…»). */
+  /** Disabled and announced busy; pass a label that says so. */
   busy?: boolean;
   /** Not usable yet (nothing picked): disabled, not announced busy; a hint nearby says why. */
   disabled?: boolean;
-  /** The spoken name when the label repeats down a list («غيّر الميعاد — يوسف»). */
+  /** The spoken name when the label repeats down a list. */
   accessibilityLabel?: string;
   /** A leading icon in the label's colour (decorative: hidden from screen readers by the icon set). */
   icon?: (color: string) => ReactNode;
@@ -47,14 +43,7 @@ export function buttonLook(variant: ButtonVariant, color: Palette, pressed: bool
 /** Press feedback: a 2% shrink while held (a state, not an animation), never when off. */
 export const pressScale = (pressed: boolean, off: boolean) => (pressed && !off ? 0.98 : 1);
 
-/**
- * docs/07 §6 «الأزرار» at 48pt: one radius, ui 600 at body size on ONE line. The label's box spans
- * the button (flexGrow) and centres its text: shrink-wrapped in the centred row, Android measured
- * «Join the lesson» narrower than it drew it, wrapped it and showed only «Join the» (owner 2026-10-28,
- * and again 10-29 with the «simple» break strategy). No adjustsFontSizeToFit: on Android it turns the
- * ellipsis off, so a label too long would be cut silently; now it ends in «…». With an icon the box
- * keeps its own width, so the icon and the label stay centred together.
- */
+/** docs/07 §6: the label box spans the button since Android wrapped shrink-wrapped labels. */
 export function Button({ label, onPress, variant = 'primary', busy = false, ref, ...p }: ButtonProps) {
   const { color } = useTheme();
   const off = busy || p.disabled === true;

@@ -93,11 +93,6 @@
       "count": 4
     }
   },
-  "src/lib/appearance/appearance.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/lib/connectivity/connectivity-machine.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -208,15 +203,7 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/lib/i18n/locale.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -245,7 +232,7 @@
   },
   "src/lib/query/query-client.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "typescript/dot-notation": {
       "count": 1
@@ -329,9 +316,6 @@
     },
     "no-nested-ternary": {
       "count": 4
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/ui/call/call-icons.tsx": {
@@ -346,7 +330,7 @@
   },
   "src/ui/connecting/BarCard.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/connecting/CheckBadge.test.tsx": {
@@ -367,7 +351,7 @@
   },
   "src/ui/connecting/ConnectingBar.test.tsx": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/no-meaningless-void-operator": {
       "count": 1
@@ -502,7 +486,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 6
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -523,7 +507,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/ui/layout/tab-bar-inset.ts": {
@@ -576,7 +560,7 @@
   },
   "src/ui/primitives/Button.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/ui/primitives/Chevron.test.tsx": {
@@ -611,7 +595,7 @@
   },
   "src/ui/startup/RetryButton.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/startup/StartupEmblem.test.tsx": {
@@ -653,7 +637,7 @@
   },
   "src/ui/startup/StartupStatus.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -661,7 +645,7 @@
   },
   "src/ui/startup/startup-mode.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ui/surface/inset.test.tsx": {

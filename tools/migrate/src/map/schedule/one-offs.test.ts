@@ -1,4 +1,4 @@
-// One-off bookings (no «التكرار») on or after --from → one upcoming lesson + its student link.
+// One-off bookings on or after --from become one upcoming lesson and its student link.
 import { describe, expect, it } from 'vitest';
 import { keys } from '../../keys.ts';
 import { studentRow } from '../../sources/sheets/fixtures.ts';

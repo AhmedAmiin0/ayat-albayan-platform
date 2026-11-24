@@ -1,0 +1,30 @@
+// The money harness plus the start-date edit's repo as a mock (test-only, excluded from the build).
+import { daysBefore } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
+import { riyadhToday } from '@ab/time';
+import type { TestingModuleBuilder } from '@nestjs/testing';
+import { vi } from 'vitest';
+import type { PermissionResolver } from '@/common/auth/permissions';
+import { systemResolver } from '@/common/auth/auth.guard';
+import { SUB_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { moneyApp } from '@/modules/finance/subscriptions/tests/test-app';
+import { StartDateEditRepo } from '@/modules/finance/subscriptions/start-date-edit/start-date-edit.repo';
+
+export const URL = `/subscriptions/${SUB_ID}/start-date`;
+
+/** Today (Asia/Riyadh) moved by n days, YYYY-MM-DD. */
+export const dayFromToday = (n: number): string => daysBefore(riyadhToday(), -n);
+
+/** salesA is the system sales role plus subscriptions.edit_terms; salesB is not. */
+const withEditTerms: PermissionResolver = async (user) => {
+  const special: readonly Permission[] = user.id.startsWith('a1') ? ['subscriptions.edit_terms'] : [];
+  return [...(await systemResolver(user)), ...special];
+};
+
+export async function startDateApp(resolver: PermissionResolver = withEditTerms) {
+  const edits = { setStartsOn: vi.fn() };
+  const withEdits = (b: TestingModuleBuilder) =>
+    b.overrideProvider(StartDateEditRepo).useValue(edits);
+  const app = await moneyApp(resolver, withEdits);
+  return { ...app, edits };
+}

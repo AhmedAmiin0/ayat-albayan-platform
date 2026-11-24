@@ -43,3 +43,12 @@ test('the automerge job itself is ignored while it runs', () => {
   const self = aRun('lane automerge', { status: 'in_progress', conclusion: null });
   assert.equal(verdict({ checks: [...base, self] }), null);
 });
+
+test('a cancelled run is superseded by a later success of the same check on the head', () => {
+  const twice = [aRun('pr title', { conclusion: 'cancelled' }), aRun('pr title')];
+  assert.equal(verdict({ checks: [...base, ...twice] }), null);
+  const alone = [aRun('pr title', { conclusion: 'cancelled' })];
+  assert.match(verdict({ checks: [...base, ...alone] }) ?? '', /not green: pr title cancelled/);
+  const failedToo = [aRun('pr title', { conclusion: 'failure' }), aRun('pr title')];
+  assert.match(verdict({ checks: [...base, ...failedToo] }) ?? '', /pr title failure/);
+});

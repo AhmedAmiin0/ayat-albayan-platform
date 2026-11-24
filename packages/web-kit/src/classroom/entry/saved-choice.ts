@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { MediaChoice } from '@ab/web-kit/classroom/room/components/room-types';
 
-/** This browser's last «قبل الدخول» choice (a per-viewer convenience: blocked storage = none). */
+/** This browser's last pre-join choice (a per-viewer convenience: blocked storage means none). */
 export const MEDIA_CHOICE_KEY = 'ab.classroom.media';
 
 const choiceSchema = z.object({
@@ -29,10 +29,7 @@ export function readSavedChoice(): MediaChoice | null {
   }
 }
 
-/**
- * What «انضم الآن» joins with, and whether to remember it: a device that was refused or missing
- * is never remembered as «off», so the check shows again next time (after allowing it).
- */
+/** A refused or missing device is never remembered as off, so the check shows again. */
 export interface JoinPick {
   media: MediaChoice;
   remember: boolean;

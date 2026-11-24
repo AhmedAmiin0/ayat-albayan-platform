@@ -7,15 +7,11 @@ import { IconButton } from '../../ui/primitives/IconButton';
 
 interface ChannelSheetHeaderProps {
   title: string;
-  /** The chat's people, «أنت» last; '' while nothing is loaded. */
+  /** The viewer is listed last; empty while nothing is loaded. */
   names: string;
   onClose: () => void;
 }
 
-/**
- * The chat's head inside a sheet (RoomXChat, the lesson room): the grab handle, the title at
- * 18/700, the people at 12/500, and «إغلاق المحادثة» at the end.
- */
 export function ChannelSheetHeader({ title, names, onClose }: ChannelSheetHeaderProps) {
   const { color } = useTheme();
   return (

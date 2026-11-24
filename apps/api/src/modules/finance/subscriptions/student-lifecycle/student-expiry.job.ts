@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { pendingSince } from './student-renewal.plan';
 import { StudentExpiryRepo } from './student-expiry.repo';
 import { StudentStatusRepo } from './student-status.repo';
-import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
 

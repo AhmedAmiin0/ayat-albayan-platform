@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import { unpaidFlagged } from '@/modules/finance/subscriptions/money/packages.plan';
-import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
-import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 
 /**
  * R-SUB-02 «flag future lessons when unpaid»: which of these students have their newest package

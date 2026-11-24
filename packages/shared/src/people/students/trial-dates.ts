@@ -2,20 +2,16 @@ import { DURATIONS, type Attendance, type Duration, type Gender, type LessonStat
 import { isCancelledLesson } from '@ab/schedule';
 import { isNotSubscribed } from './status-flow/index.js';
 
-// «موعد تجريبي جديد»: a new free-trial date for an existing student who has no
-// running subscription, and the history of every trial time picked for them. Pure.
+// A new free trial for a student with no running subscription, and the trial history; pure.
 
-/**
- * What became of one picked trial time: قادمة (still ahead), بانتظار التقرير (its time passed, nothing
- * recorded yet), حضر, غاب, أُلغيت, نُقلت (a newer date replaced it: status rescheduled).
- */
+/** moved: a newer date replaced it; awaiting: its time passed, nothing recorded yet. */
 export const TRIAL_OUTCOMES = ['upcoming', 'awaiting', 'attended', 'absent', 'cancelled', 'moved'] as const;
 export type TrialOutcome = (typeof TRIAL_OUTCOMES)[number];
 
 /** From this many dates on (the new one included) the form warns; never a block. */
 export const TRIAL_DATE_WARN_FROM = 3;
 
-/** One row of «مواعيد الحلقة التجريبية», newest pick first. Times are UTC instants. */
+/** One trial-history row, newest pick first; times are UTC instants. */
 export interface TrialDateRow {
   lesson_id: string;
   starts_at: string;
@@ -94,10 +90,7 @@ export function upcomingTrial<T extends { status: LessonStatus; starts_at: strin
 /** A trial's length when the wizard has none of its own: the booking's 45 minutes. */
 export const TRIAL_DEFAULT_MINUTES: Duration = 45;
 
-/**
- * «موعد تجريبي جديد» keeps the last trial's length (newest pick first) when it is one the slots
- * offer (30/45/60/90), else 45; the wizard may change it.
- */
+/** Keeps the last trial's length when the slots offer it (30/45/60/90), else 45. */
 export function trialLength(history: Pick<TrialHistory, 'items'>): Duration {
   const last = history.items[0];
   const ms = last ? Date.parse(last.ends_at) - Date.parse(last.starts_at) : 0;

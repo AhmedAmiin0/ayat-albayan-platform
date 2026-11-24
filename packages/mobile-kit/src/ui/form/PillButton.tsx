@@ -14,12 +14,9 @@ export interface FilterPill<V extends string> {
   glyph?: Glyph;
   /** Only a number the API returned (e.g. `total` of that filtered list). Never invent one. */
   count?: number;
-  /**
-   * An unread badge after the word (canvas ChatXFamilyEntry «المحادثة 3»): the number in a green
-   * circle and the whole pill's spoken name («المحادثة، 3 غير مقروءة»). None while 0.
-   */
+  /** The count is also in the pill's spoken name; none while 0. */
   badge?: { count: number; label: string };
-  /** Shown but not choosable (a hint beside it says where it lives): «حجز تعويضي» on a lead. */
+  /** Shown but not choosable; a hint beside it says where it lives. */
   disabled?: boolean;
 }
 

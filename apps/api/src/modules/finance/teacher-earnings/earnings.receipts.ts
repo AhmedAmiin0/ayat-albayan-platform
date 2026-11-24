@@ -1,4 +1,5 @@
-import type { SignedDownload, SignedUpload, TeacherReceiptUpload } from '@ab/shared';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
+import type { TeacherReceiptUpload } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, teacherReceiptPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

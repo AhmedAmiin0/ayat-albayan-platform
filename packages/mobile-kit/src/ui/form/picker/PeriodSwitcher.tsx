@@ -15,13 +15,11 @@ const headStyle = (ink: string) => ({
 });
 
 export interface PeriodSwitcherProps {
-  /** «3 أكتوبر – 9 أكتوبر» or «الخميس 1 أكتوبر». */
   label: string;
-  /** The shown week/day holds today: no «النهارده» jump. */
+  /** The shown period holds today, so there is no jump-to-today. */
   current: boolean;
   /** false: nothing earlier to show (a slot picker never goes before this week). Default true. */
   canPrev?: boolean;
-  /** «الأسبوع اللي فات» / «اليوم اللي فات»: the arrows' spoken names. */
   prevLabel: string;
   nextLabel: string;
   onPrev: () => void;
@@ -29,10 +27,7 @@ export interface PeriodSwitcherProps {
   onToday: () => void;
 }
 
-/**
- * ‹ label › with 44pt arrows (earlier at the inline-start, mirrored in RTL, docs/07 §14.8), and
- * «النهارده» when the shown period is elsewhere: a 28pt pill with a 44pt hit area.
- */
+/** Arrows mirrored in RTL (docs/07 §14.8); the today pill is 28pt with a 44pt hit area. */
 export function PeriodSwitcher(props: PeriodSwitcherProps) {
   const { color } = useTheme();
   return (

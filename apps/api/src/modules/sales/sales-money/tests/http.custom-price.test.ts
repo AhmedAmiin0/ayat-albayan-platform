@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { REQUEST_ID, STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';
-import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { REQUEST_ID, STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, salesDefaults } from './sales-money.fakes';
 

@@ -10,9 +10,7 @@ const BUTTON = {
   paddingHorizontal: 8,
 } as const;
 
-/**
- * «إغلاق» at the top start of a full-screen viewer (photo, video), light on black in either scheme.
- */
+/** Light on black in either scheme. */
 export function ViewerClose({
   onClose,
   label = t.common.close,

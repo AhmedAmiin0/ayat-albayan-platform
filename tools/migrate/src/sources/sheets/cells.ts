@@ -12,7 +12,7 @@ export function text(v: Cell | undefined): string | null {
   return /^[—\-–,،]*$/.test(s) ? null : s;
 }
 
-/** Number cell or numeric text («45 دقيقة» → 45); null otherwise. */
+/** Number cell or numeric text; null otherwise. */
 export function num(v: Cell | undefined): number | null {
   if (typeof v === 'number') return Number.isFinite(v) ? v : null;
   const m = /-?\d+(?:\.\d+)?/.exec(text(v) ?? '');

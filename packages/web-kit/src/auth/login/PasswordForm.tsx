@@ -17,7 +17,6 @@ interface Props {
   id: 'email' | 'username';
   label: string;
   hint?: string;
-  /** Links under «دخول». */
   children?: ReactNode;
 }
 

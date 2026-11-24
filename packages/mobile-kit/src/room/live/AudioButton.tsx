@@ -22,10 +22,7 @@ interface AudioButtonProps {
   onPress: () => void;
 }
 
-/**
- * The output in use, by name: «مكبر الصوت», «السماعة», «سماعة الرأس», «سماعة بلوتوث» (read out as
- * «مخرج الصوت: …», not a toggle); a press steps to the next one the phone has.
- */
+/** Read out as the output name, not a toggle; a press steps to the next output the phone has. */
 export function AudioButton({ output, onPress }: AudioButtonProps) {
   const look = LOOK[output ?? 'system'];
   return (

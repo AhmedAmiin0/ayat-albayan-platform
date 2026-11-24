@@ -75,7 +75,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/auth/reset/reset-checks.ts": {
@@ -204,7 +204,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/switch-exhaustiveness-check": {
       "count": 1
@@ -247,14 +247,9 @@
       "count": 1
     }
   },
-  "src/classroom/kick/ParticipantsSheet.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/kick/use-kick.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -262,14 +257,9 @@
   },
   "src/classroom/mute/use-mute.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/classroom/recordings/RecIndicator.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -943,7 +933,7 @@
   },
   "src/testing/test-setup.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1

@@ -29,7 +29,7 @@ export interface CrmIndex {
 
 const TEST_NAME = /\b(?:test|lorem)\b|تجربه|اختبار|نمنم/;
 
-/** A6 test row: dummy number or a test name (Lorem / TEST / تجربة / اختبار / نمنم). */
+/** A6 test row: dummy number or a test name. */
 export function isTestRow(o: { name: string | null; phone: PhoneInfo | undefined }): boolean {
   return (
     (o.phone !== undefined && DUMMY_PHONES.has(o.phone.e164)) ||
