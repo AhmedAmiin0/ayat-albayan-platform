@@ -21,12 +21,7 @@ export function failureCode(error: unknown): string | undefined {
 export const isStale = (error: unknown): boolean =>
   ['stale_time', 'time_edit_not_allowed'].includes(failureCode(error) ?? '');
 
-/**
- * Offline → «مش متأكدين الوقت اتعدّل» (the API answers a repeat of a landed edit with a quiet
- * replay, so trying again is safe); a clash → its lines (booking's wording, «اختار ميعاد تاني»);
- * stale_time, payout_locked, date_in_future, correction_cross_day… → editTime.error; the older
- * codes (date_in_past, invalid_transition…) → lessons.error; anything else → the general error.
- */
+/** Offline is safe to retry: the API replays an edit that already landed. */
 export function editTimeFailure(error: unknown, cycle: ClockCycle, tz: string): EditTimeFailure {
   if (isOffline(error)) return { kind: 'error', text: t.editTime.offline };
   const booked = bookFailure(error, cycle, tz);

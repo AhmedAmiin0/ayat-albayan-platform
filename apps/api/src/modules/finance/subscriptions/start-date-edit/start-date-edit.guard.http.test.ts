@@ -5,7 +5,7 @@ import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 import { dayFromToday, startDateApp, URL } from './start-date-edit.test-util';
 
-// «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms only, never set_start_date.
+// Only subscriptions.edit_terms may edit the start date, never set_start_date.
 describe('PATCH /subscriptions/:id/start-date: who', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

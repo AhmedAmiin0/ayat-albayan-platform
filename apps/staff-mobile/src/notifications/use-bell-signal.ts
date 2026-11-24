@@ -1,4 +1,5 @@
-import { newestOfKind, type PushKind } from '@ab/shared';
+import { newestOfKind } from '@ab/shared';
+import type { PushKind } from '@ab/catalog';
 import { useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { notificationsListQuery } from '@ab/mobile-kit';

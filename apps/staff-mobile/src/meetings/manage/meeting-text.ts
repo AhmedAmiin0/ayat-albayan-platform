@@ -1,4 +1,5 @@
-import { dateText, type ClockCycle, type MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
+import { dateText, type ClockCycle } from '@ab/time';
 import { clockIn, dateWithClock } from '@/core/lib/clock';
 import { ApiError, t, locale } from '@ab/mobile-kit';
 

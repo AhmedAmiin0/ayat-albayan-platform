@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, money } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';

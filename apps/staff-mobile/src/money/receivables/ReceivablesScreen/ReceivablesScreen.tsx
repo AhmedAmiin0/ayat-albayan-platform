@@ -1,4 +1,4 @@
-import type { ReceivableRow } from '@ab/shared';
+import type { ReceivableRow } from '@ab/money';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';

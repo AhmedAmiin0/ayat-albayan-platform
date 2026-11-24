@@ -22,10 +22,7 @@ import { usePayPayout } from './use-payout-move';
 
 const methodPills = (): FilterPill<PaymentMethod>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
-/**
- * «تأكيد الدفع» of a monthly payout: how it was paid, the day, a note, the receipt photo. The amount
- * is not typed: the server settles what the per-session payments left, in one transaction.
- */
+/** The amount is not typed: the server settles what per-session payments left, atomically. */
 export function PayoutPayForm({ payout, onDone }: { payout: PayoutView; onDone: () => void }) {
   const now = useNow();
   const pay = usePayPayout(payout);

@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';

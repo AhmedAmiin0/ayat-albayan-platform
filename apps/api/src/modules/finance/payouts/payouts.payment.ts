@@ -6,11 +6,7 @@ import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.re
 import { toPayoutView } from './payouts.mapper';
 import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 
-/**
- * «تم الدفع» (Y4): the ledger settlement AND the payout's move to paid in ONE transaction
- * (pay_payout, migration 20261005000201), with the transfer's date, method, note and receipt
- * (receipts/{teacher_id}/…, uploaded through POST /teacher-earnings/:teacherId/receipt-upload-url).
- */
+/** Y4: settlement and the move to paid in one transaction (migration 20261005000201). */
 @Injectable()
 export class PayoutsPayment {
   constructor(
@@ -34,7 +30,6 @@ export class PayoutsPayment {
     return toPayoutView(await this.row(id));
   }
 
-  /** The receipt uploaded with «تم الدفع»; none → 404 receipt_not_found. */
   async receipt(id: string): Promise<SignedDownload> {
     return this.receipts.download((await this.row(id)).receipt_path);
   }

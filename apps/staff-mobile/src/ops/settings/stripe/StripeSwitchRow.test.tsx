@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem } from '@ab/shared';
+import type { IntegrationConfigItem } from '@ab/catalog';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { STRIPE_FEATURE_KEY } from '@/core/lib/stripe-flag';

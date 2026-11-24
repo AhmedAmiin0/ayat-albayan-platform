@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem } from '@ab/shared';
+import type { IntegrationConfigItem } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import { stripeSwitch, switchNote, switchValues } from './stripe-switch';
 

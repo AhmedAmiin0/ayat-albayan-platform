@@ -1,4 +1,4 @@
-import { CAIRO_TZ, dateText, RIYADH_TZ, zonedFieldsIn, type ClockCycle } from '@ab/shared';
+import { CAIRO_TZ, dateText, RIYADH_TZ, zonedFieldsIn, type ClockCycle } from '@ab/time';
 import { clockIn, hhmm, phoneTz, rangeOf } from '@/core/lib/clock';
 import { t, locale, ltr } from '@ab/mobile-kit';
 import type { AvailabilityRow, TimeOff } from '@ab/shared';

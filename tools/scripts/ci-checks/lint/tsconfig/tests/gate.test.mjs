@@ -1,9 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { isTsconfig, violations } from './gate.mjs';
+import { isTsconfig, violations } from '../gate.mjs';
 
-const check = (config, path = 'apps/api/tsconfig.json') =>
-  violations(path, JSON.stringify(config));
+const check = (config, path = 'apps/api/tsconfig.json') => violations(path, JSON.stringify(config));
 
 test('isTsconfig: tsconfig.json and tsconfig.*.json anywhere, nothing in node_modules', () => {
   assert.equal(isTsconfig('tsconfig.json'), true);
@@ -33,7 +32,9 @@ test('jsonc: comments and trailing commas parse', () => {
 });
 
 test('references, rootDirs, typeRoots and baseUrl each fail, even when empty', () => {
-  assert.deepEqual(check({ references: [] }), ['references: link apps and packages in package.json']);
+  assert.deepEqual(check({ references: [] }), [
+    'references: link apps and packages in package.json',
+  ]);
   const options = { rootDirs: ['src'], typeRoots: ['./types'], baseUrl: '.' };
   assert.deepEqual(check({ compilerOptions: options }), [
     'compilerOptions.rootDirs: link apps and packages in package.json',
@@ -100,13 +101,44 @@ test('extends: a tsconfig.base.json that is not the root one fails', () => {
 });
 
 test('extends: a bare relative name without ./ is resolved as a package, so it fails', () => {
-  assert.deepEqual(check({ extends: 'tsconfig.json' }), [
-    `extends: "tsconfig.json" ${NOT_BASE}`,
-  ]);
+  assert.deepEqual(check({ extends: 'tsconfig.json' }), [`extends: "tsconfig.json" ${NOT_BASE}`]);
 });
 
-test('paths is not checked yet', () => {
-  assert.deepEqual(check({ compilerOptions: { paths: { '@/*': ['./src/*'] } } }), []);
+const ALIAS = { '@/*': ['${configDir}/src/*'] };
+const PATHS =
+  'compilerOptions.paths: only tsconfig.base.json at the root, exactly {"@/*":["${configDir}/src/*"]}';
+
+test('paths: the root tsconfig.base.json may hold exactly the @/ alias', () => {
+  assert.deepEqual(check({ compilerOptions: { paths: ALIAS } }, 'tsconfig.base.json'), []);
+});
+
+test('paths: any other value in the root base fails', () => {
+  const others = [
+    { '@/*': ['./src/*'] },
+    { '@/*': ['${configDir}/src/*', './src/*'] },
+    { ...ALIAS, '@ab/web-kit/*': ['./packages/web-kit/src/*'] },
+    {},
+  ];
+  others.forEach((paths) =>
+    assert.deepEqual(check({ compilerOptions: { paths } }, 'tsconfig.base.json'), [PATHS]),
+  );
+});
+
+test('paths: every other tsconfig fails, even with the same alias or none', () => {
+  const where = ['apps/api/tsconfig.json', 'packages/web-kit/tsconfig.json', 'tsconfig.json'];
+  where.forEach((path) => {
+    assert.deepEqual(check({ compilerOptions: { paths: ALIAS } }, path), [PATHS]);
+    assert.deepEqual(check({ compilerOptions: { paths: {} } }, path), [PATHS]);
+  });
+  const nested = 'apps/api/tsconfig.base.json';
+  assert.deepEqual(check({ compilerOptions: { paths: ALIAS } }, nested), [PATHS]);
+});
+
+test('baseUrl fails in the root base too', () => {
+  const config = { compilerOptions: { baseUrl: '.', paths: ALIAS } };
+  assert.deepEqual(check(config, 'tsconfig.base.json'), [
+    'compilerOptions.baseUrl: link apps and packages in package.json',
+  ]);
 });
 
 test('a malformed field fails the parse instead of passing silently', () => {
