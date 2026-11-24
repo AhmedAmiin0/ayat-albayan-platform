@@ -11,10 +11,7 @@ export interface PhoneInfo {
 /** A6 dummy numbers used for test rows. */
 export const DUMMY_PHONES: ReadonlySet<string> = new Set(['+966500000000', '+966501234567']);
 
-/**
- * WhatsApp ids are international digits without '+' (CRM contacts, «رقم الواتساب»); local forms
- * (05…, 01…, 00…) are accepted too. undefined = not E.164-able (empty, handle, no country code).
- */
+/** WhatsApp ids lack '+'; local forms are accepted; undefined when not E.164-able. */
 export function toE164(raw: string | number | null | undefined): PhoneInfo | undefined {
   const p = phoneCell(raw ?? null);
   return p.ok ? { e164: p.e164, tz: tzForPhone(p.e164) } : undefined;

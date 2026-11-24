@@ -1,5 +1,4 @@
-// Who a «تقويم الحجوزات» row books: its students (by guardian phone + name, siblings split, A4)
-// and its teacher («المعلم/ة» via teacherFromText; empty → the student's teacher). Pure.
+// Students by guardian phone + name (siblings split, A4); empty teacher means the student's; pure.
 import type { NaturalKey, SourceRow } from '../../types.ts';
 import { phoneCell, text } from '../../sources/sheets/cells.ts';
 import type { IssueInput } from '../../sources/sheets/issues.ts';

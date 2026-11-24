@@ -47,12 +47,7 @@ function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId' | 'onBack'
   );
 }
 
-/**
- * A lesson's own page (`/lesson/<id>`, the app's lesson screen; boards FamFilesWebNoRec,
- * FamFilesWebAttended): reached from a «حضرها» row's «ملفات الحلقة» even when nothing was
- * recorded. Its recording (if any), the report's first lines and «ملفات الحلقة». While loading
- * or after an error the page is «صفحة الحلقة».
- */
+/** Reached from an attended row even when nothing was recorded. */
 export function LessonPage({ student, lessonId, onOpenReport, onBack }: Props) {
   const query = usePortalLesson({ studentId: student.id, lessonId });
   return (

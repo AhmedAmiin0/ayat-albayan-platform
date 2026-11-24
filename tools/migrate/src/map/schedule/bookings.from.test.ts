@@ -1,5 +1,4 @@
-// Calendar bookings from the import date on: يحتاج تأكيد → active rule whose
-// lessons the platform generates unconfirmed; «حتى» → ends_on; nothing before --from.
+// Needs-confirmation bookings become active rules generating unconfirmed lessons; until is ends_on.
 import { describe, expect, it } from 'vitest';
 import { studentRow } from '../../sources/sheets/fixtures.ts';
 import { clampRuleStarts } from '../../delta/scope.ts';

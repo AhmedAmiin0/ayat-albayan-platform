@@ -21,7 +21,7 @@ const TITLE = {
   2: 'text-body font-bold',
 } as const;
 
-/** «تسجيل مرئي · 44 دقيقة» beside the title when the lesson's recording is a video. */
+/** Shown beside the title when the lesson's recording is a video. */
 function VideoChip({ view }: { view: PortalLessonAssets }) {
   const video = view.recordings.find((r) => r.media === 'video');
   if (!video) return null;
@@ -29,7 +29,7 @@ function VideoChip({ view }: { view: PortalLessonAssets }) {
   return <Pill tone="neutral">{t.familyFiles.videoChip.replace('{minutes}', minutes)}</Pill>;
 }
 
-/** «حلقة الخميس، 12 نوفمبر» and «يوسف · مع أ. فاطمة · 6:30 م – 7:15 م» on the student's clock. */
+/** On the student's clock. */
 export function LessonHead({ view, student, level }: HeadProps) {
   const clock = { ...useClock(), tz: student.tz };
   const Heading = level === 1 ? 'h1' : 'h2';
@@ -44,10 +44,7 @@ export function LessonHead({ view, student, level }: HeadProps) {
   );
 }
 
-/**
- * «من تقرير هذه الحلقة» and «اقرأ التقرير كاملًا», which opens the report's own page (without
- * the recording button: recordings spec §1 rule).
- */
+/** The report page opens without the recording button (recordings spec §1). */
 export function ReportBlock({ reportId, onOpenReport }: {
   reportId: string;
   onOpenReport: (report: OpenReport) => void;

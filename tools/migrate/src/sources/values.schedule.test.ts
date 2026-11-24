@@ -1,4 +1,4 @@
-// «التكرار» days and «حتى» end dates as the old Apps Script writes them (invented values).
+// Recurrence days and until dates as the old Apps Script writes them (invented values).
 import { describe, expect, it } from 'vitest';
 import { bookingStatus, parseRecurrence, weekday } from './values.schedule.ts';
 

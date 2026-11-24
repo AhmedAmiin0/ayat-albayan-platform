@@ -1,6 +1,4 @@
-// «كل المحادثات» (HUB, then BOOK: the same phones) folded into one entry per phone. The CRM is the
-// primary lead source; these rows fill gaps: phones the CRM lacks, and the status, source and
-// summary the CRM never had. Pure.
+// The conversations tab (HUB, then BOOK) folded per phone; it fills CRM gaps; pure.
 import type { Enums } from '@ab/db';
 import type { SourceBundle } from '../../entities/contract.ts';
 import { leadSource, sheetLeadStatus } from '../../sources/values.ts';
@@ -13,7 +11,7 @@ export interface SheetLead {
   ref: SourceRef;
   phone: PhoneInfo;
   name: string | null;
-  /** 'job_applicant' = «توظيف / عرض خدمة» (job_applicants import, never a lead). */
+  /** 'job_applicant' rows go to job_applicants, never a lead. */
   status: Enums<'lead_status'> | 'job_applicant' | undefined;
   source: Enums<'lead_source'> | undefined;
   summary: string | null;
@@ -55,7 +53,7 @@ function readRow(row: SourceRow, issues: RowIssue[]): SheetLead | undefined {
   const status = sheetLeadStatus(statusText);
   const sourceText = str(row, 'source');
   const source = leadSource(sourceText);
-  if (status === 'skip' || source === 'skip') return undefined; // جروب حلقة, داخلي
+  if (status === 'skip' || source === 'skip') return undefined;
   const phone = toE164(str(row, 'phone'));
   if (!phone) {
     // A job row without a usable phone is the job_applicants import's to report.

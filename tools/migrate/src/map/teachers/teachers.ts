@@ -1,8 +1,4 @@
-// teachers ← HUB «المعلمين» (11) + BOOK «المعلمون» (calendar ids). Pure map.
-// Not imported: rates (FIN «Staff Expenses» are per student-month, not per lesson; owner enters
-// them) and availability («الأيام المتاحة» is empty for all 11, B4; «المواعيد المتاحة» is a
-// generated grid). Teachers are matched by slug, so a teacher the app already created with the
-// same phone collides on teachers.phone_e164: create teachers in the app after the import.
+// Rates and availability are not imported (B4); create teachers after the import.
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keys, teacherSlug } from '../../keys.ts';
 import { phoneCell, text, tzForPhone } from '../../sources/sheets/cells.ts';
@@ -59,7 +55,7 @@ function mapTeacher(row: SourceRow, cals: ReadonlyMap<string, string>): Mapped {
       display_name_ar: nameAr,
       display_name_en: nameEn,
       gender: g,
-      programs: ['quran'], // «تحفيظ وتجويد» for all 11
+      programs: ['quran'], // memorization and tajweed for all 11
       phone_e164: phone.ok ? phone.e164 : null,
       meeting_link: meetingLink(text(row.fields['meeting_link'])),
       status: /نشط/.test(text(row.fields['status']) ?? '') ? 'active' : 'inactive',

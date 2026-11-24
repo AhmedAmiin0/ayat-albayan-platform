@@ -41,7 +41,7 @@ export function tzForPhone(e164: string): string {
   return TZ_BY_CODE.find(([code]) => e164.startsWith(code))?.[1] ?? DEFAULT_TZ;
 }
 
-// «الدولة / التوقيت اللي هتحضر بيه» (normalized): what the family declared beats the phone.
+// What the family declared beats the phone.
 const TZ_BY_COUNTRY: Readonly<Record<string, string>> = {
   السعوديه: 'Asia/Riyadh',
   الكويت: 'Asia/Kuwait',

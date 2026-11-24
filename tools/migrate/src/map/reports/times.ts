@@ -1,7 +1,4 @@
-// When did a reported lesson start? The report form only has a date; «تقويم الحجوزات» rows (any
-// status) give the booked wall-clock time and duration of that student: on the row's own date,
-// and for a weekly row («أسبوعي: …») on every booked weekday from that date to «حتى» (or today).
-// A row booked for that exact date beats a weekly one. Pure.
+// Start times come from bookings calendar rows; an exact-date row beats a weekly one; pure.
 import type { SourceBundle } from '../../entities/contract.ts';
 import { hhmm, num, phoneCell, text, ymd } from '../../sources/sheets/cells.ts';
 import { splitSiblings } from '../../sources/sheets/siblings.ts';

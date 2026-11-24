@@ -1,4 +1,4 @@
-// HUB «نظام تسجيل الطلاب» people tabs. A repeated header gets " 2", " 3" (A9: the form changed shape).
+// HUB people tabs; a repeated header gets " 2", " 3" (A9: the form changed shape).
 import { HUB_FILE } from './headers.common.ts';
 import type { SheetSpec } from './headers.ts';
 
@@ -18,7 +18,7 @@ export const HUB_PEOPLE: SheetSpec[] = [
       'اسم الطالب': 'student_name',
       'رقم الواتساب (مع كود الدولة)': 'phone',
       'سن الطالب': 'age',
-      النوع: 'gender', // أنثى · ذكر
+      النوع: 'gender', // female or male
       الدولة: 'country',
       المدينة: 'city',
       'بتملا الاستمارة بصفتك': 'filled_by',
@@ -35,12 +35,12 @@ export const HUB_PEOPLE: SheetSpec[] = [
       'الباقة المطلوبة': 'package_text',
       المده: 'duration_v1', // empty in every row
       'وقت البدء 2': 'start_time',
-      'المده 2': 'duration_text', // «45 دقيقة»
+      'المده 2': 'duration_text', // duration text in minutes
       الساعه: 'hour',
       'تاريخ اول حصه': 'first_lesson_date',
       'المعلم/المعلمه': 'teacher', // already a slug: hassan, hend, abrar …
       'عرفت عننا منين؟': 'source',
-      'نوع الحلقة': 'group_kind', // فردي · جماعي
+      'نوع الحلقة': 'group_kind', // individual or group
       'عرفت عننا منين؟ 2': 'source_v2',
       'ملاحظات أو طلبات خاصة': 'notes',
       'معرّف الطالب': 'legacy_code',
@@ -80,10 +80,10 @@ export const HUB_PEOPLE: SheetSpec[] = [
       التوقيت: 'tz_country',
       الباقة: 'package_text',
       'نوع الحلقة': 'group_kind',
-      المصدر: 'source', // «إعلان فيسبوك,» — multi-select, trailing comma
+      المصدر: 'source', // multi-select with a trailing comma
       ملاحظات: 'notes',
       المعلم: 'teacher', // slug
-      الحالة: 'status', // «جديد — لسه ما اتواصلناش» · «طالب حالي»
+      الحالة: 'status',
       'آخر تحديث': 'updated_at',
     },
   }),
@@ -94,10 +94,10 @@ export const HUB_PEOPLE: SheetSpec[] = [
       'معرّف المعلم': 'legacy_id', // M-01 … M-11
       'اسم المعلم': 'name_en', // English names → keys.teacher slugs (teachers.dir.ts)
       'رقم التواصل': 'phone', // digits without + (docs/06: prefix +)
-      النوع: 'gender', // معلمة · معلم
-      التخصص: 'specialty', // تحفيظ وتجويد → programs {quran}
+      النوع: 'gender', // female or male teacher
+      التخصص: 'specialty', // memorization and tajweed maps to programs {quran}
       'الأيام المتاحة': 'available_days',
-      الحالة: 'status', // نشط → active
+      الحالة: 'status', // active
       ملاحظات: 'notes',
       'رابط Google Meet': 'meeting_link',
     },

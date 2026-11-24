@@ -23,9 +23,9 @@ export const OPS_SHEETS: SheetSpec[] = [
       'اسم الطالب (لا تعدله)': 'student_locked',
       'اسم الطالب (من السجل)': 'student_registry_name',
       'رقم الواتساب': 'phone',
-      'المعلم (من السجل)': 'teacher_slug', // abrar, hend … when «حالة الربط» = «مربوط ✅»
+      'المعلم (من السجل)': 'teacher_slug', // teacher slugs when the link status is linked
       'حالة الربط': 'link_status',
-      'إرسال للطالب': 'send_status', // «اتبعت PDF ✅ wamid…» → lesson_reports.sent_at known
+      'إرسال للطالب': 'send_status', // a sent PDF marker means lesson_reports.sent_at is known
       'رابط PDF': 'pdf_link', // Drive link; the PDF itself is in the zip (report_pdfs)
     },
   },
@@ -48,7 +48,7 @@ export const OPS_SHEETS: SheetSpec[] = [
     fields: { ...BOOKING_FIELDS, 'معرّف الطالب': 'legacy_code', المعلم: 'teacher' },
   },
   {
-    // 285 rows (docs/06 «superset»). Status: يحتاج تأكيد 268 · مبدئي 6 · مؤكد 4 · ملغي 3 · مشترك 2 · تمت 2.
+    // 285 rows (docs/06 superset), mostly needs confirmation.
     id: 'book_bookings',
     source: 'BOOK',
     file: BOOK_FILE,

@@ -10,7 +10,7 @@ export function splitStudentKey(key: string): [string, string] {
   return i < 0 ? ['', key] : [key.slice(0, i), key.slice(i + 1)];
 }
 
-/** Students under one guardian whose names are similar but not equal (هاله ~ هاله محمد). */
+/** Students under one guardian with similar but unequal names. */
 export function similarStudents(desired: readonly Desired[]): RowIssue[] {
   const byGuardian = new Map<string, Desired[]>();
   for (const d of desired) {

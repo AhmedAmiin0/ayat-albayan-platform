@@ -1,5 +1,4 @@
-// People rows: HUB «الطلاب» (master), «ردود التسجيل», confirmed «تقويم الحجوزات» rows → one
-// PersonRow per child (A4 split), or issues. Pure; merging by natural key is in collect.ts.
+// One PersonRow per child (A4 split), or issues; pure; merging is in collect.ts.
 import { keys } from '../../keys.ts';
 import { cleanName, splitSiblings } from '../../sources/sheets/siblings.ts';
 import { firstText, legacyCode, num, phoneCell, text } from '../../sources/sheets/cells.ts';
@@ -13,7 +12,7 @@ export interface PersonFields {
   age: number | null;
   gender: string | null;
   country: string | null;
-  /** «الدولة / التوقيت»: the zone the family said they attend in (beats the phone's). */
+  /** The zone the family said they attend in; beats the phone's. */
   tzCountry: string | null;
   level: string | null;
   memorized: string | null;
@@ -37,7 +36,7 @@ export interface PersonRow {
   fields: PersonFields;
 }
 
-/** HUB «طالب حالي», a «مشترك» booking, a HEART «subscription» row (docs/06 status mapping). */
+/** docs/06 status mapping: old evidence claims. */
 export type OldClaim = 'hub_current' | 'subscribed_booking' | 'heart_row';
 
 /** A row with a valid phone but no child name: the family (guardian) is kept, the child is not. */
@@ -67,14 +66,14 @@ export function fieldsOf(f: Record<string, Cell>, kind: Kind): PersonFields {
     riwaya: text(f['riwaya']),
     notes: kind === 'booking' ? null : text(f['notes']),
     guardianName: text(f['guardian_name']),
-    source: firstText(f['source'], f['source_v2']), // A9: two «عرفت عننا منين؟» columns
+    source: firstText(f['source'], f['source_v2']), // A9: two referral-source columns
     teacherText: text(f['teacher']),
   };
 }
 
 const ACTIVE = /طالب حالي/;
 
-/** What the old rule read in «الحالة»: HUB «طالب حالي», a «مشترك» booking. */
+/** What the old rule read in the status column. */
 function claimsOf(status: string | null): OldClaim[] {
   const out: OldClaim[] = [];
   if (ACTIVE.test(status ?? '')) out.push('hub_current');

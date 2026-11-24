@@ -2,9 +2,7 @@ import type { NotificationsPage } from '@ab/shared';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
-// apps/api /me/notifications and /me/web-push (R-NOT-01): the bell's rows and this browser's
-// push subscription. Everyone holding notifications.push (staff, guardians, students) reads
-// their own: the staff bell and the family «الإشعارات» share these.
+// R-NOT-01: everyone with notifications.push reads their own bell rows and push subscription.
 export const NOTIFICATIONS_KEY = ['notifications'] as const;
 export const NOTIFICATIONS_PAGE_SIZE = 20;
 
@@ -15,7 +13,7 @@ export const notificationsQuery = queryOptions({
   refetchInterval: 30_000,
 });
 
-/** No ids = every unread row of the caller («تحديد الكل كمقروء»). */
+/** No ids means every unread row of the caller. */
 export const markRead = (ids?: string[]) => apiSend('POST', '/me/notifications/read', ids ? { ids } : {});
 
 /** markRead as a mutation that refreshes the list and the badge once it lands. */
