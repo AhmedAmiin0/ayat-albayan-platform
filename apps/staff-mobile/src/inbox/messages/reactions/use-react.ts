@@ -11,7 +11,7 @@ function reactionError(e: unknown): string {
   return code === 'reaction_unsupported' ? t.inbox.reactions.unsupported : t.inbox.reactions.failed;
 }
 
-/** «تفاعل» (owner 2026-10-27) in the open chat's cache (client-core reactionMutation); `say` tells why it did not go. */
+/** `say` tells why a reaction did not go. */
 export function useReact(phone: string, say: (text: string) => void) {
   const client = useQueryClient();
   const queryKey = threadKey(phone);

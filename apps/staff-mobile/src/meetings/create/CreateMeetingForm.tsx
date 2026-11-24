@@ -1,4 +1,4 @@
-import type { CreateMeeting } from '@ab/shared';
+import type { CreateMeeting } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, Field, ErrorLine } from '@ab/mobile-kit';

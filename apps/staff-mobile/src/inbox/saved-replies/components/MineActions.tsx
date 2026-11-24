@@ -2,7 +2,6 @@ import type { SavedReply } from '@ab/shared';
 import { t, useTheme, IconButton } from '@ab/mobile-kit';
 import { EditIcon, TrashIcon } from '@/inbox/shared/chat-icons';
 
-/** A reply's «عدّل» and «احذف» at the end of its row (44pt each), named with its title. */
 export function EditDelete({ reply, onEdit, onDelete }: { reply: SavedReply; onEdit: () => void; onDelete: () => void }) {
   const { color } = useTheme();
   return (

@@ -10,10 +10,7 @@ export interface OfferActionsProps {
   stale: boolean;
 }
 
-/**
- * «أرسله على واتساب» opens WhatsApp's chat picker with the site's offer text (no number: the staff
- * member picks the guardian). «انسخ العرض للعميل» opens the share sheet, which has Copy.
- */
+/** The WhatsApp share has no number so the staff member picks the guardian. */
 export function OfferActions({ quote, stale }: OfferActionsProps) {
   // The guardian reads it on WhatsApp: Arabic whatever the UI language (parent-facing output).
   const text = offerText(quote, ar.pricing);

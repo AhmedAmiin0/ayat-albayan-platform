@@ -8,11 +8,7 @@ import { EditDelete } from '@/inbox/saved-replies/components/MineActions';
 import { ReplyEditor } from '@/inbox/saved-replies/editor/ReplyEditor';
 import { ReplyRow } from '@/inbox/saved-replies/components/ReplyRow';
 
-/**
- * «إدارة» in the quick-replies sheet (owner 2026-10-26): her own replies with «رد جديد» and each row's
- * edit / delete, so the pick list itself stays clean as WhatsApp's. The shared list is managed in
- * «الإعدادات».
- */
+/** The shared list is managed in settings. */
 interface ManageRepliesProps {
   mine: SavedReply[];
   /** The list is still loading, or failed: said instead of «none yet». */

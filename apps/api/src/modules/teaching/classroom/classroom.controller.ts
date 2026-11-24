@@ -37,7 +37,7 @@ export class ClassroomController {
     return this.rooms.join({ user, lessonId: id });
   }
 
-  /** «ابعت لينك الحلقة»: 409 template_not_approved, 404 student_not_in_lesson. */
+  /** 409 template_not_approved, 404 student_not_in_lesson. */
   @Post('join-link')
   @HttpCode(200)
   @Permissions('classroom.links')
@@ -49,7 +49,7 @@ export class ClassroomController {
     return this.links.send({ lessonId: id, body, actorId: user.id });
   }
 
-  /** «انسخ لينك الطالب»: the guest URL, for the admin or the lesson's own teacher. */
+  /** Returns the guest URL, for the admin or the lesson's own teacher. */
   @Post('join-link/url')
   @HttpCode(200)
   @Permissions('classroom.host')

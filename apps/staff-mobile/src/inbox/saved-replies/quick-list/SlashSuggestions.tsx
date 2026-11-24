@@ -11,7 +11,6 @@ interface SlashSuggestionsProps {
   /** What was typed after «/». */
   search: string;
   contact: ReplyContact;
-  /** The draft's fill: a reply with blanks opens the sheet's «أكمل الرد» form instead. */
   onFill: ReplyFill;
 }
 

@@ -10,10 +10,7 @@ import { threadLink, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { callListQuery } from '@/inbox/thread/calls/api/calls-api';
 import { CallsLogRow } from './CallsLogRow';
 
-/**
- * «المكالمات» (docs/28 §5): every call, newest first; a tap opens that chat. Shown only while calls are on.
- * The chats' compact top and their inset card of rows (owner 2026-10-28: one container rule).
- */
+/** docs/28 §5: shown only while calls are on. */
 export function CallsLog({ switcher }: { switcher?: ReactNode }) {
   const mode = useThreadMode();
   const base = useTreeBase();

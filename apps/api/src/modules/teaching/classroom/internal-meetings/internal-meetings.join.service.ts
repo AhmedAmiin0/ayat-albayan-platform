@@ -11,15 +11,10 @@ import { mintToken, newIdentity } from '@/modules/teaching/classroom/livekit/liv
 import { meetingTarget } from '@/modules/teaching/classroom/recordings/recording-target';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 
-/** 410 meeting_ended: «إنهاء» was pressed, or the row was revoked. */
+/** 410 meeting_ended: the meeting was ended or the row was revoked. */
 export const meetingEnded = (): HttpException => new HttpException({ code: 'meeting_ended', message: 'meeting_ended' }, HttpStatus.GONE);
 
-/**
- * Entering «اجتماع داخلي»: staff with their login (POST /meetings/:id/join), anyone with the link
- * and a name (POST /public/meetings/:token/join, as a guest). A fresh identity per call, like the
- * lesson rooms. Every join makes sure the meeting is recorded (like a lesson, migration 212); nobody
- * is blocked: no classroom_participants row.
- */
+/** Internal meeting join: every join ensures recording; nobody is blocked (migration 212). */
 @Injectable()
 export class InternalMeetingJoinService {
   constructor(

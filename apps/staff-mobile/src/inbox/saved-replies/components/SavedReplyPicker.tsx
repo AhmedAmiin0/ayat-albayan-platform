@@ -10,10 +10,7 @@ interface SavedReplyPickerProps {
   onFill: ReplyFill;
 }
 
-/**
- * The button's sheet plus the placeholder values; mounted only while open. A reply with blanks
- * (picked here or in the «/» list) shows its «أكمل الرد» form in place of the list: one sheet at a time.
- */
+/** Only one sheet at a time, so the fill form replaces the list. */
 export function SavedReplyPicker({ contact, onClose, onFill }: SavedReplyPickerProps) {
   const { pick, known } = useFillReply(contact, onFill);
   const asking = onFill.asking;

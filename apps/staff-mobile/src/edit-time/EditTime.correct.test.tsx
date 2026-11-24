@@ -48,7 +48,7 @@ test('the session ran an hour: the reason is required before «احفظ التع
   expect(screen.getByText(t.editTime.payoutWarn)).toBeTruthy();
   expect(screen.getByText(t.editTime.pdfRefresh)).toBeTruthy();
   expect(screen.getByText(t.editTime.error.reason_required)).toBeTruthy();
-  // No guardian message for a correction, and no «غيّر الموعد» hint.
+  // No guardian message for a correction, and no reschedule hint.
   expect(screen.queryByRole('switch')).toBeNull();
   expect(screen.queryByText(t.editTime.vsReschedule)).toBeNull();
   expect(submit()).toBeDisabled();

@@ -1,7 +1,9 @@
-import { counted, formatAmount, packageProgress, type ClockCycle } from '@ab/shared';
+import { counted } from '@ab/core';
+import { formatAmount, packageProgress } from '@ab/money';
+import type { ClockCycle } from '@ab/time';
 import { whenIn } from '@/core/lib/clock';
 import { t, isolate } from '@ab/mobile-kit';
-import type { PendingReportRow, TaskRow, UnpaidRow } from '@ab/shared';
+import type { PendingReportRow, TaskRow, UnpaidRow } from '@ab/money';
 
 /** «باقة سهيلة قاربت على الانتهاء: …» (dashboard.task.<kind>, same wording as the web). */
 export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): string {

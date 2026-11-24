@@ -8,7 +8,7 @@ import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { LessonTimeService } from './time-edit.service';
 
-/** PATCH /lessons/:id/time (docs/10 route 22, R-SCH-11 «عدّل الوقت»): admin only; teachers propose. */
+/** docs/10 route 22, R-SCH-11: admin only; teachers propose instead. */
 @ApiTags('lessons')
 @ApiBearerAuth()
 @Permissions('lessons.write')

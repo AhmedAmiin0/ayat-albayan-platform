@@ -33,7 +33,7 @@ beforeEach(() => {
   apiFetch.mockReset();
 });
 
-// R-ACC-01: «حسابي» is linked from the user area of every shell, with the photo or the initials.
+// R-ACC-01: every shell links the account page with the photo or the initials.
 describe('«حسابي» in the shells (R-ACC-01)', () => {
   it.each([
     ['SideFoot (admin sidebar ≥ 900px)', <SideFoot key="s" email="sara@ab.co" />],

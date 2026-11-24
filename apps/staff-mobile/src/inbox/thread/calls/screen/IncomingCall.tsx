@@ -11,12 +11,7 @@ interface IncomingCallProps {
   onDecline: () => void;
 }
 
-/**
- * A family calling the academy's chat number (docs/28 §3.2): full screen, «رفض» (red) and «قبول». Every
- * staff member who may answer that chat sees it; the first «قبول» takes the call and the screen closes
- * for the others. Read out as an alert with the caller's name; no button is focused for them. Shown in
- * CallOverlay's one Modal (its back silences the ring).
- */
+/** docs/28 §3.2: every staff member who may answer sees it; the first accept takes the call. */
 export function IncomingCall({ name, phone, onAccept, onDecline }: IncomingCallProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();

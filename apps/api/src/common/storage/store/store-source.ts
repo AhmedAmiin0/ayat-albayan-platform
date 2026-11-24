@@ -12,7 +12,7 @@ export class StorageNotConfigured extends Error {
 
 interface Sources {
   supabase: ObjectStore;
-  /** The current storage config (the integration overlay: «التكاملات» or env). */
+  /** The current storage config: the integrations overlay, else env. */
   config: () => StorageEnv;
   minio: (m: MinioEnv) => ObjectStore;
 }

@@ -4,7 +4,7 @@ import {
   VALUE_GROUPS,
   type SettingKey,
   type ValueGroupId,
-} from '@ab/shared';
+} from '@ab/settings';
 import { textAt } from './value-text';
 
 /** The chip strip: the editable groups, then the module-owned ones (read-only, «للاطلاع»). */

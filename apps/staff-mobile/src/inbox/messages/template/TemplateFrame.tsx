@@ -4,7 +4,6 @@ import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText, AttachIcon, DocumentIcon } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 
-/** A text header in bold; a media one is the message's own file when it has one, else its kind («مستند»). */
 function Header({ header, hasMedia }: { header: TemplateHeader | null; hasMedia: boolean }) {
   const { color } = useTheme();
   if (!header || (header.type !== 'text' && hasMedia)) return null;

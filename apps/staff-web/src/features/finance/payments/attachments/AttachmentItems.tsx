@@ -4,7 +4,6 @@ export type AttachmentItem = { key: string; name: string };
 type Texts = { attachmentN: string; attachmentRemove: string };
 type Props = { items: AttachmentItem[]; texts: Texts; onRemove: (index: number) => void };
 
-/** The chosen files before the save: «مرفق n», the file's name, and a remove button each. */
 export function AttachmentItems({ items, texts, onRemove }: Props) {
   if (items.length === 0) return null;
   return (

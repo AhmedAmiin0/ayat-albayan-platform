@@ -24,7 +24,6 @@ const DURATIONS = PRICING_DURATIONS.map((d) => {
   const value = `${d}` as const;
   return { value, label: p.durations[value] };
 });
-/** The site's frequency order (مرة … كل يوم), then «عدد مخصوص». */
 const BY_FREQUENCY = ['weekly', 'starter', 'standard', 'premium', 'monthly', 'bulk'] as const;
 const PLANS: readonly FilterPill<PlanChoice>[] = [
   ...BY_FREQUENCY.map((id) => ({ value: id, label: p.frequencies[id] })),
@@ -38,16 +37,10 @@ const DISCOUNT_PILLS = DISCOUNTS.map((d) => {
 interface PricingStepsProps {
   selection: Selection;
   onChange: (patch: Partial<Selection>) => void;
-  /** The free 0–100 field beside the pills (the calculator); the chat's «عرض سعر» has the pills only. */
   freeDiscount?: boolean;
-  /** Under the pills: the chat's «مبلغ مخصص» (owner 2026-11-15). */
   discountExtra?: ReactNode;
 }
 
-/**
- * The site's five steps: country, duration, lessons a week (or a custom count), students, discount.
- * Shared by «حاسبة الأسعار» and the chat's «عرض سعر» sheet.
- */
 export function PricingSteps(props: PricingStepsProps) {
   const { selection: s, onChange, freeDiscount = true, discountExtra } = props;
   return (

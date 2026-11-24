@@ -18,13 +18,7 @@ export function fromCallingNumber(pick: SendPick, line: CallingLine): pick is { 
   return line.numberId ? pick.number_id === line.numberId : pick.line === 'chat';
 }
 
-/**
- * Call permission (docs/28 §3.1): Kapso's call_permissions decides; a missing permission inside the
- * calling number's 24 h window offers «اطلب إذن الاتصال», an interactive call_permission_request sent
- * through the ordinary outbox (send gate, allow-list, dedupe, audit) as a staff send. Outside the
- * window only an approved call-permission template could ask: never created or submitted from here.
- * A dedicated calls number (docs/28 §10) asks from ITSELF instead (CallsNumberPermission).
- */
+/** Kapso decides (docs/28 §3.1); inside the 24 h window the request goes via the outbox. */
 @Injectable()
 export class CallPermissions {
   private readonly log = new Logger(CallPermissions.name);
@@ -54,7 +48,7 @@ export class CallPermissions {
     return { state: open ? 'request' : 'needs_template', expires_at: null };
   }
 
-  /** «اطلب إذن الاتصال»: 409 with the state when it is not `request` (granted, needs_template, limited). */
+  /** 409 with the state when it is not `request` (granted, needs_template, limited). */
   async request(actor: CallActor, input: { phone: string; clientRequestId: string }, now = new Date()): Promise<Sent> {
     const state = await this.state(actor, input.phone, now);
     if (state.state !== 'request') throw conflict(`permission_${state.state}`);

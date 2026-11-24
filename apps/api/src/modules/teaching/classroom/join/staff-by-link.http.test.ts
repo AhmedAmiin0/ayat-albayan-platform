@@ -3,8 +3,7 @@ import { LESSON_ID, LINK_TOKEN } from '@/modules/teaching/classroom/classroom.fa
 import { MEETING_ID, MEETING_TOKEN } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
-// Root cause of «السبورة للعرض فقط» (owner, 2026-10-05): staff who opened a shared link entered as
-// guests. These routes let a signed-in staff member find their own staff room behind the link.
+// Staff who opened a shared link entered as guests; these routes find their own staff room.
 
 describe('staff behind a shared link', () => {
   let h: Awaited<ReturnType<typeof classroomApp>>;

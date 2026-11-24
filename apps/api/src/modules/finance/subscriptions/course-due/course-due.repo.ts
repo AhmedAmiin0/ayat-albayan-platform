@@ -53,11 +53,7 @@ const unbooked = (rows: readonly PackageRow[]): UnbookedPackage[] =>
 const undrafted = (rows: readonly PackageRow[]): PackageRow[] =>
   rows.filter((r) => r.draft === null);
 
-/**
- * The reads of «احجز أيام الحلقات» (owner 2026-11-06; service role, never a write): a package's
- * course (any schedule_rules row with its subscription_id, as SalesCourseRepo.subscriptionBooked)
- * and the active packages still without one.
- */
+/** Read-only: a package's course is any schedule_rules row with its subscription_id. */
 @Injectable()
 export class CourseDueRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

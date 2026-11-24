@@ -16,10 +16,6 @@ export interface DataTableToolbarProps {
   resultCount?: number | undefined;
 }
 
-/**
- * DataTable's toolbar: a column text filter (or the page's own box) as the search, the other
- * column filters and the page's extra fields in the «تصفية» panel, their chips under the row.
- */
 export function DataTableToolbar({ controls, filters, options = {}, resultCount }: DataTableToolbarProps) {
   const { search, panel } = splitControls(controls, options.search !== undefined);
   const { extra } = options;

@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 
 /** Does the payment have anything to show: its own receipt, or the booking invoice standing in. */
 export function hasReceipt(p: Pick<PaymentView, 'receipt_path' | 'invoice_id'>): boolean {

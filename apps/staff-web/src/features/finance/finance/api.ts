@@ -7,7 +7,6 @@ import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 
-// The «المالية» pages (owner, 2026-10-05): receivables, invoices, the yearly P&L (dashboard summary).
 export type { ReceivablesView } from '@ab/money';
 export type { InvoiceView } from '@ab/schedule';
 
