@@ -1,4 +1,4 @@
-import { settingDef, type SettingKey } from '@ab/shared';
+import { settingDef, type SettingKey } from '@ab/settings';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, Field, FilterPills } from '@ab/mobile-kit';

@@ -1,4 +1,4 @@
-import { addCalendarDays, addCalendarMonths, monthText } from '@ab/shared';
+import { addCalendarDays, addCalendarMonths, monthText } from '@ab/time';
 import { locale } from '@ab/mobile-kit';
 
 // Calendar months (the date-fns facade, docs/34 §7): plain dates, no zone involved.

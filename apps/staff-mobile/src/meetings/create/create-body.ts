@@ -1,4 +1,4 @@
-import type { CreateMeeting, UpdateMeeting } from '@ab/shared';
+import type { CreateMeeting, UpdateMeeting } from '@ab/schedule';
 import type { DraftInvitee } from '@/meetings/invite/invitee-draft';
 import { startsAtUtc, type Slot } from './schedule-time';
 

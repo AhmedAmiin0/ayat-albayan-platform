@@ -1,4 +1,5 @@
-import { formatPhone, type RegistrationMatch } from '@ab/shared';
+import type { RegistrationMatch } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
