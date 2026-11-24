@@ -10,11 +10,7 @@ type StudentRowActionsProps = { row: StudentListItem; onOpen: (studentId: string
 /** Row clicks open the profile; the actions must not trigger it too. */
 const own = (e: MouseEvent) => e.stopPropagation();
 
-/**
- * Always-visible row actions (docs/07 §6), named after the row: WhatsApp click-to-chat to the
- * guardian (wa.me fallback, R-MSG-03) and «افتح ملف …» as a chevron to the inline-end.
- * TODO(R-STU-05): ⋮ with a real menu once a row has more than one action (pause, assign, merge).
- */
+/** Always-visible row actions named after the row (docs/07 §6, R-MSG-03). */
 export function StudentRowActions({ row, onOpen }: StudentRowActionsProps) {
   return (
     <div className="flex">

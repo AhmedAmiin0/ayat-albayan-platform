@@ -14,11 +14,7 @@ export interface CrmNameDialogProps {
   onClose: () => void;
 }
 
-/**
- * «اسم القالب في واتساب» (docs/19): what every driver sends instead of the Meta name / language; blank =
- * the default (the old script's name, else the Meta name). report_ready explains its report_session switch.
- * Checked here with the API's own schema, so a bad value never leaves the form.
- */
+/** docs/19: blank means the default (the old script's name, else the Meta name). */
 export function CrmNameDialog({ template: tpl, busy, onSave, onClose }: CrmNameDialogProps) {
   const s = t.templates.crmName;
   const formId = useId();

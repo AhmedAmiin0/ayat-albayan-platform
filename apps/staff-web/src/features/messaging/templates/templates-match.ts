@@ -1,7 +1,6 @@
 import { matchesText } from '@/components/settings/search/settings-search';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** Does the search match the template section's own text (its title, intro, «القوالب حسب الرقم»)? */
 export const templatesMatch = (query: string): boolean => {
   const p = t.templates.perNumber;
   return matchesText(`${t.templates.title} ${t.templates.intro} ${p.title} ${p.sync}`, query);

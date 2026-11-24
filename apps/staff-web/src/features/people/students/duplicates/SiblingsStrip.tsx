@@ -4,7 +4,6 @@ import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { StudentRef } from '@ab/shared';
 
-/** «طلاب تانيين على نفس رقم ولي الأمر»: the guardian's other students, so the admin decides at a glance. */
 export function SiblingsStrip({ siblings }: { siblings: StudentRef[] }) {
   return (
     <div className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-2 text-xs text-ink-2">

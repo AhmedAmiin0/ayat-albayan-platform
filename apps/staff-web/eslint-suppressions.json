@@ -3259,16 +3259,6 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/features/messaging/templates/StarterToggle.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/templates/TemplateHealth.crm-name.test.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -3285,9 +3275,6 @@
   "src/features/messaging/templates/TemplateHealth.number.test.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/templates/TemplateHealth.send-from-busy.test.tsx": {
@@ -3297,7 +3284,7 @@
   },
   "src/features/messaging/templates/TemplateHealth.starter.test.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/templates/TemplateHealth.tsx": {
@@ -3308,7 +3295,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 5
     },
     "max-lines-per-function": {
       "count": 1
@@ -3325,7 +3312,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/features/messaging/templates/crm/CrmNameButton.tsx": {
@@ -3343,7 +3330,7 @@
   },
   "src/features/messaging/templates/crm/CrmNameDialog.tsx": {
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/messaging/templates/crm/CrmStatusActions.tsx": {
@@ -3351,7 +3338,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/features/messaging/templates/crm/use-crm-name.ts": {
@@ -3364,7 +3351,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "no-restricted-syntax": {
       "count": 1
@@ -3380,12 +3367,12 @@
   },
   "src/features/messaging/templates/lines/MoveLineDialog.test.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/templates/lines/MoveLineDialog.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/templates/lines/SendFromCell.tsx": {
@@ -3401,7 +3388,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/messaging/templates/lines/TemplateLines.tsx": {
@@ -3412,9 +3399,6 @@
   "src/features/messaging/templates/lines/use-line-sync.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/features/messaging/templates/lines/use-template-lines.ts": {
@@ -3425,11 +3409,6 @@
       "count": 1
     },
     "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/templates/numbers/NumberApprovals.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -3471,7 +3450,7 @@
   },
   "src/features/messaging/templates/template-cells.tsx": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/features/messaging/templates/template-columns.tsx": {
@@ -3479,7 +3458,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 3
     },
     "max-lines-per-function": {
       "count": 1
@@ -3490,35 +3469,20 @@
       "count": 2
     }
   },
-  "src/features/messaging/templates/templates-match.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/messaging/templates/use-template-actions.ts": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/features/people/account/AccountHead.tsx": {
-    "max-len": {
       "count": 1
     }
   },
   "src/features/people/account/AccountPage.test.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/features/people/account/SaveButton.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/people/account/account-test-kit.ts": {
@@ -3637,7 +3601,7 @@
       "count": 11
     },
     "max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/features/people/assistants/attribution.test.tsx": {
@@ -3661,7 +3625,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-restricted-syntax": {
       "count": 1
@@ -3749,11 +3713,6 @@
       "count": 2
     }
   },
-  "src/features/people/assistants/statements/StatementTotals.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/people/assistants/statements/StatementsPanel.tsx": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -3765,17 +3724,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "max-lines-per-function": {
       "count": 1
     },
     "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/features/people/assistants/statements/generate-targets.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -3798,7 +3752,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/people/assistants/statements/use-statement-can.ts": {
@@ -3821,9 +3775,6 @@
     "complexity": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -3836,7 +3787,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
@@ -3908,11 +3859,6 @@
       "count": 1
     }
   },
-  "src/features/people/auth/admin-access.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/people/auth/family/FamilyPanel.test.tsx": {
     "max-len": {
       "count": 1
@@ -3926,7 +3872,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/people/guardians/GuardianPhones.test.tsx": {
@@ -3936,7 +3882,7 @@
   },
   "src/features/people/guardians/GuardianPhones.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
@@ -3974,7 +3920,7 @@
   },
   "src/features/people/roles/PermissionMatrix.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/people/roles/RoleDialog.tsx": {
@@ -4043,9 +3989,6 @@
   "src/features/people/staff-photo/photo-error.ts": {
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/features/people/staff-photo/use-staff-photo.ts": {
@@ -4131,9 +4074,6 @@
     "complexity": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     }
@@ -4159,11 +4099,6 @@
       "count": 1
     }
   },
-  "src/features/people/students/duplicates/SiblingsStrip.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/features/people/students/list/StatusChips.tsx": {
     "max-len": {
       "count": 1
@@ -4171,7 +4106,7 @@
   },
   "src/features/people/students/list/StudentFilters.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/students/list/StudentKindSwitch.test.tsx": {
@@ -4257,7 +4192,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1

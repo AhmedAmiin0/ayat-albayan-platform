@@ -16,7 +16,6 @@ export type DuplicateDialogProps = {
   /** From the 409 body; never empty. */
   candidates: StudentRef[];
   error: string | null;
-  /** Start focus on «دمج» (coming back from a cancelled merge) instead of the first control. */
   focusMerge?: boolean;
   onClose: () => void;
   onMerge: (candidate: StudentRef) => void;
