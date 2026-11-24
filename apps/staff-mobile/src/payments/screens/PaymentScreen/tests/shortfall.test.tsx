@@ -4,7 +4,7 @@ import { renderWithQuery } from '@/test/query';
 import { balanceOf, payment, subscription } from '@/payments/fixtures';
 import { PaymentScreen } from '@/payments/screens/PaymentScreen/PaymentScreen';
 
-// Owner 2026-10-28: 80 recorded on a package of 81 leaves it «غير مدفوعة»; the admin is told, never stopped.
+// An underpayment leaves the package unpaid; the admin is told, never stopped.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

@@ -5,10 +5,7 @@ import { googleValues } from '@/ops/values/lib/google-values';
 import { TableFrame } from './ValuesTable';
 import { ValueRow } from './ValueRow';
 
-/**
- * «مزامنة Google» in «القيم» (read-only): the values GoogleSyncCard reads, «تُدار من صفحة أخرى».
- * Mounted only for admins with settings.read, as the API checks.
- */
+/** Read-only; mounted only for admins with settings.read, as the API checks. */
 export function GoogleValuesTable() {
   const status = useGoogleStatus();
   return (

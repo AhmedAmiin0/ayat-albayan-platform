@@ -16,10 +16,7 @@ interface AmountEditSheetProps {
   onClose: () => void;
 }
 
-/**
- * «تعديل مبلغ الدفعة»: the current amount, one field for the new one (the payment's currency),
- * then «تأكيد تعديل المبلغ» saying old → new before the PATCH. The same amount asks nothing.
- */
+/** Confirms old to new before the PATCH; the same amount asks nothing. */
 export function AmountEditSheet({ payment, edit, onClose }: AmountEditSheetProps) {
   const [text, setText] = useState(String(payment.amount));
   const [error, setError] = useState<string>();

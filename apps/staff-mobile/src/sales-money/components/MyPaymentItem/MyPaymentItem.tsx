@@ -7,8 +7,6 @@ import { instantDay } from '@/core/lib/money/format';
 import { useViewerTz } from '@/core/lib/clock';
 import { SalesAmountEdit } from '@/payments';
 
-/** One payment I recorded (web my-payment-columns): student and code, amount in its currency, kind · method · day, note, then «المرفقات» of a bank transfer.
- * Its list's inset card draws the fill and the rules (owner 2026-10-28: one container rule). */
 export function MyPaymentItem({ payment }: { payment: MyPaymentRow }) {
   const tz = useViewerTz();
   const { color } = useTheme();

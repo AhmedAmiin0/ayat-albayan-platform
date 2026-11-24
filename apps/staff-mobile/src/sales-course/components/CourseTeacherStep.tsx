@@ -7,7 +7,6 @@ import { t, locale, Button } from '@ab/mobile-kit';
 interface CourseTeacherStepProps {
   student: SalesCourseView['student'];
   onPick: (teacher: { id: string; name: string }) => void;
-  /** «سجّل التحويل البنكي»: the days later, the transfer now (from «احفظ الاشتراك»). */
   transfer?: (() => void) | undefined;
 }
 

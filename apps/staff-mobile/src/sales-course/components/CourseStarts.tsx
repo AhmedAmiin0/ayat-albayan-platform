@@ -2,7 +2,7 @@ import type { SalesCourseView } from '@ab/shared';
 import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 
-/** «يبدأ الاشتراك في 25 أكتوبر 2026» under the course's title: its days are picked from then on. */
+/** Days are picked from the subscription start on. */
 export function CourseStarts({ subscription }: { subscription: SalesCourseView['subscription'] }) {
   const { color } = useTheme();
   if (!subscription) return null;

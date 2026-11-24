@@ -28,10 +28,7 @@ export const SETTINGS_HREF = {
   savedReplies: '/more/ops/settings/saved-replies',
 } as const;
 
-/**
- * «إرسال الرسائل: متوقف»: the dangerous state is on the list, never hidden behind a row (docs/26b
- * §5.4), with its nuqta (struck = stopped, fill = on): shape says it, colour only confirms it.
- */
+/** docs/26b §5.4: a stopped send state stays visible; shape says it, colour only confirms. */
 function useSendLine(): { text: string; glyph: ReactNode } | undefined {
   const { color } = useTheme();
   const data = useSettings().data;
@@ -45,12 +42,7 @@ function useSendLine(): { text: string; glyph: ReactNode } | undefined {
   };
 }
 
-/**
- * «الإعدادات» (docs/26b §4, R-MSG-01): the list that /more/ops/settings opens (push deep links land
- * here). «القيم», «التواصل», «الردود السريعة» (saved_replies.manage) and «مزامنة Google» open their
- * screens; «التكاملات» is a line only:
- * credentials stay on the website.
- */
+/** docs/26b §4, R-MSG-01: push deep links land here; credentials stay on the website. */
 export function SettingsScreen() {
   const { color } = useTheme();
   // The Google screen is the admins' (settings.read AND base-role admin, as the API checks).

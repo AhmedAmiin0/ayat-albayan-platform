@@ -4,10 +4,7 @@ import { apiFetch } from '@ab/mobile-kit';
 import { useSettings } from '@/ops/settings/use-settings';
 import { CATALOGUE_KEY } from './use-toggle-rule';
 
-/**
- * GET /admin/notifications, shared by «الإشعارات» and the overview's «ماذا يُرسل الآن». The key
- * carries the settings' fetch time, so a saved field refetches the list.
- */
+/** The key carries the settings' fetch time, so a saved field refetches the list. */
 export function useCatalogue() {
   const version = useSettings().dataUpdatedAt;
   return useQuery({
