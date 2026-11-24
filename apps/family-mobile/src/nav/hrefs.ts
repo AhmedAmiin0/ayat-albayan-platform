@@ -47,7 +47,9 @@ const OPEN: Openers = {
   // «بدأت الحلقة»: straight into the room, the microphone on, while lessons open in the app;
   // else the child's page, where the live card's «ادخل الآن» opens the browser room.
   live: (t) =>
-    router.push(roomsInAppNow() ? roomHref({ ...t, direct: true }) : childHref(t.studentId)),
+    void roomsInAppNow().then((inApp) =>
+      router.push(inApp ? roomHref({ ...t, direct: true }) : childHref(t.studentId)),
+    ),
   schedule: () => router.navigate('/schedule'),
 };
 
