@@ -42,7 +42,7 @@ export class TemplatesController {
     return sendsAllTemplates(user) ? all : all.filter(restrictedMay);
   }
 
-  /** «قالب جديد» (owner 2026-10-31): an unsubmitted row; 409 invalid_template / template_exists. */
+  /** An unsubmitted row; 409 invalid_template or template_exists. */
   @Post()
   @UseGuards(TemplateManagerGuard)
   create(

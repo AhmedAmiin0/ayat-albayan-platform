@@ -43,28 +43,7 @@ import {
   MessageSearchController, MessageSearchRepo, MessageSearchService,
 } from './reads/search';
 
-/**
- * The WhatsApp inbox routes H1–H4 (docs/12 §4). The webhook lives in WebhookModule and the lead
- * qualification / follow-up routes (L1–L2) in LeadsModule; WhatsappModule (global) brings the
- * client, the send gate, the sender, the registry and MessageViews. SubscriptionsModule brings the
- * package balances behind a thread's `people` and «مشترك» tag (R-SUB-01). Teacher mode (R-TCH-03):
- * ThreadReads picks the admin's or the teacher's reads per request (TeacherScopes); LessonsModule
- * brings TeacherMeQueries for «my students». Sales mode: SalesModule brings SalesScopes; SalesThreadsService serves a salesperson every chat, redacted (docs/16).
- * ThreadFileController serves bubble photos / PDFs to the admin and sales (docs/20 W6);
- * ThreadFileSendController lets them send images / PDFs from the chat (owner 2026-10-19 #2).
- * PDF preview like WhatsApp (owner 2026-10-29): PdfPreviewService renders a bubble PDF's pages (poppler).
- * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
- * «رد» / «إعادة توجيه» (owner 2026-10-25): ThreadQuotes, ThreadForwardController.
- * «إعادة فتح المحادثة» (owner 2026-10-26): ThreadReopenController; since 2026-11-07 it
- * only answers the window state: the starter template goes on the first send (window/*).
- * «تفاعل» (owner 2026-10-27): ThreadReactionController (WhatsApp message reactions, migration 930).
- * «حذف من المنصة» (owner 2026-10-30): MessageHideController (staff only; nothing goes to WhatsApp).
- * Delta refresh (owner 2026-10-27): ThreadDeltaService answers GET /threads/:phone?after=.
- * Phone store sync (owner 2026-11-06, docs/43 §5): ThreadSyncController, GET /threads/sync.
- * Stickers and GIFs (owner 2026-11-01): StickersController (GIPHY through GifService).
- * «بحث» inside a chat (owner 2026-11-02): ChatSearchController; in every chat (2026-11-06,
- * docs/37): MessageSearchController (GET /threads/search beside GET /threads/:phone).
- */
+/** Inbox routes H1-H4 (docs/12 §4); webhook in WebhookModule, L1-L2 in LeadsModule. */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
   controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController, ThreadForwardController, ThreadReopenController, ThreadReactionController, MessageHideController, StickersController, ChatSearchController, MessageSearchController, ThreadSyncController],
@@ -109,9 +88,7 @@ import {
     MessageSearchRepo,
     MessageSearchService,
   ],
-  // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
-  // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the
-  // families TeacherScopes lets them write to.
+  // Feedback and meeting invitations (R-MEET-02) reuse this send path, within scopes.
   exports: [Outbox, ThreadsRepo, ThreadMessagesRepo, TeacherScopes],
 })
 export class InboxModule {}

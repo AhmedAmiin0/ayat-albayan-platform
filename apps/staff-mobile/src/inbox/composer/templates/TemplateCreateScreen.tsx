@@ -13,10 +13,7 @@ import { templateApi, templateErrorText, useTemplateSave } from './templates-api
 
 const dailyLimit = () => t.templates.author.dailyLimit.replace('{max}', String(AUTHOR_DAILY_LIMIT));
 
-/**
- * «قالب جديد» (owner 2026-11-14): the author's template, straight to Meta on the chat line. The
- * category follows the text (an offer is «تسويقية») until the author picks one.
- */
+/** Sent straight to Meta; the category follows the text until the author picks one. */
 export function TemplateCreateScreen() {
   const { draft, set } = useTemplateDraft(EMPTY_DRAFT);
   const [key, setKey] = useState('');

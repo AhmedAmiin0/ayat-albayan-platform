@@ -6,7 +6,7 @@ import { weekLabel } from '@/calendar';
 import { t, BackButton, ErrorState, Screen, ScreenHeader, Section, useNow } from '@ab/mobile-kit';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { useSummary, useWork, weekRange } from '@/ops/dashboard/dashboard-queries';
-import type { WorkTab } from '@ab/shared';
+import type { WorkTab } from '@ab/money';
 import { kpisOf } from '@/ops/dashboard/kpis';
 import { KpiTile } from '@/ops/dashboard/KpiTile';
 import { WorkPanel } from '@/ops/dashboard/WorkPanel';

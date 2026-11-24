@@ -2,7 +2,7 @@ import type { ChatListAutoRule } from '@ab/shared';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
-/** The quiet «تُحدَّث تلقائيًا» chip of an automatic list (docs/22 «القوائم التلقائية»); not a control. */
+/** docs/22 automatic lists; the chip is not a control. */
 export function AutoListChip() {
   const { color } = useTheme();
   return (
@@ -23,7 +23,6 @@ export function AutoListChip() {
   );
 }
 
-/** The chip, then one line saying who is added: «يُضاف إليها تلقائيًا كل …». Read as one sentence. */
 export function AutoListNote({ rule }: { rule: ChatListAutoRule }) {
   const { color } = useTheme();
   const line = t.inbox.lists.autoRule[rule];

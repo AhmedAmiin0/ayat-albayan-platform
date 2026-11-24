@@ -15,7 +15,6 @@ interface AppSendWrite {
 
 const fail = (what: string, message: string): Error => new Error(`${what} failed: ${message}`);
 
-/** The reads and the one write of «أرسل عبر واتساب» (app-send.service.ts). */
 @Injectable()
 export class AppSendRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

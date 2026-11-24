@@ -1,4 +1,9 @@
-import { counted, type NotificationEntryView, type NotificationRuleView, type NotificationsOverview } from '@ab/shared';
+import type {
+  NotificationEntryView,
+  NotificationRuleView,
+  NotificationsOverview,
+} from '@ab/shared';
+import { counted } from '@ab/core';
 import { ApiError, t } from '@ab/mobile-kit';
 
 // The catalogue's switches on the phone (docs/23b §4, docs/26b §6b m7), in words. Every v2 field is

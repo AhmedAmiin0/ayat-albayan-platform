@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

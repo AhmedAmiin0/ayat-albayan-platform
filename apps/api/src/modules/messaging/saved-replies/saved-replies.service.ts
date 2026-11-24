@@ -21,12 +21,7 @@ const attachmentColumns = (file: StoredFile | null, name: string | null) => ({
   attachment_name: file ? name : null,
 });
 
-/**
- * «الردود السريعة» (owner 2026-10-25). The SHARED list is read by every inbox user and written with
- * saved_replies.manage (403 saved_replies_forbidden); a PERSONAL reply is its owner's alone: another
- * person's is 404, as if it did not exist. A removed reply or a replaced attachment takes its file
- * out of Storage. Nothing here sends anything: stage() only prepares the chat's own file send.
- */
+/** Shared list written with saved_replies.manage; another person's personal reply is 404. */
 @Injectable()
 export class SavedRepliesService {
   constructor(

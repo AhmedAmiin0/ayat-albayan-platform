@@ -7,14 +7,7 @@ import { SubscriptionCancelRepo } from './subscription-cancel.repo';
 
 type CancelInput = CancelBody & { actorId: string; now?: Date };
 
-/**
- * «إلغاء الباقة» (owner 2026-10-28: «close it or cancel it»; never delete data). Only a package nothing
- * hangs on: 409 already_cancelled, has_payments (net paid ≠ 0), has_lessons (a lesson not cancelled on
- * a rule of its course, or a lesson it used FIFO: admin bookings, makeups and imported rules carry no
- * subscription_id) or has_commission (a later package earned its commission as a renewal because of it).
- * Future lessons merely projected into it do not block: they move to the next package. The row stays («ملغاة») with who / when / why; audited through MoneyWrites, which
- * closes its open tasks and recomputes the student (a cancelled package is skipped there: never resurrected).
- */
+/** Never deletes: 409 when payments, used lessons or a commission depend on it; audited. */
 @Injectable()
 export class SubscriptionCancel {
   constructor(

@@ -22,11 +22,7 @@ export const removeAvatar = () => apiSend<AccountProfile>('DELETE', '/me/avatar'
 /** The API signed the upload but Storage did not take the file. */
 export class AvatarUploadError extends Error {}
 
-/**
- * A photo's three steps (R-ACC-05, the receipt's mechanics), for «حسابي» and an admin's staff photo:
- * POST `{base}/upload-url` (the API picks the path in the private `avatars` bucket), the signed upload
- * straight to Storage, then PUT `{base}` {path}, which re-checks the bytes and drops the previous photo.
- */
+/** R-ACC-05: the API picks the private path; PUT re-checks the bytes and drops the old photo. */
 export async function uploadPhoto<T>(base: string, avatar: PickedAvatar): Promise<T> {
   const signed = await apiSend<SignedUpload>('POST', `${base}/upload-url`, {
     mime: avatar.mime,
@@ -37,5 +33,4 @@ export async function uploadPhoto<T>(base: string, avatar: PickedAvatar): Promis
   return apiSend<T>('PUT', base, { path: signed.path });
 }
 
-/** «حسابي»: the signed-in user's own photo. */
 export const uploadAvatar = (avatar: PickedAvatar) => uploadPhoto<AccountProfile>('/me/avatar', avatar);

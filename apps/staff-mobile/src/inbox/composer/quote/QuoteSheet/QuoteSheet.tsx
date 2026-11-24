@@ -18,20 +18,15 @@ interface QuoteSheetProps {
   onClose: () => void;
 }
 
-/**
- * «عرض سعر» (owner 2026-10-26): the calculator's steps (pills only for the discount), the offer text
- * exactly as «حاسبة الأسعار» copies it, then send it in this chat, put it in the box to edit, or copy
- * it (copyOrShare: the share sheet when the clipboard fails). Works for a lead with no student; nothing is created.
- * «مبلغ مخصص» (owner 2026-11-15) beside the pills makes the typed amount the offer's total.
- */
+/** Works for a lead with no student; nothing is created. */
 export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   const { color } = useTheme();
   const sheet = useQuoteSheet(phone);
   const sender = useQuoteSend(phone, onClose);
-  // «انسخ»: the clipboard, else the share sheet (it has Copy); a line says how it went.
+  // Copy falls back to the share sheet when the clipboard fails.
   const [copied, setCopied] = useState<'copied' | 'shared' | 'failed' | null>(null);
   const text = sheet.text;
-  // «مبلغ مخصص» not a valid amount: like a stale price, nothing may leave.
+  // An invalid custom amount blocks sending, like a stale price.
   const held = sheet.stale || sheet.invalid;
   const ready = text !== null && !held;
   const edit = () => {

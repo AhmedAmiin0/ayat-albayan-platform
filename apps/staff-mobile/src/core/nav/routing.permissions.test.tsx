@@ -25,7 +25,7 @@ const mockApiFetch = jest.fn(async (path: string) => {
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'admin' }));
 
-// The teacher page switches on, so these routing tests gate «المحادثات» by the permission.
+// The teacher page switches are on, so these tests gate the chats tab by permission.
 const switchKeys = Object.values(TEACHER_PAGE_SWITCH);
 const teacherPagesOn = Object.fromEntries(switchKeys.map((k) => [k, true]));
 const publicConfig = { ...PUBLIC_SETTING_DEFAULTS, ...teacherPagesOn, custom: {} };
@@ -67,7 +67,7 @@ test('D6: with no /auth/me saved, «جارٍ الاتصال» stays up and no ta
   await renderRouter(app, { initialUrl: '/' });
   expect(screen.getByTestId('startup-screen')).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.mobile.today })).toBeNull();
-  expect(screen.queryByRole('button', { name: t.mobile.more })).toBeNull(); // never lands on «المزيد» alone
+  expect(screen.queryByRole('button', { name: t.mobile.more })).toBeNull();
 });
 
 test('D6: once /auth/me answers the tabs render once, complete (never a partial bar first)', async () => {

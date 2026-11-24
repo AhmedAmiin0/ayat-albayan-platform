@@ -102,7 +102,7 @@ export class MessageDispatch {
 
   /** A session row (no template): a call-permission request, a file or a text. */
   private sendSession(row: DueMessage, via: SendVia): Promise<WaSent> {
-    // Before the text branch: «اطلب إذن الاتصال» carries its text in body (docs/28).
+    // Before the text branch: the permission request carries its text in body (docs/28).
     if (row.body && isCallPermissionRequest(row.interactive_payload)) return this.sendCallPermission(row, via);
     // Before the text branch: a reaction's body is its emoji, never a text (migration 900).
     const reaction = reactionRef(row.interactive_payload);

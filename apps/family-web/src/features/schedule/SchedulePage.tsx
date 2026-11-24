@@ -21,12 +21,7 @@ function Days({ week, guardian }: { week: Week; guardian: boolean }) {
   );
 }
 
-/**
- * «الجدول» (owner 2026-11-19: an agenda, not a week grid): the week of the student in view on the
- * viewer's clock, a strip of its seven days, its days with lessons and «ملخص الأسبوع»; «جدولي» for
- * a student's or an adult's own (a guardian of several switches the child on top). Only a guardian
- * answers for a lesson («سأحضر» …).
- */
+/** On the viewer's clock; only a guardian answers for a lesson. */
 export function SchedulePage({ student, kind }: { student: PortalStudent; kind: PortalKind }) {
   const week = useWeek(student);
   const own = readsOwn(portalViewer(kind, student));

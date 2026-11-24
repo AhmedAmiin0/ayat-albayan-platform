@@ -84,7 +84,7 @@ test('a course needs exactly n days: «التالي» waits for them', async () 
   expect(screen.getByText(t.booking.pickNDays.two)).toBeTruthy();
   await fireEvent.press(await box('19:00'));
   expect(nextDisabled()).toBe(true);
-  expect(screen.getByText(pickProgress(t.booking, 1, 2) ?? '')).toBeTruthy(); // «اخترت 1 من 2 — بقي يوم واحد»
+  expect(screen.getByText(pickProgress(t.booking, 1, 2) ?? '')).toBeTruthy();
   const tue = screen.getAllByRole('checkbox', { name: '17:00' })[1];
   if (!tue) throw new Error('no Tuesday 17:00');
   await fireEvent.press(tue);

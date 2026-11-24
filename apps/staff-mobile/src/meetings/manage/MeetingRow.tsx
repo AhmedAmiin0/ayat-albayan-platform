@@ -1,4 +1,5 @@
-import type { ClockCycle, MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { View } from 'react-native';
 import { useClockCycle } from '@/core/lib/clock';
 import { t, shape, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';

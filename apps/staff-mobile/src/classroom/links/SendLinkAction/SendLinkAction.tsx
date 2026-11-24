@@ -13,11 +13,7 @@ type Student = LessonView['students'][number];
 const sentNote = (r: JoinLinkResult): string =>
   r.message_status === 'queued' ? t.inbox.messagingOff : r.replayed ? t.classroom.linkResent : t.classroom.linkSent;
 
-/**
- * «أرسل رابط الحلقة» for one student: it messages the guardian on WhatsApp, so a press asks first
- * (a double tap must not reach a family twice). A queued message (gate closed) and a failed one are told apart from «sent». The API's refusals (template not approved, 403,
- * 404, 503) read under the button; a replayed send says so.
- */
+/** It messages the guardian, so a press asks first; a double tap must not reach a family twice. */
 export function SendLinkAction({ lessonId, student, named }: { lessonId: string; student: Student; named: boolean }) {
   const [asking, setAsking] = useState(false);
   const send = useMutation({ mutationFn: sendJoinLink, onSettled: () => setAsking(false) });

@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
@@ -14,8 +14,8 @@ import { RegistrationResults } from '@/registration-check/components/Registratio
 type Params = { phone?: string };
 
 /**
- * /…/registration-check[?phone=…] (owner 2026-10-12, docs/16 row 23), from the sales chat header
- * (the thread's number filled in and checked) and the «الطلاب» header: is this family or child
+ * /…/registration-check[?phone=…] (docs/16 row 23), from the sales chat header
+ * (the thread's number filled in and checked) and the students tab header: is this family or child
  * already registered? Name, code, status and teacher only. Needs students.check_registration.
  */
 export function RegistrationCheckScreen() {

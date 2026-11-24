@@ -9,12 +9,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { TemplateAuthor } from './template-author';
 
-/**
- * «القوالب» for sales (owner 2026-11-14): templates.author (the system sales role by default,
- * grantable). It reaches none of the templates.manage routes (TemplateManagerGuard keeps refusing a
- * role based on sales) and never lifts the allow-list: the list is the allow-list (chat line) plus
- * the user's own; edits only the allow-list's templates the code does not send.
- */
+/** templates.author never reaches templates.manage routes nor lifts the allow-list. */
 @ApiTags('messaging')
 @ApiBearerAuth()
 @Permissions('templates.author')
@@ -22,7 +17,7 @@ import { TemplateAuthor } from './template-author';
 export class TemplateAuthorController {
   constructor(@Inject(TemplateAuthor) private readonly author: TemplateAuthor) {}
 
-  /** Every status: «قيد المراجعة / معتمد / مرفوض» with Meta's reason (last_error). */
+  /** Every status with Meta's reason (last_error). */
   @Get()
   list(@CurrentUser() user: AuthUser): Promise<TemplateView[]> {
     return this.author.list(user.id);

@@ -18,10 +18,7 @@ import type { LeadView } from '@ab/shared';
 
 const NONE = '';
 
-/**
- * «مسؤول المبيعات» of one lead (admin, leads.assign): POST /leads/:id/assign with a salesperson from
- * GET /sales/people, or none to take it back. The detail shows the new owner at once; the lists refetch.
- */
+/** Admin with leads.assign; none takes the lead back; the lists refetch. */
 export function LeadAssign({ lead }: { lead: LeadView }) {
   const can = usePermissions();
   const client = useQueryClient();

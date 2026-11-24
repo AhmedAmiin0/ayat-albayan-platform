@@ -10,10 +10,7 @@ interface StickerTabProps {
   onSent: () => void;
 }
 
-/**
- * «الملصقات» (owner 2026-11-01): this staff member's favourites, then the newest stickers of any
- * chat, deduplicated by the API. A tap sends that sticker as it is stored (WhatsApp's `sticker`).
- */
+/** Favourites then newest stickers, deduplicated by the API; sent as stored. */
 export function StickerTab({ media, onSent }: StickerTabProps) {
   const { color } = useTheme();
   const list = useStickers();

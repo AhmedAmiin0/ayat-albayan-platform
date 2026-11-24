@@ -3,7 +3,7 @@ import type { RecentRow } from '@/modules/platform/drive-backup/db/archive-row.s
 import { freeOf, isLow } from '@/modules/platform/drive-backup/run/quota';
 import type { SkippedItem } from '@/modules/platform/drive-backup/run/summary';
 
-/** GET /settings/integrations/storage-backup: the status line under «التخزين» (docs/45 §5). */
+/** docs/45 §5. */
 export interface BackupStatusView {
   enabled: boolean;
   ready: { minio: boolean; google: boolean };

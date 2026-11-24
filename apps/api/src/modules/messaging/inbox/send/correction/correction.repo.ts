@@ -22,7 +22,7 @@ export interface CorrectionTarget {
 const TARGET_SELECT =
   'id, phone_e164, direction, status, body, media_mime, template_key, interactive_payload, wa_message_id, hidden_at, deleted_at, created_by, corrects_id' as const;
 
-/** «تعديل» (owner 2026-11-07): the corrected message, read only (it is never changed). */
+/** The corrected message is read only; it is never changed. */
 @Injectable()
 export class CorrectionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

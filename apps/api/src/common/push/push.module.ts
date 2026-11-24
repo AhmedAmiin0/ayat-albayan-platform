@@ -26,7 +26,7 @@ import { fetchTransport, WEB_PUSH_KEYS, WEB_PUSH_TRANSPORT, WebPushSender, type 
     { provide: WEB_PUSH_KEYS, useValue: ((): ReturnType<WebPushKeysSource> => webPushEnv(loadEnv())) satisfies WebPushKeysSource },
     {
       provide: PUSH_TRANSPORT,
-      // EXPO_* read per call: the admin may change them in «التكاملات» (no restart).
+      // Read per call so the admin can change it in integrations without a restart.
       useFactory: (): PushTransport => (messages) => {
         const env = loadEnv();
         const conn = { base: env.EXPO_API_BASE, accessToken: env.EXPO_ACCESS_TOKEN };

@@ -41,12 +41,7 @@ function TabLink({ tab, current }: { tab: FamilyTab; current: boolean }) {
   );
 }
 
-/**
- * The family bar (owner 2026-11-16): the student in view's الرئيسية · الجدول · التقارير · حسابي;
- * no «التقارير» until that student is known (a guardian of several picks one first; its slot is
- * kept while /portal/me loads, so the bar never jumps). A bottom bar on phones, the rail from
- * `shell:`.
- */
+/** The reports tab waits for the student; its slot is kept while loading so the bar never jumps. */
 export function TabBar() {
   const pick = useFamilyPick();
   const tabs = familyTabs(pick);

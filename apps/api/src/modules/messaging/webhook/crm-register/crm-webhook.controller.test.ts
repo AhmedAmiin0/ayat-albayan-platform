@@ -7,7 +7,7 @@ import type { AuditService } from '@/common/audit/audit.service';
 import { CrmWebhookController } from './crm-webhook.controller';
 import { FAKE_SECRET, IDS, registrarKit, TARGET } from './crm-webhook.fakes';
 
-// «التكاملات» › the CRM's delivery-ticks webhook: admin-only, like the secrets PUT. No network.
+// Admin-only, like the secrets PUT; no network.
 
 const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 

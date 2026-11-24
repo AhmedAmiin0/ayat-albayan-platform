@@ -37,7 +37,7 @@ interface StickerRowProps {
   onPick: (item: StickerItem) => void;
 }
 
-/** «المفضلة» or «الأحدث»: a title over a wrapping grid; nothing at all when empty. */
+/** Renders nothing when empty. */
 export function StickerRow({ title, items, onPick }: StickerRowProps) {
   const { color } = useTheme();
   if (items.length === 0) return null;

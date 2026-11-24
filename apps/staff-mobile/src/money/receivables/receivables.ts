@@ -1,4 +1,5 @@
-import { matchesQuery, type ReceivableRow } from '@ab/shared';
+import { matchesQuery } from '@ab/core';
+import type { ReceivableRow } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
 /** Past this many days the web shows the late count in saffron; so does the phone. */
