@@ -312,8 +312,10 @@ count (no suppressions) = Oxlint's matching count; `+n stricter`: §3.2; **gap**
 The repo formats with oxfmt, the Oxc formatter (pinned exactly in the root `package.json`); Prettier
 is gone. `.oxfmtrc.json` at the root carries Prettier's old options (`singleQuote`, `trailingComma:
 all`, `printWidth: 100`) and keeps `package.json` key order (`sortPackageJson: false`), so oxfmt's
-output matches what Prettier printed. A block that must keep its layout takes `// oxfmt-ignore`
-(oxfmt also honours `prettier-ignore`, so the comment guard treats both as directives).
+output matches what Prettier printed. No `oxfmt-ignore` or `prettier-ignore` comments (docs/59): a
+block whose layout matters is written so formatting cannot change its meaning (the emoji sheet keeps
+one string per row). The comment guard still treats both as directives, so removing one is a code
+change.
 
 - `pnpm format` writes, `pnpm format:check` checks; both read `.gitignore` and the config's
   `ignorePatterns`.
