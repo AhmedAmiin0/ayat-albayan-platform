@@ -92,7 +92,7 @@ export const SCHEDULE_RULE_STATUSES = [
 ] as const;
 /** DB domain `lesson_duration` (minutes). */
 export const DURATIONS = [30, 45, 60, 90] as const;
-/** 0 = الأحد … 6 = السبت (docs/06; same as JS Date#getDay). */
+/** 0 = Sunday to 6 = Saturday (docs/06; same as JS Date#getDay). */
 export const WEEKDAYS = [0, 1, 2, 3, 4, 5, 6] as const;
 
 export type LeadStatus = (typeof LEAD_STATUSES)[number];

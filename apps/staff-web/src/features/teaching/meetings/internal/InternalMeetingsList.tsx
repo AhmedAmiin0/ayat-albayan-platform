@@ -10,15 +10,10 @@ const L = t.meetings.internal;
 interface Props {
   /** The viewer's zone (times are shown on it); useViewerTz() by default. */
   tz?: string;
-  /** The heading; «الاجتماعات الداخلية» by default. */
   title?: string;
 }
 
-/**
- * «الاجتماعات الداخلية»: the ones I created or am invited to (all for an admin), instant and
- * scheduled, each with its time, invitees, enter (inside the window) and the creator's actions.
- * Every meeting is recorded; the admin and the creator download the recordings.
- */
+/** Admins see all; every meeting is recorded; the admin and the creator download recordings. */
 export function InternalMeetingsList({ tz: pinned, title = L.list }: Props) {
   const viewer = useViewerTz();
   const tz = pinned ?? viewer;

@@ -9,10 +9,7 @@ import { LessonDisclosure } from './LessonDisclosure';
 type Row = Pick<AttendanceTableRow, 'lesson_id' | 'status' | 'starts_at' | 'report' | 'report_id'>;
 type Cell = (row: Row, href: string) => ReactNode;
 
-/**
- * Her sent report: «تعديل التقرير» and the family line while the window is open; after it,
- * no link (docs/49): the report is read in the row's disclosure.
- */
+/** After the edit window there is no link (docs/49): the report is read in the row. */
 const CELLS: Record<LogReportAction, Cell> = {
   edit: (row, href) => row.report && <RowWindow report={row.report} href={href} />,
   view: () => null,
@@ -24,11 +21,7 @@ export interface LogReportCellProps {
   studentId: string;
 }
 
-/**
- * A log row's report (docs/47, docs/49): write or edit it from the lesson itself, then read it
- * (and the recording) in place; «—» on a future, cancelled or moved lesson. Re-read each
- * minute, so a lesson that starts offers «اكتب التقرير».
- */
+/** Re-read each minute so a lesson that starts offers writing the report (docs/47, docs/49). */
 export function LogReportCell({ row, studentId }: LogReportCellProps) {
   const now = useNow();
   const action = logReportAction(row, now);

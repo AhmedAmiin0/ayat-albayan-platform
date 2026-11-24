@@ -7,10 +7,7 @@ import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
-// Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the
-// thread says «غير مشترك» → «اشترك» books a regular package (new guardian + student) → «اعمل
-// الاشتراك» → back in the thread it says «مشترك». A guardian's thread offers «اشتراك جديد» per
-// child. «Meta» is tools/wa-stub; messaging stays off (journeys 2–4 assert `queued`).
+// Subscribe from chat (R-SUB-01, R-LEAD-02, R-LEAD-06); messaging stays off.
 
 const badge = ar.inbox.subscription.badge;
 const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name);
@@ -18,8 +15,7 @@ const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name)
 /** A fresh Saudi mobile per call (desktop and mobile share one DB), wa_id digits without «+». */
 const freshDigits = () => `9665${String(Date.now()).slice(-8)}`;
 
-/** The open conversation: its section is named by the heading (the contact's name). Badges are
- * read from its header: «مشترك» is also the child's package chip once a package is active. */
+/** The subscribed badge is also the child's package chip once a package is active. */
 const pane = (page: Page, name: string) => page.getByRole('region', { name });
 
 /** The create dialog preset with `student`: keep the calculator defaults and save. */
@@ -50,7 +46,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     const thread = pane(admin, guardian);
     await expect(thread.locator('header').getByText(badge.none, { exact: true })).toBeVisible();
 
-    // «اشترك» opens the wizard with the lead and a regular package (not the trial).
+    // Opens the wizard with the lead and a regular package, not the trial.
     await (await sidePanel(admin, 'lead')).getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=.*pkg=/);
     await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
@@ -70,7 +66,6 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     const lead = await withSql((sql) => sql<{ status: string }[]>`select status from public.leads where phone_e164 = ${`+${digits}`}`);
     expect(lead[0]?.status).toBe('converted');
 
-    // «أنشئ الاشتراك» right after the booking, for the new student.
     await admin.getByRole('button', { name: ar.inbox.subscription.make }).click();
     await saveSubscription(admin, student);
     await expect(admin.getByText(ar.subscriptions.saved)).toBeVisible();
@@ -101,7 +96,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await expect(thread.locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
 
     await admin.goto('/admin/inbox');
-    // The list row carries no tag: the avatar's green ring says «مشترك».
+    // The list row has no tag: the avatar's green ring marks subscribed.
     const row = admin.getByRole('link', { name: openThread(guardian) });
     await expect(row.locator('[data-ring="subscribed"]')).toBeVisible();
   });

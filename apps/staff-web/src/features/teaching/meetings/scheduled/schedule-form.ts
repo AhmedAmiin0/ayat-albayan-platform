@@ -9,8 +9,7 @@ import {
 import { wallInstant, zonedPartsIn } from '@ab/time';
 import type { PickedInvitee } from '@/features/teaching/meetings/invitees/invitee-list';
 
-// «اجتماع مجدول» (R-MEET-01): a date + a 15-minute time select on the viewer's own clock (rule 6:
-// never free text), turned into a UTC ISO startsAt with wallInstant. Pure, unit-tested.
+// Date plus a 15-minute select on the viewer's clock (rule 6), turned into UTC with wallInstant.
 
 export interface ScheduleValue {
   /** Local day, "YYYY-MM-DD". */

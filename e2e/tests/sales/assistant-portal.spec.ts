@@ -10,10 +10,7 @@ import { USERS } from '../../support/core/users';
 import { stubInbound } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «المبيعات»): «تسجيل طالب جديد»
-// in a chat, and the pages «طلابي», «مدفوعاتي» and «أرباحي». The assistant sees the students they brought, only
-// the payments they recorded, and their own commission; no price, no other person's money.
-// Needs the API's /sales/me/* and /sales/booking/* routes (the assistant's API task).
+// Assistant portal (R-ASST-01/04/05/06): own students and payments only, no other money.
 
 const PASSWORD = 'Assistant-e2e-123';
 const stamp = String(Date.now()).slice(-6);
@@ -28,7 +25,6 @@ async function signIn(page: Page, email: string): Promise<void> {
   await page.waitForURL('**/sales/**');
 }
 
-/** The assistant's section nav: in the page from 900px, in the opened «القائمة» sheet below it. */
 const salesNav = async (page: Page) => (await openNav(page)).getByRole('navigation', { name: ar.sales.nav.label });
 
 /** A sales login whose terms are 10 % of a first paid subscription and 2000 SAR a month. */
@@ -68,8 +64,7 @@ test.describe('assistant portal', () => {
     const page = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await signIn(page, email);
 
-    // Below 900px the section nav sits behind «القائمة»: salesNav opens it (the mobile project is a Pixel 7).
-    // Owner 2026-10-12: «طلابي» is a filter of «الطلاب», «مدفوعاتي» a filter of «أرباحي».
+    // Below 900px the section nav sits behind the menu sheet.
     for (const label of [ar.sales.nav.allStudents, ar.assistantPortal.nav.earnings]) await expect((await salesNav(page)).getByRole('link', { name: label })).toBeVisible();
     for (const label of [ar.assistantPortal.nav.students, ar.assistantPortal.nav.payments]) await expect((await salesNav(page)).getByRole('link', { name: label })).toHaveCount(0);
 
@@ -89,7 +84,6 @@ test.describe('assistant portal', () => {
     await expect(page.getByText(names.other)).toHaveCount(0);
     await expect(page.getByText('777')).toHaveCount(0);
 
-    // «محفظتي»: «العمولات» | «الكشوف» | «مدفوعاتي»; the terms and statements are «الكشوف».
     await money.getByRole('button', { name: ar.assistantPortal.wallet.views.statements }).click();
     await expect(page.getByRole('heading', { name: ar.assistantPortal.earnings.terms })).toBeVisible();
     await expect(page.getByText(ar.assistantPortal.earnings.commissionPercent.replace('{value}', '10'))).toBeVisible();
@@ -136,8 +130,7 @@ test.describe('assistant portal', () => {
       select brought_by, brought_at is not null as has_at from public.students where name = ${name}`);
     expect(rows).toEqual([{ brought_by: id, has_at: true }]);
 
-    // «طلابي» lists the new student, first subscription not paid yet. On a phone the open chat covers
-    // the app chrome (PhoneChat), so leave it through its «رجوع» first, as a person would.
+    // On a phone the open chat covers the app chrome, so leave it with back first.
     const chat = page.getByTestId('phone-chat');
     if (await chat.isVisible()) await chat.getByRole('link', { name: ar.common.back }).click();
     await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.allStudents }).click();

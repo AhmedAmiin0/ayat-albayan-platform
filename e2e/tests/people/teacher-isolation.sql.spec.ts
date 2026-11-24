@@ -2,9 +2,7 @@ import { expect, test } from '@playwright/test';
 import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 
-// Rule 9 behind the API, in a rolled-back transaction with a teacher's JWT (teacher-rls.sql.spec
-// has the messages and the draft payouts): lessons, students, reports, attachments and approved
-// payouts show «أبرار» her own rows only, and a write to another teacher's lesson changes nothing.
+// Rule 9 behind the API with a teacher JWT: own rows only; writes to others change nothing.
 
 const PHONE = { mine: '+966500190001', theirs: '+966500190002' };
 const MONTH = '2031-04-01';

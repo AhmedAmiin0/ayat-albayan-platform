@@ -13,10 +13,7 @@ import { MeetingRowInfo } from './MeetingRowInfo';
 const L = t.meetings.internal;
 const M = t.meetingInvites.list;
 
-/**
- * One meeting: «ادخل» only inside its window (can_join), and for its creator or an admin a new link,
- * «إنهاء» (instant) or «غيّر الموعد» / «ألغِ الاجتماع» (scheduled), «المدعوون» and «التسجيلات».
- */
+/** Join only inside its window (can_join); management for its creator or an admin. */
 export function MeetingRow({ meeting, tz }: { meeting: MeetingView; tz: string }) {
   const queryClient = useQueryClient();
   const refresh = () => queryClient.invalidateQueries({ queryKey: MEETINGS_KEY });

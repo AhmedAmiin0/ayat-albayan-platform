@@ -13,7 +13,7 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { focusOnMount } from '@/lib/dom/mount-refs';
 
-/** Toast line after a save: «اتعدّل» and, when a guardian message was queued, that it was. */
+/** Mentions the guardian message only when one was queued. */
 export const savedMessage = (r: Pick<TimeEditResult, 'notified'>): string =>
   r.notified > 0 ? t.lessons.timeEdit.savedNotified : t.lessons.timeEdit.saved;
 
@@ -25,12 +25,7 @@ export interface EditTimeDoneProps {
   onClose: (message: string) => void;
 }
 
-/**
- * Success state (R-SCH-11): what was saved («الميعاد الجديد: …») plus the follow-ups that must not
- * vanish in a toast: «احسب مستحقات الشهر» (a link to that month on the payouts page) for a draft
- * month, and the report file refresh. The grid refreshes when this closes: a lesson moved to
- * another week would drop out of the list (and the drawer with it) before the admin had read this.
- */
+/** Follow-ups stay off the toast; the grid refreshes on close so a moved lesson stays readable. */
 export function EditTimeDone({ result, onClose }: EditTimeDoneProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const queryClient = useQueryClient();

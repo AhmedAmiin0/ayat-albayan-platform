@@ -5,9 +5,7 @@ import { freshDigits } from '../../support/core/messages';
 import { setMessaging, stubReset, stubSent } from '../../support/core/wa-stub';
 import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 
-// A send that fails (R-MSG-03, R-MSG-05, M1–M3): Meta's error in words on the bubble, «حاول مرة أخرى»,
-// the wa.me hand-off with its «بعتّها؟» question, sent-by-hand and undo. The stub's injected
-// failure is one-shot. 131049 fails at once and is retryable (131047 would hide «حاول مرة أخرى»).
+// Failed sends (R-MSG-03, R-MSG-05): 131049 is retryable, 131047 would hide retry; one-shot stub.
 
 const CODE = 131049;
 const messages = ar.messages;

@@ -13,11 +13,7 @@ interface SeatChatDialogProps {
   onClose: () => void;
 }
 
-/**
- * The seat holder's chat panel (owner 2026-11-16): the student's chat, where she writes (a closed
- * channel stays read-only), and «مغادرة المحادثة», which frees the seat and closes the panel. It
- * re-reads the seat while open: taken over by the student's bringer, it closes.
- */
+/** Leaving frees the seat; re-reads while open and closes if the bringer takes it over. */
 export function SeatChatDialog({ studentId, studentName, seat, onClose }: SeatChatDialogProps) {
   const tz = useViewerTz();
   useSeatWatch(studentId);

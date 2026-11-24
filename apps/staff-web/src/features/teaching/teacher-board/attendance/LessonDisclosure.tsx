@@ -24,14 +24,11 @@ export interface LessonDisclosureProps {
   studentId: string;
 }
 
-/** An old «تسجيل الحلقة» link (#recording-<lesson id>) lands on this lesson's row open. */
+/** An old recording link (#recording-<lesson id>) opens this lesson's row. */
 const linkedHere = (lessonId: string): boolean =>
   window.location.hash === `#recording-${lessonId}`;
 
-/**
- * This student's report and recording, read inside the lesson row (docs/49: no «التقارير» tab).
- * Nothing is fetched for a row until it is opened; one cached id list says which have a recording.
- */
+/** No reports tab (docs/49); nothing is fetched until a row opens; recordings by one id list. */
 export function LessonDisclosure({ row, studentId }: LessonDisclosureProps) {
   const recorded = useQuery(recordedLessonIdsQuery(studentId));
   const hasRec = Array.isArray(recorded.data) && recorded.data.includes(row.lesson_id);

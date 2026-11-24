@@ -3,9 +3,7 @@ import { expect, test } from '@playwright/test';
 import { book, dayTimesPayload, seedSiblings, type DaySeed } from '../../support/teaching/day-times';
 import { rolledBack, type Tx } from '../../support/edit-time';
 
-// create_booking v8 (migration 20261106000501, PR #648 review): one course per package. The draft
-// booked on payment and the assistant's own «احجز» carry different client_request_ids; the second
-// is refused with course_exists, the same request again replays. Rolled back.
+// create_booking v8 (migration 501): one course per package; same request replays.
 
 async function subscriptionOf(tx: Tx, s: DaySeed): Promise<string> {
   const [row] = await tx<{ id: string }[]>`insert into public.subscriptions

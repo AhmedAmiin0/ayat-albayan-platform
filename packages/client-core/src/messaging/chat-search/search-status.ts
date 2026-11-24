@@ -14,7 +14,6 @@ export interface SearchStatusInput {
 export interface SearchStatusWords {
   searching: string;
   empty: string;
-  /** «{n} من {m}». */
   counter: string;
   error: string;
 }
@@ -42,6 +41,5 @@ const TEXT: Record<Phase, (s: SearchStatusInput, w: SearchStatusWords) => string
   },
 };
 
-/** The bar's line: «N من M», «لا توجد نتائج», «جارٍ البحث…», the load error, or nothing yet. */
 export const searchStatus = (s: SearchStatusInput, w: SearchStatusWords): string =>
   TEXT[phaseOf(s)](s, w);

@@ -5,9 +5,7 @@ import { call, family, makeAssistant, type Assistant } from '../../support/sales
 import { setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
 
-// Owner 2026-10-25 «موعد تجريبي جديد», through the REAL API and database: her student's trial is
-// booked, then a new date MOVES it (the old one stays as «نُقلت»), a retry is a replay, the history
-// shows both with the count; another assistant and a subscriber are refused.
+// A new trial date moves the old one, a retry replays; others are refused.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');
@@ -33,7 +31,7 @@ test.describe.serial('sales: a new trial date for her student (API + DB)', () =>
   test.beforeAll(async () => {
     teacher = await resetAbrar();
     await setAvailability(teacher, [[0, '08:00', '22:00']]);
-    await setSetting('sales_require_assignee', true); // her student only: «اشتراط التعيين» ON (docs/16 row 39)
+    await setSetting('sales_require_assignee', true); // Lead assignment rule on (docs/16 row 39).
     a = await makeAssistant('triala');
     b = await makeAssistant('trialb');
     student = (await family(need(a).id, 'لمى')).student;

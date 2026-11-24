@@ -1,17 +1,15 @@
 import { type ChannelMessageView, splitLinks } from '@ab/shared';
 import { t } from '../../lib/i18n/i18n';
 
-/** Who wrote it, said first: «أنت» for mine, else the name and the role's word. */
 const whoOf = (m: ChannelMessageView): string => {
   const c = t.studentChannel;
   return m.mine ? c.you : [m.sender_name, c.roles[m.sender_role]].filter(Boolean).join(' · ');
 };
 
-/** Its words: «تم حذف هذه الرسالة», the text, or a file's kind. */
 const whatOf = (m: ChannelMessageView): string =>
   m.deleted ? t.studentChannel.actions.deleted : m.body || t.studentChannel.kinds[m.kind];
 
-/** «أنت: شكرًا · 10:05»: a bubble as one screen-reader stop. */
+/** A bubble as one screen-reader stop. */
 export const bubbleLabel = (m: ChannelMessageView, meta: string): string =>
   `${whoOf(m)}: ${whatOf(m)} · ${meta}`;
 

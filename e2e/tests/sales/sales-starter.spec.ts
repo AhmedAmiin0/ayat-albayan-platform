@@ -45,7 +45,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     await expect(toggleOf(KEY)).toBeChecked();
     await expect(toggleOf(UNFLAGGED)).not.toBeChecked();
 
-    // Sales: exactly the three, by API and in «محادثة جديدة»; anything else is 403 template_not_allowed.
+    // Sales send exactly the three; anything else is 403 template_not_allowed.
     const me = await makeAssistant(`rt${test.info().project.name}`);
     expect(sorted(await listedKeys(me.token))).toEqual(sorted(RESTRICTED));
     const digits = freshDigits();

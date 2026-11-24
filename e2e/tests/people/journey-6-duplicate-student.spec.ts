@@ -26,7 +26,7 @@ test.describe('journey 6 — duplicate student (R-STU-03)', () => {
     await createStudent(page, { phone: `+966 5${digits.slice(0, 1)} ${digits.slice(1, 4)} ${digits.slice(4)}`, guardian: 'أم جود', name: 'سهيلة' });
     await expect(page.getByRole('status')).toHaveText(ar.students.created);
 
-    // Same guardian phone typed the local way, name with ه instead of ة.
+    // Same guardian phone typed the local way, name with a different final letter.
     await createStudent(page, { phone: `05${digits}`, guardian: 'ام جود', name: 'سهيله' });
     // The duplicate step is its own dialog, titled by the warning (docs/07 §6 Dialog).
     const dialog = page.getByRole('dialog', { name: ar.students.duplicateTitle });
@@ -39,7 +39,7 @@ test.describe('journey 6 — duplicate student (R-STU-03)', () => {
     await merge.getByRole('button', { name: ar.common.confirm }).click();
     await expect(page.getByRole('status')).toHaveText(ar.students.mergeDone);
 
-    // Search by the guardian phone: exactly one student left, the original سهيلة.
+    // Searching by guardian phone leaves exactly one student, the original.
     await page.getByRole('textbox', { name: ar.common.search }).fill(`05${digits}`);
     await page.getByRole('button', { name: ar.common.search, exact: true }).click();
     const rows = page.getByRole('row');

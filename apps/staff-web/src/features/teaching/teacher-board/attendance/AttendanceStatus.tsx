@@ -7,10 +7,6 @@ import { attendanceChip } from '@/features/teaching/teacher-board/cells/attendan
 const ownDay = (kind: AttendanceKind | null): kind is Exclude<AttendanceKind, 'cancelled'> =>
   kind !== null && kind !== 'cancelled';
 
-/**
- * A row's chip: the student's day as «الحضور» says it; a cancelled or moved lesson by its status
- * (who cancelled it), in the academy's words for the statuses.
- */
 export function AttendanceStatus({ row }: { row: Pick<AttendanceTableRow, 'kind' | 'status'> }) {
   const status = useLessonStatusText();
   const chip = ownDay(row.kind) ? attendanceChip(row.kind) : status.chip(row.status);

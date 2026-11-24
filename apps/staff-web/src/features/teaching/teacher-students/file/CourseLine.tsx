@@ -8,10 +8,7 @@ export interface CourseLineProps {
   tz: string;
 }
 
-/**
- * The course in one wrapping line (docs/47): its start, how it ends («تنتهي الدورة بعد 3 حلقات»
- * or a day) and «الحلقات: 5 من 8», then the hint that the count covers every teacher.
- */
+/** The count covers every teacher (docs/47). */
 export function CourseLine({ course, tz }: CourseLineProps) {
   if (!course) return <p className="mb-4 text-sm text-ink-3">{t.teacherFile.noCourse}</p>;
   const lines = courseLines(course, tz);
