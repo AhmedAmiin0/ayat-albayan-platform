@@ -8149,11 +8149,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/files/tests/http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/reports/files/report-files.service.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -8166,6 +8161,11 @@
     },
     "max-len": {
       "count": 7
+    }
+  },
+  "src/modules/reporting/reports/files/tests/http.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/modules/reporting/reports/files/tests/student-pdf.test.ts": {
@@ -8200,28 +8200,18 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/shared/report-access.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/shared/report-lesson.queries.ts": {
-    "complexity": {
-      "count": 2
+  "src/modules/reporting/reports/report-entry.controller.ts": {
+    "ab/zod-inputs": {
+      "count": 4
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/reporting/reports/report-row.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 4
     },
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/reporting/reports/tests/mapper.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -8248,9 +8238,22 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.module.ts": {
+  "src/modules/reporting/reports/shared/report-access.ts": {
     "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/shared/report-gate.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/shared/report-lesson.queries.ts": {
+    "complexity": {
       "count": 2
+    },
+    "max-len": {
+      "count": 4
     }
   },
   "src/modules/reporting/reports/shared/reports.queries.ts": {
@@ -8266,20 +8269,12 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/shared/tests/settings.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/reporting/reports/shared/reports.settings.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/reporting/reports/report-entry.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    },
+  "src/modules/reporting/reports/shared/tests/settings.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -8290,16 +8285,6 @@
     },
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/reporting/reports/submit/tests/form.http.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/reporting/reports/submit/tests/form.mapper.test.ts": {
-    "max-len": {
-      "count": 6
     }
   },
   "src/modules/reporting/reports/submit/report-form.mapper.ts": {
@@ -8313,23 +8298,8 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/shared/report-gate.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/submit/tests/pdf.queue.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/reporting/reports/submit/report-pdf.queue.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/submit/tests/rpc.test.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -8344,11 +8314,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/submit/tests/submit.http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/reports/submit/report-submit.service.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 3
@@ -8358,11 +8323,6 @@
     },
     "max-len": {
       "count": 3
-    }
-  },
-  "src/modules/reporting/reports/submit/tests/plan.test.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/reporting/reports/submit/submit-plan.ts": {
@@ -8379,25 +8339,37 @@
       "count": 3
     }
   },
-  "src/modules/reporting/reports/teacher/tests/http.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/teacher/tests/mapper.test.ts": {
+  "src/modules/reporting/reports/submit/tests/form.http.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/reporting/reports/teacher/teacher-reports.mapper.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
+  "src/modules/reporting/reports/submit/tests/form.mapper.test.ts": {
+    "max-len": {
+      "count": 6
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/pdf.queue.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/plan.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/reporting/reports/teacher/tests/queries.test.ts": {
+  "src/modules/reporting/reports/submit/tests/rpc.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/submit.http.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/teacher/teacher-reports.mapper.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -8421,6 +8393,29 @@
       "count": 3
     }
   },
+  "src/modules/reporting/reports/teacher/tests/http.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/teacher/tests/mapper.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/teacher/tests/queries.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/tests/mapper.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
   "src/modules/reporting/reports/tests/test-app.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -8435,16 +8430,6 @@
   "src/modules/reporting/reports/v2/report-v2.controller.ts": {
     "ab/zod-inputs": {
       "count": 4
-    }
-  },
-  "src/modules/reporting/reports/v2/tests/form.http.test.ts": {
-    "max-len": {
-      "count": 7
-    }
-  },
-  "src/modules/reporting/reports/v2/tests/mapper.test.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
@@ -8464,6 +8449,16 @@
     },
     "max-len": {
       "count": 1
+    }
+  },
+  "src/modules/reporting/reports/v2/tests/form.http.test.ts": {
+    "max-len": {
+      "count": 7
+    }
+  },
+  "src/modules/reporting/reports/v2/tests/mapper.test.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/modules/reporting/reports/v2/tests/submit.http.test.ts": {

@@ -1,13 +1,13 @@
-export { ReportFilesService } from './files/report-files.service';
-export { historyResponse } from './history/report-history.mapper';
-export {
-  type HistoryLesson,
-  type HistoryRow,
-  type PendingRow,
-  REPORTABLE_STATUSES,
-  ReportHistoryQueries,
-} from './history/report-history.queries';
+export { ReportFilesModule, ReportFilesService } from './files';
+export { historyResponse, ReportHistoryModule, REPORTABLE_STATUSES, ReportHistoryQueries } from './history';
+export { type HistoryLesson, type HistoryRow, type PendingRow } from './history/report-history.queries';
 export { ReportsModule } from './reports.module';
-export { ReportsSettings, type ReportsSettingsValues } from './shared/reports.settings';
-export { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './shared/teacher-link.config';
-export { type TeacherReportLink, TeacherReportLinks } from './shared/teacher-link.issuer';
+export { type ReportsSettingsValues } from './shared/reports.settings';
+export {
+  ReportsSettings,
+  ReportsSharedModule,
+  TEACHER_LINK_CONFIG,
+  type TeacherLinkConfig,
+  type TeacherReportLink,
+  TeacherReportLinks,
+} from './shared';

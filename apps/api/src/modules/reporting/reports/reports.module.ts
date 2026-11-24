@@ -1,41 +1,14 @@
 import { Module } from '@nestjs/common';
-import { loadEnv } from '@/config/env/env';
-import { RateLimitRepo } from '@/common/http/rate-limit.repo';
 import { ReportPageModule } from '@/modules/reporting/report-page';
-import { ReportPdfModule } from '@/modules/reporting/report-pdf/report-pdf.module';
-import { TeachersModule } from '@/modules/people/teachers/teachers.module';
-import { ReportAccess } from './shared/report-access';
-import { ReportAttachmentsController } from './files/report-attachments.controller';
-import { ReportAttachmentsQueries } from './files/report-attachments.queries';
+import { ReportFilesModule } from '@/modules/reporting/reports/files';
+import { ReportHistoryModule } from '@/modules/reporting/reports/history';
+import { ReportsSharedModule } from '@/modules/reporting/reports/shared';
+import { ReportSubmitModule } from '@/modules/reporting/reports/submit';
+import { TeacherReportsModule } from '@/modules/reporting/reports/teacher';
+import { TeacherLinkModule } from '@/modules/reporting/reports/teacher-link';
+import { ReportV2Module } from '@/modules/reporting/reports/v2';
 import { ReportEntryController } from './report-entry.controller';
-import { ReportFilesService } from './files/report-files.service';
-import { ReportFollowUp } from './submit/report-follow-up';
-import { ReportGate } from './shared/report-gate';
-import { ReportHistoryQueries } from './history/report-history.queries';
-import { ReportHistoryService } from './history/report-history.service';
-import { ReportLessonQueries } from './shared/report-lesson.queries';
-import { PendingPdfQueue, ReportPdfQueue } from './submit/report-pdf.queue';
-import { ReportSubmitService } from './submit/report-submit.service';
 import { ReportsController } from './reports.controller';
-import { ReportsQueries } from './shared/reports.queries';
-import { ReportsService } from './shared/reports.service';
-import { ReportsSettings } from './shared/reports.settings';
-import { TeacherReportsQueries } from './teacher/teacher-reports.queries';
-import { TeacherReportsService } from './teacher/teacher-reports.service';
-import { ReportV2Controller } from './v2/report-v2.controller';
-import { ReportV2Service } from './v2/report-v2.service';
-import { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './shared/teacher-link.config';
-import { TeacherLinkAccess } from './teacher-link/teacher-link.access';
-import { TeacherLinkController } from './teacher-link/teacher-link.controller';
-import { TeacherLinkFiles } from './teacher-link/teacher-link.files';
-import { TeacherLinkFilesController } from './teacher-link/teacher-link-files.controller';
-import { TeacherReportLinks } from './shared/teacher-link.issuer';
-import { TeacherLinkLimit } from './teacher-link/teacher-link.limit';
-import { TeacherLinkReports } from './teacher-link/teacher-link.reports';
-import { TeacherLinkRepo } from './teacher-link/teacher-link.repo';
-
-/** The teacher link's secret: the existing public-link secret (FEEDBACK_TOKEN_SECRET). */
-const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_SECRET ?? null });
 
 /**
  * Lesson reports: form prefill, drafts, submit (versions + lesson outcome), attachments, history
@@ -44,51 +17,13 @@ const linkConfig = (): TeacherLinkConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_
  * (report_form_v2).
  * teacher-link/: the teacher's no-login report link for one lesson (docs/19), and its issuer for
  * the reminders. ReportPageModule: the report's live page (/report/<public_id>).
+ * The one place the report modules are wired: AppModule imports this.
  */
 @Module({
-  imports: [TeachersModule, ReportPdfModule, ReportPageModule],
-  controllers: [
-    ReportsController,
-    ReportAttachmentsController,
-    ReportEntryController,
-    ReportV2Controller,
-    TeacherLinkController,
-    TeacherLinkFilesController,
+  imports: [
+    ...[ReportsSharedModule, ReportSubmitModule, ReportFilesModule, ReportHistoryModule],
+    ...[TeacherReportsModule, ReportV2Module, TeacherLinkModule, ReportPageModule],
   ],
-  providers: [
-    ReportAccess,
-    ReportAttachmentsQueries,
-    ReportFilesService,
-    ReportFollowUp,
-    ReportGate,
-    ReportHistoryQueries,
-    ReportHistoryService,
-    ReportLessonQueries,
-    ReportSubmitService,
-    ReportV2Service,
-    ReportsQueries,
-    ReportsService,
-    ReportsSettings,
-    TeacherReportsQueries,
-    TeacherReportsService,
-    { provide: ReportPdfQueue, useClass: PendingPdfQueue },
-    { provide: TEACHER_LINK_CONFIG, useFactory: linkConfig },
-    RateLimitRepo,
-    TeacherLinkRepo,
-    TeacherLinkAccess,
-    TeacherLinkLimit,
-    TeacherLinkReports,
-    TeacherLinkFiles,
-    TeacherReportLinks,
-  ],
-  exports: [
-    ReportFilesService,
-    ReportHistoryQueries,
-    ReportPdfQueue,
-    ReportsQueries,
-    ReportsSettings,
-    TeacherReportLinks,
-    TEACHER_LINK_CONFIG,
-  ],
+  controllers: [ReportsController, ReportEntryController],
 })
 export class ReportsModule {}

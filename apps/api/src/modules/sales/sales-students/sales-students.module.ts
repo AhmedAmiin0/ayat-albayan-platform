@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { LessonsModule } from '@/modules/teaching/lessons';
-import { ReportsModule } from '@/modules/reporting/reports';
+import {
+  ReportFilesModule,
+  ReportHistoryModule,
+  ReportsSharedModule,
+} from '@/modules/reporting/reports';
 import { TrialDateRepo } from '@/modules/teaching/booking';
 import { SalesModule } from '@/modules/sales/sales';
 import { SalesStudentAttendanceController, StudentAttendanceController } from './attendance/student-attendance.controller';
@@ -28,7 +32,10 @@ import { SalesTeacherOverviewRepo } from './teachers/sales-teacher-overview.repo
  * TrialDateQueries, RescheduleOneService, LessonCancelService, LessonStatusService).
  */
 @Module({
-  imports: [SalesModule, LessonsModule, ReportsModule],
+  imports: [
+    ...[SalesModule, LessonsModule, ReportsSharedModule, ReportFilesModule],
+    ReportHistoryModule,
+  ],
   controllers: [SalesStudentController, SalesLessonActionsController, SalesTeacherOverviewController, SalesStudentAttendanceController,
     StudentAttendanceController, TeacherAttendanceController],
   providers: [SalesStudentScope, SalesStudentRepo, TrialDateRepo, SalesStudentReads, SalesStudentService, LessonServices, SalesLessonActions,
