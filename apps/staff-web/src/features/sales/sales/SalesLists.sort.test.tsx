@@ -3,7 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { openFilters } from '@/test/open-filters';
-import type { SalesSubscriptionView, SubscriptionStatus } from '@ab/shared';
+import type { SalesSubscriptionView } from '@ab/shared';
+import type { SubscriptionStatus } from '@ab/catalog';
 import { SalesSubscriptions } from './subscriptions/SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());

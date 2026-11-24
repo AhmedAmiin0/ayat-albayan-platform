@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { SALES_NAV_ITEMS } from './SalesNav';
 
 /** Where /sales lands when no nav page is open to the held role. */

@@ -1,10 +1,10 @@
-import type { QuoteResponse } from '@ab/shared';
+import type { QuoteResponse } from '@ab/money';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 import { quoteParams, type Selection } from './selection';
 
 /** The rate a USD quote used; null for the site's own currencies. */
-export type { FxRate as QuoteFx, QuoteResponse } from '@ab/shared';
+export type { FxRate as QuoteFx, QuoteResponse } from '@ab/money';
 
 const PATH = '/pricing/quote';
 

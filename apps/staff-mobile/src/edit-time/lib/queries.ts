@@ -1,4 +1,4 @@
-import type { LessonTimeEdit, TimeEditResult } from '@ab/shared';
+import type { LessonTimeEdit, TimeEditResult } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend, pathKey } from '@ab/mobile-kit';
 import { isStale } from './edit-time-errors';

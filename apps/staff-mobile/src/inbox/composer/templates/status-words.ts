@@ -1,5 +1,7 @@
 import type { AuthorTemplate } from '@ab/client-core';
-import { templateStatusStyle, type Glyph, type TemplateStatus, type Tone } from '@ab/shared';
+import { templateStatusStyle } from '@ab/shared';
+import type { TemplateStatus } from '@ab/catalog';
+import type { Glyph, Tone } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
 // The author's status chip (owner 2026-11-14): «قيد المراجعة / معتمد / مرفوض», anything else

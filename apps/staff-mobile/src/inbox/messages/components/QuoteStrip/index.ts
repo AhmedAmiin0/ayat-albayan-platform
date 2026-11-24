@@ -1,0 +1,1 @@
+export { QuoteStrip } from './QuoteStrip';

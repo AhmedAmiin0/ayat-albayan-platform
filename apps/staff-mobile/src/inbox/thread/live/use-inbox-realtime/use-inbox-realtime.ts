@@ -1,0 +1,83 @@
+import {
+  connectInboxLive,
+  createLiveSession,
+  INBOX_INACTIVE_LEAVE_MS,
+  type LiveTargets,
+} from '@ab/client-core';
+import { onlineManager } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { AppState } from 'react-native';
+import { supabase, queryClient as client } from '@ab/mobile-kit';
+import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-session';
+import { refreshOpenChat } from '@/inbox/thread/live/live-refresh';
+import { inboxLive } from '@/inbox/thread/live/inbox-live';
+import { changeLists } from '@/inbox/thread/live/list-marks';
+
+const active = () => AppState.currentState === 'active';
+
+/** An event re-reads the open chat, the chats list and the badge; never while the app is not active. */
+// Every event also syncs the phone store (docs/43 43-7; its engine throttles to one a second).
+const targets: LiveTargets = {
+  chat: (phone) => {
+    nudgeInboxStore();
+    if (active()) void refreshOpenChat(client, phone);
+  },
+  // Shown lists re-read with the last word (a read in flight is followed by a fresh one, docs/43
+  // AU1); hidden ones are only marked (list-marks.ts). Throttled to one per 3 s.
+  list: () => {
+    nudgeInboxStore();
+    if (active()) changeLists(client);
+  },
+  badge: () => {
+    nudgeInboxStore();
+    if (active())
+      void client.invalidateQueries(
+        { queryKey: ['threads', 'nav-count'] },
+        { cancelRefetch: false },
+      );
+  },
+  // docs/44 K1: the event's ticks into the phone store at once (the screens read it); the re-reads
+  // above still run; the sync lands as the server sent it (no fold).
+  rows: patchInboxStore,
+};
+
+/**
+ * Back to 'active' with the channel still joined, nothing re-reads here: resumeInbox (mounted
+ * by the same trees, useNotificationHandling) already re-reads every chat, list and the badge
+ * then (docs/43 AU3: one resume path). A fresh join still resyncs on SUBSCRIBED.
+ */
+const noResync = (): void => undefined;
+
+/**
+ * The staff inbox's realtime nudge (owner 2026-10-27), mounted once by the admin and sales tab trees
+ * (never the teacher's, the family's or the assistant's): the private 'inbox:staff' channel while the
+ * app is active, the push otherwise. An event re-reads through useThreadPoll's own query (its merge,
+ * its yield to a send, its gap rule). In the background the channel is left (and the socket closed when
+ * nothing else uses it), so the polls take over and nothing of the inbox stays awake; 'inactive' (iOS)
+ * leaves after INBOX_INACTIVE_LEAVE_MS. Back to 'active': one rejoin, one resync on SUBSCRIBED.
+ * A dropped channel (CHANNEL_ERROR, TIMED_OUT, CLOSED) rejoins with backoff 1 s, 2 s, 5 s, 10 s,
+ * then every 30 s (client-core live-rejoin.ts), at once on 'active' or the network coming back;
+ * SUBSCRIBED again resyncs (every target nudges the phone store's sync).
+ * Unmount (sign-out flips the tree) leaves at once. The app's one (persisted) query client.
+ */
+export function useInboxRealtime(enabled: boolean): void {
+  useEffect(() => {
+    if (!enabled) return undefined;
+    const open = () => connectInboxLive(supabase, inboxLive, targets);
+    const session = createLiveSession(open, noResync);
+    const at = AppState.currentState; // 'unknown' at an iOS cold start counts as open
+    if (at !== 'background') session.resume();
+    if (at === 'inactive') session.pause(INBOX_INACTIVE_LEAVE_MS);
+    const change = AppState.addEventListener('change', (state) => {
+      if (state === 'active') session.resume();
+      else session.pause(state === 'inactive' ? INBOX_INACTIVE_LEAVE_MS : 0);
+    });
+    // The network is back (connectivity's probe answered): a dropped channel rejoins now (K2).
+    const online = onlineManager.subscribe((up) => (up && active() ? session.resume() : undefined));
+    return () => {
+      online();
+      change.remove();
+      session.end();
+    };
+  }, [enabled]);
+}

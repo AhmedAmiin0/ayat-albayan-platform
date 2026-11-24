@@ -1,5 +1,5 @@
 import type { CallSession } from '@ab/client-core';
-import { avatarTone, avatarTones } from '@ab/shared';
+import { avatarTone, avatarTones } from '@ab/catalog';
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
