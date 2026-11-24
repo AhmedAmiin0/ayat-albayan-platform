@@ -1,7 +1,7 @@
 import { t } from '../../lib/i18n/i18n';
 import { chatDayLabel } from './day-label';
 
-// Day separators as WhatsApp (owner 2026-10-27), in the zone given (staff inbox and channel).
+// Day separators as WhatsApp, in the zone given (staff inbox and channel).
 const now = new Date('2026-10-27T12:00:00.000Z');
 const label = (iso: string) => chatDayLabel(iso, { now, tz: 'Asia/Riyadh' });
 

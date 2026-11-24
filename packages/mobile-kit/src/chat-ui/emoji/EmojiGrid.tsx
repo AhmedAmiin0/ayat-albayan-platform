@@ -6,7 +6,7 @@ import { EMOJI } from '@ab/client-core';
 const GRID = { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' } as const;
 
 /**
- * The curated emoji (owner 2026-10-27) in a wrapping row that mirrors with the phone, each 44pt and
+ * The curated emoji in a wrapping row that mirrors with the phone, each 44pt and
  * named by the emoji itself. One tap = one emoji at the caret.
  */
 export function EmojiGrid({ onPick }: { onPick: (emoji: string) => void }) {

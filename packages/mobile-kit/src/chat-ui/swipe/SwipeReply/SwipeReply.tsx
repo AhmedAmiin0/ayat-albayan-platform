@@ -19,7 +19,7 @@ const ICON = {
 } as const;
 
 /**
- * Swipe a bubble toward the inline-end to answer it, as WhatsApp (owner 2026-10-25/27): ours and
+ * Swipe a bubble toward the inline-end to answer it, as WhatsApp: ours and
  * theirs alike, it uncovers the icon at the row's start. RN core only (PanResponder + Animated, no
  * gesture-handler), so a vertical scroll of the inverted list always wins. The long-press menu is
  * the main way; this is the shortcut. Without `onReply` it is a plain row.

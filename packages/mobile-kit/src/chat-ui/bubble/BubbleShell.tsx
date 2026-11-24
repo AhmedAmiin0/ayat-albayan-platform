@@ -66,7 +66,7 @@ function useBubbleBox(p: BubbleShellProps): ViewStyle {
 }
 
 /**
- * One chat bubble's shell, as WhatsApp (owner 2026-10-27): ours at the inline-end, theirs at the
+ * One chat bubble's shell, as WhatsApp: ours at the inline-end, theirs at the
  * start (RN mirrors them), the tail corner on the screen-edge side. The caller fills it; with
  * `onLongPress` it is a press target (350 ms) that leaves the reader's focus to its contents,
  * unless it is given its accessibility actions (then one stop with its label, hint and menu).

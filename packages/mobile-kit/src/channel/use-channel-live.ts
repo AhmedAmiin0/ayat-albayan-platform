@@ -14,7 +14,7 @@ interface Live {
 }
 
 /**
- * The thread's socket (owner 2026-10-29): Supabase Realtime on this channel's channel_messages
+ * The thread's socket: Supabase Realtime on this channel's channel_messages
  * (RLS decides who is told); a new message re-reads the thread through the API. Joined only while
  * the screen is shown and the app is in the foreground; on the way back the poll (and TanStack's
  * focus refetch) catch up.

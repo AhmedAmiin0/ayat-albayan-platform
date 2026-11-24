@@ -5,7 +5,7 @@ import { useTheme } from '../../../theme';
 import { useTabBarInset } from '../tab-bar-inset';
 
 const BODY = { paddingHorizontal: 16, paddingTop: 8, gap: 16 } as const;
-/** A chat, and a list screen's header blocks (title, search, pills): the tight 8pt rhythm (owner 2026-10-28). */
+/** A chat, and a list screen's header blocks (title, search, pills): the tight 8pt rhythm. */
 const TIGHT_BODY = { paddingHorizontal: 16, paddingTop: 8, gap: 8 } as const;
 
 const FullScreenContext = createContext(false);

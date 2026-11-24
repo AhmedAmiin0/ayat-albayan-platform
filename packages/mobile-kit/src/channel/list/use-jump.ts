@@ -12,7 +12,7 @@ interface ScrollFailed {
 const LIT_MS = 1500;
 
 /**
- * A tap on a quote goes to the original when it is loaded (owner 2026-10-31): the list scrolls it
+ * A tap on a quote goes to the original when it is loaded: the list scrolls it
  * to the middle and lights its edge a moment. Not loaded: nothing moves.
  */
 export function useJump(rows: readonly ChannelRow[]) {

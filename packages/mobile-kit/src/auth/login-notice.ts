@@ -7,7 +7,7 @@ export { isOtherAppRole } from './role-claim';
 export type LoginNotice = 'accountDisabled' | 'wrongApp';
 
 /**
- * «wrongApp» in the staff app names every staff role it serves (mobileRoles, owner 2026-10-12); the
+ * «wrongApp» in the staff app names every staff role it serves (mobileRoles); the
  * family app says the inverse (docs/50 §7): staff sign in to the academy's own app.
  */
 const WRONG_APP: Record<Audience, () => string> = {

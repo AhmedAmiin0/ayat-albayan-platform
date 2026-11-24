@@ -1,6 +1,6 @@
 import { CHIP_MARGIN, cellTop, chipCovered, FLOAT_TOP, type BandInput } from './top-band';
 
-// The floating day never over an inline separator (owner 2026-10-27, as WhatsApp): geometry only.
+// The floating day never over an inline separator (as WhatsApp): geometry only.
 const CHIP = 20;
 const BAND = FLOAT_TOP + CHIP_MARGIN + CHIP + 4; // 34: the inline chip's top must be under it
 const view = { offset: 0, length: 300 };
