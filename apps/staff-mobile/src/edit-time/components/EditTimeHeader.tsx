@@ -1,4 +1,4 @@
-import type { LessonView, TimeEditMode } from '@ab/shared';
+import type { LessonView, TimeEditMode } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, whenText } from '@ab/mobile-kit';
 import { studentNames } from '@/today';

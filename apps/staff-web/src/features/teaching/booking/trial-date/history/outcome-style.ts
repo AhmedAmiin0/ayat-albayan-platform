@@ -1,4 +1,5 @@
-import type { StatusStyle, TrialOutcome } from '@ab/shared';
+import type { TrialOutcome } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
 
 // A trial date's outcome chip (docs/07 §6 grammar): upcoming / awaiting neutral, attended ok,
 // absent bad (it did not happen), cancelled / moved muted and struck.

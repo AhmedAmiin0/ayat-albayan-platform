@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { MessageSearchRepo } from './message-search.repo';
 
 const AT = '2026-10-01T09:30:00.123456+00:00';

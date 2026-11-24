@@ -1,4 +1,4 @@
-import type { DashboardResponse, ReceivablesView, TeacherEarningsSummaryView } from '@ab/shared';
+import type { DashboardResponse, ReceivablesView, TeacherEarningsSummaryView } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { wholeText } from '@/finance/shared/format';
 

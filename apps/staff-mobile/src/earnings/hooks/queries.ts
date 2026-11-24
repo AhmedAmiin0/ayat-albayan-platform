@@ -1,4 +1,4 @@
-import type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/shared';
+import type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/money';
 import type { SessionFilter } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
