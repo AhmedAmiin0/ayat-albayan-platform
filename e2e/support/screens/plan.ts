@@ -2,8 +2,8 @@ import type { Variant } from './screens.types.ts';
 
 const H = 900;
 
-export const LIGHT_1440: Variant = { name: '1440-light', width: 1440, height: H, theme: 'light' };
-export const PHONE: Variant = { name: '390-light', width: 390, height: 844, theme: 'light' };
+const LIGHT_1440: Variant = { name: '1440-light', width: 1440, height: H, theme: 'light' };
+const PHONE: Variant = { name: '390-light', width: 390, height: 844, theme: 'light' };
 export const EMPTY: Variant = { name: 'empty', width: 1440, height: H, theme: 'light' };
 export const ENGLISH: Variant = { name: '390-en', width: 390, height: 844, theme: 'light' };
 
