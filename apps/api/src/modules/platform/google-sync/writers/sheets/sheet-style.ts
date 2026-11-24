@@ -1,8 +1,6 @@
 import { BRAND } from '@/modules/platform/google-sync/google-format';
 
-// Brand styleSheet («آيات البيان — الهوية (Brand)», docs/24 §1) as one Sheets batchUpdate: RTL,
-// hidden gridlines, frozen header, green header with white bold text and a thick gold bottom
-// border, banding white / paper. Only ever applied to a sheet the platform just created (tab 0).
+// docs/24 §1: only ever applied to a sheet the platform just created (tab 0).
 
 const rgb = (hex: string) => ({
   red: parseInt(hex.slice(1, 3), 16) / 255,

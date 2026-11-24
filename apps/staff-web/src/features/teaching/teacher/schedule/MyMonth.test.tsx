@@ -1,4 +1,5 @@
-import { PUBLIC_SETTING_DEFAULTS, type TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

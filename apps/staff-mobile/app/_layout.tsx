@@ -45,13 +45,7 @@ interface GatedRootProps {
   fontsLoaded: boolean;
 }
 
-/**
- * The room (docs/35: a lesson or meeting inside the app) is open to every signed-in tree, and so is
- * /share (docs/38: an Android share), which replaces itself at once with the tree's own chooser.
- * Inside the query provider, so the persisted /auth/me counts: a signed-in tree mounts only once
- * /auth/me is loaded (saved or live), and its tab bar renders once, complete (docs/27 E2, D6). Until
- * then «جارٍ الاتصال» stays up; useMeReady fetches /auth/me meanwhile.
- */
+/** Signed-in trees mount only once /auth/me is loaded so the tab bar renders complete (docs/27). */
 function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
   const { color } = useTheme();
   const signedIn = gate !== 'booting' && gate !== 'out';
@@ -63,7 +57,7 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
   useProfileLocaleSync(signedIn);
   return (
     <RootFrame ready={ready} fontsLoaded={fontsLoaded}>
-      {/* «الدخول بالبصمة»: off by default, nothing changes until the user turns it on. */}
+      {/* Fingerprint sign-in is off by default; nothing changes until the user turns it on. */}
       <BiometricGate signedIn={signedIn}>
         <StaffCalls gate={gate}>
           <Stack

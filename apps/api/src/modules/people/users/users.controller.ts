@@ -34,11 +34,7 @@ import { UsersUpdateService } from './update/users.update.service';
 
 const uuid = new ParseUUIDPipe();
 
-/**
- * «المستخدمون»: every login of the academy (admin, teacher, assistant, sales, guardian, student).
- * users.read for the directory, users.write for everything that changes a login. Secrets (a
- * generated password, a recovery link) appear only in the response of create / reset-password.
- */
+/** Secrets appear only in the response of create or reset-password. */
 @ApiTags('users')
 @ApiBearerAuth()
 @Controller('users')

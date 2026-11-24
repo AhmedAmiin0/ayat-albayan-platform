@@ -2,8 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR, migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261107000400 («تعديل» = a correction, owner 2026-11-07) read as text: expand only,
-// re-runnable, RLS untouched.
+// Migration 20261107000400 read as text: expand only, re-runnable, RLS untouched.
 const NAME = '20261107000400_message_corrections.sql';
 const SQL = readFileSync(migrationPath(NAME), 'utf8')
   .replace(/--.*$/gm, '')

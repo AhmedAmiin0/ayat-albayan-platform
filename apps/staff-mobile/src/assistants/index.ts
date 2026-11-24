@@ -1,4 +1,4 @@
 export { AssistantDetailScreen } from './screens/AssistantDetailScreen';
 export { AssistantsScreen } from './screens/AssistantsScreen';
-// «إيقاف مؤقت» (students/course-pause): the from / until day steppers (rule 6, never typed).
+// Course pause day steppers: never typed (rule 6).
 export { StartDayPicker } from './terms/StartDayPicker';

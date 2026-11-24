@@ -28,12 +28,7 @@ function Brand({ className, compact = false }: { className?: string; compact?: b
   );
 }
 
-/**
- * Every signed-in family page (docs/51 §1) in the staff shell's idiom (owner 2026-11-19): from
- * `shell:` the mint rail (brand, then the fihris) beside the work column; below it a top row
- * (brand, the child a guardian of several works as, «تجريبي», the bell) and the bottom bar. The
- * ground is the margin tone; the pages lay raised cards on it. Logical utilities only.
- */
+/** docs/51 §1: logical utilities only. */
 export function FamilyShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh shell:grid shell:grid-cols-[15rem_minmax(0,1fr)]">
