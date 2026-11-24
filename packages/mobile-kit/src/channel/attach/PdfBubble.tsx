@@ -17,10 +17,7 @@ interface PdfBubbleProps {
   onLongPress?: () => void;
 }
 
-/**
- * A PDF card (ChatXFamilyThread): the strip with «PDF», then its name and «PDF · 240 كيلوبايت».
- * The channel has no page preview yet: a tap opens the file in the phone's own viewer.
- */
+/** The channel has no page preview yet: a tap opens the file in the phone's viewer. */
 export function PdfBubble({ file, url, onLongPress }: PdfBubbleProps) {
   const { color } = useTheme();
   const small = useSmallText('ink3');

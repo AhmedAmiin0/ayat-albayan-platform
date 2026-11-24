@@ -10,7 +10,6 @@ interface SeatChatButtonProps {
   seat: ChannelSeatApi;
 }
 
-/** The seat holder's «المحادثة» (owner 2026-11-16): opens the student's chat panel. */
 export function SeatChatButton({ studentId, studentName, seat }: SeatChatButtonProps) {
   const [open, setOpen] = useState(false);
   return (

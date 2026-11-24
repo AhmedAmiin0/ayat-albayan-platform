@@ -1,7 +1,6 @@
 import { ALERT_KINDS, type AlertKind, type HomePrefs, withAlert } from './home-prefs.js';
 
-// The «تخصيص» switches in order, shared by the web dialog and the mobile screen: each knows its
-// label, its value and the prefs it makes. The apps only draw them.
+// Shared switch order for web and mobile; the apps only draw them.
 
 export interface PrefSwitchWords {
   kind: Readonly<Record<AlertKind, string>>;

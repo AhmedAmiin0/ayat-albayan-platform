@@ -7,7 +7,7 @@ const rangeText = (p: CoursePauseView): string =>
     .replace('{from}', dateLabel(p.from_date))
     .replace('{until}', p.until_date === null ? t.coursePause.historyOpenEnd : dateLabel(p.until_date));
 
-/** «سجل الإيقاف»: the ended pauses, newest first (collapsed: it is reference, not work). */
+/** Newest first, collapsed because it is reference, not work. */
 export function PauseHistory({ history }: { history: readonly CoursePauseView[] }) {
   if (history.length === 0) return null;
   return (

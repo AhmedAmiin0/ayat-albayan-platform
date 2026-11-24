@@ -5,7 +5,6 @@ import {
 } from './family-action.js';
 import type { PortalLessonSends } from './lesson-sends.js';
 
-// «خيارات الحلقة»'s writes, one hook for the family app and the web portal.
 // client-core stays React-free: each app hands in its own TanStack hooks, sends and words.
 
 /** The part of TanStack's useMutation result the hook reads. */

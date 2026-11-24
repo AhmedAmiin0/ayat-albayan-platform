@@ -20,7 +20,7 @@ test.describe('journey 4 — reschedule into a busy slot (R-SCH-07, R-SCH-04)', 
   test('busy slot → conflict in Arabic → another free slot → moved, guardian confirmation queued', async ({
     asRole,
   }) => {
-    // «أبرار» works 14:00–20:00 Riyadh every day: 45-minute starts at 14:00, 14:45, 15:30 …
+    // The teacher works 14:00-20:00 Riyadh daily: 45-minute starts at 14:00, 14:45, 15:30.
     const teacherId = await resetAbrar();
     await setAvailability(teacherId, EVERY_DAY.map((d) => [d, '14:00', '20:00']));
     const week = nextWeekSaturday();

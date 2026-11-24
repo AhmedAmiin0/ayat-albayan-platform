@@ -20,15 +20,10 @@ interface ComposerPillProps {
   recording: boolean;
   recordedMs: number;
   onCancelRecording: () => void;
-  /** «أرفق صورة أو ملف PDF»; absent where the app picks no files. */
+  /** Absent where the app picks no files. */
   onAttach?: () => void;
 }
 
-/**
- * The pill's contents in reading order (ChatX boards): the emoji button (it opens the emoji panel,
- * then «لوحة المفاتيح» goes back), the text box (16/24), the clip; 44pt buttons. While recording:
- * the dot, its clock and ✕.
- */
 export function ComposerPill({ input, ...p }: ComposerPillProps) {
   const { color } = useTheme();
   const c = t.studentChannel;

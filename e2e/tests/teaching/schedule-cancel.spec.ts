@@ -29,7 +29,6 @@ interface CancelInput {
   reason: string;
 }
 
-/** Drawer «إلغاء الحلقة» → who, scope, why → submit; waits for the toast. */
 async function cancelFromDrawer(page: Page, i: CancelInput): Promise<void> {
   const drawer = await openLessonDrawer(page, { week: weekOf(i.at), teacherId: i.teacherId, name: i.name, at: i.at });
   await drawer.getByRole('button', { name: ar.lessons.cancelSubmit }).click();

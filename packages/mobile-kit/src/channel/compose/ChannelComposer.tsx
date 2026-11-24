@@ -16,17 +16,11 @@ import { useRecording } from './use-recording';
 
 interface ChannelComposerProps {
   refs: ChannelRef;
-  /** The message being answered (swipe or «ردّ»), or null. */
   replyTo: ChannelMessageView | null;
   onReplyDone: () => void;
 }
 
-/**
- * The typing bar (ChatX boards, the kit's ComposerBar at 48pt): the pill, then the round button:
- * «أرسل» once there is text (or to send a recording), else the microphone where the app records.
- * The quote being answered sits over it, the emoji panel under it. Attach and the microphone only
- * where the app gives the port.
- */
+/** Attach and the microphone show only where the app gives the port. */
 export function ChannelComposer({ refs, replyTo, onReplyDone }: ChannelComposerProps) {
   const [sheet, setSheet] = useState(false);
   const reply = { id: replyTo?.id ?? null, done: onReplyDone };

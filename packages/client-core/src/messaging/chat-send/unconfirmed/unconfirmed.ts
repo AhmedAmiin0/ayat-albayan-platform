@@ -22,7 +22,7 @@ export type TextAnswer = MessageView & {
   same_request?: boolean | undefined;
 };
 
-/** What a send carried: its text; a correction («تعديل») also the original it corrects. */
+/** A correction also carries the original it corrects. */
 export interface SentText {
   text: string;
   correction?: { id: string } | undefined;

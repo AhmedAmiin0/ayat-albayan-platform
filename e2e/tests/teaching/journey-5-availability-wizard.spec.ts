@@ -16,7 +16,7 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await resetAbrar(); // no availability, no lessons
     const family = await seedFamily('أم سارة', ['سارة']);
 
-    // The teacher, on «المواعيد المتاحة»: one range, saved in Riyadh time.
+    // One availability range, saved in Riyadh time.
     const teacher = await asRole('teacher');
     await openMyAvailability(teacher);
     await teacher.getByLabel(ar.availability.tz).selectOption('Asia/Riyadh');
@@ -26,7 +26,6 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await teacher.getByRole('button', { name: ar.availability.save }).click();
     await expect(teacher.getByRole('status')).toHaveText(ar.availability.saved);
 
-    // The admin books for Sara: «أبرار» is pickable now, and her grid is exactly that range.
     const admin = await asRole('admin');
     await admin.goto(`/admin/book?studentId=${family.studentIds[0] ?? ''}`);
     await expect(admin.getByRole('checkbox', { name: /سارة/ })).toBeChecked();
@@ -51,8 +50,7 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await expect(step.getByRole('region', { name: new RegExp(ar.booking.pickDays) }).getByText(dayAt)).toBeVisible();
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeEnabled();
 
-    // Review → «احجز»: one transaction writes the rule (idempotency key, no frozen link), the
-    // Wednesday lessons, one queued confirmation and the audit row (migrations 110–112).
+    // One transaction writes rule, lessons, one confirmation and audit (migrations 110-112).
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await uploadInvoice(admin);
     await admin.getByRole('button', { name: ar.booking.submit }).click();

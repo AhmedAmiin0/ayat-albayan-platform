@@ -16,10 +16,7 @@ export interface AttendanceLogProps {
   tz: string;
 }
 
-/**
- * «سجل الحضور» of one student (docs/46 C5): her own lessons with the student, a month at a time
- * (newest first), the month's totals, then a compact table.
- */
+/** Her own lessons with the student, a month at a time, newest first (docs/46 C5). */
 export function AttendanceLog({ studentId, tz }: AttendanceLogProps) {
   const w = t.sales.student.log;
   const clock = useClock();

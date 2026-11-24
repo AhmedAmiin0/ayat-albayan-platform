@@ -56,14 +56,7 @@ export function LessonChipList({ lessons, onOpen }: { lessons: readonly LessonVi
   );
 }
 
-/**
- * One lesson in the week grid (R-SCH-01, R-SCH-03): the viewer's time · student(s), the status as
- * nuqta + word (shape carries state, colour only confirms), the student's own clock when it
- * differs, and
- * a flag for a generated lesson that clashes (R-SCH-04), a student whose package is unpaid with
- * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08). A trial says «تجريبية», a
- * makeup (R-SCH-10) «تعويضية».
- */
+/** Shape carries state, colour only confirms; flags clashes (R-SCH-04) and unpaid (R-SUB-02). */
 export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher = true }: LessonChipProps<L>) {
   const style = useLessonStatusText().chip(lesson.status);
   const viewer = useViewerTz();

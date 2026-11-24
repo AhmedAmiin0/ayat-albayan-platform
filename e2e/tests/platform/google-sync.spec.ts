@@ -8,7 +8,6 @@ import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/
 
 const WAIT = { timeout: 45_000, intervals: [500, 1_000, 2_000] };
 const g = ar.googleSync;
-/** Back on «مزامنة Google» with the OAuth return's `?google=` read and cleared. */
 const returnCleared = (url: URL) => url.pathname === '/admin/settings/google' && !url.searchParams.has('google');
 
 test.describe('Google sync alongside the old script (docs/24)', () => {
@@ -24,8 +23,7 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     const studentId = family.studentIds[0] ?? '';
     const admin = await asRole('admin');
 
-    // Connect: the stub consents at once and Google's redirect comes back to the settings page,
-    // which forwards ?google=connected to «مزامنة Google» (/admin/settings/google).
+    // The stub consents at once; the settings page forwards ?google=connected to the Google page.
     await admin.goto('/admin/settings/google');
     await expect(admin.getByRole('heading', { name: g.title })).toBeVisible();
     await expect(admin.getByRole('textbox', { name: g.connection.redirect })).toHaveValue('http://localhost:3100/integrations/google/callback');
@@ -35,7 +33,6 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     await expect(admin).toHaveURL(returnCleared);
     await expect(admin.getByText('academy@stub.test').first()).toBeVisible();
 
-    // Discover (read-only), confirm the Drive root, map the teacher and the student («مجلد جديد»).
     await admin.getByRole('button', { name: g.drive.discover }).click();
     await admin.getByRole('button', { name: g.drive.confirm }).click();
     await expect(admin.getByText(g.common.confirmed).first()).toBeVisible();
@@ -74,7 +71,7 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     await withSql((sql) => sql`update public.lessons set status = 'cancelled_by_admin' where id = ${lessonId}`);
     await expect.poll(async () => Object.values((await stubState()).calendars).flat().length, WAIT).toBe(0);
 
-    // A report: PDF in a new «طالب Google» folder, the 13-column row, the summary row.
+    // A report yields a PDF in a new student folder, the 13-column row and the summary row.
     const lesson2 = await seedLesson({ teacherId, studentId, startsAt: new Date(Date.now() - 2 * 3_600_000), minutes: 45 });
     await readyReport({ lessonId: lesson2, studentId, teacherId });
     await expect.poll(async () => (await stubState()).files.filter((f) => f.name.endsWith('.pdf')).map((f) => f.name.startsWith('طالب Google — ')), WAIT).toEqual([true]);

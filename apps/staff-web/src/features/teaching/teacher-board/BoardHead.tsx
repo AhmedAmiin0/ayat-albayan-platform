@@ -10,10 +10,7 @@ export interface BoardHeadProps {
   search: { q: string; onSearch: (q: string) => void };
 }
 
-/**
- * The board head (docs/48): «مشترك n · تجريبي n · الكل n», then one search box matching name,
- * code and facts. One row from 640px; at 390px the search takes the full width.
- */
+/** One row from 640px; at 390px the search takes the full width (docs/48). */
 export function BoardHead({ segment, counts, onSegment, search }: BoardHeadProps) {
   const options = BOARD_SEGMENTS.map((value) => ({
     value,

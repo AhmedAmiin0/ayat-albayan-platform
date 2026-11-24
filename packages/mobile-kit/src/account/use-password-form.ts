@@ -4,7 +4,7 @@ import { changePassword } from './account-api';
 import { passwordChecks } from './password-checks';
 import { useAccountAction } from './use-account-action';
 
-/** «كلمة السر»'s three inputs and its save (R-ACC-04): checked here, then PUT /me/password. */
+/** R-ACC-04: checked here, then PUT /me/password. */
 export function usePasswordForm() {
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');

@@ -4,9 +4,7 @@ import { seedPackageStudent, subscriptionStatus } from '../../support/finance/mo
 import { RECEIPT_PNG, uniqueName } from '../../support/finance/money-extra';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 
-// Payments page + receipts (R-PAY-01): «تسجيل دفعة» from /admin/payments with a receipt picked
-// through the file input (an in-memory PNG), the row in the list, «عرض الإيصال» through the
-// signed URL, the stored object in the private bucket, and a failed upload that keeps the form.
+// Payments and receipts (R-PAY-01): signed URL, private bucket, a failed upload keeps the form.
 
 const UPLOAD = '**/storage/v1/object/upload/sign/**';
 
@@ -23,7 +21,7 @@ async function paymentsOf(subscriptionId: string): Promise<Paid[]> {
     from public.payments p where p.subscription_id = ${subscriptionId}`);
 }
 
-/** «تسجيل دفعة»: search the student, then their package (every open one, not only the unpaid list). */
+/** Lists every open package of the student, not only the unpaid ones. */
 async function openForm(page: Page, seed: { subscriptionId: string; student: string }): Promise<Locator> {
   await page.goto('/admin/payments');
   await page.getByRole('button', { name: ar.payments.record }).click();
@@ -31,7 +29,7 @@ async function openForm(page: Page, seed: { subscriptionId: string; student: str
   await dialog.getByRole('searchbox', { name: ar.payments.mobile.chooseStudent }).fill(seed.student);
   await dialog.getByRole('button', { name: new RegExp(seed.student) }).click();
   await dialog.getByLabel(ar.payments.mobile.chooseSubscription, { exact: true }).selectOption(seed.subscriptionId);
-  // The receipt's input; «المرفقات» (bank only) is the `multiple` one.
+  // The receipt's input; the bank-only attachments input is the `multiple` one.
   await dialog.locator('input[type=file]:not([multiple])').setInputFiles({ name: 'receipt.png', mimeType: 'image/png', buffer: RECEIPT_PNG });
   await expect(dialog.getByRole('img', { name: ar.payments.receipt })).toBeVisible(); // local preview
   return dialog;

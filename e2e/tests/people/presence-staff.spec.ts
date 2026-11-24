@@ -1,10 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { USERS } from '../../support/core/users';
 
-// docs/33: the admin's «حالة الفريق» on «المستخدمون» shows a signed-in staff member online.
-// CI's e2e stack runs without Realtime, so «متصل الآن» here comes from the API's throttled last
-// seen (the teacher's own requests, under PRESENCE_RECENT_MS old): the write, the admin-only read
-// and the display, end to end.
+// docs/33: CI has no Realtime, so online comes from the API's throttled last seen.
 
 test.describe('presence: the admin staff list', () => {
   test('a teacher who just used the app shows «متصل الآن»', async ({ asRole }) => {

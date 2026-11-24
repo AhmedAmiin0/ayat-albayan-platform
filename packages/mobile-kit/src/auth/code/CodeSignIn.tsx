@@ -83,10 +83,7 @@ interface CodeSignInProps {
   children?: ReactNode;
 }
 
-/**
- * «الدخول برمز واتساب» (docs/46 A8, OTA only: the person types the code): phone → code → session.
- * The auth gate swaps the screen on success.
- */
+/** docs/46 A8: the person types the code; the auth gate swaps the screen on success. */
 export function CodeSignIn({ codes, intro, children }: CodeSignInProps) {
   const flow = useCodeSignIn(codes);
   return (

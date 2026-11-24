@@ -21,10 +21,7 @@ function Group({ legend, rows }: { legend: string; rows: readonly PrefSwitch[] }
   );
 }
 
-/**
- * «تخصيص» (owner 2026-11-14): each alert kind, the hero, the ended lessons and compact rows.
- * Every switch applies at once and is saved in this browser only.
- */
+/** Every switch applies at once and is saved in this browser only. */
 export function HomeCustomize({ onClose }: { onClose: () => void }) {
   const groups = prefSwitches(useHomePrefs(), t.teacherAlerts);
   return (

@@ -6,10 +6,7 @@ import { AppText } from '../../ui/primitives/AppText';
 import { InsetGroup } from '../../ui/surface/inset';
 import { bioLock, useBioLock } from '../core/bio-lock';
 
-/**
- * «الدخول بالبصمة» in settings: only where the device has enrolled biometrics (and the module).
- * On asks for one biometric confirmation first; off just clears the flag.
- */
+/** Only where biometrics are enrolled; on asks for one confirmation, off clears the flag. */
 export function BiometricSwitchRow() {
   const { color } = useTheme();
   const { kind, lock } = useBioLock();

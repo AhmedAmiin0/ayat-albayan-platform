@@ -89,7 +89,7 @@ export const feedbackListQuery = (s: ServerListState) =>
     placeholderData: keepPreviousData,
   });
 
-/** GET /feedback/summary (admin): average, count and «نسبة الترشيح» per teacher. */
+/** Admin only: average, count and recommend rate per teacher. */
 export const feedbackSummaryQuery = queryOptions({
   queryKey: [...FEEDBACK_KEY, 'summary'],
   queryFn: () => apiFetch<TeacherFeedbackSummary[]>('/feedback/summary'),
@@ -103,11 +103,10 @@ export const myFeedbackQuery = (s: ServerListState) =>
     placeholderData: keepPreviousData,
   });
 
-/** POST /lessons/:id/feedback-request (admin): queues the «رأيك يهمّنا» WhatsApp template. */
+/** Admin only: queues the feedback WhatsApp template. */
 export const requestFeedback = ({ lessonId, studentId }: { lessonId: string; studentId: string }) =>
   apiSend('POST', `/lessons/${lessonId}/feedback-request`, { studentId });
 
-/** The Arabic / English line for a failed «ابعت طلب الرأي». */
 export function requestErrorText(error: unknown): string {
   return errorCode(error) === 'template_not_approved' ? t.feedback.templateNotApproved : t.feedback.requestFailed;
 }

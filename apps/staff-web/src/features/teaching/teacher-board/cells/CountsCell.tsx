@@ -1,7 +1,7 @@
 import type { BoardRow } from '@/features/teaching/teacher-board/board-rows';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** «حضر n · غاب n» in the window, then «نسبة الحضور n%» once something was marked. */
+/** The rate shows once something was marked. */
 export function CountsCell({ row }: { row: BoardRow }) {
   const w = t.teacherBoard;
   const { present, absent } = row.summary.counts;

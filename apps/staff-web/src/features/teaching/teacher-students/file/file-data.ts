@@ -6,7 +6,7 @@ import type {
 } from '@ab/shared';
 import type { StudentRecordingView } from '@ab/schedule';
 
-// Test data (not a test): «ملف الطالب» as the API answers it; sample names only.
+// Test data, not a test; sample names only.
 
 export const COURSE: TeacherCourseView = {
   starts_on: '2026-09-01',

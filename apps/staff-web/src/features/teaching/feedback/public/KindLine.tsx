@@ -2,10 +2,7 @@ import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { FeedbackKind } from '@/features/teaching/feedback/types';
 
-/**
- * «نوع الحلقة *» is the lesson's own (the server derives it), so the family sees it as a fixed
- * line, not a choice they could try to change.
- */
+/** The server derives the kind, so the family sees it as fixed, not a choice. */
 export function KindLine({ kind }: { kind: FeedbackKind }) {
   return (
     <div className="grid gap-1.5">

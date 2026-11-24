@@ -1,7 +1,7 @@
 import type { ConvertedStudent, PeopleEditView } from '@ab/shared';
 import { firstError, type PeopleDone, type PeopleWrite } from './people-edit-write.js';
 
-// «تحويل إلى طالب / ولي أمر» on web and mobile: the state lives in the app's hook, the logic here.
+// The state lives in the app's hook; the logic lives here.
 
 export type Conversion = 'toStudent' | 'toGuardian';
 
@@ -13,7 +13,7 @@ export interface ConvertText {
   toGuardianDone: string;
 }
 
-/** The success handlers of the three writes; «تحويل إلى ولي أمر» removes the student row. */
+/** Converting to guardian removes the student row. */
 interface ConvertHandlers {
   self: () => void;
   toStudent: (r: ConvertedStudent) => void;

@@ -3,7 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { retryGate } from './gate-retry';
 import { useAuthGate } from './use-auth-gate';
 
-// «إعادة المحاولة» on the startup screen while the first /auth/me hangs.
+// Retry on the startup screen while the first /auth/me hangs.
 const mockVerify = jest.fn();
 const mockGetSession = jest.fn();
 const mockClear = jest.fn();

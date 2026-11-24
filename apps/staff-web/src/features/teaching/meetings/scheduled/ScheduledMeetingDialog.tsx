@@ -23,10 +23,7 @@ interface Props {
   tz?: string;
 }
 
-/**
- * «اجتماع مجدول» (R-MEET-01..03): a title, the date and time on the viewer's clock, the duration and
- * the invitees; then the link and one result per recipient («انسخ الرابط والدعوة» when the window is closed).
- */
+/** Times on the viewer's clock (R-MEET-01..03). */
 export function ScheduledMeetingDialog({ onClose, tz: pinned }: Props) {
   const viewer = useViewerTz();
   const tz = pinned ?? viewer;

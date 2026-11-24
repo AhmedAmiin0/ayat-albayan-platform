@@ -1,7 +1,6 @@
 import { chatSearchPageSchema, type ChatSearchHit, type ChatSearchPage } from '@ab/shared';
 
-// «بحث» inside a chat (owner 2026-11-02), shared by web and mobile: the request, the pages and the
-// bar's state (open, what is typed, which hit is shown). Hits are newest first: «الأقدم» steps on.
+// In-chat search for web and mobile; hits are newest first.
 
 /** How long typing pauses before the search runs. */
 export const CHAT_SEARCH_DEBOUNCE_MS = 300;
@@ -20,7 +19,6 @@ export const chatSearchKey = (phone: string, q: string) => ['chat-search', phone
 export const parseChatSearchPage = (raw: unknown): ChatSearchPage =>
   chatSearchPageSchema.parse(raw);
 
-/** Every loaded hit, newest first, and the chat's total («من M»). */
 export function searchHits(pages: readonly ChatSearchPage[] | undefined): {
   hits: ChatSearchHit[];
   total: number;
@@ -68,14 +66,13 @@ export function chatSearchReducer(s: ChatSearchState, a: ChatSearchAction): Chat
   return reduce(s, a);
 }
 
-/** Can the bar step that way: «الأقدم» while hits remain, «الأحدث» past the first. */
 export const canStep = (index: number, dir: SearchStep, total: number): boolean =>
   stepIndex(index, dir, total) !== index;
 
 /** The shown hit is past the loaded ones: the next page must load first. */
 export const needsSearchPage = (index: number, loaded: number): boolean => index >= loaded;
 
-/** «N من M» (1-based); null with no hit. */
+/** 1-based; null with no hit. */
 export function searchCounter(index: number, total: number): { n: number; m: number } | null {
   return total > 0 ? { n: Math.min(index + 1, total), m: total } : null;
 }

@@ -24,7 +24,6 @@ export function useRemoveFile() {
   return useMutation({ mutationFn: lessonFiles.remove, onSuccess: useRefresh() });
 }
 
-/** PATCH /recordings/:id/visibility (recording-visibility.service): «يراه الطالب وولي الأمر». */
 export function useRecordingVisibility() {
   return useMutation({
     mutationFn: ({ id, visible }: { id: string; visible: boolean }) =>
@@ -40,14 +39,14 @@ export function useOpenFile() {
   });
 }
 
-/** «تقرير الحلقة (PDF)»: the report's signed PDF link in a new tab. */
+/** Opens the report's signed PDF link in a new tab. */
 export function useOpenReportPdf() {
   return useMutation({
     mutationFn: (reportId: string) => openAfter(async () => (await pdfUrl(reportId)).url),
   });
 }
 
-/** «أضف ملفًا للحلقة»: slot → upload → register (@ab/client-core uploadLessonFile). */
+/** Slot, upload, register (@ab/client-core uploadLessonFile). */
 export function useUploadFile() {
   return useMutation({
     mutationFn: (input: UploadInput) =>

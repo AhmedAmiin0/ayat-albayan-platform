@@ -6,8 +6,7 @@ import {
 } from '@ab/shared';
 import type { SearchGet } from '../chat-search/index.js';
 
-// «بحث في كل الرسائل» (owner 2026-11-06, docs/37), shared by web and mobile: the chats list's
-// «الرسائل» section. Hits are newest first; a page per cursor, no total (as WhatsApp).
+// Search across all messages (docs/37): newest first, a page per cursor, no total.
 
 /** Under ['threads'] on purpose: the inbox's ['threads'] invalidations refresh it too. */
 export const messageSearchKey = (q: string) => ['threads', 'message-search', q] as const;

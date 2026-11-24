@@ -2,9 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { auditOf, fillForm, L, lessonRows, openForm, save } from './edit-session-time.helpers';
 
-// «عدّل الوقت» on a COMPLETED lesson (R-SCH-11, correct mode): fix the recorded length the same day,
-// reason required. Last month, as in payouts.spec.ts: the month is over, so it can be approved.
-// Needs the API's PATCH /lessons/:id/time (migration 174), so it only passes once that is merged.
+// R-SCH-11 correct mode needs a reason; last month so payouts can be approved.
 
 /** Last month on the e2e teacher's clock (Africa/Cairo), YYYY-MM. */
 function lastMonth(now = new Date()): string {
@@ -12,7 +10,6 @@ function lastMonth(now = new Date()): string {
   return new Date(Date.UTC(y, m - 2, 1)).toISOString().slice(0, 7);
 }
 
-/** «45 دقيقة: 1 × 70 = 70 ج.م», the breakdown line of the payouts table. */
 const line = (d: '45' | '60', rate: number) =>
   `${ar.pricing.durations[d]}: ${ar.payouts.line.replace('{lessons}', '1').replace('{rate}', String(rate)).replace('{amount}', `${rate} ${ar.payouts.currency}`)}`;
 
@@ -62,7 +59,7 @@ test.describe('«عدّل الوقت» — held lessons (R-SCH-11)', () => {
     const [report] = await withSql((sql) => sql<{ pdf_status: string }[]>`select pdf_status from public.lesson_reports where lesson_id = ${s.lessonId}`);
     expect(report?.pdf_status).toBe('pending');
 
-    // Nothing regenerates by itself: «إعادة الحساب» picks up the 60-minute rate.
+    // Nothing regenerates by itself: recalculating picks up the 60-minute rate.
     await admin.goto(`/admin/payouts?month=${s.month}`);
     await admin.getByRole('button', { name: ar.payouts.regenerate }).click();
     await expect(row).toContainText(line('60', 90));

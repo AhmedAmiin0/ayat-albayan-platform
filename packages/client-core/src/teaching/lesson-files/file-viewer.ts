@@ -1,8 +1,6 @@
 import type { PortalLessonFile, PortalRecording } from '@ab/shared';
 
-// The family's file viewer (boards FamFilesWebImage / FamFilesWebPdf): a picture or a PDF opens
-// in a dialog on the page, the lesson's other pictures and PDFs one step away («1 من 2»), a
-// picture zoomed in steps. A voice note never opens there: it plays in its own player.
+// A voice note never opens in the viewer; it plays in its own player.
 
 /** Zoom of a picture, in percent: from half size to three times, a quarter per step. */
 export const ZOOM = { min: 50, max: 300, step: 25, start: 100 } as const;
@@ -17,7 +15,7 @@ export const viewableFiles = <F extends Pick<PortalLessonFile, 'media'>>(
 ): F[] => files.filter((file) => file.media !== 'audio');
 
 export interface ViewerPage<F> {
-  /** 1-based, for «1 من 2». */
+  /** 1-based. */
   number: number;
   total: number;
   prev: F | null;
@@ -47,7 +45,7 @@ function extensionOf(mime: string): string | undefined {
   return sub && (RENAMED[sub] ?? sub);
 }
 
-/** «ورقة الواجب.jpg»: the name «تنزيل» saves under (its shown title and its type's extension). */
+/** The shown title plus its type's extension. */
 export function downloadName(input: { title: string; mime: string }): string {
   const ext = extensionOf(input.mime);
   const base = input.title.replace(/[\\/:*?"<>|]+/g, ' ').trim();

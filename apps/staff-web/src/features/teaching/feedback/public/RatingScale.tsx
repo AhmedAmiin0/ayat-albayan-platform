@@ -11,10 +11,7 @@ export interface RatingScaleProps {
   invalid?: boolean;
 }
 
-/**
- * «تقييمك للحلقة *»: the form's 1–5 scale with its two end labels (غير راضٍ ← راضٍ تمامًا). Five
- * native radios (arrow keys, one tab stop) styled as 48px circles, so a thumb hits them on a phone.
- */
+/** Native radios styled as 48px circles so a thumb hits them on a phone. */
 export function RatingScale({ value, onChange, invalid }: RatingScaleProps) {
   return (
     <fieldset aria-invalid={invalid || undefined} className="grid gap-2">

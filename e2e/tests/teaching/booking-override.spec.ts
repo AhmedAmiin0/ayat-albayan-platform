@@ -3,8 +3,7 @@ import { uploadInvoice } from '../../support/finance/invoice';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, ruleOf, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
-// Booking over a clash (R-SCH-04): a busy time stays pickable, «احجز» → 409 → ConflictNotice, and
-// «احجز رغم التعارض» needs a reason that lands on the clashing lessons only (+ the book audit).
+// Booking over a clash (R-SCH-04): the override reason lands on the clashing lessons only.
 
 const REASON = 'ولي الأمر طلب الميعاد ده';
 
