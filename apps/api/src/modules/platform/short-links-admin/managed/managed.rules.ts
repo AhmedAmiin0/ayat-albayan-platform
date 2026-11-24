@@ -5,10 +5,7 @@ import type { LinkUserRow } from './link-users.repo';
 
 const DAY_MS = 86_400_000;
 
-/**
- * The hosts a managed link may open: every WEB_ORIGIN, the API, Google Meet, plus the extra hosts
- * the admin added in «القيم» (short_link_extra_hosts). System links never take the extra hosts.
- */
+/** System links never take the extra hosts. */
 export const managedHosts = (webOrigin: string, extraRaw: string): Set<string> =>
   new Set([...allowedHosts([...webOrigin.split(','), apiPublicOrigin()]), ...extraHosts(extraRaw)]);
 
