@@ -212,9 +212,6 @@
     }
   },
   "src/lib/query/pull-refresh.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -463,7 +460,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -484,7 +481,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/ui/layout/tab-bar-inset.ts": {
@@ -529,7 +526,7 @@
   },
   "src/ui/primitives/Avatar.tsx": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -622,11 +619,6 @@
     },
     "ab/no-restricted-syntax": {
       "count": 3
-    }
-  },
-  "src/ui/surface/surface.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   }
 }

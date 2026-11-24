@@ -43,7 +43,7 @@ async function reloadInto(next: Locale, current: Locale): Promise<boolean> {
 }
 
 /**
- * The phone's language, as WhatsApp reads it (owner 2026-10-27): an RTL phone opens in Arabic,
+ * The phone's language, as WhatsApp reads it: an RTL phone opens in Arabic,
  * an LTR one in English. Never throws: no native module or no answer falls back to Arabic.
  */
 export function phoneLocale(): Locale {

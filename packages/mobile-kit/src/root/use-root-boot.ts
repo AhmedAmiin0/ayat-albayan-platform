@@ -9,7 +9,7 @@ import { useOverridesReady } from '../lib/i18n/i18n-overrides';
 import { useLocaleReady } from '../lib/i18n/locale-switch';
 import { restoreAppearance } from '../lib/appearance/appearance';
 
-// Bundled files: Noto Sans Arabic for everything, titles at 700 (owner, 2026-10-05); names match
+// Bundled files: Noto Sans Arabic for everything, titles at 700; names match
 // theme.type.
 const fonts = {
   NotoSansArabic_400Regular,
