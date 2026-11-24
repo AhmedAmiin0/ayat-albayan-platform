@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { guardianOwnerIds, ownershipOf, studentOwnerIds } from './sales-ownership';
+import { guardianOwnerIds, ownershipOf, studentOwnerIds } from '@/modules/sales/sales/sales-ownership';
 
 describe('guardianOwnerIds (who owns a family, docs/21 §6)', () => {
   it('the union of brought_by and converted-lead assigned_to, nulls dropped, deduplicated', async () => {

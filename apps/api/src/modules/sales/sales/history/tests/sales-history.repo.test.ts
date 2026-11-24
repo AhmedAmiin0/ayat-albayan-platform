@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { SalesHistoryRepo } from './sales-history.repo';
+import { SalesHistoryRepo } from '@/modules/sales/sales/history/sales-history.repo';
 
 const subs = [{ id: 'a' }, { id: 'b' }];
 

@@ -2,8 +2,8 @@ import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import { isSalesLesson, salesLessonsBetween, type SalesLessonRow } from './schedule/sales-lessons';
-import { ownershipOf, type SalesOwnership } from './sales-ownership';
+import { isSalesLesson, salesLessonsBetween, type SalesLessonRow } from '@/modules/sales/sales/schedule/sales-lessons';
+import { ownershipOf, type SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
 /** The columns a salesperson may see of a subscription: never money (price, fx_*, notes). */
 export type SalesSubscriptionRow = Pick<Tables<'subscriptions'>, 'id' | 'package' | 'status' | 'starts_on' | 'lessons_total'> & {

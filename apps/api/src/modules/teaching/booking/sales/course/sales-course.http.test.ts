@@ -7,7 +7,7 @@ import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { packageStarts } from './sales-roster.mapper';
-import type { RosterPackageRow } from './sales-roster.repo';
+import { packageStarts } from '@/modules/sales/sales/academy/sales-roster.mapper';
+import type { RosterPackageRow } from '@/modules/sales/sales/academy/sales-roster.repo';
 
 // Tuesday 27 October 2026, 13:00 in Riyadh.
 const NOW = new Date('2026-10-27T10:00:00Z');

@@ -9,7 +9,7 @@ import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 

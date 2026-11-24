@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { A, dirtySubscription, meetingRow, NONE, OWN_A, salesApp } from './sales.fakes';
+import { A, dirtySubscription, meetingRow, NONE, OWN_A, salesApp } from '@/modules/sales/sales/sales.fakes';
 
 type App = Awaited<ReturnType<typeof salesApp>>;
 const RANGE = 'from=2026-10-01T00:00:00Z&to=2026-10-31T00:00:00Z';

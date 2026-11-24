@@ -10431,12 +10431,12 @@
       "count": 5
     }
   },
-  "src/modules/sales/sales/academy/sales-academy.http.test.ts": {
+  "src/modules/sales/sales/academy/tests/sales-academy.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/sales/sales/academy/sales-academy.mapper.test.ts": {
+  "src/modules/sales/sales/academy/tests/sales-academy.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -10473,12 +10473,12 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales/assign/sales-assign.fakes.ts": {
+  "src/modules/sales/sales/assign/tests/sales-assign.fakes.ts": {
     "stylistic/max-len": {
       "count": 5
     }
   },
-  "src/modules/sales/sales/assign/sales-assign.mapper.test.ts": {
+  "src/modules/sales/sales/assign/tests/sales-assign.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10488,7 +10488,7 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales/assign/sales-assign.repo.test.ts": {
+  "src/modules/sales/sales/assign/tests/sales-assign.repo.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10501,7 +10501,7 @@
       "count": 3
     }
   },
-  "src/modules/sales/sales/assign/sales-assign.service.test.ts": {
+  "src/modules/sales/sales/assign/tests/sales-assign.service.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10517,12 +10517,12 @@
       "count": 5
     }
   },
-  "src/modules/sales/sales/assign/sales-assign.upsert.test.ts": {
+  "src/modules/sales/sales/assign/tests/sales-assign.upsert.test.ts": {
     "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
-  "src/modules/sales/sales/history/sales-history.mapper.test.ts": {
+  "src/modules/sales/sales/history/tests/sales-history.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10548,7 +10548,7 @@
   },
   "src/modules/sales/sales/rule/sales-ownership-rule.ts": {
     "typescript/consistent-type-imports": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales/sales-admin.controller.ts": {
@@ -10559,7 +10559,7 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales/sales-admin.http.test.ts": {
+  "src/modules/sales/sales/tests/sales-admin.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10604,20 +10604,15 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales/sales.module.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/modules/sales/sales/sales.service.ts": {
     "typescript/consistent-type-imports": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 6
     }
   },
-  "src/modules/sales/sales/sales.settings.ts": {
+  "src/modules/sales/sales/shared/sales.settings.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
     }
@@ -10633,12 +10628,12 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales/schedule/sales-schedule.http.test.ts": {
+  "src/modules/sales/sales/schedule/tests/sales-schedule.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/sales/sales/schedule/sales-schedule.mapper.test.ts": {
+  "src/modules/sales/sales/schedule/tests/sales-schedule.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }

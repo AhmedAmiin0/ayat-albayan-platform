@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { academyApp, studentRow } from './sales-academy.fakes';
-import type { RosterLessonRow, RosterPackageRow, RosterRuleRow } from './sales-roster.repo';
+import { academyApp, studentRow } from '@/modules/sales/sales/academy/sales-academy.fakes';
+import type { RosterLessonRow, RosterPackageRow, RosterRuleRow } from '@/modules/sales/sales/academy/sales-roster.repo';
 
 type App = Awaited<ReturnType<typeof academyApp>>;
 

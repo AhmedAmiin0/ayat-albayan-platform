@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lead } from '@/modules/sales/leads/leads.fakes';
-import { A, salesApp } from './sales.fakes';
+import { A, salesApp } from '@/modules/sales/sales/sales.fakes';
 
 type App = Awaited<ReturnType<typeof salesApp>>;
 const LEAD = '00000000-0000-4000-8000-000000000001';

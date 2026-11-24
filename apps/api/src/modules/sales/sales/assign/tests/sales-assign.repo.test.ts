@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SalesAssignRepo } from './sales-assign.repo';
+import { SalesAssignRepo } from '@/modules/sales/sales/assign/sales-assign.repo';
 
 /** A PostgREST-like builder that records every filter and resolves to `result` when awaited or on maybeSingle(). */
 function recorder(result: { data: unknown; error: null }) {

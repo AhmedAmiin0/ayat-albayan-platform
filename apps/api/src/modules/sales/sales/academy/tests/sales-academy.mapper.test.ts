@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { liveRow, studentRow, teacherRow } from './sales-academy.fakes';
-import { toSalesLive, toSalesStudent, toSalesTeacher } from './sales-academy.mapper';
+import { liveRow, studentRow, teacherRow } from '@/modules/sales/sales/academy/sales-academy.fakes';
+import { toSalesLive, toSalesStudent, toSalesTeacher } from '@/modules/sales/sales/academy/sales-academy.mapper';
 
 describe('sales academy mappers (whitelists)', () => {
   it('toSalesTeacher keeps name, gender, programs, the fixed link and the current students by name; drops pay, phone, notes', () => {

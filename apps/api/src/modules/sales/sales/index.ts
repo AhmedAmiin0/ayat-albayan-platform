@@ -13,7 +13,7 @@ export {
 export { enforcesOwnership, SalesOwnershipRule } from './rule/sales-ownership-rule';
 export { type SalesScope, SalesScopes } from './sales-scope';
 export { SalesModule } from './sales.module';
-export { SalesRepo, type SalesSubscriptionRow } from './sales.repo';
+export { SalesRepo, type SalesSubscriptionRow } from './shared';
 export {
   inSalesScope,
   isSalesLesson,

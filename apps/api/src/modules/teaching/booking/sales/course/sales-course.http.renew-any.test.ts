@@ -8,7 +8,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { REQUIRE_ON } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';

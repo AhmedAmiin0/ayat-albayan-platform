@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { dirtySubscription, meetingRow } from './sales.fakes';
-import { toSalesMeeting, toSalesSubscription } from './sales.mapper';
+import { dirtySubscription, meetingRow } from '@/modules/sales/sales/sales.fakes';
+import { toSalesMeeting, toSalesSubscription } from '@/modules/sales/sales/sales.mapper';
 
 describe('toSalesSubscription', () => {
   it('is a whitelist: price, currency, fx, notes and payments never come through', () => {

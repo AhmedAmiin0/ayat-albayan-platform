@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fakeOwnNumbers, OWN_NOT_IN } from '@/modules/messaging/numbers/own/own-numbers.fakes';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { SalesAssignRepo } from './sales-assign.repo';
+import { SalesAssignRepo } from '@/modules/sales/sales/assign/sales-assign.repo';
 
 describe('SalesAssignQueries — the academy’s own numbers', () => {
   it('their old lead is never among the unassigned leads to hand out', async () => {

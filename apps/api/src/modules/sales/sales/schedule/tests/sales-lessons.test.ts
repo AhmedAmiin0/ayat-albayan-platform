@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { inSalesScope } from './sales-lessons';
+import { inSalesScope } from '@/modules/sales/sales/schedule/sales-lessons';
 import { meetingRow, NONE, OWN_A } from '@/modules/sales/sales/sales.fakes';
 
 describe('inSalesScope: the one rule for the meetings list and the classroom', () => {

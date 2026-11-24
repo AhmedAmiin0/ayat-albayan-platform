@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { bundle, SUB } from '@/modules/sales/sales/academy/sales-academy.fakes';
-import { statusChanges, toSalesHistory } from './sales-history.mapper';
+import { statusChanges, toSalesHistory } from '@/modules/sales/sales/history/sales-history.mapper';
 
 describe('sales subscription history mapper', () => {
   it('statusChanges keeps the create and the real moves, drops same-status edits and unknown values', () => {

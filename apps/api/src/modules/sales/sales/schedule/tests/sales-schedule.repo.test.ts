@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { SalesScheduleRepo } from './sales-schedule.repo';
+import { SalesScheduleRepo } from '@/modules/sales/sales/schedule/sales-schedule.repo';
 
 const FROM = new Date('2026-10-10T21:00:00.000Z');
 const TO = new Date('2026-10-11T21:00:00.000Z');

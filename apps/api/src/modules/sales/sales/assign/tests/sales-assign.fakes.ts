@@ -3,9 +3,9 @@ import type { Tables } from '@ab/db';
 import { vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import { readerOf } from '@/common/settings/settings.fakes';
-import type { SalesAssignRepo } from './sales-assign.repo';
-import { SalesAssignService } from './sales-assign.service';
-import { SalesSettings } from '@/modules/sales/sales/sales.settings';
+import type { SalesAssignRepo } from '@/modules/sales/sales/assign/sales-assign.repo';
+import { SalesAssignService } from '@/modules/sales/sales/assign/sales-assign.service';
+import { SalesSettings } from '@/modules/sales/sales/shared';
 
 export const SALES = [{ id: 'a', full_name: 'أحمد' }, { id: 'b', full_name: 'بلال' }];
 

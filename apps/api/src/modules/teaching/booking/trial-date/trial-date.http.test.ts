@@ -6,7 +6,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { TrialDateRepo } from './trial-date.repo';
 import { TrialDates } from './trial-date.service';

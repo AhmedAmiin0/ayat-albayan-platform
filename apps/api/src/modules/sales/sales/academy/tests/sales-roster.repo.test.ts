@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { SalesRosterRepo } from './sales-roster.repo';
+import { SalesRosterRepo } from '@/modules/sales/sales/academy/sales-roster.repo';
 
 const IDS = ['s1', 's2'];
 const W = { from: new Date('2026-10-01T00:00:00Z'), to: new Date('2026-10-27T10:00:00Z') };

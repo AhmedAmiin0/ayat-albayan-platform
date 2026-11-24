@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { academyApp, bundle, liveRow, studentRow, SUB, teacherRow } from './sales-academy.fakes';
+import { academyApp, bundle, liveRow, studentRow, SUB, teacherRow } from '@/modules/sales/sales/academy/sales-academy.fakes';
 
 type App = Awaited<ReturnType<typeof academyApp>>;
 const SECRET = /price|currency|fx_|amount|method|note|rate|phone|meeting|link|receipt|balance|remaining_amount|package_remaining|secret|سر/i;

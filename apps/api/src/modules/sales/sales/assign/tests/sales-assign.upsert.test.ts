@@ -2,8 +2,8 @@ import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { fakeDeps, lead } from '@/modules/sales/leads/leads.fakes';
 import { LeadsService } from '@/modules/sales/leads/leads.service';
-import type { SalesAssignService } from './sales-assign.service';
-import { world } from './sales-assign.fakes';
+import type { SalesAssignService } from '@/modules/sales/sales/assign/sales-assign.service';
+import { world } from '@/modules/sales/sales/assign/tests/sales-assign.fakes';
 
 /** The webhook path: LeadsService.upsertByPhone with the real SalesAssignService behind it. */
 function setup(over: Parameters<typeof world>[0] = {}) {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
-import { SalesAcademyRepo } from './sales-academy.repo';
+import { SalesAcademyRepo } from '@/modules/sales/sales/academy/sales-academy.repo';
 
 const NOW = new Date('2026-10-11T16:10:00.000Z');
 

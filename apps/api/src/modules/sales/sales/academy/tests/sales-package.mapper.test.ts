@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { currentPackages, packageSummaries, toPackageSummary } from './sales-package.mapper';
-import type { RosterBalanceRow, RosterPackageRow } from './sales-roster.repo';
+import { currentPackages, packageSummaries, toPackageSummary } from '@/modules/sales/sales/academy/sales-package.mapper';
+import type { RosterBalanceRow, RosterPackageRow } from '@/modules/sales/sales/academy/sales-roster.repo';
 
 /** As the database could return it, with money columns present: none may leave. */
 const row = (id: string, over: Partial<RosterPackageRow> = {}): RosterPackageRow =>

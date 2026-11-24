@@ -12,7 +12,7 @@ import {
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SlotsService } from './slots.service';
 
