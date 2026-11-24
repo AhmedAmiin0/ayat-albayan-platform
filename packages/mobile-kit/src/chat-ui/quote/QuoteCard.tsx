@@ -26,7 +26,7 @@ export interface QuoteCardProps {
 }
 
 /**
- * The message a bubble answers, on top of it as WhatsApp draws it (owner 2026-10-31): a bar at the
+ * The message a bubble answers, on top of it as WhatsApp draws it: a bar at the
  * inline-start, who sent it, its first line (a file's icon and kind), a thumb at the end. A tap
  * goes to the original. 44pt tall at least (two short lines + padding).
  */

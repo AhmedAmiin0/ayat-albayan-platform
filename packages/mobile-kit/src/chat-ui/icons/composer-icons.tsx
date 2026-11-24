@@ -1,6 +1,6 @@
 import { type ChatIconProps, IconLine } from './icon-line';
 
-// The typing bar's own icons (owner 2026-10-27, as WhatsApp), drawn with IconLine. Never mirrored
+// The typing bar's own icons (as WhatsApp), drawn with IconLine. Never mirrored
 // (a microphone, a camera and a face read the same both ways); hidden from screen readers. The
 // staff inbox and the student channel draw the same ones.
 
