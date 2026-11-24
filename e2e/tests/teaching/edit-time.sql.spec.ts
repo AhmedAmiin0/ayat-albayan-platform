@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { BASE, edit, HOUR, iso, MIN, rolledBack, seed } from '../../support/edit-time';
 
-// edit_lesson_time (migration 174, «عدّل الوقت» R-SCH-11) against the real database, in a
-// transaction that is rolled back. The payloads have the shape the API's LessonTimeService builds.
+// edit_lesson_time (migration 174, R-SCH-11), payloads as LessonTimeService builds, rolled back.
 
 test.describe('edit_lesson_time (R-SCH-11)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));

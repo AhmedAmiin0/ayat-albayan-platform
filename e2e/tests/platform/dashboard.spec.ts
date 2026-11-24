@@ -4,10 +4,7 @@ import { riyadhToday, summaryOf, type Summary } from '../../support/finance/mone
 import { kpiCounts, money, removeDashboardExpense, seedDashboard, weekOf } from '../../support/finance/money-dashboard';
 import { addDays, resetAbrar } from '../../support/core/schedule';
 
-// Dashboard (R-RPT-01/02): the numbers on /admin are the statuses in the database. The DB is shared
-// with other journeys, so seeded data is checked as a DELTA of GET /dashboard/summary (before →
-// after) and every tile/row on the page must equal the API (or SQL) figure. All from one source,
-// «صديق أو معرفة». Teacher cost is EGP with no fx row here, so only the margin identity is checked.
+// Dashboard (R-RPT-01/02): shared DB, so seeded data is checked as a delta of the summary.
 
 const SAR = ar.pricing.currencies.SAR;
 const today = riyadhToday();

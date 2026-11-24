@@ -3,9 +3,7 @@ import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, expectRefused, expectSignedIn, profileOf, signInAs } from '../../support/people/users-control';
 
-// «حسابي» (R-ACC-03/04): a dedicated assistant changes their email, then their password (both
-// with the current password); the next sign-in works with the new email + new password only.
-// Label/region assumptions: see e2e/support/account.ts.
+// Email and password changes (R-ACC-03/04) both need the current password.
 
 const USER = accountUser('account-cred');
 const NEW_EMAIL = `account-cred-new-${USER.run}@e2e.local`;

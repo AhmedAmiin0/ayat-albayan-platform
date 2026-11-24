@@ -7,10 +7,7 @@ import { freshDigits } from '../../support/core/messages';
 import { PNG, trialFamily, uploadReceipt } from '../../support/sales/sales-money';
 import { USERS } from '../../support/core/users';
 
-// «المرفقات» of a bank transfer (docs/16 row 25, docs/11 §7), through the REAL API, database and
-// storage: the admin records a bank transfer with two attachments (and is refused them on a cash
-// payment); the salesperson records a transfer with NO receipt (optional now, old students) and one
-// with an attachment, and reads only her own payment's files.
+// Bank transfer attachments (docs/16 row 25, docs/11 §7): none on cash, optional for sales.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');

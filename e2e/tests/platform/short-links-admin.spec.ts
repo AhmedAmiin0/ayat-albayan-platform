@@ -2,10 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { openNav } from '../../support/core/nav';
 import { withSql } from '../../support/core/schedule';
 
-// «الروابط المختصرة» for the admin (docs/19 «Managed links», boards LinkXWeb*): create a link for
-// a listed user with the WhatsApp send on, see it in the list, open it, and revoke it. The send
-// goes through the Outbox on the notifications line: until the owner's `short_link` template is
-// approved every row is recorded failed / template_not_approved (never free text, never sent).
+// Short links (docs/19): sends stay failed / template_not_approved until the template is approved.
 
 const S = ar.shortLinks;
 const TARGET = 'https://meet.google.com/kdw-pqhr-xab';
@@ -41,7 +38,7 @@ test.describe('short links («الروابط المختصرة»)', () => {
     await form.getByLabel(S.form.target).fill(TARGET);
     await form.getByText(S.audience.listed, { exact: true }).click();
     await form.getByLabel(S.form.addPeople).fill('أبرار');
-    // The search results only: once picked, the name also shows as a pill in «المحددون».
+    // Only search results: a picked name also shows as a pill.
     const results = form.getByRole('list', { name: S.people.results });
     const match = results.getByRole('listitem').filter({ hasText: 'أبرار' }).first();
     await match.getByRole('button', { name: S.form.add }).click();

@@ -3,11 +3,7 @@ import type { TransactionSql } from 'postgres';
 import { withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/core/users';
 
-// submit_report (migrations 130 + 131) against the real database, in a transaction that is rolled
-// back: a report re-derives the lesson's outcome from all its students' attendance (R-REP-03),
-// so payouts (R-PAY-02) and «رقم الحلقة» (v_lesson_sequence, R-LES-03) follow a corrected report.
-// The payloads have the shape the API's submitPayload builds (lesson_change on the first report of
-// an open lesson, student afterwards).
+// submit_report (migrations 130, 131) re-derives the outcome from all attendance (R-REP-03).
 
 type Tx = TransactionSql;
 type Attendance = 'on_time' | 'late' | 'excused' | 'absent';
