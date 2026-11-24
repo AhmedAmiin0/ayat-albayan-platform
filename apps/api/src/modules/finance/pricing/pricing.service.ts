@@ -6,7 +6,7 @@ import {
   type CatalogResponse,
   type FxRate,
   type QuoteResponse,
-} from '@ab/shared';
+} from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { FxService } from '@/modules/finance/fx/fx.service';
 import type { CatalogQuery, QuoteQuery } from './pricing.dto';

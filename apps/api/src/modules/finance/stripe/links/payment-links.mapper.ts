@@ -1,5 +1,7 @@
-import type { Duration, PaymentLinkKind, PaymentLinkView, PublicPaymentLink } from '@ab/shared';
-import { effectiveLinkStatus, firstName, paymentLinkUrl } from '@ab/shared';
+import type { PaymentLinkKind, PaymentLinkView, PublicPaymentLink } from '@ab/shared';
+import type { Duration } from '@ab/catalog';
+import { effectiveLinkStatus, paymentLinkUrl } from '@ab/shared';
+import { firstName } from '@ab/schedule';
 import { loadEnv } from '@/config/env/env';
 import { stripeKeyIsLive } from '@/config/env/env.stripe';
 import type { LinkRow } from './payment-links.repo';

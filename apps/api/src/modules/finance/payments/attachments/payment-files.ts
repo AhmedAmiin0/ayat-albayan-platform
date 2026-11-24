@@ -1,4 +1,6 @@
-import { PAYMENT_ATTACHMENTS_MAX, sameStoredObject, storageKeyOf, type PaymentMethod } from '@ab/shared';
+import { sameStoredObject, storageKeyOf } from '@ab/shared';
+import { type PaymentMethod } from '@ab/catalog';
+import { PAYMENT_ATTACHMENTS_MAX } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
 import { badRequest } from '@/common/http/errors';
 import { PaymentAttachments, type CheckedAttachment } from './payment-attachments.service';

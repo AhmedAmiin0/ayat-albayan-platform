@@ -1,5 +1,6 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import { netPaid, type PaymentKind, type SubscriptionStatus } from '@ab/shared';
+import { type PaymentKind, type SubscriptionStatus } from '@ab/catalog';
+import { netPaid } from '@ab/money';
 import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort } from '@/common/db/list-sort';
@@ -8,7 +9,8 @@ import { readAll } from '@/common/db/read-all';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
-import type { Page, PeriodTotal } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { PeriodTotal } from '@ab/money';
 
 export type { PaymentFilter } from './payments.list-query';
 

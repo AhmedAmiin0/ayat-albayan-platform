@@ -1,12 +1,12 @@
+import { type SignedDownload } from '@ab/shared';
 import {
   monthParam,
   monthQuery,
   payoutPaySchema,
   voidReasonSchema,
   type PayoutGenerateResult,
-  type SignedDownload,
   type PayoutView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

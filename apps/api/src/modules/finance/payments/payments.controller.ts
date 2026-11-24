@@ -1,14 +1,13 @@
+import { type SignedDownload, type SignedUpload } from '@ab/shared';
 import {
   paymentCreateSchema,
   paymentUpdateSchema,
   receiptUploadSchema,
-  uploadMaxBytes,
   type PaymentAttachmentView,
   type PaymentsPage,
   type PaymentView,
-  type SignedDownload,
-  type SignedUpload,
-} from '@ab/shared';
+} from '@ab/money';
+import { uploadMaxBytes } from '@ab/settings';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

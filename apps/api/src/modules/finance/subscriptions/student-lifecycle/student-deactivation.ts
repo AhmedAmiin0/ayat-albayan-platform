@@ -1,4 +1,5 @@
-import { isNotSubscribed, revertMove, type StudentStatus, type TrialFacts } from '@ab/shared';
+import { isNotSubscribed, revertMove, type TrialFacts } from '@ab/shared';
+import { type StudentStatus } from '@ab/catalog';
 import { Injectable } from '@nestjs/common';
 import { activatesStudent } from './student-activation';
 import { isFlipBy, recordedFrom, revertTarget } from './student-renewal.plan';

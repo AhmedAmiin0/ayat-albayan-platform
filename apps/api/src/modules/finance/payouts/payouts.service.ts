@@ -1,4 +1,4 @@
-import { canTransitionPayout, monthStart, type PayoutView } from '@ab/shared';
+import { canTransitionPayout, monthStart, type PayoutView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { conflict, notFound } from '@/common/http/errors';

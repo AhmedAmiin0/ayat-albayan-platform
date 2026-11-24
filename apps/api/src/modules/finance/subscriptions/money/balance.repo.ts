@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import type { BalanceView } from '@ab/shared';
+import type { BalanceView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readChunked } from '@/common/db/read-all';

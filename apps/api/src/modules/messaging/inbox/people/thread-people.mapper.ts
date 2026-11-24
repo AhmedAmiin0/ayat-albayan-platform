@@ -1,20 +1,21 @@
 import {
-  dueOf,
   familyRing,
   familyUnpaid,
-  livePackages,
-  studentRemaining,
   subscriptionBadge,
   type BadgeStudent,
-  type BalanceView,
   type FamilyRing,
-  type StudentBalanceView,
-  type StudentStatus,
   type SubscriptionBadge,
-  type SubscriptionStatus,
   type ThreadStudentView,
   type ThreadSubscriptionView,
 } from '@ab/shared';
+import { type StudentStatus, type SubscriptionStatus } from '@ab/catalog';
+import {
+  dueOf,
+  livePackages,
+  studentRemaining,
+  type BalanceView,
+  type StudentBalanceView,
+} from '@ab/money';
 import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
 
 export interface PeopleStudentRow {

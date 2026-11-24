@@ -1,4 +1,6 @@
-import { phoneE164, type ThreadFile, type ThreadMediaItem } from '@ab/shared';
+import { type ThreadFile } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
+import { type ThreadMediaItem } from '@ab/schedule';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';

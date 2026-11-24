@@ -1,4 +1,5 @@
-import { AWAITING_REPLY, type WaLine } from '@ab/shared';
+import { AWAITING_REPLY } from '@ab/shared';
+import { type WaLine } from '@ab/catalog';
 import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { waHttpError, windowless } from '@/modules/messaging/whatsapp';
