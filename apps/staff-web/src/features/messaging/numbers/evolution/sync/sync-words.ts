@@ -6,7 +6,6 @@ import {
 } from '@ab/shared';
 import type { Glyph, Tone } from '@ab/money';
 
-/** The whole push in one word: «متزامن», «غير متزامن» or «لم تُزامن بعد». */
 export type SyncWord = 'synced' | 'unsynced' | 'never';
 
 export function syncWordOf(sync: EvolutionSyncView | null): SyncWord {

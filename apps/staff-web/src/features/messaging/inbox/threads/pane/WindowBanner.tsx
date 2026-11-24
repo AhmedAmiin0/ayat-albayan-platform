@@ -6,11 +6,7 @@ import { windowText } from './window-state';
 
 const MINUTE = 60_000;
 
-/**
- * The thread's 24 h window, always visible in the header: open with the hours left, or closed with
- * what reopens it (in this inbox mode's words). Re-renders every minute so «تبقّى» counts down while the thread stays open.
- * `compact`: one line in the phone header's sideways-scrolling chip row.
- */
+/** Re-renders every minute so the remaining time counts down. */
 export function WindowBanner({ thread, compact }: { thread: Pick<ThreadView, 'last_inbound_at'>; compact?: boolean }) {
   const mode = useInboxMode();
   const [now, setNow] = useState(() => new Date());

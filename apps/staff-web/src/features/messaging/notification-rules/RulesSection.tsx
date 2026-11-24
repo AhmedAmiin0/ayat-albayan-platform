@@ -35,21 +35,16 @@ function Loading() {
 interface RulesSectionProps {
   onSaved: (message: string) => void;
   drafts?: RuleDrafts | undefined;
-  /** The audience tab to start on (`?audience=`, from «نظرة عامة»); the tabs are local after that. */
+  /** The starting audience tab; tabs are local after that. */
   audience?: NotificationAudience | undefined;
 }
 
-/**
- * «التواصل» › «الإشعارات» (docs/26b §3, docs/23b): every notification, one audience at a time, each
- * row editable on its own with notifications.manage (timing, channels, number, switch) and read-only
- * without it. GET /admin/notifications (v2: `rule`, `approval`, `reach`), GET /admin/numbers.
- * `drafts` comes from «التواصل» (so a tab switch keeps them); alone, the section holds its own.
- */
+/** Editable per row with notifications.manage, read-only without it (docs/26b §3, docs/23b). */
 export function RulesSection({ onSaved, drafts, audience }: RulesSectionProps) {
   const settings = useQuery(settingsQuery);
   const numbers = useQuery(numbersQuery);
   const canManage = canManageNotifications(usePermissions().permissions);
-  // Refetched whenever the settings, «التكاملات» or a line check change; first fetch once settings are in.
+  // Refetched on settings, integrations or line-check changes; first fetch once settings load.
   const list = useCatalogue();
   const own = useRuleDrafts();
   const held = drafts ?? own;

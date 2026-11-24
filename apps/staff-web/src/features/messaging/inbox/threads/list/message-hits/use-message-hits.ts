@@ -3,7 +3,6 @@ import { searchesMessages } from '@ab/shared';
 import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 
-/** «الرسائل» (docs/37): client-core's pages over this app's fetch; ['threads'] refreshes it. */
 const messageSearchQuery = (q: string) =>
   infiniteQueryOptions(messageSearchPages(q, (path) => apiFetch(path)));
 
@@ -18,10 +17,7 @@ const phaseOf = (s: { pending: boolean; failed: boolean; none: boolean }): HitsP
   return phases.find(([on]) => on)?.[1] ?? 'found';
 };
 
-/**
- * The list's message hits for the (already debounced) search box: asked from 3 folded
- * characters, newest first, a page per «عرض مزيد من الرسائل». A short page is not the end.
- */
+/** Asked from 3 folded characters; a short page is not the end. */
 export function useMessageHits(q: string) {
   const query = useInfiniteQuery(messageSearchQuery(q));
   const hits = messageHits(query.data?.pages);

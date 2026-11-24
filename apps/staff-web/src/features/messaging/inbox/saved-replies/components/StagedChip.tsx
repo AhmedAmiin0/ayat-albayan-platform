@@ -20,7 +20,7 @@ export interface StagedChipProps {
   onRetry: () => void;
 }
 
-/** The picked reply's file above the box: «يُرسل بعد النص», removable; after a failure, why and a retry. */
+/** The staged file is sent after the text; a failure shows why and a retry. */
 export function StagedChip({ staged, pending, onRemove, onRetry }: StagedChipProps) {
   const { attachment, failed } = staged;
   return (
