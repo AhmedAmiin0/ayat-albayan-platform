@@ -1,4 +1,4 @@
-import { GENDERS, type Gender } from '@ab/shared';
+import { GENDERS, type Gender } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, Field, FilterPills, type FilterPill, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { FamilyFields } from './FamilyFields';

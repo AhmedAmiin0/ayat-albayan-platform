@@ -1,4 +1,4 @@
-import type { MeetingInviteResult } from '@ab/shared';
+import type { MeetingInviteResult } from '@ab/schedule';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

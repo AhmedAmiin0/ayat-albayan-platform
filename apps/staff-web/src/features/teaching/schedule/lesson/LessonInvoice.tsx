@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
 import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';

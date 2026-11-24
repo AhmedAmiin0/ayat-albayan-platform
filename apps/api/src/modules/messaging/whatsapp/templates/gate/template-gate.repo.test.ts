@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { sendableTemplates } from './template-gate.repo';
 

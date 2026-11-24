@@ -6,7 +6,7 @@ import {
   type PackageId,
   type PricingDuration,
   type SiteCountry,
-} from '@ab/shared';
+} from '@ab/money';
 import type { ListParams } from '@ab/mobile-kit';
 
 // What the staff member picked on «حاسبة الأسعار». The API prices it (GET /pricing/quote); the

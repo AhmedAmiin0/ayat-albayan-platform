@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { selfPermissionsOf, type Permission, type ThreadLesson } from '@ab/shared';
+import type { ThreadLesson } from '@ab/shared';
+import { selfPermissionsOf, type Permission } from '@ab/catalog';
 import { Pressable, Text } from 'react-native';
 import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery, seedPublicConfig } from '@/test/query';

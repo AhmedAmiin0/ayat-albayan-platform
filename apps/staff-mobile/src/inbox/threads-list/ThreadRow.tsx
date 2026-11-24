@@ -1,4 +1,5 @@
-import { formatPhone, type ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { router } from 'expo-router';
 import { memo, useCallback } from 'react';
 import { inTree, type TreeBase } from '@/core/nav/tree-base';
