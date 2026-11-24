@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { router } from 'expo-router';
 import { memo } from 'react';
 import { Avatar, ListRow, ltr, StatusChip } from '@ab/mobile-kit';

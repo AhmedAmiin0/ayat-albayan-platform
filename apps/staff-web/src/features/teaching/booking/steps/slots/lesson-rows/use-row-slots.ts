@@ -1,4 +1,4 @@
-import type { SlotsResponse } from '@ab/shared';
+import type { SlotsResponse } from '@ab/schedule';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { slotsQuery } from '@/features/teaching/schedule';

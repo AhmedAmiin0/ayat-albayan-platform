@@ -1,5 +1,5 @@
 import { pendingRequestId, uploadOnce } from '@ab/client-core';
-import type { TeacherPaymentResult } from '@ab/shared';
+import type { TeacherPaymentResult } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { apiSend } from '@ab/mobile-kit';

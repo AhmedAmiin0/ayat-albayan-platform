@@ -1,6 +1,7 @@
 import { EMPTY_SYNC, type SyncPlan } from '@ab/client-core';
 import type { MessageStore } from './message-store';
-import type { MessageStatus, SyncMessage, ThreadSync, ThreadView } from '@ab/shared';
+import type { SyncMessage, ThreadSync, ThreadView } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { message, thread } from '@/inbox/shared/thread-fixtures';
 
 // Rows and answers for the store's tests.

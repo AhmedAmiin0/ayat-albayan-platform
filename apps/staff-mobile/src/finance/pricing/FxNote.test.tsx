@@ -1,4 +1,4 @@
-import { FX_ATTRIBUTION_URL } from '@ab/shared';
+import { FX_ATTRIBUTION_URL } from '@ab/money';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { t, ltr } from '@ab/mobile-kit';

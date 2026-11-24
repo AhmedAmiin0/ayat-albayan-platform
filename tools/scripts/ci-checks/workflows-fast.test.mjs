@@ -54,7 +54,7 @@ test('ci: check covers changes, every verify job, the guards, the refactor and s
   );
 });
 
-test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries and lint gates)', () => {
+test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries, baselines and lint gates)', () => {
   assert.ok(
     ci.jobs.refactor.steps.some(
       (s) => s.run === 'node tools/scripts/ci-checks/folder-cap.mjs --strict',
@@ -65,10 +65,13 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries 
   // On a PR the count gates also measure the merge base (GUARD_BASE): no PR edits a baseline.
   const base = ci.jobs.guards.steps.find((s) => s.if === "github.event_name == 'pull_request'" && s.name?.startsWith('Base branch'));
   assert.match(base.run, /merge-base "origin\/\$BASE_REF" HEAD\)\n.*worktree add --detach "\$RUNNER_TEMP\/base"[\s\S]*\.bin\/jscpd"\)\n.*GUARD_BASE=/);
-  const lint = runs.find((r) => r.includes('pnpm guard:lint -- --configs'));
-  assert.ok(lint?.includes('if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi'));
-  // A rule the PR turns on (named only in the head's ESLint configs) gets its one-time baseline.
-  assert.match(lint, /--configs "\$RUNNER_TEMP\/configs-base\.txt" "\$RUNNER_TEMP\/configs-head\.txt"/);
+  // No one-time baseline for a rule a PR turns on: the lint gate takes no config sources.
+  assert.ok(['pnpm guard:lint', 'pnpm guard:baselines'].every((r) => runs.includes(r)));
+  assert.ok(!runs.some((r) => r.includes('--configs')));
+  // A loosened lint config is an annotation, never a failure: the owner decides.
+  const loosened = ci.jobs.guards.steps.find((s) => s.name === 'Lint config loosened?');
+  assert.equal(loosened?.run, 'pnpm guard:loosened');
+  assert.equal(loosened?.['continue-on-error'], true);
   assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'");
 });

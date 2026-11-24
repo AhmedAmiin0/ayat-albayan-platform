@@ -1,6 +1,6 @@
 import { COUNTS_FOR_MONEY } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { StudentAttendanceRepo } from './student-attendance.repo';
 
 const MONEY = /price|amount|paid|payment|invoice|renews_on|currency|\*/;

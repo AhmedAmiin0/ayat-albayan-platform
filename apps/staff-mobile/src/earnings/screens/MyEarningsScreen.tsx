@@ -1,4 +1,4 @@
-import { teacherPageOn } from '@ab/shared';
+import { teacherPageOn } from '@ab/settings';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { t, Button, BackButton, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';

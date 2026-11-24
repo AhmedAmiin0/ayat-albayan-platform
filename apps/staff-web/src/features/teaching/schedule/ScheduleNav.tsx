@@ -1,4 +1,4 @@
-import { addDays, weekdayOf, weekStart } from '@ab/shared';
+import { addDays, weekdayOf, weekStart } from '@ab/time';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';

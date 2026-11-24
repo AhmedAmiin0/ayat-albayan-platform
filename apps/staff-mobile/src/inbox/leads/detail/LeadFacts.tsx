@@ -1,4 +1,5 @@
-import { formatPhone, leadStatusStyle } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { leadStatusStyle } from '@ab/money';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, Ltr, StatusChip, shape, type, useTheme, AppText } from '@ab/mobile-kit';

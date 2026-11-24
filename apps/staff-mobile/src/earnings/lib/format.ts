@@ -1,4 +1,5 @@
-import { formatAmount, type ClockCycle, type TeacherEarningView } from '@ab/shared';
+import { formatAmount, type TeacherEarningView } from '@ab/money';
+import type { ClockCycle } from '@ab/time';
 import { clockIn } from '@/core/lib/clock';
 import { t, ltr } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';

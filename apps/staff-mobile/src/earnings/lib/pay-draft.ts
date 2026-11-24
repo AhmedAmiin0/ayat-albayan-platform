@@ -1,4 +1,5 @@
-import { amountProblem, parseAmount, type PaymentMethod } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import { amountProblem, parseAmount } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { paidAtFor } from '@/core/lib/money/paid-day';
 import type { Receipt } from '@/core/lib/receipts/receipt';

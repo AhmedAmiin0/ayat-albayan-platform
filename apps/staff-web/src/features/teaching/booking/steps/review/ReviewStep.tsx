@@ -1,4 +1,4 @@
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { refreshBooked } from './refresh-booked';
 import { Button } from '@ab/web-kit/components/ui/form/button';
