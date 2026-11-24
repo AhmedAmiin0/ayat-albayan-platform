@@ -8,7 +8,6 @@ import { Button } from '../../primitives/Button';
 interface RescheduleFrameProps {
   open: boolean;
   onClose: () => void;
-  /** Default «تغيير موعد الحلقة»; the family's «اطلب موعدًا آخر». */
   title?: string;
   children: ReactNode;
 }

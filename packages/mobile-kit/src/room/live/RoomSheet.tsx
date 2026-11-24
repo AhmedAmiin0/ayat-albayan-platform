@@ -7,7 +7,7 @@ import { shape, type, useTheme } from '../../theme';
 interface RoomSheetProps {
   testID: string;
   title: string;
-  /** «إغلاق»; absent when only the sheet's own buttons close it (the leave question). */
+  /** Absent when only the sheet's own buttons close it. */
   onClose?: () => void;
   children: ReactNode;
 }

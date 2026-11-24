@@ -4,8 +4,6 @@ import { createConnectivity } from '../../lib/connectivity/connectivity-store';
 import { t } from '../../lib/i18n/i18n';
 import { ConnectingBar } from './ConnectingBar';
 
-// The bar against a real store (probe never answers): 800 ms delay, the 260 ms reveal to the measured
-// card, the 10 s hint, «تم الاتصال» for 1.5 s then the exit, a bar mounted mid-outage.
 jest.useFakeTimers();
 const reduceMotion = jest.mocked(AccessibilityInfo.isReduceMotionEnabled);
 const timing = jest.spyOn(Animated, 'timing');

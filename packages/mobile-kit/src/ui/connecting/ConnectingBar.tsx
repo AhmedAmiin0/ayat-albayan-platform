@@ -37,7 +37,7 @@ interface ConnectingBarProps {
 export function ConnectingBar({ store = connectivity, inset = 0, background, gutter = 0 }: ConnectingBarProps) {
   const phase = useBarPhase(useConnectivity(store));
   const still = useA11yPref('reduceMotion');
-  // The card keeps its last words («تم الاتصال») while it closes.
+  // The card keeps its last words while it closes.
   const [shown, setShown] = useState<ShownPhase | null>(phase === 'hidden' ? null : phase);
   if (phase !== 'hidden' && shown !== phase) setShown(phase);
   const [content, setContent] = useState(0);

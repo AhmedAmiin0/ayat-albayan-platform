@@ -22,11 +22,7 @@ const NO_PEERS: PresencePeer[] = [];
 const peersOf = (data: ChannelPresence | undefined): PresencePeer[] =>
   data?.enabled === true ? data.peers : NO_PEERS;
 
-/**
- * The chat header's status (docs/33 §1, §4): the chat's people this viewer may see, from the API,
- * watched live while the screen is focused and the app open. «متصل الآن» when any is online, else
- * «آخر ظهور …» of the newest; '' when presence is off, nobody is shown or nobody was ever seen.
- */
+/** docs/33 §1, §4: live while focused and foreground; empty when presence is off or unseen. */
 export function useChannelPresence({ audience, studentId }: ChannelRef) {
   const focused = useScreenFocused();
   const query = useQuery({

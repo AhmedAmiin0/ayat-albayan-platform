@@ -4,7 +4,7 @@ import { type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 import { QUOTE_BOX, QUOTE_LINE } from './quote-style';
 
-/** «رسالة غير متاحة»: a quoted message the chat never stored; greyed, nothing to tap. */
+/** A quoted message the chat never stored: greyed, nothing to tap. */
 export function QuoteUnavailable() {
   const { color } = useTheme();
   return (

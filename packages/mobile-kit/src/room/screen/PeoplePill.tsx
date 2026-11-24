@@ -9,10 +9,6 @@ interface PeoplePillProps {
   onPress: () => void;
 }
 
-/**
- * The room's people at a glance (canvas RoomXTeacher): up to three overlapping 28pt faces and the
- * count, a 44pt pill read as «عدد المشاركين: 3»; it opens the participants panel.
- */
 export function PeoplePill({ people, onPress }: PeoplePillProps) {
   const { color } = useTheme();
   const n = people.length;

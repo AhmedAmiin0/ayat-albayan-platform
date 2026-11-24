@@ -13,11 +13,7 @@ interface ChannelMessageMenuProps extends MenuExits {
   held: { message: ChannelMessageView; offers: MenuOffers } | null;
 }
 
-/**
- * A long press on a channel bubble (ChatXMenu): «رد», «تعديل» (the sender, 15 minutes), «حذف
- * للجميع» (the sender, 48 hours; the admin any message) and «معلومات الرسالة», only what menuOffers
- * allows now; the scrim closes it. The sheet rises over the keyboard while the edit box has it.
- */
+/** Edit is the sender's for 15 minutes; delete the sender's for 48 hours, or the admin's any. */
 export function ChannelMessageMenu({ refs, held, ...exits }: ChannelMessageMenuProps) {
   const inset = useKeyboardInset();
   return (

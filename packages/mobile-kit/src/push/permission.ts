@@ -5,7 +5,7 @@ import { t } from '../lib/i18n/i18n';
 
 /** When the rationale was last shown (epoch ms), whatever the answer. */
 export const ASKED_KEY = 'push.asked';
-/** «مش دلوقتي» means later, not never: the rationale comes back a week on. */
+/** Declining means later, not never: the rationale comes back a week on. */
 export const ASK_AGAIN_MS = 7 * 24 * 60 * 60 * 1000;
 
 async function askedRecently(): Promise<boolean> {

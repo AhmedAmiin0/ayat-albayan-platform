@@ -15,15 +15,14 @@ interface RoomNoticeProps {
   message: string;
   /** A second, quieter line under the message. */
   detail?: string | undefined;
-  /** A third line: who is in the room now («المعلم/ة في الغرفة الآن»), when known. */
   presence?: string | null | undefined;
   /** A 40pt icon over the title (ink is the cover's). */
   icon?: ((ink: string) => ReactNode) | undefined;
   /** A wait (checking, joining): a spinner and no buttons. */
   busy?: boolean;
-  /** «حاول مرة أخرى» / «ادخل مرة أخرى»; absent when there is no way back in. */
+  /** Absent when there is no way back in. */
   again?: NoticeAction | undefined;
-  /** «فتح في المتصفح» where the app cannot go on (a failure, no LiveKit). */
+  /** Where the app cannot go on (a failure, no LiveKit). */
   browser?: NoticeAction | undefined;
   onBack?: () => void;
 }
@@ -71,7 +70,6 @@ export function RoomNotice(props: RoomNoticeProps) {
   );
 }
 
-/** «حاول مرة أخرى» / «ادخل مرة أخرى», «فتح في المتصفح» and «رجوع», where each applies. */
 function NoticeActions(p: Pick<RoomNoticeProps, 'again' | 'browser' | 'onBack'>) {
   const { again, browser, onBack } = p;
   return (

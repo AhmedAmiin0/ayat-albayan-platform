@@ -34,7 +34,7 @@ export function useRootBoot(gate: GateStatus): RootBoot {
   const localeReady = useLocaleReady();
   // The admins' translation overrides saved by the last run, in `t` before the first screen.
   const overridesReady = useOverridesReady();
-  // «المظهر»: the saved light/dark override, re-applied while fonts and the session load.
+  // Re-applies the saved light/dark override while fonts and the session load.
   useEffect(() => {
     void restoreAppearance();
   }, []);

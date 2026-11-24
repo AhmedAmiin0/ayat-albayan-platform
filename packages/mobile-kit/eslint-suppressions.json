@@ -93,11 +93,6 @@
       "count": 4
     }
   },
-  "src/lib/appearance/appearance.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/lib/connectivity/connectivity-machine.test.ts": {
     "max-len": {
       "count": 1
@@ -210,14 +205,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/lib/i18n/locale.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/lib/log/log.ts": {
@@ -248,7 +235,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/lib/query/query-keys.test.ts": {
@@ -327,9 +314,6 @@
     "complexity": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    },
     "no-nested-ternary": {
       "count": 4
     }
@@ -346,7 +330,7 @@
   },
   "src/ui/connecting/BarCard.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/connecting/CheckBadge.test.tsx": {
@@ -376,7 +360,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/ui/connecting/ConnectingBar.tsx": {
@@ -502,7 +486,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 6
     },
     "no-restricted-syntax": {
       "count": 1
@@ -520,7 +504,7 @@
   },
   "src/ui/layout/ScreenHeader.tsx": {
     "max-len": {
-      "count": 5
+      "count": 3
     },
     "max-lines-per-function": {
       "count": 1
@@ -576,7 +560,7 @@
   },
   "src/ui/primitives/Button.tsx": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/ui/primitives/Chevron.test.tsx": {
@@ -611,7 +595,7 @@
   },
   "src/ui/startup/RetryButton.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/startup/StartupEmblem.test.tsx": {
@@ -653,7 +637,7 @@
   },
   "src/ui/startup/StartupStatus.tsx": {
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "no-restricted-syntax": {
       "count": 1
@@ -661,7 +645,7 @@
   },
   "src/ui/startup/startup-mode.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ui/surface/inset.test.tsx": {

@@ -7,7 +7,7 @@ const SHORT: DateFields = { day: 'numeric', month: 'long' };
 const calendarText = (date: string, fields: DateFields) =>
   dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, fields);
 
-/** «3 أكتوبر – 9 أكتوبر» for the week starting `start` (YYYY-MM-DD). */
+/** `start` is YYYY-MM-DD. */
 export function weekLabel(start: string): string {
   return t.calendar.range
     .replace('{from}', calendarText(start, SHORT))
