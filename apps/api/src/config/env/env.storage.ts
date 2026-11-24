@@ -10,8 +10,7 @@ import {
 import { z } from 'zod';
 import { blankIsUnset, optionalSecret } from './env.blank';
 
-// Object storage (docs/45): which store keeps new files, and the MinIO server. Every key may come
-// from «التكاملات» (DB + Vault) through the integration overlay; env only bootstraps.
+// Object storage keys (docs/45) may come from the integrations overlay; env only bootstraps.
 
 const opt = <T extends z.ZodType>(t: T) => z.preprocess(blankIsUnset, t.optional());
 

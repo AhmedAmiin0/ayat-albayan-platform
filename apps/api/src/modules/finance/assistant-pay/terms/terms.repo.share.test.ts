@@ -4,8 +4,7 @@ import { AssistantPaySettings } from '@/modules/finance/assistant-pay/shared/ass
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { TermsRepo } from './terms.repo';
 
-// «عمولة التجديد» (owner 2026-11-01): the terms views show the share a renewal earns NOW,
-// 0 while it is off.
+// Terms views show the share a renewal earns now, 0 while the renewal commission is off.
 const share = (over: Parameters<typeof fakeSettings>[0]) =>
   new TermsRepo(fakeDb({}).db, new AssistantPaySettings(fakeSettings(over))).renewalShare();
 

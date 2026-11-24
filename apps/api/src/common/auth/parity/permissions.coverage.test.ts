@@ -11,7 +11,7 @@ const SESSION = [
   'AuthSessionController.login',
   'AuthSessionController.logout',
 ];
-/** «حسابي» (R-ACC-01..05): every login edits its own account, whatever its role. */
+/** R-ACC-01..05: every login edits its own account, whatever its role. */
 const ACCOUNT = [
   'avatarUploadUrl',
   'changeEmail',

@@ -26,14 +26,7 @@ import {
 import { salesStartsOn } from './sales-start';
 import { loadEnv } from '@/config/env/env';
 
-/**
- * The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16 row 16): each one
- * checks the student is hers (403 not_your_student; ANY student with sales.renew_any, row 38), then REUSES the admin's services with her as the actor
- * (SubscriptionCreator: catalog quote, replay, audit, lead conversion; PaymentsService: replay, receipt
- * path, audit, recompute, trial → «مشترك»). It counts at once: no admin confirmation. Whitelisted views.
- * Narrower than the admin (owner 2026-10-12): only the site's discount pills, and the transfer in the package
- * currency (fx never runs on her path). She may pick the pricing country, like the admin's calculator.
- */
+/** Sales money writes check ownership then reuse the admin's services; no admin confirmation. */
 @Injectable()
 export class SalesMoney {
   constructor(
@@ -76,11 +69,7 @@ export class SalesMoney {
     return this.services.creator.create({ ...create, customPrice }, at.actorId);
   }
 
-  /**
-   * «مبلغ مخصص» (owner 2026-11-02): any amount > 0 (owner 2026-11-18: «i want to enter any custom
-   * amount», no sales floor); only when the admin set STRIPE_MAX_DISCOUNT_PCT («التكاملات») is it
-   * held to that share of the quote (400 discount_too_large).
-   */
+  /** Any amount > 0; capped only when STRIPE_MAX_DISCOUNT_PCT is set (400 discount_too_large). */
   private async assertCustomPrice(input: SalesSubscriptionCreate, amount: number): Promise<void> {
     const quote = await this.services.creator.quote(input);
     const maxDiscountPct = loadEnv().STRIPE_MAX_DISCOUNT_PCT ?? null;
@@ -89,10 +78,7 @@ export class SalesMoney {
     if (problem) throw badRequest(problem, { min, currency: quote.currency });
   }
 
-  /**
-   * Kind 'payment' and method 'bank' always; the receipt (optional) and «المرفقات» (0..5) must be this
-   * package's, uploaded files; the currency must be the package's (400 currency_mismatch; the field stays).
-   */
+  /** Receipt and up to 5 attachments must be this package's; currency must match the package's. */
   async pay(input: SalesPaymentCreate, user: AuthUser): Promise<SalesPaymentView> {
     const { phone, ...payment } = input; // the chat's phone is never a payment column
     const sub = await this.services.receipts.subscription(input.subscriptionId);

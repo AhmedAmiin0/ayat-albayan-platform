@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { relaneQueued } from './relane.repo';
 
-// #695 review, item 2: after «نقل إلى الرقم الآخر» a template's queued, unclaimed rows take its new
-// lane stamp; a row in flight (SENDING) or no longer queued is never touched.
+// After a lane move, queued unclaimed rows take the new lane; rows in flight are never touched.
 
 const M = 'messages';
 interface Call { table: string; method: string; args: unknown[] }

@@ -58,11 +58,6 @@
       "count": 1
     }
   },
-  "src/common/auth/parity/permissions.parity.link-family.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/common/auth/parity/permissions.parity.test.ts": {
     "@typescript-eslint/restrict-template-expressions": {
       "count": 2
@@ -71,7 +66,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 2
     }
   },
   "src/common/auth/parity/route-walk.test-util.ts": {
@@ -190,7 +185,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/common/configuration/config-store/io/config-entries.mapper.ts": {
@@ -576,7 +571,7 @@
   },
   "src/common/push/dispatch/push.lock-screen.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/common/push/dispatch/push.rules.test.ts": {
@@ -1104,12 +1099,12 @@
   },
   "src/config/env/env.gaps.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/config/env/env.google.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/config/env/env.login-code.ts": {
@@ -1129,7 +1124,7 @@
   },
   "src/config/env/env.ts": {
     "max-len": {
-      "count": 12
+      "count": 11
     }
   },
   "src/config/env/env.web-push.test.ts": {
@@ -1149,7 +1144,7 @@
   },
   "src/config/env/whatsapp/env.crm.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/config/env/whatsapp/env.kapso.test.ts": {
@@ -1290,7 +1285,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/finance/assistant-pay/my/my.controller.ts": {
@@ -1301,7 +1296,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/finance/assistant-pay/my/my.earnings.test.ts": {
@@ -1317,7 +1312,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 8
     }
   },
   "src/modules/finance/assistant-pay/my/my.http.test.ts": {
@@ -1349,12 +1344,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/finance/assistant-pay/my/my.service.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/finance/assistant-pay/shared/assistant-pay.dto.ts": {
@@ -1422,7 +1417,7 @@
   },
   "src/modules/finance/assistant-pay/statements/corrections.service.ts": {
     "max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/modules/finance/assistant-pay/statements/mappers.test.ts": {
@@ -1476,7 +1471,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/finance/assistant-pay/terms/terms.repo.ts": {
@@ -1484,12 +1479,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/finance/assistant-pay/terms/terms.service.ts": {
     "max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/finance/expenses/expense-categories.controller.ts": {
@@ -1563,11 +1558,6 @@
       "count": 2
     }
   },
-  "src/modules/finance/expenses/expenses.job.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/expenses/expenses.module.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -1581,15 +1571,10 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/expenses/expenses.settings.test.ts": {
-    "max-len": {
       "count": 1
     }
   },
-  "src/modules/finance/expenses/expenses.settings.ts": {
+  "src/modules/finance/expenses/expenses.settings.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -6731,7 +6716,7 @@
   },
   "src/modules/people/students/students.service.contact-is-self.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/students/students.service.create.test.ts": {
@@ -8589,7 +8574,7 @@
   },
   "src/modules/sales/sales-money/chat/sales-chat-receipts.service.ts": {
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/sales/sales-money/package-cancel/tests/http.cancel.test.ts": {
@@ -8615,7 +8600,7 @@
   },
   "src/modules/sales/sales-money/reads/sales-renewals.ts": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/reads/tests/http.renew-any-family.test.ts": {
@@ -8633,12 +8618,12 @@
       "count": 7
     },
     "max-len": {
-      "count": 13
+      "count": 6
     }
   },
   "src/modules/sales/sales-money/sales-money.service.ts": {
     "max-len": {
-      "count": 11
+      "count": 3
     }
   },
   "src/modules/sales/sales-money/sales-start.ts": {

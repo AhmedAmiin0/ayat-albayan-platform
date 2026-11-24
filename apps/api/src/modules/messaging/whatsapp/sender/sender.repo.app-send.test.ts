@@ -3,9 +3,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { NOT_APP_SENT } from './sender.due';
 import { SenderRepo } from './sender.repo';
 
-// «أرسل عبر واتساب» (docs/19): a row with app_send_until set is never read nor claimed by the
-// sender, during the window or after it: staff may have sent it from the app (edited, late,
-// personal WhatsApp). The sweep fails it app_send_unconfirmed; only staff's answer moves it.
+// A row with app_send_until is never claimed by the sender; only staff's answer moves it (docs/19).
 
 const M = 'messages';
 const NOW = new Date('2026-11-06T10:00:00Z');
