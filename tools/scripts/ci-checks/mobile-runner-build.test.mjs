@@ -42,6 +42,17 @@ test('Java 17 (temurin) and the runner\'s Android SDK come before the build', ()
   assert.ok(steps.indexOf(sdk) < steps.indexOf(byId('runner')));
 });
 
+test('Gradle gets room on the runner: the template\'s 512 MB metaspace hung the release lint', () => {
+  const gradle = steps.find((s) => s.name === 'Gradle memory for the runner build');
+  assert.equal(gradle.if, GITHUB);
+  assert.match(gradle.run, /org\.gradle\.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=2g /);
+  assert.match(gradle.run, /kotlin\.daemon\.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g'/);
+  assert.match(gradle.run, /\} >> ~\/\.gradle\/gradle\.properties$/m);
+  assert.ok(steps.indexOf(gradle) < steps.indexOf(byId('runner')));
+  const timeout = "${{ inputs.builder == 'github' && 120 || 60 }}";
+  assert.equal(mobile.jobs.build['timeout-minutes'], timeout);
+});
+
 test('the runner step: same profile, token, folder and pinned CLI; eas build --local to RUNNER_TEMP', () => {
   const runner = byId('runner');
   assert.equal(runner.if, GITHUB);

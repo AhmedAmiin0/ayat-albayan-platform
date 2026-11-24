@@ -9,12 +9,7 @@ const looks: Record<LiveDotState, { tone: string; label: string }> = {
   off: { tone: 'bg-danger', label: t.inbox.liveOff },
 };
 
-/**
- * The live dot beside the chats list's title (docs/44 K2, like Kapso): green while the realtime
- * channel is SUBSCRIBED, red while it is down (it rejoins with backoff meanwhile and the polls keep
- * the inbox current). Its name («متصل» / «غير متصل») is its title and accessible name (an image,
- * not a live region: the page's toasts own role=status).
- */
+/** Down means it rejoins with backoff while polls keep the inbox current (docs/44 K2). */
 export function LiveDot() {
   const state = liveDotState(useInboxLive());
   const { tone, label } = looks[state];

@@ -7,13 +7,12 @@ const item =
 
 export interface EditItemProps {
   offers: Pick<BubbleOffers, 'edit' | 'noEdit'>;
-  /** Starts «تعديل» in the composer; absent while the 24 h window is closed (then it is off). */
+  /** Absent while the 24 h window is closed. */
   onEdit?: (() => void) | undefined;
-  /** Why «تعديل» is off now (the closed-window notice). */
   blocked?: string | null;
 }
 
-/** «تعديل» shown off with why: only the text she sent is corrected, by a new «تصحيح» message. */
+/** Only her own sent text can be corrected, by a new correction message. */
 function NoEdit() {
   const why = useId();
   return (
@@ -34,11 +33,7 @@ function NoEdit() {
   );
 }
 
-/**
- * «تعديل» in the bubble menu (owner 2026-11-07): WhatsApp's API cannot edit a sent message, so on
- * her own sent text (any for the admin) it opens the box with the text to send a «تصحيح:» reply;
- * on our other messages it is shown off with why.
- */
+/** WhatsApp's API cannot edit a sent message, so editing sends a correction reply instead. */
 export function EditItem({ offers, onEdit, blocked }: EditItemProps) {
   if (offers.noEdit) return <NoEdit />;
   if (!offers.edit) return null;

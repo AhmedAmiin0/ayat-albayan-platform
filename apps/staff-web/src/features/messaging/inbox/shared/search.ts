@@ -2,7 +2,7 @@ import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
 import { E164_RE } from '@ab/core';
 import { z } from 'zod';
 
-/** The list's orders: no `sort` = newest message first; «غير المقروءة أولًا»; by name. */
+/** No `sort` means newest message first. */
 export const THREAD_SORTS = ['unread', 'name'] as const;
 export type ThreadSort = (typeof THREAD_SORTS)[number];
 
@@ -17,13 +17,12 @@ export type InboxSearch = {
   unread?: true;
   sort?: ThreadSort;
   f_status?: LeadStatus;
-  /** A chat list «القوائم» (docs/22 §4): its id; the chip row falls back to «الكل» for an unknown one. */
+  /** An unknown list id falls back to all chats (docs/22 §4). */
   list?: string;
-  /** «المكالمات» (docs/28): the calls log instead of the chats list. */
   calls?: true;
   /** A search hit to open the chat at (docs/37): only with `phone`; removed = the live chat. */
   msg?: string;
-  /** «احجز أيام الحلقات» (owner 2026-11-06): a student id whose course wizard opens on the chat. */
+  /** A student id whose course wizard opens on the chat. */
   course?: string;
   page: number;
 };

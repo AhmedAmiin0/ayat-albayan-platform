@@ -38,12 +38,7 @@ const LINE: Record<Exclude<Phase, 'found'>, () => string> = {
   empty: () => t.inbox.messageSearch.empty,
 };
 
-/**
- * «الرسائل» under the chats (docs/37 NEW 1): from 3 characters, the messages holding the words,
- * newest first, «عرض مزيد من الرسائل» while older ones remain (the 1–2-character hint is the list's
- * header, SearchHead). The hits sit in one inset card, as the chats. The chips filter the chats
- * only: the hits follow the role's scope alone.
- */
+/** docs/37 NEW 1: from 3 characters; the chips filter the chats only, hits follow role scope. */
 export function MessageHits({ q, found, mode, base, now }: MessageHitsProps) {
   const { color } = useTheme();
   const phase = phaseOf(found);

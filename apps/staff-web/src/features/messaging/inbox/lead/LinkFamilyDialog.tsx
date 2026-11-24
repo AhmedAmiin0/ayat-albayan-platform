@@ -22,22 +22,17 @@ interface LinkFamilyDialogProps {
   /** The chat's number, shown under the title: on a phone the dialog covers the chat. */
   phone: string;
   onClose: () => void;
-  /** After the link: «رُبط الرقم…» or «مرتبط… من قبل». The caller closes the dialog and shows the text. */
   onDone: (text: string) => void;
 }
 
-/** One slot of «ربط الرقم بعائلة {name} ({code})؟»: the name and the code are bidi islands, so a Latin name never pulls the brackets. */
+/** The name and code are bidi islands so a Latin name never pulls the brackets. */
 function slot(part: string, m: RegistrationMatch, key: number): ReactNode {
   if (part === '{name}') return <bdi key={key}>{m.name}</bdi>;
   if (part === '{code}') return <Ltr key={key}>{m.code}</Ltr>;
   return part;
 }
 
-/**
- * «ربط بطالب موجود» (owner 2026-10-29): find the child by name or code (GET /sales/registration-check, the
- * same answer as «التحقق من التسجيل»: name, code, status, teacher), pick one, confirm, and this chat's number
- * becomes the family's second number. The lead's follow-up owner does not change; nothing is sent to anyone.
- */
+/** Linking adds this number as the family's second number; nothing is sent and the owner stays. */
 export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyDialogProps) {
   const formId = useId();
   const queryClient = useQueryClient();
@@ -59,7 +54,7 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
       await refreshAfterLink(queryClient);
     },
   });
-  // No pick: the footer offers «بحث» again (an edited name is searched before anything is linked).
+  // With no pick an edited name is searched again before anything is linked.
   const pick = (m: RegistrationMatch | null) => {
     setPicked(m);
     link.reset();

@@ -13,7 +13,6 @@ interface ProfileData {
   me: PortalHome;
 }
 
-/** The hero, «بياناتي», then a guardian's children (a student has none). */
 function ProfileBody({ profile, me }: ProfileData) {
   const own = ownStudent(me);
   return (
@@ -45,11 +44,7 @@ function useProfileRead() {
   };
 }
 
-/**
- * «الملف الشخصي», `profile`, pushed from the card on «حسابي»: the photo or initials, the name, the
- * WhatsApp number, a real email, a student's code, a guardian's children. Read-only (no editing,
- * no photo upload in this APK).
- */
+/** Read-only: no editing and no photo upload in this build. */
 export function ProfileScreen() {
   const read = useProfileRead();
   return (

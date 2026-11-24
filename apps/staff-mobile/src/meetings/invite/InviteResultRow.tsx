@@ -6,10 +6,7 @@ import { notSentHint, resultLabel } from './invite-text';
 
 const R = t.meetingInvites.results;
 
-/**
- * One recipient: its name, what happened («أُرسلت», «أُرسل إشعار في التطبيق», «النافذة مغلقة» with
- * the hint), and for a family or a phone «شارك الرابط والدعوة» (the text carries the personal link).
- */
+/** The shared text carries the recipient's personal link. */
 export function InviteResultRow({ result }: { result: MeetingInviteResult }) {
   const { color } = useTheme();
   const ok = result.status === 'sent';

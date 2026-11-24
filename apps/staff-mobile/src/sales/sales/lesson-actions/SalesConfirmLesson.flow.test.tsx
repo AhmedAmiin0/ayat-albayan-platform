@@ -15,7 +15,6 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
 
-// «Now» Thursday 1 Oct 16:20 Riyadh. يوسف at 19:00 is ANOTHER family's lesson, still scheduled.
 const NOW = new Date('2026-10-01T13:20:00Z');
 const OTHERS = scheduleLesson({ id: 'l3', starts_at: '2026-10-01T16:00:00.000Z', ends_at: '2026-10-01T16:45:00.000Z', status: 'scheduled' });
 const a = t.sales.lessonActions;

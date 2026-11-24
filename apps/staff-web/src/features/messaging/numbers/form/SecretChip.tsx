@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { formatDateTime } from '@/features/sales/leads/format';
 import { useClock } from '@ab/web-kit/lib/clock';
 
-/** A number's secret as «محفوظ» (with when) or «غير محفوظ»: never its value. */
+/** A secret's value is never shown. */
 export function SecretChip({ state }: { state: NumberSecretState }) {
   const clock = useClock();
   if (!state.set) return <StatusChip tone="neutral" glyph="hollow" size="sm" label={t.numbers.secret.notSet} />;

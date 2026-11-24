@@ -17,7 +17,7 @@ describe('GET /sales/students/:id «الجدول» (owner 2026-10-27)', () => {
     expect(res.statusCode).toBe(200);
     const { schedule } = res.json();
     expect(schedule.weekly).toEqual([expect.objectContaining({ rule_id: 'r1', byday: [0, 2, 4], start_time_local: '19:00', tz: 'Asia/Riyadh', duration_min: 45, teacher: { display_name_ar: 'أبرار', display_name_en: 'Abrar' } })]);
-    // An imported rule is in Riyadh; «عند الطالب» reads the student's own zone.
+    // Imported rules are in Riyadh; the student's view uses the student's zone.
     expect(schedule.student_tz).toBe('Africa/Cairo');
     expect(schedule.weekly[0].next).toHaveLength(3);
     expect(schedule.upcoming).toEqual([{

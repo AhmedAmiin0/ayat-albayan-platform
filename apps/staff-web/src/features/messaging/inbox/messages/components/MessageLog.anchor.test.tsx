@@ -4,8 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
 
-// docs/37 NEW 3: the window around a search hit is never pinned to the bottom; the hit is
-// scrolled to and flashed; «الانتقال إلى أحدث رسالة» always shows and leaves the window.
+// docs/37 NEW 3: the window around a search hit is never pinned to the bottom.
 
 const tops = new WeakMap<Element, number>();
 const props = ['scrollHeight', 'clientHeight', 'scrollTop'] as const;

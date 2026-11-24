@@ -10,7 +10,7 @@ import type {
   TaughtQuery,
 } from './student-attendance.rows';
 
-/** [from, to); `teacherId` keeps one teacher's lessons only (her own «سجل الحضور», docs/46 C5). */
+/** docs/46 C5: `teacherId` keeps one teacher's lessons only. */
 interface AttendanceWindow {
   from: Date;
   to: Date;
@@ -38,7 +38,7 @@ const PACKAGE_SELECT =
 const MONTH_LIMIT = 500;
 const HISTORY_LIMIT = 5000;
 
-/** «سجل الحضور» reads (service role; whitelisted columns, any student). */
+/** Service role; whitelisted columns; any student. */
 @Injectable()
 export class StudentAttendanceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

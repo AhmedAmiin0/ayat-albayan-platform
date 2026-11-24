@@ -34,7 +34,7 @@ describe('POST /reports/:id/v2/submit (the new form)', () => {
       content: { segments: QURAN.segments, tajweed: 'madd', arabic: null, islamic: null, quick: [] },
       lesson_change: { changes: [{ id: LESSON_ID, to_status: 'completed' }] },
     });
-    // The Google sheet's text columns (التسميع / الحفظ الجديد / المراجعة) read the parts.
+    // The Google sheet's text columns read the parts.
     expect(payload()?.report).toMatchObject({ recited: 'الملك 1–15', new_memorization: 'الملك 16–22', revision: 'القلم 1–20', theory: 'المدود' });
     expect(h.pdf.enqueue).toHaveBeenCalledWith(REPORT_ID);
     expect(res.json()).toMatchObject({ form_version: 2, status: 'submitted' });

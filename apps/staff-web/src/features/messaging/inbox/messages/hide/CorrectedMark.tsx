@@ -4,11 +4,7 @@ import { jumpToMessage } from '@/features/messaging/inbox/messages/lib/jump-to-m
 
 const c = t.inbox.correction;
 
-/**
- * «صُحِّحت» beside a corrected message's time (owner 2026-11-07): a click scrolls its newest
- * «تصحيح:» reply into view and highlights it, as a quote's click does. Its name is its visible
- * text (WCAG 2.5.3); where it goes is its description (title).
- */
+/** Its name is its visible text (WCAG 2.5.3); its destination is the title. */
 export function CorrectedMark({ correction }: { correction: string }) {
   const actions = useChatActions();
   return (

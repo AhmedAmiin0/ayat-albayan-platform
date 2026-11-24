@@ -6,11 +6,7 @@ import { liveText } from './live-text';
 /** Faces shown before the names; the rest are only named. */
 const FACES = 3;
 
-/**
- * Who is in the room now (canvas RoomXLiveHome), on the deeper green: their faces overlapping,
- * «المعلم/ة في الغرفة الآن» over the names with their role (a role word for one the portal does
- * not name).
- */
+/** Names the portal does not reveal get a role word instead. */
 export function LiveStrip({ live }: { live: LiveRoom }) {
   const { color } = useTheme();
   const text = liveText(live);

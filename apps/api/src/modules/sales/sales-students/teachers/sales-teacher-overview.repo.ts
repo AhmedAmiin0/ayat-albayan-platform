@@ -30,7 +30,7 @@ const LESSON_SELECT = `id, starts_at, status, lesson_students(${STUDENT})` as co
 /** A month of one teacher's lessons is a few hundred at most. */
 const LESSONS_LIMIT = 1000;
 
-/** «الجدول» and «الحضور» of one teacher for sales (service role; whitelisted columns, never money or a link). */
+/** Service role; whitelisted columns, never money or a link. */
 @Injectable()
 export class SalesTeacherOverviewRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

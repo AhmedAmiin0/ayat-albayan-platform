@@ -15,7 +15,6 @@ export interface RepliesPicker {
   /** What the list is searched by: the box's text after «/», else the panel's own search. */
   query: string;
   setSearch: (search: string) => void;
-  /** «إدارة» (the button's panel): «ردودي» rows get edit / delete, plus «رد جديد». */
   manage: boolean;
   setManage: (manage: boolean) => void;
   /** After «/» both tabs' matches (as WhatsApp), else this tab's; in served order. */
@@ -39,14 +38,11 @@ export interface PickerInput {
   /** Inside the 24 h window only; outside it nothing opens. */
   enabled: boolean;
   onPick: (reply: SavedReply) => void;
-  /** Esc, «إغلاق» or the button again: the caller puts the focus back in the message box. */
+  /** The caller returns focus to the message box. */
   onClose?: () => void;
 }
 
-/**
- * The picker's state: open by the button or by «/», the tab, the search, «إدارة» and the keyboard. Esc on a
- * «/» trigger keeps it closed until a new «/» starts. The list loads the first time it opens.
- */
+/** Esc on a slash trigger keeps it closed until a new slash starts; loads on first open. */
 export function useRepliesPicker({ text, enabled, onPick, onClose }: PickerInput): RepliesPicker {
   const [manual, setManual] = useState(false);
   const [dismissedAt, setDismissedAt] = useState<number | null>(null);
@@ -89,14 +85,14 @@ export function useRepliesPicker({ text, enabled, onPick, onClose }: PickerInput
   }
   return {
     ...{ open, bySlash, tab, search, setSearch, manage, list, keys, close, dismiss, pick, query },
-    // «إدارة» is for her own replies: it shows «ردودي».
+    // Managing applies to her own replies, so it switches to them.
     setManage: (next) => {
       setManage(next);
       if (next) setTab('mine');
     },
     setTab: (next) => {
       setTab(next);
-      // The shared list is managed in «الإعدادات»: nothing to manage there.
+      // The shared list is managed in settings, so there is nothing to manage here.
       if (next === 'shared') setManage(false);
       keys.setActive(0);
     },

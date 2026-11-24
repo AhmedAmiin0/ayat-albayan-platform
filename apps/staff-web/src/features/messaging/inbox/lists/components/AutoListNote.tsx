@@ -9,7 +9,6 @@ export interface AutoListNoteProps {
   className?: string;
 }
 
-/** The quiet «تُحدَّث تلقائيًا» chip of an automatic list (docs/22 «القوائم التلقائية»). */
 export function AutoListChip({ id, className }: { id?: string; className?: string }) {
   return (
     <span
@@ -22,7 +21,6 @@ export function AutoListChip({ id, className }: { id?: string; className?: strin
   );
 }
 
-/** The chip, then one line saying who is added: «يُضاف إليها تلقائيًا كل …». */
 export function AutoListNote({ rule, className }: AutoListNoteProps) {
   return (
     <p className={cn('flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-3', className)}>

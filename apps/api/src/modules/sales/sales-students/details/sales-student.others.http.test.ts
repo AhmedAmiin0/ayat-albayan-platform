@@ -3,7 +3,7 @@ import { LESSON, MINE, REPORT, studentsApp } from '@/modules/sales/sales-student
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 
-// Owner 2026-10-28: «تفاصيل الطالب» opens ANY student; 2026-10-30: salesB reads salesA's student (MINE) in full.
+// Any student opens, read in full even when another salesperson's.
 describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row 36)', () => {
   let t: App;
   beforeAll(async () => {
@@ -53,7 +53,7 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
   });
 });
 
-// Owner 2026-11-02 (docs/16 row 39): «اشتراط التعيين» OFF (default) = she acts on ANY student.
+// docs/16 row 39: rule off (default) means any student.
 describe('GET /sales/students/:id while the ownership rule does not enforce', () => {
   let t: App;
   beforeAll(async () => {

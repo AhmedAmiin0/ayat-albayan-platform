@@ -2,7 +2,7 @@ import { Image, Linking, View } from 'react-native';
 import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import type { AttachmentRow } from './attachments';
 
-/** One file of «المرفقات»: a PDF is a button to the phone's own viewer (Linking), an image shows whole. */
+/** A PDF opens in the phone's own viewer (Linking); an image shows whole. */
 export function AttachmentItem({ row }: { row: AttachmentRow }) {
   const { color } = useTheme();
   const { url } = row.view;

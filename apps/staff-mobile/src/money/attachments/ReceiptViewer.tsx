@@ -42,10 +42,7 @@ function ReceiptBody({ payment, open }: { payment: PaymentView; open: boolean })
   );
 }
 
-/**
- * «عرض الإيصال»: asks for the signed URL only when opened. A PDF opens in the phone's own viewer
- * through Linking (no new native module); an image shows inline.
- */
+/** Signed URL only when opened; PDFs open via Linking to avoid a new native module. */
 export function ReceiptViewer({ payment }: { payment: PaymentView }) {
   const [open, setOpen] = useState(false);
   const label = open ? t.mobileMoney.hideReceipt : t.mobileMoney.viewReceipt;

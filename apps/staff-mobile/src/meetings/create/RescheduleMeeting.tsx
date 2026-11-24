@@ -18,7 +18,6 @@ interface RescheduleMeetingProps {
   onDone: () => void;
 }
 
-/** «غيّر الموعد»: the same chips and steppers, prefilled with the meeting's time; PATCH, then the list refreshes. */
 export function RescheduleMeeting({ meeting, tz, onDone }: RescheduleMeetingProps) {
   const [slot, setSlot] = useState<Slot>(() => slotOf(meeting.starts_at, meeting.planned_end_at, tz));
   const client = useQueryClient();

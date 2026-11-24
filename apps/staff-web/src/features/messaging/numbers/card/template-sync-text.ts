@@ -3,8 +3,7 @@ import { z } from 'zod';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «مزامنة القوالب مع هذا الرقم» in words (docs/23c decision 9, owner 2026-11-07): every code the
-// endpoint answers, as a refused call or as a sync that failed, through one lookup map. Pure.
+// docs/23c decision 9: every endpoint code maps to text through one lookup map.
 
 const s = t.numbers.templateSync;
 const ERRORS: Record<string, string | undefined> = s.errors;
@@ -28,9 +27,7 @@ type SyncResult = Pick<
   'ok' | 'error' | 'message' | 'meta_count' | 'synced' | 'line'
 >;
 
-/**
- * One code in words (Meta's message or the missing CRM scope in {{message}}); unknown → «حدث خطأ».
- */
+/** Unknown codes fall back to a generic error. */
 export function syncCodeText(code: string | undefined, detail?: string): string {
   const text = ERRORS[code ?? ''] ?? t.numbers.errors.generic;
   return s.failed.replace('{{error}}', text.replace('{{message}}', detail ?? '—'));

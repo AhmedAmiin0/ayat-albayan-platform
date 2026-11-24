@@ -16,8 +16,7 @@ import SalesLayout from '../../../../app/sales/_layout';
 import SalesInboxLayout from '../../../../app/sales/inbox/_layout';
 import SalesInbox from '../../../../app/sales/inbox/index';
 
-// The sales tree (SalesTabs mounts useInboxRealtime): a new message reaches its «المحادثات» through
-// the realtime nudge and through the poll, as the admin's (owner 2026-10-30).
+// A new message reaches the sales inbox through both the realtime nudge and the poll.
 Object.assign(routes, {
   'sales/_layout': SalesLayout,
   'sales/inbox/_layout': SalesInboxLayout,

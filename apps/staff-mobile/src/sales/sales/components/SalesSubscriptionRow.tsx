@@ -8,12 +8,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { MoneyActionButton } from '@/sales/sales/money-action';
 
-/**
- * One of my subscriptions: student and code, package · status · lessons, the start day. No price, no
- * payment. A confirmed one carries «السجل» (its student's history, docs/16); the row opens the student's
- * details like every student row (owner 2026-10-28). A pending one carries its student's one money action
- * instead («تسجيل تحويل» for its owed package, else «تجديد»; UX review #9), when there is one.
- */
+/** No price or payment; a pending row carries its student's one money action. */
 export function SalesSubscriptionRow({ sub, withHistory }: { sub: SalesSubscriptionView; withHistory: boolean }) {
   const starts = startsLine(sub);
   const href = useSalesHrefs();

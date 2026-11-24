@@ -12,7 +12,6 @@ export interface NotificationItemProps {
   item: Item;
   /** Called after the row is opened (the panel closes). */
   onPick: () => void;
-  /** The panel's one ticking clock (NotificationList): «منذ 5 دقائق» stays current. */
   now: Date;
 }
 
