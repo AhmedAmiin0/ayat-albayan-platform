@@ -7,7 +7,7 @@ import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
 import { CRM_HOST, crmResponse, crmRow, stubFetch } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
-import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
 import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';

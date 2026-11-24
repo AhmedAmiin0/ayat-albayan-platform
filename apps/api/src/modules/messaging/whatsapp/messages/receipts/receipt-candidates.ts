@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { baseMime, lenientLabel, parseOrNull } from '@ab/shared';
-import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 
 // A photo or PDF only, never a sticker (image/webp) or voice note; keep both filters in step.
 

@@ -1,135 +1,34 @@
 import { WA_LINES } from '@ab/catalog';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '@/common/configuration/integrations/integration-config.module';
-import { NumbersModule } from '@/modules/messaging/numbers/numbers.module';
-import { EvolutionConfigController, NumbersEvolutionController } from './drivers/evolution/config';
 import { bootGaps, lineProvider, loadEnv } from '@/config/env/env';
-import { CodeSend } from './direct/code-send';
-import { GateController } from './gate/gate.controller';
-import { GateSettings } from './gate/gate.settings';
-import { CrmHistoryMedia } from './messages/crm-history/crm-history-media';
-import { CrmMediaSettings } from './messages/crm-history/crm-media.settings';
-import { CrmMediaCopier } from './messages/crm-copy/crm-media-copier';
-import { CrmMediaCopyDone } from './messages/crm-copy/crm-media-copy.done';
-import { CrmMediaCopyJob } from './messages/crm-copy/crm-media-copy.job';
-import { CrmMediaCopyRepo } from './messages/crm-copy/crm-media-copy.repo';
-import { CrmMediaCopySettings } from './messages/crm-copy/crm-media-copy.settings';
-import { InboundMedia } from './messages/inbound-media.service';
-import { InboundMediaRepo } from './messages/inbound-media.repo';
-import { LiveWhatsappClient } from './live-client';
-import { LineHealthStore } from './lines/line-health.store';
-import { LinesCheck } from './lines/lines.check';
-import { LinesController } from './lines/lines.controller';
-import { MessageDispatch } from './sender/message.dispatch';
-import { MessageSender } from './sender/message.sender';
-import { SenderWake } from './sender/wake/sender-wake.registrar';
-import { MessageViews } from './messages/message.views';
-import { CRM_SENT_PROVIDERS } from './messages/crm-sent';
-import { TemplateNames } from './templates/names/template-names';
-import { MessageWorker } from './sender/message.worker';
-import { EvolutionPaceRepo } from './sender/pace';
-import { KapsoHold } from './sender/window/kapso-hold';
-import { ReopenRequest } from './sender/window/reopen-request';
-import { ReopenAudit } from './sender/window/reopen-audit';
-import { WindowHold } from './sender/window/window-hold';
-import { WindowRelease } from './sender/window/window-release';
-import { WindowRepo } from './sender/window/window.repo';
-import * as manualSend from './sender/window/manual-send';
-import { WindowSettings } from './sender/window/window.settings';
-import { LineOutages } from './sender/hold/line-outages';
-import { PaymentHoldRepo } from './sender/hold/payment-hold.repo';
-import { PaymentHolds } from './sender/hold/payment-holds';
-import { MessagesController } from './messages/messages.controller';
-import { MessagesRepo } from './messages/messages.repo';
-import { MessagesService } from './messages/messages.service';
-import { AppSend, AppSendRepo } from './messages/app-send';
-import { SendGate } from './gate/send-gate';
-import { NumberRoutes } from './numbers/number-routes';
-import { RouteRepo } from './numbers/route.repo';
-import { SenderRepo } from './sender/sender.repo';
-import { TemplateCreator } from './templates/create/template-create';
-import { TEMPLATE_AUTHOR_CONTROLLERS, TEMPLATE_AUTHOR_PROVIDERS } from './templates/author';
-import { TemplateMissing } from './templates/check/template-missing';
-import { TemplateNumbersController } from './templates/sync/template-numbers.controller';
-import { TemplateNumbers } from './templates/sync/template-numbers.service';
-import { TemplateStarters } from './templates/catalog/template-starters';
-import { TemplateRegistry } from './templates/catalog/template.registry';
-import { TemplateAdmin } from './templates/catalog/template-admin';
-import { TemplateEditsController } from './templates/catalog/template-edits.controller';
-import { TemplateVerifier } from './templates/sync/template-verifier';
-import { TemplatesController } from './templates/catalog/templates.controller';
-import { TemplatesRepo } from './templates/catalog/templates.repo';
-import { WaMediaRetentionJob } from './messages/wa-media.retention.job';
-import { WhatsappSettings } from './whatsapp.settings';
-import { WHATSAPP_CLIENT, WHATSAPP_LINES, type WhatsappClient, type WhatsappLines } from './whatsapp.types';
-
-/** One client per line (docs/12 §13.4), config read per call so saved values apply at once. */
-function lines(): WhatsappLines {
-  return { notifications: new LiveWhatsappClient('notifications'), chat: new LiveWhatsappClient('chat') };
-}
+import { NumbersModule } from '@/modules/messaging/numbers';
+import { EvolutionConfigModule } from '@/modules/messaging/whatsapp/drivers/evolution/config';
+import { WhatsappGateModule } from '@/modules/messaging/whatsapp/gate';
+import { WhatsappLinesModule } from '@/modules/messaging/whatsapp/lines';
+import { WhatsappMessagesModule } from '@/modules/messaging/whatsapp/messages';
+import { WhatsappSharedModule } from '@/modules/messaging/whatsapp/shared';
+import { WhatsappTemplatesModule } from '@/modules/messaging/whatsapp/templates';
+import { TemplateAuthorModule } from '@/modules/messaging/whatsapp/templates/author';
 
 /**
- * B1 (docs/12 §1): WhatsappClient over WA_API_BASE, the template registry, the outbound sender
- * and routes T1–T3, M1–M2. Global: the inbox (B2) and the jobs (B3) inject WHATSAPP_CLIENT,
- * SendGate (is sending on?), MessageSender (kick after an enqueue), TemplateRegistry (approved?),
- * MessageViews (MessageView with click_to_chat) and InboundMedia (an inbound image / PDF as a file we
- * own, R-MSG-06; cached voice notes / videos purged after 30 days by WaMediaRetentionJob). Two lines
- * (docs/12 §13): WHATSAPP_LINES, and WHATSAPP_CLIENT = its notifications client.
+ * B1 (docs/12 §1): the WhatsApp client, the template registry, the outbound sender and routes
+ * T1–T3, M1–M2, one module per feature folder. Global: the inbox (B2) and the jobs (B3) inject
+ * WHATSAPP_CLIENT, SendGate (is sending on?), MessageSender (kick after an enqueue),
+ * TemplateRegistry (approved?), MessageViews and InboundMedia, so the shared, messages and lines
+ * modules are re-exported. Two lines (docs/12 §13): WHATSAPP_LINES, and WHATSAPP_CLIENT = its
+ * notifications client.
  */
 @Global()
 @Module({
   // Imported (though global) so the database's config is loaded before onModuleInit below; NumbersModule
   // so the numbers config (comms_source, docs/23 phase 3) is loaded before it too.
-  imports: [IntegrationConfigModule, NumbersModule],
-  controllers: [
-    TemplatesController, TemplateEditsController, MessagesController, GateController,
-    LinesController, TemplateNumbersController, ...TEMPLATE_AUTHOR_CONTROLLERS,
-    NumbersEvolutionController, EvolutionConfigController,
+  imports: [
+    ...[IntegrationConfigModule, NumbersModule, WhatsappSharedModule, WhatsappMessagesModule],
+    ...[WhatsappLinesModule, WhatsappGateModule, WhatsappTemplatesModule, TemplateAuthorModule],
+    EvolutionConfigModule,
   ],
-  providers: [
-    { provide: WHATSAPP_LINES, useFactory: lines },
-    { provide: WHATSAPP_CLIENT, useFactory: (l: WhatsappLines): WhatsappClient => l.notifications, inject: [WHATSAPP_LINES] },
-    LinesCheck, LineHealthStore,
-    TemplatesRepo, TemplateRegistry,
-    TemplateVerifier, TemplateAdmin,
-    TemplateStarters, TemplateNumbers, TemplateCreator, TemplateMissing,
-    ...TEMPLATE_AUTHOR_PROVIDERS,
-    EvolutionPaceRepo, WhatsappSettings,
-    GateSettings,
-    SendGate,
-    SenderRepo,
-    RouteRepo,
-    NumberRoutes,
-    MessageDispatch,
-    CodeSend,
-    PaymentHoldRepo, PaymentHolds, LineOutages,
-    WindowRepo, manualSend.ReopenPickRepo, manualSend.ReopenPick,
-    manualSend.ReopenCancelRepo, manualSend.ReopenCancel,
-    manualSend.AppSendAdoptRepo, manualSend.AppSendAdopt,
-    manualSend.AppSendExpiryRepo, manualSend.AppSendExpiry,
-    WindowSettings,
-    ReopenRequest, ReopenAudit,
-    WindowRelease,
-    WindowHold,
-    KapsoHold,
-    MessageWorker, MessageSender, SenderWake,
-    MessagesRepo,
-    MessageViews, TemplateNames, ...CRM_SENT_PROVIDERS,
-    MessagesService,
-    AppSendRepo,
-    AppSend,
-    InboundMediaRepo,
-    CrmMediaSettings,
-    CrmHistoryMedia,
-    CrmMediaCopySettings,
-    CrmMediaCopyRepo,
-    CrmMediaCopier,
-    CrmMediaCopyDone,
-    CrmMediaCopyJob,
-    InboundMedia,
-    WaMediaRetentionJob,
-  ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, CodeSend, MessageSender, MessageViews, InboundMedia, InboundMediaRepo, LineHealthStore, ReopenRequest, manualSend.ReopenCancel, manualSend.ReopenPick],
+  exports: [WhatsappSharedModule, WhatsappMessagesModule, WhatsappLinesModule],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

@@ -3,7 +3,7 @@ import { StorageService } from '@/common/storage/storage.service';
 import {
   InboundMediaRepo,
   type MediaMessage,
-} from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+} from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import {
   FOREIGN_MESSAGE,
   FOREIGN_PHONE,

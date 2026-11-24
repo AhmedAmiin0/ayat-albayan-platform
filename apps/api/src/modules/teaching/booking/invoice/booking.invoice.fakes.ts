@@ -3,7 +3,7 @@ import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { HttpException } from '@nestjs/common';
 import { vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
-import type { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import type { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import { bookingRequest } from '@/modules/teaching/booking/booking.fakes';
 import { BookingInvoices } from './booking.invoice';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';

@@ -4,7 +4,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, forwardOutPath, isSentFilePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { isCrmHistoryRow } from '@/modules/messaging/whatsapp';
-import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
