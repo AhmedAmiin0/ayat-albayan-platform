@@ -5,8 +5,8 @@ import { voidReasonSchema } from '../ledger/corrections-schemas.js';
 import { ASSISTANT_COMMISSION_TYPES } from './commission.js';
 import { PAYOUT_STATUSES } from '@ab/catalog';
 
-// Assistant (base role sales) pay commands (owner, 2026-10-06). camelCase like every command. The admin
-// sets the terms; nobody types a commission amount: it is computed from the terms (computeCommission).
+// Assistant (base role sales) pay commands, camelCase like every command. The admin sets the terms;
+// nobody types a commission amount: it is computed from the terms (computeCommission).
 
 const commissionTerms = z
   .object({
@@ -14,7 +14,10 @@ const commissionTerms = z
     /** percent: 0-100 points; fixed: an amount in `currency`. */
     value: z.number().positive().max(9_999_999_999).refine(hasTwoDecimals, 'too_many_decimals'),
     currency: currencyIso.nullish(),
-    /** No retroactive commission: only subscriptions fully paid on or after this day earn one. A new part cannot start in the past and a saved day cannot move earlier (termStartError). */
+    /**
+     * No retroactive commission: only subscriptions fully paid on or after this day earn one. A new
+     * part cannot start in the past and a saved day cannot move earlier (termStartError).
+     */
     startsOn: localDate,
   })
   .refine((t) => (t.type === 'fixed' ? !!t.currency : !t.currency), { message: 'currency_fixed_only', path: ['currency'] })
@@ -51,11 +54,14 @@ export const assistantAdjustmentSchema = z.object({
     .refine((v) => v !== 0 && Math.abs(v) <= 9_999_999_999 && hasTwoDecimals(v), 'invalid_amount'),
   currency: currencyIso,
   reason: z.string().trim().min(3, 'reason_required').max(500),
-  /** Idempotency key (rule 8): the client makes one per submit and repeats it on a retry; a repeat returns the first row. */
+  /**
+   * Idempotency key (rule 8): the client makes one per submit and repeats it on a retry; a repeat
+   * returns the first row.
+   */
   requestId: z.uuid().optional(),
 });
 
-/** POST /assistant-pay/statements/:id/pay: the payout's body (paidAt, method, note, receiptPath). */
+/** POST /assistant-pay/statements/:id/pay: the payout body (paidAt, method, note, receiptPath). */
 export const assistantStatementPaySchema = payoutPaySchema;
 /** POST /assistant-pay/statements/:id/unpay and /assistant-pay/commissions/:id/void. */
 export const assistantReasonSchema = voidReasonSchema;
