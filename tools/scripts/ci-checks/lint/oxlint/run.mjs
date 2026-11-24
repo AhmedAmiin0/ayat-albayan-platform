@@ -1,4 +1,4 @@
-// `pnpm lint:oxfull [-- --prune | --suppress-all]`: Oxlint with every rule of every package
+// `pnpm lint:oxfull [-- --prune]`: Oxlint with every rule of every package
 // (oxlint.full.config.ts, type-aware: build the workspace packages first, as turbo lint does) over
 // the folders that hold a lint.blocks.mjs. Writes its JSON report to oxlint-report.json, prints
 // the time, then holds the report to the oxlint-suppressions.json baselines (oxlint-gate.mjs).
