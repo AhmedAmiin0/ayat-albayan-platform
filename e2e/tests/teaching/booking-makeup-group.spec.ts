@@ -8,7 +8,6 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
 const next = (p: Page) => p.getByRole('button', { name: ar.booking.next }).click();
 const stamp = () => String(Date.now()).slice(-3);
 
-/** The makeup wizard of one child of the missed group lesson, up to «احجز». */
 async function bookMakeup(admin: Page, o: { child: string; late: boolean }): Promise<void> {
   await admin.getByRole('dialog').getByRole('link', { name: `${ar.booking.makeup.action} · ${o.child}` }).click();
   for (let i = 0; i < 3; i += 1) await next(admin); // type + student, missed lesson, teacher

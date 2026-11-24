@@ -7,7 +7,7 @@ export interface ProbeInput {
   /** Off: nothing is asked for and the device's light goes out. */
   enabled: boolean;
   deviceId: string | undefined;
-  /** Bumped by «حاول مرة أخرى» to ask again. */
+  /** Bumped by retry to ask again. */
   attempt: number;
 }
 

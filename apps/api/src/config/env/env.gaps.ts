@@ -1,4 +1,4 @@
-import type { WaLine, WaProvider } from '@ab/shared';
+import type { WaLine, WaProvider } from '@ab/catalog';
 import type { Env } from './env';
 import { bothOnCrm, crmGaps } from './whatsapp/env.crm';
 import { evolutionGaps } from './whatsapp/env.evolution';

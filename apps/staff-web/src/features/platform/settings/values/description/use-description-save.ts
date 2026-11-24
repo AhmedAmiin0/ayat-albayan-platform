@@ -7,7 +7,7 @@ import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import type { DescribeTarget } from './describe-target';
 import { textIn } from './description';
 
-/** «الترجمات» lists the overrides under this prefix (the API writes the ar override with the description). */
+/** The translations page lists overrides under this prefix; the API writes the ar override too. */
 export const TRANSLATIONS_QUERY_PREFIX = ['translations'] as const;
 
 /**
@@ -21,7 +21,7 @@ function mirrorOverride(hintKey: string | null | undefined, text: string | null)
   if (next !== undefined) applyStrings(t, { [hintKey]: next });
 }
 
-/** PUT /config/entries/:key/description (text, or null = «أعد الوصف الأصلي»), then refresh what shows it. */
+/** A null text restores the original description; then refresh what shows it. */
 export function useDescriptionSave(target: DescribeTarget) {
   const client = useQueryClient();
   return useMutation({

@@ -1,10 +1,6 @@
 import type { SettingDef } from '../defs.js';
 
-/**
- * Family accounts (docs/30): sign-in and password codes by WhatsApp. Built dark:
- * while family_login_enabled is off (or account_code is not approved) the family tab says «not yet»
- * and staff «نسيت كلمة المرور؟» points to the admin's reset.
- */
+/** Family accounts (docs/30) stay dark while family_login_enabled is off. */
 export const FAMILY_LOGIN_SETTINGS = {
   family_login_enabled: {
     module: 'family_login', group: 'academy', confirm: 'simple', reachesFamilies: true,

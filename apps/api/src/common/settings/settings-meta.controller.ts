@@ -1,4 +1,4 @@
-import type { SettingsMetaResponse } from '@ab/shared';
+import type { SettingsMetaResponse } from '@ab/settings';
 import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';

@@ -1,4 +1,5 @@
-import type { AttendanceTableRow, ClockCycle } from '@ab/shared';
+import type { AttendanceTableRow } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { View } from 'react-native';
 import { t, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
@@ -11,11 +12,7 @@ interface UpcomingLessonsProps {
   cycle: ClockCycle;
 }
 
-/**
- * «الحلقات القادمة خلال 14 يومًا» (docs/47): the head's `upcoming`, cancelled and moved ones with
- * their reasons, the chip by lesson status, under the log's column header. Not pressable: no
- * report is due yet.
- */
+/** Not pressable, since no report is due yet (docs/47). */
 export function UpcomingLessons({ rows, tz, cycle }: UpcomingLessonsProps) {
   return (
     <View style={{ gap: 6 }}>

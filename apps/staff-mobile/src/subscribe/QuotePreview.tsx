@@ -1,4 +1,5 @@
-import { counted, type QuoteResponse } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { QuoteResponse } from '@ab/money';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText, ltr, money } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
@@ -7,7 +8,6 @@ import { FxNote } from '@/finance/pricing/FxNote';
 const p = t.pricing;
 const minutes: Readonly<Record<string, string | undefined>> = p.durations;
 
-/** «الباقة المتقدمة · 12 حلقة · 45 دقيقة», the calculator's words. */
 export function planText(q: Pick<QuoteResponse, 'package' | 'lessons' | 'duration'>): string {
   const { name, sessions } =
     q.package === 'custom'

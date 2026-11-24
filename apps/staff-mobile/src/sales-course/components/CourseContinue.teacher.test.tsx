@@ -1,4 +1,5 @@
-import { counted, type BookedCourse } from '@ab/shared';
+import type { BookedCourse } from '@ab/shared';
+import { counted } from '@ab/core';
 import { screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';

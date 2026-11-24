@@ -39,7 +39,7 @@ export const EXPENSE_CATEGORIES = [
   'marketing_tools',
   'other',
 ] as const;
-/** A payment, or a refund («استرداد») counted against what was paid (migration 20261005000203). */
+/** A refund counts against what was paid (migration 20261005000203). */
 export const PAYMENT_KINDS = ['payment', 'refund'] as const;
 export const ADMIN_TASK_KINDS = [
   'renewal_due',

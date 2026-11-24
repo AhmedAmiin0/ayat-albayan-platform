@@ -15,10 +15,7 @@ interface CardLessonsProps {
   onDone: (message: string) => void;
 }
 
-/**
- * «الحلقات القادمة» of the course (owner 2026-11-17): the day, the time in the viewer's zone and
- * the status chip («مؤكدة» / «يحتاج تأكيد»); a row opens the lesson's drawer («تغيير الميعاد»…).
- */
+/** Times in the viewer's zone; a row opens the lesson's drawer. */
 export function CardLessons({ lessons, onDone }: CardLessonsProps) {
   const tz = useViewerTz();
   const clock = useClock();

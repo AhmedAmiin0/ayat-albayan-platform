@@ -18,7 +18,6 @@ interface TargetProps {
 const intentChoices = (current: string): string[] =>
   [...new Set(['', ...CREATE_REPLY_INTENTS, current])];
 
-/** A quick reply's action: none («رد عادي بلا إجراء») or one the webhook acts on. */
 interface IntentSelectProps {
   id: string;
   value: string;

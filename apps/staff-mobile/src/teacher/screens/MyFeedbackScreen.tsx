@@ -6,10 +6,7 @@ import { AverageCard } from '@/feedback/AverageCard';
 import { FeedbackRow } from '@/feedback/FeedbackRow';
 import { useMyFeedback } from '@/feedback/queries';
 
-/**
- * «رأيك يهمّنا» for a teacher: my own average and the answers about my lessons, newest first.
- * The API serves only my rows, without the parent's contact number. Read-only.
- */
+/** The API serves only her rows, without the parent's contact number; read-only. */
 export function MyFeedbackScreen() {
   const feedback = useMyFeedback();
   const mine = feedback.data;

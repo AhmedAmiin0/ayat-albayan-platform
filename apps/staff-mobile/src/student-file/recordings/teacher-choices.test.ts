@@ -1,4 +1,4 @@
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import type { TeacherChoice } from './RecordingFiltersBar';
 import { recording } from '@/student-file/testing/fixtures';
 import { renderHook } from '@testing-library/react-native';

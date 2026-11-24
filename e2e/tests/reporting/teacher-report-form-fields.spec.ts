@@ -5,10 +5,7 @@ import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar } from '../../support/core/schedule';
 import { fillTexts, pickAttendance, pickGrade, reportRow, TEXTS } from '../../support/reporting/teacher-extra';
 
-// «تقرير الحلقة» field → column mapping (docs/13-forms-spec.md form 2). forms-parity checks the
-// titles, options, order and stars; journey 2 sends five texts and one grade for all. This sends
-// every field with its own value (all seven texts, six different rubric grades, another program,
-// a late arrival) and reads each column back, so a swapped rubric or text shows. It also reloads.
+// Report field to column mapping (docs/13 form 2): every field distinct so a swap shows.
 
 const GRADE_OF: Record<Rubric, Grade> = {
   recitation: 'excellent',
@@ -30,7 +27,7 @@ test.describe('teacher report form fields (docs/13 form 2)', () => {
     const identity = teacher.getByRole('region', { name: ar.reports.identity });
     await expect(identity.getByRole('link', { name: LINK })).toHaveAttribute('href', `https://${LINK}`);
 
-    // «البرنامج» is the student's (quran) until the teacher changes it for this lesson.
+    // The program is the student's until the teacher changes it for this lesson.
     const program = identity.getByRole('group', { name: ar.reports.program });
     await expect(program.getByRole('radio', { name: ar.enums.program.quran })).toBeChecked();
     await program.getByRole('radio', { name: ar.enums.program.arabic }).locator('xpath=ancestor::label').click();

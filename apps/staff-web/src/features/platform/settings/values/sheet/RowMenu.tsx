@@ -13,10 +13,7 @@ export interface RowMenuItem {
   danger?: boolean;
 }
 
-/**
- * The row's «⋯» menu (docs/26b §2 «إجراء»): a menu button with arrow-key, Home/End, Esc and Tab
- * handling; a pick or Esc puts focus back on the button (a dialog the pick opens returns there).
- */
+/** Row menu (docs/26b §2) with arrow, Home/End, Esc and Tab; focus returns to the button. */
 export function RowMenu({ label, items }: { label: string; items: readonly RowMenuItem[] }) {
   const [open, setOpen] = useState(false);
   const menuId = useId();

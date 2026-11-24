@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { people } from '@/short-links/testing/link-fixtures';

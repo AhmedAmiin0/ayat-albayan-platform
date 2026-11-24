@@ -10,10 +10,7 @@ import { useAccountSetup } from './use-account-setup';
 
 const S = t.teacherAuth.setup;
 
-/**
- * /account-setup «أكمل حسابك» (docs/46 A4, A6): a teacher who came in with a WhatsApp code picks an
- * email and a password once; the portal stays closed until then. One narrow column, like /login.
- */
+/** The portal stays closed until a code-login teacher sets email and password (docs/46 A4, A6). */
 export function AccountSetupPage() {
   const { form, set, submit, error, busy } = useAccountSetup();
   return (

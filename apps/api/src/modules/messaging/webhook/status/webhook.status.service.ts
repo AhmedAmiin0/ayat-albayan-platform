@@ -4,7 +4,7 @@ import { PushService } from '@/common/push/push.service';
 import { CrmConfirm } from '@/modules/messaging/webhook/crm-confirm';
 import { ExternalStatus } from '@/modules/messaging/webhook/external/external-status';
 import type { EchoEvent, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
-import { WebhookRepo, type OutboundRow } from '@/modules/messaging/webhook/webhook.repo';
+import { WebhookRepo, type OutboundRow } from '@/modules/messaging/webhook/shared/webhook.repo';
 import { statusPatch } from './webhook.status';
 
 const TEMPLATE_NAMES: Record<string, string> = ar.templates.names;

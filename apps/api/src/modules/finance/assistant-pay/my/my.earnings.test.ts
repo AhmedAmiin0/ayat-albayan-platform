@@ -1,4 +1,4 @@
-import type { AssistantStatementView } from '@ab/shared';
+import type { AssistantStatementView } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { buildEarnings, frozenLines } from './my.earnings';
 import type { MyAdjustment, MyCommission } from './my.repo';

@@ -1,4 +1,4 @@
-import type { ErrorReporter } from '@ab/shared';
+import type { ErrorReporter } from '@ab/core';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withRequestId } from './request-id';
 import { ReportingLogger } from './reporting.logger';

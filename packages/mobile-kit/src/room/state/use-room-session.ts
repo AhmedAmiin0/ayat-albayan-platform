@@ -17,7 +17,7 @@ export interface RoomSessionInput {
   target: RoomTarget;
   /** The join endpoint (a retry, or no token handed over by the press). */
   fetchJoin: (target: RoomTarget) => Promise<RoomCredentials>;
-  /** Opened from the «بدأت الحلقة» push: no preview, the microphone on. */
+  /** Opened from the lesson-started push: no preview, microphone on. */
   direct?: boolean;
   /** Keep the device choice and skip the preview next time (the family's room only). */
   rememberChoice?: boolean;
@@ -67,13 +67,13 @@ export function useRoomSession(input: RoomSessionInput) {
     joinedAt: room.joinedAt,
     allow: () => answer(true),
     skip: () => answer(false),
-    /** «انضم الآن»: the preview's choice is kept for the next joins (the push reads it too). */
+    /** The preview's choice is kept for later joins, and the push reads it too. */
     join: async () => {
       void platform.devices.save(preview.wanted);
       await joinWith(preview.wanted);
     },
     leave: room.leave,
-    /** One's own «إنهاء الحلقة للجميع» went through: final, no rejoin. */
+    /** Final, no rejoin. */
     endedForAll: () => dispatch({ type: 'ended' }),
     retry: () => dispatch({ type: 'retry' }),
   };

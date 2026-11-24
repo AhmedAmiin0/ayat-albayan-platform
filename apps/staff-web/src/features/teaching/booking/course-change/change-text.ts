@@ -7,16 +7,13 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 /** The viewer's cycle, language and zone (useViewerTz()). */
 type ZonedClock = Clock & { tz: string };
 
-// «تغيير أيام الحلقات» (owner 2026-10-18): the current and the new days as one line each,
-// السبت → الجمعة, each day with its own time in the course zone. Pure.
+// Saturday to Friday, each day with its own time in the course zone; pure.
 
-/** «الأحد الساعة 17:00، الأربعاء الساعة 19:30» («الدورة والباقة» names the course with it too). */
 export const daysText = (days: readonly DayTime[], tz: string, clock: ZonedClock): string =>
   inWeekOrder(days)
     .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, clock, tz))
     .join(t.common.listSeparator);
 
-/** «الأيام الحالية: الأحد الساعة 17:00، الأربعاء الساعة 19:30». */
 export const currentDaysText = (days: readonly DayTime[], tz: string, clock: ZonedClock): string =>
   t.booking.courseChange.currentDays.replace('{days}', daysText(days, tz, clock));
 
@@ -29,6 +26,5 @@ export const requestDays = (req: RuleDays): DayTime[] =>
     startTimeLocal: req.dayTimes?.find((d) => d.weekday === weekday)?.startTimeLocal ?? req.startTimeLocal,
   }));
 
-/** «الأيام الجديدة: الاثنين الساعة 18:00، الأربعاء الساعة 19:30». */
 export const newDaysText = (req: RuleDays, tz: string, clock: ZonedClock): string =>
   t.booking.courseChange.newDays.replace('{days}', daysText(requestDays(req), tz, clock));

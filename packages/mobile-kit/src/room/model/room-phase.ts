@@ -1,11 +1,6 @@
 import type { CamMicAnswer, RoomStatus } from './room-types';
 
-/**
- * Why the room closed: the user left, the server closed it (DeleteRoom: the max-duration closer,
- * or the host's end seen from the other side: a rejoin then learns which), it was ended for
- * everyone for certain (`endedAll`: a 410 lesson_ended join, or one's own «إنهاء الحلقة للجميع»),
- * the connection dropped, the staff removed them, or it opened elsewhere.
- */
+/** `endedAll` is certain: a 410 lesson_ended join or one's own end for everyone. */
 export type ClosedWhy = 'left' | 'ended' | 'endedAll' | 'dropped' | 'removed' | 'duplicate';
 
 /** The room screen's steps (docs/35 §3): explain → preview → joining → live, or failed / closed. */
@@ -81,7 +76,7 @@ const RULES: Rules = {
     from: ['preview'],
     to: (e) => ({ step: 'preview', notice: answerNotice(e.answer) }),
   },
-  // Only from live: a disconnect that follows our own «غادر» stays «left».
+  // Only from live: a disconnect after our own leave stays `left`.
   status: {
     from: ['live'],
     to: (e) => {

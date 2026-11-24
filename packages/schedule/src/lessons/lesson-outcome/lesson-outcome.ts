@@ -7,9 +7,9 @@ import { OPEN_LESSON_STATUSES } from '../state-machine/index.js';
 // the grace (settings.lesson_outcome_grace_minutes), and only one that ended after the cutoff
 // (lesson_outcomes_since(), the deploy of migration 1000): never a retro change.
 
-/** The audit row's `after.reason` of the job's «غائب» (the family never answered the reminder). */
+/** The audit `after.reason` of the job's no-show when the family never answered the reminder. */
 export const AUTO_NO_SHOW_REASON = 'auto_no_show';
-/** The audit `after.reason` of a staff «تصحيح الحالة» (POST …/lessons/:id/correct). */
+/** The audit `after.reason` of a staff outcome correction. */
 export const OUTCOME_CORRECTION_REASON = 'outcome_correction';
 /**
  * The audit `after.reason`s that keep a lesson correctable (LessonView.auto_held): the job's two
@@ -30,11 +30,7 @@ export const CORRECT_TO = [
 ] as const satisfies readonly LessonStatus[];
 export type CorrectTo = (typeof CORRECT_TO)[number];
 
-/**
- * The job's verdict: completed (confirmed), no_show (reminded, no «نعم»), unresolved (no platform
- * reminder: stays «يحتاج تأكيد», counted, the assistant resolves it), wait (inside the grace), skip
- * (not open, or ended before the cutoff).
- */
+/** no_show means reminded without a yes; unresolved stays needs confirmation for the assistant. */
 export type OutcomeDecision = 'completed' | 'no_show' | 'unresolved' | 'wait' | 'skip';
 
 export interface OutcomeLesson {

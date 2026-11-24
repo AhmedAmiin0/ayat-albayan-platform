@@ -7,7 +7,7 @@ export interface ChannelRow {
   dayText: string;
   /** The first message of its day: the chip over it. */
   opensDay: boolean;
-  /** «n غير مقروءة» over it: the first message unread when the chat opened. */
+  /** The first message unread when the chat opened. */
   unread: number | null;
   /** The air over it: 4pt on the same side, 8pt when the side changes, 0 under a day chip. */
   space: number;

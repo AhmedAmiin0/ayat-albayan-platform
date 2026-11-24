@@ -11,7 +11,7 @@ import { SETTINGS_REGISTRY } from '../registry.js';
  */
 export const REGISTRY_VERSION = 1;
 
-/** «القيم» rows (config) vs rows a module page owns and «القيم» only shows (docs/26 §1). */
+/** Config rows vs rows a module page owns and the values page only shows (docs/26 §1). */
 export type SeedScope = 'config' | 'module';
 
 /**
@@ -38,7 +38,7 @@ export interface SeedEntry {
 
 const MODULE_GROUP_SET: ReadonlySet<string> = new Set(MODULE_GROUPS);
 
-/** module when a module page owns it (ownedBy) or it sits in a «تُدار من صفحة أخرى» group. */
+/** module when a module page owns it or it sits in an owned group. */
 export const seedScope = (def: SettingDef): SeedScope =>
   def.ownedBy !== undefined || (def.group !== undefined && MODULE_GROUP_SET.has(def.group)) ? 'module' : 'config';
 

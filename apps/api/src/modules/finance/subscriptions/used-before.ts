@@ -1,4 +1,5 @@
-import { riyadhToday, usedBeforeMax, usedBeforeProblem } from '@ab/shared';
+import { usedBeforeMax, usedBeforeProblem } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, forbidden } from '@/common/http/errors';

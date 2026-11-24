@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ar } from '@/common/infra/i18n/server-text';

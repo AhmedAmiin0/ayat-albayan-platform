@@ -5,9 +5,7 @@ import { salesNav, signInSales } from '../../support/sales/sales-portal';
 import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { stubReset } from '../../support/core/wa-stub';
 
-// «القوالب» for sales (templates.author): a salesperson writes a template; it
-// goes straight to Meta (tools/wa-stub) on the chat number, flagged for the allow-list, and shows
-// «قيد المراجعة» until Meta's review. Local Supabase + the stub only; no real Meta call.
+// Sales-authored templates go straight to the stub, flagged, and wait for review.
 
 const stamp = Date.now();
 const KEY = `e2e_offer_${String(stamp).slice(-8)}`;

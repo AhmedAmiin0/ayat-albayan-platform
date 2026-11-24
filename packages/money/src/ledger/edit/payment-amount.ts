@@ -3,10 +3,7 @@ import type { PaymentKind, PaymentMethod } from '@ab/catalog';
 import { round2 } from '@ab/core';
 import { moneyAmount } from '../schemas.js';
 
-/**
- * «تعديل المبلغ»: PATCH /sales/payments/:id/amount takes the new amount only, in
- * the payment's (the package's) currency. The admin's PATCH /payments/:id keeps its own body.
- */
+/** The sales amount edit takes only the new amount, in the package's currency. */
 export const paymentAmountSchema = z.strictObject({ amount: moneyAmount });
 export type PaymentAmount = z.output<typeof paymentAmountSchema>;
 

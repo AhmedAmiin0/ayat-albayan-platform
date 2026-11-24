@@ -22,7 +22,7 @@ interface NewFamilyFieldsProps {
   onUse: () => void;
 }
 
-/** «ولي أمر جديد»: name, WhatsApp number (E.164) and zone. */
+/** The number is E.164. */
 export function NewFamilyFields({ value, error, onChange, onUse }: NewFamilyFieldsProps) {
   return (
     <View style={{ gap: 12 }}>

@@ -9,15 +9,10 @@ import type { SeriesCheckResult } from './SeriesCheck';
 export interface CourseCheckNoticeProps {
   draft: BookingDraft;
   series: SeriesCheckResult;
-  /** «اختر موعدًا آخر»: back to the slot step. */
   onChangeSlot: () => void;
 }
 
-/**
- * The assistant's course on the review step (owner 2026-10-18): why «احجز» is not offered. A clash in
- * any week lists the clashes, a failed check its error, each with only «اختر موعدًا آخر» (she never
- * books over a clash: no reason, no override). Nothing while the check is clean.
- */
+/** She never books over a clash: no reason, no override; nothing while the check is clean. */
 export function CourseCheckNotice({ draft, series, onChangeSlot }: CourseCheckNoticeProps) {
   const { body, check } = series;
   if (!body) return null;

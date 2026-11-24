@@ -1,6 +1,6 @@
 import type { SettingKey } from '../../registry.js';
 
-/** «الجدول والحلقات»: the schedule keys, in order, for both layout.ts and value-groups.ts. */
+/** The schedule keys, in order, for both layout.ts and value-groups.ts. */
 export const SCHEDULE_KEYS = [
   'booking_horizon_weeks',
   'late_cancel_hours',

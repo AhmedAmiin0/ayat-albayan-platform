@@ -17,7 +17,7 @@ export async function copyStudentLink(lessonId: string): Promise<string> {
   return url;
 }
 
-/** «انسخ لينك الطالب»: a fresh guest link, copied to the clipboard and shown, no WhatsApp needed. Full width (docs/07 «الأزرار»). */
+/** A fresh guest link copied and shown, no WhatsApp needed; full width (docs/07). */
 export function CopyLinkButton({ lesson }: { lesson: Pick<LessonView, 'id' | 'status'> }) {
   const make = useMutation({ mutationFn: copyStudentLink });
   if (!isOpenLesson(lesson.status)) return null;

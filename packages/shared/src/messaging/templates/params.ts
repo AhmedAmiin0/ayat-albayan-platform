@@ -8,15 +8,10 @@ import {
   type TemplateParams,
 } from './templates.js';
 
-// Typed params for the Phase 4 producers (docs/12 §2). Producers that already exist keep their
-// own builders: booking_confirmation* (booking.messages.ts, confirmation-messages.ts),
-// report_ready (report-ready.ts), renewal_due (alerts.service.ts).
-// R-MSG-01, checked against Meta's approved bodies and samples (owner's CRM copy, 2026-10-02):
-// lesson_reminder_v2 / _meet / _plain read «حلقة {{1}} النهاردة — {{2}}», {{2}} = the time
-// («8:30 م بتوقيت الرياض»); teacher_lesson_reminder has no button, so its {{2}} carries the link.
+// Typed params for Phase 4 producers (docs/12 §2, R-MSG-01).
 
 export interface LessonMessageInput {
-  /** The guardian's booked children in this lesson: {{1}} «سهيلة ومريم». */
+  /** The guardian's booked children in this lesson: {{1}}. */
   names: readonly string[];
   startsAt: Date;
   /** The recipient's tz (guardian or teacher): every time is wall-clock there (rule 6). */
@@ -56,11 +51,7 @@ const LINK_LABEL = 'رابط الحلقة:';
 /** Meta rejects a parameter with a newline, a tab or 4+ spaces in a row: one line, single spaces. */
 const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim();
 
-/**
- * teacher_lesson_reminder*: {{1}} the teacher's name, {{2}} «17:00 — سهيلة ومريم» in their tz.
- * Meet → the _meet button; the plain template (Jitsi, any other link) has no button, so a link
- * rides in {{2}}: «17:00 — سهيلة ومريم · رابط الحلقة: https://meet.jit.si/…».
- */
+/** The plain template has no button, so a non-Meet link rides in {{2}}. */
 export function teacherReminderMessage(input: LessonMessageInput & { teacherName: string }): OutboundTemplate {
   const { key, button } = teacherReminderTemplate(input.meetingLink);
   const link = oneLine(input.meetingLink ?? '');
@@ -74,12 +65,12 @@ export interface FollowUpInput {
   slots: readonly [Date, Date];
   /** The lead's tz (qualification.tz ?? leads.tz ?? Asia/Riyadh). */
   tz: string;
-  /** ar.json tz.<id>, e.g. «الرياض»: {{3}} in «المواعيد بتوقيت {{3}}». */
+  /** ar.json tz.<id> city name, {{3}} of the time-zone line. */
   tzCity: string;
   leadId: string;
 }
 
-/** follow_up_slots: {{1}} {{2}} «الأحد 4 أكتوبر 17:00», {{3}} the city; «وقف الرسايل» → stop:<lead>. */
+/** {{3}} is the city; the stop button maps to stop:<lead>. */
 export function followUpSlotsMessage(input: FollowUpInput): OutboundTemplate {
   const [a, b] = input.slots;
   return {

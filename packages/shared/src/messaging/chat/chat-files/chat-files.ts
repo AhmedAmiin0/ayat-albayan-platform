@@ -64,8 +64,6 @@ export function chatFileProblem(
   return f.size < 1 || f.size > cap ? 'file_too_large' : null;
 }
 
-// A PDF bubble like WhatsApp's (owner 2026-10-29): page 1 as a thumb and «12 صفحة · PDF · 1.2 ميغابايت».
-
 const PDF_MIME = 'application/pdf';
 export const isPdfMime = (mime: string | null): boolean => baseMime(mime) === PDF_MIME;
 /** The preview's last page (GET …/pdf/:page refuses more); the file itself keeps them all. */
@@ -94,7 +92,7 @@ export function fileSizeText(bytes: number, s: PdfMetaStrings): string {
   return (small ? s.kb : s.mb).split('{n}').join(n);
 }
 
-/** «12 صفحة · PDF · 1.2 ميغابايت», each part isolated so the line reads right in Arabic and English. */
+/** Each part is isolated so the line reads right in Arabic and English. */
 export function pdfMetaLine(doc: { pages: number; bytes: number }, s: PdfMetaStrings): string {
   return [counted(s.pages, doc.pages), s.type, fileSizeText(doc.bytes, s)].map(isolate).join(' · ');
 }
@@ -112,7 +110,7 @@ export function cleanFileName(raw: string | null | undefined, max = 200): string
   return Array.from(name).slice(0, max).join('').trim();
 }
 
-/** A caption line that reads as a PDF's file name («خطة الحفظ.pdf»): no path, ≤ 200 characters. */
+/** A caption line that reads as a PDF file name: no path, at most 200 characters. */
 const PDF_FILE_NAME = /^[^/\\]{1,196}\.pdf$/i;
 
 interface Named {
@@ -126,10 +124,7 @@ const captionName = (m: Named): string => {
   return PDF_FILE_NAME.test(line) ? line : '';
 };
 
-/**
- * A PDF bubble's name, as WhatsApp's: the file's own name (media_name); else the caption's first
- * line when it reads as a file name (some senders put it there); else `untitled` («ملف PDF»).
- */
+/** PDF name: media_name, else a caption first line that reads as a file name, else `untitled`. */
 export function pdfBubbleName(m: Named, untitled: string): string {
   return [cleanFileName(m.media_name), captionName(m)].find((name) => name.length > 0) ?? untitled;
 }

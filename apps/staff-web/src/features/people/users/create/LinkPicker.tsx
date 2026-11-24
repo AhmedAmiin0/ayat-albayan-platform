@@ -16,7 +16,6 @@ export interface LinkPickerProps {
   value: LinkCandidate | null;
   onChange: (value: LinkCandidate | null) => void;
   error?: string | undefined;
-  /** The record is fixed (the student's own profile): no «تغيير». */
   locked?: boolean;
 }
 

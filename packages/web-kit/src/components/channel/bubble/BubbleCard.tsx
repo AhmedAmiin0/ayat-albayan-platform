@@ -26,7 +26,6 @@ const toneOf = (m: ChannelMessageView): string => {
   return m.mine ? 'border-lapis/25 bg-accent' : 'border-rule bg-raised';
 };
 
-/** «تم حذف هذه الرسالة» in place of the text and file. */
 function DeletedLine() {
   return (
     <p className="flex items-center gap-1.5 italic text-ink-3">
@@ -36,10 +35,6 @@ function DeletedLine() {
   );
 }
 
-/**
- * The bubble itself: the others' name and role over the first message of a run, the quote, the
- * file and the text (or «تم حذف هذه الرسالة»), then the time and my ticks.
- */
 export function BubbleCard({ message: m, followUp, tools, time }: Props) {
   const named = !m.mine && !followUp;
   return (

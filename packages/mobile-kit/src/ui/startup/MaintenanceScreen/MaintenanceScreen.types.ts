@@ -3,7 +3,6 @@ export type MaintenanceCover = 'maintenance' | 'down';
 
 export interface MaintenanceScreenProps {
   kind: MaintenanceCover;
-  /** A check is running: the button says «جارٍ التحقق…». */
   checking: boolean;
   onRetry: () => void;
   /** Noto Sans Arabic is registered (until then the system font: iOS errors on unknown ones). */

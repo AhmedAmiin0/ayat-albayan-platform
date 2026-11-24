@@ -1,4 +1,6 @@
-import type { ClockCycle, LinkCandidate, UserRole, UserRoleOption, UserStatus } from '@ab/shared';
+import type { LinkCandidate, UserRoleOption, UserStatus } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import type { ClockCycle } from '@ab/time';
 import { t, locale, ltr } from '@ab/mobile-kit';
 import { formatAt } from '@/ops/activity/activity-format';
 

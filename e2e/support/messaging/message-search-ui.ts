@@ -55,7 +55,6 @@ export async function searchChats(page: Page, q: string): Promise<void> {
   await page.getByRole('searchbox', { name: ar.common.search, exact: true }).first().fill(q);
 }
 
-/** The «الرسائل» section's hit for a chat name. */
 export const messageHit = (page: Page, name: string) =>
   page.getByRole('region', { name: ar.inbox.messageSearch.section }).getByRole('button', { name: new RegExp(name) });
 

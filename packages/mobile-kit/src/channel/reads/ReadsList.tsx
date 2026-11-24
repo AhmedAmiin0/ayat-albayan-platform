@@ -6,13 +6,11 @@ import { AppText } from '../../ui/primitives/AppText';
 
 interface ReadsRow {
   key: string;
-  /** «فاطمة · المعلم/ة». */
   line: string;
   /** When she read it; '' for those who have not. */
   time: string;
 }
 
-/** One section of «من قرأ الرسالة»: its title, then a row per person (or «لا أحد بعد»). */
 export function ReadsList({ title, rows }: { title: string; rows: readonly ReadsRow[] }) {
   const { color } = useTheme();
   const small = useSmallText('ink3');

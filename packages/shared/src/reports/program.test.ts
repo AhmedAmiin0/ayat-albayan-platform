@@ -3,7 +3,7 @@ import { draftBody, submitProblem, valuesOf, type FormValues } from './form-valu
 import { reportDraftSchema, reportSubmitSchema } from './schema/index.js';
 import type { ReportView } from './views.js';
 
-// «البرنامج *» on «تقرير الحلقة» (docs/13-forms-spec.md form 2).
+// The program field on the lesson report (docs/13-forms-spec.md form 2).
 const GRADES = { recitation: 'good', memorization: 'good', revision: 'good', tajweed: 'good', engagement: 'good', commitment: 'good' } as const;
 const FULL: FormValues = {
   attendance: 'on_time',

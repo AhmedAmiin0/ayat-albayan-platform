@@ -32,14 +32,7 @@ import type { StudentProfile } from '@ab/shared';
 
 const back = () => backWithin('/students');
 
-/**
- * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is
- * recorded from «الدورة والباقة» («سجّل دفعة»), «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
- * «موعد تجريبي جديد» and the trial dates' history in TrialDateSection (R-STU-05); «عرض سجل الحضور» opens the
- * month-by-month attendance table (owner 2026-10-28, the same screen as sales' «تفاصيل الطالب»). The compact
- * h2 title (owner 2026-10-28: «the student screen still has a big header»): the file starts higher. Under the
- * status «الدورة والباقة» (owner 2026-11-17): the course, its next lessons and every course action.
- */
+/** Quick view (R-MOB-02): editing, adding and merging stay on the web. */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const path = `/students/${id}`;

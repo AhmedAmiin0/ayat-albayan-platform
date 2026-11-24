@@ -40,10 +40,7 @@ function OneButton({ lessonId, student, named, approved }: OneProps) {
   );
 }
 
-/**
- * «ابعت طلب الرأي» for a completed lesson (admin): one button per student, because each guardian
- * gets their own link. Disabled until WhatsApp approved the template; «اتبعت» once requested.
- */
+/** One button per student since each guardian gets their own link; disabled until approved. */
 export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
   const students = askable(lesson);
   const eligible = students.length > 0;

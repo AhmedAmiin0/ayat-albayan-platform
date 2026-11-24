@@ -26,7 +26,7 @@ export const myEarningsQuery = queryOptions({
   queryFn: () => apiFetch<MyEarnings>('/sales/me/earnings'),
 });
 
-/** «محفظتي»: both of its queries sit under this key, so one invalidation refreshes the page. */
+/** Both wallet queries sit under this key, so one invalidation refreshes the page. */
 export const MY_MONEY_KEY = ['sales', 'me'] as const;
 export const MY_COMMISSIONS_PAGE_SIZE = 20;
 

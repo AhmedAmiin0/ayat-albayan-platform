@@ -1,20 +1,6 @@
 import type { LessonStatus } from '@ab/catalog';
 
-// Lesson lifecycle (R-SCH-03, R-SCH-07, R-SCH-08; issue B2). Why each move exists:
-// - scheduled («يحتاج تأكيد», docs/01) is where booking and rule generation put every lesson.
-// - scheduled → confirmed: R-SCH-03, confirmation by the guardian's reply or a teacher/admin action.
-// - scheduled → completed | late | excused | no_show: issue B2, 29 of 30 calendar events were
-//   never confirmed even after the lesson happened, so an outcome must not require a confirm first.
-// - scheduled | confirmed → cancelled_by_teacher | cancelled_by_admin | rescheduled | excused:
-//   R-SCH-07, a single occurrence (or the rest of its rule) can be cancelled or moved. A student's
-//   cancellation is `excused` («اعتذر مسبقًا»); there is no cancelled_by_student status.
-// - Every other status is terminal: the outcome drives package balance (R-SUB-03) and teacher
-//   payouts (R-TCH-04), and a moved lesson lives on as a new row (lessons.rescheduled_from_id).
-// - A wrong outcome is fixed through the report, not here: submit_report (migration 131)
-//   re-derives the lesson's outcome from its students' attendance, audited (R-REP-03).
-// - «عدّل الوقت» (R-SCH-11, edit_lesson_time) is not an event: it edits the time of the SAME row.
-//   The one status change it makes (a confirmed lesson moved to a new start goes back to
-//   scheduled, the guardian confirmed the old time) is a direct update in that RPC, not an edge.
+// Lifecycle (R-SCH-03/07/08, issue B2): an outcome needs no prior confirm; others are terminal.
 
 const OUTCOMES = ['completed', 'late', 'excused', 'no_show'] as const;
 /** Cancelled by the teacher or the admin (a student's cancellation is `excused`). */

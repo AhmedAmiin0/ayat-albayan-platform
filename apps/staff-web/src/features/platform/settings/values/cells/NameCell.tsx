@@ -19,9 +19,8 @@ export interface NameCellProps {
   settingKey?: SettingKey;
   modified?: boolean;
   isPublic?: boolean;
-  /** «الكل» results: the group name under the label. */
   groupName?: string | undefined;
-  /** The muted line is a button opening «تعديل الوصف» (read it in full, edit it with the right). */
+  /** The muted line is a button opening the description dialog (edit needs the right). */
   onDescribe?: (() => void) | undefined;
 }
 
@@ -50,7 +49,7 @@ function HintLine({ hint, onDescribe }: { hint: string; onDescribe?: (() => void
   );
 }
 
-/** «الاسم»: the label, its tags, and one muted, truncated line (the description; full text in the title and its dialog). */
+/** The label, its tags and one truncated description line (full text in the title and dialog). */
 export function NameCell({ label, labelId, hint, settingKey, modified, isPublic, groupName, onDescribe }: NameCellProps) {
   const confirm = settingKey ? VALUE_CONFIRM[settingKey] : undefined;
   const shown = isPublic ?? (settingKey ? settingDef(settingKey).public === true : false);

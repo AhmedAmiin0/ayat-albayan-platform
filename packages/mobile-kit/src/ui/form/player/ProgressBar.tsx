@@ -17,10 +17,7 @@ interface SeekBarProps {
 const STEP: Readonly<Record<string, number>> = { increment: 1, decrement: -1 };
 const ACTIONS = [{ name: 'increment' }, { name: 'decrement' }] as const;
 
-/**
- * «موضع التشغيل»: the heard share as a bar you tap or drag to seek (a screen reader swipes it
- * ±10 s), the clock under it «12:40 … 45:20» (an unknown length shows «—»).
- */
+/** A screen reader swipes it 10 s; an unknown length shows a dash. */
 export function ProgressBar({ position, duration, seek }: SeekBarProps) {
   const { color } = useTheme();
   const [width, setWidth] = useState(0);

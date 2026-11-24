@@ -11,7 +11,7 @@ interface Props {
 
 const a = t.studentChannel.actions;
 
-/** «حذف الرسالة للجميع؟»: it goes for every participant and cannot be undone. */
+/** It goes for every participant and cannot be undone. */
 export function ChannelDeleteDialog({ moderator, pending, onConfirm, onClose }: Props) {
   return (
     <ConfirmSwitchDialog

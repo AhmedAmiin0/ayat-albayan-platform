@@ -11,11 +11,11 @@ export interface ScheduleChipsOptions {
   /** Every teacher of the overview, for the picked teachers' chip. */
   teachers: readonly OverviewTeacher[];
   onSearch: (patch: Partial<ScheduleSearch>) => void;
-  /** A status's words (useLessonStatusText: «مجدولة» when no confirmation is required). */
+  /** Scheduled wording when no confirmation is required. */
   statusLabel?: (status: LessonStatus) => string;
 }
 
-/** «مسح الكل»: every schedule filter (the week / day navigation is not a filter). */
+/** Week and day navigation is not a filter. */
 export const CLEAR_SCHEDULE_FILTERS: Partial<ScheduleSearch> = {
   teachers: undefined,
   program: undefined,
@@ -24,7 +24,6 @@ export const CLEAR_SCHEDULE_FILTERS: Partial<ScheduleSearch> = {
   closed: undefined,
 };
 
-/** The set teachers, program, gender and status, and «إظهار الملغاة…», as removable chips. */
 export function scheduleChips(options: ScheduleChipsOptions): FilterChip[] {
   const { search, teachers, onSearch } = options;
   const statusLabel = options.statusLabel ?? ((s: LessonStatus) => t.enums.lessonStatus[s]);

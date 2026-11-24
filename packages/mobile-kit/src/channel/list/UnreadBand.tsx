@@ -2,7 +2,7 @@ import { t } from '../../lib/i18n/i18n';
 import { type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 
-/** «3 غير مقروءة» edge to edge across the thread over the first message unread when it opened. */
+/** Over the first message unread when the thread opened. */
 export function UnreadBand({ count }: { count: number }) {
   const { color } = useTheme();
   return (

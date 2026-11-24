@@ -7,7 +7,6 @@ export const STUDENT_ID = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
 export const SUB_ID = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
 export const PREV_SUB_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
 
-/** ريم (Riyadh) with an unpaid 8-a-month package of 45 minutes: two days a week. */
 export function courseView(patch: Partial<SalesCourseView> = {}): SalesCourseView {
   return {
     student: {
@@ -26,7 +25,6 @@ export function courseView(patch: Partial<SalesCourseView> = {}): SalesCourseVie
   };
 }
 
-/** ريم's course with مريم (Cairo): Sunday 17:00 and Thursday 18:00 (Riyadh), 8 lessons from 13 Sep, two days a week. */
 export function bookedCourse(patch: Partial<BookedCourse> = {}): BookedCourse {
   return {
     subscriptionId: PREV_SUB_ID,

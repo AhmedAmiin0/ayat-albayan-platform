@@ -16,13 +16,12 @@ const C = t.users.create;
 
 export interface CreateUserDialogProps {
   onClose: () => void;
-  /** Start with a role and a record already picked (student profile «إنشاء حساب»). */
   prefill?: Prefill;
 }
 
 type Issued = { credential: IssuedCredential | null };
 
-/** «مستخدم جديد» in the side panel; on success the one-time password / link replaces the form. */
+/** On success the one-time password or link replaces the form. */
 export function CreateUserDialog({ onClose, prefill }: CreateUserDialogProps) {
   const queryClient = useQueryClient();
   const formId = useId();

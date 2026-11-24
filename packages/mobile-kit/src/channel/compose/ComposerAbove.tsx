@@ -19,7 +19,6 @@ interface ComposerAboveProps {
   onCancelReply: () => void;
 }
 
-/** Over the typing bar: why a send failed, «جارٍ رفع الملف…», «جارٍ التسجيل…», the quote. */
 export function ComposerAbove(p: ComposerAboveProps) {
   const { color } = useTheme();
   const small = { fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) };

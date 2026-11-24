@@ -21,7 +21,7 @@ interface AudioPlayerProps {
   createSource: CreateAudioSource;
 }
 
-/** «من حيث توقفت: 12:40 · ابدأ من البداية», while the saved stop is ahead of the start. */
+/** Shown while the saved stop is ahead of the start. */
 function ResumeLine({ player, from }: { player: AudioPlayerControls; from: number }) {
   const { color } = useTheme();
   if (from <= 0 || player.state.position <= 0) return null;

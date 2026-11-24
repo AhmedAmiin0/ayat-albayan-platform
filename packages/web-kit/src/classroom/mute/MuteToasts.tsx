@@ -3,7 +3,7 @@ import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room
 import type { MuteController } from './use-mute';
 import { useMutedNotice } from './use-muted-notice';
 
-/** The staff's «كُتم ميكروفون {name}» and the muted person's «كتمك المعلم» (one at a time). */
+/** One toast at a time. */
 export function MuteToasts({ room, mute }: { room: RoomController; mute: MuteController }) {
   const muted = useMutedNotice(room);
   if (muted.notice) return <Toast message={muted.notice} onDismiss={muted.dismiss} className="bottom-24" />;

@@ -11,7 +11,6 @@ export interface PdfZoom {
 
 export interface PdfPageProps {
   page: number;
-  /** The PDF's page count, for «صفحة 3 من 12». */
   pages: number;
   /** The page image's URL once the caller has it. */
   url?: string;

@@ -1,4 +1,5 @@
-import { localizedName, type SalesScheduleLesson } from '@ab/shared';
+import type { SalesScheduleLesson } from '@ab/shared';
+import { localizedName } from '@ab/core';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';

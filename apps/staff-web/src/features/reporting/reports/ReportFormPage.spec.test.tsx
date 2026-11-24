@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { formResponse, reportView } from './report-fixture';
 import { ReportFormPage } from './ReportFormPage';
 
-// تقرير الحلقة: the form's section headings, field titles and their order (the Google Form's).
+// The form's section headings, field titles and their order, matching the original form.
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));

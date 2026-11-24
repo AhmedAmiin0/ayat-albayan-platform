@@ -17,7 +17,6 @@ export interface ValuesToolbarProps {
   counts: Record<ValuesFilter, number>;
 }
 
-/** The search over every group, and the filters «المعدَّلة فقط» / «العامة فقط»; both list «الكل». */
 export function ValuesToolbar({ q, filter, onQ, onFilter, phone, counts }: ValuesToolbarProps) {
   const id = useId();
   const chip = (f: ValuesFilter, label: string) => (

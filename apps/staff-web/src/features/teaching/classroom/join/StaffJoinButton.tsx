@@ -19,12 +19,7 @@ interface Props {
   variant?: 'primary' | 'secondary';
 }
 
-/**
- * «ادخل الحلقة» for staff who may open the room (the admin, the lesson's teacher): while the room is
- * not open yet, «افتح الحلقة الآن» under the «تُفتح الساعة …» hint opens it for everyone at once
- * (POST /lessons/:id/room/open); the join button turns on without waiting for a refetch. Both fill the
- * width they are given (docs/07 «الأزرار»: never shrink-wrapped).
- */
+/** Opening early opens the room for everyone (POST /lessons/:id/room/open); join enables now. */
 export function StaffJoinButton({ lesson, size = 'md', variant }: Props) {
   const now = useNow();
   const win = useJoinWindow();

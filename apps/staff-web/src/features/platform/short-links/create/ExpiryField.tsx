@@ -28,10 +28,7 @@ const OPTIONS = [
 const chipOf = (expiry: LinkExpiry): string =>
   expiry.kind === 'days' ? String(expiry.days) : OTHER;
 
-/**
- * «مدة الصلاحية» (board LinkXWebCreate): 1, 3, 7 or 30 days or another date, then when it ends
- * («ينتهي الثلاثاء 24 نوفمبر، 14:06») and when it is deleted with its visits.
- */
+/** 1, 3, 7 or 30 days or another date, then when it ends and when it is deleted with its visits. */
 export function ExpiryField({ expiry, onChange, error }: ExpiryFieldProps) {
   const dates = useLinkDates();
   const dateId = useId();

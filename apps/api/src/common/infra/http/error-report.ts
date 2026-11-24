@@ -1,4 +1,4 @@
-import { createErrorReporter, type ErrorReporter, type ReportTransport } from '@ab/shared';
+import { createErrorReporter, type ErrorReporter, type ReportTransport } from '@ab/core';
 import { Logger } from '@nestjs/common';
 import { z } from 'zod';
 

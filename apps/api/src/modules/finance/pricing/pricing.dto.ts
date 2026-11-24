@@ -7,7 +7,7 @@ import {
   PRICING_DURATIONS,
   STUDENTS_MAX,
   STUDENTS_MIN,
-} from '@ab/shared';
+} from '@ab/money';
 import { z } from 'zod';
 
 // Query strings for /pricing (docs/08 §3). Everything arrives as text, hence the coercion.

@@ -1,4 +1,6 @@
-import { RIYADH_TZ, type LessonStatus, type ThreadLesson, type ThreadView } from '@ab/shared';
+import type { ThreadLesson, ThreadView } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { RIYADH_TZ } from '@ab/time';
 import type { Db } from '@/common/db/db.module';
 
 /** How many upcoming lessons the template composer offers. */

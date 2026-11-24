@@ -1,4 +1,5 @@
-import type { QuoteResponse, StudentRef } from '@ab/shared';
+import type { StudentRef } from '@ab/shared';
+import type { QuoteResponse } from '@ab/money';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
 import {
@@ -17,7 +18,6 @@ import { DatePickerField } from '@/core/ui/form/date-picker';
 import { QuotePreview } from './QuotePreview';
 import { subscribeErrorText } from './subscribe-form';
 
-/** «الطالب»: the child and the siblings to subscribe instead; nothing for an only child. */
 export function StudentPills(p: {
   family: readonly StudentRef[];
   value: string;
@@ -37,7 +37,6 @@ export function StudentPills(p: {
   );
 }
 
-/** «السعر»: the API's quote, its error with a retry, or loading. */
 export function PriceSection({ quote }: { quote: UseQueryResult<QuoteResponse> }) {
   return (
     <Section title={t.subscriptions.price}>
@@ -55,7 +54,7 @@ export function PriceSection({ quote }: { quote: UseQueryResult<QuoteResponse> }
   );
 }
 
-/** «بداية الباقة» on Expo's date dialog (rule 6, never typed), bounded by the days it offered. */
+/** Picked on the date dialog, never typed (rule 6). */
 interface StartDayFieldProps {
   days: readonly string[];
   value: string;

@@ -4,7 +4,6 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { signOut } from '@ab/web-kit/auth/sign-in';
 
-/** «تسجيل الخروج» under the setup form: a teacher who does not want to finish now leaves. */
 export function LeaveSetup() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();

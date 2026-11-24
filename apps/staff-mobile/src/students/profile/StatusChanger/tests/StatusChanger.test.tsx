@@ -1,4 +1,4 @@
-import { STUDENT_STATUSES } from '@ab/shared';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -18,12 +18,12 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 
-// The status pills come first; the file has other radio groups below («رقم الواتساب لـ», docs/30).
+// The status pills come first; the file has other radio groups below (docs/30).
 const statusPills = () => screen.getAllByRole('radio').slice(0, STUDENT_STATUSES.length);
 const selected = () => statusPills().find((r) => r.props.accessibilityState?.checked);
 const pill = (name: string) => screen.getByRole('radio', { name });
 
-/** The file and an empty trial history; no package (404): «متوقف» is set at once. */
+/** With no package (404), stopped is set at once. */
 const serve = async (p: string) => {
   if (p.includes('/trial-dates')) return historyOf([]);
   if (p === '/students/s1') return profile;
@@ -31,7 +31,7 @@ const serve = async (p: string) => {
 };
 
 beforeEach(() => {
-  // The file's «مواعيد الحلقة التجريبية» reads its own endpoint (an empty history here).
+  // The trial history reads its own endpoint.
   mockApiFetch.mockReset().mockImplementation(serve);
   mockApiSend.mockReset();
 });

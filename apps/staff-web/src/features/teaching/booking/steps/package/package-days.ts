@@ -3,11 +3,7 @@ import { counted } from '@ab/core';
 import { packagePerWeek } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «الباقة 8 حلقات في الشهر = مرتين في الأسبوع» when the picked weekdays don't add up to the
- * package (R-SCH-02, R-SUB-01): booking one day a week for 8 a month books half of what is charged.
- * Only a note: which extra weekday the family wants is the admin's choice. null when they match.
- */
+/** A note (R-SCH-02, R-SUB-01) when weekdays don't add up to the package; null when they match. */
 export function packageDaysNote(pkg: PackageSize, days: number): string | null {
   const perWeek = packagePerWeek(pkg);
   if (perWeek === null || perWeek === days) return null;

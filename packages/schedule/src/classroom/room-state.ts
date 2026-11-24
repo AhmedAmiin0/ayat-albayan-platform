@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-// The live state of a lesson's room («الحلقة جارية الآن»): who is inside now and
-// since when, from LiveKit's participant_joined / participant_left webhooks, and the «إنهاء الحلقة
-// للجميع» stamp (lessons.room_ended_at). Rides on the staff lesson rows and the portal lessons.
+// Live room state from LiveKit join/leave webhooks plus lessons.room_ended_at.
 
 /** How a person in the room is named to the others: never a login role the family must not see. */
 export const ROOM_PRESENCE_ROLES = ['teacher', 'student', 'guardian', 'staff', 'guest'] as const;
@@ -30,6 +28,6 @@ export type LessonRoomState = z.infer<typeof lessonRoomStateSchema>;
 export const lessonEndResultSchema = z.object({ endedAt: z.string() });
 export type LessonEndResult = z.infer<typeof lessonEndResultSchema>;
 
-/** A lesson whose room was ended for everyone: no join, no «ادخل مرة أخرى». */
+/** A lesson whose room was ended for everyone: no join or rejoin. */
 export const roomEnded = (lesson: { room_ended_at?: string | null | undefined }): boolean =>
   typeof lesson.room_ended_at === 'string';

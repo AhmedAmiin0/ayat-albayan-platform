@@ -1,11 +1,7 @@
 import { type, useTheme } from '../../theme';
 import { AppText } from '../primitives/AppText';
 
-/**
- * Small ink-3 line: a hint («المواعيد بتوقيت الرياض») or an empty note («لا توجد إجازات»).
- * `alert`: a line that replaces what was just done («أُزيل الرقم الثاني»), announced by the
- * screen reader.
- */
+/** `alert` lines replace what was just done and are announced by the screen reader. */
 export function Note({ children, alert = false }: { children: string; alert?: boolean }) {
   const { color } = useTheme();
   return (

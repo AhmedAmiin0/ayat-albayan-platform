@@ -2,9 +2,7 @@ import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/edit-time';
 import { bookPayload, movePayload, seedTrial, type TrialSeed } from '../../support/sales/trial-date';
 
-// pick_trial_date (migration 20261025000660, owner 2026-10-25 «موعد تجريبي جديد»): the move or the
-// booking, the student → trial and the audit rows in one transaction (via = trial_new_date since
-// 20261025000661). Rolled back.
+// pick_trial_date (migration 660): move or book, status and audit in one transaction.
 
 type Pick = ReturnType<typeof movePayload> | ReturnType<typeof bookPayload>;
 const pick = (tx: Tx, p: Pick) => tx<{ r: { lesson_id: string; moved_from_id: string | null } }[]>`select public.pick_trial_date(${tx.json(p)}) as r`;

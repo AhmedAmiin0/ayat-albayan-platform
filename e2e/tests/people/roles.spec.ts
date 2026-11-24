@@ -5,9 +5,7 @@ import { openNav } from '../../support/core/nav';
 import { withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// «الأدوار والصلاحيات»: the admin creates «محاسب» with payments.read only and
-// gives it to a staff user. That user lands in the admin app on «المدفوعات», sees no «الطلاب» in
-// the nav, and the API refuses the students list (403) — the role's grants, not its base role.
+// A custom role's grants, not its base role, decide nav and API access (403).
 
 const P = ar.permissions.page;
 const RUN = Date.now() % 100_000;
@@ -58,7 +56,7 @@ test.describe('roles and permissions («الأدوار والصلاحيات»)',
 
     // No dashboard.read: the admin home sends the user to their first page.
     await expect(page).toHaveURL(/\/admin\/payments/);
-    // The nav: the sidebar, or the «القائمة» sheet below 900px (the same filtered list).
+    // The sidebar, or the menu sheet below 900px, show the same filtered list.
     const nav = (await openNav(page)).getByRole('navigation', { name: ar.nav.label });
     await expect(nav.getByRole('link', { name: ar.payments.title })).toBeVisible();
     await expect(nav.getByRole('link', { name: ar.nav.students })).toHaveCount(0);

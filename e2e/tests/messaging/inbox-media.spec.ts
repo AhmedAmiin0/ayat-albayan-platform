@@ -3,9 +3,7 @@ import { bubble, inboundRows, openThread, pushesForPhone, stubInboundMedia } fro
 import { freshDigits, seedLead } from '../../support/core/messages';
 import { stubReset } from '../../support/core/wa-stub';
 
-// Inbound media (R-MSG-05, R-MSG-06): a photo and a file from a lead show as bubbles named by
-// kind with their caption (the file itself is fetched from Meta only when «عرض …» is clicked, W6), and
-// the admin gets a new_message push. «Meta» is tools/wa-stub; nothing is sent back.
+// Inbound media (R-MSG-05, R-MSG-06) is fetched from Meta only on click (W6).
 
 /** A 1×1 PNG and a tiny PDF, made in memory (no binary fixtures in the repo). */
 const PNG = Buffer.from(
@@ -45,15 +43,12 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
 
     const admin = await asRole('admin');
     const log = await openThread(admin, name);
-    // W6: the photo is a «عرض …» button; nothing is fetched until it is clicked. The PDF card asks
-    // its page 1 by itself; CI has no PDF sandbox (503 pdf_unavailable, not
-    // retried), so the card falls back to today's «عرض ملف».
+    // W6: nothing is fetched until clicked; CI has no PDF sandbox, so the card falls back.
     const viewPhoto = bubble(log, photo).getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.image) });
     const viewFile = bubble(log, file).getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.document) });
     await expect(viewPhoto).toBeVisible();
     await expect(viewFile).toBeVisible();
-    // Theirs, not ours: no delivery ticks and no retry actions on an inbound bubble. Before a click the
-    // ticks are the only role=img a bubble can hold, and «عرض …» its only button.
+    // Inbound bubbles have no delivery ticks, which are the only role=img a bubble can hold.
     await expect(bubble(log, photo).getByRole('img')).toHaveCount(0);
     await expect(bubble(log, file).getByRole('button')).toHaveCount(1);
 
@@ -74,7 +69,7 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     await expect.poll(() => pushesForPhone({ phone, kind: 'new_message' })).toBeGreaterThan(0);
   });
 
-  // docs/21 D1: a voice note plays in the chat. «تشغيل رسالة صوتية» fetches it (W6), then an <audio> with the signed URL.
+  // docs/21 D1: a voice note is fetched on click (W6), then plays from a signed URL.
   test('a voice note from a lead → «تشغيل رسالة صوتية», then an audio player with a src', async ({ asRole }) => {
     test.setTimeout(90_000);
     const digits = freshDigits();

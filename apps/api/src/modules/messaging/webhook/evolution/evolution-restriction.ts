@@ -3,7 +3,7 @@ import { PushService } from '@/common/push/push.service';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { EVOLUTION_SEND_ERROR, NumbersEvolution } from '@/modules/messaging/numbers';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
-import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
+import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
 
 // Too many WhatsApp ERRORs on an Evolution number (review fix 3, docs/19 «Evolution driver»): an
 // ERROR status on one of OUR sends (key.id = the row's wa_message_id) fails only that row; the

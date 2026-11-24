@@ -1,4 +1,4 @@
-import type { AdminTaskKind } from '@ab/shared';
+import type { AdminTaskKind } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';

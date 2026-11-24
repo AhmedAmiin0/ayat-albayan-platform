@@ -1,5 +1,7 @@
 // The money harness plus the start-date edit's repo as a mock (test-only, excluded from the build).
-import { daysBefore, riyadhToday, type Permission } from '@ab/shared';
+import { daysBefore } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
+import { riyadhToday } from '@ab/time';
 import type { TestingModuleBuilder } from '@nestjs/testing';
 import { vi } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';

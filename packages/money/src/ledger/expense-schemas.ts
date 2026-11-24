@@ -18,7 +18,7 @@ const fields = {
   method: z.enum(PAYMENT_METHODS).nullish(),
   /** From POST /expenses/receipt-upload-url (receipts/expenses/…). */
   receiptPath: z.string().min(1).nullish(),
-  /** «تكرار شهري»: next month's draft is pre-created by the job. */
+  /** Monthly repeat: next month's draft is pre-created by the job. */
   recurring: z.boolean().optional(),
   note: optionalText,
 };

@@ -7,11 +7,7 @@ import { shape, useTheme } from '../../theme';
 /** One breath of the placeholder, ms each way. */
 const BREATH_MS = 700;
 
-/**
- * A card-sized placeholder while a list loads (docs/50 §6): the raised card with a circle and two
- * bars that breathe gently; still under «Reduce Motion». Hidden from screen readers (the screen
- * says «جارٍ التحميل» once).
- */
+/** docs/50 §6: still under Reduce Motion; hidden from screen readers, which hear loading once. */
 export function SkeletonCard() {
   const { color } = useTheme();
   const still = useA11yPref('reduceMotion');

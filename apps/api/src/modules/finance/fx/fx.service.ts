@@ -1,4 +1,4 @@
-import { SAR_PER_USD_PEG, type FxRate } from '@ab/shared';
+import { SAR_PER_USD_PEG, type FxRate } from '@ab/money';
 import { Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { FX_FETCHER, type FxFetcher, type FxSnapshot } from './fx.fetcher';
 import { FxRepo, type FxRow } from './fx.repo';

@@ -1,13 +1,12 @@
 import {
-  localizedName,
   packageSummaryText,
-  RIYADH_TZ,
   rosterAttendanceText,
   rosterScheduleText,
-  type ClockCycle,
   type PackageWords,
   type SalesStudentView,
 } from '@ab/shared';
+import { localizedName } from '@ab/core';
+import { RIYADH_TZ, type ClockCycle } from '@ab/time';
 import { hhmm } from '@/core/lib/clock';
 import { t, locale, ltr } from '@ab/mobile-kit';
 import { fill, packageLabel, statusLabel, viewerDate } from '@/sales/sales/lib/sales-text';

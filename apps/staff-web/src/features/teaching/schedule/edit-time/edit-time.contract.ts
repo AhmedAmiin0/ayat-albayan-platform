@@ -1,7 +1,6 @@
 import type { LessonTimeEditView, LessonView, TimeEditMode } from '@ab/schedule';
 
-// R-SCH-11 «عدّل الوقت»: the wire contract lives in @ab/shared (schemas/lesson-time.ts,
-// lessons/time-edit.ts, LessonView); the form imports it from there.
+// R-SCH-11: the wire contract lives in @ab/shared; the form imports it from there.
 
 /** What the admin may do to this lesson's time; null for a teacher or a closed lesson. */
 export const timeEditMode = (lesson: LessonView): TimeEditMode | null => lesson.time_edit_mode ?? null;

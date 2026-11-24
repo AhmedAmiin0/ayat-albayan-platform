@@ -13,7 +13,7 @@ import { newPasswordProblem } from './reset-checks';
 const F = t.familyAuth;
 
 interface Props {
-  /** forgot = «نسيت كلمة المرور؟» (any identifier); firstTime = «أول دخول؟» (a child's student code). */
+  /** forgot takes any identifier; firstTime takes a child's student code. */
   mode: 'forgot' | 'firstTime';
   /** `saved`: the password was saved (the caller says so and shows the sign-in form). */
   onDone: (saved: boolean) => void;

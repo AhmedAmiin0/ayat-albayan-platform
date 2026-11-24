@@ -5,9 +5,7 @@ import { uniqueName } from '../../support/finance/money-extra';
 import { openNav } from '../../support/core/nav';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 
-// «المالية»: a part payment shows «مدفوع جزئيًا» and is found by that filter, the rest is owed on
-// «مستحق على الطلاب»; a refund («استرداد») counts against what was paid; the money pages sit under
-// «المالية» and the yearly summary renders.
+// A part payment is owed in receivables, and a refund counts against what was paid.
 
 const kinds = (subscriptionId: string) =>
   withSql((sql) => sql<{ kind: string; amount: number }[]>`
@@ -27,7 +25,7 @@ test.describe('finance: part payments, receivables, refunds', () => {
     await pay.getByLabel(new RegExp(ar.payments.amount)).fill('100');
     await pay.getByRole('button', { name: ar.payments.record, exact: true }).click();
     await expect(page.getByRole('status')).toHaveText(ar.payments.saved);
-    // The status cell says what was paid and what is left («مدفوعة جزئيًا: 100 من …»).
+    // The status cell says what was paid and what is left.
     const partPaid = ar.packagePayment.partPaid.replace('{paid}', '100').split(' من ')[0] ?? '';
     await expect(row.getByText(partPaid)).toBeVisible();
     const filters = await openFilters(page);
@@ -40,7 +38,7 @@ test.describe('finance: part payments, receivables, refunds', () => {
     const owed = page.getByRole('row').filter({ hasText: student });
     await expect(owed).toContainText(String(seed.price - 100));
 
-    // «استرداد» 40 of the 100: stored as kind refund, counted against what was paid.
+    // A refund of 40 of the 100 is stored as kind refund, counted against what was paid.
     await page.goto('/admin/subscriptions');
     await page.getByRole('row').filter({ hasText: student }).getByRole('button', { name: ar.finance.refund }).click();
     const refund = page.getByRole('dialog', { name: ar.finance.refundTitle });
@@ -59,7 +57,7 @@ test.describe('finance: part payments, receivables, refunds', () => {
     const money = (await openNav(page)).getByRole('list', { name: ar.finance.nav, exact: true });
     for (const name of [ar.payments.title, ar.nav.subscriptions, ar.nav.payouts, ar.nav.expenses, ar.finance.invoicesTitle, ar.finance.receivablesTitle, ar.finance.summaryTitle])
       await expect(money.getByRole('link', { name, exact: true })).toBeVisible();
-    await page.keyboard.press('Escape'); // the «القائمة» sheet on phones; nothing on desktop
+    await page.keyboard.press('Escape'); // The menu sheet on phones; nothing on desktop.
     await expect(page.getByRole('heading', { name: ar.finance.summaryTitle })).toBeVisible();
     await expect(page.getByText(ar.dashboard.grossMargin).first()).toBeVisible();
     await expect(page.getByRole('list', { name: ar.finance.moneyKpis }).getByRole('link', { name: new RegExp(ar.finance.receivablesKpi) })).toBeVisible();

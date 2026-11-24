@@ -1,5 +1,4 @@
-// «حذف من المنصة» (owner 2026-10-30): WhatsApp's API cannot edit or delete a sent message, so staff
-// may only hide one from the platform. It stays on the customer's phone; nothing goes to WhatsApp.
+// WhatsApp cannot delete a sent message, so staff only hide it from the platform.
 
 /** A hidden WhatsApp message: who hid it and when (the bubble's muted placeholder). */
 export interface MessageHidden {
@@ -8,10 +7,7 @@ export interface MessageHidden {
   at: string;
 }
 
-/**
- * On a MessageView: «حذف من المنصة» — staff see a placeholder (no text or file). Absent in an old
- * cache.
- */
+/** Hidden from the platform: staff see a placeholder; absent in an old cache. */
 export interface HiddenMark {
   hidden?: MessageHidden | null;
 }
@@ -26,6 +22,6 @@ export interface HideActor {
 export const canHideMessages = (who: HideActor | null | undefined): boolean =>
   !!who && who.role !== 'teacher' && (who.permissions ?? []).includes('inbox.send');
 
-/** «إظهار»: the admin only. */
+/** Unhiding is the admin's only. */
 export const canUnhideMessages = (who: HideActor | null | undefined): boolean =>
   who?.role === 'admin';

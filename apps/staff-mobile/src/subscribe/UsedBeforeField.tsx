@@ -1,4 +1,5 @@
-import { riyadhToday, usedBeforeMax } from '@ab/shared';
+import { usedBeforeMax } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { useHolds, t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { View } from 'react-native';
@@ -19,10 +20,7 @@ export const quoteLessons = (quote: { lessons: number } | undefined): number => 
 /** What is sent: the picked count, never past usedBeforeMax of the package now picked (it may have shrunk). */
 export const usedBefore = (value: number, lessonsTotal: number): number => Math.min(value, usedBeforeMax(lessonsTotal));
 
-/**
- * «حلقات مستخدمة من الباقة» (owner 2026-10-28): lessons a package that already started had before the
- * platform. − / + only (rule 6, never typed), 0 … usedBeforeMax (every lesson but one); counted as used, the course books the rest.
- */
+/** Lessons used before the platform, steppers only (rule 6), 0 to every lesson but one. */
 export function UsedBeforeField({ value, lessonsTotal, onChange }: UsedBeforeFieldProps) {
   const { color } = useTheme();
   const m = t.salesMoney;
@@ -51,11 +49,7 @@ interface PastStartInput {
   today: string;
 }
 
-/**
- * The admin's subscribe (owner 2026-10-28): no «بدأ الاشتراك سابقًا» switch there, so the stepper is
- * asked only for a first day before the academy's (Riyadh) today, the day POST /subscriptions checks,
- * and before the form's own default day, and only with subscriptions.set_start_date (else 403).
- */
+/** Asked only for a first day before Riyadh today and with subscriptions.set_start_date. */
 export function usePastUsedBefore({ startsOn, quote, now, today }: PastStartInput) {
   const [picked, setPicked] = useState(0);
   const canSet = useHolds('subscriptions.set_start_date');

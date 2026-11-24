@@ -1,4 +1,4 @@
-import { receivablesOf, receivableTotals, type ReceivablesView } from '@ab/shared';
+import { receivablesOf, receivableTotals, type ReceivablesView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { convert, round2 } from '@/modules/reporting/dashboard/work/conversion';
 import { riyadhDate } from '@/modules/reporting/dashboard/range';

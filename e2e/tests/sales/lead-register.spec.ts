@@ -5,9 +5,7 @@ import { withSql } from '../../support/core/schedule';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 
-// «تسجيل الطالب» from the thread's short aside (R-LEAD-06, R-STU-02): the essentials pre-filled
-// from the lead, the thread's number as the guardian's; the lead is converted and linked to the
-// new guardian, and the aside becomes the family's panel. Messaging stays off (nothing sent).
+// Registering from the thread (R-LEAD-06, R-STU-02) converts the lead and links the guardian.
 
 const exact = { exact: true } as const;
 

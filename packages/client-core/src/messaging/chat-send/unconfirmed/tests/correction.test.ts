@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { replayedOther } from '../unconfirmed.js';
 
-// «تعديل» = a correction (owner 2026-11-07): the API sends «تصحيح: » + the text, linked by
-// corrects_id, says `replayed` when the request id gave back its FIRST row, and `same_request`
-// when that first row IS this request (the server decides: review of #694, round 4).
+// A correction links by corrects_id; the server decides `replayed` and `same_request`.
 const O1 = 'o1';
 const fix = (text: string, id = O1) => ({ text, correction: { id } });
 

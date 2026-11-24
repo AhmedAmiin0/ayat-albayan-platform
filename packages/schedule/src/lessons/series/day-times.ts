@@ -11,7 +11,7 @@ import {
 // row per distinct time (days sharing a time stay one rule, like the imported HEART timetables),
 // so a booking is grouped by time. Pure (the date-fns facade).
 
-/** A weekday whose time differs from the booking's startTimeLocal (0 = الأحد … 6 = السبت). */
+/** A weekday whose time differs from the booking's startTimeLocal (0 = Sunday ... 6 = Saturday). */
 export interface DayTime {
   weekday: number;
   /** Wall clock "HH:MM" in the booking's tz. */
@@ -43,7 +43,7 @@ export interface WallParts {
   date: string;
   /** "HH:MM", 24h. */
   time: string;
-  /** 0 = الأحد … 6 = السبت. */
+  /** 0 = Sunday ... 6 = Saturday. */
   weekday: number;
 }
 

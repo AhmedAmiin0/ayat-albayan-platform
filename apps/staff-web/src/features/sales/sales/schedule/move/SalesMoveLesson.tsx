@@ -6,10 +6,7 @@ import { SalesRescheduleForm } from './SalesRescheduleForm';
 
 type Step = 'button' | 'form' | 'done';
 
-/**
- * «تغيير الموعد» in the /sales drawer (owner 2026-11-02, lessons.reschedule): the button, then the
- * form in place, then «تم تغيير الموعد». The drawer shows it only when canSalesChangeLesson allows.
- */
+/** Needs lessons.reschedule; the drawer shows it only when canSalesChangeLesson allows. */
 export function SalesMoveLesson({ lesson }: { lesson: SalesScheduleLesson }) {
   const [step, setStep] = useState<Step>('button');
   const views: Record<Step, () => ReactNode> = {

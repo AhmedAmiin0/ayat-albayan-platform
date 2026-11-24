@@ -11,7 +11,6 @@ import type { Rate } from './voice-math';
 export interface VoiceRowProps {
   /** Seeds the drawn waveform: the same note looks the same on every render. */
   id: string;
-  /** The media kind's word, said in «تشغيل {kind}». */
   kind: string;
   playing: boolean;
   busy: boolean;

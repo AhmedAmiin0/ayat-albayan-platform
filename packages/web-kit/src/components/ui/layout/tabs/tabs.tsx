@@ -6,7 +6,7 @@ import { keepInStrip, TabBadge } from '@ab/web-kit/components/ui/layout/tab-part
 export interface TabOption<V extends string> extends SegmentOption<V> {
   /** Vertical fihris only: a hairline before this tab to group it (docs/07 §9). */
   separatorBefore?: boolean;
-  /** The tab's spoken name when the word and count say less (an unread badge, «المحادثة، 3 …»). */
+  /** The tab's spoken name when the word and count say less. */
   ariaLabel?: string;
   /** An unread count drawn as a green badge (none = no badge); `count` stays a neutral total. */
   badge?: number;

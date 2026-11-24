@@ -5,10 +5,7 @@ import { nextWeekSaturday, resetAbrar, setAvailability, withSql } from '../../su
 import { setMessaging, stubReset } from '../../support/core/wa-stub';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// «رأيك يهمّنا»: admin presses «أرسل طلب الرأي» on a completed lesson → the
-// WhatsApp stub gets the template with the signed token as the button value → the guardian opens
-// /feedback/<token> (no login) and answers → the answer shows in the admin list and in the
-// teacher's own list. Also a wrong token and an expired one. «Meta» is tools/wa-stub.
+// Feedback journey: a signed token as the button value, plus wrong and expired tokens.
 
 const NOTE = 'ما شاء الله، المعلمة صبورة جدًا';
 /** Desktop and mobile run this spec on one DB: a fresh name per run keeps the rows apart. */

@@ -5,9 +5,7 @@ import {
 import { resetAbrar, seedFamily, seedLesson } from '../../support/core/schedule';
 import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// Quick replies from a guardian (R-MSG-04, R-SCH-03, docs/12 §3.5): «نعم» / the confirm button
-// confirms the lesson through the state machine (confirmed_by null = WhatsApp, audited); a button
-// for someone else's lesson is only stored; a reschedule request stays an admin job (own push).
+// Guardian quick replies (R-MSG-04, R-SCH-03, docs/12 §3.5): confirmed_by null means WhatsApp.
 
 const POLL = { timeout: 30_000, intervals: [500, 1_000, 2_000] };
 const DAY = 24 * 60 * 60_000;

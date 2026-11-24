@@ -4,7 +4,6 @@ import { type, useTheme } from '../../theme';
 /** quiet: a hint; bad: what is wrong with the field while it is typed (read out politely). */
 type HintTone = 'quiet' | 'bad';
 
-/** A quiet line under a sign-in field («اسم المستخدم هو كود الطالب…»), or what is wrong with it. */
 export function AuthHint({ text, tone = 'quiet' }: { text: string; tone?: HintTone }) {
   const { color } = useTheme();
   const ink: Record<HintTone, string> = { quiet: color.ink2, bad: color.bad };

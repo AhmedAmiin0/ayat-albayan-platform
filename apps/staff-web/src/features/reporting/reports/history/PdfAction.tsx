@@ -7,10 +7,7 @@ import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { pdfUrl, REPORTS_KEY, reportErrorText, retryPdf } from '@/features/reporting/reports/api';
 
-/**
- * The report's PDF (R6, R12): «تحميل PDF» once ready, else its state; a failed one is the admin's
- * to retry («جهّز الـPDF تاني»).
- */
+/** The report's PDF (R6, R12): download once ready; a failed one is the admin's to retry. */
 export function PdfAction({ report, role }: { report: Pick<ReportSummaryView, 'id' | 'pdf_status'>; role: UserRole }) {
   const queryClient = useQueryClient();
   const open = useMutation({ mutationFn: () => pdfUrl(report.id) });

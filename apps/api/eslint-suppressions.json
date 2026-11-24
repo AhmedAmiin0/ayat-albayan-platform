@@ -4671,11 +4671,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/webhook/external/external-catchup.job.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/webhook/external/external-catchup.job.ts": {
     "complexity": {
       "count": 1
@@ -4714,25 +4709,12 @@
       "count": 2
     }
   },
-  "src/modules/messaging/webhook/external/external.fakes.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/webhook/external/external.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
     },
     "max-len": {
       "count": 4
-    }
-  },
-  "src/modules/messaging/webhook/external/external.store.read.test.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/webhook/external/external.store.ts": {
@@ -4775,9 +4757,22 @@
       "count": 2
     }
   },
-  "src/modules/messaging/webhook/inbound/inbound-refill.test.ts": {
+  "src/modules/messaging/webhook/external/tests/catchup.job.test.ts": {
     "max-len": {
       "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/external/tests/external.fakes.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/external/tests/store.read.test.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/modules/messaging/webhook/inbound/inbound-refill.ts": {
@@ -4791,9 +4786,40 @@
       "count": 1
     }
   },
-  "src/modules/messaging/webhook/inbound/webhook.inbound.order.test.ts": {
+  "src/modules/messaging/webhook/inbound/tests/inbound.test.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 5
+    }
+  },
+  "src/modules/messaging/webhook/inbound/tests/order.test.ts": {
     "max-len": {
       "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/tests/quick-reply.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/tests/rating.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/tests/reaction.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/inbound/tests/refill.test.ts": {
+    "max-len": {
+      "count": 3
     }
   },
   "src/modules/messaging/webhook/inbound/webhook.inbound.service.ts": {
@@ -4824,14 +4850,6 @@
       "count": 4
     }
   },
-  "src/modules/messaging/webhook/inbound/webhook.inbound.test.ts": {
-    "@typescript-eslint/dot-notation": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 5
-    }
-  },
   "src/modules/messaging/webhook/inbound/webhook.inbound.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -4843,11 +4861,6 @@
       "count": 5
     }
   },
-  "src/modules/messaging/webhook/inbound/webhook.quick-reply.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/webhook/inbound/webhook.quick-reply.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -4857,14 +4870,6 @@
     },
     "max-len": {
       "count": 5
-    }
-  },
-  "src/modules/messaging/webhook/inbound/webhook.reaction.test.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/webhook/inbound/webhook.reaction.ts": {
@@ -4881,6 +4886,14 @@
       "count": 3
     }
   },
+  "src/modules/messaging/webhook/lines/tests/reload.test.ts": {
+    "max-len": {
+      "count": 2
+    },
+    "no-nested-ternary": {
+      "count": 1
+    }
+  },
   "src/modules/messaging/webhook/lines/webhook.lines.ts": {
     "complexity": {
       "count": 1
@@ -4889,22 +4902,29 @@
       "count": 4
     }
   },
-  "src/modules/messaging/webhook/lines/webhook.reload.test.ts": {
-    "max-len": {
-      "count": 2
-    },
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/webhook/lines/webhook.reload.ts": {
     "max-len": {
       "count": 4
     }
   },
-  "src/modules/messaging/webhook/meta.fakes.ts": {
-    "@typescript-eslint/dot-notation": {
+  "src/modules/messaging/webhook/parse/tests/echoes.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/webhook/parse/tests/parse.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/webhook/parse/tests/signature.test.ts": {
+    "max-len": {
       "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/parse/tests/wacrm-signature.test.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/modules/messaging/webhook/parse/webhook.calls.ts": {
@@ -4913,11 +4933,6 @@
     },
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/parse/webhook.echoes.test.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/webhook/parse/webhook.echoes.ts": {
@@ -4931,11 +4946,6 @@
   "src/modules/messaging/webhook/parse/webhook.kapso-signature.ts": {
     "complexity": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/parse/webhook.parse.test.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/webhook/parse/webhook.parse.ts": {
@@ -4952,16 +4962,6 @@
       "count": 5
     }
   },
-  "src/modules/messaging/webhook/parse/webhook.signature.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/webhook/parse/webhook.wacrm-signature.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/webhook/parse/webhook.wacrm-signature.ts": {
     "@typescript-eslint/dot-notation": {
       "count": 2
@@ -4973,15 +4973,7 @@
       "count": 3
     }
   },
-  "src/modules/messaging/webhook/providers/webhook.kapso.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/providers/webhook.kapso.http.test.ts": {
+  "src/modules/messaging/webhook/providers/tests/wacrm.http.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -4994,17 +4986,50 @@
       "count": 6
     }
   },
-  "src/modules/messaging/webhook/providers/webhook.wacrm.http.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/webhook/providers/webhook.wacrm.ts": {
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 4
+    }
+  },
+  "src/modules/messaging/webhook/shared/tests/numbers.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/webhook/shared/tests/repo.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/shared/tests/settings.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/shared/webhook.config.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/webhook/shared/webhook.repo.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/shared/webhook.settings.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/shared/webhook.types.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/modules/messaging/webhook/status/webhook.status.service.ts": {
@@ -5020,12 +5045,42 @@
       "count": 1
     }
   },
-  "src/modules/messaging/webhook/test-app.ts": {
+  "src/modules/messaging/webhook/tests/http.kapso.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/webhook/tests/http.lines.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/tests/http.numbers.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/tests/meta.fakes.ts": {
+    "@typescript-eslint/dot-notation": {
+      "count": 3
+    }
+  },
+  "src/modules/messaging/webhook/tests/service.reload.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/webhook/tests/service.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/messaging/webhook/tests/test-app.ts": {
     "max-len": {
       "count": 3
     }
   },
-  "src/modules/messaging/webhook/webhook.config.ts": {
+  "src/modules/messaging/webhook/tests/webhook.fakes.ts": {
     "max-len": {
       "count": 2
     }
@@ -5043,60 +5098,12 @@
       "count": 2
     }
   },
-  "src/modules/messaging/webhook/webhook.fakes.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/messaging/webhook/webhook.http.lines.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/webhook.http.numbers.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/webhook.module.ts": {
-    "ab/module-boundaries": {
-      "count": 4
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/webhook.numbers.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/messaging/webhook/webhook.rating.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/webhook.repo.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/webhook/webhook.repo.ts": {
-    "ab/module-boundaries": {
+  "src/modules/messaging/webhook/webhook.kapso.controller.ts": {
+    "ab/zod-inputs": {
       "count": 1
     },
     "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/webhook/webhook.service.reload.test.ts": {
-    "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/webhook.service.test.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/webhook/webhook.service.ts": {
@@ -5108,21 +5115,6 @@
     },
     "max-len": {
       "count": 11
-    }
-  },
-  "src/modules/messaging/webhook/webhook.settings.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/webhook.settings.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/webhook.types.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/client-factory.ts": {

@@ -11,10 +11,7 @@ import {
   WINDOW_CLOSED,
 } from '../../chat/thread-reopen/index.js';
 
-// «أرسل عبر واتساب» (owner 2026-11-06, «I don't want this 24h limitation»): a staff text that the
-// 24 h window stopped is sent by staff from the WhatsApp Business app (coexistence: app sends have
-// no window). The tap only opens a short pending window (app_send_until): the platform never sends
-// the row meanwhile, and the app's echo, when it comes, confirms the send (docs/19).
+// A text the 24 h window stopped is sent from the Business app; the echo confirms (docs/19).
 
 /** Failed codes that mean «stopped by the 24 h window», never another failure. */
 const WINDOW_FAILURES: ReadonlySet<string> = new Set([
@@ -61,7 +58,7 @@ const noWamid = (m: SendRow): boolean => m.replyable !== true;
  */
 const onChatLine = (m: SendRow): boolean => (m.line ?? 'chat') === 'chat';
 
-/** «أرسل عبر واتساب» shows: our text (no template, no file, v1) stopped by the 24 h window. */
+/** Shown for our plain text (no template or file) stopped by the 24 h window. */
 export function canSendViaWhatsApp(m: SendRow): boolean {
   const ours = m.direction === 'outbound' && plainText(m) && noWamid(m);
   return ours && onChatLine(m) && stoppedByWindow(m);
@@ -70,7 +67,7 @@ export function canSendViaWhatsApp(m: SendRow): boolean {
 /** Runs of spaces, tabs and line breaks become one space; the ends are trimmed (echo matching). */
 export const foldText = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
-/** The tap's window passed with no echo: the bubble asks «هل أرسلتها من واتساب؟». */
+/** The tap's window passed with no echo, so staff are asked if they sent it. */
 export const appSendUnconfirmed = (m: Pick<MessageView, 'status' | 'error_code'>): boolean =>
   m.status === 'failed' && m.error_code === APP_SEND_UNCONFIRMED;
 
@@ -89,7 +86,7 @@ export const APP_SEND_MS = 10 * 60_000;
  */
 export const APP_SEND_GRACE_MS = 15 * 60_000;
 
-/** «جارٍ الإرسال من واتساب…»: the tap's window is still open at `now`. */
+/** The tap's window is still open at `now`. */
 export function appSendPending(m: Pick<MessageView, 'app_send_until'>, now: Date): boolean {
   return Date.parse(m.app_send_until ?? '') > now.getTime();
 }

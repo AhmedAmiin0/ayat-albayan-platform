@@ -38,8 +38,7 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
       'واتساب مباشر',
       'صديق أو معرفة',
     ]);
-    // DEVIATION: the teachers come from the database (not the Google Form's fixed 11 Latin names);
-    // the empty first option is the form's «(خيار فاضي)».
+    // DEVIATION: teachers come from the database, not the form's fixed list.
     const teachers = await optionTexts(dialog.getByLabel('المعلم/المعلمة'));
     expect(teachers[0]).toBe(ar.students.noTeacher);
     expect(teachers).toContain('أبرار');
@@ -52,7 +51,7 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     const family = await seedFamily('أم سارة', ['سارة']);
     const admin: Page = await asRole('admin');
     await admin.goto(`/admin/book?studentId=${family.studentIds[0] ?? ''}`);
-    // «نوع الحجز» (beyond the Google Form): trial / subscription / makeup, and the trial left the package list.
+    // Booking kind goes beyond the form: trial, subscription or makeup; trial left packages.
     const kinds = admin.getByRole('group', { name: ar.booking.kind.label });
     await expect(kinds).toBeVisible();
     expect(await kinds.getByRole('radio').evaluateAll((els) => els.map((e) => e.closest('label')?.textContent?.trim()))).toEqual([
@@ -62,12 +61,11 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     ]);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // المعلم/المعلمة
     await expect(admin.getByRole('group', { name: 'المعلم/المعلمة' })).toBeVisible();
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // المدة (30/45/60/90 دقيقة) and الباقة المطلوبة * (the form's options; DEVIATION: 20/28 stay in the DB only, the trial moved to «نوع الحجز»).
+    // DEVIATION: 20/28 stay in the DB only, and the trial moved to the booking kind.
     expect(await optionTexts(admin.getByLabel('المدة'))).toEqual(['30 دقيقة', '45 دقيقة', '60 دقيقة', '90 دقيقة']);
     const pkg = admin.getByRole('group', { name: 'الباقة المطلوبة' });
     await expect(pkg.locator('legend')).toHaveText(/الباقة المطلوبة\s*\*/);
@@ -80,16 +78,14 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     ]);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // الساعة * / تاريخ أول حلقة / الأيام المتاحة *. DEVIATION (owner 2026-11-07): per lesson day a
-    // date input and a time input (native pickers, never free text), read against her free slots.
+    // DEVIATION: per lesson day a native date and time input, never free text.
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
     await expect(step.getByRole('heading', { name: ar.lessonTimes.title })).toBeVisible();
     const first = step.getByRole('group', { name: ar.lessonTimes.row.replace('{n}', '1') });
     await expect(first.getByLabel(ar.lessonTimes.date, { exact: true })).toHaveAttribute('type', 'date');
     await expect(first.getByLabel(ar.lessonTimes.time, { exact: true })).toHaveAttribute('type', 'time');
     await fillLessonRow(step, 1, { weekday: 3, time: '16:00' });
-    // DEVIATION (owner 2026-10-18): each day has its own time; the days set are listed under
-    // «الأيام المتاحة» *.
+    // DEVIATION: each day has its own time.
     const days = step.getByRole('region', { name: /الأيام المتاحة/ });
     await expect(days.getByRole('heading')).toContainText('*');
     await expect(days.getByRole('listitem')).toHaveCount(1);

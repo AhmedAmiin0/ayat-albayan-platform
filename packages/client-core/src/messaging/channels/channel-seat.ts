@@ -14,10 +14,7 @@ export type SeatState = 'mine' | 'take' | 'takeover' | 'held';
 /** Why a take failed: another assistant got there first (409), or anything else. */
 type SeatError = 'taken' | 'failed';
 
-/**
- * A row reads its seat once a minute at most: «كل الطلاب» and «طلابي» read one seat per row.
- * ponytail: one GET per row; put the seat in the list rows if a page feels slow.
- */
+/** A row reads its seat once a minute at most; lists read one seat per row. */
 const SEAT_STALE_MS = 60_000;
 
 type SeatKey = readonly ['channel', 'seat', string];
@@ -78,10 +75,7 @@ const SEAT_ERROR_TEXT: Readonly<Record<SeatError, (words: SeatErrorWords) => str
 export const seatErrorText = (e: unknown, words: SeatErrorWords): string =>
   SEAT_ERROR_TEXT[seatError(e)](words);
 
-/**
- * The seat's read and its two writes, bound to an app's API client. `seatMutations(id, done)`:
- * useMutation options for «تولَّ المحادثة» and «مغادرة المحادثة»; `done` re-reads the seat.
- */
+/** `done` re-reads the seat after a take-over or leave. */
 export function channelSeats(client: ApiClient): ChannelSeats {
   const take = (studentId: string): Promise<ChannelSeat> =>
     client.apiSend('PUT', seatPath(studentId)).then(parse);

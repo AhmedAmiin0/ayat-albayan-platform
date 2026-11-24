@@ -35,7 +35,7 @@ describe('ChannelThread rows (FamChatWebThread)', () => {
     expect(await screen.findByText('الثالثة')).toBeTruthy();
     expect(screen.getByText(t.inbox.dayToday)).toBeTruthy();
     expect(screen.getByText(c.unread.replace('{n}', '2'))).toBeTruthy();
-    // «أمسية» opens yesterday, «الأولى» today, «الثانية» follows the band: three name lines.
+    // Yesterday's first, today's first and the one after the band each carry a name line.
     expect(screen.getAllByText('أ. فاطمة')).toHaveLength(3);
   });
 

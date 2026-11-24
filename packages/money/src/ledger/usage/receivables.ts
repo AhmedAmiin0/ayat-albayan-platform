@@ -1,6 +1,5 @@
 import { calendarDaysBetween } from '@ab/time';
-// Receivables («مستحق على الطلاب»): who still owes on a package, how much and
-// for how long. Pure; the API reads the packages and their net paid, the dashboard converts.
+// Receivables: who still owes on a package, how much and for how long; pure.
 
 import { toCents } from '@ab/core';
 import { dueOf } from './owed.js';
@@ -17,7 +16,7 @@ export interface ReceivableIn {
   /** The package's first day (YYYY-MM-DD): what is owed is due from then. */
   starts_on: string;
   status: string;
-  /** 'stopped' for «إلغاء الاشتراك»: it owes stop_owed_amount, not its price (owedFor). */
+  /** A stopped package owes stop_owed_amount, not its price (owedFor). */
   cancel_kind?: string | null;
   /** The stop's stored decision (migration 20261106000100); null for a package not stopped. */
   stop_owed_amount?: number | null;

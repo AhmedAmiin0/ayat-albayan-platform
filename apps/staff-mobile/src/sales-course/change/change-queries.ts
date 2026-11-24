@@ -23,11 +23,7 @@ export function useCourseChangeCheck(body: CourseChangeRequest | null, path = CH
   });
 }
 
-/**
- * «احفظ الأيام الجديدة»: POST …/course/change, re-sent with the flow's one clientRequestId on every
- * retry (rule 8). The schedule and the course refetch, as after «احجز». `path`: the student
- * profile's …/course-teacher|course-times/change (owner 2026-10-30), not the assistant's own.
- */
+/** Rule 8: one clientRequestId per flow, re-sent on every retry. */
 export function useChangeCourse(path = CHANGE) {
   const client = useQueryClient();
   return useMutation({

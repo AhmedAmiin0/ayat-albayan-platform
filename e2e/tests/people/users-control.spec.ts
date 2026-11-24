@@ -5,9 +5,7 @@ import {
   dropLogins, expectSignedIn, fillIdentity, openCreateDialog, openUser, detailDialog, profileOf, signInAs, stamp, takeIssued,
 } from '../../support/people/users-control';
 
-// «المستخدمون»: the admin creates logins from the UI: a staff user whose
-// generated password is shown once and works, and a student login linked to an existing student.
-// Then edits it. Dates are rendered by the page but never asserted here.
+// The generated password is shown once; dates are rendered but never asserted.
 
 const F = ar.users.form;
 const RUN = stamp();

@@ -18,14 +18,9 @@ export interface BookingPageProps {
 
 type Choice = Pick<BookingDraft, 'kind' | 'pkg'>;
 
-/**
- * /admin/book (R-SCH-06): from a student profile «احجز حلقات» (student + siblings), from a lead
- * row «حجز حلقة تجريبية» or the chat's «اشترك» (new student + guardian, R-LEAD-06), from a missed
- * lesson «حجز تعويضي» (R-SCH-10), or bare (search a student first).
- */
+/** Entry points per R-SCH-06, R-LEAD-06 and R-SCH-10, or bare (search a student first). */
 export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
-  // The title follows what the admin has picked: «تجريبية» only while it is the free trial, the
-  // makeup's own while it is a makeup. A new URL (another lead or package) forgets the pick.
+  // The title follows the admin's pick; a new URL (another lead or package) forgets the pick.
   const [picked, setPicked] = useState<{ from: BookSearch['pkg']; choice: Choice } | null>(null);
   const choice = picked && picked.from === search.pkg ? picked.choice : null;
   const pkg = choice?.pkg ?? search.pkg ?? 'trial';

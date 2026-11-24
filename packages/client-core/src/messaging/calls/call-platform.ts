@@ -16,5 +16,5 @@ export interface CallPlatform {
 /** Opens the microphone and builds the peer for the academy's ICE servers (MicError when it cannot). */
 export type PeerMaker = (iceServers: readonly CallIceServer[]) => Promise<CallPeer>;
 
-/** A notice's own action: «افتح الإعدادات» when the microphone was refused for good. */
+/** Opens settings when the microphone was refused for good. */
 export type NoticeAction = 'settings';

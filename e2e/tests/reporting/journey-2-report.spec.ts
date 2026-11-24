@@ -3,9 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { balanceOf, reportOf, seedPackageStudent } from '../../support/finance/money';
 import { queuedFor, resetAbrar } from '../../support/core/schedule';
 
-// Journey 2 (docs/03 §5, docs/11 §10): teacher logs in → sees today's lesson → marks attendance →
-// opens «تقرير الحلقة» → submits → PDF generated → guardian message queued → package balance
-// decremented. R-REP-01/02/03/04, R-SUB-01. Needs the PDF job (ReportPdfModule) merged.
+// Journey 2 (docs/03 §5, docs/11 §10; R-REP-01/02/03/04, R-SUB-01); needs the PDF job.
 
 const PDF_WAIT = { timeout: 120_000, intervals: [1_000, 2_000, 5_000] };
 
@@ -16,8 +14,7 @@ test.describe('journey 2 — lesson report (R-REP-01..04)', () => {
     const seed = await seedPackageStudent({ teacherId, paid: true, guardian: 'أم سهيلة', student: 'سهيلة' });
     expect(await balanceOf(seed.subscriptionId)).toMatchObject({ remaining: 3 });
 
-    // Teacher: today's lesson (already started) is the running hero (docs/48) → «التفاصيل» →
-    // the drawer's «الحلقة تمت» → its «اكتب التقرير».
+    // Today's started lesson is the running hero (docs/48).
     const page = await asRole('teacher');
     await page.goto('/teacher');
     const hero = page.getByRole('region', { name: ar.today.running });

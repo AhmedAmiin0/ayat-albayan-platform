@@ -15,19 +15,13 @@ import { TrialDateNotes } from './TrialDateNotes';
 
 export interface TrialReviewStepProps {
   draft: BookingDraft;
-  /** «اختر موعدًا آخر» after a conflict or a past start: back to the slot step. */
+  /** Back to the slot step after a conflict or a past start. */
   onChangeSlot: () => void;
   onPatch: (patch: Partial<BookingDraft>) => void;
   onDone: (result: TrialDateResult) => void;
 }
 
-/**
- * The review of «موعد تجريبي جديد» (R-SCH-06, R-ASST-01): the booking's summary (time in Riyadh and
- * the family's zone, teacher), what happens to the upcoming trial, the warning from the 3rd date, then
- * POST {base}/trial-date with the draft's request id. «رابط الحلقة» is optional for the admin and
- * the assistant alike (owner 2026-11-02; empty = the teacher's link; hers must be https). A 409
- * lists the clashes; the admin may book over them with a reason (as booking), the assistant never.
- */
+/** Link optional (empty uses the teacher's, hers https); only the admin may override a 409. */
 export function TrialReviewStep({ draft, onChangeSlot, onPatch, onDone }: TrialReviewStepProps) {
   const queryClient = useQueryClient();
   const mode = useBookingMode();

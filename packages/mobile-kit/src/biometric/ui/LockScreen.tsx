@@ -13,7 +13,7 @@ import type { BioKind } from '../core/device';
 import { useDissolve } from './use-dissolve';
 
 interface LockScreenProps {
-  /** null: the biometrics are gone; only «الدخول بطريقة أخرى» is left (fails closed). */
+  /** Null means biometrics are gone; only the other sign-in way is left (fails closed). */
   kind: BioKind | null;
   /** The last prompt was cancelled or failed: say so, wait for a tap. */
   failed: boolean;

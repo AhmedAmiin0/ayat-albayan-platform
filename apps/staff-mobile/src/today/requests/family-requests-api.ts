@@ -1,14 +1,9 @@
-import {
-  answeredLessonSchema,
-  familyRequestsSchema,
-  type AnsweredLesson,
-  type ProposalApprove,
-} from '@ab/shared';
+import { answeredLessonSchema, familyRequestsSchema, type AnsweredLesson } from '@ab/shared';
+import type { ProposalApprove } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
-// «طلبات الأسر» (owner 2026-11-17): the families' «اطلب موعدًا آخر» this admin or assistant
-// answers, and the answer (POST /family-requests/:id/approve | reject). Parsed (rule 12).
+// Family reschedule requests and their answers; parsed (rule 12).
 
 const PATH = '/family-requests';
 

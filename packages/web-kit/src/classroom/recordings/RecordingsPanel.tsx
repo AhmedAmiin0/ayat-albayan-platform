@@ -35,7 +35,7 @@ function Row({ rec }: { rec: LessonRecordingView }) {
   );
 }
 
-/** «التسجيل غير مفعّل على الخادم»: the server says it cannot record (nothing would show up here). */
+/** The server cannot record, so nothing would show up here. */
 export function RecordingOffAlert() {
   return (
     <FormAlert>
@@ -68,7 +68,7 @@ function Body({ source }: { source: RecordingSource }) {
   );
 }
 
-/** «التسجيلات» of a lesson (admin, teacher) or a meeting (admin, creator): status, start time, download. */
+/** A lesson's recordings (admin, teacher) or a meeting's (admin, creator). */
 export function RecordingsPanel({ source, onClose }: { source: RecordingSource; onClose: () => void }) {
   return (
     <Drawer title={R.title} onClose={onClose}>

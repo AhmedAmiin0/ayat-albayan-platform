@@ -1,8 +1,6 @@
 import type { ChildTab } from '../viewer.js';
 
-// A child page's tab names (docs/50 §6), shared by the family app and the family web pages: a
-// login that reads its own page (a student, an adult: readsOwn) sees «حضرتها», a guardian their
-// child's «حضرها». Each app passes its `t`.
+// A login reading its own page gets the self wording; a guardian gets the child wording.
 
 export interface ChildTabWords {
   portal: {
@@ -32,17 +30,13 @@ const WORD: Readonly<Record<ChildTab, Word>> = {
 export const childTabWord = (tab: ChildTab, own: boolean, words: ChildTabWords): string =>
   WORD[tab](words, own);
 
-/** A child tab's pill: its word, and on «المحادثة» the unread badge with its spoken name. */
 export interface ChildTabPill {
   value: ChildTab;
   label: string;
   badge?: { count: number; label: string };
 }
 
-/**
- * The pill of a child tab (the family app's FilterPills, the family web's Tabs): «المحادثة»
- * carries its unread count, named «المحادثة، n غير مقروءة» for a screen reader.
- */
+/** The chat tab carries its unread count, also in its screen reader name. */
 export function childTabPill(
   tab: ChildTab,
   at: { own: boolean; unread: number },

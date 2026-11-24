@@ -7,7 +7,6 @@ import { useChannelEdits } from './use-channel-edits';
 
 type Mode = 'view' | 'edit' | 'delete';
 
-/** A pick in «خيارات الرسالة». */
 export type MenuPick = keyof MenuOffers;
 
 interface Input {
@@ -17,10 +16,7 @@ interface Input {
   at: { now: Date; mode: 'write' | 'read' };
 }
 
-/**
- * One bubble's «ردّ», «تعديل», «حذف للجميع» and «معلومات الرسالة»: what it offers now (the shared
- * menuOffers; reply and info only inside a thread), the open step, and the two calls.
- */
+/** Reply and info only inside a thread. */
 export function useBubbleEditing({ refs, message, at }: Input) {
   const [mode, setMode] = useState<Mode>('view');
   const calls = useChannelEdits({ ...refs, messageId: message.id });

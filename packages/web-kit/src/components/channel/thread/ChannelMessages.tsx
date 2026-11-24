@@ -20,11 +20,7 @@ interface Props {
   older: { has: boolean; loading: boolean; load: () => void };
 }
 
-/**
- * «الرسائل الأقدم», then the messages oldest first under their day chips with the unread band, or
- * the empty state. Each message keeps its key from its client_id once the API stores it, so my
- * pending row turns into the stored message without fading in twice.
- */
+/** Keys come from client_id so my pending row becomes the stored message without fading twice. */
 export function ChannelMessages({ pages, refs, tz, now, mode, older }: Props) {
   const rows = useThreadRows({ pages, tz, now, more: older.has });
   return (

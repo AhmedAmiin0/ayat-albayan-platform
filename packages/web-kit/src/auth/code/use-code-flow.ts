@@ -7,11 +7,7 @@ import { useCountdown } from './use-countdown';
 /** A step's outcome: undefined = done, a string = the error to show. */
 type Task = () => Promise<string | undefined>;
 
-/**
- * «أرسل الرمز» then the code (docs/30 §7), shared by the family phone sign-in and the password
- * reset. `target` is what the code was sent for (null = still asking for it). The API answers 202
- * whether or not the account exists, so the code step always follows a request that did not fail.
- */
+/** docs/30 §7: the API answers 202 whether or not the account exists. */
 export function useCodeFlow(send: (target: string) => Promise<void>) {
   const [target, setTarget] = useState<string | null>(null);
   const [digits, setDigits] = useState(emptyCode);

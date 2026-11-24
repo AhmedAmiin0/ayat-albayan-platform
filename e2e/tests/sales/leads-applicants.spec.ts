@@ -5,11 +5,7 @@ import { freshDigits, seedLead } from '../../support/core/messages';
 import { riyadhToday, summaryOf, uniqueName } from '../../support/finance/money-extra';
 import { withSql } from '../../support/core/schedule';
 
-// Leads list (R-LEAD-01/02/04, issue C4): status tabs and source filter narrow the list (the header
-// count is GET /leads `total`), search finds a lead by name and by phone, and «نقل لطلبات التوظيف»
-// moves a lead to /admin/job-applicants, out of the funnel. Four leads share one name token, so
-// every count below is exact in the shared DB. (The list has no status-change control: that lives
-// in the chat thread.)
+// Leads list (R-LEAD-01/02/04, C4): four leads share a name token so counts are exact.
 
 const count = (n: number) => ar.leads.count.replace('{n}', String(n));
 const byStatus = (n: number, status: keyof typeof ar.enums.leadStatus) =>
@@ -67,7 +63,7 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     await tab('new').click();
     await expect(page.getByText(byStatus(2, 'new'), { exact: true })).toBeVisible();
     await page.getByRole('tab', { name: ar.leads.filterAll, exact: true }).click();
-    // The source filter lives in the shared «تصفية» panel: the button counts it.
+    // The source filter lives in the shared panel, and the button counts it.
     let panel = await openFilters(page);
     await panel.getByLabel(ar.leads.source, { exact: true }).selectOption('facebook_ad');
     await showResults(panel);
@@ -84,7 +80,7 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     await expect(row).toContainText(ar.enums.leadStatus.new);
     await expect(row).toContainText(ar.enums.leadSource.facebook_ad);
 
-    // Reclassify: the strip asks first, «أبقِها هنا» keeps it, the move removes it from the list.
+    // Reclassify asks first; keeping it leaves the row, moving removes it from the list.
     await row.getByRole('button', { name: ar.leads.reclassifyRow.replace('{name}', name) }).click();
     const confirm = page.getByRole('group', { name: ar.leads.reclassifyAsApplicant });
     await expect(confirm).toContainText(ar.leads.reclassifyConfirm);

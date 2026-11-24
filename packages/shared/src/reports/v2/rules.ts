@@ -18,10 +18,7 @@ export interface SurahRange {
   to: number;
 }
 
-/**
- * The teacher's memorization history for one student (GET report-form, v2 entries): per track the
- * last range saved in a submitted v2 report, and the surahs used lately (the picker's «الأخيرة»).
- */
+/** Per track, the last range in a submitted v2 report and the surahs used lately. */
 export interface MemoryView {
   last: Record<SegmentKind, SurahRange | null>;
   recent_surahs: number[];
@@ -63,7 +60,7 @@ export function contentGrades(program: Program, content: ReportContent): (Grade 
   return ISLAMIC_RATES.map((k) => content.islamic?.rates[k] ?? null);
 }
 
-/** «مقترح من التقييمات»: the rounded mean of the graded rows (ممتاز = 0 … يحتاج إلى مراجعة = 4). */
+/** The rounded mean of the graded rows (excellent = 0 ... needs revision = 4). */
 export function suggestOverall(program: Program, content: ReportContent): Grade | null {
   const idx = contentGrades(program, content)
     .filter((g): g is Grade => g !== null)

@@ -1,4 +1,4 @@
-import type { ErrorReporter, ReportTags } from '@ab/shared';
+import type { ErrorReporter, ReportTags } from '@ab/core';
 import { jobBeats } from '@/common/jobs/beats';
 import type { LoggedFailures } from '@/common/jobs/beats/beat-book.types';
 import { currentRequestId } from './request-id';

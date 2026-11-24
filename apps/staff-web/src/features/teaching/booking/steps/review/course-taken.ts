@@ -4,9 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { draftPicks } from '@/features/teaching/booking/draft/draft.days';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 
-// «تابِع بنفس الأيام» (owner 2026-10-18): a renewal opens with the previous course's days picked. When
-// the series check finds a clash on one of those days, the slot step names the day so she picks
-// another time for it (tapping another slot that day replaces it, togglePick). Pure.
+// A renewal's prefilled day that clashes is named so she picks another time for it; pure.
 
 type TakenInput = Pick<BookingDraft, 'course' | 'tz' | 'startsAt' | 'extra' | 'kind'>;
 
@@ -21,6 +19,6 @@ export function takenDays(d: TakenInput, conflicts: readonly Conflict[]): number
   return WEEK_ORDER.filter((w) => hit.has(w));
 }
 
-/** «موعد الأحد لم يعد متاحًا، اختر وقتًا آخر لهذا اليوم», one line per day. */
+/** One line per day. */
 export const takenTexts = (d: TakenInput, conflicts: readonly Conflict[]): string[] =>
   takenDays(d, conflicts).map((w) => t.booking.courseChange.continueTaken.replace('{day}', weekday[String(w)] ?? ''));

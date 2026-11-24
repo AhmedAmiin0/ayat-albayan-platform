@@ -24,7 +24,7 @@
   },
   "src/messaging/calls/call-entry.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/messaging/calls/call-machine/call-machine.ts": {
@@ -39,7 +39,7 @@
   },
   "src/messaging/calls/call-types.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/channel/channel-open.test.ts": {
@@ -55,7 +55,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/messaging/chat/chat-lists.ts": {
@@ -63,7 +63,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/messaging/chat/crm-names.test.ts": {
@@ -76,7 +76,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 11
+      "count": 9
     }
   },
   "src/messaging/chat/line-views.ts": {
@@ -105,9 +105,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/messaging/chat/thread-reopen/thread-reopen.ts": {
@@ -116,21 +113,13 @@
     }
   },
   "src/messaging/chat/ticks.ts": {
-    "max-len": {
-      "count": 5
-    },
     "no-nested-ternary": {
       "count": 1
     }
   },
   "src/messaging/chat/views.ts": {
     "max-len": {
-      "count": 11
-    }
-  },
-  "src/messaging/lesson/booking-confirmation.ts": {
-    "max-len": {
-      "count": 3
+      "count": 10
     }
   },
   "src/messaging/lesson/meeting-link.ts": {
@@ -150,7 +139,7 @@
   },
   "src/messaging/lesson/timing.day-before.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/lesson/timing/timing.ts": {
@@ -191,7 +180,7 @@
   },
   "src/messaging/numbers/views.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/messaging/replies/quick-reply.ts": {
@@ -218,7 +207,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/messaging/replies/reply-lesson.ts": {
@@ -226,7 +215,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 9
     },
     "no-nested-ternary": {
       "count": 1
@@ -247,7 +236,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/messaging/replies/reply-number.ts": {
@@ -257,7 +246,7 @@
   },
   "src/messaging/replies/reply-slots.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/replies/saved-replies.test.ts": {
@@ -275,7 +264,7 @@
   },
   "src/messaging/replies/saved-reply-text/saved-reply-text.ts": {
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/messaging/schemas.files.test.ts": {
@@ -288,7 +277,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 7
     }
   },
   "src/messaging/templates/i18n.test.ts": {
@@ -308,7 +297,7 @@
   },
   "src/messaging/templates/params.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/messaging/templates/prefill.ts": {
@@ -359,7 +348,7 @@
   },
   "src/messaging/wa.ts": {
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/notifications/catalogue/catalogue-settings.test.ts": {
@@ -405,7 +394,7 @@
   },
   "src/notifications/catalogue/catalogue-views.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/notifications/catalogue/catalogue.test.ts": {
@@ -457,7 +446,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/notifications/views.test.ts": {
@@ -480,11 +469,6 @@
       "count": 1
     }
   },
-  "src/people/account/avatar-initials.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/people/presence/presence-rules.ts": {
     "complexity": {
       "count": 1
@@ -492,12 +476,12 @@
   },
   "src/people/schemas/contact-is-self.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/people/schemas/people.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/people/schemas/student-filters.ts": {
@@ -515,12 +499,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 16
+      "count": 9
     }
   },
   "src/people/students/portal.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/people/students/status-flow/status-flow.ts": {
@@ -528,7 +512,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 14
+      "count": 12
     }
   },
   "src/people/students/status-flow/tests/status-flow.test.ts": {
@@ -549,7 +533,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/people/students/trial-dates.ts": {
@@ -557,7 +541,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/people/users/index.ts": {
@@ -601,7 +585,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/reports/program.test.ts": {
@@ -611,7 +595,7 @@
   },
   "src/reports/quran/quran-data.ts": {
     "max-len": {
-      "count": 30
+      "count": 29
     }
   },
   "src/reports/quran/quran.test.ts": {
@@ -621,7 +605,7 @@
   },
   "src/reports/quran/quran.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/reports/rules.test.ts": {
@@ -634,7 +618,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/reports/schema/tests/schema.test.ts": {
@@ -644,7 +628,7 @@
   },
   "src/reports/teacher-list.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/reports/v2/content.ts": {
@@ -670,12 +654,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/reports/v2/progress.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/reports/v2/rules.test.ts": {
@@ -717,7 +701,7 @@
   },
   "src/reports/views.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/sales/academy.ts": {
@@ -725,12 +709,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/sales/course/course-change.ts": {
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/sales/course/course-follow.test.ts": {
@@ -740,7 +724,7 @@
   },
   "src/sales/course/course-follow.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/sales/course/course-picks.test.ts": {
@@ -755,7 +739,7 @@
   },
   "src/sales/course/course.ts": {
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/sales/family-link.ts": {
@@ -763,12 +747,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/money-views.ts": {
     "max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/sales/money.test.ts": {
@@ -778,7 +762,7 @@
   },
   "src/sales/money.ts": {
     "max-len": {
-      "count": 17
+      "count": 16
     }
   },
   "src/sales/payment-link/index.ts": {
@@ -798,7 +782,7 @@
   },
   "src/sales/payment-link/schemas.ts": {
     "max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/sales/payment-link/views.ts": {
@@ -841,7 +825,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/renewal-due.test.ts": {
@@ -851,12 +835,12 @@
   },
   "src/sales/renewal-due.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/sales/schedule.ts": {
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/sales/start-date.test.ts": {
@@ -869,7 +853,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 4
     }
   },
   "src/sales/student/student-attendance.test.ts": {
@@ -893,7 +877,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 7
     }
   },
   "src/sales/student/student-roster.ts": {
@@ -906,12 +890,12 @@
   },
   "src/sales/student/student-schedule.ts": {
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/sales/teacher-filter/teacher-filter.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/sales/teacher/teacher-overview.test.ts": {
@@ -957,7 +941,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/settings/exports.test.ts": {

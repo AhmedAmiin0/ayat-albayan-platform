@@ -26,7 +26,6 @@ export const maintenanceQuery = queryOptions({
 const matches = (pattern: RegExp | undefined, path: string): boolean =>
   pattern?.test(path) ?? false;
 
-/** The cover's verdict for this viewer and page (owner 2026-11-21, «تحت الصيانة»). */
 export function useMaintenance(watch: MaintenanceWatch): MaintenanceState {
   const { router, staff, rooms, signIn } = watch;
   const facts = useQuery(maintenanceQuery);

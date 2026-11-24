@@ -3,8 +3,7 @@ import { chatDayKey, RIYADH_TZ } from '@ab/time';
 import { isOpenLesson } from '@ab/schedule';
 import type { MessageView, ThreadLesson } from '../chat/views.js';
 
-// Which lesson a guardian's quick reply is about, and what the viewer may do to it from the chat
-// (owner 2026-10-28: the note under «تأجيل الحلقة» / «ايوه» carries the action). Pure; web and mobile alike.
+// Which lesson a guardian's quick reply refers to and what the viewer may do from the chat; pure.
 
 /** The lesson a reply refers to; `status` null = an old cache's family lesson (open, by the API's filter). */
 export interface ReplyLesson {

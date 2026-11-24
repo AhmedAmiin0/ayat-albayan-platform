@@ -13,16 +13,12 @@ interface ChannelHeaderProps {
   title: string;
   /** Whose initials the avatar shows (the student, or the family's first other speaker). */
   avatarName: string;
-  /** The chat's people, «أنت» last; '' while nothing is loaded. */
+  /** The viewer is listed last; empty while nothing is loaded. */
   names: string;
-  /** A header action at the end (the seated assistant's «مغادرة المحادثة»). */
   trailing?: ReactNode;
 }
 
-/**
- * The chat's head (ChatXFamilyThread / ChatXTeacherThread): «رجوع», the avatar, the title on one
- * line, the people under it, then «متصل الآن» / «آخر ظهور …» when presence allows it.
- */
+/** Presence shows only when allowed. */
 export function ChannelHeader(props: ChannelHeaderProps) {
   const { refs, title, avatarName, names, trailing } = props;
   const { color } = useTheme();

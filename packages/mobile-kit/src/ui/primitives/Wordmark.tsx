@@ -9,7 +9,7 @@ const SUBTITLE = type.size.lg;
 interface WordmarkProps {
   /** «Ayat Al-Bayan». */
   title: string;
-  /** «آيات البيان» (Arabic: no letter spacing, it would break the joins). */
+  /** Arabic gets no letter spacing, which would break the joins. */
   subtitle: string;
   color: string;
   /** Noto Sans Arabic is registered (the startup cover can come before it). */

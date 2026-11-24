@@ -29,15 +29,11 @@ export interface SlotPickerProps {
   /** starts_at of the picked slot. */
   value: string | null;
   onPick: (startsAt: string) => void;
-  /** Only days from this local date (`tz`) on: «الحلقة دي وكل اللي بعدها». */
+  /** Only days from this local date (`tz`) on. */
   notBefore?: string;
 }
 
-/**
- * «الموعد الجديد» (R-SCH-07), staff's and the family's: ‹ › moves a week; a day with free starts,
- * then one of its free starts, then «الموعد الذي اخترته: …». Only clash-free slots are offered;
- * nothing is typed (rule 6). The caller reads the slots (its own route) for `week`.
- */
+/** R-SCH-07: only clash-free slots are offered and nothing is typed (rule 6). */
 export function SlotPicker(props: SlotPickerProps) {
   const { week, tz, viewer, value } = props;
   const note = useNoteStyle();
@@ -76,7 +72,6 @@ const stateOf = (slots: SlotsRead): BodyState => {
   return slots.data ? 'ready' : 'loading';
 };
 
-/** The week's read: its error with «أعد المحاولة», «جارٍ التحميل», or its days and free starts. */
 function SlotsBody({ slots, tz, viewer, value, onPick, notBefore = '' }: SlotPickerProps) {
   const note = useNoteStyle();
   const shown = (slots.data ?? []).filter(

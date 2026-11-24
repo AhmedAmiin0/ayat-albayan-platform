@@ -28,12 +28,6 @@ export interface LeadListItemProps {
   onMove: () => void;
 }
 
-/**
- * One inbox row: avatar (initials) · name, E.164 phone, source, lead age · status chip · actions
- * (open the WhatsApp thread, book a trial, reclassify).
- * TODO(R-LEAD-02): unread dot, last-message line and the per-status next-action button (رد /
- * اقترح ميعاد / فتح الحلقة) arrive with Phase 4 messaging; تحويل لطالب with R-LEAD-06.
- */
 export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: LeadListItemProps) {
   const clock = useClock();
   const ask = useRef<HTMLButtonElement>(null);

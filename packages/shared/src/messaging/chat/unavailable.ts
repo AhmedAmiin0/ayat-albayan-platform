@@ -37,12 +37,7 @@ const reactionEmojiSchema = payloadOfType('reaction')
   .extend({ reaction: z.looseObject({ emoji: z.string().catch('') }).catch({ emoji: '' }) })
   .transform((p) => p.reaction.emoji);
 
-/**
- * An inbound WhatsApp reaction kept as its own row (`{ type: 'reaction', reaction: { emoji,
- * message_id } }`): «تفاعل: 👍» instead of «رسالة لا يمكن عرضها هنا» (owner 2026-10-27), «أُزيل
- * التفاعل» when the emoji is empty (WhatsApp's removal); null for anything else. Until the
- * reactions work shows it on the bubble itself.
- */
+/** An inbound reaction row reads as its emoji, or as removed when empty; null for anything else. */
 export function reactionText(
   payload: unknown,
   words: { reacted: string; removed: string },

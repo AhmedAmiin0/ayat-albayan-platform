@@ -21,7 +21,7 @@ export type StartCallInput = z.input<typeof startCallSchema>;
 export const acceptCallSchema = z.object({ sdp });
 export type AcceptCallInput = z.input<typeof acceptCallSchema>;
 
-/** POST /calls/permission/:phone/request: «اطلب إذن الاتصال», a staff send through the outbox. */
+/** Request call permission, a staff send through the outbox. */
 export const callPermissionRequestSchema = z.object({ clientRequestId: z.uuid() });
 
 /** GET /calls: the calls log (newest first), optionally one chat's. */

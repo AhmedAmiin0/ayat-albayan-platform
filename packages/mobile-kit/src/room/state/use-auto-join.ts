@@ -5,7 +5,7 @@ import type { DeviceMemory, MediaWish } from '../model/room-types';
 interface AutoJoinInput {
   phase: RoomPhase;
   devices: DeviceMemory;
-  /** Opened from the «بدأت الحلقة» push: straight in with the microphone on. */
+  /** Opened from the lesson-started push: straight in with the microphone on. */
   direct: boolean;
   /** The family's room: the kept choice skips the preview (the staff see it every time). */
   remember: boolean;
@@ -29,13 +29,7 @@ function autoWish(entry: Entry, remembered: MediaWish | null): MediaWish | null 
 const quietPreview = (phase: RoomPhase): boolean =>
   phase.step === 'preview' && phase.notice === null;
 
-/**
- * The family's preview the first time only (canvas RoomXPreview): later joins reuse the last
- * device choice and go straight in, and the «بدأت الحلقة» push joins with the microphone on.
- * Only a missing permission is asked first; a refused one still shows the preview with its
- * notice. Each entry into the preview (the first check, a pressed «حاول مرة أخرى») joins at most
- * once.
- */
+/** Preview first time only; only a missing permission is asked; each preview entry joins once. */
 export function useAutoJoin({ phase, devices, direct, remember, join }: AutoJoinInput) {
   const [remembered, setRemembered] = useState<MediaWish | null | undefined>(undefined);
   useEffect(() => {

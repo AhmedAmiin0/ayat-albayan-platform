@@ -8,10 +8,7 @@ import { StudentPaymentsList } from '@/student-file/money/StudentPaymentsList';
 
 const M = t.mobileStudentFile.money;
 
-/**
- * «المدفوعات والفواتير» of one student (web: StudentPayments + StudentInvoices): two sections behind
- * pills, each shown only if its permission (payments.read / invoices.read) is held. Read-only.
- */
+/** Each section shows only with its permission (payments.read / invoices.read); read-only. */
 export function StudentMoneyScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const can = usePermissions();

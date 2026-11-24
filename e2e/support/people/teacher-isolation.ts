@@ -1,8 +1,7 @@
 import { startedToday } from '../finance/money';
 import { seedFamily, seedLesson, withSql } from '../core/schedule';
 
-// A second, login-less teacher «هبة» with her own family, lesson, sent report, chat and payout:
-// everything «أبرار» must never reach (R-NFR-02, rule 9). dropHiba removes it again.
+// A second teacher's data the e2e teacher must never reach (R-NFR-02, rule 9).
 
 export const HIBA_MONTH = '2031-03-01';
 export const HIBA_AMOUNT = 987;
@@ -55,7 +54,7 @@ export async function dropHiba(hiba: HibaSeed): Promise<void> {
   });
 }
 
-/** An approved payout of «أبرار» for the same month (one row per teacher and month). */
+/** One payout row per teacher and month. */
 export async function seedAbrarPayout(input: { teacherId: string; amount: number }): Promise<void> {
   await withSql((sql) => sql`
     insert into public.teacher_payouts (teacher_id, month, lessons_count, amount, status, approved_at)

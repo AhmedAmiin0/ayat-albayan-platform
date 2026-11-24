@@ -71,7 +71,7 @@ describe('juzProgress', () => {
   it('counts whole pages held in the juz of today’s new memorization', () => {
     const p = juzProgress(lesson, [{ surah: 67, from: 1, to: 15 }]);
     expect(p).toMatchObject({ juz: 29, total: 20 });
-    // Page 562 = الملك 1–12 is held; 563 (13–26) is not complete.
+    // Page 562 (Al-Mulk 1-12) is held; 563 (13-26) is not complete.
     expect(p?.done).toBe(1);
     expect(p?.completed).toEqual([]);
   });

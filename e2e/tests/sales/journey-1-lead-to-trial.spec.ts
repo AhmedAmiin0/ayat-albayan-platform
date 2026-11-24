@@ -30,7 +30,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     asRole,
   }) => {
     test.setTimeout(180_000);
-    // «أبرار» is free on Sundays 16:00–18:00 Riyadh only, so the wizard's first slot is known.
+    // The teacher is free Sundays 16:00-18:00 Riyadh only, so the first slot is known.
     const teacherId = await resetAbrar();
     await setAvailability(teacherId, [[0, '16:00', '18:00']]);
     // desktop and mobile share one DB: a fresh Saudi mobile and guardian name per run (wa_id =
@@ -60,7 +60,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
       .poll(async () => (await sentTo(digits)).filter((m) => m.type === 'text').length, SENDER_WAIT)
       .toBe(1);
 
-    // «حجز حلقة تجريبية» opens the Phase 2 wizard with the lead (phone + name prefilled).
+    // Opens the wizard with the lead's phone and name prefilled.
     await (await sidePanel(admin, 'lead')).getByRole('link', { name: ar.booking.trialTitle }).click();
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=/);
     await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
@@ -69,7 +69,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();
-    // A trial has no package to pick (the type is «نوع الحجز» on step 1): only the duration shows.
+    // A trial has no package to pick: only the duration shows.
     await expect(admin.getByRole('radio', { name: new RegExp(ar.enums.packageSize['8']) })).toHaveCount(0);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
@@ -90,7 +90,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     expect(JSON.stringify(confirmation?.body)).toContain(ROOM);
     expect(JSON.stringify(confirmation?.body)).toContain(student);
 
-    // One trial lesson next Sunday 16:00 Riyadh, on «أبرار»'s week in the schedule.
+    // One trial lesson next Sunday 16:00 Riyadh, on the teacher's week in the schedule.
     const week = nextWeekSaturday();
     const [studentId] = await withSql((sql) => sql<{ id: string }[]>`
       select s.id from public.students s join public.guardians g on g.id = s.guardian_id

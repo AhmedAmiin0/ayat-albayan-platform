@@ -20,11 +20,6 @@ interface Props {
   onClose: () => void;
 }
 
-/**
- * «من قرأ الرسالة» (FamChatWebInfo, S13): the message itself, then «قرأها» with each reader's
- * time and «لم يقرأها بعد», each «لا أحد بعد» when empty; a skeleton while loading, the error line,
- * and «إغلاق». The dialog's card enters with the kit's dialog motion; Esc closes it.
- */
 export function ReadsDialog({ refs, message, tz, now, onClose }: Props) {
   const reads = useMessageReads(refs, message.id);
   const clock = useClock();

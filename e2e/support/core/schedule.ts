@@ -2,9 +2,7 @@ import { normalizeArabic } from '@ab/core';
 import postgres from 'postgres';
 import { USERS } from './users';
 
-// Scheduling seed for journeys 4 and 5 (docs/03 §5). Deterministic without resetting the shared
-// DB: each journey wipes only the e2e teacher «أبرار»'s lessons, rules and availability, and
-// creates its family with a fresh phone. Times are Riyadh wall clock (UTC+3 all year, no DST).
+// Journeys 4 and 5 (docs/03 §5) wipe only the e2e teacher's data; Riyadh is UTC+3 with no DST.
 
 type Sql = ReturnType<typeof postgres>;
 
@@ -26,7 +24,7 @@ export function addDays(date: string, days: number): string {
   return new Date(Date.parse(`${date}T00:00:00Z`) + days * DAY_MS).toISOString().slice(0, 10);
 }
 
-/** Saturday of next week in Riyadh (weeks run السبت → الجمعة): always in the future. */
+/** Weeks run Saturday to Friday; the result is always in the future. */
 export function nextWeekSaturday(now = new Date()): string {
   const riyadh = new Date(now.getTime() + RIYADH_OFFSET_MS);
   const today = riyadh.toISOString().slice(0, 10);
@@ -38,7 +36,6 @@ export function riyadh(date: string, time: string): Date {
   return new Date(`${date}T${time}:00+03:00`);
 }
 
-/** «أبرار» (owned by abrar@e2e.local) with no lessons, rules or availability left from a run. */
 export async function resetAbrar(): Promise<string> {
   return withSql(async (sql) => {
     const [row] = await sql<{ id: string }[]>`
@@ -55,7 +52,7 @@ export async function resetAbrar(): Promise<string> {
   });
 }
 
-/** Weekly availability in Riyadh time: [weekday (0 = الأحد), "HH:MM", "HH:MM"]. */
+/** Riyadh time rows: [weekday (0 = Sunday), "HH:MM", "HH:MM"]. */
 export async function setAvailability(teacherId: string, rows: [number, string, string][]): Promise<void> {
   await withSql(async (sql) => {
     for (const [weekday, start, end] of rows) {
@@ -100,7 +97,7 @@ interface LessonSeed {
   minutes: number;
 }
 
-/** One scheduled (يحتاج تأكيد) lesson with its student. */
+/** One scheduled lesson (needs confirmation) with its student. */
 export async function seedLesson(l: LessonSeed): Promise<string> {
   return withSql(async (sql) => {
     const endsAt = new Date(l.startsAt.getTime() + l.minutes * 60_000);

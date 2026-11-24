@@ -8,7 +8,7 @@ const C = t.roomFlow.check;
 const currentId = (c: DeviceControl): string =>
   c.id ?? (c.state.status === 'on' ? (c.state.track.getSettings().deviceId ?? '') : '');
 
-/** «الميكروفون» / «الكاميرا» as a list, only when there is more than one to choose from. */
+/** Device lists show only when there is more than one to choose from. */
 function Picker({ control, label }: { control: DeviceControl; label: string }) {
   const devices = control.state.status === 'on' ? control.state.devices : [];
   if (devices.length < 2) return null;

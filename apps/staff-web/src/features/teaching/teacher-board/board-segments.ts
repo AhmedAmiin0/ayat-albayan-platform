@@ -1,12 +1,11 @@
 import type { StudentListKind } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// The board's segments (docs/46 D4, docs/48). docs/47 PR2 adds «موقوفون مؤقتًا» as a fourth
-// segment: widen BoardSegment and add one entry to each lookup below.
+// Board segments (docs/46 D4, docs/48); docs/47 PR2 adds a paused segment here.
 
 export type BoardSegment = StudentListKind;
 
-/** Reading order of the SegmentedControl; «الكل» is the default. */
+/** Reading order; all is the default. */
 export const BOARD_SEGMENTS: readonly BoardSegment[] = ['active', 'trial', 'all'];
 export const DEFAULT_SEGMENT: BoardSegment = 'all';
 

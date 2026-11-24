@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { lineView } from './template-lines-fixture';
 import { TemplateLineBlock } from './TemplateLineBlock';
 
-// docs/39: a crm number's templates live in the CRM; «مزامنة» reads their status from it.
+// docs/39: a crm number's templates live in the CRM, and sync reads their status from it.
 
 describe('TemplateLineBlock on a crm line', () => {
   it('says the templates live in the CRM and offers its sync', () => {

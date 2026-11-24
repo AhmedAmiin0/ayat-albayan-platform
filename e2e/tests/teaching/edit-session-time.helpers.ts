@@ -2,7 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { ar } from '../../support/core/fixtures';
 import { addDays, withSql } from '../../support/core/schedule';
 
-// Shared by edit-session-time*.spec.ts («عدّل الوقت», R-SCH-11). Not a spec: Playwright only runs *.spec.ts.
+// Shared by edit-session-time specs (R-SCH-11); Playwright only runs *.spec.ts.
 
 export const L = ar.lessons.timeEdit;
 const TZ = 'Africa/Cairo';
@@ -14,7 +14,6 @@ export function cairo(at: Date) {
   return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}` };
 }
 
-/** The schedule week that holds `date`, the lesson's chip, then «عدّل الوقت». */
 export async function openForm(page: Page, p: { date: string; teacherId: string; name: string }): Promise<Locator> {
   const week = addDays(p.date, -((new Date(`${p.date}T00:00:00Z`).getUTCDay() + 1) % 7));
   await page.goto(`/admin/schedule?week=${week}&teacher=${p.teacherId}`);
@@ -35,7 +34,7 @@ export interface Pick {
 /** Day, time and length are picked (a native date, two selects); only the reason is typed. */
 export async function fillForm(d: Locator, f: Pick) {
   if (f.date) {
-    // «تاريخ آخر» is a <details> that starts closed when the lesson's day is one of the day chips.
+    // The other-date <details> starts closed when the lesson's day is one of the day chips.
     const input = d.getByLabel(L.otherDate);
     if (!(await input.isVisible())) await d.locator('summary', { hasText: L.otherDate }).click();
     await input.fill(f.date);

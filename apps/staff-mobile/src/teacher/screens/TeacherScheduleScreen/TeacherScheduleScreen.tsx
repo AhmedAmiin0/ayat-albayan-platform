@@ -13,7 +13,7 @@ const PERIODS = [
   { value: 'month' as const, label: t.teacherSchedule.month },
 ];
 
-/** «المواعيد المتاحة» lives in «المزيد» (the native tab bar holds five); this is its shortcut. */
+/** Availability lives in more because the tab bar holds five; this is its shortcut. */
 const AVAILABILITY_HREF = '/teacher/more/availability';
 
 const toAvailability = () => router.push(AVAILABILITY_HREF);
@@ -24,12 +24,7 @@ const PANES: Record<Period, (head: Head) => ReactNode> = {
   month: (head) => <ScheduleMonth head={head} />,
 };
 
-/**
- * «جدولي» (R-TCH-03, R-SCH-08; owner 2026-11-14): «الأسبوع | الشهر». The week is the day-by-day
- * agenda السبت → الجمعة; the month a Saturday-first grid whose day lists its lessons. Both read
- * GET /teachers/me/lessons once per shown period, in her own days and clock (docs/34); a lesson
- * opens «تفاصيل الحلقة» (teacher variant). «المواعيد المتاحة» is one tap away in the header.
- */
+/** Week and month (R-TCH-03, R-SCH-08) read once per period in her days and clock (docs/34). */
 export function TeacherScheduleScreen() {
   const [period, setPeriod] = useState<Period>('week');
   const head: Head = (subtitle) => (

@@ -1,5 +1,5 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
-import { LOCALE_STORAGE_KEY } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { calendarBackend, NOW } from '@/calendar/testing/flow-backend';

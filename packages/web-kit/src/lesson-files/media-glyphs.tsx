@@ -1,7 +1,6 @@
 import { cn } from '@ab/web-kit/lib/utils';
 
-// Filled media glyphs of the players (boards FamRecWeb*): the icon sprite is line art, a play
-// triangle reads better solid. Not directional: «تشغيل» points the same way in both directions.
+// The sprite is line art but a solid play triangle reads better; not directional.
 
 const FILLED = {
   play: 'M6.5 4.2v11.6a.8.8 0 0 0 1.2.7l9-5.8a.8.8 0 0 0 0-1.4l-9-5.8a.8.8 0 0 0-1.2.7Z',

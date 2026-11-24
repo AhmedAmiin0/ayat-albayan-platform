@@ -5,10 +5,7 @@ import { MoreMenu } from '@ab/web-kit/components/ui/overlay/more-menu';
 import { classroomErrorText, copyStudentLink } from '@/features/teaching/classroom';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «المزيد» → «انسخ رابط الطالب» (docs/48, room mode only). The menu closes on the pick, so the
- * result (copied, the link to copy by hand, or the error) shows under the head, outside the menu.
- */
+/** Room mode only (docs/48); the result shows under the head because the menu closes on pick. */
 export function CopyStudentLink({ lessonId }: { lessonId: string }) {
   const make = useMutation({ mutationFn: copyStudentLink });
   return (

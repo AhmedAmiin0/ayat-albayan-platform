@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { threadReplyLine, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 

@@ -10,10 +10,8 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 const P = t.assistantPortal;
 const W = P.wallet;
-/** The wallet's short words («دفع إلكتروني», «تحويل بنكي»); the other methods' own words are short. */
 const SHORT_METHOD: Partial<Record<PaymentMethod, string>> = W.method;
 
-/** The chip's word: «مستحقة», «في كشف أكتوبر 2026», «مدفوعة» or «ملغاة». */
 function stateWord(c: MyCommissionRow): string {
   if (c.state === 'in_statement' && c.statement_month) return W.state.in_statement.replace('{month}', monthLabel(c.statement_month.slice(0, 7)));
   return { due: P.commission.earned, in_statement: P.commission.earned, paid: W.state.paid, voided: P.commission.voided }[c.state];
@@ -26,11 +24,7 @@ function details(c: MyCommissionRow): string[] {
   return [kind, ...(c.method ? [SHORT_METHOD[c.method] ?? t.enums.paymentMethod[c.method]] : [])];
 }
 
-/**
- * One commission of «عمولاتي» in two lines (WhatsApp-compact, ≥ 44px): «+50 ج.م», the day and its state
- * chip, then «AB-1022 · lmkl · أول اشتراك · دفع إلكتروني», short enough for a phone. A voided one is struck
- * through with no sign, and says why.
- */
+/** A voided commission is struck through with no sign and says why. */
 export function CommissionEntry({ entry }: { entry: MyCommissionRow }) {
   const voided = entry.state === 'voided';
   return (

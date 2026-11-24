@@ -12,10 +12,9 @@ export interface ConflictTextInput {
   now?: Date;
 }
 
-/** Who saved first (their name, else «مستخدم آخر»). */
 export const conflictBy = (conflict: ConfigEntryConflict): string => conflict.updatedByName ?? c.someone;
 
-/** «تغيّرت هذه القيمة إلى 6 قبل دقيقتين بواسطة سارة. قيمتك: 8.» (docs/26b §2 «Conflict (409)»). */
+/** The 409 conflict message with the new value, age, author and the admin's value (docs/26b §2). */
 export function conflictText({ key, conflict, mine, now }: ConflictTextInput): string {
   const when = conflict.updatedAt ? formatAge(conflict.updatedAt, now) : '';
   return c.body

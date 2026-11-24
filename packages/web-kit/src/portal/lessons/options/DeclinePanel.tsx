@@ -15,7 +15,6 @@ interface DeclinePanelProps {
 
 const A = t.portal.actions;
 
-/** «الاعتذار عن الحلقة» in place: the package line, the optional reason, confirm or go back. */
 export function DeclinePanel({ lesson, busy, onDecline, onBack }: DeclinePanelProps) {
   const [reason, setReason] = useState('');
   return (

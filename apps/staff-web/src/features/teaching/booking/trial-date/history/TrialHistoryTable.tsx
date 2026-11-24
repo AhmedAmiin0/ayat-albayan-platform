@@ -9,7 +9,7 @@ import { trialOutcomeStyle } from './outcome-style';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
-/** Rows shown before «عرض كل المواعيد»: the history stays a compact block. */
+/** Keeps the history a compact block. */
 export const TRIAL_ROWS_SHOWN = 5;
 
 const head = 'border-b border-rule-strong px-2 py-1.5 text-start text-xs font-semibold text-ink-3';
@@ -22,7 +22,7 @@ export interface TrialHistoryTableProps {
   viewerTz?: string | undefined;
 }
 
-/** «مواعيد الحلقة التجريبية» (R-STU-05, R-SCH-07): newest pick first, the first 5 then «عرض كل المواعيد». */
+/** Newest pick first (R-STU-05, R-SCH-07). */
 export function TrialHistoryTable({ history, viewerTz: pinned }: TrialHistoryTableProps) {
   const own = useViewerTz();
   const viewerTz = pinned ?? own;

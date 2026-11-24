@@ -16,7 +16,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() } }));
 
-// Stored values that differ from the defaults (5 weeks, 180 days), so «أعد القيمة الافتراضية» shows.
+// Stored values differ from the defaults (5 weeks, 180 days) so the reset action shows.
 const stored = { ...settings, booking_horizon_weeks: 8, activity_retention_days: 90 };
 
 beforeEach(() => {
