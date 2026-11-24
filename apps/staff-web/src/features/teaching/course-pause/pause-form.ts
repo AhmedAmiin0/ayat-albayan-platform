@@ -30,9 +30,11 @@ export function startBody(draft: PauseDraft): CoursePauseStart {
   return { fromDate: draft.from, untilDate: draft.until || null, ...(reason ? { reason } : {}) };
 }
 
+/** A pause preview: the lessons with their dates, then the package extension. */
 export const pauseLines = (preview: CoursePausePreview, tz: string): string[] =>
   pausePreviewLines({ preview, words: t.coursePause, day: dayIn(tz) });
 
+/** A resume preview: the lessons back with their dates and the days the package moves. */
 export const resumeLines = (preview: CourseResumePreview, tz: string): string[] =>
   resumePreviewLines({
     preview,
