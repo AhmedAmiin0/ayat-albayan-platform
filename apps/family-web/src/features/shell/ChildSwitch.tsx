@@ -3,10 +3,7 @@ import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { usePickedChild } from './use-family-pick';
 
-/**
- * The child a guardian of several works as, on top of every page (owner 2026-11-16): its name
- * opens «اختر الطالب» to switch. Nothing for a student or a guardian of one child.
- */
+/** Nothing for a student or a guardian of one child. */
 export function ChildSwitch() {
   const child = usePickedChild();
   if (!child) return null;

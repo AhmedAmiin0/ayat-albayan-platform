@@ -13,7 +13,7 @@ const SUB =
 const OWING = ['unpaid', 'active', 'paused', 'expired'] as const satisfies readonly Exclude<SubscriptionStatus, 'trial' | 'cancelled'>[];
 const OWING_FILTER = `status.in.(${OWING.join(',')}),cancel_kind.eq.stopped`;
 
-/** Packages and their net paid for «مستحق على الطلاب» (service role; admin-only routes). */
+/** Packages and their net paid for receivables (service role; admin-only routes). */
 @Injectable()
 export class ReceivablesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

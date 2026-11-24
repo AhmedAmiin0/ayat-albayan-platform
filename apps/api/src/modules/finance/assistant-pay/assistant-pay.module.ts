@@ -23,7 +23,7 @@ import { TermsEnv, TermsService } from './terms/terms.service';
  * (migrations 20261006000270..274); this module is the guarded door to them.
  */
 @Module({
-  // PaymentsModule: her payments' «المرفقات»; SubscriptionsModule: CommissionBell after an attribution or new terms.
+  // PaymentsModule for attachments; SubscriptionsModule for CommissionBell.
   imports: [TeacherEarningsModule, PaymentsModule, SubscriptionsModule],
   controllers: [AssistantPayController, AssistantStatementsController, MyController],
   providers: [

@@ -1,9 +1,4 @@
-import {
-  quote,
-  type PaymentView,
-  type StudentBalanceView,
-  type SubscriptionView,
-} from '@ab/shared';
+import { quote, type PaymentView, type StudentBalanceView, type SubscriptionView } from '@ab/money';
 
 // Test-only API answers in the docs/11 shapes. The package is e2e/support/money.ts's: the weekly
 // catalog package for Saudi Arabia (4 lessons, priced by the shared quote, not typed here).

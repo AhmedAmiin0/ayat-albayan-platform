@@ -38,12 +38,7 @@ const OWNER = {
   },
 } satisfies Record<Who['kind'], (db: Db, id: string) => Promise<Who>>;
 
-/**
- * An admin's photo of a staff member (owner 2026-10-28), through the same AvatarWriter as «حسابي»:
- * a teacher WITH a login gets its login's photo (avatars/{profile_id}/…), one without a login the
- * teacher record's (avatars/teachers/{teacher_id}/…). Every change writes one audit_log row (paths only).
- * The routes' guards (teachers.write, users.write) decide who may call it.
- */
+/** A teacher with a login gets the login's photo, else the teacher record's; audited. */
 @Injectable()
 export class StaffPhotoAdmin {
   constructor(

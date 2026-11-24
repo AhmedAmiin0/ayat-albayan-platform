@@ -1,4 +1,5 @@
-import { SUBSCRIPTION_STATUSES, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
+import { SUBSCRIPTION_STATUSES } from '@ab/catalog';
+import { subscriptionStatusStyle, type SubscriptionView } from '@ab/money';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { t, useTheme, EmptyState, ErrorState, FilterPills, type FilterPill } from '@ab/mobile-kit';

@@ -4,8 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../app/(tabs)/_layout';
 
-// The More tab's stack gets the teacher calendar and «الجدول» (a static route beside teachers/[id]).
-// The tabs' permission and badge reads need the API: allow everything, no badge, in this routing test.
+// The routing test allows every permission and no badge because those reads need the API.
 jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
 jest.mock('@/core/push/usePushRegistration/usePushRegistration', () => ({ usePushRegistration: () => undefined }));

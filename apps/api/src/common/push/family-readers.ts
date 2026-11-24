@@ -1,9 +1,7 @@
 import { joinNames, lessonWhenText } from '@ab/shared';
 import type { PushTarget } from './push.service';
 
-// Who in a family hears about a student (docs/50 §5 item 6): the guardian's login and the student's
-// own, each in their own zone, siblings under one guardian named together. Shared by the family
-// pushes' sweep (lesson_starting, report_sent) and «بدأت الحلقة» (lesson_live, the room webhook).
+// Who in a family hears about a student (docs/50 §5 item 6), each login in its own zone.
 
 /** The select of a FamilyStudent under students(...). */
 export const FAMILY_STUDENT_SELECT = 'id, name, tz, profile_id, guardian:guardians(profile_id, tz)';

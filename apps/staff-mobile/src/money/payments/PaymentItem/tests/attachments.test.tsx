@@ -1,4 +1,4 @@
-import type { PaymentAttachmentView } from '@ab/shared';
+import type { PaymentAttachmentView } from '@ab/money';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';

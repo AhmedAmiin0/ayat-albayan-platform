@@ -45,8 +45,7 @@ test('lead → «احجز تجريبية» → wizard → POST /booking → back
 
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.subscription.backToChat }));
   expect(app.pathname()).toBe('/inbox/a1');
-  // The chip moved at once (and the list refetch agrees): «حجز حلقة تجريبية» is the status now,
-  // so the changer no longer offers it as a move.
+  // The status chip moved at once, so the changer no longer offers it as a move.
   expect(await screen.findByText(t.enums.leadStatus.trial_booked)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.enums.leadStatus.trial_booked })).toBeNull();
 });

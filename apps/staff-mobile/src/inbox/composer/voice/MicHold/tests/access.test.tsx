@@ -39,7 +39,7 @@ test('a screen reader’s «activate» records locked (no hold), announced; the 
     fireEvent(mic(), 'accessibilityAction', { nativeEvent: { actionName: 'activate' } });
   });
   expect(rec.record).toHaveBeenCalled();
-  expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.locked); // «اضغط «أرسل» عند الانتهاء», not the hold hint
+  expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.locked);
   expect(screen.getByRole('button', { name: t.inbox.composer.voice.delete })).toBeTruthy();
   await act(async () => {
     fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.voice.delete }));

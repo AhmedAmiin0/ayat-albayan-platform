@@ -259,7 +259,7 @@ Verified: CI + affected e2e (s5, s8: full e2e); each PR removes its rows from th
 
 ### 4.1 Packages, in layer order
 
-Each package: ≤ ≈ 40 code files, ≤ 12 per folder, tests next to the code, vitest in a node environment (`@ab/client-hooks`: jsdom + @testing-library/react), coverage ≥ 80 % for core, time, schedule and money (CLAUDE.md rule 4). Files per package: `package.json` (`exports` `.` plus declared subpaths), `tsconfig` extending `@ab/config`, `eslint.config.js` (`config` + `boundaries`), an empty `eslint-suppressions.json`, a vitest config. Mobile jest already transforms `@ab/.*`, so no jest change.
+Each package: ≤ ≈ 40 code files, ≤ 12 per folder, tests next to the code, vitest in a node environment (`@ab/client-hooks`: jsdom + @testing-library/react), coverage ≥ 80 % for core, time, schedule and money (CLAUDE.md rule 4). Files per package: `package.json` (`exports` `.` plus declared subpaths), `tsconfig` extending the root `tsconfig.base.json`, `eslint.config.js` (`config` + `boundaries`), an empty `eslint-suppressions.json`, a vitest config. Mobile jest already transforms `@ab/.*`, so no jest change.
 
 | Package | Layer | Contents (today's location) | Depends on | Used by | ≈ code files |
 |---|---|---|---|---|---|

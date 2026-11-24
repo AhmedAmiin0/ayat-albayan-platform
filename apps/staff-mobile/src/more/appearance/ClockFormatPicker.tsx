@@ -1,4 +1,4 @@
-import type { ClockPref } from '@ab/shared';
+import type { ClockPref } from '@ab/time';
 import { useClockPref } from '@/core/lib/clock';
 import { t, FilterPills, type FilterPill, Section } from '@ab/mobile-kit';
 

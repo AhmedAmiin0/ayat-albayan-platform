@@ -1,4 +1,5 @@
-import { alertFor, packageProgress, SETTING_DEFAULTS, type StudentBalanceView } from '@ab/shared';
+import { alertFor, packageProgress, type StudentBalanceView } from '@ab/money';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { t } from '@ab/mobile-kit';
 
 /** settings.renewal_alert_remaining's default (docs/11 §2: 2), used until GET /settings answers. */

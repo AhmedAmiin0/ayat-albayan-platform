@@ -89,7 +89,6 @@ export class ConfigStore {
     }
   }
 
-  /** profiles.full_name of the writers («آخر تعديل»). */
   names(ids: readonly string[]): Promise<Map<string, string>> {
     return this.queries.names(ids);
   }

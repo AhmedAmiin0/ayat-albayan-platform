@@ -8,9 +8,8 @@ interface EmojiSheetProps {
   visible: boolean;
   /** One tap = one emoji at the caret; the sheet stays open for more. */
   onPick: (emoji: string) => void;
-  /** «تم» or a tap outside: closed, the box takes the focus back. */
   onClose: () => void;
-  /** Staff wherever a text goes: «GIF» and «الملصقات» tabs too (owner 2026-11-01). */
+  /** Staff also get GIF and sticker tabs. */
   media?: PanelMedia | undefined;
 }
 

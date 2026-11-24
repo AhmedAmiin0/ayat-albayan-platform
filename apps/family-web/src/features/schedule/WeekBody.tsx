@@ -12,11 +12,7 @@ interface WeekBodyProps {
   guardian: boolean;
 }
 
-/**
- * One week: the seven-day strip, then the agenda (only the days with lessons) beside «ملخص
- * الأسبوع» on wide screens, under it on phones. Keyed on the week, so it cross-fades and the
- * strip's choice starts empty.
- */
+/** Keyed on the week so it cross-fades and the strip's choice starts empty. */
 export function WeekBody({ week, days, guardian }: WeekBodyProps) {
   const jump = useJumpToDay();
   const today = week.strip.find((d) => d.today)?.day;

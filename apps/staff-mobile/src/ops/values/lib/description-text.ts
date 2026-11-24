@@ -1,4 +1,6 @@
-import { DESCRIPTION_MAX, type ConfigEntry, type Locale, type Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
+import type { Locale } from '@ab/core';
+import { DESCRIPTION_MAX, type ConfigEntry } from '@ab/settings';
 import { ApiError, t } from '@ab/mobile-kit';
 
 // «القيم» on the phone: a key's description (docs/26 §3) and who may edit it (§2f, §5).

@@ -1,4 +1,5 @@
-import { dateText, type ClockCycle, type MeetingInviteResult, type MeetingView } from '@ab/shared';
+import type { MeetingInviteResult, MeetingView } from '@ab/schedule';
+import { dateText, type ClockCycle } from '@ab/time';
 import { whenIn } from '@/core/lib/clock';
 import { ApiError, t, locale, cityOf } from '@ab/mobile-kit';
 

@@ -2,8 +2,7 @@ import type { ChatList } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
-// The academy's chat lists «القوائم» (docs/22): ONE shared set for every admin and assistant. They only
-// organise the chats; nothing is ever sent because of a list.
+// docs/22: one shared set for all admins and assistants; a list never causes a message send.
 
 /** ['chat-lists']: every list with its count. */
 export const listsKey = pathKey('/chat-lists');
@@ -27,10 +26,7 @@ export function useChatLists(enabled: boolean) {
 /** Keeps a list answer usable even if a mock or an older API answers something else. */
 export const listsOf = (data: unknown): ChatList[] => (Array.isArray(data) ? (data as ChatList[]) : []);
 
-/**
- * POST /chat-lists. The new list goes into the cache at once, so the chip the caller makes active
- * is already there (an unknown active list falls back to «الكل»).
- */
+/** The new list enters the cache at once so the caller's active chip already exists. */
 export function useCreateList() {
   const client = useQueryClient();
   return useMutation({
