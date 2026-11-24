@@ -10,11 +10,7 @@ const D = () => t.shortLinks.detail;
 
 type Step = 'idle' | 'confirm' | 'edit' | 'extend';
 
-/**
- * «تمديد» (a new lifetime), «تعديل» (title, limit, lifetime) and «إيقاف الرابط» behind its
- * confirm: the link stops at once for everyone and cannot run again (POST …/revoke). None on a
- * revoked link.
- */
+/** Revoke stops the link at once for everyone and it cannot run again. */
 export function LinkActions({ link }: { link: ShortLinkDetail }) {
   const [step, setStep] = useState<Step>('idle');
   const revoke = useRevokeLink();

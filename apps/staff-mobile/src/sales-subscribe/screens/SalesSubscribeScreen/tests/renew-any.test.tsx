@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { familyOf, KID, kid, openSub, PHONE, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// sales.renew_any (owner 2026-10-29, docs/16 row 38): «جدّد الاشتراك» for a child not hers (mine: false).
+// sales.renew_any (docs/16 row 38): renewal for a child not hers.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -31,7 +31,6 @@ beforeEach(() => {
   mockApiSend.mockImplementation(async (_m: string, path: string) => (path === '/sales/subscriptions/quote' ? salesQuote : openSub()));
 });
 
-// owner 2026-11-01: «أيام الحلقات» for it too, then its transfer (from the course screen).
 test('the quote and the package carry the chat phone; «أيام الحلقات»; saved → its weekly days', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   await waitFor(() => expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ studentId: KID, phone: PHONE }));

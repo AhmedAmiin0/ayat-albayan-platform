@@ -4,10 +4,7 @@ import { fill } from '@/sales/sales';
 import { LinkPriceSection } from './LinkPriceSection';
 import type { LinkPay } from './use-link-pay';
 
-/**
- * «دفع إلكتروني»: the calculator price after the pill (the link's amount); with «مبلغ مخصص» on, the amount field
- * (the price by default) and the admin's lowest amount.
- */
+/** With a custom amount on, the field defaults to the price and shows the admin's minimum. */
 export function OnlinePrice({ pay }: { pay: LinkPay }) {
   const currency = pay.priced?.quote.currency;
   return (

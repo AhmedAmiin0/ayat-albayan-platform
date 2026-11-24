@@ -17,10 +17,7 @@ interface EditSheetProps {
 const F = () => t.shortLinks.form;
 const D = () => t.shortLinks.detail;
 
-/**
- * «تعديل» of a link: its title, its allowed users and a new lifetime from now («تمديد»: an
- * expired link runs again until then). PATCH /short-links/:code.
- */
+/** A new lifetime runs from now, so an expired link runs again until then. */
 export function EditSheet({ link, onClose }: EditSheetProps) {
   const [edit, setEdit] = useState<LinkEdit>(() => editOf(link));
   const patch = usePatchLink(link.code, onClose);

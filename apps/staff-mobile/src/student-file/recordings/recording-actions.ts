@@ -25,7 +25,7 @@ export function useSetVisibility(studentId: string) {
   });
 }
 
-/** DELETE /recordings/:id (admin only; 409 while recording). The row stays as «محذوف». */
+/** Admin only; 409 while recording; the row stays as deleted. */
 export function useDeleteRecording(studentId: string) {
   const client = useQueryClient();
   return useMutation({

@@ -11,10 +11,7 @@ import { useState } from 'react';
 import { useViewerTz } from '@/core/lib/clock';
 import { useCreateLink } from '@/short-links/api/link-hooks';
 
-/**
- * «رابط جديد»: the form (client-core's LinkForm), its field errors, and the submit that checks it
- * with the API's schema, POSTs it, and hands the new code over (a refusal lands on its field).
- */
+/** Checks with the API's schema before posting; a refusal lands on its field. */
 export function useLinkForm(onCreated: (code: string) => void) {
   const [form, setForm] = useState<LinkForm>(() => emptyLinkForm(SHORT_LINK_DEFAULT_DAYS));
   const [errors, setErrors] = useState<LinkFieldErrors>({});

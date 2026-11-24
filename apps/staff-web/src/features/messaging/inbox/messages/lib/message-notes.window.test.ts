@@ -4,8 +4,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { outboundNotes } from './message-notes';
 
-// Owner 2026-11-03: a text held behind the reopen template says «بانتظار رد العائلة»; a failed
-// one says why in Modern Standard Arabic, never the raw HTTP text.
+// A held text waits for the family's reply; a failed one says why, never the raw HTTP text.
 
 const NOW = new Date('2026-11-03T08:00:00Z');
 const o = { waitingTemplate: false, now: NOW, clock: { cycle: '24', locale } as const };

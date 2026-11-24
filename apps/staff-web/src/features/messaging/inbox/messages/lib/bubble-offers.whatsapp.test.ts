@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { bubbleOffers, offersAny } from './bubble-offers';
 
-// «أرسل عبر واتساب» in the bubble's menu (owner 2026-11-06): admin mode, a text the window stopped.
-
 const held = message({
   id: 'm1',
   direction: 'outbound',

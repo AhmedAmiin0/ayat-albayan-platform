@@ -10,7 +10,6 @@ interface MoneyActionButtonProps {
   variant?: ButtonVariant;
 }
 
-/** «تسجيل تحويل» or «تجديد» for one student, or nothing (UX review #9). */
 export function MoneyActionButton({ student, subscriptionId, variant = 'primary' }: MoneyActionButtonProps) {
   const action = useMoneyAction({ studentId: student.id, ...(student.phone === undefined ? {} : { phone: student.phone }), ...(subscriptionId ? { subscriptionId } : {}) });
   if (!action) return null;

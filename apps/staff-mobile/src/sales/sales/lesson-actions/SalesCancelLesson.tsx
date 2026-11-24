@@ -12,7 +12,7 @@ import { useSalesCancel } from './lesson-actions-api';
 
 interface SalesCancelLessonProps {
   lessonId: string;
-  /** Who may be recorded (salesCancelRights), the default first; one choice = no «مين ألغى». */
+  /** Who may be recorded, the default first; one choice hides the picker. */
   choices: readonly SalesCancelBy[];
   onClose: () => void;
 }
@@ -23,12 +23,7 @@ function cancelBody(reason: string, by: SalesCancelBy, choices: number): SalesCa
   return { ...(typed ? { reason: typed } : {}), ...(choices > 1 ? { by } : {}) };
 }
 
-/**
- * Sales' «إلغاء الحلقة» (docs/16 row 37): this lesson only, the reason optional (none =
- * stored null), then «تأكيد الإلغاء». No series. With a confirmation required the academy
- * cancels it, as the admin's «الإدارة»; without one (owner 2026-11-02) she picks who: the
- * academy (default), the teacher or the student, only the last two once the lesson ended.
- */
+/** With confirmation required the academy cancels; else teacher or student once it ended. */
 export function SalesCancelLesson({ lessonId, choices, onClose }: SalesCancelLessonProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

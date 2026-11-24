@@ -22,14 +22,12 @@ export interface FileComposerProps {
   phone: string;
   /** Picked by AttachButton; held by ComposerPhone only, never in the draft store. */
   file: File;
-  /** Sent, or «إزالة الملف»: back to the message box. */
   onDone: () => void;
 }
 
 /** The name the family sees: ≤ 200 characters, keeping the end (the extension). */
 const sentName = (file: File): string => file.name.trim().slice(-200) || file.type;
 
-/** «تعذّر رفع الملف» for a failed storage PUT, else the API's reason. */
 const fileErrorText = (e: unknown): string => sendErrorCodeText(e instanceof ChatUploadError ? e.code : sendErrorCode(e));
 
 /** An image's thumbnail (an object URL, revoked on unmount) or the PDF's name and size. */
@@ -51,13 +49,7 @@ function Chip({ file }: { file: File }) {
   );
 }
 
-/**
- * Sends the picked image or PDF (D2) in place of the message box: the file's chip with «إزالة الملف»,
- * an optional caption and «أرسل». Upload then send; a failed send keeps its clientRequestId, so the
- * same file sent again is the same request (rule 8). It shares the chat's send lock with the message
- * box (mutationKey), and its result after a sign-out writes nothing back (sendStart generations).
- * «رد»: the quoted strip stays above it; the file answers that message, and a sent one clears it.
- */
+/** A failed send keeps its clientRequestId so resending the file is the same request (rule 8). */
 export function FileComposer({ phone, file, onDone }: FileComposerProps) {
   const queryClient = useQueryClient();
   const errorId = useId();

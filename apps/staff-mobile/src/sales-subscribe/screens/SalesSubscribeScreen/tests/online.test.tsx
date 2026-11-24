@@ -7,7 +7,6 @@ import { familyOf, KID, kid, PHONE, salesQuote } from '@/sales-subscribe/testing
 import { linkQuote, paymentLink } from '@/sales-subscribe/testing/link-fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// «اشتراك جديد» → «دفع إلكتروني» (owner 2026-10-29, docs/30): the Stripe test build with the API's switch on.
 jest.mock('@/sales-subscribe/payment-link/flag', () => ({ STRIPE_FEATURE: true }));
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -50,7 +49,7 @@ async function createLink(amount?: string, client = createTestQueryClient()) {
   await renderWithQuery(<SalesSubscribeScreen />, client);
   await fireEvent.press(await screen.findByRole('radio', { name: t.salesMoney.payOnline }));
   expect(await screen.findByText(referenceLine(180, 'SAR'))).toBeTruthy();
-  // «مبلغ مخصص» on only to type one (owner 2026-11-01): off, the link carries the calculator price.
+  // With the custom amount off, the link carries the calculator price.
   if (amount) {
     await fireEvent.press(screen.getByRole('checkbox', { name: pl.customAmount }));
     const field = screen.getByLabelText(new RegExp(pl.agreedAmount.split(' (')[0] ?? ''));

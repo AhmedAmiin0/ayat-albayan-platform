@@ -1,8 +1,6 @@
 import { stepsOf, type BookingDraft, type StepKey } from '@/features/teaching/booking/draft/draft';
 
-// W9 (docs/20): «تسجيل طالب جديد» keeps what she typed and the step she reached when she closes the
-// dialog (✕ or Esc) to re-read the chat. Per phone, for this tab only (module memory, never storage);
-// cleared once the wizard books, and on sign-out.
+// W9 (docs/20): per-phone draft kept in tab memory only, cleared on booking and sign-out.
 
 export interface RegisterDraft {
   draft: BookingDraft;

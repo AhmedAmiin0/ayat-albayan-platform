@@ -42,19 +42,7 @@ function emptyTitle(filteredOut: boolean, teacherId: string): string {
   return teacherId ? s.emptyTeacher : s.empty;
 }
 
-/**
- * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy; she may move
- * or cancel any lesson not over yet, one at a time (docs/16 row 37, any lesson: owner 2026-10-28),
- * a day at a time (the admin schedule's switcher) and one teacher or all. A tap on a lesson opens its
- * «تفاصيل الحلقة», which holds every action («ادخل الحلقة» first while it runs; no buttons on the rows).
- * `?teacherId=` opens it on a teacher (from «المعلمون»), that teacher's pill right after «كل المعلمين» so
- * the filter is in view; `?date=` on a day. `asTab`: the sales tree's «جدول الحلقات» tab (no «رجوع»). The
- * compact top (owner 2026-10-28; UX review 2026-10-29: no permissions note, the sheet says what she may
- * do): an h2 title, the day switcher, the teacher pills and the status pills (UX review #6: «الكل» /
- * «للتأكيد» / «مؤكدة» / «ملغاة» with the day's counts), each pill group ONE row that scrolls sideways, 8pt
- * apart; the day's lessons in one inset card. Under «للتأكيد» or «مؤكدة» the rows drop the status word
- * they all share; «ملغاة» groups two statuses, so its rows keep who cancelled.
- */
+/** She may move or cancel any lesson not over, one at a time (docs/16 row 37). */
 export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const params = useLocalSearchParams<{ teacherId?: string; date?: string }>();

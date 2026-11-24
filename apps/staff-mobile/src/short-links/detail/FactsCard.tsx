@@ -41,7 +41,6 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** «أُرسل 3 · فشل 1 · لم يُرسل 1» and «أعد الإرسال», with the answer of the last resend. */
 function SendFacts({ link }: { link: ShortLinkDetail }) {
   const resend = useResendLink();
   const counts = sendCounts(link.userList);

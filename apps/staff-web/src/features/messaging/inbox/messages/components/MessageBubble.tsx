@@ -29,18 +29,11 @@ export interface MessageBubbleProps {
   /** Its template is not approved yet, so the sender leaves it queued. */
   waitingTemplate: boolean;
   now: Date;
-  /** Its newest «تصحيح:» reply (owner 2026-11-07): this one shows greyed, marked «صُحِّحت». */
+  /** Its newest correction reply; this one shows greyed as corrected. */
   correctedBy?: string | undefined;
 }
 
-/**
- * One message (R-MSG-05). As WhatsApp (owner 2026-10-26): ours on the right, theirs on the left, in
- * Arabic and English alike (BUBBLE_ROW), the text inside keeping its own direction; the clock time (the log's day
- * separators carry the day, the tooltip the full date), and on ours WhatsApp-style delivery ticks
- * right after the time (DeliveryTicks), the reason when it failed and what to do next. In a chat she
- * can write in, «رد» / «إعادة توجيه» beside it (BubbleActions; also a right-click), and an id a
- * quote's click scrolls to (jump-to-message), highlighted for a moment.
- */
+/** Ours on the right and theirs on the left in both languages, as WhatsApp (R-MSG-05). */
 export function MessageBubble(props: MessageBubbleProps) {
   const { message: m, waitingTemplate, now, correctedBy } = props;
   const outbound = m.direction === 'outbound';

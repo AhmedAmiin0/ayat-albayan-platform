@@ -5,7 +5,6 @@ import { jumpToMessage } from './jump-to-message';
 export interface LogAnchor {
   /** The hit the window opened around. */
   id: string;
-  /** «الانتقال إلى أحدث رسالة»: back to the live chat. */
   onNewest: () => void;
 }
 

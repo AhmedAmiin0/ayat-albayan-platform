@@ -4,7 +4,7 @@ import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «القوائم» (docs/22 §3): the academy's ONE shared set of chat lists. Lists only organise chats.
+// docs/22 §3: one academy-wide shared set of chat lists; lists only organise chats.
 
 export const CHAT_LISTS_KEY = ['chat-lists'] as const;
 

@@ -20,10 +20,7 @@ function VisitorRow({ visitor }: { visitor: ShortLinkVisitor }) {
   );
 }
 
-/**
- * «الزوار» (board LinkXStaffDetail): each distinct visitor once, a system user by name and role or
- * a number verified by a WhatsApp code (with the person it matched), how and when they came in.
- */
+/** Each distinct visitor once: a system user, or a number verified by a WhatsApp code. */
 export function VisitorsList({ link }: { link: ShortLinkDetail }) {
   const visitors = link.visitorList;
   return (

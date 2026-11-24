@@ -13,8 +13,8 @@ import { reportFileName } from '@/modules/reporting/report-pdf/report-ready';
 import { badRequest, conflict } from '@/common/http/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
 import type { ReportRow } from '@/modules/reporting/reports/report-row';
-import { ReportGate } from '@/modules/reporting/reports/submit/report-gate';
-import { callerActor, type ReportCaller } from '@/modules/reporting/reports/report-access';
+import { ReportGate } from '@/modules/reporting/reports/shared/report-gate';
+import { callerActor, type ReportCaller } from '@/modules/reporting/reports/shared/report-access';
 
 /** A signed-in user, or the lesson's teacher through their report link (owner 2026-11-06). */
 type FileRef = { id: string; user: ReportCaller };

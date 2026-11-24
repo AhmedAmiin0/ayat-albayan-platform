@@ -14,14 +14,13 @@ interface AudienceFieldProps {
 
 const F = () => t.shortLinks.form;
 
-/** «أحمد علي، سارة محمود ورقم هاتف». */
 function namesLine(form: LinkForm): string {
   const names = form.people.map((p) => p.name).join(t.common.listSeparator);
   const phone = form.phones.length > 0 ? F().andPhone : '';
   return [names, phone].filter((part) => part !== '').join(' ');
 }
 
-/** The typed limit, when it is a whole number («تم · 5 من 5 مسموح»). */
+/** The typed limit, only when it is a whole number. */
 function limitOf(form: LinkForm): number | null {
   const max = maxUsersOf(form.maxUsers);
   return max !== null && Number.isInteger(max) ? max : null;
@@ -29,7 +28,6 @@ function limitOf(form: LinkForm): number | null {
 
 const needsPeople = (form: LinkForm): boolean => form.audience === 'listed' || form.sendWhatsapp;
 
-/** «5 أشخاص» and who they are; «أضف من مستخدمي المنصة» while nobody is listed. */
 function PeopleSummary({ form, onOpen }: { form: LinkForm; onOpen: () => void }) {
   const n = listedCount(form);
   const title = n === 0 ? F().addPeople : counted(F().listedPeople, n);
@@ -40,10 +38,7 @@ function PeopleSummary({ form, onOpen }: { form: LinkForm; onOpen: () => void })
   );
 }
 
-/**
- * «من يمكنه فتح الرابط» (board LinkXStaffCreate): anyone who confirms who they are, or only the
- * listed people (picked on the people sheet); the list also feeds the WhatsApp send.
- */
+/** Anyone who verifies who they are, or only the listed people. */
 export function AudienceField({ form, set, error }: AudienceFieldProps) {
   const [picking, setPicking] = useState(false);
   const done = (picked: PeoplePicked) => {

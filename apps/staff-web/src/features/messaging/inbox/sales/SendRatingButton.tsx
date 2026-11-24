@@ -24,12 +24,7 @@ const doneText = (sent: MessageView | undefined): string | null => (sent ? (sent
 const isApproved = (templates: readonly TemplateView[] | undefined): boolean =>
   templates?.some((x) => x.key === RATING_TEMPLATE && x.status === 'approved') ?? false;
 
-/**
- * «إرسال تقييم الحلقة» (admin mode only, a guardian's closed chat): the API picks the children's latest lesson
- * that took place and sends lesson_rating; one tap on a button reopens the 24 h window. One request
- * id per press, kept across a retry (rule 8). Disabled until Meta approves the template. A sent rating
- * counts as her own send (own-send).
- */
+/** Admin only; one request id per press kept across retries (rule 8); needs Meta approval. */
 export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e164' | 'guardian_id'> }) {
   const queryClient = useQueryClient();
   const admin = useInboxMode() === 'admin';
