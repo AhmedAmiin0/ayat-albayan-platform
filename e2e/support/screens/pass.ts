@@ -33,22 +33,46 @@ async function shootTarget(job: Job, input: { page: Page; target: Target; varian
   return save(job, { page, entry });
 }
 
+async function visitAndShoot(job: Job, input: { pass: Pass; variant: Variant; target: Target }) {
+  const { pass, variant, target } = input;
+  const page = await variantPage(job, variant);
+  const problem = await visit(page, { job, target });
+  if (problem) return problem;
+  const entry = await shootTarget(job, { page, target, variant });
+  if (wantsDialogs(pass, variant)) await shootDialogs(job, { page, entry });
+  return null;
+}
+
+/**
+ * One target in its own context, closed afterwards: one page reused over a whole role's routes
+ * grew until the renderer crashed. A page that crashes is listed as skipped, with the error.
+ */
+async function oneTarget(job: Job, input: { pass: Pass; variant: Variant; target: Target }) {
+  const contexts = job.browser.contexts().length;
+  const problem = await visitAndShoot(job, input).catch(
+    (error: unknown) => `crashed: ${String(error).split('\n')[0] ?? ''}`,
+  );
+  await Promise.all(
+    job.browser
+      .contexts()
+      .slice(contexts)
+      .map((c) => c.close()),
+  );
+  return problem;
+}
+
 /** One variant over the targets; returns the ones this role reached. */
 async function runVariant(job: Job, input: { pass: Pass; variant: Variant; targets: Target[] }) {
   const { pass, variant } = input;
-  const page = await variantPage(job, variant);
   const reached: Target[] = [];
   for (const target of input.targets) {
-    const problem = await visit(page, { job, target });
+    const problem = await oneTarget(job, { pass, variant, target });
     if (problem) {
       pass.skipped.push({ app: job.app, role: job.role, route: target.route, reason: problem });
       continue;
     }
     reached.push(target);
-    const entry = await shootTarget(job, { page, target, variant });
-    if (wantsDialogs(pass, variant)) await shootDialogs(job, { page, entry });
   }
-  await page.context().close();
   return reached;
 }
 
