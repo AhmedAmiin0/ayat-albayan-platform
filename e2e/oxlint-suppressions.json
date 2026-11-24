@@ -1,7 +1,7 @@
 {
   "playwright.config.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/dot-notation": {
       "count": 9
@@ -36,7 +36,7 @@
   },
   "support/auto-lists.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "support/core/db.ts": {
@@ -102,7 +102,7 @@
       "count": 4
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "support/finance/course-pause.ts": {
@@ -188,11 +188,6 @@
       "count": 1
     }
   },
-  "support/messaging/chat-more.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "support/messaging/inbox.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -221,7 +216,7 @@
   },
   "support/messaging/restricted-templates.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "ab/no-unchecked-json": {
       "count": 2
@@ -265,7 +260,7 @@
   },
   "support/people/student-statuses.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/no-unchecked-json": {
       "count": 1
@@ -344,17 +339,17 @@
   },
   "support/sales/assistant-course.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "support/sales/assistant-journey-ui.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "support/sales/assistant-journey.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "support/sales/assistant.ts": {
@@ -380,7 +375,7 @@
   },
   "support/sales/sales-portal.ts": {
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "support/sales/trial-date.ts": {
@@ -396,7 +391,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/max-params": {
       "count": 1
@@ -410,7 +405,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "support/teaching/schedule-extra.ts": {

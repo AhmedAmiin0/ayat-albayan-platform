@@ -2,8 +2,7 @@ import { zonedPartsIn } from '@ab/time';
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 
-// «جدولي» (/teacher/calendar): the teacher's week grid. The home lists today only, so a later
-// lesson's card (propose, «سأحضر», join) opens from here.
+// The home lists today only, so a later lesson's card opens from the week grid.
 
 const DAY = 86_400_000;
 
@@ -35,7 +34,6 @@ export async function openMyLesson(page: Page, o: MyLesson): Promise<Locator> {
   return page.getByRole('dialog', { name: o.name });
 }
 
-/** «المواعيد المتاحة» (/teacher/availability, its own page). */
 export async function openMyAvailability(page: Page): Promise<void> {
   await page.goto('/teacher/availability');
   await expect(page).toHaveURL(/\/teacher\/availability/);

@@ -12,7 +12,6 @@ export interface NextLessonProps {
   tz: string;
 }
 
-/** «حلقتك القادمة: الأحد 16 نوفمبر 4:00 م · يوسف» (or none in two weeks) and «افتح جدولي». */
 export function NextLesson({ next, tz }: NextLessonProps) {
   const clock = useClock();
   const line = next
