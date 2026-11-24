@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { unreadCountQuery, useInboxLive } from '@/features/messaging/inbox';

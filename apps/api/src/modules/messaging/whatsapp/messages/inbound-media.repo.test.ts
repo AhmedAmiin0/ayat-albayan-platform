@@ -1,6 +1,6 @@
 import { PLAYABLE_MIMES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { InboundMediaRepo, PLAYABLE_FILTER } from './inbound-media.repo';
 import { RECEIPT_FILTERS } from './receipts/receipt-candidates';
 

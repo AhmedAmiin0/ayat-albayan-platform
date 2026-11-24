@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { CallsNumberRepo } from './calls-number.repo';
 

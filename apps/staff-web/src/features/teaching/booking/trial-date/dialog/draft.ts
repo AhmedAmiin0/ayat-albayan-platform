@@ -1,4 +1,5 @@
-import { trialLength, type Gender, type Program, type TrialHistory } from '@ab/shared';
+import { trialLength, type TrialHistory } from '@ab/shared';
+import type { Gender, Program } from '@ab/catalog';
 import { emptyDraft, type BookingDraft, type PickedStudent } from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
 
