@@ -21,7 +21,7 @@ import { StudentRecordingsService } from './student-recordings.service';
  * Settings, Storage and Audit are global modules; RecordingViews comes from ClassroomModule.
  */
 @Module({
-  // «ملفات الحلقة» and the family's «التسجيلات» ride along (app.module is at its line cap).
+  // Lesson files ride along here because app.module is at its line cap.
   imports: [ClassroomModule, TeachersModule, LessonFilesModule],
   controllers: [StudentRecordingsController],
   providers: [

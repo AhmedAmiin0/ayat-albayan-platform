@@ -31,7 +31,7 @@ export interface RatingLesson {
 export const ratingDedupKey = (lessonId: string, guardianId: string): string =>
   `${RATING_TEMPLATE}:${lessonId}:${guardianId}`;
 
-/** Attendance recorded (a report, staff «تم»), never on a lesson only held automatically. */
+/** Attendance was recorded, never on a lesson only held automatically. */
 const recorded = (ls: RatingLessonStudent): boolean => ls.attendance !== null;
 
 /** The guardians of the students who attended (feedbackEligible), each with their children's names. */

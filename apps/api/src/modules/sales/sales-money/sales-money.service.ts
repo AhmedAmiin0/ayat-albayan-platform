@@ -1,7 +1,6 @@
 import {
   linkAmountProblem,
   minLinkAmount,
-  type SalesFamilyView,
   type SalesMoneySubscriptionView,
   type SalesPaymentCreate,
   type SalesPaymentView,
@@ -15,10 +14,15 @@ import {
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict } from '@/common/http/errors';
-import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
-import { assertSalesDiscount, renewsAny, SalesMoneyScope } from './sales-money.scope';
-import { SalesMoneyServices } from './sales-money.services';
-import { SalesMoneyReads } from './reads/sales-money.reads';
+import { SalesMoneyReads } from './reads';
+import {
+  assertSalesDiscount,
+  SalesMoneyScope,
+  SalesMoneyServices,
+  toSalesPayment,
+  toSalesQuote,
+  toSalesSubscription,
+} from './shared';
 import { salesStartsOn } from './sales-start';
 import { loadEnv } from '@/config/env/env';
 
@@ -104,10 +108,5 @@ export class SalesMoney {
     const sub = await this.services.receipts.subscription(input.subscriptionId);
     await this.scope.assertRenews(ctx.user, sub.student_id);
     return this.services.receipts.uploadUrl(upload, ctx.maxBytes);
-  }
-
-  /** Her students of this chat's family (every child with sales.renew_any) with the packages still owed. */
-  async familyOf(phone: string, user: AuthUser): Promise<SalesFamilyView> {
-    return this.reads.familyOf(phone, { own: await this.scope.ownership(user), all: renewsAny(user) });
   }
 }

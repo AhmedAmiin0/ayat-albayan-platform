@@ -14,12 +14,6 @@ import { secretsOf } from './number-secrets';
 
 const n = t.numbers;
 
-/**
- * One number as a card: its name, role and provider, the phone (LTR island), on / off and default
- * chips, the last check, an Evolution number's engine, state, check and QR, its driver's secrets
- * (set / not set), «ترتيب البديل» (editable with numbers.manage),
- * «مزامنة القوالب مع هذا الرقم» (templates.manage), the raw ids folded, and — with numbers.manage — its buttons.
- */
 export function NumberCard({ view, manage }: { view: NumberView; manage: boolean }) {
   return (
     <article aria-label={view.label} data-number={view.id} className="grid min-w-0 gap-3 rounded-lg border border-rule bg-raised p-4">

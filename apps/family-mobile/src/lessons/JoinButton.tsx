@@ -5,22 +5,16 @@ import { AppText, pressScale, shape, t, type, useTheme } from '@ab/mobile-kit';
 interface JoinButtonProps {
   onPress: () => void;
   busy: boolean;
-  /** «ادخل» on a schedule row; «ادخل الحلقة» on a card. */
   short?: boolean;
-  /** The room is live: «ادخل الآن» on a card. */
   live?: boolean;
 }
 
-/** The idle word: a row's «ادخل», else the card's (live or not). */
 const idleWord = (short: boolean, live: boolean): string => {
   const card = live ? t.portal.app.live.join : t.portal.join;
   return short ? t.portal.app.lesson.joinShort : card;
 };
 
-/**
- * «ادخل الحلقة» on the lapis card: white, with the camera glyph, the app's press-in; busy while the
- * room link is fetched (the label says so).
- */
+/** Busy while the room link is fetched. */
 export function JoinButton({ onPress, busy, short = false, live = false }: JoinButtonProps) {
   const { color } = useTheme();
   const label = busy ? t.portal.joining : idleWord(short, live);

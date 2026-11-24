@@ -7,8 +7,7 @@ import type { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-
 import type { SalesBookingScope } from './sales-booking.ownership';
 import { SalesBookingService } from './sales-booking.service';
 
-// Hold mode on the server (PR #648 review): an old app build or a stale web tab POSTs «احجز» for
-// a package that is unpaid with an open payment link: nothing is booked, nobody is told.
+// An old client booking an unpaid package with an open payment link books nothing.
 const S1 = 'c0000000-0000-4000-8000-000000000001';
 const USER: AuthUser = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' };
 const REQ = bookingRequestSchema.parse({

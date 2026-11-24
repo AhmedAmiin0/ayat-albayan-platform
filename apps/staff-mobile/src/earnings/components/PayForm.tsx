@@ -23,8 +23,9 @@ interface PayFormProps {
 }
 
 /**
- * «سجّل دفعة» for a teacher (admin): amount (default = what the ticked sessions owe; more than
- * that is refused here and by the API), method, day, receipt photo. A refused save keeps everything.
+ * The payment form for a teacher (admin): amount (default = what the ticked sessions owe; more
+ * than that is refused here and by the API), method, day, receipt photo. A refused save keeps
+ * everything.
  */
 export function PayForm({ teacherId, selected, outstanding, onDone }: PayFormProps) {
   const now = useNow();

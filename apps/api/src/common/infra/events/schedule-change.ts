@@ -6,10 +6,7 @@
 /** Who made the change (their profile): they get no push about it. null = a job. */
 interface Actor {
   actorId: string | null;
-  /**
-   * Only this side hears it; absent: both. «تغيير المعلم» (CourseChangeNotices) tells the family,
-   * the old teacher and the new one apart.
-   */
+  /** Only this side hears it; absent means both. */
   audience?: 'teacher' | 'family';
 }
 interface Moved {

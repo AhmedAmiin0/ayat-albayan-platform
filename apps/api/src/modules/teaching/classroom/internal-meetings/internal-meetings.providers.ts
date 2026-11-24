@@ -16,9 +16,7 @@ import { MeetingListRepo } from '@/modules/teaching/classroom/meetings/schedule/
 import { MeetingListService } from '@/modules/teaching/classroom/meetings/schedule/meeting-list.service';
 import { MeetingScheduleDeps, MeetingScheduleService } from '@/modules/teaching/classroom/meetings/schedule/meeting-schedule.service';
 
-// «اجتماع داخلي» (migration 193) with scheduling and invitations (R-MEET-01..03, migrations 410–414):
-// listed here so ClassroomModule stays readable. ThreadsQueries and TeacherScopes (InboxModule), PushService (global)
-// and MessageSender (global WhatsappModule) come from outside.
+// Internal meetings with scheduling and invitations (R-MEET-01..03, migrations 193, 410-414).
 
 export const INTERNAL_MEETING_CONTROLLERS = [InternalMeetingsController, InternalMeetingsPublicController, MeetingInvitesController];
 

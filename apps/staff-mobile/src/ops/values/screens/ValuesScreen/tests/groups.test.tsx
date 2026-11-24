@@ -36,7 +36,6 @@ test('D24: without settings.write no row says «عدّل»; each reads «الا�
   mockApiFetch.mockImplementation(answer(READER));
   await renderWithQuery(<ValuesScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByRole('button', { name: `${labelOf('booking_horizon_weeks')}: 5` });
-  // «عدّل «{label}»: {value}» → the verb that a read-only row must not say.
   const verb = t.mobileValues.edit.replace(/«\{label\}».*$/, '').trim();
   expect(verb.length).toBeGreaterThan(0);
   for (const row of screen.getAllByRole('button')) {

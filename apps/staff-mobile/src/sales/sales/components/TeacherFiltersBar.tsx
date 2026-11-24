@@ -9,7 +9,6 @@ interface TeacherFiltersBarProps {
   onChange: (next: SalesTeacherFilter) => void;
 }
 
-/** «المعلمون» filters (the web's): the pill search by name, then a row of programs and one of genders, 8pt apart. */
 export function TeacherFiltersBar({ value, programs, onChange }: TeacherFiltersBarProps) {
   return (
     <View style={{ gap: 8 }}>

@@ -7,7 +7,6 @@ import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { LessonWhen } from '@ab/web-kit/portal/lessons/LessonWhen';
 import { markReportSeen, useSeenReports } from '@ab/web-kit/portal/use-seen-reports';
 
-/** One report of the student's «التقارير»: the lesson's time, the teacher, «جديد», open. */
 export function ReportRow({ report, student }: { report: PortalReport; student: PortalStudent }) {
   const navigate = useNavigate();
   const fresh = isNewReport(report.id, useSeenReports());

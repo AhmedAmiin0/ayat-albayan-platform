@@ -11,14 +11,7 @@ import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { TemplateComposer } from '@/features/messaging/inbox/composer/components/TemplateComposer';
 import { LinkedCourseDialog } from '@/features/sales/sales-money';
 
-/**
- * A number with no message yet: opened from a lead, a booking or «محادثة جديدة» (admin and sales, same
- * path). WhatsApp opens no window without the family's reply, so the first message is an approved
- * template; once it is queued the thread exists and the normal pane takes over. A teacher only reads.
- * Sales with no template allowed reads why she cannot start it (W7), not an empty composer.
- * `lessons`: the family's next lessons (the API finds a booked family by its number), for rule 6.
- * Sales: a «احجز أيام الحلقات» link (?course=) to a number with no chat yet opens its «أيام الحلقات».
- */
+/** WhatsApp opens no window without the family's reply, so the first message is a template. */
 export function NewThread({ phone, lessons }: { phone: string; lessons: readonly ThreadLesson[] }) {
   const mode = useInboxMode();
   const writes = mode !== 'teacher';

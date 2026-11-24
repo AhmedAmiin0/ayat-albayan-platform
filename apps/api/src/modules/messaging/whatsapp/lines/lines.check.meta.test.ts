@@ -4,9 +4,7 @@ import { LINES_RECORDED as R, routedFetch, stubEnvs, TWO_LINES_ENV } from '@/mod
 import { LinesCheck } from './lines.check';
 import { appSubscribed } from './lines.check.meta';
 
-// docs/19 «CRM → Meta»: «افحص الخطوط» says whether the app secret and the verify token are set
-// (booleans, never values) and whether the line's app is subscribed to its WABA, before and after
-// the switch.
+// docs/19: secret and verify token reported as booleans only, plus the WABA subscription.
 
 const NW = `${STUB_ENV.wabaId}/subscribed_apps`;
 const CRM = { WA_PROVIDER: 'crm', WACRM_API_BASE: 'http://127.0.0.1:4010/crm/api/v1', WACRM_API_KEY: 'fake-crm-key' };

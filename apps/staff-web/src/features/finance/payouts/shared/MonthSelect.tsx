@@ -4,7 +4,6 @@ import { Select } from '@ab/web-kit/components/ui/form/select';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 
-/** `YYYY-MM` → «أكتوبر 2026». */
 export function monthLabel(month: string): string {
   const first = new Date(`${addCalendarMonths(month, 0)}T00:00:00Z`);
   return dateText(first, { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });

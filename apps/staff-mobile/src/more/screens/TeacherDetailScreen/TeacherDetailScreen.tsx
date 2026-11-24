@@ -1,4 +1,5 @@
-import { teacherName, teacherStatusStyle } from '@ab/shared';
+import { teacherStatusStyle } from '@ab/money';
+import { teacherName } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
@@ -26,15 +27,10 @@ import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
 import { StaffPhotoControl } from '@/account';
 import type { Teacher } from '@ab/shared';
 
-/** The teacher's page and lists, and sales' «المعلمون»: where a new photo must show. */
+/** Every query where a new teacher photo must show. */
 const TEACHER_KEYS = [pathKey('/teachers'), pathKey('/sales/teachers')];
 
-/**
- * A teacher, read-only (R-TCH-01, R-TCH-02): status, «جدول المعلم/ة» (the week's lessons), their
- * students («مشترك · تجريبي · الكل», preset by `?status=`), phone +
- * WhatsApp, the weekly availability and upcoming time-off; for an admin «الصورة» (change / remove). Editing stays on the web, except the login's
- * «اسم المستخدم» (teachers.write, docs/30 §7).
- */
+/** R-TCH-01, R-TCH-02: read-only except the login username (teachers.write, docs/30 §7). */
 export function TeacherDetailScreen() {
   const { id = '', status } = useLocalSearchParams<{ id: string; status?: string }>();
   const path = `/teachers/${id}`;

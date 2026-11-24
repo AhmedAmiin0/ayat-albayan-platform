@@ -4,7 +4,7 @@ import { createTestQueryClient, noConfirmQueryClient, renderWithQuery } from '@/
 import { OVERVIEW } from '@/calendar/overview/overview-fixtures';
 import { LessonRowActions } from '@/calendar/agenda/LessonRowActions/LessonRowActions';
 
-// No confirmation required (OFF, owner 2026-11-02) and «تصحيح حالة الحلقة» (owner 2026-11-03).
+// No confirmation required, plus the status correction action.
 const action = {
   busyId: null,
   errorFor: () => null,

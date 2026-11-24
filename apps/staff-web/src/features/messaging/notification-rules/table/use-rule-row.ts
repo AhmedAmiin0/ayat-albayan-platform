@@ -46,10 +46,7 @@ function afterSave(client: QueryClient, updated: unknown) {
   void client.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settings });
 }
 
-/**
- * One editable row of «الإشعارات»: its draft (kept in the shared RuleDrafts, so a tab switch keeps it),
- * its per-row save and its switch (docs/26b §3). A refused save is also announced by the section.
- */
+/** Drafts live in the shared RuleDrafts so a tab switch keeps them (docs/26b §3). */
 export function useRuleRow(rule: NotificationRuleView): RuleRowState {
   const api = useRules();
   const client = useQueryClient();

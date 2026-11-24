@@ -26,10 +26,6 @@ const ARROWS: { dir: SearchStep; Icon: typeof UpIcon }[] = [
   { dir: 'newer', Icon: DownIcon },
 ];
 
-/**
- * The chat header while «بحث» is open (WhatsApp): back (closes it), the field (the keyboard's
- * «بحث» goes to the older hit), «N من M» and the two arrows, in the header's own 52pt row.
- */
 export function ChatSearchBar({ search: s }: { search: ChatSearchValue }) {
   const { color } = useTheme();
   const small = useSmallText();

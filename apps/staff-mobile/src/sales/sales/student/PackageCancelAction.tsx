@@ -11,11 +11,7 @@ interface PackageCancelActionProps {
   subscriptionId: string | null;
 }
 
-/**
- * «إلغاء الباقة» next to «إلغاء الاشتراك» (owner 2026-11-02): subscriptions.stop, ANY student,
- * shown only when the server's check (the cancel's own: no lessons, no payments) lets it run;
- * the confirm, the optional reason and the 409 words are the admin's (CancelPackage).
- */
+/** Shown only when the server's cancel check (no lessons, no payments) passes. */
 export function PackageCancelAction({ studentId, subscriptionId }: PackageCancelActionProps) {
   const allowed = useHolds('subscriptions.stop');
   const check = usePackageCancelCheck({ subscriptionId, enabled: allowed });

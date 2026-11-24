@@ -13,7 +13,6 @@ type Switch = (typeof SWITCHES)[number];
 
 const switchPatch = (key: Switch, on: boolean) => ({ [key]: on });
 
-/** «سلوك المثيل» (Evolution's /settings/set): the switches, and the reply to a rejected call. */
 export function BehaviourSection({ value, errors, onChange }: SectionProps<'behaviour'>) {
   return (
     <ConfigFieldset legend={c.sections.behaviour}>

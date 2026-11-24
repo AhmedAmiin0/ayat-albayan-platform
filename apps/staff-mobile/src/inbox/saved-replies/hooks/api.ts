@@ -4,8 +4,7 @@ import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import { ChatFileError, type ChatFilePick } from '@/inbox/composer/send-file';
 
-// «الردود السريعة» (owner 2026-10-25): GET /saved-replies answers the shared list then the caller's
-// own; every write refetches it. The API decides who may write the shared list (403 otherwise).
+// Every write refetches; the API decides who may write the shared list (403 otherwise).
 
 export const SAVED_REPLIES_KEY = ['saved-replies'] as const;
 

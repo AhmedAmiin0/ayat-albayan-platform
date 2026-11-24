@@ -8,8 +8,7 @@ import { studentLinkQueries } from './student-link.fakes';
 import type { StudentLinkRepo } from './student-link.repo';
 import { StudentLinkService } from './student-link.service';
 
-// Test accounts (docs/56) on the family portal's «ادخل الحلقة»: the window is skipped only for a
-// test login on a test student; the rate limit only by the login's own flag.
+// docs/56: the window is skipped only for a test login on a test student; rate limit by login flag.
 
 let q: ReturnType<typeof studentLinkQueries>;
 const service = () =>

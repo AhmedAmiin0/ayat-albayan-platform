@@ -9,8 +9,6 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
-// «أرسل عبر واتساب» in the bubble's menu (⋯): the same action as the bubble's line.
-
 const base = {
   phone: PHONE,
   hasMore: false,

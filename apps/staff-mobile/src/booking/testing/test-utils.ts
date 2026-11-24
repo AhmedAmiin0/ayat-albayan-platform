@@ -8,12 +8,10 @@ import { pickLesson } from './lesson-times';
 
 // Test-only helpers for the quick-book screen tests (the jest.mock calls stay in each test file).
 
-/** The invoice preview's label «الفاتورة، <source>» (the field's own label is just «الفاتورة»). */
 export const PREVIEW = new RegExp(`^${t.booking.mobile.invoiceA11y.split('{source}')[0] ?? ''}`);
 
 export const LEADS_KEY = listKey('/leads', { q: '' });
 
-/** The inbox list the lead screen came from: هدى (+966, Riyadh) and an unnamed +20 lead. */
 export function seededClient() {
   const client = createTestQueryClient();
   client.setQueryData(LEADS_KEY, cachedList([huda, unnamed]));
@@ -36,8 +34,6 @@ export function fakeBookingApi() {
   return { api, fetch };
 }
 
-/** The chat's «اشترك» wizard: name, teacher, the package step as it is, one day (Sunday 4 Oct at
- * `time`, the other row dropped), «التالي» → «الفاتورة». */
 export async function walkPackageToInvoice(time = '17:00') {
   await fireEvent.changeText(await screen.findByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));

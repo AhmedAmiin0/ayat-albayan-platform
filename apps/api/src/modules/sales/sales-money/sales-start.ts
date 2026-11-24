@@ -6,13 +6,7 @@ import { riyadhToday } from '@/modules/sales/sales';
 
 type StartInput = { startsOn?: string | undefined; alreadyStarted?: boolean | undefined; lessonsUsedBefore?: number | undefined };
 
-/**
- * The start day of a package she creates (docs/16 row 24): today in Riyadh unless she holds
- * subscriptions.set_start_date (403 start_date_not_allowed); a past day only with alreadyStarted, at most a
- * year back (400). Before pricing. Old apps sent the family's local day: without alreadyStarted, Riyadh's
- * yesterday is read as today. «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a past start.
- * Shared by «اشتراك جديد» and «رابط دفع» (docs/30).
- */
+/** docs/16 row 24: today in Riyadh unless allowed; past only with alreadyStarted, max a year. */
 export function salesStartsOn(input: StartInput, user: AuthUser, now: Date): string {
   const canSet = user.permissions?.includes('subscriptions.set_start_date') ?? false;
   const today = riyadhToday(now);

@@ -6,8 +6,7 @@ import type { InboundMediaRepo, MediaMessage } from './inbound-media.repo';
 import { InboundMedia, servable } from './inbound-media.service';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// Owner 2026-10-19 #1: the chat bubble (W6) serves voice notes and videos up to 16 MB; the default
-// gate (booking «من الشات», sales receipt copy) stays images / PDFs.
+// W6 serves voice notes and videos up to 16 MB; the default gate stays images and PDFs.
 
 const msg = (over: Partial<MediaMessage> = {}): MediaMessage => ({
   id: 'm1',

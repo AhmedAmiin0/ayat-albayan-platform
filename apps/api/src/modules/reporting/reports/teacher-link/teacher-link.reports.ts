@@ -1,7 +1,7 @@
 import type { ReportFormResponse, ReportView } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
-import { ReportsService } from '@/modules/reporting/reports/reports.service';
+import { ReportsService } from '@/modules/reporting/reports/shared/reports.service';
 import { ReportSubmitService } from '@/modules/reporting/reports/submit/report-submit.service';
 import { ReportV2Service } from '@/modules/reporting/reports/v2/report-v2.service';
 import type { LinkCall, LinkReportCall } from './teacher-link.calls';

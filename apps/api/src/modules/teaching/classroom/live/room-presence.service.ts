@@ -23,11 +23,7 @@ function presenceOf(e: ParticipantEvent, now: Date): PresenceEvent | null {
   return { lessonId: target.id, identity: e.identity, at: e.at ?? now.toISOString() };
 }
 
-/**
- * LiveKit's participant_joined / participant_left / room_finished on a lesson room (owner
- * 2026-11-16): who is inside now (RoomPresenceRepo, in LiveKit's order), and «بدأت الحلقة» to the
- * family when the lesson's teacher comes in. Never throws: the webhook must acknowledge.
- */
+/** Never throws: the webhook must acknowledge. */
 @Injectable()
 export class RoomPresenceService {
   private readonly log = new Logger(RoomPresenceService.name);

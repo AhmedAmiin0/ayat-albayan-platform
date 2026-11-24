@@ -25,8 +25,7 @@ const body = (currency: string) => ({
   clientRequestId: REQ,
 });
 
-// 2026-11-14: a QAR link wrote its unpaid package, then payment_links_currency_check refused the
-// link (500, «تعذّر الحفظ»). Every catalog currency now makes a link; any other is refused first.
+// Unsupported currencies are refused before the package is written (once a 500 for QAR).
 describe('POST /sales/payment-links: the package currency', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

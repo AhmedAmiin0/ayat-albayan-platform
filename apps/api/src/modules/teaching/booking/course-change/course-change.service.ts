@@ -19,17 +19,10 @@ import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sale
 
 /** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
 export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
-/** teacherId: «تغيير المعلم» (owner 2026-10-30), the new rules' teacher; absent = the course's. */
+/** Absent means the course's teacher. */
 export type CourseMove = CourseChangeRequest & { teacherId?: string };
 
-/**
- * «تغيير أيام الحلقات» (owner 2026-10-18, R-ASST-01/04): the course's lessons that have not happened
- * yet move to new days, the teacher, length and zone staying the course's. The assistant changes her
- * own student's course only and never over a clash; the admin may override with a reason. One
- * transaction (change_course): the old rules still reaching the change point end the day before it,
- * every open lesson of the course from it becomes rescheduled, the new rules carry exactly REMAINING
- * lessons (course-change.planner.ts).
- */
+/** R-ASST-01/04: one transaction; assistants never over a clash; admin overrides with a reason. */
 @Injectable()
 export class CourseChange {
   constructor(
@@ -81,15 +74,17 @@ export class CourseChange {
     return this.deps.writer.apply({ payload, subscriptionId: sub.id, told });
   }
 
-  /**
-   * 404 subscription_not_found; for the assistant 403 not_your_student unless the student is hers
-   * (only while SalesOwnershipRule enforces it). Public: the profile's GET reads through it too.
-   */
+  /** 404 subscription_not_found, then ownsStudent. Public: the profile's GET reads through it. */
   async owned(subscriptionId: string, actor: ChangeActor): Promise<CourseSub> {
     const sub = await this.queries.subscription(subscriptionId);
-    if (actor.role === 'sales' && actor.anyStudent !== true)
-      assertOwnStudents([sub.student_id], await this.scope.of(actor.user));
+    await this.ownsStudent(sub.student_id, actor);
     return sub;
+  }
+
+  /** The assistant: 403 not_your_student unless hers, only while SalesOwnershipRule enforces it. */
+  async ownsStudent(studentId: string, actor: ChangeActor): Promise<void> {
+    const scoped = actor.role === 'sales' && actor.anyStudent !== true;
+    assertOwnStudents([studentId], scoped ? await this.scope.of(actor.user) : null);
   }
 
   /**

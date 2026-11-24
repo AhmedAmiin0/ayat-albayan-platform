@@ -1,8 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LESSON, lessonFacts, studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 
-// «تصحيح الحالة» from the assistant (owner 2026-11-03): key lessons.cancel, after the end, through
-// the admin's OutcomeCorrection (which decides whether the lesson may still be corrected).
+// Key lessons.cancel, after the end, via OutcomeCorrection which decides eligibility.
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const NOW = new Date('2026-10-27T10:00:00Z');
 const ENDED = lessonFacts({ starts_at: '2026-10-26T15:00:00Z', ends_at: '2026-10-26T15:30:00Z' });

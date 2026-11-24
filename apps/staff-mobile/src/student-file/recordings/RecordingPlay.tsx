@@ -4,10 +4,7 @@ import { t, Button, ErrorLine } from '@ab/mobile-kit';
 
 const R = t.mobileStudentFile.recordings;
 
-/**
- * «تشغيل»: asks for a fresh 1-hour link on every tap (`getUrl`, the list's refetch) and hands it to
- * the system player through Linking (no in-app player: that needs a new native module).
- */
+/** Asks for a fresh 1-hour link on every tap and hands it to the system player. */
 export function RecordingPlay({ when, getUrl }: { when: string; getUrl: () => Promise<string | null> }) {
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);

@@ -44,7 +44,7 @@ test('the reason is required; sent trimmed with one request id, then the done bl
   await openSheet();
   await fireEvent.press(await screen.findByRole('button', { name: s.confirm }));
   expect(mockApiSend).not.toHaveBeenCalled();
-  // owner 2026-11-17: a clear error under the empty reason, only once «تأكيد الإلغاء» was pressed.
+  // The reason error shows only once confirm was pressed.
   expect(screen.getByText(s.reasonRequired)).toBeTruthy();
   await fireEvent.changeText(screen.getByPlaceholderText(s.reasonHint), '  سفر  ');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
@@ -56,7 +56,6 @@ test('the reason is required; sent trimmed with one request id, then the done bl
       owe: { choice: 'attended' },
     }),
   );
-  // owner 2026-11-17 (CourseXStopDone): the status now, the next step, who was told, «تم».
   expect(await screen.findByText(s.done)).toBeTruthy();
   const status = s.doneStatus.replace('{status}', t.enums.studentStatus.churned);
   for (const line of [status, s.nextTitle, s.nextTell, s.notifiedFamily, s.notifiedTeacher])

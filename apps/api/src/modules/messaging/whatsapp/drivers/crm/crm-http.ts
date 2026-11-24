@@ -55,13 +55,7 @@ function retryAfterMs(header: string | null, now: Date = new Date()): number {
   return Number.isFinite(ms) && ms > 0 ? Math.min(ms, RETRY_MAX_MS) : RETRY_DEFAULT_MS;
 }
 
-/**
- * The CRM's failure → WaError. 401 / 403: the key is refused or lacks a scope (a 403 naming
- * one keeps it as missingScope: templates:read on «مزامنة», docs/39), and 400
- * whatsapp_not_configured: the CRM lost its own WhatsApp connection (credential 'crm': the line is held, rows stay queued). 429: retryAfterMs. 502 meta_error / 500 template_malformed / any other
- * 4xx: fails with crmCode (nothing was sent). A 503 with no envelope: the CRM is down (lineDown).
- * Any other 5xx: uncertain (the CRM may have sent to Meta before failing its own insert).
- */
+/** 401/403 bad key or scope; 429 retryAfterMs; 503 no envelope is down; other 5xx is uncertain. */
 export function crmErrorFrom(res: { status: number; text: string; retryAfter: string | null }): WaError {
   const { crmCode, said } = envelopeOf(res);
   const base = { code: null, status: res.status, crmCode, details: said };

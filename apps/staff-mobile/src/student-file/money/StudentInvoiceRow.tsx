@@ -8,10 +8,7 @@ import { useViewerTz } from '@/core/lib/clock';
 
 const M = t.mobileStudentFile.money;
 
-/**
- * One invoice (day · kind · source) with «فتح الفاتورة»: a fresh signed link in the system viewer. No fill
- * or rule of its own: the list's inset card draws them (owner 2026-10-28: one container rule).
- */
+/** Opens a fresh signed link in the system viewer; the list's inset card draws fill and rules. */
 export const StudentInvoiceRow = memo(function StudentInvoiceRow({ invoice }: { invoice: InvoiceView }) {
   const tz = useViewerTz();
   const { color } = useTheme();

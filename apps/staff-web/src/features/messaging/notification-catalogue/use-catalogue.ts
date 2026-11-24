@@ -4,10 +4,7 @@ import { integrationsQuery } from '@/features/platform/integrations/integrations
 import { linesCheckQuery } from '@/features/messaging/messaging/api';
 import { catalogueQuery } from './catalogue-api';
 
-/**
- * GET /admin/notifications as «الإشعارات» and «نظرة عامة» read it (one cache entry): refetched whenever
- * the settings, «التكاملات» or a line check change; the first fetch once the settings are in.
- */
+/** One cache entry refetched on settings, integrations or line-check changes. */
 export function useCatalogue() {
   const settings = useQuery(settingsQuery);
   const check = useQuery(linesCheckQuery);

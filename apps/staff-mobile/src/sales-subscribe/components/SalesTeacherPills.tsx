@@ -26,10 +26,7 @@ interface SalesTeacherPillsProps {
 /** More teachers than this: a search narrows the pills (the picked one always stays). */
 const SEARCH_FROM = 8;
 
-/**
- * «المعلم/ة» (owner 2026-10-29): who teaches the student once subscribed, the trial's teacher by default
- * (students.teacher_id). Saved with the package; the teacher–student chat opens after the subscription.
- */
+/** Defaults to the trial's teacher (students.teacher_id); their chat opens after subscribing. */
 export function SalesTeacherPills({ hidden, value, onChange }: SalesTeacherPillsProps) {
   const teachers = useSalesTeachers().data ?? [];
   const [q, setQ] = useState('');

@@ -3,14 +3,12 @@ import { t } from '@ab/mobile-kit';
 import { Pills } from './Pills';
 
 interface GradePillsProps {
-  /** The graded row («التسميع», «القراءة»…); the group is announced «تقييم …». */
   title: string;
   value: Grade | null;
   onChange: (grade: Grade) => void;
   disabled?: boolean;
 }
 
-/** The five grades (ممتاز … يحتاج إلى مراجعة) as one radiogroup of chips. */
 export function GradePills({ title, value, onChange, disabled }: GradePillsProps) {
   const items = GRADES.map((g) => ({ value: g, label: t.enums.grade[g] }));
   return (

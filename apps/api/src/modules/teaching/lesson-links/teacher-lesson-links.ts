@@ -9,9 +9,9 @@ import { joinExpiry, signTeacherJoin } from './join-token';
 
 /** One lesson's two teacher links (teacher_lesson_v3's button suffixes, owner 2026-11-06). */
 export interface TeacherLessonTokens {
-  /** The signed-in report page and its button suffix, the lesson id («تقرير الحلقة»). */
+  /** The signed-in report page and its button suffix, the lesson id. */
   report: TeacherReportLink;
-  /** The signed /join token («ادخل الحلقة»): GET /join/:token, until the end + 2 h. */
+  /** Valid until the lesson end + 2 h. */
   join: string;
 }
 

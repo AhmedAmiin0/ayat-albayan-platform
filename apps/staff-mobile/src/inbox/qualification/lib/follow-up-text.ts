@@ -8,11 +8,7 @@ const statuses: readonly string[] = FOLLOW_UP_STATUSES;
 const f = t.followUps;
 const NOTES = { queued: f.queued, waiting_template: f.waitingTemplate, no_slots: f.noSlots } as const;
 
-/**
- * What the follow-up automation will do next (R-LEAD-05), like the web's followUpText: who paused
- * it, or why the due one has not gone out (queue, Meta's approval, no free slots), else when it is
- * due («المتابعة الجاية الأحد 4 أكتوبر 17:00», in `tz`: the device's), then «اتبعت 1 من 3».
- */
+/** R-LEAD-05: who paused it, why the due one is held, else when it is due in the device zone. */
 export function followUpLines(lead: LeadProfile, total: number | undefined, at: { tz: string; cycle: ClockCycle }): string[] {
   if (lead.follow_up_paused) return [lead.follow_up_paused_by === 'lead' ? f.pausedByLead : f.paused];
   if (!statuses.includes(lead.status)) return [f.none];

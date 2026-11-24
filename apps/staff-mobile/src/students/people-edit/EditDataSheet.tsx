@@ -37,7 +37,6 @@ async function saveBoth(input: { view: PeopleEditView; initial: Forms; current: 
   if (hasChange(family)) await saveFamily({ id: input.view.guardian.id, patch: family });
 }
 
-/** «تعديل البيانات»: the student's and the family's details, and the family's second number. */
 export function EditDataSheet({ view, onClose, onDone }: PeopleSheetProps) {
   const [initial] = useState<Forms>(() => ({
     student: studentFormOf(view.student),

@@ -20,7 +20,6 @@ jest.mock('expo-router', () => ({
 
 const sent = (n: number) => mockApiSend.mock.calls[n]?.[2] as Record<string, unknown>;
 
-/** Name → teacher → «وقت آخر» → 12:00 (outside her hours) → «التالي» → the review. */
 async function walkOutside() {
   await fireEvent.changeText(await screen.findByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));

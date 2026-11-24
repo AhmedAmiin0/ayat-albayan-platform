@@ -5,7 +5,7 @@ import { LessonRowActions } from '@/calendar/agenda/LessonRowActions/LessonRowAc
 import { t, palette } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 
-// An academy that requires lesson confirmation: «تأكيد» exists (OFF: LessonRowActions.no-confirm).
+// With confirmation required, the confirm action exists; the off case is in no-confirm.
 const render = (ui: Parameters<typeof renderWithQuery>[0]) =>
   renderWithQuery(ui, confirmingQueryClient());
 

@@ -8,7 +8,7 @@ interface UsersFiltersProps {
   onChange: (next: UsersView) => void;
 }
 
-/** The web's role and status filters as two chip rows; «الكل» clears one. A change reloads from page 1. */
+/** A change reloads from page 1. */
 export function UsersFilters({ view, onChange }: UsersFiltersProps) {
   const all = { value: '', label: t.users.filters.all };
   const roles = [all, ...USER_ROLES.map((r) => ({ value: r, label: roleText(r) }))];

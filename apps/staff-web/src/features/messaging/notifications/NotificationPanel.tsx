@@ -11,10 +11,7 @@ export interface NotificationPanelProps {
   onPick: () => void;
 }
 
-/**
- * The bell's drop-down (R-NOT-01): heading, «تحديد الكل كمقروء» while anything is unread, the
- * latest rows, and browser push at its foot.
- */
+/** R-NOT-01. */
 export function NotificationPanel({ onPick }: NotificationPanelProps) {
   const unread = useQuery(notificationsQuery).data?.unread ?? 0;
   const markAll = useMarkRead();

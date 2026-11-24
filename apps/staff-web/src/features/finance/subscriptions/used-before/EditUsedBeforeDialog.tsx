@@ -19,7 +19,7 @@ interface Props {
 
 const e = t.salesMoney.usedBeforeEdit;
 
-/** The form once the state is read: − / + from min(stored, max), «حفظ» only for another number. */
+/** Starts from min(stored, max); save only for another number. */
 function EditForm({ state, formId, run }: { state: UsedBeforeState; formId: string; run: Run }) {
   const from = state.lessons_used_before;
   const [value, setValue] = useState(Math.min(from, state.max));
@@ -50,11 +50,7 @@ function EditForm({ state, formId, run }: { state: UsedBeforeState; formId: stri
 
 type Run = ReturnType<typeof useEditUsedBefore>;
 
-/**
- * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): reads GET …/lessons-used-before first, so a
- * cancelled package or a booked course says so before anything is typed; the stepper's max is
- * the server's (usedBeforeEditMax: one lesson left per course day, a past start for > 0).
- */
+/** Reads the server first; the max keeps one lesson per course day (usedBeforeEditMax). */
 export function EditUsedBeforeDialog({ subscriptionId, onClose, onSaved }: Props) {
   const formId = useId();
   const state = useQuery(usedBeforeStateQuery(subscriptionId));

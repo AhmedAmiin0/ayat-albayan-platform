@@ -41,7 +41,7 @@ export function timingDraft(key: TimedNotificationKey, timing: AnyRuleTiming | n
   }
 }
 
-/** A whole number within [min, max] typed on any keypad («٤٥» is 45), or null. */
+/** Accepts Arabic-Indic digits from any keypad; null when out of range. */
 export function boundedInt(text: string, bounds: { min: number; max: number }): number | null {
   const s = westernDigits(text.trim());
   if (!/^\d+$/.test(s)) return null;

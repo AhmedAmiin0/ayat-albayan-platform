@@ -1,9 +1,7 @@
 import { z } from 'zod';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 
-// Who hears a course change (owner 2026-10-30: «on any reschedule notify both the teacher and the
-// family»): «تغيير موعد الحلقات» and «تغيير المعلم» from the profile, and the drawer's «تغيير أيام
-// الحلقات». Pure: CourseChangeNotices asks FamilyMoveNotice and announces what this plans.
+// Both teacher and family hear any reschedule; pure, CourseChangeNotices announces it.
 
 /** A lesson the change moved or added: its id and start. */
 interface Timed {
@@ -20,7 +18,7 @@ export interface CourseTold {
   actorId: string;
   /** The course's student(s): the new teacher's teacher_new_student names them. */
   studentIds: readonly string[];
-  /** «تغيير المعلم»: the rest of the course goes to another teacher. */
+  /** The rest of the course goes to another teacher. */
   teacherChanged: boolean;
 }
 

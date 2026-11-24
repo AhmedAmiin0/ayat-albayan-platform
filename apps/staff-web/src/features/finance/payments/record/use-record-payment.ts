@@ -11,21 +11,16 @@ export type SaveInput = {
   sub: SubscriptionView;
   form: PaymentForm;
   file: File | null;
-  /** «المرفقات»: sent only for a bank payment (the dialog clears them when the method changes). */
+  /** Sent only for a bank payment; the dialog clears them when the method changes. */
   attachments?: File[];
   /** What was sent; another currency than the package's is converted by the API (fx at paid_at). */
   currency: string;
   kind: PaymentKind;
-  /** «سجّل كدفعة»: the booking's invoice is the receipt (no upload). */
+  /** The booking's invoice is the receipt, so no upload. */
   invoiceId?: string;
 };
 
-/**
- * The «تسجيل دفعة» save (R-PAY-01). One clientRequestId per open dialog, re-sent on every retry,
- * and a receipt / attachment uploaded once per file: when the reply of a POST that did reach the API is
- * lost, the retry returns that payment instead of booking the money twice or uploading the files again.
- * A failure refetches the money lists, so the admin sees a payment that went through anyway.
- */
+/** One clientRequestId per dialog and one upload per file, so a lost reply never books twice. */
 export function useRecordPayment(onSaved: () => void) {
   const queryClient = useQueryClient();
   const [requestId] = useState(() => crypto.randomUUID());

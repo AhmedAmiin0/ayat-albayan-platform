@@ -10,11 +10,7 @@ export interface MenuBellProps {
   onOpen: () => void;
 }
 
-/**
- * The compact bar's ONE button «القائمة» (< 900px, owner 2026-10-05). For staff holding
- * notifications.push with something unread it carries a small saffron dot; its name stays exactly
- * «القائمة» and the count is its description (a visually hidden text). The bell itself is in the sheet.
- */
+/** Its name stays exactly the menu label; the unread count is its hidden description. */
 export function MenuBell({ open, onOpen }: MenuBellProps) {
   const allowed = usePermissions().can('notifications.push');
   const unread = useQuery({ ...notificationsQuery, enabled: allowed }).data?.unread ?? 0;

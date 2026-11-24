@@ -4,10 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { THREAD_SORTS } from '@/features/messaging/inbox/shared/search';
 import type { ThreadFilterOptions } from './thread-filters';
 
-/**
- * The list's order and the lead's status (R-NFR-08, server-side) in the shared «تصفية» panel.
- * Teacher mode has neither «غير المقروءة أولًا» nor leads.
- */
+/** Server-side filtering (R-NFR-08); teacher mode has no unread-first order nor leads. */
 export function ThreadFilterFields({ search, mode, onFilter }: ThreadFilterOptions) {
   const sorts = mode === 'teacher' ? THREAD_SORTS.filter((s) => s !== 'unread') : THREAD_SORTS;
   return (

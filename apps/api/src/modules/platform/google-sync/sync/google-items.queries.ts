@@ -119,10 +119,7 @@ export class GoogleItemsQueries {
     return data;
   }
 
-  /**
-   * «إعادة المحاولة»: a failed or skipped row, never one a worker holds, back to pending now. A gone
-   * row is NOT retried: what someone deleted in Google comes back only when the lesson changes (§2.4).
-   */
+  /** A gone row is not retried: what was deleted in Google returns only on lesson change (§2.4). */
   async retry(id: string): Promise<boolean> {
     const reset = { state: 'pending' as const, attempts: 0, next_attempt_at: new Date().toISOString(), last_error: null, skip_reason: null, planned: null };
     const { data, error } = await this.db.from('google_sync_items').update(reset).eq('id', id).in('state', ['failed', 'skipped']).is('claim_token', null).select('id');

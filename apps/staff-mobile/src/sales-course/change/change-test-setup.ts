@@ -5,9 +5,6 @@ import { t } from '@ab/mobile-kit';
 import { fakeCourseApi, pickLesson, press } from '@/sales-course/testing/course-test-utils';
 import { bookedCourse, courseView, SUB_ID } from '@/sales-course/testing/fixtures';
 
-// Test-only: the student of the «تغيير أيام الحلقات» tests, whose course still runs (the jest.mock
-// calls stay in each test file).
-
 export const TZ = 'Asia/Riyadh';
 /** Thursday 1 Oct 2026, 03:00 Riyadh: «now» in these tests. */
 export const NOW = new Date('2026-10-01T00:00:00Z');
@@ -36,14 +33,12 @@ export function windowed(fetch: (path: string) => Promise<unknown>) {
   };
 }
 
-/** On the days: the Sunday row (the second from NOW) becomes Monday 19:00, then «التالي». */
 export async function changeSundayToMonday(sunday = { row: 1, monday: '2026-10-05' }) {
   await pickLesson(sunday.row, { date: sunday.monday, time: '19:00' });
   await press('button', t.booking.next);
 }
 
 /** The change point is the earliest pick (today 18:00); Monday keeps its own 19:00. */
-/** A prefilled lesson row's time as the field reads it («الساعة: 17:00»). */
 export const rowTime = async (row: number): Promise<unknown> =>
   (await screen.findByTestId(`lesson-time-${row}`)).props.accessibilityLabel;
 export const timeLabel = (time: string): string => `${t.lessonTimes.time}: ${time}`;

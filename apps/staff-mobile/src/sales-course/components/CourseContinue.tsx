@@ -11,27 +11,17 @@ interface CourseContinueProps {
   previous: BookedCourse;
   /** The first local day the new course may start (courseOpensOn). */
   opensOn: string;
-  /**
-   * The previous teacher (known): «تابِع» is enabled only once she is bookable; busy while her list loads,
-   * the error with a retry when it failed, unavailable says why not.
-   */
+  /** Enabled only once the previous teacher is bookable. */
   teacher: Pick<KnownTeacher, 'bookable' | 'pending' | 'failed' | 'unavailable' | 'refetch'>;
   /** The new plan's days a week when it differs from the previous course's (!continueFits), else null. */
   adjustTo: number | null;
-  /** «تابِع بنفس الأيام» (or «عدّل الأيام السابقة» with adjustTo): the same teacher, days and times, prefilled. */
   onSame: () => void;
-  /** «اختر أيامًا أخرى»: the teacher, then the days, empty, as for a first course. */
   onOther: () => void;
-  /** `previous` is the draft saved before the payment (view.draft): its own line and «عدّل». */
   saved?: boolean | undefined;
-  /** «سجّل التحويل البنكي»: the days later, the transfer now (from «احفظ الاشتراك»). */
   transfer?: (() => void) | undefined;
 }
 
-/**
- * A renewal's first step (owner 2026-10-18): the previous course's days, offered again from opensOn;
- * with another day count than before (adjustTo), said so and «عدّل الأيام السابقة» to bring them to that count.
- */
+/** A different day count than before offers to adjust the previous days. */
 export function CourseContinue(props: CourseContinueProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

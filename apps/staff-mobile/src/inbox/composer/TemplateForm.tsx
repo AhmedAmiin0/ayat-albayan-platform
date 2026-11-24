@@ -33,7 +33,7 @@ interface TemplateFormProps {
   contactName?: string | null;
   onBack: () => void;
   onSend: (out: Outgoing) => void;
-  /** «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft in the free-text slot, over the prefill. */
+  /** The draft fills the free-text slot, overriding the prefill. */
   initial?: TemplateParamsInput | undefined;
 }
 

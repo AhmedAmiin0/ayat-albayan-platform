@@ -16,10 +16,7 @@ function useAmountEdit(send: (amount: number) => Promise<void>, stale: readonly 
   });
 }
 
-/**
- * The admin's «تعديل المبلغ»: PATCH /payments/:id { amount } only. The payments list, the
- * packages' paid state, the receivables and the student's balance refetch.
- */
+/** Patches the amount only; payments, package paid state, receivables and balance refetch. */
 export function useAdminAmountEdit(payment: { id: string; student: { id: string } }) {
   return useAmountEdit(
     (amount) => apiSend('PATCH', `/payments/${payment.id}`, { amount }),

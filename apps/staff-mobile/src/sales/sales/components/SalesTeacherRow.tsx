@@ -7,12 +7,7 @@ import { countsLine } from '@/students/list/student-kinds';
 import { useSalesHrefs } from '@/sales/sales/lib/sales-href';
 import { teacherCounts, teacherLabel, teacherSubtitle } from '@/sales/sales/lib/sales-text';
 
-/**
- * One active teacher in «المعلمون» (web parity, owner report 2026-10-12): name, gender · programs, the
- * students and today's lessons as counts, «مشترك n · تجريبي n», «في حلقة الآن» (green: information,
- * never saffron). The row opens the teacher's students. Never pay, rates or phone; the fixed meeting
- * link only on the teacher's page.
- */
+/** Never pay, rates or phone; the fixed meeting link only on the teacher's page. */
 export const SalesTeacherRow = memo(function SalesTeacherRow({ teacher }: { teacher: SalesTeacherView }) {
   const href = useSalesHrefs();
   const name = teacherLabel(teacher);

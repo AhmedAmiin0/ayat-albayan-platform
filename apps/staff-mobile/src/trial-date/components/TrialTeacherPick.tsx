@@ -15,10 +15,7 @@ interface TrialTeacherPickProps {
   onPick: (teacher: { id: string; name: string }) => void;
 }
 
-/**
- * Step 1: «متابعة مع {teacher}» for the last trial's teacher (pre-selected), or another from the
- * booking's own teacher step (the same program / gender filters and «غير متاح» rows).
- */
+/** The last trial's teacher is preselected; others use the booking's filters. */
 export function TrialTeacherPick({ current, program, gender = null, onKeep, onPick }: TrialTeacherPickProps) {
   const { color } = useTheme();
   const [filter, setFilter] = useState<{ program: Program; gender: Gender | null }>({ program, gender });

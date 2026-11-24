@@ -39,18 +39,17 @@ export const DRIVE = {
   calendarPrefix: 'آيات البيان — ',
 } as const;
 
-/** «سجل حضور — <student>»: 13 columns, A..M (the last is the PDF's Drive link). */
+/** 13 columns A..M; the last is the PDF's Drive link. */
 export const ATTENDANCE_HEADER = [
   'تاريخ الحلقة', 'رقم الحلقة', 'المعلمة', 'البرنامج', 'الحضور', 'التسميع', 'الحفظ الجديد',
   'المراجعة', 'التقدير العام', 'ملاحظات المعلمة', 'الواجب', 'رابط الاجتماع', 'تقرير PDF',
 ] as const;
 
-/** «سجل الطلاب المشتركين»: 8 columns, A..H (G = the folder link, H = the attendance sheet link). */
+/** 8 columns A..H: G is the folder link, H the attendance sheet link. */
 export const SUMMARY_HEADER = [
   'اسم الطالب', 'المعلمة', 'البرنامج', 'تاريخ أول حلقة', 'آخر حلقة', 'عدد الحلقات', 'مجلد الطالب', 'سجل الحضور',
 ] as const;
 
-/** Brand palette of «آيات البيان — الهوية (Brand)» styleSheet. */
 export const BRAND = { green: '#0C2A1E', gold: '#C2A24A', paper: '#FDF8F0', white: '#FFFFFF' } as const;
 
 export const MIME = {

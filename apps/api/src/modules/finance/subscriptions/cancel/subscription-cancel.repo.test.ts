@@ -2,8 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { SubscriptionCancelRepo } from './subscription-cancel.repo';
 
-// The reads and the compare-and-set of «إلغاء الباقة» against a chain-recording fake client.
-
 function chain(result: unknown) {
   const q: Record<string, ReturnType<typeof vi.fn>> = {};
   for (const k of ['select', 'eq', 'neq', 'not', 'update', 'gt', 'or', 'in']) q[k] = vi.fn(() => q);

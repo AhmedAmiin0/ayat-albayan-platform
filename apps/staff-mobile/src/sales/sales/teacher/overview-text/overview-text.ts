@@ -4,8 +4,6 @@ import { hhmm } from '@/core/lib/clock';
 import { t, ltr } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 
-// A teacher's «الجدول» and «الحضور» in words (owner 2026-10-28). Pure, unit-tested.
-
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 const o = t.sales.teachers.overview;
 
@@ -16,7 +14,7 @@ function inViewerZone(slot: SalesTeacherSlot, tz: string): SalesTeacherSlot {
   return { ...slot, weekday, time };
 }
 
-/** The slots السبت → الجمعة, by time within a day, on the viewer's (`tz`) clock. */
+/** Slots Saturday to Friday, by time within a day, on the viewer's `tz` clock. */
 export function slotsInWeekOrder(
   slots: readonly SalesTeacherSlot[],
   tz: string,
@@ -25,18 +23,15 @@ export function slotsInWeekOrder(
   return inWeekOrder(own.sort((a, b) => a.time.localeCompare(b.time)));
 }
 
-/** «الأحد الساعة 8:00 م · 45 دقيقة» (the viewer's clock, the phone's 12 / 24 h). */
 export function slotLine(slot: SalesTeacherSlot, cycle: ClockCycle, tz: string): string {
   const { weekday, time } = inViewerZone(slot, tz);
   const day = weekdays[String(weekday)] ?? '';
   return fill(o.slot, { day, time: hhmm(time, cycle), minutes: String(slot.duration_min) });
 }
 
-/** «ياسمين AB-0101 · يوسف»: each student with their code when there is one. */
 export const studentsLine = (students: readonly SalesOverviewStudent[]): string =>
   students.map((s) => (s.code ? `${s.name} ${ltr(s.code)}` : s.name)).join(' · ');
 
-/** «عُقدت 12 · غياب الطالب 1 · …». */
 export function totalsLine(totals: SalesTeacherOverview['attendance']['totals']): string {
   return fill(o.totals, Object.fromEntries(Object.entries(totals).map(([k, n]) => [k, String(n)])));
 }

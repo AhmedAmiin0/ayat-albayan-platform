@@ -43,7 +43,7 @@ export class UsersRepo {
     return { rows, total: data[0]?.total ?? (await this.totalBeyond(query)) };
   }
 
-  /** The page's test logins (profiles.is_test, docs/56), for the «تجريبي» chip. */
+  /** profiles.is_test (docs/56). */
   private async testLogins(ids: readonly string[]): Promise<Set<string>> {
     if (ids.length === 0) return new Set();
     const { data, error } = await this.db.from('profiles').select('id').in('id', ids).eq('is_test', true);

@@ -1,4 +1,4 @@
-import type { MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -18,7 +18,6 @@ interface RescheduleMeetingProps {
   onDone: () => void;
 }
 
-/** «غيّر الموعد»: the same chips and steppers, prefilled with the meeting's time; PATCH, then the list refreshes. */
 export function RescheduleMeeting({ meeting, tz, onDone }: RescheduleMeetingProps) {
   const [slot, setSlot] = useState<Slot>(() => slotOf(meeting.starts_at, meeting.planned_end_at, tz));
   const client = useQueryClient();

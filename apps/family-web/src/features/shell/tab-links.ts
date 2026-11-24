@@ -26,7 +26,7 @@ const SECTION: readonly (readonly [string, FamilyTab])[] = [
   ['/account', 'account'],
 ];
 
-/** The tab the page at `pathname` belongs to; none for «الإشعارات» (the bell lights then). */
+/** None for the alerts page, where the bell lights instead. */
 export function tabOf(pathname: string): FamilyTab | null {
   return SECTION.find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? null;
 }

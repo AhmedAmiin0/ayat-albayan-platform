@@ -2,10 +2,6 @@ import { View } from 'react-native';
 import { AppText, Avatar, t, type, useTheme } from '@ab/mobile-kit';
 import type { Waiting } from '@/teacher/lessons/teacher-word';
 
-/**
- * «يوسف ينتظرك في الغرفة» over «دخل منذ 3 دقائق» (canvas RoomXTeacherToday), before the hero's
- * buttons: a 40pt face with the presence dot, read as a status.
- */
 export function WaitingStrip({ who }: { who: Waiting }) {
   const { color } = useTheme();
   return (

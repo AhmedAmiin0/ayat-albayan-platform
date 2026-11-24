@@ -19,7 +19,7 @@ export const FOOTER = 'أكاديمية آيات البيان';
 export const LINE =
   'الأحد 8 نوفمبر 5:00 م · طالب (AB-0101) · رابط الحلقة: https://meet.example/x · تقرير الحلقة: https://r.example/t';
 
-/** The registry row: its own body, a «ادخل الحلقة» URL button (not what the CRM sends). */
+/** Its own body and a URL button, which is not what the CRM sends. */
 export const REMINDER_MEET = templateRow({
   key: 'teacher_lesson_reminder_meet',
   meta_name: 'teacher_lesson_reminder_meet',

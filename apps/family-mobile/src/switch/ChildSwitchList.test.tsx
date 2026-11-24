@@ -33,7 +33,6 @@ async function show() {
   await waitFor(() => expect(client.isFetching()).toBe(0));
 }
 
-// g1 works as يوسف on this phone.
 beforeEach(async () => {
   closeChildSwitch();
   await AsyncStorage.setItem(PICKED_CHILD_KEY, JSON.stringify({ profileId: 'g1', studentId: 's2' }));

@@ -4,20 +4,16 @@ import { t, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 
 interface InvoiceActionsProps {
-  /** An invoice is already picked: the camera says «صوّر تاني», and «شيلها» shows. */
   picked: boolean;
   /** An upload is running: nothing else can start. */
   busy: boolean;
   onPick: (source: ReceiptSource) => void;
-  /** Present only when a chat number is known: opens «من الشات». */
+  /** Present only when a chat number is known. */
   onChat?: () => void;
   onRemove: () => void;
 }
 
-/**
- * The invoice step's buttons (docs/07 §6 «الأزرار»): ONE ButtonRow camera | gallery | «من الشات» (with
- * a number), then «شيلها» (danger, once picked) full width under it.
- */
+/** docs/07 §6: one ButtonRow, then remove (danger) full width once picked. */
 export function InvoiceActions({ picked, busy, onPick, onChat, onRemove }: InvoiceActionsProps) {
   const button = (label: string, onPress: () => void) => (
     <Button variant="secondary" label={label} disabled={busy} onPress={onPress} />

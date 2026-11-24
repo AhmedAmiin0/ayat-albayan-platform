@@ -12,12 +12,7 @@ import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mut
 
 const r = t.numbers.fallbackRank;
 
-/**
- * «ترتيب البديل» (docs/23c decisions 3, 9): the number's place among its role's fallbacks (0–999, lower
- * first). numbers.manage edits it through the number PATCH; without it the value is text. A bad value
- * is said on blur or submit, not on every keystroke. NumberCard keys it by id + saved rank, so a
- * refetched rank resets the input.
- */
+/** Range 0-999, lower first (docs/23c decisions 3, 9); keyed by id and rank to reset on refetch. */
 export function FallbackRankField({ view, manage }: { view: NumberView; manage: boolean }) {
   const [text, setText] = useState(String(view.fallback_rank));
   const [touched, setTouched] = useState(false);

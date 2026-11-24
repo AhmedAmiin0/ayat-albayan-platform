@@ -11,6 +11,5 @@ const HELD: readonly [(m: HeldRow) => boolean, () => string][] = [
   [isUnconfirmed, () => t.messages.sendUnconfirmed],
 ];
 
-/** A held text's line («بانتظار رد العائلة»), an unconfirmed send's; else null. */
 export const heldLine = (m: HeldRow): string | null =>
   HELD.find(([is]) => is(m))?.[1]() ?? null;

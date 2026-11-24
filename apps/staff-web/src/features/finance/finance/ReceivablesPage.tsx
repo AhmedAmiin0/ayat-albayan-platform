@@ -9,10 +9,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receivablesQuery } from './api';
 import { ReceivablesBody } from './ReceivablesBody';
 
-/**
- * /admin/receivables «مستحق على الطلاب»: who owes, how much, days since the package started, aging;
- * CSV; every column sorts and filters.
- */
 export function ReceivablesPage() {
   const q = useQuery(receivablesQuery);
   const csv = useMutation({ mutationFn: () => downloadCsv({ kind: 'receivables' }) });

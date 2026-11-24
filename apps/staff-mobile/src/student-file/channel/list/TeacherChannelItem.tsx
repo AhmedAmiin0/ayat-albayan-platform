@@ -15,10 +15,6 @@ import {
 import { CountBadge } from './CountBadge';
 import { previewOf } from './teacher-row';
 
-/**
- * One student of «رسائل الطلاب» (ChatXTeacherList): a 44pt avatar, the name and code, the last
- * message after who wrote it; at the end its time (brand while unread) over the count.
- */
 export function TeacherChannelItem({ item }: { item: TeacherChannelRow }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
