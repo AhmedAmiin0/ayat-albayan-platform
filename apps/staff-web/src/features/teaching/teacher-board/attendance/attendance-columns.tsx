@@ -16,7 +16,7 @@ export interface AttendanceColumnsOptions {
   studentId: string;
 }
 
-/** «سجل الحضور» columns: when (+ tags, reasons, move lines) | status | report (docs/47). */
+/** Columns per docs/47. */
 export function attendanceColumns({ clock, studentId }: AttendanceColumnsOptions) {
   return col.columns([
     col.accessor('starts_at', {

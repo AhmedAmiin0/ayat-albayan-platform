@@ -20,11 +20,7 @@ export interface FeedbackPageProps {
   onSearch: (patch: ServerListPatch) => void;
 }
 
-/**
- * /admin/feedback «رأيك يهمّنا» (admin): each teacher's average on top, then the answers; every
- * column sorts and filters on the server. The table stays while a filter matches nothing, so the
- * filter row can still be cleared.
- */
+/** Every column sorts and filters on the server; the table stays when empty so filters clear. */
 export function FeedbackPage({ search, onSearch }: FeedbackPageProps) {
   const state = serverListState(search, FEEDBACK_LIST_KEYS);
   const table = serverListProps(state, onSearch);

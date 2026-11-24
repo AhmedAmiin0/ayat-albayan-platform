@@ -20,7 +20,6 @@ export type ScheduleSearch = {
   gender?: Gender | undefined;
   program?: Program | undefined;
   status?: LessonStatus | undefined;
-  /** «إظهار الملغية واللي اتغير ميعادها». */
   closed?: true | undefined;
 };
 

@@ -13,17 +13,12 @@ import { type Clock, useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { revealOnMount } from '@/lib/dom/mount-refs';
 
-/** How many clashes are listed before «وفيه {n} تعارض كمان». */
 const SHOWN = 5;
 
 /** Clashes with the teacher's own week, read better on the teacher's clock (a DST shift shows). */
 const TEACHER_SIDE = new Set<Conflict['kind']>(['outside_availability', 'time_off']);
 
-/**
- * «الميعاد ده مش من المواعيد المتاحة للمعلم/ة (السبت 31 أكتوبر 15:00، عند المعلم/ة 14:00 بتوقيت
- * القاهرة)»: the viewer's wall clock, plus the teacher's own (when it differs) for their
- * availability / time off. `clock.tz` is the viewer's zone (useViewerTz()).
- */
+/** The viewer's wall clock, plus the teacher's own when it differs; `clock.tz` is the viewer's. */
 export function conflictText(
   c: Conflict,
   clock: Clock & { tz: string },
@@ -43,12 +38,11 @@ export interface ConflictNoticeProps {
   conflicts: readonly Conflict[];
   /** The teacher's zone, for their clock on availability / time-off lines. */
   teacherTz?: string;
-  /** «اختار ميعاد تاني»: back to the slot grid. */
   onChangeSlot: () => void;
-  /** «احجز رغم التعارض» with the reason (R-SCH-04); stored on the clashing lessons. Absent = never (the assistant). */
+  /** Override reason (R-SCH-04) is stored on the clashing lessons; absent means never. */
   onOverride?: ((reason: string) => void) | undefined;
   busy?: boolean;
-  /** A form that already asked why (an edit's «السبب») starts the override reason with it. */
+  /** An edit's existing reason pre-fills the override reason. */
   initialReason?: string;
   /** Wording for the caller's own action (an edit saves, a booking books). */
   labels?: { override: string; reason: string };

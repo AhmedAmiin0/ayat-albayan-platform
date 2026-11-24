@@ -21,10 +21,7 @@ interface Choice {
 const picked = (file: File): PickedFile =>
   ({ name: file.name, mime: file.type, size: file.size, body: file });
 
-/**
- * «أضف ملفًا للحلقة» for several files at once: each is checked (type, 25 MiB), then they go up
- * one after another with a line each; «إلغاء» drops the ones still waiting.
- */
+/** Each file is checked (type, 25 MiB), then uploaded in turn; cancel drops waiting ones. */
 export function useUploadQueue(choice: Choice) {
   const upload = useUploadFile();
   const [items, setItems] = useState<QueueItem[]>([]);

@@ -17,11 +17,7 @@ interface CoursePauseSheetProps {
   onDone: (message: string) => void;
 }
 
-/**
- * «إيقاف الدورة مؤقتًا» (owner 2026-10-28): from (Riyadh today by default), an optional until (empty = until
- * «استئناف»), an optional reason, the live count of the lessons it cancels; ONE primary «إيقاف الدورة».
- * No WhatsApp is sent: the note says to tell the family in the chat.
- */
+/** From defaults to Riyadh today; empty until means until resumed; no WhatsApp is sent. */
 export function CoursePauseSheet({ studentId, onClose, onDone }: CoursePauseSheetProps) {
   const formId = useId();
   const today = riyadhToday(); // academy day (docs/34 b): the API's pause days are Riyadh days

@@ -7,17 +7,14 @@ import type { BoardStudent } from '@/features/teaching/teacher-board/board-rows'
 
 export interface StudentCellProps {
   student: BoardStudent;
-  /** «القرآن الكريم · جزء عمّ · 9 سنوات» (student-facts), absent until it loads. */
+  /** Absent until it loads. */
   facts?: string | undefined;
 }
 
-/** Every status but «مشترك» carries its chip (docs/48: trial, pending_renewal, expired). */
+/** Every status but subscribed carries its chip (docs/48). */
 const showsChip = (s: BoardStudent): boolean => s.status !== 'active';
 
-/**
- * «الطالب»: the name as a link to «ملف الطالب» (docs/47; the row opens it too, this is the
- * keyboard way in), the LTR code, the status chip, then the quiet facts line.
- */
+/** The name link is the keyboard way in; the row opens it too (docs/47). */
 export function StudentCell({ student, facts }: StudentCellProps) {
   return (
     <span className="grid gap-0.5">

@@ -40,11 +40,7 @@ const attendanceColumn = col.accessor((r) => r.rate ?? -1, {
   cell: (c) => labelled(w.attendance, <CountsCell row={c.row.original} />),
 });
 
-/**
- * «طلابي» columns (docs/46 C1): student (name, code, status) | last lesson (date + attendance) |
- * next lesson | last report | present / absent in the window (+ rate). Each sorts on its value.
- * The name links to the student file (docs/47), with the facts line under it (docs/48).
- */
+/** Columns per docs/46 C1, each sorting on its value; the name links to the file (docs/47). */
 export function boardColumns({ tz, facts }: BoardColumnsInput) {
   return col.columns([
     col.accessor((r) => r.student.name, {

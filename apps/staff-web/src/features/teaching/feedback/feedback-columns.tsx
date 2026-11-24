@@ -13,10 +13,7 @@ const col = createColumnHelper<DataTableFeatures, FeedbackListRow>();
 // Server sort/filter (R-NFR-08): `sortKey` / filter keys are the GET /feedback params. The student
 // has no sort (lesson_feedback has no FK to students); it filters by name or code.
 
-/**
- * Name and code on the first line; the admin's list folds the family's number («رقم واتساب للتواصل»)
- * under them. A teacher's own list never shows it (the API does not send it, and this never reads it).
- */
+/** A teacher's own list never shows the family's number: the API omits it and this never reads. */
 const studentColumn = (withPhone: boolean) =>
   col.accessor((r) => r.student.name, {
     id: 'student',
@@ -86,7 +83,6 @@ const quickRating = col.accessor((r) => r.quick_rating ?? null, {
   meta: { className: 'max-sm:order-2', sortKey: 'quick_rating', filter: { kind: 'select', options: quickRatingOptions() } },
 });
 
-/** The column says «الترشيح»; the filter row spells the same short label. */
 const recommend = col.accessor('recommend', {
   header: () => t.feedback.recommendShort,
   cell: (c) => (c.getValue() ? t.enums.feedbackRecommend[c.getValue() ?? 'maybe'] : <span className="max-sm:hidden">—</span>),

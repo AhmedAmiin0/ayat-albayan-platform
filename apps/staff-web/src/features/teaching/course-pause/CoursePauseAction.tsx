@@ -8,13 +8,12 @@ import { CoursePauseSheet } from './CoursePauseSheet';
 
 interface CoursePauseActionProps {
   studentId: string;
-  /** «أُوقفت الدورة مؤقتًا»: the page's toast (the head's «⋯» menu hides its children on phones). */
+  /** The head's overflow menu hides its children on phones, so the page shows the toast. */
   onDone: (message: string) => void;
-  /** What the action does, under it («الدورة والباقة», owner 2026-11-17). */
   hint?: string;
 }
 
-/** «إيقاف مؤقت» in the student file's head: only with courses.pause and while no pause is open. */
+/** Only with courses.pause and while no pause is open. */
 export function CoursePauseAction({ studentId, onDone, hint }: CoursePauseActionProps) {
   const { can } = usePermissions();
   const allowed = can('courses.pause');

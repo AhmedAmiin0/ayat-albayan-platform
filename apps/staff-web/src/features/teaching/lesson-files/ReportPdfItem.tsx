@@ -12,7 +12,7 @@ interface Props {
   named: boolean;
 }
 
-/** «تقرير الحلقة (PDF)»: made from the report, reaches the family with it, never removed here. */
+/** Made from the report, reaches the family with it, never removed here. */
 export function ReportPdfItem({ report, named }: Props) {
   const open = useOpenReportPdf();
   const title = named ? `${F.reportPdf} · ${report.student_name}` : F.reportPdf;

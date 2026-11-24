@@ -864,11 +864,6 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/list/PayoutsPage/tests/PayoutsPage.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/finance/payouts/list/PayoutsPage/PayoutsPage.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -887,6 +882,11 @@
     },
     "ab/module-boundaries": {
       "count": 3
+    }
+  },
+  "src/features/finance/payouts/list/PayoutsPage/tests/PayoutsPage.test.tsx": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/features/finance/payouts/list/payout-columns.tsx": {
@@ -2557,22 +2557,17 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/NewThread/tests/NewThread.test.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/features/messaging/inbox/threads/pane/NewThread/NewThread.tsx": {
     "no-nested-ternary": {
       "count": 1
     }
   },
-  "src/features/messaging/inbox/threads/pane/PhoneChat.tsx": {
+  "src/features/messaging/inbox/threads/pane/NewThread/tests/NewThread.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
+      "count": 3
     }
   },
-  "src/features/messaging/inbox/threads/pane/ThreadHeader/tests/ThreadHeader.test.tsx": {
+  "src/features/messaging/inbox/threads/pane/PhoneChat.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -2585,11 +2580,36 @@
       "count": 2
     }
   },
+  "src/features/messaging/inbox/threads/pane/ThreadHeader/tests/ThreadHeader.test.tsx": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
   "src/features/messaging/inbox/threads/pane/ThreadHeaderPhone.tsx": {
     "complexity": {
       "count": 1
     },
     "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane.tsx": {
+    "max-lines-per-function": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 11
+    },
+    "ab/module-boundaries": {
+      "count": 2
+    },
+    "ab/no-restricted-syntax": {
       "count": 1
     }
   },
@@ -2660,26 +2680,6 @@
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane/tests/subscription.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 11
-    },
-    "ab/module-boundaries": {
-      "count": 2
-    },
-    "ab/no-restricted-syntax": {
       "count": 1
     }
   },
@@ -8161,24 +8161,14 @@
       "count": 2
     }
   },
-  "src/features/teaching/course-pause/CoursePauseAction.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/teaching/course-pause/CoursePauseBanner.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/course-pause/CoursePauseDialogs.tsx": {
     "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/features/teaching/course-pause/CoursePausePanel.tsx": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/features/teaching/course-pause/CoursePauseSheet.test.tsx": {
@@ -8191,17 +8181,17 @@
   },
   "src/features/teaching/course-pause/CoursePauseSheet.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/features/teaching/course-pause/PauseFields.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/teaching/course-pause/ResumeCourseDialog.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/course-pause/api.ts": {
@@ -8247,11 +8237,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/feedback/TeacherAverages.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/teaching/feedback/api.ts": {
     "no-restricted-globals": {
       "count": 1
@@ -8274,7 +8259,7 @@
   },
   "src/features/teaching/feedback/feedback-columns.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/teaching/feedback/filter-options.ts": {
@@ -8304,7 +8289,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
@@ -8320,16 +8305,11 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/feedback/public/RatingScale.tsx": {
     "typescript/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/feedback/types.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -8368,9 +8348,6 @@
   "src/features/teaching/meetings/NewMeetingMenu.tsx": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/features/teaching/meetings/instant/InstantLessonDialog.test.tsx": {
@@ -8386,7 +8363,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/module-boundaries": {
       "count": 3
@@ -8395,16 +8372,6 @@
   "src/features/teaching/meetings/instant/instant-form.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/features/teaching/meetings/internal/CreatedMeeting.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/meetings/internal/InternalMeetingButton.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/teaching/meetings/internal/InternalMeetingDialog.test.tsx": {
@@ -8437,7 +8404,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-untyped-api-calls": {
       "count": 3
@@ -8446,20 +8413,7 @@
       "count": 1
     }
   },
-  "src/features/teaching/meetings/invitees/InviteResultRow.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/meetings/invitees/InviteePicker.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/teaching/meetings/invitees/InviteeSearch.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -8471,12 +8425,12 @@
   },
   "src/features/teaching/meetings/invitees/InviteeViewRow.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/teaching/meetings/invitees/MeetingInviteesDialog.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/meetings/invitees/PhoneInviteeInput.tsx": {
@@ -8498,7 +8452,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/features/teaching/meetings/invitees/invitee-list.ts": {
@@ -8514,36 +8468,18 @@
       "count": 5
     }
   },
-  "src/features/teaching/meetings/invitees/use-may-invite-phones.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/teaching/meetings/rows/CancelMeetingDialog.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/features/teaching/meetings/rows/MeetingLinkBox.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
   "src/features/teaching/meetings/rows/MeetingManageButtons.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/meetings/rows/MeetingRow.tsx": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/meetings/rows/MeetingRowInfo.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -8554,7 +8490,7 @@
   },
   "src/features/teaching/meetings/scheduled/RescheduleDialog.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/meetings/scheduled/ScheduleFields.tsx": {
@@ -8572,7 +8508,7 @@
   },
   "src/features/teaching/meetings/scheduled/ScheduledMeetingDialog.tsx": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/features/teaching/meetings/scheduled/meeting-when.ts": {
@@ -8595,7 +8531,7 @@
   },
   "src/features/teaching/schedule/api.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1
@@ -8640,7 +8576,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/schedule/edit-time/EditTimeDone.tsx": {
@@ -8653,7 +8589,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/features/teaching/schedule/edit-time/EditTimeForm.tsx": {
@@ -8667,7 +8603,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -8678,12 +8614,12 @@
   },
   "src/features/teaching/schedule/edit-time/EditTimeLink.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/schedule/edit-time/edit-time-fixture.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
@@ -8691,7 +8627,7 @@
   },
   "src/features/teaching/schedule/edit-time/edit-time-text.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -8714,12 +8650,12 @@
   },
   "src/features/teaching/schedule/filters/ScheduleFilters.tsx": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/features/teaching/schedule/filters/TeacherPicker.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/schedule/filters/schedule-filters.test.ts": {
@@ -8771,9 +8707,6 @@
     }
   },
   "src/features/teaching/schedule/grid/TeacherCell.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 3
     }
@@ -8812,7 +8745,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/module-boundaries": {
       "count": 1
@@ -8831,7 +8764,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 4
     }
   },
   "src/features/teaching/schedule/lesson/LessonChip.tsx": {
@@ -8858,12 +8791,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
-    }
-  },
-  "src/features/teaching/schedule/lesson/LessonDrawer.buttons.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 3
     }
   },
   "src/features/teaching/schedule/lesson/LessonDrawer.makeup.offer.test.tsx": {
@@ -8885,9 +8813,6 @@
     }
   },
   "src/features/teaching/schedule/lesson/LessonDrawer.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 4
     }
@@ -8949,7 +8874,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/teaching/schedule/reschedule/ConflictNotice.edit.test.tsx": {
@@ -8968,7 +8893,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/restrict-template-expressions": {
       "count": 1
@@ -8976,9 +8901,6 @@
   },
   "src/features/teaching/schedule/reschedule/MakeupAction.tsx": {
     "react/purity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -9017,11 +8939,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/student-channel/MonitorChannel.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/teaching/student-channel/TeacherMessagesPage.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -9032,7 +8949,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/teaching/teacher/MyPayouts.test.tsx": {

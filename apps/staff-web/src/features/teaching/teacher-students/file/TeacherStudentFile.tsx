@@ -20,11 +20,7 @@ export interface TeacherStudentFileProps {
   studentId: string;
 }
 
-/**
- * «ملف الطالب» (docs/47, docs/49): name, code and status, the trial note, the course line and
- * this student's pending reports; then the next 14 days and the month log. No tabs: each
- * lesson row opens its own report and recording (a #recording-<id> link opens that row).
- */
+/** No tabs (docs/47, docs/49): each lesson row opens its own report and recording. */
 export function TeacherStudentFile({ studentId }: TeacherStudentFileProps) {
   const head = useQuery(teacherStudentHeadQuery(studentId));
   const me = useQuery(teacherMeQuery);
