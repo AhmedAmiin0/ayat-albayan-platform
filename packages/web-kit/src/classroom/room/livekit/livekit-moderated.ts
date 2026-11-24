@@ -17,10 +17,7 @@ export interface ModerationWatch {
   on: (listener: (e: ModeratedEvent) => void) => () => void;
 }
 
-/**
- * A staff «كتم الميكروفون» (server MutePublishedTrack) reaches the muted person as TrackMuted on
- * their own publication, exactly like a self-mute: any local TrackMuted outside `self` is the staff's.
- */
+/** A server mute arrives as TrackMuted like a self-mute: any outside `self` is the staff's. */
 export function watchModeration(room: Pick<Room, 'on'>): ModerationWatch {
   const listeners = new Set<(e: ModeratedEvent) => void>();
   let selfDepth = 0;

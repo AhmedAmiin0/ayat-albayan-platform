@@ -7,10 +7,7 @@ interface Props {
 
 const pdf = t.inbox.pdf;
 
-/**
- * A chat PDF (FamChatWebThread): a 240px card with the «PDF» badge, the file's name on up to two
- * lines (else «ملف PDF») and «PDF · 240 كيلوبايت»; it opens in the browser's own viewer.
- */
+/** Opens in the browser's own viewer. */
 export function PdfBubble({ file }: Props) {
   const name = file.name || t.studentChannel.kinds.pdf;
   return (

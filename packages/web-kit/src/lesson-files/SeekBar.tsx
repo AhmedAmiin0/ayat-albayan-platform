@@ -20,10 +20,7 @@ function pointAt(e: PointerEvent<HTMLDivElement>, duration: number): number {
   return seekAtPoint({ ...point, rtl: isRtl(e.currentTarget) });
 }
 
-/**
- * «موضع التشغيل»: a slider over the heard share (arrows ±10 s, Home/End, tap or drag), the clock
- * under it «12:40 … 45:20», each time an LTR island in the RTL row.
- */
+/** Each time is an LTR island in the RTL row. */
 export function SeekBar({ position, duration, seek }: Props) {
   const share = Math.round(progressOf(position, duration) * 100);
   const total = duration > 0 ? formatClock(duration) : '—';

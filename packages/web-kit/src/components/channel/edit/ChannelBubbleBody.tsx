@@ -10,11 +10,7 @@ interface Props {
   tools: ReturnType<typeof useBubbleEditing>;
 }
 
-/**
- * The quote it answers, its photo, PDF or voice note, then the text with its links (a file's
- * caption), or the edit box while «تعديل» is open; the API's refusal under it. A deleted message
- * is drawn by the bubble itself.
- */
+/** A deleted message is drawn by the bubble itself. */
 export function ChannelBubbleBody({ message: m, tools }: Props) {
   return (
     <>

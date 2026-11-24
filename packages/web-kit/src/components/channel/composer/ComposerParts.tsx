@@ -21,10 +21,7 @@ const FACES: Readonly<Record<Round, { submit: boolean; label: string; glyph: Rea
   voice: { submit: false, label: c.send, glyph: <Icon name="send" /> },
 };
 
-/**
- * The 48px round button at the composer's end: «أرسل» submits the form; while the box is empty it
- * is the microphone; while recording, «أرسل» stops and sends the note. The face crossfades.
- */
+/** Empty box makes it the microphone; while recording, send stops and sends the note. */
 export function RoundAction(props: RoundProps) {
   const face = FACES[props.round];
   const clicks: Readonly<Record<Round, (() => void) | undefined>> = {
@@ -52,7 +49,7 @@ const Key = ({ children }: { children: string }) => (
   </kbd>
 );
 
-/** «Enter للإرسال، Shift + Enter لسطر جديد», where there is a keyboard (never on a phone). */
+/** Only where there is a keyboard, never on a phone. */
 export function ComposerHint() {
   return (
     <p className="flex flex-wrap items-center gap-1 text-2xs text-ink-3 pointer-coarse:hidden">
@@ -70,7 +67,6 @@ interface NotesProps {
   uploading: boolean;
 }
 
-/** The lines over the composer: the refusal, «أطول من 2000 حرف», the microphone, the upload. */
 export function ComposerNotes({ problem, tooLong, denied, uploading }: NotesProps) {
   return (
     <>

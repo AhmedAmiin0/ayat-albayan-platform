@@ -52,10 +52,7 @@ function Lessons({ lessons, student, skip }: ListProps) {
   );
 }
 
-/**
- * «القادمة»: «ما المطلوب» first, then the next 14 days, one card per lesson, re-read every 30
- * seconds and when the family comes back to the page.
- */
+/** Re-read every 30 seconds and when the family comes back to the page. */
 export function LessonsPanel({ student, exceptNext = false }: Props) {
   const query = useQuery(portalLessonsQuery(student.id));
   const now = useNow(PORTAL_REFRESH_MS);

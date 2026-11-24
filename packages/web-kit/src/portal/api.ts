@@ -20,5 +20,5 @@ export const {
 export const portalApi = portalSends(client);
 export const portalLessonApi = portalLessonSends(client);
 export const familySlotsQuery = portalSlotsQuery(client);
-/** «التسجيلات» and a lesson's files on the family pages (the staff side: lesson-files). */
+/** Recordings and lesson files on the family pages (the staff side: lesson-files). */
 export const portalAssets = portalAssetsApi(client);

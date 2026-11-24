@@ -3,7 +3,7 @@ import { REQUEST_TEXT } from './request-text';
 import type { RequestKind, ShareInput, ShareState } from './share-messages';
 
 export interface GrantFlags {
-  /** LiveKit lets me publish a screen (a staff «سماح» via UpdateParticipant). */
+  /** A staff grant via UpdateParticipant lets me publish a screen. */
   screen: boolean;
   /** The board lets me draw (my name in `allowed`, or every student may). */
   draw: boolean;
@@ -20,11 +20,7 @@ interface Options {
 
 const KINDS: readonly RequestKind[] = ['screen', 'draw', 'open'];
 
-/**
- * Guest side: a permission flipping on is the «سماح» itself. It ends my request of that kind and
- * says «سُمح لك…» (for the screen always, as before; for the board only when I had asked). A
- * permission taken away («إيقاف مشاركة» / «إيقاف كتابة») clears the line that no longer holds.
- */
+/** Guest side: a permission flipping on is the grant itself and ends my request of that kind. */
 export function useGrantNotices({ flags, mine, dispatch, setNotice }: Options): void {
   const before = useRef(flags);
   const asked = useRef(mine);

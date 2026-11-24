@@ -17,12 +17,8 @@ interface Props {
   now: Date;
   /** Our classroom admitted the student: the card opens the room. */
   onJoined: (join: RoomJoinResult) => void;
-  /** The button's words: «ادخل الآن» while the room is live, else «ادخل الحلقة». */
   label?: string | undefined;
-  /**
-   * The card shows the live countdown to the window («يُتاح الدخول بعد …»): the «يُتاح الدخول من
-   * …» hint would say it twice, so none until the window opens.
-   */
+  /** The live countdown already says when, so no hint until the window opens. */
   counted?: boolean;
 }
 
@@ -49,11 +45,7 @@ function waitLine({ props, clock }: WaitInput): ReactNode {
   return <Hint text={lessonWaitText(wait, lesson, { words: t.portal, clock: { ...clock, tz } })} />;
 }
 
-/**
- * «ادخل الحلقة» («ادخل الآن» while live), only inside the join window: our classroom admits the
- * student through the API and the room opens here, after «تُسجَّل هذه الجلسة» like every other
- * door into it (consent); an external lesson opens its own meeting link (sent only while open).
- */
+/** Only inside the join window; our classroom admits via the API after the recording consent. */
 export function LessonAction(props: Props) {
   const { lesson, studentId, onJoined, label = t.portal.join } = props;
   const clock = useClock();

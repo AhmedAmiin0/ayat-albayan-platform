@@ -9,12 +9,7 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 const other: Locale = locale === 'ar' ? 'en' : 'ar';
 
-/**
- * «English» in the Arabic UI, «العربية» in the English one: the other language by its own name
- * (lang-tagged so a screen reader voices it right), after a visually hidden «اللغة» so the
- * accessible name holds the visible word (voice control). Signed in it writes the login's
- * language first (chooseLocale), then saves and reloads; a write that failed says so and stays.
- */
+/** The other language by its own name; signed in it writes the login's locale first. */
 export function LanguageSwitch({ className }: { className?: string }) {
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);

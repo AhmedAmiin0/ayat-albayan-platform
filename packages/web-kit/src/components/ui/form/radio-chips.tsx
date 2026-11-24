@@ -20,7 +20,6 @@ export interface RadioChipsProps<V extends string> {
   describedBy?: string | undefined;
 }
 
-/** A legend and native radios styled as chips (one choice, «اختيار واحد» on the forms). */
 export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
   return (
     <fieldset disabled={p.disabled} aria-invalid={p.invalid || undefined} aria-describedby={p.describedBy} className="grid gap-2">

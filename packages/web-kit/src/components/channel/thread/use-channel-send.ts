@@ -35,13 +35,7 @@ function sendProblem(e: unknown): string {
   return errors[errorCode(e) ?? ''] ?? t.studentChannel.sendFailed;
 }
 
-/**
- * The composer's send: shown at once as my pending row («جارٍ الإرسال…», the clock tick), taken
- * away again if it fails (the box keeps the words). Each text carries a client_id; a failed send's
- * id is kept, so sending the same text again in the same chat is a retry the API answers with the
- * stored message (never a double). After it: the thread, the counts and the assistant's seat
- * (owner 2026-11-16: a 404 there means the student's bringer took the chat over).
- */
+/** A failed send keeps its client_id so a resend is an API-deduped retry. */
 export function useChannelSend(refs: ChannelRef) {
   const { audience, studentId } = refs;
   const client = useQueryClient();

@@ -10,11 +10,10 @@ export interface RoomButtonProps extends Omit<ButtonProps, 'children'> {
   on?: boolean;
   /** Phones: a 56px round button with its short word under it (the family room, the app's look). */
   round?: boolean;
-  /** The word under a round button («كتم»); the label stays the button's name. */
+  /** The word under a round button; the label stays the button's name. */
   short?: string;
   /** Not on phones (the round row keeps the app's few buttons). */
   wideOnly?: boolean;
-  /** A corner mark, e.g. the unread count on «المحادثة». */
   badge?: ReactNode;
 }
 

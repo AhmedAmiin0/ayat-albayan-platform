@@ -283,7 +283,7 @@
   },
   "src/classroom/recordings/RecordingsPanel.tsx": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/classroom/room/components/ClassroomRoom/tests/boardRequest.test.tsx": {
@@ -390,11 +390,6 @@
       "count": 2
     }
   },
-  "src/classroom/room/livekit/livekit-moderated.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
     "@typescript-eslint/no-meaningless-void-operator": {
       "count": 2
@@ -460,11 +455,6 @@
   },
   "src/classroom/room/livekit/window-hint.ts": {
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/classroom/share/RequestButton.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -476,12 +466,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
-    }
-  },
-  "src/classroom/share/stop-revoked.ts": {
-    "max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/classroom/share/use-grant-notices.ts": {
@@ -500,7 +485,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     },
     "max-lines-per-function": {
       "count": 1
@@ -519,7 +504,7 @@
   },
   "src/classroom/stage/use-maximize.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "no-restricted-syntax": {
       "count": 1
@@ -578,11 +563,6 @@
   },
   "src/components/ui/display/mark.tsx": {
     "max-len": {
-      "count": 3
-    }
-  },
-  "src/components/ui/display/skeleton.tsx": {
-    "max-len": {
       "count": 1
     }
   },
@@ -598,7 +578,7 @@
   },
   "src/components/ui/form/button.tsx": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/components/ui/form/field.tsx": {
@@ -629,7 +609,7 @@
   },
   "src/components/ui/form/segmented-control.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/ui/form/select.tsx": {
@@ -781,14 +761,9 @@
       "count": 1
     }
   },
-  "src/lib/clock-options.tsx": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/lib/clock-text.ts": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/lib/clock.ts": {
