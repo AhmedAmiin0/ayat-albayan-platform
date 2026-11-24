@@ -3515,7 +3515,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/delta/thread-delta.http.test.ts": {
+  "src/modules/messaging/inbox/delta/tests/thread-delta.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -3544,7 +3544,7 @@
       "count": 4
     }
   },
-  "src/modules/messaging/inbox/files/forward-files.crm.test.ts": {
+  "src/modules/messaging/inbox/files/tests/forward-files.crm.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -3563,7 +3563,7 @@
       "count": 3
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-client.test.ts": {
+  "src/modules/messaging/inbox/files/pdf/tests/pdf-client.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -3598,12 +3598,12 @@
       "count": 4
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-preview.limits.test.ts": {
+  "src/modules/messaging/inbox/files/pdf/tests/pdf-preview.limits.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-preview.repo.test.ts": {
+  "src/modules/messaging/inbox/files/pdf/tests/pdf-preview.repo.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -3627,7 +3627,7 @@
       "count": 8
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-render.spawn.test.ts": {
+  "src/modules/messaging/inbox/files/pdf/tests/pdf-render.spawn.test.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -3635,7 +3635,7 @@
       "count": 4
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-render.test.ts": {
+  "src/modules/messaging/inbox/files/pdf/tests/pdf-render.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -3651,7 +3651,7 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-sandbox.handler.test.ts": {
+  "src/modules/messaging/inbox/files/pdf/tests/pdf-sandbox.handler.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
@@ -3693,12 +3693,12 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/files/thread-file-send.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-file-send.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-file-send.service.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-file-send.service.test.ts": {
     "stylistic/max-len": {
       "count": 4
     },
@@ -3720,7 +3720,7 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/files/thread-file-send.voice.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-file-send.voice.test.ts": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -3745,7 +3745,7 @@
       "count": 3
     }
   },
-  "src/modules/messaging/inbox/files/thread-file.crm.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-file.crm.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -3753,15 +3753,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-file.echo.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/files/thread-file.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-file.echo.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     },
@@ -3769,7 +3761,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-file.pdf.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-file.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     },
@@ -3777,7 +3769,15 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-file.playable.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-file.pdf.http.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 1
+    }
+  },
+  "src/modules/messaging/inbox/files/tests/thread-file.playable.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -3796,17 +3796,17 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-forward.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-forward.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-forward.media.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-forward.media.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-forward.service.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-forward.service.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -3848,7 +3848,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-media.http.test.ts": {
+  "src/modules/messaging/inbox/files/tests/thread-media.http.test.ts": {
     "stylistic/max-len": {
       "count": 3
     },
@@ -3870,7 +3870,7 @@
       "count": 3
     }
   },
-  "src/modules/messaging/inbox/files/voice-ogg.test.ts": {
+  "src/modules/messaging/inbox/files/tests/voice-ogg.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -3901,20 +3901,12 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/inbox.module.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 4
-    }
-  },
   "src/modules/messaging/inbox/inbox.settings.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/people/thread-people.mapper.test.ts": {
+  "src/modules/messaging/inbox/people/tests/thread-people.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
@@ -3930,7 +3922,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/people/thread-people.test.ts": {
+  "src/modules/messaging/inbox/people/tests/thread-people.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -3987,17 +3979,17 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/reactions/thread-reaction.http.test.ts": {
+  "src/modules/messaging/inbox/reactions/tests/thread-reaction.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/reactions/thread-reaction.sales.test.ts": {
+  "src/modules/messaging/inbox/reactions/tests/thread-reaction.sales.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/reactions/thread-reaction.service.test.ts": {
+  "src/modules/messaging/inbox/reactions/tests/thread-reaction.service.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -4021,7 +4013,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/reads/read-receipts.test.ts": {
+  "src/modules/messaging/inbox/reads/tests/read-receipts.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4111,7 +4103,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/send/outbox.test.ts": {
+  "src/modules/messaging/inbox/send/tests/outbox.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -4130,7 +4122,7 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/send/send-audit.test.ts": {
+  "src/modules/messaging/inbox/send/tests/send-audit.test.ts": {
     "typescript/no-unnecessary-type-assertion": {
       "count": 2
     }
@@ -4140,7 +4132,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/send/send-line.test.ts": {
+  "src/modules/messaging/inbox/send/tests/send-line.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4155,7 +4147,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/send/send-number.test.ts": {
+  "src/modules/messaging/inbox/send/tests/send-number.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
@@ -4208,7 +4200,7 @@
       "count": 4
     }
   },
-  "src/modules/messaging/inbox/teacher-threads/teacher-scope.test.ts": {
+  "src/modules/messaging/inbox/teacher-threads/tests/teacher-scope.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -4249,7 +4241,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/teacher-threads/teacher-threads.test.ts": {
+  "src/modules/messaging/inbox/teacher-threads/tests/teacher-threads.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4267,7 +4259,7 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/known-number.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/known-number.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4299,7 +4291,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/thread-lessons.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/thread-lessons.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4332,12 +4324,12 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/thread-summaries.migration.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/thread-summaries.migration.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/threads-unread.repo.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads-unread.repo.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4350,7 +4342,7 @@
       "count": 4
     }
   },
-  "src/modules/messaging/inbox/threads/threads.assistant-templates.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.assistant-templates.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -4372,12 +4364,12 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/threads.known.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.known.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/threads.line.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.line.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4390,7 +4382,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/threads.lists.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.lists.http.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -4406,32 +4398,32 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/threads.numbers.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.numbers.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/threads.own.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.own.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/threads.own.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.own.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/threads.parallel.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.parallel.test.ts": {
     "stylistic/max-len": {
       "count": 5
     }
   },
-  "src/modules/messaging/inbox/threads/threads.read.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.read.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/threads.reply.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.reply.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -4453,7 +4445,7 @@
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/threads.sales.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.sales.http.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -4472,17 +4464,17 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/threads.teacher-send.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.teacher-send.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/messaging/inbox/threads/threads.teacher.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.teacher.http.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
   },
-  "src/modules/messaging/inbox/threads/threads.trial.http.test.ts": {
+  "src/modules/messaging/inbox/threads/tests/threads.trial.http.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
