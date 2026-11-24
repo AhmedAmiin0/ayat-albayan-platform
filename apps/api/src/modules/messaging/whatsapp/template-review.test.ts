@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { SEEDS } from './templates/catalog/seed-templates.fakes';
 import { bodyExamples, SAMPLE_REPORT, templateProblem } from './template-review';
-import { bodyVarCount, submitPayload } from './messages/wa-components';
+import { submitPayload } from './messages/submit';
+import { bodyVarCount } from './messages/wa-components';
 import { templateRow } from './whatsapp.fakes';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 

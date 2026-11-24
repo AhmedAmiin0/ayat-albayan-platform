@@ -15,7 +15,7 @@ import { meetingLinkFor, type BookingPayload } from '@/modules/teaching/booking/
 import { bookingPayload, type CourseLabel } from '@/modules/teaching/booking/core/booking.payload';
 import { BookingParties, type Resolved } from '@/modules/teaching/booking/core/booking.parties';
 import type { Plan } from './booking.plan';
-import type { BookingTeacher } from '@/modules/teaching/booking/core/booking.repo';
+import type { BookingTeacher } from '@/modules/teaching/booking/core/types';
 import type { Occurrence } from '@ab/schedule';
 import { planSeries } from './booking.series-plan';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';

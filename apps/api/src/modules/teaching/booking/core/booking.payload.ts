@@ -13,7 +13,7 @@ import { courseAudit, courseTie, type CourseLabel } from './booking.course-label
 import { confirmationDrafts } from './booking.messages';
 import type { Resolved } from './booking.parties';
 import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
-import type { BookingTeacher } from './booking.repo';
+import type { BookingTeacher } from './types';
 
 export type { CourseLabel } from './booking.course-label';
 

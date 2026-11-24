@@ -3,7 +3,7 @@ import type { WaLine } from '@ab/catalog';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
-import type { NumberRef } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { NumberRef } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import {
   syncNumber, type NumberSyncDeps,
 } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';

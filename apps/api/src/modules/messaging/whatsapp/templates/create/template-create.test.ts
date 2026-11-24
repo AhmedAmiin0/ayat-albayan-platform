@@ -3,7 +3,7 @@ import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
-import { submitPayload } from '@/modules/messaging/whatsapp/messages/wa-components';
+import { submitPayload } from '@/modules/messaging/whatsapp/messages/submit';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { createdRow, TemplateCreator } from './template-create';

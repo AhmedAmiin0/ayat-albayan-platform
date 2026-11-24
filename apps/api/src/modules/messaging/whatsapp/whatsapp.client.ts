@@ -11,19 +11,15 @@ import { resumableUpload } from './drivers/meta/meta-upload';
 import { relayGraphBody } from './drivers/waba/waba-graph';
 import { sendGraphTemplate } from './drivers/waba/waba-send';
 import { callPermissionMessage } from './messages/wa-call-permission';
-import { mediaMessage, readReceipt, submitPayload, textMessage, type GraphBody } from './messages/wa-components';
+import { submitPayload } from './messages/submit';
+import { mediaMessage, readReceipt, textMessage, type GraphBody } from './messages/wa-components';
 import { reactionMessage } from './drivers/meta/meta-reaction';
 import { capsOf } from './drivers/driver-caps';
 import { graphVoice } from './drivers/meta/meta-voice';
+import type { ClientOpts } from './whatsapp.client.types';
 import { WaError, type VoiceUpload, type MetaTemplate, type ReactionSend, type SampleFile, type TemplateRow, type TemplateSend, type WaSent, type WhatsappClient } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
-
-export interface ClientOpts {
-  fetch?: FetchLike;
-  timeoutMs?: number;
-  allowed?: readonly string[] | null;
-}
 
 const ANY = z.unknown(); // A read receipt's 2xx body is not checked (any answer, as before).
 
