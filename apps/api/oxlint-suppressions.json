@@ -8304,7 +8304,7 @@
       "count": 6
     }
   },
-  "src/modules/platform/google-sync/google-alerts.test.ts": {
+  "src/modules/platform/google-sync/tests/google-alerts.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -8354,19 +8354,14 @@
       "count": 2
     }
   },
-  "src/modules/platform/google-sync/google-sync.http.test.ts": {
+  "src/modules/platform/google-sync/tests/google-sync.http.test.ts": {
     "stylistic/max-len": {
       "count": 6
     }
   },
-  "src/modules/platform/google-sync/google-sync.migration.test.ts": {
+  "src/modules/platform/google-sync/tests/google-sync.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/platform/google-sync/google-sync.module.ts": {
-    "stylistic/max-len": {
-      "count": 4
     }
   },
   "src/modules/platform/google-sync/http/google-client.fake.ts": {
@@ -8374,7 +8369,7 @@
       "count": 9
     }
   },
-  "src/modules/platform/google-sync/http/google-http.client.test.ts": {
+  "src/modules/platform/google-sync/http/tests/google-http.client.test.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -8441,7 +8436,7 @@
       "count": 4
     }
   },
-  "src/modules/platform/google-sync/map/teacher-calendar.service.test.ts": {
+  "src/modules/platform/google-sync/map/tests/teacher-calendar.service.test.ts": {
     "stylistic/max-len": {
       "count": 5
     }
@@ -8493,7 +8488,7 @@
       "count": 3
     }
   },
-  "src/modules/platform/google-sync/oauth/google-oauth.service.test.ts": {
+  "src/modules/platform/google-sync/oauth/tests/google-oauth.service.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
@@ -8509,7 +8504,7 @@
       "count": 6
     }
   },
-  "src/modules/platform/google-sync/oauth/oauth-state.test.ts": {
+  "src/modules/platform/google-sync/oauth/tests/oauth-state.test.ts": {
     "typescript/restrict-template-expressions": {
       "count": 1
     }
@@ -8525,7 +8520,7 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/sync/google-items.queries.test.ts": {
+  "src/modules/platform/google-sync/sync/tests/google-items.queries.test.ts": {
     "typescript/dot-notation": {
       "count": 4
     }
@@ -8549,12 +8544,12 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/sync/google-sync.processor.test.ts": {
+  "src/modules/platform/google-sync/sync/tests/google-sync.processor.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/platform/google-sync/sync/google-sync.processor.trips.test.ts": {
+  "src/modules/platform/google-sync/sync/tests/google-sync.processor.trips.test.ts": {
     "stylistic/max-len": {
       "count": 3
     },
@@ -8579,7 +8574,7 @@
       "count": 5
     }
   },
-  "src/modules/platform/google-sync/sync/google-sync.settings.test.ts": {
+  "src/modules/platform/google-sync/sync/tests/google-sync.settings.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -8628,17 +8623,17 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/teacher-calendar.migration.test.ts": {
+  "src/modules/platform/google-sync/tests/teacher-calendar.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/writers/calendar/calendar.writer.fixture.ts": {
+  "src/modules/platform/google-sync/writers/calendar/tests/calendar.writer.fixture.ts": {
     "stylistic/max-len": {
       "count": 3
     }
   },
-  "src/modules/platform/google-sync/writers/calendar/calendar.writer.handover.test.ts": {
+  "src/modules/platform/google-sync/writers/calendar/tests/calendar.writer.handover.test.ts": {
     "stylistic/max-len": {
       "count": 2
     },
@@ -8646,7 +8641,7 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/writers/calendar/calendar.writer.test.ts": {
+  "src/modules/platform/google-sync/writers/calendar/tests/calendar.writer.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -8706,12 +8701,12 @@
       "count": 5
     }
   },
-  "src/modules/platform/google-sync/writers/drive/drive.waits.test.ts": {
+  "src/modules/platform/google-sync/writers/drive/tests/drive.waits.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/platform/google-sync/writers/drive/drive.writers.test.ts": {
+  "src/modules/platform/google-sync/writers/drive/tests/drive.writers.test.ts": {
     "complexity": {
       "count": 1
     },
@@ -8771,7 +8766,7 @@
       "count": 7
     }
   },
-  "src/modules/platform/google-sync/writers/sheets/sheet-style.test.ts": {
+  "src/modules/platform/google-sync/writers/sheets/tests/sheet-style.test.ts": {
     "stylistic/max-len": {
       "count": 5
     }
