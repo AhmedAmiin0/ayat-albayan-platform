@@ -5,7 +5,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { RoomOpenService } from './room-open.service';
 
-/** «افتح الحلقة الآن»: the admin or the lesson's teacher opens the room before the usual 15 minutes. */
+/** The admin or the lesson's teacher opens the room before the usual 15 minutes. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.host')

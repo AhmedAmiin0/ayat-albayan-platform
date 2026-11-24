@@ -13,7 +13,6 @@ import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { LessonCancelService } from '@/modules/teaching/lessons/status/lesson-cancel.service';
 import { fakeCorrection } from './auto-held.fakes';
 
-// «لم تنعقد؟» through POST /lessons/:id/cancel (LessonCancelService → AutoHeldCorrection).
 const AFTER = new Date('2026-10-04T16:00:00Z'); // the fixture lesson ended at 14:45Z
 
 function setup(o: { correctable?: string[]; lateCancelHours?: number | null } = {}) {
