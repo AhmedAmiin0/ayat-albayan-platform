@@ -11,12 +11,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 const F = t.familyAuth;
 const sameCode = (a: readonly string[], b: readonly string[]) => a.join('') === b.join('');
 
-/**
- * «الدخول برقم الواتساب» (docs/50 §4), as the family app: the number (country + national,
- * checked while typing; a whole number pasted picks its country) → the six digits, the sixth
- * signing in without a tap → the session, then /portal (or the page the guard carried). A
- * refused code empties the boxes for the next try. A staff number lands on the guard's «wrongApp».
- */
+/** docs/50 §4: the sixth digit signs in without a tap; a refused code empties the boxes. */
 export function useWhatsAppSignIn() {
   const queryClient = useQueryClient();
   const land = useLandAfterSignIn();

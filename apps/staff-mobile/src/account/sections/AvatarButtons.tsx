@@ -19,10 +19,7 @@ interface AvatarButtonsProps {
 
 const a = t.account.avatar;
 
-/**
- * The photo's actions (docs/07 §6 «الأزرار»): with a preview ONE ButtonRow «رفع الصورة» (primary) |
- * «إلغاء» (secondary), else «الكاميرا» | «المعرض» (secondary) and «إزالة الصورة» (danger, full width).
- */
+/** docs/07 §6: one ButtonRow with a preview, else camera and gallery plus a danger remove. */
 export function AvatarButtons(p: AvatarButtonsProps) {
   const { color } = useTheme();
   const caption = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 };
