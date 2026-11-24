@@ -16,7 +16,6 @@ export interface ReplyActionsValue {
   /** pages[0].lessons: the family's next open lessons. */
   lessons: readonly ThreadLesson[];
   rights: ReplyRights;
-  /** Replies whose lesson was moved from their «تغيير الموعد». */
   moved: readonly string[];
   openMove: (messageId: string, lesson: ReplyLesson) => void;
 }

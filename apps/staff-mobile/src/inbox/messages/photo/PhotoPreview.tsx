@@ -13,14 +13,13 @@ interface PhotoPreviewProps {
   phone: string;
   box: PhotoBox;
   kind: string;
-  /** The bubble's menu («رد», «إعادة توجيه»): the thumbnail takes the touch, so it opens it too. */
+  /** The thumbnail takes the touch, so it also opens the bubble menu. */
   onLongPress?: () => void;
 }
 
 /** The photos already re-signed once after a failed load, by message: kept across a remount (scroll back). */
 const resigned = new Set<string>();
 
-/** «تعذّر تحميل الصورة»: a tap asks again. */
 function RetryLine({ onPress }: { onPress: () => void }) {
   const { color } = useTheme();
   return (

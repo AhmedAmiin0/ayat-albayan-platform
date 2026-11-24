@@ -26,7 +26,7 @@ interface PdfPreviewProps {
   message: MessageView;
   phone: string;
   kind: string;
-  /** The bubble's menu («رد», «إعادة توجيه»): the card takes the touch, so it opens it too. */
+  /** The card takes the touch, so it also opens the bubble menu. */
   onLongPress?: () => void;
   /** Today's opener, for a 4xx only: a PDF with no preview (422), a bad request (400). */
   fallback: ReactNode;
@@ -38,16 +38,7 @@ const WIDTH = 240;
 /** The PDFs whose thumb was re-signed once after a failed load, by message: kept across a remount. */
 const resigned = new Set<string>();
 
-/**
- * A chat PDF like WhatsApp's (owner 2026-10-29, 2026-11-01 «do it like WhatsApp»): the top of page
- * 1, a «PDF» badge, the name and «12 صفحة · PDF · 1.2 ميغابايت»; a tap opens every page in the app
- * (PdfViewer), «تنزيل» saves it. Every PDF (a family's, an echo, an import, a forward, one staff
- * sent) asks page 1 once its row has been on screen (useSeen), so a long thread never asks a burst;
- * the API renders it in the ayat-pdf sandbox and keeps it, so a scroll back reads the cache. The
- * strip keeps one height (PdfStrip): a spinner until the image has loaded, a large «PDF» when the
- * image fails after one re-sign, «تعذّر تحميل الصفحة» after a 5xx or no network (a tap asks again).
- * Only a 4xx leaves the card.
- */
+/** Page 1 is asked once on screen (useSeen) so long threads never burst; a 4xx drops the card. */
 export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: PdfPreviewProps) {
   const { color } = useTheme();
   const small = useSmallText();
@@ -76,8 +67,7 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
     resigned.add(m.id);
     void client.invalidateQueries({ queryKey: query.queryKey, exact: true });
   };
-  // On «تعذّر تحميل الصفحة» a tap only asks again (a viewer must never open by itself later);
-  // else it opens the viewer, at once or as page 1 answers.
+  // After a page-load failure a tap only retries; a viewer must never open by itself later.
   const show = () => {
     setOpen(!failed);
     if (failed) void first.refetch();

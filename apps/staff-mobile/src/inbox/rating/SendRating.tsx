@@ -23,12 +23,7 @@ import { ratingApproved, ratingDone, ratingError } from './rating-words';
 
 const TEMPLATES = '/messaging/templates';
 
-/**
- * «إرسال تقييم الحلقة» (feedback.write, a guardian's thread whose 24 h window is closed, as on the
- * web): POST /threads/:phone/rating. The API picks the children's latest completed lesson (no
- * lesson to choose). It asks first, naming the guardian; one request id per confirmed attempt, kept
- * across a retry (rule 8) and the button is off once it went out. Off until Meta approves it.
- */
+/** Idempotent: one request id per confirmed attempt kept across retries (rule 8). */
 export function SendRating({ thread }: { thread: Pick<ThreadView, 'phone_e164' | 'guardian_id' | 'display_name'> }) {
   const { color } = useTheme();
   const client = useQueryClient();

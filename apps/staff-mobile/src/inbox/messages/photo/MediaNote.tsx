@@ -12,7 +12,6 @@ export function MediaNote({ text }: { text: string }) {
   );
 }
 
-/** «تعذّر تشغيل الملف. اضغط لإعادة المحاولة»: the line itself asks again, announced when it appears. */
 export function RetryLine({ onPress }: { onPress: () => void }) {
   const small = useSmallText();
   return (

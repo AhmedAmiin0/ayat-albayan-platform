@@ -1,3 +1,2 @@
-// Tests only: a bubble's DeliveryTicks label is the status word, then « · » and its times when Meta
-// reported any. Anchored, so «أُرسلت» never matches «أُرسلت يدويًا».
+// Anchored so a status word never matches a longer status that starts with it.
 export const ticksLabel = (word: string): RegExp => new RegExp(`^${word}( · |$)`);

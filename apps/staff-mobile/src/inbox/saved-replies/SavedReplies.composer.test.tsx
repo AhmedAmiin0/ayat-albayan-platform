@@ -34,7 +34,6 @@ async function open(last = minutesAgo(5), teacher = false) {
 }
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const button = () => screen.getByRole('button', { name: t.savedReplies.open });
-/** Open window (owner 2026-10-27, WhatsApp Business): «الردود السريعة» is a tile of the paperclip's sheet. */
 const openReplies = async () => {
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
   await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.savedReplies.open }));

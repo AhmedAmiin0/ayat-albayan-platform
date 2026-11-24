@@ -6,27 +6,18 @@ import { ChatSearchBar, useChatSearch } from '@/inbox/thread/search';
 interface ChatHeaderProps {
   /** The name (or the number); one line, cut with an ellipsis. */
   title: string;
-  /** «عميل محتمل · +966 …» or when the saved thread was fetched; one smaller line. */
   subtitle?: string;
-  /** «آخر رسالة منذ …» (docs/33 §4): a third, smaller line; '' or unset = none. */
+  /** docs/33 §4; empty or unset means no line. */
   status?: string;
   onBack: () => void;
   /** The contact's initials circle, beside the chevron (decorative: the title reads the name). */
   avatar?: ReactNode;
-  /** Icon buttons at the inline-end («تحقق من التسجيل»). */
   trailing?: ReactNode;
   /** Tapping the name or number: the student's details (owner 2026-10-29). Unset = not tappable. */
   onTitlePress?: () => void;
 }
 
-/**
- * A chat's header in one ~52pt line, WhatsApp-like, so the messages get the room (owner
- * 2026-10-18): «رجوع» as a chevron, the name in Amiri at h4 and the subtitle under it, both one
- * line, then the icon actions. As WhatsApp (owner 2026-10-27), a logical row that RN mirrors: the
- * back chevron at the inline-start pointing back (the right in Arabic, the left in English), the
- * contact's initials and the name beside it, the icons at the end. While «بحث» is open the row is
- * the search field (ChatSearchBar), as WhatsApp.
- */
+/** A logical row that RN mirrors, so back sits at the inline start in both languages. */
 export function ChatHeader(props: ChatHeaderProps) {
   const { title, subtitle, status, onBack, avatar, trailing, onTitlePress } = props;
   const { color } = useTheme();

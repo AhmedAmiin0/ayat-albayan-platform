@@ -8,7 +8,7 @@ import { answer } from '@/inbox/lists/lib/list-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { detail, inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
-// «ربط بطالب موجود» (owner 2026-10-29) in the chat's «⋮»: leads.link_family, a lead's chat with no family.
+// Needs leads.link_family, on a lead's chat with no family.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
