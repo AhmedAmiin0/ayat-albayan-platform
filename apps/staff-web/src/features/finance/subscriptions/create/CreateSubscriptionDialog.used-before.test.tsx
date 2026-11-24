@@ -17,7 +17,7 @@ vi.mock('@/features/people/auth', async (importOriginal) => ({
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),
 }));
 
-// «حلقات مستخدمة من الباقة» in the admin's «اشتراك جديد» (owner 2026-10-28): only with a start before today.
+// Used lessons are asked only with a start before today.
 const posts = () => apiSend.mock.calls.filter((c) => c[1] === '/subscriptions').map((c) => c[2] as Record<string, unknown>);
 const today = riyadhToday();
 const past = daysBefore(today, 10);

@@ -19,7 +19,6 @@ type Props = {
   amountError?: string | undefined;
 };
 
-/** Category (the table's, admin-extendable), amount, currency, paid day, vendor, method, note, «تكرار شهري». */
 export function ExpenseFields({ form, set, categories, amountError }: Props) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
