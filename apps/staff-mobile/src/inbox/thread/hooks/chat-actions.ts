@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { createContext, type Dispatch, type SetStateAction, useContext } from 'react';
 import type { CopyRequest } from '@/inbox/messages/copy-download/chat-tools';
 
-// One open chat's «رد» / «إعادة توجيه» state (ChatActionsProvider). Without a provider: all off.
+// Without a provider every action is off.
 
 /** A short line over the composer: why a jump failed, what a forward did. */
 export interface ChatNoticeValue {
@@ -12,39 +12,37 @@ export interface ChatNoticeValue {
 }
 
 export interface ChatActions {
-  /** Long press, swipe, «رد» and «إعادة توجيه» are offered (admin and sales chats only). */
+  /** Admin and sales chats only. */
   enabled: boolean;
   /** The message the next text or file answers. */
   reply: MessageView | null;
   setReply: Dispatch<SetStateAction<MessageView | null>>;
-  /** «تعديل» (owner 2026-11-07): the message the next text corrects; never with a reply. */
+  /** Never set together with a reply. */
   editing: MessageView | null;
-  /** This «تعديل» tap's session (its send carries it); null when none. */
+  /** Null when there is no edit session. */
   editSession: string | null;
   /** Starts the correction: the box holds its text, any reply is dropped. */
   startEdit: (m: MessageView) => void;
   /** ✕ on the edit bar: the box gets back its draft from before the edit. */
   cancelEdit: () => void;
-  /** The correction sent from `session` went: that edit ends (never a newer «تعديل»). */
+  /** Ends only that session's edit, never a newer one. */
   editSent: (session: string) => void;
-  /** Free text can go out now (24 h window, not a read-only chat): «رد» is usable. */
+  /** True inside the 24 h window on a writable chat. */
   canSend: boolean;
   /** Who an inbound quote is from: the chat's name, else its number. */
   threadName: string | null;
   /** The long-press menu; `at` = the held bubble's window y (the reaction row floats above it). */
   openMenu: (m: MessageView, at?: number) => void;
   openForward: (m: MessageView) => void;
-  /** «نسخ النص» / «نسخ الرقم»: the selectable copy sheet (chat-tools). */
   showCopy: (req: CopyRequest) => void;
   notice: ChatNoticeValue | null;
   say: (notice: ChatNoticeValue | null) => void;
-  /** «تفاعل» (owner 2026-10-27): this bubble offers the reaction row (canReact, staff chats only). */
+  /** Staff chats only (canReact). */
   reactable: (m: MessageView) => boolean;
   /** Ours on `m` (null removes it): optimistic, one send. */
   react: (m: MessageView, emoji: string | null) => void;
   /** A tap on the pill: who reacted. */
   openReactors: (m: MessageView) => void;
-  /** A tap on the admin's «! لم تُرسل» (or queued clock): why, retry, send it by hand (FailedSheet). */
   openFailed: (m: MessageView) => void;
 }
 
@@ -89,10 +87,7 @@ export type BubbleChatActions = Pick<
   | 'openFailed'
 >;
 
-/**
- * The bubbles' own slice (owner 2026-10-27, «Avoid rerenders»): picking «رد» or a notice changes
- * ChatActionsContext, which only the composer and the notice read; every bubble reads this one.
- */
+/** A separate slice so picking a reply or a notice does not rerender every bubble. */
 export const BubbleActionsContext = createContext<BubbleChatActions>({
   enabled: false,
   canSend: false,

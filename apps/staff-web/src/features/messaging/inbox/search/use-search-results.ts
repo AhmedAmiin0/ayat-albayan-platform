@@ -3,10 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useDebounced } from '@/features/finance/pricing';
 import { chatSearchQuery } from './chat-search-api';
 
-/**
- * The open search's hits: asked once typing settles; while the words still change, the last
- * search's hits are neither shown nor followed (the bar says «جارٍ البحث…»).
- */
+/** While the words still change, the previous search's hits are neither shown nor followed. */
 export function useSearchResults(phone: string, state: ChatSearchState) {
   const settled = useDebounced(state.text.trim(), CHAT_SEARCH_DEBOUNCE_MS);
   const q = state.open ? settled : '';

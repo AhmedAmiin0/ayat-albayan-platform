@@ -13,12 +13,7 @@ import { TrialDates } from './trial-date.service';
 const historyQuery = z.object({ studentId: z.uuid() });
 type HistoryQuery = z.output<typeof historyQuery>;
 
-/**
- * «موعد تجريبي جديد» from the student file (owner 2026-10-25): the booking wizard's trial body for ONE
- * existing student. An upcoming trial moves (kept as «نُقلت»), else a new trial lesson is booked. Admin
- * only, like POST /booking (override reason, custom link). 400 trial_date_invalid, 404 student_not_found,
- * 409 trial_date_subscribed | conflict | trial_changed.
- */
+/** Admin only; an upcoming trial moves (kept as rescheduled), else a new trial is booked. */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('booking.write')
@@ -26,7 +21,7 @@ type HistoryQuery = z.output<typeof historyQuery>;
 export class TrialDateController {
   constructor(private readonly dates: TrialDates) {}
 
-  /** «مواعيد الحلقة التجريبية»: every trial time picked for the student, newest first. */
+  /** Newest first. */
   @Get('trial-dates')
   history(@ZodQuery(historyQuery) query: HistoryQuery): Promise<TrialHistory> {
     return this.dates.history(query.studentId);

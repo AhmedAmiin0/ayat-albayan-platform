@@ -9,16 +9,11 @@ import { ReceiptViewer } from '@/money/attachments/ReceiptViewer';
 import { useViewerTz } from '@/core/lib/clock';
 import { AdminAmountEdit } from '@/payments';
 
-/**
- * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
- * student + code, method and day, who recorded it, then its «المرفقات» (bank, or a stored receipt), the booking invoice, or «بلا إيصال».
- * The list's inset card draws the fill and the rule between payments (owner 2026-10-28).
- */
 export const PaymentItem = memo(function PaymentItem({ payment }: { payment: PaymentView }) {
   const tz = useViewerTz();
   const { color } = useTheme();
   const refund = payment.kind === 'refund';
-  // The booking invoice standing in for a receipt has its own viewer; any stored file is in «المرفقات».
+  // A booking invoice standing in for a receipt has its own viewer.
   const invoiceOnly = payment.invoice_id !== null && payment.receipt_path === null;
   const files = hasAttachments(payment);
   const line = [

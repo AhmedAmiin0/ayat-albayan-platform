@@ -12,12 +12,10 @@ const fileLabel = (f: SharedFile): string => f.name || `photo-${String(f.n)}.jpg
 
 interface ShareFailuresProps {
   failed: readonly FailedShare[];
-  /** A retry under way: «جارٍ إرسال {n} من {m}». */
   step: ShareStep | null;
   actions: { retry: () => void; open: () => void };
 }
 
-/** «تعذّر إرسال بعض الملفات:», each failed file and its reason (inbox.error.*), retry, open. */
 export function ShareFailures({ failed, step, actions }: ShareFailuresProps) {
   const busy = step !== null;
   const retryLabel = step ? sendingText(step) : s.retry;

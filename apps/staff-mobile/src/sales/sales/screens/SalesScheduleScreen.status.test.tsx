@@ -7,7 +7,7 @@ import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from './SalesScheduleScreen';
 
-// An academy that requires lesson confirmation (the pills and rows say «للتأكيد»).
+// An academy that requires lesson confirmation.
 const statusWord = lessonStatusText(true).word;
 
 const mockApiFetch = jest.fn();
@@ -59,7 +59,7 @@ test('«للتأكيد» keeps only the unconfirmed lessons, «ملغاة» the 
 test('under «الكل» each row says its status; under «للتأكيد» the rows drop the word the pill already says', async () => {
   await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   expect(await screen.findByText('نور')).toBeTruthy();
-  // The pill's text is its label and count together («للتأكيد 2»), so only the rows match the bare word.
+  // The pill's text is its label and count together, so only the rows match the bare word.
   expect(screen.getAllByText(statusWord('scheduled'))).toHaveLength(2);
   await fireEvent.press(screen.getByRole('tab', { name: `${s.scheduled} 2` }));
   expect(screen.getByText('سلمى')).toBeTruthy();

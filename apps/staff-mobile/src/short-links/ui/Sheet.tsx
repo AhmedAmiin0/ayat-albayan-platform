@@ -6,12 +6,10 @@ interface SheetProps {
   title: string;
   onClose: () => void;
   children: ReactNode;
-  /** The pinned bottom: «تم · 5», «احفظ». */
   footer: ReactNode;
   testID?: string;
 }
 
-/** A page sheet over the form (boards LinkXStaffPeople, the edit): title, «إغلاق», body, footer. */
 export function Sheet({ title, onClose, children, footer, testID }: SheetProps) {
   const { color } = useTheme();
   const rule = { borderTopWidth: StyleSheet.hairlineWidth, borderColor: color.rule };

@@ -10,7 +10,7 @@ function Row() {
   return <ListRow title={t.paymentLinks.list} onPress={() => router.push('/sales/more/payment-links')} />;
 }
 
-/** «روابط الدفع» in her «المزيد» (docs/30): a Stripe build only, then the server's switch. */
+/** Payment links row (docs/30): a Stripe build only, then the server's switch. */
 export function PaymentLinksRow() {
   return STRIPE_FEATURE ? <Row /> : null;
 }

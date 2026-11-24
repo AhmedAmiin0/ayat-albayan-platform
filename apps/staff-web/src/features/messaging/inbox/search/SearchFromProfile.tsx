@@ -17,11 +17,7 @@ const focusBarSoon = (): void => {
   setTimeout(focusBar, 0);
 };
 
-/**
- * «بحث في الرسائل» at the top of the contact's panel (docs/37 NEW 2): opens the chat's search
- * bar and puts the cursor in it; on a phone it also closes the panel's sheet. Outside a chat
- * (no search provider) it renders nothing.
- */
+/** docs/37 NEW 2: on a phone it also closes the panel's sheet; renders nothing outside a chat. */
 export function SearchFromProfile() {
   const search = useChatSearch();
   const closeSheet = useSideSheetClose();

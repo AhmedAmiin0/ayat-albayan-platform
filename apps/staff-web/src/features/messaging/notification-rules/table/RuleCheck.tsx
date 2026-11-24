@@ -3,7 +3,6 @@ export interface RuleCheckProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   disabled?: boolean;
-  /** A fuller name for assistive tech when the visible label is short («واتساب: تذكير الحلقة»). */
   ariaLabel?: string;
 }
 

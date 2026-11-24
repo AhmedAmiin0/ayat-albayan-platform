@@ -17,11 +17,7 @@ const GO = new Map<boolean, (id: string, jumps: SearchJumps<{ id: string }>) => 
   [false, (id) => anchorAt(id)],
 ]);
 
-/**
- * The message list's side of «بحث»: a shown hit already on screen is centred and lit (useJump);
- * any other opens the window around it with one request (`?msg=`, docs/37), never a page-by-page
- * seek. A close goes back to the live chat, at the newest message.
- */
+/** A hit off screen opens its window in one request (`?msg=`, docs/37), never paging to seek. */
 export function useSearchJump<T extends { id: string }>(
   list: RefObject<FlatList<T> | null>,
   jumps: SearchJumps<T>,

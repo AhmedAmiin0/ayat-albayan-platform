@@ -3,7 +3,7 @@ import { t } from '@ab/mobile-kit';
 import type { ChatChoice } from '@/inbox/lists/components/ChatListChips';
 import { ListChip } from '@/inbox/lists/components/ListChip';
 
-/** The stages she works (review 2026-10-29 #2); «مشترك» is a family by then, «مفقود» is not chased here. */
+/** Converted leads are families by then and lost leads are not chased here. */
 const WORKED_STAGES: readonly LeadStatus[] = LEAD_STATUSES.filter((s) => s !== 'converted' && s !== 'lost');
 
 const stageOf = (choice: ChatChoice): LeadStatus | null =>
@@ -14,11 +14,7 @@ interface LeadChipsProps {
   onChange: (choice: ChatChoice) => void;
 }
 
-/**
- * Staff choices after «غير مقروءة» (admin and sales trees; a teacher sees no lead): «بانتظار ردّك»
- * (the family wrote last) and one chip per lead stage, served by GET /threads?status= (the sales
- * scope already reads every chat with its lead, docs/16). One choice at a time, as the rest of the row.
- */
+/** Staff only; the sales scope already reads every chat with its lead (docs/16). */
 export function LeadChips({ value, onChange }: LeadChipsProps) {
   const stage = stageOf(value);
   return (

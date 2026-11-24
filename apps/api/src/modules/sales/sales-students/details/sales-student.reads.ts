@@ -3,13 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { historyResponse, ReportFilesService, ReportHistoryQueries } from '@/modules/reporting/reports';
 import { SalesHistoryRepo } from '@/modules/sales/sales';
 
-/** The latest sent reports in «التقارير» (the teacher's history pages by 10; a salesperson reads the recent ones). */
+/** Teachers page history by 10; a salesperson reads the recent ones. */
 const REPORTS_LIMIT = 50;
 
-/**
- * The other modules' reads «تفاصيل الطالب» reuses: the subscriptions of «السجل» (SalesHistoryQueries),
- * the teacher's report history (ReportHistoryQueries + historyResponse) and the report PDF signer.
- */
+/** Reads reused from other modules: subscription history, report history and the PDF signer. */
 @Injectable()
 export class SalesStudentReads {
   constructor(

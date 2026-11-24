@@ -8,11 +8,7 @@ import { JoinLinkCard } from './JoinLinkCard';
 import { RecordingsButton } from '@/student-file/recordings/RecordingsButton';
 import type { StudentProfile } from '@ab/shared';
 
-/**
- * What the web student file has beyond the quick view: «تسجيلات الحلقات», «المدفوعات والفواتير»
- * (each opens its own screen), «رابط دخول الطالب», «رقم الواتساب لـ» (docs/30), the read-only teacher–family
- * channel (docs/31 §2) and «إنشاء حساب». Each is hidden without its permission.
- */
+/** Each section is hidden without its permission. */
 export function StudentFileSections({ student }: { student: StudentProfile }) {
   const can = usePermissions();
   const to = useStudentHref();

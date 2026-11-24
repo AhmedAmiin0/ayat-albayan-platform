@@ -12,7 +12,6 @@ const rows = () =>
     { route: 'shortLinks', title: t.nav.shortLinks, href: '/more/short-links' },
   ] as const;
 
-/** «الإدارة»: the web admin screens that fit a phone: overview, academy settings, activity log (by permission). */
 export function AdminOpsSection({ can = () => true }: { can?: Can }) {
   const shown = allowedRows(can, rows());
   if (shown.length === 0) return null;

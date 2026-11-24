@@ -3,8 +3,6 @@ import { renderWithQuery } from '@/test/query';
 import { t } from '@ab/mobile-kit';
 import { ContactIsSelfCard } from './ContactIsSelfCard';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1) on the student file.
-
 const C = t.familyAuth.contactIsSelf;
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

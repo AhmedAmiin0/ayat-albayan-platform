@@ -1,8 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LESSON, lessonFacts, studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
 
-// «ألغاها المعلم/ة» / «اعتذر الطالب» from the assistant (owner 2026-11-02): same key
-// lessons.cancel, before or after the lesson ends; the academy's own cancel stays before the end.
+// Key lessons.cancel, before or after the end; the academy's own cancel only before the end.
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const NOW = new Date('2026-10-27T10:00:00Z');
 const ENDED = lessonFacts({ starts_at: '2026-10-26T15:00:00Z', ends_at: '2026-10-26T15:30:00Z' });

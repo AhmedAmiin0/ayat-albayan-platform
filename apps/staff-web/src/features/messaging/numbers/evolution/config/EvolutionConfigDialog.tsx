@@ -21,11 +21,7 @@ export interface EvolutionConfigDialogProps {
   onClose: () => void;
 }
 
-/**
- * «إعدادات Evolution» (docs/19 «Evolution driver»): every option of the instance, checked with
- * evolutionConfigSchema, saved with PUT …/evolution/config; the answer (each part read back from
- * Evolution) stays shown. The Cloud section shows only on a Cloud instance.
- */
+/** Validated with evolutionConfigSchema; the Cloud section shows only on a Cloud instance. */
 export function EvolutionConfigDialog({ view, evolution, onClose }: EvolutionConfigDialogProps) {
   const formId = useId();
   const form = useConfigForm(view, evolution);

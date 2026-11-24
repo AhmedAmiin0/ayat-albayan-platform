@@ -6,13 +6,7 @@ import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { useInboxRealtime } from '@/inbox';
 import { salesTabItems } from '@/sales/app/lib/sales-tabs';
 
-/**
- * The phone app of the base role sales («المبيعات», owner 2026-10-12): its own tree under /sales,
- * mirroring the web sales portal. The shared screens (inbox, thread in sales mode, students,
- * schedule, teachers, subscriptions, earnings) run here as they do for an admin holding the double
- * role, with their links moved under /sales (TreeBaseProvider). Push (and the bell) only with notifications.push;
- * the inbox live over realtime while the app is open (docs/12 §15).
- */
+/** The sales role's own tree under /sales; push only with notifications.push (docs/12 §15). */
 export function SalesTabs() {
   usePushRegistration('sales');
   const can = usePermissions();

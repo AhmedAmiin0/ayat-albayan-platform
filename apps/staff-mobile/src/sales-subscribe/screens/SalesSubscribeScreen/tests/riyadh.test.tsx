@@ -5,8 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// Regression: the default day and the chips are the academy's (Riyadh) day, the one the API checks,
-// not the family's. A London family after Riyadh midnight: «اليوم» is already the 13th.
+// Regression: the default day is the academy's (Riyadh) day the API checks, not the family's.
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
