@@ -1,4 +1,6 @@
-import { RIYADH_TZ, type Gender, type LessonStatus, type Program, type TeacherStatus, allDayRows } from '@ab/shared';
+import type { Gender, LessonStatus, Program, TeacherStatus } from '@ab/catalog';
+import { allDayRows } from '@ab/schedule';
+import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';

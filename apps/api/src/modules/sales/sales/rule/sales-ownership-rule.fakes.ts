@@ -1,5 +1,5 @@
 // Test-only: a SalesOwnershipRule over a fake SalesRepo and fake settings (not built).
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';

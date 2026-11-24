@@ -1,4 +1,5 @@
-import type { NumberCreate, NumberError, WaLine } from '@ab/shared';
+import type { NumberCreate, NumberError } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import type { Database } from '@ab/db';
 import { DB, type Db } from '@/common/db/db.module';

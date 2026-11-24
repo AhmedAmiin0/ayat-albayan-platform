@@ -1,4 +1,4 @@
-import { DISCOUNTS } from '@ab/shared';
+import { DISCOUNTS } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';

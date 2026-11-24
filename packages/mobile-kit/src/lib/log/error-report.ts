@@ -1,5 +1,5 @@
 import { installErrorReporting, type UncaughtSource } from '@ab/client-core';
-import type { ErrorReporter, ReportTransport } from '@ab/shared';
+import type { ErrorReporter, ReportTransport } from '@ab/core';
 import { z } from 'zod';
 
 type GlobalHandler = (error: unknown, isFatal?: boolean) => void;

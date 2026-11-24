@@ -1,4 +1,11 @@
-import { SECRET_PARITY_FIELDS, WA_LINES, type ParityCell, type ParityField, type ParityRoleView, type ParityView, type WaLine } from '@ab/shared';
+import {
+  SECRET_PARITY_FIELDS,
+  type ParityCell,
+  type ParityField,
+  type ParityRoleView,
+  type ParityView,
+} from '@ab/shared';
+import { WA_LINES, type WaLine } from '@ab/catalog';
 import { lineEnvs, lineNumbers, lineProvider, type Env, type GraphEnv, type WhatsappEnv } from '@/config/env/env';
 
 // GET /admin/communications/parity (docs/23 §2e step 4): per role, the effective config the legacy path

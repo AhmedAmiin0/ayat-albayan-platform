@@ -1,4 +1,4 @@
-import type { LessonEndResult } from '@ab/shared';
+import type { LessonEndResult } from '@ab/schedule';
 import { Controller, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

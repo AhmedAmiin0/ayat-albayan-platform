@@ -1,4 +1,4 @@
-import { joinWindowConfig } from '@ab/shared';
+import { joinWindowConfig } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import type { FamilyStudent } from '@/common/push/family-readers';
 import { lessonStartingPushes, reportSentPushes, windowJustOpened } from './family-push.plan';

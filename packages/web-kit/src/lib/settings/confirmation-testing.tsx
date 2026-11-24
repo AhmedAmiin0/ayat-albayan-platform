@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { publicConfigQuery } from './public-config';

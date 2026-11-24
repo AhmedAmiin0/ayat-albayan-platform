@@ -1,4 +1,4 @@
-import { isOwnedSettingKey, SEED_ENTRIES } from '@ab/shared';
+import { isOwnedSettingKey, SEED_ENTRIES } from '@ab/settings';
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { listKeys } from './translations.catalog';

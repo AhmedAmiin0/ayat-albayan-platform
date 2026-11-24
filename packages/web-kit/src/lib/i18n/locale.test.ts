@@ -1,4 +1,4 @@
-import { LOCALE_STORAGE_KEY } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 // `locale` is read when the module loads, so every case imports a fresh copy.

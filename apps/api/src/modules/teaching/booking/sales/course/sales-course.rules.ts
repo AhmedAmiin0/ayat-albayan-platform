@@ -1,4 +1,10 @@
-import { courseDaysPerWeek, type BookingRequest, type CourseBlock, type CourseSubscription, type PackageSize } from '@ab/shared';
+import {
+  courseDaysPerWeek,
+  type BookingRequest,
+  type CourseBlock,
+  type CourseSubscription,
+} from '@ab/shared';
+import type { PackageSize } from '@ab/catalog';
 import { HttpStatus } from '@nestjs/common';
 
 // The assistant's course of a subscription she sold (owner 2026-10-18, R-ASST-01): pure rules,

@@ -1,4 +1,5 @@
-import { WA_PROVIDERS, type ImportResult, type ImportRoleView } from '@ab/shared';
+import type { ImportResult, ImportRoleView } from '@ab/shared';
+import { WA_PROVIDERS } from '@ab/catalog';
 import { Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { integrationOverlay } from '@/common/configuration/integrations/integration-overlay';

@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Injectable, Logger } from '@nestjs/common';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import type { FetchLike } from '@/common/infra/http/failure';

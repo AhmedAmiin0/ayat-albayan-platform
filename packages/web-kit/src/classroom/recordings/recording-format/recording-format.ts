@@ -1,4 +1,5 @@
-import type { LessonRecordingView, Tone } from '@ab/shared';
+import type { Tone } from '@ab/money';
+import type { LessonRecordingView } from '@ab/schedule';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
 

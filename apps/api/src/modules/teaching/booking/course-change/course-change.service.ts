@@ -1,10 +1,5 @@
-import {
-  usesPlatform,
-  type Conflict,
-  type CourseChangeCheck,
-  type CourseChangeRequest,
-  type CourseChangeResult,
-} from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
+import { usesPlatform, type Conflict, type CourseChangeRequest } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { domainError } from '@/modules/teaching/booking/booking.errors';

@@ -1,4 +1,4 @@
-import { joinWindow, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
+import { joinWindow, type JoinWindowConfig, type WindowLesson } from '@ab/schedule';
 import { familyTargets, type FamilyStudent } from '@/common/push/family-readers';
 import type { PushTarget } from '@/common/push/push.service';
 

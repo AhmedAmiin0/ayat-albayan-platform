@@ -1,5 +1,6 @@
 import { type CodeRoutes, RESEND_SECONDS } from '@ab/client-core';
-import { loginCode, normalizePhone } from '@ab/shared';
+import { loginCode } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { useState } from 'react';
 import { authApi } from '../forgot/auth-api';
 import { authErrorText } from '../forgot/auth-errors';

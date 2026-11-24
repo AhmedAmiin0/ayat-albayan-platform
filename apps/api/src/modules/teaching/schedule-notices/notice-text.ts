@@ -1,4 +1,5 @@
-import { clockOf, joinNames, lessonWhenAt, type OutboundTemplate } from '@ab/shared';
+import { joinNames, lessonWhenAt, type OutboundTemplate } from '@ab/shared';
+import { clockOf } from '@ab/time';
 import type { Notice } from './notice.types';
 
 // The four templates' positional params (owner 2026-10-30, exact bodies in the migration):

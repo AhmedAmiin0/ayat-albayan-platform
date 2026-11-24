@@ -2,7 +2,7 @@ import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@
 import { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons, templateDisplay } from '@/modules/messaging/whatsapp/messages/wa-json';
 import { CRM_AUTH, EVOLUTION_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
-import type { ApprovalRow } from './templates.repo';
+import type { ApprovalRow } from './types';
 import type { TemplateRow, WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */

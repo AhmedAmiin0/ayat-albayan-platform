@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import type { SendOutcome } from '@/modules/messaging/whatsapp/sender/message.job';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 

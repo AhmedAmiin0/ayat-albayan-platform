@@ -1,4 +1,11 @@
-import { isOpenLesson, type CancelRequest, type RuleCancelRequest, addDays, localDateOf, startOfLocalDay } from '@ab/shared';
+import {
+  isOpenLesson,
+  type CancelRequest,
+  type RuleCancelRequest,
+  localDateOf,
+  startOfLocalDay,
+} from '@ab/schedule';
+import { addDays } from '@ab/time';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict } from '@/common/http/errors';

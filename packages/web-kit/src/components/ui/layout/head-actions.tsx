@@ -12,7 +12,7 @@ export interface HeadActionsProps {
 }
 
 /**
- * A page head's actions (owner, 2026-10-05: "simpler"): the secondary ones, then the primary at
+ * A page head's actions: the secondary ones, then the primary at
  * the inline-end. On phones (< 640px) only the primary and a «⋯» stay in the head.
  */
 export function HeadActions({ primary, more, label }: HeadActionsProps) {

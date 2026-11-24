@@ -1,5 +1,5 @@
 import { meLocaleSend } from '@ab/client-core';
-import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/shared';
+import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/core';
 import { z } from 'zod';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { supabase } from '@ab/web-kit/lib/http/supabase';

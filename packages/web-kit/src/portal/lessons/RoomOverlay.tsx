@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { createPortal } from 'react-dom';
 import { holdRoomOpen } from '@ab/web-kit/boot/maintenance';
 import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';

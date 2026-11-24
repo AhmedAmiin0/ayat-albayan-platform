@@ -1,6 +1,6 @@
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW } from '@ab/schedule';
 import {
   ADMIN,
   ASSISTANT,

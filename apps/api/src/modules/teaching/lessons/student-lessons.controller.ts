@@ -1,4 +1,5 @@
-import type { LessonView, Page } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { LessonView } from '@ab/schedule';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

@@ -1,5 +1,6 @@
 import { lessonMinutes } from '@ab/client-core';
-import { firstName, type PortalLesson, type PortalStudent } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import { firstName } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

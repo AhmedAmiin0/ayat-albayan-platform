@@ -23,7 +23,7 @@ function typeNames(file: string, text: string): Set<string> {
   return new Set(decls.filter(([, ds]) => ds.length > 0 && ds.every(isTypeDecl)).map(([n]) => n));
 }
 
-/** `export { a, type B } from './x';`, wrapped like prettier when it is too long. */
+/** `export { a, type B } from './x';`, wrapped like oxfmt when it is too long. */
 function exportLine(names: string[], spec: string): string {
   const one = `export { ${names.join(', ')} } from '${spec}';`;
   return one.length <= WIDTH

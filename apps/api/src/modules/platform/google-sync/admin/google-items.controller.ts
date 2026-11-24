@@ -1,4 +1,4 @@
-import type { GoogleSyncItemView } from '@ab/shared';
+import type { GoogleSyncItemView } from '@ab/catalog';
 import { ConflictException, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

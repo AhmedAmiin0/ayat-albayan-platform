@@ -1,4 +1,5 @@
-import type { PushKind, TemplateKey } from '@ab/shared';
+import type { TemplateKey } from '@ab/shared';
+import type { PushKind } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';

@@ -1,9 +1,5 @@
-import type {
-  SalesPackageCancelCheck,
-  SalesPackageCancelled,
-  SubscriptionCancel as CancelBody,
-  SubscriptionView,
-} from '@ab/shared';
+import type { SalesPackageCancelCheck, SalesPackageCancelled } from '@ab/shared';
+import type { SubscriptionCancel as CancelBody, SubscriptionView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SubscriptionCancel } from '@/modules/finance/subscriptions';

@@ -1,4 +1,6 @@
-import { STUDENT_STATUSES, searchDigits, type StudentListFilters, type StudentStatus } from '@ab/shared';
+import type { StudentListFilters } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
+import { searchDigits } from '@ab/core';
 import type { TeacherOption } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
@@ -20,7 +22,7 @@ import {
   type StudentColumnFilters,
   type StudentListSort,
 } from './students.sort';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 // One literal each: supabase-js infers the row type from the select string.
 const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;

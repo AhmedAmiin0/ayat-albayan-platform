@@ -1,4 +1,5 @@
-import { FAMILY_EMAIL_DOMAIN, type UserRole } from '@ab/shared';
+import { FAMILY_EMAIL_DOMAIN } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { conflict, forbidden } from '@/common/http/errors';

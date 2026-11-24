@@ -1,4 +1,4 @@
-import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
+import type { LessonRecordingView, RecordingStatus } from '@ab/schedule';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

@@ -1,4 +1,4 @@
-import { systemPermissionsOf } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { whatsappApp } from '@/modules/messaging/whatsapp/test-app';

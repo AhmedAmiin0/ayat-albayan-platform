@@ -1,4 +1,5 @@
-import { OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll, readChunked } from '@/common/db/read-all';

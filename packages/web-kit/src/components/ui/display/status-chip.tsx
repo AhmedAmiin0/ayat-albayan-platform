@@ -1,4 +1,4 @@
-import type { Glyph, Tone } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 import { cn } from '@ab/web-kit/lib/utils';
 import { GradePips, NuqtaGlyph } from './nuqta-glyph';
 

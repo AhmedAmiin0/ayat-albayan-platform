@@ -1,4 +1,4 @@
-import type { LessonRecordingView } from '@ab/shared';
+import type { LessonRecordingView } from '@ab/schedule';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';

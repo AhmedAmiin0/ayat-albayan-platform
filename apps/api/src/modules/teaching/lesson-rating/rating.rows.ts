@@ -1,5 +1,6 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import type { FeedbackKind, LessonRating } from '@ab/shared';
+import type { LessonRating } from '@ab/shared';
+import type { FeedbackKind } from '@ab/catalog';
 
 // A guardian's lesson_rating tap → lesson_feedback rows (pure; migration 195).
 

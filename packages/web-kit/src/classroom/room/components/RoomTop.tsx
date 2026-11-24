@@ -1,4 +1,4 @@
-import { chatOpen, type RoomJoinResult } from '@ab/shared';
+import { chatOpen, type RoomJoinResult } from '@ab/schedule';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ReconnectStrip } from '@ab/web-kit/classroom/flow/ReconnectStrip';

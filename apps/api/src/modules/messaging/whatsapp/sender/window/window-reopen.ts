@@ -1,5 +1,5 @@
 import type { TablesInsert } from '@ab/db';
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import {
   AWAITING_REPLY,
   HOLD_EXPIRED,

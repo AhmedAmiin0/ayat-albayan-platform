@@ -1,4 +1,5 @@
-import { currentPackage, type SalesPackageSummary } from '@ab/shared';
+import type { SalesPackageSummary } from '@ab/shared';
+import { currentPackage } from '@ab/money';
 import type { RosterBalanceRow, RosterPackageRow, SalesRosterRepo } from './sales-roster.repo';
 
 /** Each student's current package (the newest active one, else the newest not cancelled). */

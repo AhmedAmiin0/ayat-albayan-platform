@@ -1,4 +1,5 @@
-import { durationSeconds, mediaOfPath, type PortalRecording } from '@ab/shared';
+import type { PortalRecording } from '@ab/shared';
+import { durationSeconds, mediaOfPath } from '@ab/schedule';
 import type { PortalRecordingRow } from '@/modules/people/portal';
 
 /** The family's whitelist of a recording: no path or egress id; the report it came with. */

@@ -1,5 +1,12 @@
 import type { Json } from '@ab/db';
-import type { Attendance, Grade, LessonStatus, PdfStatus, Program, ReportStatus } from '@ab/shared';
+import type {
+  Attendance,
+  Grade,
+  LessonStatus,
+  PdfStatus,
+  Program,
+  ReportStatus,
+} from '@ab/catalog';
 
 // Selects + structural row types for the reports module (service role; callers guard).
 

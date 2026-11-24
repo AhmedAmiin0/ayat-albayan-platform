@@ -9,6 +9,8 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "pnpm lint:ox && turbo lint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "lint:prune": "turbo lint --force --continue --concurrency=3 -- --prune-suppressions",
     "lint:ox": "oxlint --deny-warnings --report-unused-disable-directives-severity=error --ignore-pattern=packages/db/src/types.ts apps packages tools/google-stub tools/migrate tools/scripts tools/wa-stub e2e docs/design/brand/tools",
     "lint:oxfull": "node tools/scripts/ci-checks/lint/oxlint/run.mjs",
@@ -42,15 +44,14 @@
     "units:fold": "node tools/scripts/units/fold.ts",
     "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs"
   },
-  "prettier": "@ab/config/prettier",
   "devDependencies": {
     "@ab/config": "workspace:*",
     "jscpd": "4.0.5",
     "knip": "5.88.1",
+    "oxfmt": "0.80.0",
     "oxlint": "1.90.0",
     "oxlint-tsgolint": "7.0.2005",
     "postgres": "^3.4.9",
-    "prettier": "^3.6.0",
     "turbo": "^2.11.6"
   }
 }

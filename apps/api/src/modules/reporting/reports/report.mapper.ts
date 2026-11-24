@@ -4,12 +4,11 @@ import {
   editUntil,
   REPORT_RUBRICS,
   RUBRIC_COLUMN,
-  type Grade,
   type ReportDraft,
   type ReportView,
   type Rubric,
-  type UserRole,
 } from '@ab/shared';
+import type { Grade, UserRole } from '@ab/catalog';
 import type { ReportRow } from './report-row';
 import { v2Fields } from './v2/report-v2.mapper';
 

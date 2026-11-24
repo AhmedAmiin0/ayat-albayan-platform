@@ -1,4 +1,5 @@
-import type { TemplateLineSync, TemplateMoveView, WaLine } from '@ab/shared';
+import type { TemplateLineSync, TemplateMoveView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import { requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';

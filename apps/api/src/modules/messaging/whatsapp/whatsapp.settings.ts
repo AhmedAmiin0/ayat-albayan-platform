@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { SettingsSlice } from '@/common/settings/settings-slice';

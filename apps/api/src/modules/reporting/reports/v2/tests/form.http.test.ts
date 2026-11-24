@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AFTER, LESSON_ID, lessonRow, REPORT_ID, reportRow, STUDENT_ID, TEACHER } from '@/modules/reporting/reports/tests/reports.fakes';
 import { reportsApp } from '@/modules/reporting/reports/tests/test-app';

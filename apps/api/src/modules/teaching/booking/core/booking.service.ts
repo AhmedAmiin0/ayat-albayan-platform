@@ -1,4 +1,5 @@
-import type { BookingRequest, BookingResult, Conflict } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import type { BookingResult, Conflict } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { BookingPlanner, type PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
 import { BookingRepo } from './booking.repo';

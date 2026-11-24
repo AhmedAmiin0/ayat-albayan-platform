@@ -1,4 +1,5 @@
-import type { Page, TeacherReportsQuery, TeacherReportView } from '@ab/shared';
+import type { TeacherReportsQuery, TeacherReportView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PageQuery } from '@/common/http/http';

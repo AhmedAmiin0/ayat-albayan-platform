@@ -1,4 +1,4 @@
-import type { LeadSource } from '@ab/shared';
+import type { LeadSource } from '@ab/catalog';
 import type { SourceKey } from '@/modules/reporting/dashboard/dashboard.types';
 import type { CostFact, ExpenseFact, PaymentFact } from './finance';
 import { riyadhMonth } from '@/modules/reporting/dashboard/range';

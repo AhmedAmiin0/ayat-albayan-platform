@@ -1,4 +1,4 @@
-import { GRANTABLE_PERMISSIONS } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS } from '@ab/catalog';
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PermissionCache } from '@/common/auth/permission.cache';

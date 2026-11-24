@@ -13,7 +13,7 @@ vi.mock('@tanstack/react-router', async () => ({
 }));
 vi.mock('@ab/web-kit/auth/me/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: async () => null } }));
 vi.mock('@/components/shell/header/MenuBar', () => ({ MenuBar: () => null }));
-vi.mock('@/features/messaging/notifications/NotificationBell', () => ({
+vi.mock('@/features/messaging/notifications/NotificationBell/NotificationBell', () => ({
   NotificationBell: () => <button type="button">{t.bell.open}</button>,
 }));
 

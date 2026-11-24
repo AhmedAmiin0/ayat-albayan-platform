@@ -1,4 +1,4 @@
-import { formatRunningHead } from '@ab/shared';
+import { formatRunningHead } from '@ab/time';
 import { useEffect, useState, type ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

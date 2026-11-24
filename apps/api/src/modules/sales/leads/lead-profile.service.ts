@@ -1,5 +1,11 @@
 import type { Json } from '@ab/db';
-import { nextFollowUpAt, SETTING_DEFAULTS, validTiming, type LeadFollowUp, type LeadQualificationPatch } from '@ab/shared';
+import {
+  nextFollowUpAt,
+  validTiming,
+  type LeadFollowUp,
+  type LeadQualificationPatch,
+} from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';

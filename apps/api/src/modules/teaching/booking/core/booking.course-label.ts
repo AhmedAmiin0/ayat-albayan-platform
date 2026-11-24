@@ -1,4 +1,4 @@
-import type { PackageSize } from '@ab/shared';
+import type { PackageSize } from '@ab/catalog';
 
 /** PR #113 review M3 / M4: the server owns a course's package (null = a custom count) and ties it to its subscription. */
 export type CourseLabel = {

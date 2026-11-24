@@ -1,4 +1,5 @@
-import { courseChangeCheckSchema, type CourseLessonFact } from '@ab/shared';
+import type { CourseLessonFact } from '@ab/shared';
+import { courseChangeCheckSchema } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { errorCode } from '@/common/http/errors';
 import { assertChange, planChange, type ChangeFacts } from './course-change.plan';

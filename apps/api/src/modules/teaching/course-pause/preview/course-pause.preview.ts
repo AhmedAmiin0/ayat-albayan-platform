@@ -1,13 +1,11 @@
 import {
-  addDays,
   pausedDays,
   resumeDayOf,
-  riyadhToday,
-  RIYADH_TZ,
-  startOfLocalDay,
   type CoursePausePreview,
   type CourseResumePreview,
 } from '@ab/shared';
+import { startOfLocalDay } from '@ab/schedule';
+import { addDays, riyadhToday, RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { assertPauseDates, assertStudent } from './course-pause.guards';

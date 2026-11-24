@@ -1,9 +1,9 @@
-import type { LeadStatus } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import type { Db } from '@/common/db/db.module';
 import { dbError } from '@/modules/people/guardians/http';
-import { canTransitionLead } from '@ab/shared';
+import { canTransitionLead } from '@ab/catalog';
 
 export type LinkedLead = { id: string; status: LeadStatus; converted_guardian_id: string | null };
 type LeadLinkInput = { lead: LinkedLead; guardianId: string; actorId: string };

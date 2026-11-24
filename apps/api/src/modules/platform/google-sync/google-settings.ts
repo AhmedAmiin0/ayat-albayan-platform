@@ -1,4 +1,10 @@
-import { GOOGLE_SETTING_KEYS, GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS, type GoogleSettingsInput, type GoogleSyncSettings } from '@ab/shared';
+import {
+  GOOGLE_SETTING_KEYS,
+  GOOGLE_SYNC_MODES,
+  GOOGLE_WINDOW_DAYS,
+  type GoogleSettingsInput,
+  type GoogleSyncSettings,
+} from '@ab/catalog';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
 import { SharedCache } from '@/common/infra/cache/shared-cache';

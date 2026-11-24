@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { CHANNEL_BODY_MAX, CHANNEL_SENDER_ROLES, PUSH_KINDS } from '@ab/shared';
+import { CHANNEL_BODY_MAX, CHANNEL_SENDER_ROLES } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 

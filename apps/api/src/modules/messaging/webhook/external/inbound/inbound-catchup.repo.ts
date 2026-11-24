@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';

@@ -1,4 +1,5 @@
-import { bookingKindOf, type BookingRequest } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import { bookingKindOf } from '@ab/schedule';
 import { HttpException } from '@nestjs/common';
 import { forbidden } from '@/common/http/errors';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';

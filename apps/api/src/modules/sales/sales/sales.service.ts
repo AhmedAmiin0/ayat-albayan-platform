@@ -1,4 +1,5 @@
-import { joinWindowConfig, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
+import type { SalesMeetingView, SalesSubscriptionView } from '@ab/shared';
+import { joinWindowConfig } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { KIND_STATUSES, toSalesMeeting, toSalesSubscription } from './sales.mapper';

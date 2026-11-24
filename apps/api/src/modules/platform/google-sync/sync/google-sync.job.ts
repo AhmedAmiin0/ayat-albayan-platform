@@ -1,4 +1,4 @@
-import { localDateIn, wallToUtc } from '@ab/shared';
+import { localDateIn, wallToUtc } from '@ab/time';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { GoogleItemsQueries } from './google-items.queries';

@@ -1,4 +1,5 @@
-import type { ReopenFields, ThreadView, WaLine } from '@ab/shared';
+import type { ReopenFields, ThreadView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { reopenChoiceOf } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';

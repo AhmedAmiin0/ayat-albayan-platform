@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { parseOrNull, SETTING_DEFAULTS } from '@ab/shared';
+import { parseOrNull } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import type { GraphBody } from '@/modules/messaging/whatsapp/messages/wa-components';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 

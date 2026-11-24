@@ -2,12 +2,10 @@ import {
   canPickTrialDate,
   trialOutcome,
   upcomingTrial,
-  type Attendance,
-  type LessonStatus,
-  type PackageSize,
   type TrialDateRow,
   type TrialHistory,
 } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 import { isTrialLesson } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 import type { TrialStudent } from './trial-date.repo';
 

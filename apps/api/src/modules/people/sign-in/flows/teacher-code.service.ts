@@ -1,4 +1,5 @@
-import { normalizePhone, type CodeRequest, type CodeSession, type CodeVerify } from '@ab/shared';
+import type { CodeRequest, CodeSession, CodeVerify } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import type { TeacherRec } from '@/modules/people/sign-in/sign-in.ports';
 import { SignInAccounts } from './sign-in.accounts';

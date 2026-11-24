@@ -1,4 +1,5 @@
-import { isWaLine, type NumberSecretName, type WaLine } from '@ab/shared';
+import type { NumberSecretName } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/catalog';
 import type { CallsNumber } from '@/common/configuration/integrations/calls-number';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import {

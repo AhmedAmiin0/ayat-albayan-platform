@@ -1,4 +1,5 @@
-import { joinWindowConfig, type TemplateKey } from '@ab/shared';
+import type { TemplateKey } from '@ab/shared';
+import { joinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { livekitEnv, loadEnv } from '@/config/env/env';

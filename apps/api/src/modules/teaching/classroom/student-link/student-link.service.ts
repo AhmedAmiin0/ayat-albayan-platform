@@ -4,8 +4,9 @@ import {
   pickStudentLesson,
   roomNameOfStudent,
   studentJoinSchema,
-} from '@ab/shared';
-import type { JoinWindowConfig, PortalRoomLink, RoomJoinResult, StudentLinkView } from '@ab/shared';
+} from '@ab/schedule';
+import type { PortalRoomLink } from '@ab/shared';
+import type { JoinWindowConfig, RoomJoinResult, StudentLinkView } from '@ab/schedule';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';

@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
 import { useState } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Toast } from '@ab/web-kit/components/ui/overlay/toast';

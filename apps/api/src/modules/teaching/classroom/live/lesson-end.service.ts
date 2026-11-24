@@ -1,4 +1,4 @@
-import { canEndLesson, isClosedLesson, joinWindow, type LessonEndResult } from '@ab/shared';
+import { canEndLesson, isClosedLesson, joinWindow, type LessonEndResult } from '@ab/schedule';
 import { ConflictException, ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { JoinLesson } from '@/modules/teaching/classroom/classroom.repo';

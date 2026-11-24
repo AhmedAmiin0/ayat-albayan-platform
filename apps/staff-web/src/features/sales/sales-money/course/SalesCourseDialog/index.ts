@@ -1,0 +1,1 @@
+export { SalesCourseDialog } from './SalesCourseDialog';

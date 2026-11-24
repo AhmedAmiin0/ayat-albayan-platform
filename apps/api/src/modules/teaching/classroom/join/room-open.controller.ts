@@ -1,4 +1,4 @@
-import type { RoomOpenResult } from '@ab/shared';
+import type { RoomOpenResult } from '@ab/schedule';
 import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

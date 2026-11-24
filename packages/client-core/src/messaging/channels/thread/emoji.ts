@@ -1,16 +1,17 @@
-// The emoji sheet's curated set (owner 2026-10-27: ~80 built-in emoji, no emoji library): faces,
-// hands, hearts and the academy's own (the Quran, the mosque, a lesson's time). Order = reading
-// order.
-// prettier-ignore
-export const EMOJI: readonly string[] = [
-  '😀', '😃', '😄', '😁', '😊', '🙂', '😉', '😍', '🥰', '😘', '😇', '🤗',
-  '🤩', '😎', '🤔', '🤲', '🙏', '👍', '👌', '👏', '🙌', '💪', '✋', '👋',
-  '🤝', '☝️', '✌️', '👆', '👇', '👉', '👈', '😅', '😂', '🥲', '😢', '😭',
-  '😔', '😞', '😌', '🙈', '❤️', '💚', '💙', '💛', '🤍', '💜', '💯', '✨',
-  '🌟', '⭐', '🔥', '🎉', '🎊', '🎁', '🌹', '🌸', '🌷', '🍃', '☀️', '🌙',
-  '⏰', '📅', '📖', '📚', '✏️', '📝', '📌', '✅', '☑️', '❌', '❓', '❗',
-  '🕌', '🕋', '📿', '🏆', '🥇', '👦', '👧', '👨‍🏫', '👩‍🏫',
+// The emoji sheet's curated set: about 80 built-in emoji, no emoji library. Faces, hands, hearts
+// and the academy's own (the Quran, the mosque, a lesson's time). Order = reading order; one row
+// per string so the layout survives any formatter.
+const ROWS: readonly string[] = [
+  '😀 😃 😄 😁 😊 🙂 😉 😍 🥰 😘 😇 🤗',
+  '🤩 😎 🤔 🤲 🙏 👍 👌 👏 🙌 💪 ✋ 👋',
+  '🤝 ☝️ ✌️ 👆 👇 👉 👈 😅 😂 🥲 😢 😭',
+  '😔 😞 😌 🙈 ❤️ 💚 💙 💛 🤍 💜 💯 ✨',
+  '🌟 ⭐ 🔥 🎉 🎊 🎁 🌹 🌸 🌷 🍃 ☀️ 🌙',
+  '⏰ 📅 📖 📚 ✏️ 📝 📌 ✅ ☑️ ❌ ❓ ❗',
+  '🕌 🕋 📿 🏆 🥇 👦 👧 👨‍🏫 👩‍🏫',
 ];
+
+export const EMOJI: readonly string[] = ROWS.join(' ').split(' ');
 
 interface Selection {
   start: number;

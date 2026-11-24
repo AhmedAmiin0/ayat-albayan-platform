@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, type SettingsPatchResult } from '@ab/shared';
+import { SETTING_DEFAULTS, type SettingsPatchResult } from '@ab/settings';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN_ID, rulesApp } from './test-app';
 

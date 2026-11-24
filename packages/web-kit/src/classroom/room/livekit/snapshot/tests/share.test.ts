@@ -1,4 +1,4 @@
-import { participantMeta } from '@ab/shared';
+import { participantMeta } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { mayShareScreen, snapshotOf, type ParticipantLike } from '@ab/web-kit/classroom/room/livekit/snapshot/snapshot';
 

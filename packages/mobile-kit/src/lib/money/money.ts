@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { t } from '../i18n/i18n';
 import { ltr } from '../../ui/primitives/Ltr';
 

@@ -1,4 +1,4 @@
-import type { StudentJoinLinkUrl } from '@ab/shared';
+import type { StudentJoinLinkUrl } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { notFound } from '@/common/http/errors';

@@ -1,4 +1,11 @@
-import { bookingKindOf, type BookingRequest, type BookingResult, type BookingTeacherOption, type Conflict, type OutsideSlotsResponse, type SlotsResponse } from '@ab/shared';
+import type { BookingRequest, OutsideSlotsResponse } from '@ab/shared';
+import {
+  bookingKindOf,
+  type BookingResult,
+  type BookingTeacherOption,
+  type Conflict,
+  type SlotsResponse,
+} from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';

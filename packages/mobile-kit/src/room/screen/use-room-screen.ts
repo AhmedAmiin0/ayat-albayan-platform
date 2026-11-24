@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import { useState } from 'react';
 import type { RoomHost } from '../host/host-types';
 import { useHostPanel } from '../host/use-host-panel';

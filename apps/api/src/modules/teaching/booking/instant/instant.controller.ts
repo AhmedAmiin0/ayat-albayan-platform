@@ -2,7 +2,7 @@ import {
   instantLessonSchema,
   type InstantLessonRequest,
   type InstantLessonResult,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

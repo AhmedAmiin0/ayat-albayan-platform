@@ -1,4 +1,4 @@
-import { avatarTone, avatarTones, palette, type } from '@ab/shared';
+import { avatarTone, avatarTones, palette, type } from '@ab/catalog';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet, useColorScheme } from 'react-native';
 import { Avatar } from './Avatar';

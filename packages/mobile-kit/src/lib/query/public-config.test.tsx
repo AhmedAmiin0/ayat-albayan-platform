@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS, type PublicConfig } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, type PublicConfig } from '@ab/settings';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { freshQueryClient, queryWrapper } from '../../testing/query';
 import {

@@ -1,4 +1,5 @@
-import { joinNames, lessonWhenText, RIYADH_TZ } from '@ab/shared';
+import { joinNames, lessonWhenText } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService, type PushTarget } from '@/common/push/push.service';

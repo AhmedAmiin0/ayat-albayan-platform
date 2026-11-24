@@ -1,4 +1,5 @@
-import type { LessonView, UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import type { LessonView } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';

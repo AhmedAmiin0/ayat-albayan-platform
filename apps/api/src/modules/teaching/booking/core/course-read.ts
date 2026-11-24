@@ -1,12 +1,6 @@
-import {
-  courseDaysPerWeek,
-  courseLessonCount,
-  DURATIONS,
-  type BookedCourse,
-  type DayTime,
-  type PackageSize,
-  wallParts,
-} from '@ab/shared';
+import { courseDaysPerWeek, courseLessonCount, type BookedCourse } from '@ab/shared';
+import { DURATIONS, type PackageSize } from '@ab/catalog';
+import { type DayTime, wallParts } from '@ab/schedule';
 
 // Rules sharing a subscription_id (migration 470); pure; local dates compare as strings.
 

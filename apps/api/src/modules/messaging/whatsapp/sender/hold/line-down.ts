@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import type { FailurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import type { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';

@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';

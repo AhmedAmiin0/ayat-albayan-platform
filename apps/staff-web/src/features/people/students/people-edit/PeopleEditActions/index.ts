@@ -1,0 +1,1 @@
+export { PeopleEditActions } from './PeopleEditActions';

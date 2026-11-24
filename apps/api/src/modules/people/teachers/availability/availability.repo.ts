@@ -1,8 +1,16 @@
 import type { Tables } from '@ab/db';
-import { OCCUPYING_LESSON_STATUSES, RIYADH_TZ, type AvailabilitySlot, type TimeOffCreate, allDayRows, type WeeklyRow } from '@ab/shared';
+import {
+  OCCUPYING_LESSON_STATUSES,
+  type AvailabilitySlot,
+  type TimeOffCreate,
+  allDayRows,
+  type WeeklyRow,
+} from '@ab/schedule';
+import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import type { AvailabilityRow, BusyLesson } from '@ab/shared';
+import type { AvailabilityRow } from '@ab/shared';
+import type { BusyLesson } from '@ab/schedule';
 import { dbError } from '@/common/http/http';
 import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
 export type TimeOff = Tables<'teacher_time_off'>;

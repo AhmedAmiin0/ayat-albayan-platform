@@ -1,4 +1,4 @@
-import type { Tone } from '@ab/shared';
+import type { Tone } from '@ab/money';
 import { Dot, Pill } from './pill';
 
 type Look = 'pill' | 'dot';
@@ -14,7 +14,7 @@ export interface StatusMarkProps {
   className?: string;
 }
 
-/** A status word in the look its tone asks for (owner 2026-11-19, see pill.tsx). */
+/** A status word in the look its tone asks for (see pill.tsx). */
 export function StatusMark({ tone, label, live, className }: StatusMarkProps) {
   if (LOOK[tone] === 'pill') return <Pill tone={tone} className={className}>{label}</Pill>;
   return (

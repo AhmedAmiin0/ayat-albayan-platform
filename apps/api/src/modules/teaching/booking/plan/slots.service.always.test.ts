@@ -1,4 +1,5 @@
-import { RIYADH_TZ, allDayRows } from '@ab/shared';
+import { allDayRows } from '@ab/schedule';
+import { RIYADH_TZ } from '@ab/time';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';

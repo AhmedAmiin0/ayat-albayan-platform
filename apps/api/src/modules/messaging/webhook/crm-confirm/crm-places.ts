@@ -1,4 +1,4 @@
-import { WA_LINES, type WaLine } from '@ab/shared';
+import { WA_LINES, type WaLine } from '@ab/catalog';
 import {
   overlayNumbers,
   type OverlayNumber,

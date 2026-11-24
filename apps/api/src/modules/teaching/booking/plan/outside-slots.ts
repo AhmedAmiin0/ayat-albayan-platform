@@ -1,10 +1,5 @@
-import {
-  allDayRows,
-  findConflicts,
-  freeSlots,
-  type ConflictInput,
-  type OutsideSlot,
-} from '@ab/shared';
+import type { OutsideSlot } from '@ab/shared';
+import { allDayRows, findConflicts, freeSlots, type ConflictInput } from '@ab/schedule';
 
 // Pure: the teacher's whole day, not only her weekly hours.
 

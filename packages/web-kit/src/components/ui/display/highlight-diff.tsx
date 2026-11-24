@@ -1,4 +1,4 @@
-import { diffSegments } from '@ab/shared';
+import { diffSegments } from '@ab/core';
 
 export interface HighlightDiffProps {
   /** The name to show, exactly as typed / stored. */

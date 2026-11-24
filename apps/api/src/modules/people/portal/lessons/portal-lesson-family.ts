@@ -1,4 +1,5 @@
-import { isChargeable, type PortalLessonFamily, type PortalLessonRequest } from '@ab/shared';
+import type { PortalLessonFamily, PortalLessonRequest } from '@ab/shared';
+import { isChargeable } from '@ab/schedule';
 import type { PortalLessonRow, PortalRequestRow } from './portal-lessons.repo';
 
 interface FamilyContext {

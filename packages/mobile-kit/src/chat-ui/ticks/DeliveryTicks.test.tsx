@@ -1,4 +1,4 @@
-import { MESSAGE_STATUSES, type MessageStatus } from '@ab/shared';
+import { MESSAGE_STATUSES, type MessageStatus } from '@ab/catalog';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '../../lib/i18n/i18n';

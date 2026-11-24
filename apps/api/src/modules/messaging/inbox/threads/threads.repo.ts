@@ -1,4 +1,5 @@
-import { onMessagingLine, type ThreadLesson, type ThreadPeople } from '@ab/shared';
+import type { ThreadLesson, ThreadPeople } from '@ab/shared';
+import { onMessagingLine } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';

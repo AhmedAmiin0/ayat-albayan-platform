@@ -1,5 +1,6 @@
 import { hasVideo, partIdsByLesson, recordingMonths } from '@ab/client-core';
-import { dateText, type PortalRecording, type PortalRecordings, type PortalStudent } from '@ab/shared';
+import type { PortalRecording, PortalRecordings, PortalStudent } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { useRef, useState } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';

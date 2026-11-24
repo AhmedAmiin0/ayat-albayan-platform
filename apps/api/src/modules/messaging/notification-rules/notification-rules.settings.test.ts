@@ -1,4 +1,5 @@
-import { CATALOGUE_SETTING_KEYS, SETTING_DEFAULTS, type CatalogueSettings } from '@ab/shared';
+import { CATALOGUE_SETTING_KEYS, type CatalogueSettings } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { NotificationRulesSettings } from './notification-rules.settings';

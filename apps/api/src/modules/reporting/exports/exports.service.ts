@@ -1,4 +1,4 @@
-import { monthStart, type DateRangeQuery } from '@ab/shared';
+import { monthStart, type DateRangeQuery } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { rangeWindow, riyadhDate } from '@/modules/reporting/dashboard/range';
 import { toCsv } from './csv';

@@ -1,7 +1,6 @@
 import type { Tables } from '@ab/db';
 import {
   replyLine,
-  searchDigits,
   sessionWindowOpen,
   type BodySlot,
   type ReopenChoice,
@@ -9,8 +8,9 @@ import {
   type TemplateView,
   type ThreadNote,
   type ThreadView,
-  type WaLine,
 } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
+import { searchDigits } from '@ab/core';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { orSafe } from '@/modules/people/guardians/http';
 import { looksCrmHistory, windowless } from '@/modules/messaging/whatsapp';

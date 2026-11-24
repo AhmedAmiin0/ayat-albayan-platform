@@ -1,4 +1,4 @@
-import { palette, type Palette } from '@ab/shared';
+import { palette, type Palette } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import css from './tokens.css?raw';
 

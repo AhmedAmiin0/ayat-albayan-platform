@@ -1,4 +1,5 @@
-import { isOpenLesson, type RescheduleRequest, addDays, localDateOf, startOfLocalDay } from '@ab/shared';
+import { isOpenLesson, type RescheduleRequest, localDateOf, startOfLocalDay } from '@ab/schedule';
+import { addDays } from '@ab/time';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';

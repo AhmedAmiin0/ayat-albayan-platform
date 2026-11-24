@@ -1,4 +1,4 @@
-import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
+import { isOpenLesson, type RescheduleRequest } from '@ab/schedule';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { AuthUser } from '@/common/auth/verify-token';

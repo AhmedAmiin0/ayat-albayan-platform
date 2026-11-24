@@ -1,4 +1,5 @@
-import type { TemplateCrmNameInput, TemplateMoveView, TemplateView, WaLine } from '@ab/shared';
+import type { TemplateCrmNameInput, TemplateMoveView, TemplateView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { setCrmName } from './template-crm-name';

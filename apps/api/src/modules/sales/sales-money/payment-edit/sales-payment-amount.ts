@@ -1,4 +1,5 @@
-import { amountFromStripe, type PaymentAmount, type SalesPaymentView } from '@ab/shared';
+import type { SalesPaymentView } from '@ab/shared';
+import { amountFromStripe, type PaymentAmount } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, forbidden } from '@/common/http/errors';

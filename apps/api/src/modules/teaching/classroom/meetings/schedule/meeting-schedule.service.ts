@@ -1,4 +1,4 @@
-import { meetingState, updateMeetingSchema } from '@ab/shared';
+import { meetingState, updateMeetingSchema } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ar } from '@/common/infra/i18n/server-text';

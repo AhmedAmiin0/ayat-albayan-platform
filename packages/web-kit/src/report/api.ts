@@ -7,7 +7,7 @@ import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 export const reportPageKey = (publicId: string) => ['report-page', publicId] as const;
 
 /**
- * GET /report-pages/:publicId with the browser's session (owner 2026-11-06): the report's readers
+ * GET /report-pages/:publicId with the browser's session: the report's readers
  * only (admin, the teacher, the family, the owning assistant); 401 / 404 for anyone else. Parsed
  * with the shared schema (rule 12).
  */

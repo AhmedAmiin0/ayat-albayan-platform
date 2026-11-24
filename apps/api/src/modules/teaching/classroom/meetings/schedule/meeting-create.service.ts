@@ -1,4 +1,4 @@
-import { createMeetingSchema, mayInvitePhones, type MeetingCreateResult } from '@ab/shared';
+import { createMeetingSchema, mayInvitePhones, type MeetingCreateResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';

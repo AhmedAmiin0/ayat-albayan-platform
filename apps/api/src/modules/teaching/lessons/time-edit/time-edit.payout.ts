@@ -1,4 +1,5 @@
-import { payoutStatuses, type TimeEditResult } from '@ab/shared';
+import { payoutStatuses } from '@ab/money';
+import type { TimeEditResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';

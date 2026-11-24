@@ -1,4 +1,4 @@
-import { WA_ERROR } from '@ab/shared';
+import { WA_ERROR } from '@ab/catalog';
 import { z } from 'zod';
 import type { ErrorTable } from '@/common/infra/http/errors';
 import type { HttpFailure } from '@/common/infra/http/failure';

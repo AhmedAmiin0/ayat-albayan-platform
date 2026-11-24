@@ -1,4 +1,5 @@
-import type { LessonEvent, LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import type { LessonEvent } from '@ab/schedule';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuditEntry } from '@/common/audit/audit.service';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';

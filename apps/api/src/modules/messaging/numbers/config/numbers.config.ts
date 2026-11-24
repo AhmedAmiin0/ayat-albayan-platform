@@ -1,4 +1,5 @@
-import { isWaLine, type CommsSource } from '@ab/shared';
+import { isWaLine } from '@ab/catalog';
+import type { CommsSource } from '@ab/settings';
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { integrationRefreshMs } from '@/common/configuration/integrations/integration-refresh';
 import {
