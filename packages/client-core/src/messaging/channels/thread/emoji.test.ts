@@ -7,6 +7,12 @@ test('about 80 emoji, none twice', () => {
   expect(new Set(EMOJI).size).toBe(EMOJI.length);
 });
 
+test('the curated set, in reading order', () => {
+  expect(EMOJI.join(' ')).toBe(
+    '😀 😃 😄 😁 😊 🙂 😉 😍 🥰 😘 😇 🤗 🤩 😎 🤔 🤲 🙏 👍 👌 👏 🙌 💪 ✋ 👋 🤝 ☝️ ✌️ 👆 👇 👉 👈 😅 😂 🥲 😢 😭 😔 😞 😌 🙈 ❤️ 💚 💙 💛 🤍 💜 💯 ✨ 🌟 ⭐ 🔥 🎉 🎊 🎁 🌹 🌸 🌷 🍃 ☀️ 🌙 ⏰ 📅 📖 📚 ✏️ 📝 📌 ✅ ☑️ ❌ ❓ ❗ 🕌 🕋 📿 🏆 🥇 👦 👧 👨‍🏫 👩‍🏫',
+  );
+});
+
 describe('insertAt', () => {
   it('at the caret, in Arabic and English text alike; the caret moves past it', () => {
     expect(insertAt('السلام عليكم', { start: 6, end: 6 }, '🌹')).toEqual({

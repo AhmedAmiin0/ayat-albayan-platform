@@ -34,7 +34,7 @@ test('keeps only the directive comments', () => {
     '// @ts-expect-error why',
     '/** @deprecated use g */',
     '/* istanbul ignore next */',
-    '// prettier-ignore',
+    '// oxfmt-ignore',
     '/** @public */',
     'f();',
   ].join('\n');
