@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { subRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { toSubscriptionView } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import { toSalesSubscription } from '@/modules/sales/sales-money/shared/sales-money.mapper';
 

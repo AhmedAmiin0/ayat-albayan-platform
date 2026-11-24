@@ -2,8 +2,8 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
-import { STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { STUDENT_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
