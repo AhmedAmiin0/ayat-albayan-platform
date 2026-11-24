@@ -44,7 +44,7 @@ ayat-albayan/
 │  ├─ db/                        # supabase/ (config, migrations, seed), generated types
 │  ├─ shared/                    # enums, zod schemas, i18n/ar.json + en.json, pure utils (phone, tz, money, …)
 │  ├─ client-core/               # web + mobile: http client, query keys and options, non-UI hooks (usePermissions)
-│  └─ config/                    # oxlint config (+ the ab/* rules)
+│  └─ config/                    # oxlint config (+ the ab/* rules); formatting: oxfmt, root .oxfmtrc.json
 ├─ tools/
 │  ├─ migrate/                   # Google Sheets → Supabase import (dry-run + apply)
 │  ├─ wa-stub/  google-stub/  livekit/

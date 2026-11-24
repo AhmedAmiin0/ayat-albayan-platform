@@ -9,6 +9,8 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo build --filter='./packages/*' --output-logs=errors-only && node tools/scripts/ci-checks/lint/oxlint/run.mjs",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "lint:prune": "turbo build --filter='./packages/*' --output-logs=errors-only && node tools/scripts/ci-checks/lint/oxlint/run.mjs --prune",
     "lint:report": "oxlint -c oxlint.config.ts --type-aware --deny-warnings --report-unused-disable-directives-severity=error --format json",
     "typecheck": "turbo typecheck",
@@ -39,15 +41,14 @@
     "units:fold": "node tools/scripts/units/fold.ts",
     "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs"
   },
-  "prettier": "@ab/config/prettier",
   "devDependencies": {
     "@ab/config": "workspace:*",
     "jscpd": "4.0.5",
     "knip": "5.88.1",
+    "oxfmt": "0.80.0",
     "oxlint": "1.95.0",
     "oxlint-tsgolint": "7.0.2008",
     "postgres": "^3.4.9",
-    "prettier": "^3.6.0",
     "turbo": "^2.11.6"
   }
 }

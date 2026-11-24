@@ -5,7 +5,6 @@
   "exports": {
     "./lint": "./lint.js",
     "./oxlint": "./oxlint/config.js",
-    "./prettier": "./prettier.json",
     "./vite": {
       "types": "./vite.d.ts",
       "default": "./vite.js"

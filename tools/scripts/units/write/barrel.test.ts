@@ -44,7 +44,7 @@ test("barrelText keeps the importers' extension style", () => {
   );
 });
 
-test('a long line wraps like prettier', () => {
+test('a long line wraps like oxfmt', () => {
   const names = new Map(Array.from({ length: 12 }, (_, i) => [`someLongName${i}`, false] as const));
   const text = barrelText({ style: 'bare', files: new Map([['u/A.tsx', names]]) }, () => '');
   assert.match(text, /^export \{\n {2}someLongName0,\n/);

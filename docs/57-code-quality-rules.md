@@ -806,7 +806,7 @@ loosens a lint config («lint rules loosened»); such a PR merges only with the 
 | 13 | **B** builders | `packages/shared/src/testing/builders` + api row builders, then migrate test files per module (codemod where shapes are regular) | 2 + many | — |
 | 14 | **A** adapters | Stripe and S3 ports in api; `RoomClient` port into cc | 3 PRs | — |
 | 15 | **T1** types (docs/52 §4, 231 declarations) + R (v2 lane R, 37 `*queries.ts`) + M/K/S rows | as docs/32 and docs/52 | per those docs | G2 |
-| 16 | ~~**L** `max-len` sweep (12,987 of the 20,189 suppressions)~~ | replaced by `prettier --check` on added files | — | — |
+| 16 | ~~**L** `max-len` sweep (12,987 of the 20,189 suppressions)~~ | replaced by the oxfmt format sweep (`pnpm format:check`, docs/31b §9) | — | — |
 | 17 | **MT** mutation testing | weekly workflow, then gate | 2 PRs | G1 |
 
 ### 10.3 Lane rows, smallest first in each lane
