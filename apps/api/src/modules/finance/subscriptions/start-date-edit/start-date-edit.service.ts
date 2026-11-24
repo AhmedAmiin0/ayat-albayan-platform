@@ -11,8 +11,8 @@ import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes'
 import {
   SubscriptionsRepo,
   type SubRow,
-} from '@/modules/finance/subscriptions/subscriptions.repo';
-import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+} from '@/modules/finance/subscriptions/shared/subscriptions.repo';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/shared/subscriptions.service';
 import { StartDateEditRepo } from './start-date-edit.repo';
 
 type HttpError = (code: string) => Error;

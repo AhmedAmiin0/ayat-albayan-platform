@@ -2,7 +2,7 @@
 // so AppModule mounts StripeTestModule; the money harness's mocks plus the Stripe module's own.
 import { PushService } from '@/common/push/push.service';
 import { SalesTeacherAssign } from '@/modules/sales/sales-money';
-import { moneyApp } from '@/modules/finance/subscriptions/test-app';
+import { moneyApp } from '@/modules/finance/subscriptions/tests/test-app';
 import { STRIPE_FACTORY } from '@/modules/finance/stripe/gate/stripe-clients';
 import { PaymentLinksRepo } from '@/modules/finance/stripe/links/payment-links.repo';
 import { PayLimit } from '@/modules/finance/stripe/pay/pay-limit';

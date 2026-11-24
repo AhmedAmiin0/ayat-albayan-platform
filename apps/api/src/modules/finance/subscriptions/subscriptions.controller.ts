@@ -18,8 +18,8 @@ import { toTeacherBalance } from './money/balance.teacher';
 import { PackagesService } from './money/packages.service';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.dto';
-import { SubscriptionCreator } from './subscription-creator';
-import { SubscriptionsService } from './subscriptions.service';
+import { SubscriptionCreator } from './shared/subscription-creator';
+import { SubscriptionsService } from './shared/subscriptions.service';
 import { assertUsedBefore } from './used-before';
 import type { Page } from '@ab/shared';
 

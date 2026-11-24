@@ -11,8 +11,8 @@ import {
 import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
-import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
-import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/shared/subscriptions.service';
 import { UsedBeforeEditRepo } from './used-before-edit.repo';
 
 type HttpError = (code: string) => Error;
