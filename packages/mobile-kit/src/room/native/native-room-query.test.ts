@@ -30,7 +30,7 @@ test('pending first (the screen shows its loading state), then null without Live
 test('with LiveKit: the platform, loaded once and never refetched or saved to disk', async () => {
   mockNative = { sdk: {}, rtc: {}, lk: {} };
   const { client, result } = await hook();
-  await waitFor(() => expect(result.current.data).not.toBeNull());
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(result.current.data?.createClient).toBeDefined();
   await client.query(nativeRoomQuery);
   expect(mockLoads).toHaveBeenCalledTimes(1);
