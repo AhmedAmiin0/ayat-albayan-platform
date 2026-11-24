@@ -4244,7 +4244,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 3
     }
   },
   "src/inbox/thread/components/ThreadHeaderActions/tests/link.test.tsx": {
@@ -4452,9 +4452,6 @@
     },
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/inbox/threads-list/ThreadsList/tests/draft.test.tsx": {
