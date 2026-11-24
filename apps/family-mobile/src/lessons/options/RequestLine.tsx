@@ -10,20 +10,18 @@ interface RequestLineProps {
   /** The words' colour (white on the lapis card, ink-2 on a row). */
   ink: string;
   now: Date;
-  /** The student's name: «أكّدتم حضور يوسف لهذه الحلقة». */
   student: string;
 }
 
 const A = () => t.portal.actions;
 
-/** «طلبتم الثلاثاء 18 نوفمبر، 5:30 م». */
 const askedText = (iso: string, clock: ClockOptions): string => {
   const at = new Date(iso);
   const day = dateText(at, clock, { weekday: 'long', day: 'numeric', month: 'long' });
   return A().requestedLine.replace('{when}', `${day}${t.common.listSeparator}${clockOf(at, clock)}`);
 };
 
-/** «أكّدتم حضور يوسف لهذه الحلقة» on a confirmed lesson, else null. */
+/** Null unless the lesson is confirmed. */
 const confirmedText = ({ lesson, now, student }: RequestLineProps): string | null =>
   confirmedLine(lesson, now) ? A().confirmedLine.replace('{student}', student) : null;
 

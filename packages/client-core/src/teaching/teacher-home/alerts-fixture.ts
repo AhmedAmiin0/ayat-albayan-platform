@@ -1,7 +1,7 @@
 import type { NotificationItem } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
 
-// Test builders for «تنبيهات اليوم»: her lessons on Saturday 14 November 2026, Riyadh (UTC+3).
+// Lessons on Saturday 14 November 2026 in Riyadh (UTC+3).
 
 export const TZ = 'Asia/Riyadh';
 /** 12:00 in Riyadh. */

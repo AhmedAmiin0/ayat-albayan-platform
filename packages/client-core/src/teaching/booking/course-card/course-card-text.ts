@@ -1,9 +1,7 @@
 import type { CourseCardView } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 
-// The lines of «الدورة والباقة» and of each action's preview (owner 2026-11-17: «every action
-// previews what will happen … and shows the result after»), for web and mobile. Words and the
-// date formats are injected (each app's `t.courseCard`, its own day labels).
+// Every action previews what will happen and shows the result after; words are injected.
 
 export type CountWords = Readonly<Record<PluralForm | 'zero', string>>;
 /** The zero form, else the plural form of n. */
@@ -11,16 +9,13 @@ export const count = (words: CountWords, n: number): string =>
   n === 0 ? words.zero : counted(words, n);
 export const fill = (text: string, key: string, value: string): string => text.split(`{${key}}`).join(value);
 
-/** The day labels of these instants, joined («الأحد 22 نوفمبر، الثلاثاء 24 نوفمبر»). */
 export const datesText = (instants: readonly string[], day: (instant: string) => string): string =>
   instants.map(day).join('، ');
 
 export interface CardWords {
-  /** «{teacher} · آخر حلقة في {date}». */
   teacherEnd: string;
-  /** «آخر حلقة في {date}» (no teacher known). */
+  /** Used when no teacher is known. */
   endsOn: string;
-  /** «بقيت حلقتان بلا مواعيد» (zero: nothing). */
   unbooked: CountWords;
 }
 
@@ -31,7 +26,7 @@ interface CardLineInput {
   date: (local: string) => string;
 }
 
-/** «فاطمة · آخر حلقة في 24 نوفمبر 2026» and «بقيت حلقتان بلا مواعيد» (null when none). */
+/** The unbooked line is null when none are left. */
 export function courseCardLines({ course, words, date }: CardLineInput): {
   teacher: string;
   unbooked: string | null;
@@ -45,15 +40,13 @@ export function courseCardLines({ course, words, date }: CardLineInput): {
 }
 
 export interface PreviewWords {
-  /** «ستُلغى حلقتان: {dates}» (zero: «لا توجد حلقات في هذه المدة»). */
   cancels: CountWords;
-  /** «عند الاستئناف تُمدَّد الباقة {n} أيام». */
   extendDays: CountWords;
-  /** «تُمدَّد الباقة عند الاستئناف بعدد أيام الإيقاف» (open-ended). */
+  /** Open-ended pause: the package is extended by the number of paused days. */
   extendOpen: string;
 }
 
-/** «إيقاف مؤقت»'s «ما سيحدث»: the lessons cancelled with their dates, the package's extension. */
+/** Pause preview: the cancelled lessons with their dates and the package's extension. */
 export function pausePreviewLines(input: {
   preview: { lessons: number; starts?: string[]; extend_days?: number | null };
   words: PreviewWords;
@@ -67,13 +60,11 @@ export function pausePreviewLines(input: {
 }
 
 export interface ResumeWords {
-  /** «تعود الحلقتان: {dates}» (zero: «لا توجد حلقات تعود»). */
   back: CountWords;
-  /** «تُمدَّد الباقة {n} أيام» (zero: «الإيقاف لم يبدأ بعد، فلا تُمدَّد الباقة»). */
+  /** Zero means the pause has not started, so the package is not extended. */
   extendDays: CountWords;
 }
 
-/** «استئناف الدورة الآن؟»: the lessons back with their dates and the days the package moves. */
 export function resumePreviewLines(input: {
   preview: { back: string[]; extendDays: number };
   words: ResumeWords;
@@ -85,13 +76,10 @@ export function resumePreviewLines(input: {
 }
 
 export interface ExtendWords {
-  /** «تُحجز حلقتان على الأيام والمواعيد نفسها: {dates}» (zero: nothing left). */
   books: CountWords;
-  /** «آخر حلقة في {date}». */
   endsOn: string;
 }
 
-/** «مدّ الجدول حتى نهاية الباقة؟»: the lessons it books and the new last day. */
 export function extendPreviewLines(input: {
   preview: { starts: string[]; endsOn: string | null };
   words: ExtendWords;
@@ -104,15 +92,13 @@ export function extendPreviewLines(input: {
 }
 
 export interface ExtendDoneWords {
-  /** «حُجزت حلقتان» (zero: nothing was left to book). */
   done: CountWords;
-  /** «آخر حلقة في {date}». */
   endsOn: string;
   /** Some new lessons clash (stored on them, never blocking). */
   clashes: string;
 }
 
-/** After «مدّ الجدول»: what it booked, the new last day, and the clashes line when some. */
+/** The clashes line appears only when some lessons clashed. */
 export function extendDoneLines(input: {
   result: { inserted: number; endsOn: string | null; conflicts: number };
   words: ExtendDoneWords;

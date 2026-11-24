@@ -2,9 +2,7 @@ import type { CourseStopPreview } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { ApiError } from '../../core/http/index.js';
 
-// The student profile's «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» (owner 2026-10-30)
-// for web and mobile: the API paths, the query key, the stop sheet's lines and the error codes.
-// Words are injected (each app's `t.courseActions`).
+// Course actions for web and mobile: API paths, query key and error codes; words are injected.
 
 const student = (studentId: string): string => `/students/${studentId}`;
 
@@ -36,7 +34,7 @@ export function courseMoveViewPath(input: MoveTarget & { subscriptionId: string 
   return `${courseMoveBase(input)}/change?subscriptionId=${q}`;
 }
 
-/** GET: the teachers «تغيير المعلم» offers (the student's program and gender preference). */
+/** Offered teachers match the student's program and gender preference. */
 export const courseTeacherOptionsPath = (studentId: string): string =>
   `${student(studentId)}/course-teacher/teachers`;
 
@@ -49,7 +47,6 @@ export const courseActionsKey = (studentId: string): readonly ['course-actions',
 /** `t.courseActions.stop.lessons`: a zero line and the four Arabic count forms. */
 export type StopWords = Readonly<Record<PluralForm | 'zero', string>>;
 
-/** «ستُلغى N حلقات قادمة» (or the zero line). */
 export function courseStopLessonsText(
   words: StopWords,
   preview: Pick<CourseStopPreview, 'futureLessons'>,

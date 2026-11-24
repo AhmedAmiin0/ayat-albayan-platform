@@ -4,8 +4,7 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { addDaysIn } from '@ab/time';
 import { issueErrors, type LinkFieldErrors } from './link-form-errors.js';
 
-// «رابط جديد» (boards LinkXWebCreate, LinkXStaffCreate): the form both apps keep, and the body
-// it becomes, checked by the API's own schema so the form and the server never disagree.
+// The form is checked by the API's own schema so the form and the server never disagree.
 
 /** A person picked from GET /short-links/people. */
 export interface LinkPick {
@@ -14,7 +13,7 @@ export interface LinkPick {
   role: string;
 }
 
-/** «يوم واحد · 3 أيام · 7 أيام · 30 يومًا», or «تاريخ آخر» (an instant, ISO). */
+/** A custom expiry date is an ISO instant. */
 export type LinkExpiry = { kind: 'days'; days: number } | { kind: 'date'; at: string };
 
 export interface LinkForm {
@@ -24,7 +23,7 @@ export interface LinkForm {
   people: LinkPick[];
   /** Numbers that are not on the platform, E.164 (checkPhone's `e164`). */
   phones: string[];
-  /** Digits as typed; empty = «بلا حد». */
+  /** Digits as typed; empty means no limit. */
   maxUsers: string;
   expiry: LinkExpiry;
   sendWhatsapp: boolean;
@@ -33,10 +32,7 @@ export interface LinkForm {
 /** The lifetime chips of the boards. */
 export const EXPIRY_DAY_CHOICES = [1, 3, 7, 30] as const;
 
-/**
- * «القيم» → short_link_default_days as seeded (7). Sales cannot read the settings, and the API
- * uses the stored value when no expiry is sent; apps pass this unless they know better.
- */
+/** Seeded default (7); sales cannot read settings and the API uses the stored value if absent. */
 export const SHORT_LINK_DEFAULT_DAYS = SETTING_DEFAULTS.short_link_default_days;
 
 export function emptyLinkForm(defaultDays: number): LinkForm {
@@ -54,7 +50,7 @@ export function emptyLinkForm(defaultDays: number): LinkForm {
 
 export interface LinkClock {
   now: Date;
-  /** The creator's zone: «7 أيام» keeps the wall clock across a DST change. */
+  /** The creator's zone keeps the wall clock across a DST change. */
   tz: string;
 }
 
@@ -70,7 +66,7 @@ export function expiresAtOf(expiry: LinkExpiry, clock: LinkClock): string {
 
 const isFutureInstant = (at: string, now: Date): boolean => Date.parse(at) > now.getTime();
 
-/** «بلا حد» = null; anything else must be a whole number (the schema judges its range). */
+/** Null means no limit; otherwise a whole number whose range the schema judges. */
 export function maxUsersOf(typed: string): number | null {
   const digits = asciiDigits(typed).trim();
   return digits === '' ? null : Number(digits);

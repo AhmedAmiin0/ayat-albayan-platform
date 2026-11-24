@@ -1,7 +1,6 @@
 import { addDays, localDateIn, wallToUtc, weekStart } from '@ab/time';
 
-// «جدولي» month view (owner 2026-11-14): a Saturday-first grid of whole academy weeks covering one
-// calendar month, in the teacher's zone. Plain calendar math on local dates «YYYY-MM-DD».
+// A Saturday-first grid of whole academy weeks for one month, in the teacher's zone.
 
 /** A month «YYYY-MM». */
 export type MonthKey = string;
@@ -27,7 +26,7 @@ export function addMonths(month: MonthKey, n: number): MonthKey {
 const firstOf = (month: MonthKey): string => `${month}-01`;
 const lastOf = (month: MonthKey): string => addDays(firstOf(addMonths(month, 1)), -1);
 
-/** The first and the day after the last day of the grid: whole weeks, السبت → الجمعة. */
+/** The end is exclusive; the grid spans whole Saturday-to-Friday weeks. */
 export function monthSpan(month: MonthKey): { first: string; end: string } {
   return { first: weekStart(firstOf(month)), end: addDays(weekStart(lastOf(month)), 7) };
 }

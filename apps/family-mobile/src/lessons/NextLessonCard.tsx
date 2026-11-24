@@ -20,9 +20,7 @@ const TICK_MS = 1000;
 interface NextLessonCardProps {
   lesson: PortalLesson;
   student: PortalStudent;
-  /** The child's «القادمة»: the time range, length, teacher and where it opens. */
   full?: boolean;
-  /** A student's own page: «حلقتك القادمة». */
   own?: boolean;
 }
 
@@ -64,7 +62,6 @@ interface CardTopProps {
   own: boolean;
 }
 
-/** «الحلقة القادمة · اليوم 6:30 م», and «الدخول متاح الآن» on the full card once it opens. */
 function CardTop({ lesson, clock, now, full, own }: CardTopProps) {
   const { color } = useTheme();
   const A = t.portal.app.lesson;
@@ -85,13 +82,7 @@ function CardTop({ lesson, clock, now, full, own }: CardTopProps) {
   );
 }
 
-/**
- * The next lesson on the lapis card (canvas Home, Child): when and its chip, the live countdown,
- * then «ادخل الحلقة» once the window opens; the full card adds what the family asked and
- * «خيارات الحلقة» (owner 2026-11-17), its result said above the card. The student's own clock.
- * While the room is live (canvas RoomXLiveHome): «الحلقة جارية الآن», how long, who is inside,
- * «ادخل الآن».
- */
+/** The next lesson on the student's own clock; while the room is live it shows who is inside. */
 export function NextLessonCard(props: NextLessonCardProps) {
   const { lesson, student, full = false, own = false } = props;
   const { color } = useTheme();
