@@ -6,9 +6,7 @@
     "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/*"],
-      "@ab/web-kit/*": ["../../packages/web-kit/src/*"],
-      "react": ["./node_modules/@types/react"],
-      "react/*": ["./node_modules/@types/react/*"]
+      "@ab/web-kit/*": ["../../packages/web-kit/src/*"]
     }
   },
   "include": ["src", "vite.config.ts"]
