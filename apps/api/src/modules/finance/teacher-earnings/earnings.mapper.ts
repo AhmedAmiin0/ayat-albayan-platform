@@ -1,4 +1,4 @@
-import { outstanding, type TeacherEarningView, type TeacherPaymentView } from '@ab/shared';
+import { outstanding, type TeacherEarningView, type TeacherPaymentView } from '@ab/money';
 import type { EarningRow, PaymentRow, SessionRow } from './earnings.repo';
 
 const names = (row: SessionRow): string[] =>

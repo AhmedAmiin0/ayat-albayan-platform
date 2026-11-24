@@ -1,4 +1,5 @@
-import type { InvoiceView, SignedDownload } from '@ab/shared';
+import type { SignedDownload } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

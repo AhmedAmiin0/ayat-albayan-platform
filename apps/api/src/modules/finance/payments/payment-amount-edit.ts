@@ -1,5 +1,5 @@
 import type { TablesUpdate } from '@ab/db';
-import { amountEditProblem, amountFromStripe, type PaymentUpdate } from '@ab/shared';
+import { amountEditProblem, amountFromStripe, type PaymentUpdate } from '@ab/money';
 import { conflict } from '@/common/http/errors';
 import type { PaymentRow, PaymentsRepo } from './payments.repo';
 

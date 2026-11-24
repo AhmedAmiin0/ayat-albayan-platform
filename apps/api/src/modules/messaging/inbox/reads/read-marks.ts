@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 
 /** One read receipt to send: the newest unread inbound wamid of one line (docs/12 §13.7). */
 export interface ReadMark {

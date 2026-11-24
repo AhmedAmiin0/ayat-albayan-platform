@@ -1,4 +1,4 @@
-import type { QuoteResponse, SubscriptionCreate, SubscriptionView } from '@ab/shared';
+import type { QuoteResponse, SubscriptionCreate, SubscriptionView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { PricingService } from '@/modules/finance/pricing/pricing.service';
 import { notFound } from '@/common/http/errors';

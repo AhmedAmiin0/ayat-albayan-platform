@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES } from '@ab/shared';
+import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { lstat, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { request, type Server } from 'node:http';
 import { tmpdir } from 'node:os';

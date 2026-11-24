@@ -1,4 +1,5 @@
-import type { Page, ThreadView } from '@ab/shared';
+import type { ThreadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { Injectable } from '@nestjs/common';
 import { SalesThreadsService } from '@/modules/messaging/inbox/sales-threads/sales-threads.service';
 import {

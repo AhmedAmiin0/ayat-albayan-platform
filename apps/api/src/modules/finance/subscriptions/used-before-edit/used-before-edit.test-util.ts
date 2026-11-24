@@ -1,7 +1,7 @@
 // The money harness plus the edit's own repo as a mock (test-only, excluded from the build).
 import type { TestingModuleBuilder } from '@nestjs/testing';
 import { vi } from 'vitest';
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { systemResolver } from '@/common/auth/auth.guard';
 import { SUB_ID, STUDENT_ID } from '@/modules/finance/subscriptions/money/money.fakes';

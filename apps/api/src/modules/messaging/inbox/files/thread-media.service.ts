@@ -1,4 +1,5 @@
-import type { ThreadFile, ThreadMediaItem } from '@ab/shared';
+import type { ThreadFile } from '@ab/shared';
+import type { ThreadMediaItem } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

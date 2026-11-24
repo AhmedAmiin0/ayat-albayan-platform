@@ -1,4 +1,5 @@
-import { DEFAULT_DURATION, SETTING_DEFAULTS } from '@ab/shared';
+import { DEFAULT_DURATION } from '@ab/money';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it, vi } from 'vitest';
 import type { AvailabilityQuery, FreeSlotsQuery } from '@/modules/people/teachers/availability/availability.query';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';

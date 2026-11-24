@@ -1,4 +1,4 @@
-import { livePackages, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
+import { livePackages, type StudentBalanceView, type SubscriptionView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { PackageEvents } from '@/common/infra/events/lesson-events';

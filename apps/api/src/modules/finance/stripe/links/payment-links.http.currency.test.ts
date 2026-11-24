@@ -1,4 +1,4 @@
-import type { QuoteResponse } from '@ab/shared';
+import type { QuoteResponse } from '@ab/money';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/money.fakes';

@@ -1,5 +1,5 @@
 import type { Json, TablesInsert } from '@ab/db';
-import { TIER_PACKAGE_SIZE, type QuoteResponse, type SubscriptionCreate } from '@ab/shared';
+import { TIER_PACKAGE_SIZE, type QuoteResponse, type SubscriptionCreate } from '@ab/money';
 
 /** A custom price keeps the quote in price_source; commission runs on `price`. */
 function priced(quote: QuoteResponse, customPrice: number | undefined) {

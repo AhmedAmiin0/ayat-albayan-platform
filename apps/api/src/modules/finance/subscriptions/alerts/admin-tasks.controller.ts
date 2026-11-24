@@ -1,4 +1,5 @@
-import type { AdminTaskView, Page } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { AdminTaskView } from '@ab/money';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
