@@ -4,7 +4,7 @@ import { AuditService } from '@/common/audit/audit.service';
 import { LessonStatusService } from '@/modules/teaching/lessons/status/lesson-status.service';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { payloadLesson } from './webhook.inbound';
-import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/webhook.repo';
+import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
 
 /** Audit trail marker for what the webhook does on a guardian's / lead's behalf. */
 const WHATSAPP_ACTOR = 'system:whatsapp';
