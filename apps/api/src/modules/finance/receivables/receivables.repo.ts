@@ -1,4 +1,4 @@
-import { type SubscriptionStatus } from '@ab/catalog';
+import type { SubscriptionStatus } from '@ab/catalog';
 import { netPaid, type ReceivableIn } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';

@@ -1,4 +1,4 @@
-import { type StudentStatus } from '@ab/catalog';
+import type { StudentStatus } from '@ab/catalog';
 import { livePackages, localDay } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { PackagesService, type StudentState } from '@/modules/finance/subscriptions/money/packages.service';

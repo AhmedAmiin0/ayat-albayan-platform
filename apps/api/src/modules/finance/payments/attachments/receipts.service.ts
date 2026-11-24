@@ -1,4 +1,4 @@
-import { type SignedDownload, type SignedUpload } from '@ab/shared';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
 import { RECEIPT_MAX_BYTES, type ReceiptUpload } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, receiptPath } from '@/common/storage/storage.paths';

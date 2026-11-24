@@ -1,4 +1,4 @@
-import { type SignedDownload } from '@ab/shared';
+import type { SignedDownload } from '@ab/shared';
 import {
   monthParam,
   monthQuery,

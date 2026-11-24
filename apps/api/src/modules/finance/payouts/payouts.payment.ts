@@ -1,4 +1,4 @@
-import { type SignedDownload } from '@ab/shared';
+import type { SignedDownload } from '@ab/shared';
 import { canTransitionPayout, type PayoutPay, type PayoutView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';

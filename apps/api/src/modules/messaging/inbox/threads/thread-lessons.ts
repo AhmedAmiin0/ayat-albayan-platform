@@ -1,5 +1,5 @@
-import { type ThreadLesson, type ThreadView } from '@ab/shared';
-import { type LessonStatus } from '@ab/catalog';
+import type { ThreadLesson, ThreadView } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { RIYADH_TZ } from '@ab/time';
 import type { Db } from '@/common/db/db.module';
 

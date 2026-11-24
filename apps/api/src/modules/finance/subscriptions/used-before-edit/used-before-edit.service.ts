@@ -6,7 +6,7 @@ import {
   type UsedBeforeEditProblem,
   type UsedBeforeEditResult,
 } from '@ab/shared';
-import { type SubscriptionView } from '@ab/money';
+import type { SubscriptionView } from '@ab/money';
 import { riyadhToday } from '@ab/time';
 import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';

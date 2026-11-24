@@ -1,6 +1,6 @@
 import type { Json, Tables } from '@ab/db';
 import { toCents } from '@ab/core';
-import { type EarningsListQuery, type TeacherPaymentListQuery } from '@ab/money';
+import type { EarningsListQuery, TeacherPaymentListQuery } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readChunked } from '@/common/db/read-all';

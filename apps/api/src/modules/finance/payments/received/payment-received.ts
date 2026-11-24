@@ -1,4 +1,4 @@
-import { type PaymentKind } from '@ab/catalog';
+import type { PaymentKind } from '@ab/catalog';
 import { formatAmount } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';

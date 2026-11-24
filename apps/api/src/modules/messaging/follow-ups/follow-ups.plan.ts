@@ -7,7 +7,7 @@ import {
   followUpSlotsMessage,
   leadQualificationSchema,
 } from '@ab/shared';
-import { type MessageStatus } from '@ab/catalog';
+import type { MessageStatus } from '@ab/catalog';
 import { dayInZone, RIYADH_TZ } from '@ab/time';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 // R-LEAD-05 follow-up planning (docs/12 §7). Pure.

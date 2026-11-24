@@ -7,7 +7,7 @@ import {
   type PaymentLinkQuoteView,
   type PaymentLinkView,
 } from '@ab/shared';
-import { type QuoteResponse } from '@ab/money';
+import type { QuoteResponse } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';

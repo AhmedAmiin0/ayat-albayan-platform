@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import { type PaymentKind, type SubscriptionStatus } from '@ab/catalog';
+import type { PaymentKind, SubscriptionStatus } from '@ab/catalog';
 import { netPaid } from '@ab/money';
 import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';

@@ -1,4 +1,4 @@
-import { type PaymentWrite, type SignedDownload } from '@ab/shared';
+import type { PaymentWrite, SignedDownload } from '@ab/shared';
 import { convertPayment } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { FxService } from '@/modules/finance/fx/fx.service';

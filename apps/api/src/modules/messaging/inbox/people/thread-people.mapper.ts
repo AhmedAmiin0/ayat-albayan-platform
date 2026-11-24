@@ -8,7 +8,7 @@ import {
   type ThreadStudentView,
   type ThreadSubscriptionView,
 } from '@ab/shared';
-import { type StudentStatus, type SubscriptionStatus } from '@ab/catalog';
+import type { StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import {
   dueOf,
   livePackages,

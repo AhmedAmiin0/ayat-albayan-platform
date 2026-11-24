@@ -1,4 +1,4 @@
-import { type SubscriptionStatus } from '@ab/catalog';
+import type { SubscriptionStatus } from '@ab/catalog';
 import {
   alertDedupKey,
   alertFor,

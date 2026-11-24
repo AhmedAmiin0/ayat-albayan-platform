@@ -1,4 +1,4 @@
-import { type SignedDownload, type SignedUpload } from '@ab/shared';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
 import {
   paymentCreateSchema,
   paymentUpdateSchema,

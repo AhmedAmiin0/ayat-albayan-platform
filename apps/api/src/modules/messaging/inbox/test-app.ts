@@ -4,7 +4,7 @@
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { ThreadWindow } from './send/send-number';
-import { type ChatListRef, type ThreadLesson, type ThreadPeople } from '@ab/shared';
+import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
