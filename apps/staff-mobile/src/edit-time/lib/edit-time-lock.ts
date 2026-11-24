@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { ApiError, t } from '@ab/mobile-kit';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { lengthOf, type EditState } from './edit-time-body';

@@ -1,4 +1,5 @@
-import type { BookingTeacherOption, ProfileCourseView } from '@ab/shared';
+import type { ProfileCourseView } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Input } from '@ab/web-kit/components/ui/form/input';

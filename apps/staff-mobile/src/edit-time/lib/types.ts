@@ -1,4 +1,4 @@
-import type { LessonView, TimeEditMode } from '@ab/shared';
+import type { LessonView, TimeEditMode } from '@ab/schedule';
 
 // R-SCH-11: the contract (LessonView, LessonTimeEdit, TimeEditResult) lives in @ab/shared.
 

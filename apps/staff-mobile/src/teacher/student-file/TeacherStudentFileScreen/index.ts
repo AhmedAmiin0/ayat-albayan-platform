@@ -1,0 +1,1 @@
+export { TeacherStudentFileScreen } from './TeacherStudentFileScreen';
