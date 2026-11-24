@@ -2,8 +2,7 @@ import { courseChangeSchema } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BODY, SALES, setup } from './course-change.fakes';
 
-// «تغيير أيام الحلقات» names the course teacher's fixed link in the confirmation unless that teacher
-// holds lessons in our classroom (teachers.meeting_mode, else settings.meeting_link_auto; migration 490).
+// Names the fixed link unless the teacher uses our classroom (migration 490).
 
 const templateOf = (apply: ReturnType<typeof setup>['writer']['apply']) =>
   (apply.mock.calls[0]?.[0].payload as { messages: { template_key: string }[] }).messages[0]?.template_key;

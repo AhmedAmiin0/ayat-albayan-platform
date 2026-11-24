@@ -27,7 +27,7 @@ export class BookingExtrasController {
     private readonly settings: BookingSettings,
   ) {}
 
-  /** R-SCH-10: the student's missed lessons that a «حجز تعويضي» can replace. */
+  /** R-SCH-10. */
   @Get('makeup-candidates')
   makeupCandidates(
     @ZodQuery(makeupCandidatesQuery) query: z.output<typeof makeupCandidatesQuery>,

@@ -13,7 +13,7 @@ const listQuery = z.object({
   status: z.enum(LEAD_STATUSES).optional(),
   source: z.enum(LEAD_SOURCES).optional(),
   ...pageQueryShape,
-  // `sort`/`dir` + the «مسؤول المتابعة» filter (R-NFR-08, R-LEAD-05).
+  // R-NFR-08, R-LEAD-05.
   ...leadColumnQueryShape,
 });
 const statusBody = z.object({ status: z.enum(LEAD_STATUSES) });

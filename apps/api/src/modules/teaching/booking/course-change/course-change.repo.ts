@@ -59,7 +59,7 @@ export type OpenCourseLesson = { id: string; status: LessonStatus };
 /** An active rule of the student, for courseOverlaps (sales-course.rules.ts). */
 type OtherRule = { id: string; starts_on: string; ends_on: string | null; package: PackageSize | null; subscription_id: string | null };
 
-/** «تغيير أيام الحلقات»'s reads (service role; ownership is checked by CourseChange). */
+/** Service role; ownership is checked by CourseChange. */
 @Injectable()
 export class CourseChangeRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

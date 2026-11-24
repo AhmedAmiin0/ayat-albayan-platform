@@ -61,7 +61,6 @@ function firstLessons(lessons: readonly AlertLesson[]): { teacher: AlertTeacher;
   return [...byTeacher.values()];
 }
 
-/** teacher_new_student: {{1}} the students, {{2}} the first lesson in the teacher's tz, {{3}} «تجريبية» | «اشتراك». */
 function teacherNewStudentMessage(input: { names: readonly string[]; startsAt: Date; tz: string; kind: BookingKind }): OutboundTemplate {
   const kinds = ar.templates.teacherNewStudentKind;
   return {
