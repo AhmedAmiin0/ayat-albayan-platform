@@ -1,4 +1,4 @@
-import { meetingModeOf, usesPlatform, type TeacherMeetingMode } from '@ab/shared';
+import { meetingModeOf, usesPlatform, type TeacherMeetingMode } from '@ab/schedule';
 
 // teachers.meeting_mode (migration 490) as every teacher read returns it: the stored mode (null =
 // the academy default) and what it resolves to now, so clients never combine two sources.

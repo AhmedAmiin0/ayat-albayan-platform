@@ -1,6 +1,6 @@
 import { cleanup, configure } from '@testing-library/react';
 import { setViewerPersonTz } from '@ab/client-core';
-import { CLOCK_STORAGE_KEY } from '@ab/shared';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
 import { afterEach, beforeEach } from 'vitest';
 
 // findBy*/waitFor budget: 1s (the default) is too tight when `turbo --force` runs every package's

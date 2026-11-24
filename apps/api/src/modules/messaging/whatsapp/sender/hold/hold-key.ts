@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, lineProvider, loadEnv, type Env } from '@/config/env/env';
 import type { WhatsappEnv } from '@/config/env/whatsapp/env.whatsapp';

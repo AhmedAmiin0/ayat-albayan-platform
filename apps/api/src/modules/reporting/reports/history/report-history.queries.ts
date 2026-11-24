@@ -1,4 +1,4 @@
-import type { Attendance, Grade, LessonStatus, PdfStatus, ReportStatus } from '@ab/shared';
+import type { Attendance, Grade, LessonStatus, PdfStatus, ReportStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';

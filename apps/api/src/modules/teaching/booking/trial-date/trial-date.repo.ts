@@ -1,4 +1,5 @@
-import type { Gender, Program, StudentStatus, TrialDateResult } from '@ab/shared';
+import type { TrialDateResult } from '@ab/shared';
+import type { Gender, Program, StudentStatus } from '@ab/catalog';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import type { Json } from '@ab/db';

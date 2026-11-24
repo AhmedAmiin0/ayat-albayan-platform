@@ -1,0 +1,65 @@
+import { offerText, type Quote } from '@ab/money';
+import ar from '@ab/shared/i18n/ar.json';
+import { useState } from 'react';
+import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { waLink } from '@/features/finance/pricing/format';
+
+type Outcome = 'copied' | 'failed' | null;
+
+export interface OfferActionsProps {
+  quote: Quote;
+  /** The card still shows the previous choice's price (debounce or fetch): nothing may be sent. */
+  stale: boolean;
+}
+
+/** Without clipboard access an error toast shows; WhatsApp still works. */
+export function OfferActions({ quote, stale }: OfferActionsProps) {
+  const [outcome, setOutcome] = useState<Outcome>(null);
+  // The guardian reads it on WhatsApp: Arabic whatever the UI language (parent-facing output).
+  const text = offerText(quote, ar.pricing);
+  const wa = (
+    <>
+      <Icon name="chat" />
+      {t.pricing.sendWhatsapp}
+    </>
+  );
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(text);
+      setOutcome('copied');
+    } catch {
+      setOutcome('failed');
+    }
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2.5">
+      <Button disabled={stale} onClick={() => void copy()}>
+        {t.pricing.cta}
+      </Button>
+      {stale ? (
+        <Button variant="secondary" disabled>
+          {wa}
+        </Button>
+      ) : (
+        <Button asChild variant="secondary">
+          <a href={waLink(text)} target="_blank" rel="noopener noreferrer">
+            {wa}
+          </a>
+        </Button>
+      )}
+      {outcome && (
+        <Toast
+          key={outcome}
+          tone={outcome === 'failed' ? 'error' : 'info'}
+          message={outcome === 'failed' ? t.pricing.copyFailed : t.pricing.copied}
+          onDismiss={() => setOutcome(null)}
+        />
+      )}
+    </div>
+  );
+}

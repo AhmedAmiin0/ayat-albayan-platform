@@ -1,4 +1,4 @@
-import { canGrantShare, type JoinRole } from '@ab/shared';
+import { canGrantShare, type JoinRole } from '@ab/schedule';
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import type { BoardController } from '@ab/web-kit/classroom/board/use-board';
 import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';

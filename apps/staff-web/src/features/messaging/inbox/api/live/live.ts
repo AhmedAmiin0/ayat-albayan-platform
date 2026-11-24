@@ -1,0 +1,89 @@
+import {
+  chatLiveKey,
+  connectInboxLive,
+  createInboxLive,
+  createLiveSession,
+  INBOX_HIDDEN_LEAVE_MS,
+} from '@ab/client-core';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useSyncExternalStore } from 'react';
+import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { patchLiveCaches } from '@/features/messaging/inbox/api/live-patch';
+import { rereadChat, rereadList } from '@/features/messaging/inbox/api/reread';
+
+/**
+ * The inbox's realtime nudge on the web (docs/12 §15), shared logic in @ab/client-core: the private
+ * 'inbox:staff' channel joined by the admin and sales shells (never the teacher's). While it is
+ * SUBSCRIBED the inbox polls slow to INBOX_FALLBACK_MS; otherwise they keep INBOX_REFRESH_MS.
+ */
+export const inboxLive = createInboxLive();
+
+/** Re-renders on a connect / drop, so the queries' refetchInterval functions are read again. */
+export function useInboxLive(): boolean {
+  return useSyncExternalStore(inboxLive.subscribe, inboxLive.isLive);
+}
+
+/** The open chat: its events re-read it (only while this window has focus: reading marks it read). */
+export function useLiveChat(phone: string): void {
+  useInboxLive();
+  useEffect(() => {
+    const release = inboxLive.watch(chatLiveKey(phone));
+    return () => {
+      release();
+      inboxLive.forget(chatLiveKey(phone));
+    };
+  }, [phone]);
+}
+
+/**
+ * Mounted once by a staff shell. A web page shows only mounted queries, so the list and the badge
+ * always count as on screen: an event re-reads the mounted ['threads', 'list'] and nav counts.
+ * A tab hidden for INBOX_HIDDEN_LEAVE_MS leaves the channel (the polls take over); shown again it
+ * rejoins (or, still joined, rejoins a dropped channel at once and resyncs). A dropped channel
+ * rejoins with backoff (client-core live-rejoin.ts), at once when the network comes back.
+ * Sign-out / unmount leaves at once.
+ */
+export function useInboxRealtime(enabled: boolean): void {
+  const client = useQueryClient();
+  useEffect(() => {
+    if (!enabled) return undefined;
+    const list = inboxLive.watch('list');
+    const open = () =>
+      connectInboxLive(supabase, inboxLive, {
+        // docs/44 K1: a read in flight started before this event: cancelled, never joined (a
+        // page load or a first load is waited for instead; only while focused: reread.ts).
+        chat: (phone) => rereadChat(client, phone),
+        // A hidden tab waits: TanStack re-reads the stale list when it is shown again. A read in
+        // flight started before this change: cancelled, never joined (docs/43 AU1; throttled 3 s);
+        // a first load is followed by one more read (reread.ts).
+        list: () => {
+          if (document.visibilityState === 'visible') rereadList(client);
+        },
+        badge: () =>
+          void client.invalidateQueries(
+            { queryKey: ['threads', 'nav-count'] },
+            { cancelRefetch: false },
+          ),
+        // docs/44 K1: the event's ticks into the caches at once (a visual patch); the re-reads
+        // above still run and land as the server sent them.
+        rows: (phone, rows) => patchLiveCaches(client, phone, rows),
+      });
+    const session = createLiveSession(open, inboxLive.resync);
+    const shown = () =>
+      document.visibilityState === 'hidden'
+        ? session.pause(INBOX_HIDDEN_LEAVE_MS)
+        : session.resume();
+    if (document.visibilityState !== 'hidden') session.resume(); // a tab opened in the background joins when shown
+    // The network is back (Wi-Fi switch, laptop wake): a dropped channel rejoins now, then resyncs.
+    const online = () => (document.visibilityState === 'hidden' ? undefined : session.resume());
+    document.addEventListener('visibilitychange', shown);
+    window.addEventListener('online', online);
+    return () => {
+      window.removeEventListener('online', online);
+      document.removeEventListener('visibilitychange', shown);
+      session.end();
+      list();
+      inboxLive.forget('list');
+    };
+  }, [enabled, client]);
+}

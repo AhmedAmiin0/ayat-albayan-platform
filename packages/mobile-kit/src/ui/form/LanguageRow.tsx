@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';

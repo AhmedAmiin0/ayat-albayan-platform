@@ -1,4 +1,5 @@
-import { type DateRangeQuery, type LeadSource, type LeadStatus } from '@ab/shared';
+import type { LeadSource, LeadStatus } from '@ab/catalog';
+import type { DateRangeQuery } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { sourceRows } from '@/modules/reporting/dashboard/dashboard.mapper';
 import { DashboardSettings } from '@/modules/reporting/dashboard/dashboard.settings';
@@ -7,7 +8,7 @@ import { costFacts, currenciesOf, expenseFacts, paymentFacts } from './finance.m
 import { FinanceQueries } from './finance.queries';
 import { FxConverter } from './fx-converter';
 import { monthsOf, rangeWindow } from '@/modules/reporting/dashboard/range';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 interface FinanceInput {
   range: DateRangeQuery;

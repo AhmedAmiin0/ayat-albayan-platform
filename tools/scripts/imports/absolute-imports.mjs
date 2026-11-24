@@ -9,20 +9,19 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { Project, ts } from 'ts-morph';
+import { Project } from 'ts-morph';
 import { applyEdits, specifierNodes } from '../ci-checks/move-module/specifiers.ts';
+import { workspacePaths } from '../ci-checks/move-module/tsconfig-paths.ts';
 
 const CODE = /\.[cm]?[jt]sx?$/;
 const SKIP = new Set(['node_modules', 'dist', 'coverage', '.expo', '.turbo', 'playwright-report', 'test-results']);
 
-/** `{ scope: 'apps/staff-web', dir: 'apps/staff-web/src' }` from the app tsconfig's `@/*` path. */
+/** `{ scope: 'apps/staff-web', dir: 'apps/staff-web/src' }` from the `@/*` path the app's tsconfig
+ * sets or inherits (the root tsconfig.base.json's `${configDir}/src/*`). */
 export function aliasOf(root, scope) {
-  const file = posix.join(root, scope, 'tsconfig.json');
-  if (!existsSync(file)) return undefined;
-  const { config } = ts.parseConfigFileTextToJson(file, readFileSync(file, 'utf8'));
-  const target = config?.compilerOptions?.paths?.['@/*']?.[0];
-  if (typeof target !== 'string' || !target.endsWith('/*')) return undefined;
-  return { scope, dir: posix.join(scope, target.slice(0, -2)) };
+  const target = workspacePaths(root, scope).find((p) => p.key === '@/*')?.target;
+  if (target === undefined || !target.endsWith('/*')) return undefined;
+  return { scope, dir: target.slice(0, -2) };
 }
 
 /** The alias form of `spec` written in `file` (repo-relative), or null when it stays as it is. */

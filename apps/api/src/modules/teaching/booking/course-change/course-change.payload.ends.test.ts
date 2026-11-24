@@ -1,4 +1,4 @@
-import { courseChangeSchema } from '@ab/shared';
+import { courseChangeSchema } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { BODY, RULE_A, RULE_B, SUB_ID } from './course-change.fakes';
 import { changePayload, type PayloadInput } from './course-change.payload';

@@ -1,4 +1,4 @@
-import { localeDir } from '@ab/shared';
+import { localeDir } from '@ab/core';
 // Self-hosted fonts (no Google Fonts at runtime): Noto Sans Arabic for all UI text and titles
 // (owner, 2026-10-05: an easier font to read; the PDF report keeps its own faces).
 import '@fontsource/noto-sans-arabic/400.css';

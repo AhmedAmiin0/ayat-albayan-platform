@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { RejoinState } from '@ab/web-kit/classroom/closing/RoomClosing';

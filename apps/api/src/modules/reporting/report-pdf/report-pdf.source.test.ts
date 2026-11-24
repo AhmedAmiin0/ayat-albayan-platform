@@ -1,4 +1,4 @@
-import { COUNTS_FOR_MONEY } from '@ab/shared';
+import { COUNTS_FOR_MONEY } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { ReportPdfSource } from './report-pdf.source';

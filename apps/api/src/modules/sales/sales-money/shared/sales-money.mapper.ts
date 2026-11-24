@@ -1,14 +1,12 @@
+import type { SalesMoneySubscriptionView, SalesPaymentView, SalesQuoteView } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import {
   countsForMoney,
   dueOf,
   type PaymentView,
   type QuoteResponse,
-  type SalesMoneySubscriptionView,
-  type SalesPaymentView,
-  type SalesQuoteView,
-  type StudentStatus,
   type SubscriptionView,
-} from '@ab/shared';
+} from '@ab/money';
 
 // The whitelists of the salesperson's money responses (docs/16 row 16): explicit keys, never a spread of
 // the admin's view, so a column added there never leaks here (fx rate, price_source, notes, recorder…).

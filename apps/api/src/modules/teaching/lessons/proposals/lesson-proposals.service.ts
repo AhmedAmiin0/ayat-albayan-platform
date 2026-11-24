@@ -3,7 +3,7 @@ import {
   type LessonProposalRequest,
   type ProposalApprove,
   type ProposalRequester,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, forbidden } from '@/common/http/errors';

@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { defaultGrantsOf } from '@ab/shared';
+import { defaultGrantsOf } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 import { GRANTED_BY_HAND } from './roles.by-hand.test-util';

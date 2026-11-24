@@ -1,4 +1,5 @@
-import { SETTING_DEFAULTS, type AcademySettings, type NotificationRuleRow } from '@ab/shared';
+import type { NotificationRuleRow } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { RulesSettingsBridge } from './rules.bridge';

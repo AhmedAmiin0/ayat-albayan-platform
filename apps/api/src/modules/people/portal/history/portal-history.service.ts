@@ -1,12 +1,12 @@
 import {
   PORTAL_HISTORY_PAGE,
-  zonedPartsIn,
   type PortalHistory,
   type PortalHistoryQuery,
   type PortalHistoryRow,
   type PortalMonth,
   type PortalStudent,
 } from '@ab/shared';
+import { zonedPartsIn } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PortalReportsRepo } from '@/modules/people/portal/reports/portal-reports.repo';

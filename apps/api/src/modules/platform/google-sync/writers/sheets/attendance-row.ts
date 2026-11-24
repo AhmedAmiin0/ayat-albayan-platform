@@ -1,5 +1,5 @@
-import type { Attendance, Grade, Program } from '@ab/shared';
-import { driveFileLink, fileIdIn } from '@ab/shared';
+import type { Attendance, Grade, Program } from '@ab/catalog';
+import { driveFileLink, fileIdIn } from '@ab/catalog';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { CellValue, Rows } from '@/modules/platform/google-sync/google-client.port';
 import { sheetDate } from './sheet-dates';

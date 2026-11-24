@@ -1,8 +1,8 @@
 import { recordingMinutes } from '@ab/client-core';
-import {
-  clockOf, counted, dateText, teacherName, type ClockOptions, type PortalLessonAssets,
-  type PortalRecording,
-} from '@ab/shared';
+import type { PortalLessonAssets, PortalRecording } from '@ab/shared';
+import { counted } from '@ab/core';
+import { teacherName } from '@ab/schedule';
+import { clockOf, dateText, type ClockOptions } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 

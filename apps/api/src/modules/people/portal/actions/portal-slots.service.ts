@@ -1,4 +1,5 @@
-import { lessonDuration, type PortalSlots, type PortalSlotsQuery, type SlotView } from '@ab/shared';
+import type { PortalSlots, PortalSlotsQuery } from '@ab/shared';
+import { lessonDuration, type SlotView } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { SlotsService } from '@/modules/teaching/booking';

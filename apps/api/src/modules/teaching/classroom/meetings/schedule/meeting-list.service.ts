@@ -1,4 +1,4 @@
-import type { MeetingView, MyMeetingInvite } from '@ab/shared';
+import type { MeetingView, MyMeetingInvite } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';

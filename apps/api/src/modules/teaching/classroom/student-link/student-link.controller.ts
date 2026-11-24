@@ -1,4 +1,4 @@
-import type { RoomJoinResult, StudentJoinLinkUrl, StudentLinkView } from '@ab/shared';
+import type { RoomJoinResult, StudentJoinLinkUrl, StudentLinkView } from '@ab/schedule';
 import { Body, Controller, Get, HttpCode, Ip, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';

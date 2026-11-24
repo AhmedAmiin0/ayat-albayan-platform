@@ -1,12 +1,5 @@
-import {
-  clockOf,
-  lessonWhenAt,
-  lessonWhenText,
-  localDateIn,
-  otherZoneClock,
-  sameClockAt,
-  type ClockCycle,
-} from '@ab/shared';
+import { lessonWhenAt, lessonWhenText } from '@ab/shared';
+import { clockOf, localDateIn, otherZoneClock, sameClockAt, type ClockCycle } from '@ab/time';
 import { t } from '../../../i18n/i18n';
 import { locale } from '../../../i18n/locale';
 import { ltr } from '../../../../ui/primitives/Ltr';

@@ -1,5 +1,6 @@
 import type { Tables } from '@ab/db';
-import { countsForMoney, isCancelled, type TeacherCourseView } from '@ab/shared';
+import type { TeacherCourseView } from '@ab/shared';
+import { countsForMoney, isCancelled } from '@ab/money';
 import type { CoursePackageRow } from '@/modules/sales/sales-students/attendance/student-attendance.rows';
 
 /** A package's balance (v_subscription_balance), as SalesRosterRepo.balances reads it. */

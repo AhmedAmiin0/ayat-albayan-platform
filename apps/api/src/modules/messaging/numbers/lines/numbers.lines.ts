@@ -1,4 +1,5 @@
-import { WA_LINES, type ImportField, type IntegrationKey, type NumberSecretName, type WaLine } from '@ab/shared';
+import type { ImportField, NumberSecretName } from '@ab/shared';
+import { WA_LINES, type IntegrationKey, type WaLine } from '@ab/catalog';
 import type { NumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { validOverlay } from '@/config/env/env';
 

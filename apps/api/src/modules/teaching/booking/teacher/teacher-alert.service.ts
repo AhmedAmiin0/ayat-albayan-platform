@@ -1,9 +1,5 @@
-import {
-  bookingKindOf,
-  type BookingKind,
-  type BookingRequest,
-  type BookingResult,
-} from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import { bookingKindOf, type BookingKind, type BookingResult } from '@ab/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';

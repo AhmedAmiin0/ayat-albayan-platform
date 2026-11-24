@@ -2,7 +2,7 @@ import {
   recordingVisibilitySchema,
   studentRecordingsQuerySchema,
   type StudentRecordingsPage,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

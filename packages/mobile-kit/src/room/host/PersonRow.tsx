@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import { View } from 'react-native';
 import { RemoveIcon } from '../live/room-icons';
 import type { RoomTile } from '../model/room-types';

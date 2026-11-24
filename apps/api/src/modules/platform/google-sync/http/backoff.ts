@@ -1,4 +1,4 @@
-import { backoffDelay, withJitter } from '@ab/shared';
+import { backoffDelay, withJitter } from '@ab/core';
 import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
 
 /** Five attempts (docs/24 §3), then `failed` until an admin retries (lessons: the reconcile). */

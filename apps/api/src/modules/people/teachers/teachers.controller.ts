@@ -20,7 +20,8 @@ import { withMeeting } from './meeting-view';
 import { TeachersRepo, withoutPath, type Teacher } from './teachers.repo';
 import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
-import type { Page, Teacher as TeacherView, TeacherListRow as TeacherListView } from '@ab/shared';
+import type { Teacher as TeacherView, TeacherListRow as TeacherListView } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 /** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
 const listQuery = pageQuerySchema.extend({

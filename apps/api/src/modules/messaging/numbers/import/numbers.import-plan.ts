@@ -1,7 +1,13 @@
 import {
-  IMPORT_FIELDS, META_ID_RE, NUMBER_SECRET_NAMES, WA_LINES, type ImportField, type ImportFieldView, type ImportRoleView,
-  type IntegrationKey, type IntegrationSource, type NumberSecretName, type WaLine,
+  IMPORT_FIELDS,
+  META_ID_RE,
+  NUMBER_SECRET_NAMES,
+  type ImportField,
+  type ImportFieldView,
+  type ImportRoleView,
+  type NumberSecretName,
 } from '@ab/shared';
+import { WA_LINES, type IntegrationKey, type IntegrationSource, type WaLine } from '@ab/catalog';
 import { lineNumbers, lineProvider, type Env } from '@/config/env/env';
 import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';

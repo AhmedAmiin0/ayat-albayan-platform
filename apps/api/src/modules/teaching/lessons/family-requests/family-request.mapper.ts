@@ -1,4 +1,5 @@
-import type { FamilyRequestView, LessonView } from '@ab/shared';
+import type { FamilyRequestView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 
 /** The row of a lesson with a pending family request; null for any other. */
 function toFamilyRequest(l: LessonView): FamilyRequestView | null {

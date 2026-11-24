@@ -1,4 +1,5 @@
-import type { LineCheckView, WaLine, WaProvider } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import type { WaLine, WaProvider } from '@ab/catalog';
 
 // Which wa_numbers rows keep one line check (#134 item 9, owner 2026-11-07). A Meta / Kapso /
 // Evolution line is found by the phone id it checked (Evolution: its instance); a crm line has none

@@ -1,5 +1,5 @@
-import { dayInZone, MINUTE_MS, offsetMs, weekdayOfDay } from '@ab/shared';
-import type { Conflict, Occurrence, OccurrenceTiming } from '@ab/shared';
+import { dayInZone, MINUTE_MS, offsetMs, weekdayOfDay } from '@ab/time';
+import type { Conflict, Occurrence, OccurrenceTiming } from '@ab/schedule';
 import { lessonRows, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 
 type InstantPlan = { timing: OccurrenceTiming; occurrence: Occurrence };

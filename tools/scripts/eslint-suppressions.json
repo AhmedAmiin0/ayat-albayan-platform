@@ -283,20 +283,11 @@
     }
   },
   "ci-checks/move-module/resolve.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-optional-chain": {
-      "count": 1
-    },
     "complexity": {
       "count": 3
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "ci-checks/move-module/rewrite.ts": {

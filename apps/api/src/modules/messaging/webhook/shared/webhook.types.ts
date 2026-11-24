@@ -1,5 +1,5 @@
 import type { TablesUpdate } from '@ab/db';
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 
 /** Who a phone is. Each is matched by phone_e164 (unique on all three tables). */
 export interface Contact {

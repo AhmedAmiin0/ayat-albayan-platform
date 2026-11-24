@@ -1,4 +1,5 @@
-import type { LineCheckView, WaLine } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import type { GraphEnv, WhatsappEnv } from '@/config/env/env';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { crmConn, crmLineCheck } from './lines.check.crm';

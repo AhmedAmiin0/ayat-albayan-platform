@@ -1,4 +1,5 @@
-import type { Attendance, Grade, Program, Rubric } from '@ab/shared';
+import type { Rubric } from '@ab/shared';
+import type { Attendance, Grade, Program } from '@ab/catalog';
 
 /** Everything the report PDF shows (R-REP-03, docs/07 §13): read from the DB, never typed. */
 export interface ReportPdfModel {

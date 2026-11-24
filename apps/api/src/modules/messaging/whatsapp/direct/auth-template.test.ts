@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { templateMessage } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
-import { submitPayload } from '@/modules/messaging/whatsapp/messages/wa-components';
+import { submitPayload } from '@/modules/messaging/whatsapp/messages/submit';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const ACCOUNT_CODE = templateRow({

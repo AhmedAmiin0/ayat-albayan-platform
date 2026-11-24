@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react-native';
 import type { ReactElement, ReactNode } from 'react';

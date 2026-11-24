@@ -1,4 +1,4 @@
-import { autoHeldWindow } from '@ab/shared';
+import { autoHeldWindow } from '@ab/schedule';
 import { describe, expect, it, vi } from 'vitest';
 import { conflict } from '@/common/http/errors';
 import { readerOf } from '@/common/settings/settings.fakes';

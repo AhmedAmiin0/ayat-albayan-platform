@@ -41,8 +41,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "@ab/catalog": "workspace:*",
     "@ab/client-core": "workspace:*",
+    "@ab/core": "workspace:*",
     "@ab/i18n": "workspace:*",
+    "@ab/money": "workspace:*",
+    "@ab/schedule": "workspace:*",
+    "@ab/settings": "workspace:*",
     "@ab/shared": "workspace:*",
     "@ab/time": "workspace:*",
     "@supabase/supabase-js": "^2.117.2",

@@ -4,7 +4,7 @@ import type {
   MeetingView,
   PublicMeetingView,
   RoomJoinResult,
-} from '@ab/shared';
+} from '@ab/schedule';
 import {
   Body,
   Controller,

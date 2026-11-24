@@ -1,5 +1,6 @@
 import type { Json } from '@ab/db';
-import type { BookingResult, Gender, LeadStatus, LessonStatus, PackageSize, Program, StudentStatus } from '@ab/shared';
+import type { LeadStatus, StudentStatus } from '@ab/catalog';
+import type { BookingResult } from '@ab/schedule';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { gateConfirmations } from '@/common/rules/confirmations';
@@ -8,31 +9,12 @@ import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { dbError } from '@/common/http/http';
 import type { LeadFacts } from './booking.lead-merge';
 import { toBookingResult, type BookingPayload, type InvoiceRow } from './booking.mapper';
+import type { BookingStudent, BookingTeacher, MakeupOriginalRow } from './types';
 
-export type Range = { from: Date; to: Date };
 type GuardianOnFile = {
   id: string;
   tz: string;
   students: { id: string; code: string | null; name: string; status: StudentStatus }[];
-};
-export type BookingStudent = {
-  id: string;
-  name: string;
-  program: Program;
-  teacher_gender_pref: Gender | null;
-  meeting_link_override: string | null;
-  guardian: { id: string; phone_e164: string; tz: string };
-};
-/** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in fakes. */
-export type BookingTeacher = { id: string; tz: string; meeting_link: string | null; meeting_mode?: string | null };
-/** The lesson a makeup would replace, with who was on it and whether each was charged. */
-export type MakeupOriginalRow = {
-  id: string;
-  status: LessonStatus;
-  starts_at: string;
-  makeup_of_id: string | null;
-  rule: { package: PackageSize | null } | null;
-  lesson_students: { student_id: string; chargeable: boolean }[];
 };
 
 /**

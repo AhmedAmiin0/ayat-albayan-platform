@@ -1,4 +1,4 @@
-import { isWaLine } from '@ab/shared';
+import { isWaLine } from '@ab/catalog';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 

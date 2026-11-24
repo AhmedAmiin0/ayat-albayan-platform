@@ -1,5 +1,5 @@
 import { newReportCount } from '@ab/client-core';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { portalReportsQuery } from '@ab/web-kit/portal/api';

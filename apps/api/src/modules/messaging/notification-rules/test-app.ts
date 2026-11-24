@@ -1,7 +1,9 @@
 // HTTP test harness for /admin/notifications and the /settings alias (test-only, excluded from the
 // build): the real controllers, guards, policy, writer and settings bridge; the settings store is a
 // stateful fake, the rules table an in-memory map, the gate / templates / audit / activity mocks.
-import { publicSettings, SETTING_DEFAULTS, systemPermissionsOf, type AcademySettings, type LineHealthView, type NotificationRuleRow } from '@ab/shared';
+import type { LineHealthView, NotificationRuleRow } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
+import { publicSettings, SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';

@@ -1,4 +1,4 @@
-import { looksLikeFamilyToken } from '@ab/shared';
+import { looksLikeFamilyToken } from '@ab/schedule';
 import { signPair, verifyPair } from '@/common/http/pair-token';
 
 // Family join token (docs/50 §2, §7): own signing context; the sig travels without its dot.

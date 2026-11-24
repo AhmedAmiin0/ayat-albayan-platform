@@ -1,4 +1,4 @@
-import type { UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 
 // What the roles service needs from the DB. RolesQueries implements it on supabase-js; the unit
 // tests use an in-memory fake (roles.fakes.ts).

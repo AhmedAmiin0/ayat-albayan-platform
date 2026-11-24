@@ -1,4 +1,4 @@
-import { makeupEligible } from '@ab/shared';
+import { makeupEligible } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';

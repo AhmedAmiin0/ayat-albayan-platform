@@ -5,7 +5,7 @@ import {
   mayStopCam,
   muteAllTargets,
 } from '@ab/client-core';
-import type { JoinRole, MuteSource } from '@ab/shared';
+import type { JoinRole, MuteSource } from '@ab/schedule';
 import { useState } from 'react';
 import { classroomError } from '../state/room-failure';
 import type { RoomTile } from '../model/room-types';

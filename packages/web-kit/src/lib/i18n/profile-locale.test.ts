@@ -1,4 +1,4 @@
-import { LOCALE_STORAGE_KEY } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 // After sign-in the login's language (GET /auth/me `locale`) wins over the browser's copy.

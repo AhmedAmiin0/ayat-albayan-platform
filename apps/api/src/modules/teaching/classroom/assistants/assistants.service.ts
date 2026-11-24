@@ -1,4 +1,4 @@
-import { assignAssistantSchema, type AssistantLessonView, type AssistantView } from '@ab/shared';
+import { assignAssistantSchema, type AssistantLessonView, type AssistantView } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { badRequest, notFound } from '@/common/http/errors';

@@ -11,7 +11,7 @@ import {
   type LessonStudentView,
   type LessonTimeEditView,
   type LessonView,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { z } from 'zod';
 import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './store/lesson-row';

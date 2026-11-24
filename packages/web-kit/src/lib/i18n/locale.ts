@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALE_STORAGE_KEY, parseLocale, type Locale } from '@ab/shared';
+import { DEFAULT_LOCALE, LOCALE_STORAGE_KEY, parseLocale, type Locale } from '@ab/core';
 
 // UI language (Phase 7), read ONCE at boot: `t` and the Intl formatters capture it at module
 // level, so a switch saves the choice and reloads instead of re-rendering. Arabic is the default.

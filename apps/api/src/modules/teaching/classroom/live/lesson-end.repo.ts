@@ -1,4 +1,4 @@
-import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
+import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';

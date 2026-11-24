@@ -1,4 +1,5 @@
-import { countByKind, meetingModeOf, usesPlatform, type AssistantLessonView, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
+import { countByKind, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
+import { meetingModeOf, usesPlatform, type AssistantLessonView } from '@ab/schedule';
 import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.repo';
 import type { TeacherDayFacts } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
 

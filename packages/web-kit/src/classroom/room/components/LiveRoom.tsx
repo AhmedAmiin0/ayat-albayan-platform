@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { BoardStage } from '@ab/web-kit/classroom/board/BoardStage';
 import { ControlBar, type ChatControl } from './ControlBar';
 import { STAFF_KIT, type RoomKit } from '@ab/web-kit/classroom/flow/room-kit';

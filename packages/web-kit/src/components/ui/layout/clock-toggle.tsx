@@ -1,4 +1,4 @@
-import type { ClockPref } from '@ab/shared';
+import type { ClockPref } from '@ab/time';
 import { setClockPref, useClockPref } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';

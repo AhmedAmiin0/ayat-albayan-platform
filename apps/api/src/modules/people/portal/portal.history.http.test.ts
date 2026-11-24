@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { pastRow } from './portal.family.fakes';
 import { portalApp, R1, REC, S1, S2, S3 } from './portal.fakes';

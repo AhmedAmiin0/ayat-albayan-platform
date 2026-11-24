@@ -1,10 +1,6 @@
-import {
-  courseRemaining,
-  sameDays,
-  type CourseChangeRequest,
-  type CourseLessonFact,
-  type Duration,
-} from '@ab/shared';
+import { courseRemaining, sameDays, type CourseLessonFact } from '@ab/shared';
+import type { Duration } from '@ab/catalog';
+import type { CourseChangeRequest } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
 import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course-end';
 import { domainError } from '@/modules/teaching/booking/booking.errors';

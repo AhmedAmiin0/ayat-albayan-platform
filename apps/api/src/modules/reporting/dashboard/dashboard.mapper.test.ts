@@ -1,4 +1,4 @@
-import { LEAD_STATUSES } from '@ab/shared';
+import { LEAD_STATUSES } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { countBy, sourceRows, teacherLoad } from './dashboard.mapper';
 

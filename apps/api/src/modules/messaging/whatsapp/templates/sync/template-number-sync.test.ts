@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { EvolutionLineEnv, MetaLineEnv } from '@/config/env/env';
 import { syncNumber, type NumberSyncDeps } from './template-number-sync';
-import type { ApprovalRow, ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { ApprovalRow, ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError, type MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 

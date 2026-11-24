@@ -1,0 +1,1 @@
+export { MyWeek } from './MyWeek';

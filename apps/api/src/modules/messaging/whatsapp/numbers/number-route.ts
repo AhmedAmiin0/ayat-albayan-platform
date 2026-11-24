@@ -1,11 +1,10 @@
 import {
-  isWaLine,
   NOTIFICATION_CATALOGUE,
   routeSession,
   routeTemplate,
   type RoutableNumber,
-  type WaLine,
 } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/catalog';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';

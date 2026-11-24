@@ -1,4 +1,5 @@
-import { clickToChatLink, type PortalGuardian, type PortalHome } from '@ab/shared';
+import type { PortalGuardian, PortalHome } from '@ab/shared';
+import { clickToChatLink } from '@ab/core';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import type { AuthUser } from '@/common/auth/verify-token';

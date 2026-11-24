@@ -1,4 +1,4 @@
-import { canGrantShare, type JoinRole } from '@ab/shared';
+import { canGrantShare, type JoinRole } from '@ab/schedule';
 
 /** Share, draw and open-board requests go on the reliable data channel. */
 export const SHARE_TOPIC = 'share-request';

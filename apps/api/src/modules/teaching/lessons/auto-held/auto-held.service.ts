@@ -1,4 +1,4 @@
-import { autoHeldWindow } from '@ab/shared';
+import { autoHeldWindow } from '@ab/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';

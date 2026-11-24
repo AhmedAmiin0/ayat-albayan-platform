@@ -1,4 +1,5 @@
-import { DAY_MS, timeGroups, localDateOf, startOfLocalDay } from '@ab/shared';
+import { timeGroups, localDateOf, startOfLocalDay } from '@ab/schedule';
+import { DAY_MS } from '@ab/time';
 import { planBooking } from '@/modules/teaching/booking/plan/booking.plan';
 import type { SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 

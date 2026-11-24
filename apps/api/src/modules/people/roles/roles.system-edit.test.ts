@@ -1,4 +1,4 @@
-import { defaultGrantsOf, effectivePermissions } from '@ab/shared';
+import { defaultGrantsOf, effectivePermissions } from '@ab/catalog';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { profile, rolesHarness } from './roles.fakes';
 

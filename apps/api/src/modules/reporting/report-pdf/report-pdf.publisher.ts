@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { StorageService } from '@/common/storage/storage.service';
 import { BUCKETS, reportPdfPath } from '@/common/storage/storage.paths';

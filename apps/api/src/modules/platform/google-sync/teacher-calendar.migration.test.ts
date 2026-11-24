@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { GOOGLE_SKIP_REASONS } from '@ab/shared';
+import { GOOGLE_SKIP_REASONS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 

@@ -1,4 +1,5 @@
-import { WA_LINES, type TemplateLineSync, type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
+import type { TemplateLineSync, TemplateLineView, TemplateView } from '@ab/shared';
+import { WA_LINES, type WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { lineFacts } from './template-env';
 import { toTemplateView, withNumbers } from './template.mapper';

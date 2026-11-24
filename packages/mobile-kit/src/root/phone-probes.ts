@@ -1,5 +1,5 @@
 import { MAINTENANCE_CONFIRM_MS, probe, type MaintenanceProbes } from '@ab/client-core';
-import { PUBLIC_CONFIG_PATH } from '@ab/shared';
+import { PUBLIC_CONFIG_PATH } from '@ab/settings';
 import { z } from 'zod';
 import { env } from '../lib/http/env';
 

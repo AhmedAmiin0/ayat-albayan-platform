@@ -1,4 +1,4 @@
-import { courseTeacherChangeSchema, type DayTime } from '@ab/shared';
+import { courseTeacherChangeSchema, type DayTime } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { BODY, RULE_A, SUB_ID } from './course-change.fakes';
 import { changePayload, type PayloadInput } from './course-change.payload';

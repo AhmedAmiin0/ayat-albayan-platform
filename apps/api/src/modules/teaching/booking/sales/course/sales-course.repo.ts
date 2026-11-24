@@ -1,4 +1,5 @@
-import { DURATIONS, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import type { CourseSubscription, SalesCourseView } from '@ab/shared';
+import { DURATIONS } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';

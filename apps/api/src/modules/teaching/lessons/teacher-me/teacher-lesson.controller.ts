@@ -1,4 +1,4 @@
-import { teacherCancelSchema, type LessonView } from '@ab/shared';
+import { teacherCancelSchema, type LessonView } from '@ab/schedule';
 import { Controller, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

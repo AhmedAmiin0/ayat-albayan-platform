@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@ab/shared';
+import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';

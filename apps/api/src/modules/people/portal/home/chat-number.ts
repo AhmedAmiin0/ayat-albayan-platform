@@ -1,4 +1,4 @@
-import { isWaLine } from '@ab/shared';
+import { isWaLine } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { activeNumberId, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';

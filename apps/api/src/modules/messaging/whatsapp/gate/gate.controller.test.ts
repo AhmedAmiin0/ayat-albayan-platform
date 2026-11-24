@@ -1,4 +1,4 @@
-import { GATE_CONFIRM_TEXT, SETTING_DEFAULTS } from '@ab/shared';
+import { GATE_CONFIRM_TEXT, SETTING_DEFAULTS } from '@ab/settings';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { ADMIN_ID, gateApp } from './gate.test-app';

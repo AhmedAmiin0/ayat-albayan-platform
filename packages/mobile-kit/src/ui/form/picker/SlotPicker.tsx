@@ -1,4 +1,4 @@
-import { localDateIn } from '@ab/shared';
+import { localDateIn } from '@ab/time';
 import type { ReactElement } from 'react';
 import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';

@@ -2,7 +2,7 @@ import {
   Controller, HttpCode, HttpException, HttpStatus, Logger, NotFoundException, Post, Req,
   ServiceUnavailableException, UnauthorizedException,
 } from '@nestjs/common';
-import { EVOLUTION_INSTANCE_RE } from '@ab/shared';
+import { EVOLUTION_INSTANCE_RE } from '@ab/catalog';
 import { ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Public } from '@/common/auth/decorators';

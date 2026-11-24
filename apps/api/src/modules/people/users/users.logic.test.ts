@@ -1,4 +1,4 @@
-import { GRANTABLE_PERMISSIONS } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { systemRoles } from '@/modules/people/roles/roles.fakes';
 import type { RoleRecord } from '@/modules/people/roles/roles.store';

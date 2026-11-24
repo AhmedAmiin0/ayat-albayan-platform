@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ADMIN, fakeStore, lessonRow, STUDENT_ID, TEACHER } from '@/modules/teaching/lessons/lessons.fakes';

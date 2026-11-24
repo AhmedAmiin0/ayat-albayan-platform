@@ -3,9 +3,9 @@ import {
   joinNames,
   lessonWhenText,
   makeupNames,
-  type BookingKind,
   type BookingTemplateKey,
 } from '@ab/shared';
+import type { BookingKind } from '@ab/schedule';
 
 /** A booked student's guardian; id null = the guardian the RPC creates or reuses (lead path). */
 export type BookedGuardian = { id: string | null; phone_e164: string; tz: string };

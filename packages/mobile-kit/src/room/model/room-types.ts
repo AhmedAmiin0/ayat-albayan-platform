@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import type { ComponentType } from 'react';
 import type { AudioOutput } from './audio-output';
 

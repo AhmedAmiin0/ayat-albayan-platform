@@ -1,10 +1,6 @@
-import {
-  invoiceUploadSchema,
-  uploadMaxBytes,
-  type InvoiceUpload,
-  type MakeupCandidate,
-  type SignedUpload,
-} from '@ab/shared';
+import type { SignedUpload } from '@ab/shared';
+import { invoiceUploadSchema, type InvoiceUpload, type MakeupCandidate } from '@ab/schedule';
+import { uploadMaxBytes } from '@ab/settings';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

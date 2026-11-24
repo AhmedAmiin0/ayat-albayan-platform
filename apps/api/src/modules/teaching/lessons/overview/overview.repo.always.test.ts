@@ -1,7 +1,7 @@
 import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
-import { allDayRows } from '@ab/shared';
+import { allDayRows } from '@ab/schedule';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { teacherSpans } from './free-windows';

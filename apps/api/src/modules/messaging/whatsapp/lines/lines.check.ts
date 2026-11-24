@@ -1,4 +1,5 @@
-import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import { WA_LINES, type WaLine } from '@ab/catalog';
 import { Injectable } from '@nestjs/common';
 import { isGraphEnv, lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
 import { graphHttp, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';

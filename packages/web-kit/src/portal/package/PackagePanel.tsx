@@ -1,5 +1,6 @@
 import { packageSummary, paymentInstructions } from '@ab/client-core';
-import { subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
+import type { PortalPackage, PortalStudent } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';

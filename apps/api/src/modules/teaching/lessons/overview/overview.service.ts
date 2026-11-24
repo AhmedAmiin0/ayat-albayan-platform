@@ -1,4 +1,4 @@
-import type { ScheduleOverview } from '@ab/shared';
+import type { ScheduleOverview } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';

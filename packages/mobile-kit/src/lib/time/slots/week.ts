@@ -1,4 +1,4 @@
-import { addDays, dateText, type DateFields } from '@ab/shared';
+import { addDays, dateText, type DateFields } from '@ab/time';
 import { t } from '../../i18n/i18n';
 import { locale } from '../../i18n/locale';
 

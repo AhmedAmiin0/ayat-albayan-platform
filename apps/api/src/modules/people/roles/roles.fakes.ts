@@ -1,4 +1,4 @@
-import { defaultGrantsOf, USER_ROLES } from '@ab/shared';
+import { defaultGrantsOf, USER_ROLES } from '@ab/catalog';
 import type { AuditEntry, AuditService } from '@/common/audit/audit.service';
 import { PermissionCache } from '@/common/auth/permission.cache';
 import { RolesService } from './roles.service';

@@ -1,4 +1,4 @@
-import { retry } from '@ab/shared';
+import { retry } from '@ab/core';
 import {
   Injectable,
   Logger,

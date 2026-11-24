@@ -1,9 +1,5 @@
-import {
-  OUTCOME_CORRECTION_REASON,
-  type CorrectTo,
-  type LessonEvent,
-  type LessonStatus,
-} from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { OUTCOME_CORRECTION_REASON, type CorrectTo, type LessonEvent } from '@ab/schedule';
 import type { LessonChange } from '@/modules/teaching/scheduling';
 import type { Commit } from '@/modules/teaching/lessons/store/lesson-store';
 import { cancelChange } from '@/modules/teaching/lessons/status/transition';

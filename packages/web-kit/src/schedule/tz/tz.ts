@@ -1,4 +1,4 @@
-import { dateText } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // Date labels for the schedule screens (R-SCH-01, rule 6). The zone math they used to sit beside

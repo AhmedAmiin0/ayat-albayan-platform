@@ -1,4 +1,4 @@
-import { WA_LINES } from '@ab/shared';
+import { WA_LINES } from '@ab/catalog';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '@/common/configuration/integrations/integration-config.module';
 import { NumbersModule } from '@/modules/messaging/numbers/numbers.module';

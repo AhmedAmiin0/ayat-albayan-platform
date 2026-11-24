@@ -1,4 +1,4 @@
-import type { JoinRole, RoomJoinResult } from '@ab/shared';
+import type { JoinRole, RoomJoinResult } from '@ab/schedule';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';

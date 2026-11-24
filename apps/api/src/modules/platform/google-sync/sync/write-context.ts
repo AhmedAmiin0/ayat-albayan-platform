@@ -1,4 +1,4 @@
-import type { GooglePlannedRequest } from '@ab/shared';
+import type { GooglePlannedRequest } from '@ab/catalog';
 import type { GoogleClient } from '@/modules/platform/google-sync/google-client.port';
 import type { ItemResult, SyncItem } from './google-items.queries';
 

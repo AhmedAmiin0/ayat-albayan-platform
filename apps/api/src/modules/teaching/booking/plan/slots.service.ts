@@ -1,11 +1,8 @@
-import { DAY_MS, findConflicts, freeSlots, outsideSlotsResponseSchema } from '@ab/shared';
-import type {
-  Conflict,
-  Occurrence,
-  OutsideSlotsResponse,
-  SlotsResponse,
-  SlotView,
-} from '@ab/shared';
+import { outsideSlotsResponseSchema } from '@ab/shared';
+import { findConflicts, freeSlots } from '@ab/schedule';
+import { DAY_MS } from '@ab/time';
+import type { OutsideSlotsResponse } from '@ab/shared';
+import type { Conflict, Occurrence, SlotsResponse, SlotView } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { OutsideSlotsQuery, SlotsQuery } from '@/modules/teaching/booking/booking.dto';
 import { domainError } from '@/modules/teaching/booking/booking.errors';

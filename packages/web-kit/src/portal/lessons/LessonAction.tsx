@@ -1,5 +1,6 @@
 import { lessonWait, lessonWaitText, type LessonWait } from '@ab/client-core';
-import type { PortalLesson, RoomJoinResult } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { useMutation } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { buttonVariants, Button } from '@ab/web-kit/components/ui/form/button';

@@ -1,4 +1,4 @@
-import { searchDigits } from '@ab/shared';
+import { searchDigits } from '@ab/core';
 import { orSafe } from '@/modules/people/guardians/http';
 
 /** GET /teachers?search (R-TCH-01): phone digits (searchDigits), else the Arabic or English name. */

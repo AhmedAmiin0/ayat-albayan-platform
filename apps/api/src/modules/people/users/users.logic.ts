@@ -1,4 +1,5 @@
-import { isLinkedRole, USER_ROLES, type Permission, type UserRole } from '@ab/shared';
+import { isLinkedRole } from '@ab/shared';
+import { USER_ROLES, type Permission, type UserRole } from '@ab/catalog';
 import { z } from 'zod';
 import { grantsOf, heldRole, isSystemAdmin, permissionsOf, roleView, type RoleState } from '@/modules/people/roles/roles.logic';
 import type { RoleRecord } from '@/modules/people/roles/roles.store';

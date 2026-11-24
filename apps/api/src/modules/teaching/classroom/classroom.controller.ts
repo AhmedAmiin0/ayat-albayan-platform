@@ -4,7 +4,7 @@ import {
   type JoinLinkResult,
   type JoinLinkUrl,
   type RoomJoinResult,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

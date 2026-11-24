@@ -1,10 +1,6 @@
-import {
-  addDays,
-  DAY_MS,
-  startOfLocalDay,
-  type CourseExtendPreview,
-  type CourseExtendResult,
-} from '@ab/shared';
+import type { CourseExtendPreview, CourseExtendResult } from '@ab/shared';
+import { startOfLocalDay } from '@ab/schedule';
+import { addDays, DAY_MS } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';

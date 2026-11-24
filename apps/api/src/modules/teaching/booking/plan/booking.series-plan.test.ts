@@ -1,4 +1,4 @@
-import { courseEndsOn, timeGroups } from '@ab/shared';
+import { courseEndsOn, timeGroups } from '@ab/schedule';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { planSeries, type SeriesRule } from './booking.series-plan';

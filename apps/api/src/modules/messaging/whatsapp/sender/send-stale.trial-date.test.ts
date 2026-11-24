@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { dropReason } from './send-stale';
 

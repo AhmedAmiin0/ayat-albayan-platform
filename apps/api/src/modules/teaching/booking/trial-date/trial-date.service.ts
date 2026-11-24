@@ -1,4 +1,10 @@
-import { upcomingTrial, type BookingRequest, type BookingResult, type Conflict, type TrialDateResult, type TrialHistory } from '@ab/shared';
+import {
+  upcomingTrial,
+  type BookingRequest,
+  type TrialDateResult,
+  type TrialHistory,
+} from '@ab/shared';
+import type { BookingResult, Conflict } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
