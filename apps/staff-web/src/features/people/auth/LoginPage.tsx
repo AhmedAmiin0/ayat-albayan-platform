@@ -15,18 +15,14 @@ const TABS: { value: Tab; label: string }[] = [
   { value: 'family', label: t.familyAuth.tabs.family },
 ];
 
-/**
- * Login (docs/07 login section, docs/30 §7): the forms beside the leather binding; cover on top on
- * phones. Two tabs, «فريق الأكاديمية» first; only the active panel is rendered. Once the family
- * host is live (VITE_FAMILY_ORIGIN, docs/51 §3) the staff form alone, and a link for families.
- */
+/** Only the active panel is rendered; with the family host live, staff form only (docs/51 §3). */
 export function LoginPage() {
   const host = env.familyOrigin;
   return (
     <main className="grid min-h-screen bg-page shell:grid-cols-2">
       <div className="grid items-start justify-items-center px-4 py-8 sm:px-8 sm:py-12 shell:place-items-center">
         <div className="grid w-full max-w-[380px] gap-[22px]">
-          {/* One row with the title, so the switch costs no height above «دخول» on phones. */}
+          {/* One row with the title so the switch costs no height on phones. */}
           <div className="flex items-center justify-between gap-3">
             <Cartouche>{t.auth.loginTitle}</Cartouche>
             <LanguageSwitch />

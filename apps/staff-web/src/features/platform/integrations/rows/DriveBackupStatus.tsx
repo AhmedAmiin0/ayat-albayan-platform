@@ -9,11 +9,7 @@ import {
 
 const b = t.integrations.driveBackup;
 
-/**
- * Under «التخزين» (docs/45 §5): last archive, raw → compressed, errors, Drive's free space, the
- * objects skipped by name and those waiting for room. Only for a user who may read it (the API's
- * permission); nothing for the others.
- */
+/** Only for a user the API permits; nothing for the others (docs/45 §5). */
 export function DriveBackupStatus() {
   const status = useDriveBackup();
   const view = status.data;

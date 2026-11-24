@@ -16,7 +16,7 @@ import type { StudentPick } from './use-student-pick';
 const B = t.assistants.brought;
 type Props = { pick: StudentPick; onDone: (message: string) => void };
 
-/** «تعيين مسؤول مبيعات (n)» in the students head: one salesperson for every ticked student (R-ASST-01, audited by the API). */
+/** One salesperson for every ticked student, audited by the API (R-ASST-01). */
 export function BulkAssign({ pick, onDone }: Props) {
   const [open, setOpen] = useState(false);
   if (!pick.enabled || pick.ids.length === 0) return null;

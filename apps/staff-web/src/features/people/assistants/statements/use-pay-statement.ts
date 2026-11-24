@@ -7,7 +7,7 @@ import { ASSISTANTS_KEY, payStatement, uploadStatementReceipt } from '@/features
 
 export type PayStatementInput = { day: string; method: PaymentMethod; note: string; file: File | null };
 
-/** «تأكيد الدفع»: the receipt goes up once per file, then POST /assistant-pay/statements/:id/pay. */
+/** The receipt uploads once per file before the pay request. */
 export function usePayStatement(statementId: string, assistantId: string, onSaved: () => void) {
   const queryClient = useQueryClient();
   const [receiptOnce] = useState(() => uploadOnce<File>());

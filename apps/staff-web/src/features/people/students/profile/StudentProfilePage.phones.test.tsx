@@ -19,7 +19,6 @@ const SECOND = '+966552220000';
 const guardian = (phones?: { phone_e164: string; is_primary: boolean }[]) => ({ id: 'g1', name: 'أم سهيلة', phone_e164: MAIN, ...(phones ? { phones } : {}) });
 const STUDENT = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', meeting_link: null, siblings: [] };
 
-// The file's meta line: the <dl> that holds «الكود».
 const meta = () => screen.getByText(t.students.code, { selector: 'dt' }).closest('dl');
 const terms = () => [...(meta()?.querySelectorAll('dt') ?? [])].map((d) => d.textContent);
 

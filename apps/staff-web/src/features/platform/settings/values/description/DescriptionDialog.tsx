@@ -17,10 +17,7 @@ export interface DescriptionDialogProps {
   onDone: (message: string) => void;
 }
 
-/**
- * The row's description in full (docs/26b §2 «الاسم»): the editor for whoever may write it (settings.write,
- * or the owning module's right on an owned key), otherwise the text to read, and the developer key.
- */
+/** Full description (docs/26b §2): editor with settings.write or the owning module's right. */
 export function DescriptionDialog({ target, entry, rights, onClose, onDone }: DescriptionDialogProps) {
   const input = { entry, hintKey: target.hintKey, locale, bundle: t };
   if (entry && canEditDescription(entry, rights)) {

@@ -20,11 +20,7 @@ const v = t.settingsValues;
 
 const DISCARD_WORDS = { title: v.sheet.discardTitle, body: v.sheet.discardBody, discard: v.sheet.discard, keep: v.sheet.keep };
 
-/**
- * The phone editor (docs/26b §2 «Phone»): a sheet titled by the label with the full description,
- * the editor (16px, 44px), bounds, default + reset, last change, the impact note, «إلغاء» + «احفظ»
- * and a closed «للمطوّر» with the key. Closing with an unsaved edit asks first. Read-only: no editor.
- */
+/** Phone editor (docs/26b §2); closing with an unsaved edit asks first; read-only has no editor. */
 export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; onClose: () => void }) {
   const api = useValues();
   const clock = useClock();
@@ -37,7 +33,7 @@ export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; on
   const bounds = boundsText(settingKey);
   const confirm = VALUE_CONFIRM[settingKey];
   const description = useSheetDescription(settingKey, Boolean(confirm));
-  // Closes only when a save of this key lands: never after a refused, cancelled or failed «احفظ».
+  // Closes only when a save of this key lands, never after a refused, cancelled or failed save.
   const savedAt = api.savedAt(settingKey);
   const [openedAt] = useState(savedAt);
   useEffect(() => {

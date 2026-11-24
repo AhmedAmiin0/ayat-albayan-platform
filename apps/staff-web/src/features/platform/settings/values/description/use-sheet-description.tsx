@@ -8,11 +8,7 @@ import { useDescribeRights } from './use-describe-rights';
 import { useValues } from '@/features/platform/settings/values/values-context';
 
 
-/**
- * The phone sheet's description line (states.html #values-phone): the full text and, with the right
- * to write it, «عدّل الوصف» opening the same editor as the table's line. Undefined when there is
- * neither. `hideText`: a value that asks first (its impact note says it, so the text is not repeated).
- */
+/** Undefined with neither text nor edit right; `hideText` when the impact note repeats it. */
 export function useSheetDescription(settingKey: SettingKey, hideText: boolean): ReactNode | undefined {
   const api = useValues();
   const rights = useDescribeRights();

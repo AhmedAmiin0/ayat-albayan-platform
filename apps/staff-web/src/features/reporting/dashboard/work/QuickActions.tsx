@@ -8,11 +8,7 @@ import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * The dashboard's quick actions (owner, 2026-10-05): «اجتماع جديد» (the one primary), «إضافة طالب»
- * (the students page's own dialog, right here) and «حجز حلقة» (the booking wizard); on phones the
- * two secondary ones sit behind «⋯» (HeadActions).
- */
+/** On phones the two secondary actions sit behind the overflow menu (HeadActions). */
 export function QuickActions() {
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);

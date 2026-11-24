@@ -8,7 +8,6 @@ import { GATE_ACTION } from './gate-action';
 
 const G = t.shortLinks.gate;
 
-/** Board LinkXGateSignedIn: the title, «متابعة باسم <name>» and «لست أنت؟ تسجيل الخروج». */
 export function SignedInScreen({ gate }: { gate: Gate }) {
   return (
     <>

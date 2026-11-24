@@ -112,7 +112,6 @@ describe('CreateStudentDialog (R-STU-02, R-STU-03)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.confirm }));
     await screen.findByText(t.common.error);
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
-    // Back on the duplicate step, focus is on «دمج», the button the admin had pressed.
     await waitFor(() => expect(document.activeElement?.textContent).toBe(t.students.merge));
     fireEvent.click(await screen.findByRole('button', { name: t.students.createAnyway }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.students.created));

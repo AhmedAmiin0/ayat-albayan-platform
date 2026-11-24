@@ -9,7 +9,7 @@ import { deleteRecording, RECORDINGS_KEY } from './recordings-api';
 
 const R = t.studentRecordings.delete;
 
-/** Admin only: «حذف التسجيل» asks once more, then removes the file (the row stays as «محذوف»). */
+/** Admin only; removes the file but the row stays marked deleted. */
 export function RecordingDelete({ id }: { id: string }) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();

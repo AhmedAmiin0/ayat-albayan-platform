@@ -26,7 +26,6 @@ function check(draft: EditDraft, opts: { bound: boolean; tpl: AuthorTemplate }) 
   return { refused: new Set(varsMoved ? [...refused, 'params'] : refused), parsed, varsMoved };
 }
 
-/** «تعديل»: the words, the variables' samples and the buttons, with WhatsApp's preview. */
 export function TemplateEditForm(props: TemplateEditFormProps) {
   const { formId, tpl, bound, repliesOnly, onSave } = props;
   const [draft, setDraft] = useState<EditDraft>(() => draftOf(tpl));

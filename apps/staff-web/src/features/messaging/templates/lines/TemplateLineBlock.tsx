@@ -20,7 +20,6 @@ export interface TemplateLineBlockProps {
   onNotice: (notice: Notice) => void;
 }
 
-/** The number's phone (LTR, or «افحص الخطوط لعرض الرقم»), WABA id and driver. */
 function NumberFacts({ facts, phone }: Pick<TemplateLineBlockProps, 'facts' | 'phone'>) {
   const p = t.templates.perNumber;
   return (
@@ -52,7 +51,6 @@ function LineBody({ line, facts, phone, shown, crm }: Pick<TemplateLineBlockProp
   );
 }
 
-/** «آخر مزامنة: …» or «لم تتم المزامنة بعد». */
 function LastSync({ at }: { at: string | undefined }) {
   const p = t.templates.perNumber;
   const clock = useClock();
@@ -69,11 +67,7 @@ export function newerSync(a: TemplateLineSync | null, b: TemplateLineSync | null
   return Date.parse(a.checked_at) >= Date.parse(b.checked_at) ? a : b;
 }
 
-/**
- * One number of the template registry (owner 2026-10-18): its phone, WABA and driver, its own
- * «مزامنة مع Meta», and what its last sync found (the newer of this session's and the server's since boot).
- * A number the server has no credentials for says so and offers no sync.
- */
+/** A number without server credentials says so and offers no sync. */
 export function TemplateLineBlock({ line, facts, phone, onNotice }: TemplateLineBlockProps) {
   const p = t.templates.perNumber;
   const { result, syncing, sync } = useLineSync({ line, onNotice });

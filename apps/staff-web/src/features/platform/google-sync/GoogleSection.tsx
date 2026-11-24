@@ -13,11 +13,7 @@ import { useOauthReturn } from './connection/use-oauth-return';
 
 const s = t.googleSync;
 
-/**
- * «Google» under «التكاملات» (docs/24 §3 Web): the connected account, the two switches, the Drive
- * root, the teacher ↔ calendar and student ↔ folder mappings and the sync log. One way only,
- * platform → Google, default off and dry run. The client id / secret rows live in the form above.
- */
+/** docs/24 §3: one way only, platform to Google, default off and dry run. */
 export function GoogleSection({ onNote }: { onNote: (message: string) => void }) {
   const status = useQuery(googleStatusQuery);
   const oauth = useOauthReturn();

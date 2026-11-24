@@ -19,10 +19,7 @@ import { usersFilters } from './use-users-filters';
 
 const FIRST: UsersPageView = { q: '', role: '', status: '', page: 1 };
 
-/**
- * «المستخدمون» (users.read): every login with its role, linked record and status; search, role and
- * status filters, server paging. «مستخدم جديد» and the panel's actions need users.write.
- */
+/** Needs users.read; creating and panel actions need users.write. */
 export function UsersPage() {
   const { can } = usePermissions();
   const canWrite = can('users.write');

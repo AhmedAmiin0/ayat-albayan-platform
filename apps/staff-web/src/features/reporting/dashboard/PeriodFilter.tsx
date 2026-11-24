@@ -12,10 +12,7 @@ export interface PeriodFilterProps {
   onChange: (next: DayRange) => void;
 }
 
-/**
- * The one filter row above everything it scopes (dataviz): «الفترة» من / إلى, Riyadh days. A range
- * the API would refuse is caught here with the API's own wording (dashboard.error.*).
- */
+/** Riyadh days; a range the API would refuse is caught here with the API's own wording. */
 export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
   const [draft, setDraft] = useState(value);
   const [error, setError] = useState<keyof typeof t.dashboard.error | null>(null);

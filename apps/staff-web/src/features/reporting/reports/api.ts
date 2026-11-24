@@ -38,7 +38,7 @@ export const studentReportsQuery = (studentId: string, page: number) =>
     queryFn: () => apiFetch<StudentReportsResponse>(`/students/${studentId}/reports?page=${page}&pageSize=10`),
   });
 
-/** R11: «تقارير لسه ما اتكتبتش». Polled every 30 s with her lessons (docs/48). */
+/** R11: polled every 30 s with her lessons (docs/48). */
 export const pendingReportsQuery = queryOptions({
   queryKey: [...REPORTS_KEY, 'pending'],
   queryFn: () => apiFetch<PendingReportView[]>('/teachers/me/pending-reports'),

@@ -19,17 +19,11 @@ type CreateStudentFormProps = {
   onSubmit: (values: CreateStudentValues) => Promise<void>;
   onCancel: () => void;
   error: string | null;
-  /**
-   * «تسجيل الطالب» from an inbox thread: the lead's data pre-filled, the thread's phone read-only,
-   * and only the essentials asked — program and source keep these values without a field.
-   */
+  /** The thread's phone is read-only; program and source keep their values without a field. */
   initial?: Partial<CreateStudentValues>;
   title?: string;
 };
 
-// The registration form's wording and order: «اسم الطالب», «رقم الواتساب (مع كود الدولة)» with its
-// hint, «سن الطالب», «النوع», then the guardian's name (kept on the guardian), the zone, the
-// program, «المعلم/المعلمه» and «عرفت عننا منين؟» (optional).
 const TEXT_FIELDS = {
   name: { label: t.leads.studentName, check: requiredError },
   guardianName: { label: t.guardians.name, check: requiredError },
@@ -37,10 +31,7 @@ const TEXT_FIELDS = {
 } as const;
 type TextName = keyof typeof TEXT_FIELDS;
 
-/**
- * «إضافة طالب» dialog: student + guardian phone in one step (R-STU-02, R-STU-04). `noValidate`:
- * errors are the Arabic field errors (docs/07 §10), never the browser's bubble.
- */
+/** `noValidate` so errors are the Arabic field errors, never the browser's bubble (docs/07 §10). */
 export function CreateStudentForm({ onSubmit, onCancel, error, initial, title }: CreateStudentFormProps) {
   const formId = useId();
   const defaultValues: CreateStudentValues = { ...EMPTY_STUDENT, ...initial };

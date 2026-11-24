@@ -24,11 +24,7 @@ function choices(items: StudentRecordingView[], all: TeacherChoice[]): TeacherCh
   return [...seen].map(([id, name]) => ({ id, name }));
 }
 
-/**
- * «تسجيلات الحلقات» on a student's file (owner, 2026-10-05): every online lesson of the student,
- * newest first, with a player, date / teacher filters, and the staff controls. The same section
- * serves the admin's student profile and the teacher's view (`role` decides who may delete).
- */
+/** `role` decides who may delete. */
 export function StudentRecordings({ studentId, role }: { studentId: string; role: UserRole }) {
   const [filters, setFilters] = useState<StudentRecordingFilters>({});
   const [page, setPage] = useState(1);

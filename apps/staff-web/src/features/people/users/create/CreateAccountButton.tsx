@@ -10,11 +10,7 @@ export interface CreateAccountButtonProps {
   student: { id: string; name: string; code: string | null };
 }
 
-/**
- * «إنشاء حساب» on the student profile (users.write + students.write): the create dialog with the
- * student's own record already picked. Shown only while the student has no login: the link
- * candidates are the students without one, so a student that is not among them already has it.
- */
+/** Needs users.write and students.write; shown only while the student has no login. */
 export function CreateAccountButton({ student }: CreateAccountButtonProps) {
   const { can } = usePermissions();
   const [open, setOpen] = useState(false);

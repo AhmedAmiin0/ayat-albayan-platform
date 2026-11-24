@@ -17,7 +17,6 @@ function RowState({ row }: { row: GoogleStudentMapRow }) {
   return <StatusChip size="sm" tone="ok" glyph="fill" label={row.create_new ? s.createNew : s.existing} />;
 }
 
-/** One student: state, the summary-sheet suggestion, and «تأكيد» / «مجلد جديد» / «ربط يدوي» / «إلغاء التأكيد». */
 export function StudentRow({ row, onNote }: { row: GoogleStudentMapRow; onNote: (message: string) => void }) {
   const queryClient = useQueryClient();
   const [manual, setManual] = useState(false);

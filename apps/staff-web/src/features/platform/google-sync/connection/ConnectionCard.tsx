@@ -11,7 +11,6 @@ import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 const s = t.googleSync.connection;
 
-/** «الحساب المربوط»: status, email, since, last error, the redirect URI and connect / disconnect. */
 export function ConnectionCard({ status, onNote }: { status: GoogleStatusView; onNote: (message: string) => void }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const c = status.connection;

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { discoverGoogle, googleStatusQuery, putGoogleDrive } from '@/features/platform/google-sync/google-api';
 
-/** «ابحث في Google» and «تأكيد المجلد والجدول»: both answer the new status (teacher and student suggestions may change). */
+/** Both return the new status, since teacher and student suggestions may change. */
 export function useDriveActions(onNote: (message: string) => void) {
   const queryClient = useQueryClient();
   const onStatus = async (next: GoogleStatusView) => {

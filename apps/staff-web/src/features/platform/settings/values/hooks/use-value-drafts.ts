@@ -37,12 +37,7 @@ export function pruneDrafts(all: Drafts, settings: AcademySettings): Drafts {
   return stale.length === 0 ? all : stale.reduce(without, all);
 }
 
-/**
- * The local edits of «القيم», per key. They are never overwritten by server data: a refetch of the
- * settings (another row saved, the window refocused) changes only the rows nobody is editing. A
- * draft that equals the stored value is dropped (typed back, or the server now holds it), so it
- * never hides a newer stored value.
- */
+/** Drafts are never overwritten by server data; a draft equal to the stored value is dropped. */
 export function useValueDrafts(settings: AcademySettings): ValueDrafts {
   const [drafts, setDrafts] = useState<Drafts>({});
   const saved = useCallback((key: SettingKey) => rowForm(key, settings[key]), [settings]);
