@@ -15,10 +15,7 @@ interface Props {
   now: Date;
 }
 
-/**
- * The student channel's header line (docs/33 §4): «متصل الآن» when anyone of the chat's people this
- * viewer may see is online, else the newest «آخر ظهور …»; nothing when presence is off or unknown.
- */
+/** docs/33 §4: online if anyone visible is, else the newest last seen; nothing when off. */
 export function ChannelPresenceLine({ chat, tz, now }: Props) {
   const { data } = useQuery(channelPresenceQuery(chat, now));
   const peers = data?.enabled === true ? data.peers : [];

@@ -7,7 +7,7 @@ const byKey = new Map(SEED_ENTRIES.map((e) => [e.key, e]));
 const keysWhere = (pick: (e: (typeof SEED_ENTRIES)[number]) => boolean): string[] =>
   SEED_ENTRIES.filter(pick).map((e) => e.key).sort();
 
-/** docs/26b §2: the «القيم» groups of the CONFIG keys of docs/26 §1 + docs/30 (counts 4·4·1·5·3·1·8·4·1·2). */
+/** docs/26b §2: the values-page groups of the CONFIG keys of docs/26 §1 and docs/30. */
 const CONFIG_GROUPS: Record<string, string[]> = {
   schedule: ['booking_horizon_weeks', 'late_cancel_hours', 'makeup_window_days', 'teachers_always_available',
     'lesson_confirmation_required', 'lesson_outcome_grace_minutes'],
@@ -29,7 +29,7 @@ const CONFIG_GROUPS: Record<string, string[]> = {
   family: ['family_chat_enabled', 'family_meetings_in_app', 'family_payment_instructions'],
   system: ['maintenance_mode'],
 };
-/** docs/26 §1: the 8 notification keys (owned by «الإشعارات» from 23-P4) and the send-gate keys. */
+/** docs/26 §1: the 8 notification keys and the send-gate keys. */
 const NOTIFICATION_KEYS = [
   'reminder_minutes_before', 'reminder_24h_enabled', 'teacher_whatsapp_new_student', 'teacher_whatsapp_lesson_reminder',
   'follow_up_hours', 'follow_up_slots_from_hours', 'follow_up_slots_to_days', 'feedback_mode',

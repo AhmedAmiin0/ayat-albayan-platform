@@ -1,10 +1,6 @@
 import type { LessonStatus } from '@ab/catalog';
 
-// «عدّل الوقت» (R-SCH-11): edit ONE lesson's time in place (same row, report, payments), unlike
-// «غيّر الميعاد» which closes the row as `rescheduled` and creates a twin (docs/10 §10).
-// - move: a scheduled / confirmed lesson goes to a future time.
-// - correct: a held (completed / late) lesson's recorded start or length is fixed, same day.
-// Every other status (cancelled_*, rescheduled, excused, no_show) cannot be edited (409).
+// R-SCH-11 edits one lesson's time in place, unlike reschedule which creates a twin (docs/10 §10).
 
 export type TimeEditMode = 'move' | 'correct';
 
@@ -37,10 +33,7 @@ export const TIME_EDIT_ERRORS = [
 ] as const;
 export type TimeEditError = (typeof TIME_EDIT_ERRORS)[number];
 
-/**
- * «45 دقيقة»: the named length ('30' / '45' / '60' / '90' in the enums.duration table), else
- * `other` ("{n} دقيقة") so a migrated 40-minute lesson never shows as a bare number.
- */
+/** Named length from enums.duration, else `other`, so 40 minutes never shows as a bare number. */
 export const durationText = (min: number, named: Record<string, string | undefined>, other: string): string =>
   named[String(min)] ?? other.replace('{n}', String(min));
 

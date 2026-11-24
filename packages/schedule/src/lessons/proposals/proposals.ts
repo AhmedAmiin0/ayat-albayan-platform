@@ -1,5 +1,4 @@
-// Who asked to move a lesson (lesson_proposals.requested_by): the teacher's
-// «اقترح موعدًا آخر» (R-SCH-08) or the family's «اطلب موعدًا آخر». Staff answer both the same way.
+// Who asked to move a lesson (R-SCH-08): teacher or family; staff answer both the same way.
 
 export const PROPOSAL_REQUESTERS = ['teacher', 'family'] as const;
 export type ProposalRequester = (typeof PROPOSAL_REQUESTERS)[number];

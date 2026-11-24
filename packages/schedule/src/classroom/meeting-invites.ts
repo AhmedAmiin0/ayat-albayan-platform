@@ -25,10 +25,7 @@ export const DEFAULT_MEETING_DURATION = 60;
 /** A scheduled meeting starts at most 90 days ahead. */
 export const MEETING_MAX_AHEAD_DAYS = 90;
 
-/**
- * Who may type any phone as an invitee and see every student: admin and
- * sales only. Anyone else gets 403 phone_invite_not_allowed, and the clients hide «رقم هاتف».
- */
+/** Only admin and sales may invite any phone and see every student; others get 403. */
 export const mayInvitePhones = (role: string | null | undefined): boolean => role === 'admin' || role === 'sales';
 
 /** One invitee as the client picks it: a staff profile, a student (→ the guardian) or a typed phone. */

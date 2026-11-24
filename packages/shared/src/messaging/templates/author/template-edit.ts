@@ -7,9 +7,7 @@ import {
   templateUrlButton,
 } from '../template-create.js';
 
-// «تعديل» and «قالب جديد» for sales (owner 2026-11-14: «add the option to add or edit templates on
-// the platform for sales and admin»). Meta keeps the name and the category of an edited template:
-// neither is in the edit, and the header is never edited here.
+// Meta keeps the name and category of an edited template, and the header is never edited here.
 
 /** :key of the edit routes (a registry key, as Meta names templates). */
 export const templateKeyParam = z.string().regex(TEMPLATE_KEY_PATTERN);

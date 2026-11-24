@@ -3,11 +3,10 @@ import { cn } from '@ab/web-kit/lib/utils';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 
 export interface ToastProps {
-  /** Same verb as the action: t.students.created «الطالب اتسجل». */
+  /** Same verb as the action. */
   message: string;
   /** Called after `duration` ms (paused while hovered) or never when omitted. */
   onDismiss?: () => void;
-  /** Text action: «افتح الملف», «تراجع», «جرّب تاني». */
   action?: { label: string; onClick: () => void };
   tone?: 'info' | 'error';
   duration?: number;

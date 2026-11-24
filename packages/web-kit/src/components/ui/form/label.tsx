@@ -24,7 +24,6 @@ export function RequiredMark() {
   );
 }
 
-/** «* مطلوب» at the top of a form that has required fields. */
 export function RequiredLegend() {
   return <p className="text-xs text-ink-3">{t.common.requiredLegend}</p>;
 }

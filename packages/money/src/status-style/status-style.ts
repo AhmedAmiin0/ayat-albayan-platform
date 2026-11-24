@@ -14,10 +14,7 @@ import type {
 } from '@ab/catalog';
 import type { EarningStatus } from '../ledger/earnings/earnings.js';
 
-// Status → visual grammar (docs/07 §6). Labels come from ar.json `enums.*`; this map is shape only.
-// Tone: act = admin must do something now («دورك»), bad = didn't happen through someone's fault,
-// ok = settled and good, neutral = informational / waiting on someone else / closed.
-// Glyph: fill = settled, half = underway, hollow = waiting, struck = stopped or cancelled.
+// Status visual grammar (docs/07 §6); act means the admin must act now, bad means someone's fault.
 
 export type Tone = 'ok' | 'act' | 'bad' | 'neutral';
 export type Glyph = 'fill' | 'half' | 'hollow' | 'struck';
@@ -87,7 +84,7 @@ export const teacherStatusStyle: Record<TeacherStatus, StatusStyle> = {
   inactive: { tone: 'neutral', glyph: 'struck' },
 };
 
-/** A new applicant is neutral: hiring is not a «دورك» moment. `interview` mirrors `trial_booked`. */
+/** A new applicant is neutral since hiring needs no action; `interview` mirrors `trial_booked`. */
 export const jobApplicantStatusStyle: Record<JobApplicantStatus, StatusStyle> = {
   new: { tone: 'neutral', glyph: 'hollow' },
   reviewing: { tone: 'neutral', glyph: 'half' },

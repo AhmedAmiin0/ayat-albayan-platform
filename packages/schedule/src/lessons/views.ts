@@ -18,17 +18,11 @@ export interface LessonStudentView {
   chargeable: boolean;
   /** Lesson number for this student (v_lesson_sequence), null until the lesson is completed. */
   seq: number | null;
-  /**
-   * R-SUB-02 «الباقة مش مدفوعة»: true on a future open lesson when the student's newest package is
-   * unpaid with nothing left (setting flag_future_lessons_when_unpaid). Absent otherwise.
-   */
+  /** R-SUB-02: true on a future open lesson when the newest package is unpaid with nothing left. */
   unpaid?: boolean;
-  /** The active حجز تعويضي booked for this student's miss of the lesson (a group's others may have none). */
+  /** The active makeup booked for this student's miss; others in a group may have none. */
   makeup?: { lesson_id: string; starts_at: string } | null;
-  /**
-   * This student's تقرير الحلقة (draft or submitted), null before one is opened. The window
-   * (docs/46 B7): first submit, family send, can_edit / edit_until for the caller. Old cache: absent.
-   */
+  /** This student's lesson report, null before one is opened; edit window per docs/46 B7. */
   report?: { id: string; status: ReportStatus; submitted_at?: string | null;
     sent_at?: string | null; can_edit?: boolean; edit_until?: string | null } | null;
 }
@@ -37,13 +31,13 @@ export interface LessonStudentView {
 export interface LessonView {
   id: string;
   rule_id: string | null;
-  /** The weekly rule's weekdays (0 = الأحد) in its zone; null for a one-off. Absent in an old cache. */
+  /** The weekly rule's weekdays (0 = Sunday) in its zone; null for a one-off. */
   rule_byday?: number[] | null;
-  /** The rule is a حلقة تجريبية (schedule_rules.package = 'trial'); a one-off move keeps it. Absent in an old cache. */
+  /** The rule is a trial; a one-off move keeps it; absent in an old cache. */
   trial?: boolean;
-  /** The assistant course its rule belongs to (schedule_rules.subscription_id): «تغيير أيام الحلقات». Absent in an old cache. */
+  /** The assistant course its rule belongs to (schedule_rules.subscription_id). */
   course_subscription_id?: string | null;
-  /** A حجز تعويضي: replaces a missed lesson, never consumes a package unit (lessons.makeup_of_id). */
+  /** A makeup replaces a missed lesson and never consumes a package unit. */
   makeup?: boolean;
   makeup_of?: { id: string; starts_at: string } | null; // a makeup's missed lesson
   /** avatar_url: the teacher's photo (a short-lived signed URL), on staff views only; null/absent = initials. */
@@ -63,12 +57,12 @@ export interface LessonView {
   cancel_reason: string | null;
   override_reason: string | null;
   confirmed_at: string | null;
-  /** docs/46 D1 «سأحضر»: the teacher will attend; never the status. Absent in an old cache. */
+  /** docs/46 D1: the teacher will attend; never the status; absent in an old cache. */
   teacher_confirmed_at?: string | null;
   rescheduled_from_id: string | null;
-  /** «افتح الحلقة الآن»: the room opened early (joinWindow); «حلقة فورية»: never consumes a package. */
+  /** The room opened early (joinWindow); an instant lesson never consumes a package. */
   room_opened_at?: string | null;
-  room?: LessonRoomState | null; // who is in, «إنهاء للجميع»; null: nobody, not ended
+  room?: LessonRoomState | null; // who is in and the end-for-all stamp; null: nobody, not ended
   instant?: boolean;
   students: LessonStudentView[];
   /** allowedLessonEvents(status) minus what the caller's role may not do. */
@@ -78,9 +72,9 @@ export interface LessonView {
    * (R-SCH-04: e.g. a DST change moved it onto another lesson). [] = none.
    */
   conflicts: Conflict[];
-  /** The pending «اقترح موعدًا آخر» of the teacher or the family (R-SCH-08), null when none. */
+  /** The teacher's or family's pending move request (R-SCH-08), null when none. */
   pending_proposal: LessonProposalView | null;
-  /** R-SCH-11 «عدّل الوقت»: what an admin may do to the time (null = nothing, and for teachers). Absent in an old cache. */
+  /** R-SCH-11: what an admin may do to the time (null = nothing, and for teachers). */
   time_edit_mode?: TimeEditMode | null;
   /** The last in-place time edit (the time it replaced), null when never edited. */
   time_edit?: LessonTimeEditView | null;
@@ -139,6 +133,6 @@ export interface BookingResult {
   lessons: { id: string; starts_at: string; ends_at: string }[];
   /** Queued booking_confirmation* messages, one per guardian (docs/10 §5.11). */
   message_ids: string[];
-  /** The stored فاتورة (null for a trial). */
+  /** The stored invoice (null for a trial). */
   invoice_id: string | null;
 }

@@ -2,11 +2,7 @@ import type { AcademySettings, SettingKey } from '@ab/settings';
 import type { NotificationKey } from './catalogue/catalogue.js';
 import type { AnyRuleTiming, EffectiveRule } from './rules.types.js';
 
-/**
- * The 8 settings keys the notification rules own (docs/26 §1 «MODULE التواصل → الإشعارات»; ownedBy
- * 'notifications' in the registry). renewal_alert_remaining is NOT one: it stays CONFIG and the
- * renewal row shows it by reference (docs/26 §1).
- */
+/** The 8 keys owned by notification rules (docs/26 §1); renewal_alert_remaining stays CONFIG. */
 export const RULE_SETTING_KEYS = [
   'reminder_minutes_before',
   'reminder_24h_enabled',

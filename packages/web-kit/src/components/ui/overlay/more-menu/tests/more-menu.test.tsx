@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { MoreMenu } from '@ab/web-kit/components/ui/overlay/more-menu/more-menu';
 
-/** «المزيد» with one entry that opens a dialog outside the menu, like the sales chat actions. */
+/** One entry opens a dialog outside the menu, like the sales chat actions. */
 function Page() {
   const [open, setOpen] = useState(false);
   return (

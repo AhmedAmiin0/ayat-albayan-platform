@@ -4,8 +4,7 @@ import { isOwnedSettingKey } from '../../ownership.js';
 import { settingDef, type SettingKey } from '../../registry.js';
 import { OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS, type ValueGroupId } from '../value-groups.js';
 
-// «القيم» (web + Expo) reads VALUE_GROUPS; 26-P1 put `group` / `confirm` / `ownedBy` on the registry.
-// Until the screens read the registry directly, the two must say the same thing.
+// Until the screens read the registry directly, VALUE_GROUPS and the registry must agree.
 const REGISTRY_GROUP: Record<ValueGroupId | keyof typeof OWNED_VALUE_GROUPS, SettingGroup> = {
   schedule: 'schedule', classroom: 'classroom', reports: 'reports', accounts: 'accounts', payouts: 'payouts',
   uploads: 'uploads', academy: 'academy', messages: 'messaging', sales: 'sales', retention: 'retention', teachers: 'teachers',

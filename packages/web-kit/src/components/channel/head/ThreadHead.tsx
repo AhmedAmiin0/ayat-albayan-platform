@@ -16,11 +16,7 @@ interface Props {
   now: Date;
 }
 
-/**
- * The chat's head (FamChatWebThread): the first teacher's initials, the title, the people line
- * «أ. فاطمة، سارة، يوسف خالد، أنت» (at most four names, then «أنت») and the presence line (a family
- * sees only its teacher's). A viewer with nobody else known yet sees the presence line alone.
- */
+/** At most four names then the viewer; a family sees only its teacher's presence. */
 export function ThreadHead({ title, pages, refs, tz, now }: Props) {
   const people = headerPeople({
     participants: pages[0]?.participants ?? [],

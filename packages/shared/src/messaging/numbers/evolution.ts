@@ -33,7 +33,7 @@ export interface NumberEvolutionView {
   hook_url: string | null;
 }
 
-/** GET /admin/numbers/:id/evolution/state («افحص الاتصال»): Evolution's connectionState now. */
+/** Evolution's current connectionState. */
 export interface EvolutionStateView {
   state: EvolutionState | null;
   checked_at: string;

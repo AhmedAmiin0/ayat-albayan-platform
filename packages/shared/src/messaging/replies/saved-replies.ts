@@ -2,10 +2,7 @@ import { z } from 'zod';
 import { CHAT_SEND_MIMES, type ChatSendMime } from '../chat/chat-files/index.js';
 import { WA_TEXT_MAX } from '../schemas.js';
 
-// «الردود السريعة» (owner 2026-10-25): saved replies staff insert into the chat composer. Named
-// «saved replies» in code: `quickReply` is WhatsApp's interactive reply buttons (quick-reply.ts).
-// A shared reply (owner_profile_id null) is seen by everyone with the inbox and written with
-// saved_replies.manage; a personal one («ردودي») is its owner's alone. Nothing here sends anything.
+// Called saved replies since `quickReply` means WhatsApp's buttons; nothing here sends.
 
 export const SAVED_REPLY_TITLE_MAX = 60;
 export const SAVED_REPLY_BODY_MAX = WA_TEXT_MAX;

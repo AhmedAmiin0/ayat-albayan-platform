@@ -14,7 +14,7 @@ export const RESTRICTED_TEMPLATE_DEFAULTS = [
   'free_trial_invite',
   'welcome_greeting',
   'trial_reschedule',
-  // Owner 2026-11-14: «a template that carries your text» (free-text.ts, «أرسِل الآن داخل قالب»).
+  // The free-text template (free-text.ts).
   'academy_message',
 ] as const;
 

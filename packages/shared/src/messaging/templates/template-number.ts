@@ -34,10 +34,6 @@ export interface TemplateNumberSyncView {
   synced: number;
   /** Every number written: this one and each other number on the same WABA. */
   number_ids: string[];
-  /**
-   * Set when the number ran its line's sync (the one «القوالب» runs): every number under
-   * legacy, and a crm number that is its role's number in module mode. Absent on the
-   * per-number WABA sync.
-   */
+  /** Set when the number ran its line's sync; absent on the per-number WABA sync. */
   line?: WaLine;
 }

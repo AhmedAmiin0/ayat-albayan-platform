@@ -21,11 +21,7 @@ const VARIANT: Readonly<Record<LessonOption, 'primary' | 'secondary' | 'ghost'>>
   decline: 'ghost',
 };
 
-/**
- * «خيارات الحلقة» on a web portal lesson (owner 2026-11-17): «سأحضر», «اطلب موعدًا آخر» or
- * «سحب الطلب», «أعتذر عن الحلقة», as the family app; the result said under the card: at once
- * for a one-tap answer (it fades up while the write lands; a refusal replaces it with the reason).
- */
+/** A one-tap answer shows at once; a refusal replaces it with the reason. */
 export function LessonOptionsBar({ lesson, student, now }: LessonOptionsBarProps) {
   const { open, setOpen, said, action, ids, send, pick } = useLessonOptions({ lesson, student });
   const options = lessonOptions(lesson, now);

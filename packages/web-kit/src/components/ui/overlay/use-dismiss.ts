@@ -7,11 +7,7 @@ export interface DismissOptions {
   onDismiss: (how: 'outside' | 'escape') => void;
 }
 
-/**
- * Closing logic of the small popovers («⋯ المزيد», the bell): a pointerdown outside the box or
- * Esc anywhere. Non-modal: no focus trap, the rest of the page stays usable. The latest
- * `onDismiss` is called, so callers need not memoise it.
- */
+/** Non-modal: no focus trap; the latest `onDismiss` is called, so callers need not memoise it. */
 export function useDismiss(ref: RefObject<HTMLElement | null>, { open, onDismiss }: DismissOptions): void {
   const latest = useRef(onDismiss);
   useEffect(() => {

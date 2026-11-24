@@ -17,7 +17,7 @@ export interface SegmentedControlProps<V extends string> {
   className?: string;
 }
 
-/** Pressed-button group on a sunk track (docs/07 seg): filters, «بتوقيتها | بتوقيت الرياض», theme. */
+/** Pressed-button group on a sunk track (docs/07 seg). */
 export function SegmentedControl<V extends string>({
   label,
   options,

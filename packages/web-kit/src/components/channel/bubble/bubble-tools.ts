@@ -1,10 +1,7 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { createContext, use } from 'react';
 
-/**
- * What the open thread lets a bubble do beyond its own edit and delete: «ردّ» (the composer's
- * reply bar) and «معلومات الرسالة» (who read it). A bubble outside a thread offers neither.
- */
+/** A bubble outside a thread offers neither reply nor info. */
 export interface BubbleTools {
   reply: (message: ChannelMessageView) => void;
   info: (message: ChannelMessageView) => void;

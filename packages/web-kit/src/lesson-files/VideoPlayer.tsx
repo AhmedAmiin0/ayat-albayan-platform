@@ -18,11 +18,7 @@ interface Props {
 
 const MARK = 'pointer-events-none absolute text-xs font-semibold tracking-wide text-white/70';
 
-/**
- * A video recording (board FamRecWebVideo; rows recorded before 2026-10-06): the picture on the
- * dark frame with the student's code in two corners, «ملء الشاشة» on the frame, and the same
- * controls, saved stop and one-at-a-time rule as the audio player.
- */
+/** Rows recorded before 2026-10-06 are video; the student's code watermarks two corners. */
 export function VideoPlayer({ id, url, label, watermark }: Props) {
   const from = resumeAt(useResumeMap(), id);
   const player = useHtmlAudio({ id, startAt: from });

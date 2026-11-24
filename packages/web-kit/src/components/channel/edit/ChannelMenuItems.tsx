@@ -28,10 +28,7 @@ const ROWS: readonly { pick: MenuPick; label: string; glyph: ReactNode; danger?:
   { pick: 'reads', label: c.reads.action, glyph: <ChatGlyph name="info" /> },
 ];
 
-/**
- * The open menu: «ردّ», «تعديل», «حذف للجميع», «معلومات الرسالة», each only where it is offered
- * now (plain buttons like the inbox's; the first takes focus). It pops in from its ⋯.
- */
+/** Each item only where offered now; the first takes focus. */
 export function ChannelMenuItems({ offers, mine, onPick, onEscape }: Props) {
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key !== 'Escape') return;

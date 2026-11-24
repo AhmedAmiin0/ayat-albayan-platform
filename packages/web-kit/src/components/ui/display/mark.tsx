@@ -14,7 +14,7 @@ const SMALL_MARK_MAX = 32;
 export interface MarkProps {
   /** Rendered size in px (a square box, the emblem is contained); ≤ 32 switches to the Mushaf crop. */
   size?: number;
-  /** Decorative next to the wordmark (default); `labelled` names it «آيات البيان». */
+  /** Decorative next to the wordmark by default; `labelled` names it. */
   labelled?: boolean;
   className?: string;
 }
@@ -35,11 +35,7 @@ export function Mark({ size = 42, labelled = false, className }: MarkProps) {
   );
 }
 
-/**
- * Mark + wordmark «أكاديمية / آيات البيان» (Amiri 700, live text): sidebar brand, teacher top bar.
- * `collapse`: below 900px only a 34px mark (the compact admin top row). The Latin «Ayat Al-Bayan» is half
- * again as wide as «آيات البيان»: one step smaller (h4), so it fits the 236px sidebar beside a 16px scrollbar.
- */
+/** `collapse` shows only a 34px mark below 900px; the Latin wordmark is one step smaller to fit. */
 export function Logo({ collapse = false, className }: { collapse?: boolean; className?: string }) {
   return (
     <span className={cn('flex items-center gap-2.5 text-ink', className)}>

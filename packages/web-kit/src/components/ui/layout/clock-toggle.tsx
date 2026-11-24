@@ -9,7 +9,7 @@ const OPTIONS: { value: ClockPref; label: string }[] = [
   { value: '24', label: t.clock.h24 },
 ];
 
-/** تنسيق الوقت: تلقائي / 12 ساعة / 24 ساعة. Saved per browser; «تلقائي» follows its locale. */
+/** Saved per browser; automatic follows its locale. */
 export function ClockToggle({ className }: { className?: string }) {
   return (
     <SegmentedControl

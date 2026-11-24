@@ -13,7 +13,7 @@ import { dayTimesSchema } from '../day-times.js';
 export const moveReasonSchema = z.string().trim().min(1).max(500).optional();
 export const lessonDuration = z.literal(DURATIONS);
 
-/** 0 = الأحد … 6 = السبت, at least one, no repeats. */
+/** 0 = Sunday ... 6 = Saturday, at least one, no repeats. */
 export const bydaySchema = z
   .array(z.int().min(0).max(6))
   .min(1)
@@ -52,7 +52,7 @@ export const rescheduleRequestSchema = z.discriminatedUnion('scope', [
   z.object({
     scope: z.literal('one'),
     startsAt: instant,
-    /** docs/47 «سبب تغيير الموعد» (optional): the teacher sees it in the student file. */
+    /** docs/47 optional move reason; the teacher sees it in the student file. */
     reason: moveReasonSchema,
     /** Substitute teacher for this occurrence; defaults to the lesson's teacher. */
     teacherId: z.uuid().optional(),
@@ -97,15 +97,12 @@ export const lessonStatusRequestSchema = z.object({
     .optional(),
 });
 
-/** POST /lessons/:id/propose — the teacher's «اقترح ميعاد تاني» (R-SCH-08). */
+/** The teacher's request for another time (R-SCH-08). */
 export const lessonProposalRequestSchema = z.object({
   startsAt: instant,
   note: z.string().trim().max(500).optional(),
 });
-/**
- * POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason.
- * `startsAt`: «اختر موعدًا آخر», staff move the lesson to another free time than the one asked.
- */
+/** A reschedule, so a clash needs a reason; `startsAt` picks a time other than asked. */
 export const proposalApproveSchema = z.object({
   override: overrideSchema.optional(),
   startsAt: instant.optional(),

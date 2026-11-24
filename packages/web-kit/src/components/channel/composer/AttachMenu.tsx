@@ -40,10 +40,6 @@ function Source({ accept, label, glyph, onFile, onKeyDown }: SourceProps) {
   );
 }
 
-/**
- * «أرفق صورة أو ملف PDF» (FamChatWebAttach): a photo (JPG or PNG) or a PDF from the device, with
- * the hint of what the chat takes. It pops in above the composer; Esc closes it.
- */
 export function AttachMenu({ onFile, onClose }: Props) {
   const onKeyDown = escapeCloses(onClose);
   return (

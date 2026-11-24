@@ -8,7 +8,7 @@ import type { NotificationChannel } from './catalogue/catalogue.types.js';
 /** Where producers read a row's choices: legacy settings keys, or notification_rules (settings.comms_source). */
 export type RulesMode = 'legacy' | 'module';
 
-/** «اليوم السابق الساعة …»: whole hours a select offers (never free text). null = at the lesson's own time. */
+/** Whole hours a select offers (never free text); null means at the lesson's own time. */
 export const DAY_BEFORE_HOURS = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '19:00', '20:00', '21:00', '22:00'] as const;
 
 const minutes = z.number().int().min(5).max(720);
