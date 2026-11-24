@@ -13,11 +13,7 @@ import { syncEvolution } from './evolution-push';
 
 const ID = z.uuid();
 
-/**
- * Every Evolution option of a number (owner 2026-11-06: «make all the evolution api options
- * configurable»): saved (zod), pushed to its instance, read back («متزامن / غير متزامن»).
- * numbers.manage. No secret is ever in a body, an answer or a log.
- */
+/** Saved (zod), pushed and read back; numbers.manage; no secret in a body, answer or log. */
 @ApiTags('numbers')
 @ApiBearerAuth()
 @Controller('admin/numbers/:id/evolution')
@@ -36,7 +32,6 @@ export class EvolutionConfigController {
     return this.sync(id, { push: true, saved: true });
   }
 
-  /** Push the saved options again («مزامنة الآن»). */
   @Post('sync')
   @HttpCode(200)
   @Permissions('numbers.manage')
@@ -44,17 +39,14 @@ export class EvolutionConfigController {
     return this.sync(id, { push: true, saved: false });
   }
 
-  /** Read back only («تحقق»): nothing is written to Evolution. */
+  /** Read back only: nothing is written to Evolution. */
   @Get('sync')
   @Permissions('numbers.manage')
   verify(@ZodParam('id', ID) id: string): Promise<EvolutionSyncView> {
     return this.sync(id, { push: false, saved: false });
   }
 
-  /**
-   * Push (or read back) and keep the answer. Any failure (not configured, refused, unreachable)
-   * first stores «غير متزامن» with every part failed, so an older «متزامن» never outlives it.
-   */
+  /** A failure first stores unsynced, so an older synced state never outlives it. */
   private async sync(
     id: string,
     at: { push: boolean; saved: boolean },

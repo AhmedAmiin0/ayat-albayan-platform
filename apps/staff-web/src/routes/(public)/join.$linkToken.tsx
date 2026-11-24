@@ -1,4 +1,4 @@
-import { looksLikeFamilyToken } from '@ab/shared';
+import { looksLikeFamilyToken } from '@ab/schedule';
 import { createFileRoute } from '@tanstack/react-router';
 import { GuestJoinPage } from '@/features/teaching/classroom/join/GuestJoinPage';
 import { lessonPathOfLink } from '@/features/teaching/classroom/join/staff-link';

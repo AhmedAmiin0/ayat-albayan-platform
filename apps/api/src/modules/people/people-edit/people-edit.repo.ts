@@ -95,7 +95,6 @@ export class PeopleEditRepo {
     return data;
   }
 
-  /** The family's children: duplicate names, «الطالب هو ولي الأمر» and their logins. */
   async children(guardianId: string): Promise<Child[]> {
     const { data, error } = await this.db
       .from('students')

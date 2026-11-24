@@ -1,5 +1,5 @@
 import { type Hero, pickHero } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { lessonsOnDay } from '@/features/teaching/schedule';
 
 export interface HomeToday {

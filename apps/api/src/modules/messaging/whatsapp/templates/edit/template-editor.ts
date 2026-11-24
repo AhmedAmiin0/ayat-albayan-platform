@@ -23,11 +23,7 @@ interface EditActor {
 const notFound = () =>
   new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
 
-/**
- * «تعديل» (owner 2026-11-14): a template's body, footer and buttons. One Meta knows goes
- * through the line's driver (Meta's edit, back to review; then that line's sync); one never sent
- * is saved here (an author's is then submitted). Audited template_edited.
- */
+/** Known templates go via the line's driver back to review; unsent ones are saved; audited. */
 @Injectable()
 export class TemplateEditor {
   private readonly log = new Logger(TemplateEditor.name);

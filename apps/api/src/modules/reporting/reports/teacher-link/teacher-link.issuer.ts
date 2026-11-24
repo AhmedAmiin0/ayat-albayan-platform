@@ -4,10 +4,7 @@ import { loadEnv } from '@/config/env/env';
 
 /** The teacher's report link of one lesson: the signed-in portal page and its button suffix. */
 export interface TeacherReportLink {
-  /**
-   * The button suffix of teacher_lesson_v3 («تقرير الحلقة» …/teacher-report/{{1}}): the lesson id.
-   * The public route /teacher-report/<lesson id> redirects to the portal page.
-   */
+  /** The public route /teacher-report/<lesson id> redirects to the portal page. */
   suffix: string;
   /** The portal page /teacher/report/<lesson id> (signed in; the login returns to it). */
   url: string;

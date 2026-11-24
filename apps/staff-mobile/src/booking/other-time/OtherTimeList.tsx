@@ -7,10 +7,7 @@ import type { OtherTimeProps } from './OtherTime';
 import { OtherTimeStatus } from './OtherTimeStatus';
 import { useOutsideSlots } from './use-outside-slots';
 
-/**
- * The server's list, by the viewer's day: a day pill, then its times (the viewer's clock, the
- * family's beside it). Picked, never typed; an outside time warns before «التالي».
- */
+/** Picked, never typed; a time outside teacher hours warns before continuing. */
 export function OtherTimeList({ tz, onPick, ...params }: OtherTimeProps) {
   const viewer = useViewerClock();
   const read = useOutsideSlots(params);

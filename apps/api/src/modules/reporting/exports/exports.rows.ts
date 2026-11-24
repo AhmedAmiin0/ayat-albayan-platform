@@ -65,7 +65,6 @@ const lessonHeader = (): Cell[] => [
   X.columns.date, X.columns.time, SUB.duration, S.teacher, S.code, S.name, X.columns.lessonStatus, X.columns.attendance, X.columns.chargeable,
 ];
 
-/** «30 دقيقة» for a catalog length, else the minutes. */
 function durationLabel(l: Pick<LessonIn, 'starts_at' | 'ends_at'>): Cell {
   const minutes = Math.round((Date.parse(l.ends_at) - Date.parse(l.starts_at)) / 60_000);
   const d = DURATIONS.find((x) => x === minutes);

@@ -8,7 +8,6 @@ const r = AR.reports;
 /** The built-in contact: used when the settings cannot be read, or academy_contact has no site. */
 const CONTACT = { site: 'ayatalbayan.com', whatsapp: '+966 56 610 1447' } as const;
 
-/** A «۞ title» section rule. */
 export function sectionHtml(title: string): string {
   return `<h2 class="sec"><span class="star" aria-hidden="true">۞</span><span>${esc(title)}</span></h2>`;
 }
@@ -17,7 +16,6 @@ function field(label: string, value: string | null, wide = false): string {
   return `<div class="field${wide ? ' wide' : ''}"><div class="k">${esc(label)}</div><div class="v">${para(value)}</div></div>`;
 }
 
-/** «محتوى الحلقة» 2×2: what was recited, memorised, revised and taught. */
 export function contentHtml(m: ReportPdfModel): string {
   return [
     sectionHtml(r.done),
@@ -30,7 +28,6 @@ export function contentHtml(m: ReportPdfModel): string {
   ].join('');
 }
 
-/** «الملاحظات والواجب»: notes | homework, then the next plan full width. */
 export function notesHtml(m: ReportPdfModel): string {
   return [
     sectionHtml(r.notesTitle),
@@ -53,7 +50,7 @@ export function closingHtml(): string {
   ].join('');
 }
 
-/** «فاضل 2 حلقة» as of this lesson (docs/07 §6 packageProgress); empty outside a package. */
+/** docs/07 §6: lessons left as of this lesson; empty outside a package. */
 function packageLine(m: Pick<ReportPdfModel, 'slot'>): string {
   if (!m.slot) return '';
   const p = packageProgress(m.slot.position, m.slot.total, { forms: AR.subscriptions.progress });

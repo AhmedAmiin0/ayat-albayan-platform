@@ -2,11 +2,7 @@ import type { ThreadPeople, ThreadView } from '@ab/shared';
 import type { PeopleStudentRow } from '@/modules/messaging/inbox/people/thread-people.mapper';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
-/**
- * A thread as a teacher sees it: no lead (the admin's pipeline), no family tags («مشترك»,
- * «مش مدفوع»: they are about money), and their own unread count (teacher_unread), never the
- * admin's read_at.
- */
+/** Teachers see no lead and no money tags, and their own unread count, never the admin's. */
 export function forTeacher(view: ThreadView, unread: ReadonlyMap<string, number>): ThreadView {
   return {
     ...view,

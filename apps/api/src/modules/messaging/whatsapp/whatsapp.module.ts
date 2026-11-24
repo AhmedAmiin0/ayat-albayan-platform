@@ -63,10 +63,7 @@ import { WaMediaRetentionJob } from './messages/wa-media.retention.job';
 import { WhatsappSettings } from './whatsapp.settings';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES, type WhatsappClient, type WhatsappLines } from './whatsapp.types';
 
-/**
- * One client per line (docs/12 §13.4); an unconfigured line's client refuses every call. Each reads
- * its config per call, so a value the admin saves in «التكاملات» applies without a restart.
- */
+/** One client per line (docs/12 §13.4), config read per call so saved values apply at once. */
 function lines(): WhatsappLines {
   return { notifications: new LiveWhatsappClient('notifications'), chat: new LiveWhatsappClient('chat') };
 }

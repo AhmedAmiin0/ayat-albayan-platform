@@ -13,7 +13,6 @@ function codeOf(body: unknown): string | undefined {
   return isRecord(first) && typeof first['message'] === 'string' ? first['message'] : undefined;
 }
 
-/** What a «فريق المبيعات» action says when it failed (t.assistants.error, as the web maps it). */
 export function assistantsErrorText(error: unknown): string {
   if (error instanceof ReceiptUploadError) return t.payments.mobile.uploadFailed;
   if (error instanceof TypeError) return t.mobileFinance.offline;
@@ -21,7 +20,7 @@ export function assistantsErrorText(error: unknown): string {
   return (code ? messages[code] : undefined) ?? t.common.error;
 }
 
-/** A form field's error key (a schema message) → text; unknown keys read «تحقق من هذه القيمة». */
+/** Unknown keys fall back to a generic check-this-value text. */
 export function fieldError(key: string | undefined): string | undefined {
   if (key === undefined) return undefined;
   return messages[key] ?? t.assistants.error.invalid;

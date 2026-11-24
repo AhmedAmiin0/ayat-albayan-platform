@@ -31,7 +31,6 @@ interface SentRef {
   lesson_id: string;
 }
 
-/** The two texts the family prepares from («الواجب», «خطة الحلقة القادمة»). */
 export interface ReportTexts {
   homework: string | null;
   next_plan: string | null;
@@ -43,16 +42,11 @@ const SCAN = 1000;
 const REC = 'id, lesson_id, file_path, started_at, ended_at, size_bytes, lessons!inner(starts_at, teacher:teachers(display_name_ar, display_name_en), lesson_students(student_id))';
 type Reply<T> = PromiseLike<{ data: T | null; error: PostgrestError | null }>;
 
-/**
- * «تقارير الحلقات» reads (service role, the student already scoped). Sent = submitted, the PDF
- * ready and the report_ready message gone (sent_at): the same PDFs the family received on
- * WhatsApp. The one reader of «sent» and of the family's recordings (reports, «التسجيلات»).
- */
+/** Sent means submitted, PDF ready and report_ready delivered: the PDFs the family received. */
 @Injectable()
 export class PortalReportsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The newest sent reports first (`limit` 1: the one «ما المطلوب» reads). */
   async sent(studentId: string, limit = LIMIT): Promise<PortalReportRow[]> {
     const { data, error } = await this.sentQuery(studentId)
       .order('sent_at', { ascending: false })
@@ -84,7 +78,7 @@ export class PortalReportsRepo {
     return data.map((r) => ({ id: r.id, lesson_id: r.lesson_id }));
   }
 
-  /** «ما المطلوب» (docs/50 §2): the texts of a report the sent rule already picked. */
+  /** docs/50 §2: texts of a report the sent rule already picked. */
   async texts(reportId: string): Promise<ReportTexts | null> {
     const { data, error } = await this.db
       .from('lesson_reports')

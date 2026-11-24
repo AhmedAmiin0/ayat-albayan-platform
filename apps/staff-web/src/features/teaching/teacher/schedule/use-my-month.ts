@@ -1,5 +1,6 @@
 import { addMonths, lessonsByDay, monthOf, monthWindowIn } from '@ab/client-core';
-import { isClosedLesson, type LessonView, zonedPartsIn } from '@ab/shared';
+import { isClosedLesson, type LessonView } from '@ab/schedule';
+import { zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { myLessonsQuery } from '@/features/teaching/teacher/api';
