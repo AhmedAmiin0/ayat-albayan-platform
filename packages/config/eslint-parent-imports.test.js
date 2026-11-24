@@ -22,6 +22,9 @@ testRule({ name: 'no-parent-imports', rule: noParentImportsRule, lang: 'ts' }, {
     ok("const p = join(__dirname, '../../db');"),
     ok("const s = `../${name}`; require(s);"),
     ok('mock(`../x`);'),
+    ok('vi.mock(`../${name}`);'),
+    ok('require(42);'),
+    ok('require();'),
     // The alias cannot name a path outside src/ (mobile app/ routes, app.json): it stays.
     ok("import Layout from '../../../app/(tabs)/_layout';"),
     ok("import config from '../../../app.json';"),

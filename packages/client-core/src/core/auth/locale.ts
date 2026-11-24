@@ -3,8 +3,7 @@ import { LOCALES, type Locale } from '@ab/core';
 import { z } from 'zod';
 import type { ApiClient } from '../http/index.js';
 
-// «اللغة» from the API, for web and both apps: GET /auth/me (staff) and GET /portal/me (family)
-// answer profiles.locale; «اللغة» writes it back with PATCH /me/locale.
+// Locale comes from GET /auth/me or GET /portal/me and is written back with PATCH /me/locale.
 
 /** PATCH: the signed-in login's own language (any role, guardians and students too). */
 export const meLocalePath = '/me/locale';

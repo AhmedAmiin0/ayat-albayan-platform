@@ -20,12 +20,15 @@ export function parseClockPref(value: unknown): ClockPref {
  * The cycle in effect: an override wins; «auto» follows the device. A device that can't say
  * (`null` / `undefined`) reads as 24 h, the app's form before this setting existed.
  */
-export function resolveHourCycle(pref: ClockPref, deviceUses24: boolean | null | undefined): ClockCycle {
+export function resolveHourCycle(
+  pref: ClockPref,
+  deviceUses24: boolean | null | undefined,
+): ClockCycle {
   if (pref !== 'auto') return pref;
   return deviceUses24 === false ? '12' : '24';
 }
 
-/** Intl's resolved `hourCycle` (web) → does the device use 24 h? h11/h12 = no; anything else = yes. */
+/** Does the device use 24 h, from Intl's resolved `hourCycle` (web)? h11/h12 = no, else yes. */
 export function uses24FromHourCycle(hourCycle: string | undefined): boolean | null {
   if (hourCycle === undefined) return null;
   return hourCycle !== 'h11' && hourCycle !== 'h12';

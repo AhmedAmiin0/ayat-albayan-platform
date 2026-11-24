@@ -2,10 +2,7 @@ import type { LessonStatus } from '@ab/catalog';
 import { lessonStatusStyle, type StatusStyle } from '@ab/money';
 import { needsConfirmation } from '@ab/schedule';
 
-// «يحتاج تأكيد» only while the academy requires a confirmation
-// (settings.lesson_confirmation_required,
-// owner 2026-11-02). Otherwise a scheduled lesson is simply an upcoming one: its own words and a
-// neutral, waiting look (never the «دورك» tone).
+// Needs confirmation only while settings.lesson_confirmation_required is on; else neutral look.
 
 /** A scheduled lesson when no confirmation is required: informational, waiting. */
 export const UPCOMING_LESSON_STYLE: StatusStyle = { tone: 'neutral', glyph: 'hollow' };

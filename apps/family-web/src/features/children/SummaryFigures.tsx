@@ -12,7 +12,7 @@ const DAY = { day: 'numeric', month: 'long' } as const;
 const LINE = 'flex flex-wrap items-center gap-x-3 gap-y-1';
 const LABEL = 'text-xs text-ink-3';
 
-/** «آخر تقرير · 12 نوفمبر» on the family's clock, or «لم يصل تقرير بعد». */
+/** Formatted on the family's clock. */
 const lastLine = (summary: ChildSummary, tz: string): string => {
   const last = summary.lastReport;
   if (!last) return t.portal.app.children.noReport;
@@ -20,7 +20,6 @@ const lastLine = (summary: ChildSummary, tz: string): string => {
   return t.portal.app.children.lastReport.replace('{date}', day);
 };
 
-/** «هذا الشهر · حضر 6 · غاب 1» as two dots (data, not boxes). */
 function MonthDots({ month }: { month: PortalMonth }) {
   return (
     <p className={LINE}>
@@ -39,10 +38,7 @@ const PACKAGE_LINK =
   'ab-press -mx-2 flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 rounded-md px-2 ' +
   'transition-[transform,background-color] duration-(--duration-press) ease-ink hover:bg-sunk';
 
-/**
- * «الباقة · 8 من 12» and the amount due as the one pill that asks the family to act; the line
- * opens the package's own page (/package/<id>, the family app's `package/[id]`).
- */
+/** The amount due is the one pill that asks the family to act. */
 function PackageFigure({ pkg, studentId }: { pkg: PortalPackage; studentId: string }) {
   const summary = packageSummary(pkg);
   return (

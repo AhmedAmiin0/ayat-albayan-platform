@@ -3,20 +3,13 @@ import { counted, type PluralForm } from '@ab/core';
 import { formatAmount } from '@ab/money';
 import { count, fill, type CountWords } from './course-card-text.js';
 
-// The headline and the package line of «الدورة والباقة» (owner 2026-11-17, boards CourseXActions
-// and CourseXWebPanel): «بقيت 3 حلقات», «12 حلقة · 9 من 12 حلقة · دُفع 360 من 360 ر.س» and
-// «يُتوقع أن تنتهي يوم …». Words and formats are injected (each app's own). Pure.
+// Pure; words and formats are injected by each app.
 
 export interface PackageWords {
-  /** «بقيت 3 حلقات» (zero: «لم تبقَ حلقات في الباقة»). */
   left: CountWords;
-  /** «12 حلقة». */
   lessons: Readonly<Record<PluralForm, string>>;
-  /** «{used} من {total} حلقة». */
   usedOf: string;
-  /** «دُفع {paid} من {price}». */
   paidOf: string;
-  /** «يُتوقع أن تنتهي يوم {date}». */
   projectedEnd: string;
 }
 
@@ -38,7 +31,6 @@ export const packageWordsOf = (t: PackageCatalog): PackageWords => ({
 });
 
 interface PackageFormat {
-  /** «360 ر.س». */
   money: (amount: number, currency: string) => string;
   /** The day of an instant in the viewer's zone. */
   day: (instant: string) => string;
@@ -51,7 +43,6 @@ export interface PackageLines {
   end: string | null;
 }
 
-/** The card's «بقيت N حلقات», its package line and its projected end. */
 export function packageCardLines(input: {
   pkg: CourseCardPackage;
   words: PackageWords;

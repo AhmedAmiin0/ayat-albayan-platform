@@ -11,18 +11,17 @@ import { ChildNextLine } from './ChildNextLine';
 
 const count = (n: number | null): string => (n === null ? '–' : String(n));
 
-/** «أنا» on a guardian's own card (canvas Adult); else the student's name. */
+/** On a guardian's own card the name reads "Me"; otherwise the student's name. */
 const selfName = (kind: PortalKind, student: PortalStudent): string | undefined =>
   isSelfChild(kind, student) ? t.portal.app.pick.me : undefined;
 
-/** «آخر تقرير · الخميس 13 نوفمبر», or «لم يصل تقرير بعد». */
 function lastReportLine(last: PortalReport | null, clock: ClockOptions): string {
   const C = t.portal.app.children;
   if (!last) return C.noReport;
   return C.lastReport.replace('{date}', dateLine(new Date(reportAt(last)), clock));
 }
 
-/** «استُخدمت 8 من 12» over its bar, for a viewer who sees money (none without a package). */
+/** Shown only to a viewer who sees money, and absent without a package. */
 function PackageBar({ studentId }: { studentId: string }) {
   const pkg = useChildPackage(studentId, true).data?.package;
   return pkg ? <UsedBar summary={packageSummary(pkg)} /> : null;
@@ -31,14 +30,10 @@ function PackageBar({ studentId }: { studentId: string }) {
 interface ChildSummaryCardProps {
   student: PortalStudent;
   kind: PortalKind;
-  /** The whole card is one button (on «اختر الطالب»: work as this child). */
+  /** The whole card is one button that switches to working as this child. */
   onPress: () => void;
 }
 
-/**
- * One child on «اختر الطالب» (canvas Children), read top-down: who (and «جديد» when a report
- * waits), the next lesson, the counts, the package for money viewers, the last report; one button.
- */
 export function ChildSummaryCard({ student, kind, onPress }: ChildSummaryCardProps) {
   const { color } = useTheme();
   const clock = { ...useFamilyClock(), tz: student.tz };
