@@ -16,7 +16,7 @@ const TEACHER = '7a000000-0000-4000-8000-0000000000aa';
 const BODY = { studentId: STUDENT_ID, pricing: { tier: 'weekly' }, amount: 125, currency: 'SAR', clientRequestId: REQ };
 const OWN = { leadIds: [], guardianIds: [], studentIds: [STUDENT_ID], phones: [] };
 
-// «اشتراك جديد» → «دفع إلكتروني» (owner 2026-10-29): the link carries the subscribe step's teacher and used lessons.
+// The link carries the subscribe step's teacher and used lessons.
 describe('POST /sales/payment-links with the subscribe step’s «المعلم/ة» and «حلقات مستخدمة»', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

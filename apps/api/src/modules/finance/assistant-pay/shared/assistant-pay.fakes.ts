@@ -44,7 +44,7 @@ export async function assistantApp() {
   };
   const receipts = { check: vi.fn(), uploadUrl: vi.fn(), download: vi.fn() };
   const audit = { record: vi.fn() };
-  const bell = { notify: vi.fn() }; // «عمولة جديدة» after an attribution or new terms
+  const bell = { notify: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(MyRepo).useValue(my)

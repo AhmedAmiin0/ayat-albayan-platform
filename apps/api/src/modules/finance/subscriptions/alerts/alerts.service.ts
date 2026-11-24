@@ -43,11 +43,7 @@ export class SubscriptionAlertsService {
     await this.evaluateStudents(await this.queries.studentsOfLessons(lessonIds));
   }
 
-  /**
-   * Recompute statuses, then raise the alert, then the student's «بانتظار التجديد» rule
-   * (StudentRenewal). The reads are batched for every student, so the sweep's round trips do not
-   * grow with the students (BE-07). One student's failure never stops the others; never throws.
-   */
+  /** Batched reads for every student (BE-07); one student's failure never stops the others. */
   async evaluateStudents(studentIds: readonly string[], opts: EvaluateOptions = {}): Promise<number> {
     const ids = [...new Set(studentIds)];
     if (ids.length === 0) return 0;

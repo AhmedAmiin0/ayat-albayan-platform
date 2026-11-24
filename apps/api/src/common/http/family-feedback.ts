@@ -1,4 +1,3 @@
-/** A family's «رأيك يهمّنا» link: the signed token of /feedback/<token> and when it expires. */
 interface FamilyFeedbackLink {
   token: string;
   expiresAt: Date;

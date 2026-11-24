@@ -13,11 +13,7 @@ import { ThreadReactionService } from './thread-reaction.service';
 
 const params = z.object({ phone: z.string(), id: z.uuid() });
 
-/**
- * «تفاعل» (owner 2026-10-27): hold a bubble, tap an emoji; the family sees it on WhatsApp. The same
- * permissions and scopes as POST /threads/:phone/text (inbox.send; a salesperson any chat, a teacher
- * their own families), audited like a text send.
- */
+/** Same permissions and scopes as POST /threads/:phone/text, audited like a text send. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.read')

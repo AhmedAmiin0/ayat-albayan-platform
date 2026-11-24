@@ -36,11 +36,7 @@ interface PageRows {
   rows: ThreadMessageRow[];
 }
 
-/**
- * Stage 1 of an open chat (admin and sales): the thread row and the page side by side. A number
- * with no message yet (a booked family, «محادثة جديدة»): who it is, so the first template can name
- * its lesson.
- */
+/** A number with no message yet still returns who it is, for the first template. */
 export async function pageRows(repos: PageRepos, q: ThreadPageQuery): Promise<PageRows> {
   const { threads, messages } = repos;
   const [found, rows] = await Promise.all([threads.thread(q.phone), messages.messages(q)]);
