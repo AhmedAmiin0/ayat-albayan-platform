@@ -14,7 +14,7 @@
     }
   },
   "typescript/prefer-optional-chain": {
-    "missed": 21,
+    "missed": 20,
     "why": "tsgolint does not report `!a || a.b !== c` (→ `a?.b !== c`), which typescript-eslint 8.71 does; type-aware, no JS-plugin fallback (docs/31b §3).",
     "scopes": {
       "apps/api": 10
