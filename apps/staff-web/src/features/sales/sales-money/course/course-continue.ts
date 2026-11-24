@@ -11,9 +11,7 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 /** The viewer's cycle, language and zone (useViewerTz()). */
 type ZonedClock = Clock & { tz: string };
 
-// «تابِع بنفس الأيام» (owner 2026-10-18): a renewal's course continues on the previous course's days
-// and times, with its teacher, from the first day the new one may start (courseOpensOn, never before
-// today in the family's zone). Pure.
+// A renewal continues on the previous days, teacher and times from courseOpensOn, not before today.
 
 export interface ContinuePlan {
   /** The course draft, the previous days kept as `course.prefilled` (each with its own time). */
@@ -39,22 +37,18 @@ export function continuePlan(view: SalesCourseView, now: string): ContinuePlan |
   };
 }
 
-/** «السبت الساعة 17:00، الثلاثاء الساعة 19:30»: the previous course's days. */
 const previousDays = (view: SalesCourseView, clock: ZonedClock): string =>
   inWeekOrder(view.previous?.days ?? [])
     .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, clock, view.student.tz))
     .join(t.common.listSeparator);
 
-/**
- * «حلقات الباقة السابقة: السبت الساعة 17:00، الثلاثاء الساعة 19:30. تبدأ … من 3 نوفمبر 2026.»; for
- * the days saved before the payment (view.draft) «الأيام المحفوظة بانتظار الدفع: …».
- */
+/** For days saved before the payment (view.draft) the text says they await payment. */
 export function continueText(view: SalesCourseView, clock: ZonedClock, now?: string): string {
   const from = courseOpensOn(view, now);
   const line = view.draft ? t.booking.courseChange.draftHint : t.booking.courseChange.continueHint;
   return line.replace('{days}', previousDays(view, clock)).replace('{date}', from ? dateLabel(from) : '');
 }
 
-/** Another day count than before (!continueFits): «حلقات الباقة السابقة: …. الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام». */
+/** A different day count (!continueFits) asks to adjust the previous days to the new count. */
 export const adjustText = (view: SalesCourseView, clock: ZonedClock): string =>
   counted(t.booking.courseChange.continueAdjust, view.perWeek ?? 0).replace('{days}', previousDays(view, clock));

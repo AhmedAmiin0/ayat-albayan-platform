@@ -6,10 +6,7 @@ import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { closeCodes, openCodes } from '../../support/people/family-sign-in';
 import { guardianSignIn, seedPortalFamily, studentSignIn } from '../../support/people/family-portal';
 
-// The family web's own «الملف الشخصي» and «الباقة» pages (parity with the family app's `profile`
-// and `package/[id]`), on the real API and seeded data: a guardian opens the profile from the card
-// on «حسابي» and a child from it, and the package of a child from its card on «اختر الطالب»; a
-// child's own login sees their code on the profile and never the package (not even a request).
+// Family web profile and package pages; a child's login never requests the package.
 
 const P = ar.portal;
 const PACKAGE_READ = /\/portal\/students\/[^/]+\/package(\?|$)/;
@@ -29,7 +26,6 @@ test.describe('family profile and package pages', () => {
     const page = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await guardianSignIn(page, family.phone);
 
-    // The package from the first child's card on «اختر الطالب».
     const card = page.getByRole('article', { name: family.first.name });
     await card.getByRole('link', { name: new RegExp(P.packageTab) }).click();
     await expect(page).toHaveURL(new RegExp(`/package/${family.first.id}$`));
@@ -38,7 +34,6 @@ test.describe('family profile and package pages', () => {
     await expect(page.getByRole('region', { name: P.payments })).toBeVisible();
     await expect(page.locator('a[href*="wa.me"], a[href*="whatsapp"]')).toHaveCount(0);
 
-    // «حسابي» → «الملف الشخصي»: read-only details and a link per child.
     await page.goto(`${FAMILY_URL}/account`);
     await page.getByRole('link', { name: new RegExp(P.app.profile.open) }).click();
     await expect(page).toHaveURL(/\/profile$/);

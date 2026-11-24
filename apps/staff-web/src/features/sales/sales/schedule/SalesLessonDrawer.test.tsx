@@ -44,7 +44,7 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
     renderDay();
     fireEvent.click(await screen.findByRole('button', { name: /سهيلة/ }));
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
-    // No confirmation required (the default): an upcoming lesson, never «يحتاج تأكيد».
+    // No confirmation required by default: an upcoming lesson never needs confirmation.
     expect(within(drawer).getByText(t.lessons.noConfirm.scheduled)).toBeTruthy();
     expect(within(drawer).queryByText(t.enums.lessonStatus.scheduled)).toBeNull();
     expect(within(drawer).getByText(t.schedule.trialTag)).toBeTruthy();
@@ -57,7 +57,7 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
     // Owner 2026-10-26: the lesson link row (this one has none); LessonMeetingLink.test covers a URL.
     expect(within(drawer).getByText(t.lessons.joinLink)).toBeTruthy();
     expect(within(drawer).getByText(t.lessons.noLink)).toBeTruthy();
-    // Only «إغلاق»: no confirm, cancel, move, edit, invoice or report button.
+    // Only close: no confirm, cancel, move, edit, invoice or report button.
     expect(within(drawer).getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? b.textContent)).toEqual([t.common.close]);
     fireEvent.click(within(drawer).getByRole('button', { name: t.common.close }));
     expect(screen.queryByRole('dialog')).toBeNull();

@@ -11,7 +11,6 @@ interface Props {
   clock: Clock & { now: Date };
 }
 
-/** One line per staff login: name, role, then «متصل الآن» / «آخر ظهور …» / «لم يظهر بعد». */
 export function StaffPresenceRows({ rows, clock }: Props) {
   const at = { ...clock, tz: viewerZone(), words: t.presence };
   return (

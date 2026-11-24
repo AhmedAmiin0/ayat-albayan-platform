@@ -3,10 +3,8 @@ import { formatPhone } from '@ab/core';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// Who a link's user or visitor is (board LinkXWebDetail): a system user by name and role, a
-// verified phone with the person it matched, or «رقم غير مسجّل».
+// A system user by name and role, a verified phone with its matched person, or unregistered.
 
-/** The small boxed role word: «ولي الأمر», «المبيعات»… */
 export function RoleTag({ role }: { role: string }) {
   return (
     <span className="rounded-sm border border-rule px-1.5 text-[11px] leading-5 text-ink-2">
@@ -24,7 +22,7 @@ function NameAndRole({ look }: { look: PersonLook }) {
   );
 }
 
-/** A phone's second line: the matched person, or «رقم غير مسجّل». */
+/** The matched person, or a not-registered note. */
 function PhoneSub({ look }: { look: PersonLook }) {
   return look.unregistered ? (
     <span className="text-xs text-ink-3">{t.shortLinks.form.unregistered}</span>

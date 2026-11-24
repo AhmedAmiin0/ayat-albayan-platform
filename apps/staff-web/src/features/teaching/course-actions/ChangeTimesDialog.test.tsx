@@ -28,7 +28,6 @@ function open(mode: 'admin' | 'sales' = 'sales') {
   return onDone;
 }
 
-/** Monday 18:00 instead of Sunday, then «التالي». */
 async function swapAndNext() {
   fireEvent.click(within(await day(1)).getByRole('button', { name: /18:00/ }));
   const remove = t.booking.removeDay.replace('{day}', t.enums.weekday[0]);

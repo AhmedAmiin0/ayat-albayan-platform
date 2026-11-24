@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { packageCardLines, packageWordsOf, type PackageWords } from './course-card-package.js';
 
-// «الدورة والباقة»'s headline and package line (owner 2026-11-17, board CourseXActions).
 const plural = (one: string, n: string) => ({ one, two: n, few: n, other: n });
 const words: PackageWords = {
   left: { zero: 'انتهت', ...plural('بقيت حلقة', 'بقيت {n} حلقات') },

@@ -38,7 +38,6 @@ function ConfirmedDrive({ drive }: { drive: GoogleStatusView['drive'] }) {
   );
 }
 
-/** What the last search found: the root folder and the summary sheet (or «غير موجود»). */
 function DriveFound({ found }: { found: GoogleStatusView['discovery'] }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   return (
@@ -54,7 +53,7 @@ function DriveFound({ found }: { found: GoogleStatusView['discovery'] }) {
   );
 }
 
-/** «تأكيد المجلد والجدول» while the found root differs from the confirmed one. */
+/** Shown while the found root differs from the confirmed one. */
 function ConfirmButton({ status, confirm }: { status: GoogleStatusView; confirm: ReturnType<typeof useDriveActions>['confirm'] }) {
   const root = status.discovery?.root_folder ?? null;
   const sheetId = status.discovery?.summary_sheet?.id ?? null;
@@ -71,7 +70,7 @@ function ConfirmButton({ status, confirm }: { status: GoogleStatusView; confirm:
   );
 }
 
-/** «Drive وجداول البيانات»: «ابحث في Google» (read-only discovery), then confirm the root folder and summary sheet. */
+/** Discovery is read-only. */
 export function DriveCard({ status, onNote }: Props) {
   const { discover, confirm, failed } = useDriveActions(onNote);
   const search = (

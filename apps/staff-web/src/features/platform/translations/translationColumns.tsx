@@ -10,7 +10,7 @@ import { ValuesLink } from './ValuesLink';
 const col = createColumnHelper<DataTableFeatures, TranslationKeyRow>();
 
 function TextCell({ row, locale }: { row: TranslationKeyRow; locale: Locale }) {
-  // The Arabic text of a registry hint is a value's description: read-only here, edited on «القيم».
+  // The Arabic text of a registry hint is a value's description, edited on the values page.
   const hint = locale === 'ar' ? registryHintOf(row.key) : undefined;
   return (
     <div>
@@ -32,7 +32,6 @@ function TextCell({ row, locale }: { row: TranslationKeyRow; locale: Locale }) {
   );
 }
 
-/** «الترجمات»: key | العربية | English, each with the text the UI shows today. */
 export const translationColumns = col.columns([
   col.accessor('key', {
     header: () => t.translations.key,

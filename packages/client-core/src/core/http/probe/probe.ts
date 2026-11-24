@@ -9,12 +9,7 @@ const OPAQUE = 'opaque';
 const bodyOf = (res: Response): Promise<unknown> =>
   res.type === OPAQUE ? Promise.resolve(null) : readJson(res);
 
-/**
- * One bare GET («تحت الصيانة»): no token and no custom header, so the browser
- * sends no CORS preflight; `no-store` so no cached reply hides an outage. The deadline is an
- * AbortController + setTimeout (React Native has no AbortSignal.timeout). Resolves null on a
- * dropped connection or the deadline; never throws.
- */
+/** No token or custom header avoids CORS preflight; RN lacks AbortSignal.timeout; never throws. */
 export async function probe(url: string, opts: ProbeOptions = {}): Promise<ProbeAnswer | null> {
   const abort = new AbortController();
   const timer = setTimeout(() => abort.abort(), opts.timeoutMs ?? PROBE_TIMEOUT_MS);

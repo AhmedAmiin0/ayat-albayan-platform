@@ -1,7 +1,4 @@
-// «أرسل عبر واتساب» (owner 2026-11-06): the link that opens the family's chat in WhatsApp with the
-// text filled in, and the order of the two steps. Web opens WhatsApp Web (never the Windows app,
-// which coexistence does not support); mobile opens wa.me, where Android lets staff pick WhatsApp
-// Business (the academy number's linked device).
+// Web opens WhatsApp Web (coexistence does not support the Windows app); mobile opens wa.me.
 
 /** Where WhatsApp opens: WhatsApp Web in a browser tab, or the app on a phone. */
 export type WhatsAppTarget = 'web' | 'mobile';
@@ -32,7 +29,7 @@ interface WhatsAppSendSteps<R> {
   open: () => Promise<boolean> | boolean;
 }
 
-/** What happened: the pending row, and whether WhatsApp opened (false: «افتح واتساب مجددًا»). */
+/** Also whether WhatsApp opened; when it did not, the user must open it again. */
 export interface WhatsAppSendResult<R> {
   row: R;
   opened: boolean;

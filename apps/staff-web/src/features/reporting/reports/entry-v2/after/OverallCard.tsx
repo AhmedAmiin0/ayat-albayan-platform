@@ -8,13 +8,13 @@ export interface OverallCardProps {
   name: string;
   /** What the form shows: the teacher's grade, else the suggestion. */
   value: Grade | null;
-  /** «مقترح من التقييمات» (suggestOverall), null until a row is graded. */
+  /** Null until a row is graded. */
   suggested: Grade | null;
   onChange: (grade: Grade) => void;
   invalid: boolean;
 }
 
-/** «التقدير العام»: prefilled from the rows' grades until the teacher picks one. */
+/** Prefilled from the rows' grades until the teacher picks one. */
 export function OverallCard({ name, value, suggested, onChange, invalid }: OverallCardProps) {
   return (
     <section aria-label={t.reports.v2.overall} className={CARD}>

@@ -42,8 +42,7 @@ jest.mock('./src/lib/http/supabase', () => ({
   },
 }));
 
-// «تحت الصيانة» (owner 2026-11-21): the root's maintenance probe would call fetch every 10 s in
-// every suite that mounts the real root; here the app is always open. Its own test uses requireActual.
+// The root's maintenance probe would fetch every 10 s in every suite; its own test is real.
 jest.mock('./src/root/use-maintenance', () => ({
   maintenanceQuery: { queryKey: ['maintenance'] },
   useMaintenance: () => ({ view: 'open', checking: false, retry: () => undefined }),

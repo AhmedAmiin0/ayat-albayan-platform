@@ -1,4 +1,4 @@
-import { INTEGRATION_KEYS } from '@ab/shared';
+import { INTEGRATION_KEYS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { integrationItems } from './integration-config.view';
 

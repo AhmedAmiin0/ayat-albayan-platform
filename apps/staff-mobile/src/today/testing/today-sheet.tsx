@@ -4,11 +4,9 @@ import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { TodayScreen } from '@/today/screens/TodayScreen';
 import { yusuf } from './fixtures';
 
-// Today through its details sheet (docs/29): open the screen, then a lesson's «تفاصيل الحلقة».
-// 16:20 Riyadh in the tests: pending (16:00, يوسف) runs and is the hero; muscat (17:00, جنى) is a row.
+// At 16:20 Riyadh in the tests the 16:00 lesson runs and is the hero.
 
 const { openLesson } = t.today;
-/** What a row's spoken name puts between the time and the names («، »). */
 const timeToNames = openLesson.slice('{time}'.length, openLesson.indexOf('{names}'));
 
 /** An academy that requires lesson confirmation (the Today flows predate the OFF default). */
@@ -17,7 +15,6 @@ export async function openToday(client = confirmingQueryClient()) {
   await screen.findByText(yusuf.name);
 }
 
-/** Opens «تفاصيل الحلقة» from the hero, or from a row by its students. */
 export async function openSheet(names?: string) {
   const target = names
     ? screen.getByRole('button', { name: new RegExp(`^\\d\\d:\\d\\d${timeToNames}${names}`) })
@@ -26,5 +23,4 @@ export async function openSheet(names?: string) {
   await screen.findByRole('header', { name: names ?? yusuf.name });
 }
 
-/** A sheet action's spoken name: «إلغاء — يوسف أحمد». */
 export const inSheet = (label: string, who = yusuf.name) => ({ name: `${label} — ${who}` });

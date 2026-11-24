@@ -28,11 +28,7 @@ const FACES: { glyph: MediaGlyphName; label: string; when: boolean }[] = [
   { glyph: 'pause', label: P.pause, when: true },
 ];
 
-/**
- * «تشغيل» ↔ «إيقاف مؤقت»: both faces share one cell and cross-fade (--duration-quick), so the
- * button keeps its width and the eye sees the state change in place. The hidden face is
- * aria-hidden: the button is named by the shown one.
- */
+/** Both faces share one cell and cross-fade so the width holds; the hidden face is aria-hidden. */
 function PlayFace({ playing }: { playing: boolean }) {
   return (
     <span className="grid">
@@ -54,7 +50,6 @@ function PlayFace({ playing }: { playing: boolean }) {
   );
 }
 
-/** «10» back · play/pause · «10» forward, then «السرعة» as three choices 1× · 1.5× · 2×. */
 export function PlayerButtons({ controls, speed, playing }: Props) {
   const { skip } = controls;
   const name = useId();

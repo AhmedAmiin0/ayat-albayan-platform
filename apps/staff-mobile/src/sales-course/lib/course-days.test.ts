@@ -6,7 +6,6 @@ const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 const sep = t.common.listSeparator;
 const at = (day: string, time: string) => t.booking.dayAt.replace('{day}', day).replace('{time}', time);
 const RIYADH = 'Asia/Riyadh';
-// Riyadh: الأحد 11 Oct 17:00, الخميس 15 Oct 18:00, السبت 17 Oct 09:00.
 const SUN = '2026-10-11T14:00:00.000Z';
 const THU = '2026-10-15T15:00:00.000Z';
 const SAT = '2026-10-17T06:00:00.000Z';

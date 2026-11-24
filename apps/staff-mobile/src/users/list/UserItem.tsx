@@ -1,5 +1,6 @@
 import { memo, useCallback } from 'react';
-import { formatPhone, type UserView } from '@ab/shared';
+import type { UserView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, ListRow, Ltr, ltr, StatusChip, Avatar } from '@ab/mobile-kit';
 import { lastSignIn, recordText, roleText, statusStyle } from '@/users/shared/format';

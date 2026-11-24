@@ -1,10 +1,6 @@
 import { type Audience, audience } from './audience';
 
-/**
- * Who may use the staff app, each with their own tree (R-AUTH-01): admins the admin tabs, teachers
- * the teacher tabs, the salesperson (base role sales, «المبيعات») the sales tabs and the classroom
- * assistant («مساعد حلقة») the assistant tabs (owner 2026-10-12, docs/16 «Mobile»).
- */
+/** Each staff role gets its own tree (R-AUTH-01, docs/16 Mobile). */
 const STAFF_ROLES = ['admin', 'teacher', 'sales', 'assistant'] as const;
 
 /** Who may use the family app (docs/50 §7): a guardian, or a student who signs in themselves. */
@@ -26,7 +22,7 @@ export function appRole(role: unknown): AppRole | null {
   return ROLES_OF[audience()].find((r) => r === role) ?? null;
 }
 
-/** A real role of the other app: the sign-in says so instead of «لم يُفعَّل حسابك». */
+/** A real role of the other app gets its own message instead of "not activated". */
 export function isOtherAppRole(role: unknown): boolean {
   return OTHERS_OF[audience()].some((r) => r === role);
 }

@@ -14,10 +14,7 @@ import { PNG, statusFacts, trialFamily, uploadReceipt } from '../../support/sale
 import { withSql } from '../../support/core/schedule';
 import { stubReset } from '../../support/core/wa-stub';
 
-// Owner 2026-10-12 «how can assistants move student from trial to subscribed», through the REAL API and
-// database (wa-stub for WhatsApp): A subscribes her trial student from the chat, records the family's bank
-// transfer with a receipt (uploaded, then one picked from the chat), the student is «مشترك» at once and
-// the payments show in her «مدفوعاتي». B (another salesperson) is 403 on all of it.
+// A salesperson subscribes her trial student from chat; another salesperson gets 403.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');
@@ -37,7 +34,7 @@ test.describe.serial('sales subscribe from the chat with a bank-transfer receipt
 
   test.beforeAll(async () => {
     await stubReset();
-    await setSetting('sales_require_assignee', true); // her student only: «اشتراط التعيين» ON (docs/16 row 39)
+    await setSetting('sales_require_assignee', true); // Lead assignment rule on (docs/16 row 39).
     a = await makeAssistant('subsa');
     b = await makeAssistant('subsb');
     student = await trialFamily({ broughtBy: need(a).id, phone, name: `سلمى${digits.slice(-3)}` });

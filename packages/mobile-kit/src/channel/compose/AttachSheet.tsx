@@ -19,10 +19,7 @@ interface AttachSheetProps {
   onClose: () => void;
 }
 
-/**
- * «أرفق صورة أو ملف PDF» (ChatXAttach): the grab handle, the tiles «المعرض», «الكاميرا» and
- * «مستند», and what the chat takes; a tile closes the sheet and opens the app's picker.
- */
+/** A tile closes the sheet and opens the app's picker. */
 export function AttachSheet({ open, sources, onClose }: AttachSheetProps) {
   const { color } = useTheme();
   const m = t.studentChannel.media;

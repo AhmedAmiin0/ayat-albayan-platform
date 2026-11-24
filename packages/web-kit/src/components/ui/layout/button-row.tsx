@@ -4,7 +4,6 @@ import { cn } from '@ab/web-kit/lib/utils';
 export interface ButtonRowProps {
   /** 2–3 peer Buttons (or button-styled links), in reading order. */
   children: ReactNode;
-  /** Names the group when it needs one («تسجيل الحضور»). */
   label?: string;
   className?: string;
 }

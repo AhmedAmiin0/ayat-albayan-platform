@@ -1,4 +1,5 @@
-import { DEFAULT_RENEWAL_PRICING, type SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesMoneySubscriptionView } from '@ab/shared';
+import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { t } from '@ab/mobile-kit';

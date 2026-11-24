@@ -11,11 +11,7 @@ const unreadOf = (student: PortalStudent | null, counted: boolean) => ({
   enabled: counted && student !== null,
 });
 
-/**
- * The family's in-room «المحادثة» (the app's use-family-room-chat, canvas RoomXChat): THE student
- * channel (the same thread as the child page's tab), with its unread count; a trial lesson's room
- * explains that the chat opens after subscribing (no badge). None while family_chat_enabled is off.
- */
+/** The in-room chat is the student channel; a trial room explains it opens after subscribing. */
 export function useRoomChat(
   student: PortalStudent | null,
   join: RoomJoinResult,

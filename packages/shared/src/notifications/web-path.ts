@@ -44,11 +44,7 @@ const MEETINGS: Record<Area, string> = {
   assistant: '/assistant',
 };
 
-/**
- * A chat message (docs/31 §2): the teacher's «رسائل الطلاب» on that student; for the seated
- * assistant (the seat is not «طلابي») «الطلاب» with that
- * student's chat open; nobody else gets the kind (home).
- */
+/** A chat message (docs/31 §2) opens that student's chat for teacher or assistant. */
 const CHANNEL: Record<Area, (studentId: string | null) => string> = {
   teacher: (id) => (id ? `/teacher/messages?student=${id}` : '/teacher/messages'),
   sales: (id) => (id ? `/sales/students?student=${id}` : '/sales/students'),
@@ -72,10 +68,10 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
     const id = uuid(data, 'meetingId');
     return id ? `/meeting/${id}` : MEETINGS[area];
   },
-  // «مزامنة Google» (docs/24, docs/26b §1); only admins get this kind.
+  // Google sync (docs/24, docs/26b §1); only admins get this kind.
   google_sync_alert: (area) => (area === 'admin' ? '/admin/settings/google' : HOME_BY_ROLE[area]),
   channel_message: (area, data) => CHANNEL[area](uuid(data, 'studentId')),
-  // «محفظتي»: the salesperson's wallet; only sales get this kind.
+  // The salesperson's wallet; only sales get this kind.
   commission_earned: (area) => (area === 'sales' ? '/sales/earnings' : HOME_BY_ROLE[area]),
   // A schedule change: the lesson on the teacher's calendar, else the student.
   lesson_rescheduled: lessonPath,
@@ -92,7 +88,7 @@ const ROUTES: Record<AnyPushKind, (area: Area, data: Data) => string> = {
   lesson_request_declined: (area) => HOME_BY_ROLE[area],
 };
 
-/** «احجز أيام الحلقات»: the family chat, wizard open; else the student. */
+/** The family chat with the wizard open, else the student. */
 function coursePath(area: Area, data: Data): string {
   const id = uuid(data, 'studentId');
   const p = phone(data);

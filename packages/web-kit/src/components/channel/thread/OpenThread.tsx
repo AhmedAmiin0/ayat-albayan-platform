@@ -15,7 +15,7 @@ import { useStickToEnd } from './use-stick-to-end';
 
 const NOTE = 'rounded-md border border-rule bg-sunk px-3 py-2 text-sm text-ink-2';
 const c = t.studentChannel;
-/** «للاطلاع فقط», and for a monitor of a closed channel why nobody writes yet. */
+/** For a monitor of a closed channel, also why nobody writes yet. */
 const readOnlyText = (open: boolean | undefined) =>
   open === false ? `${c.readOnly} ${c.closedMonitor}` : c.readOnly;
 
@@ -27,12 +27,7 @@ interface Props {
   head: { label: string; heading: string };
 }
 
-/**
- * A thread that reads (a monitor) or writes (a participant's open channel): the head (title,
- * people, presence), the connecting bar, the messages, the newest kept in view, and the composer
- * with its reply bar. «ردّ» and «معلومات الرسالة» reach the bubbles through BubbleToolsContext. A
- * failed re-read is one inline line: the thread and the draft stay.
- */
+/** A failed re-read is one inline line: the thread and the draft stay. */
 export function OpenThread({ thread, pages, refs, tz, head }: Props) {
   const { query, first, mode, send, now } = thread;
   const [replyTo, setReplyTo] = useState<ChannelMessageView | null>(null);

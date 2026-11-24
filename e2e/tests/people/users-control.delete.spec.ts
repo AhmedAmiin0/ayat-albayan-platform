@@ -3,8 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { withSql } from '../../support/core/schedule';
 import { dropLogins, openUser, profileOf, stamp } from '../../support/people/users-control';
 
-// «المستخدمون»: a user without history is deleted for good; one with history (a student it
-// created, students.created_by) is refused, the tables are listed and «تعطيل بدلًا من الحذف» disables it instead.
+// A user with history is refused deletion and can be disabled instead.
 
 const RUN = stamp();
 const PLAIN = { email: `plain-${RUN}@e2e.local`, password: `Plain-e2e-${RUN}`, fullName: `بلا سجل ${RUN}` };

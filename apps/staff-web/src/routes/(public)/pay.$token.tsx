@@ -1,10 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { parsePayReturn, PayPage, stripeBuild } from '@/features/sales/payment-links';
 
-/**
- * /pay/:token — «رابط دفع» for the family (docs/30, with FEATURE_STRIPE (test or live)). Outside every guard: no login.
- * A normal build has no such page: the router's not-found, and no request.
- */
+/** Family payment link (docs/30, FEATURE_STRIPE); without the flag the router shows not-found. */
 export const Route = createFileRoute('/(public)/pay/$token')({
   validateSearch: parsePayReturn,
   beforeLoad: () => {

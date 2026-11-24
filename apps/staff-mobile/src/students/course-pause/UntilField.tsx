@@ -1,4 +1,4 @@
-import { addDays } from '@ab/shared';
+import { addDays } from '@ab/time';
 import { Switch, View } from 'react-native';
 import { StartDayPicker } from '@/assistants';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
@@ -7,7 +7,7 @@ import { Note } from '@/more';
 interface UntilFieldProps {
   /** The pause's first day: the end is never before it. */
   from: string;
-  /** null = until «استئناف الدورة». */
+  /** Null means until the course resumes. */
   until: string | null;
   onChange: (until: string | null) => void;
 }
@@ -15,10 +15,7 @@ interface UntilFieldProps {
 /** A week from the start when the end is switched on; the steppers move it from there. */
 const DEFAULT_SPAN_DAYS = 6;
 
-/**
- * «آخر يوم في الإيقاف (اختياري)»: off = the pause runs until «استئناف» (the hint says so); on = the last paused
- * day with the app's day steppers (rule 6, never typed), never before `from`.
- */
+/** Off runs until resume; the day uses steppers, never typed (rule 6), never before `from`. */
 export function UntilField({ from, until, onChange }: UntilFieldProps) {
   const { color } = useTheme();
   const c = t.coursePause;

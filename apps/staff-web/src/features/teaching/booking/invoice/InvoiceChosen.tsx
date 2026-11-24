@@ -11,7 +11,6 @@ export interface InvoiceChosenProps {
   onRemove: () => void;
 }
 
-/** The invoice that is attached: its thumbnail (opens full size), where it came from, and «شيلها». */
 export function InvoiceChosen({ value, uploading, onRemove }: InvoiceChosenProps) {
   const thumb = <InvoiceThumb src={value.preview} mime={value.mime} name={value.source === 'upload' ? value.name : undefined} />;
   return (

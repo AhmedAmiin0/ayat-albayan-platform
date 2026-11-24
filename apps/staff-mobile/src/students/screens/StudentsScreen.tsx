@@ -12,12 +12,7 @@ import { StudentRow } from '@/students/list/StudentRow';
 const keyOf = (s: StudentListItem) => s.id;
 const renderRow = ({ item }: { item: StudentListItem }) => <StudentRow student={item} />;
 
-/**
- * «الطلاب» tab (R-MOB-02): GET /students, searched server-side by name, phone in any format or code.
- * Filters like the web (status with GET /students/status-counts, teacher, program, package, weekly,
- * tz) and a server-side sort go to the same endpoint as query params. The list screens' one compact top
- * (owner 2026-10-28): «الطلاب · 233» on the title's line, the pill search, one filter row, 8pt apart.
- */
+/** Searched server-side by name, any phone format or code (R-MOB-02). */
 export function StudentsScreen() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<StudentFilters>(NO_FILTERS);

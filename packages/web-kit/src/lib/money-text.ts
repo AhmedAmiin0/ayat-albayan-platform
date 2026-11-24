@@ -8,12 +8,12 @@ const symbols: Readonly<Record<string, string>> = {
   EGP: t.payouts.currency,
 };
 
-/** The currency's Arabic symbol («ر.س», «ج.م»), else its ISO code. */
+/** The currency's Arabic symbol, else its ISO code. */
 export function currencySymbol(iso: string): string {
   return symbols[iso] ?? iso;
 }
 
-/** «145 ر.س» as plain text (aria labels, CSV-free places). */
+/** Plain text for aria labels and similar places. */
 export function moneyText(amount: number, currency: string): string {
   return `${formatAmount(amount)} ${currencySymbol(currency)}`;
 }

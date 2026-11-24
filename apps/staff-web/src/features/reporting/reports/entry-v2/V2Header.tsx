@@ -10,7 +10,6 @@ export interface V2HeaderProps {
   entry: ReportFormEntry;
 }
 
-/** «الحلقة 9 من 12» with a package, else «الحلقة 9». */
 function lessonChip(entry: ReportFormEntry): string {
   const n = entry.lesson_no;
   const total = entry.package?.lessons_total;
@@ -19,7 +18,6 @@ function lessonChip(entry: ReportFormEntry): string {
 
 const CHIP = 'rounded-full bg-sunk px-2.5 py-1 text-xs text-ink-2';
 
-/** The read-only top of the new form: student · code, the lesson chips, «تُملأ … تلقائيًا». */
 export function V2Header({ lesson, entry }: V2HeaderProps) {
   const clock = useClock();
   const { student } = entry;

@@ -1,4 +1,5 @@
-import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
+import { studentStatusStyle } from '@ab/money';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { t, FilterPills } from '@ab/mobile-kit';
@@ -16,11 +17,7 @@ interface StudentFilterBarProps {
   searching?: boolean;
 }
 
-/**
- * The students list filters (web StudentFilters): ONE row, the «تصفية» pill (and «مسح» once a filter is
- * set) before the status pills with the API's counts (owner 2026-10-28: the first student shows early),
- * and the panel under it when open.
- */
+/** One filter row before the status pills, so the first student shows early. */
 export function StudentFilterBar({ value, onChange, searching = false }: StudentFilterBarProps) {
   const [open, setOpen] = useState(false);
   const status = useStatusCounts(value);

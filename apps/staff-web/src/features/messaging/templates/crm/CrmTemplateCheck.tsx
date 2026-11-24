@@ -29,12 +29,7 @@ function MissingList({ rows }: { rows: readonly TemplateView[] }) {
   );
 }
 
-/**
- * «تحقق من القالب» on a crm number (docs/19, owner 2026-10-31). The CRM's API cannot list its
- * templates, so a send Meta refuses with #132001 marks the template missing (the API's
- * templates/check): this lists the number's missing ones and how to fix one. It reads the table's
- * copy of the registry (TemplateHealth loads it), never a request of its own.
- */
+/** The CRM's API cannot list templates, so Meta's #132001 refusals mark them missing (docs/19). */
 export function CrmTemplateCheck({ line }: { line: WaLine }) {
   const rows = useQuery({ ...templatesQuery, enabled: false }).data;
   const missing = rows?.filter((r) => r.line === line && r.status === 'missing');

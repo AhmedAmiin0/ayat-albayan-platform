@@ -58,7 +58,7 @@ export async function seedBooked(input: { name: string; teacher: string }): Prom
   return { phone: booked.phone, guardian: booked.guardian };
 }
 
-/** «متاح للمعلمين والمبيعات» set in the DB, as the admin's switch does: restricted roles send only these. */
+/** Set in the DB as the admin's switch does: restricted roles send only these templates. */
 export async function setSalesStarter(key: string, on: boolean): Promise<void> {
   await withSql((sql) => sql`update public.message_templates set sales_starter = ${on} where key = ${key}`);
 }

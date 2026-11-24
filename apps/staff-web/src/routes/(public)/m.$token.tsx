@@ -3,10 +3,7 @@ import { meetingPathOfLink } from '@/features/teaching/classroom/join/staff-link
 import { StaffLinkGate } from '@/features/teaching/classroom/join/StaffLinkGate';
 import { MeetingGuestPage } from '@/features/teaching/meetings/MeetingGuestPage';
 
-/**
- * /m/:token: an internal meeting's link («اجتماع داخلي»). Outside every guard: no login, no app
- * shell. A signed-in staff member is sent to /meeting/<id> to join with their own role.
- */
+/** Outside every guard; a signed-in staff member is sent to /meeting/<id> with their role. */
 export const Route = createFileRoute('/(public)/m/$token')({ component: MeetingLinkRoute });
 
 function MeetingLinkRoute() {

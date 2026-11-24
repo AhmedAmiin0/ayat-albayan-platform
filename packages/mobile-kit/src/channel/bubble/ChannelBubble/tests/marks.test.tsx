@@ -5,7 +5,7 @@ import { t } from '../../../../lib/i18n/i18n';
 import { channelMessage } from '../../../testing/channel-fixtures';
 import { ChannelBubble, type ChannelBubbleProps } from '../ChannelBubble';
 
-// Owner 2026-10-30: an edited message shows «تم التعديل» by its time; a deleted one only its line.
+// An edited message shows the edited mark by its time; a deleted one only its line.
 const NOW = new Date('2026-10-27T12:00:00.000Z');
 const msg = (over: Partial<ChannelMessageView>) =>
   channelMessage({

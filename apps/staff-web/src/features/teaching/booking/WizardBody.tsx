@@ -31,11 +31,10 @@ export interface WizardBodyProps {
   missedLessonId: string | undefined;
   onGoto: (step: StepKey) => void;
   onBooked: (result: BookingResult) => void;
-  /** «موعد تجريبي جديد» booked (draft.trialDate): POST {base}/trial-date answered. */
   onTrialDone?: ((result: TrialDateResult) => void) | undefined;
 }
 
-/** The body of the current step (the wizard owns the chrome: step list, «التالي» and «رجوع»). */
+/** The wizard owns the chrome: step list, next and back. */
 export function WizardBody(props: WizardBodyProps) {
   const { step, draft, patch, primary, siblings, onOpenStudent, hint, missedLessonId, onGoto, onBooked } = props;
   const mode = useBookingMode();

@@ -4,9 +4,7 @@ import { freshDigits, seedLead } from '../../support/core/messages';
 import { seedFamily } from '../../support/core/schedule';
 import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// «وقف الرسايل» (R-MSG-04, docs/12 §3.5): from a lead it pauses the follow-ups (the marketing
-// opt-out, follow_up_paused_by 'lead', audited) and gets its own admin push; from a guardian
-// nothing is paused (utility messages continue, no lead is created) and the text is only stored.
+// Stop requests (R-MSG-04, docs/12 §3.5) pause lead follow-ups only; guardians keep utility.
 
 const POLL = { timeout: 30_000, intervals: [500, 1_000, 2_000] };
 const STOP = 'وقف الرسايل';

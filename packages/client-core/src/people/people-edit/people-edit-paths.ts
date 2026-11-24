@@ -1,5 +1,4 @@
-// The /people/* API of «تعديل البيانات», «ربط بولي أمر آخر» and «تحويل», for both
-// apps: one path builder and one query key, so web and mobile never drift.
+// One path builder and one query key so web and mobile never drift.
 
 export const PEOPLE_EDIT_KEY = ['people-edit'] as const;
 

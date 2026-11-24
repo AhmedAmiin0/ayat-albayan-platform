@@ -4,10 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { portalPackageQuery } from '@ab/web-kit/portal/api';
 import { amountText, dayText, usedOfText } from '@ab/web-kit/portal/package/package-text';
 
-/**
- * The home card's package summary (a guardian's only): «8 من 12», the renewal day and the amount
- * due as a badge. Quiet while loading or without a package.
- */
+/** A guardian's only; quiet while loading or without a package. */
 export function PackageLine({ studentId }: { studentId: string }) {
   const pkg = useQuery(portalPackageQuery(studentId)).data?.package;
   if (!pkg) return null;

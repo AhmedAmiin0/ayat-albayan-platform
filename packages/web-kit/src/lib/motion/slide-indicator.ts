@@ -42,8 +42,7 @@ function placingOf(el: HTMLElement): Placing | null {
 function watchHost({ el, host, bar }: Placing): () => void {
   const place = () => placeIndicator(bar, el);
   place();
-  // A resize of the host or the choice (a bold label), or a choice added before it (the bar's
-  // «التقارير» arriving), moves it: place it again.
+  // A resize or a choice added before it moves the indicator, so place it again.
   const resized = typeof ResizeObserver === 'function' ? new ResizeObserver(place) : null;
   const moved = typeof MutationObserver === 'function' ? new MutationObserver(place) : null;
   resized?.observe(host);

@@ -2,10 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import { oauthReturnRedirect, parseOauthReturnSearch } from '@/features/platform/settings/pages/page-search';
 import { IntegrationsPage } from '@/features/platform/settings/pages/IntegrationsPage';
 
-/**
- * /admin/settings/integrations «التكاملات» — docs/26b §3. Google's OAuth return (`?google=…`, forwarded
- * here from /admin/settings) belongs to «مزامنة Google»: go there at once with the same query.
- */
+/** The OAuth return (`?google=`) belongs to the Google sync page: redirect with the query. */
 export const Route = createFileRoute('/admin/settings/integrations')({
   validateSearch: parseOauthReturnSearch,
   beforeLoad: ({ search }) => {

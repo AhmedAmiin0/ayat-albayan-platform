@@ -15,7 +15,6 @@ export interface AuthorTemplateCardProps {
   onEdit: (tpl: AuthorTemplate) => void;
 }
 
-/** One template: name, status (Meta's reason when rejected), text, «تعديل» on the user's own. */
 export function AuthorTemplateCard({ tpl, me, onEdit }: AuthorTemplateCardProps) {
   const status = authorStatus(tpl.status);
   const mine = me !== undefined && tpl.created_by === me;

@@ -13,10 +13,7 @@ interface ComposerActionProps {
 /** The channel's circle (ChatX boards): 48pt. */
 const SIZE = shape.control.comfort;
 
-/**
- * The round button at the bar's end: the microphone while there is no text and the app records,
- * else «أرسل» (the text, or the recording: it stops and sends it).
- */
+/** Sending while recording stops the recording and sends it. */
 export function ComposerAction({ box, voice }: ComposerActionProps) {
   if (!box.hasText && voice.available && !voice.on) {
     return (

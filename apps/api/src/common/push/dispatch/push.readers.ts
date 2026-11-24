@@ -1,4 +1,5 @@
-import { pushReaderOf, readerMayGet, type AnyPushKind, type UserRole } from '@ab/shared';
+import { pushReaderOf, readerMayGet } from '@ab/shared';
+import type { AnyPushKind, UserRole } from '@ab/catalog';
 
 interface Reader {
   id: string;

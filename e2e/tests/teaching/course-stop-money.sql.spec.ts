@@ -3,9 +3,7 @@ import { rolledBack } from '../../support/core/rls';
 import { assistant, code, commissionOf, pay, subscription } from '../../support/sales/assistant';
 import { importedCourse, lesson, moneyOf, rule, stop, teacher } from '../../support/teaching/course-stop';
 
-// «إلغاء الاشتراك» keeps the money (PR #464 review B1, migration 991): a STOPPED package (status
-// cancelled, cancel_kind stopped) stays in every money reader, so nothing the money says changes.
-// Rolled back.
+// A stopped package (migration 991) stays in every money reader, so the money is unchanged.
 
 const PERCENT = {
   commission_type: 'percent',

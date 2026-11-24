@@ -1,4 +1,4 @@
-import { payoutStatusStyle, type PayoutView } from '@ab/shared';
+import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import {
@@ -42,10 +42,7 @@ function PayoutCard({ payout }: { payout: PayoutView }) {
   );
 }
 
-/**
- * «كشوف الشهر» (R-TCH-04): my months newest first, each with its lessons, the amount in EGP, its
- * state (مسودة / اتعتمدت / اتدفعت) and the breakdown by lesson length. Read-only.
- */
+/** Monthly payouts (R-TCH-04) in EGP, newest first; read-only. */
 export function MyPayoutsScreen() {
   const payouts = useMyPayouts();
   return (

@@ -32,11 +32,7 @@ type StudentsPageProps = StudentsSearch & {
   onOpen: (studentId: string) => void;
 };
 
-/**
- * Students list: search by name / phone / code, filter, sort by any column, paginate, add
- * (R-STU-01..03, R-NFR-08). Inside the shell's Page. Any search, filter or sort change goes back
- * to page 1. «الكل · مشترك · تجريبي» sits in the toolbar, on the status filter (owner 2026-10-12).
- */
+/** Any search, filter or sort change goes back to page 1 (R-STU-01..03, R-NFR-08). */
 export function StudentsPage({ search, page, filters = {}, sort, columns: colFilters, onChange, onOpen }: StudentsPageProps) {
   const { data, isError } = useQuery(studentListQuery(search, page, { filters, sort, columns: colFilters }));
   const counts = useQuery(studentStatusCountsQuery({ ...filters, status: undefined }));
@@ -64,11 +60,10 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
       <PageHead>
         <Cartouche>{t.students.title}</Cartouche>
         {data && (
-          // ponytail: «{n} طالب» for every n; Arabic plural forms (3–10 طلاب) when copy needs them.
+          // One count form for every n; Arabic plural forms come when copy needs them.
           <span className="text-sm text-ink-3 tabular-nums">{t.students.count.replace('{n}', String(data.total))}</span>
         )}
         <div className="ms-auto flex gap-2.5 max-sm:w-full max-sm:[&>*]:flex-1">
-          {/* TODO(R-RPT-03): «تصدير» (students CSV) once the API has an export endpoint. */}
           <BulkAssign pick={pick} onDone={setNotice} />
           <Button onClick={() => setAdding(true)}>
             <Icon name="plus" />
@@ -82,7 +77,7 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
         </p>
       )}
       {none ? (
-        // The head already holds «إضافة طالب»: one primary per screen, so no second one here.
+        // One primary action per screen, and the head already holds it.
         <TableBox center>
           <EmptyState title={t.students.empty}>{t.students.emptyHint}</EmptyState>
         </TableBox>
@@ -112,7 +107,7 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
           }}
         />
       )}
-      {/* Keyed so «تم الدمج» right after «الطالب اتسجل» gets its own full 10 s (journey 6). */}
+      {/* Keyed so the merge toast gets its own full 10 s after the register one (journey 6). */}
       {notice && <Toast key={notice} message={notice} duration={10_000} onDismiss={dismiss} />}
     </>
   );

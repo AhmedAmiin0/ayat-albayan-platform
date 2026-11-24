@@ -13,13 +13,12 @@ import { createBody, createErrors, type FormErrors } from '@/users/shared/valida
 
 interface CreateUserFormProps {
   onClose: () => void;
-  /** Start with a role and a record already picked (the student file's «إنشاء حساب»). */
   prefill?: Prefill;
 }
 
 type Issued = { credential: IssuedCredential | null };
 
-/** «مستخدم جديد» (users.write): on success the one-time password / link replaces the form. */
+/** The one-time password or link replaces the form on success. */
 export function CreateUserForm({ onClose, prefill }: CreateUserFormProps) {
   const C = t.users.create;
   const queryClient = useQueryClient();

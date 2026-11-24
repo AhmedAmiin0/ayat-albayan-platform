@@ -9,10 +9,6 @@ interface MetaInput {
   cycle: ClockCycle;
 }
 
-/**
- * The meta row's text: «جارٍ الإرسال…» while on its way, else the time, after «تم التعديل ·» once
- * edited (owner 2026-10-30).
- */
 export function metaText(m: ChannelMessageView, input: MetaInput): string {
   if (isPending(m)) return t.studentChannel.sending;
   const time = channelTimeText({ iso: m.created_at, ...input, locale });

@@ -11,7 +11,7 @@ export interface TeacherOptionProps {
   onPick: () => void;
 }
 
-/** «{n} من {max} طالب», or «{n} طالب حاليًا» when the teacher has no maximum. */
+/** The count alone when the teacher has no maximum. */
 export function teacherLoad(o: Pick<BookingTeacherOption, 'students_count' | 'max_students'>): string {
   const n = String(o.students_count);
   return o.max_students === null

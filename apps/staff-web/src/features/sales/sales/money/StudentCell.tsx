@@ -1,7 +1,7 @@
 import type { SalesStudentRef } from '@ab/shared';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 
-/** A money row's student: the name, then the code as an LTR island («مدفوعاتي», «روابط الدفع»). */
+/** The code is rendered as an LTR island. */
 export function StudentCell({ student }: { student: Pick<SalesStudentRef, 'name' | 'code'> }) {
   return (
     <span className="inline-flex items-baseline gap-3">

@@ -16,12 +16,10 @@ interface Person {
 
 interface Props {
   title: string;
-  /** ✓✓ blue for «قرأها», ✓ grey for «لم يقرأها بعد». */
   read: boolean;
   people: readonly Person[];
 }
 
-/** One list of the dialog: its heading and its rows, or «لا أحد بعد». */
 export function ReadsList({ title, read, people }: Props) {
   const rows: ReactNode =
     people.length === 0 ? (

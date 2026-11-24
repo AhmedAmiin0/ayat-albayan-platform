@@ -21,7 +21,7 @@ const TEXT = 'ندعوكم… https://app.example.test/m/personal';
 function open() {
   api.fetch.mockImplementation(async (path: string) => (path === '/meetings' ? [SCHEDULED] : [INVITEE]));
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  // An admin: «أعد الإرسال» on a phone row is for admin and sales only.
+  // Resending to a phone row is for admin and sales only.
   client.setQueryData(meQuery.queryKey, ADMIN_ME);
   render(
     <QueryClientProvider client={client}>

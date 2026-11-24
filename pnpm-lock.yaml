@@ -48,6 +48,12 @@ importers:
 
   apps/api:
     dependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../../packages/catalog
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@ab/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -60,9 +66,15 @@ importers:
       '@ab/schedule':
         specifier: workspace:*
         version: link:../../packages/schedule
+      '@ab/settings':
+        specifier: workspace:*
+        version: link:../../packages/settings
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@ab/time':
+        specifier: workspace:*
+        version: link:../../packages/time
       '@aws-sdk/client-s3':
         specifier: 3.1162.0
         version: 3.1162.0

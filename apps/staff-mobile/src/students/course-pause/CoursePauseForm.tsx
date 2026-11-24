@@ -1,4 +1,5 @@
-import { riyadhToday, type CoursePauseStart } from '@ab/shared';
+import type { CoursePauseStart } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { StartDayPicker } from '@/assistants';
@@ -12,7 +13,6 @@ import { UntilField } from './UntilField';
 
 interface CoursePauseFormProps {
   studentId: string;
-  /** Saved: the sheet closes and the file says «أُوقفت الدورة مؤقتًا». */
   onDone: () => void;
   onClose: () => void;
 }
@@ -22,11 +22,7 @@ const bodyOf = (draft: { from: string; until: string | null; reason: string }): 
   return { fromDate: draft.from, untilDate: draft.until, ...(reason ? { reason } : {}) };
 };
 
-/**
- * «إيقاف الدورة مؤقتًا» (owner 2026-10-28): from (Riyadh today by default, never a past day), until (optional:
- * none = until «استئناف»), the reason (optional), the live count of the lessons it cancels and the note that
- * no message goes to the family. One primary «إيقاف الدورة» beside «إلغاء», equal widths.
- */
+/** From Riyadh today by default, never a past day; no end means until resume; no family message. */
 export function CoursePauseForm({ studentId, onDone, onClose }: CoursePauseFormProps) {
   // academy day (docs/34 b): a pause cuts at the academy's today.
   const [today] = useState(() => riyadhToday());

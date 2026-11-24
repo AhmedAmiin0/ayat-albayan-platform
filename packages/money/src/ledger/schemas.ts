@@ -11,8 +11,7 @@ import {
 } from '../pricing/catalog.js';
 import { calendarDaysBetween } from '@ab/time';
 
-// Money commands (docs/11 §5–8). camelCase. The API quotes every subscription from the catalog
-// (docs/08, as /pricing); only «مبلغ مخصص» (customPrice) replaces the quoted price, never `price`.
+// Money commands (docs/11 §5-8): only customPrice replaces the catalog-quoted price, never `price`.
 
 /** `YYYY-MM` in routes and queries; stored as the month's first day (monthStart). */
 export const monthParam = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'invalid_month');
@@ -57,7 +56,7 @@ export const subscriptionCreateSchema = z.object({
   /** Lessons taken before the platform: only with a past startsOn (usedBeforeProblem). */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
   clientRequestId: z.uuid(), // rule 8: a retry of the same form returns its package
-  /** «مبلغ مخصص»: the price, in the quote's currency (kept in price_source). */
+  /** The custom price, in the quote's currency (kept in price_source). */
   customPrice: moneyAmount.optional(),
 });
 
@@ -72,7 +71,7 @@ export const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 3
   message: 'paid_at_future',
 });
 
-/** «المرفقات» of a bank transfer: at most this many files per payment, all optional. */
+/** A bank transfer holds at most this many attachments per payment, all optional. */
 export const PAYMENT_ATTACHMENTS_MAX = 5;
 /**
  * Paths from the receipt upload URL (receipts/{subscription_id}/…). Accepted ONLY when the method is 'bank'
@@ -80,12 +79,7 @@ export const PAYMENT_ATTACHMENTS_MAX = 5;
  */
 export const paymentAttachmentPaths = z.array(z.string().min(1).max(200)).max(PAYMENT_ATTACHMENTS_MAX, { message: 'too_many_attachments' });
 
-/**
- * POST /payments (R-PAY-01). receiptPath comes from POST /payments/receipt-upload-url. `currency`
- * may differ from the package's when an fx rate exists (stored converted, original kept);
- * kind 'refund' («استرداد»): a positive amount counted against what was paid. invoiceId: the
- * booking's invoice is the receipt («سجّل كدفعة»).
- */
+/** `currency` may differ from the package's when an fx rate exists; a refund counts as negative. */
 export const paymentCreateSchema = z.object({
   subscriptionId: z.uuid(),
   amount: moneyAmount,

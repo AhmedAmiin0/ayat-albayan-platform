@@ -18,7 +18,6 @@ const gradeAt = (index: number, grade: ReportContent['segments'][number]['grade'
   return part ? withSegment(c, { index, segment: { ...part, grade } }) : c;
 };
 
-/** One track (التسميع / الحفظ الجديد / المراجعة): its parts, or «اختر السورة والآيات» while empty. */
 export function SegmentCard({ s, kind, onPick }: SegmentCardProps) {
   const v2 = t.reports.v2;
   const { content } = s.values;

@@ -24,7 +24,7 @@
   },
   "src/messaging/calls/call-entry.ts": {
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/messaging/calls/call-machine/call-machine.ts": {
@@ -39,7 +39,7 @@
   },
   "src/messaging/calls/call-types.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/channel/channel-open.test.ts": {
@@ -55,7 +55,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/messaging/chat/chat-lists.ts": {
@@ -63,7 +63,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/messaging/chat/crm-names.test.ts": {
@@ -76,7 +76,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 11
+      "count": 9
     }
   },
   "src/messaging/chat/line-views.ts": {
@@ -105,9 +105,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/messaging/chat/thread-reopen/thread-reopen.ts": {
@@ -116,21 +113,13 @@
     }
   },
   "src/messaging/chat/ticks.ts": {
-    "max-len": {
-      "count": 5
-    },
     "no-nested-ternary": {
       "count": 1
     }
   },
   "src/messaging/chat/views.ts": {
     "max-len": {
-      "count": 11
-    }
-  },
-  "src/messaging/lesson/booking-confirmation.ts": {
-    "max-len": {
-      "count": 3
+      "count": 10
     }
   },
   "src/messaging/lesson/meeting-link.ts": {
@@ -150,7 +139,7 @@
   },
   "src/messaging/lesson/timing.day-before.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/lesson/timing/timing.ts": {
@@ -191,7 +180,7 @@
   },
   "src/messaging/numbers/views.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/messaging/replies/quick-reply.ts": {
@@ -218,7 +207,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/messaging/replies/reply-lesson.ts": {
@@ -226,7 +215,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 9
     },
     "no-nested-ternary": {
       "count": 1
@@ -247,7 +236,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/messaging/replies/reply-number.ts": {
@@ -257,7 +246,7 @@
   },
   "src/messaging/replies/reply-slots.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/replies/saved-replies.test.ts": {
@@ -275,7 +264,7 @@
   },
   "src/messaging/replies/saved-reply-text/saved-reply-text.ts": {
     "max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/messaging/schemas.files.test.ts": {
@@ -288,7 +277,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 7
     }
   },
   "src/messaging/templates/i18n.test.ts": {
@@ -308,7 +297,7 @@
   },
   "src/messaging/templates/params.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/messaging/templates/prefill.ts": {
@@ -359,7 +348,7 @@
   },
   "src/messaging/wa.ts": {
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/notifications/catalogue/catalogue-settings.test.ts": {
@@ -405,7 +394,7 @@
   },
   "src/notifications/catalogue/catalogue-views.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/notifications/catalogue/catalogue.test.ts": {
@@ -457,7 +446,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/notifications/views.test.ts": {
@@ -480,11 +469,6 @@
       "count": 1
     }
   },
-  "src/people/account/avatar-initials.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/people/presence/presence-rules.ts": {
     "complexity": {
       "count": 1
@@ -492,7 +476,7 @@
   },
   "src/people/schemas/contact-is-self.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/people/schemas/people.ts": {

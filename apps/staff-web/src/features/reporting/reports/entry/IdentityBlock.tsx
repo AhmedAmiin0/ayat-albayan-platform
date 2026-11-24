@@ -16,7 +16,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** «رقم الحلقة» (R-LES-03), with the package line when the student has one (R-SUB-03). */
+/** R-LES-03 lesson number; R-SUB-03 adds the package line for a student who has one. */
 function lessonNo(entry: ReportFormEntry): string {
   if (!entry.package) return String(entry.lesson_no);
   const { lessons_used, lessons_total } = entry.package;
@@ -24,11 +24,7 @@ function lessonNo(entry: ReportFormEntry): string {
   return `${entry.lesson_no} · ${left.remainingLabel}`;
 }
 
-/**
- * The read-only top of the report (R-REP-01, issue D1), in the form's order: «معرّف الطالب», the
- * teacher, the student, the date in the student's zone and the lesson number. They come from the
- * lesson, never typed. «البرنامج» and «الحضور» (editable) follow, then the link (MeetingLinkRow).
- */
+/** Identity (R-REP-01) comes from the lesson, never typed; dates in the student's zone. */
 export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
   const clock = useClock();
   const { student } = entry;
@@ -51,7 +47,7 @@ export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; ent
   );
 }
 
-/** «رابط الاجتماع»: the lesson's link, read-only (it lives on the lesson), after the attendance. */
+/** The meeting link is read-only because it lives on the lesson. */
 export function MeetingLinkRow({ lesson }: { lesson: ReportFormLesson }) {
   return (
     <dl>

@@ -4,8 +4,6 @@ import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { countText, unitWord } from './value-units';
 
-// A value as words: the read-only cells, the default column, «المحفوظ: …», the phone button.
-
 const v = t.settingsValues;
 const ENUM_WORDS: Record<string, string> = {
   buttons: t.templates.settings.feedbackModeButtons,
@@ -59,7 +57,7 @@ export function valueText(key: SettingKey, value: unknown): string {
   return valueTextBy(VALUE_TEXT, key, value);
 }
 
-/** «من 1 إلى 12» (numbers), «من 1 إلى 60 حرفًا» (text); nothing for the other kinds. */
+/** Bounds as words for numbers and text lengths; nothing for the other kinds. */
 export function boundsText(key: SettingKey): string | undefined {
   const def = settingDef(key);
   const fill = (s: string, min: number, max: number) =>
@@ -74,7 +72,6 @@ export function defaultText(key: SettingKey): string {
   return valueText(key, SETTING_DEFAULTS[key]);
 }
 
-/** The second line of the default column: «24 عند التشغيل · من 1 إلى 168» or the bounds. */
 export function defaultNote(key: SettingKey): string | undefined {
   const def = settingDef(key);
   const bounds = boundsText(key);

@@ -13,19 +13,14 @@ export interface TeacherCancelDialogProps {
   lessonId: string;
   /** teacherCanPropose: open with no pending proposal (else the API answers 409). */
   canPropose: boolean;
-  /** «اقترح موعدًا آخر» instead (owner Q5): closes this dialog and opens the proposal. */
+  /** Proposing a new time instead closes this dialog and opens the proposal. */
   onPropose: () => void;
   onClose: () => void;
   /** Toast text after the cancel. */
   onDone: (message: string) => void;
 }
 
-/**
- * «إلغاء هذه الحلقة» (docs/46 C3, D3): this lesson only, a required reason checked with
- * teacherCancelSchema before the request; the family and the admins hear the reason. While no
- * proposal is pending, «اقترح موعدًا آخر» is offered before she confirms (owner Q5): the API
- * refuses a proposal on a cancelled lesson, so it is never suggested after.
- */
+/** Cancels this lesson only with a required reason; the API refuses proposals once cancelled. */
 export function TeacherCancelDialog(props: TeacherCancelDialogProps) {
   const { lessonId, canPropose, onPropose, onClose, onDone } = props;
   const w = t.teacherBoard;
@@ -79,7 +74,6 @@ interface CancelActionsProps {
   busy: boolean;
 }
 
-/** «تراجع» · «اقترح موعدًا آخر» (while none is pending) · «تأكيد الإلغاء» (danger). */
 function CancelActions({ canPropose, onPropose, onClose, formId, busy }: CancelActionsProps) {
   const w = t.teacherBoard;
   return (

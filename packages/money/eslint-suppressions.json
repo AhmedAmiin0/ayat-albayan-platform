@@ -37,7 +37,7 @@
   },
   "src/assistant/renewal.ts": {
     "max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/assistant/schemas.test.ts": {
@@ -96,7 +96,7 @@
   },
   "src/assistant/wallet.ts": {
     "max-len": {
-      "count": 17
+      "count": 13
     }
   },
   "src/ledger/alerts.test.ts": {
@@ -194,7 +194,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 12
+      "count": 7
     }
   },
   "src/ledger/usage/package-progress.ts": {
@@ -306,7 +306,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/status-style/status-style.ts": {
@@ -314,7 +314,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   }
 }

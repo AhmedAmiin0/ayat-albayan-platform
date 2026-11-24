@@ -11,11 +11,6 @@ export interface ReportEntryFooterProps {
   tz: string;
 }
 
-/**
- * The end of a student's report: what stops the submit (validation, the lesson not started yet,
- * an API refusal), the sent state with «تعديل التقرير», then «إرسال التقرير» / «حفظ التعديل»
- * (disabled with a spinner while pending) and the autosave line.
- */
 export function ReportEntryFooter({ s, block, tz }: ReportEntryFooterProps) {
   const { report, mode } = s;
   const label = report.status === 'draft' ? t.reports.submit : t.reports.resubmit;

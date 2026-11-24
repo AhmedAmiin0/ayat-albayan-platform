@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import { AccountDisabledError } from './permissions';

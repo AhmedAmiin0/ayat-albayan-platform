@@ -1,4 +1,4 @@
-import { expenseCategoryCreateSchema, type ExpenseCategoryView } from '@ab/shared';
+import { expenseCategoryCreateSchema, type ExpenseCategoryView } from '@ab/money';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';

@@ -20,7 +20,7 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-// Ported from the old /admin/settings page: the kill switch lives on «التواصل» › «نظرة عامة» (docs/12 §3.1).
+// docs/12 §3.1.
 describe('messaging kill switch on «نظرة عامة»', () => {
   it('warns that the CRM owns the number, and turning sending ON asks first, saying how many go out', async () => {
     renderCommunications({ apiFetch, gate: { open: false, reason: 'switch_off', queued: 5 } });

@@ -18,11 +18,7 @@ interface Props {
   onPeople: () => void;
 }
 
-/**
- * Above the stage: the top line (the family's lesson bar, staff's status line), «جارٍ إعادة
- * الاتصال…», the admin's recording-off alert, the trial's no-chat note (unless the family's chat
- * button explains it), the soft media problems and the share / board answers.
- */
+/** The trial's no-chat note shows unless the family's chat button explains it. */
 export function RoomTop({ room, join, kit, share, onPeople }: Props) {
   const { snap } = room;
   const trialNote = !chatOpen(join) && !kit.chat;

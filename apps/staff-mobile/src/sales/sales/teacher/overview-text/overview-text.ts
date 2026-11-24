@@ -1,4 +1,6 @@
-import { inWeekOrder, wallParts, type ClockCycle, type SalesOverviewStudent } from '@ab/shared';
+import { inWeekOrder, type SalesOverviewStudent } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import type { SalesTeacherOverview, SalesTeacherSlot } from '@ab/shared';
 import { hhmm } from '@/core/lib/clock';
 import { t, ltr } from '@ab/mobile-kit';

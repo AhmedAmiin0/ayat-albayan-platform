@@ -13,7 +13,7 @@ export interface DraftSaveInput {
   save: (body: string) => Promise<unknown>;
 }
 
-/** Debounced save of a draft body while `enabled`; `saveNow` sends the current body at once («احفظ مسودة»). */
+/** Debounced draft save while `enabled`; `saveNow` sends the current body at once. */
 export function useDraftSave(input: DraftSaveInput): { state: SaveState; saveNow: () => void } {
   const { body } = input;
   const settled = useDebounced(body, AUTOSAVE_MS);

@@ -13,16 +13,11 @@ interface PanelProps {
   onOpenReport: (report: OpenReport) => void;
   /** The family web's own lesson page (files without a recording); the staff pages pass none. */
   onOpenLesson?: (lessonId: string) => void;
-  /** «القادمة» leaves out the next lesson, shown above the tabs (the family home). */
+  /** Leaves out the next lesson, shown above the tabs on the family home. */
   exceptNext?: boolean;
 }
 
-/**
- * Each child tab's panel (docs/50 §6), mounted by the family web app and the staff portal pages:
- * only the shown one mounts, so the package is never asked for a child. «المحادثة» is the
- * student's thread (refs portal + the student in view, docs/31 §2); the API refuses it while
- * family_chat_enabled is off (403 family_chat_off), shown as the thread's load error.
- */
+/** Only the shown panel mounts; chat answers 403 family_chat_off while disabled. */
 const PANELS: Record<ChildTab, (props: PanelProps) => ReactNode> = {
   upcoming: ({ student, exceptNext }) => <LessonsPanel student={student} exceptNext={exceptNext} />,
   attended: (props) => <HistoryPanel {...props} status="attended" />,

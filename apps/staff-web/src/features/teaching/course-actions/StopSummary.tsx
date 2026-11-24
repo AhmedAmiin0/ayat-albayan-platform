@@ -37,7 +37,7 @@ function StopSummary({ preview, keeps }: { preview: CourseStopPreview; keeps: bo
   );
 }
 
-/** «أُلغي الاشتراك في …» and its reason, instead of the button. */
+/** Shown instead of the button. */
 function StoppedLine({ stopped }: { stopped: NonNullable<CourseStopPreview['stopped']> }) {
   const words = t.courseActions.stop;
   return (
@@ -54,13 +54,12 @@ function StoppedLine({ stopped }: { stopped: NonNullable<CourseStopPreview['stop
 
 interface BodyProps {
   preview: CourseStopPreview;
-  /** The reason typed; `missing`: «هذه الخانة مطلوبة» (after «تأكيد الإلغاء»). */
+  /** `missing` shows the required error after confirm. */
   reason: { value: string; onChange: (v: string) => void; missing: boolean };
   /** The money choice (owner 2026-11-06). */
   money: StopMoneyView;
 }
 
-/** The preview, or «أُلغي الاشتراك في …» when it is already cancelled; then the reason. */
 export function StopBody({ preview, reason, money }: BodyProps) {
   const words = t.courseActions.stop;
   if (preview.stopped) return <StoppedLine stopped={preview.stopped} />;

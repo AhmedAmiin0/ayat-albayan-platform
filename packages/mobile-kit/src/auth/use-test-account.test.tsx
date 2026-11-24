@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { freshQueryClient, queryWrapper } from '../testing/query';
 import { useIsTestAccount } from './use-permissions';
 
-// /auth/me `is_test` (docs/56): the family app's «تجريبي» chip.
+// /auth/me `is_test` (docs/56) drives the family app's test chip.
 const mockApiFetch = jest.fn();
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),

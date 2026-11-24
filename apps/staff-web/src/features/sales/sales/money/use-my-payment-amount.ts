@@ -5,11 +5,7 @@ import { MY_MONEY_KEY, updateMyPaymentAmount } from '@/features/sales/sales/api'
 const SALES_MONEY_KEY = ['sales', 'money'] as const;
 const SALES_SUBSCRIPTIONS_KEY = ['sales', 'subscriptions'] as const;
 
-/**
- * «تعديل المبلغ» by the assistant (subscriptions.edit_terms): PATCH
- * /sales/payments/:id/amount, then
- * «مدفوعاتي» / «محفظتي» (commission), the family's packages owed and her subscriptions refresh.
- */
+/** PATCH /sales/payments/:id/amount needs subscriptions.edit_terms; her money reads refresh. */
 export function useMyPaymentAmount(paymentId: string) {
   const queryClient = useQueryClient();
   const refresh = (queryKey: readonly string[]) => queryClient.invalidateQueries({ queryKey });

@@ -24,16 +24,10 @@ const LINE: Record<Exclude<PayScreen, 'open'>, { text: string; tone: 'ok' | 'act
 
 type Props = { token: string; back: PayReturn };
 
-/** A wrong token (404 link_not_found) is «هذا الرابط غير صحيح»; anything else the generic line. */
+/** A wrong token (404 link_not_found) gets its own line; anything else the generic one. */
 const loadErrorText = (e: unknown): string => (e instanceof ApiError && e.status === 404 ? P.notFound : t.common.error);
 
-/**
- * /pay/:token (docs/30, with FEATURE_STRIPE test or live; no login): the family's payment page.
- * GET /pay/:token gives the first name, the amount and the lessons; «ادفع الآن» goes to Stripe
- * Checkout through the API, which brings the payer back here with `?done=1` or `?cancelled=1`.
- * A wrong token is «هذا الرابط غير صحيح». The test notice shows only while the API's key is a
- * sandbox one (`sandbox`).
- */
+/** Public payment page (docs/30, no login); Checkout returns with `?done=1` or `?cancelled=1`. */
 export function PayPage({ token, back }: Props) {
   const query = useQuery(publicLinkQuery(token));
   const screen = query.data ? payScreen(query.data.status, back) : null;

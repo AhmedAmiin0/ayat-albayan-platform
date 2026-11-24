@@ -16,17 +16,13 @@ export function confirmErrorText(error: unknown): string {
 
 interface SalesConfirmLessonProps {
   lessonId: string;
-  /** The drawer then shows the lesson «مؤكدة» while the day re-reads. */
+  /** The drawer shows the lesson confirmed while the day re-reads. */
   onConfirmed: () => void;
-  /** Under a live «ادخل الحلقة»: outlined, so the drawer keeps one filled button. */
+  /** Under a live join button it is outlined, so the drawer keeps one filled button. */
   secondary?: boolean;
 }
 
-/**
- * «تأكيد الحلقة» in sales' lesson drawer (owner 2026-10-28, docs/16): POST /sales/lessons/:id/confirm on
- * ANY lesson (the family's «نعم» arrives in a chat every assistant sees), scheduled → confirmed, no message
- * to anyone. The drawer shows it only when canSalesConfirm (@ab/shared).
- */
+/** Any lesson (all assistants see the family's reply), scheduled to confirmed, no message sent. */
 export function SalesConfirmLesson({ lessonId, onConfirmed, secondary = false }: SalesConfirmLessonProps) {
   const client = useQueryClient();
   const confirm = useMutation({

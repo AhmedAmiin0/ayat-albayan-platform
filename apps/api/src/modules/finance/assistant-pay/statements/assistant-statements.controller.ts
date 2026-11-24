@@ -1,12 +1,11 @@
+import type { SignedDownload, SignedUpload } from '@ab/shared';
 import {
   assistantStatementGenerateSchema,
   assistantReasonSchema,
   assistantStatementPaySchema,
   assistantStatementsQuery,
   type AssistantStatementView,
-  type SignedDownload,
-  type SignedUpload,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

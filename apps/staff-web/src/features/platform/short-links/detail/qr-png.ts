@@ -1,5 +1,4 @@
-// «تنزيل PNG» of the QR card: the drawn <svg> rasterised on a canvas and saved as a file. The
-// svg carries its own colours (dark modules on white), so the file reads the same in dark mode.
+// The svg carries its own colours (dark on white), so the PNG reads the same in dark mode.
 
 /** The saved image's side in pixels (sharp enough to print). */
 export const QR_PNG_SIDE = 1024;

@@ -19,7 +19,7 @@ export interface PaymentInput {
   /** ISO instant, never ahead of now (paid-day.ts). */
   paidAt: string;
   receipt: Receipt | null;
-  /** A bank transfer's «المرفقات» (none otherwise). */
+  /** Bank transfers only. */
   attachments?: Attachment[];
 }
 

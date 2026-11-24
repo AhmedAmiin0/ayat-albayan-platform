@@ -1,15 +1,12 @@
 import {
-  attendanceStyle,
-  counted,
-  leadStatusStyle,
-  lessonStatusStyle,
   lessonWhenText,
   warnsTrialDate,
-  type StatusStyle,
   type TrialDateRow,
   type TrialHistory,
   type TrialOutcome,
 } from '@ab/shared';
+import { counted } from '@ab/core';
+import { attendanceStyle, leadStatusStyle, lessonStatusStyle, type StatusStyle } from '@ab/money';
 import { whenIn, type ViewerClock } from '@/core/lib/clock';
 import { t, locale, isolate } from '@ab/mobile-kit';
 
@@ -26,7 +23,7 @@ export const trialOutcomeStyle: Record<TrialOutcome, StatusStyle> = {
 interface WhenLines {
   /** In the viewer's zone. */
   when: string;
-  /** «بتوقيت الأسرة: …» when the family's zone differs; else null. */
+  /** Null when the family's zone is the same. */
   family: string | null;
 }
 
@@ -42,17 +39,16 @@ export function whenLines(startsAt: string, familyTz: string, viewer: ViewerCloc
   return { when, family: t.trialDate.familyTime.replace('{time}', familyAt) };
 }
 
-/** «فاطمة، الأحد 4 أكتوبر 17:00»: who picked it and when; «غير معروف» for an imported row. */
+/** An imported row shows the picker as unknown. */
 export function pickedLine(row: TrialDateRow, viewer: ViewerClock): string {
   return t.trialDate.pickedAt
     .replace('{name}', row.picked_by ? isolate(row.picked_by) : t.trialDate.unknownPicker)
     .replace('{when}', whenIn(new Date(row.picked_at), viewer.tz, viewer.cycle));
 }
 
-/** «موعدان» … the history header's count. */
 export const countText = (count: number): string => counted(t.trialDate.count, count);
 
-/** From the 3rd date on: «سيكون هذا الموعد التجريبي رقم {n}…» (a warning, never a block). */
+/** From the 3rd date on; a warning, never a block. */
 export function warnLine(count: number): string | null {
   return warnsTrialDate(count) ? t.trialDate.warn.replace('{n}', String(count + 1)) : null;
 }

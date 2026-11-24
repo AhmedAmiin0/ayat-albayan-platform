@@ -9,10 +9,7 @@ import { AssistantLessonRow } from '@/features/teaching/classroom/sessions/Assis
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
-/**
- * /sales/live «الحلقات الجارية»: every lesson running now in the academy (the API's start <= now < end),
- * with the classroom assistant's row and «ادخل الحلقة» (POST /lessons/:id/room/join lets her in).
- */
+/** Every lesson running now (start <= now < end); POST /lessons/:id/room/join lets her in. */
 export function SalesLive() {
   const live = useQuery(salesLiveQuery);
   return (

@@ -3,13 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
-/**
- * The short block on the sales landing (the chats): «حلقات جارية الآن: N» with a link to /sales/live.
- * Nothing while none is running, while loading, on an error, or without the scope key.
- * The band's link is a plain one (like EnterButton): it works without the router.
- * `compact` (the inbox list's head row): ONE small chip «حلقات جارية الآن: N» instead of the band, a
- * router Link, so leaving the chats keeps this tab's drafts (a full reload would lose them).
- */
+/** Hidden while loading, on error or without the scope key; compact uses a router Link. */
 export function SalesLiveStrip({ enabled, compact = false }: { enabled: boolean; compact?: boolean }) {
   const live = useQuery({ ...salesLiveQuery, enabled });
   const n = live.data?.length ?? 0;

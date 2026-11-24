@@ -37,7 +37,7 @@
   },
   "src/assistant/renewal.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/assistant/schemas.test.ts": {
@@ -96,7 +96,7 @@
   },
   "src/assistant/wallet.ts": {
     "stylistic/max-len": {
-      "count": 17
+      "count": 13
     }
   },
   "src/ledger/alerts.test.ts": {
@@ -191,7 +191,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 12
+      "count": 7
     }
   },
   "src/ledger/usage/package-progress.ts": {
@@ -300,7 +300,7 @@
   },
   "src/status-style/commission-status-style.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -308,7 +308,7 @@
   },
   "src/status-style/status-style.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1

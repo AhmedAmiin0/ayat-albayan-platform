@@ -14,28 +14,17 @@ interface CourseCardSectionProps {
   tree: CardTree;
   /** The package (sales' current one); absent = the server's current package. */
   subscriptionId?: string | null | undefined;
-  /**
-   * «تغيير المعلم» / «تغيير موعد الحلقات» / «مدّ الجدول» (sales: hers and a course exists);
-   * absent = once the card has a booked course.
-   */
+  /** Sales need her student and a course; absent means once the card has a booked course. */
   moves?: boolean;
   /** The package whose course the moves change (sales, owner 2026-11-06). */
   movesOf?: string | null | undefined;
-  /** The package's rows («جدّد الاشتراك»), before «إلغاء الاشتراك». */
   extra?: ReactNode;
-  /** The assistant's own «الحلقات القادمة» (with its lesson sheet) instead of the card's list. */
   upcoming?: ReactNode;
   /** The guardian's phone: the stop's done block opens the chat. */
   chatPhone?: string | undefined;
 }
 
-/**
- * «الدورة والباقة» (owner 2026-11-17) on the admin's student file and the assistant's «تفاصيل
- * الطالب»: the course (days, teacher and last day, lessons without a date), «الحلقات القادمة»,
- * then «إجراءات الدورة»: «إيقاف مؤقت» (or the pause's banner), «تغيير المعلم», «تغيير موعد
- * الحلقات», «مدّ الجدول», the package's rows and «إلغاء الاشتراك», each behind its key. The moves
- * need a booked course (no dead end on course_not_found).
- */
+/** Each action behind its key; moves need a booked course, so no dead end on course_not_found. */
 export function CourseCardSection(props: CourseCardSectionProps) {
   const { studentId, tree } = props;
   const card = useCourseCard({ studentId, tree }).data;

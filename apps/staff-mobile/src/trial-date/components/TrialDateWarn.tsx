@@ -2,10 +2,7 @@ import { View } from 'react-native';
 import { type, useTheme, AppText } from '@ab/mobile-kit';
 import { warnLine } from '@/trial-date/lib/trial-date-text';
 
-/**
- * From the 3rd date on (warnsTrialDate): «سيكون هذا الموعد التجريبي رقم {n}…» as a hamish line in
- * act, like the package/days note: a warning to check with the guardian, never a block.
- */
+/** From the 3rd date on, a warning to check with the guardian, never a block. */
 export function TrialDateWarn({ count }: { count: number }) {
   const { color } = useTheme();
   const line = warnLine(count);

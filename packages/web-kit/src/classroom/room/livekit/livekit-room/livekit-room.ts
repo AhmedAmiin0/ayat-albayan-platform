@@ -20,14 +20,11 @@ const REFRESH: readonly RoomEvent[] = [
   RoomEvent.AudioPlaybackStatusChanged,
   RoomEvent.RecordingStatusChanged,
   RoomEvent.ParticipantMetadataChanged,
-  // A staff «سماح» / «إيقاف مشاركة» (UpdateParticipant) changes who may share the screen.
+  // A staff grant or stop (UpdateParticipant) changes who may share the screen.
   RoomEvent.ParticipantPermissionsChanged,
 ];
 
-/**
- * Kicked (RemoveParticipant), opened elsewhere and ended for everyone (DeleteRoom, or the server's
- * closer) get their own screens; anything else is «خرجت».
- */
+/** Kicked, opened elsewhere and ended for everyone get their own screens; else plain left. */
 const CLOSING: Partial<Record<DisconnectReason, RoomStatus>> = {
   [DisconnectReason.DUPLICATE_IDENTITY]: 'duplicate',
   [DisconnectReason.PARTICIPANT_REMOVED]: 'removed',

@@ -4,9 +4,7 @@ import type { AttachmentItem } from '@/features/finance/payments/attachments/Att
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// The transfer's «المرفقات» (R-ASST-04, owner 2026-10-12: optional, old students have no receipt): up to
-// five, each a chat file already copied into the package's receipts (its path kept) or a file she picks,
-// uploaded once on save.
+// Attachments are optional (R-ASST-04; old students have no receipt), up to five, uploaded on save.
 
 export type ReceiptChoice =
   | { kind: 'chat'; messageId: string; subscriptionId: string; path: string; label: string }
@@ -38,7 +36,7 @@ export function attachmentItem(c: ReceiptChoice, index: number): AttachmentItem 
   return c.kind === 'chat' ? { key: `chat-${c.subscriptionId}-${c.messageId}`, name: c.label } : { key: `file-${index}-${c.file.name}`, name: c.file.name };
 }
 
-/** An accessible name for one chat file: its caption (else «الإيصال»), its day, and «expired» when so. */
+/** An accessible name: caption or a default, its day, and whether it expired. */
 export function chatReceiptLabel(r: SalesChatReceipt): string {
   const day = dateLabel(r.created_at.slice(0, 10));
   const parts = [r.caption?.trim() || t.salesMoney.receipt, day];

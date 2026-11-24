@@ -3,17 +3,16 @@ import { TextInput, View } from 'react-native';
 import { t, shape, type, useTheme, AppText, ErrorLine, currencyName, FormLabel } from '@ab/mobile-kit';
 
 interface AmountFieldProps {
-  /** Raw text; parseAmount reads it (Arabic digits and «٫» too). */
+  /** Raw text parsed by parseAmount, which accepts Arabic digits and decimal mark. */
   value: string;
   onChange: (text: string) => void;
   /** The package's currency: payments are in it (docs/11 §7), so it is shown, not asked. */
   currency: string;
   error?: string;
-  /** Defaults to «المبلغ». */
   label?: string;
 }
 
-/** «المبلغ»: 16pt (docs/07 §12, no iOS zoom), the numeric pad, LTR digits, the currency beside it. */
+/** 16pt avoids iOS zoom (docs/07 §12); numeric pad with LTR digits. */
 export function AmountField({ value, onChange, currency, error, label = t.payments.amount }: AmountFieldProps) {
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);

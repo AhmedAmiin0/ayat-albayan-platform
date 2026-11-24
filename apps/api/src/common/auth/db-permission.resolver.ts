@@ -1,4 +1,4 @@
-import { effectivePermissions, type Permission } from '@ab/shared';
+import { effectivePermissions, type Permission } from '@ab/catalog';
 import type { Db } from '@/common/db/db.module';
 import type { PermissionCache } from './permission.cache';
 import type { TestFlagReader } from './test-flag/test-flag.reader';

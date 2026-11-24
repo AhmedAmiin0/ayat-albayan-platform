@@ -81,7 +81,7 @@ export async function startNow(lessonId: string): Promise<void> {
   );
 }
 
-/** POST /lessons/:id/status as the admin (the teacher's «حضر» button): the status code. */
+/** Posts the status as the admin and returns the HTTP status code. */
 export async function completeLesson(page: Page, lessonId: string): Promise<number> {
   const res = await page.request.post(`${API}/lessons/${lessonId}/status`, {
     headers: await bearer(page),
@@ -96,7 +96,7 @@ interface UnpaidPackage {
   currency: string;
 }
 
-/** An unpaid «باقة الحلقة الأسبوعية» from today, at the catalog price (test data, SQL, like journey 3). */
+/** An unpaid weekly package from today at the catalog price, as in journey 3. */
 export async function unpaidPackage(studentId: string): Promise<UnpaidPackage> {
   const offer = {
     ...quote({ tier: 'weekly', duration: 45, country: 'SA', students: 1, discount: 0 }),

@@ -1,4 +1,5 @@
-import { localDateIn, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { localDateIn } from '@ab/time';
 import { SlotPicker, useSlotWeek } from '@ab/mobile-kit';
 import { useRescheduleSlots } from './queries';
 import { useViewerClock } from '@/core/lib/clock';
@@ -17,19 +18,15 @@ interface LessonSlotPickerProps {
   /** starts_at of the picked slot. */
   value: string | null;
   onPick: (startsAt: string) => void;
-  /** «الحلقة دي وكل اللي بعدها»: only days from the lesson's own day (the API refuses earlier). */
+  /** Only days from the lesson's own day, since the API refuses earlier ones. */
   fromLessonDay?: boolean;
-  /** «عدّل الوقت»: 15-minute starts, the lesson itself not counted as busy (useRescheduleSlots). */
+  /** 15-minute starts; the lesson itself does not count as busy. */
   edit?: { stepMin: number; excludeLessonId: string };
   /** Sales: GET /sales/booking/slots (useRescheduleSlots `path`), naming the lesson it moves. */
   slotsPath?: string;
 }
 
-/**
- * Staff's «الميعاد الجديد» (R-SCH-07): the kit's SlotPicker on the staff clock, fed by GET
- * /booking/slots (or sales' scoped route) for the shown week: the teacher's candidate starts with
- * their clashes, the lesson's own students included.
- */
+/** Staff slot picker (R-SCH-07); the lesson's own students count for clashes. */
 export function LessonSlotPicker(props: LessonSlotPickerProps) {
   const { lesson, durationMin, tz, fromLessonDay, edit, slotsPath } = props;
   const viewer = useViewerClock();

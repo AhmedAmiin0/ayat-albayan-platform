@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { avatarSetSchema, avatarUploadSchema, emailChangeSchema, passwordChangeSchema, profileUpdateSchema } from './account.schemas.js';
 
-// «حسابي» bodies (R-ACC-02..05).
-
 describe('profileUpdateSchema (R-ACC-02)', () => {
   it('trims the name and keeps it within 2-80 characters', () => {
     expect(profileUpdateSchema.parse({ full_name: '  هدى علي ' })).toEqual({ full_name: 'هدى علي' });

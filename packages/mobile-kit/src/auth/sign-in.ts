@@ -65,11 +65,7 @@ export async function signIn(creds: Credentials): Promise<SignInResult> {
   return refused === null ? checkRole() : { ok: false, error: refused };
 }
 
-/**
- * A WhatsApp code, a teacher's (docs/46 A8) or a guardian's through `codes` (docs/50 §6): the API
- * answers a magic-link token hash that supabase-js turns into a session, then the same role check.
- * A teacher's first sign-in lands on «أكمل حسابك».
- */
+/** The API returns a magic-link token hash that supabase-js turns into a session. */
 export async function signInWithCode(
   body: { phone: string; code: string },
   codes: CodeRoutes = authApi.staffCodes,

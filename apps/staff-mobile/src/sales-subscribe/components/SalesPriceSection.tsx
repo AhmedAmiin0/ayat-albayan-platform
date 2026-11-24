@@ -5,7 +5,6 @@ import { Note } from '@/core/ui/feedback/Note';
 import { SalesQuotePreview } from './SalesQuotePreview';
 import { salesErrorText } from '@/sales-subscribe/lib/sales-errors';
 
-/** «المبلغ المطلوب تحويله»: the API's quote, its error with a retry, or loading. */
 export function SalesPriceSection({ quote }: { quote: UseQueryResult<SalesQuoteView> }) {
   return (
     <Section title={t.salesMoney.price}>

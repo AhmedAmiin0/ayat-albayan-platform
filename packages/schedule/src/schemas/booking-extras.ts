@@ -4,7 +4,7 @@ import type { LessonStatus } from '@ab/catalog';
 // Booking kind, invoice and makeup (R-SCH-10, R-PAY-03, R-MSG-06). Kept apart from scheduling.ts
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.
 
-/** trial = حلقة تجريبية, package = اشتراك, makeup = حجز تعويضي (a replacement for a missed lesson). */
+/** makeup replaces a missed lesson. */
 export const BOOKING_KINDS = ['trial', 'package', 'makeup'] as const;
 export type BookingKind = (typeof BOOKING_KINDS)[number];
 
@@ -16,10 +16,7 @@ export type BookingKind = (typeof BOOKING_KINDS)[number];
 export const INVOICE_MIMES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'] as const;
 export const INVOICE_MAX_BYTES = 10 * 1024 * 1024;
 
-/**
- * The invoice (فاتورة) of a non-trial booking: a file the client already uploaded to the signed
- * URL of POST /booking/invoice-upload-url, or a WhatsApp image/PDF the server copies itself.
- */
+/** A client upload to the signed URL, or a WhatsApp file the server copies. */
 export const invoiceInputSchema = z.discriminatedUnion('source', [
   z.object({ source: z.literal('upload'), path: z.string().min(1) }),
   z.object({ source: z.literal('whatsapp'), messageId: z.uuid() }),
@@ -40,7 +37,7 @@ export const bookingExtras = {
   invoice: invoiceInputSchema.optional(),
   /** The missed lesson a makeup replaces. */
   makeupOfLessonId: z.uuid().optional(),
-  /** «وقت آخر»: skips only the teacher-hours check; never a clash, the past. */
+  /** Skips only the teacher-hours check; never a clash or the past. */
   outsideHours: z.boolean().optional(),
 };
 
@@ -72,12 +69,7 @@ const DAY_MS = 86_400_000;
 /** settings.makeup_window_days default, pinned by shared join-window.registry.test.ts. */
 export const MAKEUP_WINDOW_DAYS = 60;
 
-/**
- * May this lesson be made up? Only a student's own miss that the package already charged
- * (no_show, or an excuse that counted as a late cancel) within `windowDays` (settings.makeup_window_days). A cancel by the teacher or
- * admin and a `rescheduled` lesson are never charged, so «غيّر الميعاد» covers them; a free
- * makeup there would be an extra free lesson. A trial and a makeup are not made up again.
- */
+/** Only a charged own miss within `windowDays`; teacher or admin cancels are rescheduled. */
 export function makeupEligible(
   original: MakeupOriginal,
   now: Date,

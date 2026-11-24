@@ -5,7 +5,7 @@ import { act, renderHook } from '@testing-library/react-native';
 import { setDeviceZone } from '../testing/device-zone';
 import { useMeZone } from './use-me-zone';
 
-// The startup gate («جارٍ الاتصال») must open once and stay open (review of #462).
+// The startup gate must open once and stay open.
 afterEach(() => setViewerPersonTz('Asia/Riyadh'));
 
 test('the phone moving to another zone after start does not keep the gate shut', async () => {

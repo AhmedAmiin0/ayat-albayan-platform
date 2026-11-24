@@ -1,8 +1,7 @@
 import { resumeStore, type ResumeMap, type ResumeStorage } from '@ab/client-core';
 import { useSyncExternalStore } from 'react';
 
-// «تتابع من حيث توقفت» in this browser: @ab/client-core's store over localStorage, which can be
-// missing or throw (a private window): then this visit's stops only.
+// localStorage may be missing or throw (private window): then only this visit's stops.
 
 const local: ResumeStorage = {
   getItem: (key) => Promise.resolve().then(() => window.localStorage.getItem(key)),

@@ -1,7 +1,4 @@
-// Integration config lives in the database.
-// The keys an admin edits in «التكاملات» (/admin/settings): plain ones live in the
-// integration_config table, secret ones in Supabase Vault. A non-empty DB value wins over the
-// server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
+// Admin-edited keys: plain in integration_config, secrets in Vault; a non-empty DB value beats env.
 
 import { GROUP_OF } from '../keys.groups.js';
 import { STORAGE_DRIVERS, STORAGE_PLAIN_KEYS } from '../storage.js';
@@ -105,9 +102,9 @@ export type EvolutionMode = (typeof EVOLUTION_MODES)[number];
 export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly string[]>> = {
   WA_PROVIDER: WA_LINE_PROVIDERS,
   WA_CHAT_PROVIDER: WA_LINE_PROVIDERS,
-  // A switch, not a word to type (docs/23a §E H3): the select shows «مفعّلة» / «متوقفة».
+  // A switch, not a word to type (docs/23a §E H3).
   WA_TEMPLATE_SYNC: ['true', 'false'],
-  STRIPE_ENABLED: ['false', 'true'], // «الدفع الإلكتروني» (docs/30): off by default.
+  STRIPE_ENABLED: ['false', 'true'], // Online payment (docs/30) is off by default.
   STORAGE_DRIVER: STORAGE_DRIVERS, // docs/45: supabase until an admin switches (the cut-over).
   MINIO_RECORDINGS: ['false', 'true'], // docs/45 §1: recordings into MinIO, off by default.
   MINIO_DRIVE_BACKUP: ['false', 'true'], // docs/45 §5: MinIO archives to Google Drive, off.

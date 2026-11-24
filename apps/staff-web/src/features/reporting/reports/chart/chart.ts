@@ -13,11 +13,11 @@ export const CHART_MAX_POINTS = 30;
 export interface ChartPoint {
   id: string;
   at: string;
-  /** gradeScore: 5 = ممتاز … 1 = يحتاج إلى مراجعة; null = not graded (absent / excused). */
+  /** gradeScore: 5 is the best grade down to 1; null when not graded (absent or excused). */
   score: number | null;
   /** 0 = oldest (inline-start) … 100 = newest. */
   pos: number;
-  /** 0 = top (ممتاز) … 100 = bottom; null when not graded. */
+  /** 0 is the top (best grade) to 100 at the bottom; null when not graded. */
   y: number | null;
 }
 

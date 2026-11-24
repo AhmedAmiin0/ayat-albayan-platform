@@ -11,11 +11,7 @@ interface Props {
   onCancel: () => void;
 }
 
-/**
- * The composer's pill while recording (FamChatWebVoice): the red dot that pulses while the
- * microphone is live (the only loop, a live sign; none under reduced motion), the clock,
- * «جارٍ التسجيل…», and ✕ «إلغاء»; the round «أرسل» beside it stops and sends.
- */
+/** The pulsing dot is the only loop, a live sign, and none under reduced motion. */
 export function RecordingBar({ seconds, onCancel }: Props) {
   return (
     <div className="flex min-h-12 flex-1 animate-fade-in items-center gap-2.5 rounded-full border border-rule-input bg-raised ps-4 pe-1">

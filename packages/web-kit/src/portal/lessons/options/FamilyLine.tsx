@@ -11,18 +11,12 @@ interface FamilyLineProps {
   now: Date;
 }
 
-/** «أكّدتم حضور يوسف لهذه الحلقة» on a confirmed lesson ahead; else nothing. */
 function ConfirmedLine({ lesson, student, now }: FamilyLineProps) {
   if (!confirmedLine(lesson, now)) return null;
   const line = A.confirmedLine.replace('{student}', firstName(student.name));
   return <p className="text-sm text-ok">{line}</p>;
 }
 
-/**
- * What the family's request or excuse left on the lesson (canvas LessonXWebFamily): «طلبتم …»
- * with «يبقى موعد الحلقة كما هو…», a declined one with the academy's note, the excuse's outcome,
- * or the attendance they confirmed.
- */
 export function FamilyLine(props: FamilyLineProps) {
   const { lesson, student } = props;
   const clock = useClock();

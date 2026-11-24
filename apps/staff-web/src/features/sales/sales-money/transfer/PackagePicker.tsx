@@ -11,7 +11,6 @@ type Props = {
   onChange: (id: string) => void;
 };
 
-/** One of her packages still owed (opened from «سجّل تحويلًا بنكيًا»): the child, the package and what is due. */
 export function PackagePicker({ packages, value, onChange }: Props) {
   return (
     <Field label={t.subscriptions.package}>

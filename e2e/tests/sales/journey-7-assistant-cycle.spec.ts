@@ -13,20 +13,11 @@ import {
   apiAs, checkRegistration, childAndTrial, expectQuietStub, expectStatus, fromChatMore, leadIdOf, newestPackage, openChat, shot,
 } from '../../support/sales/assistant-journey';
 
-// Journey 7: the WHOLE student cycle as an assistant (base role sales), docs/16 + docs/18.
-// A family writes in → the assistant checks the number, registers the child with a trial (written at once as
-// «بانتظار الحلقة التجريبية») → the trial is attended («بانتظار الاشتراك») → she subscribes the family and
-// books the course days, records the bank transfer («مشترك», in «مدفوعاتي») → the package ends («بانتظار التجديد») → expired
-// («انتهى الاشتراك») → one tap renews from the chat, prefilled («مشترك» again; owner 2026-10-26). The assistant's buttons in the web UI;
-// the API only where she has no action (the trial outcome, the renewal date, the expiry). Local Supabase
-// and tools/wa-stub only, fake numbers; messaging stays off and nothing reaches the stub as a template.
-// Expiry: the API has no hook to run StudentExpiryJob in e2e (and none is added to production), so the
-// admin sets it (PATCH /students/:id with expected_status); the automatic move is unit-tested in
-// apps/api student-expiry.job.test.ts.
+// Journey 7 (docs/16, docs/18); expiry is set by the admin since e2e has no job hook.
 
 const E = ar.enums.studentStatus;
 const PASSWORD = 'Assistant-e2e-123';
-const WEEKLY = 'weekly'; // «باقة الحلقة الأسبوعية»: 4 lessons, the smallest package of the catalog
+const WEEKLY = 'weekly'; // The weekly package: 4 lessons, the catalog's smallest.
 
 test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs/18)', () => {
   test.beforeEach(async () => {
@@ -73,8 +64,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       await openChat(page, phone);
       await registerWithTrial(page, { name, guardian });
       ids = await childAndTrial(name);
-      // A registration with a trial lesson writes the student as «بانتظار الحلقة التجريبية» at once
-      // (docs/18 transition 1: create_booking, not a later new → trial move), so no status_change row yet.
+      // docs/18 transition 1: create_booking writes trial at once, so no status_change row yet.
       await expectStatus(page, { ...family, studentId: ids.studentId }, { from: null, to: 'trial', reason: null });
       await shot(page, info, '03-trial-booked');
       await expectQuietStub(phone);
@@ -93,8 +83,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     await test.step('5. «اشتراك جديد» + «أيام الحلقات» + «سجّل تحويلًا بنكيًا» → «أصبح الطالب مشتركًا»', async () => {
       await openChat(page, phone);
       await page.getByRole('button', { name: ar.salesMoney.newSubscription }).click();
-      // The transfer step opens by itself; first «احجز أيام الحلقات الآن» (the course before
-      // the transfer): exactly the plan's 4 lessons, one day a week; then closed to use the chat's own button.
+      // The course is booked before the transfer: exactly the plan's 4 lessons, one day a week.
       const step = await saveSubscription(page, WEEKLY);
       await bookCourseDays(page, step);
       await shot(page, info, '05a-course-days');

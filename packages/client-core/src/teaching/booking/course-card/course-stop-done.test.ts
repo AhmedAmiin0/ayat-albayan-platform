@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { stopDoneLines, type StopDoneWords } from './course-stop-done.js';
 
-// «إلغاء الاشتراك»'s done block (owner 2026-11-17, board CourseXStopDone).
 const words: StopDoneWords = {
   done: 'done',
   doneRefund: 'refund {amount}',

@@ -24,7 +24,7 @@ interface StudentEditFieldsProps {
   notes: boolean;
 }
 
-/** «بيانات الطالب»: what an assistant may edit (never status, program, teacher or link). */
+/** An assistant may never edit status, program, teacher or link. */
 export function StudentEditFields(props: StudentEditFieldsProps) {
   const { value, onChange, invalid, notes } = props;
   const error = (key: string) => (invalid.includes(key) ? E.invalid : null);

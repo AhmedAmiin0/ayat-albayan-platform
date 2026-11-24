@@ -5,9 +5,7 @@ import { stubReset } from '../../support/core/wa-stub';
 import { closeCodes, codeSentTo, openCodes } from '../../support/people/family-sign-in';
 import { codeTeacher } from '../../support/people/teacher-sign-in';
 
-// docs/46 A9: a teacher with no login → «الدخول برمز واتساب» → the code from the stub →
-// /account-setup (email + password) → her home; then a fresh browser signs in with her phone + that
-// password. Staff codes do not need the family flag (A1): it stays off here.
+// docs/46 A9: staff sign-in codes do not need the family flag (A1), so it stays off here.
 
 const PASSWORD = 'Teacher-e2e-pass-1';
 

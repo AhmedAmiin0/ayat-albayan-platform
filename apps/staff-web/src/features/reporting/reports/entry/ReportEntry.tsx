@@ -27,17 +27,13 @@ export interface ReportEntryProps {
   entry: ReportFormEntry;
   /** Heading per student when the lesson has more than one (group / siblings, R-STU-04). */
   titled: boolean;
-  /** The viewer's zone for «اتحفظت 17:42» and the edit window. */
+  /** The viewer's zone for the saved time and the edit window. */
   tz: string;
 }
 
 const H3 = 'font-display text-h3 font-bold';
 
-/**
- * One student's «تقرير الحلقة» (R-REP-01/02), in the Google Form's sections: «بيانات الحلقة»
- * (identity, program, attendance, link), «محتوى الحلقة», «التقييم التفصيلي» (six rubric grades +
- * overall) and «الملاحظات والواجب» (+ attachments); autosaved while a draft, then sent.
- */
+/** One student's lesson report (R-REP-01/02) in the original form's sections; draft autosave. */
 export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
   const s = useReportEntry(entry.report, entry.student.program);
   const { attachments } = useReportApi();

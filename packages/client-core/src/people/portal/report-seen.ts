@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-// «جديد» on a report the family has not opened yet (docs/50 §6, builder's call: on the device).
-// The app stores the opened ids (localStorage, AsyncStorage); the rules and the shape live here.
+// New-report marks are kept on the device (docs/50 §6); rules and shape live here.
 
 /** The device key the apps store the opened report ids under. */
 export const SEEN_REPORTS_KEY = 'ab.portal.seen-reports';

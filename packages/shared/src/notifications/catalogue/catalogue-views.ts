@@ -9,7 +9,7 @@ import type { NotificationRuleView } from '../rules.types.js';
 /** on = goes out when its trigger happens; off = held by the first blocker; manual = a person sends it. */
 export type NotificationState = 'on' | 'off' | 'manual';
 
-/** The catalogue's tabs in web and mobile: one audience, or «يدوي» (every manual row). */
+/** The catalogue's tabs: one audience, or manual (every manual row). */
 export type AudienceTab = NotificationAudience | 'manual';
 
 /** Why a row would not go out now, in the order they are checked (the first one is shown). */
@@ -47,12 +47,9 @@ export interface NotificationEntryView {
   templates: NotificationTemplateView[];
   /** The WhatsApp numbers it leaves from (its templates' lines); empty for bell / push and free text. */
   lines: WaLine[];
-  /** When it is sent: the governing setting and its current value, as text («60», «24، 72»). */
+  /** When it is sent: the governing setting and its current value, as text. */
   timing: { key: TimingKey; value: string } | null;
-  /**
-   * v2 only: how many of its template variants are approved (PR #134 item 7). some = «معتمد جزئيًا»:
-   * on, but lessons whose link picks an unapproved variant get nothing. null: no template.
-   */
+  /** v2 only: approved variants; some means lessons picking an unapproved variant get nothing. */
   approval?: 'all' | 'some' | 'none' | null;
   /** v2 only: the admin's choices for this row (docs/23 phase 4). */
   rule?: NotificationRuleView;
@@ -71,6 +68,6 @@ export interface NotificationsOverview {
   lines: LineHealthView[];
   /** v2 only: where producers read the rules now (settings.comms_source). */
   mode?: 'legacy' | 'module';
-  /** v2 only: whom a family-facing switch reaches («سيصل إلى N ولي أمر»): counts with a phone. */
+  /** v2 only: whom a family-facing switch reaches, counting contacts with a phone. */
   reach?: { guardian: number; teacher: number; lead: number };
 }

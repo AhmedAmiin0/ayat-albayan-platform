@@ -1,4 +1,4 @@
-import { PUSH_KINDS } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import { fakePolicy, fakeRulesReader, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/common/push/push.fakes';

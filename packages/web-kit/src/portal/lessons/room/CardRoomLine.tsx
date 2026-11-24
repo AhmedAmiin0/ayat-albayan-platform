@@ -7,7 +7,7 @@ import { LivePresence } from './LivePresence';
 
 interface Props {
   room: CardRoom;
-  /** The family's clock: «انتهت الحلقة الساعة 7:12 م». */
+  /** The family's clock. */
   tz: string;
 }
 

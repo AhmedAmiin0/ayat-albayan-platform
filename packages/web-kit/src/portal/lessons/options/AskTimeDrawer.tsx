@@ -26,17 +26,13 @@ interface AskTimeDrawerProps {
 
 const A = t.portal.actions;
 
-/** «حلقة يوسف مع أ. فاطمة · 45 دقيقة». */
 const sublineOf = (lesson: PortalLesson, student: PortalStudent): string =>
   A.askSubline
     .replace('{student}', firstName(student.name))
     .replace('{teacher}', teacherLabel(lesson.teacher))
     .replace('{minutes}', t.portal.app.lesson.minutes.replace('{n}', String(lessonMinutes(lesson))));
 
-/**
- * «اطلب موعدًا آخر» (canvas LessonXWebFamily): the staff slot grid's week frame over the family's
- * free starts, a note for the academy and «أرسل الطلب». The lesson keeps its time until answered.
- */
+/** The lesson keeps its time until the request is answered. */
 export function AskTimeDrawer(props: AskTimeDrawerProps) {
   const { lesson, student, busy, error, onClose, onSend } = props;
   const tz = useViewerTz();

@@ -1,4 +1,9 @@
-import type { AssistantTermsInput, BroughtByView, AssistantTermsRow, AssistantTermsView } from '@ab/shared';
+import type {
+  AssistantTermsInput,
+  BroughtByView,
+  AssistantTermsRow,
+  AssistantTermsView,
+} from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { notFound } from '@/common/http/errors';

@@ -1,4 +1,5 @@
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow, Page } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';

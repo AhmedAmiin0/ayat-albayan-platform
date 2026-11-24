@@ -18,8 +18,7 @@ import { meQuery } from '@/features/people/auth';
 import { apiFetch, apiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// /people/* (owner 2026-11-02): «تعديل البيانات», «ربط بولي أمر آخر» and «تحويل», for the assistant
-// and the admin (people.edit, students.attach_guardian, people.switch_role).
+// Needs people.edit, students.attach_guardian or people.switch_role.
 
 /** apiSend whose JSON answer is parsed by the caller's schema (never a type argument). */
 const send = (method: SendMethod, path: string, body?: unknown): Promise<unknown> =>

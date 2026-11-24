@@ -15,11 +15,7 @@ export function needsLesson(params: readonly string[]): boolean {
   return params.some((p) => LESSON_TIME_PARAMS.includes(p));
 }
 
-/**
- * The value of variable `name` for this lesson, as the producers write it: «الأحد 4 أكتوبر 17:00»
- * (lesson_when), «17:00» (lesson_time), «17:00 — سهيلة ومريم» (lesson_slot), the students' names.
- * null for a variable a lesson does not answer.
- */
+/** The value of variable `name` for this lesson; null when the lesson has none. */
 export function lessonParamValue(name: string, lesson: ThreadLesson): string | null {
   const startsAt = new Date(lesson.starts_at);
   const names = joinNames(lesson.student_names);

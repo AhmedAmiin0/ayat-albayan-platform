@@ -26,11 +26,7 @@ const words = () => t.reports.v2.suggest;
 // A sent report stores untouched suggestions in Arabic (the bundle, or its overrides).
 const storedWords = () => [arBundle.reports.v2.suggest, t.reports.v2.suggest];
 
-/**
- * One student's v2 «تقرير الحلقة» (form_version 2): local values, the debounced v2 draft save while
- * a draft («احفظ مسودة» saves at once), and the send with the API's own check first. Nothing shows
- * as sent until the API says so.
- */
+/** Nothing shows as sent until the API says so (form_version 2). */
 export function useV2Entry(entry: ReportFormEntry) {
   const client = useQueryClient();
   const studentProgram = entry.student.program;

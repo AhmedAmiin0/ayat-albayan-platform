@@ -1,13 +1,11 @@
+import type { PaymentKind, PaymentMethod, PayoutStatus } from '@ab/catalog';
 import {
   walletState,
   WALLET_VOID_REASONS,
   type AssistantCommissionStatus,
   type MyCommissionRow,
-  type PaymentKind,
-  type PaymentMethod,
-  type PayoutStatus,
   type WalletVoidReason,
-} from '@ab/shared';
+} from '@ab/money';
 
 /**
  * A row of «عمولاتي» as the select returns it: the student (code, name), the statement it sits in and the

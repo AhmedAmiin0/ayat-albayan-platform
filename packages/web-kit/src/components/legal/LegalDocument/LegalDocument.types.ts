@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 
 export interface LegalDocumentProps {
-  /** The page's one level-1 heading («سياسة الخصوصية»). */
   title: string;
   /** The «last updated» line, already worded. */
   updated: string;

@@ -9,7 +9,7 @@ import {
 
 /** The schedule_rules columns that decide when lessons happen; a Tables<'schedule_rules'> row fits. */
 export type OccurrenceTiming = {
-  /** 0 = الأحد … 6 = السبت. */
+  /** 0 = Sunday ... 6 = Saturday. */
   byday: readonly number[];
   /** Wall-clock in `tz`, "HH:MM" or Postgres "HH:MM:SS". */
   start_time_local: string;

@@ -8,15 +8,10 @@ import type { GateViewResult } from './short-links-api.js';
 
 export const GATE_SCREENS = [
   'loading',
-  /** «متابعة باسم <name>» (a signed-in visitor). */
   'signed_in',
-  /** «للمتابعة، أكّد رقمك عبر واتساب». */
   'phone',
-  /** «أدخل الرمز». */
   'code',
-  /** limit_reached: «اكتمل العدد المسموح به لهذا الرابط». */
   'full',
-  /** not_allowed: «هذا الرابط مخصّص لأشخاص محددين». */
   'restricted',
   'expired',
   'revoked',
@@ -26,7 +21,7 @@ export const GATE_SCREENS = [
 ] as const;
 export type GateScreen = (typeof GATE_SCREENS)[number];
 
-/** The visitor's own step: `start` = what the session offers; `phone` = «أكّد رقمًا آخر». */
+/** `start` is what the session offers; `phone` confirms another number. */
 export type GateStep = 'start' | 'phone' | 'code';
 
 export interface GateState {
@@ -34,7 +29,7 @@ export interface GateState {
   view: GateViewResult | undefined;
   signedIn: boolean;
   step: GateStep;
-  /** The last open / verify answer, null before one (or after «أكّد رقمًا آخر»). */
+  /** Null before an answer, or after choosing to confirm another number. */
   result: ShortLinkOpenResult | null;
 }
 

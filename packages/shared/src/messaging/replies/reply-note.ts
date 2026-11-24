@@ -17,9 +17,9 @@ export interface ReplyNoteAction {
 }
 
 export interface ReplyNote {
-  /** The line's key; null = the button alone (a «نعم» whose lesson is still to confirm). */
+  /** null means the button alone (a yes whose lesson is still to confirm). */
   key: ReplyNoteKey | null;
-  /** «الأحد 4 أكتوبر 17:00», the academy's (Riyadh) time, of the lesson; null without one. */
+  /** The lesson's time in the academy's (Riyadh) zone; null without one. */
   when: string | null;
   action: ReplyNoteAction | null;
 }
@@ -63,12 +63,7 @@ function confirmNote(ctx: ReplyNoteContext, when: string | null): ReplyNote | nu
   return null;
 }
 
-/**
- * A guardian's reschedule ask: «طلب تغيير موعد الحلقة» with «تغيير الموعد» for its lesson (open, not
- * ended, the viewer may move it), else «طلب تغيير الموعد»; «تم تغيير موعد الحلقة» once it moved.
- * A «نعم»: «تم تأكيد حلقة …» when its lesson is confirmed, else «تأكيد الحلقة» on a scheduled one the
- * viewer may confirm, else nothing. «وقف» from a guardian or a lead. Anything else → null.
- */
+/** A reschedule ask offers a move, a yes offers confirm, if the viewer may; else null. */
 export function replyNote(m: NoteInput, ctx: ReplyNoteContext): ReplyNote | null {
   if (m.direction !== 'inbound' || !m.body) return null;
   const intent = quickReplyIntent(m.body);

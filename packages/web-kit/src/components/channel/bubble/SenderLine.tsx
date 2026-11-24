@@ -15,7 +15,6 @@ interface Props {
   role: ChannelSenderLabel;
 }
 
-/** «أ. فاطمة · المعلم/ة» over someone else's first message of a run (the FamChat boards). */
 export function SenderLine({ name, role }: Props) {
   const word = t.studentChannel.roles[role];
   return (

@@ -9,15 +9,12 @@ export function Skeleton({ className }: { className?: string }) {
 export interface ListSkeletonProps {
   /** Placeholder rows; a list page shows about one screenful. */
   rows?: number;
-  /** Spoken while loading; defaults to «جاري التحميل…». */
+  /** Spoken while loading. */
   label?: string;
   className?: string;
 }
 
-/**
- * Loading state of a list or table: a few row-shaped bars in place of the old «جاري التحميل…» line.
- * role=status + aria-busy, and the words stay for screen readers (and for tests that look for them).
- */
+/** role=status with aria-busy; the words stay for screen readers and tests. */
 export function ListSkeleton({ rows = 4, label = t.common.loading, className }: ListSkeletonProps) {
   return (
     <div role="status" aria-busy="true" className={cn('grid gap-3 py-4', className)}>

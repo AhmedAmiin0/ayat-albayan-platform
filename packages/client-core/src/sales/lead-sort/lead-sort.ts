@@ -13,7 +13,7 @@ export function parseLeadSort(sort: unknown, dir: unknown): LeadSort {
   return dir === 'desc' ? { sort: key, dir: 'desc' } : { sort: key };
 }
 
-/** The «الترتيب» select value: `key` (asc) or `key:desc`; '' = the default order. */
+/** `key` (asc) or `key:desc`; empty string means the default order. */
 export function leadSortValue({ sort, dir }: LeadSort): string {
   if (!sort) return '';
   return dir === 'desc' ? `${sort}:desc` : sort;

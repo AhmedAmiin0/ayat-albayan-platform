@@ -16,12 +16,7 @@ export interface MoveLineDialogProps {
   onClose: () => void;
 }
 
-/**
- * «نقل إلى الرقم الآخر» confirm (owner 2026-10-18): which number the template leaves and joins, and,
- * for a template the platform sends on its own (TEMPLATE_KEYS), that booking / reminder messages
- * will then go out from the other number. A number the server has no credentials for cannot be
- * re-checked on Meta, so it says so and offers no confirm.
- */
+/** A number without server credentials cannot be re-checked on Meta, so no confirm is offered. */
 export function MoveLineDialog({ template: tpl, target, busy, onConfirm, onClose }: MoveLineDialogProps) {
   const noTarget = target?.configured === false;
   const from = t.enums.waLine[tpl.line];

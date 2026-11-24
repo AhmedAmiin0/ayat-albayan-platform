@@ -20,7 +20,6 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 const BLOCKED = { ...COURSE_VIEW, blocked: 'course_exists' as const };
 
-/** The header's «المزيد» (W3): the secondary sales actions live in it. */
 const openMore = async () => fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
 
 function openChat(students: ReturnType<typeof student>[]) {

@@ -23,7 +23,6 @@ const INVOICE_ERRORS = new Set(['invoice_required', 'invoice_type', 'invoice_too
 export interface ReviewStepProps {
   draft: BookingDraft;
   onMeetingLink: (link: string) => void;
-  /** «اختر موعدًا آخر» after a conflict: back to the slot step. */
   onChangeSlot: () => void;
   /** An invoice error (required, wrong file, expired chat media): back to the invoice step. */
   onInvoice: () => void;
@@ -32,11 +31,7 @@ export interface ReviewStepProps {
   onPatch: (patch: Partial<BookingDraft>) => void;
 }
 
-/**
- * Step 5 (R-SCH-06): everything that will be created, the optional link, then «احجز». A 409 lists
- * the conflicts in Arabic with «اختار ميعاد تاني» or «احجز رغم التعارض» + reason (R-SCH-04). The
- * assistant (sales mode) has no link and no override; her course books only over a clean series check.
- */
+/** A 409 lists conflicts with override and reason (R-SCH-04); sales has no link or override. */
 export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBooked, onPatch }: ReviewStepProps) {
   const queryClient = useQueryClient();
   const mode = useBookingMode();
@@ -53,8 +48,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
       else held?.();
     },
   });
-  // The assistant's course books only over a clean series check: she never books over a clash. Only
-  // a course asks here (the admin's 409 lists the clashes), so «رابط الحلقة» never re-checks.
+  // Only a course checks here (the admin's 409 lists clashes), so the link never re-checks.
   const course = draft.course !== null;
   const series = useSeriesCheck(draft, course);
   const clean = isSeriesClean(series);
@@ -106,7 +100,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
           <FormAlert>
             {past ? t.booking.firstLessonPast : lessonErrorText(book.error)}
             {past && (
-              // The past start is dropped first, so «التالي» cannot lead back to the same refusal.
+              // The past start is dropped first, so next cannot lead back to the same refusal.
               <Button
                 type="button"
                 variant="secondary"

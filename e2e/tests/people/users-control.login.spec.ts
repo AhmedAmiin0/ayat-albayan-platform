@@ -2,9 +2,6 @@ import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, detailDialog, expectRefused, expectSignedIn, openUser, signInAs, stamp, takeIssued } from '../../support/people/users-control';
 
-// «المستخدمون»: disabling a login refuses its sign-in, enabling brings it back, and a password
-// reset makes the old password useless and the new one work.
-
 const RUN = stamp();
 const USER = { email: `login-${RUN}@e2e.local`, password: `Old-pass-e2e-${RUN}`, fullName: `مستخدم الدخول ${RUN}` };
 const A = ar.users.actions;

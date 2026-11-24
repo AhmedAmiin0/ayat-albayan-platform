@@ -45,7 +45,7 @@ export function BlockSkeleton({ rows = 3 }: { rows?: number }) {
   );
 }
 
-/** A block that could not load: a quiet line (no role=alert at rest) and «إعادة المحاولة». */
+/** No role=alert at rest. */
 export function LoadError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="flex flex-wrap items-center gap-3">

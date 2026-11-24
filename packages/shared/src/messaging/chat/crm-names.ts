@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-// The crm driver's template names (docs/19 «crm driver»). The academy CRM holds the templates of the old
-// Google Apps Script («نظام تسجيل الطلاب»): most share our meta_name, three flows use the CRM's own names.
+// The crm driver's template names (docs/19); three flows use the CRM's own names.
 
 /**
  * The CRM's name for a template when it is not its meta_name: the teacher's new-student alert

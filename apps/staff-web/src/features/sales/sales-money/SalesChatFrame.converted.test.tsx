@@ -53,7 +53,7 @@ describe('SalesChatFrame: the lead becoming a family under an open «تسجيل 
     fireEvent.change(name, { target: { value: 'أم جود' } });
 
     fireEvent.click(screen.getByRole('button', { name: 'poll' }));
-    // Her family's actions arrive («اشتراك جديد»): the header switched to the family branch.
+    // Her family's actions arrive: the header switched to the family branch.
     await screen.findByRole('button', { name: t.salesMoney.newSubscription });
     await waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/sales\/money\/family/)));
     expect(screen.getByRole('dialog', { name: t.inbox.registerNew })).toBe(register);

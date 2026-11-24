@@ -1,4 +1,5 @@
-import { GENDERS, tzChoices, tzOptionLabel } from '@ab/shared';
+import { GENDERS } from '@ab/catalog';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import { t } from '@ab/mobile-kit';
 
 const city = (id: string): string | undefined => (t.tz as Record<string, string | undefined>)[id];

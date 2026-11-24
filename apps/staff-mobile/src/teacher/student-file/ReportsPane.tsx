@@ -58,12 +58,7 @@ interface ReportsPaneProps {
   tz?: string | undefined;
 }
 
-/**
- * «التقارير» of one student (R-REP-05, R-TCH-03): the recordings way (a teacher's), then every
- * sent report, newest first, with its PDF once it is ready. Only the teacher's own lessons'
- * reports open as a form; another teacher's stays a history line. The admin reads any report
- * (read-only, ops/AdminReportScreen).
- */
+/** Only her own lessons' reports open as a form (R-REP-05); another teacher's stays history. */
 export function ReportsPane({ id, who, tz: zone }: ReportsPaneProps) {
   const viewer = useViewerTz();
   const tz = zone ?? viewer;

@@ -3,11 +3,7 @@ import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { useTheme } from '../../theme';
 import { raisedCard } from './surface';
 
-/**
- * The one container rule (owner 2026-10-28: «some screens have a padded container and some do not»):
- * every group of rows sits inside Screen's 16pt gutter in ONE rounded raised card, as Today's «بقية
- * اليوم»: radius 20, the `raised` fill, a hairline edge, a rule between rows inset 16pt from both sides.
- */
+/** Every group of rows sits in one rounded raised card inside Screen's 16pt gutter. */
 const INSET_RADIUS = 20;
 
 const InsetContext = createContext(false);
@@ -21,10 +17,7 @@ function Rule() {
   return <View style={{ height: StyleSheet.hairlineWidth, marginHorizontal: 16, backgroundColor: color.rule }} />;
 }
 
-/**
- * A short, static group of rows («المزيد», a settings card): the card with a rule between its children
- * (null / false children are skipped, so permission-gated rows need no bookkeeping).
- */
+/** A short static group of rows in the card; null or false children are skipped. */
 export function InsetGroup({ children, testID }: { children: ReactNode; testID?: string }) {
   const { color } = useTheme();
   const rows = Children.toArray(children);

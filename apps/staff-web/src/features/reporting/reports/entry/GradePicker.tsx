@@ -20,11 +20,7 @@ export interface GradePickerProps {
   required?: boolean;
 }
 
-/**
- * One rubric (R-REP-02): five native radios drawn as grade pips (gradeStyle, ordinal so it reads
- * in greyscale) with the grade word under them (12px, never counted from dots), ممتاز first.
- * Arrow keys move.
- */
+/** Rubric pips (R-REP-02) are ordinal so they read in greyscale; the word is shown, never dots. */
 export function GradePicker({ name, label, value, onChange, disabled, emphasis, invalid, required }: GradePickerProps) {
   return (
     <fieldset

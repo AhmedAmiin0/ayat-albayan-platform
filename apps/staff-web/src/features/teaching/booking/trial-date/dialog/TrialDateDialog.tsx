@@ -26,7 +26,7 @@ export interface TrialDateDialogProps {
 const noop = () => undefined;
 type Start = { draft: BookingDraft; hint: BookHint | null };
 
-/** The history behind «عرض المواعيد» (collapsed: the wizard comes first), with its count. */
+/** Collapsed so the wizard comes first. */
 function HistoryToggle({ query }: { query: UseQueryResult<TrialHistory> }) {
   const [open, setOpen] = useState(false);
   return (
@@ -42,14 +42,7 @@ function HistoryToggle({ query }: { query: UseQueryResult<TrialHistory> }) {
   );
 }
 
-/**
- * «موعد تجريبي جديد» (owner 2026-10-25; R-SCH-06, R-SCH-07, R-ASST-01): the booking wizard's reduced
- * flow teacher → slot → review in a dialog, for one existing student without a running subscription.
- * The last trial's teacher is preselected (changeable); the grid leaves out the trial being moved;
- * the review says whether it moves the upcoming trial or books a new one, and warns from the 3rd
- * date. A subscriber gets the reason instead. The first draft is held: the refetch after booking
- * never resets the done panel.
- */
+/** For a student without a running subscription; the first draft is held so refetch keeps done. */
 export function TrialDateDialog({ student, mode, facts, onClose }: TrialDateDialogProps) {
   const history = useQuery(trialHistoryQuery(student.id, mode));
   const [start, setStart] = useState<Start | null>(null);

@@ -7,7 +7,7 @@ import { fromPhone, type PickedInvitee } from './invitee-list';
 
 const L = t.meetingInvites;
 
-/** «رقم هاتف»: a typed number, kept only when it is a valid E.164 number (rule 7). */
+/** Kept only when it is a valid E.164 number (rule 7). */
 export function PhoneInviteeInput({ onAdd, disabled }: { onAdd: (item: PickedInvitee) => void; disabled?: boolean }) {
   const [phone, setPhone] = useState('');
   const [invalid, setInvalid] = useState(false);
