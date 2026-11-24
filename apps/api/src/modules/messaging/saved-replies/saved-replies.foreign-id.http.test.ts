@@ -1,6 +1,5 @@
-import { systemPermissionsOf } from '@ab/shared';
 import { afterEach, describe, expect, it } from 'vitest';
-import type { PermissionResolver } from '@/common/auth/permissions';
+import { systemResolver, type PermissionResolver } from '@/common/auth/permissions';
 import { replyId, repliesApp, row } from './saved-replies.fakes';
 
 type App = Awaited<ReturnType<typeof repliesApp>>;
@@ -10,10 +9,10 @@ const seed = () => [
   row({ n: 2, owner_profile_id: 's2' }),
   row({ n: 3, owner_profile_id: 's1' }),
 ];
-const withManage: PermissionResolver = async (user) => {
-  const all = user.role ? systemPermissionsOf(user.role) : [];
-  return [...all, 'saved_replies.manage'];
-};
+const withManage: PermissionResolver = async (user) => [
+  ...(await systemResolver(user)),
+  'saved_replies.manage',
+];
 
 let t: App | null = null;
 afterEach(async () => {
