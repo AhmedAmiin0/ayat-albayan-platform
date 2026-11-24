@@ -67,8 +67,7 @@ describe('«القيم» — each row saves on its own', () => {
     expect(within(row).getByText(message)).toBeTruthy();
     expect(input.getAttribute('aria-invalid')).toBe('true');
     expect(input.getAttribute('aria-describedby')).toContain(within(row).getByText(message).closest('p')?.id ?? 'x');
-    // Named by aria-label, not by a visually hidden span (a browser reads that span as a block and
-    // spaces it, «حفظ : …», so the e2e's exact «حفظ: …» found nothing).
+    // Named by aria-label, not a hidden span, which browsers space so the exact e2e name fails.
     expect(saveOf(row).getAttribute('aria-label')).toBe(`${t.common.save}: ${HORIZON}`);
     fireEvent.click(saveOf(row));
     expect(saveOf(row).getAttribute('aria-disabled')).toBe('true');

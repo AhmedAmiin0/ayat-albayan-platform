@@ -15,10 +15,10 @@ export interface PendingConfirm {
   key: SettingKey;
   kind: ConfirmKind;
   value: unknown;
-  /** «احفظ قيمتي» after a conflict: the version to send. */
+  /** The version to send when keeping the admin's value after a conflict. */
   version?: number | undefined;
 }
-/** The last saved row, for the toast's «تراجع» (it re-saves `prev`). */
+/** The last saved row, for the toast's undo (it re-saves `prev`). */
 export interface SavedNote {
   key: SettingKey;
   prev: AcademySettings[SettingKey];
@@ -37,19 +37,17 @@ export interface ValuesApi {
   error: (key: SettingKey) => string | undefined;
   /** Validates the row, asks first when the registry says so, then saves it alone. */
   save: (key: SettingKey) => void;
-  /** Puts these fields in the row and saves them (a switch, «أعد القيمة الافتراضية», undo, a shape dialog). */
   apply: (key: SettingKey, form: SettingsForm) => void;
-  /** The value the last save of this key replaced («أعد القيمة السابقة»), if it was saved in this visit. */
+  /** The value the last save replaced, only if it was saved in this visit. */
   previous: (key: SettingKey) => { value: AcademySettings[SettingKey] } | undefined;
   /** When this key last saved (the phone sheet closes on a new one). */
   savedAt: (key: SettingKey) => number | undefined;
   announce: (message: string) => void;
-  /** Conflict: «احفظ قيمتي» (the edit again, over the newer version) / «اعتمد القيمة الجديدة» (drop the edit). */
+  /** Conflict: save the edit again over the newer version, or drop the edit. */
   keepMine: (key: SettingKey) => void;
   takeTheirs: (key: SettingKey) => void;
   /** The key's row of GET /config/entries, once read. */
   entry: (key: string) => ConfigEntry | undefined;
-  /** Opens «تعديل الوصف» (read it in full; edit it with the right). */
   describe: (target: DescribeTarget) => void;
 }
 
@@ -63,7 +61,6 @@ export interface ControllerInput {
 
 const v = t.settingsValues;
 
-/** The state of «القيم»: local edits, per-row saves, the pending confirmation and the saved note. */
 export function useValuesController(input: ControllerInput) {
   const { settings, canWrite, entries } = input;
   const saves = useRowSaves();

@@ -19,7 +19,6 @@ export interface SurahPickerProps {
   onClose: () => void;
 }
 
-/** «اختر السورة والآيات»: search, recent surahs, the list, then the from / to steppers and «تمّ». */
 export function SurahPicker({ title, target, recent, onDone, onClose }: SurahPickerProps) {
   const p = t.reports.v2.picker;
   const [query, setQuery] = useState('');

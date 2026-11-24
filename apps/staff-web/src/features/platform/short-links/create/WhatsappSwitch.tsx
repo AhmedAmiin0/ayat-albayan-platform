@@ -12,7 +12,7 @@ interface WhatsappSwitchProps {
   listed: number;
 }
 
-/** «إرسال عبر واتساب»: the approved notifications template to everyone listed, once created. */
+/** Sends the approved notifications template to everyone listed, once created. */
 export function WhatsappSwitch({ checked, onChange, listed }: WhatsappSwitchProps) {
   const hintId = useId();
   const hint = listed > 0 ? counted(F.sendTo, listed) : F.sendWhatsappHint;

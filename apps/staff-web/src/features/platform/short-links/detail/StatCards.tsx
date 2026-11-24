@@ -17,7 +17,7 @@ function Stat({ label, value, children }: { label: string; value: string; childr
   );
 }
 
-/** «7 من 12» over a bar of the limit used (no bar without a limit). */
+/** No bar without a limit. */
 function VisitorsStat({ link }: { link: ShortLinkDetail }) {
   const max = link.maxUsers;
   const used = max === null ? 0 : Math.min(100, Math.round((link.visitors / max) * 100));
@@ -62,7 +62,6 @@ function RemainingStat({ link }: { link: ShortLinkDetail }) {
   );
 }
 
-/** «الزوار», «المستخدمون», «المتبقي» (board LinkXWebDetail). */
 export function StatCards({ link }: { link: ShortLinkDetail }) {
   return (
     <div className="grid gap-3 sm:grid-cols-3">

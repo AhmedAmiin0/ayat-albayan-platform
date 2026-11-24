@@ -11,10 +11,7 @@ export interface ValueSwitchProps {
   disabled?: boolean;
 }
 
-/**
- * A checkbox with role=switch drawn as a track and knob (the settings pages' switch), with its
- * state word («مفعّل» / «مغلق»). Phones: the hit area is 44px tall; from 640px the track's own.
- */
+/** Phones get a 44px tall hit area; from 640px the track's own. */
 export function ValueSwitch({ checked, onChange, labelledBy, label, disabled }: ValueSwitchProps) {
   return (
     <span className="inline-flex items-center gap-2">

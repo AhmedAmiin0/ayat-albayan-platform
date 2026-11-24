@@ -3,8 +3,6 @@ import { missingPlaceholders, type TranslationKeyRow } from '@ab/i18n';
 import { editedOnValues } from './registry-hints';
 import type { OverrideChange } from './translations.api';
 
-// Pure side of the «الترجمات» editor: what a row shows, and which requests a save sends.
-
 export const defaultOf = (row: TranslationKeyRow, locale: Locale): string => (locale === 'ar' ? row.ar : row.en);
 export const overrideOf = (row: TranslationKeyRow, locale: Locale): string | null =>
   locale === 'ar' ? row.arOverride : row.enOverride;
@@ -27,11 +25,7 @@ export function draftProblems(row: TranslationKeyRow, drafts: Drafts): Partial<R
   return out;
 }
 
-/**
- * The requests «حفظ» sends: a PUT for each changed locale; typing the original text back over an
- * override is a restore (DELETE), so the row stops being «معدّل». Unchanged or blank: nothing. The
- * Arabic of a registry hint key is never sent (it is edited on «القيم»; the API refuses it, 409).
- */
+/** Typing the original back is a restore (DELETE); Arabic registry hints are never sent (409). */
 export function changesFor(row: TranslationKeyRow, drafts: Drafts): OverrideChange[] {
   return LOCALES.flatMap((locale): OverrideChange[] => {
     if (editedOnValues(row.key, locale)) return [];

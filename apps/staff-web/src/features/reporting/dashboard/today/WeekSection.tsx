@@ -7,7 +7,7 @@ import { TeacherLoad } from './TeacherLoad';
 import type { DayRange } from '@/features/reporting/dashboard/search';
 import type { DashboardResponse } from '@ab/money';
 
-/** «الأسبوع ده» (Saturday → Friday, Riyadh): lessons by status and teacher load (R-RPT-01). */
+/** Saturday to Friday in Riyadh: lessons by status and teacher load (R-RPT-01). */
 export function WeekSection({
   week,
   data,

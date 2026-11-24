@@ -25,7 +25,7 @@ afterEach(() => {
   granted.perms = new Set(['settings.write']);
 });
 
-// The line's name is its text, then the sr-only «. اقرأ الوصف كاملًا أو عدّله» (the visible text alone says no action).
+// The line's name is its text plus a screen-reader suffix, since the text alone names no action.
 const openLine = async (label: string, text: string) => fireEvent.click(within(await findRow(label)).getByRole('button', { name: `${text}${d.lineSr}` }));
 
 describe('«القيم» — «تعديل الوصف»', () => {

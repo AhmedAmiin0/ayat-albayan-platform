@@ -24,7 +24,7 @@ function Row({ title, hint, children }: { title: string; hint: string; children:
   );
 }
 
-/** «المظهر»: the light/dark theme and the 12/24-hour clock of this browser (not stored settings). */
+/** Theme and 12/24-hour clock of this browser, not stored settings. */
 export function AppearanceSection() {
   const { query } = useSettingsView();
   const theme = themeMatch(query);
