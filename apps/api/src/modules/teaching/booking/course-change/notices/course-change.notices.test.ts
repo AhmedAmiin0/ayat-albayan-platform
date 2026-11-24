@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import type { TeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.service';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 import type { CourseTold } from './course-change.notice-plan';

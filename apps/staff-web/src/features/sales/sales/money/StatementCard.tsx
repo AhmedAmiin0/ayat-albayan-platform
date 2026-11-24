@@ -1,4 +1,8 @@
-import { payoutStatusStyle, type AssistantStatementLineView, type AssistantStatementView } from '@ab/shared';
+import {
+  payoutStatusStyle,
+  type AssistantStatementLineView,
+  type AssistantStatementView,
+} from '@ab/money';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { formatDate } from '@/features/sales/leads';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';

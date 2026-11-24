@@ -1,14 +1,11 @@
-import {
-  addDays,
-  clockTime,
-  type Gender,
-  type LessonView,
-  type OverviewTeacher,
-  type OverviewTimeOff,
-  type Program,
-  type Span,
-  wallInstant,
-} from '@ab/shared';
+import type { Gender, Program } from '@ab/catalog';
+import type {
+  LessonView,
+  OverviewTeacher,
+  OverviewTimeOff,
+  Span,
+} from '@ab/schedule';
+import { addDays, clockTime, wallInstant } from '@ab/time';
 import type { Range } from '@/features/people/teachers/availability/grid';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherRows } from './lesson/lessons';

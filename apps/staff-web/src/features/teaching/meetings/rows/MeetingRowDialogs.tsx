@@ -1,4 +1,4 @@
-import type { MeetingView } from '@ab/shared';
+import type { MeetingView } from '@ab/schedule';
 import { RecordingsPanel } from '@ab/web-kit/classroom/recordings/RecordingsPanel';
 import { CancelMeetingDialog } from './CancelMeetingDialog';
 import { MeetingInviteesDialog } from '@/features/teaching/meetings/invitees/MeetingInviteesDialog';
