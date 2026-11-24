@@ -5,7 +5,7 @@ import { patchProfile } from '@/account/hooks/account-api';
 
 const hint = t.account.name.hint.replace('{min}', String(ACCOUNT_NAME_MIN)).replace('{max}', String(ACCOUNT_NAME_MAX));
 
-/** «الاسم» (R-ACC-02): the login's own name; no password needed. */
+/** R-ACC-02: the login's own name; no password needed. */
 export function NameSection({ profile }: { profile: AccountProfile }) {
   const [name, setName] = useState(profile.full_name);
   const action = useAccountAction({ run: patchProfile, success: t.account.toast.name });

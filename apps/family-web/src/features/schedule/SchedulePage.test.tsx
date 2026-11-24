@@ -15,7 +15,6 @@ const S = t.portal.app.schedule;
 // Wednesday 2026-11-11, 12:00 in Riyadh: the academy week runs Sat 7 → Fri 13.
 const NOW = new Date('2026-11-11T09:00:00.000Z');
 
-/** Today, its window open; Friday, still awaiting the family's «سأحضر» with another teacher. */
 const LESSONS: PortalLesson[] = [
   lesson({
     id: 'l1', starts_at: '2026-11-11T09:05:00.000Z', ends_at: '2026-11-11T09:35:00.000Z',

@@ -5,10 +5,6 @@ import { RecordingsPanel } from '@ab/web-kit/portal/recordings/RecordingsPanel';
 import { StudentOf } from './StudentOf';
 import { useLessonNav } from './use-lesson-nav';
 
-/**
- * `/recordings/<id>` (the app's «التسجيلات» screen): one child's recordings on a page of their
- * own, «التسجيلات» over the child's name, the same list and lesson card as the child's tab.
- */
 export function FamilyRecordingsPage({ studentId }: { studentId: string }) {
   const nav = useLessonNav(studentId);
   return (

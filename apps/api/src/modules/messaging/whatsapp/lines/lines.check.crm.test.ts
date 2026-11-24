@@ -3,7 +3,7 @@ import { crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { LinesCheck } from './lines.check';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/19 «crm driver»: «افحص الخطوط» on a crm line = GET /me only, never a test message, never a Graph call.
+// docs/19: a crm line check is GET /me only, never a test message or a Graph call.
 
 afterEach(() => vi.unstubAllEnvs());
 

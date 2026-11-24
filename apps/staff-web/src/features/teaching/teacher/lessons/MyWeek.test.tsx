@@ -1,4 +1,4 @@
-import type { TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';

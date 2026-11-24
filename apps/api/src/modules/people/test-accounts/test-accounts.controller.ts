@@ -9,7 +9,7 @@ import { TestAccountsService } from './test-accounts.service';
 
 const idSchema = z.uuid();
 
-/** PATCH /admin/users/:id/test {is_test}: «حساب تجريبي» (users.write). 404, 409, 400. */
+/** users.write; 404, 409, 400. */
 @ApiTags('users')
 @ApiBearerAuth()
 @Controller('admin/users')
@@ -27,7 +27,7 @@ export class UserTestController {
   }
 }
 
-/** PATCH /students/:id/test {is_test}: «طالب تجريبي» (students.write). 404, 409. */
+/** students.write; 404, 409. */
 @ApiTags('students')
 @ApiBearerAuth()
 @Controller('students')
