@@ -11,14 +11,13 @@ interface GenerateBarProps {
   /** Who would be built: the chosen salesperson or all, minus the frozen ones (generateTargets). */
   targets: readonly string[];
   month: string;
-  /** Some statement exists already: «إعادة الحساب». */
   hasRows: boolean;
   /** No salesperson at all: nothing to build. */
   disabled: boolean;
   onNotice: (text: string) => void;
 }
 
-/** «احسب كشوف الشهر» (assistantpay.write): asks once, builds or rebuilds the month's drafts. */
+/** assistantpay.write: asks once, builds or rebuilds the month's drafts. */
 export function GenerateBar({ targets, month, hasRows, disabled, onNotice }: GenerateBarProps) {
   const [asking, setAsking] = useState(false);
   const generate = useGenerateStatements();

@@ -1,6 +1,6 @@
 import { AccountScreen } from '@/account';
 
-/** «حسابي» for the assistant shell (R-ACC-01). */
+/** R-ACC-01: the account screen for the assistant shell. */
 export default function AssistantAccountRoute() {
   return <AccountScreen home="/assistant/more" />;
 }

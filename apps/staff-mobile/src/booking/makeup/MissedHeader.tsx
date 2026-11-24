@@ -3,7 +3,6 @@ import { t, AppText, type, useTheme, whenText } from '@ab/mobile-kit';
 import type { MakeupSource } from './makeup-draft';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-/** What the makeup is for, over every step: «للطالب يوسف» and the lesson he missed, with its time. */
 export function MissedHeader({ source }: { source: MakeupSource }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

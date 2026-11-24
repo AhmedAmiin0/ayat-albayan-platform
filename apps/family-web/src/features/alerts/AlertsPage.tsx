@@ -43,10 +43,7 @@ function AlertList({ page, kind, onRead }: ListProps) {
   );
 }
 
-/**
- * «الإشعارات» (canvas Alerts): the rows under اليوم / أمس / هذا الأسبوع / أقدم; a tap marks the
- * row read and opens its report, child or package; «تعليم الكل كمقروء» while any is unread.
- */
+/** A tap marks the row read and opens its report, child or package. */
 export function AlertsPage({ kind }: { kind: PortalKind }) {
   const alerts = useAlerts();
   const markRead = useMarkAlertsRead();

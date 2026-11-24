@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// PATCH /messaging/templates/:key/starter «متاح للمعلمين والمبيعات» (the restricted allow-list) (owner 2026-10-12, docs/16).
+// The restricted allow-list flag (docs/16).
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const STARTER_URL = '/messaging/templates/academy_welcome/starter';

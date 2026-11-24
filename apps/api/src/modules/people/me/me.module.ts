@@ -15,7 +15,7 @@ import { AccountSetupService } from './account/account.setup.service';
 import { MeController } from './me.controller';
 import { MeService } from './me.service';
 
-/** The caller's own settings: push tokens (R-MOB-01) and «حسابي» (R-ACC-01..05). */
+/** Push tokens (R-MOB-01) and the account page (R-ACC-01..05). */
 @Module({
   controllers: [MeController, AccountController],
   providers: [

@@ -26,16 +26,7 @@ interface MoveInput {
 type Existing = Extract<FamilyMove, { kind: 'existing' }>;
 type Fresh = Extract<FamilyMove, { kind: 'new' }>;
 
-/**
- * «ربط الطالب بولي أمر» (owner 2026-11-02): the student moves to another family =
- * students.guardian_id, and nothing else. Packages, lessons, payments, reports, attendance and
- * the student's channel are keyed by the student, so they move with it. The old family's chats and
- * calls stay with the number they came from (messages, wa_calls and lesson_feedback keep their
- * guardian_id as history), and the old family stays, even empty. «مشترك» follows by trigger
- * (students_chat_list_auto_upd). contact_is_self is cleared: the new family's number is not the
- * student's own. Compare-and-set on the old family (409 guardian_changed), one audit row
- * ('guardian_change'). A new family is found by its main phone first (as POST /students).
- */
+/** Only guardian_id changes; history stays with the old family; compare-and-set, audited. */
 @Injectable()
 export class FamilyMoveService {
   constructor(
@@ -70,12 +61,7 @@ export class FamilyMoveService {
     return { student_id: studentId, guardian_id: target.id };
   }
 
-  /**
-   * A student with a login of their own is refused (409 student_has_login): their sign-in codes go
-   * to the family's number, so a move would hand that login to another number. An adult learner
-   * (contact_is_self) whose family has a login is refused too (409 self_has_login): that login is
-   * theirs and would lose them. The admin unlinks the login first («المستخدمون»).
-   */
+  /** A student with a login, or a self learner whose family has one, is refused. */
   private async assertMovable(student: StudentRow): Promise<void> {
     if (student.profile_id) throw conflict('student_has_login');
     const family = student.contact_is_self ? await this.repo.guardian(student.guardian_id) : null;

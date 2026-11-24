@@ -7,10 +7,6 @@ import { SettingsCard } from './SettingsCard';
 import { useSignOut } from './use-sign-out';
 import { Who } from './Who';
 
-/**
- * «حسابي»: who is in, a guardian's children, this browser's settings, «تسجيل الخروج», then the
- * legal pages.
- */
 export function AccountPage({ home }: { home: PortalHome }) {
   const out = useSignOut();
   return (

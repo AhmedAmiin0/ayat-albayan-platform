@@ -15,7 +15,7 @@ export interface PaymentIn {
   amount: number;
   currency: string;
   paid_at: string;
-  /** A refund («استرداد») is money back: negative revenue. Absent = a payment. */
+  /** A refund is money back, negative revenue; absent means a payment. */
   kind?: 'payment' | 'refund';
   subscription: { fx_rate: number | null; student: { guardian: Source } | null } | null;
 }

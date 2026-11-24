@@ -10,11 +10,7 @@ const MISSING: Readonly<Record<TestFlagWrite['kind'], string>> = {
   profile: 'user_not_found',
 };
 
-/**
- * The admin switches «حساب تجريبي» / «طالب تجريبي» (docs/56): the whole family flips (the DB keeps
- * a test login on test students only), audited in the same transaction; the flipped logins' cached
- * flag is dropped on this API copy (the others within TEST_FLAG_TTL_MS). Grants no visibility.
- */
+/** docs/56: the whole family flips, audited in one transaction; grants no visibility. */
 @Injectable()
 export class TestAccountsService {
   constructor(

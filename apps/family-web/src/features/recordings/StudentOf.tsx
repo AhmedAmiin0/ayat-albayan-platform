@@ -11,10 +11,7 @@ interface Props {
   children: (student: PortalStudent) => ReactNode;
 }
 
-/**
- * The login's student named in the link; another family's (or none) is «لم نجد ما تبحث عنه»
- * with the way home: the API would refuse it anyway (404).
- */
+/** Another family's student shows not-found; the API would refuse it anyway (404). */
 export function StudentOf({ studentId, children }: Props) {
   return (
     <WithHome>
