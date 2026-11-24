@@ -7,7 +7,6 @@ import { Input } from '@ab/web-kit/components/ui/form/input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useStudentSignIn } from './use-student-sign-in';
 
-/** The student code and the password, «دخول»; `children`: «أول دخول؟» / «نسيت كلمة المرور؟». */
 export function StudentPasswordForm({ children }: { children?: ReactNode }) {
   const form = useStudentSignIn();
   return (

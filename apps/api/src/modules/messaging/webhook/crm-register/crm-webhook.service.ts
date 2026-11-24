@@ -20,7 +20,7 @@ export interface CrmWebhookSource {
 
 export const CRM_WEBHOOK_SOURCE = Symbol('CRM_WEBHOOK_SOURCE');
 
-/** The live source: loadEnv() (env + «التكاملات») per call, API_PUBLIC_URL, crmFetch (H-1). */
+/** Env plus integrations read per call. */
 export const liveCrmWebhookSource = (): CrmWebhookSource => ({
   line: () => lineEnvs(loadEnv()).notifications,
   publicUrl: () => process.env.API_PUBLIC_URL,
@@ -31,14 +31,7 @@ const TIMEOUT_MS = 15_000;
 const SECRET_KEY = 'WACRM_WEBHOOK_SECRET';
 const onCrm = (env: WhatsappEnv | null): env is CrmLineEnv => env?.provider === 'crm';
 
-/**
- * Delivery ticks from the academy CRM in one click (docs/19 «crm driver»). With the notifications
- * line's own CRM key (scope webhooks:manage): creates an endpoint for message.status_updated,
- * stores the secret the CRM shows once as WACRM_WEBHOOK_SECRET (Vault, through the «التكاملات»
- * write path), and only then removes the older endpoints aimed at our receiver (best effort), so
- * a failed create or store leaves them as they were. The secret is never logged, returned or
- * thrown.
- */
+/** Old endpoints are removed only after create and store succeed; the secret is never exposed. */
 @Injectable()
 export class CrmWebhookRegistrar {
   private readonly log = new Logger(CrmWebhookRegistrar.name);

@@ -6,7 +6,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { familySearchQuery, moveFamily } from '@/features/people/students/people-edit/api';
 import { usePeopleWrite } from '@/features/people/students/people-edit/use-people-write';
 
-/** «ربط بولي أمر آخر»: the state here, the logic in @ab/client-core (attachModel). */
 export function useAttach(view: PeopleEditView, onDone: (notice: string) => void): AttachModel {
   const [search, setSearch] = useState('');
   const [choice, setChoice] = useState<MoveChoice | null>(null);

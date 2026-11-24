@@ -17,14 +17,13 @@ export interface TranslationEditorProps {
   onDone: (message: string) => void;
 }
 
-/** 409 `edit_on_values`: an ar override on a registry hint key (it is a description, edited on «القيم»). */
+/** 409 `edit_on_values`: an ar override on a registry hint key, edited on the values page. */
 export function isEditOnValues(error: unknown): boolean {
   if (typeof error !== 'object' || error === null || !('status' in error) || error.status !== 409 || !('body' in error)) return false;
   const { body } = error;
   return typeof body === 'object' && body !== null && 'code' in body && body.code === 'edit_on_values';
 }
 
-/** The aside panel of «الترجمات»: both languages side by side, the slots to keep, save / restore. */
 export function TranslationEditor({ row, onClose, onDone }: TranslationEditorProps) {
   const formId = useId();
   const [drafts, setDrafts] = useState<Drafts>(() => draftsOf(row));

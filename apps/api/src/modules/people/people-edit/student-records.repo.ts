@@ -9,13 +9,7 @@ import type { StudentRow } from './people-edit.repo';
 type Count = PromiseLike<{ count: number | null; error: PostgrestError | null }>;
 const head = { count: 'exact', head: true } as const;
 
-/**
- * Everything that makes a student row a learner with a history: lessons, packages, money, reports,
- * chat messages, attendance and assistants. «تحويل إلى ولي أمر» is refused while any of these holds
- * a row. The cascading ones (student_assistants, student_join_links, the channel's messages) and
- * the ones with no foreign key (google_*) are checked here because a delete would take them along
- * or leave them pointing nowhere; the others are also protected by their foreign keys (23503).
- */
+/** Cascading and FK-less tables are checked here, since a delete would take or orphan them. */
 const RECORDS: Record<string, (db: Db, id: string) => Count> = {
   subscriptions: (db, id) => db.from('subscriptions').select('id', head).eq('student_id', id),
   lesson_students: (db, id) =>

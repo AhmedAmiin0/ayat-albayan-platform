@@ -3,7 +3,7 @@ import { partPaidLine } from '@/core/lib/money/format';
 import { entry } from '@/sales/sales/testing/fixtures';
 import { HistoryEntryCard } from './HistoryEntryCard';
 
-// «تفاصيل الطالب» (owner 2026-10-28): part_paid comes only to a self.sales_money viewer, only when part-paid.
+// part_paid comes only to a self.sales_money viewer, and only when part-paid.
 const { id, package: pkg, status, starts_on, lessons_total, renews_on, ended_at, created_at, lessons_used, lessons_remaining } = entry({ status: 'unpaid' });
 const brief = { id, package: pkg, status, starts_on, lessons_total, renews_on, ended_at, created_at, lessons_used, lessons_remaining };
 const part = { paid: 80, price: 81, due: 1, currency: 'SAR' };

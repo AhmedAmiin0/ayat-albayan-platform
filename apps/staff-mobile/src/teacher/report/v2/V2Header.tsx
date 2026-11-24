@@ -5,7 +5,6 @@ import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { t, locale, AppText, ltr, shape, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/more';
 
-/** «الحلقة 9 من 12» with a package, else «الحلقة 9». */
 function lessonChip(entry: Pick<ReportFormEntry, 'lesson_no' | 'package'>): string {
   const v2 = t.reports.v2;
   return entry.package

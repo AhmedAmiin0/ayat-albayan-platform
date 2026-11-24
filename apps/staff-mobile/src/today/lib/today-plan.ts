@@ -3,8 +3,7 @@ import { zonedFieldsIn } from '@ab/shared';
 import { applyFilter, type TodayFilter } from './timeline';
 import type { TodayLesson } from './today-lesson';
 
-// The calm «اليوم» (docs/29): which lesson is the hero, what stays in «بقية اليوم», what folds under
-// «انتهت». Pure, so the screen only lays it out.
+// Hero, rest and ended fold of the day (docs/29); pure.
 
 type GreetingPart = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -19,7 +18,7 @@ export function greetingPart(now: Date, tz: string): GreetingPart {
   return hour >= 17 && hour < 22 ? 'evening' : 'night';
 }
 
-/** The first word of a full name, for «صباح الخير يا أحمد»; null when the name is missing or blank. */
+/** Null when the name is missing or blank. */
 export function firstName(fullName: unknown): string | null {
   return typeof fullName === 'string' ? (fullName.trim().split(/\s+/)[0] || null) : null;
 }
@@ -31,9 +30,9 @@ export type Hero<L extends TodayLesson = TodayLesson> = CoreHero<L>;
 const ended = (l: TodayLesson, at: number) => Date.parse(l.ends_at) <= at;
 
 interface TodayPlan<L extends TodayLesson> {
-  /** Only under «الكل»: a column filter shows that status's lessons as rows, the hero among them. */
+  /** Only under the all filter; a column filter shows the hero among the rows. */
   hero: Hero<L> | null;
-  /** «بقية اليوم»: not ended and not the hero, under the filter. */
+  /** Not ended and not the hero, under the filter. */
   rest: L[];
   /** Ended today (any shown status), under the filter: folded into one quiet row. */
   ended: L[];

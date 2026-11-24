@@ -21,7 +21,7 @@ type Props = {
   onSearch: (patch: Record<string, unknown>) => void;
 };
 
-/** /admin/invoices: every booking invoice (R-PAY-03); range, sort and filters in the URL; open or «سجّل كدفعة». */
+/** Every booking invoice (R-PAY-03); range, sort and filters live in the URL. */
 export function InvoicesPage({ search, onSearch }: Props) {
   const q = invoicesList(search);
   const list = useQuery(invoicesQuery(q));

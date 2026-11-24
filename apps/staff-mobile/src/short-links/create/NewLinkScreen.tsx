@@ -1,5 +1,5 @@
 import { listedCount, type LinkField, type LinkForm } from '@ab/client-core';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import {
@@ -24,7 +24,6 @@ import { useLinkForm, type LinkFormState } from './use-link-form';
 
 const F = () => t.shortLinks.form;
 
-/** «إرسال عبر واتساب» and, once on, who it goes to. */
 function SendField({ form, set }: Pick<LinkFormState, 'form' | 'set'>) {
   const n = listedCount(form);
   return (
@@ -41,7 +40,7 @@ function SendField({ form, set }: Pick<LinkFormState, 'form' | 'set'>) {
   );
 }
 
-/** «العنوان» and «الرابط الأصلي» (a host off the allow-list: target_not_allowed). */
+/** A host off the allow-list answers target_not_allowed. */
 function BasicFields({ form, set, errors }: Pick<LinkFormState, 'form' | 'set' | 'errors'>) {
   return (
     <>
@@ -69,11 +68,7 @@ function BasicFields({ form, set, errors }: Pick<LinkFormState, 'form' | 'set' |
 const createLabel = (form: LinkForm): string =>
   form.sendWhatsapp ? F().createAndSend : F().create;
 
-/**
- * «رابط جديد» (board LinkXStaffCreate, docs/19): title, the original link (the API's allow-list
- * answers target_not_allowed), lifetime, allowed users, audience with its people, the WhatsApp
- * send; created, it opens the link's page.
- */
+/** New short link (docs/19); the API's allow-list answers target_not_allowed. */
 export function NewLinkScreen({ base }: { base: string }) {
   const { form, set, errors, submit, busy } = useLinkForm((code) =>
     router.replace(linkHref(base, code)),

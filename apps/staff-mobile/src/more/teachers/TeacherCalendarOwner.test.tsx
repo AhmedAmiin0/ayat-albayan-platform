@@ -4,7 +4,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { seedFullAccess } from '@/test/staff-me';
 import { TeacherCalendarOwner } from './TeacherCalendarOwner';
 
-// «تقويم المعلم» (docs/24 «نقل تقويم معلم إلى المنصة»): admin only, GET/PUT calendar-owner.
+// docs/24: admin only.
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

@@ -5,11 +5,7 @@ import { fullTime } from '@/features/messaging/inbox/format';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
 
-/**
- * «الفواتير» on the student's profile (R-PAY-03): the payment proofs of this student's bookings,
- * newest first, each with its type and where it came from. Nothing while there are none (a trial
- * has no invoice), and nothing for a role the endpoint refuses.
- */
+/** Nothing while there are none (a trial has no invoice) or for a refused role (R-PAY-03). */
 export function StudentInvoices({ studentId }: { studentId: string }) {
   const invoices = useQuery(invoicesQuery({ studentId }));
   const clock = useClock();

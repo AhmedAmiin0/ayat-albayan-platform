@@ -10,10 +10,7 @@ import {
   type ConfigSection,
 } from './config-draft';
 
-/**
- * «إعدادات Evolution»: the draft from the saved options, each field's problem once submitted, and
- * the PUT (only a draft that passes evolutionConfigSchema is sent).
- */
+/** Only a draft that passes evolutionConfigSchema is sent. */
 export function useConfigForm(view: NumberView, evolution: NumberEvolutionView) {
   const [draft, setDraft] = useState(() => draftOfConfig(evolution.config));
   const [errors, setErrors] = useState<ConfigErrors>({});

@@ -9,7 +9,6 @@ import type { AssistantRow } from '@ab/client-core';
 const col = createColumnHelper<DataTableFeatures, AssistantRow>();
 const since = (day: string | undefined) => (day ? t.assistants.startsOn.replace('{date}', dayText(day)) : null);
 
-/** Name, salary, commission and a «تعديل الشروط» link to the detail page. */
 export function assistantColumns() {
   return col.columns([
     col.accessor('name', {

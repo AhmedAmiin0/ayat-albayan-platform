@@ -19,7 +19,7 @@ export function checkAmount(text: string, current: number): AmountCheck {
   return same ? { ok: false, error: t.payments.editAmount.same } : { ok: true, amount };
 }
 
-/** «تعديل المبلغ» is offered: never for a card payment, its amount comes from Stripe. */
+/** Never for a card payment, whose amount comes from Stripe. */
 export const amountEditable = (p: { method: PaymentMethod }): boolean =>
   !amountFromStripe(p.method);
 

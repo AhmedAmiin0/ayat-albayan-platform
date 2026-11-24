@@ -5,8 +5,7 @@ import { clearChatMemory } from '@/inbox/thread/anchor';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useQuoteSend } from './use-quote-sheet';
 
-// docs/44 BUG7 (review of PR #667): «عرض سعر» keeps one id per chat after no answer, also when
-// the sheet closes and opens again, until an answer; the first offer answering a retry is said.
+// docs/44 BUG7: one id per chat is kept after no answer, across sheet reopen, until answered.
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

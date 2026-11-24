@@ -57,7 +57,7 @@ export class TeacherAlert {
     await this.toTeachers({ lessonIds, studentIds: result.student_ids, kind: bookingKindOf(req) });
   }
 
-  /** The same alert for any write that hands lessons to a teacher («تغيير المعلم»). */
+  /** Any write that hands lessons to a teacher sends the same alert. */
   async toTeachers(input: NewStudents): Promise<void> {
     try {
       await this.alert(input);

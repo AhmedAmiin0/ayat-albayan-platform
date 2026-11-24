@@ -6,15 +6,10 @@ const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4';
 
 export interface MediaPlayerProps {
   file: ThreadFile;
-  /** «رسالة صوتية» / «فيديو»: the player's name and the fallback link's. */
   kind: string;
 }
 
-/**
- * A family's voice note or video, played in the bubble (D1). The src is pinned at mount: a refetch of
- * the signed URL never restarts playback. What the browser cannot play (AMR, 3GPP, Ogg on Safari)
- * falls back to «افتح {kind}» in a new tab.
- */
+/** The src is pinned at mount so a signed-URL refetch never restarts playback. */
 export function MediaPlayer({ file, kind }: MediaPlayerProps) {
   const [src] = useState(file.url);
   const [failed, setFailed] = useState(false);

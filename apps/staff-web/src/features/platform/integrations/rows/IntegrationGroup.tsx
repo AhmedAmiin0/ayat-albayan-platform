@@ -26,7 +26,7 @@ const GROUP_EXTRAS: Partial<Record<Group, ComponentType<{ onNote: (message: stri
   storage: StorageExtras,
 };
 
-/** One group of «التكاملات» (a WhatsApp line, LiveKit, …): its heading, then its rows in registry order. */
+/** Rows are in registry order. */
 export function IntegrationGroup({ group, items, draft, invalid, onDraft, onNote }: Props) {
   const id = `integrations-${group}`;
   const Extra = GROUP_EXTRAS[group];

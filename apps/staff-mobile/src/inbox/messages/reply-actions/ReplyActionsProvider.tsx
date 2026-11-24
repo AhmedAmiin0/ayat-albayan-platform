@@ -14,11 +14,7 @@ interface ReplyActionsProviderProps {
   children: ReactNode;
 }
 
-/**
- * The reply notes' «تأكيد الحلقة» / «تغيير الموعد» for one chat (owner 2026-10-28): a salesperson
- * (self.sales) gets her sheet and route, the admin tree the admin's, a teacher none. One sheet for the
- * chat; a move is remembered per chat (the family's moved lesson leaves the list, the note says so).
- */
+/** Sales and admin get their own sheet and route, a teacher none; moves are remembered per chat. */
 export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsProviderProps) {
   const teacher = useThreadMode().kind === 'teacher';
   const sales = useHolds('self.sales');
@@ -29,7 +25,7 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
   const flow = teacher ? null : sales ? 'sales' : 'admin';
   const rights = replyRights(can, flow);
   const { reschedule } = rights;
-  // «تأكيد الحلقة» only while the academy requires a confirmation (owner 2026-11-02).
+  // Confirm is offered only while the academy requires confirmation.
   const confirm = useLessonStatusText().required ? rights.confirm : null;
   const value = useMemo<ReplyActionsValue>(
     () => ({

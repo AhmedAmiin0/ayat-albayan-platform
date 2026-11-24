@@ -5,7 +5,7 @@ import { ReportTextField } from '@/teacher/report/components/ReportTextField';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { Card } from '@/teacher/report/v2/ui/Card';
 
-/** «الواجب قبل الحلقة القادمة»: prefilled from today's parts (a Quran lesson), editable. */
+/** Prefilled from today's parts on a Quran lesson, editable. */
 export function HomeworkCard({ s }: { s: V2EntryState }) {
   const v2 = t.reports.v2;
   return (

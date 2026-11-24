@@ -5,12 +5,11 @@ import { AR, durationText, esc, fill, localDate, ltr, timeWithZone, weekdayName 
 const r = AR.reports;
 const MINUTE = 60_000;
 
-/** ——— ۞ ——— : the brand's ornament line. */
 export function ornament(): string {
   return '<div class="orn" aria-hidden="true"><span class="dash"></span><span class="star">۞</span><span class="dash"></span></div>';
 }
 
-/** Emblem, academy name, tagline, ornament and the «تقرير الحلقة» cartouche (one per page). */
+/** One header per page. */
 export function headerHtml(logo: string): string {
   return [
     '<header class="head">',
@@ -28,7 +27,7 @@ function cell(label: string, value: string, sub?: string): string {
   return `<div class="cell"><div class="k">${esc(label)}</div><div class="v">${value}</div>${extra}</div>`;
 }
 
-/** «6 من 8» inside a package, else the plain lesson number (R-LES-03). */
+/** "n of total" inside a package, else the plain lesson number (R-LES-03). */
 function lessonNoText(m: Pick<ReportPdfModel, 'lessonNo' | 'slot'>): string {
   return m.slot
     ? fill(esc(r.lessonNoValue), { n: ltr(String(m.slot.position)), total: ltr(String(m.slot.total)) })
@@ -55,7 +54,6 @@ function chipHtml(input: { tone: string; glyph: string; label: string }): string
   return `<span class="chip tone-${input.tone}"><i class="nuqta ${input.glyph}"></i><span>${esc(input.label)}</span></span>`;
 }
 
-/** «الحضور» with its chip. */
 export function attendanceHtml(m: Pick<ReportPdfModel, 'attendance'>): string {
   const style = attendanceStyle[m.attendance];
   const chip = chipHtml({ ...style, label: AR.enums.attendance[m.attendance] });

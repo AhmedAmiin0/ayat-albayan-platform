@@ -34,10 +34,7 @@ export function toAvatar(asset: ImagePicker.ImagePickerAsset): PickedAvatar | nu
   return { uri: asset.uri, mime, bytes, size: bytes.byteLength };
 }
 
-/**
- * «التقاط صورة» (camera, after the receipt's permission flow with the avatar's reason) or
- * «اختيار من المعرض» (the system photo picker, no permission needed). null when cancelled or refused.
- */
+/** Gallery needs no permission; null when cancelled or refused. */
 export async function pickAvatar(source: AvatarSource): Promise<PickedAvatar | null> {
   const copy = { rationale: t.account.mobile.cameraRationale, confirm: t.account.avatar.camera };
   if (source === 'camera' && !(await ensureCameraPermission(copy))) return null;

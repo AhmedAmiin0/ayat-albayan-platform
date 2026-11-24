@@ -10,11 +10,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { putTeacherCalendarOwner, teacherCalendarQuery } from '@/features/platform/google-sync/google-api';
 import { fill, formatAt } from '@/features/platform/google-sync/google-format';
 
-/**
- * «تقويم المعلم» on the admin teacher page (docs/24 «نقل تقويم معلم إلى المنصة»): who builds this
- * teacher's Google Calendar — the old script from the sheet, or the platform — with the one-line
- * warning and the sync status. Base-role admins only (the API refuses everyone else too).
- */
+/** Base-role admins only; the API refuses everyone else too (docs/24). */
 export function TeacherCalendarOwner({ teacherId }: { teacherId: string }) {
   const T = t.googleSync.teacherCalendar;
   const noteId = useId();

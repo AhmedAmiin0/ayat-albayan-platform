@@ -14,7 +14,7 @@ export type Favourite = Pick<Tables<'sticker_favourites'>, 'profile_id' | 'stick
 const COLUMNS = 'id, phone_e164, direction, media_id, media_path, created_at, interactive_payload';
 /** WhatsApp's stickers are its only WebP (messages_sticker_idx, migration 998). */
 const STICKER_MIME = 'image/webp';
-/** How many of the newest sticker messages «الأحدث» reads; deduplicated and capped after. */
+/** Rows read before deduplicating and capping the recent list. */
 const RECENT_SCAN = 120;
 const FAVOURITES_MAX = 60;
 
@@ -28,7 +28,7 @@ function rows<T>(r: { data: T[] | null; error: { message: string } | null }, wha
 export class StickerRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The newest sticker messages, not hidden from the platform («حذف من المنصة»). */
+  /** Messages hidden from the platform are excluded. */
   async recent(): Promise<StickerRow[]> {
     const r = await this.db
       .from('messages')

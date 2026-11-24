@@ -51,7 +51,6 @@ function ShapeDialog({ settingKey, onClose }: { settingKey: SettingKey; onClose:
   );
 }
 
-/** An object value in the table: a one-line summary and «عدّل الحقلين» (a dialog edits and saves it). */
 export function ShapeEditor({ settingKey, ids }: EditorProps) {
   const api = useValues();
   const [open, setOpen] = useState(false);

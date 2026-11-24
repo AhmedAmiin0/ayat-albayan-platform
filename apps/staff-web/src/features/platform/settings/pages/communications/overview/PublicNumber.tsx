@@ -7,10 +7,7 @@ import { LINK } from './overview-table';
 
 const h = t.communicationsHub;
 
-/**
- * «الرقم المعلن للأسر» (academy_whatsapp_e164, docs/23 §2d): shown here read-only (LTR), still edited in
- * «القيم» › «الأكاديمية», which the link opens.
- */
+/** Read-only here; edited on the values page (docs/23 §2d). */
 export function PublicNumber({ e164 }: { e164: string }) {
   return (
     <section aria-labelledby="overview-public-number" className="grid gap-1">

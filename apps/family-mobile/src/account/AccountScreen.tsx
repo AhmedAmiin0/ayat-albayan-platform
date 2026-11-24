@@ -15,16 +15,9 @@ import { AccountSettings } from './AccountSettings';
 import { LegalLinks } from './LegalLinks';
 import { ProfileCard } from './ProfileCard';
 
-/** «الإصدار 1.0.0». */
 const versionLine = (): string =>
   t.portal.app.account.version.replace('{v}', Constants.expoConfig?.version ?? '');
 
-/**
- * «حسابي» (docs/50 §6, canvas Account / StudentAccount): the card that opens the profile (where a
- * guardian's children are; a guardian of several switches from the header), this phone's
- * notifications, the appearance; a student also changes their password; the privacy policy and
- * the deletion page (browser). Sign out last.
- */
 export function AccountScreen() {
   const { color } = useTheme();
   const profile = useMyProfile();

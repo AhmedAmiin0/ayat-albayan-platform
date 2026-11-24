@@ -4,7 +4,6 @@ import { type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import type { FamilySummary } from './subscription-summary';
 import { childChip, dueLine, packageText } from './subscription-words';
 
-/** The panel's small text: xs, tabular digits (a price, «بقيت 6 حلقات»). */
 export const LINE = {
   fontFamily: type.ui[500],
   fontSize: type.size.xs,
@@ -15,10 +14,7 @@ export const LINE = {
 /** About four rows: a big family scrolls inside the panel, the messages keep the screen. */
 const LIST_MAX_HEIGHT = 124;
 
-/**
- * One child as the web panel, display only (the title opens the child's file): «يوسف [غير مدفوع]
- * 8 حلقات في الشهر · بقيت حلقتان عليه 145 ر.س», wrapping onto a second line on a narrow phone.
- */
+/** Display only; wraps onto a second line on a narrow phone. */
 export function ChildLines({ student }: { student: ThreadStudentView }) {
   const { color } = useTheme();
   const sub = student.subscription;
@@ -36,7 +32,6 @@ export function ChildLines({ student }: { student: ThreadStudentView }) {
   );
 }
 
-/** The opened family: a line per child with a package, then ONE muted «بلا باقة: …» for the rest. */
 export function FamilyList({ packaged, noPackage }: Pick<FamilySummary, 'packaged' | 'noPackage'>) {
   const { color } = useTheme();
   return (

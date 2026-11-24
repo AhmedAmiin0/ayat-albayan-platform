@@ -14,13 +14,7 @@ interface StaffPhotoControlProps extends StaffPhotoOptions {
   id: string;
 }
 
-/**
- * «الصورة» on an admin's teacher or user page (owner 2026-10-28): the photo or the initials at 64pt,
- * «تغيير الصورة» (the gallery, square crop) and, with a photo, «حذف الصورة» after an inline confirm.
- * The caller shows it only to who may write it (admin / users.write) and never for a student or guardian.
- * The confirm takes screen-reader focus; cancel or remove gives it back to «تغيير الصورة». The circle is
- * decorative: the screen's header already reads the name.
- */
+/** Only shown to who may write it, never for a student or guardian; focus returns after confirm. */
 export function StaffPhotoControl({ name, id, ...options }: StaffPhotoControlProps) {
   const { color } = useTheme();
   const photo = useStaffPhoto(options);

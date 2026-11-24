@@ -1,7 +1,6 @@
 import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 
-// The student file (`[id].tsx`) and its «سجل الحضور» (`[id]/attendance.tsx`) live side by side in both trees.
 const stub = (label: string) => () => <Text>{label}</Text>;
 const tree = {
   'students/[id]': stub('student-file'),

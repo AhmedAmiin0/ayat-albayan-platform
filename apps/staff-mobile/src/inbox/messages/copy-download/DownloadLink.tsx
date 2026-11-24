@@ -5,10 +5,7 @@ import { t, shape, type, useTheme, AppText, useSmallText } from '@ab/mobile-kit'
 import { downloadLabel } from '@/inbox/messages/hooks/bubble-offers';
 import { downloadFile, downloadProblem } from './chat-tools';
 
-/**
- * «تنزيل» on a file chip (owner 2026-10-26): a fresh signed URL, handed to the phone's browser to save
- * (chat-tools). Shown only where the chip may open the file (MessageFile: never a teacher).
- */
+/** A fresh signed URL each time; shown only where the chip may open the file, never teachers. */
 export function DownloadLink({ message: m, phone }: { message: MessageView; phone: string }) {
   const { color } = useTheme();
   const small = useSmallText();

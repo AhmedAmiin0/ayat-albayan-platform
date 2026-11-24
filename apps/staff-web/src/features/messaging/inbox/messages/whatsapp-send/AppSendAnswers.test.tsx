@@ -7,7 +7,7 @@ import { action, button, fakeTab, held, renderBubble } from './whatsapp-send.tes
 
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
-// Staff's answers about a «أرسل عبر واتساب» (docs/19): the platform never sends such a row itself.
+// The platform never sends a row handed to WhatsApp itself (docs/19).
 
 const PENDING = '2026-11-06T12:08:00Z';
 const unconfirmed = { status: 'failed' as const, error_code: 'app_send_unconfirmed' };

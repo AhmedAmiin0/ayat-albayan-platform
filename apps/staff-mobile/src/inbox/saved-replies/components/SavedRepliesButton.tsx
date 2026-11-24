@@ -9,11 +9,7 @@ export interface SavedRepliesButtonProps {
   onPress: () => void;
 }
 
-/**
- * «الردود السريعة» beside the box (owner 2026-10-25), 44pt. After the window it stays in its place,
- * dimmed and announced disabled with the reason as its hint; a tap shows that reason over the row
- * (absolutely placed, so the closed row keeps its height).
- */
+/** After the window it stays dimmed and disabled with its reason; overlay keeps the row height. */
 export function SavedRepliesButton({ open, onPress }: SavedRepliesButtonProps) {
   const { color } = useTheme();
   const [hint, setHint] = useState(false);

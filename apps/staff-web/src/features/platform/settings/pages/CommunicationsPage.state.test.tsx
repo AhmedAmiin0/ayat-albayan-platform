@@ -14,7 +14,6 @@ const p = t.settingsPages;
 
 afterEach(() => apiFetch.mockReset());
 
-// D12: before the settings are in, «التواصل» shows bars (no role=status), or the error with «أعد المحاولة».
 describe('«التواصل» load state', () => {
   it('a failed load says so inline with «أعد المحاولة», which refetches; no role=status while loading', async () => {
     let fail = true;

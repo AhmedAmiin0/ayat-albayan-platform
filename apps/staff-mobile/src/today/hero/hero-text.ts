@@ -4,13 +4,12 @@ import { durationLabel, studentTimes } from '@/today/lib/lesson-text';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import type { Hero } from '@/today/lib/today-plan';
 
-/** «الحلقة التالية · بعد 12 دقيقة» under an hour, «الحلقة التالية» later on, «جارية الآن» when under way. */
+/** Shows the countdown only under an hour. */
 export function heroLead(hero: Hero): string {
   if (hero.kind === 'running') return t.today.running;
   return hero.minutes < 60 ? `${t.today.next} · ${counted(t.today.inMinutes, hero.minutes)}` : t.today.next;
 }
 
-/** «مع أ. هدى · 45 دقيقة · 18:00 بتوقيت مسقط». */
 export function heroSubtitle(lesson: TodayLesson, cycle: ClockCycle, tz: string): string {
   const teacher = t.today.withTeacher.replace(
     '{teacher}',

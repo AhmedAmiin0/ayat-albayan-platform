@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { View } from 'react-native';
 import { t, Field } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
@@ -6,11 +6,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import type { ValueSheetState } from '@/ops/values/hooks/use-value-sheet';
 import { impactOf } from '@/ops/values/lib/value-text';
 
-/**
- * The question the sheet asks before acting: the same confirmations as the web (VALUE_CONFIRM: type
- * the number of days for a retention that will delete more, a plain «احفظ» for academy-wide
- * switches), each with what the change does; or «أغلق دون حفظ» when closing would drop an edit.
- */
+/** Same confirmations as the web (VALUE_CONFIRM). */
 export function SheetQuestion({ valueKey, sheet }: { valueKey: SettingKey; sheet: ValueSheetState }) {
   const v = t.mobileValues;
   if (sheet.stage === 'closing') {
@@ -30,7 +26,7 @@ export function SheetQuestion({ valueKey, sheet }: { valueKey: SettingKey; sheet
   return (
     <View style={{ gap: 12 }}>
       {impact ? <Note>{impact}</Note> : null}
-      {/* The days are typed first, then confirmed: the box comes before its «احفظ». */}
+      {/* The days are typed first, so the box comes before its save button. */}
       {typed ? (
         <Field label={v.typedLabel} value={sheet.typed} onChangeText={sheet.setTyped} keyboardType="number-pad" ltr />
       ) : null}

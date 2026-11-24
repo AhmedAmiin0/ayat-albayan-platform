@@ -9,7 +9,6 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 
 const currencies: Readonly<Record<string, string>> = t.pricing.currencies;
 
-/** «ر.س» for the site currencies, else the ISO code (EGP, …). */
 export function currencyLabel(code: string): string {
   return currencies[code] ?? code;
 }
@@ -25,7 +24,6 @@ export function percent(rate: number | null): string {
   return rate === null ? '—' : `${Math.round(rate * 100)}%`;
 }
 
-/** "2026-09" → «سبتمبر 2026». */
 export function monthLabel(month: string): string {
   const first = new Date(`${month}-01T00:00:00Z`);
   return dateText(first, { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });
@@ -33,7 +31,6 @@ export function monthLabel(month: string): string {
 
 const WEEKDAY_DAY_MONTH = { weekday: 'long', day: 'numeric', month: 'long' } as const;
 
-/** «الخميس، 1 أكتوبر 16:00» in `clock.tz`, the viewer's zone (useViewerTz()). */
 export function whenViewer(iso: string, clock: Clock & { tz: string }): string {
   const at = new Date(iso);
   return `${dateText(at, { tz: clock.tz, locale }, WEEKDAY_DAY_MONTH)} ${clockOf(at, clock)}`;

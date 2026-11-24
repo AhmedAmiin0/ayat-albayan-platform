@@ -11,7 +11,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «نقل إلى الرقم الآخر» (owner 2026-10-18): always behind a confirm; a producer's template warns first.
+// Always behind a confirm; a producer's template warns first.
 
 const BOOKING = template({ key: 'booking_confirmation', meta_name: 'booking_confirmation' });
 const WELCOME = template({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', status: 'missing' });

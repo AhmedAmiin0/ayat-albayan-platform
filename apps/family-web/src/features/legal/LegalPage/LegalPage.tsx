@@ -5,10 +5,7 @@ import { legalContent } from '@/features/legal/legal-content';
 import { LegalFooter } from '@/features/legal/LegalFooter';
 import type { LegalPageProps } from './LegalPage.types';
 
-/**
- * «سياسة الخصوصية» or «حذف الحساب وبياناته» (owner 2026-11-21, Google Play): public, no sign-in,
- * the kit's legal document in the staff look; the contact comes from settings.academy_contact.
- */
+/** Public, no sign-in (Google Play); the contact comes from settings.academy_contact. */
 export function LegalPage({ page }: LegalPageProps) {
   const content = legalContent(page);
   return (

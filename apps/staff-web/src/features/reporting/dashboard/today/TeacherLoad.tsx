@@ -8,7 +8,7 @@ import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
 type Load = DashboardSummary['teacher_load'][number];
 
-/** «4 من 12», or the count alone when the teacher has no maximum. */
+/** The count alone when the teacher has no maximum. */
 export function loadLabel(l: Pick<Load, 'students' | 'max_students'>): string {
   return l.max_students === null
     ? String(l.students)

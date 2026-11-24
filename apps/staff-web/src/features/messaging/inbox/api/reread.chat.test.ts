@@ -6,8 +6,7 @@ import { heldRead, live, msg, PHONE } from './patch-fixtures';
 import { rereadChat } from './reread';
 import { threadQuery } from './thread-query';
 
-// docs/44 K1: a live event never drops «تحميل الأقدم» (a page load in flight) and never joins a
-// chat's first load: the patch leaves them alone, the delta read waits for them, then runs.
+// docs/44 K1: a live event never drops an older-page load in flight nor joins a first load.
 
 const mockApiFetch = vi.fn();
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
@@ -44,7 +43,6 @@ async function opened() {
   return client;
 }
 
-/** «تحميل الأقدم» held in flight until `resolve`. */
 async function pageLoad(client: QueryClient) {
   const older = heldRead<unknown>();
   mockApiFetch.mockReturnValueOnce(older.promise);

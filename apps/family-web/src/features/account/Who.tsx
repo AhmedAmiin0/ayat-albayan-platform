@@ -19,7 +19,6 @@ function GuardianHead({ home }: { home: PortalHome }) {
   );
 }
 
-/** A student: their name and «رمز الطالب AB-…». */
 function StudentHead({ home }: { home: PortalHome }) {
   const own = home.students[0];
   if (!own) return <PersonHead name={A.roleStudent} />;

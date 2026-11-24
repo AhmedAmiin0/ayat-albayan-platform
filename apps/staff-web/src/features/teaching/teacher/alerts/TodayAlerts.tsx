@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';

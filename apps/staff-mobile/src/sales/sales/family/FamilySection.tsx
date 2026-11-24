@@ -1,10 +1,6 @@
-import {
-  formatPhone,
-  parseSalesFamily,
-  studentStatusStyle,
-  type FamilySibling,
-  type SalesStudentFamily,
-} from '@ab/shared';
+import { parseSalesFamily, type FamilySibling, type SalesStudentFamily } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { studentStatusStyle } from '@ab/money';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t, StatusChip, ListRow, InsetGroup } from '@ab/mobile-kit';
@@ -21,15 +17,9 @@ interface FamilySectionProps {
   phone: string | null;
 }
 
-/** Something to say: a guardian to name or reach, a sibling, or «صاحب الرقم». */
 const hasFamily = (f: SalesStudentFamily, phone: string | null): boolean =>
   [f.guardian_name, phone].some(Boolean) || f.siblings.length > 0 || f.contact_is_self;
 
-/**
- * «العائلة» of «تفاصيل الطالب» (owner 2026-11-02), compact: the guardian (name, LTR phone; a tap
- * opens the family's chat), «الطالب هو صاحب رقم المحادثة» when they are, then the siblings, each
- * with code and status; a tap opens that student.
- */
 export function FamilySection({ family: raw, phone }: FamilySectionProps) {
   const base = useTreeBase();
   const to = useStudentHref();
@@ -61,7 +51,6 @@ export function FamilySection({ family: raw, phone }: FamilySectionProps) {
   );
 }
 
-/** The guardian: name (or «ولي الأمر») and LTR phone; a tap opens the family chat if any. */
 function GuardianRow({ name, phone }: { name: string | null; phone: string | null }) {
   const base = useTreeBase();
   const openChat = phone ? () => router.push(familyChatHref(base, phone)) : undefined;

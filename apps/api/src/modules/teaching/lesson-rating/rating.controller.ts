@@ -9,10 +9,7 @@ import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { RatingSendService } from './rating.send.service';
 
-/**
- * «إرسال تقييم الحلقة» from the inbox (admin): 201 the queued / sent lesson_rating row; 404
- * not_a_guardian / no_completed_lesson; 409 template_not_approved. Audited like H4.
- */
+/** 201 the queued row; 404 not_a_guardian or no_completed_lesson; 409 template_not_approved. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('feedback.write')

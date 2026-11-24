@@ -8,7 +8,6 @@ import { SmallHeading } from '@/sales/sales/components/SmallHeading';
 import { fill } from '@/sales/sales/lib/sales-text';
 import { studentsLine, totalsLine } from './overview-text';
 
-/** «الحضور»: the last 30 days' totals in one line, then the latest lessons (Riyadh time, students, status chip). */
 export function TeacherAttendanceTab({ attendance }: { attendance: SalesTeacherOverview['attendance'] }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

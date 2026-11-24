@@ -4,10 +4,7 @@ import { apiFetch, pathKey, toQueryString } from '@ab/mobile-kit';
 import { bookingPath, useBookingMode } from '@/booking/shared/booking-mode';
 import type { OutsideParams } from './OtherTime';
 
-/**
- * GET /booking/outside-slots (sales: /sales/booking/outside-slots), «وقت آخر»: the server's next
- * 14 days. No time from the phone goes out; the answer is parsed with the shared schema.
- */
+/** No time from the phone goes out; the answer is parsed with the shared schema. */
 export function useOutsideSlots(params: OutsideParams) {
   const path = bookingPath(useBookingMode(), '/outside-slots');
   return useQuery({

@@ -48,7 +48,7 @@ describe('«القيم» — confirmations and the row menu', () => {
     expect(yes.getAttribute('aria-disabled')).toBe('true');
     fireEvent.click(yes);
     expect(apiSend).not.toHaveBeenCalled();
-    // Typed on an Arabic keypad: «٣٠» is 30.
+    // Typed on an Arabic keypad: Arabic-Indic 30 is 30.
     fireEvent.change(within(dialog).getByLabelText(c.typedLabel.replace('{n}', '30')), { target: { value: '٣٠' } });
     fireEvent.click(within(dialog).getByRole('button', { name: c.typedYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/activity_retention_days', { value: 30, confirmText: '٣٠', expectedVersion: 1 }));

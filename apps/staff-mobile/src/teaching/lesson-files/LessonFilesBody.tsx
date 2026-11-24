@@ -7,7 +7,6 @@ import { UploadBox } from './UploadBox';
 
 const F = t.lessonFiles;
 
-/** The recording(s), «ملفات المعلم/ة · 3», the family note, then «أضف ملفًا للحلقة». */
 export function LessonFilesBody({ data }: { data: LessonAssets }) {
   const group = data.students.length > 1;
   return (

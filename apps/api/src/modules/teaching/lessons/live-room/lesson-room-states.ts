@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { RoomInsideRepo } from './room-inside.repo';
 import { roomStateOf, type Named } from './room-state.mapper';
 
-/** What a lesson payload gives: its times and the «إنهاء الحلقة للجميع» stamp. */
+/** What a lesson payload gives: its times and the room_ended_at stamp. */
 export interface RoomLesson {
   id: string;
   starts_at: string;
@@ -31,11 +31,7 @@ const AFTER_MS = 4 * HOUR_MS;
 const nearNow = (l: RoomLesson, now: number): boolean =>
   Date.parse(l.starts_at) - BEFORE_MS <= now && now <= Date.parse(l.ends_at) + AFTER_MS;
 
-/**
- * The `room` of each lesson on the staff rows and the portal (owner 2026-11-16, «الحلقة جارية
- * الآن»): one read of who is inside the lessons near now. A hint: a failed read gives no live
- * state, never an error on the schedule.
- */
+/** A hint only: a failed presence read gives no live state, never an error on the schedule. */
 @Injectable()
 export class LessonRoomStates {
   private readonly log = new Logger(LessonRoomStates.name);

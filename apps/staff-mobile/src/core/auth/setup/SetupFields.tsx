@@ -4,7 +4,6 @@ import { useAccountSetup } from './use-account-setup';
 
 const S = t.teacherAuth.setup;
 
-/** Email, password twice, the refusal and «احفظ وتابع» (docs/46 A4). */
 export function SetupFields() {
   const setup = useAccountSetup();
   const [email, setEmail] = useState('');

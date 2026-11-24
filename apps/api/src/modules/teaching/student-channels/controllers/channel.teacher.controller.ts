@@ -20,7 +20,7 @@ import { pageFor } from './channel-page';
 
 const UUID = new ParseUUIDPipe();
 
-/** «رسائل الطلاب» (docs/31 §2): the teacher's channels with the families of their current students. */
+/** The teacher's channels with the families of their current students (docs/31 §2). */
 @ApiTags('student-channels')
 @ApiBearerAuth()
 @Permissions('self.teacher')

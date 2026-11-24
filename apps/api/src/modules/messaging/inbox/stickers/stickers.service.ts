@@ -46,14 +46,13 @@ export class StickersService {
     };
   }
 
-  /** «أضف إلى المفضلة»: the sticker (by its key), held by this message. */
   async favourite(input: FavouriteInput): Promise<void> {
     const row = await this.sticker(input.messageId);
     const key = stickerKey(row);
     await this.repo.save({ profile_id: input.profileId, sticker_key: key, message_id: row.id });
   }
 
-  /** «أزل من المفضلة»: the same sticker, whichever message saved it. */
+  /** Removes the same sticker, whichever message saved it. */
   async unfavourite(input: FavouriteInput): Promise<void> {
     const row = await this.sticker(input.messageId);
     await this.repo.drop({ profile_id: input.profileId, sticker_key: stickerKey(row) });

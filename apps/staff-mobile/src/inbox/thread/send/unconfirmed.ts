@@ -5,7 +5,7 @@ import type { MessageView } from '@ab/shared';
 // 5xx) may have reached the server. Its bubble stays, marked «unconfirmed», until a send with its
 // pinned id gets an answer (pinned-send).
 
-/** A provisional row whose send ended with no answer: «لم يتأكد الإرسال بعد». */
+/** A provisional row whose send ended with no answer. */
 export const isUnconfirmed = (m: Pick<MessageView, 'status' | 'error_code'>): boolean =>
   m.status === 'queued' && m.error_code === SEND_UNCONFIRMED;
 

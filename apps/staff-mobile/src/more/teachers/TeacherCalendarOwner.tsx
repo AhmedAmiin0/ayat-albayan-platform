@@ -1,4 +1,8 @@
-import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner, type TeacherCalendarView } from '@ab/shared';
+import {
+  TEACHER_CALENDAR_OWNERS,
+  type TeacherCalendarOwner as Owner,
+  type TeacherCalendarView,
+} from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   useIsAdmin,
@@ -14,11 +18,7 @@ import { Note } from '@/core/ui/feedback/Note';
 
 const fill = (template: string, n: number) => template.replace('{n}', String(n));
 
-/**
- * «تقويم المعلم» (docs/24 «نقل تقويم معلم إلى المنصة»): who builds this teacher's Google Calendar —
- * the old script from the sheet, or the platform — with the warning and the sync status. Base-role
- * admins only (GET/PUT /admin/google/teachers/:id/calendar-owner refuse everyone else too).
- */
+/** docs/24: base-role admins only; the API refuses everyone else too. */
 export function TeacherCalendarOwner({ teacherId }: { teacherId: string }) {
   const T = t.googleSync.teacherCalendar;
   const admin = useIsAdmin();

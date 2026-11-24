@@ -12,10 +12,7 @@ import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/te
 import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «قالب جديد» (owner 2026-10-31: «add ability to create and sync templates from the admin»). The
-// row is the registry's like any other: the existing submit sends it to its own line's WABA (meta /
-// kapso), the line's sync then keeps its status; on a crm line the admin creates it in the CRM and
-// marks it.
+// A registry row like any other: submitted to its line's WABA; on a crm line made in the CRM.
 
 type CreatedRow = ImportRow & Pick<TemplateRow, 'body_ar' | 'params'>;
 

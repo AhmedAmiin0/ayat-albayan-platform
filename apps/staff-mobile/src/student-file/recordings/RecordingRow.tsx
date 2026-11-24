@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { durationText, sizeText, teacherLabel } from './recording-format';
@@ -27,7 +27,7 @@ interface RecordingRowProps {
   canManage: boolean;
   /** Admin (and recordings.manage): the delete button. */
   canDelete: boolean;
-  /** The admin's list: «ملفات الحلقة» opens in the students tab, else in the teacher's. */
+  /** The admin's list opens lesson files in the students tab, else in the teacher's. */
   admin: boolean;
   /** Stable: a fresh signed link for this recording's id. */
   getUrl: (id: string) => Promise<string | null>;

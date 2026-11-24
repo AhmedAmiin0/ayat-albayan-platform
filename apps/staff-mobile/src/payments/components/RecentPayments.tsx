@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, money } from '@ab/mobile-kit';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
@@ -44,11 +44,7 @@ function PaymentRow({ payment }: { payment: PaymentView }) {
   );
 }
 
-/**
- * «المدفوعات» on the student quick view: the latest 5 (P1). A payment being recorded shows here
- * first, faded with «جاري الحفظ…», and leaves again if the API refuses it (use-record-payment).
- * Nothing when the read failed with nothing cached.
- */
+/** Shows a pending row first, removed if the API refuses it; nothing if failed with no cache. */
 export function RecentPayments({ studentId }: { studentId: string }) {
   const { color } = useTheme();
   const items = useRecentPayments(studentId).data?.items;

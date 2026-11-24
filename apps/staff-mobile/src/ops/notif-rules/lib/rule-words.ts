@@ -1,4 +1,9 @@
-import { counted, type NotificationEntryView, type NotificationRuleView, type NotificationsOverview } from '@ab/shared';
+import type {
+  NotificationEntryView,
+  NotificationRuleView,
+  NotificationsOverview,
+} from '@ab/shared';
+import { counted } from '@ab/core';
 import { ApiError, t } from '@ab/mobile-kit';
 
 // The catalogue's switches on the phone (docs/23b §4, docs/26b §6b m7), in words. Every v2 field is
@@ -17,7 +22,7 @@ export function ruleOf(entry: Pick<NotificationEntryView, 'rule'>): Notification
   return typeof enabled === 'boolean' && typeof editable === 'boolean' ? (rule as NotificationRuleView) : null;
 }
 
-/** switch: on/off here; locked: «لا يمكن إيقافه»; none: nothing to switch (read-only, manual, v1). */
+/** none means nothing to switch: read-only, manual or a v1 API. */
 export type RowControl = { kind: 'switch'; enabled: boolean } | { kind: 'locked' } | { kind: 'none' };
 
 export function controlOf(entry: NotificationEntryView, canManage: boolean): RowControl {
@@ -36,10 +41,7 @@ export function askOf(entry: Pick<NotificationEntryView, 'audience' | 'essential
   return 'plain';
 }
 
-/**
- * «سيصل إلى N ولي أمر» from GET /admin/notifications `reach`, in the Arabic count form for N (1, 2,
- * 3–10, 11+; the web's familyOn forms); none yet says so; a missing count says it generally.
- */
+/** Uses the Arabic plural forms for N, as the web's familyOn; a missing count reads generally. */
 export function reachLine(audience: NotificationEntryView['audience'], reach: NotificationsOverview['reach']): string {
   if (audience !== 'guardian' && audience !== 'lead') return '';
   const n: unknown = isObject(reach) ? Reflect.get(reach, audience) : undefined;
@@ -47,7 +49,7 @@ export function reachLine(audience: NotificationEntryView['audience'], reach: No
   return n === 0 ? r().reach.nobody : counted(r().reach[audience], n);
 }
 
-/** «لا يُرسل الآن: …» for a known blocker; an unknown one (a newer API) shows no reason. */
+/** An unknown blocker from a newer API shows no reason. */
 export function heldLine(entry: Pick<NotificationEntryView, 'blocker'>): string | null {
   const blocker: unknown = entry.blocker;
   const words: Record<string, string> = r().blockers;
@@ -55,7 +57,7 @@ export function heldLine(entry: Pick<NotificationEntryView, 'blocker'>): string 
   return r().heldNow.replace('{reason}', words[blocker] ?? '');
 }
 
-/** «معتمد جزئيًا» when only some of its template variants are approved (v2 `approval`). */
+/** Partial means only some template variants are approved (v2 `approval`). */
 export const partialLine = (entry: Pick<NotificationEntryView, 'approval'>): string | null =>
   entry.approval === 'some' ? r().partial : null;
 

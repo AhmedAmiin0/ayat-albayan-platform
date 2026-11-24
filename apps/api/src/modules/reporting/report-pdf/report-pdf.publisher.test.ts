@@ -33,8 +33,7 @@ describe('ReportPdfPublisher — render and store one report', () => {
   it('renders the report HTML and overwrites reports/{student_id}/{lesson_id}.pdf', async () => {
     const { publisher, renderer, storage, source } = setup();
     const out = await publisher.publish('r1', NOW);
-    // The clock reaches the source: «الحلقة القادمة» is read after now, never a lesson already
-    // past.
+    // The clock reaches the source, so the next lesson is read after now, never one already past.
     expect(source.load).toHaveBeenCalledWith('r1', NOW);
     const html = renderer.render.mock.calls[0]?.[0] ?? '';
     expect(html).toContain('سلمى عبد الرحمن');

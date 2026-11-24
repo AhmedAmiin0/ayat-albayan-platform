@@ -4,10 +4,6 @@ import { useState } from 'react';
 import { t, useNow } from '@ab/mobile-kit';
 import { teacherActionError, useTeacherConfirm } from './teacher-lesson-api';
 
-/**
- * «سأحضر» and «إلغاء الحلقة» of one of her lessons (docs/46 C4, C3): what is offered now, the
- * confirm's own mutation, and whether the cancel form is open. `onNotice` says what landed.
- */
 export function useTeacherActs(lesson: LessonView, onNotice: (text: string) => void) {
   const now = useNow();
   const confirm = useTeacherConfirm(lesson.id);
@@ -16,7 +12,6 @@ export function useTeacherActs(lesson: LessonView, onNotice: (text: string) => v
   return {
     canConfirm: teacherCanAct(lesson, now) && !confirmedNow(lesson, answer),
     canCancel: teacherCanAct(lesson, now),
-    /** «حضورك مؤكَّد» while the lesson is still ahead. */
     confirmed: confirmedChipShown(lesson, { answer, now }),
     busy: confirm.isPending,
     error: confirm.isError ? teacherActionError(confirm.error) : undefined,

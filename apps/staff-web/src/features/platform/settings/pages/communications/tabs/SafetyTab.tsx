@@ -10,12 +10,7 @@ import { IntegrationsPanel } from '@/features/platform/integrations/Integrations
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CrmCutoverCard } from '@/features/platform/settings/pages/communications/CrmCutoverCard';
 
-/**
- * «الحماية» (docs/23 §2d tab 5, docs/26b §6a 1.2–1.3, 10.16–10.21): the CRM cut-over in its danger
- * frame and the test guards on one side, Kapso, the CRM and Evolution drivers on the other (two columns on a wide screen, so the tab
- * fits one screen) — the same form «التكاملات» had, one panel per side with its own «حفظ», limited to
- * those groups (emptying the allow-list still asks first).
- */
+/** docs/23 §2d tab 5, docs/26b §6a: emptying the allow-list still asks first. */
 export function SafetyTab({ settings, onNote }: { settings: AcademySettings; onNote: (message: string) => void }) {
   return (
     <div className="grid gap-8 lg:grid-cols-2 lg:items-start">

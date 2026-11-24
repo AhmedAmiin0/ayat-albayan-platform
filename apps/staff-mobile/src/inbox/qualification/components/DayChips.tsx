@@ -5,16 +5,15 @@ import { WEEK_ORDER } from '@/inbox/qualification/lib/qualification-form';
 const weekday: Record<string, string> = t.enums.weekday;
 
 interface DayChipsProps {
-  /** Picked weekdays (0 = الأحد), sorted. */
+  /** Sunday is 0; sorted. */
   value: readonly number[];
   onChange: (days: number[]) => void;
   /** The picked slot's weekday: always on, not a toggle (a series repeats on it), with a line saying so. */
   locked?: number;
-  /** The group's spoken name; «الأيام المتاحة» by default, «أيام الحلقة» for a lesson's days. */
   accessibilityLabel?: string;
 }
 
-/** «الأيام المتاحة»: one checkbox chip per day, السبت → الجمعة, any number of them (R-LEAD-03). */
+/** R-LEAD-03: any number of days. */
 export function DayChips({
   value,
   onChange,

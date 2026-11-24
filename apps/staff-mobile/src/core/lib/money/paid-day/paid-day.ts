@@ -14,7 +14,7 @@ export function paidAtFor(now: Date, daysAgo: number): Date {
   return wallToUtc(day, 12 * 60, RIYADH_TZ);
 }
 
-/** «النهارده · الخميس 1 أكتوبر 2026», «امبارح · …», then the date alone. */
+/** Today, yesterday, then the date alone. */
 export function paidDayLabel(now: Date, daysAgo: number): string {
   const date = formatRunningHead(paidAtFor(now, daysAgo), locale).gregorian;
   const near = daysAgo <= 0 ? t.mobile.today : daysAgo === 1 ? t.payments.mobile.yesterday : null;

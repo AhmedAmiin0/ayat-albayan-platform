@@ -8,19 +8,17 @@ import {
   type CourseMoveKind,
 } from '@ab/client-core';
 import type {
-  BookingTeacherOption,
   CourseStopPreview,
   CourseStopRequest,
   CourseStopResult,
   ProfileCourseView,
 } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
-// The student profile's «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» (owner
-// 2026-10-30): the same routes in the admin and the sales trees (their own keys); paths and key
-// are @ab/client-core's, shared with web.
+// The same routes in the admin and sales trees, each with its own key; shared with web.
 
 export interface SubRef {
   studentId: string;
@@ -117,7 +115,6 @@ export const useTeacherOptions = (studentId: string) =>
     queryFn: () => apiFetch<BookingTeacherOption[]>(courseTeacherOptionsPath(studentId)),
   });
 
-/** After a stop: the actions, the student's file and lists («توقف»), sales' screens, lessons. */
 function useRefresh(studentId: string) {
   const client = useQueryClient();
   return () =>

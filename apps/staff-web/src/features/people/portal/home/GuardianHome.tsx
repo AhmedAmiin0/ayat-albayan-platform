@@ -8,7 +8,7 @@ interface Props {
   onOpen: (studentId: string) => void;
 }
 
-/** «أبنائي» (docs/50 §6): every child at a glance, one card each; a card opens that child. */
+/** docs/50 §6. */
 export function GuardianHome({ home, onOpen }: Props) {
   return (
     <section aria-label={t.portal.myChildren} className="grid gap-4">

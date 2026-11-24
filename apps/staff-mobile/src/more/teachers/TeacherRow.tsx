@@ -1,16 +1,13 @@
 import { memo } from 'react';
-import { teacherName, teacherStatusStyle } from '@ab/shared';
+import { teacherStatusStyle } from '@ab/money';
+import { teacherName } from '@ab/schedule';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { t, locale, type, useTheme, AppText, StatusChip, Avatar } from '@ab/mobile-kit';
 import { TeacherCountLinks } from './TeacherCountLinks';
 import type { TeacherListRow } from '@ab/shared';
 
-/**
- * One teacher in «المعلمين»: the name and status open the teacher's file (on «مشترك»); the two counts
- * beside them open it on that list. Two sibling buttons, never one inside the other. The list's inset
- * card draws the fill and the rule between rows (owner 2026-10-28: one container rule).
- */
+/** Two sibling buttons, never nested. */
 export const TeacherRow = memo(function TeacherRow({ teacher }: { teacher: TeacherListRow }) {
   const { color } = useTheme();
   const name = teacherName(teacher, locale);

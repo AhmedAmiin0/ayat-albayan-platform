@@ -5,7 +5,6 @@ import { ChatFileError } from '@/inbox/composer/send-file';
 const codeOf = (error: unknown): unknown =>
   error instanceof ApiError && typeof error.body === 'object' && error.body !== null ? Reflect.get(error.body, 'code') : undefined;
 
-/** What a failed save, delete, move or upload says: its own words, the chat's file words, else «تعذّر الحفظ». */
 export function replyError(error: unknown): string {
   if (error instanceof ChatFileError) return t.inbox.error[error.code];
   const code = codeOf(error);

@@ -16,11 +16,7 @@ const segments = [
   { value: 'phone', label: L.tabs.phone },
 ] as const;
 
-/**
- * «المدعوون»: the team (an in-app notification), students (their guardian, on WhatsApp when the creator
- * may send it, else a link to share) or a typed phone (admin and sales only), as removable chips; at
- * most 30. Used by both the instant and the scheduled create.
- */
+/** At most 30 invitees; typed phones are for admin and sales only. */
 export function InviteePicker({ value, onChange }: { value: DraftInvitee[]; onChange: (list: DraftInvitee[]) => void }) {
   const [segment, setSegment] = useState<Segment>('staff');
   const phones = useMayInvitePhones();

@@ -5,7 +5,6 @@ import type { EditButton } from './edit-draft';
 import { EditBodyFields } from './EditBodyFields';
 import { EditButtonFields } from './EditButtonFields';
 
-/** The parts both «تعديل» and the author's «قالب جديد» type. */
 export interface Words {
   body: string;
   footer: string;

@@ -22,10 +22,7 @@ export interface AlertRowView {
 
 const WORDS: AlertWords = { ...t.teacherAlerts, inMinutes: t.today.inMinutes };
 
-/**
- * «تنبيهات اليوم» (owner 2026-11-14) from «اليوم»'s lessons and the bell's own query (the same
- * GET /me/notifications as the bell; its rows only once she holds notifications.push).
- */
+/** Reads the bell's own query; its rows only with notifications.push. */
 export function useTodayAlerts(o: { lessons: readonly LessonView[]; now: Date; tz: string }) {
   const prefs = useHomePrefs();
   const cycle = useClockCycle();

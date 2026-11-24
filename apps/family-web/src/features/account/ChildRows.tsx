@@ -10,10 +10,7 @@ import { ChildRow } from './ChildRow';
 const shownId = (pick: FamilyPick): string | null =>
   pick.state === 'one' ? pick.student.id : null;
 
-/**
- * «الأبناء» (a guardian only): one row per child, a guardian who studies first as «أنا»; a row
- * makes the pages that child's (like «اختر الطالب») and goes home.
- */
+/** A guardian who studies comes first; a row switches the child and goes home. */
 export function ChildRows({ home }: { home: PortalHome }) {
   const navigate = useNavigate();
   const pickChild = usePickChild();

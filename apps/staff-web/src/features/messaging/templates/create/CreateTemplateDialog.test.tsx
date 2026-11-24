@@ -9,8 +9,6 @@ import { CreateTemplateDialog } from './CreateTemplateDialog';
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
-// «قالب جديد» (owner 2026-10-31): the form, checked with the API's schema before it posts.
-
 const S = t.templates.create;
 const nth = (text: string, n: number) => text.replace('{n}', String(n));
 const field = (label: string) => screen.getByLabelText<HTMLInputElement>(label);

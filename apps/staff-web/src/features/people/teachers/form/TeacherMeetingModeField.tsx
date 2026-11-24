@@ -15,12 +15,7 @@ type Props = {
   teacher?: Teacher | null;
 };
 
-/**
- * «طريقة حضور الحلقات» (owner 2026-10-19): follow the academy switch (with what it gives today), a
- * fixed link, or the academy platform. The fixed-link field above stays either way. The academy
- * default is read from GET /settings/public itself, not usePublicConfig's registry defaults, so
- * nothing is claimed about it before the API answers.
- */
+/** The academy default comes from GET /settings/public, so nothing is claimed before it answers. */
 export function TeacherMeetingModeField({ form, set, teacher = null }: Props) {
   const notesId = useId();
   const config = useQuery(publicConfigQuery);

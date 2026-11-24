@@ -9,10 +9,9 @@ const v = AR.reports.v2;
 const f = v.family;
 const CONTACT_WHATSAPP = '+966 56 610 1447';
 
-/** «الأحد 2026-10-27» in the guardian's zone. */
+/** In the guardian's zone. */
 const day = (at: Date, tz: string) => `${esc(weekdayName(at, tz))} ${ltr(localDate(at, tz))}`;
 
-/** «الحلقة 9 من 12» inside a package, else «الحلقة 14». */
 function lessonText(m: FamilyModel): string {
   return m.slot
     ? fill(esc(v.lessonOf), { n: ltr(String(m.slot.position)), total: ltr(String(m.slot.total)) })
@@ -32,7 +31,6 @@ function headerHtml(m: FamilyModel, logo: string): string {
   ].join('');
 }
 
-/** «الحلقة القادمة»: when (if booked) and the plan (if any). */
 function nextHtml(m: FamilyModel): string {
   const when = m.nextLessonAt ? `${day(m.nextLessonAt, m.tz)} ${timeWithZone(m.nextLessonAt, m.tz)}` : '';
   const text = [when, m.nextPlan ? esc(m.nextPlan) : ''].filter(Boolean).join(' · ');

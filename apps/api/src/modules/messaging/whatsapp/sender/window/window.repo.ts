@@ -20,7 +20,7 @@ interface HoldWrite {
   from: string;
   since: Date;
   until: Date;
-  /** error_text while held: null behind a template, NO_TEMPLATE_NOTE under «بدون قالب». */
+  /** Null behind a template. */
   note: string | null;
 }
 const fail = (what: string, message: string): Error => new Error(`${what} failed: ${message}`);

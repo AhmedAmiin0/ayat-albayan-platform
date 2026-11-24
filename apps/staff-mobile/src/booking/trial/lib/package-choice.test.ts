@@ -35,7 +35,7 @@ test('a paid package: a weekly rule on its days, its length and size, the new ch
     durationMin: 45,
     newStudent: { status: 'trial' },
   });
-  // A trial takes the form's «المدة» too (30 / 45 / 60 / 90).
+  // A trial takes the duration too (30 / 45 / 60 / 90).
   expect(toBookingRequest(draft({ durationMin: 30 }), { requestId: REQ })).toMatchObject({ durationMin: 30 });
 });
 

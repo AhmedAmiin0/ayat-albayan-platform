@@ -18,7 +18,7 @@ interface ConfirmStepProps {
   busy: boolean;
   failure: BookFailure | null;
   onChangeSlot: () => void;
-  /** Back to «الفاتورة» (a refused or expired one). */
+  /** Back to the invoice step for a refused or expired one. */
   onChangeInvoice: () => void;
 }
 
@@ -39,11 +39,7 @@ export function SummaryList({ rows }: { rows: SummaryRow[] }) {
   ));
 }
 
-/**
- * «المراجعة»: the booking as it will be made: a trial free of charge, or a package with its weekly
- * days (each with its time, picked on the slot step) and its invoice; then the WhatsApp confirmation the
- * parent will get (queued by the API). A clash or a similar-named child shows its way out here.
- */
+/** The WhatsApp confirmation shown is queued by the API. */
 export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: ConfirmStepProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

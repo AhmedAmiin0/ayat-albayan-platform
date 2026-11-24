@@ -13,13 +13,7 @@ import { toStudentDetails } from './sales-student.mapper';
 import { SalesStudentRepo } from './sales-student.repo';
 import { SalesStudentReads } from './sales-student.reads';
 
-/**
- * «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student (owner 2026-10-28) with its
- * trial, attendance, «الجدول» (weekly slots, the next lessons; no link), the current package's
- * summary, the subscriptions (no payments) and the sent reports as the teacher sees them: every
- * student reads as hers (owner 2026-10-30, «Make all assistants see all»); `mine` only marks hers
- * for the money actions. Read-only.
- */
+/** docs/16 row 36: any student, read-only; `mine` only marks hers for the money actions. */
 @Injectable()
 export class SalesStudentService {
   constructor(
@@ -44,8 +38,7 @@ export class SalesStudentService {
     ]);
     const facts = { rules, lessons: upcoming, own: own.studentIds, studentTz: student.tz };
     const schedule = toStudentSchedule(facts, now);
-    // «مدفوعة جزئيًا» (owner 2026-10-28): the price for a viewer who sees it in her money views
-    // already, any student.
+    // The price only for a viewer who already sees it in her money views.
     const prices = can(user, 'self.sales_money') ? await this.queries.prices(studentId) : [];
     const trial = toTrialLessons(trials, now);
     const parts = { student, history, lessons, reports, schedule, trial, mine: acts, prices };
@@ -61,7 +54,7 @@ export class SalesStudentService {
     return (await packageSummaries(this.roster, rows)).get(studentId) ?? null;
   }
 
-  /** «تنزيل PDF» of ANY student's sent report (owner 2026-10-30): 404 another's, 409 pdf_not_ready. */
+  /** Any student's sent report; 404 for another's, 409 pdf_not_ready. */
   reportPdf(input: { studentId: string; reportId: string }): Promise<SignedDownload> {
     return this.reads.files.studentPdfUrl({ id: input.reportId, studentId: input.studentId });
   }

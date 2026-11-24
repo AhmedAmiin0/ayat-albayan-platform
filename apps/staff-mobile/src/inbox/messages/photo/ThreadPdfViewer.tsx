@@ -12,7 +12,6 @@ interface ThreadPdfViewerProps {
   onClose: () => void;
 }
 
-/** A chat PDF full screen (the kit's PdfViewer): pages signed by the staff API, «تنزيل» below. */
 export function ThreadPdfViewer({ message: m, phone, doc, name, onClose }: ThreadPdfViewerProps) {
   return (
     <PdfViewer

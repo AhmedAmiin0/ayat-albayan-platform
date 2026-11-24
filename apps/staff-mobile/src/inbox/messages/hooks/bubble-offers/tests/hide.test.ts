@@ -1,7 +1,7 @@
 import { delivered, inbound, message } from '@/inbox/shared/thread-fixtures';
 import { bubbleOffers, offersAny } from '@/inbox/messages/hooks/bubble-offers/bubble-offers';
 
-// «حذف من المنصة» (owner 2026-10-30): staff who may hide, the admin shows again; no WhatsApp edit.
+// Staff who may hide, the admin unhides; nothing is edited on WhatsApp.
 const on = { enabled: true, teacher: false };
 const hidden = { ...inbound, hidden: { by_name: 'سارة', at: '2026-10-30T10:00:00.000Z' } };
 

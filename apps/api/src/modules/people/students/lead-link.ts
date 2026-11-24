@@ -8,12 +8,7 @@ import { canTransitionLead } from '@ab/shared';
 export type LinkedLead = { id: string; status: LeadStatus; converted_guardian_id: string | null };
 type LeadLinkInput = { lead: LinkedLead; guardianId: string; actorId: string };
 
-/**
- * «تسجيل الطالب» from the inbox thread (R-LEAD-06, R-STU-02): POST /students with `lead_id` links
- * the lead to the family like create_booking does (converted_guardian_id, kept when already set)
- * and moves it to `converted` when the funnel allows it. Compare-and-set on the status, so a
- * concurrent change wins; a terminal status only gets the link. Audited like a status change.
- */
+/** R-LEAD-06, R-STU-02: compare-and-set on status; a terminal status only gets the link. */
 export class LeadLink {
   constructor(
     private readonly db: Db,

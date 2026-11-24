@@ -1,4 +1,5 @@
-import { studentStatusStyle, type SalesStudentView } from '@ab/shared';
+import type { SalesStudentView } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { pushInTab } from '@/core/nav/back-within';
 import { memo } from 'react';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';
@@ -10,15 +11,7 @@ import { RosterLines } from '@/sales/sales/roster/RosterLines';
 
 const S = t.sales.allStudents;
 
-/**
- * One student of the academy: the name as the row's header (a link to the file) with its readable
- * code, teacher · program, the guardian's phone and name, the current package (size, status,
- * lessons used / left, dates; no price), the weekly schedule and attendance (owner 2026-10-30,
- * RosterLines),
- * the status chip. Never a price, payment, note or meeting link. Every row, in every tree, opens the student's details (owner 2026-10-28: the
- * same tap every time, never the chat): «تفاصيل الطالب» in the sales tree (docs/16 row 36), the
- * admin's student file under «المزيد» › «المبيعات». The family's chat is a button on those screens.
- */
+/** Never a price, payment, note or meeting link; every row opens the student's details. */
 export const AllStudentRow = memo(function AllStudentRow({ student }: { student: SalesStudentView }) {
   const base = useTreeBase();
   const phone = student.guardian_phone;

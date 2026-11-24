@@ -3,7 +3,7 @@ import { EssentialOffSheet } from './EssentialOffSheet';
 import { nameOf } from '@/ops/notif-rules/lib/rule-words';
 import type { CatalogueToggles } from '@/ops/notif-rules/hooks/use-catalogue-toggles';
 
-/** The typed «إيقاف» sheet for the row that asked for it (essential OFF, or a 428), if any. */
+/** Opens for an essential OFF or a 428 answer. */
 export function TypedOffSheet({ entries, toggles }: { entries: readonly NotificationEntryView[]; toggles: CatalogueToggles }) {
   const ask = toggles.ask;
   if (ask?.kind !== 'typed') return null;

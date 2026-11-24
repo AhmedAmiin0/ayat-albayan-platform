@@ -19,10 +19,7 @@ export interface EditTemplateDialogProps {
   onClose: () => void;
 }
 
-/**
- * «تعديل» (owner 2026-11-14): Meta's rules on top, the form, and one save that is disabled while
- * Meta would refuse (under review, or the approved template's next edit not open yet).
- */
+/** Save is disabled while Meta would refuse (under review, or the next edit not open yet). */
 export function EditTemplateDialog({ tpl, mode, onSaved, onClose }: EditTemplateDialogProps) {
   const formId = useId();
   // Meta's limits read once, when the dialog opens.

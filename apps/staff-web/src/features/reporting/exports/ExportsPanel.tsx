@@ -63,7 +63,7 @@ export function ExportsPanel({ period, month: initialMonth }: ExportsPanelProps)
         ))}
         <li className={row}>
           <span className="min-w-28 font-semibold">{t.exports.payouts}</span>
-          {/* «أكتوبر 2026» like the payouts page; a native month input shows the OS locale. */}
+          {/* A custom month label because a native month input shows the OS locale. */}
           <MonthSelect label={t.exports.month} value={month} latest={currentMonth()} onChange={setMonth} />
           <span className="ms-auto">{button({ kind: 'payouts', params: { month } }, t.exports.payouts)}</span>
         </li>

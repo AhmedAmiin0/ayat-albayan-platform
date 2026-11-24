@@ -6,7 +6,6 @@ import { t } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// The salesperson's «المحادثات» tab (/sales/inbox): the chats alone, as the web /sales/inbox.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

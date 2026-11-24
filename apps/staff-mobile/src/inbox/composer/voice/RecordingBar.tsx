@@ -37,11 +37,6 @@ function LevelBars({ level, ms }: { level: number | null; ms: number }) {
   );
 }
 
-/**
- * The pill's contents while a voice note is recorded or kept (owner 2026-10-27, as WhatsApp), in
- * reading order. Holding: [dot][time] … [‹ «اسحب للإلغاء»], the chevron pointing to the start.
- * Locked, kept or failed: [bin][dot while live][time][level]; the round button is «أرسل».
- */
 export function RecordingBar({ voice }: { voice: Pick<VoiceUi, 'state' | 'ms' | 'level' | 'hint' | 'cancel'> }) {
   const { color } = useTheme();
   const kept = keptTake(voice.state);

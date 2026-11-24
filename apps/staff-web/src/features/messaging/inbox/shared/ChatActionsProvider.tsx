@@ -17,14 +17,7 @@ export interface ChatActionsProviderProps {
   children: ReactNode;
 }
 
-/**
- * The open chat's «رد» target, its forward dialog and their toasts (owner 2026-10-25). ThreadPane is
- * keyed by phone, so another chat starts with no target. «رد» follows the text rule (useMaySend: tried
- * after the window on a Kapso chat line); where a text cannot go it is off with the closed-window
- * notice as its hint, and a target set before is not offered to the composer. «بحث» lives here too.
- * «تعديل» (owner 2026-11-07) fills the box with the original's text; it and «رد» exclude each
- * other.
- */
+/** ThreadPane is keyed by phone so another chat starts with no target; reply and edit exclude. */
 export function ChatActionsProvider({ thread, enabled, children }: ChatActionsProviderProps) {
   const [forwarding, setForwarding] = useState<MessageView | null>(null);
   const [notice, setNotice] = useState<ForwardSummary | null>(null);
@@ -34,7 +27,7 @@ export function ChatActionsProvider({ thread, enabled, children }: ChatActionsPr
   const replyBlocked = useMaySend(thread) ? null : t.inbox.sessionClosed;
   const { display_name: name, phone_e164: phone } = thread;
   const picks = usePicks(phone);
-  // «تفاعل» (owner 2026-10-27): a refused or failed reaction says so in the same toast.
+  // A refused or failed reaction is reported in the same toast.
   const { mutate: reactNow } = useReact(phone, (text) => setNotice({ text, tone: 'error' }));
   const value: ChatActions = {
     enabled,

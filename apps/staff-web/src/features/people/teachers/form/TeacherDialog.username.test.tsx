@@ -9,7 +9,7 @@ import { TeacherDialog } from './TeacherDialog';
 import type { Teacher } from '@ab/shared';
 import { teacherFixture } from '@ab/shared/testing';
 
-// «اسم المستخدم» of the teacher's login (docs/30 §7).
+// docs/30 §7.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

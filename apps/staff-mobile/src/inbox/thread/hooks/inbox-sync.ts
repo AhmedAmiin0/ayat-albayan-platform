@@ -9,20 +9,13 @@ import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
 import { type ThreadCache, threadKey } from './thread-cache';
 import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
 
-// The chats list follows every chat (owner 2026-10-27: it needed a pull to refresh): a send, a
-// received message and an opened chat refresh the thread, the chats list, the tab's unread badge
-// and «القوائم» from this one place. Every tree's list (admin, sales, assistant, teacher) is
-// useThreadList, so one key reaches them all.
+// One shared key reaches every tree's chats list (useThreadList) after any send or receive.
 
 /** ['threads', 'list']: every cached chats list, whatever its search, unread or list filter. */
 export const threadListKey = ['threads', 'list'];
 const navCountKey = ['threads', 'nav-count'];
 
-/**
- * Every chats list, the tab badge and «القوائم»: a push that names no chat refetches no thread. A
- * list under a chat (a send, an opened chat) is only marked (docs/43 AU2): useListCatchUp re-reads
- * it when it shows again; a list on screen re-reads now (changeLists).
- */
+/** A list under a chat is only marked stale (docs/43 AU2); a list on screen re-reads now. */
 export function refreshLists(client: QueryClient): void {
   nudgeInboxStore(); // the phone store syncs too (docs/43 43-7)
   changeLists(client);
@@ -51,12 +44,7 @@ export async function refreshChat(client: QueryClient, phone: string): Promise<v
   await Promise.all(keys.map((queryKey) => client.invalidateQueries({ queryKey })));
 }
 
-/**
- * Back in the foreground (owner 2026-11-05): a chat read started before the background may hang
- * on a dead connection, and every automatic refresh (focus, interval, realtime) joins it instead
- * of starting anew. Every chat read is cancelled (shown or not, loaded or not: a push tap mounts a
- * hidden chat), then the lists, the badge, «القوائم» and the shown chats read again.
- */
+/** Reads started before backgrounding may hang and absorb refreshes, so all are cancelled first. */
 export async function resumeInbox(client: QueryClient): Promise<void> {
   await client.cancelQueries({ queryKey: ['threads'] });
   nudgeInboxStore();

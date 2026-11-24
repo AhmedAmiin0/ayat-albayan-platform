@@ -3,7 +3,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const G = t.shortLinks.gate;
 
-/** «لست أنت؟ تسجيل الخروج» under the signed-in visitor's action. */
 export function SignOutLine({ onSignOut }: { onSignOut: () => Promise<void> }) {
   return (
     <p className="flex items-center justify-center gap-1 text-[14px] text-ink-2">

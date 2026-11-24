@@ -23,7 +23,7 @@ const SCREENS: Readonly<Record<GateScreen, (gate: Gate) => ReactNode>> = {
   opening: (gate) => <OpeningScreen gate={gate} />,
 };
 
-/** The boards draw no language switch beside «متابعة باسم…» (the login's own language). */
+/** The boards draw no language switch beside the continue-as button (the login's own language). */
 const NO_LANGUAGE: ReadonlySet<GateScreen> = new Set<GateScreen>(['signed_in']);
 
 const assign: Go = (url) => window.location.assign(url);

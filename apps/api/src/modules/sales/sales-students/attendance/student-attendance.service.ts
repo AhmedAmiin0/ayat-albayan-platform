@@ -11,10 +11,7 @@ export function monthOf(query: unknown, now: Date): string {
   return parsed.data.month ?? riyadhMonthOf(now);
 }
 
-/**
- * «سجل الحضور» of one student (owner 2026-10-28): every lesson that started in a Riyadh month, the
- * months that have one, and the month's totals. Read-only; the same rows for sales and the admin.
- */
+/** Months are Riyadh months; read-only, same rows for sales and admin. */
 @Injectable()
 export class StudentAttendanceService {
   constructor(private readonly queries: StudentAttendanceRepo) {}

@@ -14,7 +14,6 @@ export interface StaffPhotoOptions {
   invalidate: readonly QueryKey[];
 }
 
-/** «تغيير الصورة» (gallery, square crop) and «حذف الصورة»: the photo shown now, busy flags, the outcome line. */
 export function useStaffPhoto({ base, photo, invalidate }: StaffPhotoOptions) {
   const client = useQueryClient();
   // What the last write answered, until the page reloads; undefined = nothing written here yet.

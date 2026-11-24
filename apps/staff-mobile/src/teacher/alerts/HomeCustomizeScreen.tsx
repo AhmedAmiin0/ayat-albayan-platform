@@ -21,10 +21,7 @@ function Group({ rows, testID }: { rows: readonly PrefSwitch[]; testID: string }
   );
 }
 
-/**
- * «تخصيص صفحة اليوم» (owner 2026-11-14): each alert kind, the hero, the ended lessons and compact
- * rows. Every switch applies at once and is saved on this device only.
- */
+/** Every switch applies at once and is saved on this device only. */
 export function HomeCustomizeScreen() {
   const groups = prefSwitches(useHomePrefs(), t.teacherAlerts);
   return (
