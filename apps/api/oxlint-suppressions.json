@@ -2551,7 +2551,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/finance/subscriptions/trial/student-trial-status.test.ts": {
@@ -8463,8 +8463,10 @@
   "src/modules/sales/sales-money/chat/sales-chat-files.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
+    }
+  },
+  "src/modules/sales/sales-money/chat/sales-chat-receipts.http.test.ts": {
+    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -8473,15 +8475,14 @@
       "count": 6
     }
   },
-  "src/modules/sales/sales-money/reads/sales-family.repo.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
+  "src/modules/sales/sales-money/package-cancel/sales-package-cancel.ts": {
     "stylistic/max-len": {
-      "count": 6
-    },
-    "typescript/no-unnecessary-condition": {
       "count": 3
+    }
+  },
+  "src/modules/sales/sales-money/package-cancel/tests/http.cancel.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/reads/sales-money-reads.controller.ts": {
@@ -8505,6 +8506,16 @@
       "count": 4
     }
   },
+  "src/modules/sales/sales-money/reads/tests/http.renew-any-family.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/reads/tests/http.renewal.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
   "src/modules/sales/sales-money/sales-money.controller.ts": {
     "stylistic/max-len": {
       "count": 13
@@ -8513,83 +8524,9 @@
       "count": 7
     }
   },
-  "src/modules/sales/sales-money/sales-money.fakes.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.http.cancel.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.http.chat.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.http.renew-any-family.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.http.renewal.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.http.start-locked.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.http.used-before.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.mapper.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.module.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    },
-    "ab/module-boundaries": {
-      "count": 4
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.scope.ts": {
-    "stylistic/max-len": {
-      "count": 8
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-money/sales-money.service.ts": {
     "stylistic/max-len": {
-      "count": 13
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.services.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
-    }
-  },
-  "src/modules/sales/sales-money/sales-money.settings.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/sales-money/sales-package-cancel.ts": {
-    "stylistic/max-len": {
-      "count": 3
+      "count": 11
     }
   },
   "src/modules/sales/sales-money/sales-start.ts": {
@@ -8603,14 +8540,41 @@
       "count": 5
     }
   },
-  "src/modules/sales/sales-money/teacher/sales-teacher-assign.http.test.ts": {
+  "src/modules/sales/sales-money/shared/sales-family.repo.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 6
+    },
+    "typescript/no-unnecessary-condition": {
+      "count": 3
+    }
+  },
+  "src/modules/sales/sales-money/shared/sales-money.mapper.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/sales/sales-money/teacher/sales-teacher-assign.test.ts": {
+  "src/modules/sales/sales-money/shared/sales-money.scope.ts": {
+    "stylistic/max-len": {
+      "count": 8
+    },
+    "ab/module-boundaries": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/shared/sales-money.services.ts": {
     "stylistic/max-len": {
       "count": 1
+    },
+    "ab/module-boundaries": {
+      "count": 3
+    }
+  },
+  "src/modules/sales/sales-money/shared/sales-money.settings.ts": {
+    "stylistic/max-len": {
+      "count": 2
     }
   },
   "src/modules/sales/sales-money/teacher/sales-teacher-assign.ts": {
@@ -8619,6 +8583,31 @@
     },
     "ab/forbidden-imports": {
       "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/teacher/tests/assign.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/teacher/tests/http.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/sales/sales-money/tests/http.start-locked.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/tests/http.used-before.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/sales/sales-money/tests/sales-money.fakes.ts": {
+    "stylistic/max-len": {
+      "count": 3
     }
   },
   "src/modules/sales/sales-registration/sales-registration.controller.ts": {

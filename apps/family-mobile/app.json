@@ -96,7 +96,8 @@
       ]
     ],
     "experiments": {
-      "reactCompiler": true
+      "reactCompiler": true,
+      "tsconfigPaths": false
     },
     "runtimeVersion": {
       "policy": "fingerprint"

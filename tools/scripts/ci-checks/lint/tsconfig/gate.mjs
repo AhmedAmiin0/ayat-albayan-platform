@@ -1,20 +1,25 @@
 // A tsconfig names only its own folder (CLAUDE.md rule 13): apps and packages link through
 // package.json dependencies and `exports`/`imports`, never through compiler paths; shared compiler
-// options come only from the root tsconfig.base.json, never from a package. No baseline and no
-// allow-list: every tsconfig.json and tsconfig.*.json outside node_modules passes or CI fails.
-// `compilerOptions.paths` is left to its own lane until no tsconfig has it.
+// options come only from the root tsconfig.base.json, never from a package. The one alias, `@/` →
+// each app's own src, is declared once in that root base. No baseline and no allow-list: every
+// tsconfig.json and tsconfig.*.json outside node_modules passes or CI fails, and so does any `@/`
+// import under packages/ (alias.mjs).
 // Usage: node tools/scripts/ci-checks/lint/tsconfig/gate.mjs
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ts } from 'ts-morph';
 import { z } from 'zod';
+import { aliasImports, isPackageCode } from './alias.mjs';
 
 const NAME = /(^|\/)tsconfig(\.[^/]+)?\.json$/;
 const VENDORED = /(^|\/)node_modules\//;
 const WORKSPACE = /^(apps|packages)\//;
 const ROOT_BASE = 'tsconfig.base.json';
+const ALIAS = { '@/*': ['${configDir}/src/*'] };
+const PATHS = `compilerOptions.paths: only ${ROOT_BASE} at the root, exactly ${JSON.stringify(ALIAS)}`;
 const LINKS = 'link apps and packages in package.json';
 
 const list = z.array(z.string()).optional();
@@ -61,24 +66,45 @@ const bases = (path, config) =>
     .filter((base) => !allowedBase(path, base))
     .map((base) => `extends: "${base}" is not its own folder or the root ${ROOT_BASE}`);
 
+const isTheAlias = (paths, path) => path === ROOT_BASE && isDeepStrictEqual(paths, ALIAS);
+const pathsAllowed = (paths, path) => paths === undefined || isTheAlias(paths, path);
+const aliasOnlyInBase = (config, path) =>
+  pathsAllowed(config.compilerOptions?.paths, path) ? [] : [PATHS];
+
 /** Every way the tsconfig at `path` (its jsonc `text`) names something outside its folder. */
 export function violations(path, text) {
   const raw = ts.parseConfigFileTextToJson(path, text);
   const config = schema.parse(raw.error === undefined ? raw.config : undefined);
-  return [...forbidden(config), ...outside(config), ...bases(path, config)];
+  return [
+    ...forbidden(config),
+    ...aliasOnlyInBase(config, path),
+    ...outside(config),
+    ...bases(path, config),
+  ];
 }
+
+const report = (label, found) => {
+  console.log(`${label}: ${found.length} found`);
+  found.forEach((line) => console.log(line));
+  return found.length;
+};
 
 function main() {
   const root = fileURLToPath(new URL('../../../../..', import.meta.url));
   const args = ['ls-files', '--cached', '--others', '--exclude-standard'];
-  const files = execFileSync('git', args, { cwd: root, encoding: 'utf8' }).split('\n');
-  const configs = [...new Set(files.filter(isTsconfig))].sort();
-  const found = configs.flatMap((path) =>
-    violations(path, readFileSync(join(root, path), 'utf8')).map((v) => `  ${path}: ${v}`),
-  );
-  console.log(`tsconfig: ${configs.length} files, ${found.length} outside their own folder`);
-  found.forEach((line) => console.log(line));
-  process.exitCode = found.length === 0 ? 0 : 1;
+  const files = [
+    ...new Set(execFileSync('git', args, { cwd: root, encoding: 'utf8' }).split('\n')),
+  ];
+  const read = (path) => readFileSync(join(root, path), 'utf8');
+  const lines = (check) => (path) => check(path, read(path)).map((v) => `  ${path}: ${v}`);
+  const configs = files.filter(isTsconfig).sort().flatMap(lines(violations));
+  const aliases = files
+    .filter(isPackageCode)
+    .sort()
+    .flatMap(lines((_, text) => aliasImports(text)));
+  const total =
+    report('tsconfig outside its own folder', configs) + report('@/ in packages', aliases);
+  process.exitCode = total === 0 ? 0 : 1;
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main();

@@ -32,7 +32,8 @@
     "./ui/tabs/AppNativeTabs": "./src/ui/tabs/AppNativeTabs.tsx",
     "./babel": "./babel.cjs",
     "./jest-config": "./jest.base.cjs",
-    "./jest-setup": "./jest.shared.cjs"
+    "./jest-setup": "./jest.shared.cjs",
+    "./metro": "./metro.cjs"
   },
   "scripts": {
     "typecheck": "tsgo --noEmit",
@@ -109,7 +110,7 @@
     "@ab/config": "workspace:*",
     "@testing-library/react-native": "^14.0.1",
     "@types/jest": "^30.0.0",
-    "@types/react": "~19.2.2",
+    "@types/react": "catalog:",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "jest": "^30.5.2",
     "jest-expo": "~57.0.5",
