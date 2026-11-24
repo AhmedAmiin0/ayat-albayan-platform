@@ -4,10 +4,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
+import { readChunked } from '@/common/db/read-all';
 import type { StatusChangeRow } from './student-renewal.plan';
 
 type StatusMove = { studentId: string; from: StudentStatus; to: StudentStatus };
 type MoveAudit = { actorId: string | null; after: Record<string, Json> };
+interface StudentTzRow {
+  status: StudentStatus;
+  tz: string;
+}
 
 /** The reads and the compare-and-set writes of the automatic student status changes (docs/11 §7). */
 @Injectable()
@@ -17,7 +22,14 @@ export class StudentStatusRepo {
     private readonly audit: AuditService,
   ) {}
 
-  async student(studentId: string): Promise<{ status: StudentStatus; tz: string } | null> {
+  async students(studentIds: readonly string[]): Promise<Map<string, StudentTzRow>> {
+    const data = await readChunked(studentIds, (chunk) =>
+      this.db.from('students').select('id, status, tz').in('id', chunk),
+    );
+    return new Map(data.map((s) => [s.id, { status: s.status, tz: s.tz }]));
+  }
+
+  async student(studentId: string): Promise<StudentTzRow | null> {
     const { data, error } = await this.db.from('students').select('status, tz').eq('id', studentId).maybeSingle();
     if (error) throw dbError(error);
     return data;

@@ -1,4 +1,5 @@
-import { courseChangeSchema, sameDays } from '@ab/shared';
+import { sameDays } from '@ab/shared';
+import { courseChangeSchema } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { changeBody, currentPicks, picksReady } from './change-body';
 import { COURSE, MON, NOW, SUN, WED } from './change-fixture';

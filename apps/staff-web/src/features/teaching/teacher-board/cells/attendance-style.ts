@@ -1,4 +1,5 @@
-import type { AttendanceKind, StatusStyle } from '@ab/shared';
+import type { AttendanceKind } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** «حضر» settled green, «غاب» struck red, «اعتذر» / «أُلغيت» neutral, «لم يُسجَّل» waits on her. */

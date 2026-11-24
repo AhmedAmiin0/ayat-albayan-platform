@@ -1,4 +1,4 @@
-import type { MeetingInviteeOption } from '@ab/shared';
+import type { MeetingInviteeOption } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Field } from '@ab/web-kit/components/ui/form/field';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { ThreadMessagesRepo } from './thread-messages.repo';
 
 // A thread is ordered by each message's time, whatever its direction or how it got stored (owner

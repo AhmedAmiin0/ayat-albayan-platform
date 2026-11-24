@@ -1,0 +1,1 @@
+export { TeacherTabs } from './TeacherTabs';
