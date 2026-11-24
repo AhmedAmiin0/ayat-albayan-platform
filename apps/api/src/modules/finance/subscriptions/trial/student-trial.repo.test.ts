@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { IN_CHUNK } from '@/common/db/read-all';
 import { StudentTrialRepo } from './student-trial.repo';
 

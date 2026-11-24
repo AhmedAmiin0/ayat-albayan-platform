@@ -5,7 +5,7 @@ import type {
   RoomOpenResult,
   StudentJoinLinkUrl,
   StudentLinkView,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 

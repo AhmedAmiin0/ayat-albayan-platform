@@ -1,4 +1,10 @@
-import type { AssistantLessonView, SalesScheduleDay, SalesStudentView, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
+import type {
+  SalesScheduleDay,
+  SalesStudentView,
+  SalesSubscriptionHistory,
+  SalesTeacherView,
+} from '@ab/shared';
+import type { AssistantLessonView } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 

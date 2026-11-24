@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { TeacherCancelRepo } from './teacher-cancel.repo';
 import { TeacherConfirmRepo } from './teacher-confirm.repo';
 

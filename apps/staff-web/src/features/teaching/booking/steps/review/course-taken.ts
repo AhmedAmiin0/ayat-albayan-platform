@@ -1,4 +1,4 @@
-import { wallParts, type Conflict } from '@ab/shared';
+import { wallParts, type Conflict } from '@ab/schedule';
 import { WEEK_ORDER } from '@/features/people/teachers/availability/grid';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { draftPicks } from '@/features/teaching/booking/draft/draft.days';
