@@ -18,7 +18,8 @@ import { fakeDeps } from './webhook.fakes';
 import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from '@/modules/messaging/webhook/webhook.module';
 import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
-import { WEBHOOK_CONFIG, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import type { WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 import { CrmInboundRepo } from '@/modules/messaging/webhook/crm-inbound';
 
 export const SECRET = 'stub-app-secret';

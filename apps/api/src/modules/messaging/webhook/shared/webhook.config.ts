@@ -4,6 +4,9 @@ import { crmWebhookSecret } from '@/config/env/whatsapp/env.crm';
 import { appSecrets, kapsoWebhookSecret, lineNumbers, type Env } from '@/config/env/env';
 import type { WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
 
+/** A token so tests can swap the webhook settings. */
+export const WEBHOOK_CONFIG = Symbol('WEBHOOK_CONFIG');
+
 /**
  * Webhook settings from env (docs/12 §13.6). The chat number comes from WA_CHAT_PHONE_NUMBER_ID
  * alone (lineNumbers), so a half-configured chat line still receives and stores its messages.
