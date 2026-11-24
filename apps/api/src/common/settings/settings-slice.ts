@@ -1,4 +1,4 @@
-import type { AcademySettings, SettingKey } from '@ab/shared';
+import type { AcademySettings, SettingKey } from '@ab/settings';
 import type { SettingsService } from './settings.service';
 
 /**

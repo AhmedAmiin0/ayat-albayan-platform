@@ -5,7 +5,7 @@ import { type, useTheme } from '../../theme';
 
 const P = t.mobileRoom.permission;
 
-/** A refused camera / mic: joining goes on without it; «لا تسأل مجددًا» offers the settings. */
+/** Joining goes on without it; a permanent refusal offers the settings. */
 export function PreviewNotice({ notice }: { notice: 'denied' | 'blocked' }) {
   const { color } = useTheme();
   return (

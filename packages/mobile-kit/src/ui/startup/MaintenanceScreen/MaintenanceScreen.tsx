@@ -13,11 +13,6 @@ const WORDS = { maintenance: S.planned, down: S.outage } as const;
 const TITLE = 22;
 const BODY = type.size.body;
 
-/**
- * «تحت الصيانة» (owner 2026-11-21) in the startup screen's frame: the emblem (still while planned,
- * breathing while the API is away, with the gold dots), the title and body (announced) and one
- * button that asks again now.
- */
 export function MaintenanceScreen(props: MaintenanceScreenProps) {
   const { kind, checking, onRetry, fontsLoaded } = props;
   const font = (family: string) => (fontsLoaded ? family : undefined);

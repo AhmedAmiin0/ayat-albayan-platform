@@ -20,10 +20,7 @@ interface RoomTopBarProps {
   live: LiveHeader | null;
 }
 
-/**
- * The room's header: its name; in the room «جارٍ التسجيل · 04:12» and the people pill. «فتح في
- * المتصفح» lives in the participants panel and the steps before the room (it overflowed 358pt).
- */
+/** Open in browser lives in the panel and pre-room steps since it overflowed 358pt. */
 export function RoomTopBar({ title, live }: RoomTopBarProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();

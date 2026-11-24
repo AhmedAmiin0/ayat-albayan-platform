@@ -5,7 +5,6 @@ import type { RowDialog } from './MeetingRowDialogs';
 
 const M = t.meetingInvites.list;
 
-/** The creator's (or an admin's) dialogs: «غيّر الموعد» / «ألغِ الاجتماع» while a scheduled one is live, «المدعوون», «التسجيلات». */
 export function MeetingManageButtons({ meeting, onOpen }: { meeting: MeetingView; onOpen: (dialog: RowDialog) => void }) {
   if (!meeting.can_manage) return null;
   const live = meeting.state === 'open' && !meeting.cancelled_at && meeting.starts_at !== null;

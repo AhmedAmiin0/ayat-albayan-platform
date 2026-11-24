@@ -43,7 +43,7 @@ export interface UnpaidRow {
   starts_on: string;
 }
 
-/** A task plus its package's use, so the UI can word «فاضل حلقتين». */
+/** A task plus its package's use, so the UI can word the lessons left. */
 export type TaskRow = AdminTaskView & { balance: { used: number; total: number } | null };
 
 export interface DashboardWork {

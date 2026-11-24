@@ -1,4 +1,5 @@
-import { clockOf, type ClockOptions, type NotificationItem } from '@ab/shared';
+import type { NotificationItem } from '@ab/shared';
+import { clockOf, type ClockOptions } from '@ab/time';
 import { Pressable, View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 

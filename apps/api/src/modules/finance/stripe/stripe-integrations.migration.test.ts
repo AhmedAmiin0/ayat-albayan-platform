@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
+import { INTEGRATION_SECRET_KEYS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 

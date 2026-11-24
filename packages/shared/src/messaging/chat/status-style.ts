@@ -1,8 +1,7 @@
 import type { MessageStatus, TemplateStatus } from '@ab/catalog';
 import type { StatusStyle } from '@ab/money';
 
-// Phase 4 status chips (docs/07 §6 grammar: act = the admin must do something, «دورك»).
-// Labels: ar.json enums.messageStatus / enums.templateStatus.
+// Status chips follow docs/07 §6; labels from ar.json enums.messageStatus and enums.templateStatus.
 
 /** A failed send is the admin's to retry or send by hand (R-MSG-03/05). */
 export const messageStatusStyle: Record<MessageStatus, StatusStyle> = {

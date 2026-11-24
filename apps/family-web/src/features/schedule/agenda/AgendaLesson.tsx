@@ -1,5 +1,6 @@
 import { lessonMinutes, lessonWait, type WeekLesson } from '@ab/client-core';
-import { clockOf, type RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { useState } from 'react';
 import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { Dot } from '@ab/web-kit/components/ui/surface/pill';

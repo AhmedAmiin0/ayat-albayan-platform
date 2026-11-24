@@ -3,10 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { openFilters, showResults } from '../../support/core/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 
-// All-teachers calendar (R-SCH-01, research-calendar item 15): rows come from the teachers table,
-// not from lessons, so a teacher with nothing booked still shows. «أبرار» works Sunday 16:00–20:00
-// Riyadh next week, teaches one trial at 17:00 and is off all Monday; a second, profile-less male
-// Arabic teacher has nothing. Book-from-gap lands on the wizard with «أبرار» preselected.
+// Rows come from the teachers table (R-SCH-01), so a teacher with nothing booked still shows.
 
 const STUDENT = `تجربة الجدول ${Date.now() % 100_000}`; // unique: the student search must find exactly this one
 const OTHER = `معلم الجدول ${Date.now() % 100_000}`;
@@ -68,7 +65,7 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
       const abrar = row(page, 'أبرار');
       await expect(abrar).toBeVisible();
       await expect(row(page, OTHER)).toContainText(ar.schedule.noLessons);
-      // Other journeys may leave students on «أبرار»: the count is theirs plus ours.
+      // Other journeys may leave students on this teacher: the count is theirs plus ours.
       await expect(abrar).toContainText(new RegExp(ar.dashboard.ofMax.replace('{n}', '\\d+').replace('{max}', '10')));
       const chip = abrar.getByRole('button', { name: new RegExp(`17:00.*${STUDENT}`) });
       await expect(chip).toContainText(ar.schedule.trialTag);
@@ -80,8 +77,7 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
       await page.getByRole('button', { name: ar.schedule.nextDay }).click();
       await expect(row(page, 'أبرار')).toContainText(`${ar.schedule.dayOff} · سفر`);
 
-      // Gender filter hides the male teacher; «اليوم» goes back to today.
-      const panel = await openFilters(page); // the shared «تصفية» panel
+      const panel = await openFilters(page);
       await panel.getByLabel(ar.teachers.gender).selectOption('female');
       await showResults(panel);
       await expect(row(page, OTHER)).toHaveCount(0);

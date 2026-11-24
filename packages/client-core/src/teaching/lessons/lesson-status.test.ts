@@ -1,4 +1,4 @@
-import { lessonStatusStyle } from '@ab/shared';
+import { lessonStatusStyle } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import {
   lessonStatusLabel,

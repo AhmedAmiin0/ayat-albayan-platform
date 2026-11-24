@@ -3,13 +3,12 @@ import { inWeekOrder } from '../course/course-picks.js';
 import type { AttendanceKind } from './student-details.js';
 import type { SalesWeeklySlot } from './student-schedule.js';
 
-// «كل الطلاب» of the assistant: each row's weekly slots in one short line and an attendance
-// count. Pure.
+// Each roster row's weekly slots in one short line and an attendance count; pure.
 
 /** A row's weekly slot: the next start of each weekday (UTC) and the teacher; never a link. */
 export type RosterSlot = Pick<SalesWeeklySlot, 'next' | 'teacher'>;
 
-/** «حضر 7 من 9»: present lessons of the held ones (present + absent, as «سجل الحضور» counts). */
+/** Present lessons out of held ones (present + absent), as the attendance log counts. */
 export interface RosterAttendance {
   attended: number;
   held: number;
@@ -63,13 +62,11 @@ export interface ScheduleWords {
   weekday: (day: number) => string;
   clock: (hhmm: string) => string;
   teacher: (teacher: NonNullable<RosterSlot['teacher']>) => string;
-  /** Between the days of one group («، »). */
   daySep: string;
-  /** Between two groups («؛ »). */
   groupSep: string;
 }
 
-/** «الأحد، الثلاثاء، الخميس · 11:00 ص · أسماء حسين»; null without a weekly slot. */
+/** null without a weekly slot. */
 export function scheduleLine(
   slots: readonly RosterSlot[],
   tz: string,
@@ -95,7 +92,7 @@ export interface RosterTexts {
   noHeldRecent: string;
 }
 
-/** The schedule line, «لا يوجد جدول ثابت» without a slot; null in an old cache (no `weekly`). */
+/** null in an old cache (no `weekly`). */
 export function rosterScheduleText(
   weekly: readonly RosterSlot[] | undefined,
   tz: string,
@@ -105,7 +102,7 @@ export function rosterScheduleText(
   return scheduleLine(weekly, tz, words) ?? words.noSchedule;
 }
 
-/** «حضر 7 من 9 في الباقة الحالية» (or the last 30 days); null in an old cache. */
+/** Within the current package (or the last 30 days); null in an old cache. */
 export function rosterAttendanceText(
   a: RosterAttendance | undefined,
   texts: RosterTexts,

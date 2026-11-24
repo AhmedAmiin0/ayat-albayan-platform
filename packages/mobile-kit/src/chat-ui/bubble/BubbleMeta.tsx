@@ -11,7 +11,7 @@ type Ticks = Pick<
 >;
 
 export interface BubbleMetaProps {
-  /** The clock (and e.g. «تم التعديل ·» before it), already formatted. */
+  /** Already formatted, possibly with the edited mark before it. */
   time: string;
   /** Ours only: the delivery ticks; a long press on them shows `times` on a line of their own. */
   ticks?: Ticks;

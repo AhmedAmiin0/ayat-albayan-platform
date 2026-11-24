@@ -1,5 +1,6 @@
-import { ASSISTANT_COMMISSION_STATUSES, instant, teacherReceiptUploadSchema } from '@ab/shared';
-import type { assistantStatementPaySchema, assistantStatementsQuery } from '@ab/shared';
+import { instant } from '@ab/core';
+import { ASSISTANT_COMMISSION_STATUSES, teacherReceiptUploadSchema } from '@ab/money';
+import type { assistantStatementPaySchema, assistantStatementsQuery } from '@ab/money';
 import { z } from 'zod';
 
 /** GET /assistant-pay/commissions: the ledger of every assistant, narrowed by assistant, status and when earned. */

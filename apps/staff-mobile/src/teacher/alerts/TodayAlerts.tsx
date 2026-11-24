@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { t, AppText, InsetGroup, type, useTheme, useMarkRead } from '@ab/mobile-kit';

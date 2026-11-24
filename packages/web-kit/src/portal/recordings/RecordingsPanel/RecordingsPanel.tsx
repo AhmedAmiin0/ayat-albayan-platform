@@ -90,10 +90,7 @@ function List({ data, student, onOpenReport }: Props & { data: PortalRecordings 
   );
 }
 
-/**
- * «التسجيلات» (boards FamRecWebList, FamRecWebEmpty): the hint, the picked lesson's card, then
- * every lesson by month; with none yet only the empty note (no hint above it).
- */
+/** With no lessons yet only the empty note shows, no hint above it. */
 export function RecordingsPanel({ student, onOpenReport }: Props) {
   const query = useChildRecordings(student.id);
   return (

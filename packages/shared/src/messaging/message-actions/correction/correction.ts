@@ -1,7 +1,4 @@
-// «تعديل» in a WhatsApp chat = a correction (owner 2026-11-07): WhatsApp's API cannot edit or
-// revoke a sent message, so staff send a NEW reply to it, «تصحيح: …», linked by corrects_id. The
-// original is never touched; the bubbles show the link (صُحِّحت on the original, the quote on the
-// correction).
+// WhatsApp cannot edit a sent message, so an edit is a new reply linked by corrects_id.
 
 /** On a MessageView: the link of a correction. Both absent in an old cache. */
 export interface CorrectionMark {
@@ -44,18 +41,13 @@ const kindOk: ((m: Correctable) => boolean)[] = [
   (m) => !m.corrects_id,
 ];
 
-/**
- * An outbound, sent staff text WhatsApp knows (a wamid): never a template, a file, a marker, a
- * hidden, deleted or failed message, nor a correction (review of #694: «تعديل» stays on the
- * original, and each new correction links to it).
- */
+/** Only a sent staff text with a wamid, never a correction; edits stay on the original. */
 export const isCorrectable = (m: Correctable): boolean => kindOk.every((ok) => ok(m));
 
 /** The one who sent it, or an admin. */
 export const mayCorrect = (sentBy: string | null | undefined, who: CorrectionActor): boolean =>
   who.role === 'admin' || (Boolean(sentBy) && sentBy === who.id);
 
-/** «تعديل» on this bubble for this viewer. */
 export const canCorrect = (
   m: Correctable & CorrectionMark,
   who: CorrectionActor | null | undefined,
@@ -65,11 +57,7 @@ export const canCorrect = (
 const leading = (prefixes: readonly string[], t: string): string | undefined =>
   prefixes.map((p) => p.trim()).find((p) => p !== '' && t.startsWith(p));
 
-/**
- * The text without its leading prefix(es) (trimmed): a prefix staff typed themselves never
- * reaches the family twice («تصحيح: تصحيح: …»). `prefixes`: the admins' current wording and the
- * bundled one (ar.json inbox.correction.prefix).
- */
+/** Strips leading prefixes so a typed prefix never reaches the family twice. */
 export function stripCorrectionPrefix(prefixes: readonly string[], text: string): string {
   const t = text.trim();
   const p = leading(prefixes, t);

@@ -9,7 +9,7 @@ import { ReportPdfSettings } from '@/modules/reporting/report-pdf/report-pdf.set
 import { ReportPdfSource, type ReportSource } from '@/modules/reporting/report-pdf/report-pdf.source';
 import { familySource } from './family.fakes';
 
-/** A clock before every fixture lesson: «الحلقة القادمة» is read after the lesson itself. */
+/** A clock before every fixture lesson, since the next lesson is read after the lesson itself. */
 const EPOCH = new Date(0);
 
 const NOW = new Date('2026-10-27T14:10:00Z');

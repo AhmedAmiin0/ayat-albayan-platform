@@ -2,8 +2,7 @@ import { z } from 'zod';
 import { phoneE164 } from '@ab/core';
 import { isFamilyEmail, PASSWORD_MAX } from '../users/index.js';
 
-// «حسابي» (R-ACC-01..05): what a signed-in user may change on their OWN login.
-// Only these fields exist here: role, role_id and disabled_* are never part of a body (rule 9).
+// R-ACC-01..05: own-login fields only; role, role_id and disabled_* are never in a body (rule 9).
 
 export const ACCOUNT_NAME_MIN = 2;
 export const ACCOUNT_NAME_MAX = 80;

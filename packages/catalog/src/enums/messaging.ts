@@ -26,14 +26,7 @@ export const TEMPLATE_CATEGORIES = [
   'marketing',
   'authentication',
 ] as const;
-/**
- * R-MOB-01's five events plus new_message (mobile.pushRationale promises «رسالة جديدة»), and the bell's
- * new_student (a teacher's new booking, R-NOT-03) and meeting_invite (an internal meeting, R-NOT-01),
- * and google_sync_alert (docs/24: the Google link expired or a teacher has no calendar; bell only, admins),
- * channel_message (docs/31 §2: a family's message in a student channel, to the current teacher) and
- * commission_earned («عمولة جديدة» to the assistant who brought the student; bell only).
- * payment_received: a payment came in; the admins and the student's assistant.
- */
+/** R-MOB-01's events plus new_message, new_student (R-NOT-03), meeting_invite (R-NOT-01), etc. */
 export const PUSH_KINDS = [
   'new_lead',
   'new_message',
@@ -52,12 +45,7 @@ export const PUSH_KINDS = [
   'course_resumed',
   'payment_received',
 ] as const;
-/**
- * The family app's own kinds (docs/50 §5 item 6): a lesson's join window opened, its report was
- * sent to the family, the teacher entered its room (lesson_live, «بدأت الحلقة»),
- * staff declined the family's «اطلب موعدًا آخر». Kept apart from PUSH_KINDS, which the staff apps
- * map exhaustively.
- */
+/** Family app kinds (docs/50 §5 item 6), apart since staff apps map PUSH_KINDS exhaustively. */
 export const FAMILY_PUSH_KINDS = [
   'lesson_starting',
   'report_sent',

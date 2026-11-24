@@ -5,12 +5,7 @@ interface FrameTrack {
   requestFrame?: () => void;
 }
 
-/**
- * A canvas.captureStream track only carries a frame when the canvas is drawn on. Shared while
- * nobody draws, it sent nothing: LiveKit kept the track pending (never forwarded it) and the others
- * never saw «مشاركة السبورة» (seen against a real LiveKit, 2026-10-05). So while shared, the board
- * is touched (one pixel rewritten as it is) and a frame requested a few times a second.
- */
+/** captureStream sends no frame unless drawn, so LiveKit kept it pending; frames are forced. */
 export function keepFrames(canvas: HTMLCanvasElement, track: MediaStreamTrack, every = KEEP_FRAMES_MS): () => void {
   const ctx = canvas.getContext('2d');
   const tick = () => {

@@ -1,14 +1,14 @@
 import { asciiDigits, normalizeArabic } from '@ab/core';
 import { z } from 'zod';
 
-// «بحث» inside one chat (owner 2026-11-02): GET /threads/:phone/search, newest hit first.
+// In-chat search: GET /threads/:phone/search, newest hit first.
 
 /** Hits a page carries; the bar steps past them by loading the next page (`next_cursor`). */
 export const CHAT_SEARCH_PAGE = 50;
 /** Characters a snippet keeps on each side of the match. */
 export const SNIPPET_SIDE = 40;
 
-/** Text as the search sees it: tashkeel gone, أإآ/ة/ى folded, Latin lowercased, digits Western. */
+/** Search folding: no tashkeel, letter variants folded, Latin lowercased, Western digits. */
 export function searchFold(text: string): string {
   return asciiDigits(normalizeArabic(text));
 }
@@ -38,7 +38,7 @@ export type ChatSearchHit = z.infer<typeof chatSearchHitSchema>;
 
 export const chatSearchPageSchema = z.object({
   items: z.array(chatSearchHitSchema),
-  /** Every hit in the chat (the bar's «من M»). */
+  /** Every hit in the chat. */
   total: z.number().int().min(0),
   next_cursor: z.string().nullable(),
 });

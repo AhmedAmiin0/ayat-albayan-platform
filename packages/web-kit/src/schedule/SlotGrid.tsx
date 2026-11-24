@@ -23,11 +23,7 @@ export interface SlotGridProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/**
- * The teacher's candidate starts as 7 day columns in the viewer's zone (R-SCH-06). Times are
- * picked, never typed (rule 6). A start with conflicts stays pickable but reads «مش فاضي» (struck
- * nuqta): booking it shows the conflict and the book-anyway path (R-SCH-04).
- */
+/** R-SCH-06, rule 6: a start with conflicts stays pickable but reads busy (R-SCH-04). */
 export function SlotGrid({ week, slots, studentTz, value, also = [], onPick }: SlotGridProps) {
   const days = byLocalDay(slots, useViewerTz());
   // Container query: 7 columns on a wide page, stacked days inside the narrow lesson drawer.

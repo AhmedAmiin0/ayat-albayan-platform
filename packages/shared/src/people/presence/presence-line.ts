@@ -2,11 +2,9 @@ import { presenceWhen, type PresenceWhenInput, type PresenceWords } from './pres
 
 /** ar.json / en.json `presence`: the header words around presenceWhen. */
 export interface PresenceText extends PresenceWords {
-  /** «متصل الآن» */
   online: string;
-  /** «آخر ظهور {when}» */
   lastSeen: string;
-  /** «آخر رسالة {when}» (a WhatsApp contact: Meta shares no presence) */
+  /** A WhatsApp contact: Meta shares no presence. */
   lastMessage: string;
 }
 
@@ -37,7 +35,7 @@ type LineInput = Omit<PresenceWhenInput, 'iso' | 'words'> & { words: PresenceTex
 
 const fill = (template: string, when: string): string => template.split('{when}').join(when);
 
-/** «متصل الآن», else «آخر ظهور …», else '' (never seen). */
+/** Online, else last seen, else '' when never seen. */
 export function presenceLine(
   input: LineInput & { online: boolean; lastSeenAt: string | null },
 ): string {
@@ -46,7 +44,7 @@ export function presenceLine(
   return fill(input.words.lastSeen, presenceWhen({ ...input, iso: input.lastSeenAt }));
 }
 
-/** «آخر رسالة …» from a WhatsApp thread's last inbound time; '' when they never wrote. */
+/** From a WhatsApp thread's last inbound time; '' when they never wrote. */
 export function lastMessageLine(input: LineInput & { lastInboundAt: string | null }): string {
   if (!input.lastInboundAt) return '';
   return fill(input.words.lastMessage, presenceWhen({ ...input, iso: input.lastInboundAt }));

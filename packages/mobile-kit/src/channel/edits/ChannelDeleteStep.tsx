@@ -13,7 +13,7 @@ interface ChannelDeleteStepProps {
   onCancel: () => void;
 }
 
-/** «حذف للجميع», asked first; a refusal is said in words under the question. */
+/** Asked first; a refusal is shown in words under the question. */
 export function ChannelDeleteStep(props: ChannelDeleteStepProps) {
   const { admin, busy, problem, onConfirm, onCancel } = props;
   const { color } = useTheme();

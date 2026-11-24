@@ -7,7 +7,7 @@ export interface StartFact {
   /** The package's first day (YYYY-MM-DD); absent = not known here. */
   starts_on?: string;
   created_at: string;
-  /** «حلقات مستخدمة من الباقة»: lessons taken before the platform (0 by default). */
+  /** Lessons taken before the platform (0 by default). */
   lessons_used_before?: number;
 }
 

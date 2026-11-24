@@ -1,10 +1,9 @@
 import type { ChannelMessageView } from '../channel/channel-views.js';
 
-// Edit and delete in the in-app channel (owner 2026-10-30: «also add edit and delete message
-// ability»).
+// Edit and delete in the in-app channel.
 // The sender edits their own text within 15 minutes and deletes their own message for everyone
-// within
-// 48 hours; an admin (moderation) deletes any message. The API enforces the same rule (rule 9).
+// within 48 hours; an admin (moderation) deletes any message. The API enforces the same rule
+// (rule 9).
 
 export const CHANNEL_EDIT_WINDOW_MS = 15 * 60_000;
 export const CHANNEL_DELETE_WINDOW_MS = 48 * 3_600_000;
@@ -33,7 +32,7 @@ export interface ChannelActions {
 const within = (input: ChannelActionInput, windowMs: number): boolean =>
   input.now.getTime() - Date.parse(input.message.created_at) <= windowMs;
 
-/** «تعديل» / «حذف للجميع» for this viewer, now. A deleted message offers nothing. */
+/** Edit and delete-for-everyone for this viewer now; a deleted message offers nothing. */
 export function channelActions(input: ChannelActionInput): ChannelActions {
   const { message: m } = input;
   if (m.deleted) return { edit: false, delete: false };

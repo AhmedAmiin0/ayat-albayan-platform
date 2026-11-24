@@ -9,7 +9,7 @@ export interface ZonedParts {
   date: string;
   /** Local wall clock, "HH:MM" (24h). */
   time: string;
-  /** 0 = الأحد … 6 = السبت (same numbering as `byday` and teacher_availability.weekday). */
+  /** 0 = Sunday ... 6 = Saturday (same as `byday` and teacher_availability.weekday). */
   weekday: number;
 }
 

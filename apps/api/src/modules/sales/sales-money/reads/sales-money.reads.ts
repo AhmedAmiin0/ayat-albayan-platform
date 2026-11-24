@@ -1,7 +1,7 @@
 import { DEFAULT_RENEWAL_PRICING, type SalesFamilyView, type SalesMoneySubscriptionView, type StudentStatus } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
-import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/shared/subscriptions.service';
 import { SalesFamilyRepo, toSalesSubscription } from '@/modules/sales/sales-money/shared';
 import { SalesRenewals } from './sales-renewals';
 

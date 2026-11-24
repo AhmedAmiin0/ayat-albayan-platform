@@ -11,14 +11,13 @@ export function bellBadge(unread: number): string | null {
   return unread > BADGE_MAX ? t.mobileNav.badgeOverflow.replace('{n}', String(BADGE_MAX)) : String(unread);
 }
 
-/** The bell's spoken name: «الإشعارات» or «الإشعارات، 3 غير مقروءة». */
 export function bellLabel(unread: number): string {
   const bell = t.bell.mobile;
   return unread > 0 ? bell.openUnread.replace('{n}', String(unread)) : bell.open;
 }
 
 interface MarkRead {
-  /** The rows to mark; none = every unread row («تحديد الكل كمقروء»). */
+  /** None means every unread row. */
   ids?: readonly string[];
   /** read_at to stamp (ISO). */
   at: string;

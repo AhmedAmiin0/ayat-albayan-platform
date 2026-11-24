@@ -1,6 +1,4 @@
-// What the old status rule (before 2026-10-27) would have said, so every student it made «مشترك»
-// without a current subscription is counted in the dry-run report (report/report.ts) by reason.
-// Pure; the issue detail is a machine reason, never a name or phone.
+// Counts students the old rule made subscribed without a current subscription; reasons only.
 import type { StudentStatus } from '@ab/catalog';
 import { issuesFor } from '../../../sources/sheets/issues.ts';
 import type { RowIssue, SourceRef } from '../../../types.ts';
@@ -13,7 +11,7 @@ interface OldGrounds {
   payingPhone: boolean;
   /** A non-trial lesson report, attended or not. */
   chargeable: boolean;
-  /** SUBS «عدد الحلقات» > 1. */
+  /** SUBS lesson count > 1. */
   subsRegister: boolean;
 }
 

@@ -4,9 +4,7 @@ import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar } from '../../support/core/schedule';
 import { fillTexts, pickAttendance, reportRow } from '../../support/reporting/teacher-extra';
 
-// «تقرير الحلقة» drafts (R-REP-02): the form autosaves while it is a draft and a reopened form
-// shows what was typed; an absence needs no grades and no texts (the Google Form's rule for a
-// student who did not attend), and still sends. Journey 2 covers the attended first submit.
+// Drafts autosave (R-REP-02); an absence needs no grades or texts, like the original form.
 
 const SAVED = ar.reports.draftSaved.split('{time}')[0]?.trim() ?? '';
 
@@ -47,7 +45,7 @@ test.describe('teacher report draft (R-REP-02)', () => {
     const teacher = await asRole('teacher');
     await openForm(teacher, seed.todayLessonId);
 
-    // Attendance still open: the five texts carry the star. «غياب بدون إشعار» lifts it.
+    // While attendance is open the five texts are required; an unexcused absence lifts that.
     const recited = teacher.getByRole('textbox', { name: ar.reports.recited, exact: true });
     await expect(recited).toHaveAttribute('aria-required', 'true');
     await pickAttendance(teacher, 'absent');

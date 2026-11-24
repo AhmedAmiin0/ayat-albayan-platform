@@ -11,7 +11,7 @@ export interface TeacherDraft {
   teacherId: string;
   /** Keep the course's days and times (the remaining lessons move to the new teacher only). */
   keep: boolean;
-  /** «يبدأ التغيير من» (local date in the course zone). */
+  /** Local date in the course zone. */
   from: string;
 }
 
@@ -55,7 +55,6 @@ const keepOptions = () => [
   { value: 'change' as const, label: t.courseActions.teacher.changeDays },
 ];
 
-/** «تغيير المعلم», step 1: the current and the new teacher, keep or change the days, from when. */
 export function TeacherPickStep(props: TeacherPickStepProps) {
   const { view, teachers, draft, onDraft, today, onNext } = props;
   const words = t.courseActions;

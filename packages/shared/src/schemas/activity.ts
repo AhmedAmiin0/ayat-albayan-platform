@@ -2,8 +2,7 @@ import { z } from 'zod';
 import { USER_ROLES } from '@ab/catalog';
 import { listSortShape } from '@ab/core';
 
-// «سجل النشاط»: GET /activity, admin only, paged (R-NFR-08). The API logs
-// every mutating request + sign-in/out; this is the list's query and row shape.
+// Activity log (R-NFR-08): the API logs every mutating request and sign-in/out.
 
 /** The actor's role on a row: a user role, or 'public' for calls without a login. */
 export const ACTIVITY_ROLES = [...USER_ROLES, 'public'] as const;

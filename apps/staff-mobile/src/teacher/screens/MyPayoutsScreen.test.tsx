@@ -1,4 +1,4 @@
-import type { PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
 import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';

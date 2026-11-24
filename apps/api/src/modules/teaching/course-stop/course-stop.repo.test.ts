@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { CourseStopRepo } from './course-stop.repo';
 
-// «إلغاء الاشتراك»'s reads and its one RPC, against a chain-recording fake client.
 function chain(result: unknown) {
   const q: Record<string, ReturnType<typeof vi.fn>> = {};
   for (const k of ['select', 'eq', 'order']) q[k] = vi.fn(() => q);

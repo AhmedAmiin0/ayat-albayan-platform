@@ -12,7 +12,6 @@ export interface TileActions {
   /** One's own front camera is mirrored, like a mirror. */
   front: boolean;
   switchCamera: () => void;
-  /** «تكبير» / «تصغير» a shared screen. */
   zoom: (key: string) => void;
   zoomed: string | null;
 }
@@ -23,13 +22,11 @@ interface ParticipantTileProps {
   actions: TileActions;
 }
 
-/** «أنت», «شاشة …», or the participant's name. */
 function tileName(tile: RoomTile): string {
   if (tile.screen) return t.classroom.screenOf.replace('{name}', tile.name);
   return tile.local ? t.classroom.you : tile.name;
 }
 
-/** «سهيلة، ضيف، الميكروفون مغلق، يتحدث»: the parts that apply, joined with «، ». */
 function tileLabel(tile: RoomTile, name: string): string {
   const parts = [
     name,
@@ -40,7 +37,6 @@ function tileLabel(tile: RoomTile, name: string): string {
   return parts.filter((x) => x !== null).join(t.common.listSeparator);
 }
 
-/** The tile's corner button: «تكبير» on a screen, «بدّل الكاميرا» on one's own camera. */
 function Corner({ tile, actions }: Pick<ParticipantTileProps, 'tile' | 'actions'>) {
   const S = t.classroom.stage;
   if (tile.screen) {

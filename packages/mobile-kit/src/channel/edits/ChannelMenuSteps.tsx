@@ -36,10 +36,7 @@ const leave = (p: StepProps, exit: (m: ChannelMessageView) => void) => () => {
   exit(p.message);
 };
 
-/**
- * The menu's rows (ChatXMenu), edge to edge in the sheet: «رد», «تعديل», «حذف للجميع», «معلومات
- * الرسالة», only what menuOffers allows now. A tap outside closes it (no «إلغاء» row).
- */
+/** Only what menuOffers allows now; a tap outside closes it, so there is no cancel row. */
 const menuRows = (p: StepProps): ReactNode => {
   const a = t.studentChannel;
   const { reply, edit, reads } = p.offers;

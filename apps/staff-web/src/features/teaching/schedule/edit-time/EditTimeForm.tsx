@@ -24,13 +24,7 @@ export interface EditTimeFormProps {
 
 const OVERRIDE = { override: t.lessons.timeEdit.overrideEdit, reason: t.lessons.timeEdit.overrideReasonEdit };
 
-/**
- * «عدّل الوقت» (R-SCH-11): edits THIS lesson in place (same report, same payments; «غيّر الميعاد»
- * is the one that closes it and opens a twin). Scheduled lessons move (`move`); held ones get their
- * recorded start / length corrected the same day with a reason (`correct`). Clashes come back as a
- * 409 and are shown with «اختار ميعاد تاني» or save-anyway + reason. A length change refused by a
- * closed payout month names the month and offers the old length back (a start-only fix still saves).
- */
+/** Edits this lesson in place (R-SCH-11); a closed payout month refuses length changes. */
 export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
   const queryClient = useQueryClient();
   const mode = timeEditMode(lesson) ?? 'move';

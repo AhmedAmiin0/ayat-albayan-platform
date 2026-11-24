@@ -4,7 +4,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/classroom/join-window/join-window.ts": {
@@ -12,7 +12,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/classroom/join-window/tests/config.test.ts": {
@@ -37,7 +37,7 @@
   },
   "src/classroom/moderation/moderation.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -50,7 +50,7 @@
   },
   "src/classroom/schemas.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/student-lesson.test.ts": {
@@ -191,7 +191,7 @@
   },
   "src/lessons/state-machine/state-machine.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/lessons/teacher-name.ts": {
@@ -201,7 +201,7 @@
   },
   "src/lessons/views.ts": {
     "stylistic/max-len": {
-      "count": 12
+      "count": 4
     },
     "ab/module-boundaries": {
       "count": 1
@@ -215,7 +215,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/schemas/course-change.ts": {

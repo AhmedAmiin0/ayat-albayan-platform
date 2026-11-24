@@ -1,10 +1,6 @@
 import { fromCents, round2, toCents } from '@ab/core';
 
-// What a package has been paid, as the lists show it (owner, 2026-10-05). Derived, never stored:
-// the stored subscription_status keeps its meaning (a part-paid package is still 'unpaid').
-//   none    nothing paid (refunds included)
-//   partial «مدفوع جزئيًا»: 0 < paid < price
-//   full    paid ≥ price (a free package, price 0, is full)
+// Derived, never stored: a part-paid package keeps subscription_status 'unpaid'; free is full.
 
 export type PaymentState = 'none' | 'partial' | 'full';
 
@@ -44,10 +40,7 @@ export function convertPayment(input: { amount: number; sarToSent: number; sarTo
   return { amount: round2(input.amount * rate), rate: Math.round(rate * 1e8) / 1e8 };
 }
 
-/**
- * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1»: what was paid, the price and what is left,
- * or null unless 0 < paid < price. The rule itself never changes: such a package stays 'unpaid'.
- */
+/** Null unless 0 < paid < price; such a package still stays 'unpaid'. */
 export function partPaid(input: { paid: number; price: number }): { paid: number; price: number; due: number } | null {
   if (paymentState(input) !== 'partial') return null;
   return { paid: input.paid, price: input.price, due: (toCents(input.price) - toCents(input.paid)) / 100 };

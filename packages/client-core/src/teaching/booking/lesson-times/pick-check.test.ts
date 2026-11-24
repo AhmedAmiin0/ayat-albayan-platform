@@ -1,4 +1,4 @@
-import type { SlotView } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { nearestFree, pickState } from './pick-check.js';
 

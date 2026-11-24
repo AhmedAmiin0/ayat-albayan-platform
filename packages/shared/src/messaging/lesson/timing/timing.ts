@@ -79,11 +79,7 @@ export interface ReminderTiming {
   now: Date;
 }
 
-/**
- * Should a tick at `now` queue this reminder? same_day: from minutesBefore before the start until
- * the start. day_before: from dayBeforeSendAt while the lesson is still «بكرة» in the recipient's
- * tz, so a lesson booked for later today never gets a «بكرة» message.
- */
+/** day_before is due only while the lesson is still tomorrow in the recipient's tz. */
 export function reminderDue(t: ReminderTiming): boolean {
   const now = t.now.getTime();
   const start = t.startsAt.getTime();

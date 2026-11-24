@@ -1,4 +1,4 @@
-import { GRADES, type Grade } from '@ab/shared';
+import { GRADES, type Grade } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import { Pills } from './Pills';
 

@@ -7,7 +7,7 @@ import { useModeFade } from './use-mode-fade';
 
 export interface RoundActionProps {
   mode: 'mic' | 'send';
-  /** «أرسل» only: nothing to send, or a send on its way. */
+  /** Send only: nothing to send, or a send on its way. */
   disabled?: boolean;
   onSend?: () => void;
   /** The circle's side: 44pt (the staff inbox) unless given (the channel's 48). */
@@ -20,11 +20,7 @@ const CIRCLE = {
   justifyContent: 'center',
 } as const;
 
-/**
- * The round 44pt button at the row's end (owner 2026-10-27, as WhatsApp): the microphone while
- * there is nothing else to send (the caller's hold wraps it), «أرسل» otherwise, its plane mirrored
- * in Arabic. The icon crossfades in 120 ms when the mode changes; not with «Reduce Motion».
- */
+/** Microphone when nothing else to send, else send, mirrored in RTL; Reduce Motion skips fades. */
 export function RoundAction(p: RoundActionProps) {
   const { mode, disabled = false, onSend, size = shape.control.touch } = p;
   const { color } = useTheme();

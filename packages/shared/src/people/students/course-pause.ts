@@ -3,15 +3,13 @@ import { daysBetween } from '@ab/schedule';
 import { localDate } from '@ab/core';
 import { addDays } from '@ab/time';
 
-// «إيقاف الدورة مؤقتًا» (docs/11 §7b): a pause of a student's course between two Riyadh
-// days. The database (migrations 955–957) does the work; these are the contracts and the day arithmetic it
-// mirrors, so the API's checks and the sheet's preview say what the RPCs will do. Dates are "YYYY-MM-DD".
+// Course pause (docs/11 §7b, migrations 955-957); mirrors the RPCs' day arithmetic.
 
 /** The cancel_reason the pause writes on the lessons it cancels (migration 956); data, not a UI string. */
 export const COURSE_PAUSE_REASON = 'إيقاف مؤقت';
 export const COURSE_PAUSE_REASON_MAX = 300;
 
-/** POST /students/:id/course-pause. fromDate defaults to Riyadh today; untilDate null = until «استئناف». */
+/** fromDate defaults to Riyadh today; untilDate null means until resumed. */
 export const coursePauseStartSchema = z
   .object({
     fromDate: localDate.optional(),
@@ -21,14 +19,11 @@ export const coursePauseStartSchema = z
   .strict();
 export type CoursePauseStart = z.infer<typeof coursePauseStartSchema>;
 
-/** PATCH /students/:id/course-pause/until: extend or shorten the open pause (null = until «استئناف»). */
+/** Extend or shorten the open pause (null means until resumed). */
 export const coursePauseUntilSchema = z.object({ untilDate: localDate.nullable() }).strict();
 export type CoursePauseUntil = z.infer<typeof coursePauseUntilSchema>;
 
-/**
- * POST /students/:id/course-pause/resume. subscriptionId: the package row's «استئناف» (absent from the banner): the
- * open pause when it is that pause's package, otherwise that package row paused by the old package-only button.
- */
+/** subscriptionId: a package row's resume; resumes the open pause or a package-only paused row. */
 export const coursePauseResumeSchema = z.object({ subscriptionId: z.string().uuid().optional() }).strict();
 export type CoursePauseResume = z.infer<typeof coursePauseResumeSchema>;
 
@@ -38,7 +33,7 @@ export const coursePausePreviewQuery = z.object({ from: localDate.optional(), un
 export interface CoursePauseView {
   id: string;
   from_date: string;
-  /** null = until «استئناف». */
+  /** null means until resumed. */
   until_date: string | null;
   reason: string | null;
   created_at: string;
@@ -54,14 +49,14 @@ export interface CoursePauseState {
   history: CoursePauseView[];
 }
 
-/** The sheet's line «ستُلغى N حلقات…»: lessons the window takes the student out of (cancelled or left). */
+/** Lessons the pause window takes the student out of (cancelled or left). */
 export interface CoursePausePreview {
   from_date: string;
   until_date: string | null;
   lessons: number;
   /** The instants of those lessons, earliest first (absent in an old answer). */
   starts?: string[];
-  /** The days a resume moves the package forward; null = until «استئناف» (counted then). */
+  /** Days a resume moves the package forward; null when open-ended (counted at resume). */
   extend_days?: number | null;
 }
 

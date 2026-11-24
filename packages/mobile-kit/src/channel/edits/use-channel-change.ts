@@ -13,10 +13,7 @@ export function channelChangeError(e: unknown): string {
   return known ? t.studentChannel.actions.errors[known] : t.studentChannel.actions.failed;
 }
 
-/**
- * «تعديل» (PATCH) and «حذف للجميع» (DELETE) of one message (owner 2026-10-30). The thread and the
- * teacher's list re-read after either; the other side hears it over the channel's socket.
- */
+/** The thread and teacher list re-read after either; the other side hears it over the socket. */
 export function useChannelChange(ref: ChannelRef) {
   const settle = useChannelSettle(ref);
   const path = (messageId: string) => channelMessagePath({ ...ref, messageId });

@@ -2,7 +2,7 @@ import type { JoinRole, MuteSource } from '@ab/shared';
 
 /** What the room UI knows about a call. livekit-client stays behind RoomClient so tests inject a fake. */
 
-/** `closed`: the room was ended for everyone («إنهاء الحلقة للجميع», or the server's closer). */
+/** `closed`: the room was ended for everyone, or by the server's closer. */
 export type RoomStatus =
   | 'connecting'
   | 'connected'
@@ -30,7 +30,7 @@ export interface TileView {
   videoRev: string;
   /** A screen tile that carries someone's shared whiteboard, not their screen. */
   isBoard: boolean;
-  /** Their token (or a staff «سماح») lets them publish a screen share. */
+  /** Their token, or a staff grant, lets them publish a screen share. */
   shareAllowed: boolean;
 }
 
@@ -45,7 +45,7 @@ export interface RoomSnapshot {
   boardShareOn: boolean;
   /** LiveKit egress is recording the room. */
   isRecording: boolean;
-  /** This participant may publish a screen share now (staff always; a guest after «سماح»). */
+  /** Staff always; a guest after a grant. */
   shareAllowed: boolean;
 }
 
@@ -87,7 +87,7 @@ export interface RoomClient {
   onData(listener: (packet: DataPacketIn) => void): () => void;
   /** Publishes a canvas track as the screen share (the whiteboard); null stops it. */
   setBoardTrack(track: MediaStreamTrack | null): Promise<void>;
-  /** A staff member muted my microphone or camera («كتمك المعلم»); returns the unsubscribe. */
+  /** A staff member muted my mic or camera; returns the unsubscribe. */
   onModerated(listener: (e: ModeratedEvent) => void): () => void;
 }
 

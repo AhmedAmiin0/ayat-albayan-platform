@@ -1,8 +1,7 @@
 import { MESSAGE_TEMPLATE, type TemplateView } from '@ab/shared';
 import type { WindowBar } from './window-bar.js';
 
-// «أرسِل الآن داخل قالب» (owner 2026-11-14: «a template that carries your text»): after the 24 h
-// window, staff send their typed draft now inside `academy_message` instead of holding it.
+// After the 24 h window, staff send their draft now inside `academy_message` instead of holding it.
 
 /**
  * The template that carries the text: `academy_message` when this user may send it from the chat

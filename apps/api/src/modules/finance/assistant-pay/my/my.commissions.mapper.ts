@@ -1,18 +1,13 @@
+import type { PaymentKind, PaymentMethod, PayoutStatus } from '@ab/catalog';
 import {
   walletState,
   WALLET_VOID_REASONS,
   type AssistantCommissionStatus,
   type MyCommissionRow,
-  type PaymentKind,
-  type PaymentMethod,
-  type PayoutStatus,
   type WalletVoidReason,
-} from '@ab/shared';
+} from '@ab/money';
 
-/**
- * A row of «عمولاتي» as the select returns it: the student (code, name), the statement it sits in and the
- * package's payments (for how it was paid). Never the price, the base amount or the actors.
- */
+/** A commission row as selected; never the price, the base amount or the actors. */
 export const MY_COMMISSION_SELECT =
   'id, kind, share_percent, amount, currency, earned_at, status, void_reason, student:students(code, name), statement:assistant_statements(status, month), subscription:subscriptions(payments(method, kind, paid_at))';
 
@@ -48,13 +43,9 @@ export function paidVia(earnedAt: string, payments: readonly PaymentFact[]): Pay
   return best?.method ?? null;
 }
 
-/**
- * Only a code the database writes itself (payment_voided, student_merged); anything else is a reason an
- * admin typed, which migration 271 keeps from sales, so it never leaves: the app says «ألغتها الإدارة».
- */
+/** Only database-written codes pass; an admin-typed reason never leaves (migration 271). */
 const voidCode = (reason: string | null): WalletVoidReason | null => WALLET_VOID_REASONS.find((c) => c === reason) ?? null;
 
-/** One entry of «عمولاتي»: a whitelist (MyCommissionRow), its wallet state and the statement month when frozen. */
 export function toMyCommission(r: MyCommissionSource): MyCommissionRow {
   const state = walletState(r.status, r.statement?.status ?? null);
   return {

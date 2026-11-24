@@ -11,8 +11,7 @@ import {
 import type { ApiClient } from '../../core/http/index.js';
 import { enc, SHORT_LINKS_PATH, SHORT_LINKS_PUBLIC_PATH } from './short-links-api.js';
 
-// The writes of «الروابط المختصرة» (docs/19): the admin / sales routes and the gate's open and
-// WhatsApp code steps. Each one takes a single input, ready for a TanStack `mutationFn`.
+// Each write takes a single input, ready for a TanStack `mutationFn` (docs/19).
 
 export interface ShortLinkUpdateCall {
   code: string;

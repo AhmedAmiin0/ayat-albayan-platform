@@ -91,7 +91,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     },
     "typescript/no-confusing-void-expression": {
       "count": 2
@@ -136,7 +136,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -147,7 +147,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -200,7 +200,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/inbox/inbox-live.ts": {
@@ -252,12 +252,12 @@
       "count": 4
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/messaging/inbox/reactions.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/messaging/inbox/template-button.ts": {
@@ -366,7 +366,7 @@
   },
   "src/teaching/booking/picks.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teaching/reports/entry-values.ts": {

@@ -25,13 +25,13 @@ export interface BookedPanelProps {
   tz: string;
   /** The booking type: a subscription or makeup shows its invoice; a makeup never offers a subscription. */
   kind?: BookingKind;
-  /** A regular package: «اعمل الاشتراك» for this student (R-SUB-01). */
+  /** A regular package offers subscribing this student (R-SUB-01). */
   subscribeFor?: PickedStudent | null;
-  /** Booked from a lead: «ارجع للمحادثة» opens their WhatsApp thread. */
+  /** Booked from a lead: returning opens their WhatsApp thread. */
   chatPhone?: string | null;
 }
 
-/** The first lesson and its week in the viewer's zone `viewer`, as the calendar («افتح الجدول»). */
+/** The first lesson and its week in the viewer's zone, as the calendar uses. */
 function firstLesson(result: BookingResult, viewer: string) {
   const first = result.lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
   return { first, week: first ? weekStart(zonedPartsIn(new Date(first.starts_at), viewer).date) : undefined };

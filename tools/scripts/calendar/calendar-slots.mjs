@@ -1,17 +1,15 @@
-// Calendar series → the standing weekly slots (teacher, student, weekday, local time, minutes).
-// The old calendars hold the same student in several duplicate series (docs/02 B1: «نمنم» 7 times):
-// identical slots collapse into one with a `series` count, so the comparison is per lesson slot.
+// Duplicate series (docs/02 B1) collapse into one slot with a `series` count.
 
 export const ACADEMY_TZ = 'Asia/Riyadh';
 const WEEK_MS = 7 * 86_400_000;
 
-/** «آيات البيان — Abrar» → «Abrar»; a calendar without « — name » (the main one) → null. */
+/** The calendar's teacher name; the main calendar without one gives null. */
 export function teacherOf(calendar) {
   const parts = (calendar ?? '').split(/\s[—–-]\s/);
   return parts.length > 1 ? (parts.at(-1) ?? '').trim() || null : null;
 }
 
-/** «حلقة — مرام يحي (يحتاج تأكيد)» → «مرام يحي». */
+/** The student name from the event summary. */
 export function studentOf(summary) {
   return summary.replace(/^\s*حلقة\s*[—–-]\s*/, '').replace(/\s*\([^)]*\)\s*$/, '').trim();
 }

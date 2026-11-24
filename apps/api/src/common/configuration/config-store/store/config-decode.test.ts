@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '@ab/shared';
+import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '@ab/settings';
 import { describe, expect, it, vi } from 'vitest';
 import { CONFIG_DEFS, CONFIG_KEYS } from './config-defs';
 import { decodeAll, decodeValue } from './config-decode';

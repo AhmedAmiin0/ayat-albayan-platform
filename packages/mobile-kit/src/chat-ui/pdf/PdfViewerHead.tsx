@@ -20,7 +20,6 @@ const NAME = {
   color: palette.dark.ink,
 };
 
-/** The viewer's head: the name, «12 صفحة · PDF · …», «صفحة 3 من 12» and the zoom hint. */
 export function PdfViewerHead({ name, meta, current, pages }: PdfViewerHeadProps) {
   const at = t.inbox.pdf.pageOf.replace('{n}', String(current)).replace('{total}', String(pages));
   return (

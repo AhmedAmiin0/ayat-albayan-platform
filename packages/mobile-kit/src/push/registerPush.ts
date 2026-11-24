@@ -41,8 +41,7 @@ export async function registerPush(): Promise<void> {
   if (!Device.isDevice) return;
   const projectId = easProjectId(Constants.expoConfig?.extra);
   if (!projectId) return;
-  // Never before the user is authenticated (a cold start on an expired session): no prompt, no PUT.
-  // Nor while «الإشعارات على هذا الجهاز» is off (the family app's settings, docs/50 §6).
+  // Never before authentication, nor while the device opt-out is on (docs/50 §6).
   if (!(await mayRegister())) return;
   try {
     if (Platform.OS === 'android') {

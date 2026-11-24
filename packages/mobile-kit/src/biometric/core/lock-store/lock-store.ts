@@ -25,10 +25,7 @@ export class BioLockStore {
     return () => void this.listeners.delete(listener);
   };
 
-  /**
-   * Reads the flag and the device. A flag whose biometrics are gone (or unreadable) turns itself
-   * off, but never opens the app: the lock stays with «الدخول بطريقة أخرى» (fails closed).
-   */
+  /** Gone biometrics turn the flag off but never open the app: the lock fails closed. */
   boot = async (): Promise<void> => {
     const [on, kind] = await Promise.all([
       this.deps.flags.enabled(),
@@ -61,7 +58,7 @@ export class BioLockStore {
   /** The lock dissolved: the app is open. */
   finish = (): void => this.send({ type: 'success' });
 
-  /** «تفعيل» and the settings switch: one biometric confirmation first, then the flag. */
+  /** One biometric confirmation first, then the flag. */
   enable = async (): Promise<boolean> => {
     const { enableReason, cancel } = this.deps.text();
     const native = await this.deps.native;
@@ -82,13 +79,13 @@ export class BioLockStore {
     void this.deps.flags.setEnabled(false);
   };
 
-  /** «ليس الآن»: never offered again on this device. */
+  /** Never offered again on this device. */
   decline = (): void => {
     this.set({ offer: false });
     void this.deps.flags.setDeclined();
   };
 
-  /** A fresh sign-in: offer once, if the device can and nobody said «ليس الآن» on it. */
+  /** Offer once, if the device can and nobody declined on it. */
   signedIn = async (): Promise<void> => {
     const wasOn = this.snap.lock.enabled;
     this.send({ type: 'signedIn' });
@@ -102,7 +99,7 @@ export class BioLockStore {
     this.set({ kind, offer: !declined && !on && kind !== null });
   };
 
-  /** Every sign-out path (the button, «الدخول بطريقة أخرى», a refused refresh) clears the flag. */
+  /** Every sign-out path clears the flag. */
   signedOut = (): void => {
     this.set({ offer: false, lock: lockReducer(this.snap.lock, { type: 'signedOut' }) });
     void this.deps.flags.setEnabled(false);

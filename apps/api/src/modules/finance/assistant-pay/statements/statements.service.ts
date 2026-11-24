@@ -1,4 +1,5 @@
-import { monthStart, type AssistantStatementView, type SignedDownload, type SignedUpload, type TeacherReceiptUpload } from '@ab/shared';
+import type { SignedDownload, SignedUpload } from '@ab/shared';
+import { monthStart, type AssistantStatementView, type TeacherReceiptUpload } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.receipts';

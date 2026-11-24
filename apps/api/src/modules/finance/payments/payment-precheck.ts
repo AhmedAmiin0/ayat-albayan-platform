@@ -1,4 +1,5 @@
-import { countsForMoney, type PaymentWrite } from '@ab/shared';
+import type { PaymentWrite } from '@ab/shared';
+import { countsForMoney } from '@ab/money';
 import { conflict } from '@/common/http/errors';
 import type { CheckedAttachment } from './attachments/payment-attachments.service';
 import type { Converted, PaymentInputs } from './payment-inputs';

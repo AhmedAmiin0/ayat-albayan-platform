@@ -6,7 +6,7 @@ import { useSalesFamilyActions } from './use-sales-family-actions';
 
 export interface SalesChatFrameProps {
   thread: ThreadView;
-  /** The chat's lists (ThreadDetail.lists): «القوائم» in «المزيد» for admin and sales (docs/22 §4). */
+  /** The chat's lists, shown in the more menu for admin and sales (docs/22 §4). */
   lists?: readonly ChatListRef[] | undefined;
   /** Below 900px: the visible action as an icon button. */
   compact: boolean;
@@ -14,12 +14,7 @@ export interface SalesChatFrameProps {
   children: (actions: ReactNode) => ReactNode;
 }
 
-/**
- * The sales chat's actions held above the width switch (docs/20 m13): the phone and the wide header
- * get only the buttons, while the dialogs and their state (a transfer being typed) stay at one tree
- * position, so crossing 900px with a dialog open keeps it. ThreadPane keys it by phone. The admin's
- * chat gets the same «المزيد» with «القوائم» only (docs/22 §4).
- */
+/** Dialogs stay at one tree position so crossing 900px with one open keeps it (docs/20 m13). */
 export function SalesChatFrame({ thread, lists, compact, children }: SalesChatFrameProps) {
   const { primary, items, dialogs } = useSalesFamilyActions({ thread, compact });
   const listsAction = useThreadListsAction(thread.phone_e164, lists);

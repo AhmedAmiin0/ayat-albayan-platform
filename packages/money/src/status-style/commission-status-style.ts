@@ -8,7 +8,7 @@ export const commissionStatusStyle: Record<AssistantCommissionStatus, StatusStyl
   voided: { tone: 'bad', glyph: 'struck' },
 };
 
-/** «محفظتي»: owed is hers, not paid yet (hollow); in a statement underway (half); paid settled; voided struck. */
+/** Owed is hollow, in a statement underway is half, paid is settled, voided is struck. */
 export const walletStateStyle: Record<WalletState, StatusStyle> = {
   due: { tone: 'ok', glyph: 'hollow' },
   in_statement: { tone: 'neutral', glyph: 'half' },

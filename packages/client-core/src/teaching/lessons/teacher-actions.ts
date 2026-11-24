@@ -1,4 +1,5 @@
-import { isOpenLesson, LESSON_STATUSES, type LessonView } from '@ab/shared';
+import { LESSON_STATUSES } from '@ab/catalog';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { z } from 'zod';
 
 // docs/46 C3/C4/C5: the teacher's own routes (self.teacher), never the admin's /lessons/:id/cancel.

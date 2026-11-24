@@ -1,5 +1,5 @@
 import type { Enums, Tables } from '@ab/db';
-import type { MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { MyPaymentRow, MyStudentRow } from '@ab/money';
 
 /** v_assistant_students, the columns the assistant's own list uses. */
 export interface MyStudentSource {

@@ -4,9 +4,9 @@ import { shape, type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 
 interface AttachTileProps {
-  /** The full name, for the screen reader («الردود السريعة»). */
+  /** The full name, for the screen reader. */
   label: string;
-  /** The word under the circle, one line («ردود سريعة»); the label when absent. */
+  /** One line under the circle; falls back to the label when absent. */
   short?: string;
   onPress: () => void;
   children: ReactNode;

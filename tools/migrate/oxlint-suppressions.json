@@ -198,9 +198,6 @@
     }
   },
   "src/map/lessons/lessons.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
       "count": 2
     },
@@ -356,9 +353,6 @@
     }
   },
   "src/map/people/students.status.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/dot-notation": {
       "count": 5
     }
@@ -473,9 +467,6 @@
   },
   "src/map/schedule/booking-slot.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "typescript/dot-notation": {
@@ -788,16 +779,6 @@
       "count": 1
     }
   },
-  "src/sources/headers/headers.hub.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/sources/headers/headers.ops.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/sources/headers/headers.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -805,9 +786,6 @@
   },
   "src/sources/rows.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "typescript/no-base-to-string": {
@@ -848,15 +826,9 @@
   "src/sources/values.schedule.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/sources/values.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 1
     }

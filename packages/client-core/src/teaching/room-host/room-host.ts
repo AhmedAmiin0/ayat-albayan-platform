@@ -1,4 +1,4 @@
-import { canMute, canMuteAll, canRemove, type JoinRole } from '@ab/shared';
+import { canMute, canMuteAll, canRemove, type JoinRole } from '@ab/schedule';
 
 // Who the teacher (or an admin) may act on in a lesson room from the phone (owner 2026-11-16,
 // canvas RoomXTeacher / RoomXEndAll), the web room's rules per person: mute, stop the camera, «كتم

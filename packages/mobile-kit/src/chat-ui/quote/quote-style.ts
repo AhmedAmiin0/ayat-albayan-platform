@@ -15,7 +15,6 @@ export const QUOTE_BOX = {
   borderRadius: shape.radius.sm,
 } as const;
 
-/** «سارة: النص»: the reader's one label for a quote. */
 export const quoteLabel = (sender: string | null, text: string): string =>
   [sender, text].filter(Boolean).join(': ');
 

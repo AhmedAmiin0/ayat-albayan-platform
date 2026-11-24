@@ -1,4 +1,5 @@
-import { STUDENT_STATUSES, type TeacherStudentHead } from '@ab/shared';
+import type { TeacherStudentHead } from '@ab/shared';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 import { attendanceRowSchema } from './attendance-table-schema.js';
 

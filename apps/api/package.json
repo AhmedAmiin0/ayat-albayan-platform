@@ -11,11 +11,15 @@
     "config:import-env": "node --env-file-if-exists=.env dist/scripts/config-import-env.js"
   },
   "dependencies": {
+    "@ab/catalog": "workspace:*",
+    "@ab/core": "workspace:*",
     "@ab/db": "workspace:*",
     "@ab/i18n": "workspace:*",
     "@ab/money": "workspace:*",
     "@ab/schedule": "workspace:*",
+    "@ab/settings": "workspace:*",
     "@ab/shared": "workspace:*",
+    "@ab/time": "workspace:*",
     "@aws-sdk/client-s3": "3.1162.0",
     "@aws-sdk/s3-request-presigner": "3.1162.0",
     "@fastify/static": "^7.0.4",

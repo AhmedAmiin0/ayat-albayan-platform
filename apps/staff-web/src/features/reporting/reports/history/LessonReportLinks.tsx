@@ -13,12 +13,7 @@ export interface LessonReportLinksProps {
   filled?: boolean;
 }
 
-/**
- * «تقرير الحلقة» on a lesson card / drawer (R-REP-01: the report is opened from the lesson) once
- * it started and was not cancelled or moved. The teacher's form holds every student of the
- * lesson and lists one control per student (docs/49 «Drawer rule», TeacherReportLinks); the
- * admin opens it per student (one link each in a group lesson).
- */
+/** Shown once the lesson started and was not cancelled or moved (R-REP-01, docs/49). */
 export function LessonReportLinks({ lesson, role, size = 'sm', filled }: LessonReportLinksProps) {
   return role === 'teacher' ? (
     <TeacherReportLinks lesson={lesson} size={size} filled={filled} />

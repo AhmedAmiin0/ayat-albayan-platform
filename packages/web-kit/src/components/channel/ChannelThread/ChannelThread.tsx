@@ -10,7 +10,6 @@ import { useChannelThread } from '@ab/web-kit/components/channel/thread/use-chan
 
 const c = t.studentChannel;
 
-/** What the chat is called: the family's «المحادثة مع المعلم/ة», the staff's «رسائل الطلاب». */
 const TITLES: Readonly<Record<ChannelAudience, string>> = {
   portal: c.portalTab,
   teacher: c.title,
@@ -36,14 +35,7 @@ interface Props {
   named?: boolean;
 }
 
-/**
- * One student's channel (docs/31 §2), shared by the family portal and the staff pages: oldest
- * first under day chips, «الرسائل الأقدم» pages back, the newest message kept in view; live over
- * the socket, polled as the fallback. A participant writes (text, emoji, a photo, a PDF, a voice
- * note, a reply) and marks read (visible tab only) up to the newest message shown; before the
- * subscription and the teacher's assignment (owner 2026-10-29) the card of the steps left. A
- * monitor sees «للاطلاع فقط». The error state only while nothing was read yet.
- */
+/** docs/31 §2; live over the socket with polling fallback; reads only in a visible tab. */
 export function ChannelThread({ refs, tz, named = false }: Props) {
   const thread = useChannelThread(refs);
   const { query, first, mode } = thread;

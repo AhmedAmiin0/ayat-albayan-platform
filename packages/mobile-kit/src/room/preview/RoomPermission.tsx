@@ -9,7 +9,6 @@ const P = t.mobileRoom.permission;
 interface RoomPermissionProps {
   onAllow: () => void;
   onSkip: () => void;
-  /** «فتح في المتصفح»: the web room instead. */
   onBrowser: (() => void) | null;
 }
 

@@ -8,7 +8,6 @@ export interface SendButtonProps {
   onClick: () => void;
 }
 
-/** «إرسال التقرير» / «حفظ التعديل»: disabled with a spinner while the request is pending. */
 export function SendButton({ label, pending, disabled, onClick }: SendButtonProps) {
   return (
     <Button type="button" size="lg" disabled={disabled || pending} aria-busy={pending}

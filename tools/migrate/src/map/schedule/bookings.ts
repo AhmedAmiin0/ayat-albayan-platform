@@ -1,7 +1,4 @@
-// «تقويم الحجوزات» (HUB, then BOOK) weekly rows with status مؤكد / مشترك / يحتاج تأكيد → rules
-// from the import date on (booking-slot.ts); one-off rows are lessons (one-offs.ts). The teacher
-// column, when empty, gives way to the student's teacher. Times are the sheet's wall clock in
-// Asia/Riyadh. Lessons of these rules come from the platform's daily horizon job (rules.ts). Pure.
+// Rules from the import date on, Asia/Riyadh wall clock; the horizon job makes lessons.
 import type { SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { text } from '../../sources/sheets/cells.ts';

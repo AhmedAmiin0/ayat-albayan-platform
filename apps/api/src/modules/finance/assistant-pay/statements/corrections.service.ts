@@ -1,4 +1,9 @@
-import type { AssistantAdjustmentInput, AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
+import type {
+  AssistantAdjustmentInput,
+  AssistantCommissionView,
+  BroughtByInput,
+  BroughtByResult,
+} from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { CommissionBell } from '@/modules/finance/subscriptions';
 import type { CommissionsQuery } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
@@ -33,10 +38,7 @@ export class CorrectionsService {
     return { id: await this.rpc.adjust(input) };
   }
 
-  /**
-   * One student or many; assistantId null clears it. 409 commission_exists while a live commission belongs to another
-   * assistant. A change evaluates the student's paid packages, which can earn a commission: «عمولة جديدة» then.
-   */
+  /** assistantId null clears it; 409 commission_exists while another assistant has a live one. */
   async broughtBy(input: BroughtByInput, actorId: string): Promise<BroughtByResult> {
     const changed = await this.rpc.broughtBy({ ...input, actorId, broughtAt: input.broughtAt });
     if (changed > 0) await this.bell.notify();

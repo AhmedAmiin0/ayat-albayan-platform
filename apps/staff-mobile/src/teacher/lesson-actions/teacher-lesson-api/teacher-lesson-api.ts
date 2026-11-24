@@ -1,4 +1,4 @@
-import type { TeacherCancelRequest } from '@ab/shared';
+import type { TeacherCancelRequest } from '@ab/schedule';
 import { cancelAnswerSchema, confirmAnswerSchema, teacherLessonPaths } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';

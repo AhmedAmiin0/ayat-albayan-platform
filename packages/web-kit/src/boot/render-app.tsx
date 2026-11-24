@@ -13,7 +13,7 @@ interface App {
   queryClient: QueryClient;
   /** The browser tab's title. */
   title: string;
-  /** «تحت الصيانة» (owner 2026-11-21): the staff app's rooms and sign-in; the family app none. */
+  /** The staff app's rooms and sign-in are covered; the family app none. */
   maintenance?: MaintenanceOptions;
 }
 

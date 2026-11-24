@@ -22,9 +22,9 @@ export interface BoardController {
   undo: () => void;
   clear: () => void;
   setStudentsCanDraw: (on: boolean) => void;
-  /** «سماح» / «إيقاف كتابة {name}» for one guest (staff). */
+  /** Allow or stop drawing for one guest (staff). */
   allowDrawer: (identity: string, allow: boolean) => void;
-  /** Opens the board for everyone (staff, after «اطلب فتح السبورة»). */
+  /** Opens the board for everyone (staff, on request). */
   openForAll: () => void;
   toggleVisible: () => void;
 }

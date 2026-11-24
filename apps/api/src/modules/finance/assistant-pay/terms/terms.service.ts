@@ -1,4 +1,9 @@
-import type { AssistantTermsInput, BroughtByView, AssistantTermsRow, AssistantTermsView } from '@ab/shared';
+import type {
+  AssistantTermsInput,
+  BroughtByView,
+  AssistantTermsRow,
+  AssistantTermsView,
+} from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { notFound } from '@/common/http/errors';
@@ -65,7 +70,6 @@ export class TermsService {
   }
 
   // ponytail: one RPC per brought student without a commission, sequential; fine for tens of students per assistant.
-  /** Each evaluation may earn a commission: «عمولة جديدة» for what they earned, once after them all. */
   private async evaluateBrought(assistantId: string): Promise<void> {
     const subscriptions = await this.queries.uncommissioned(assistantId);
     for (const subscriptionId of subscriptions) await this.rpc.evaluate(subscriptionId);

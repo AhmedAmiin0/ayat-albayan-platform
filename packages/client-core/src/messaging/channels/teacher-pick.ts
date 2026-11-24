@@ -1,4 +1,4 @@
-// «المعلم/ة» in the assistant's subscribe step (owner 2026-10-29, docs/16 row 38), for web and mobile.
+// The teacher picker in the assistant's subscribe step (docs/16 row 38), for web and mobile.
 
 /** A teacher she picked for one student (a new child starts again from theirs). */
 export interface TeacherPick {

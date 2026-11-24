@@ -4,18 +4,16 @@ import {
   emptyContent,
   ISLAMIC_RATES,
   type ArabicSkill,
-  type Attendance,
-  type Grade,
   type IslamicDomain,
   type IslamicRate,
-  type Locale,
-  type Program,
   type QuickNote,
   type ReportContent,
   type ReportView,
   type SegmentKind,
   type TajweedTopic,
 } from '@ab/shared';
+import type { Attendance, Grade, Program } from '@ab/catalog';
+import type { Locale } from '@ab/core';
 import { rangeLabel, type RangeWords } from './v2-text.js';
 
 /** What the lines read: a ReportView, or the live page's report (ReportPageReport). */

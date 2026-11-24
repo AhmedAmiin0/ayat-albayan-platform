@@ -1,9 +1,7 @@
 import { z } from 'zod';
 import type { SubscriptionStatus } from '@ab/catalog';
 
-// «إلغاء الباقة»: a package made by mistake is cancelled, never deleted. Only one
-// nothing hangs on: no money kept (net paid 0) and no lesson booked on it. A cancelled package stays
-// in the history («ملغاة»), is never current, never owed, never bookable and never earns commission.
+// A package made by mistake is cancelled, never deleted, only when nothing is paid or booked on it.
 
 /** POST /subscriptions/:id/cancel and POST /sales/subscriptions/:id/cancel. */
 export const subscriptionCancelSchema = z.strictObject({ reason: z.string().trim().max(500).optional() });
@@ -32,12 +30,7 @@ export function cancelBlock(facts: CancelFacts): CancelBlock | null {
 
 export const isCancelled = (p: { status: SubscriptionStatus }): boolean => p.status === 'cancelled';
 
-/**
- * Whether the package still counts for money (migration 991): every one but an
- * unused cancel. A STOPPED package («إلغاء الاشتراك»: the course stopped, the money kept) stays
- * owed, paid into, used FIFO and commissioned. SQL twin: status <> 'cancelled' or cancel_kind =
- * 'stopped'.
- */
+/** Every package but an unused cancel counts for money (migration 991). */
 export const countsForMoney = (p: {
   status: SubscriptionStatus;
   cancel_kind?: string | null;
@@ -51,7 +44,7 @@ export function livePackages<T extends { status: SubscriptionStatus }>(packages:
   return packages.filter((p) => !isCancelled(p));
 }
 
-/** «الباقة الحالية»: the newest active package, else the newest; never a cancelled one. Newest first in. */
+/** The newest active package, else the newest; never a cancelled one; input newest first. */
 export function currentPackage<T extends { status: SubscriptionStatus }>(newestFirst: readonly T[]): T | null {
   const live = livePackages(newestFirst);
   return live.find((p) => p.status === 'active') ?? live[0] ?? null;
@@ -59,11 +52,7 @@ export function currentPackage<T extends { status: SubscriptionStatus }>(newestF
 
 type CancelRow = { status: SubscriptionStatus; paid: number; balance?: { lessons_used: number } };
 
-/**
- * Whether a package row offers «إلغاء الباقة»: not cancelled, nothing paid and, where the row carries its
- * balance (v_subscription_balance), no lesson used. The course's booked lessons and a later package's
- * commission are not on the row: the API answers 409 has_lessons / has_commission for those.
- */
+/** Cancel needs nothing paid or used; the API checks booked lessons and commission (409). */
 export function cancelOffered(p: CancelRow): boolean {
   return !isCancelled(p) && p.paid === 0 && (p.balance === undefined || p.balance.lessons_used === 0);
 }

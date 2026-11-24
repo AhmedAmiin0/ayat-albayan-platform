@@ -28,7 +28,7 @@ describe('ChannelThread (docs/31 §2)', () => {
     apiSend.mockResolvedValue({});
     show('portal');
     expect(await screen.findByRole('link', { name: 'https://example.org/plan' })).toBeTruthy();
-    // The head names the people, the viewer last as «أنت»; others' bubbles carry name and role.
+    // The head names the people with the viewer last; others' bubbles carry name and role.
     expect(screen.getByTestId('channel-people').textContent).toBe(`أم سلمى${c.namesJoin}${c.you}`);
     expect(screen.getByText('أم سلمى').parentElement?.textContent).toBe(`أم سلمى · ${c.roles.guardian}`);
     expect(screen.getByRole('region', { name: `${c.portalTab} · سلمى` })).toBeTruthy();

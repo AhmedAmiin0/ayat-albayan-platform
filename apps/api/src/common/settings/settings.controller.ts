@@ -3,7 +3,7 @@ import {
   type AcademySettings,
   type SettingsPatchBody,
   type SettingsPatchResult,
-} from '@ab/shared';
+} from '@ab/settings';
 import { Controller, Get, Optional, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';

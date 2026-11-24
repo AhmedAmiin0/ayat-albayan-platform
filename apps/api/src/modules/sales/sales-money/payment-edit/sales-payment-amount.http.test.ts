@@ -3,13 +3,12 @@ import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
-import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
-// «تعديل المبلغ» by the assistant (owner 2026-11-02): subscriptions.edit_terms (owner
-// 2026-11-03), never payments.write.
+// The assistant's amount edit needs subscriptions.edit_terms, never payments.write.
 const URL = `/sales/payments/${PAYMENT_ID}/amount`;
 const withEdit: PermissionResolver = async (user) => [
   ...(await systemResolver(user)),

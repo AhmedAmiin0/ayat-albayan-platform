@@ -13,7 +13,7 @@ export type BoardMessage =
   | { t: 'clear' }
   | { t: 'perm'; studentsCanDraw: boolean }
   | { t: 'open'; open: boolean }
-  /** «سماح» / «إيقاف كتابة {name}»: one guest may (or may no longer) draw. */
+  /** One guest may, or may no longer, draw. */
   | { t: 'allow'; who: string; allow: boolean }
   | { t: 'sync-request' }
   | { t: 'sync'; strokes: Stroke[]; studentsCanDraw: boolean; open: boolean; allowed: string[] };

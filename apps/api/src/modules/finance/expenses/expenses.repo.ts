@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import type { ExpenseCategoryView, ExpenseView } from '@ab/shared';
+import type { ExpenseCategoryView, ExpenseView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
@@ -89,7 +89,7 @@ export class ExpensesRepo {
     return data;
   }
 
-  /** «تكرار شهري»: recurring expenses of the month before copied into `month` as drafts (idempotent). */
+  /** Recurring expenses of the previous month copied into `month` as drafts (idempotent). */
   async createRecurringDrafts(month: string): Promise<number> {
     const { data, error } = await this.db.rpc('create_recurring_expense_drafts', { p_month: month });
     if (error) throw dbError(error);

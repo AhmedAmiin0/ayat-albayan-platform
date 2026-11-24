@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import type { HttpException } from '@nestjs/common';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 

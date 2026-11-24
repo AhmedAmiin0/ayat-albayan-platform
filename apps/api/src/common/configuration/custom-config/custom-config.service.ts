@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { CustomConfigUpsert, CustomConfigView } from '@ab/shared';
+import type { CustomConfigUpsert, CustomConfigView } from '@ab/settings';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
 import { SharedCache } from '@/common/infra/cache/shared-cache';

@@ -8,13 +8,13 @@ interface Props {
   onPick: (studentId: string) => void;
 }
 
-/** The last message's text; «تم حذف هذه الرسالة» once it was deleted for everyone. */
+/** Shows a deleted note once deleted for everyone. */
 const previewOf = (r: TeacherChannelRow): string => {
   if (!r.last_message) return t.studentChannel.noMessageYet;
   return r.last_message.deleted ? t.studentChannel.actions.deleted : r.last_message.body;
 };
 
-/** «رسائل الطلاب»: one row per current student, newest activity first, with my unread count. */
+/** One row per current student, newest activity first, with my unread count. */
 export function TeacherChannelList({ rows, selected, onPick }: Props) {
   return (
     <ul className="grid gap-1" aria-label={t.studentChannel.students}>

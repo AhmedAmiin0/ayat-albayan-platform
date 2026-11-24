@@ -10,7 +10,6 @@ interface RetryButtonProps {
   fontFamily: string | undefined;
 }
 
-/** The startup screen's «إعادة المحاولة»: 48 pt high, 28 pt sides, the green fill, 16 pt semibold. */
 export function RetryButton({ label, onPress, fontFamily }: RetryButtonProps) {
   const { color } = useTheme();
   return (

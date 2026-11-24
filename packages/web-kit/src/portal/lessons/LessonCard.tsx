@@ -21,12 +21,7 @@ interface Props {
   student: PortalStudent;
 }
 
-/**
- * One upcoming lesson: when (family and viewer clocks), status, teacher, what the family asked,
- * the live countdown (or the live room: since when, who is inside; or «انتهت الحلقة» once ended
- * for everyone), «ادخل الحلقة» and «خيارات الحلقة» (owner 2026-11-17). Once admitted, the
- * classroom covers the page (as on the student's own link).
- */
+/** Once admitted, the classroom covers the page. */
 export function LessonCard({ lesson, student }: Props) {
   const now = useNow(TICK_MS);
   const [room, setRoom] = useState<RoomJoinResult | null>(null);

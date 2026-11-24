@@ -4,9 +4,7 @@ import type { AppSendAdopt, HeldRow } from './app-send-adopt';
 import { AppSendExpiry } from './app-send-expiry';
 import { AppSendExpiryRepo, UNCONFIRMED_TEXT } from './app-send-expiry.repo';
 
-// «أرسل عبر واتساب» with no echo attached (docs/19): after the window and its 15 min grace the
-// row first adopts the app's message if it was stored as its own row; else it is failed
-// app_send_unconfirmed, never sent by the platform, and staff answer «هل أرسلتها؟».
+// After the window and 15 min grace an app-sent row adopts the echo or fails, never sent (docs/19).
 
 const NOW = new Date('2026-11-06T10:30:00Z');
 const filters = (calls: { method: string; args: unknown[] }[]) =>

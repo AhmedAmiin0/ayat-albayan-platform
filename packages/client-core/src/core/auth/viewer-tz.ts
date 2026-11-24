@@ -1,4 +1,4 @@
-import { deviceTimeZone, resolveViewerTz } from '@ab/shared';
+import { deviceTimeZone, resolveViewerTz } from '@ab/time';
 
 // The viewer's zone for both apps (docs/34 §2): the signed-in person's tz from GET /auth/me, else
 // the device's, else the academy's. A store, like the clock preference, so code outside React

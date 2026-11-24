@@ -1,4 +1,4 @@
-import { RECEIPT_MAX_BYTES, RECEIPT_MIMES, type PaymentAttachmentView } from '@ab/shared';
+import { RECEIPT_MAX_BYTES, RECEIPT_MIMES, type PaymentAttachmentView } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, isPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

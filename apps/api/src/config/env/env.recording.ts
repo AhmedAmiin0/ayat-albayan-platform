@@ -1,4 +1,4 @@
-import { httpsUrl } from '@ab/shared';
+import { httpsUrl } from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset, optionalSecret } from './env.blank';

@@ -80,7 +80,6 @@ export function unpaidList(rows: readonly UnpaidIn[]): WorkList<UnpaidRow> {
   );
 }
 
-/** Tasks about a package carry its student and use («باقة سهيلة قربت تخلص: فاضل حلقتين»). */
 export function taskList(tasks: readonly TaskIn[], subjects: readonly SubjectIn[]): WorkList<TaskRow> {
   const byId = new Map(subjects.map((s) => [s.id, s]));
   return list(

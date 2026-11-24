@@ -11,9 +11,9 @@ interface Props {
   entry: PhoneEntry;
   hint: string;
   error?: string | undefined;
-  /** The field's name; «رقم الواتساب» by default. */
+  /** The field's name; WhatsApp number by default. */
   label?: string;
-  /** A button after the number on the same row (the short-link form's «أضف»). */
+  /** A button after the number on the same row. */
   action?: ReactNode;
   /** Enter in the number (the form is not submitted). */
   onEnter?: () => void;
@@ -26,11 +26,7 @@ const enterKey = (onEnter: () => void) => (e: KeyboardEvent<HTMLInputElement>) =
   onEnter();
 };
 
-/**
- * «رقم الواتساب» as the family app (#752): one LTR field, the country (flag + calling code,
- * opening «اختر الدولة») at its start, then the national number or a whole one pasted with +.
- * Shared by the family sign-in, the short-link gate /l/<code> and the short-link form.
- */
+/** One LTR field with the country at its start; shared by family sign-in and short links. */
 export function PhoneNumberField({ entry, hint, error, ...more }: Props) {
   const [picking, setPicking] = useState(false);
   const label = more.label ?? t.familyAuth.phone;

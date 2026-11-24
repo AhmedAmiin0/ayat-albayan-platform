@@ -6,14 +6,11 @@ import { PauseHistory } from './PauseHistory';
 
 interface CoursePausePanelProps {
   studentId: string;
-  /** «استُؤنفت الدورة» / «حُفظت نهاية الإيقاف»: the page's toast (the banner goes once resumed). */
+  /** The page shows the toast because the banner goes once resumed. */
   onDone: (message: string) => void;
 }
 
-/**
- * The student file's pause block: the banner while a pause is open (with «استئناف» / «تغيير نهاية الإيقاف»
- * for courses.pause) and «سجل الإيقاف». Nothing at all for a student never paused.
- */
+/** Nothing at all for a student never paused. */
 export function CoursePausePanel({ studentId, onDone }: CoursePausePanelProps) {
   const { data } = useQuery(coursePauseQuery(studentId));
   const { can } = usePermissions();

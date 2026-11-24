@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
-/** «حجز من فجوة فاضية · السبت 15:00»: the gap clicked on the calendar, kept in sight on every step. */
+/** The gap clicked on the calendar, kept in sight on every step. */
 export function GapChip({ startsAt }: { startsAt: string }) {
   const clock = useClock();
   const when = lessonWhenAt(new Date(startsAt), { tz: useViewerTz(), ...clock });

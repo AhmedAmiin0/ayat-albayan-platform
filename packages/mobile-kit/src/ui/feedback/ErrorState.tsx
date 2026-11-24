@@ -8,7 +8,6 @@ import { AppText } from '../primitives/AppText';
 interface ErrorStateProps {
   /** Usually the query's `refetch`. */
   onRetry: () => void;
-  /** Defaults to t.common.error «حصلت مشكلة، حاول تاني». */
   message?: string;
 }
 

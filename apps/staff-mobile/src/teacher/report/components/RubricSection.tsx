@@ -1,4 +1,5 @@
-import { GRADES, REPORT_RUBRICS } from '@ab/shared';
+import { REPORT_RUBRICS } from '@ab/shared';
+import { GRADES } from '@ab/catalog';
 import type { View } from 'react-native';
 import { t, Section, FormLabel } from '@ab/mobile-kit';
 import { ChoiceChips } from './ChoiceChips';

@@ -95,7 +95,6 @@ export function hoursText(minutes: number): string {
   return `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
 }
 
-/** «فاضي 17:00 – 19:00». */
 export function freeText(range: Range, clock: Clock): string {
   return t.schedule.free.replace('{from}', hhmmText(range.start, clock)).replace('{to}', hhmmText(range.end, clock));
 }
@@ -108,7 +107,7 @@ export interface TeacherDay {
   /** Bookable free gaps: from now on, at least 30 min. */
   gaps: Span[];
   freeMin: number;
-  /** Time off covering the whole 08–24 track: one «إجازة» note instead of the track. */
+  /** Time off covering the whole 08-24 track shows one note instead of the track. */
   dayOff: OverviewTimeOff | null;
 }
 

@@ -7,7 +7,6 @@ import { VideoTile } from './VideoTile';
 
 export interface TileSlots {
   attach: (tileKey: string, el: HTMLVideoElement) => () => void;
-  /** The corner action of a tile (e.g. «إخراج من الحلقة»), or nothing. */
   actionFor: (tile: TileView) => ReactNode;
 }
 

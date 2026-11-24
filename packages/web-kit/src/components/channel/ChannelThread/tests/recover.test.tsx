@@ -51,7 +51,7 @@ describe('ChannelThread keeps what is on screen', () => {
     showThread('portal');
     fireEvent.change(await screen.findByLabelText(c.messageLabel), { target: { value: 'السلام' } });
     fireEvent.click(screen.getByRole('button', { name: c.send }));
-    // My pending row shows at once, «جارٍ الإرسال…» under it.
+    // My pending row shows at once with its sending line.
     expect(await screen.findByText(c.sending)).toBeTruthy();
     fireEvent.change(box(), { target: { value: 'السلام عليكم' } });
     await act(async () => stored(channelMessage({ body: 'السلام', mine: true })));

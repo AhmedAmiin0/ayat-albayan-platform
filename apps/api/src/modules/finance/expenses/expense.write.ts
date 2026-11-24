@@ -1,5 +1,5 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import { monthStart, type ExpenseCreate, type ExpenseUpdate } from '@ab/shared';
+import { monthStart, type ExpenseCreate, type ExpenseUpdate } from '@ab/money';
 
 // Expense commands → rows (pure). The accounting month is the one sent, else the paid day's month.
 

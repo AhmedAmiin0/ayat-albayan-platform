@@ -7,7 +7,6 @@ import type { BoardController } from './use-board';
 import { useBoardShare } from './use-board-share';
 import { Whiteboard } from './Whiteboard';
 
-/** «السبورة» on the stage: its tools above, the canvas filling the rest at 16:9. */
 export function BoardStage({ board, room, requests }: { board: BoardController; room: RoomController; requests: ShareRequests }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const share = useBoardShare(canvasRef, room);

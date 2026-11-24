@@ -1,4 +1,4 @@
-import { COUNTS_FOR_MONEY, renewalShareNow } from '@ab/shared';
+import { COUNTS_FOR_MONEY, renewalShareNow } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
@@ -13,7 +13,7 @@ export class TermsRepo {
     private readonly settings: AssistantPaySettings,
   ) {}
 
-  /** The share of the commission earned on each renewal now (0..100): renewal_commission_percent, 0 while «عمولة التجديد» is off. */
+  /** Share earned on each renewal now (0..100), 0 while the renewal commission is off. */
   async renewalShare(): Promise<number> {
     return renewalShareNow(await this.settings.read());
   }

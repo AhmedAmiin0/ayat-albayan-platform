@@ -1,11 +1,9 @@
 import type { PortalHome, PortalKind, PortalStudent } from '@ab/shared';
 
-// The children a guardian chooses between (canvas Adult, SwitchSheet): a
-// guardian who also studies has their own student row (contact_is_self), named «أنا» and first.
+// A guardian who also studies has their own student row (contact_is_self), shown first.
 
 type SelfFlag = Pick<PortalStudent, 'contact_is_self'>;
 
-/** The guardian's own student row: shown as «أنا». */
 export const isSelfChild = (kind: PortalKind, student: SelfFlag): boolean =>
   kind === 'guardian' && student.contact_is_self;
 

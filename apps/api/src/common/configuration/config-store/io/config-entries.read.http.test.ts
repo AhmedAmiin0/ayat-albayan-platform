@@ -1,4 +1,4 @@
-import { SEED_ENTRIES, SETTING_KEYS } from '@ab/shared';
+import { SEED_ENTRIES, SETTING_KEYS } from '@ab/settings';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';

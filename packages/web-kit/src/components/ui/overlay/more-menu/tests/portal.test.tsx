@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { MoreMenu } from '@ab/web-kit/components/ui/overlay/more-menu/more-menu';
 
-/** An entry that owns its dialog, rendered inside the menu (like «تحقق من التسجيل»). */
+/** An entry that owns its dialog, rendered inside the menu. */
 function CheckEntry() {
   const [open, setOpen] = useState(false);
   return (

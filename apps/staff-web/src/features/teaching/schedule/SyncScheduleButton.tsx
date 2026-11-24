@@ -3,10 +3,7 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LESSONS_KEY, syncSchedule } from './api';
 
-/**
- * «مزامنة الجدول»: the weekly rules generate their missing lessons now (the daily pass), then the
- * calendar reloads. The answer is the page's toast via onDone.
- */
+/** Runs the daily generation pass now, then reloads; the answer is the page's toast. */
 export function SyncScheduleButton({ onDone }: { onDone: (message: string) => void }) {
   const queryClient = useQueryClient();
   const sync = useMutation({

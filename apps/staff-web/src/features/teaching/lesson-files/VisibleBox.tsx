@@ -8,7 +8,7 @@ interface Props {
   onChange: (visible: boolean) => void;
 }
 
-/** «يراه الطالب وولي الأمر» (the label never changes), the hidden note under it when off. */
+/** The label never changes; the hidden note shows under it when off. */
 export function VisibleBox({ checked, disabled, onChange }: Props) {
   return (
     <div className="grid">

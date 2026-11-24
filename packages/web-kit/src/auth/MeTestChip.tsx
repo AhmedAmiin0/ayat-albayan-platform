@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { meQuery } from './me';
 import { TestChip } from './TestChip';
 
-/** The signed-in family's «تجريبي» (docs/56): shown only when GET /auth/me says is_test. */
+/** Shown only when GET /auth/me says is_test (docs/56). */
 export function MeTestChip() {
   const me = useQuery(meQuery);
   return <TestChip when={me.data?.is_test === true} />;

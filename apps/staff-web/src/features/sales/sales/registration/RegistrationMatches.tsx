@@ -8,7 +8,7 @@ const R = t.registrationCheck;
 interface RegistrationMatchesProps {
   view: RegistrationCheckView;
   by: RegistrationCheckBy;
-  /** «ربط بطالب موجود»: each child becomes a button that picks it; `picked` is the chosen code. */
+  /** When linking to an existing student, each child is a pick; `picked` is the chosen code. */
   onPick?: (m: RegistrationMatch) => void;
   picked?: string | null;
 }
@@ -32,7 +32,6 @@ function MatchLines({ m }: { m: RegistrationMatch }) {
 
 const ROW = 'grid gap-1 rounded-md border p-3 text-sm';
 
-/** The answer: «مسجّل: n طالب» and each child (name, code, status, teacher), or «لا يوجد…». */
 export function RegistrationMatches({ view, by, onPick, picked = null }: RegistrationMatchesProps) {
   if (!view.found) {
     return <p role="status" className="text-sm text-ink-2">{by === 'phone' ? R.notFoundPhone : R.notFoundName}</p>;

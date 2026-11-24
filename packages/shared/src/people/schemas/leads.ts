@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { GENDERS, JOB_APPLICANT_STATUSES, LEAD_SOURCES, LEAD_STATUSES } from '@ab/catalog';
 import { optionalText, phoneE164, timeOfDay, timeZone } from '@ab/core';
 
-/** «بتملا الاستمارة بصفتك» and «نوع الحلقة» from the registration form's first version (A9). */
+/** From the registration form's first version (A9). */
 export const FILLED_BY = ['guardian', 'student'] as const;
 export const GROUP_KINDS = ['individual', 'group'] as const;
 export type FilledBy = (typeof FILLED_BY)[number];

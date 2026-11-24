@@ -1,4 +1,5 @@
-import type { MessageStatus, MessageView, SyncMessage } from '@ab/shared';
+import type { MessageView, SyncMessage } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { mergeRead, UNSYNCED_AT } from './store-merge.js';
 

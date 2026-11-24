@@ -3,7 +3,7 @@ import { type, useTheme } from '../../theme';
 import { AppText } from '../primitives/AppText';
 
 interface PresenceLabelProps {
-  /** «متصل الآن» / «آخر ظهور …» / «آخر رسالة …»; '' renders nothing. */
+  /** An empty string renders nothing. */
   text: string;
   /** Online now: a small success-toned dot before the words (never colour alone). */
   online?: boolean;

@@ -18,7 +18,6 @@ const MESSAGE = P.message
   .replace('{currency}', 'ر.س')
   .replace('{url}', 'https://app.example.com/pay/tok_1');
 
-/** The link made (SalesMoneyFlow's last step after «دفع إلكتروني»). */
 async function created({ canSend = true } = {}) {
   const onClose = vi.fn();
   renderWithClient(<CreatedLink link={CREATED} phone={PHONE} canSend={canSend} onClose={onClose} />);

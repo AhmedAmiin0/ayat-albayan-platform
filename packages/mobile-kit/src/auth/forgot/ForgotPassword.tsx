@@ -54,11 +54,10 @@ function Step({ forgot, mode }: StepProps) {
 interface ForgotPasswordProps {
   /** Returns to the sign-in form. */
   onBack: () => void;
-  /** The staff app's reset (default), the family's, or a student's «أول دخول؟» (docs/50 §6). */
   mode?: ForgotMode;
 }
 
-/** «نسيت كلمة المرور؟» / «أول دخول؟» inside a login screen (docs/30 §7). */
+/** Inside a login screen (docs/30 §7). */
 export function ForgotPassword({ onBack, mode = 'staff' }: ForgotPasswordProps) {
   const { color } = useTheme();
   const forgot = useForgot(forgotWords(mode).side);

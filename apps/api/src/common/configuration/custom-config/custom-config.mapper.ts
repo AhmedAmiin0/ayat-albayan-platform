@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { CustomConfigView } from '@ab/shared';
+import type { CustomConfigView } from '@ab/settings';
 
 interface CustomConfigRow {
   key: string;

@@ -20,15 +20,15 @@ export interface SalesScheduleLesson {
   status: LessonStatus;
   trial: boolean;
   makeup: boolean;
-  /** docs/46 D1: the teacher said «سأحضر» (never the status). Absent in an old cache. */
+  /** docs/46 D1: the teacher said she will attend (never the status); absent in an old cache. */
   teacher_confirmed_at?: string | null;
   /** The lesson's copied meeting link (trimmed, empty → null). Optional: an old persisted cache lacks it. */
   meeting_link?: string | null;
-  /** The teacher holds it in our classroom (meeting_mode, else the academy default): «عبر الفصل», no URL. */
+  /** Held in our classroom (meeting_mode, else the academy default), so there is no URL. */
   platform_classroom?: boolean;
   /** tz: the teacher's and each student's zone, for the details sheet's local times. Absent in an old cache. */
   teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string };
-  /** `mine`: one of hers (docs/16 row 36): opens «تفاصيل الطالب», and lets her move or cancel the lesson. */
+  /** `mine` (docs/16 row 36): opens details and lets her move or cancel the lesson. */
   students: { id: string; code: string; name: string; tz?: string; mine?: boolean }[];
 }
 

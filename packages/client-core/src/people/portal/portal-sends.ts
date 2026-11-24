@@ -1,11 +1,10 @@
 import {
-  JOIN_ROLES,
   portalFileUrlSchema,
   portalRoomLinkSchema,
   type PortalFileUrl,
   type PortalRoomLink,
-  type RoomJoinResult,
 } from '@ab/shared';
+import { JOIN_ROLES, type RoomJoinResult } from '@ab/schedule';
 import { z } from 'zod';
 import type { ApiClient } from '../../core/http/index.js';
 

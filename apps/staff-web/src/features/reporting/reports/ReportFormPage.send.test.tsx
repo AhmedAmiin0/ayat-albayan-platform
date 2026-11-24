@@ -9,8 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
-// Owner 2026-11-06: one send per tap, a clear «sent» and a read-only view, and an edit only
-// through «تعديل التقرير» (the same report, its version), never a second report.
+// One send per tap, a read-only sent view, and edits only on the same report, never a second.
 const AT = '2026-10-03T14:05:00.000Z';
 const sent = { status: 'submitted' as const, version: 1, attendance: 'on_time' as const, submitted_at: AT, edit_until: '2026-10-04T14:05:00.000Z' };
 const posts = () => apiSend.mock.calls.filter(([method]) => method === 'POST');

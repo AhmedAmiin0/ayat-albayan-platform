@@ -7,10 +7,7 @@ import { trialFamily } from '../../support/sales/sales-money';
 import { resetSales, revokeFromSales, riyadhDay } from '../../support/sales/sales-options';
 import { USERS } from '../../support/core/users';
 
-// Owner 2026-10-12 (docs/16 rows 23, 24, 26), through the REAL API and database: a salesperson checks a
-// registered number and a new one («التحقق من التسجيل»), sets the start date («تحديد تاريخ بداية الاشتراك»,
-// a past one only when «بدأ الاشتراك سابقًا»), and the admin switches both options off on the built-in
-// sales role, then restores the defaults (afterAll too, so no later spec runs without them).
+// docs/16 rows 23, 24, 26; defaults are restored in afterAll so later specs keep them.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');

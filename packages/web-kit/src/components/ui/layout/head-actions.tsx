@@ -5,7 +5,7 @@ import { usePhone } from './use-narrow';
 export interface HeadActionsProps {
   /** The page's ONE primary action (a filled button), always in view. */
   primary?: ReactNode;
-  /** Secondary actions: inline from 640px, behind «⋯ المزيد» on phones. */
+  /** Inline from 640px, behind the more menu on phones. */
   more?: ReactNode;
   /** Names the group (e.g. the dashboard's quick actions). */
   label?: string;

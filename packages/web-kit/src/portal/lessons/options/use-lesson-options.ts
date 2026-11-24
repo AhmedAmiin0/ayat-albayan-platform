@@ -15,10 +15,7 @@ interface Of {
   student: PortalStudent;
 }
 
-/**
- * «خيارات الحلقة»'s state: which panel is open, the line said under the card (at once for a
- * one-tap answer; null again once a refusal shows), each option's tap and the write itself.
- */
+/** The line is null again once a refusal shows. */
 export function useLessonOptions({ lesson, student }: Of) {
   const [open, setOpen] = useState<OptionsOpen>(null);
   const [said, setSaid] = useState<string | null>(null);

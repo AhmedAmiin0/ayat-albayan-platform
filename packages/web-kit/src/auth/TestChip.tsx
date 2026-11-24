@@ -7,7 +7,7 @@ interface TestChipProps {
   className?: string;
 }
 
-/** «تجريبي»: a test account or student (docs/56), so nobody mistakes it for a real one. */
+/** Marks a test account or student (docs/56) so nobody mistakes it for real. */
 export function TestChip({ when = true, className }: TestChipProps) {
   if (!when) return null;
   return (

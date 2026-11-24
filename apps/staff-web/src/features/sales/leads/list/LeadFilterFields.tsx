@@ -6,10 +6,7 @@ import { leadSortFromValue, leadSortValue } from '@ab/client-core';
 import { leadSortChoices } from './lead-sort';
 import type { LeadChipsOptions } from './lead-filters';
 
-/**
- * The inbox's own filters in the shared «تصفية» panel (R-LEAD-05, R-NFR-08, server-side): the source,
- * «مسؤول المبيعات» and the order. The card list has no column heads to sort by, so the order is a field.
- */
+/** Server-side filters (R-LEAD-05, R-NFR-08); cards have no column heads, so order is a field. */
 export function LeadFilterFields({ search, people, onFilter }: LeadChipsOptions) {
   return (
     <>

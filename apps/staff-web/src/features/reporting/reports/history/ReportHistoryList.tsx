@@ -21,11 +21,7 @@ export interface ReportHistoryListProps {
   recorded: ReadonlySet<string>;
 }
 
-/**
- * The student's submitted reports, newest lesson first (R-REP-05, issue D2: replaces the
- * per-student sheets): when, which lesson, who taught, attendance, overall grade, the PDF, and
- * «تعديل التقرير» while its edit window is still open on this clock (docs/46 B7).
- */
+/** Newest first (R-REP-05); edit shows only while the window is open on this clock (docs/46 B7). */
 export function ReportHistoryList({ items, role, tz, studentId, recorded }: ReportHistoryListProps) {
   const clock = useClock();
   const now = useNow();

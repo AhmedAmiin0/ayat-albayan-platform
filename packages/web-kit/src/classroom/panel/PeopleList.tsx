@@ -27,10 +27,7 @@ function Row({ tile, variant }: { tile: TileView; variant: RoomVariant }) {
   );
 }
 
-/**
- * «المشاركون», read only (the family): face, name («(أنت)» on one's own row), the role word
- * («الطالب» for the family), «يتحدث», and a closed mic or camera in words.
- */
+/** Read only for the family; mic and camera state in words. */
 export function PeopleList({ tiles, variant }: { tiles: TileView[]; variant: RoomVariant }) {
   const people = tiles.filter((x) => x.kind === 'camera');
   return (

@@ -3,8 +3,6 @@ import { t } from '../../lib/i18n/i18n';
 import type { bioLockMock } from '../../testing/bio-lock';
 import { BiometricSwitchRow } from './BiometricSwitchRow';
 
-// «الدخول بالبصمة» in settings, with the native modules mocked (testing/bio-lock).
-
 jest.mock(
   '../core/bio-lock',
   () => jest.requireActual<{ bioLockMock: object }>('../../testing/bio-lock').bioLockMock,

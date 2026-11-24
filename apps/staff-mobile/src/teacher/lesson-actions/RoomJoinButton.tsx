@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { useJoinClassroom } from '@/classroom';
 import { t, Button, type ButtonVariant, ErrorLine } from '@ab/mobile-kit';

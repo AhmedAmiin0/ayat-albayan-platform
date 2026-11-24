@@ -1,4 +1,4 @@
-import { settingZod, type SettingDef } from '@ab/shared';
+import { settingZod, type SettingDef } from '@ab/settings';
 import { isDeepStrictEqual } from 'node:util';
 import { CONFIG_DEFS, defaultOf } from './config-defs';
 

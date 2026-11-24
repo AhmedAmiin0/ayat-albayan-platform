@@ -14,9 +14,7 @@ import { ApiError, type ApiClient } from '../http/index.js';
 // Family accounts (docs/30 §6): the public sign-in routes as web and mobile call them. Sessions are
 // finished by the app's own supabase client (verifyOtp / setSession).
 
-/**
- * Seconds before «أعد إرسال الرمز» comes back (the API allows 3 codes per phone per 15 minutes).
- */
+/** The API allows 3 codes per phone per 15 minutes. */
 export const RESEND_SECONDS = 60;
 
 /** One phone + WhatsApp code pair of routes: the family's or the teacher's (docs/46 A2). */

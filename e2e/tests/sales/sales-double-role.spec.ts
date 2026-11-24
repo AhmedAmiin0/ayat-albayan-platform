@@ -5,11 +5,7 @@ import { lastOutbound } from '../../support/messaging/inbox';
 import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { salesNav, seedBooked, seedMine, setSalesStarter, signInSales } from '../../support/sales/sales-portal';
 
-// Sales double role (docs/16): the salesperson also does the classroom assistant's job.
-// She reads a chat that is not hers, opens the history of a confirmed subscription she made (with its payment amounts),
-// sees the teachers (master-detail) and every student, the academy's day read-only, and a lesson running now
-// with «ادخل الحلقة». Owner report 2026-10-12: she starts a conversation with a template, one the
-// admin offers to sales («قالب بدء محادثة للمبيعات»; sales-starter.spec covers the chat line's own).
+// Sales double role (docs/16): also the classroom assistant's job, read-only schedule.
 
 const composer = ar.inbox.composer;
 
@@ -27,25 +23,23 @@ test.describe('sales double role', () => {
     await page.goto(`/sales/inbox?phone=${encodeURIComponent(foreign.phone)}`);
     await expect(page.getByRole('log', { name: ar.messages.log }).getByText(names.says)).toBeVisible();
 
-    // The landing's running-lessons chip (the list's head row) leads to /sales/live: my student's lesson, «ادخل الحلقة» open.
+    // The running-lessons chip leads to /sales/live with the join open.
     await page.goto('/sales/inbox');
     await page.getByRole('link', { name: new RegExp(ar.sales.live.strip.replace('{n}', '\\d+')) }).click();
     const lesson = page.getByRole('listitem').filter({ hasText: names.mine });
     await expect(lesson).toContainText(names.teacher);
     await expect(lesson.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
 
-    // «المعلمون»: the teacher's row (in a lesson now), then the drawer with the student as a list item.
     await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.teachers }).click();
     await page.getByRole('searchbox', { name: ar.sales.teachers.search }).fill(names.teacher);
     const row = page.getByRole('list', { name: ar.sales.teachers.listLabel }).getByRole('button', { name: new RegExp(names.teacher) });
     await expect(row).toContainText(ar.sales.teachers.liveNow);
     await row.click();
     const drawer = page.getByRole('dialog', { name: ar.sales.teachers.detailTitle.replace('{name}', names.teacher) });
-    // «مشترك» is the default segment; «الكل» shows the student whatever her status.
+    // Subscribed is the default segment; all shows the student whatever her status.
     await drawer.getByRole('group', { name: ar.studentLists.kinds }).getByRole('button', { name: new RegExp(`^${ar.studentLists.all}`) }).click();
     await expect(drawer.getByRole('listitem').filter({ hasText: names.mine })).toContainText(ar.enums.program.quran);
 
-    // «جدول الحلقات» from the drawer: that teacher's day, read-only, the running lesson with «ادخل الحلقة».
     await drawer.getByRole('link', { name: ar.sales.teachers.openSchedule }).click();
     await page.waitForURL('**/sales/schedule?teacherId=*');
     const day = page.getByRole('region', { name: names.teacher });
@@ -59,7 +53,7 @@ test.describe('sales double role', () => {
     const details = page.getByRole('dialog', { name: names.mine });
     await expect(details).toContainText(ar.lessons.sheet.readOnly);
     await expect(details.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
-    // «إغلاق» is its only button: no confirm, cancel, move, edit, invoice or report.
+    // Close is its only button: no confirm, cancel, move, edit, invoice or report.
     await expect(details.getByRole('button')).toHaveCount(1);
     await details.getByRole('button', { name: ar.common.close }).click();
     await expect(details).toBeHidden();
@@ -94,7 +88,7 @@ async function startsWithTemplate(browser: Browser): Promise<void> {
   const booked = await seedBooked({ name: names.student, teacher: names.teacher });
   const page = await signInSales(browser, me.email);
 
-  // «محادثة جديدة»: the family never wrote; the number opens the first-template pane (the templates load: no 403).
+  // A new chat opens the first-template pane; the templates load without a 403.
   await page.goto('/sales/inbox');
   await page.getByRole('button', { name: ar.inbox.newChat.title }).click();
   await page.getByLabel(ar.inbox.newChat.phone).fill(booked.phone);

@@ -5,16 +5,13 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface MyPaymentHandlers {
   onAttachments: (p: MyPaymentRow) => void;
-  /** «تعديل المبلغ» (subscriptions.edit_terms); null without the permission. */
+  /** Needs subscriptions.edit_terms; null without the permission. */
   onEditAmount: ((p: MyPaymentRow) => void) | null;
 }
 
 type Props = MyPaymentHandlers & { payment: MyPaymentRow };
 
-/**
- * A row of «مدفوعاتي»: «عرض المرفقات», and «تعديل المبلغ» with the permission on a payment (never a
- * refund, never a card one: its amount is Stripe's).
- */
+/** Amount edit with the permission, never on a refund or a card payment (Stripe's amount). */
 export function MyPaymentActions({ payment, onAttachments, onEditAmount }: Props) {
   const name = payment.student.name;
   return (

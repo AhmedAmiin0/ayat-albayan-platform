@@ -48,9 +48,9 @@ export interface ChannelMessageView {
   /** Written by the caller. */
   mine: boolean;
   created_at: string;
-  /** Changed by its sender after sending: «تم التعديل» (only a text message is edited). */
+  /** Changed by its sender after sending; only a text message is edited. */
   edited: boolean;
-  /** Deleted for everyone: «تم حذف هذه الرسالة», body empty, no file link. */
+  /** Deleted for everyone: body empty, no file link. */
   deleted: boolean;
   kind: ChannelMessageKind;
   attachment: ChannelAttachmentView | null;
@@ -67,10 +67,10 @@ export interface ChannelPage {
   student_name: string;
   messages: ChannelMessageView[];
   has_more: boolean;
-  /** A monitor's view: no composer, «للاطلاع فقط». */
+  /** A monitor's view: no composer, read only. */
   read_only: boolean;
   /**
-   * Subscribed AND a teacher assigned (channelOpen, owner 2026-10-29). Closed: a participant gets
+   * Subscribed AND a teacher assigned (channelOpen). Closed: a participant gets
    * no messages and no composer, only the closed line of `closed_reason`; a monitor still reads.
    */
   open: boolean;

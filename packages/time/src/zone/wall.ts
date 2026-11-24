@@ -12,5 +12,4 @@ export const zonedInstant = (date: string, time: string, tz: string): string =>
 /** `date` moved by `days` local days ("YYYY-MM-DD"). */
 export const addLocalDays = addCalendarDays;
 
-/** 0 = الأحد … 6 = السبت of a local date (the date-fns facade). */
 export { weekdayOfDate } from './calendar/index.js';

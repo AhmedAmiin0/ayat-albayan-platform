@@ -13,7 +13,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 const sent = () => apiSend.mock.calls.map(([method, path]) => `${String(method)} ${String(path)}`);
 
-// Hold mode (owner 2026-11-06): unpaid with an open payment link, «احجز» keeps a draft.
+// Hold mode: unpaid with an open payment link, booking keeps a draft.
 describe('«أيام الحلقات» before the payment', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });

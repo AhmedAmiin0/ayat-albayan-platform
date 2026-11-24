@@ -8,12 +8,7 @@ import { linkProblem, linkReportFormQuery } from './link-api';
 import { LinkProblemAlert } from './LinkProblemAlert';
 import { LinkReportEntries } from './LinkReportEntries';
 
-/**
- * «تقرير الحلقة» from the teacher's signed link (no login, the token in the URL): one lesson's
- * form, the same entries and checks as the signed-in page, without the app shell, the history
- * link; attachments too (owner 2026-11-06). A wrong, expired or not-yet-open link gets its own
- * line.
- */
+/** The signed link (no login) uses the same entries and checks as the signed-in page. */
 export function TeacherReportLinkPage({ token }: { token: string }) {
   const query = useQuery(linkReportFormQuery(token));
   return (

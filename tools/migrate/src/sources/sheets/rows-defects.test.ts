@@ -44,7 +44,7 @@ describe('testReason (A6)', () => {
     expect(testReason({ names: ['نمنم'] })).toBe('test_name');
     expect(testReason({ names: ['أ. معلمة (تجربة)'] })).toBe('test_name');
     expect(testReason({ names: ['ليان'], other: ['اختبار الجزء الأول'] })).toBeNull();
-    // «حلقة تجريبية» (the free trial) is not «تجربة».
+    // The free trial phrase is not a test marker.
     expect(testReason({ names: ['ليان'], other: ['حلقة تجريبية مجانية'] })).toBeNull();
   });
 

@@ -3,13 +3,10 @@ import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header'
 import { reportLines, reportPageByIdQuery } from '@ab/web-kit/report';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** How many of the report's lines the lesson page shows before «اقرأ التقرير كاملًا». */
+/** How many report lines the lesson page shows before the full report link. */
 const SUMMARY_LINES = 5;
 
-/**
- * «من تقرير هذه الحلقة»: the report's first filled lines (attendance, memorization, grade…), two
- * to a row where the card is wide enough.
- */
+/** The report's first filled lines, two to a row where the card is wide enough. */
 export function ReportSummary({ reportId }: { reportId: string }) {
   const page = useQuery(reportPageByIdQuery(reportId));
   if (!page.data) return null;

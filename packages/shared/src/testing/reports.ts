@@ -1,6 +1,6 @@
 import type { ReportView } from '../reports/views.js';
 
-// Test-only «تقرير الحلقة» rows shared by the web and mobile tests (never imported by app code).
+// Test-only lesson report rows shared by web and mobile tests, never imported by app code.
 
 export const FULL_GRADES = {
   recitation: 'excellent',

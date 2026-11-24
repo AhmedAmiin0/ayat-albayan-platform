@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
 import { LINK_ID, linkRow, SESSION, stripeDefaults, TOKEN, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 

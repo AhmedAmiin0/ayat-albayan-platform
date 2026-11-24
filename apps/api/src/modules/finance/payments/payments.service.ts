@@ -1,5 +1,6 @@
 import type { TablesUpdate } from '@ab/db';
-import type { PaymentAttachmentView, PaymentsPage, PaymentWrite, PaymentUpdate, PaymentView } from '@ab/shared';
+import type { PaymentWrite } from '@ab/shared';
+import type { PaymentAttachmentView, PaymentsPage, PaymentUpdate, PaymentView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';

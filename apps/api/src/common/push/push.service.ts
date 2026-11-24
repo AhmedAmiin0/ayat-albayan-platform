@@ -1,4 +1,5 @@
-import { webNotificationPath, type AnyPushKind } from '@ab/shared';
+import { webNotificationPath } from '@ab/shared';
+import type { AnyPushKind } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pushText, type PushText } from './expo/expo-push';
@@ -16,7 +17,7 @@ export interface PushEvent {
   vars: Record<string, string | number>;
   /** Delivered to the app for navigation, e.g. { phone } or { lessonId }. */
   data?: Record<string, string>;
-  /** Replaces notifications.<kind>.title (a reschedule request is not just «رسالة جديدة»). */
+  /** Replaces notifications.<kind>.title when the generic new-message title is not enough. */
   title?: string;
   /** The bell row only: no browser or app push (the Google sync's alerts, docs/24). */
   bellOnly?: boolean;

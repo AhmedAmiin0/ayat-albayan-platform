@@ -51,10 +51,10 @@ export type CrmRow = Record<string, unknown>;
 
 /** docs/02 data defects (A1–A9) plus pipeline-level problems. */
 export type IssueCode =
-  | 'test_row' // A6 Lorem / TEST / تجربة / نمنم / dummy phones
+  | 'test_row' // A6 test names and dummy phones
   | 'bad_date' // A6 outside 2026-08-01..today, or unparseable
   | 'bad_phone' // A8 not E.164-able (Telegram handle, missing country code)
-  | 'unknown_teacher' // A3 free text that is no teacher (الفيوم, مصر) or unknown alias
+  | 'unknown_teacher' // A3 free text that is no teacher (a city) or an unknown alias
   | 'duplicate' // A7 same natural key and same content: first kept
   | 'conflict' // same natural key, different content: one kept, others for review
   | 'merge_candidate' // A1 similar names under one guardian: owner decides

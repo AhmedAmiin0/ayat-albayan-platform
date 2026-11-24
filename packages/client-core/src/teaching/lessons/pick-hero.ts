@@ -1,4 +1,4 @@
-import { isOpenLesson, type LessonView } from '@ab/shared';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 
 // The hero lesson of «اليوم» (docs/29, docs/48): moved from the mobile today-plan.ts, unchanged in
 // behaviour. Pure, so web and mobile pick the same lesson from the same clock.

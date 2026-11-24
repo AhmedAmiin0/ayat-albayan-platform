@@ -3,7 +3,7 @@ import {
   configEntryPatchSchema,
   type ConfigEntriesResponse,
   type ConfigEntryResult,
-} from '@ab/shared';
+} from '@ab/settings';
 import { Body, Controller, Get, Param, Patch, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '@/common/http/http';
@@ -11,11 +11,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ConfigEntriesService } from './config-entries.service';
 
-/**
- * «القيم» (docs/26 §2f): every settings row merged with its code entry, saved one key at a time with
- * an expected version, and the admins' Arabic description of each row. No new permission: settings.read
- * / settings.write; Google rows are base-admin only, owned keys are edited on their module page.
- */
+/** Settings values (docs/26 §2f): per-key versioned saves; Google rows are base-admin only. */
 @ApiTags('config')
 @ApiBearerAuth()
 @Permissions('settings.read')

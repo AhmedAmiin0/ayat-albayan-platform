@@ -31,7 +31,7 @@ describe('the review when the first lesson already passed (review M3)', () => {
     expect(await screen.findByText(t.booking.firstLessonPast)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));
     expect(onChangeSlot).toHaveBeenCalledTimes(1);
-    // Round 2 G: the past start and its extra picks go first, so «التالي» needs a new slot.
+    // The past start and its extra picks go first, so next needs a new slot.
     expect(onPatch).toHaveBeenCalledWith({ startsAt: null, extra: [] });
     expect(onPatch.mock.invocationCallOrder[0] ?? 0).toBeLessThan(onChangeSlot.mock.invocationCallOrder[0] ?? 0);
   });

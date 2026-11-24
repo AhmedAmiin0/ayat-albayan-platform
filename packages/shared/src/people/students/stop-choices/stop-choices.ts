@@ -8,11 +8,10 @@ import { fromMinor, toMinor, type StopRefund } from '../stop-refund/index.js';
 // the family still owes (subscriptions.stop_owed_amount). A refund never touches the assistant's
 // commission. Pure.
 
-/** «إلغاء مع استرداد»: the unattended lessons (default), everything paid, or a custom amount. */
 export const STOP_REFUND_CHOICES = ['unattended', 'paid', 'custom'] as const;
 export type StopRefundChoice = (typeof STOP_REFUND_CHOICES)[number];
 
-/** «إلغاء فقط»: what the family still owes: attended × rate (default), the price, 0, or custom. */
+/** Without refund the family owes attended x rate (default), the price, 0, or a custom amount. */
 export const STOP_OWE_CHOICES = ['attended', 'price', 'nothing', 'custom'] as const;
 export type StopOweChoice = (typeof STOP_OWE_CHOICES)[number];
 
@@ -97,10 +96,7 @@ const LOWERS: Readonly<Record<StopOweChoice, Lowers>> = {
   custom: (amount, owe, currency) => toMinor(amount, currency) < toMinor(owe.charged, currency),
 };
 
-/**
- * «إلغاء فقط» below the default (nothing, or a custom amount under attended × rate) forgives
- * money: only a holder of subscriptions.refund on this student may choose it (403 otherwise).
- */
+/** Owing less than the default forgives money: subscriptions.refund only (403 otherwise). */
 export const oweLowersDefault = (
   ask: { choice: StopOweChoice; amount?: number | undefined } | undefined,
   owe: StopOwe,

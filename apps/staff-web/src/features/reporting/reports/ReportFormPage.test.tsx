@@ -75,7 +75,7 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.reports.submit }));
     expect(await screen.findByText(t.reports.submitted)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/reports/r-1/submit', expect.objectContaining({ attendance: 'on_time', overall: 'excellent', expectedVersion: 0 }));
-    // Sent: read-only; editing is «تعديل التقرير» (report-entry.send.test.tsx).
+    // Sent: read-only; editing goes through the edit button (report-entry.send.test.tsx).
     expect(screen.queryByRole('button', { name: t.reports.resubmit })).toBeNull();
     expect(screen.getByRole('button', { name: t.reports.edit })).toBeTruthy();
     expect(screen.getByText(/يمكنك تعديل التقرير حتى/)).toBeTruthy();

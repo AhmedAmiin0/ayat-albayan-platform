@@ -1,8 +1,6 @@
 import { searchFold } from '../../message-actions/chat-search.js';
 
-// Placeholders of a saved reply «الردود السريعة» (owner 2026-10-25), filled on the client when the reply
-// goes into the composer (still editable before sending). A placeholder with no value is removed with
-// the space or bracket around it, so «أهلًا {name}، كيف حالك؟» with no name reads «أهلًا، كيف حالك؟».
+// Filled on the client; a placeholder with no value is removed with its spacing.
 
 /** {name} the contact (guardian / lead), {student} the first student, {assistant} the sender. */
 export const SAVED_REPLY_PLACEHOLDERS = ['name', 'student', 'assistant'] as const;
@@ -23,7 +21,7 @@ const isPlaceholder = (key: string): key is SavedReplyPlaceholder => SAVED_REPLY
 const TIDY: readonly [RegExp, string][] = [
   [new RegExp(`${GAP}([ \\t]*${GAP})+`, 'g'), GAP], // two removed side by side are one gap
   [new RegExp(`[(\\[«][ \\t]*${GAP}[ \\t]*[)\\]»]`, 'g'), GAP], // «({student})» empty brackets
-  [new RegExp(`(^|[ \\t\\n])يا[ \\t]+${GAP}`, 'gm'), `$1${GAP}`], // «يا {name}»: no vocative left alone
+  [new RegExp(`(^|[ \\t\\n])يا[ \\t]+${GAP}`, 'gm'), `$1${GAP}`], // no vocative left alone
   [new RegExp(`^[ \\t]*${GAP}[ \\t]*[،,؛;:]?[ \\t]*`, 'gm'), ''], // at a line's start, with its comma
   [new RegExp(`[ \\t]*${GAP}[ \\t]*(?=[${PUNCT})\\]»])`, 'g'), ''], // before punctuation
   [new RegExp(`[ \\t]*${GAP}[ \\t]*$`, 'gm'), ''], // at a line's end
@@ -48,7 +46,7 @@ export function placeholdersIn(body: string): SavedReplyPlaceholder[] {
   return SAVED_REPLY_PLACEHOLDERS.filter((key) => body.includes(placeholderToken(key)));
 }
 
-// Quick replies (owner 2026-10-26, as WhatsApp): which letters of a reply match what was typed
+// Quick replies, as in WhatsApp: which letters of a reply match what was typed
 // after «/», for the web and mobile lists to draw in bold.
 
 /** A run of a reply's text, `match` when it is part of what was typed after «/». */
@@ -87,11 +85,7 @@ function hits(text: string, q: string): boolean[] {
   return hit;
 }
 
-/**
- * The text cut into matched / plain runs (WhatsApp bolds what you typed). Matched with the same
- * folding as the search (the apps' filterReplies), then mapped back to the original characters, so a match
- * in «أهلًا» for «اهلا» keeps its hamza and tanween on screen.
- */
+/** Matched with the search folding, then mapped back so diacritics stay on screen. */
 export function highlightParts(text: string, query: string): MatchPart[] {
   const q = searchFold(query);
   if (!q) return [{ text, match: false }];

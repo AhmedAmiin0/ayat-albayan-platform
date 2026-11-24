@@ -25,7 +25,7 @@ export interface ConnectivityStore {
   reportReached: () => void;
   /** AppState: 'active' → true, 'background' → false. Nothing probes in the background. */
   setActive: (active: boolean) => void;
-  /** «إعادة المحاولة»: probe now, skipping the rest of the backoff. */
+  /** Probe now, skipping the rest of the backoff. */
   probeNow: () => void;
 }
 

@@ -19,7 +19,6 @@ interface Props {
   onOpen: () => void;
 }
 
-/** The card's lessons part: the next lesson (countdown, join), «ما المطلوب», this month. */
 function CardLessons({ lessons, student }: { lessons: PortalLessons; student: PortalStudent }) {
   const next = nextLesson(lessons.lessons, useNow(PORTAL_REFRESH_MS));
   return (
@@ -38,10 +37,7 @@ function CardLessons({ lessons, student }: { lessons: PortalLessons; student: Po
   );
 }
 
-/**
- * One child on the guardian's home (docs/50 §6): name and code, the next lesson, «ما المطلوب»,
- * this month's counts, the package summary; «عرض الحلقات والتقارير» opens the child's screen.
- */
+/** One child on the guardian's home (docs/50 §6). */
 export function ChildCard({ student, money, onOpen }: Props) {
   const lessons = useQuery(portalLessonsQuery(student.id));
   return (

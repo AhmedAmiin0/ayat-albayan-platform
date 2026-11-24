@@ -5,11 +5,7 @@ export type PayReturn = { done?: true; cancelled?: true };
 
 export type PayScreen = 'open' | 'back' | 'thanks' | PublicPaymentLink['status'];
 
-/**
- * The screen for a link and the way back from Stripe: an open link waits for the webhook after `done`
- * (thanks, no second «ادفع الآن»); `cancelled` keeps the button with «لم يكتمل الدفع». A paid link
- * thanks right after the payment, else says it is paid; expired, cancelled and processing say so.
- */
+/** After `done` an open link waits for the webhook without a second pay button. */
 export function payScreen(status: PublicPaymentLink['status'], back: PayReturn): PayScreen {
   if (status === 'open') return back.done ? 'thanks' : back.cancelled ? 'back' : 'open';
   if (status === 'paid' && back.done) return 'thanks';

@@ -20,18 +20,14 @@ interface HostPanelInput {
   host: RoomHost | null;
   me: JoinRole | null;
   tiles: readonly RoomTile[];
-  /** One's own «إنهاء الحلقة للجميع» went through: the room closes for good. */
+  /** The room closes for good. */
   onEnded: () => void;
 }
 
 /** The cameras (one per person), not the shared screens. */
 const peopleOf = (tiles: readonly RoomTile[]): RoomTile[] => tiles.filter((x) => !x.screen);
 
-/**
- * The participants panel's state (canvas RoomXTeacher): per person mute / camera off / «إخراج»
- * (asked first, the web's wording), «كتم الجميع», and «إنهاء الحلقة للجميع» (asked first). No host
- * (the family) or a role without these powers: the list only. The tiles update by themselves.
- */
+/** No host (the family) or a role without these powers sees the list only. */
 export function useHostPanel({ host, me, tiles, onEnded }: HostPanelInput) {
   const [kick, setKick] = useState<RoomTile | null>(null);
   const [ending, setEnding] = useState(false);

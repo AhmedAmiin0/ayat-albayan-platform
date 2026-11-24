@@ -15,10 +15,7 @@ interface Props {
   from: number;
 }
 
-/**
- * Under an <audio> or a <video>: «من حيث توقفت» (it fades in once the stop is known), the seek
- * bar, the buttons, and «تعذّر تشغيل التسجيل» when the file cannot play.
- */
+/** The resume hint fades in once the stop is known. */
 export function MediaControls({ player, from }: Props) {
   const { state, controls } = player;
   return (

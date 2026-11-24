@@ -27,10 +27,7 @@ function Body({ data }: { data: LessonAssets }) {
   );
 }
 
-/**
- * «ملفات الحلقة» in the lesson drawer (canvas RecXWebStaffLessonFiles): the recording with its
- * show-to-family switch, the files staff added, and «أضف ملفًا للحلقة». Admin and the teacher.
- */
+/** Admin and the teacher. */
 export function LessonFilesSection({ lessonId }: { lessonId: string }) {
   const query = useLessonAssets(lessonId);
   return (

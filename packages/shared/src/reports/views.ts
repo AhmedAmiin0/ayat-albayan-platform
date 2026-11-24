@@ -22,7 +22,7 @@ export interface ReportView {
   student_id: string;
   teacher_id: string;
   attendance: Attendance | null;
-  /** «البرنامج *»: the program this lesson was taught in; null only on a row older than migration 167. */
+  /** null only on a row older than migration 167. */
   program: Program | null;
   recited: string | null;
   new_memorization: string | null;
@@ -63,10 +63,7 @@ export interface ReportFormLesson {
 
 export interface ReportFormEntry {
   student: { id: string; code: string; name: string; tz: string; program: Program };
-  /**
-   * «رقم الحلقة» (R-LES-03, issue A5): v_lesson_sequence.seq once the lesson is completed, else
-   * the student's completed lessons before this one + 1.
-   */
+  /** R-LES-03, issue A5: v_lesson_sequence.seq once completed, else prior completed lessons + 1. */
   lesson_no: number;
   /** The package the lesson counts against (v_subscription_balance), null without one. */
   package: BalanceView | null;
@@ -83,7 +80,7 @@ export interface ReportFormResponse {
   submit_block: 'lesson_cancelled' | 'not_started' | null;
 }
 
-/** One point of the progress chart (R-REP-05): gradeScore of each rubric, 5 = ممتاز … 1. */
+/** One progress-chart point (R-REP-05): gradeScore per rubric, 5 = excellent ... 1. */
 export interface GradePoint {
   report_id: string;
   lesson_id: string;

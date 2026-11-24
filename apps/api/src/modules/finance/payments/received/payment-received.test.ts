@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fakePushDb, flushPushes, okTickets, pushService } from '@/common/push/push.fakes';
 import type { PushTransport } from '@/common/push/push.service';
-import { paymentRow } from '@/modules/finance/subscriptions/money/money.fakes';
+import { paymentRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { PaymentReceived, receivedOf, type ReceivedPayment } from './payment-received';
 import type { PaymentReceivedRepo } from './payment-received.repo';
 

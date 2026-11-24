@@ -67,10 +67,7 @@ export const sendChannelMessage = (ref: ChannelRef, send: ChannelSend) =>
 export const markChannelRead = ({ audience, studentId, at }: ChannelRef & { at: string }) =>
   apiSend<unknown>('POST', channelReadPath(audience, studentId), { at });
 
-/**
- * The list and badge keys a read or a send in this student's channel changes: the teacher's list
- * and the family's «المحادثة» badge (client-core portalUnreadQuery), never the open thread itself.
- */
+/** A read or send changes the list and badge keys, never the open thread itself. */
 export const channelCountKeys = (studentId: string): readonly (readonly string[])[] => [
   ['channel', 'teacher', 'list'],
   pathKey(portalUnreadPath(studentId)),

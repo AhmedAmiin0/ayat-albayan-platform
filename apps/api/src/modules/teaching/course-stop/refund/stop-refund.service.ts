@@ -35,17 +35,7 @@ interface Allowed {
 
 export type { RefundChoiceAsk } from './stop-refund.plan';
 
-/**
- * «إلغاء مع استرداد» (owner 2026-11-02, choices 2026-11-06): the unattended lessons (net paid −
- * attended × price / lessons × rate, floored at 0: stopRefund), everything paid, or a custom
- * amount; each at most the net paid (pending Stripe refunds off); then the course owes the net
- * paid left (plan.owed). Payment-link card payments go back through Stripe first (the webhook
- * records their rows), the rest is one manual refund row and an admin bell «حوّل … للعائلة».
- * Idempotent on the stop's clientRequestId: its own refunds are left out of «net paid», so a
- * replay plans the same split (another split: 409 refund_mismatch) from the STORED decision
- * (refundDecision: never live lessons or rate; another one: 409 stop_mismatch). A converted or
- * 3-decimal card payment is refunded by hand (the manual leg).
- */
+/** Refund capped at net paid; idempotent on clientRequestId, replays use the stored decision. */
 @Injectable()
 export class StopRefunds {
   constructor(

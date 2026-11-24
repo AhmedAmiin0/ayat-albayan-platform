@@ -5,7 +5,7 @@ import { GuardiansService } from '@/modules/people/guardians/guardians.service';
 import { studentCreateRequestSchema, studentPatchSchema } from './students.dto';
 import { StudentsService } from './students.service';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1): POST and PATCH /students save contact_is_self.
+// POST and PATCH /students save contact_is_self (docs/30 §1).
 
 const S = { id: 's1', name: 'سهيلة', status: 'trial' };
 

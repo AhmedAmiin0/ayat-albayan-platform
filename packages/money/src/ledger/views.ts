@@ -84,18 +84,15 @@ export interface PaymentView {
   recorded_by: { id: string; full_name: string } | null;
   note: string | null;
   created_at: string;
-  /** 'refund' («استرداد») counts against what was paid. */
+  /** A refund counts against what was paid. */
   kind: PaymentKind;
   /** What the family sent when it was another currency (amount/currency are the package's). */
   original: { amount: number; currency: string; fx_rate: number } | null;
-  /** Recorded from the booking's invoice («سجّل كدفعة»): the invoice is the receipt. */
+  /** Recorded from the booking's invoice: the invoice is the receipt. */
   invoice_id: string | null;
 }
 
-/**
- * One file of a payment's «المرفقات», signed for the UI (1 h). A payment recorded before
- * attachments existed shows its receipt_path first, `legacy: true` (id 'receipt').
- */
+/** A signed attachment (1 h); a pre-attachments payment shows receipt_path as legacy 'receipt'. */
 export interface PaymentAttachmentView {
   id: string;
   mime: string | null;
@@ -136,7 +133,7 @@ export interface AdminTaskView {
   kind: AdminTaskKind;
   subject_type: string;
   subject_id: string;
-  /** For subscription tasks: the student, so the UI can word «باقة {student} …». */
+  /** For subscription tasks: the student, so the UI can name them. */
   student: { id: string; code: string; name: string } | null;
   title: string | null;
   due_at: string | null;
