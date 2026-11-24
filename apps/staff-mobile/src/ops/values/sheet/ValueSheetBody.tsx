@@ -1,4 +1,4 @@
-import type { SettingKey, SettingMeta } from '@ab/shared';
+import type { SettingKey, SettingMeta } from '@ab/settings';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Button, ScreenHeader, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

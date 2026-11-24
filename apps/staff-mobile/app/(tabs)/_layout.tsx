@@ -4,9 +4,7 @@ import { useInboxBadge } from '@/core/nav/use-inbox-badge';
 import { usePushRegistration } from '@/core/push/usePushRegistration';
 import { useInboxRealtime } from '@/inbox';
 
-// docs/07 §12 bottom tabs, native. The first tab sits at the inline-start (right in Arabic). A tab the held
-// role cannot read is hidden (`can` allows all while /auth/me loads: no flicker); المحادثات carries the
-// unread + new-leads count (R-MOB-02). «المزيد» is always there (sign-out, language).
+// docs/07 §12: unreadable tabs are hidden; all allowed while /auth/me loads (R-MOB-02).
 const tabItems = (can: Can, inboxBadge?: string): TabItem[] => [
   { name: 'index', title: t.mobile.today, icon: 'today', hidden: !tabOpen(can, 'today') },
   { name: 'schedule', title: t.schedule.nav, icon: 'schedule', hidden: !tabOpen(can, 'schedule') },

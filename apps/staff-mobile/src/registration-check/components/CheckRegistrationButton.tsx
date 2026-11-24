@@ -3,7 +3,7 @@ import { useHolds, t, useTheme, Button, IconButton } from '@ab/mobile-kit';
 import { CheckPersonIcon } from '@/inbox/shared/chat-icons';
 
 /**
- * «تحقق من التسجيل» in a sales header (the chat thread, the «الطلاب» tab): opens the registration
+ * The registration-check button in a sales header (the chat thread, the students tab): opens the
  * check. Only once /auth/me lists students.check_registration; nothing otherwise. `icon`: a 44pt
  * icon button with the same spoken name, for the one-line chat header.
  */

@@ -6,7 +6,6 @@ interface SearchFieldProps {
   /** Called with the trimmed text once typing pauses (and at once on the keyboard's search key). */
   onSearch: (q: string) => void;
   initial?: string;
-  /** Placeholder and screen-reader name; defaults to «بحث». */
   label?: string;
   delayMs?: number;
   /**

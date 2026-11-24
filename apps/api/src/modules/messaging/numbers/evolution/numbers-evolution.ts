@@ -15,9 +15,7 @@ import { NumbersEffects } from '@/modules/messaging/numbers/numbers.effects';
 import { NumbersRepo, type NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 import { EvolutionNumbersRepo } from './evolution-numbers.repo';
 
-// An Evolution number for the admin (docs/19 «Evolution driver»): its instance for «افحص
-// الاتصال» / QR, its options saved and pushed (owner 2026-11-06), and the restriction switch-off.
-// Every value returned here holds a secret: used server-side only, never logged or returned.
+// Every value here holds a secret: server-side only, never logged or returned (docs/19).
 
 const conflict = (code: string) => new ConflictException({ code, message: code });
 const bad = (code: string) => new BadRequestException({ code, message: code });

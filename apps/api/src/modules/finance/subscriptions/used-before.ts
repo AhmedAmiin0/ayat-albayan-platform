@@ -3,10 +3,7 @@ import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, forbidden } from '@/common/http/errors';
 
-// «حلقات مستخدمة من الباقة» (owner 2026-10-28, migration 932): lessons taken before the platform.
-// Accepted only with a start before the academy's today (Riyadh) and subscriptions.set_start_date:
-// 403 used_before_not_allowed, 400 used_before_needs_past_start; the bound against the package size
-// (400 used_before_too_many) once the quote is known (SubscriptionCreator → assertUsedBeforeFits).
+// Lessons taken before the platform (migration 932): need a past start (Riyadh).
 
 interface UsedBeforeCheck {
   lessonsUsedBefore?: number | undefined;

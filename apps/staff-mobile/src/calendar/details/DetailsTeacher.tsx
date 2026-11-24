@@ -10,7 +10,7 @@ interface DetailsTeacherProps {
   photo: boolean;
 }
 
-/** «المعلم/ة»'s value: the name, read once (the avatar beside it is decorative). */
+/** Read once; the avatar beside it is decorative. */
 export function DetailsTeacher({ teacher, photo }: DetailsTeacherProps) {
   const name = localizedName({ ar: teacher.display_name_ar, en: teacher.display_name_en ?? null }, locale);
   if (!photo) return <DetailsLine tone="ink">{name}</DetailsLine>;

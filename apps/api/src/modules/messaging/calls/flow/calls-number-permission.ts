@@ -25,16 +25,7 @@ interface CallsNumberRequest {
   via: CallPermissionVia;
 }
 
-/**
- * Call permission on the dedicated calls number (docs/28 §10). Kapso's call_permissions decides
- * granted / limited; the family's stored answer (wa_call_permissions) is shown beside it. A request
- * is sent ONLY on a staff member's tap of «اطلب إذن الاتصال», FROM the calls number: the
- * interactive request inside ITS 24 h window, else the approved template of
- * calls_permission_template (unset = needs_template, the button disabled with the reason). It
- * passes the send gate (messaging_enabled) and the allow-list (CallPermissions checks it first), is
- * deduped by the tap's request id and makes ONE request, never retried; its messages row (line
- * `calls`) shows in the thread and is never read by the sender.
- */
+/** Sent only on a staff tap from the calls number (docs/28 §10); deduped, never retried. */
 @Injectable()
 export class CallsNumberPermission {
   private readonly log = new Logger(CallsNumberPermission.name);

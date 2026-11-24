@@ -15,12 +15,7 @@ import { syncNumber } from './template-number-sync';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { WHATSAPP_LINES, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-/**
- * Templates per number (docs/23 phase 5, docs/23c decision 9): a template's own number and one number's
- * sync with its WABA. The sync's client is built from that number's overlay entry only (its row + its
- * Vault secrets); it lists templates and never sends, so the allow-list does not apply. Under
- * legacy (and for a crm role number) it is the line's own sync, exactly as «القوالب» runs it.
- */
+/** docs/23c decision 9: the client uses only that number's overlay; lists, never sends. */
 @Injectable()
 export class TemplateNumbers {
   private readonly log = new Logger(TemplateNumbers.name);
@@ -45,7 +40,7 @@ export class TemplateNumbers {
     return syncNumber({ ...deps, syncLine: line, activeNumberId }, numberId, now);
   }
 
-  /** One line's sync, kept for «القوالب» (lineViews) as POST …/templates/health keeps it. */
+  /** Kept like POST .../templates/health keeps it. */
   private async syncLine(line: WaLine, now: Date): Promise<TemplateLineSync> {
     const deps = { queries: this.queries, lines: this.lines, log: this.log, copies: this.copies };
     const result = await syncLine(deps, line, now);

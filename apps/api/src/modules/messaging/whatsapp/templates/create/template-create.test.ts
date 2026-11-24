@@ -8,8 +8,6 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { createdRow, TemplateCreator } from './template-create';
 
-// «قالب جديد» (owner 2026-10-31): the registry row an admin's new template becomes.
-
 const input = templateCreateSchema.parse({
   key: 'welcome_back',
   line: 'chat',

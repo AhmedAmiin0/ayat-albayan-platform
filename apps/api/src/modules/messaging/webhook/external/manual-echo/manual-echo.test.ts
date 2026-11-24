@@ -3,8 +3,6 @@ import { foldText } from '@ab/shared';
 import { appSendMatches, appSendSpan, attachPatch } from './manual-echo';
 import { CHAT, row, SENT_AT } from './manual-echo.fixtures.test-util';
 
-// The pure rules of the «أرسل عبر واتساب» attach (docs/19): which row an external text confirms.
-
 const BODY = 'السلام عليكم موعد الحلقة غدًا';
 const SENT = { at: SENT_AT, status: null };
 const event = (status: 'sent' | 'delivered' | 'read' | 'failed') => ({

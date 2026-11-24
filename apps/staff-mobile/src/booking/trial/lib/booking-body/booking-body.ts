@@ -31,13 +31,7 @@ function ruleTiming(d: TrialDraft, startsAt: string) {
   return { ...rest, ...(dayTimes.length > 0 ? { dayTimes } : {}) };
 }
 
-/**
- * POST /booking: a trial is one lesson, a rule on the slot's local day that ends on it (invariant
- * 4); a paid package repeats weekly on its picks' days, with its invoice (a trial has none).
- * The new child starts trial with a trial lesson, else new (registrationStatus, docs/18 row 1: only a
- * positive payment makes it active), and carries the form's age and gender; the guardian its
- * «عرفت عننا منين؟». Unanswered optional questions are left out.
- */
+/** Trial rule ends on its day (invariant 4); a child is active only on payment (docs/18 row 1). */
 export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingRequest | null {
   const phone = normalizePhone(d.phone);
   if (!d.teacher || !d.startsAt || !phone.ok) return null;
@@ -79,7 +73,7 @@ function newStudent(d: TrialDraft) {
     tz: d.tz,
     status: registrationStatus(d.pkg === 'trial'),
     teacher_gender_pref: d.gender,
-    // Only «الطالب نفسه» is sent: absent = the column default «ولي الأمر» (false).
+    // Only a self contact is sent; absent means the column default, the guardian (false).
     ...(d.contactIsSelf ? { contact_is_self: true } : {}),
   };
 }

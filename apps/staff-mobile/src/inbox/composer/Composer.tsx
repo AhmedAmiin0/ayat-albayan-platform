@@ -20,21 +20,7 @@ import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { sendState } from '@/inbox/thread/hooks/chat-window';
 import { errorLines, useComposerSend } from './use-composer-send';
 
-/**
- * Reply box (R-MOB-02, R-MSG-03) as WhatsApp Business (owner 2026-10-27): [pill: text · «عرض سعر» ·
- * paperclip] and the round microphone / «أرسل» (OpenRow); everything else is in the paperclip's sheet.
- * Within 24 h of their last message: free text, a photo or PDF, a voice note, plus a template (in the
- * paperclip's sheet). After it, on a Kapso chat line, staff still send all of it (owner 2026-11-01);
- * else only a template. The window is checked against the device clock on every render.
- * «الردود السريعة» (owner 2026-10-25/26, staff only, as WhatsApp Business): «/» at a line's start docks
- * the list over the row; a pick fills the box and stages its file. «أرسل» sends the text, then it.
- * «رد» (owner 2026-10-25): the quoted strip over the row; the text answers it (useComposerSend).
- * «تعديل» (2026-11-07): the edit bar instead; the text goes as a correction of that message.
- * A known chat after the window (owner 2026-11-14, «like Kapso»): the reopen bar (ReopenSlot) and
- * its sheet; under it the box on a Kapso line (held texts), else «أرسل قالبًا» (any template).
- * «عرض سعر» (owner 2026-10-26, staff with pricing.read): its sheet sends the offer or fills the box; the
- * box's text lives in draft-store for that.
- */
+/** Within 24 h of the last message anything goes; after it only a template, unless Kapso. */
 export function Composer({
   phone,
   thread,

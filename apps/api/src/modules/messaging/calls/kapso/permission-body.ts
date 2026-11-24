@@ -1,10 +1,7 @@
 import { callPermissionMessage, waTo, type GraphBody } from '@/modules/messaging/whatsapp';
 import type { PermissionRequest } from './calls-api';
 
-// The body of «اطلب إذن الاتصال» from the calls number (docs/28 §10): the interactive
-// call_permission_request inside its 24 h window, else the approved template the setting names
-// (calls_permission_template, «name» or «name:language», Arabic by default). No parameters: the
-// template's text and its call-permission button are Meta's.
+// Interactive request inside the 24 h window, else the configured template (docs/28 §10).
 
 const TEMPLATE_RE = /^([a-z0-9_]{1,512})(?::([a-z]{2,3}(?:_[A-Z]{2})?))?$/;
 

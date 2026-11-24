@@ -10,7 +10,6 @@ describe('toFamilyModel — DB rows → the v2 family report', () => {
     const m = toFamilyModel(familySource(), NOW);
     expect(m).toMatchObject({ program: 'quran', content: QURAN_CONTENT, slot: { position: 6, total: 8 }, overall: 'very_good' });
     expect(m.nextLessonAt?.toISOString()).toBe('2026-10-29T13:00:00.000Z');
-    // History holds الملك 1–12 (page 562) and today adds 1–22: 562 whole, 563 (13–26) not yet.
     expect(m.progress).toEqual({ juz: 29, done: 1, total: 20, completed: [] });
   });
 

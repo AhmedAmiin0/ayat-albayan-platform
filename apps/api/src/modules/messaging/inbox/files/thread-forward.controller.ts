@@ -35,11 +35,7 @@ export const freshResults = (results: readonly ForwardOutcome[]): ForwardOutcome
 export const allReplayed = (results: readonly ForwardOutcome[]): boolean =>
   freshResults(results).length === 0;
 
-/**
- * «إعادة توجيه» (owner 2026-10-25): POST /threads/forward copies one message to 1–5 chats through the
- * session send path and answers per target. Audited once per forward (`thread_forward`, the source
- * message) under the actor, with the salesperson's or teacher's id like every inbox send.
- */
+/** Copies one message to 1-5 chats via the send path; audited once per forward. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.read')

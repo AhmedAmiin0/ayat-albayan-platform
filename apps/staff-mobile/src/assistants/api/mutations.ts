@@ -46,10 +46,7 @@ export function useStatementMove() {
   });
 }
 
-/**
- * «احسب كشوف الشهر»: POST /assistant-pay/statements {assistantId, month} for each target (idempotent:
- * a draft is rebuilt). Every request runs; the first refusal is reported. Re-reads whatever happened.
- */
+/** Idempotent: a draft is rebuilt; every request runs and the first refusal is reported. */
 export function useGenerateStatements() {
   const refresh = useRefresh();
   return useMutation({

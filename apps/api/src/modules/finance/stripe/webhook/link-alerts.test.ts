@@ -6,7 +6,7 @@ import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo'
 import type { CourseDue } from '@/modules/finance/subscriptions';
 import { LinkAlerts } from './link-alerts';
 
-// A paid link is «تم استلام دفعة» (payment_received, bell + push); admins' alerts stay payment_due.
+// A paid link raises payment_received (bell and push); admins' alerts stay payment_due.
 
 const LINK = {
   id: 'l1',

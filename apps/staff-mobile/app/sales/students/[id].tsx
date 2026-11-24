@@ -1,6 +1,6 @@
 import { SalesStudentScreen } from '@/sales/sales';
 
-/** «تفاصيل الطالب»: one of my students from «الطلاب» or a lesson's details (docs/16 row 36). */
+/** docs/16 row 36: one of my students, from the list or a lesson's details. */
 export default function SalesStudentRoute() {
   return <SalesStudentScreen />;
 }

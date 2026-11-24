@@ -13,11 +13,11 @@ export interface Candidate {
 }
 
 export type BookFailure =
-  /** 409 conflict: the slot clashes; one Arabic line per clash, then «اختار ميعاد تاني». */
+  /** 409 conflict: one line per clash, then a prompt to pick another time. */
   | { kind: 'conflict'; lines: string[] }
   /** 409 duplicate_student: the family has a similar-named child (R-STU-03). */
   | { kind: 'duplicate'; candidates: Candidate[] }
-  /** The invoice is missing, unusable or gone from WhatsApp: back to «الفاتورة» for another. */
+  /** The invoice is missing, unusable or gone from WhatsApp: back to the invoice step. */
   | { kind: 'invoice'; text: string }
   | { kind: 'error'; text: string };
 
@@ -41,7 +41,7 @@ function toCandidate(v: unknown): Candidate | null {
   return { id: v['id'], name: v['name'], code: typeof v['code'] === 'string' ? v['code'] : null };
 }
 
-/** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», viewer's `tz`. */
+/** In the viewer's tz. */
 export function conflictLine(c: Conflict, cycle: ClockCycle, tz: string): string {
   return t.booking.conflict[c.kind].replace(
     '{when}',

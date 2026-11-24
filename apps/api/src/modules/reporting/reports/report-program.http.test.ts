@@ -2,8 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { AFTER, FULL_GRADES, REPORT_ID, reportRow, submittedRow } from './reports.fakes';
 import { reportsApp } from './test-app';
 
-// «البرنامج *» on the lesson report (docs/13-forms-spec.md form 2): prefilled from the student,
-// editable by the teacher, kept by a submit that leaves it out.
+// docs/13 form 2: prefilled from the student, editable, kept when a submit omits it.
 const TEXT = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'سورة الملك' };
 const FORM = { attendance: 'on_time', grades: FULL_GRADES, overall: 'excellent', ...TEXT, expectedVersion: 0 };
 

@@ -1,4 +1,10 @@
-import { isEditableValueKey, SETTING_DEFAULTS, VALUE_CONFIRM, type SettingKey, type SettingMeta } from '@ab/shared';
+import {
+  isEditableValueKey,
+  SETTING_DEFAULTS,
+  VALUE_CONFIRM,
+  type SettingKey,
+  type SettingMeta,
+} from '@ab/settings';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { formatAt } from '@/ops/activity/activity-format';
@@ -6,7 +12,7 @@ import { DevKey } from './DevKey';
 import { sameValue } from '@/ops/values/lib/value-draft';
 import { boundsOf, valueText } from '@/ops/values/lib/value-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import type { ClockCycle } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 
 interface SheetNotesProps {
   valueKey: SettingKey;
