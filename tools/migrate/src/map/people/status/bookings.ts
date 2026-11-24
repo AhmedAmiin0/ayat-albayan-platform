@@ -1,6 +1,4 @@
-// Booking evidence per student (pure), from «تقويم الحجوزات» (HUB, then BOOK): the «مشترك» weekly
-// rules the schedule import itself builds (bookingRules: teacher known, the newer row winning per
-// rule key) that still run on the import date, and rows marked «تمت» (a lesson that took place).
+// Booking evidence per student from the bookings calendar (HUB, then BOOK); pure.
 import type { SourceBundle } from '../../../entities/contract.ts';
 import { keyId } from '../../../keys.ts';
 import type { Desired } from '../../../plan/resolve.ts';
@@ -13,9 +11,9 @@ import { bookingRules, importFrom } from '../../schedule/bookings.ts';
 import type { StudentIndex } from '../match.ts';
 
 interface BookingFacts {
-  /** student keyIds of a «مشترك» weekly rule with lessons on or after the import date. */
+  /** student keyIds of a subscribed weekly rule with lessons on or after the import date. */
   series: Set<string>;
-  /** student keyIds named by a booking marked «تمت». */
+  /** student keyIds named by a booking marked done. */
   done: Set<string>;
 }
 

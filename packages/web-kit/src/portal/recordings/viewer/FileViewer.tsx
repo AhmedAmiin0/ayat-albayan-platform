@@ -46,11 +46,7 @@ function ViewerDialog({ studentId, file, viewer }: {
   );
 }
 
-/**
- * A lesson's picture or PDF on the page (boards FamFilesWebImage / FamFilesWebPdf) instead of a
- * bare tab: its name and line on top, the picture (zoom) or the browser's PDF reader, the other
- * files a step away, «تنزيل» and «افتح في نافذة جديدة». The link is minted when it opens.
- */
+/** The link is minted when it opens. */
 export function FileViewer({ studentId, files, openId, onClose }: Props) {
   const viewer = useViewer({ files, openId, onClose });
   if (!viewer.file) return null;

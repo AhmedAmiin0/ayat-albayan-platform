@@ -27,7 +27,7 @@ interface Props {
   code: string;
 }
 
-/** «تسجيل الحلقة» in the in-page player once its signed link is in. */
+/** Plays once its signed link is in. */
 export function RecordingPlayer({ studentId, recording, code }: Props) {
   const link = useRecordingUrl({ studentId, recordingId: recording.id });
   return (

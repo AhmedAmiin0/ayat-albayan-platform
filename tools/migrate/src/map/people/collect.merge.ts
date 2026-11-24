@@ -10,7 +10,7 @@ import type { PersonFields, PersonRow } from './rows.ts';
 import { latinMatchesArabic } from './translit.ts';
 
 export interface Person extends PersonRow {
-  /** Rows merged into this person after the first (registration copies of a «الطلاب» row). */
+  /** Rows merged into this person after the first. */
   merged: number;
   /** Other spellings of the name from rows merged by AB code (reports may use them). */
   aliases: string[];
@@ -60,7 +60,7 @@ export function mergeInto(into: Person, row: PersonRow): RowIssue[] {
   return issues;
 }
 
-/** A row joined to a «الطلاب» child by AB code alone, under a name that is not a spelling of it. */
+/** A row joined to a master child by AB code alone, under a name that is not a spelling of it. */
 export function codeMergeIssues(master: Person, row: PersonRow): RowIssue[] {
   const [a, b] = [personName(master.name), personName(row.name)];
   if (a === b || arabicNameSimilar(a, b) || latinMatchesArabic(row.name, master.name)) return [];

@@ -1,8 +1,7 @@
 import { parseSeen, SEEN_REPORTS_KEY, withSeen } from '@ab/client-core';
 import { useSyncExternalStore } from 'react';
 
-// «جديد» on reports the family has not opened (docs/50 §6): the opened ids live in this browser
-// only. Blocked storage (private mode) keeps them for this page view.
+// docs/50 §6: opened ids live in this browser only; blocked storage keeps them for this view.
 
 let seen: string[] | null = null;
 const listeners = new Set<() => void>();

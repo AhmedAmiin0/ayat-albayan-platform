@@ -65,7 +65,7 @@ export const CRM_TABLES: readonly CrmTableSpec[] = [
     account: 'account_id',
     cursor: 'updated_at',
   },
-  // اسم الطالب · العمر · الوقت المناسب — no values stored yet (contact_custom_values = 0).
+  // Student name, age, preferred time: no values stored yet (contact_custom_values = 0).
   {
     table: 'custom_fields',
     select: 'id,field_name,field_type,created_at',
@@ -82,10 +82,7 @@ export const CRM_TABLES: readonly CrmTableSpec[] = [
   },
 ];
 
-/**
- * CRM tag → lead_status. A contact with several tags takes the first in TAG_PRECEDENCE.
- * «مشكلة تقنية», «whatsapp», «imported» are not statuses (kept in qualification.crm_tags).
- */
+/** Several tags take the first in TAG_PRECEDENCE; others stay in qualification.crm_tags. */
 const TAG_LEAD_STATUS: Record<string, Enums<'lead_status'>> = {
   مشترك: 'converted',
   'حضر التجربة': 'trial_done',

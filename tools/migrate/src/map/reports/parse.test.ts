@@ -59,7 +59,7 @@ describe('parseReport', () => {
       grade_tajweed: 'very_good',
       grade_memorization: 'needs_review',
     });
-    // A5: «رقم الحلقة» is never a column; the number is derived in the app.
+    // A5: the lesson number is never a column; the app derives it.
     expect(JSON.stringify(r.body)).not.toContain('الثالثة');
   });
 

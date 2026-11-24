@@ -20,7 +20,7 @@ function mapLessonReports(bundle: SourceBundle): Mapped[] {
         status: 'submitted',
         version: 1,
         submitted_at: r.submittedAt,
-        // «اتبعت PDF ✅»: sent, at an unrecorded time — the submission time stands in for it.
+        // Sent at an unrecorded time, so the submission time stands in.
         sent_at: r.sent ? r.submittedAt : null,
       },
       refs: {

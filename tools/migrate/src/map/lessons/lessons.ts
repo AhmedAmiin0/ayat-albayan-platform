@@ -1,8 +1,4 @@
-// lessons + lesson_students ← reports (collectReports): one past lesson per reported student and
-// day; plus upcoming one-off bookings (schedule/one-offs.ts). rule_id stays null (handbook gotcha 6), so the generator's (rule_id, starts_at) and
-// (rule_id, local_date) indexes never see imported rows. «رقم الحلقة» is not imported (A5):
-// the number is derived from completed lessons (v_lesson_sequence). Issues are raised once, by
-// the lesson_reports module.
+// rule_id stays null so generator indexes never see imported rows; lesson number not imported (A5).
 import type { EntityModule, SourceBundle, WriteContext } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { accepted } from '../../sources/sheets/issues.ts';

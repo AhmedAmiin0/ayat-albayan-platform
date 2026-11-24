@@ -38,10 +38,7 @@ function Body({ view, student, onOpenReport }: Omit<Props, 'lessonId'> & { view:
   );
 }
 
-/**
- * The picked lesson in «التسجيلات» (boards FamRecWebList, FamRecWebParts): the recording, its
- * files and the report's first lines. A new pick mounts a new panel, which fades up in place.
- */
+/** A new pick mounts a new panel, which fades up in place. */
 export function LessonPanel({ student, lessonId, onOpenReport }: Props) {
   const query = usePortalLesson({ studentId: student.id, lessonId });
   return (

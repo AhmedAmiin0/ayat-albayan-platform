@@ -3,8 +3,7 @@
 import { normalizeArabic } from '@ab/core';
 import type { EntityName, NaturalKey } from './types.ts';
 
-// Honorifics dropped from person keys (docs/06 step 3). «أم/ام» stays: «ام ليلى» is a different
-// person from her daughter «ليلى» on the same phone.
+// Honorifics dropped from person keys (docs/06 step 3); "mother of" stays, a different person.
 const TITLES =
   /^(?:الاستاذه|الاستاذ|استاذه|استاذ|ا\.|د\.|دكتوره|دكتور|الحاجه|الحاج|المعلمه|معلمه)\s*:?\s*/;
 
@@ -21,7 +20,7 @@ export function personName(raw: string): string {
   return s;
 }
 
-/** Lower-case Latin slug: «Mariam Adel» → 'mariam adel' (same shape as HUB «المعلم (من السجل)»). */
+/** Same shape as the HUB teacher-from-log column. */
 export function teacherSlug(nameEn: string): string {
   return nameEn.trim().toLowerCase().replace(/\s+/g, ' ');
 }
@@ -54,7 +53,7 @@ export const keys = {
   teacher: (slug: string) => k('teachers', teacherSlug(slug)),
   /** E.164 phone. */
   guardian: (e164: string) => k('guardians', e164),
-  /** '+9665…|نوره' — guardian phone + personName(name). */
+  /** Guardian phone + personName(name). */
   student: (o: StudentKeyInput) => k('students', `${o.guardianPhone}|${personName(o.name)}`),
   lead: (e164: string) => k('leads', e164),
   jobApplicant: (e164: string) => k('job_applicants', e164),

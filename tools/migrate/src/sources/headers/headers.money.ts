@@ -15,7 +15,7 @@ const TIMETABLE = {
 
 export const MONEY_SHEETS: SheetSpec[] = [
   {
-    // 61 students; A3: «المعلمة» holds cities (الفيوم, مصر) and title variants; 39 empty.
+    // 61 students; A3: the teacher column holds cities and title variants; 39 empty.
     id: 'subs_students',
     source: 'SUBS',
     file: SUBS_FILE,
@@ -75,7 +75,7 @@ export const MONEY_SHEETS: SheetSpec[] = [
     fields: TIMETABLE,
   },
   {
-    // 60 files «تقارير آيات البيان/<student>/سجل حضور — <student>.xlsx». ref.file = the zip path.
+    // 60 attendance files in the reports zip; ref.file is the zip path.
     id: 'att_attendance',
     source: 'ATT',
     file: /^تقارير آيات البيان\/[^/]+\/[^/]+\.xlsx$/,
