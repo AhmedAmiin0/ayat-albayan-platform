@@ -1,9 +1,16 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { headerProblems } from '../ci-checks/lint/commit-header/header.ts';
 import { scrubBody, subjectOf } from './body.ts';
 
 test('the subject is the PR title and number', () => {
-  assert.equal(subjectOf({ number: 812, title: 'Cut money from db' }), 'Cut money from db (#812)');
+  assert.equal(subjectOf({ number: 812, title: 'refactor(money): cut db' }), 'refactor(money): cut db (#812)');
+});
+
+test('the squash subject of an angular title passes the same header check', () => {
+  const title = 'ci(repo): enforce angular commit messages and pr titles';
+  assert.deepEqual(headerProblems(subjectOf({ number: 930, title })), []);
+  assert.deepEqual(headerProblems(subjectOf({ number: 12, title: 'fix(api/booking): keep it' })), []);
 });
 
 test('every attribution line is removed, whatever its case', () => {
