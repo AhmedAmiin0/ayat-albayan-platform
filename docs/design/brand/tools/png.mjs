@@ -1,5 +1,5 @@
 // Minimal PNG codec on node:zlib (no dependency): reads 8-bit RGB/RGBA non-interlaced files (the
-// brand logos), writes 8-bit RGBA or RGB. Images are { width, height, data: Float32Array RGBA 0..1 }.
+// brand logos), writes 8-bit RGBA or RGB. Images: { width, height, data: Float32Array RGBA 0..1 }.
 import { deflateSync, inflateSync } from 'node:zlib';
 
 const SIG = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
@@ -15,10 +15,14 @@ function crc32(buf) {
   return (c ^ 0xffffffff) >>> 0;
 }
 
+/** The PNG Paeth predictor: of a (left), b (up), c (up-left), the one nearest a + b − c. */
 function paeth(a, b, c) {
   const p = a + b - c;
-  const pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
-  return pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
+  const pa = Math.abs(p - a);
+  const pb = Math.abs(p - b);
+  const pc = Math.abs(p - c);
+  if (pa <= pb && pa <= pc) return a;
+  return pb <= pc ? b : c;
 }
 
 /** The header fields and the concatenated IDAT data of a PNG (8-bit RGB or RGBA, no interlace). */
@@ -26,7 +30,7 @@ function readChunks(buf) {
   if (!buf.subarray(0, 8).equals(SIG)) throw new Error('not a PNG');
   const head = { width: 0, height: 0, ctype: 0 };
   const idat = [];
-  for (let o = 8; o < buf.length; ) {
+  for (let o = 8; o < buf.length;) {
     const len = buf.readUInt32BE(o);
     const type = buf.toString('ascii', o + 4, o + 8);
     const body = buf.subarray(o + 8, o + 8 + len);
@@ -40,7 +44,8 @@ function readChunks(buf) {
 /** Width, height and colour type from IHDR; only 8-bit, non-interlaced RGB or RGBA is supported. */
 function ihdr(body) {
   const ctype = body[9];
-  if (body[8] !== 8 || body[12] !== 0 || (ctype !== 2 && ctype !== 6)) throw new Error('unsupported PNG');
+  if (body[8] !== 8 || body[12] !== 0 || (ctype !== 2 && ctype !== 6))
+    throw new Error('unsupported PNG');
   return { width: body.readUInt32BE(0), height: body.readUInt32BE(4), ctype };
 }
 
@@ -81,17 +86,22 @@ function chunk(type, body) {
   return Buffer.concat([head, body, crc]);
 }
 
-/** `opaque` writes RGB (iOS app icons must have no alpha channel). Filter 0 per line; zlib does the rest. */
+const channelByte = (v) => Math.round(Math.min(1, Math.max(0, v)) * 255);
+
+/** Scanline `y` of `data` into `raw` after its filter byte (0: none), `bpp` bytes per pixel. */
+function encodeRow(raw, data, { y, width, bpp }) {
+  for (let x = 0; x < width; x++) {
+    const i = (y * width + x) * 4;
+    const o = y * (width * bpp + 1) + 1 + x * bpp;
+    for (let k = 0; k < bpp; k++) raw[o + k] = channelByte(data[i + k]);
+  }
+}
+
+/** `opaque` writes RGB (iOS app icons have no alpha). Filter 0 per line; zlib does the rest. */
 export function encode({ width, height, data }, opaque = false) {
   const bpp = opaque ? 3 : 4;
   const raw = Buffer.alloc((width * bpp + 1) * height);
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const i = (y * width + x) * 4;
-      const o = y * (width * bpp + 1) + 1 + x * bpp;
-      for (let k = 0; k < bpp; k++) raw[o + k] = Math.round(Math.min(1, Math.max(0, data[i + k])) * 255);
-    }
-  }
+  for (let y = 0; y < height; y++) encodeRow(raw, data, { y, width, bpp });
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(width, 0);
   ihdr.writeUInt32BE(height, 4);
