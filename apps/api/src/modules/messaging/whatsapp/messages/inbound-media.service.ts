@@ -24,13 +24,7 @@ export type InboundFile = { bucket: typeof BUCKETS.waMedia; path: string; mime: 
 export { baseMime };
 const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
 
-/**
- * The gate of a file we may serve: inbound, with a media id (or an old-CRM file link, isCrmHistoryRow),
- * and a mime `allow` accepts. An inbound file with neither (imported, its link lost) is 410 media_expired,
- * an honest «not available» instead of a «try again» that never works (owner 2026-10-29); a text stays 400. The default
- * (images / PDFs) keeps the booking's «من الشات» and the sales receipt copy narrow; the chat bubble
- * (W6) passes isChatViewMime for voice notes and videos too (owner 2026-10-19 #1).
- */
+/** An inbound file with no id and no link is 410, an honest answer instead of a futile retry. */
 export function servable(msg: MediaMessage, allow: (mime: string | null) => boolean = isInvoiceMime): MediaMessage {
   if (msg.direction === 'inbound' && msg.media_mime && !msg.media_id && !isCrmHistoryRow(msg)) throw waHttpError('media_expired', HttpStatus.GONE);
   if (msg.direction !== 'inbound' || !(msg.media_id || isCrmHistoryRow(msg)) || !allow(msg.media_mime)) {
@@ -64,18 +58,7 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
 const fromCrmStorage = (msg: MediaMessage): boolean =>
   isCrmHistoryRow(msg) && (msg.number?.provider ?? 'crm') === 'crm';
 
-/**
- * An inbound WhatsApp file (image / PDF; audio / video for the chat bubble) as a file we own
- * (R-MSG-06). The webhook stores only Meta's media id, so the first time an admin needs the file (a thumbnail, «من الشات» on a booking) it is
- * fetched from Meta and cached in the private `wa-media` bucket; later calls read the cache.
- * 404 message_not_found, 400 invoice_message (not inbound, or not an image / PDF), 410 media_expired
- * (older than 29 days, Meta refuses the id, or an imported file with no id and no CRM link), 413 invoice_too_large (chatFileMaxBytes). The file is fetched with the
- * client of the NUMBER it came in on (mediaSource; docs/12 §13.4, docs/23c): 409 crm_no_media for the old
- * CRM number's history (no call), 503 line_not_configured for a chat message while the chat
- * line is not configured (module mode: while its number has no client), 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
- * 502 kapso_auth when Kapso refuses the project key (docs/19), 502 crm_unreachable when the old CRM's storage
- * does not answer for an imported file (CrmHistoryMedia; a retry may work).
- */
+/** R-MSG-06: fetched from Meta on first need via the number it came on, then cached privately. */
 @Injectable()
 export class InboundMedia {
   /** Module mode's per-number clients (in memory; legacy finds none and uses the lines). */

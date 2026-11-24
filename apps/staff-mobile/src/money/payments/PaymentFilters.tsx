@@ -1,4 +1,4 @@
-import { PAYMENT_KINDS, type PaymentKind } from '@ab/shared';
+import { PAYMENT_KINDS, type PaymentKind } from '@ab/catalog';
 import { useMemo } from 'react';
 import { riyadhToday } from '@/calendar';
 import { t, FilterPills } from '@ab/mobile-kit';

@@ -9,11 +9,7 @@ import { ExpensesRepo } from './expenses.repo';
 import { ExpensesService } from './expenses.service';
 import { ExpensesSettings } from './expenses.settings';
 
-/**
- * Expenses (R-RPT-02, issue E4; owner 2026-10-05): CRUD with date, vendor, method and receipt,
- * categories the admin can extend, the 12-month table in the reporting currency, and the
- * «تكرار شهري» job. Routes X1–X4 (docs/11 §9) + docs/11 §13.
- */
+/** Expenses (R-RPT-02, issue E4): routes X1-X4 (docs/11 §9) and docs/11 §13. */
 @Module({
   imports: [DashboardModule],
   controllers: [ExpensesController, ExpenseCategoriesController],

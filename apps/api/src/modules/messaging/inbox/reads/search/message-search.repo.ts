@@ -23,11 +23,7 @@ interface MessageSearchInput {
   limit: number;
 }
 
-/**
- * «بحث في كل الرسائل» (docs/37): one call of public.search_messages (migration
- * 20261106000400) over the stored, trigram-indexed fold. The typed words reach SQL only as an RPC
- * argument; SQL escapes %, _ and \ itself (never an or= string, never a pattern built here).
- */
+/** Migration 20261106000400; the words reach SQL only as an RPC argument. */
 @Injectable()
 export class MessageSearchRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

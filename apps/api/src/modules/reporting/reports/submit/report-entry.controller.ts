@@ -9,10 +9,7 @@ import { ReportsService } from '@/modules/reporting/reports/reports.service';
 import { TeacherReportsService } from '@/modules/reporting/reports/teacher/teacher-reports.service';
 import type { Page } from '@ab/shared';
 
-/**
- * Where reports are reached from (docs/11 §4 R1, R5, R11): the lesson, the student, the teacher's
- * dashboard and «التقارير» (teacher mode). The static `teachers/me/…` wins over `teachers/:id` in Fastify's router.
- */
+/** docs/11 §4 R1, R5, R11: the static teachers/me segment wins over teachers/:id. */
 @ApiTags('reports')
 @ApiBearerAuth()
 @Permissions('self.teacher')
@@ -48,7 +45,7 @@ export class ReportEntryController {
     return this.history.pending(user);
   }
 
-  /** Teacher mode «تقارير اتبعتت» (R-REP-02): my submitted reports, newest first, with the edit window. */
+  /** R-REP-02: newest first, with the edit window. */
   @Get('teachers/me/reports')
   mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<TeacherReportView>> {
     return this.mineService.mine(user, { filter: parseOrThrow(teacherReportsQuerySchema, query), page: parseOrThrow(pageQuerySchema, query) });

@@ -5,8 +5,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useHolds, useIsAdmin, apiFetch, apiSend, t } from '@ab/mobile-kit';
 
-// «القوالب» (owner 2026-11-14): the routes live in @ab/client-core; this module binds them to
-// mobile's API client. Every write refreshes every template list (and the composers' pickers).
+// Routes live in @ab/client-core; every write refreshes all template lists.
 
 const client = { apiFetch, apiSend };
 const { templateListQuery } = templateQueries(client);

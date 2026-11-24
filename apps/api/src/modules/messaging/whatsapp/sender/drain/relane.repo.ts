@@ -2,10 +2,7 @@ import type { Db } from '@/common/db/db.module';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { LANE_ROWS, laneOfRow, type Lane } from './lanes';
 
-// #695 review, item 2: a template's enqueue stamp (send-line templateStamp) picks the lane its
-// queued rows drain in. «نقل إلى الرقم الآخر» changes the template's line, so its rows still queued
-// and not claimed take the new stamp: the chat lane never drains a notifications send under the
-// notifications lock (behind a CRM batch), and the main lane leaves the chat line's sends alone.
+// A line move restamps queued unclaimed rows so each lane drains only its own sends.
 
 /** `line`: the new stamp, templateStamp(template).line ?? null. */
 export interface RelaneInput { key: string; line: 'chat' | null }

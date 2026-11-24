@@ -13,11 +13,6 @@ import { MonthPicker } from '@/finance/shared/MonthPicker';
 import { useExpenseCategories, useExpenses } from '@/finance/shared/queries';
 import { StaleNote, StateNote } from '@/finance/shared/StateNote';
 
-/**
- * «المصروفات» (admin; web /admin/expenses): the month's expenses with totals per category, and
- * «إضافة مصروف» with a receipt photo from the camera or the gallery. The rows sit in one inset card
- * under the totals (owner 2026-10-28: one container rule).
- */
 export function ExpensesScreen() {
   const [month, setMonth] = useState(currentMonth());
   const [adding, setAdding] = useState(false);

@@ -1,4 +1,4 @@
-import type { PaymentKind } from '@ab/shared';
+import type { PaymentKind } from '@ab/catalog';
 import type { SubscriptionFilter } from '@ab/client-core';
 import { monthRange } from '@/money/shared/months';
 

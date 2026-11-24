@@ -42,14 +42,7 @@ export class PortalActionDeps {
   ) {}
 }
 
-/**
- * «خيارات الحلقة» of the family (owner 2026-11-17) on a lesson of the login's own student
- * (PortalScopes: 404 student_not_found / lesson_not_found), still open and not started (409
- * lesson_started), the student's alone (409 group_lesson: a group lesson is the academy's to
- * move or cancel): «سأحضر» = LessonStatusService.confirm; «أعتذر عن الحلقة» = the student's
- * cancel of that one lesson under late_cancel_hours (its teacher hears it); «اطلب موعدًا آخر» /
- * «سحب الطلب» = FamilyRequestService. Each answers the lesson's status and package outcome.
- */
+/** Only an open, unstarted solo lesson; group lessons are the academy's to move or cancel. */
 @Injectable()
 export class PortalLessonActions {
   constructor(

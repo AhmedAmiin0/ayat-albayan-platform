@@ -14,7 +14,7 @@ const fill = (text: string, values: Record<string, string>): string =>
 
 const money = (amount: number): string => (Number.isInteger(amount) ? String(amount) : amount.toFixed(2));
 
-/** «صفحة دفع تجريبية»: only while the saved key is a sandbox one; a live key's pages take real cards. */
+/** Shown only while the saved key is a sandbox one; live keys take real cards. */
 const testNote = (): string =>
   stripeKeyIsLive(loadEnv()) ? '' : `<p class="note">${escapeHtml(ar.paymentLinks.pay.testNotice)}</p>`;
 
@@ -42,10 +42,7 @@ function stateText(status: PublicPaymentLink['status']): string | null {
   return null;
 }
 
-/**
- * GET /pay/:token: the first name, the package and the amount; one «ادفع الآن» link to the checkout while
- * the link is open, else what its state means. Nothing else about the family.
- */
+/** Shows only the first name, package and amount; nothing else about the family. */
 export function payPageHtml(view: PublicPaymentLink, token: string): string {
   const P = ar.paymentLinks.pay;
   const lessons = fill(ar.paymentLinks.lessons, { count: String(view.lessons) });
@@ -60,12 +57,7 @@ export function payPageHtml(view: PublicPaymentLink, token: string): string {
   );
 }
 
-/**
- * Stripe's success / cancel URLs: text only (the verified webhook alone records the payment). `app` is the
- * deep link back into the app when the app opened the link (pay-return.ts), else null: the page as
- * before. With it, «العودة إلى التطبيق»; the done page also tries it at once (a meta refresh, no script)
- * unless `auto` is off (the app's own fallback). The cancelled page never leaves by itself: a retry stays here.
- */
+/** Text only: the verified webhook alone records payment; `app` is the deep link back. */
 export function resultPageHtml(r: { kind: 'done' | 'cancelled'; token: string; app: string | null; auto: boolean }): string {
   const P = ar.paymentLinks.pay;
   const toApp = r.app ? `<a class="btn" href="${escapeHtml(r.app)}">${escapeHtml(P.backToApp)}</a>` : '';

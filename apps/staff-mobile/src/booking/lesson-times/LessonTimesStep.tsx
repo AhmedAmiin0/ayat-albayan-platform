@@ -22,7 +22,7 @@ type Inherited = 'teacherId' | 'tz' | 'durationMin' | 'from' | 'exclude';
 interface LessonTimesStepProps extends Pick<SlotStepProps, Inherited> {
   /** The course's first local day (YYYY-MM-DD in `tz`): the dates run from it for one week. */
   opens: string;
-  /** The picks (one instant per weekday), the days a week when fixed, and «التالي». */
+  /** One instant per weekday, and the days a week when fixed. */
   multi: SlotMulti;
   /** Rows to begin with when the days a week are not fixed (the package's usual count). */
   startRows?: number;

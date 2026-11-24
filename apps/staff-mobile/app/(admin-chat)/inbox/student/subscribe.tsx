@@ -1,2 +1,2 @@
-/** The student file's own screens, copied into the chat group (useStudentHref): «جدّد الاشتراك» from the file opened in a chat. */
+/** Copied into the chat group so renewing from a file opened in a chat stays in that stack. */
 export { SubscribeScreen as default } from '@/subscribe';

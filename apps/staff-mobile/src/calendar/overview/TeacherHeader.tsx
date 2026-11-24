@@ -8,15 +8,11 @@ import { teacherMeta, timeOffLine, windowsLine } from './overview-text';
 
 interface TeacherHeaderProps {
   agenda: TeacherAgenda;
-  /** Day view: the day's windows as a faint «متاح …» line. */
+  /** Day view: the day's windows as a faint line. */
   showWindows: boolean;
 }
 
-/**
- * A «الجدول» section's head: the name (opens the teacher), «معلمة · القرآن الكريم · 3 من 10 طالب ·
- * القاهرة», then the day's availability, any time off touching the period (neutral ink: cinnabar is
- * for errors and stopped states), and «مفيش حلقات» when nothing is booked.
- */
+/** Time off uses neutral ink: the error colour is for errors and stopped states. */
 export function TeacherHeader({ agenda, showWindows }: TeacherHeaderProps) {
   const { color } = useTheme();
   const { teacher } = agenda;

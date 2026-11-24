@@ -6,11 +6,11 @@ import { DRIVE } from '@/modules/platform/google-sync/google-format';
 export interface TeacherNames {
   display_name_ar: string;
   display_name_en: string | null;
-  /** teachers.google_calendar_id: imported from the old «المعلمون» tab. */
+  /** Imported from the old teachers tab. */
   google_calendar_id: string | null;
 }
 
-/** «آيات البيان — <teacher>» → the teacher part, normalised; null for any other calendar. */
+/** Null for any other calendar. */
 export function calendarTeacher(summary: string): string | null {
   const s = summary.trim();
   const prefix = DRIVE.calendarPrefix.trim();

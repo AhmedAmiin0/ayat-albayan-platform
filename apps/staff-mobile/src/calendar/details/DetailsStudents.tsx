@@ -21,7 +21,6 @@ const teacherStage = (lesson: DetailsLesson, now: Date): ReportStage | null =>
 
 type OnReport = ((lessonId: string) => void) | undefined;
 
-/** «الطلاب»: one row per student, hairlines between them, and the teacher's report button under them. */
 interface DetailsStudentsProps {
   lesson: DetailsLesson;
   role: DetailsRole;

@@ -1,5 +1,6 @@
-import type { PaymentAttachmentView, ReceivablesView, SignedDownload } from '@ab/shared';
-import type { PeriodTotal } from '@ab/shared';
+import type { SignedDownload } from '@ab/shared';
+import type { PaymentAttachmentView, ReceivablesView } from '@ab/money';
+import type { PeriodTotal } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 

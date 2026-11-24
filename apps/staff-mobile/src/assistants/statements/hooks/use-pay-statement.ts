@@ -7,11 +7,7 @@ import { apiSend } from '@ab/mobile-kit';
 import { ASSISTANTS_KEY } from '@/assistants/api/api';
 import { uploadStatementReceipt } from './upload-receipt';
 
-/**
- * «تأكيد الدفع» of a statement (web use-pay-statement): the receipt goes up first, once per photo (a
- * retry after a refused pay does not upload it again), then POST /assistant-pay/statements/:id/pay
- * with paidAt, method, note and receiptPath (payoutPaySchema).
- */
+/** The receipt uploads once per photo, so a retry after a refused pay does not re-upload. */
 export function usePayStatement(statement: Pick<AssistantStatementView, 'id' | 'assistant'>) {
   const client = useQueryClient();
   const [receiptOnce] = useState(() => uploadOnce<string>());

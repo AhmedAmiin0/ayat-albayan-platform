@@ -1,4 +1,4 @@
-import { JOB_APPLICANT_STATUSES, type JobApplicantStatus } from '@ab/shared';
+import { JOB_APPLICANT_STATUSES, type JobApplicantStatus } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import type { ListParams } from '@ab/mobile-kit';
 

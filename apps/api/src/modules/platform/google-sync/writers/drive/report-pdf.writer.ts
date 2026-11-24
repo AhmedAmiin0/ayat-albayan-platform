@@ -11,12 +11,7 @@ import { pdfName } from './pdf-name';
 import { localDate } from '@/modules/platform/google-sync/writers/sheets/sheet-dates';
 import { later, planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
 
-/**
- * report_pdf (docs/24 §3, §2.5): the platform's report PDF into the student's Drive folder, named
- * «<student> — <date>.pdf» (« (المنصة)» when the old script already has that date in the sheet).
- * A re-rendered report replaces the content of the file WE uploaded (checked by appProperties);
- * a file someone deleted or trashed is `gone`.
- */
+/** docs/24 §3, §2.5: replaces only a file we uploaded (appProperties); a deleted one is `gone`. */
 @Injectable()
 export class ReportPdfWriter implements ItemWriter {
   constructor(

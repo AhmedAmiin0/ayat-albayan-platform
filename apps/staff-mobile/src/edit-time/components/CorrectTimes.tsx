@@ -17,11 +17,7 @@ interface CorrectTimesProps {
   onPick: (startsAt: string) => void;
 }
 
-/**
- * «تصحيح»: the day is fixed (the correction stays on it) and so is «before now»; what is picked is
- * the start, from quarter-hour times that keep the lesson on its own day and over by now. Nothing
- * is typed (rule 6). The recorded start shows picked until another one is.
- */
+/** A correction keeps its day and stays in the past: only quarter-hour starts on that day. */
 export function CorrectTimes({ lesson, durationMin, tz, now, value, onPick }: CorrectTimesProps) {
   const viewer = useViewerClock();
   const viewerZone = viewer.tz;
