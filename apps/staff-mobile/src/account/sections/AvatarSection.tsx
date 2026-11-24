@@ -8,10 +8,7 @@ import { AvatarButtons } from './AvatarButtons';
 
 const a = t.account.avatar;
 
-/**
- * «الصورة الشخصية» (R-ACC-05): camera or gallery, a preview, then «رفع الصورة» (upload-url →
- * signed upload → PUT /me/avatar); «إزالة الصورة» goes back to the initials.
- */
+/** R-ACC-05: upload-url, signed upload, then PUT /me/avatar; removing returns to initials. */
 export function AvatarSection({ profile }: { profile: AccountProfile }) {
   const [picked, setPicked] = useState<PickedAvatar | null>(null);
   const upload = useAccountAction({

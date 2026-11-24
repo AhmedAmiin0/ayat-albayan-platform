@@ -18,7 +18,7 @@ const MODES = (): { value: RegistrationCheckBy; label: string }[] => [
   { value: 'name', label: t.registrationCheck.byName },
 ];
 
-/** «برقم الهاتف» / «بالاسم أو الكود», the one field of that mode, «تحقق», and why it was not sent. */
+/** The phone / name-or-code switch, that mode's one field, submit, and why it was not sent. */
 export function RegistrationForm({ by, onBy, text, onText, onSubmit, busy, error }: RegistrationFormProps) {
   const rc = t.registrationCheck;
   const phone = by === 'phone';

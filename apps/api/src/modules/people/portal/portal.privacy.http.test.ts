@@ -24,7 +24,7 @@ describe('/portal responses are whitelists (no money outside the package, notes 
     for (const url of urls) {
       const res = await t.call('GET', url, 'guardianA');
       expect([url, res.statusCode]).toEqual([url, 200]);
-      // «حسابي»: the guardian login's OWN name and number are the one contact allowed (owner).
+      // The guardian login's own name and number are the one contact allowed.
       const { guardian, ...rest } = res.json();
       expect([url, keysOf(rest).filter((k) => SECRET.test(k))]).toEqual([url, []]);
       const own = url === '/portal/me' ? ['name', 'phone'] : [];

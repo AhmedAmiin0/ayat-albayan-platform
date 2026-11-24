@@ -50,12 +50,12 @@ export class DashboardQueries {
     );
   }
 
-  /** «مشترك» = status active only: pending_renewal / expired are not counted (owner 2026-10-12, 2026-10-15). */
+  /** Status active only; pending_renewal and expired are not counted. */
   activeStudents(): Promise<number> {
     return counted(this.db.from('students').select('id', { count: 'exact', head: true }).eq('status', 'active'));
   }
 
-  /** «يحتاج تأكيد»: scheduled lessons starting in [now, now + 48 h). */
+  /** Scheduled lessons starting in [now, now + 48 h). */
   needsConfirmation(now: Date): Promise<number> {
     return counted(
       this.db

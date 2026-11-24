@@ -27,10 +27,7 @@ interface IlikeQuery<Q> {
   ilike(column: string, pattern: string): Q;
 }
 
-/**
- * Code «contains», name «contains» on the Arabic-normalised name (سهيله finds سهيلة), guardian
- * name «contains»: guardians is an !inner embed, so its filter drops the student row.
- */
+/** The name match is Arabic-normalised; guardians is an !inner embed, so it drops rows. */
 export function applyStudentColumnFilters<Q extends IlikeQuery<Q>>(query: Q, f: StudentColumnFilters): Q {
   let q = query;
   if (f.code) q = q.ilike('code', ilikeContains(f.code));

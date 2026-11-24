@@ -11,10 +11,7 @@ interface ReasonConfirmProps {
   onCancel: () => void;
 }
 
-/**
- * A confirm strip that needs a reason of three letters or more (void, un-pay; the API checks it too).
- * ONE ButtonRow (docs/07 §6): the verb (primary) at the reading start, «إلغاء» (secondary) beside it.
- */
+/** The reason needs three letters or more; the API checks it too. */
 export function ReasonConfirm({ message, confirmLabel, busy, onConfirm, onCancel }: ReasonConfirmProps) {
   const { color } = useTheme();
   const [reason, setReason] = useState('');

@@ -1,0 +1,37 @@
+name: pr-title
+# CLAUDE.md rule 25: a PR title is its squash commit header, so it follows the Angular convention
+# `<type>(<scope>): <subject>` (tools/scripts/ci-checks/lint/commit-header). Its own workflow, not a ci job:
+# `edited` re-runs it when only the title changes, and an edit in ci would cancel the running ci and
+# replace the head's `check` and `guards` runs with skipped ones, which lane-automerge reads as not passed.
+# No exception list. The title reaches the script through env only, never through the shell.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-title-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  title:
+    name: pr title
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - uses: ./.github/actions/pnpm-store
+      - run: pnpm i --frozen-lockfile --filter @ab/scripts
+      - name: The PR title follows the Angular header
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node tools/scripts/ci-checks/lint/commit-header/pr-title.ts

@@ -16,10 +16,7 @@ interface ExternalInput {
   event?: StatusEvent;
 }
 
-/**
- * stored = a new row; known = the wamid was already there, or it confirmed a «أرسل عبر واتساب»
- * row (ManualEcho attached it); skipped = not an outbound message we can read.
- */
+/** known also covers confirming a manual-send row; skipped is not a readable outbound message. */
 export type ExternalOutcome = 'stored' | 'known' | 'skipped';
 
 /** An outbound message we can read, with its customer's E.164 phone; null otherwise. */
@@ -52,8 +49,7 @@ export class ExternalStore {
     const { msg, phone } = read;
     if ((await this.queries.existing([msg.waMessageId])).size > 0) return 'known';
     const numberId = from.numberId ?? (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null);
-    // Never while our own send to the phone is unrecorded: its status may be this very message
-    // (the catch-up retries). Then every external path tries the «أرسل عبر واتساب» row first.
+    // Skip while our own send is unrecorded, as its status may be this message (catch-up retries).
     if (await this.queries.inFlight(phone)) return 'skipped';
     const origin = { line: from.line, numberId };
     if (await this.manual.attach({ msg, phone, from: origin, event })) return this.attached(phone, msg.at);

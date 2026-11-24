@@ -14,10 +14,7 @@ const WEEK_WORD: readonly (() => string)[] = [
 
 const STEP = 'min-w-11 px-0 sm:min-h-11';
 
-/**
- * «الأسبوع السابق» · the week's name and its dates («15 – 21 نوفمبر») · «الأسبوع التالي», within
- * the lessons the API sends. The chevrons follow the reading direction (Icon's MIRROR).
- */
+/** Within the lessons the API sends; chevrons follow the reading direction. */
 export function WeekBar({ week }: { week: Week }) {
   const word = WEEK_WORD[week.offset] ?? WEEK_WORD[0];
   return (

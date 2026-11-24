@@ -9,6 +9,10 @@ const H2 = 'H-2: parse the response with a zod schema, not `await res.json() as 
 const Z2 = 'Z-2: boundary data goes through a zod schema, not a hand shape check (docs/36 §1.1).';
 const Z5 = 'Z-5: pass a zod schema (apiFetch(path, { schema })), not a type argument.';
 const F1 = 'F-1: an else-if chain of 3+: use a lookup table or per-kind strategy (CLAUDE.md 11).';
+const M1 = 'M-1: sum payments and refunds with netPaid / netPaidIn from @ab/money (one rule).';
+const refundSum =
+  "CallExpression[callee.property.name='reduce'] " +
+  "ConditionalExpression[test.left.property.name='kind'][test.right.value='refund']";
 const unknownGuard =
   ':function[params.0.typeAnnotation.typeAnnotation.type=\'TSUnknownKeyword\']' +
   '[returnType.typeAnnotation.type=\'TSTypePredicate\']';
@@ -31,6 +35,7 @@ export const SYNTAX = {
     { selector: 'CallExpression[callee.name=/^api(Fetch|Send)$/][typeArguments]', message: Z5 },
     { selector: 'CallExpression[callee.property.name=/^api(Fetch|Send)$/][typeArguments]', message: Z5 },
   ],
+  'ab/no-refund-sums': [{ selector: refundSum, message: M1 }],
   'ab/no-if-chains': [
     {
       selector: "IfStatement[alternate.type='IfStatement'][alternate.alternate.type='IfStatement']",

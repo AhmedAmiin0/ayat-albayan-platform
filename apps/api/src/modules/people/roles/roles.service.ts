@@ -15,13 +15,7 @@ import {
 import { regrantAudit, resetGrants, type Regrant } from './roles.reset';
 import { ROLE_STORE, type ProfileRecord, type RoleStore } from './roles.store';
 
-/**
- * «الأدوار والصلاحيات» (owner, 2026-10-05). Roles carry permissions; profiles.role stays the base
- * scope and always equals the held role's base_role. Every change clears the permission cache, and
- * one that would leave nobody with roles.manage (409 last_admin) or take it from the actor
- * (409 self_lockout) is refused before it is written (the checks: roles.grants.ts). The admin,
- * guardian and student grants are fixed (400).
- */
+/** profiles.role equals the held base_role; 409 on last_admin or self_lockout before writing. */
 @Injectable()
 export class RolesService {
   constructor(
@@ -67,7 +61,6 @@ export class RolesService {
     return this.view(id);
   }
 
-  /** «استعادة الافتراضي»: a system teacher / sales / assistant role back to its seeded grants. */
   async reset(id: string, actorId: string): Promise<RoleView> {
     const state = await this.state();
     const role = grants.findRole(state, id);

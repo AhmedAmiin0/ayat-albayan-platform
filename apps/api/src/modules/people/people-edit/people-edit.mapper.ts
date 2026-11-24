@@ -38,13 +38,7 @@ export function changedFields<R extends Record<string, Json | undefined>>(
   return { before: pick(rows.before), after: pick(rows.after) };
 }
 
-/**
- * «تحويل إلى طالب»: the guardian who is really the learner becomes a student of their own family,
- * whose number is theirs (contact_is_self). Status and program take the DB defaults. No
- * created_by: a conversion is not a registration, so students_brought_guard never attributes it
- * (and its commission) to the converting assistant; the audit row names the actor, the admin sets
- * brought_by.
- */
+/** No created_by, so students_brought_guard never credits the converting assistant. */
 export function selfStudentInsert(guardian: GuardianRow) {
   const row: TablesInsert<'students'> = {
     guardian_id: guardian.id,

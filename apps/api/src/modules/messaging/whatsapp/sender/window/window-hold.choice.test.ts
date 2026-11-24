@@ -2,9 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { NO_TEMPLATE_NOTE } from './window-reopen';
 import { NOW, PHONE, staffText, windowFakes } from './window.fakes';
 
-// Owner 2026-11-06 («give him a choice»): chat_reopen_template = «بدون قالب» (none) holds the
-// text with no template (Kapso reopen + awaiting_reply) until the family writes; a template key
-// keeps today's path. Fakes only: never a database, Kapso or Meta.
+// With no template chosen the text is held until the family writes; fakes only.
 
 let f = windowFakes();
 const at = (row = staffText()) => ({ row, now: NOW, line: 'chat' as const });

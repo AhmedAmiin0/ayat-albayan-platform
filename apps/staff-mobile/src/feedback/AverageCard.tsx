@@ -4,7 +4,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { averageLine, recommendLine } from './feedback-text';
 import type { FeedbackAverage } from './types';
 
-/** «متوسط التقييم»: a teacher's average, number of answers and «نعم» share; nothing before an answer. */
+/** A teacher's average rating, answer count and yes share; nothing before an answer. */
 export function AverageCard({ name, average }: { name: string | null; average: FeedbackAverage | null }) {
   const { color } = useTheme();
   const rating = averageLine(average);

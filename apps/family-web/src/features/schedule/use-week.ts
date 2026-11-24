@@ -9,11 +9,6 @@ import { portalLessonsQuery } from '@ab/web-kit/portal/api';
 /** The lessons API covers 14 days: this week, the next and the one after at most. */
 export const MAX_OFFSET = 2;
 
-/**
- * «الجدول» (canvas StudentSchedule): the lessons of the student in view (owner 2026-11-16), one
- * academy week of what is still ahead (@ab/client-core weekSchedule): its seven-day strip, its
- * days with lessons, its summary, and a week offset.
- */
 export function useWeek(student: PortalStudent) {
   const [offset, setOffset] = useState(0);
   const tz = useViewerTz();

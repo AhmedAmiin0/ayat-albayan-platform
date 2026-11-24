@@ -9,11 +9,7 @@ import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
 
-/**
- * «الردود السريعة» (owner 2026-10-25) belong to the inbox of the admin and the assistants (base role
- * sales) with inbox.read; a teacher or a guardian never gets them, whatever a custom role grants.
- * 403 saved_replies_forbidden otherwise.
- */
+/** Admin and sales with inbox.read only; never teachers or guardians, whatever a role grants. */
 export function assertRepliesUser(user: AuthUser): void {
   const staff = user.role === 'admin' || user.role === 'sales';
   if (!staff || !can(user, 'inbox.read')) throw forbidden('saved_replies_forbidden');

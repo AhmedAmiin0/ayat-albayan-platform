@@ -9,7 +9,6 @@ interface StatusPillsProps<S extends string> {
   onChange: (status: '' | S) => void;
 }
 
-/** «كل الحالات» then each status with its shape (web FilterBar's status select). */
 export function StatusPills<S extends string>({ statuses, labels, styles, value, onChange }: StatusPillsProps<S>) {
   const items = [
     { value: '' as const, label: t.assistants.ledger.allStatuses },
