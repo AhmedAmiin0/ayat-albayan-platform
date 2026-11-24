@@ -3,13 +3,12 @@ import { attended, REPORT_RUBRICS, type Rubric } from './rules.js';
 import { REPORT_REQUIRED_TEXT, reportSubmitSchema, type ReportDraft } from './schema/index.js';
 import type { ReportView } from './views.js';
 
-// «تقرير الحلقة» form state shared by web and mobile (R-REP-01, R-REP-02, docs/01 T7): the same
-// fields in the same order on both, and the same autosave rule.
+// Lesson report form state shared by web and mobile (R-REP-01, R-REP-02, docs/01 T7).
 
 /** What the teacher edits (R-REP-02); identity never (R-REP-01). Text fields are '' when empty. */
 export interface FormValues {
   attendance: Attendance | null;
-  /** «البرنامج *»: prefilled from the student, the teacher may change it. */
+  /** Prefilled from the student; the teacher may change it. */
   program: Program | null;
   recited: string;
   newMemorization: string;
@@ -29,7 +28,7 @@ export type DraftBody = Partial<ReportDraft>;
 /** POST /reports/:id/submit body. */
 export type SubmitBody = DraftBody & { expectedVersion: number };
 
-/** The four «اللي اتعمل في الحلقة» fields, then the three after the grades, in form order. */
+/** The four lesson-work fields, then the three after the grades, in form order. */
 export const DONE_FIELDS = ['recited', 'newMemorization', 'revision', 'theory'] as const satisfies readonly TextKey[];
 export const AFTER_FIELDS = ['notes', 'homework', 'nextPlan'] as const satisfies readonly TextKey[];
 
@@ -84,11 +83,7 @@ export function submitBody(v: FormValues, expectedVersion: number): SubmitBody {
   return { ...draftBody(v), expectedVersion };
 }
 
-/**
- * Same rules as the API (reportSubmitSchema): attendance first (`missing_attendance`), then the
- * six grades + overall when the student attended (`missing_grades`), then the required text
- * (`missing_text`); then the program (`missing_program`, the form's «البرنامج *»). null = ready to send.
- */
+/** Same order of checks as the API's reportSubmitSchema; null means ready to send. */
 export function submitProblem(v: FormValues, version = 0): string | null {
   const parsed = reportSubmitSchema.safeParse(submitBody(v, version));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? 'validation_failed';

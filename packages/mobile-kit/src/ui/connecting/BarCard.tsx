@@ -20,7 +20,6 @@ export function barLook(phase: ShownPhase, color: Palette) {
   return { bg: color.neutralSoft, ink: color.ink2, dots: color.gold };
 }
 
-/** «جارٍ الاتصال…» with the gold dots; from 10 s the amber hint; «تم الاتصال» with its check badge. */
 interface BarCardProps {
   phase: ShownPhase;
   still: boolean;

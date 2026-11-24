@@ -4,21 +4,11 @@ import { OPEN_LESSON_STATUSES, wallParts } from '@ab/schedule';
 import type { StopRefund } from './stop-refund/index.js';
 import { stopOweAskSchema, stopRefundAskSchema, type StopOwe } from './stop-choices/index.js';
 
-// «إلغاء الاشتراك» from the student's profile: STOP THE COURSE, KEEP THE MONEY.
-// Every future lesson of the subscription's course is cancelled, its weekly rules end on the cancel
-// date, the student becomes «توقف» (churned) unless another package still runs, and the package
-// «ملغاة» (cancel_kind 'stopped', migration 990) with who / when / why. Payments, held lessons,
-// reports, teacher earnings and the assistant's commission are never touched: a stopped package
-// stays in every money reader (countsForMoney, migration 991). Pure.
+// Stopping a course keeps the money: payments, earnings and commission stay (migrations 990, 991).
 
 export const COURSE_STOP_REASON_MAX = 300;
 
-/**
- * POST /students/:id/course-stop: idempotent on clientRequestId (rule 8); the reason is required.
- * `refund` (subscriptions.refund): «إلغاء مع استرداد» and the chosen refund;
- * absent = «إلغاء فقط», with `owe`: what the family still owes (absent = attended × rate). Never
- * both.
- */
+/** Idempotent on clientRequestId (rule 8); `refund` and `owe` are never both given. */
 export const courseStopSchema = z
   .strictObject({
     subscriptionId: z.uuid(),
@@ -50,20 +40,17 @@ export interface CourseStopPreview {
   futureStarts?: string[];
   /** Weekly rules of the course that still run: each ends on the cancel date. */
   activeRules: number;
-  /** Net paid, kept as it is with «إلغاء فقط». */
+  /** Net paid, kept as it is when cancelling without refund. */
   paid: number;
   currency: string;
-  /**
-   * «إلغاء مع استرداد»'s lines: paid, attended × price × rate, refund; null
-   * for a caller without subscriptions.refund.
-   */
+  /** Refund lines: paid, attended x price x rate, refund; null without subscriptions.refund. */
   refund: StopRefund | null;
   /**
    * The person may refund but the refund could not be computed now (Stripe down for a card
    * payment): the sheet says so instead of hiding the choice silently.
    */
   refundUnavailable: boolean;
-  /** «إلغاء فقط»'s numbers: attended × rate (capped at the price) and the price. */
+  /** Without refund: attended x rate (capped at the price), and the price. */
   owe: StopOwe;
   /** Set once the package is cancelled (either kind): the sheet shows it instead of the button. */
   stopped: CourseStopped | null;
@@ -76,7 +63,7 @@ export interface CourseStopResult {
   /** The student's status after the stop (churned, or what it was when already churned). */
   studentStatus: StudentStatus;
   stoppedAt: string;
-  /** «إلغاء مع استرداد»: the amount, its card part (Stripe) and its manual part; null = none. */
+  /** The refund amount, its card (Stripe) and manual parts; null means none. */
   refund: CourseStopRefunded | null;
 }
 
@@ -102,11 +89,7 @@ export function stoppedLessons<T extends { status: LessonStatus; starts_at: stri
   return lessons.filter((l) => open.includes(l.status) && Date.parse(l.starts_at) >= now.getTime());
 }
 
-/**
- * «من تاريخ» of a teacher or time change: the next upcoming open lesson of the course (its local
- * date and instant in the course zone); null when none is booked yet (the dialog then asks for a
- * date).
- */
+/** The next upcoming open lesson of the course in its zone; null when none is booked yet. */
 export function changeEffectiveFrom(
   lessons: readonly { status: LessonStatus; starts_at: string }[],
   input: { tz: string; now: Date },

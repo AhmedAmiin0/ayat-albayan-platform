@@ -1,7 +1,6 @@
 import type { LessonStatus } from '@ab/catalog';
 
-// «الجدول» and «الحضور» of one teacher for the salesperson (docs/16 row 36b):
-// GET /sales/teachers/:id/overview. Whitelist: never a meeting link, a rate, a payout or a balance.
+// One teacher's schedule and attendance (docs/16 row 36b); never link, rate, payout or balance.
 
 /** A student of a slot or a lesson: the name and the readable code only. */
 export interface SalesOverviewStudent {
@@ -12,7 +11,7 @@ export interface SalesOverviewStudent {
 /** One weekly slot of an active rule, read in Riyadh: one row per weekday. */
 export interface SalesTeacherSlot {
   rule_id: string;
-  /** 0 = الأحد … 6 = السبت, in Riyadh. */
+  /** 0 = Sunday ... 6 = Saturday, in Riyadh. */
   weekday: number;
   /** "HH:MM" (24 h) in Riyadh. */
   time: string;

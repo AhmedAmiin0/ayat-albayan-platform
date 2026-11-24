@@ -1,4 +1,5 @@
-import { trialMove, type Attendance, type LessonStatus } from '@ab/shared';
+import { trialMove } from '@ab/shared';
+import type { Attendance, LessonStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { trialFactsOf, type TrialLessonRow } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 

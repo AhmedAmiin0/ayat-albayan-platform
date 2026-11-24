@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { StorageService } from '@/common/storage/storage.service';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';

@@ -2,9 +2,7 @@ import type { StudentStatus } from '@ab/catalog';
 import { DISCOUNTS, renewalPricing, type LastPackage, type RenewalPricing } from '@ab/money';
 import { isPackageEnded } from '../people/students/index.js';
 
-// «جدّد الاشتراك» from the sales chat: which of her students is due for a renewal,
-// and the calculator inputs it opens with (the admin's renewalPricing, from the last priced package).
-// Pure; GET /sales/money/family returns both per student.
+// Which of her students is due for renewal and the calculator inputs it opens with; pure.
 
 /** A package of the student, FIFO order (starts_on, created_at, id); price 0 = a trial. */
 export type RenewalPackage = LastPackage & { price: number };

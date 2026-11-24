@@ -31,8 +31,7 @@ export async function putPushToken(token: string): Promise<void> {
   if (res?.deviceKey) await AsyncStorage.setItem(DEVICE_KEY, res.deviceKey);
 }
 
-// «الإشعارات على هذا الجهاز» (docs/50 §6, the family app's settings): off keeps this device out of
-// pushes until it is switched on again, across restarts. The staff app never sets it.
+// docs/50 §6: off keeps this device out of pushes across restarts; the staff app never sets it.
 
 export const PUSH_OPT_OUT_KEY = 'push.optOut';
 

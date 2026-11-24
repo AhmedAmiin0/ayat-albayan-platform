@@ -4,7 +4,6 @@ import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { KickController } from './use-kick';
 
-/** The confirm step of «إخراج من الحلقة» and the toast that reports how it went. */
 export function KickDialog({ kick }: { kick: KickController }) {
   const { target, toast } = kick;
   return (

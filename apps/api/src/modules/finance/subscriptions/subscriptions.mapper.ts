@@ -1,5 +1,6 @@
-import type { BalanceView, Duration, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
-import { countsForMoney, livePackages, studentRemaining } from '@ab/shared';
+import type { Duration } from '@ab/catalog';
+import type { BalanceView, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/money';
+import { countsForMoney, livePackages, studentRemaining } from '@ab/money';
 import { emptyBalance, type BalanceRow } from './money/balance.repo';
 import type { StudentRef, SubRow } from './shared/subscriptions.repo';
 

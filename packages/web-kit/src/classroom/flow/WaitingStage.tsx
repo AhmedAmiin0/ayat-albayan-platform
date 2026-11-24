@@ -8,16 +8,12 @@ interface Props {
   /** One's own camera tile, once it is there. */
   me: TileView | undefined;
   attach: (tileKey: string, el: HTMLVideoElement) => () => void;
-  /** The page's countdown to the start («تبدأ الحلقة بعد 00:03:30»), if it has one. */
+  /** The page's countdown to the start, if it has one. */
   note?: ReactNode;
 }
 
 const W = t.roomFlow.waiting;
 
-/**
- * Alone in the room (boards FamRoomWebWait / FamRoomPhoneWait): where the teacher's camera will
- * be, «بانتظار المعلم/ة…», and one's own camera: in the corner on wide screens, under it on phones.
- */
 export function WaitingStage({ me, attach, note }: Props) {
   return (
     <div className="relative flex min-h-0 flex-1 flex-col gap-2">

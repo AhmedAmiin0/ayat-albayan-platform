@@ -1,4 +1,4 @@
-import type { CancelBlock } from '@ab/shared';
+import type { CancelBlock } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';

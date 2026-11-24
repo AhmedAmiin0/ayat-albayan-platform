@@ -1,9 +1,7 @@
 import type { BookingResult } from '@ab/schedule';
 import { z } from 'zod';
 
-// «اختر أيام الحلقات» before the payment: the assistant's weekly days for a
-// package that is unpaid with an open payment link are kept as a DRAFT on the package (nothing
-// booked, nobody told) and booked once it is paid; editable (saved again) until then.
+// An unpaid package with an open payment link keeps the picked days as a draft, booked on payment.
 
 /** POST /booking 201 (BookingResult), as the clients parse it. */
 const bookingResultSchema: z.ZodType<BookingResult> = z.object({

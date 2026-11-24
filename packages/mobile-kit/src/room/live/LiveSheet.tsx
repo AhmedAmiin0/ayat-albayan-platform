@@ -20,7 +20,7 @@ interface LiveSheetProps {
   onBrowser: (() => void) | null;
 }
 
-/** A trial lesson's «المحادثة»: it opens after subscribing (canvas RoomXChat, the family). */
+/** In a trial lesson the chat opens only after subscribing. */
 function ChatLocked({ onClose }: Pick<LiveSheetProps, 'onClose'>) {
   const { color } = useTheme();
   return (

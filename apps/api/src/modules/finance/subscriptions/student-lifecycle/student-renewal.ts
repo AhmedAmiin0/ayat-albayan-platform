@@ -1,4 +1,5 @@
-import { livePackages, localDay, type StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
+import { livePackages, localDay } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { PackagesService, type StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { manualWins, packageEnded, renewalTarget, subscriptionEnded, type EndPackage } from './student-renewal.plan';

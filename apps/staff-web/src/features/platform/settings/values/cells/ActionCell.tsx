@@ -7,7 +7,7 @@ import { isDirty } from '@/features/platform/settings/registry-form/settings-dir
 import { describeItem, settingTarget } from '@/features/platform/settings/values/description/row-description';
 import { RowMenu, type RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
 import { valueText } from '@/features/platform/settings/values/lib/value-format';
-import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller';
+import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller.types';
 import { useValues } from '@/features/platform/settings/values/values-context';
 import { keyItem } from './key-item';
 

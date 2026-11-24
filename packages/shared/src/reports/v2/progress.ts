@@ -3,7 +3,7 @@ import { PAGE_STARTS } from '../quran/quran-data.js';
 import type { ReportContent } from './content.js';
 import type { SurahRange } from './rules.js';
 
-/** «التقدّم في الحفظ» on the family report: pages of the current juz held, and the juz completed. */
+/** Pages of the current juz held, and the juz completed. */
 export interface JuzProgress {
   juz: number;
   done: number;

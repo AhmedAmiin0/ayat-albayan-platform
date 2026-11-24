@@ -1,7 +1,7 @@
 import { countdownTick, RESEND_SECONDS } from '@ab/client-core';
 import { useEffect, useState } from 'react';
 
-/** Seconds left before «أعد إرسال الرمز» comes back; `restart` after each sent code. */
+/** Seconds left before resend comes back; `restart` after each sent code. */
 export function useCountdown(seconds: number = RESEND_SECONDS) {
   const [left, setLeft] = useState(0);
   useEffect(() => {

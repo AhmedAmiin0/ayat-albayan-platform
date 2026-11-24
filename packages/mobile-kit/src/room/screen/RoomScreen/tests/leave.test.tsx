@@ -57,7 +57,7 @@ test('«غادر» asks first (#bug); «ابقَ في الحلقة» stays; «غ
   await fireEvent.press(ask.getByRole('button', { name: R.controls.leave }));
   expect(p.client.disconnect).toHaveBeenCalled();
   expect(p.audio.stop).toHaveBeenCalled();
-  // The screen stays: «خرجت من الحلقة» with «ادخل مرة أخرى»; only «رجوع» exits.
+  // The screen stays after leaving; only back exits.
   expect(screen.getByTestId('room-closed-left')).toBeTruthy();
   expect(screen.getByText(R.left.body)).toBeTruthy();
   expect(onExit).not.toHaveBeenCalled();

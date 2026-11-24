@@ -1,4 +1,5 @@
-import { daysBefore, riyadhToday } from '@ab/shared';
+import { daysBefore } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { badRequest } from '@/common/http/errors';

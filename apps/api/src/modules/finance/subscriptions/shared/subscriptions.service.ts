@@ -1,5 +1,6 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import type { Page, SubscriptionUpdate, SubscriptionView } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { SubscriptionUpdate, SubscriptionView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';

@@ -12,17 +12,12 @@ const TITLE = 22;
 
 interface StartupScreenProps {
   mode: StartupMode;
-  /** «إعادة المحاولة»: ask for the session and the connection again. */
   onRetry: () => void;
   /** Noto Sans Arabic is registered: before that the system Arabic font (an unknown family is an error on iOS). */
   fontsLoaded: boolean;
 }
 
-/**
- * The branded wait before the first screen (approved design, 2026-10-26): the emblem breathing in
- * its glow inside a turning gold ring, the academy's name, «جارٍ الاتصال» with the gold dots, and
- * from 10 s the hint and «إعادة المحاولة» in a space reserved from the start. Reduce Motion: still.
- */
+/** The retry and hint space is reserved from the start; still under Reduce Motion. */
 export function StartupScreen({ mode, onRetry, fontsLoaded }: StartupScreenProps) {
   const font = (family: string) => (fontsLoaded ? family : undefined);
   const { color } = useTheme();

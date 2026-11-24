@@ -1,4 +1,5 @@
-import type { Attendance, LessonStatus, PackageSize, TrialFacts } from '@ab/shared';
+import type { TrialFacts } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 
 // The trial facts trialMove reads (owner 2026-10-15, docs/11 §7, R-STU-05), from the student's lessons.
 

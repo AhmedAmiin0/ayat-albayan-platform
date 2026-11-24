@@ -1,4 +1,4 @@
-import type { Attendance, LessonStatus, PackageSize } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { trialFactsOf, trialStudentsOf, type TrialLessonRow } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 

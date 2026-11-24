@@ -3,10 +3,9 @@ import { dayTimesFromPicks, timeGroups, wallParts, type DayTime, type PickedRule
 import type { BookedCourse, PrefilledPick } from './course-follow.js';
 import { prefillDays } from './course-follow.js';
 
-// The picks of «تابِع بنفس الأيام» and «تغيير أيام الحلقات», shared by web and
-// mobile so both read the same days the same way. Pure, Intl only.
+// Shared by web and mobile so both read the days the same way; pure, Intl only.
 
-/** Days are shown السبت → الجمعة everywhere (docs/07 §8). */
+/** Days run Saturday to Friday everywhere (docs/07 §8). */
 export const WEEK_ORDER: readonly Weekday[] = [6, 0, 1, 2, 3, 4, 5];
 
 /** Position of a weekday in WEEK_ORDER (a sort key). */

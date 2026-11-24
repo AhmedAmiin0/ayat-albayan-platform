@@ -1,11 +1,7 @@
 import type { Attendance, LessonStatus } from '@ab/catalog';
 import { attendanceKind, type AttendanceKind } from './student-details.js';
 
-/**
- * The teacher's reading of one lesson for one student (docs/46 C5): the student's own attendance
- * wins, else the lesson status. A completed lesson with no attendance was closed by the auto-held
- * job with no report since: «لم يُسجَّل», never present. Moved lessons: null (no day of their own).
- */
+/** docs/46 C5: a completed lesson with no attendance was auto-held, so it reads unrecorded. */
 export function teacherAttendanceKind(
   status: LessonStatus,
   attendance: Attendance | null,

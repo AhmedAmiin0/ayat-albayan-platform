@@ -1,3 +1,4 @@
+import type { SubscriptionStatus } from '@ab/catalog';
 import {
   alertDedupKey,
   alertFor,
@@ -5,8 +6,7 @@ import {
   studentRemaining,
   subscriptionStatusFor,
   type BalanceAlert,
-  type SubscriptionStatus,
-} from '@ab/shared';
+} from '@ab/money';
 
 // Pure decisions over one student's packages (R-SUB-01/02). Packages arrive in FIFO order
 // (starts_on, created_at, id), the same order as v_subscription_balance. A cancelled package is skipped by

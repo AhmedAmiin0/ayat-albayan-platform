@@ -1,7 +1,4 @@
-// «إلغاء مع استرداد»: the refund a course stop may pay back, and how it is
-// split between the card payments (Stripe) and the rest (a manual transfer). Pure; every amount is
-// rounded to the package currency's minor unit as the platform stores it: the ISO 4217 decimals,
-// at most 2 (payments and prices are numeric(12, 2) in every currency, so KWD / OMR keep 2).
+// Refund split card-first (Stripe), rest manual; amounts round to ISO 4217 decimals, at most 2.
 
 /** ISO 4217 decimals that differ from 2. */
 const ISO_DIGITS: Readonly<Record<string, number>> = {
@@ -24,7 +21,7 @@ export const toMinor = (amount: number, currency: string): number =>
 
 export const fromMinor = (minor: number, currency: string): number => minor / minorScale(currency);
 
-/** «نسبة احتساب الحلقة المحضورة عند الاسترداد»: percent of the per-lesson price, 0-300. */
+/** Percent of the per-lesson price charged per attended lesson on refund, 0-300. */
 export const REFUND_RATE_MIN = 0;
 export const REFUND_RATE_MAX = 300;
 
@@ -104,10 +101,7 @@ export function splitRefund(input: {
   return { cards: cards.filter((c) => c.amount > 0), manual: fromMinor(left, currency) };
 }
 
-/**
- * 409 refund_exceeds_allowed: the amount asked is above the allowed maximum or negative. 0 is a
- * stop that refunds nothing («مبلغ مخصص» from 0).
- */
+/** Above the allowed maximum or negative; 0 is a stop that refunds nothing. */
 export const refundAmountProblem = (
   amount: number,
   allowed: number,

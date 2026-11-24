@@ -2,9 +2,7 @@ import { phoneE164 } from '@ab/core';
 import { z } from 'zod';
 import { guardianCreateSchema, studentCreateSchema } from './people.js';
 
-// «تعديل البيانات» by an assistant: the admin's PATCH fields minus the
-// admin-only ones, under people.edit, never students.write / guardians.write (those also delete and
-// merge). Strict: an admin-only field answers 400, it is never silently dropped.
+// The assistant's edit: admin PATCH minus admin-only fields; strict, so those answer 400.
 
 /**
  * The student fields an assistant edits. Admin-only (PATCH /students/:id): status and
@@ -44,7 +42,7 @@ export type PeopleGuardianPatch = z.output<typeof peopleGuardianPatchSchema>;
  */
 export const notesFreeSchema = z.object({ notes: z.undefined().optional() });
 
-/** A new family for «ربط بولي أمر آخر»: found by its main phone first, created only when new. */
+/** A new family is found by its main phone first and created only when new. */
 export const newFamilySchema = guardianCreateSchema.pick({
   name: true,
   phone_e164: true,
@@ -52,7 +50,7 @@ export const newFamilySchema = guardianCreateSchema.pick({
   country: true,
 });
 
-/** «ربط بولي أمر آخر»: exactly one of an existing family or a new one, tagged by `kind`. */
+/** Exactly one of an existing family or a new one, tagged by `kind`. */
 export const familyMoveSchema = z.union([
   z
     .strictObject({ guardian_id: z.guid() })
@@ -63,7 +61,7 @@ export const familyMoveSchema = z.union([
 ]);
 export type FamilyMove = z.output<typeof familyMoveSchema>;
 
-/** «الطالب هو ولي الأمر»: the family's number is the student's own (an adult learner). */
+/** The family's number is the student's own (an adult learner). */
 export const contactSelfSchema = z.strictObject({ contact_is_self: z.boolean() });
 export type ContactSelf = z.output<typeof contactSelfSchema>;
 

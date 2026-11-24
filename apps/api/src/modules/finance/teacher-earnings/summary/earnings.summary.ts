@@ -1,4 +1,4 @@
-import type { TeacherEarningsSummaryView } from '@ab/shared';
+import type { TeacherEarningsSummaryView } from '@ab/money';
 import type { SummaryRow } from './corrections.repo';
 
 const cents = (v: number) => Math.round(Number(v) * 100);

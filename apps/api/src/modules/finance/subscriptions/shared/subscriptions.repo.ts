@@ -1,12 +1,12 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import { netPaidIn } from '@ab/shared';
+import { netPaidIn } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains } from '@/common/db/list-sort';
 import { dbError } from '@/common/http/http';
 import { readChunked, readChunkedAll } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 export type { SubListQuery } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 

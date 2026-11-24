@@ -16,13 +16,13 @@ export interface RejoinState {
 
 export interface RoomClosingProps {
   kind: ClosingKind;
-  /** Staff keep their plain «خرجت من الحلقة» (closing-kinds.ts). */
+  /** Staff keep their plain left screen (closing-kinds.ts). */
   variant: RoomVariant;
   /** A failed connect's own words. */
   failure: string | null;
   context: RoomContext | null;
   onRejoin?: (() => void) | undefined;
-  /** «رجوع» to the page that opened the room (never a dead end). */
+  /** Back to the page that opened the room, never a dead end. */
   onBack?: (() => void) | undefined;
   rejoin?: RejoinState | undefined;
 }
@@ -33,7 +33,7 @@ interface ButtonsProps {
   busy: boolean;
 }
 
-/** «ادخل مرة أخرى» (while it can work) over «رجوع», which leads when it is alone. */
+/** Rejoin while it can work, over back, which leads when alone. */
 function ClosingButtons({ again, onBack, busy }: ButtonsProps) {
   return (
     <div className="grid w-full gap-2.5">
@@ -65,11 +65,6 @@ function ClosingText({ kind, variant, failure, context, rejoin }: RoomClosingPro
   );
 }
 
-/**
- * After the call (boards FamRoomWebLeft / FamRoomWebEnded): a calm icon, why it ended, who is
- * still inside when it is known, «ادخل مرة أخرى» where a rejoin can work, and «رجوع». It settles
- * in with fade-up.
- */
 export function RoomClosing(props: RoomClosingProps) {
   const { kind, variant, context, onRejoin, onBack, rejoin } = props;
   const spec = closingSpec(kind, variant);

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RoomContext } from './room-kit';
 
-/** «حلقة يوسف مع أ. فاطمة» over its time («6:30 – 7:15 م»), or the room's own name. */
+/** The lesson title over its time, or the room's own name. */
 export function ContextTitle({ context }: { context: RoomContext | null }) {
   return (
     <div className="min-w-0 flex-1">
@@ -14,7 +14,6 @@ export function ContextTitle({ context }: { context: RoomContext | null }) {
 
 interface Props {
   context: RoomContext | null;
-  /** The end side of the line (the room: «جارٍ التسجيل» and the people pill). */
   children?: ReactNode;
 }
 

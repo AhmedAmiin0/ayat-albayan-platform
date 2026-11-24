@@ -18,7 +18,7 @@ interface PersonRowProps {
   presence: readonly RoomPresence[];
 }
 
-/** The host's 44pt actions on this person, named as on the web («كتم ميكروفون سهيلة»…). */
+/** Named as on the web. */
 function HostActions({ person, panel }: Omit<PersonRowProps, 'presence'>) {
   const { color } = useTheme();
   const of = (line: string) => line.replace('{name}', person.name);
@@ -43,7 +43,6 @@ function HostActions({ person, panel }: Omit<PersonRowProps, 'presence'>) {
   );
 }
 
-/** What everyone sees of a person (canvas RoomXParticipants): mic off, camera off, «يتحدث». */
 function StateIcons({ person }: Pick<PersonRowProps, 'person'>) {
   const { color } = useTheme();
   return (
@@ -59,7 +58,6 @@ function StateIcons({ person }: Pick<PersonRowProps, 'person'>) {
   );
 }
 
-/** «فاطمة (أنت) · معلم/ة», its state, and the host's actions where this person may be acted on. */
 export function PersonRow({ person, panel, presence }: PersonRowProps) {
   const { color } = useTheme();
   const name = person.local ? `${person.name} (${t.classroom.you})` : person.name;

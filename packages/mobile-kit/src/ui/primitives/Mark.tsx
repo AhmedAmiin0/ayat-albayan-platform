@@ -12,7 +12,7 @@ const SMALL_MARK_MAX = 32;
 interface MarkProps {
   /** Rendered size (a square box, the emblem is contained); ≤ 32 switches to the Mushaf crop. */
   size?: number;
-  /** Decorative by default; `labelled` exposes it as an image named «آيات البيان». */
+  /** Decorative by default; `labelled` exposes it as a named image. */
   labelled?: boolean;
 }
 

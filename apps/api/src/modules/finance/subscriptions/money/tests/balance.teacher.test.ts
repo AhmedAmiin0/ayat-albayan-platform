@@ -1,4 +1,4 @@
-import type { StudentBalanceView, SubscriptionView } from '@ab/shared';
+import type { StudentBalanceView, SubscriptionView } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { toTeacherBalance } from '@/modules/finance/subscriptions/money/balance.teacher';
 

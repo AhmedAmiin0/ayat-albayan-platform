@@ -12,7 +12,7 @@ interface LiveControls extends RoomControlsActions {
   output: AudioOutput | null;
   front: boolean;
   switchCamera: () => void;
-  /** The microphone went off by the teacher's hand: «كتمك المعلم». */
+  /** The microphone was turned off by the teacher. */
   mutedByStaff: boolean;
 }
 
@@ -20,16 +20,12 @@ interface RoomLiveProps {
   snap: RoomSnapshot;
   Video: RoomPlatform['Video'];
   controls: LiveControls;
-  /** «المحادثة»'s unread count; null = no chat control. */
+  /** Null means no chat control. */
   chatUnread: number | null;
   /** The panel over the foot: the participants, the leave question, the chat notice. */
   sheet: ReactNode;
 }
 
-/**
- * In the room: «جارٍ إعادة الاتصال…» while LiveKit reconnects, «كتمك المعلم» (canvas RoomXNotice),
- * the grid, and the controls.
- */
 export function RoomLive({ snap, Video, controls, chatUnread, sheet }: RoomLiveProps) {
   const { color } = useTheme();
   return (

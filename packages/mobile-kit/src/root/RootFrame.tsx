@@ -22,10 +22,7 @@ const hiddenWhile = (covered: boolean) =>
     importantForAccessibility: covered ? 'no-hide-descendants' : 'auto',
   }) as const;
 
-/**
- * The app's frame once ready (status bar, reconnecting bar, stack); the startup overlay on top,
- * and «تحت الصيانة» over everything (owner 2026-11-21) while the tree stays mounted beneath.
- */
+/** The maintenance cover lies over everything while the tree stays mounted beneath. */
 export function RootFrame({ ready, fontsLoaded, children }: RootFrameProps) {
   const { color } = useTheme();
   const { view, checking, retry } = useMaintenance();

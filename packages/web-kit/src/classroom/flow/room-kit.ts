@@ -3,20 +3,15 @@ import { ROOM_VARIANTS, type RoomFeatures, type RoomVariant } from './room-varia
 
 /** What the page that opened the room knows about the lesson (the portal card; staff: nothing). */
 export interface RoomContext {
-  /** «حلقة يوسف مع أ. فاطمة». */
   title: string;
-  /** «6:30 – 7:15 م». */
   subtitle?: string | undefined;
-  /** Under «بانتظار المعلم/ة…»: the countdown to the start. */
+  /** The countdown to the start. */
   waiting?: ReactNode;
-  /** On «خرجت من الحلقة»: who is in the room now. */
+  /** Who is in the room now. */
   presence?: ReactNode;
 }
 
-/**
- * The family's in-room «المحادثة»: THE student channel (the app's room chat, use-family-room-chat),
- * its unread count, and `locked` on a trial lesson (join.chat false: the panel explains instead).
- */
+/** The family's in-room chat is the student channel; `locked` on a trial (join.chat false). */
 export interface RoomChatSlot {
   unread: number;
   locked: boolean;

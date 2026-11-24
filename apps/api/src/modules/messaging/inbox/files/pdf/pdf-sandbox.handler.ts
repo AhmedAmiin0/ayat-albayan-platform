@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES } from '@ab/shared';
+import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { chmod, rm } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { PDF_RUN, type PageRange } from './pdf-pages';

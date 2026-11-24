@@ -1,5 +1,5 @@
 import { ar } from '@/common/infra/i18n/server-text';
-import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
+import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { AlertsRepo } from './alerts.repo';

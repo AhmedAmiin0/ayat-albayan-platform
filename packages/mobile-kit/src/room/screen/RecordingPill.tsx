@@ -3,10 +3,7 @@ import { t } from '../../lib/i18n/i18n';
 import { AppText, Ltr } from '../../ui';
 import { shape, type, useTheme } from '../../theme';
 
-/**
- * «جارٍ التسجيل · 04:12» (canvas RoomXTeacher): 24pt, the soft bad fill and bad ink, an 8pt dot,
- * bold 12; the elapsed time is a timer in an LTR island.
- */
+/** The elapsed time is a timer in an LTR island. */
 export function RecordingPill({ elapsed }: { elapsed: string | null }) {
   const { color } = useTheme();
   const ink = { fontFamily: type.ui[700], fontSize: 12, color: color.bad };

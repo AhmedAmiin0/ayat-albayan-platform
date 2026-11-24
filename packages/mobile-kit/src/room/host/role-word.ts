@@ -12,10 +12,7 @@ const FAMILY: Record<FamilyRole, string> = {
 const familyRole = (role: RoomPresence['role']): role is FamilyRole =>
   role === 'student' || role === 'guardian';
 
-/**
- * A person's role in words: the token's role («معلم/ة», «مساعد حلقة»), except a guest the lesson's
- * presence knows (the family's link): «الطالب» / «ولي الأمر» instead of «ضيف». null: unknown.
- */
+/** A guest the lesson's presence knows is named student or guardian, not guest; null if unknown. */
 export function roleWord(person: RoomTile, presence: readonly RoomPresence[]): string | null {
   const known = presence.find((p) => p.name === person.name)?.role;
   if (known && familyRole(known) && person.role !== 'teacher') return FAMILY[known];

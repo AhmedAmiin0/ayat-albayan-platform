@@ -1,4 +1,9 @@
-import { cancelBlock, type CancelBlock, type SubscriptionCancel as CancelBody, type SubscriptionView } from '@ab/shared';
+import {
+  cancelBlock,
+  type CancelBlock,
+  type SubscriptionCancel as CancelBody,
+  type SubscriptionView,
+} from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
