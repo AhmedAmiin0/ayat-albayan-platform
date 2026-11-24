@@ -1,4 +1,4 @@
-import type { AssistantTermsView } from '@ab/shared';
+import type { AssistantTermsView } from '@ab/money';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { CardTitle } from './CardTitle';

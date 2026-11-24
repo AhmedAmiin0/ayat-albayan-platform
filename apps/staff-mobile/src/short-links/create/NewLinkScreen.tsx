@@ -1,5 +1,5 @@
 import { listedCount, type LinkField, type LinkForm } from '@ab/client-core';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import {

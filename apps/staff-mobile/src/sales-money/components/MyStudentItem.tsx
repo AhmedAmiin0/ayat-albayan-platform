@@ -1,4 +1,4 @@
-import type { MyStudentRow } from '@ab/shared';
+import type { MyStudentRow } from '@ab/money';
 import { router } from 'expo-router';
 import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';

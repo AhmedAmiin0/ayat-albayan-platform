@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { lessonStatusText } from '@/core/ui/feedback/lesson-status';

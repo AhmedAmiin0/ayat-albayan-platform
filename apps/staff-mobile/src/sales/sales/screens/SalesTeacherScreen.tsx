@@ -1,4 +1,5 @@
-import { type SalesTeacherView, splitByStatus, studentStatusStyle, type StudentListKind } from '@ab/shared';
+import { type SalesTeacherView, splitByStatus, type StudentListKind } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { router, useLocalSearchParams } from 'expo-router';
 import { pushInTab } from '@/core/nav/back-within';
 import { useCallback, useState } from 'react';

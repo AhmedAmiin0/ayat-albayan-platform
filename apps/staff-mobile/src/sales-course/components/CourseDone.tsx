@@ -1,4 +1,6 @@
-import { counted, courseLessonCount, type BookingRequest, type BookingResult, type SalesCourseView } from '@ab/shared';
+import { courseLessonCount, type BookingRequest, type SalesCourseView } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { BookingResult } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, AppText, Button, NuqtaGlyph, type, useTheme, whenText } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';

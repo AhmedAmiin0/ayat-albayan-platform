@@ -1,4 +1,4 @@
-import type { AssistantCommissionStatus } from '@ab/shared';
+import type { AssistantCommissionStatus } from '@ab/money';
 import { t, StatusChip } from '@ab/mobile-kit';
 
 /** Voided commissions are struck through, as the web's CommissionChip. */

@@ -1,4 +1,5 @@
-import type { AttendanceKind, SalesStudentDetails, StatusStyle } from '@ab/shared';
+import type { AttendanceKind, SalesStudentDetails } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 

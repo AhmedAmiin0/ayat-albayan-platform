@@ -1,4 +1,6 @@
-import { formatPhone, studentStatusStyle, type SalesStudentDetails } from '@ab/shared';
+import type { SalesStudentDetails } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { studentStatusStyle } from '@ab/money';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import {

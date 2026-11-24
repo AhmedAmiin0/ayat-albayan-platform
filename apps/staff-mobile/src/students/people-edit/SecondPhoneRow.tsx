@@ -1,4 +1,5 @@
-import { formatPhone, type PeopleEditView } from '@ab/shared';
+import type { PeopleEditView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, ltr } from '@ab/mobile-kit';

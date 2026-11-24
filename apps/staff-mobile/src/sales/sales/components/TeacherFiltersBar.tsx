@@ -1,4 +1,5 @@
-import { GENDERS, type Program, type SalesTeacherFilter } from '@ab/shared';
+import type { SalesTeacherFilter } from '@ab/shared';
+import { GENDERS, type Program } from '@ab/catalog';
 import { View } from 'react-native';
 import { t, FilterPills } from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';

@@ -1,4 +1,4 @@
-import { walletStateStyle, type MyCommissionRow } from '@ab/shared';
+import { walletStateStyle, type MyCommissionRow } from '@ab/money';
 import { memo } from 'react';
 import { View } from 'react-native';
 import { StatusChip, AppText, type, useTheme } from '@ab/mobile-kit';

@@ -1,4 +1,5 @@
-import { COURSE_PAUSE_REASON, RIYADH_TZ } from '@ab/shared';
+import { COURSE_PAUSE_REASON } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { fireEvent, screen } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
 import { clockIn } from '@/core/lib/clock';
