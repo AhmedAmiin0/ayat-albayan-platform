@@ -1,0 +1,1 @@
+export { hasCourse } from './SalesSubscribeAction';

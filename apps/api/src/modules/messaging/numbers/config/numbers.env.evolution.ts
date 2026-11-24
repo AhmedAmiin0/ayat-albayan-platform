@@ -1,4 +1,5 @@
-import { EVOLUTION_MODES, evolutionConfigOf, type EvolutionMode } from '@ab/shared';
+import { evolutionConfigOf } from '@ab/shared';
+import { EVOLUTION_MODES, type EvolutionMode } from '@ab/catalog';
 import type { Env, EvolutionLineEnv } from '@/config/env/env';
 import { evolutionBaseOf } from '@/config/env/whatsapp/env.evolution';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';

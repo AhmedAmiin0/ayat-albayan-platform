@@ -1,4 +1,5 @@
-import { isClosedLesson, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { isClosedLesson } from '@ab/schedule';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { GoogleEventBody } from '@/modules/platform/google-sync/google-client.port';
 import { EVENT, isJitsi, PLATFORM_SOURCE, POPUP_MINUTES, TZ } from '@/modules/platform/google-sync/google-format';

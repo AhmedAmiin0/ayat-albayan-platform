@@ -1,5 +1,5 @@
 import type { CodeRoutes } from '@ab/client-core';
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

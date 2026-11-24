@@ -1,10 +1,5 @@
-import {
-  CANCEL_STATUS,
-  isChargeable,
-  type CancelBy,
-  type LessonEvent,
-  type LessonStatus,
-} from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { CANCEL_STATUS, isChargeable, type CancelBy, type LessonEvent } from '@ab/schedule';
 import type { LessonChange } from '@/modules/teaching/scheduling/change-set';
 import { conflict } from '@/common/http/errors';
 

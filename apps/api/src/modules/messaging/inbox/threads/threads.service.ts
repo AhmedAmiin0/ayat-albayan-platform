@@ -1,4 +1,5 @@
-import type { Page, ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';

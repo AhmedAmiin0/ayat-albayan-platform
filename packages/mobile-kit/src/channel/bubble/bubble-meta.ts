@@ -1,5 +1,6 @@
 import { channelTimeText, isPending } from '@ab/client-core';
-import type { ChannelMessageView, ClockCycle } from '@ab/shared';
+import type { ChannelMessageView } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { t } from '../../lib/i18n/i18n';
 import { locale } from '../../lib/i18n/locale';
 

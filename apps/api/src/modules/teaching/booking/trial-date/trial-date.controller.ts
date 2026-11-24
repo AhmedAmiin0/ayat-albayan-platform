@@ -1,4 +1,5 @@
-import type { BookingRequest, Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
+import type { BookingRequest, TrialDateResult, TrialHistory } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

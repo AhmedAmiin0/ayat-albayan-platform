@@ -1,4 +1,4 @@
-import { AUTO_OUTCOME_REASONS, OPEN_LESSON_STATUSES } from '@ab/shared';
+import { AUTO_OUTCOME_REASONS, OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';

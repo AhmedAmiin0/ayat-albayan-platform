@@ -1,4 +1,4 @@
-import { availabilityReplaceSchema, timeOffCreateSchema } from '@ab/shared';
+import { availabilityReplaceSchema, timeOffCreateSchema } from '@ab/schedule';
 import {
   Controller,
   Delete,

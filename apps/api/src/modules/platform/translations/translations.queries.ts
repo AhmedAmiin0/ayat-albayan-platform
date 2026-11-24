@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 

@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
 import { I18nManager } from 'react-native';
 
 // The persisted native RTL flag is the only thing known synchronously at boot, so it picks.

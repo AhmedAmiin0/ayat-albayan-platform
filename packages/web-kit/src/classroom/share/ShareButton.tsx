@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
 import { RequestButton } from './RequestButton';

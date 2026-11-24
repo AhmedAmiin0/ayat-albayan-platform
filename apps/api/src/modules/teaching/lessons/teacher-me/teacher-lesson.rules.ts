@@ -1,4 +1,5 @@
-import { isOpenLesson, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { isOpenLesson } from '@ab/schedule';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';

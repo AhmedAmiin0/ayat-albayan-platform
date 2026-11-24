@@ -15,7 +15,7 @@ import { pageQuerySchema, parseOrThrow } from '@/common/http/http';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { FeedbackReadService } from './read/feedback.read.service';
 import { FeedbackRequestService } from './request/feedback.request.service';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
 type PageQuery = z.output<typeof pageQuerySchema>;

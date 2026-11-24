@@ -1,5 +1,6 @@
-import type { Json, Tables, TablesInsert } from '@ab/db';
-import { isWaLine, type TemplateLineSync, type TemplateStatus, type WaLine } from '@ab/shared';
+import type { Json } from '@ab/db';
+import type { TemplateLineSync } from '@ab/shared';
+import { isWaLine, type TemplateStatus, type WaLine } from '@ab/catalog';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { DB, type Db } from '@/common/db/db.module';
@@ -8,11 +9,7 @@ import type { TemplatePatch } from '@/modules/messaging/whatsapp/templates/sync/
 import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { sendableCache } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import { relaneQueued, type RelaneInput } from '@/modules/messaging/whatsapp/sender/drain';
-/** One (template, number) approval (docs/23c decision 4). */
-export type ApprovalRow = Tables<'message_template_numbers'>;
-export type ApprovalWrite = TablesInsert<'message_template_numbers'>;
-/** What the per-number routes need of a wa_numbers row (ids only, never a secret). */
-export type NumberRef = Pick<Tables<'wa_numbers'>, 'id' | 'purpose' | 'is_default' | 'waba_id'>;
+import type { ApprovalRow, ApprovalWrite, NumberRef } from './types';
 
 const TEMPLATE_COPY_MS = 60_000; // cached() trusts its copy this long (another copy may write)
 type MaybeRow = TemplateRow | null; // a row, or null when none matched

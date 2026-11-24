@@ -1,4 +1,4 @@
-import { palette } from '@ab/shared';
+import { palette } from '@ab/catalog';
 
 // docs/07 §13: always light, A4, 12px floor; 10mm margin since the frame is the margin.
 const c = palette.light;

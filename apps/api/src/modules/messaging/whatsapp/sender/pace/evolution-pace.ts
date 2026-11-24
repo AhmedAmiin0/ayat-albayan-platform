@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';

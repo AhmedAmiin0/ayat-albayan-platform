@@ -1,4 +1,5 @@
-import { currentPackage, netPaidIn, type SubscriptionStatus } from '@ab/shared';
+import type { SubscriptionStatus } from '@ab/catalog';
+import { currentPackage, netPaidIn } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';

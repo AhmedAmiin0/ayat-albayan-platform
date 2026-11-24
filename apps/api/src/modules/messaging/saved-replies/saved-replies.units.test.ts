@@ -1,4 +1,4 @@
-import { systemPermissionsOf, type UserRole } from '@ab/shared';
+import { systemPermissionsOf, type UserRole } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { row } from './saved-replies.fakes';

@@ -1,4 +1,5 @@
-import { PACKAGE_IDS, PACKAGE_SIZES } from '@ab/shared';
+import { PACKAGE_SIZES } from '@ab/catalog';
+import { PACKAGE_IDS } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { bookingBodySchema, packageSizeOf, withPackageSize } from './package-size';
 

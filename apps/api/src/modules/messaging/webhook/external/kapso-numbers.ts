@@ -1,4 +1,4 @@
-import { isWaLine, type WaLine } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/catalog';
 import { numberByPhoneId, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, loadEnv, type KapsoLineEnv, type LineEnvs, type WhatsappEnv } from '@/config/env/env';
 

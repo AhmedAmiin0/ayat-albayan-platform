@@ -1,4 +1,4 @@
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';

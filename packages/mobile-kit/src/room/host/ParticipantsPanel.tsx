@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import { BottomSheet } from '@expo/ui';
 import { ScrollView, View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';

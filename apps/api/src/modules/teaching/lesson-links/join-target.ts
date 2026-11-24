@@ -1,4 +1,5 @@
-import { meetingModeOf, usesPlatform, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { meetingModeOf, usesPlatform } from '@ab/schedule';
 import { z } from 'zod';
 import { JOIN_GRACE_MS } from './join-token';
 

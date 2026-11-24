@@ -1,11 +1,7 @@
-import {
-  addDays,
-  courseRemaining,
-  DURATIONS,
-  localDateOf,
-  wallParts,
-  type CourseLessonFact,
-} from '@ab/shared';
+import { courseRemaining, type CourseLessonFact } from '@ab/shared';
+import { DURATIONS } from '@ab/catalog';
+import { localDateOf, wallParts } from '@ab/schedule';
+import { addDays } from '@ab/time';
 import { plannedCourseStarts } from '@/modules/teaching/booking/core/booking.course-end';
 import type { SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 

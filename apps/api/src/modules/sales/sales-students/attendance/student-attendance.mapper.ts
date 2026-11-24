@@ -1,13 +1,11 @@
 import {
   attendanceKind,
   attendanceTableTotals,
-  monthRangeIn,
-  RIYADH_TZ,
   teacherAttendanceKind,
-  zonedPartsIn,
   type AttendanceTableRow,
   type StudentAttendanceTable,
 } from '@ab/shared';
+import { monthRangeIn, RIYADH_TZ, zonedPartsIn } from '@ab/time';
 import { isTrialLesson } from '@/modules/finance/subscriptions';
 import { moveOf, reasonShown, type AttendanceReader } from './lesson-row-notes';
 import type { AttendanceLessonRow, AttendanceReportRow } from './student-attendance.rows';

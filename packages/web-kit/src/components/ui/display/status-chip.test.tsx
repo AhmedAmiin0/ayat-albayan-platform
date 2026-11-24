@@ -1,4 +1,4 @@
-import { gradeStyle, leadStatusStyle, studentStatusStyle } from '@ab/shared';
+import { gradeStyle, leadStatusStyle, studentStatusStyle } from '@ab/money';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -1,4 +1,6 @@
-import { currentPackage, OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { currentPackage } from '@ab/money';
+import { OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';

@@ -1,4 +1,5 @@
-import type { LineCheckView, WaLine, WaProvider } from '@ab/shared';
+import type { LineCheckView } from '@ab/shared';
+import type { WaLine, WaProvider } from '@ab/catalog';
 import type { Env, MetaLineEnv } from '@/config/env/env';
 import { chatEnv, metaNotifications } from '@/config/env/whatsapp/env.meta';
 import type { FetchLike, GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';

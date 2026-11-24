@@ -6,7 +6,7 @@ import {
   type MeetingInviteeView,
   type MeetingInviteResult,
   mayInvitePhones,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

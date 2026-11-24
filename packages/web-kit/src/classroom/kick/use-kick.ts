@@ -1,4 +1,4 @@
-import { canRemove, type JoinRole } from '@ab/shared';
+import { canRemove, type JoinRole } from '@ab/schedule';
 import { useCallback, useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';

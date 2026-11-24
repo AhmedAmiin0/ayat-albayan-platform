@@ -1,4 +1,4 @@
-import type { BookingResult, InstantLessonRequest, InstantLessonResult } from '@ab/shared';
+import type { BookingResult, InstantLessonRequest, InstantLessonResult } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { domainError } from '@/modules/teaching/booking/booking.errors';

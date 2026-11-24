@@ -1,4 +1,5 @@
-import { formatPhone, type AcademySettings } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import type { AcademySettings } from '@ab/settings';
 import type { PdfContact } from './pdf-model';
 
 /**

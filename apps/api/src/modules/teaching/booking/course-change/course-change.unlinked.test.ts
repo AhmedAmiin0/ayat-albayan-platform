@@ -1,4 +1,4 @@
-import { courseChangeCheckSchema } from '@ab/shared';
+import { courseChangeCheckSchema } from '@ab/schedule';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { errorCode } from '@/common/http/errors';
 import { BODY, RULE_A, SALES, setup } from './course-change.fakes';

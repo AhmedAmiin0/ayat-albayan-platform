@@ -1,4 +1,4 @@
-import type { Tone } from '@ab/shared';
+import type { Tone } from '@ab/money';
 import { Dot, Pill } from './pill';
 
 type Look = 'pill' | 'dot';

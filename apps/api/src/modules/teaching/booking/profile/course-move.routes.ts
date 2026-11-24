@@ -1,4 +1,5 @@
-import { profileCourseQuerySchema, type ProfileCourseView } from '@ab/shared';
+import type { ProfileCourseView } from '@ab/shared';
+import { profileCourseQuerySchema } from '@ab/schedule';
 import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
 import { Body, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import type { z } from 'zod';

@@ -1,5 +1,6 @@
-import type { RoomJoinResult, TestFlags } from '@ab/shared';
-import { joinWindowConfig } from '@ab/shared';
+import type { TestFlags } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
+import { joinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { TestFlagReader } from '@/common/auth/test-flag';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';

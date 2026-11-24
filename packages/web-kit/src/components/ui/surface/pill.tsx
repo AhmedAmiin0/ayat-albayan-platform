@@ -1,4 +1,4 @@
-import type { Tone } from '@ab/shared';
+import type { Tone } from '@ab/money';
 import type { ReactNode } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 

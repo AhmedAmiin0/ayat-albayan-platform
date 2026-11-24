@@ -1,4 +1,4 @@
-import { integrationSecretSchema } from '@ab/shared';
+import { integrationSecretSchema } from '@ab/catalog';
 import { z } from 'zod';
 
 // The academy CRM's webhook management API (wacrm, docs/19 «crm driver»): GET/POST {base}/webhooks,

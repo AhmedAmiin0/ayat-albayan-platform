@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { bookingBase, useBookingMode } from '@/features/teaching/booking/mode';
-import type { OutsideParams } from './OtherTime.types';
+import type { OutsideParams } from './OtherTime';
 
 /** The query string: the grid's fields only, never a time from this browser. */
 export function outsideQuery(p: OutsideParams): string {

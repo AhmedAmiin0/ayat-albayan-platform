@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { kickScope, recordingSourceOf } from '@ab/web-kit/classroom/api/moderation-api';
 import { useBoard } from '@ab/web-kit/classroom/board/use-board';
 import { KickButton } from '@ab/web-kit/classroom/kick/KickButton';

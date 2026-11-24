@@ -1,5 +1,5 @@
 import { jobBeats } from './beat-book';
-import type { BeatPlan, BeatSink } from './beat-book.types';
+import type { BeatPlan, BeatSink } from './beat-book';
 
 /**
  * For a job with its own timers (not a Ticker): registers its heartbeat now and returns the timer

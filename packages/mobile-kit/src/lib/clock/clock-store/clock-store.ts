@@ -1,4 +1,10 @@
-import { CLOCK_STORAGE_KEY, parseClockPref, resolveHourCycle, type ClockCycle, type ClockPref } from '@ab/shared';
+import {
+  CLOCK_STORAGE_KEY,
+  parseClockPref,
+  resolveHourCycle,
+  type ClockCycle,
+  type ClockPref,
+} from '@ab/time';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSyncExternalStore } from 'react';
 import { deviceUses24 } from '../device-clock';

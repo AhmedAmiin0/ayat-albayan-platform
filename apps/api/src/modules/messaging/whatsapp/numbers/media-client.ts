@@ -1,4 +1,4 @@
-import { isWaLine, type WaLine } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/catalog';
 import { callsNumber } from '@/common/configuration/integrations/calls-number';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { allowedRecipients, loadEnv } from '@/config/env/env';

@@ -1,4 +1,5 @@
-import { GOOGLE_SETTING_KEYS, isSettingKey } from '@ab/shared';
+import { GOOGLE_SETTING_KEYS } from '@ab/catalog';
+import { isSettingKey } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { GOOGLE_DEFAULTS, readGoogleSettings } from './google-settings';
 

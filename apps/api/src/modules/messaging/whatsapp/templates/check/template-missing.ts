@@ -1,4 +1,5 @@
-import { crmTemplateName, type WaLine } from '@ab/shared';
+import { crmTemplateName } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { REGISTRY_ENTITY_ID } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';

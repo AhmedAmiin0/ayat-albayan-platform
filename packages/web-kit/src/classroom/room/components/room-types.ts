@@ -1,4 +1,4 @@
-import type { JoinRole, MuteSource } from '@ab/shared';
+import type { JoinRole, MuteSource } from '@ab/schedule';
 
 /** What the room UI knows about a call. livekit-client stays behind RoomClient so tests inject a fake. */
 

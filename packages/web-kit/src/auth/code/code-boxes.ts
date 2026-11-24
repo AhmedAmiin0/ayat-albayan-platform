@@ -1,4 +1,5 @@
-import { LOGIN_CODE_LENGTH, asciiDigits } from '@ab/shared';
+import { LOGIN_CODE_LENGTH } from '@ab/shared';
+import { asciiDigits } from '@ab/core';
 
 // The 6-box code input's rules (docs/30 §7), kept pure so they are unit-tested apart from the DOM.
 

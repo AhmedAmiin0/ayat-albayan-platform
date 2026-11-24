@@ -1,12 +1,11 @@
+import type { BookingRequest, SignedUpload } from '@ab/shared';
 import {
   bookingKindOf,
   INVOICE_MAX_BYTES,
   INVOICE_MIMES,
-  type BookingRequest,
   type InvoiceInput,
   type InvoiceUpload,
-  type SignedUpload,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
   BUCKETS,

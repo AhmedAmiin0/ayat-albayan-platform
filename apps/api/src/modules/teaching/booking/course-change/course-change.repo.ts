@@ -1,4 +1,5 @@
-import { meetingModeOf, type LessonStatus, type PackageSize, type TeacherMeetingMode } from '@ab/shared';
+import type { LessonStatus, PackageSize } from '@ab/catalog';
+import { meetingModeOf, type TeacherMeetingMode } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { Contact } from '@/modules/teaching/lessons/status/confirmation-messages';

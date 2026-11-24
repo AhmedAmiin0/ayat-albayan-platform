@@ -1,4 +1,5 @@
-import { monthQuery, PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/shared';
+import { PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/catalog';
+import { monthQuery } from '@ab/money';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
 import { Controller, Get, Query, Res } from '@nestjs/common';

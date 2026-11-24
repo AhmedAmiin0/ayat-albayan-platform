@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
 import { ruleSettingsOf } from '@/common/rules/rule-settings.fakes';

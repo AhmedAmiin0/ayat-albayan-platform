@@ -1,4 +1,4 @@
-import { INTEGRATION_KEYS } from '@ab/shared';
+import { INTEGRATION_KEYS } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import { importEnv, type ImportStore } from './import-env';
 

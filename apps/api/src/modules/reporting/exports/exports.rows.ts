@@ -1,13 +1,12 @@
 import {
-  clockTime,
   DURATIONS,
-  RIYADH_TZ,
   type Attendance,
   type LeadSource,
   type LessonStatus,
   type Program,
   type StudentStatus,
-} from '@ab/shared';
+} from '@ab/catalog';
+import { clockTime, RIYADH_TZ } from '@ab/time';
 import { ar } from '@/common/infra/i18n/server-text';
 import { riyadhDate } from '@/modules/reporting/dashboard/range';
 import { riyadhStamp, safeText, type Cell } from './csv';

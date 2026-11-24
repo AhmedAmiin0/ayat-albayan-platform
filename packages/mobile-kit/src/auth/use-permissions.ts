@@ -4,8 +4,8 @@ import {
   canUnhideMessages,
   type CorrectionActor,
   sendsAllTemplates,
-  type Permission,
 } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { apiFetch } from '../lib/http/api';

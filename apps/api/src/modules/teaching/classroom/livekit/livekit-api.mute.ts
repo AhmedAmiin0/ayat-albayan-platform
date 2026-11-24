@@ -1,4 +1,4 @@
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 import type { LivekitApi } from './livekit-api';
 import { ignoredAnswer, participantAnswer } from './livekit-twirp';
 

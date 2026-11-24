@@ -6,9 +6,5 @@ export {
   throwIfDbError,
 } from './http';
 export { LeadsModule } from './leads.module';
-export {
-  type InboundContact,
-  invalidTransition,
-  type LeadAction,
-  LeadsService,
-} from './leads.service';
+export { invalidTransition, LeadsService } from './leads.service';
+export type { InboundContact, LeadAction } from './leads.types';

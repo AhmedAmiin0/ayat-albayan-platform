@@ -1,11 +1,5 @@
-import {
-  bubbleWord,
-  type MessageStatus,
-  messageTicks,
-  type TickKind,
-  tickTone,
-  type TickTone,
-} from '@ab/shared';
+import { bubbleWord, messageTicks, type TickKind, tickTone, type TickTone } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { type Palette, useTheme } from '../../theme';

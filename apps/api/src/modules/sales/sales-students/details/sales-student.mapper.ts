@@ -1,9 +1,6 @@
 import {
   attendanceKind,
   attendanceTotals,
-  currentPackage,
-  netPaid,
-  partPaidOf as owedPartPaid,
   type SalesPackageSummary,
   type SalesPartPaid,
   type ReportSummaryView,
@@ -13,6 +10,7 @@ import {
   type SalesStudentSubscription,
   type SalesTrialLesson,
 } from '@ab/shared';
+import { currentPackage, netPaid, partPaidOf as owedPartPaid } from '@ab/money';
 import { type HistoryBundle, toSalesHistory } from '@/modules/sales/sales';
 import type { AttendanceRow, DetailsStudentRow, PriceRow } from './sales-student.repo';
 

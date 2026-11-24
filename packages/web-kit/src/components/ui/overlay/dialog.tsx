@@ -1,4 +1,4 @@
-import type { Glyph, Tone } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@ab/web-kit/lib/utils';

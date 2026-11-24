@@ -1,4 +1,5 @@
-import { lessonWhenAt, sameClockAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { sameClockAt } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';

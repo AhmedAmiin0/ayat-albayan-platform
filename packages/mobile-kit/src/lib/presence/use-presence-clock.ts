@@ -1,4 +1,6 @@
-import type { ClockCycle, Locale, PresenceText } from '@ab/shared';
+import type { PresenceText } from '@ab/shared';
+import type { Locale } from '@ab/core';
+import type { ClockCycle } from '@ab/time';
 import { useClockCycle } from '../clock/clock-store';
 import { phoneTz } from '../clock/phone-tz';
 import { t } from '../i18n/i18n';

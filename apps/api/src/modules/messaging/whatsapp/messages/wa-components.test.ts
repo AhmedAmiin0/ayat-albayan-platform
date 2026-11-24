@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  bodyVarCount,
-  mediaMessage,
-  readReceipt,
-  submitPayload,
-  textMessage,
-} from './wa-components';
+import { submitPayload } from './submit';
+import { bodyVarCount, mediaMessage, readReceipt, textMessage } from './wa-components';
 import { templateMessage } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
 import { REMINDER_24H, REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';

@@ -1,4 +1,5 @@
-import { chatOpen, type PortalStudent, type RoomJoinResult } from '@ab/shared';
+import type { PortalStudent } from '@ab/shared';
+import { chatOpen, type RoomJoinResult } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import type { RoomChatSlot } from '@ab/web-kit/classroom/flow/room-kit';
 import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';

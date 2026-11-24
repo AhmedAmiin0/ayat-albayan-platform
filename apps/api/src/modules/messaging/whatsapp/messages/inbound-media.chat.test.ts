@@ -1,4 +1,5 @@
-import { INVOICE_MAX_BYTES, PLAYABLE_MAX_BYTES, isChatViewMime } from '@ab/shared';
+import { PLAYABLE_MAX_BYTES, isChatViewMime } from '@ab/shared';
+import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';

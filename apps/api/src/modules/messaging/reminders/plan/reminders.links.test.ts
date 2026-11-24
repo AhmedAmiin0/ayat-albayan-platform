@@ -1,4 +1,4 @@
-import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { at, sampleLesson } from '@/modules/messaging/reminders/reminders.fakes';
 import { joinCandidates, roomFor, sentLinks, type RoomContext } from './reminders.links';

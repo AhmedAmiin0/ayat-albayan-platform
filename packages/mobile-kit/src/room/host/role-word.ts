@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import type { RoomTile } from '../model/room-types';
 import { t } from '../../lib/i18n/i18n';
 

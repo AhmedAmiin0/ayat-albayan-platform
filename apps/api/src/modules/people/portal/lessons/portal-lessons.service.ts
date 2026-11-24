@@ -1,11 +1,5 @@
-import {
-  isOpenLesson,
-  joinWindowConfig,
-  PORTAL_LESSON_DAYS,
-  type PortalLessons,
-  type PortalRoomLink,
-  type RoomJoinResult,
-} from '@ab/shared';
+import { PORTAL_LESSON_DAYS, type PortalLessons, type PortalRoomLink } from '@ab/shared';
+import { isOpenLesson, joinWindowConfig, type RoomJoinResult } from '@ab/schedule';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

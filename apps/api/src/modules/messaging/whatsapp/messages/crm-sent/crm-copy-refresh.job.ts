@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';

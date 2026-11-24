@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN_ID, gateApp } from './gate.test-app';
 

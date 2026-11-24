@@ -1,4 +1,4 @@
-import { lessonRoomName, type JoinRole, type RoomJoinResult } from '@ab/shared';
+import { lessonRoomName, type JoinRole, type RoomJoinResult } from '@ab/schedule';
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import type { LivekitEnv } from '@/config/env/env';
 import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from '@/modules/teaching/classroom/classroom.config';

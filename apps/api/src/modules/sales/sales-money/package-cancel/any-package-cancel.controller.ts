@@ -1,10 +1,9 @@
 import {
   salesPackageIdSchema,
-  subscriptionCancelSchema,
   type SalesPackageCancelCheck,
   type SalesPackageCancelled,
-  type SubscriptionCancel,
 } from '@ab/shared';
+import { subscriptionCancelSchema, type SubscriptionCancel } from '@ab/money';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

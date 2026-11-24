@@ -1,4 +1,4 @@
-import { roleOfMeta } from '@ab/shared';
+import { roleOfMeta } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
 import { grantsFor, mintServerToken, mintToken, signJwt } from './livekit-token';

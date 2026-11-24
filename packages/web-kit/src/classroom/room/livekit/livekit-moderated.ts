@@ -1,4 +1,4 @@
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 import { RoomEvent, type Room } from 'livekit-client';
 import type { ModeratedEvent } from '@ab/web-kit/classroom/room/components/room-types';
 

@@ -1,5 +1,7 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import { NO_ASSIGNEE, type LeadSortKey, type LeadSource, type LeadStatus, type ListSort } from '@ab/shared';
+import { NO_ASSIGNEE, type LeadSortKey } from '@ab/shared';
+import type { LeadSource, LeadStatus } from '@ab/catalog';
+import type { ListSort } from '@ab/core';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, type SortSpec } from '@/common/db/list-sort';

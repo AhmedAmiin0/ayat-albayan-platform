@@ -1,10 +1,10 @@
 import type {
   FeedbackQuery,
   FeedbackRowView,
-  Page,
   TeacherFeedbackSummary,
   TeacherFeedbackView,
 } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

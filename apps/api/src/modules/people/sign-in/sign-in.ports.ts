@@ -1,4 +1,5 @@
-import type { PasswordSession, CodeSession, UserRole } from '@ab/shared';
+import type { PasswordSession, CodeSession } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 
 // Family accounts (docs/30): what the sign-in flows read and write, as ports so the flows are tested
 // on in-memory fakes (sign-in.fakes.ts) and run on Supabase (codes.queries, subjects.queries, auth-gate).
@@ -145,6 +146,3 @@ export interface SignInConfig {
   supabaseUrl: string;
   signInKey: string;
 }
-
-/** Staff = every base role but the family ones (guardian, student). */
-export const isStaff = (role: UserRole): boolean => role !== 'guardian' && role !== 'student';

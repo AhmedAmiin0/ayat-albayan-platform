@@ -1,4 +1,10 @@
-import { meetingRoomName, meetingState, meetingWindow, type JoinWindowConfig, type MeetingCreated } from '@ab/shared';
+import {
+  meetingRoomName,
+  meetingState,
+  meetingWindow,
+  type JoinWindowConfig,
+  type MeetingCreated,
+} from '@ab/schedule';
 import { ConflictException, ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

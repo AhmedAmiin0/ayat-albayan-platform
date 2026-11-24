@@ -1,6 +1,5 @@
-import {
-  isReactionPayload, reactionRef, waSendKind, type TemplateDocument, type WaLine,
-} from '@ab/shared';
+import { isReactionPayload, reactionRef, waSendKind, type TemplateDocument } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, isSentFilePath, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';

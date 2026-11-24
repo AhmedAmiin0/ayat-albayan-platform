@@ -1,4 +1,4 @@
-import { LOCALE_STORAGE_KEY } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { accessToken } from '../http/access-token';
 import { apiSend } from '../http/api';

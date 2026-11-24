@@ -1,9 +1,9 @@
-import type { Conflict, CourseChangeRequest } from '@ab/shared';
+import type { Conflict, CourseChangeRequest } from '@ab/schedule';
 import { randomUUID } from 'node:crypto';
 import { confirmationMessages, forMessages, type Contact } from '@/modules/teaching/lessons/status/confirmation-messages';
 import { planLessons } from '@/modules/teaching/lessons/reschedule/rule-plan';
 import type { NewLesson, NewRule } from '@/modules/teaching/scheduling/change-set';
-import { addDays } from '@ab/shared';
+import { addDays } from '@ab/time';
 import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
 import type { ChangePlan, ChangeRole } from './course-change.plan';
 import type { ChangeRule, OpenCourseLesson } from './course-change.repo';

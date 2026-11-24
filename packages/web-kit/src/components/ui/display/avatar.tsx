@@ -1,4 +1,5 @@
-import { avatarInitials, avatarTone } from '@ab/shared';
+import { avatarInitials } from '@ab/shared';
+import { avatarTone } from '@ab/catalog';
 import { memo, useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';

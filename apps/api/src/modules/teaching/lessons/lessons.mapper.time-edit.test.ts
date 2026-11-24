@@ -1,4 +1,4 @@
-import { LESSON_STATUSES } from '@ab/shared';
+import { LESSON_STATUSES } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { toLessonView } from './lessons.mapper';
 import { lessonRow } from './lessons.fakes';

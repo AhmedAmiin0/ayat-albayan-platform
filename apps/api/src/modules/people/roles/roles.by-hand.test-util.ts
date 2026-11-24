@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 
 /** Added by hand in production, not by migration; the sales matrix holds them for restore. */
 const PEOPLE_EDIT: Permission[] = ['people.edit', 'students.attach_guardian', 'people.switch_role'];

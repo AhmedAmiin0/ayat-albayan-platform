@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES } from '@ab/shared';
+import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { IDS } from '@/modules/teaching/booking/booking.fakes';
 import { code, paid, PATH, SCOPE, setup } from './booking.invoice.fakes';

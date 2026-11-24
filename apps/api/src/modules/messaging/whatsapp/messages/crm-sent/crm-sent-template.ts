@@ -1,4 +1,4 @@
-import { isWaLine, type WaLine } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/catalog';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { lineProvider, loadEnv, type Env } from '@/config/env/env';
 import { wabaReport } from '@/modules/messaging/whatsapp/drivers/waba/waba-report';

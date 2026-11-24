@@ -1,4 +1,4 @@
-import { isOwnedSettingKey, SEED_ENTRIES } from '@ab/shared';
+import { isOwnedSettingKey, SEED_ENTRIES } from '@ab/settings';
 import { ConflictException } from '@nestjs/common';
 
 /** docs/26 §3: ar hints of settings rows are edited on values only; module-owned keys excluded. */

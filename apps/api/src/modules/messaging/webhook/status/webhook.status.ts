@@ -1,5 +1,5 @@
 import type { TablesUpdate } from '@ab/db';
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 
 // R-MSG-05: Meta delivery statuses move an outbound row forward only. Webhooks arrive out of

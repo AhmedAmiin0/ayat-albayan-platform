@@ -1,4 +1,4 @@
-import { AUTO_HELD_MAX_AGE_MS, decideLessonOutcome, type OutcomeDecision } from '@ab/shared';
+import { AUTO_HELD_MAX_AGE_MS, decideLessonOutcome, type OutcomeDecision } from '@ab/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import type { OpenEndedLesson } from './auto-held.plan';

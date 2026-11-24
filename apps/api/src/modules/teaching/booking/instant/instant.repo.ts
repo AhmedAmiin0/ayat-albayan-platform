@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';

@@ -1,4 +1,4 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { OccurrenceGenerator } from '@/modules/teaching/scheduling/occurrences/occurrence-generator';

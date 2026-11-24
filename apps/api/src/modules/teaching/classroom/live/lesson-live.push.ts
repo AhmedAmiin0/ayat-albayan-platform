@@ -1,4 +1,5 @@
-import { isOpenLesson, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { isOpenLesson } from '@ab/schedule';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { familyTargets, type FamilyStudent } from '@/common/push/family-readers';
 import { PushService, type PushTarget } from '@/common/push/push.service';

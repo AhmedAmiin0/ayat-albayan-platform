@@ -19,8 +19,8 @@ const FILES: Record<string, string> = {
   'apps/web/src/app.tsx': "import { Pane } from './pane/Pane';\n",
 };
 
-const gitRepo = (): string => {
-  const root = makeRepo(FILES);
+const gitRepo = (files: Record<string, string> = FILES): string => {
+  const root = makeRepo(files);
   const git = (...args: string[]): string =>
     execFileSync('git', args, { cwd: root, encoding: 'utf8' });
   git('init', '-q');
@@ -63,4 +63,42 @@ test('--write moves with git mv and rewrites references, barrels and baseline ke
   assert.match(s['apps/web/eslint-suppressions.json'] ?? '', /"src\/pane\/Pane\/Pane.tsx"/);
   const status = execFileSync('git', ['status', '--short'], { cwd: root, encoding: 'utf8' });
   assert.match(status, /^RM? apps\/web\/src\/pane\/Pane\.a\.test\.tsx -> .*tests\/a\.test\.tsx$/m);
+});
+
+const SLOT = 'apps/mob/src/core/http';
+
+const ROOT_BASE: Record<string, string> = {
+  'tsconfig.base.json': '{ "compilerOptions": { "paths": { "@/*": ["${configDir}/src/*"] } } }',
+  'apps/mob/tsconfig.json': '{ "extends": "../../tsconfig.base.json" }',
+  [`${SLOT}/upload-slot.ts`]: 'export const uploadSigned = 1;\nexport type Slot = 2;\n',
+  [`${SLOT}/upload-slot.test.ts`]: "import { uploadSigned } from './upload-slot';\n",
+  [`${SLOT}/upload-slot.guard.test.ts`]: "import { uploadSigned } from './upload-slot';\n",
+  [`${SLOT}/lone.ts`]: 'export const lone = 1;\nexport default lone;\n',
+  [`${SLOT}/lone.a.test.ts`]: "import lone from './lone';\n",
+  [`${SLOT}/lone.b.test.ts`]: "import lone from './lone';\n",
+  'apps/mob/src/use.ts': "import { uploadSigned } from '@/core/http/upload-slot';\n",
+};
+
+test('--write: an app on the root base @/ path gets its unit index.ts and folder imports', () => {
+  const root = gitRepo(ROOT_BASE);
+  fold(root, ['--write', '--paths', SLOT]);
+  const s = snapshot(root);
+  assert.equal(
+    s[`${SLOT}/upload-slot/index.ts`],
+    "export { uploadSigned } from './upload-slot';\n",
+  );
+  assert.equal(
+    s['apps/mob/src/use.ts'],
+    "import { uploadSigned } from '@/core/http/upload-slot';\n",
+  );
+  assert.equal(
+    s[`${SLOT}/upload-slot/tests/upload-slot.test.ts`],
+    "import { uploadSigned } from '@/core/http/upload-slot/upload-slot';\n",
+  );
+});
+
+test('--write: a folded unit no one imports by name still gets an export-only index.ts', () => {
+  const root = gitRepo(ROOT_BASE);
+  fold(root, ['--write', '--paths', SLOT]);
+  assert.equal(snapshot(root)[`${SLOT}/lone/index.ts`], "export { lone } from './lone';\n");
 });

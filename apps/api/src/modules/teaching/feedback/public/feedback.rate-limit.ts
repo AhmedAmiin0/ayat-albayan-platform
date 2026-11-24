@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import type { FeedbackSettings } from '@/modules/teaching/feedback/feedback.settings';
 

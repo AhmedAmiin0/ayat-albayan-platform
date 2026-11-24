@@ -1,4 +1,4 @@
-import { GRANTABLE_PERMISSIONS, type Permission } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS, type Permission } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import type { RoleRecord } from '@/modules/people/roles/roles.store';
 import { errorCode } from '@/common/http/errors';

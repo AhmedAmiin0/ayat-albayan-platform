@@ -1,4 +1,4 @@
-import type { LessonRecordingView } from '@ab/shared';
+import type { LessonRecordingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';

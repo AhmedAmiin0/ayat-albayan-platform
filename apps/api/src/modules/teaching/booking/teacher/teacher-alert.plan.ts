@@ -1,4 +1,5 @@
-import { joinNames, lessonWhenText, type BookingKind, type OutboundTemplate } from '@ab/shared';
+import { joinNames, lessonWhenText, type OutboundTemplate } from '@ab/shared';
+import type { BookingKind } from '@ab/schedule';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { PushTarget } from '@/common/push/push.service';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';

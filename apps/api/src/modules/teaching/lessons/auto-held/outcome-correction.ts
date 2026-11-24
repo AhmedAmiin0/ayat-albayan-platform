@@ -1,4 +1,4 @@
-import { AUTO_HELD_MAX_AGE_MS, CORRECT_TO, isOpenLesson, type CorrectTo } from '@ab/shared';
+import { AUTO_HELD_MAX_AGE_MS, CORRECT_TO, isOpenLesson, type CorrectTo } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict } from '@/common/http/errors';

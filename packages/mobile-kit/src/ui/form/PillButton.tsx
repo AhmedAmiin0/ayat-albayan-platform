@@ -1,4 +1,4 @@
-import type { Glyph, Tone } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 import { Pressable, View } from 'react-native';
 import { shape, type, useTheme } from '../../theme';
 import { NuqtaGlyph } from '../primitives/NuqtaGlyph';

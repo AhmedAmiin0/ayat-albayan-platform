@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import type { ChangeSet, QueuedMessage } from '@/modules/teaching/scheduling/change-set';
 import type { BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 import type { MessageDraft } from '@/modules/teaching/booking/core/booking.messages';

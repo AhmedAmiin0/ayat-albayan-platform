@@ -1,4 +1,5 @@
-import type { TemplateNumberSyncView, WaProvider } from '@ab/shared';
+import type { TemplateNumberSyncView } from '@ab/shared';
+import type { WaProvider } from '@ab/catalog';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { WhatsappEnv } from '@/config/env/env';
 import { readError, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
@@ -10,7 +11,8 @@ import {
 import {
   syncByLine, syncCrmNumber, unread, type NumberLineDeps,
 } from '@/modules/messaging/whatsapp/templates/sync/number-line/template-number-line';
-import type { ApprovalRow, ApprovalWrite, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { ApprovalRow, ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One number's template sync (docs/23 phase 5, docs/23c decision 4): read THAT number's WABA list with a

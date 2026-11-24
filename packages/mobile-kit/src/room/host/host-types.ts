@@ -1,4 +1,4 @@
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 
 /**
  * The host's writes for one lesson room, injected by the app that may use them (the staff app:

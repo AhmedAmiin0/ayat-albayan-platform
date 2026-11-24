@@ -1,4 +1,5 @@
-import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
+import type { SalesMeetingView, SalesSubscriptionView } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig } from '@ab/schedule';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { SalesLessonRow } from './schedule/sales-lessons';
 import type { SalesSubscriptionRow } from './sales.repo';

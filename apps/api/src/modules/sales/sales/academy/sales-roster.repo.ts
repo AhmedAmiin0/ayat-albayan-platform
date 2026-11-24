@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import type { Attendance, LessonStatus } from '@ab/shared';
+import type { Attendance, LessonStatus } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';

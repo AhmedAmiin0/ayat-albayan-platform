@@ -1,4 +1,5 @@
-import { leadQualificationSchema, type BookingRequest, type LeadSource } from '@ab/shared';
+import { leadQualificationSchema, type BookingRequest } from '@ab/shared';
+import type { LeadSource } from '@ab/catalog';
 
 /** The lead row the booking started from (BookingQueries.lead). */
 export type LeadFacts = {

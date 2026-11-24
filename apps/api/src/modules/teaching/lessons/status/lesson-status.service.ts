@@ -1,4 +1,4 @@
-import { applyLessonEvent, type LessonStatusRequest, type StatusRouteEvent } from '@ab/shared';
+import { applyLessonEvent, type LessonStatusRequest, type StatusRouteEvent } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, errorCode } from '@/common/http/errors';

@@ -1,15 +1,16 @@
+import type { GuardianCreate, StudentCreate } from '@ab/shared';
+import type { LeadStatus, PackageSize } from '@ab/catalog';
 import type {
   BookingKind,
   BookingResult,
   Conflict,
-  GuardianCreate,
-  LeadStatus,
-  PackageSize,
-  StudentCreate, Occurrence, OccurrenceTiming } from '@ab/shared';
+  Occurrence,
+  OccurrenceTiming,
+} from '@ab/schedule';
 import type { Json } from '@ab/db';
 import { z } from 'zod';
 import type { MessageDraft } from './booking.messages';
-import { canTransitionLead } from '@ab/shared';
+import { canTransitionLead } from '@ab/catalog';
 
 export type LessonRow = {
   starts_at: string;

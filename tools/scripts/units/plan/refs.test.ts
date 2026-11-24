@@ -28,3 +28,22 @@ test('pathRefs: config paths resolve from the config folder, code mentions by re
   ];
   for (const [file, by] of expected) assert.deepEqual(refs.get(file), by, file);
 });
+
+test('pathRefs: a path a file of the same workspace spells from inside its tree counts', () => {
+  const texts: Record<string, string> = {
+    'apps/mob/src/core/http/upload-slot.ts': '',
+    'apps/mob/src/core/http/upload-slot.guard.test.ts':
+      "const HELPER = 'core/http/upload-slot.ts';",
+    'apps/web/src/core/http/upload-slot.ts': '',
+    'apps/web/src/core/http/upload-slot.guard.test.ts':
+      "const HELPER = join('core', 'http', 'upload-slot.ts');",
+    'apps/mob/src/a.ts': "import { b } from './core/http/upload-slot.ts'; const n = 'x.ts';",
+  };
+  const refs = pathRefs(Object.keys(texts), (f) => texts[f] ?? '');
+  assert.deepEqual(refs.get('apps/mob/src/core/http/upload-slot.ts'), [
+    'apps/mob/src/core/http/upload-slot.guard.test.ts',
+  ]);
+  assert.deepEqual(refs.get('apps/web/src/core/http/upload-slot.ts'), [
+    'apps/web/src/core/http/upload-slot.guard.test.ts',
+  ], 'a join of literals counts too; the other workspace does not');
+});

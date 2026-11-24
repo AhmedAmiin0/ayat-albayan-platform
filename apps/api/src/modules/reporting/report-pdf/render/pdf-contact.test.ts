@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { pdfContact } from './pdf-contact';
 import { sampleModel } from '@/modules/reporting/report-pdf/report-pdf.fakes';

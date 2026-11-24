@@ -1,4 +1,4 @@
-import type { FxRate } from '@ab/shared';
+import type { FxRate } from '@ab/money';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { FxService } from '@/modules/finance/fx/fx.service';

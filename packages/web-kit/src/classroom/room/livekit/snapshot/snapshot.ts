@@ -1,4 +1,4 @@
-import { roleOfMeta } from '@ab/shared';
+import { roleOfMeta } from '@ab/schedule';
 import type { RoomSnapshot, RoomStatus, TileView } from '@ab/web-kit/classroom/room/components/room-types';
 
 // Structural slices of livekit-client's Room / Participant, so this file is pure and testable.

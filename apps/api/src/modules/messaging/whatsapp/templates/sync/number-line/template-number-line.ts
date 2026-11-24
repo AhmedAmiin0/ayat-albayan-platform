@@ -1,9 +1,5 @@
-import {
-  isWaLine,
-  type TemplateLineSync,
-  type TemplateNumberSyncView,
-  type WaLine,
-} from '@ab/shared';
+import type { TemplateLineSync, TemplateNumberSyncView } from '@ab/shared';
+import { isWaLine, type WaLine } from '@ab/catalog';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import {
   CRM_MANAGED,

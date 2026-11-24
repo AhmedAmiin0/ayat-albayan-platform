@@ -1,4 +1,4 @@
-import { leadStatusStyle, lessonStatusStyle, type Tone } from '@ab/shared';
+import { leadStatusStyle, lessonStatusStyle, type Tone } from '@ab/money';
 import { render, screen } from '@testing-library/react-native';
 import { t } from '../../lib/i18n/i18n';
 import { palette } from '../../theme';

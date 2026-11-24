@@ -1,4 +1,4 @@
-import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/shared';
+import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';

@@ -1,14 +1,13 @@
+import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
 import {
-  joinWindowConfig,
   PUBLIC_CONFIG_PATH,
   PUBLIC_CONFIG_QUERY_KEY,
   PUBLIC_CONFIG_STALE_MS,
   uploadMaxBytes,
   withPublicDefaults,
-  type JoinWindowConfig,
   type PublicConfig,
   type PublicSettings,
-} from '@ab/shared';
+} from '@ab/settings';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 

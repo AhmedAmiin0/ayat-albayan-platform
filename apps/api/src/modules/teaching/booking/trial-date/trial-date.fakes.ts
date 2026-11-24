@@ -1,5 +1,5 @@
 // Test-only: a real BookingPlanner and TrialDates over mocked reads.
-import type { StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { vi } from 'vitest';
 import type { LessonEvents } from '@/common/infra/events/lesson-events';
 import { ruleSettingsOf } from '@/common/rules/rule-settings.fakes';

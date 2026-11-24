@@ -30,7 +30,7 @@ test('--shims repoints the importers of an app re-export file and deletes it onc
   );
   assert.equal(
     read(root, 'apps/api/src/b.test.ts'),
-    "import { own } from '@ab/shared';\nimport { type Zone } from '@ab/time';\n",
+    "import { own } from '@ab/shared';\nimport type { Zone } from '@ab/time';\n",
   );
   assert.equal(existsSync(posix.join(root, SHIM)), false);
   assert.deepEqual(Object.keys(JSON.parse(read(root, 'apps/api/package.json')).dependencies), [

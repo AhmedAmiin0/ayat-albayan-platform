@@ -1,4 +1,4 @@
-import { addDays, RIYADH_TZ, riyadhToday, wallToUtc, weekStart } from '@ab/shared';
+import { addDays, RIYADH_TZ, riyadhToday, wallToUtc, weekStart } from '@ab/time';
 import { useState } from 'react';
 
 /** The week a slot picker shows, and how ‹ › moves it (PeriodSwitcher's props). */

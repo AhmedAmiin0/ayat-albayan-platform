@@ -1,4 +1,4 @@
-import type { SlotView } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
 import { describe, expect, it, vi } from 'vitest';
 import type { SlotsService } from '@/modules/teaching/booking';
 import { lessonRow, S1, L1 } from '@/modules/people/portal/portal.fakes';

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { approvedOn, setTemplateNumber, type NumberSetDeps } from './template-number-set';
-import type { ApprovalRow, NumberRef } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { ApprovalRow, NumberRef } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 

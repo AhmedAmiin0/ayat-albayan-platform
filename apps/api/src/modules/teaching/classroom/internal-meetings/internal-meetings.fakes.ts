@@ -1,4 +1,4 @@
-import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW } from '@ab/schedule';
 import { vi } from 'vitest';
 import { TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import type { MeetingRow, NewMeeting } from './internal-meetings.repo';

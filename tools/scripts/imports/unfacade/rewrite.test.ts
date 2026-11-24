@@ -40,7 +40,19 @@ test('statement-level and inline type-only flags are kept', () => {
   );
   assert.equal(
     rewrite("import { type Phone, own } from '@ab/shared';\n"),
-    "import { own } from '@ab/shared';\nimport { type Phone } from '@ab/core';\n",
+    "import { own } from '@ab/shared';\nimport type { Phone } from '@ab/core';\n",
+  );
+});
+
+test('a statement whose names are all inline types becomes a type-only statement', () => {
+  assert.equal(
+    rewrite("import { type Phone, type Zone, own } from '@ab/shared';\n"),
+    [
+      "import { own } from '@ab/shared';",
+      "import type { Phone } from '@ab/core';",
+      "import type { Zone } from '@ab/time';",
+      '',
+    ].join('\n'),
   );
 });
 

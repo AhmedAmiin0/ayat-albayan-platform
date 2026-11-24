@@ -1,4 +1,4 @@
-import type { NumberPurpose, WaLine } from '@ab/shared';
+import type { NumberPurpose, WaLine } from '@ab/catalog';
 import type { LineNumbers } from '@/config/env/env';
 
 // Which WhatsApp line a webhook change came in on (docs/12 §13.6). Pure.

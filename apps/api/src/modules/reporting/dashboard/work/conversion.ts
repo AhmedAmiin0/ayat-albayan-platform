@@ -1,4 +1,4 @@
-import type { FxRate } from '@ab/shared';
+import type { FxRate } from '@ab/money';
 
 // Money in many currencies → settings.reporting_currency (R-RPT-02, docs/11 §9 FX).
 // FxService gives SAR→X rates (X per 1 SAR), so 1 reporting unit = rate(SAR→X) / rate(SAR→R) X.
@@ -45,4 +45,4 @@ export function convert(c: Conversion, amount: number, currency: string): number
   return rate === undefined ? null : amount / rate;
 }
 
-export { round2 } from '@ab/shared';
+export { round2 } from '@ab/core';

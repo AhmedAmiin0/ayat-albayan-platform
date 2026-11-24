@@ -1,4 +1,5 @@
-import { driveFolderLink, folderIdIn, normalizeArabic, sheetLink, type Program } from '@ab/shared';
+import { driveFolderLink, folderIdIn, sheetLink, type Program } from '@ab/catalog';
+import { normalizeArabic } from '@ab/core';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { CellValue, Rows } from '@/modules/platform/google-sync/google-client.port';
 import { textCell } from './attendance-row';

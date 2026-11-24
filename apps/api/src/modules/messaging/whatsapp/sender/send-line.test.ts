@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { lineOf } from './send-line';
 

@@ -1,4 +1,4 @@
-import { clockOfHhmm } from '@ab/shared';
+import { clockOfHhmm } from '@ab/time';
 import { useClock } from './clock';
 
 /** Values stay the stored 24 h "HH:MM"; pair with `dir={clockDir(useClock())}` on the select. */

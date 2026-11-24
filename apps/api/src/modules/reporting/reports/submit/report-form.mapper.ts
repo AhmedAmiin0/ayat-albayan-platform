@@ -1,4 +1,5 @@
-import type { BalanceView, MemoryView, ReportFormEntry, ReportFormResponse } from '@ab/shared';
+import type { MemoryView, ReportFormEntry, ReportFormResponse } from '@ab/shared';
+import type { BalanceView } from '@ab/money';
 import { reportView, type ViewContext } from '@/modules/reporting/reports/report.mapper';
 import type { ReportLessonRow, ReportLessonStudent, ReportRow } from '@/modules/reporting/reports/report-row';
 

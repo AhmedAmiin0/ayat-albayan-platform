@@ -1,4 +1,4 @@
-import type { PaymentKind, PaymentMethod } from '@ab/shared';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { Window } from '@/modules/reporting/dashboard/finance/finance.queries';

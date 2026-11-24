@@ -1,4 +1,4 @@
-import { TIME_EDIT_ERRORS } from '@ab/shared';
+import { TIME_EDIT_ERRORS } from '@ab/schedule';
 import ar from '@ab/shared/i18n/ar.json';
 import { describe, expect, it } from 'vitest';
 
