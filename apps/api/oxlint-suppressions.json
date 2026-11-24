@@ -10046,9 +10046,6 @@
   "src/modules/sales/sales-money/package-cancel/sales-package-cancel.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/modules/sales/sales-money/package-cancel/tests/http.cancel.test.ts": {
@@ -10152,7 +10149,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 1
@@ -10197,7 +10194,7 @@
   },
   "src/modules/sales/sales-money/teacher/tests/http.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/tests/http.start-locked.test.ts": {

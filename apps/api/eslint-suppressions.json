@@ -8605,11 +8605,6 @@
       "count": 6
     }
   },
-  "src/modules/sales/sales-money/package-cancel/sales-package-cancel.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/modules/sales/sales-money/package-cancel/tests/http.cancel.test.ts": {
     "max-len": {
       "count": 1
@@ -8691,7 +8686,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/sales/sales-money/shared/sales-money.services.ts": {
@@ -8727,7 +8722,7 @@
   },
   "src/modules/sales/sales-money/teacher/tests/http.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/tests/http.start-locked.test.ts": {
