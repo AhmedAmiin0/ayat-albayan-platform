@@ -23,6 +23,6 @@ export interface SetupSubject {
   email?: string | null;
 }
 
-/** A teacher still on her code-made login: the portal waits for /account-setup («أكمل حسابك»). */
+/** A teacher still on her code-made login must finish /account-setup first. */
 export const needsSetup = (me: SetupSubject | null | undefined): boolean =>
   me?.role === 'teacher' && isFamilyEmail(me.email);

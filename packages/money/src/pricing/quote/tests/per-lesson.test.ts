@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { roundCents } from '../../price/index.js';
 import { quote, type QuoteOptions } from '../quote.js';
 
-// «سعر الحلقة» is rounded the way the site's Intl formatter shows it. These 40 cases (all students
-// 1–6) are where Math.round(x × 100) / 100 differed from ayatalbayan.com/calculator by 0.01.
+// Per-lesson price rounds like the site's Intl formatter; these cases differed by 0.01 otherwise.
 type Case = [country: string, plan: string, duration: 30 | 45 | 60, discount: number, site: number];
 const KW_45_15 = ['starter', 'standard', 'premium', ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 26].map((n) => `c${n}`)];
 const CASES: Case[] = [

@@ -1,6 +1,6 @@
 import type { MessageView } from './views.js';
 
-// Who sent an outgoing bubble (owner 2026-10-19 #4): a staff name, «رسالة تلقائية», or nothing.
+// Who sent an outgoing bubble: a staff name, an automatic message, or nothing.
 
 export type SenderLine = { kind: 'name'; name: string } | { kind: 'auto' } | null;
 

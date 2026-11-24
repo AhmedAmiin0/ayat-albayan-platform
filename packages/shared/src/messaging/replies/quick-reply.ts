@@ -26,7 +26,7 @@ export function payloadRef(payload: string): string | null {
   return payload.slice(at + 1).trim() || null;
 }
 
-// Written already normalised (normalizeArabic: أإآ→ا, ة→ه, ى→ي, Latin lowercased).
+// Written already normalised (normalizeArabic: letter variants folded, Latin lowercased).
 const STOP = ['وقف', 'ايقاف', 'وقف الرسايل', 'وقف الرسائل', 'الغاء الاشتراك', 'stop', 'unsubscribe'];
 const RESCHEDULE = [
   'تاجيل', 'اجل', 'اجلها', 'ناجل', 'ناجلها', 'غير الميعاد', 'نغير الميعاد', 'تغيير الميعاد',
@@ -36,12 +36,9 @@ const CONFIRM = new Set([
   'نعم', 'اه', 'ايوه', 'ايوا', 'تمام', 'موافق', 'موافقه', 'اكيد', 'حاضر', 'موكد',
   'ok', 'okay', 'yes',
 ]);
-/** «تم» is «done» far more often than «yes» («تم التحويل»): a confirm only on its own. */
+/** This word usually means "done", so it confirms only on its own. */
 const CONFIRM_ALONE = 'تم';
-/**
- * Any of these turns a «yes» into something the admin should read: a negation or «but», or talk
- * of money and renewals («تمام هبعت الفلوس بكرة», «تم التحويل»), which is not about the lesson.
- */
+/** A negation, "but" or money talk turns a yes into something the admin should read. */
 const BLOCKERS = new Set([
   'مش', 'لا', 'لاء', 'مو', 'ما', 'بس', 'no', 'not',
   'تحويل', 'التحويل', 'حولت', 'حولنا', 'هحول', 'فلوس', 'الفلوس', 'المبلغ', 'مبلغ', 'دفعت', 'هدفع',
@@ -68,12 +65,7 @@ function confirms(tokens: readonly string[]): boolean {
   return tokens.some((t) => CONFIRM.has(t)) || GOD_WILLING.includes(tokens.join(' '));
 }
 
-/**
- * confirm / reschedule / stop from a button payload («confirm:<id>») or a short text in Egyptian
- * or Gulf Arabic (نعم، أيوه، تمام، موافق، أكيد · تأجيل، غيّر الميعاد · وقف، إلغاء الاشتراك، stop).
- * Stop beats reschedule beats confirm; a «yes» with مش / لا / بس or money talk in it, «تم» with
- * anything after it, or a long text, is null.
- */
+/** Stop beats reschedule beats confirm; a hedged yes, a trailing "done" or a long text is null. */
 export function quickReplyIntent(input: string): QuickReplyIntent | null {
   const payload = payloadIntent(input.trim());
   if (payload) return payload;

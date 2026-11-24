@@ -11,7 +11,7 @@ const teacherSwitch = (name: string) =>
     labelKey: `settings.${name}`, hintKey: `settings.hints.${name}`,
   }) as const satisfies SettingDef;
 
-/** «صفحات المعلم»: seven switches, a missing row reads as off (the seeder stores JSON null). */
+/** Teacher page switches; a missing row reads as off (the seeder stores JSON null). */
 export const TEACHER_PAGE_SETTINGS = {
   teacher_chats_enabled: teacherSwitch('teacherChatsEnabled'),
   teacher_student_messages_enabled: teacherSwitch('teacherStudentMessagesEnabled'),
@@ -34,7 +34,7 @@ export const TEACHER_PAGE_SWITCH = {
 } as const satisfies Record<string, keyof typeof TEACHER_PAGE_SETTINGS>;
 export type TeacherPage = keyof typeof TEACHER_PAGE_SWITCH;
 
-/** The seven keys in «القيم» and /admin/settings order (value-groups.ts, layout.ts). */
+/** The seven keys in values-page and /admin/settings order (value-groups.ts, layout.ts). */
 export const TEACHER_PAGE_KEYS = [
   'teacher_chats_enabled',
   'teacher_student_messages_enabled',

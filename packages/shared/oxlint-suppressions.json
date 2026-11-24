@@ -24,7 +24,7 @@
   },
   "src/messaging/calls/call-entry.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/messaging/calls/call-machine/call-machine.ts": {
@@ -39,7 +39,7 @@
   },
   "src/messaging/calls/call-types.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/channel/channel-open.test.ts": {
@@ -52,7 +52,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1
@@ -60,7 +60,7 @@
   },
   "src/messaging/chat/chat-lists.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -76,7 +76,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 9
     }
   },
   "src/messaging/chat/line-views.ts": {
@@ -110,9 +110,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/messaging/chat/thread-reopen/thread-reopen.ts": {
@@ -123,19 +120,11 @@
   "src/messaging/chat/ticks.ts": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 5
     }
   },
   "src/messaging/chat/views.ts": {
     "stylistic/max-len": {
-      "count": 11
-    }
-  },
-  "src/messaging/lesson/booking-confirmation.ts": {
-    "stylistic/max-len": {
-      "count": 3
+      "count": 10
     }
   },
   "src/messaging/lesson/meeting-link.ts": {
@@ -155,7 +144,7 @@
   },
   "src/messaging/lesson/timing.day-before.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/lesson/timing/timing.ts": {
@@ -196,7 +185,7 @@
   },
   "src/messaging/numbers/views.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/messaging/replies/quick-reply.ts": {
@@ -217,7 +206,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -234,7 +223,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/messaging/replies/reply-line.test.ts": {
@@ -252,7 +241,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/messaging/replies/reply-number.ts": {
@@ -262,7 +251,7 @@
   },
   "src/messaging/replies/reply-slots.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/messaging/replies/saved-replies.test.ts": {
@@ -280,7 +269,7 @@
   },
   "src/messaging/replies/saved-reply-text/saved-reply-text.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/messaging/schemas.files.test.ts": {
@@ -290,7 +279,7 @@
   },
   "src/messaging/schemas.ts": {
     "stylistic/max-len": {
-      "count": 10
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 1
@@ -313,7 +302,7 @@
   },
   "src/messaging/templates/params.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/messaging/templates/prefill.ts": {
@@ -364,7 +353,7 @@
   },
   "src/messaging/wa.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/notifications/catalogue/catalogue-settings.test.ts": {
@@ -410,7 +399,7 @@
   },
   "src/notifications/catalogue/catalogue-views.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/notifications/catalogue/catalogue.test.ts": {
@@ -459,7 +448,7 @@
   },
   "src/notifications/rules.types.ts": {
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     },
     "typescript/no-deprecated": {
       "count": 1
@@ -485,11 +474,6 @@
       "count": 1
     }
   },
-  "src/people/account/avatar-initials.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/people/presence/presence-rules.ts": {
     "complexity": {
       "count": 1
@@ -497,7 +481,7 @@
   },
   "src/people/schemas/contact-is-self.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/people/schemas/people.ts": {

@@ -33,7 +33,7 @@ export interface ConfigEntry {
   version: number;
   updatedAt: string | null;
   updatedByName: string | null;
-  /** Set when a module page edits the value; «القيم» shows it read-only. */
+  /** Set when a module page edits the value; the values page shows it read-only. */
   ownedBy: SettingOwner | null;
   confirm: SettingConfirm | null;
   retired: boolean;

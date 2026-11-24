@@ -2,11 +2,9 @@ import type { SettingKey } from '../registry.js';
 import { SCHEDULE_KEYS } from '../domains/teaching/schedule-keys.js';
 import { TEACHER_PAGE_KEYS } from '../domains/teaching/teacher-pages.js';
 
-// «القيم» (docs/26b §2): the store's rows in small groups, one group per view, each a table
-// rather than one long page. Kept apart from layout.ts, which still orders the old single page;
-// docs/26 26-P1 later moves `group`/`confirm`/`ownedBy` into the registry itself.
+// Values page (docs/26b §2): small groups, one per view; kept apart from layout.ts.
 
-/** The editable groups of «القيم», in list order (62 keys). */
+/** The editable values-page groups, in list order (62 keys). */
 export const VALUE_GROUPS = {
   schedule: SCHEDULE_KEYS,
   classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
@@ -43,10 +41,7 @@ export const VALUE_GROUPS = {
 export type ValueGroupId = keyof typeof VALUE_GROUPS;
 export const VALUE_GROUP_IDS = Object.keys(VALUE_GROUPS) as ValueGroupId[];
 
-/**
- * Keys a module page owns («تُدار من صفحة أخرى»): read-only in «القيم», with a link to the page
- * that edits them. The three Google values are not settings rows (they live in google_settings).
- */
+/** Module-owned keys, read-only in the values page; the Google values live in google_settings. */
 export const OWNED_VALUE_GROUPS = {
   notifications: [
     'reminder_minutes_before',
@@ -62,10 +57,10 @@ export const OWNED_VALUE_GROUPS = {
 } as const satisfies Record<string, readonly SettingKey[]>;
 export type OwnedValueGroupId = keyof typeof OWNED_VALUE_GROUPS | 'google';
 
-/** Every key «القيم» may write (the owned keys are never in it). */
+/** Every key the values page may write (owned keys never in it). */
 export const EDITABLE_VALUE_KEYS: readonly SettingKey[] = Object.values(VALUE_GROUPS).flat();
 
-/** May «القيم» edit this key? (false for module-owned keys and unknown names). */
+/** False for module-owned keys and unknown names. */
 export const isEditableValueKey = (key: string): key is SettingKey =>
   (EDITABLE_VALUE_KEYS as readonly string[]).includes(key);
 

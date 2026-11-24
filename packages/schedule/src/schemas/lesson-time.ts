@@ -27,7 +27,7 @@ export interface TimeEditResult {
   lesson: LessonView;
   /** Queued guardian confirmations. */
   notified: number;
-  /** draft_stale: the lesson's month has a draft payout, press «احسب مستحقات الشهر» again. */
+  /** draft_stale: the lesson's month has a draft payout that must be recalculated. */
   payout: 'none' | 'draft_stale';
   /** The report PDF is re-rendered (the guardian is not sent it again). */
   pdf_refresh: boolean;

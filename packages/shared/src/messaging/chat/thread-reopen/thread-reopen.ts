@@ -1,9 +1,7 @@
 import type { MessageStatus } from '@ab/catalog';
 import { localDate } from '../../lesson/timing.day-before.js';
 
-// «إعادة فتح المحادثة»: the starter template that reopens WhatsApp's 24 h window. Owner 2026-11-07
-// (option 1): it goes only when a staff member presses send in a closed chat, never on open; the
-// message is held until the family replies (the sender's window hold).
+// The reopen template goes only when staff send in a closed chat, never on open; the text is held.
 
 // The template is the `chat_reopen_template` setting (default welcome_greeting, owner 2026-11-03).
 
@@ -37,7 +35,7 @@ export function reopenDedupKey(phone: string, now: Date, attempt = 1): string {
 // `chat_reopen_template` setting, an approved chat-line starter with no variables) and holds the
 // text until the family answers on the chat line; after HOLD_DAYS it fails, never sent late.
 
-/** messages.error_code of a queued text waiting for the family's reply («بانتظار رد العائلة»). */
+/** messages.error_code of a queued text waiting for the family's reply. */
 export const AWAITING_REPLY = 'awaiting_reply';
 /** A held text the family never answered within HOLD_DAYS: failed, never sent late. */
 export const HOLD_EXPIRED = 'hold_expired';
@@ -49,24 +47,19 @@ export const REOPEN_UNAVAILABLE = 'reopen_unavailable';
 export const REOPEN_FAILED = 'reopen_failed';
 /** Today's reopen template tries are all used: the text fails, staff may send it again tomorrow. */
 export const REOPEN_TRIES_USED = 'reopen_tries_used';
-/**
- * «أرسل عبر واتساب» (docs/19): the tap's window and its grace passed with no echo attached. Never
- * sent by the platform: staff answer «هل أرسلتها من واتساب؟» (yes: sent-manually; no: held again).
- */
+/** The app-send window and grace passed with no echo (docs/19); staff confirm by hand. */
 export const APP_SEND_UNCONFIRMED = 'app_send_unconfirmed';
 /** How long a held text waits for the family's reply. */
 export const HOLD_DAYS = 7;
 
-/** A queued text held for the family's reply: the bubble says «بانتظار رد العائلة», not a retry. */
+/** A queued text held for the family's reply, not a retry. */
 export function isAwaitingReply(m: { status: string; error_code: string | null }): boolean {
   return m.status === 'queued' && m.error_code === AWAITING_REPLY;
 }
 
-// Owner 2026-11-06 («give him a choice»): `chat_reopen_template` holds a starter template's key, or
-// REOPEN_NO_TEMPLATE («بدون قالب»): then no template is sent, Kapso's conversation is reopened and
-// the text waits for the family's next message (7 days at most), as a held text does.
+// With REOPEN_NO_TEMPLATE the conversation reopens and the text waits up to 7 days for a reply.
 
-/** The `chat_reopen_template` value of «بدون قالب: انتظار رد العائلة». */
+/** The `chat_reopen_template` value for no template, waiting for the family's reply. */
 export const REOPEN_NO_TEMPLATE = 'none';
 
 /** What asks the family to reply after the window: a starter template, or nothing (wait). */

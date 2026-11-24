@@ -91,11 +91,7 @@ export const evolutionProxySchema = z
     message: 'proxy_needed', path: ['host'],
   });
 
-/**
- * Each send: the link preview. No typing delay (owner 2026-11-06: «dont make the family see
- * typing»): Evolution's `delay` shows «يكتب…» to the family, so it is never sent; an old stored
- * `delay_ms` is dropped on read (zod strips unknown keys).
- */
+/** No `delay` is sent so the family never sees typing; old `delay_ms` is dropped on read. */
 export const evolutionSendingSchema = z.object({
   link_preview: z.boolean().default(false),
 });

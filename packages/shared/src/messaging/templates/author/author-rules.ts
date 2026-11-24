@@ -13,7 +13,7 @@ export const AUTHOR_PERMISSION = 'templates.author' satisfies Permission;
 /** New templates one user may create in a rolling day. */
 export const AUTHOR_DAILY_LIMIT = 5;
 
-/** May this user open «القوالب» as an author (list the allow-list, create, edit their own)? */
+/** May this user open templates as an author (list the allow-list, create, edit their own)? */
 export const authorsTemplates = (who: TemplateSender | null | undefined): boolean =>
   (who?.permissions ?? []).includes(AUTHOR_PERMISSION);
 

@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { E164_RE, normalizeArabic, normalizePhone } from '@ab/core';
 
-// Chat lists «القوائم» (owner 2026-10-20, docs/22): academy-wide names that only ORGANISE chats, like
-// WhatsApp Business lists. Nothing is ever sent because of a list.
+// Chat lists (docs/22) only organise chats; nothing is ever sent because of a list.
 
 /** A list's name: 1–30 characters after trimming, not only tashkeel / tatweel (its key is never empty). */
 export const CHAT_LIST_NAME_MAX = 30;
@@ -27,10 +26,7 @@ export type ChatListError = (typeof CHAT_LIST_ERRORS)[number];
 export const isChatListError = (code: unknown): code is ChatListError =>
   CHAT_LIST_ERRORS.some((c) => c === code);
 
-/**
- * Two names are the same list when their keys match: case, spaces, tashkeel and the Arabic letter
- * variants (أ/إ/آ → ا, ة → ه, ى → ي) are ignored (chat_lists.name_key is unique).
- */
+/** Same list when keys match: case, spaces, tashkeel and Arabic letter variants are ignored. */
 export function chatListNameKey(name: string): string {
   return normalizeArabic(name);
 }
@@ -46,11 +42,7 @@ export function chatListPhone(raw: string): string | null {
   return phone.ok ? phone.e164 : null;
 }
 
-/**
- * An automatic list (migration 20261025000710, docs/22 «القوائم التلقائية»): «مشترك» gains every guardian
- * with a running subscription, «معلم» every active teacher. The rule only adds, never removes; adding and
- * removing by hand work as on any list.
- */
+/** Automatic lists (migration 20261025000710, docs/22) only add members, never remove them. */
 export const CHAT_LIST_AUTO_RULES = ['subscribed', 'teachers'] as const;
 export type ChatListAutoRule = (typeof CHAT_LIST_AUTO_RULES)[number];
 

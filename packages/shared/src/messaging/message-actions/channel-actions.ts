@@ -33,7 +33,7 @@ export interface ChannelActions {
 const within = (input: ChannelActionInput, windowMs: number): boolean =>
   input.now.getTime() - Date.parse(input.message.created_at) <= windowMs;
 
-/** «تعديل» / «حذف للجميع» for this viewer, now. A deleted message offers nothing. */
+/** Edit and delete-for-everyone for this viewer now; a deleted message offers nothing. */
 export function channelActions(input: ChannelActionInput): ChannelActions {
   const { message: m } = input;
   if (m.deleted) return { edit: false, delete: false };

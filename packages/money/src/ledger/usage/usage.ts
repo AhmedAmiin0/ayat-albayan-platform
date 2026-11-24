@@ -26,9 +26,9 @@ export interface PackageLesson {
   chargeable: boolean;
   /** The lesson's rule is a trial (schedule_rules.package = 'trial'): free. */
   trial: boolean;
-  /** A حجز تعويضي (lessons.makeup_of_id): replaces a charged miss, so it never consumes a unit. */
+  /** A makeup booking replaces a charged miss, so it never consumes a unit. */
   makeup: boolean;
-  /** A حلقة فورية (lessons.instant, migration 190): an ad-hoc lesson, never consumes a unit. */
+  /** An instant lesson (migration 190) is ad hoc and never consumes a unit. */
   instant?: boolean;
 }
 

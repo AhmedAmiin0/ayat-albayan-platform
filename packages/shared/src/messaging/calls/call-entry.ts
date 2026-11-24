@@ -1,7 +1,6 @@
 import type { CallView } from './call-types.js';
 
-// A call as an entry in the chat and the calls log (WhatsApp-like, docs/28 §5): «مكالمة صوتية صادرة · 2:14»,
-// «مكالمة واردة», «مكالمة فائتة» (danger), «لم يُرَدّ»; the clients map the kind to their strings and glyphs.
+// A call as a chat and log entry (docs/28 §5); clients map the kind to strings and glyphs.
 
 /** live = still ringing or talking; the rest are ended calls. */
 export type CallEntryKind = 'outgoing' | 'incoming' | 'missed' | 'unanswered' | 'live';

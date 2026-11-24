@@ -37,11 +37,11 @@ export interface ThreadView extends ThreadNote, FamilyRingField, ReopenFields {
   teacher_name: string | null;
   /** sessionWindowOpen(last_inbound_at, now): free text allowed, else a template (or a try). */
   session_open: boolean;
-  /** subscriptionBadge(the guardian's students) === 'subscribed': the «مشترك» tag. */
+  /** subscriptionBadge of the guardian's students is 'subscribed'. */
   subscribed: boolean;
-  /** Family subscriptionBadge, null without a guardian: «اشتراكه خلص» and «مشترك». Absent in an old cache. */
+  /** Family subscriptionBadge, null without a guardian; absent in an old cache. */
   badge?: SubscriptionBadge | null;
-  /** familyUnpaid: a running package still owes money, the «مش مدفوع» tag. Absent like `badge`. */
+  /** familyUnpaid: a running package still owes money; absent like `badge`. */
   unpaid?: boolean;
   /** Line of the newest inbound (docs/12 §13; `calls` = the calls number, docs/28 §10); null = history or a single line. Absent in an old cache. */
   last_inbound_line?: NumberPurpose | null;
@@ -76,9 +76,9 @@ export interface MessageView extends TemplatedMessage, MessageMarks {
   reply_to_message_id?: string | null;
   /** The message this one answers (same chat), or «unavailable» when we lack it (10-31). Absent in an old cache. */
   reply_to?: ReplyQuote | null;
-  /** WhatsApp knows it (it has a wamid): «رد» may quote it. Absent in an old cache. */
+  /** WhatsApp knows it (it has a wamid), so a reply may quote it; absent in an old cache. */
   replyable?: boolean;
-  /** A text or a file we can copy: «إعادة توجيه». Absent in an old cache. */
+  /** A text or a file we can copy, so it can be forwarded; absent in an old cache. */
   forwardable?: boolean;
   /** Staff forwarded it from another message (our inbox only: WhatsApp shows no flag). */
   forwarded?: boolean;
@@ -94,7 +94,7 @@ export interface MessageView extends TemplatedMessage, MessageMarks {
   delivered_at: string | null;
   read_at: string | null;
   sent_manually_at: string | null;
-  /** «أرسل عبر واتساب» pending until then (appSendPending); absent in an old cache. */
+  /** The WhatsApp-app send is pending until then (appSendPending); absent in an old cache. */
   app_send_until?: string | null;
   /** @deprecated Read sender_name (D4); still filled for old mobile builds and cached rows. */
   sent_by_teacher_name?: string | null;
@@ -142,7 +142,7 @@ export interface ThreadLesson {
   student_names: string[];
   /** The recipient's tz (the guardian's, or the teacher's). */
   tz: string;
-  /** scheduled | confirmed (the reply note's «تأكيد الحلقة»). Both absent in an old cache. */
+  /** scheduled or confirmed, for the reply note; both absent in an old cache. */
   status?: LessonStatus;
   ends_at?: string;
 }

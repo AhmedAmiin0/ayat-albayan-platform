@@ -10,7 +10,7 @@ export function customBase(count: number, duration: PricingDuration): number {
   return rate * count;
 }
 
-/** Site aE, before the currency step: `lessons` at the starter per-lesson rate («بدلاً من»). */
+/** Site aE, before the currency step: `lessons` at the starter per-lesson rate. */
 export function starterRateBase(lessons: number, duration: PricingDuration): number {
   const rate = STARTER.base[duration] / STARTER.lessons;
   return rate * lessons;

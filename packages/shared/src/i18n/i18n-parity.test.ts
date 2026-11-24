@@ -35,8 +35,7 @@ describe('en.json ↔ ar.json', () => {
   });
 });
 
-/** Names that stay Arabic in every language: «العربية» and the academy's own name under the
- *  family app's Latin wordmark (docs/50: «Ayat Al-Bayan» over «آيات البيان»). */
+/** Names that stay Arabic in every language: the language name and the academy name (docs/50). */
 const ENDONYMS = new Set(['language.ar', 'familyApp.signIn.wordmarkArabic']);
 
 describe('en.json is fully English', () => {

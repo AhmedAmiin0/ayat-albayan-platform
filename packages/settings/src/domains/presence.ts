@@ -1,9 +1,6 @@
 import type { SettingDef } from '../defs.js';
 
-/**
- * «متصل الآن» / «آخر ظهور» (docs/33). Off: the API writes no last seen and shows
- * none, the apps neither track nor watch, and the Realtime policy refuses a track (migration 985).
- */
+/** Off (docs/33): no last seen written or shown; Realtime refuses a track (migration 985). */
 export const PRESENCE_SETTINGS = {
   presence_enabled: {
     module: 'presence',

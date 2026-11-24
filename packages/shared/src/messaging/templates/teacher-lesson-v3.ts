@@ -1,8 +1,6 @@
 import type { TemplateCreateInput } from './template-create.js';
 
-// teacher_lesson_v3 (owner 2026-11-06): the teacher's lesson notice with two link buttons on our
-// own domains. The meeting link is written in the text as well; the report link is a button only.
-// Seeded by migration 20261106001300 (status not_submitted: the admin submits it from «القوالب»).
+// Seeded by migration 20261106001300; the report link is a button only.
 
 /** The join button's page: GET /join/<token> on the API (a signed, expiring 302 to the room). */
 export const TEACHER_JOIN_BUTTON_URL = 'https://api.ayatalbayan.com/join/{{1}}';
@@ -47,7 +45,7 @@ const SAMPLES: Readonly<Record<(typeof TEACHER_LESSON_V3_PARAMS)[number], string
 /** A token-shaped sample suffix for Meta's reviewer (never a real token). */
 const SAMPLE_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.BBBBBBBBBBBBBBBBBBBBBB';
 
-/** The registry row as «قالب جديد» would take it (validated by templateCreateSchema in a test). */
+/** The registry row as template creation takes it (validated by templateCreateSchema in a test). */
 export const TEACHER_LESSON_V3: TemplateCreateInput = {
   key: 'teacher_lesson_v3',
   line: 'notifications',

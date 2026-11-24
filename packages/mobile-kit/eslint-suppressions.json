@@ -664,11 +664,6 @@
       "count": 2
     }
   },
-  "src/ui/startup/use-startup-stage.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/ui/surface/inset.test.tsx": {
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
@@ -676,7 +671,7 @@
   },
   "src/ui/surface/inset.tsx": {
     "max-len": {
-      "count": 8
+      "count": 5
     },
     "no-restricted-syntax": {
       "count": 3

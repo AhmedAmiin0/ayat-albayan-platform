@@ -5,12 +5,7 @@ import { commissionKindOf, RENEWAL_CUTOFF } from './kind.js';
 // value» = HALF OF HER NORMAL COMMISSION on each renewal (settings.renewal_commission_percent, default 50),
 // not half of the renewal's price. Pure twin; the database decides.
 
-/**
- * The share of the normal commission a NEW renewal earns now, for the screens: the percent
- * while «عمولة التجديد» is on, 0 while it is off. Not a twin of
- * renewal_commission_share (always the percent): the SQL switch gates a new row in
- * evaluate_assistant_commission (migration 20261101000996); an existing row settles at the percent.
- */
+/** Renewal share for new renewals: the percent while renewal commission is on, else 0. */
 export const renewalShareNow = (s: {
   renewal_commission_enabled: boolean;
   renewal_commission_percent: number;
@@ -22,14 +17,7 @@ export interface PlannedRenewal extends PlannedCommission {
   share: number;
 }
 
-/**
- * What a renewal subscription earns: only a 'renewal' by order (commissionKindOf), fully paid on or after the
- * cutoff (RENEWAL_CUTOFF: no backfill) and after the same two days as the first (planOn); amount = the
- * normal commission x share %. A late payment on another subscription never changes it: each row is its own.
- * `excluded`: the subscription is in assistant_commission_exclusions (seen fully paid before the cutoff, or
- * its 'first' row dropped by a merge): an edit that moves its fully paid instant later never mints one.
- * Also 'renewal_off': fully paid since «عمولة التجديد» was turned off, and seen while off.
- */
+/** A renewal earns only when fully paid after RENEWAL_CUTOFF; each subscription row is its own. */
 export function planRenewalCommission(
   input: CommissionContext & { share: number; subscriptionId: string; subscriptions: readonly SubscriptionFact[]; excluded?: boolean },
 ): PlannedRenewal | null {
