@@ -4,12 +4,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { SubscriptionCancel } from '@/modules/finance/subscriptions';
 import { SalesMoneyScope, toSalesSubscription } from '@/modules/sales/sales-money/shared';
 
-/**
- * «إلغاء الباقة» by the salesperson (owner 2026-10-28): a package of HER student only while SalesOwnershipRule
- * enforces it (SalesMoneyScope; any student otherwise): 404 subscription_not_found, then 403 not_your_student before anything is
- * written. The rules and the write are the admin's (SubscriptionCancel: 409 has_payments / has_lessons /
- * already_cancelled, audit, recompute); the answer is her whitelisted view.
- */
+/** Own student only while enforced; 404 then 403 before any write; the admin's rules apply. */
 @Injectable()
 export class SalesPackageCancel {
   constructor(

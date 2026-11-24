@@ -9,8 +9,6 @@ import { CourseChange, type ChangeActor } from './course-change.service';
 import type { CourseChangeDeps } from './course-change.writer';
 import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 
-// Fakes of «تغيير أيام الحلقات» (course-change.service.ts) for its unit tests.
-
 export const S1 = 'c0000000-0000-4000-8000-000000000001';
 export const SUB_ID = '00000000-0000-4000-8000-000000000001';
 export const REQUEST_ID = '00000000-0000-4000-8000-0000000000aa';

@@ -6,11 +6,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { LeadFamilyService } from './lead-family.service';
 
-/**
- * «ربط بطالب موجود» (owner 2026-10-29): a lead chat's number becomes the second number of an existing student's
- * family. Its own key, leads.link_family (the admin's by default; grantable from the matrix). Body { code }
- * (a generated AB-nnnn code, from GET /sales/registration-check); 200 { linked }, never an id or a phone.
- */
+/** leads.link_family; body is a generated code; answers never an id or a phone. */
 @ApiTags('leads')
 @ApiBearerAuth()
 @Controller('leads')
