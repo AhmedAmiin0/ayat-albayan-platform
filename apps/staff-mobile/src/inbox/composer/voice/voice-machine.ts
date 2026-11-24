@@ -85,7 +85,6 @@ interface ModeInput {
   state: VoiceState;
 }
 
-/** The round button: the microphone while there is nothing else to send, else «أرسل». */
 export function roundMode({ voice, text, staged, state }: ModeInput): 'mic' | 'send' {
   if (!voice || text.trim() !== '' || staged) return 'send';
   return state.kind === 'idle' || state.kind === 'arming' || state.kind === 'holding' ? 'mic' : 'send';

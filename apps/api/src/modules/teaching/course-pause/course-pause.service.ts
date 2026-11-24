@@ -26,12 +26,7 @@ const legacyResult = (subscriptionId: string): CoursePauseResult => {
   return { pause, cancelled: 0, left: 0, reopened: 0, conflicts: 0 };
 };
 
-/**
- * «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b, docs/16 row 37c): ANY student, for whoever holds courses.pause
- * (admins and assistants by default). The work is one RPC each (migration 956); this checks the dates first (400),
- * then runs the follow-ups (CoursePauseFollowUps); the teacher and the family hear a pause or a
- * resume once.
- */
+/** Course pause (docs/11 §7b): one RPC each (migration 956); teacher and family are told once. */
 @Injectable()
 export class CoursePauseService {
   constructor(
@@ -63,12 +58,7 @@ export class CoursePauseService {
     return this.done(await this.queries.call('course_pause_set_until', p), actor.id);
   }
 
-  /**
-   * «استئناف الدورة» now (POST …/resume): the open pause, unless a package row's «استئناف» names another package.
-   * Packages paused by the old package-only button (no pause row) are lifted instead (that row, or every paused one
-   * of the student): back to their derived status, nothing else moved (it never cancelled a lesson); 409
-   * pause_not_open when nothing was paused.
-   */
+  /** Legacy package-only pauses are lifted instead; 409 pause_not_open when nothing was paused. */
   async resume({ studentId, body, actor }: ResumeInput): Promise<CoursePauseResult> {
     await assertStudent(this.queries, studentId);
     const open = await this.queries.openPause(studentId);

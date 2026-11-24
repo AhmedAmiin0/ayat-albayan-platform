@@ -23,7 +23,7 @@ function Composer() {
   return <AppText>{full.reply ? 'رد' : 'لا رد'}</AppText>;
 }
 
-// Owner 2026-10-27, «Avoid rerenders»: picking «رد» redraws the composer, not every bubble.
+// Picking a reply redraws the composer, not every bubble.
 test('picking a reply or showing a notice leaves the bubbles\' slice unchanged', async () => {
   await renderWithQuery(
     <ThreadModeProvider value={{ kind: 'admin' }}>

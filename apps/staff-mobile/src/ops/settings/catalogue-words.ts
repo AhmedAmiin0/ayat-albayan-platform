@@ -1,4 +1,5 @@
-import type { Glyph, LineHealthView, NotificationEntryView, Tone } from '@ab/shared';
+import type { LineHealthView, NotificationEntryView } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
 // Same ar.json keys as the web's catalogue-text.

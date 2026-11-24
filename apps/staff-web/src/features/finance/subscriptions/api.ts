@@ -64,9 +64,9 @@ export type CreateSubscriptionBody = {
   pricing: SubscriptionPricing;
   startsOn: string;
   notes?: string | null;
-  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a start before today, when > 0. */
+  /** Only with a start before today, and only when > 0. */
   lessonsUsedBefore?: number;
-  /** «مبلغ مخصص» (owner 2026-11-02): the price instead of the quote's; absent = the quote. */
+  /** Absent means the quote's price. */
   customPrice?: number;
   /** Rule 8: the same body re-sent (a retry) carries the same id, so the API replays the first package. */
   clientRequestId?: string;
@@ -78,17 +78,17 @@ export const quoteSubscription = (body: Pick<CreateSubscriptionBody, 'studentId'
 export const createSubscription = (body: CreateSubscriptionBody) =>
   apiSend<SubscriptionView>('POST', '/subscriptions', body);
 
-/** «إلغاء الباقة» (owner 2026-10-28): 409 has_payments / has_lessons / already_cancelled. */
+/** 409 has_payments, has_lessons or already_cancelled. */
 export const cancelSubscription = (id: string, body: { reason?: string }) =>
   apiSend<SubscriptionView>('POST', `/subscriptions/${id}/cancel`, body);
 
-/** «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): admins, assistants; 409 with a course. */
+/** Admins and assistants; 409 once a course is booked. */
 export const editUsedBefore = (id: string, lessonsUsedBefore: number) =>
   apiSend('PATCH', `/subscriptions/${id}/lessons-used-before`, { lessonsUsedBefore }).then(
     (raw: unknown) => usedBeforeEditResultSchema.parse(raw),
   );
 
-/** «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms; starts_on only. */
+/** Needs subscriptions.edit_terms; changes starts_on only. */
 export const editStartDate = (id: string, startsOn: string) =>
   apiSend('PATCH', `/subscriptions/${id}/start-date`, { startsOn }).then((raw: unknown) =>
     startDateEditResultSchema.parse(raw),

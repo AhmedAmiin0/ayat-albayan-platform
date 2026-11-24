@@ -21,11 +21,9 @@ import { leadSortChoices } from './lead-sort';
 interface LeadFilterSheetProps {
   visible: boolean;
   filters: LeadFilters;
-  /** The salespeople (empty when the role cannot list them): only «الكل» and «بدون مسؤول» then. */
+  /** Empty when the role cannot list salespeople. */
   people: readonly { id: string; name: string }[];
-  /** leads.assign: the bulk «عيّن العملاء الذين بلا مسؤول» under the owner filter. */
   assign: boolean;
-  /** The leads the filters leave: «عرض النتائج (14)». */
   total: number | undefined;
   onChange: (next: LeadFilters) => void;
   onClose: () => void;
@@ -41,10 +39,7 @@ function Group({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/**
- * «تصفية»: the source, «مسؤول المبيعات» and the order of the leads, like the web LeadFilterFields; with
- * leads.assign, the bulk assignment under the owners (moved off the list's top, owner 2026-10-28).
- */
+/** Mirrors the web LeadFilterFields; bulk assignment needs leads.assign. */
 export function LeadFilterSheet({ visible, filters, people, assign, total, onChange, onClose }: LeadFilterSheetProps) {
   const sources: FilterPill<string>[] = [
     { value: '', label: t.leads.sourceAll },

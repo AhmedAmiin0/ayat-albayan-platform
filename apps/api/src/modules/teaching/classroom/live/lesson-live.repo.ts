@@ -10,7 +10,7 @@ const LESSON = `id, starts_at, status, room_ended_at, lesson_students(student:st
 const present = (s: { student: FamilyStudent | null }): FamilyStudent[] =>
   s.student ? [s.student] : [];
 
-/** «بدأت الحلقة»'s read: the lesson and its students with their family logins (service role). */
+/** The lesson and its students with their family logins (service role). */
 @Injectable()
 export class LessonLiveRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

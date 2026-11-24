@@ -11,7 +11,6 @@ import { RowDefaultActions } from '@/calendar/agenda/RowDefaultActions';
 import { RowSide } from '@/calendar/agenda/RowSide';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
-/** «45 دقيقة · عند المعلم/ة 15:00 بتوقيت القاهرة»: the row's second line for the viewer `tz`. */
 const lessonMeta = (lesson: LessonView, cycle: ClockCycle, tz: string): string =>
   [durationLabel(lesson), teacherClock(lesson, cycle, tz)].filter(Boolean).join(' · ');
 
@@ -19,15 +18,13 @@ const lineStyle = { flexDirection: 'row', alignItems: 'flex-start', gap: 10, min
 
 interface AgendaLessonRowProps {
   lesson: LessonView;
-  /** «غيّر الميعاد» on the row; opens the reschedule sheet. */
   onReschedule: (lesson: LessonView) => void;
-  /** The row's own actions (تأكيد / إلغاء / غيّر الميعاد) in place of «غيّر الميعاد» alone. */
   actions?: ReactNode;
-  /** «عدّل الوقت» (R-SCH-11), the secondary beside «غيّر الميعاد» in the row: shown when the lesson allows it (time_edit_mode). */
+  /** R-SCH-11: shown when the lesson allows it (time_edit_mode). */
   onEditTime?: (lesson: LessonView) => void;
-  /** A tap on the row's line (not its buttons) opens «تفاصيل الحلقة». */
+  /** A tap on the row's line, not its buttons, opens the lesson details. */
   onOpen?: (lesson: LessonView) => void;
-  /** The second line in place of «45 دقيقة · عند المعلم/ة …» (the teacher's: students' clocks). */
+  /** Replaces the default second line; the teacher's view shows students' clocks. */
   meta?: string;
   /** The chip in place of the lesson-status chip (the teacher's own word, docs/48). */
   chip?: ReactNode;
@@ -49,14 +46,7 @@ function RowFoot({ lesson, actions, onReschedule, onEditTime, join = true }: Age
   return <JoinAround lesson={lesson}>{own}</JoinAround>;
 }
 
-/**
- * One lesson in the agenda: the viewer's start, the students, «45 دقيقة · عند المعلم/ة 15:00 بتوقيت
- * القاهرة», the status chip (and «تجريبية» for a trial), and «غيّر الميعاد» always in view under the
- * line when it can still move (docs/07 §6: row actions are visible, never behind a tap a new admin
- * would not guess). The line itself is a 44pt button to «تفاصيل الحلقة»; the actions sit outside
- * it, so each press stays its own and a screen reader still reaches every button. Inside a day's inset
- * card (owner 2026-10-28: one container rule) it takes the card's 16pt padding and the card draws the rules.
- */
+/** docs/07 §6: row actions stay visible, outside the 44pt line button so each press is its own. */
 export function AgendaLessonRow(props: AgendaLessonRowProps) {
   const { lesson, onOpen, meta, chip, word } = props;
   const { color } = useTheme();

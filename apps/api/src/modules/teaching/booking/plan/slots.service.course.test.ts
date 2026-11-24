@@ -6,7 +6,7 @@ import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { SlotsService } from './slots.service';
 
-// «تغيير أيام الحلقات» (owner 2026-10-18): the course's own lessons move, so the grid shows their time free.
+// The course's own lessons move, so the grid shows their time free.
 const SUB = '00000000-0000-4000-8000-000000000001';
 const query = (over: Partial<SlotsQuery> = {}): SlotsQuery => ({
   teacherId: IDS.teacher,

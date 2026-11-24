@@ -7,7 +7,7 @@ import { useRecordings, useRecordingStatus } from './recordings-api';
 
 const R = t.classroom.recordings;
 
-/** The recordings of a lesson or meeting, newest first, with the «التسجيل غير مفعّل» warning when the server can't record. */
+/** Newest first, with a warning when the server cannot record. */
 export function RecordingsList({ source }: { source: RecordingSource }) {
   const list = useRecordings(source);
   const status = useRecordingStatus();

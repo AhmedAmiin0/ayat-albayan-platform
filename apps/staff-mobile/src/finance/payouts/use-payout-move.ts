@@ -22,10 +22,7 @@ export function usePayoutMove() {
   });
 }
 
-/**
- * «تأكيد الدفع»: the receipt goes up once (a retry after a failed POST does not upload it again),
- * then POST /payouts/:id/pay settles the ledger and marks the month paid in one transaction.
- */
+/** The receipt uploads once; the pay POST settles the ledger and the month atomically. */
 export function usePayPayout(payout: PayoutView) {
   const client = useQueryClient();
   const [receiptOnce] = useState(() => uploadOnce<string>());

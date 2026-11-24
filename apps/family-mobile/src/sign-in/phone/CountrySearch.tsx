@@ -6,7 +6,7 @@ interface CountrySearchProps {
   onQuery: (query: string) => void;
 }
 
-/** «ابحث باسم الدولة أو رمزها»: filters the picker by Arabic or English name or calling code. */
+/** Filters by Arabic or English name or calling code. */
 export function CountrySearch({ query, onQuery }: CountrySearchProps) {
   const { color } = useTheme();
   const label = t.familyApp.signIn.countrySearch;

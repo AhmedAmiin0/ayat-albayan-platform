@@ -1,9 +1,6 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { matchesQuery } from '@ab/core';
 
-// Pure helpers of the «الردود السريعة» picker (owner 2026-10-25): which replies a search shows, when
-// «/» opens the picker, and how a picked reply fills the composer.
-
 /** One tab's replies whose title or body holds the search (Arabic letter variants and case ignored), in the served order. */
 export function filterReplies(list: readonly SavedReply[], input: { scope: SavedReplyScope; query: string }): SavedReply[] {
   return list.filter((r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query));

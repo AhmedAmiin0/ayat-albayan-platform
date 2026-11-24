@@ -1,4 +1,5 @@
-import type { CourseChangeCheck, CourseChangeRequest, CourseChangeResult } from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
+import type { CourseChangeRequest } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiSend, pathKey } from '@ab/mobile-kit';
 

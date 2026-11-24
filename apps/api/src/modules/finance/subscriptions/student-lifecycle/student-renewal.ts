@@ -28,14 +28,7 @@ function endPackages(state: StudentState): EndPackage[] {
   }));
 }
 
-/**
- * «بانتظار التجديد» (owner 2026-10-12, docs/11 §7): after the package statuses are recomputed (every money
- * write, lesson change and the sweep), an `active` student whose subscription ended becomes
- * `pending_renewal`, and back to `active` once it runs again (a renewal payment), from `expired` too (owner
- * 2026-10-15). Runs after StudentActivation on a payment: a renewal still unpaid in part moves the student
- * it just activated back to pending_renewal. Never the not-subscribed statuses, paused or churned. Compare-and-set + audit (via subscription_ended / payment + payment_id / subscription_renewed).
- * The sweep leaves a status the admin set by hand until the next automatic event (manualWins).
- */
+/** Active with an ended package goes pending_renewal, and back on renewal; manual wins. */
 @Injectable()
 export class StudentRenewal {
   constructor(

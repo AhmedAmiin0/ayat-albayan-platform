@@ -1,4 +1,4 @@
-import type { SettingsMetaResponse } from '@ab/shared';
+import type { SettingsMetaResponse } from '@ab/settings';
 import { settings } from '@/ops/shared/fixtures';
 
 export const meta: SettingsMetaResponse = {

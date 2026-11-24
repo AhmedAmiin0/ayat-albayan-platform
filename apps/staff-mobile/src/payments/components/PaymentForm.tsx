@@ -1,4 +1,5 @@
-import { dueOf, PAYMENT_METHODS, type PaymentMethod, type StudentBalanceView } from '@ab/shared';
+import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
+import { dueOf, type StudentBalanceView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, FilterPills, type FilterPill, ErrorLine, useNow, FormLabel } from '@ab/mobile-kit';

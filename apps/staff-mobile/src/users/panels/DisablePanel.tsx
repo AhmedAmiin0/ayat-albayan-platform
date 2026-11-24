@@ -14,7 +14,7 @@ interface DisablePanelProps {
   onDone: (message: string) => void;
 }
 
-/** «تعطيل الحساب» with an optional reason: the user can no longer sign in, nothing is deleted. */
+/** The user can no longer sign in; nothing is deleted. */
 export function DisablePanel({ user, onBack, onDone }: DisablePanelProps) {
   const D = t.users.disable;
   const queryClient = useQueryClient();

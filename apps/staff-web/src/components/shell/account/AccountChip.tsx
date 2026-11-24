@@ -7,18 +7,12 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 
 export interface AccountChipProps {
-  /** The signed-in email (/auth/me), shown under «حسابي» in the block variant. */
   email?: string | null;
-  /** `block`: sidebar foot and «القائمة» sheet (photo, «حسابي», email); `inline`: the wide top bar. */
   variant?: 'block' | 'inline';
   className?: string;
 }
 
-/**
- * The user area's link to «حسابي» (R-ACC-01) with the user's photo or initials. The profile is
- * its own query (['me','profile']); while it loads or if it fails the chip still works: the
- * initials come from the email and the link stays.
- */
+/** The profile is its own query; while loading or failed, initials come from the email. */
 export function AccountChip({ email, variant = 'block', className }: AccountChipProps) {
   const { data: profile } = useQuery(profileQuery);
   const name = profile?.full_name ?? email ?? '';

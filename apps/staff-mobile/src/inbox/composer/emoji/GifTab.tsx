@@ -34,10 +34,7 @@ function GifCell({ gif, onPick }: { gif: GifItem; onPick: (gif: GifItem) => void
   );
 }
 
-/**
- * «GIF» (owner 2026-11-01): GIPHY's trending GIFs, or a search; a tap sends it as a WhatsApp video.
- * Without a GIPHY key in «التكاملات» the tab says an admin must add it.
- */
+/** A GIF is sent as a WhatsApp video; without a GIPHY key the tab says an admin must add it. */
 export function GifTab({ media, onSent }: GifTabProps) {
   const { color } = useTheme();
   const [q, setQ] = useState('');

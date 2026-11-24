@@ -1,5 +1,6 @@
 import { pendingRequestId, uploadOnce } from '@ab/client-core';
-import type { Page, PaymentView, StudentBalanceView } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { PaymentView, StudentBalanceView } from '@ab/money';
 import { useMutation, useQueryClient, type Query } from '@tanstack/react-query';
 import { useState } from 'react';
 import { apiSend } from '@ab/mobile-kit';

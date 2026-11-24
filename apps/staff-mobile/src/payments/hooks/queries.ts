@@ -1,4 +1,6 @@
-import type { AcademySettings, Page, PaymentView, StudentBalanceView } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { PaymentView, StudentBalanceView } from '@ab/money';
+import type { AcademySettings } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, listKey, pathKey } from '@ab/mobile-kit';
 

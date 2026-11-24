@@ -18,10 +18,7 @@ import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 
 type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
 
-/**
- * «تأكيد الدفع»: the cash still due (amount − what per-session payments covered), the transfer's
- * date, method, note and receipt. One request settles the ledger and marks the payout paid.
- */
+/** Cash due is the amount minus per-session payments; one request settles ledger and payout. */
 export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
   const formId = useId();
   const due = Math.max(0, round2(payout.amount - (payout.ledger_paid ?? 0)));

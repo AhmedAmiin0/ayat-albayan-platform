@@ -4,8 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { TemplateForm } from './TemplateForm';
 import { plainReminder } from '@/inbox/shared/thread-fixtures';
 
-// A chat starter imported from Meta (owner 2026-10-12): its key is its Meta name (not a producer key)
-// and it may take more than three variables (var_1…var_n, labelled «المتغير n»).
+// An imported Meta starter keys by its Meta name and may take more than three variables.
 
 const IMPORTED: TemplateView = {
   ...plainReminder,

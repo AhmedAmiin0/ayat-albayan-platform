@@ -1,4 +1,8 @@
-import { integrationBool, type IntegrationConfigItem, type IntegrationSecretKey } from '@ab/shared';
+import {
+  integrationBool,
+  type IntegrationConfigItem,
+  type IntegrationSecretKey,
+} from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales';
 

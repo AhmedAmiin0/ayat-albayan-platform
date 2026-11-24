@@ -1,5 +1,6 @@
 import { shapeParts, valueTextBy, type ValueTextTable } from '@ab/client-core';
-import { settingDef, tzOptionLabel, type SettingKey } from '@ab/shared';
+import { settingDef, type SettingKey } from '@ab/settings';
+import { tzOptionLabel } from '@ab/time';
 import { t } from '@ab/mobile-kit';
 
 // Reads the registry's dotted i18n paths so the phone uses the web's strings.

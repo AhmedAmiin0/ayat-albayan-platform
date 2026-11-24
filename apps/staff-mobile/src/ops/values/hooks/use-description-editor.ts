@@ -1,4 +1,4 @@
-import type { ConfigEntry, SettingKey } from '@ab/shared';
+import type { ConfigEntry, SettingKey } from '@ab/settings';
 import { useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { useIsAdmin, usePermissions, t, locale } from '@ab/mobile-kit';

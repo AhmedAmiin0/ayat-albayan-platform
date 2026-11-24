@@ -49,7 +49,7 @@ export type RecordPaymentBody = {
   method: PaymentMethod;
   paidAt: string;
   receiptPath: string | null;
-  /** «المرفقات» (bank only, 0..5 uploaded paths); the API answers 400 attachments_not_allowed otherwise. */
+  /** Bank only, 0 to 5 uploaded paths; otherwise 400 attachments_not_allowed. */
   attachments?: string[];
   note: string | null;
   /** One per payment form, re-sent on retries (the API returns the payment it already recorded). */
@@ -60,7 +60,7 @@ export const recordPayment = (body: RecordPaymentBody) => apiSend<PaymentView>('
 
 export const receiptUrl = (paymentId: string) => apiFetch<SignedDownload>(`/payments/${paymentId}/receipt`);
 
-/** A payment's «المرفقات», signed for 1 h: GET /payments/:id/attachments or /sales/me/payments/:id/attachments. */
+/** Signed for 1 h. */
 export const attachmentsQuery = (path: string) =>
   queryOptions({
     queryKey: ['payment-attachments', path],

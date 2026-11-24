@@ -32,7 +32,7 @@ Names (rename #735): `apps/staff-web` (package `staff-web`), `apps/staff-mobile`
 
 ## 2. Shared code: `packages/web-kit` (`@ab/web-kit`)
 
-- **It exports SOURCE, not dist.** The React Compiler and `import.meta.env` need Vite to transform it. Every web workspace aliases `@ab/web-kit/*` → `packages/web-kit/src/*` (tsconfig `paths` + the Vite alias); the kit's own files import each other the same way or as `./` siblings.
+- **It exports SOURCE, not dist.** The React Compiler and `import.meta.env` need Vite to transform it. `@ab/web-kit/<path>` resolves through the kit's package.json `exports` (no tsconfig `paths`, no Vite alias): an explicit entry for `index.css` and each folder module, and `./*` for files, whose `types` condition lists `src/*.ts` then `src/*.tsx` for TypeScript and whose `default` is the extensionless `src/*` that Vite completes. The kit's own files import each other the same way or as `./` siblings; they never use `@/`.
 - **Contents** (moved from apps/staff-web with the repo's move codemod, `tools/scripts/ci-checks/move-module.ts`; no copies):
   - the UI primitives (`components/ui/*`, the side `Drawer`) and `LanguageSwitch` (NOT `AdminLayout`, `MenuBar` or `SectionHome`, which link to `/admin`);
   - the tokens and `index.css`, with `@source "./"` so each app's Tailwind sees the kit's classes;

@@ -9,14 +9,7 @@ import { LinkPackages } from './link-packages';
 
 type Found = { api: StripeApi; id: string; status: Stripe.Checkout.Session['status'] };
 
-/**
- * «إلغاء الرابط» of an open link (hers; an admin any). Stripe is asked about the link's session first: when it
- * cannot say, nothing changes (502 stripe_unavailable, she tries again). Then the link (so the payment page
- * refuses at once), its open Checkout Session expired and its still-unpaid package cancelled with the admin's
- * rules (LinkPackages). A payment already under way never loses its package: a processing link is refused
- * (409 link_processing), and the package stays when the session completed (the webhook records the payment),
- * could not be expired, or was replaced by a racing checkout.
- */
+/** Asks Stripe first (502 if unsure); a payment under way never loses its package. */
 @Injectable()
 export class LinkCancel {
   private readonly log = new Logger(LinkCancel.name);

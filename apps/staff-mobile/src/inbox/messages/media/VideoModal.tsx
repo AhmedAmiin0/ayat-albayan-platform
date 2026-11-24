@@ -14,11 +14,7 @@ interface VideoModalProps {
   onFail: () => void;
 }
 
-/**
- * A chat video full screen (owner 2026-10-27), never inline: an inverted FlatList flips its cells
- * (scaleY -1), which Android's SurfaceView ignores. Black, the system's controls, uncut, it starts with
- * sound once loaded (a ring until then); «إغلاق» or Android's back closes it and releases the player.
- */
+/** Never inline: an inverted FlatList flips cells, which Android's SurfaceView ignores. */
 export function VideoModal({ id, url, kind, onClose, onFail }: VideoModalProps) {
   const still = useA11yPref('reduceMotion');
   const [source] = useState(url);

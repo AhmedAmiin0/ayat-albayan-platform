@@ -1,11 +1,11 @@
+import type { PaymentMethod } from '@ab/catalog';
 import {
   countsForMoney,
   owesMore,
   parseAmount,
-  type PaymentMethod,
   type StudentBalanceView,
   type SubscriptionView,
-} from '@ab/shared';
+} from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { type Attachment, withAttachment } from '@/payments/receipts/attachments';
 import type { PaymentInput } from '@/payments/lib/optimistic';

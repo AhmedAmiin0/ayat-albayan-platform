@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { View } from 'react-native';
 import { t, Field } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

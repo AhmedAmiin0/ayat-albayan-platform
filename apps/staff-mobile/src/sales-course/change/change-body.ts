@@ -1,4 +1,5 @@
-import { dayTimesKeeping, type CourseChangeRequest, type PrefilledPick } from '@ab/shared';
+import { dayTimesKeeping, type PrefilledPick } from '@ab/shared';
+import type { CourseChangeRequest } from '@ab/schedule';
 
 // Teacher, length and zone stay the course's; first picks come from changePicks. Pure.
 

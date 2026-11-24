@@ -1,4 +1,4 @@
-import { DESCRIPTION_MAX, type SettingKey } from '@ab/shared';
+import { DESCRIPTION_MAX, type SettingKey } from '@ab/settings';
 import { View } from 'react-native';
 import { t, Button, Field, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

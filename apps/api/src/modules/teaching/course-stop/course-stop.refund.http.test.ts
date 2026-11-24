@@ -2,8 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { manualRefundKey } from './refund/stop-refund.plan';
 import { ADMIN, bankRow, REQ, STUDENT, stopApp, SUB } from './course-stop.fakes';
 
-// «إلغاء مع استرداد» over HTTP (owner 2026-11-02): bank-only packages, the key, the cap.
-// 400 SAR / 8 lessons, 3 attended, rate 100 %, 290 paid by bank → 140 refundable.
+// Cancel with refund: bank-only packages, the key, the cap.
 type App = Awaited<ReturnType<typeof stopApp>>;
 const URL = `/students/${STUDENT}/course-stop`;
 const BODY = { subscriptionId: SUB, reason: 'سفر الأسرة', clientRequestId: REQ };

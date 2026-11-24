@@ -4,7 +4,7 @@ import {
   VALUE_GROUPS,
   type SettingKey,
   type ValueGroupId,
-} from '@ab/shared';
+} from '@ab/settings';
 import { textAt } from './value-text';
 
 /** Module-owned groups come after the editable ones and are read-only. */

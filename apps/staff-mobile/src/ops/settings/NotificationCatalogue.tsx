@@ -1,5 +1,7 @@
 import type { AudienceTab } from '@ab/shared';
-import { formatPhone, WA_LINES, type NotificationsOverview } from '@ab/shared';
+import type { NotificationsOverview } from '@ab/shared';
+import { WA_LINES } from '@ab/catalog';
+import { formatPhone } from '@ab/core';
 import { t, ErrorState, ltr, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { numberLine } from './catalogue-words';

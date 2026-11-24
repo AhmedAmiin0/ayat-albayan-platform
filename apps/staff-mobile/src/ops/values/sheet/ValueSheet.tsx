@@ -1,4 +1,4 @@
-import type { SettingKey, SettingMeta } from '@ab/shared';
+import type { SettingKey, SettingMeta } from '@ab/settings';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { t, shape, useTheme, ScreenHeader } from '@ab/mobile-kit';

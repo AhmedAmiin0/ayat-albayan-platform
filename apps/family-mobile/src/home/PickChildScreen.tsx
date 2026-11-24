@@ -9,12 +9,7 @@ import { Rise } from '@/ui';
 import { ChildSummaryCard } from './ChildSummaryCard';
 import { StudentsBody } from './StudentsBody';
 
-/**
- * «اختر الطالب» (owner 2026-11-16): the title, one card per child rising in one after another,
- * then the hint; a press makes the app that child's (saved on the phone) and goes home. Forced
- * after sign-in for a guardian of several children with no pick yet (no way back to a childless
- * home); pushed from «حسابي» to switch, with «رجوع» and no hint.
- */
+/** Forced after sign-in for a guardian of several with no pick; pushed from account to switch. */
 export function PickChildScreen() {
   const { color } = useTheme();
   const me = usePortalMe();
@@ -24,13 +19,12 @@ export function PickChildScreen() {
   const pickChild = usePickChild();
   const refresh = useRefreshPortal();
   const still = useA11yPref('reduceMotion');
-  // A guardian who also studies: their own row first, as «أنا» (canvas Adult).
+  // A guardian who also studies sees their own row first.
   const data = me.data && { ...me.data, students: familyChildren(me.data) };
   const students = data?.students ?? [];
   const kind = me.data?.kind ?? 'guardian';
   const choose = (student: PortalStudent) => () => {
     pickChild(student.id);
-    // Back down to the tabs' home when pushed from «حسابي»; in place of the picker when forced.
     router.dismissTo('/');
   };
   return (

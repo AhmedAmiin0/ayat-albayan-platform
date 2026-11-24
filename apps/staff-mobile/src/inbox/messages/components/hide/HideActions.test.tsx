@@ -6,7 +6,7 @@ import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// «حذف من المنصة» / «إظهار» (owner 2026-10-30): staff only, nothing sent to WhatsApp.
+// Hide and show are staff only; nothing is sent to WhatsApp.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

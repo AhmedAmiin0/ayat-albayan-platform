@@ -1,6 +1,5 @@
 import { type, useTheme, AppText } from '@ab/mobile-kit';
 
-/** Small ink-3 label over a quick-view block (البرنامج، ولي الأمر…). */
 export function SectionLabel({ children }: { children: string }) {
   const { color } = useTheme();
   return (

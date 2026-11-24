@@ -7,11 +7,7 @@ import { studentCodeOnTrack } from '@ab/client-core';
 /** password: student code + password; family (forgot) / firstTime: a code to the guardian. */
 type StudentView = 'password' | 'family' | 'firstTime';
 
-/**
- * «الدخول برمز الطالب وكلمة المرور» (docs/50 §4): student code (checked while typing) + password
- * (POST /auth/login); «أول دخول؟» sets the first password with a code sent to the guardian's
- * WhatsApp, «نسيت كلمة المرور؟» resets it the same way. Both hide while WhatsApp codes are off.
- */
+/** docs/50 §4: first password and reset use a WhatsApp code; both hide while codes are off. */
 export function StudentSignIn({ codes }: { codes: boolean }) {
   const [view, setView] = useState<StudentView>('password');
   const toPassword = () => setView('password');

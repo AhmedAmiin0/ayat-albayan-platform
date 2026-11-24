@@ -8,7 +8,7 @@ import { held, upcoming } from './testing/fixtures';
 
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => [] }));
 
-// «عدّل الوقت» (R-SCH-11) shows only where the API offered it (time_edit_mode), beside «غيّر الموعد».
+// Edit time (R-SCH-11) shows only where the API offered it via time_edit_mode.
 
 const action = { busyId: null, errorFor: () => null, confirm: jest.fn(), cancel: jest.fn() } as never;
 const edit = (who: string) => ({ name: `${t.editTime.action} — ${who}` });

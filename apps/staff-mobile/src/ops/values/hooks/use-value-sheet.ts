@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
+import { SETTING_DEFAULTS, type SettingKey } from '@ab/settings';
 import { useState } from 'react';
 import { ApiError, t } from '@ab/mobile-kit';
 import { ascii } from '@/ops/shared/ascii-digits';

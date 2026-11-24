@@ -3,8 +3,7 @@ import { useRef } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receiptProblem } from './ReceiptField';
 
-// A payment's «المرفقات» (owner 2026-10-12): optional, at most PAYMENT_ATTACHMENTS_MAX files, each checked like
-// a receipt (image / PDF, settings.upload_max_mb) before any upload; the API checks them again.
+// Optional, capped, each checked like a receipt before upload; the API checks them again.
 
 export type AttachmentProblem = 'receipt_type' | 'receipt_too_large' | 'too_many_attachments';
 
@@ -25,7 +24,7 @@ export function addAttachments<T>(
   return { list: next, problem };
 }
 
-/** The shown name of each stored file: the legacy receipt «الإيصال», then «مرفق 1»، «مرفق 2»… */
+/** The legacy receipt comes first. */
 export function attachmentLabels(rows: readonly PaymentAttachmentView[]): string[] {
   let n = 0;
   return rows.map((r) => (r.legacy ? t.payments.legacyReceipt : t.payments.attachmentN.replace('{n}', String((n += 1)))));

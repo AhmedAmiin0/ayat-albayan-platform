@@ -3,9 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course-end';
 import { planSeries, type SeriesRule } from './booking.series-plan';
 
-// Owner 2026-11-02 «dont put limit»: «حلقات مستخدمة من الباقة» may leave fewer lessons than
-// days a week. The course books exactly the remaining lessons on the next matching days and ends
-// after them; every picked day keeps its rule (the later ones empty).
+// Used-before lessons may leave fewer lessons than days a week; exactly the rest are booked.
 const now = new Date('2026-10-01T08:00:00Z'); // Thu 11:00 Riyadh
 const base: SeriesRule = {
   byday: [0, 2],

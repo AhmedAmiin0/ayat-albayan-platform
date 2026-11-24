@@ -1,4 +1,6 @@
-import { DESCRIPTION_MAX, type ConfigEntry, type Locale, type Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
+import type { Locale } from '@ab/core';
+import { DESCRIPTION_MAX, type ConfigEntry } from '@ab/settings';
 import { ApiError, t } from '@ab/mobile-kit';
 
 // docs/26 §3 for descriptions; §2f and §5 for who may edit.

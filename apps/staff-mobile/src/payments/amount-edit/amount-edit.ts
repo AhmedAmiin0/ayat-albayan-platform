@@ -1,4 +1,5 @@
-import { amountFromStripe, parseAmount, type PaymentKind, type PaymentMethod } from '@ab/shared';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
+import { amountFromStripe, parseAmount } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
 // Pure: the API re-checks every amount.

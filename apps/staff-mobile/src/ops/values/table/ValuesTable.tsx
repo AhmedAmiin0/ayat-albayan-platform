@@ -1,4 +1,4 @@
-import type { AcademySettings, SettingKey } from '@ab/shared';
+import type { AcademySettings, SettingKey } from '@ab/settings';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, InsetGroup } from '@ab/mobile-kit';

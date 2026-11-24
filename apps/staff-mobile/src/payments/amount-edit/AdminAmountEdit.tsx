@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { useHolds } from '@ab/mobile-kit';
 import { amountEditable } from './amount-edit';
 import { EditAmountButton } from './EditAmountButton';

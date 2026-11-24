@@ -15,10 +15,7 @@ import { t } from '@ab/mobile-kit';
 const draftOf = (out: Outgoing): string =>
   out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '';
 
-/**
- * A template's clientRequestId: the same template + params sent again (after «جرّب تاني») reuses
- * its id, so a lost answer never sends twice; `sent` forgets it once the API took the row.
- */
+/** The same template and params reuse their id, so a lost answer never sends twice. */
 export function useTemplateId() {
   const last = useRef<{ draft: string; id: string } | null>(null);
   const of = (out: Outgoing): string => {
@@ -44,19 +41,14 @@ interface ComposerSendInput {
   clearStaged: () => void;
 }
 
-/**
- * The box's «أرسل»: the text (its clientRequestId from useBoxId: a lost answer never sends twice),
- * then a staged file. A refused text comes back into the box; the file
- * waits in its chip until it went. A template keeps its own id the same way. `errors` = what failed, in words.
- */
+/** A lost answer never sends twice; a refused text returns to the box, a file waits in its chip. */
 export function useComposerSend({ phone, text, setText, staged, clearStaged }: ComposerSendInput) {
   const send = useSendMessage(phone);
-  // Any send of this chat in flight (this box's or «عرض سعر»'s): one at a time.
+  // Only one send per chat at a time, including the quote sheet's.
   const inFlight = useIsMutating({ mutationKey: sendKey(phone) }) > 0;
   const sendStaged = useSendStagedFile(phone);
   const boxId = useBoxId(phone);
   const replayed = useReplayed('box', phone);
-  // «رد» (owner 2026-10-25) or «تعديل» (2026-11-07): what the next text answers or corrects.
   const target = useTextTarget();
   const templateId = useTemplateId();
   const sendTemplate = (out: Outgoing, done?: () => void) =>
@@ -99,8 +91,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const textLine = replayed ? t.inbox.error.send_replayed : sendLine;
   const errors = [textLine, sendStaged.isError ? fileError(sendStaged.error) : null];
   const pending = inFlight || send.isPending || sendStaged.isPending;
-  // In edit mode a box holding only «تصحيح:» has nothing to send (round 3 of #694), nor one with no
-  // room left for the prefix (round 4).
+  // A box with only the correction prefix, or no room for it, has nothing to send (#694).
   return { sendTemplate, sendText, renew: boxId.renew, errors, pending, blocked: target.blocked(text) };
 }
 

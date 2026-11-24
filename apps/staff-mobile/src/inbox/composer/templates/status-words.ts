@@ -4,8 +4,7 @@ import type { TemplateStatus } from '@ab/catalog';
 import type { Glyph, Tone } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
-// The author's status chip (owner 2026-11-14): «قيد المراجعة / معتمد / مرفوض», anything else
-// «غير متاح» (never sent, paused, disabled, missing).
+// Anything other than pending, approved or rejected shows as unavailable.
 
 type Shown = 'pending' | 'approved' | 'rejected' | 'other';
 

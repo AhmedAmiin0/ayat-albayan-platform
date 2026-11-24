@@ -1,4 +1,4 @@
-import type { GoogleSyncSettings } from '@ab/shared';
+import type { GoogleSyncSettings } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 
 /** Read from GET /admin/google/status. */

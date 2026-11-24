@@ -20,12 +20,7 @@ const keepsStored = (stored: OwedDecision, ask: StopOweAsk): boolean =>
 /** No `owe` in the body (an older client): the sheet's default, attended × rate. */
 const DEFAULT_ASK: StopOweAsk = { choice: 'attended' };
 
-/**
- * «إلغاء فقط» (owner 2026-11-06): what the family still owes, chosen by the person stopping:
- * attended × per-lesson price × the rate (default, capped at the price), the price, nothing, or a
- * custom amount 0..price (409 owed_exceeds_price). Computed once at the stop and stored
- * (stop_owed_amount): a later rate change never rewrites it.
- */
+/** Owed amount at stop is computed once and stored, so a later rate change never rewrites it. */
 @Injectable()
 export class StopOwedCalc {
   constructor(

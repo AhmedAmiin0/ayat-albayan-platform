@@ -19,11 +19,7 @@ const GROUP_PILLS = (): FilterPill<GroupKind | ''>[] => [
   ...GROUP_KINDS.map((v) => ({ value: v, label: t.leads.groupKindOption[v] })),
 ];
 
-/**
- * When and how the student can study (R-LEAD-03), in the old form's order: days, a start-time
- * range picked from 30-minute choices (never typed, rule 6), the zone they attend in, the lesson
- * type, then «ملاحظات أو طلبات خاصة».
- */
+/** R-LEAD-03: start-time range from 30-minute choices, never typed (rule 6). */
 export function PreferenceFields(props: QualFieldsProps) {
   const cycle = useClockCycle();
   const { form, errors, onChange } = props;

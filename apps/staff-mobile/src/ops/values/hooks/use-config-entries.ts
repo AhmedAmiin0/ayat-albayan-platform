@@ -1,4 +1,9 @@
-import type { ConfigEntriesResponse, ConfigEntry, ConfigEntryResult, SettingKey } from '@ab/shared';
+import type {
+  ConfigEntriesResponse,
+  ConfigEntry,
+  ConfigEntryResult,
+  SettingKey,
+} from '@ab/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, t, refreshOverrides, locale, pathKey } from '@ab/mobile-kit';
 
