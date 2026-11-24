@@ -26,7 +26,13 @@ export interface NotificationsScreenProps {
   tree: PushTree;
 }
 
-/** R-NOT-01: newest 20; a tap marks read and opens the same target as a tapped push. */
+/**
+ * The notifications screen (R-NOT-01): the newest 20 of my notifications, unread ones marked. A
+ * tap marks the row read and opens its screen (the same map as a tapped push); mark-all-as-read
+ * while any is unread. Pull to refresh; with nothing cached, a failed read offers a retry. The
+ * list screens' compact top and one inset card of rows: mark-all-as-read is a pill, not a full
+ * button.
+ */
 export function NotificationsScreen({ tree }: NotificationsScreenProps) {
   const list = useNotifications();
   const pull = usePullRefresh(list.refetch);

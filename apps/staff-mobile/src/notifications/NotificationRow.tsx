@@ -7,7 +7,7 @@ interface NotificationRowProps {
   onPress: (item: NotificationItem) => void;
 }
 
-/** Unread is shown with glyph and word, never colour alone. */
+/** One bell row: title, body, age, and the unread mark (glyph + word, never colour alone). */
 export function NotificationRow({ item, onPress }: NotificationRowProps) {
   const { color } = useTheme();
   const tags = (

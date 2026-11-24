@@ -250,9 +250,6 @@
   "src/assistant-app/AssistantMoreScreen.tsx": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/assistant-app/assistant-day.ts": {
@@ -1693,7 +1690,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 2
     },
     "no-restricted-syntax": {
       "count": 1
@@ -1701,7 +1698,7 @@
   },
   "src/earnings/components/EarningsSummary.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/earnings/components/PayForm.tsx": {
@@ -1709,7 +1706,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/earnings/components/PaymentItem.tsx": {
@@ -1775,7 +1772,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/earnings/lib/scope.ts": {
@@ -1946,7 +1943,7 @@
   },
   "src/feedback/AverageCard.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/feedback/FeedbackRequestButton.tsx": {
@@ -1954,7 +1951,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "no-nested-ternary": {
       "count": 2
@@ -1962,7 +1959,7 @@
   },
   "src/feedback/FeedbackRow/FeedbackRow.tsx": {
     "max-len": {
-      "count": 5
+      "count": 4
     },
     "no-restricted-syntax": {
       "count": 1
@@ -1982,9 +1979,6 @@
     },
     "ab/no-shape-checks": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/feedback/queries.ts": {
@@ -5847,16 +5841,6 @@
   },
   "src/registration-check/components/RegistrationForm.tsx": {
     "max-len": {
-      "count": 2
-    }
-  },
-  "src/registration-check/components/RegistrationResults.tsx": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/registration-check/lib/link-family.test.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -5866,9 +5850,6 @@
     },
     "ab/no-untyped-api-calls": {
       "count": 1
-    },
-    "max-len": {
-      "count": 3
     }
   },
   "src/registration-check/lib/registration-check.ts": {
@@ -5883,9 +5864,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/registration-check/screens/LinkFamilyScreen/LinkFamilyScreen.tsx": {
@@ -5899,7 +5877,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 1
     },
     "max-lines-per-function": {
       "count": 1
