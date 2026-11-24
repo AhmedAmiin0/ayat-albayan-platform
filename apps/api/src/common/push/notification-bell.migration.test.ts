@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { INTEGRATION_SECRET_KEYS, PUSH_KINDS, SETTING_DEFAULTS } from '@ab/shared';
+import { INTEGRATION_SECRET_KEYS, PUSH_KINDS } from '@ab/catalog';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 

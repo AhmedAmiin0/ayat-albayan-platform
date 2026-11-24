@@ -19,7 +19,6 @@ export interface ValuesHeadProps {
   phone: boolean;
 }
 
-/** The page head: «القيم», «للاطلاع فقط» when read-only, the counts, the unsaved count and «أضف قيمة». */
 export function ValuesHead({ canWrite, counts, unsaved, onUnsaved, onAdd, phone }: ValuesHeadProps) {
   const summary =
     counts &&

@@ -15,11 +15,11 @@ interface StartDateFieldProps {
   draft: StartDraft;
   onChange: (patch: Partial<StartDraft>) => void;
   error: string | undefined;
-  /** The picked package's lessons (the quote's): «حلقات مستخدمة من الباقة» stops at usedBeforeMax (every lesson but one). */
+  /** Used lessons stop at usedBeforeMax, every lesson but one. */
   lessonsTotal: number;
 }
 
-/** «بدأ الاشتراك سابقًا»: off again resets the used lessons to 0. */
+/** Turning it off resets used lessons to 0. */
 function StartedSwitch({ on, onChange }: { on: boolean; onChange: StartDateFieldProps['onChange'] }) {
   const { color } = useTheme();
   const m = t.salesMoney;
@@ -38,12 +38,7 @@ function StartedSwitch({ on, onChange }: { on: boolean; onChange: StartDateField
   );
 }
 
-/**
- * «يوم البدء» of the sales subscribe (docs/16 row 24). Without the permission only «تبدأ الباقة اليوم
- * (…)». With it the day on Expo's date dialog (rule 6, never typed; owner 2026-11-07) from the
- * academy's today, and «بدأ الاشتراك سابقًا»: on, a past day on the same dialog replaces it, from a
- * year back up to today, with «حلقات مستخدمة من الباقة» (owner 2026-10-28); off again resets it to 0.
- */
+/** docs/16 row 24: rule 6, never typed; a past start goes back at most a year. */
 export function StartDateField({ canSet, days, academyToday, draft, onChange, error, lessonsTotal }: StartDateFieldProps) {
   const m = t.salesMoney;
   if (!canSet) {

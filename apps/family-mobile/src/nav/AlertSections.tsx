@@ -22,7 +22,7 @@ const GROUP: Record<AlertGroup, () => string> = {
   older: () => t.portal.app.alerts.older,
 };
 
-/** The rows under «اليوم» / «أمس» / «هذا الأسبوع» / «أقدم»; a tap marks read and opens. */
+/** A tap marks the row read and opens it. */
 export function AlertSections({ page }: { page: NotificationsPage }) {
   const { color } = useTheme();
   const markRead = useMarkRead();

@@ -14,7 +14,6 @@ export interface TeacherFiltersProps {
 const isProgram = (all: readonly Program[], v: string): v is Program => all.some((p) => p === v);
 const isGender = (v: string): v is Gender => GENDERS.some((g) => g === v);
 
-/** «المعلمون» toolbar: search by name, then program and gender (native selects, labelled). Wraps on phones. */
 export function TeacherFilters({ value, programs, onChange }: TeacherFiltersProps) {
   return (
     <div role="search" className="mb-4 flex flex-wrap items-center gap-2">

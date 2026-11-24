@@ -6,11 +6,7 @@ import { AssistantLessonItem } from './AssistantLessonItem';
 
 const A = t.classroom.assistants;
 
-/**
- * The classroom TA's day (`GET /assistants/me/lessons`): time, students, teacher, «ادخل الحلقة».
- * Mounted by the assistant tree's home (AssistantHomeScreen), which passes the day's [from, to) and
- * its own empty line for a day other than today.
- */
+/** Mounted by AssistantHomeScreen, which passes the day's [from, to) and its empty line. */
 export function AssistantLessonsList({ day, emptyTitle = A.homeEmpty }: { day: { from: string; to: string }; emptyTitle?: string }) {
   const lessons = useAssistantLessons(day);
   if (lessons.isPending) return <AppText>{t.common.loading}</AppText>;

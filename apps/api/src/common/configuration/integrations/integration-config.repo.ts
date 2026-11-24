@@ -1,4 +1,9 @@
-import { isIntegrationPlainKey, isIntegrationSecretKey, type IntegrationPlainKey, type IntegrationSecretKey } from '@ab/shared';
+import {
+  isIntegrationPlainKey,
+  isIntegrationSecretKey,
+  type IntegrationPlainKey,
+  type IntegrationSecretKey,
+} from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 

@@ -4,10 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PresenceStatus } from '@ab/web-kit/components/channel/presence/PresenceStatus';
 import { usePresenceClock } from './use-presence-clock';
 
-/**
- * A WhatsApp chat's header (docs/33 §4): Meta shares no presence, so «آخر رسالة …» from the
- * thread's last inbound message on the viewer's clock and zone; nothing when they never wrote.
- */
+/** Meta shares no presence, so the last inbound message time is shown instead (docs/33 §4). */
 export function LastMessageLine({ lastInboundAt }: { lastInboundAt: string | null }) {
   const { now, ...clock } = usePresenceClock();
   const at = { now, tz: viewerZone(), ...clock, words: t.presence };

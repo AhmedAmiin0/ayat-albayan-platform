@@ -9,7 +9,7 @@ import { useWhatsAppSend } from '@/inbox/messages/resend/use-whatsapp-send';
 
 interface FailedSheetProps {
   phone: string;
-  /** The row whose «! لم تُرسل» (or queued clock) was tapped; null hides the sheet. */
+  /** Null hides the sheet. */
   message: MessageView | null;
   onClose: () => void;
   /** A refused action in words, for the chat's notice line. */
@@ -19,16 +19,7 @@ interface FailedSheetProps {
 /** The sender claimed the row meanwhile (409 not_manual): it is going out, never send it by hand too. */
 const claimed = (e: unknown) => e instanceof ApiError && (e.body as { code?: unknown } | null)?.code === 'not_manual';
 
-/**
- * A tap on an admin's row that did not go out (R-MSG-03/05), as WhatsApp's «!» menu: why in full,
- * «حاول مرة أخرى» only where trying again can help (canRetryCode: not while the WhatsApp Business
- * account is blocked, 131042…), «أرسلها بنفسك من واتساب» (the API's wa.me link with the text filled
- * in), which first tells the server: it holds the row so the sender never sends it too, and the
- * row then asks «هل أرسلتها؟» itself. WhatsApp opens only once the server holds the row. A
- * «أرسل عبر واتساب» row pending or unconfirmed adds «أرسلتها» / «نعم، أرسلتها» (SheetAnswers:
- * the platform's stop path, docs/19; never put back to automatic sending). Drawn once
- * per chat and always mounted: a hand-off answered after the sheet closed still opens WhatsApp.
- */
+/** R-MSG-03/05: the server holds the row before WhatsApp opens so it is never sent twice. */
 export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheetProps) {
   const { color } = useTheme();
   const retry = useMessageAction(phone, 'retry');
@@ -38,7 +29,7 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
   // Why, for a queued row too once it has a reason (an auth hold: 190, kapso_auth…); 'sending' is the
   // sender's claim, not a reason.
   const why = failed || (!!m?.error_code && m.error_code !== 'sending');
-  // A text the 24 h window stopped has «أرسل عبر واتساب» instead of the wa.me hand-off.
+  // A text stopped by the 24 h window offers send via WhatsApp instead of the wa.me hand-off.
   const viaWhatsApp = m !== null && canSendViaWhatsApp(m);
   const link = viaWhatsApp ? null : (m?.click_to_chat ?? null);
   const sendViaWhatsApp = useWhatsAppSend(phone);

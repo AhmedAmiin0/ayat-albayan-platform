@@ -18,9 +18,9 @@ interface MessageRowProps {
   /** Stable: a tap on its quote. */
   onJump: (id: string) => void;
   highlight: boolean;
-  /** «تعديل» (owner 2026-11-07): its newest correction's id; the bubble greys and links to it. */
+  /** The newest correction's id; the bubble greys and links to it. */
   correctedBy?: string | undefined;
-  /** Stable while calls back are possible; undefined hides «اتصال». */
+  /** Stable while calls back are possible; undefined hides the call action. */
   onCallBack: ((call: CallView) => void) | undefined;
 }
 

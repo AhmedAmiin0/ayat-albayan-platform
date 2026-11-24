@@ -1,13 +1,13 @@
+import { sumByCurrency } from '@ab/core';
 import {
   monthOf,
   planStatement,
-  sumByCurrency,
   walletTotals,
   type AssistantStatementView,
   type AssistantTermsView,
   type MyEarnings,
   type WalletLine,
-} from '@ab/shared';
+} from '@ab/money';
 import type { StatementRow } from '@/modules/finance/assistant-pay/statements/statements.mapper';
 import type { MyAdjustment, MyCommission, StatementState } from './my.repo';
 

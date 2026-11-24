@@ -16,7 +16,7 @@ export interface RolePickerProps {
   hint?: string | undefined;
 }
 
-/** Base role, then a role of that base role: custom ones only, «الدور الافتراضي» when none is picked. */
+/** Only custom roles are listed; none picked means the default role. */
 export function RolePicker({ role, roleId, options, onChange, disabled, hint }: RolePickerProps) {
   const custom = options.filter((o) => o.base_role === role && !o.is_system);
   const locked = (r: UserRole) => options.some((o) => o.base_role === r && o.is_system && !o.assignable);

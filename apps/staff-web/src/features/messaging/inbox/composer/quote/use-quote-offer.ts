@@ -20,12 +20,7 @@ export function initialSelection(phone: string): Selection {
   return { ...INITIAL_SELECTION, country: pricingCountryOfPhone(phone) ?? OTHER };
 }
 
-/**
- * The sheet's choice and its quote (GET /pricing/quote, debounced as on the calculator). `text` is
- * the calculator's own offer (offerText with ar.pricing: the guardian reads Arabic whatever the UI
- * language); null until the first quote. `stale`: the price shown is still the previous choice's.
- * `custom`: «مبلغ مخصص» (useQuoteCustom); while its amount is not valid, `invalid` holds all.
- */
+/** The offer text is Arabic whatever the UI language; `stale` means the old choice's price. */
 export function useQuoteOffer(phone: string) {
   const [sel, setSel] = useState(() => initialSelection(phone));
   const asked = useDebounced(sel);
@@ -49,14 +44,7 @@ interface Offer {
   generation: number;
 }
 
-/**
- * «أرسل العرض»: the chat's own POST /threads/:phone/text. After no answer its id is pinned per
- * chat (quote-id) until a send with it gets an answer, 2xx or 4xx (docs/44 BUG7); no answer
- * re-reads the chat; a retry answered with the FIRST offer says this one did not go. It shares the
- * composer's mutation key, so neither sends while the other is in flight, and a second tap before
- * the re-render sends nothing (the ref). `onSent` closes the sheet. Like a template, a sent offer
- * settles a refused text attempt (settleOwnSend).
- */
+/** docs/44 BUG7: after no answer the id is pinned per chat until a send gets a 2xx or 4xx. */
 export function useQuoteSend(phone: string, onSent: () => void) {
   const queryClient = useQueryClient();
   const mutationKey = ['inbox-send', phone];

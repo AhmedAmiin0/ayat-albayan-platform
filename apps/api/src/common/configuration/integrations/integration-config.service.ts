@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/shared';
+import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/catalog';
 import { Inject, Injectable, Logger, Optional, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { setIntegrationOverlay } from './integration-overlay';

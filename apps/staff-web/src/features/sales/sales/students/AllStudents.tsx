@@ -11,10 +11,7 @@ import { ALL_STUDENTS_PAGE_SIZE, salesAllStudentsQuery } from '@/features/sales/
 import { usePermissions } from '@/features/people/auth';
 import { allStudentColumns, peopleEditColumn } from './all-student-columns';
 
-/**
- * «كل الطلاب» on /sales/students (the default view; «طلابي» is the other): every student of the academy,
- * paged and searched on the server (name or code). Read-only: no money, notes or links.
- */
+/** Paged and searched on the server; read-only: no money, notes or links. */
 export function AllStudents() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');

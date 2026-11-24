@@ -1,4 +1,4 @@
-import type { AcademySettings, SettingsUpdate } from '@ab/shared';
+import type { AcademySettings, SettingsUpdate } from '@ab/settings';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { CONFIG_QUERY_KEYS } from './query-keys';

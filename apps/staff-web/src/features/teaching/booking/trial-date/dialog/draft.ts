@@ -3,8 +3,7 @@ import type { Gender, Program } from '@ab/catalog';
 import { emptyDraft, type BookingDraft, type PickedStudent } from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
 
-// The booking wizard's draft for «موعد تجريبي جديد» (owner 2026-10-25): one trial lesson for one
-// existing student, in the family's zone, through the reduced flow teacher → slot → review. Pure.
+// One trial lesson for one existing student in the family's zone, teacher to slot to review; pure.
 
 /** What the caller knows of the student besides the history (the admin's profile); else the history's prefill. */
 export interface TrialStudentFacts {

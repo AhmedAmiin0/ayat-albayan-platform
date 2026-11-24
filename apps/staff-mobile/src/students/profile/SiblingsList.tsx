@@ -1,4 +1,4 @@
-import { studentStatusStyle } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t, ListRow, StatusChip, InsetGroup } from '@ab/mobile-kit';

@@ -1,4 +1,5 @@
-import { type LessonView, lessonWhenAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useClock } from '@ab/web-kit/lib/clock';
@@ -8,17 +9,12 @@ export interface TeacherProposalProps {
   lesson: LessonView;
   /** The teacher's zone. */
   tz: string;
-  /** Driven by the card: its «اقترح موعدًا آخر», or the cancel dialog's (owner Q5). */
   open: boolean;
   onClose: () => void;
   onDone: (message: string) => void;
 }
 
-/**
- * «اقترح موعدًا آخر» (R-SCH-08): the proposal waiting for the admin as one line, and the form in a
- * Dialog on every width (docs/48: no inline form in the card). The card offers it only while
- * teacherCanPropose holds (open, no pending proposal: the API's 409 rule).
- */
+/** Offered only while open with no pending proposal (the API's 409 rule); always in a Dialog. */
 export function TeacherProposal({ lesson, tz, open, onClose, onDone }: TeacherProposalProps) {
   const clock = useClock();
   const proposal = lesson.pending_proposal;

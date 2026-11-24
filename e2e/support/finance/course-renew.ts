@@ -1,8 +1,5 @@
 import { withSql } from '../core/schedule';
 
-// Helpers of e2e/tests/assistant-course-renew.api.spec.ts («تابِع بنفس الأيام», «تغيير أيام
-// الحلقات»).
-
 /** A renewal of the student's plan (8 lessons, 2 a week), unpaid, starting today: the newest subscription. */
 export async function renewal(studentId: string): Promise<string> {
   const [row] = await withSql((sql) => sql<{ id: string }[]>`insert into public.subscriptions

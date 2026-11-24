@@ -5,11 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { ResendDialog } from './ResendDialog';
 
-/**
- * Under Meta's 131060 bubble (a new number's first message whose content never reached us): «اطلب
- * إعادة الإرسال». Only in a chat she may write in (admin, sales; never teacher mode) while the 24 h
- * window is open (ChatActions.replyBlocked); the API still decides the send.
- */
+/** Only where she may write, while the 24 h window is open; the API still decides the send. */
 export function ResendAsk({ message }: { message: MessageView }) {
   const { enabled, replyBlocked, chat } = useChatActions();
   const [open, setOpen] = useState(false);

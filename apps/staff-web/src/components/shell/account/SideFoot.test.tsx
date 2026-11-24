@@ -12,7 +12,7 @@ vi.mock('./LogoutButton', () => ({ LogoutButton: () => <button type="button">out
 vi.mock('@ab/web-kit/components/shell/LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));
 vi.mock('@ab/web-kit/components/ui/layout/theme-toggle', () => ({ ThemeToggle: () => <button type="button">theme</button> }));
 
-// The «حسابي» chip reads ['me','profile']; here it fails, and the foot still shows the email.
+// The profile query fails here and the foot still shows the email.
 const render = (ui: ReactElement) =>
   rtlRender(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{ui}</QueryClientProvider>);
 

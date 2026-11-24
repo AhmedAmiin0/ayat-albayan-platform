@@ -9,19 +9,13 @@ import { RangeSteppers } from './RangeSteppers';
 import { SurahList } from './SurahList';
 
 interface SurahPickerSheetProps {
-  /** The track's title («الحفظ الجديد»). */
   title: string;
   start: PickerStart;
-  /** entry.memory.recent_surahs: the «الأخيرة» shortcuts. */
   recent: readonly number[];
   onCancel: () => void;
   onDone: (range: SurahRange) => void;
 }
 
-/**
- * The bottom sheet that picks a part's surah and ayahs (docs/design/report-form/SurahPicker): search,
- * recent surahs, the list, from/to steppers, the range's size, page and juz, then «تمّ».
- */
 export function SurahPickerSheet(p: SurahPickerSheetProps) {
   const { color } = useTheme();
   const v2 = t.reports.v2;
@@ -29,7 +23,7 @@ export function SurahPickerSheet(p: SurahPickerSheetProps) {
   const [draft, setDraft] = useState(p.start.draft);
   const [typed, setTyped] = useState<PendingText>({});
   const range = rangeOf(draft);
-  // A new surah drops digits typed for the old one: «تمّ» writes the range the sheet shows.
+  // A new surah drops digits typed for the old one, so done writes the range the sheet shows.
   const pick = (surah: number) => {
     setTyped({});
     setDraft((d) => pickSurah(d, surah));

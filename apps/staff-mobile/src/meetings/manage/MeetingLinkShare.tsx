@@ -2,7 +2,7 @@ import { Share, View } from 'react-native';
 import { t, type, useTheme, Button, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 
-/** The meeting's link (shown once) with «شارك الرابط»: the share sheet has Copy, WhatsApp and the rest. */
+/** The link is shown only once. */
 export function MeetingLinkShare({ url, note }: { url: string; note: string }) {
   const { color } = useTheme();
   return (

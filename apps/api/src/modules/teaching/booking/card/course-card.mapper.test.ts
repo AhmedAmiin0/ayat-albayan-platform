@@ -2,7 +2,6 @@ import type { SubscriptionView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { toCardPackage } from './course-card.mapper';
 
-// «الدورة والباقة»'s package line (owner 2026-11-17).
 const sub = (over: Partial<SubscriptionView> = {}) =>
   ({
     id: 'p1',

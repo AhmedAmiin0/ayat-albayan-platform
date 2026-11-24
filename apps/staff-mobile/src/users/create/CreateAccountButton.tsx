@@ -9,11 +9,7 @@ export interface CreateAccountButtonProps {
   student: { id: string; name: string; code: string | null };
 }
 
-/**
- * «إنشاء حساب» on the student file (users.write), as on the web: the create form in a page sheet
- * with the student's own record already picked. Shown only while the student has no login: the
- * link candidates are the students without one.
- */
+/** Shown only while the student has no login (users.write). */
 export function CreateAccountButton({ student }: CreateAccountButtonProps) {
   const can = usePermissions();
   const [open, setOpen] = useState(false);

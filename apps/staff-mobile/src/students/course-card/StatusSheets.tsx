@@ -7,7 +7,7 @@ export type StatusAsk = 'pause' | 'stop' | null;
 
 interface StatusSheetsProps {
   studentId: string;
-  /** The package «إلغاء الاشتراك» stops (the server's current one). */
+  /** The server's current package, which cancel stops. */
   subscriptionId: string | null;
   ask: StatusAsk;
   onClose: () => void;
@@ -17,10 +17,7 @@ interface StatusSheetsProps {
   chatPhone?: string | undefined;
 }
 
-/**
- * The status pills' sheets (owner 2026-11-17): «موقوف مؤقتًا» opens «إيقاف الدورة مؤقتًا» and
- * «متوقف» opens «إلغاء الاشتراك», the same forms as «إجراءات الدورة» (never a bare status change).
- */
+/** Status pills open the same pause and cancel forms, never a bare status change. */
 export function StatusSheets(props: StatusSheetsProps) {
   const { studentId, subscriptionId, ask, onClose, onDone } = props;
   const stopping = ask === 'stop' && subscriptionId !== null;

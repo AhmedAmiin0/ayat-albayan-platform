@@ -1,5 +1,20 @@
 {
-  "extends": "@ab/config/tsconfig/nest.json",
-  "compilerOptions": { "outDir": "dist", "rootDir": "src", "noEmit": true, "paths": { "@/*": ["./src/*"] } },
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    // CommonJS + Nest DI parameter properties (docs/31a §2): consistent-type-imports covers it instead.
+    "verbatimModuleSyntax": false,
+    "erasableSyntaxOnly": false,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
+    "types": ["node"],
+    "outDir": "dist",
+    "rootDir": "src",
+    "noEmit": true
+  },
   "include": ["src"]
 }

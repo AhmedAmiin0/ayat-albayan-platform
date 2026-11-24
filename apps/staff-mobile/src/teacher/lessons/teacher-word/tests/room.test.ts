@@ -1,4 +1,4 @@
-import type { LessonRoomState } from '@ab/shared';
+import type { LessonRoomState } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 import { lesson } from '@/today/testing/fixtures';
 import { teacherWord, waiting } from '@/teacher/lessons/teacher-word/teacher-word';

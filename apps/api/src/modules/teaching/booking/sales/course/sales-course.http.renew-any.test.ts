@@ -17,9 +17,7 @@ import { SalesCourseRepo } from './sales-course.repo';
 /** No payment link held, no draft (owner 2026-11-06). */
 const NO_DRAFTS = { held: async () => false, get: async () => null };
 
-// «أيام الحلقات» with sales.renew_any (owner 2026-11-01, docs/16 row 38): the course of ANY
-// student, another assistant's (S1, salesA's) or nobody's (S2). sales_auto_assign ON: the slot
-// grid is checked too.
+// docs/16 row 38: any student's course with renew_any; the slot grid is checked too.
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';
 const D = 'd1000000-0000-4000-8000-00000000000d';

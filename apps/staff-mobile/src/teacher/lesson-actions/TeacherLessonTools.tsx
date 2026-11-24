@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, StatusChip, Button, ErrorLine } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
@@ -7,7 +7,7 @@ import { useTeacherActs, type TeacherActs } from './use-teacher-acts';
 
 const w = t.teacherBoard;
 
-/** «حضورك مؤكَّد» once she said she will attend (the lesson still ahead). */
+/** Shown only while the lesson is still ahead. */
 function ConfirmedChip({ on }: { on: boolean }) {
   if (!on) return null;
   return (
@@ -17,7 +17,7 @@ function ConfirmedChip({ on }: { on: boolean }) {
   );
 }
 
-/** «سأحضر» (outlined: the sheet's filled button is the classroom) and «إلغاء الحلقة» (danger). */
+/** Outlined, since the sheet's filled button is the classroom. */
 function ToolButtons({ acts }: { acts: TeacherActs }) {
   return (
     <ButtonRow testID="teacher-lesson-tools">
@@ -33,14 +33,11 @@ function ToolButtons({ acts }: { acts: TeacherActs }) {
 
 interface TeacherLessonToolsProps {
   lesson: LessonView;
-  /** Says what landed («سأحضر», a cancel): the screen's notice outlives the sheet (docs/48). */
+  /** The screen's notice outlives the sheet (docs/48). */
   onDone: (text: string) => void;
 }
 
-/**
- * The teacher's own actions in «تفاصيل الحلقة» of «جدولي» (docs/46 C7): «سأحضر» (C4) or its chip,
- * «إلغاء الحلقة» (C3) with the required reason, each its own mutation; onDone once one lands.
- */
+/** Her own actions (docs/46 C7, C4, C3); cancel needs a reason. */
 export function TeacherLessonTools({ lesson, onDone }: TeacherLessonToolsProps) {
   const acts = useTeacherActs(lesson, onDone);
   return (

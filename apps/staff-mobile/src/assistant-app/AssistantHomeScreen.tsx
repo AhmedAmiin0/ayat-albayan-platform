@@ -21,10 +21,10 @@ import { HeldBell } from '@/notifications/HeldBell';
 import { assistantDay } from './assistant-day';
 
 /**
- * «حلقاتي» (web /assistant/ AssistantHome): the open lessons of the students they assist, today
- * first and a day at a time, each with «ادخل الحلقة» (the room opens in the system browser, as
- * every mobile classroom entry does). Below, «اجتماعات داخلية» (meetings.read) as on the web page.
- * The bell at the header's end (notifications.push).
+ * The assistant's lessons (web /assistant/ AssistantHome): the open lessons of the students they
+ * assist, today first and a day at a time; the room opens in the system browser, as every mobile
+ * classroom entry does. Internal meetings below (meetings.read) as on the web page. The bell at
+ * the header's end (notifications.push).
  */
 export function AssistantHomeScreen({ can }: { can: Can }) {
   // academy day (docs/34 b): the day pages as the calendar's; times read in the viewer's zone.

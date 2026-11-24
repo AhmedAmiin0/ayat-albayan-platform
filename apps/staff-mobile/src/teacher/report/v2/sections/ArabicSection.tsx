@@ -7,7 +7,6 @@ import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { Card } from '@/teacher/report/v2/ui/Card';
 import { GradePills } from '@/teacher/report/v2/ui/GradePills';
 
-/** The Arabic lesson (attended): «موضوع الدرس», then the four skills, each graded. */
 export function ArabicSection({ s }: { s: V2EntryState }) {
   const v2 = t.reports.v2;
   const arabic = s.values.content.arabic;

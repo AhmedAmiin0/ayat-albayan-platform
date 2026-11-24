@@ -1,13 +1,12 @@
 import {
   courseBodyPackage,
-  courseEndsOn,
   dayTimesKeeping,
-  timeGroups,
   type BookingRequest,
   type CourseBlock,
   type PrefilledPick,
   type SalesCourseView,
 } from '@ab/shared';
+import { courseEndsOn, timeGroups } from '@ab/schedule';
 
 // The assistant's course for the subscription she sold (R-ASST-01, owner 2026-10-18): the plan's
 // package and length, the student's zone, one pick per weekday. Pure; the wizard only holds picks.
@@ -26,7 +25,7 @@ interface CourseInput {
   picks: readonly string[];
   /** Idempotency key, the same on every retry of this wizard (rule 8). */
   requestId: string;
-  /** «تابِع بنفس الأيام»'s prefilled picks: a day still on one keeps its own time (DST-safe). */
+  /** A still-prefilled day keeps its own time, which stays DST-safe. */
   prefilled?: readonly PrefilledPick[];
 }
 

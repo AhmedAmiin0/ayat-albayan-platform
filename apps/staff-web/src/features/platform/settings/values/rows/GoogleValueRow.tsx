@@ -13,7 +13,6 @@ import { cellClass, headClass, rowClass } from './row-classes';
 
 const gs = t.googleSync.switches;
 
-/** A Google value as words («مفعّلة», «تجربة بدون كتابة», «60 يومًا»); «—» before the status loads. */
 export function googleText(field: GoogleField, s: GoogleSyncSettings | undefined): string {
   if (!s) return '—';
   if (field === 'enabled') return s.enabled ? gs.on : gs.off;
@@ -28,7 +27,7 @@ export interface GoogleValueRowProps {
   phone?: boolean;
 }
 
-/** One of «مزامنة Google»'s three values: read-only here, edited on /admin/settings/google. */
+/** Read-only here, edited on /admin/settings/google. */
 export function GoogleValueRow({ field, google, groupName, phone }: GoogleValueRowProps) {
   const api = useValues();
   const ids = useRowIds();

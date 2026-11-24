@@ -8,7 +8,7 @@ import { normalizePhone } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { AccountErrors } from './errors';
 
-// Client checks of the «حسابي» forms, before any request (the API checks the same again).
+// The API checks the same again.
 
 const E = t.account.errors;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -6,7 +6,6 @@ import type { ListUrlState } from '@/lib/list/list-url';
 
 export const ACTIVITY_PAGE_SIZE = 25;
 
-/** A fixed entity (a profile's «النشاط»): every row of that student / teacher. */
 export interface ActivityScope {
   entity: string;
   entityId: string;

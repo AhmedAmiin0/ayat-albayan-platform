@@ -7,7 +7,7 @@ import { CurrentUser, Permissions, Public, SignedIn } from '@/common/auth/decora
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ActivityRepo } from './activity.repo';
 
-/** «سجل النشاط»: GET /activity, admin only, paged + filtered + sorted (R-NFR-08). */
+/** Admin only, paged, filtered and sorted (R-NFR-08). */
 @ApiTags('activity')
 @ApiBearerAuth()
 @Permissions('activity.read')

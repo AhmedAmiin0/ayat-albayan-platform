@@ -7,8 +7,6 @@ import { http, participantRow } from './moderation.fakes';
 import { MuteLimit, MUTES_PER_WINDOW } from './mute-limit';
 import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
-// «كتم الميكروفون» / «إيقاف الكاميرا» (owner, 2026-10-05): LiveKit GetParticipant → MutePublishedTrack.
-
 const GUEST = 'guest-0123456789ab';
 const lesson = (identity = GUEST) => `/lessons/${LESSON_ID}/room/participants/${identity}/mute`;
 const meeting = (identity = GUEST) => `/meetings/${MEETING_ID}/participants/${identity}/mute`;

@@ -25,7 +25,7 @@ export class ReopenCancel {
 
   constructor(private readonly repo: ReopenCancelRepo) {}
 
-  /** The app's echo confirmed a «أرسل عبر واتساب» text (ManualEcho): its reopen is not needed. */
+  /** The app's echo confirmed the manual send, so its reopen is not needed. */
   async afterAttach(row: SentRow): Promise<CancelOutcome> {
     return this.safely(row.phone_e164, () => this.cancel(row));
   }

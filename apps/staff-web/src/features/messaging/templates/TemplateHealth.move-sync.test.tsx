@@ -10,7 +10,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// A move re-syncs the row on its new number: that result is read, never dropped behind «نُقل».
+// A move re-syncs the row on its new number; that result is never hidden.
 
 const WELCOME = template({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', status: 'missing' });
 const MOVED = { ...WELCOME, line: 'notifications' as const, status: 'not_submitted' as const };

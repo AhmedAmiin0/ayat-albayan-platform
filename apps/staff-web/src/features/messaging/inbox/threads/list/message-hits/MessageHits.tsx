@@ -23,10 +23,7 @@ const LINE: Record<HitsPhase, string> = {
   found: '',
 };
 
-/**
- * «الرسائل» under the chats (docs/37 NEW 1, as WhatsApp): matching messages, newest first, no
- * total; a tap opens that chat at that message and the list keeps the search beside it.
- */
+/** docs/37 NEW 1: newest first with no total; the list keeps the search beside the chat. */
 export function MessageHits({ hits: s, active }: MessageHitsProps) {
   const heading = useId();
   const now = useNow();

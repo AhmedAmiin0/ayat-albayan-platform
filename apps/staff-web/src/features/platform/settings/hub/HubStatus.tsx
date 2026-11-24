@@ -12,8 +12,7 @@ import { readThemePref } from '@ab/web-kit/lib/theme';
 import { googleChips, integrationChips, valuesSummary, type HubChip } from './hub-status';
 import type { HubDestination } from './hub-paths';
 
-// «الحالة الآن» of each hub row, from the queries the pages already use. Loading, an error or a
-// forbidden read shows a dash (named for screen readers), never a guess and never a crash.
+// Loading, error or a forbidden read shows a named dash, never a guess or a crash.
 
 const H = t.settingsHub;
 const SUM = 'text-sm text-ink-2';

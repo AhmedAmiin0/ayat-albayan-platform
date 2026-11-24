@@ -12,7 +12,6 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
-// owner 2026-11-17 (board CourseXActions): «سجّل دفعة» is a row of «الدورة والباقة».
 const serve = (balance: unknown) =>
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1/balance') return balance;

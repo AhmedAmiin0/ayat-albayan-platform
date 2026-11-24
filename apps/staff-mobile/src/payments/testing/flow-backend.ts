@@ -1,4 +1,4 @@
-import type { PaymentView, SubscriptionView } from '@ab/shared';
+import type { PaymentView, SubscriptionView } from '@ab/money';
 import { listItem, profile } from '@/students/shared/test-data';
 import { FakeBackend } from '@/test/fake-backend';
 import { balanceOf, page, payment, SUB_ID, subscription } from '@/payments/fixtures';

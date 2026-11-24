@@ -4,17 +4,12 @@ import type { RowControl } from '@/ops/notif-rules/lib/rule-words';
 
 interface RuleControlProps {
   control: RowControl;
-  /** The row's name: the switch is announced as «تشغيل «…»». */
   name: string;
   busy: boolean;
   onChange: (next: boolean) => void;
 }
 
-/**
- * The row's end: an on/off switch (a 44pt target, named by the row), «لا يمكن إيقافه» for a locked
- * row, or nothing (read-only, manual rows, an older API). The switch shows the saved state: a
- * question or a failed save leaves it where it was.
- */
+/** The switch shows the saved state, so a pending question or failed save leaves it unmoved. */
 export function RuleControl({ control, name, busy, onChange }: RuleControlProps) {
   const { color } = useTheme();
   if (control.kind === 'none') return null;

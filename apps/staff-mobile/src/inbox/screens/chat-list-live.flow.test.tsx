@@ -12,8 +12,7 @@ import {
   withOlderChat,
 } from '@/inbox/shared/chat-list-live.helpers';
 
-// The admin tree ((tabs)/_layout mounts useInboxRealtime): a new message reaches «المحادثات»
-// through the realtime nudge and through the poll (owner 2026-10-30).
+// A new message reaches the chats list through the realtime nudge and through the poll.
 
 beforeEach(async () => {
   await resetApp();

@@ -1,4 +1,6 @@
-import { packageProgress, teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import type { ReportFormEntry, ReportFormLesson } from '@ab/shared';
+import { packageProgress } from '@ab/money';
+import { teacherName } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { t, locale, shape, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
@@ -6,7 +8,7 @@ import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 const cities: Record<string, string | undefined> = t.tz;
 
-/** «رقم الحلقة» (R-LES-03), with the package line when the student has one (R-SUB-03). */
+/** Lesson number (R-LES-03), with the package line when the student has one (R-SUB-03). */
 function lessonNo(entry: ReportFormEntry): string {
   if (!entry.package) return String(entry.lesson_no);
   const { lessons_used, lessons_total } = entry.package;
@@ -61,11 +63,7 @@ function Panel({ children, label }: { children: ReactNode; label: string }) {
   );
 }
 
-/**
- * The read-only identity of the report (R-REP-01, issue D1), in the form's order: «معرّف الطالب»,
- * teacher, student, date in the student's zone, lesson number. All come from the lesson, never
- * typed. «البرنامج» and «الحضور» are questions (ReportEntryCard), then the link (MeetingLink).
- */
+/** Read-only identity (R-REP-01, issue D1), all from the lesson, never typed. */
 export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
   const cycle = useClockCycle();
   const { color } = useTheme();
@@ -83,7 +81,7 @@ export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; ent
   );
 }
 
-/** «رابط الاجتماع»: the lesson's link (it opens), read-only; after «الحضور» as on the form. */
+/** Read-only, placed after attendance as on the original form. */
 export function MeetingLink({ lesson }: { lesson: ReportFormLesson }) {
   const link = lesson.meeting_link;
   const open = link ? () => void Linking.openURL(link) : undefined;

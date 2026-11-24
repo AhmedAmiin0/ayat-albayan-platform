@@ -4,7 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 
-/** «إنهاء الحلقة للجميع»: lessons.room_ended_at (migration 20261117100100; service role). */
+/** lessons.room_ended_at (migration 20261117100100; service role). */
 @Injectable()
 export class LessonEndRepo {
   constructor(

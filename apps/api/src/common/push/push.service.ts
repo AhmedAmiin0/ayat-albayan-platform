@@ -1,4 +1,5 @@
-import { webNotificationPath, type AnyPushKind } from '@ab/shared';
+import { webNotificationPath } from '@ab/shared';
+import type { AnyPushKind } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pushText, type PushText } from './expo/expo-push';

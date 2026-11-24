@@ -2,10 +2,7 @@ import type { ThreadPages } from '@ab/client-core';
 import type { Query, QueryClient } from '@tanstack/react-query';
 import { threadDeltaKey, threadQuery } from './thread-query';
 
-// docs/44 K1: the re-reads a live event runs, each started after the event (cancelRefetch: true:
-// an older read in flight is cancelled, never joined). A chat load in flight («تحميل الأقدم», a
-// first load, a full read) is waited for instead: cancelling a page load drops it, joining a first
-// load misses the event, and a delta landing during any of them is dropped (thread-delta.ts).
+// docs/44 K1: re-reads cancel older reads but wait for chat loads in flight (thread-delta.ts).
 
 const fetching = (query: Query) => query.state.fetchStatus === 'fetching';
 

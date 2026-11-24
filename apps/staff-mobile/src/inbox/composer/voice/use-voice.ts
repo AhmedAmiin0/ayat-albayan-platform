@@ -127,7 +127,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
     if (action === 'send') await stopAndSend();
   };
 
-  /** «أرسل» in the bar: a locked recording stops first; a kept or failed one goes again (same id). */
+  /** A locked recording stops first; a kept or failed one is resent with the same id. */
   const finish = async () => {
     const kept = keptTake(now.current);
     if (kept) return send(kept);

@@ -9,11 +9,7 @@ import { PayoutsSettings } from './payouts.settings';
 
 type Ctx = { teacherId: string; month: string; actorId: string };
 
-/**
- * Y2 «احسب مستحقات الشهر» (R-PAY-02, R-TCH-04, issue E3): per teacher, the paid lessons in the
- * month (teacher's tz) × the rate for their duration, EGP, written as a draft. Approved and paid
- * rows are never touched; re-running gives the same rows (idempotent).
- */
+/** Y2 (R-PAY-02, R-TCH-04, E3): paid lessons in the teacher's tz month; idempotent drafts. */
 @Injectable()
 export class PayoutsGenerator {
   constructor(

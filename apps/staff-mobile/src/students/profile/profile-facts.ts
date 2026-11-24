@@ -1,4 +1,4 @@
-import { teacherName } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { t, locale } from '@ab/mobile-kit';
 import type { StudentProfile } from '@ab/shared';
 

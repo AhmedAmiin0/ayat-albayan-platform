@@ -19,7 +19,7 @@ export class DashboardService {
     private readonly settings: DashboardSettings,
   ) {}
 
-  /** «يحتاج تأكيد» only while a confirmation is required (owner 2026-11-02: 0 otherwise). */
+  /** Zero unless confirmation is required. */
   private async needsConfirmation(now: Date): Promise<number> {
     const { lesson_confirmation_required: required } = await this.settings.read();
     return required ? this.counts.needsConfirmation(now) : 0;

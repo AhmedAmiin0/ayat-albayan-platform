@@ -34,7 +34,6 @@ export class GoogleMapController {
     return this.map.teachers();
   }
 
-  /** «تقويم المعلم»: who builds the teacher's calendar (script / platform) and how its events fare. */
   @Get('teachers/:id/calendar-owner')
   @Permissions('settings.read')
   calendarOwner(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<TeacherCalendarView> {

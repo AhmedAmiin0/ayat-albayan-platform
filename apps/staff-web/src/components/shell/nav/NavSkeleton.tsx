@@ -7,10 +7,7 @@ export interface NavSkeletonProps {
   layout?: 'column' | 'row';
 }
 
-/**
- * The navigation while /auth/me loads (docs/27 E2, owner D6): placeholder items in the menu's place,
- * never a partial menu. role=status + aria-busy, and «جاري التحميل…» for screen readers.
- */
+/** Placeholders while /auth/me loads (docs/27 E2), never a partial menu. */
 export function NavSkeleton({ layout = 'column' }: NavSkeletonProps) {
   const row = layout === 'row';
   return (

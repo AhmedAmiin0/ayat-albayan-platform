@@ -14,13 +14,12 @@ export function windowLeftMs(lastInboundAt: string | null, now: Date): number {
   return Math.max(0, Date.parse(lastInboundAt) + SESSION_WINDOW_MS - now.getTime());
 }
 
-/** «23س», or «40د» in the last hour (never «0س» while still open). */
+/** Never shows zero hours while still open. */
 export function leftText(ms: number): string {
   if (ms >= HOUR) return t.inbox.window.hours.replace('{n}', String(Math.floor(ms / HOUR)));
   return t.inbox.window.minutes.replace('{n}', String(Math.max(1, Math.ceil(ms / 60_000))));
 }
 
-/** «المحادثة مفتوحة — تبقّى 23س» / «المحادثة مغلقة — أرسل قالبًا أو تقييمًا لإعادة فتحها» (admin; staff: closedStaff). */
 export function windowText(lastInboundAt: string | null, now: Date, mode: InboxMode = 'admin'): { open: boolean; text: string } {
   const left = windowLeftMs(lastInboundAt, now);
   if (left <= 0) return { open: false, text: mode === 'admin' ? t.inbox.window.closed : t.inbox.window.closedStaff };

@@ -20,7 +20,7 @@ type LateInput = { subscriptionId: string; attachments?: readonly string[] | und
 
 const reason = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
-/** The files of a payment: the single receipt (older forms) and «المرفقات» (bank transfers only). */
+/** The single legacy receipt and the attachments (bank transfers only). */
 @Injectable()
 export class PaymentFiles {
   private readonly log = new Logger(PaymentFiles.name);
@@ -38,11 +38,7 @@ export class PaymentFiles {
     return this.attachments.check({ subscriptionId, paths });
   }
 
-  /**
-   * PATCH: a new receipt (the payment's own path is fine); a payment with «المرفقات» stays a
-   * bank transfer (400). Returns the patch to write: a path sent back for the row's own moved
-   * file keeps the row's path (docs/45 §6).
-   */
+  /** A payment with attachments stays a bank transfer; a moved own file keeps its path. */
   async checkPatch<P extends ReceiptPatch>(row: PatchedRow, sent: P): Promise<P> {
     const own = sameStoredObject(row.receipt_path, sent.receiptPath);
     const patch = own ? { ...sent, receiptPath: row.receipt_path } : sent;

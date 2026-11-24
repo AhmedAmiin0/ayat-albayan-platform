@@ -6,10 +6,7 @@ import { PhoneField } from '@/sign-in/phone/PhoneField';
 import { progressIcon } from '@/sign-in/progress';
 import type { WhatsAppSignIn } from './use-whatsapp-sign-in';
 
-/**
- * Step 1: the WhatsApp number with its country, the hint (or, once it cannot be right, why) and
- * «أرسل الرمز», which waits for a whole number and shows progress while the code is asked for.
- */
+/** The send button waits for a whole number and shows progress while the code is requested. */
 export function PhoneStep({ sign }: { sign: WhatsAppSignIn }) {
   const { flow, phone } = sign;
   const [picking, setPicking] = useState(false);

@@ -16,7 +16,7 @@ export function outsideQuery(p: OutsideParams): string {
   return params.toString();
 }
 
-/** GET {base}/outside-slots («وقت آخر»): the server's next 14 days, parsed (shared schema). */
+/** The server's next 14 days, parsed with the shared schema. */
 export function useOutsideSlots(p: OutsideParams) {
   const mode = useBookingMode();
   const query = outsideQuery(p);

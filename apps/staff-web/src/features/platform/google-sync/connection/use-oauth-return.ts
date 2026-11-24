@@ -4,12 +4,7 @@ import { oauthReturnNote } from '@/features/platform/google-sync/google-format';
 
 export type OauthNote = NonNullable<ReturnType<typeof oauthReturnNote>>;
 
-/**
- * Back from Google's consent screen the API sends the browser to /admin/settings?google=connected
- * (or ?google=error&reason=…); the hub and «التكاملات» forward that query to «مزامنة Google»
- * (/admin/settings/google, docs/26b §3). The note is read once, then the query leaves the URL
- * (TanStack Router navigate, replace) on the same path; an anchor, if any, stays.
- */
+/** The query is read once then replaced out of the URL on the same path (docs/26b §3). */
 export function useOauthReturn(): { note: OauthNote | null; clear: () => void } {
   const router: AnyRouter | undefined = useRouter({ warn: false });
   const [note, setNote] = useState<OauthNote | null>(() => oauthReturnNote(window.location.search));

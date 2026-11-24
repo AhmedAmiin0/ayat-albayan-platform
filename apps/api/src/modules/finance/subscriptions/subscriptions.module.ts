@@ -37,16 +37,7 @@ import { StartDateEdit } from './start-date-edit/start-date-edit.service';
 import { UsedBeforeEditRepo } from './used-before-edit/used-before-edit.repo';
 import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 
-/**
- * Subscriptions priced from the catalog, balances (v_subscription_balance), the alerts job.
- * R-SUB-01/02/03. Routes S1–S8 (docs/11 §6).
- * Exports: MoneyWrites (payments: audit + recompute after a write), SubscriptionAlertsService
- * (reports/lessons may call evaluateLessons; AlertsJob already listens to LessonEvents),
- * PackagesService, BalanceQueries, UnpaidFlags (the lesson views' «الباقة مش مدفوعة» flag) and
- * SubscriptionCreator + SubscriptionsService + SubscriptionCancel (the salesperson's subscribe / cancel from the chat reuse them, sales-money),
- * StudentTrialStatus (a trial booking moves new → trial, owner 2026-10-15), CommissionBell (assistant-pay rings it after
- * an attribution or new terms earn a commission). StudentExpiryJob: pending_renewal → expired.
- */
+/** R-SUB-01/02/03; routes S1-S8 (docs/11 §6). */
 @Module({
   imports: [PricingModule, TeachersModule],
   controllers: [

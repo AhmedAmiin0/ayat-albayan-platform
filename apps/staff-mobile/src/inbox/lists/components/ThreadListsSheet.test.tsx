@@ -23,12 +23,10 @@ let mockLists = [PAID, TRIAL];
 const box = (name: string) => screen.getByRole('checkbox', { name });
 
 async function openSheet() {
-  // The chat is in «بانتظار الدفع» (the first page's `lists`), not in «تجريبية».
   const threads = () => detail([inbound], { lists: [{ id: PAID.id, name: PAID.name }] });
   mockApiFetch.mockImplementation((p: string) => answer({ me: withLists, lists: mockLists, threads })(p));
   await renderWithQuery(<ThreadScreen />);
   await screen.findByText(inbound.body ?? '');
-  // «القوائم» is an item of the header's «⋮» menu (review 2026-10-29 #13).
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.chatMenu }));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.lists.title }));
   await screen.findByRole('checkbox', { name: TRIAL.name });

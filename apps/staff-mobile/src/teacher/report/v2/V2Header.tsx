@@ -1,11 +1,11 @@
-import { teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import type { ReportFormEntry, ReportFormLesson } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { fillSlots } from '@ab/client-core';
 import { View } from 'react-native';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { t, locale, AppText, ltr, shape, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/more';
 
-/** «الحلقة 9 من 12» with a package, else «الحلقة 9». */
 function lessonChip(entry: Pick<ReportFormEntry, 'lesson_no' | 'package'>): string {
   const v2 = t.reports.v2;
   return entry.package

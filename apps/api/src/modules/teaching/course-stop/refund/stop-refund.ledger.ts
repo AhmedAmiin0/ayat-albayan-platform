@@ -22,11 +22,7 @@ function manualMethod(rows: readonly MoneyRow[], cardIds: ReadonlySet<string>): 
   return manual.filter(isManualMethod).at(-1)?.method ?? 'bank';
 }
 
-/**
- * The platform side of «إلغاء مع استرداد»: the manual refund row (kind 'refund', the family's own
- * method, idempotent on the stop's key) with the admins' bell «حوّل … للعائلة», and the audit
- * row of the Stripe refunds the stop created.
- */
+/** Manual refund row is idempotent on the stop's key; admins are told to transfer the money. */
 @Injectable()
 export class StopRefundLedger {
   constructor(
@@ -66,10 +62,7 @@ export class StopRefundLedger {
     });
   }
 
-  /**
-   * The stop committed but its refund did not finish (Stripe error, crash; review 2026-11-06):
-   * the admins' bell «تعذّر إتمام استرداد …», so a half-done refund is seen and retried.
-   */
+  /** The stop committed but its refund did not finish, so admins are told to see and retry it. */
   async failed(plan: RefundPlan): Promise<void> {
     const left = `${plan.amount} ${plan.sub.currency}`;
     await this.push.notifyAdmins('payment_due', {

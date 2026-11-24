@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-/** «مدّ الجدول»'s write (service role; CourseExtend checks the key and the ownership first). */
+/** Service role; CourseExtend checks the key and ownership first. */
 @Injectable()
 export class CourseExtendRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

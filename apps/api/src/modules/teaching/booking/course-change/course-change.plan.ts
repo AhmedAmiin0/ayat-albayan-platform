@@ -11,7 +11,7 @@ import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
 import { planSeries, type SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 
-// «تغيير أيام الحلقات» (owner 2026-10-18): the remaining lessons of a course on new days. Pure.
+// Pure plan of a course's remaining lessons on new days.
 
 export type ChangeRole = 'sales' | 'admin';
 
@@ -50,7 +50,7 @@ type StartFacts = {
   subStartsOn: string;
   /** Every rule of the course (any status). */
   rules: readonly { status: string; starts_on: string; ends_on: string | null; byday: readonly number[]; start_time_local: string }[];
-  /** «تغيير المعلم» (owner 2026-10-30): the same days are a change when the teacher changes. */
+  /** Same days still count as a change when the teacher changes. */
   teacherChanged?: boolean;
 };
 

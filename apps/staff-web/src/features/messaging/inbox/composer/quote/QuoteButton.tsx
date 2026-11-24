@@ -7,11 +7,10 @@ import { QuoteDialog } from './QuoteDialog';
 
 export interface QuoteButtonProps {
   thread: ThreadView;
-  /** «عدّل قبل الإرسال» filled the box (the composer leaves template mode). */
   onFilled: () => void;
 }
 
-/** «عرض سعر» beside the composer's quick buttons (admin and sales with pricing.read; never a teacher). */
+/** Admin and sales with pricing.read only; never a teacher. */
 export function QuoteButton({ thread, onFilled }: QuoteButtonProps) {
   const [open, setOpen] = useState(false);
   return (

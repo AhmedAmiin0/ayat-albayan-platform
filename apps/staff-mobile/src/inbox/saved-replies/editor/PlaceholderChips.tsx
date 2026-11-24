@@ -11,10 +11,6 @@ export function insertToken(input: { text: string; key: SavedReplyPlaceholder; s
   return `${text.slice(0, start)}${placeholderToken(key)}${text.slice(end)}`;
 }
 
-/**
- * «أدرج متغيرًا»: a pill per placeholder (اسم العميل · اسم الطالب · اسمك) and what happens to it; each
- * pill is 36pt with a 44pt hit area. Under them, how «[نص]» makes a blank the sender fills (owner 2026-10-27).
- */
 export function PlaceholderChips({ onInsert }: { onInsert: (key: SavedReplyPlaceholder) => void }) {
   const { color } = useTheme();
   const names: Record<SavedReplyPlaceholder, string> = t.savedReplies.placeholders;

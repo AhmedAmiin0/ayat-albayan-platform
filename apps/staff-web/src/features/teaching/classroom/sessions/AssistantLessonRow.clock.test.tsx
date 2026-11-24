@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { setClockPref } from '@ab/web-kit/lib/clock';
 import { AssistantLessonRow } from './AssistantLessonRow';
 
-// jsdom's zone is UTC: 14:30Z reads «14:30» / «2:30 م».
+// jsdom's zone is UTC: 14:30Z reads 14:30 or 2:30 PM.
 const LESSON: AssistantLessonView = {
   lesson_id: 'l-1',
   starts_at: '2026-10-03T14:30:00Z',

@@ -11,7 +11,6 @@ interface UsedBeforeWrite {
   to: number;
 }
 
-/** The reads and the write of «تعديل عدد الحلقات المستخدمة» (service role; the route guards). */
 @Injectable()
 export class UsedBeforeEditRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

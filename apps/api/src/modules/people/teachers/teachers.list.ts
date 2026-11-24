@@ -51,10 +51,7 @@ export function applyTeacherFilters<Q extends TeacherFilterable<Q>>(query: Q, f:
   return q;
 }
 
-/**
- * Students' (teacher_id, status) rows → «مشترك / تجريبي» counts by teacher id: active, and not subscribed yet
- * (new, trial, pending_subscription; owner 2026-10-15). Other statuses ignored.
- */
+/** Active, and not yet subscribed (new, trial, pending_subscription); others ignored. */
 export function tallyKinds(rows: readonly { teacher_id: string | null; status: StudentStatus }[]): Map<string, TeacherStudentCounts> {
   const out = new Map<string, TeacherStudentCounts>();
   for (const { teacher_id: id, status } of rows) {

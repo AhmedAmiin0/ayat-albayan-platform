@@ -20,15 +20,11 @@ export interface ReportEntryV2Props {
   titled: boolean;
   /** The viewer's zone for the autosave line and the edit window. */
   tz: string;
-  /** Opens a sent report straight in an edit (the admin pressed «تعديل التقرير» on its view). */
+  /** Opens a sent report straight in an edit, from the admin's view. */
   opened?: boolean;
 }
 
-/**
- * The new «تقرير الحلقة» (form_version 2, docs/design/report-form): attendance and program, then
- * the program's content (surah parts, Arabic skills or Islamic studies) and the lesson's end, or
- * one card when the student was absent; autosaved while a draft, then sent.
- */
+/** Form version 2 (docs/design/report-form): one card when absent; autosaved while a draft. */
 export function ReportEntryV2({ form, entry, titled, tz, opened }: ReportEntryV2Props) {
   const s = useReportEntryV2(entry.report, entry.student.program, opened);
   const { report, values } = s;

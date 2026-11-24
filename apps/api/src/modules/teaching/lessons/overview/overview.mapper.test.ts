@@ -4,7 +4,7 @@ import { lessonRow, OTHER_TEACHER_ID, TEACHER_ID } from '@/modules/teaching/less
 import { toOverview, type OverviewParts } from './overview.mapper';
 import type { OverviewTeacherRow } from './overview.repo';
 
-// The Riyadh day Sunday 2026-10-04; the fake lesson is 14:00Z–14:45Z with أبرار.
+// The Riyadh day Sunday 2026-10-04; the fake lesson is 14:00Z-14:45Z.
 const window = { from: new Date('2026-10-03T21:00:00Z'), to: new Date('2026-10-04T21:00:00Z') };
 const teacher = (over: Partial<OverviewTeacherRow>): OverviewTeacherRow => ({
   ...{ id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, gender: 'female', programs: ['quran'], tz: 'Africa/Cairo' },

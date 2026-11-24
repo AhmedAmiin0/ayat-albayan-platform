@@ -4,8 +4,7 @@ import { BODY, RULE_A, SUB_ID } from './course-change.fakes';
 import { changePayload, type PayloadInput } from './course-change.payload';
 import { assertStart, planChange } from './course-change.plan';
 
-// «تغيير المعلم» from the student's profile (owner 2026-10-30): the same change, the new rules'
-// teacher.
+// The same change, with the new rules' teacher.
 const NOW = new Date('2026-10-18T08:00:00Z');
 const NEW_TEACHER = '00000000-0000-4000-8000-0000000000e2';
 const req = courseTeacherChangeSchema.parse({ ...BODY, teacherId: NEW_TEACHER });

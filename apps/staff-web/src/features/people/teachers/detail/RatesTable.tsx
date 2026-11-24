@@ -2,7 +2,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RATE_FIELDS } from '@/features/people/teachers/form/teacher-form';
 import type { Teacher } from '@ab/shared';
 
-/** «سعر الحلقة (جنيه)»: one row per duration that has a rate, Western tabular digits. R-TCH-01. */
+/** R-TCH-01: Western tabular digits. */
 export function RatesTable({ teacher }: { teacher: Teacher }) {
   const rates = RATE_FIELDS.flatMap(({ key, label }) => {
     const value = teacher[key];

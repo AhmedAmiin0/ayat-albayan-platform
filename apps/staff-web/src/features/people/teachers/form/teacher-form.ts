@@ -22,7 +22,7 @@ export type TeacherForm = {
   programs: Program[];
   phone_e164: string;
   meeting_link: string;
-  /** null = «حسب إعداد الأكاديمية» (settings.meeting_link_auto). */
+  /** Null follows the academy setting (settings.meeting_link_auto). */
   meeting_mode: TeacherMeetingMode | null;
   status: TeacherStatus;
   tz: string;

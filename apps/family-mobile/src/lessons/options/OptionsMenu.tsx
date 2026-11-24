@@ -4,13 +4,9 @@ import { useState } from 'react';
 import { AppText, Button, ErrorLine, MenuSheet, t, type, useTheme } from '@ab/mobile-kit';
 import { DeclineForm } from './DeclineForm';
 
-/** «خيارات الحلقة»'s words for one lesson (canvas LessonXDecline). */
 export interface OptionsTitle {
-  /** «حلقة الغد · 6:30 م – 7:15 م». */
   heading: string;
-  /** «الإثنين 17 نوفمبر · مع فاطمة · 45 دقيقة». */
   subline: string;
-  /** «الاعتذار عن حلقة الغد». */
   decline: string;
 }
 
@@ -33,10 +29,6 @@ const VARIANT: Readonly<Record<LessonOption, 'primary' | 'secondary' | 'ghost'>>
   decline: 'ghost',
 };
 
-/**
- * «خيارات الحلقة» (owner 2026-11-17): the kit's bottom menu with what this lesson still allows —
- * «سأحضر», «اطلب موعدًا آخر» / «سحب الطلب», «أعتذر عن الحلقة» (which opens its form in place).
- */
 export function OptionsMenu(props: OptionsMenuProps) {
   const { lesson, title, now, open, busy, error, onClose, onPick, onDecline } = props;
   const { color } = useTheme();

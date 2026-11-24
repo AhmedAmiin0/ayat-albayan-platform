@@ -16,11 +16,7 @@ interface Props {
   onBack?: () => void;
 }
 
-/**
- * One child (docs/50 §6): «القادمة» / «حضرها» / «غاب عنها» / «الباقة» (guardian and adult only) /
- * the teacher chat (while family_chat_enabled is on, for every login). A report opens
- * over the tabs and comes back to the same tab.
- */
+/** The package tab is for guardian and adult logins; chat needs family_chat_enabled (docs/50). */
 export function ChildView({ kind, student, onBack }: Props) {
   const tabs = childTabs({ kind, student, chatOn: useFamilyChatOn() });
   const [picked, setPicked] = useState<ChildTab>('upcoming');

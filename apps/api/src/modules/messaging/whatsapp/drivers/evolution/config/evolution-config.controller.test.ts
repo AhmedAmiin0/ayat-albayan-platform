@@ -5,8 +5,7 @@ import type { NumbersEvolution } from '@/modules/messaging/numbers';
 import { EVO_BAILEYS } from '@/modules/messaging/whatsapp/drivers/evolution/evolution.fakes';
 import { EvolutionConfigController } from './evolution-config.controller';
 
-// Review fix 9: a failed push never leaves the old «متزامن»: synced false is stored first, and
-// the answer to a save says the options were saved but not pushed. All HTTP faked.
+// A failed push stores synced false first, so the old synced state never survives.
 
 const ID = '00000000-0000-4000-8000-000000000001';
 const USER = { id: 'admin-1' } as never;

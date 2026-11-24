@@ -1,4 +1,4 @@
-import { isOwnedSettingKey, OWNED_SETTING_KEYS, type SettingOwner } from '@ab/shared';
+import { isOwnedSettingKey, OWNED_SETTING_KEYS, type SettingOwner } from '@ab/settings';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { configDef, seedEntryOf } from '@/common/configuration/config-store/store/config-defs';

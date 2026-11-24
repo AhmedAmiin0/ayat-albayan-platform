@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { PROFILE_KEY, t, signOutDevice } from '@ab/mobile-kit';

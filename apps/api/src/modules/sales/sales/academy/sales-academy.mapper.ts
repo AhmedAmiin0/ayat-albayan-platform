@@ -14,12 +14,7 @@ const NO_CONTEXT: TeacherContext = { facts: new Map(), next: new Map() };
 
 // Whitelists, not omit-lists (docs/16): a column added to teachers or students later never reaches sales.
 
-/**
- * An active teacher with today's lesson count, whether one is running now, the students they teach
- * now (a churned student is no longer theirs) by name, each with program, status and next lesson, the
- * «مشترك / تجريبي» counts of those, their fixed meeting link (owner 2026-10-12; null when unset) and
- * whether their lessons go out with our classroom (platform_classroom).
- */
+/** A churned student is no longer the teacher's; meeting link null when unset. */
 export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CONTEXT): SalesTeacherView {
   const today = ctx.facts.get(row.id);
   const current = row.students.filter((s) => s.status !== 'churned');
@@ -56,7 +51,7 @@ export function toSalesStudent(row: SalesStudentRow): SalesStudentView {
   };
 }
 
-/** The assistant's session row (AssistantHome's shape), so the web reuses its row and «ادخل الحلقة». */
+/** Shaped like AssistantHome's row so the web reuses it. */
 export function toSalesLive(row: SalesLiveRow): AssistantLessonView {
   return {
     lesson_id: row.id,

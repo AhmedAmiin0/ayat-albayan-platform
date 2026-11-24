@@ -5,7 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with «بدأ الاشتراك سابقًا», − / + from 0 to every lesson but one.
+// Used lessons apply only to an already started package, from 0 to every lesson but one.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

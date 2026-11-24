@@ -18,7 +18,7 @@ const failLessons = (path: string) =>
 const lessonCalls = () =>
   apiFetch.mock.calls.filter(([p]) => String(p).startsWith('/teachers/me/lessons')).length;
 
-// docs/48: «جدولي» re-reads her lessons every 30 s, and a failed poll never blanks the grid.
+// docs/48: the schedule re-reads her lessons every 30 s, and a failed poll never blanks the grid.
 describe('«جدولي» poll', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });

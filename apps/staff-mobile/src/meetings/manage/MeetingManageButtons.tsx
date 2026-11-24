@@ -6,16 +6,13 @@ const L = t.meetings.internal;
 const M = t.meetingInvites.list;
 
 interface MeetingManageButtonsProps {
-  /** A scheduled meeting: «غيّر الموعد» and «ألغِ الاجتماع» instead of «إنهاء» (like web MeetingRow). */
+  /** A scheduled meeting gets reschedule and cancel instead of end, like the web MeetingRow. */
   scheduled: boolean;
   onAsk: (asking: Asking) => void;
   onMove: () => void;
 }
 
-/**
- * The creator's (or an admin's) buttons on an open meeting, ONE ButtonRow (docs/07 §6): reschedule and
- * new link (secondary), then cancel (danger); «إنهاء» (danger) instead of reschedule/cancel for an instant one.
- */
+/** docs/07 §6: one ButtonRow, danger actions last. */
 export function MeetingManageButtons({ scheduled, onAsk, onMove }: MeetingManageButtonsProps) {
   return (
     <ButtonRow>

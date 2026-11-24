@@ -7,12 +7,7 @@ import { useNoteStyle } from '@/inbox/shared/note-style';
 
 const PATH = '/messages/gate';
 
-/**
- * While a send gate is closed, messages wait in the queue (docs/12 §3.1): the admin's switch
- * («الإرسال متوقف») or the server — env off / WhatsApp not configured — which the switch alone
- * can't open. Nothing when sending is on. One line (the chat needs the room); a tap shows it whole,
- * and a screen reader always reads it whole.
- */
+/** docs/12 §3.1: the switch alone cannot open a server-side gate; readers always get it whole. */
 export function GateNote() {
   const note = useNoteStyle();
   const [whole, setWhole] = useState(false);

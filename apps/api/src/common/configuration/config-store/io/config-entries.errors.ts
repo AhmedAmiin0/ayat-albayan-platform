@@ -1,4 +1,4 @@
-import type { ConfigEntryError, SettingOwner } from '@ab/shared';
+import type { ConfigEntryError, SettingOwner } from '@ab/settings';
 import { ConflictException, ForbiddenException, HttpException, HttpStatus, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 
 // The /config/entries error bodies (docs/26 §2f): `code` is the contract (CONFIG_ENTRY_ERRORS);

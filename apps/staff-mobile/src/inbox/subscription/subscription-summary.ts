@@ -8,13 +8,12 @@ import { childChip, running } from './subscription-words';
 type Chip = NonNullable<ReturnType<typeof childChip>>;
 
 export interface FamilySummary {
-  /** «غير مدفوع» / «متوقف مؤقتًا» of the folded rows, once each: the rows' own rule (packageChip). */
+  /** Each chip once, by the rows' own rule (packageChip). */
   chips: Chip[];
-  /** «مشترك: 2 من 5» while only some packages run, else «5 طلاب». */
   count: string;
   /** The children with a package (running, ended, trial…): one line each once opened. */
   packaged: ThreadStudentView[];
-  /** «بلا باقة: سارة · علي»; null when every child has a package. */
+  /** Null when every child has a package. */
   noPackage: string | null;
 }
 

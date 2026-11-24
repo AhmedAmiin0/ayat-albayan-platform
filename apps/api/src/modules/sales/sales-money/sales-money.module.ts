@@ -1,48 +1,27 @@
 import { Module } from '@nestjs/common';
-import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
-import { PaymentsModule } from '@/modules/finance/payments/payments.module';
-import { SalesModule } from '@/modules/sales/sales/sales.module';
-import { SubscriptionsModule } from '@/modules/finance/subscriptions/subscriptions.module';
-import { SalesChatFiles } from './chat/sales-chat-files';
-import { SalesChatReceipts } from './chat/sales-chat-receipts.service';
-import { SalesFamilyRepo } from './reads/sales-family.repo';
-import { SalesMoneyReadsController } from './reads/sales-money-reads.controller';
+import { SalesChatModule } from './chat';
+import { SalesPackageCancelModule } from './package-cancel';
+import { SalesPaymentEditModule } from './payment-edit';
+import { SalesMoneyReadsModule } from './reads';
 import { SalesPaymentsController, SalesSubscribeController } from './sales-money.controller';
-import { SalesMoneyReads } from './reads/sales-money.reads';
-import { SalesRenewals } from './reads/sales-renewals';
-import { SalesMoneyScope } from './sales-money.scope';
 import { SalesMoney } from './sales-money.service';
-import { SalesMoneyServices } from './sales-money.services';
-import { SalesMoneySettings } from './sales-money.settings';
-import { AnyPackageCancelController } from './package-cancel/any-package-cancel.controller';
-import { AnyPackageCancel } from './package-cancel/any-package-cancel.service';
-import { SalesPackageCancel } from './sales-package-cancel';
-import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
-import { SalesPaymentAmount } from './payment-edit';
-import { UsedBeforeAccess } from './used-before/used-before-access';
-import { UsedBeforeEditController } from './used-before/used-before-edit.controller';
+import { SalesMoneySharedModule } from './shared';
+import { SalesTeacherAssignModule } from './teacher';
+import { UsedBeforeModule } from './used-before';
 
 /**
- * The salesperson subscribes her student from the chat and records the family's bank transfer (owner
- * 2026-10-12, R-ASST-01/04, docs/16 rows 16–19), permission self.sales_money. Thin: the money logic is the
- * admin's (SubscriptionCreator, PaymentsService, ReceiptsService), the ownership is SalesQueries.ownership,
- * and the chat files are ThreadMediaService's (its deps are global: InboundMedia, StorageService).
+ * The salesperson subscribes her student from the chat and records the family's bank transfer
+ * (R-ASST-01/04, docs/16 rows 16–19), permission self.sales_money. Thin: the money logic is the
+ * admin's (SubscriptionCreator, PaymentsService, ReceiptsService) and the ownership is
+ * SalesOwnershipRule's. The one place the sales-money modules are wired: AppModule imports this.
  */
 @Module({
-  imports: [SubscriptionsModule, PaymentsModule, SalesModule],
-  controllers: [
-    ...[SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
-    AnyPackageCancelController,
-    UsedBeforeEditController,
+  imports: [
+    ...[SalesMoneySharedModule, SalesMoneyReadsModule, SalesChatModule],
+    ...[SalesPackageCancelModule, SalesPaymentEditModule, SalesTeacherAssignModule],
+    UsedBeforeModule,
   ],
-  providers: [
-    ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyRepo],
-    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings, SalesRenewals, SalesPackageCancel, SalesTeacherAssign],
-    SalesPaymentAmount,
-    AnyPackageCancel,
-    UsedBeforeAccess,
-  ],
-  // The Stripe module's link takes «المعلم/ة» too: her own student only (the scope), then the assignment.
-  exports: [SalesMoneyScope, SalesTeacherAssign],
+  controllers: [SalesSubscribeController, SalesPaymentsController],
+  providers: [SalesMoney],
 })
 export class SalesMoneyModule {}

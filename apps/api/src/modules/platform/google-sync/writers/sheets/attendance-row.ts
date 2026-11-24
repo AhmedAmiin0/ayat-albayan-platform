@@ -28,7 +28,7 @@ export const textCell = (v: string | null): string => {
   return /^[=+\-@]/.test(s) ? `'${s}` : s;
 };
 
-/** The 13 columns of «سجل حضور — <student>», A..M (docs/24 §1). */
+/** docs/24 §1. */
 export function attendanceRow(r: AttendanceInput): CellValue[] {
   return [
     r.date,

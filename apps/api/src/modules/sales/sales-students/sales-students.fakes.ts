@@ -1,4 +1,3 @@
-// Test fixtures and HTTP harness for sales' «تفاصيل الطالب» and lesson actions (test-only, excluded from the build by *.fakes.ts).
 import type { AcademySettings } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -49,7 +48,7 @@ const pastLessons = (): AttendanceRow[] => [
   { id: 'l1', starts_at: '2026-10-11T15:00:00+00:00', status: 'completed', lesson_students: [{ student_id: MINE, attendance: 'on_time' }] },
 ];
 
-/** A trial moved once by «موعد تجريبي جديد» (old date first, so a test proves the order), with a link that never leaves. */
+/** Old date first, so a test proves the order; its link never leaves. */
 const trialLesson = (id: string, over: Partial<NonNullable<TrialLessonRead['lesson']>>) => ({
   id, rule_id: 'rt', teacher_id: 'tc1', starts_at: '2026-09-01T15:00:00+00:00', ends_at: '2026-09-01T15:30:00+00:00', status: 'rescheduled' as const,
   created_at: '2026-08-30T10:00:00Z', created_by: A, rescheduled_from_id: null, instant: false, makeup_of_id: null, rule: { package: 'trial' as const },
@@ -68,7 +67,7 @@ const reportRow = { id: REPORT, lesson_id: 'l1', teacher_id: 'tc1', attendance: 
   grade_engagement: null, grade_commitment: null, grade_overall: 'excellent', status: 'submitted', version: 1, pdf_status: 'ready', sent_at: '2026-10-11T16:00:00Z', notes: 'سر',
 };
 
-/** `settings` over the registry defaults; «اشتراط التعيين» ON unless overridden (enforced). */
+/** The ownership rule is on unless overridden. */
 export async function studentsApp(settings: Partial<AcademySettings> = {}) {
   const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN : NONE)), subscriptions: vi.fn(), meetings: vi.fn() };
   const schedule = { rules: vi.fn(), upcoming: vi.fn() };

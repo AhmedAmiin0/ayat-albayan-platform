@@ -9,9 +9,9 @@ export interface ChatAccess {
   templates: boolean;
   /** The paperclip (D2): staff who may send; never teachers (the API answers 403 files_forbidden). */
   files: boolean;
-  /** «الردود السريعة» (owner 2026-10-25): the admin and assistants who may send; never teachers. */
+  /** Admin and assistants who may send; never teachers. */
   replies: boolean;
-  /** «عرض سعر» (owner 2026-10-26): GET /pricing/quote (pricing.read, sales by default); never teachers. */
+  /** Needs pricing.read for GET /pricing/quote; never teachers. */
   quote: boolean;
 }
 

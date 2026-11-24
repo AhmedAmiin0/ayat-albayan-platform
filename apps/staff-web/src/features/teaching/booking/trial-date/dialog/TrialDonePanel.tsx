@@ -13,7 +13,6 @@ export interface TrialDonePanelProps {
   tz: string;
 }
 
-/** After POST {base}/trial-date: booked or moved, the new time, the guardian's confirmation, «إغلاق». */
 export function TrialDonePanel({ result, tz }: TrialDonePanelProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const close = useChatReturn();

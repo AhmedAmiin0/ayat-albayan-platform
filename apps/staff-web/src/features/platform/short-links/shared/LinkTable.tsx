@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 interface LinkTableProps {
   id: string;
   title: string;
-  /** «12 شخصًا», «7 زائرين من 12» beside the title. */
   count: string;
   /** The line under the title (or what an empty table says). */
   hint: string;

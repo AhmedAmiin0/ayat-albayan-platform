@@ -1,8 +1,7 @@
 import { NOTIFICATION_AUDIENCES, type AudienceTab, type NotificationEntryView } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «ماذا يُرسل ومتى» one audience at a time (docs/26b §3, mockup notifications.html): ولي الأمر ·
-// المعلم/ة · العميل · فريق الأكاديمية, then «يدوي» (the messages a person sends) when there are any.
+// One audience per tab (docs/26b §3); the manual tab appears only when there are manual rows.
 
 /** The rows of one tab: an audience's automatic/event rows, or every manual row. */
 export function rowsOf(entries: readonly NotificationEntryView[], tab: AudienceTab): NotificationEntryView[] {
@@ -11,7 +10,7 @@ export function rowsOf(entries: readonly NotificationEntryView[], tab: AudienceT
   return entries.filter((e) => !e.manual && (e.audience === tab || !!e.also_to?.includes(tab)));
 }
 
-/** The tabs with their counts; «يدوي» only when the catalogue has manual rows. Guardian first (the default). */
+/** The manual tab only when manual rows exist; guardian first as the default. */
 export function audienceTabs(entries: readonly NotificationEntryView[]): { value: AudienceTab; label: string; count: number }[] {
   const c = t.notificationCatalogue;
   const tabs = NOTIFICATION_AUDIENCES.map((value) => ({ value, label: c.audience[value], count: rowsOf(entries, value).length }));

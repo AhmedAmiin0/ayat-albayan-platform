@@ -35,7 +35,7 @@ export function PaymentFields({ form, set, currency, today, amountError, amountL
         error={amountError ?? undefined}
       >
         {(p) => (
-          // Text, not type=number: an Arabic keyboard types «١٤٥», which parseAmount reads.
+          // Text, not type=number, so Arabic-Indic digits typed on an Arabic keyboard still parse.
           <Input
             {...p}
             type="text"

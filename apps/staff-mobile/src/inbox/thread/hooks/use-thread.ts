@@ -30,7 +30,6 @@ import { useThreadPoll } from './thread-poll';
 export const threadGet = (path: string, init?: { signal?: AbortSignal }) =>
   apiFetch<ThreadDetail>(path, init);
 
-/** The chat's infinite query: useThread, and «محادثة جديدة» reading a number before it opens it. */
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
     queryKey: threadKey(phone),
@@ -99,7 +98,7 @@ export function useSendMessage(phone: string) {
     client.setQueryData<ThreadCache>(queryKey, fn);
   const pinned = (input: SendInput, generation = -1) => pinnedOf(phone, input, generation);
   return useMutation({
-    // One key per chat: the composer and «عرض سعر» see each other's send in flight (useIsMutating).
+    // One key per chat so the composer and the quote sheet see each other's in-flight send.
     mutationKey: sendKey(phone),
     mutationFn: (input: SendInput) =>
       apiSend<TextAnswer>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
@@ -109,7 +108,7 @@ export function useSendMessage(phone: string) {
       await client.cancelQueries({ queryKey });
       const text = echoed(out);
       const key = out.kind === 'template' ? out.key : undefined;
-      // An answer shows its quote at once (owner 2026-10-25 «رد»), as the API's row will.
+      // An answer shows its quote at once, as the API's row will.
       const quote = out.kind === 'text' && out.replyTo ? { reply_to_message_id: out.replyTo.id, reply_to: out.replyTo } : {};
       const row = { ...provisionalMessage({ id, phone, body: text, templateKey: key }), ...quote };
       edit((old) => appendMessage(removeMessage(old, id), row));
@@ -129,7 +128,7 @@ export function useSendMessage(phone: string) {
   });
 }
 
-/** app-send: «أرسل عبر واتساب», the row's short pending window (docs/19). */
+/** app-send gives the row a short pending window (docs/19). */
 type MessageAction = 'retry' | 'sent-manually' | 'hand-off' | 'app-send';
 
 /**

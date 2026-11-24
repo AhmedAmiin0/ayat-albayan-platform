@@ -23,11 +23,7 @@ export interface ForwardDialogProps {
 
 const max = String(FORWARD_MAX_TARGETS);
 
-/**
- * «إعادة توجيه» (owner 2026-10-25): pick up to five chats, recent first, searched by name or number
- * (GET /threads, debounced). A chat outside its window can be picked; the server skips it and says
- * why. The same picks sent again (a retry after an error) reuse the request's id (rule 8).
- */
+/** An out-of-window chat can be picked and the server skips it; retries reuse the id (rule 8). */
 export function ForwardDialog({ message, from, onClose, onDone }: ForwardDialogProps) {
   const queryClient = useQueryClient();
   const [q, setQ] = useState('');

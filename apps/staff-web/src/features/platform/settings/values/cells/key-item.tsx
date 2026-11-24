@@ -12,7 +12,7 @@ async function copyText(text: string): Promise<boolean> {
   }
 }
 
-/** «للمطوّر: المفتاح» + «انسخ المفتاح»: the key is never a visible line in the row (docs/26b §2). */
+/** The key is never a visible line in the row, only in the menu (docs/26b §2). */
 export function keyItem(key: string, announce: (message: string) => void): RowMenuItem {
   return {
     id: 'copy-key',

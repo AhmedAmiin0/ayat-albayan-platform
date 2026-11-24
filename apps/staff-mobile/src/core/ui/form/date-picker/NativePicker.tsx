@@ -12,12 +12,7 @@ interface NativePickerProps {
   onClose: () => void;
 }
 
-/**
- * Expo's own picker (@expo/ui DateTimePicker: the Material 3 date / time dialog on Android, SwiftUI
- * on iOS), mounted only while open: it opens on mount, confirming calls onPick and cancelling
- * onClose, and the caller unmounts it after either. 12 / 24 h follows «تنسيق الوقت»; the academy's
- * accent tints it.
- */
+/** Mounted only while open; the caller unmounts it after confirm or cancel. */
 export function NativePicker(props: NativePickerProps) {
   const { mode, value, min, max, onPick, onClose } = props;
   const cycle = useClockCycle();

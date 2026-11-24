@@ -22,9 +22,8 @@ import { slotWindow, windowStart } from '@/booking/shared/slots';
 export interface SlotMulti {
   picks: readonly string[];
   onChange: (picks: string[]) => void;
-  /** «التالي»: on to the next step once the days are picked. */
   onNext: () => void;
-  /** Days a week the course needs (the assistant's course): «التالي» waits for exactly that many. */
+  /** Days a week the course needs; next waits for exactly that many. */
   need?: number;
 }
 
@@ -32,19 +31,19 @@ export interface SlotStepProps {
   teacherId: string;
   /** The family's zone: the small clock under each viewer's time, and the picks' weekdays. */
   tz: string;
-  /** The lesson length the slot must fit (the draft's «المده»). */
+  /** The lesson length the slot must fit. */
   durationMin: number;
   /** One slot (a trial, a makeup): picking it moves on. */
   onPick?: (startsAt: string) => void;
-  /** «وقت آخر» (one slot only): a start of the server's fortnight, outside the hours or not. */
+  /** One slot only: a start of the server's fortnight, outside the hours or not. */
   onPickOther?: (startsAt: string, outside: boolean) => void;
-  /** Several slots (a package): toggled, then «التالي». */
+  /** Several slots for a package: toggled, then next. */
   multi?: SlotMulti;
   /** The earliest start (an instant), when later than now: a subscription that starts ahead. */
   from?: string;
-  /** «تغيير أيام الحلقات»: this course's own lessons (of these students) are not busy: they move. */
+  /** This course's own lessons of these students are not busy because they move. */
   exclude?: { course: string; studentIds: readonly string[] };
-  /** «موعد تجريبي جديد»: the upcoming trial it moves (its own time is not busy). */
+  /** The upcoming trial it moves; its own time is not busy. */
   excludeLessonId?: string;
 }
 

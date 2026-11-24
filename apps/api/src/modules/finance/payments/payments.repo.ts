@@ -90,7 +90,7 @@ export class PaymentsRepo {
     return data;
   }
 
-  /** The payment already recorded from this invoice («سجّل كدفعة» once), or null. */
+  /** The payment already recorded from this invoice (recorded once), or null. */
   async byInvoice(invoiceId: string): Promise<{ id: string } | null> {
     const { data, error } = await this.db.from('payments').select('id').eq('invoice_id', invoiceId).maybeSingle();
     if (error) throw dbError(error);
@@ -99,13 +99,13 @@ export class PaymentsRepo {
 
   async update(id: string, patch: TablesUpdate<'payments'>): Promise<PaymentRow> {
     const { data, error } = await this.db.from('payments').update(patch).eq('id', id).select(SELECT).single();
-    // The backstop of migration 432: a payment with «المرفقات» stays a bank transfer.
+    // The backstop of migration 432: a payment with attachments stays a bank transfer.
     if (error?.code === '23514' && error.message.includes('attachments')) throw badRequest('attachments_not_allowed');
     if (error) throw dbError(error);
     return data;
   }
 
-  /** «تعديل المبلغ» checked and written under a lock (payment_amount_set): 409 on a lost race. */
+  /** Checked and written under a lock (payment_amount_set): 409 on a lost race. */
   async setAmount(id: string, change: { amount: number; expected: number }): Promise<PaymentRow> {
     const args = { p_payment: id, p_amount: change.amount, p_expected: change.expected };
     const { error } = await this.db.rpc('payment_amount_set', args);
@@ -132,7 +132,6 @@ export class PaymentsRepo {
     return data;
   }
 
-  /** auth user id → profiles.full_name («سجّلها {name}»). */
   async recorders(ids: readonly (string | null)[]): Promise<Map<string, string>> {
     const wanted = [...new Set(ids.filter((id) => id !== null))];
     if (wanted.length === 0) return new Map();

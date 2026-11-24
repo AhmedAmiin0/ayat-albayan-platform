@@ -19,10 +19,7 @@ interface FileCall {
   id: string;
 }
 
-/**
- * «أضف ملفًا للحلقة» (owner 2026-11-17): the same signed-upload flow as a report's attachments
- * (StorageService, the report-attachments bucket under the lesson's id), registered on the lesson.
- */
+/** The same signed-upload flow as report attachments, registered on the lesson. */
 @Injectable()
 export class LessonFilesService {
   constructor(

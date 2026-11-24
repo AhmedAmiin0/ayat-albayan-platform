@@ -3,14 +3,7 @@ import { amountEditProblem, amountFromStripe, type PaymentUpdate } from '@ab/sha
 import { conflict } from '@/common/http/errors';
 import type { PaymentRow, PaymentsRepo } from './payments.repo';
 
-/**
- * «تعديل المبلغ» (owner 2026-11-02), the admin's PATCH and the assistant's alike: the new
- * amount, or null when unchanged. The same amount (the admin's form re-sends it) is never
- * refused. A card payment's amount is Stripe's: 409 stripe_amount_locked. The package's net
- * paid may not go below 0 (409 refund_exceeds_paid: checked here for a quick answer, and again
- * under a lock by PaymentsRepo.setAmount, which writes it). A method may never switch into or
- * out of card (409 stripe_method_locked): that would unlock (or fake) a Stripe amount.
- */
+/** Same amount is never refused; card amounts and methods are locked; net paid stays >= 0. */
 export async function amountChange(
   payments: Pick<PaymentsRepo, 'netPaid'>,
   before: PaymentRow,

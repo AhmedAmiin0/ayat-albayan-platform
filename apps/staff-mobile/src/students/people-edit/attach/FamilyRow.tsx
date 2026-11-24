@@ -1,4 +1,5 @@
-import { formatPhone, type FamilyOption } from '@ab/shared';
+import type { FamilyOption } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { Pressable, View } from 'react-native';
 import { t, AppText, ltr, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/more';

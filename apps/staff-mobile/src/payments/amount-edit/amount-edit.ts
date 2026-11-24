@@ -1,7 +1,8 @@
-import { amountFromStripe, parseAmount, type PaymentKind, type PaymentMethod } from '@ab/shared';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
+import { amountFromStripe, parseAmount } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
-// «تعديل المبلغ» of a recorded payment (owner 2026-11-02). Pure: the API re-checks every amount.
+// Pure: the API re-checks every amount.
 
 const e = t.payments.editAmount;
 

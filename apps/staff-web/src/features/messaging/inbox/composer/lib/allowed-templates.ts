@@ -8,11 +8,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { forAudience } from './template-params';
 
-/**
- * The templates the thread's composer offers: approved, for this audience (a teacher's own chat
- * number gets teacher templates only). The feedback request needs its own signed link (token): it is
- * sent only by «ابعت طلب الرأي»; the lesson rating picks its lesson and buttons itself: only «إرسال تقييم الحلقة».
- */
+/** The feedback request and lesson rating are excluded: each is sent only by its own action. */
 export function allowedTemplates(
   list: readonly TemplateView[] | undefined,
   teacher: boolean,

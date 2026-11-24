@@ -1,5 +1,5 @@
 import type { PlanAction, WayIn } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { StaffJoinButton } from '@/features/teaching/classroom';
@@ -21,7 +21,7 @@ type View = (p: TeacherLessonLeadProps) => ReactNode;
 
 const variantOf = (p: TeacherLessonLeadProps) => (p.look.filled ? 'primary' : 'secondary');
 
-/** «ادخل الحلقة» by the way in (owner Q3): our classroom, or her own link of the lesson. */
+/** The join action depends on the way in: our classroom, or her own link of the lesson. */
 const JOIN: Record<WayIn, View> = {
   room: (p) => <StaffJoinButton lesson={p.lesson} size={p.look.size} variant={variantOf(p)} />,
   link: (p) => (
@@ -50,7 +50,7 @@ const LEAD: Record<PlanAction, View> = {
       {REPORT_STAGE_LABEL[p.plan.stage ?? 'write']}
     </ReportLink>
   ),
-  // «إلغاء الحلقة» is never a lead: the card draws it last, danger-quiet (TeacherLessonPeers).
+  // Cancelling is never a lead: the card draws it last, danger-quiet (TeacherLessonPeers).
   cancel: () => null,
 };
 

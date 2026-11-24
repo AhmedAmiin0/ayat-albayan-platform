@@ -12,10 +12,6 @@ export interface HideItemsProps extends Omit<EditItemProps, 'offers'> {
   onPick: () => void;
 }
 
-/**
- * The menu's end: «تعديل» (owner 2026-11-07: a «تصحيح:» reply to her own sent text, else off with
- * why), then «حذف من المنصة» for staff who may hide it (owner 2026-10-30).
- */
 export function HideItems({ offers, onPick, ...edit }: HideItemsProps) {
   return (
     <>

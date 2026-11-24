@@ -22,7 +22,7 @@ const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 export const chatSendMime = (file: Pick<File, 'type'>): ChatSendMime | null =>
   CHAT_SEND_MIMES.find((m) => m === baseMime(file.type)) ?? null;
 
-/** A storage PUT that failed (network, quota): «تعذّر رفع الملف». Not an ApiError. */
+/** A failed storage PUT (network, quota); deliberately not an ApiError. */
 export class ChatUploadError extends Error {
   readonly code = 'file_upload';
 }
@@ -44,11 +44,7 @@ export async function uploadChatFile(input: { phone: string; requestId: string; 
 export const sendFile = ({ phone, ...body }: ThreadFileSendInput & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/file`, body);
 
-/**
- * A chat PDF's page as a signed JPEG with the PDF's page count and size (owner 2026-10-29); page 1
- * is the bubble's thumb, asked once the card has been on screen (PdfCard, owner 2026-11-01). A 503
- * (one render at a time per API copy) is retried twice; anything else leaves today's «عرض ملف».
- */
+/** Page 1 is the bubble's thumb; a 503 (one render at a time per API copy) is retried twice. */
 /** A query that has not failed: one that has keeps its answer (no ask on focus or reconnect). */
 const notFailed = (query: { state: { status: string } }): boolean => query.state.status !== 'error';
 

@@ -15,12 +15,7 @@ interface Read {
   refetch: () => Promise<unknown>;
 }
 
-/**
- * A child's card in numbers (canvas Children, @ab/client-core childSummary) from the reads the
- * pages share; the package only for a viewer who sees money (a child's login never asks).
- * `loading` until EVERY read it shows is in, `failed` when any of them failed (audit 2026-11-19: a
- * failed read used to leave «لم يصل تقرير بعد» on screen for good), `retry` re-reads the failed.
- */
+/** Loading until every read is in, failed when any failed, so no false empty state stays. */
 export function useChildSummary(student: PortalStudent, kind: PortalKind) {
   const money = seesMoney(portalViewer(kind, student));
   const lessons = useQuery(portalLessonsQuery(student.id));

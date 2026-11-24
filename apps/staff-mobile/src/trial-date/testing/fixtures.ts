@@ -8,7 +8,6 @@ export const UPCOMING = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 export const OLD = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const NEW_LESSON = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
 
-/** Thursday 1 Oct 2026, 18:00 Riyadh: an upcoming trial with مريم. */
 export const THU_1_18 = '2026-10-01T15:00:00.000Z';
 
 export function trialRow(fields: Partial<TrialDateRow> = {}): TrialDateRow {

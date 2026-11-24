@@ -1,9 +1,7 @@
 import type { Permission } from '@ab/catalog';
 import { canDo, type Me } from '@ab/web-kit/auth/me';
 
-// Which permission each /admin page needs (dynamic roles, 2026-10-05). The base role still decides
-// who gets /admin at all (requireRole('admin')); inside, a custom role (e.g. «محاسب» with
-// payments.read only) reaches only the pages its permissions open. Longest prefix wins.
+// The base role still gates /admin; inside, a custom role reaches only its permitted pages.
 export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permission])[] = [
   ['/admin/leads', 'leads.read'],
   ['/admin/inbox', 'inbox.read'],
@@ -25,7 +23,7 @@ export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permis
   ['/admin/finance', 'dashboard.read'],
   ['/admin/pricing', 'pricing.read'],
   ['/admin/settings', 'settings.read'],
-  // «التواصل»'s own address (docs/23 §2d): it opens /admin/settings/communications, so it needs the same.
+  // It opens /admin/settings/communications, so it needs the same permission (docs/23 §2d).
   ['/admin/communications', 'settings.read'],
   ['/admin/translations', 'translations.manage'],
   ['/admin/activity', 'activity.read'],

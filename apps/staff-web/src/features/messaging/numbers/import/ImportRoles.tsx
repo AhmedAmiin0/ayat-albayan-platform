@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const im = t.numbers.import;
 
-/** A field's value (secrets: «قيمة سرية لا تُعرض», never a value) and where it comes from. */
+/** Secret values are never shown. */
 function FieldLine({ field }: { field: ImportFieldView }) {
   return (
     <li className="flex flex-wrap items-baseline gap-x-2" data-field={field.field}>
@@ -19,7 +19,7 @@ function FieldLine({ field }: { field: ImportFieldView }) {
   );
 }
 
-/** «لا يمكن استيراده» and the fields whose ids fail the checks, by label only (never the value). */
+/** Failing fields are listed by label only, never the value. */
 function NotImportable({ block }: { block: ImportBlock }) {
   const names = block.fields.map((f) => t.numbers.fields[f]).join(t.common.listSeparator);
   return (

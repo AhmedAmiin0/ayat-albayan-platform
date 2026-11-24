@@ -77,12 +77,7 @@ async function publicRoundTrip(store: ObjectStore, http: Http): Promise<void> {
   }
 }
 
-/**
- * «اختبار الاتصال» (docs/45): puts a small object under _probe/ in the reports bucket, reads it
- * back and deletes it, whatever STORAGE_DRIVER says (test before the cut-over); then the same
- * through MINIO_PUBLIC_URL as the apps do (502 storage_public_failed: a wrong public address or
- * Caddy site). The log and the answer name the step only, never a key or a URL.
- */
+/** Probes regardless of STORAGE_DRIVER, then via MINIO_PUBLIC_URL; logs name only the step. */
 @Injectable()
 export class StorageProbe {
   private readonly log = new Logger(StorageProbe.name);

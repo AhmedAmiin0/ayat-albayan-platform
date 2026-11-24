@@ -1,4 +1,4 @@
-import { rescheduleRequestSchema } from '@ab/shared';
+import { rescheduleRequestSchema } from '@ab/schedule';
 import { jana, lesson, pending } from '@/today/testing/fixtures';
 import { familyTz, lessonDuration, repeatDays, rescheduleBody, seriesDays } from './reschedule-body';
 

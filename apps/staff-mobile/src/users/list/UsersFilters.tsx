@@ -1,4 +1,5 @@
-import { USER_ROLES, USER_STATUSES } from '@ab/shared';
+import { USER_STATUSES } from '@ab/shared';
+import { USER_ROLES } from '@ab/catalog';
 import { t, FilterPills } from '@ab/mobile-kit';
 import { roleText, statusStyle } from '@/users/shared/format';
 import type { UsersView } from '@ab/client-core';
@@ -8,7 +9,7 @@ interface UsersFiltersProps {
   onChange: (next: UsersView) => void;
 }
 
-/** The web's role and status filters as two chip rows; «الكل» clears one. A change reloads from page 1. */
+/** A change reloads from page 1. */
 export function UsersFilters({ view, onChange }: UsersFiltersProps) {
   const all = { value: '', label: t.users.filters.all };
   const roles = [all, ...USER_ROLES.map((r) => ({ value: r, label: roleText(r) }))];

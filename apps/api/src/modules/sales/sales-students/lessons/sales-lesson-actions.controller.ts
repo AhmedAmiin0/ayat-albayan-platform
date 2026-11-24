@@ -15,14 +15,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { SalesLessonActions } from './sales-lesson-actions.service';
 
-/**
- * «تغيير الموعد» / «إلغاء الحلقة» / «تأكيد الحلقة» from sales' «جدول الحلقات» (docs/16 rows 37, 37b). Each route
- * has its own narrow key (lessons.reschedule, lessons.cancel, lessons.confirm; the admin's routes keep lessons.write
- * and lessons.status). All three: ANY lesson, hers or another family's (owner 2026-10-28; a group lesson moves or
- * cancels for all its students), before it ends (409 lesson_ended), 404 lesson_not_found; strict bodies: no series,
- * substitute teacher or clash override. A cancel's `by` teacher / student may come after the end
- * (owner 2026-11-02).
- */
+/** docs/16 rows 37, 37b: narrow keys per route; any lesson before it ends; strict bodies. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Controller('sales/lessons')
@@ -37,11 +30,7 @@ export class SalesLessonActionsController {
     return this.actions.reschedule({ lessonId: id, body: parseOrThrow(salesRescheduleSchema, body ?? {}), actor: user });
   }
 
-  /**
-   * `{ reason?, by? }`: «ألغتها الإدارة» (by admin, the default), «ألغاها المعلم/ة» or
-   * «اعتذر الطالب» (also after the end, and on a lesson held automatically: 409 not_auto_held
-   * for another completed one); 409 invalid_transition.
-   */
+  /** Teacher or student cancels may also come after the end; 409 invalid_transition. */
   @Post(':id/cancel')
   @HttpCode(200)
   @Permissions('lessons.cancel')
@@ -49,10 +38,7 @@ export class SalesLessonActionsController {
     return this.actions.cancel({ lessonId: id, body: parseOrThrow(salesCancelSchema, body ?? {}), actor: user });
   }
 
-  /**
-   * «تأكيد الحلقة» (owner 2026-10-28): ANY lesson, scheduled → confirmed; no body, no message to anyone.
-   * 404 lesson_not_found, 409 lesson_ended once over, 409 invalid_transition when not scheduled (confirmed = unchanged).
-   */
+  /** Any lesson; no body, no message; 409 lesson_ended or invalid_transition. */
   @Post(':id/confirm')
   @HttpCode(200)
   @Permissions('lessons.confirm')
@@ -60,7 +46,7 @@ export class SalesLessonActionsController {
     return this.actions.confirm({ lessonId: id, actor: user });
   }
 
-  /** «تصحيح الحالة» `{ to }` after the end (owner 2026-11-03): 409 not_auto_held / earning_paid. */
+  /** After the end only; 409 not_auto_held or earning_paid. */
   @Post(':id/correct')
   @HttpCode(200)
   @Permissions('lessons.cancel')

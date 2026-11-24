@@ -4,11 +4,7 @@ import { FamilyHeader, FamilyPage } from '@/nav';
 import { ownPage, useFamilyPick, usePickedChild, usePortalMe, useRefreshPortal } from '@/portal';
 import { OwnReports } from './OwnReports';
 
-/**
- * «التقارير» (canvas Reports): the sent reports of the student in view, newest first, by month;
- * «تقاريري» for a student's own, the child switch under the title for a guardian of
- * several. The tab shows only once that student is known (familyTabs).
- */
+/** Newest first, by month; the tab shows only once the student is known. */
 export function StudentReportsScreen() {
   const me = usePortalMe();
   const pick = useFamilyPick();

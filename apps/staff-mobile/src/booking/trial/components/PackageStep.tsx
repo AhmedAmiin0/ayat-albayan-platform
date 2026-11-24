@@ -13,15 +13,11 @@ export interface PackageStepProps {
   onNext: () => void;
 }
 
-/** The form's paid answers: 4, 8, 12, 16 («حلقة تجريبية» is «نوع الحجز» now, not a size). */
+/** Paid sizes 4, 8, 12, 16; the trial is a booking type now, not a size. */
 const packagePills = (): FilterPill<PackageSize>[] =>
   PAID_SIZES.map((p) => ({ value: p, label: t.enums.packageSize[p] }));
 
-/**
- * «الباقة» (R-SCH-06), after «نوع الحجز» says subscription: the paid package and the lesson
- * length. Before the slot step, which needs the length. The price is set afterwards on the
- * subscription screen, from the API's catalog.
- */
+/** R-SCH-06: before the slot step, which needs the length; price is set on the subscription. */
 export function PackageStep({ value, onChange, onNext }: PackageStepProps) {
   return (
     <View style={{ gap: 12 }}>

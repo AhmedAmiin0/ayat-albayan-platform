@@ -4,9 +4,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
-// Follow-up to #694 (items 1-3): same_request is decided from the STORED row, so a correction
-// hidden with «حذف من المنصة» (its view shows no body) or sent under an older wording of the
-// prefix still answers an exact retry as sent: the client never sends a second «تصحيح».
+// same_request uses the stored row, so a hidden or reworded retry still matches.
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}/text`;
 const ORIGINAL = 'a0000000-0000-4000-8000-0000000000c1';

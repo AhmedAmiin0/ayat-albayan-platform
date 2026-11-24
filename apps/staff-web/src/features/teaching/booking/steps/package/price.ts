@@ -28,10 +28,7 @@ export interface PriceInput {
   students: number;
 }
 
-/**
- * The quote for a package, or null when the catalog has no price for it: the free trial, a
- * group above the calculator's 6, or 90 minutes outside «باقة الحلقة الأسبوعية» (4 × 90 min).
- */
+/** Null without a catalog price: the free trial, a group above 6, or 90 minutes outside 4 x 90. */
 export function quoteSelection(p: PriceInput): Selection | null {
   if (p.pkg === 'trial' || p.students < 1 || p.students > STUDENTS_MAX) return null;
   const base = { country: siteCountry(p.country) ?? OTHER, count: Number(p.pkg), students: p.students, discount: 0 };

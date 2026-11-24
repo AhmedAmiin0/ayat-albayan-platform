@@ -1,5 +1,6 @@
 // Metro resolves an imported image to an asset id that <Image source> takes (expo-env.d.ts is not
-// checked in): the kit's brand marks, and each app's own images (their tsconfig includes this).
+// checked in). Each kit file that imports an image references this file, so an app that builds the
+// kit's source gets the declaration through the package itself.
 declare module '*.png' {
   const source: number;
   export default source;

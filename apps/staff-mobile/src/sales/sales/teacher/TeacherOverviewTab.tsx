@@ -6,10 +6,6 @@ import { TeacherAttendanceTab } from './TeacherAttendanceTab';
 import { TeacherScheduleTab } from './TeacherScheduleTab';
 import { useTeacherOverview } from './teacher-overview-api';
 
-/**
- * «الجدول» or «الحضور» of a sales teacher's page (owner 2026-10-28): loading, error with retry, then the tab,
- * inside the screen's gutter, its rows in an inset card (owner 2026-10-28: one container rule).
- */
 export function TeacherOverviewTab({ teacherId, view }: { teacherId: string; view: 'schedule' | 'attendance' }) {
   const { color } = useTheme();
   const overview = useTeacherOverview(teacherId);

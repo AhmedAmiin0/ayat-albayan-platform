@@ -10,10 +10,7 @@ import type { Teacher } from '@ab/shared';
 
 type Props = { form: TeacherForm; set: SetField; teacher?: Teacher | null };
 
-/**
- * Identity + contact fields of the teacher dialog (R-TCH-01). Phone and link are LTR islands;
- * then «طريقة حضور الحلقات».
- */
+/** R-TCH-01: phone and link are LTR islands. */
 export function TeacherFormFields({ form, set, teacher = null }: Props) {
   const toggleProgram = (program: TeacherForm['programs'][number], on: boolean) =>
     set('programs', on ? [...form.programs, program] : form.programs.filter((p) => p !== program));

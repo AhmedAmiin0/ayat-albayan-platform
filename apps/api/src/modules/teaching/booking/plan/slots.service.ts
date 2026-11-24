@@ -15,7 +15,6 @@ import { ConflictContext } from './conflict-context';
 import { outsideGrid } from './outside-slots';
 
 const MAX_SLOT_RANGE_DAYS = 14;
-/** How far «وقت آخر» looks ahead of the server's now. */
 const OUTSIDE_DAYS = 14;
 /**
  * Default step while settings.teachers_always_available is on: the one window starts at midnight,
@@ -66,11 +65,7 @@ export class SlotsService {
     const conflicts = findConflicts({ proposed, ...rows });
     return { teacher_tz: teacher.tz, step_min: stepMin, slots: slotViews(proposed, conflicts) };
   }
-  /**
-   * GET /booking/outside-slots («وقت آخر», owner 2026-11-21): every start of the teacher's whole
-   * day over the next 14 days from the SERVER clock, minus the past and any clash (lessons, time
-   * off), each with inside_hours; `server_now` is the clock it used. The client only formats them.
-   */
+  /** Decided on the server clock, returned as `server_now`; the client only formats the starts. */
   async outside(q: OutsideSlotsQuery): Promise<OutsideSlotsResponse> {
     const now = new Date();
     const range = { from: now, to: new Date(now.getTime() + OUTSIDE_DAYS * DAY_MS) };

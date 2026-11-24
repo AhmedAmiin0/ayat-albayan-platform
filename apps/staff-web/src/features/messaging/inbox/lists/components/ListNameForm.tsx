@@ -13,7 +13,7 @@ export interface ListNameFormProps {
   onSubmit: (name: string) => void;
 }
 
-/** «اسم القائمة»: 1–30 characters after trimming (chatListNameSchema), checked before the request. */
+/** Names are 1-30 characters after trimming (chatListNameSchema), checked before the request. */
 export function ListNameForm({ id, initial = '', error, onSubmit }: ListNameFormProps) {
   const [name, setName] = useState(initial);
   const [missing, setMissing] = useState(false);

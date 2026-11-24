@@ -7,11 +7,7 @@ import type { TeacherListRow } from '@ab/shared';
 const keyOf = (teacher: TeacherListRow) => teacher.id;
 const renderRow = ({ item }: { item: TeacherListRow }) => <TeacherRow teacher={item} />;
 
-/**
- * «المعلمين», read-only (R-TCH-01). GET /teachers pages by name and has no search or status filter
- * yet, so neither is offered here. Tap → the teacher's view; a «مشترك n» / «تجريبي n» count opens it on
- * that list. The list screens' compact top (owner 2026-10-28): «المعلمين · 12» on the title's line.
- */
+/** R-TCH-01: GET /teachers has no search or status filter yet, so none is offered. */
 export function TeachersScreen() {
   const list = usePagedList<TeacherListRow>({ path: '/teachers' });
   return (

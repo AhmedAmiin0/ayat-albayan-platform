@@ -47,12 +47,7 @@ export function linesOf(lessons: readonly PayoutLesson[]): PayoutLine[] {
 
 type ApproveBlock = 'month_not_over' | 'reports_pending' | 'payout_stale';
 
-/**
- * Approving freezes the month (E3), so it waits until the month has ended in the teacher's tz
- * (`to` of monthWindow) and every report of it is in: a report filed later could otherwise
- * complete a lesson that is never paid. A lesson whose time was edited («عدّل الوقت») after the
- * draft was calculated (`editedSince`) would be paid at the old length: calculate again first.
- */
+/** Approval freezes the month (E3): wait for month end and all reports; recalc after edits. */
 export function approveBlock(input: { monthEnd: string; now: Date; pendingReports: number; editedSince: number }): ApproveBlock | null {
   if (input.now.getTime() < Date.parse(input.monthEnd)) return 'month_not_over';
   if (input.pendingReports > 0) return 'reports_pending';

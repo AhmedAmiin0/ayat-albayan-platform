@@ -7,7 +7,7 @@ import { http, moderation, participantRow, roomPersons, rolesOf } from './modera
 import type { ModerationRepo } from './moderation.repo';
 import type { RoomPersonRepo } from './room-person.repo';
 
-// Room server bugs (owner 2026-11-16): «إخراج» blocked one link row and one identity only.
+// Regression: removal once blocked only one link row and one identity.
 
 const LINK = participantRow().join_link_id ?? '';
 const WHATSAPP_LINK = '00000000-0000-4000-8000-0000000000f2';

@@ -9,7 +9,7 @@ interface LinkCardProps {
   row: ShortLinkRow;
   /** The viewer's clock (expiry words). */
   viewer: { now: Date; tz: string };
-  /** «المالك: …» on every card (short_links.all); null: the viewer's own links only. */
+  /** Owner shown on every card with short_links.all; null means only the viewer's own links. */
   me: string | null;
   onOpen: (code: string) => void;
 }
@@ -21,7 +21,6 @@ function ownerName(row: ShortLinkRow, me: string): string {
   return owner?.id === me ? L().you : (owner?.name ?? '');
 }
 
-/** «المالك: الزهراء · مستخدمون محددون», or the audience alone on the viewer's own list. */
 function ownerLine(row: ShortLinkRow, me: string | null): string {
   const audience = t.shortLinks.audience[row.audience];
   if (me === null) return audience;

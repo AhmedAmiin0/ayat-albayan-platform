@@ -13,7 +13,7 @@ export interface AdminCourseChangeProps {
   onDone: (message: string) => void;
 }
 
-/** The admin's «تغيير أيام الحلقات» from a lesson's drawer: GET /booking/course/change, then the form. */
+/** GET /booking/course/change, then the form. */
 export function AdminCourseChange({ subscriptionId, onBack, onDone }: AdminCourseChangeProps) {
   const view = useQuery(courseChangeViewQuery(subscriptionId));
   return (

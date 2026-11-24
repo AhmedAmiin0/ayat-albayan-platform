@@ -11,7 +11,6 @@ interface DaySwitcherProps {
   onToday: () => void;
 }
 
-/** Previous / today / next and the day itself («السبت 3 أكتوبر»), one compact block. */
 export function DaySwitcher({ date, isToday, onStep, onToday }: DaySwitcherProps) {
   const { color } = useTheme();
   return (

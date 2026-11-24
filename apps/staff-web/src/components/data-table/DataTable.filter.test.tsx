@@ -52,7 +52,7 @@ describe('DataTable filters', () => {
     openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), { target: { value: 'paused' } });
     expect(names()).toEqual(['فاطمه علي']);
-    // «مسح الكل» clears the panel's filters; the search box keeps its text.
+    // Clear all empties the panel's filters; the search box keeps its text.
     closeFilters();
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
     expect(names()).toEqual(['فاطمة', 'فاطمه علي']);

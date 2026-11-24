@@ -7,10 +7,6 @@ export interface JumpToLatestProps {
   onJump: () => void;
 }
 
-/**
- * «الانتقال إلى أحدث رسالة» (W4): while the reader is up in the history, a round button sticks to the
- * bottom of the log at the inline end, with how many new messages wait below, like WhatsApp.
- */
 export function JumpToLatest({ count, onJump }: JumpToLatestProps) {
   const label = count > 0 ? t.inbox.jumpLatestCount.replace('{count}', String(count)) : t.inbox.jumpLatest;
   return (

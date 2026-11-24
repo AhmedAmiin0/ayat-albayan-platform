@@ -48,12 +48,7 @@ const LOGINS: readonly [PeopleEditError, (l: Logins) => boolean][] = [
   ['student_has_login', (l) => l.children.some((c) => Boolean(c.profile_id))],
 ];
 
-/**
- * «تعديل البيانات» (owner 2026-11-02): the admin's writes (StudentsService.update,
- * GuardiansService.update) behind people.edit, the admin-only fields left out by the schemas
- * (peopleStudentPatchSchema, peopleGuardianPatchSchema). Every edit is audited with the named
- * fields before and after ('people_edit'). Any student or family: no ownership check.
- */
+/** Admin-only fields are left out by the schemas; audited; no ownership check. */
 @Injectable()
 export class PeopleEditService {
   constructor(

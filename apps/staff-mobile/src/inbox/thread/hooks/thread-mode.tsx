@@ -21,7 +21,6 @@ export function useThreadMode(): ThreadMode {
   return useContext(ThreadModeContext);
 }
 
-/** Where this mode's chats live: the admin's «المحادثات» tab or the teacher's. */
 export function threadBase(mode: ThreadMode): string {
   return mode.kind === 'teacher' ? '/teacher/chats' : '/inbox';
 }
@@ -36,11 +35,7 @@ export function isOwnThread(mode: ThreadMode, thread: ThreadView | null): boolea
   return mode.kind === 'teacher' && thread?.teacher_id === mode.teacherId;
 }
 
-/**
- * Who sent an outgoing row (owner 2026-10-19 #4): «أرسلها: سارة» for a staff member (a teacher's
- * display name wins), «رسالة تلقائية» for a job's row; null for inbound rows, imported history and
- * the optimistic row (the line appears when the API's row arrives).
- */
+/** Null for inbound rows, imported history and the optimistic row until the API row arrives. */
 export function senderText(m: MessageView): string | null {
   const line = senderLine(m);
   if (!line) return null;

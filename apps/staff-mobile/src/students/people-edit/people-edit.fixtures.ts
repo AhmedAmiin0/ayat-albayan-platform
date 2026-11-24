@@ -1,4 +1,5 @@
-import type { Permission, PeopleEditView } from '@ab/shared';
+import type { PeopleEditView } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
 import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';

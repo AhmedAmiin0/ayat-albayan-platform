@@ -4,10 +4,6 @@ import type { Tone } from '@ab/money';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// The chips of the short-link screens: a link's state («فعّال», «اكتمل العدد», «منتهٍ», «موقوف»)
-// and a WhatsApp send («قيد الإرسال», «فشل», «لم يُرسل بعد»), in the shared status-chip colours
-// and client-core's glyphs.
-
 const TONE: Readonly<Record<LinkTone, Tone>> = {
   success: 'ok',
   warning: 'act',
@@ -28,7 +24,7 @@ export function StateChip({ row, size = 'sm' }: StateChipProps) {
 
 interface SendChipProps {
   status: ShortLinkSendStatus;
-  /** «أُرسل 9»: the number of users in this state (the detail's summary). */
+  /** The number of users in this state, for the detail's summary. */
   count?: number;
 }
 

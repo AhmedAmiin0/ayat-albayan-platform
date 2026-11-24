@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice, ruleFromSlot } from '@/booking';
@@ -21,16 +21,11 @@ interface Props {
   move: ReturnType<typeof useReschedule>;
   scope: Scope;
   onScope: (scope: Scope) => void;
-  /** «سبب تغيير الموعد» (docs/47): its text, and its field shown above the button. */
+  /** Optional reason (docs/47) shown to the teacher in her file. */
   reason: { text: string; field: ReactNode };
 }
 
-/**
- * This lesson or it and every later one, a free slot of the same teacher (and, for the series, the
- * days it repeats on: the old ones moved along, the slot's own day fixed), then «غيّر الميعاد». A
- * clash that appeared since the slots loaded comes back as a 409 with «اختار ميعاد تاني»; booking
- * over it with a reason stays on the web.
- */
+/** A new clash since the slots loaded answers 409; booking over a clash stays on the web. */
 export function MoveFields({ lesson, durationMin, tz, move, scope, onScope, reason }: Props) {
   const [startsAt, setStartsAt] = useState<string | null>(null);
   // null = untouched: the old rule's days shifted to the new slot (seriesDays).
@@ -53,7 +48,7 @@ export function MoveFields({ lesson, durationMin, tz, move, scope, onScope, reas
   };
   return (
     <View style={{ gap: 16 }}>
-      {/* A lesson outside a series has no «كل اللي بعدها» (the API answers 400 no_rule). */}
+      {/* A lesson outside a series cannot move later ones (the API answers 400 no_rule). */}
       {lesson.rule_id ? <ScopeChoice value={scope} onChange={rescope} /> : null}
       {failure?.kind === 'conflict' ? (
         <ConflictNotice lines={failure.lines} onChangeSlot={() => pick(null)} />
@@ -81,7 +76,7 @@ export function MoveFields({ lesson, durationMin, tz, move, scope, onScope, reas
   );
 }
 
-/** A plain failure under the button (a clash shows in place of the slots), then «غيّر الميعاد». */
+/** A clash shows in place of the slots; other failures under the button. */
 function Submit(p: {
   failure: RescheduleFailure | null;
   pending: boolean;
@@ -101,7 +96,7 @@ function Submit(p: {
   );
 }
 
-/** «أيام الحلقة» of the moved series: the new slot's day fixed, the others free. */
+/** The new slot's day is fixed, the others free. */
 function SeriesDays(p: {
   startsAt: string;
   tz: string;
@@ -121,7 +116,6 @@ function SeriesDays(p: {
   );
 }
 
-/** «التغيير يشمل»: الحلقة دي بس | الحلقة دي وكل اللي بعدها. */
 function ScopeChoice({ value, onChange }: { value: Scope; onChange: (scope: Scope) => void }) {
   return (
     <View style={{ gap: 6 }}>

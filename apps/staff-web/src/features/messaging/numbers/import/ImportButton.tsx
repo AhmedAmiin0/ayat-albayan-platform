@@ -12,10 +12,7 @@ import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mut
 
 const im = t.numbers.import;
 
-/**
- * «استيراد الإعداد الحالي» (docs/23 §2e step 2): a dry run first, shown role by role with each value's
- * source (secrets never shown); «تأكيد الاستيراد» applies it, unless there is nothing new.
- */
+/** docs/23 §2e step 2: a dry run first, secrets never shown. */
 export function ImportButton() {
   const [preview, setPreview] = useState<ImportResult | null>(null);
   const dry = useMutation({ mutationFn: () => importNumbers(true), onSuccess: setPreview });

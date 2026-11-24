@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { studentStatusStyle } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';
@@ -7,7 +7,6 @@ import { studentNote } from '@/students/profile/student-note';
 import { StudentNote } from '@/students/profile/StudentNote';
 import type { StudentListItem } from '@ab/shared';
 
-/** Name + AB-code, guardian under it; status chip and the «دورك» note at the inline-end. */
 export const StudentRow = memo(function StudentRow({ student }: { student: StudentListItem }) {
   const note = studentNote(student);
   return (

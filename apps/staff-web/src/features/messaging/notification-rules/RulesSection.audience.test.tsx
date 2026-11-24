@@ -15,7 +15,6 @@ const tab = (label: string) => screen.getByRole('tab', { name: new RegExp(label)
 
 afterEach(() => apiFetch.mockReset());
 
-// «ماذا يُرسل الآن» on «نظرة عامة» opens «الإشعارات» on the row's audience (`?audience=`).
 describe('«الإشعارات» first audience', () => {
   it('starts on guardians when none is given', async () => {
     renderRules({ apiFetch });

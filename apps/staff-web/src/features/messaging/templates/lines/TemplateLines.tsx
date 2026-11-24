@@ -9,7 +9,6 @@ export interface TemplateLinesProps {
   onNotice: (notice: Notice) => void;
 }
 
-/** «القوالب حسب الرقم»: one block per number (notifications, chat), side by side from 640px. */
 export function TemplateLines({ lines, onNotice }: TemplateLinesProps) {
   const p = t.templates.perNumber;
   return (

@@ -1,26 +1,22 @@
 import {
-  localizedName,
   packageSummaryText,
-  RIYADH_TZ,
   rosterAttendanceText,
   rosterScheduleText,
-  type ClockCycle,
   type PackageWords,
   type SalesStudentView,
 } from '@ab/shared';
+import { localizedName } from '@ab/core';
+import { RIYADH_TZ, type ClockCycle } from '@ab/time';
 import { hhmm } from '@/core/lib/clock';
 import { t, locale, ltr } from '@ab/mobile-kit';
 import { fill, packageLabel, statusLabel, viewerDate } from '@/sales/sales/lib/sales-text';
 
-// «كل الطلاب»'s extra lines (owner 2026-10-30: «Show all the students to the assistants with
-// their schedule and attendance», then their status and package), built by the shared
-// rosterScheduleText / rosterAttendanceText / packageSummaryText. The viewer's zone: Riyadh in the
-// sales and admin trees (useViewerTz: only a teacher has own).
+// The viewer's zone is Riyadh in the sales and admin trees; only a teacher has her own.
 
 const S = t.sales.allStudents;
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
-/** «الأحد، الثلاثاء، الخميس · 11:00 ص · أسماء حسين», «لا يوجد جدول ثابت»; null in an old cache. */
+/** Null in an old cache. */
 export function rosterScheduleLine(
   student: Pick<SalesStudentView, 'weekly'>,
   cycle: ClockCycle,
@@ -36,7 +32,7 @@ export function rosterScheduleLine(
   });
 }
 
-/** «حضر 7 من 9 في الباقة الحالية» (or the last 30 days); null in an old cache. */
+/** Attendance in the current package or the last 30 days; null in an old cache. */
 export const rosterAttendanceLine = (student: Pick<SalesStudentView, 'attendance'>): string | null =>
   rosterAttendanceText(student.attendance, S);
 
@@ -54,7 +50,7 @@ const packageWords: PackageWords = {
   projectedEnd: H.projectedEnd,
 };
 
-/** «الباقة: 12 حلقة · مشترك · استُخدمت 5 من 12 · …», «لا توجد باقة حالية»; null in an old cache. */
+/** Null in an old cache. */
 export function rosterPackageLine(student: Pick<SalesStudentView, 'package'>): string | null {
   const line = packageSummaryText(student.package, { ...packageWords, noPackage: S.noPackage });
   return student.package && line ? fill(S.packageLine, { line }) : line;

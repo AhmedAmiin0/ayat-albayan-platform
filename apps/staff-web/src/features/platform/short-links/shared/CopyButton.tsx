@@ -13,7 +13,7 @@ interface CopyButtonProps {
   wide?: boolean;
 }
 
-/** Copies `text` and says «نُسخ الرابط.»; a blocked clipboard changes nothing on screen. */
+/** A blocked clipboard changes nothing on screen. */
 export function CopyButton({ text, label, wide }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
   const copy = () => {

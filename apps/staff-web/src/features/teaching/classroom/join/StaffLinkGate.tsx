@@ -10,19 +10,14 @@ interface Props {
   /** Where this staff member's own room is behind the link; throws when they have none. */
   resolve: () => Promise<string>;
   children: ReactNode;
-  /** Test seams: who is signed in, and the navigation (a full load, like «ادخل الحلقة»). */
+  /** Test seams: who is signed in, and the navigation (a full load, like joining). */
   who?: () => Promise<Me | null>;
   go?: (path: string) => void;
 }
 
 const replace = (path: string) => window.location.replace(path);
 
-/**
- * A shared link (/m/<token>, /join/<token>) opened by a signed-in admin or teacher sends them to
- * their own staff room, so they keep the board pen and screen share: entering as a guest left them
- * with «السبورة للعرض فقط» and a share button LiveKit refuses (owner, 2026-10-05). Everyone else,
- * and staff with no role in that room, get the guest page as before.
- */
+/** Staff on a shared link go to their staff room; as guests LiveKit refuses board and share. */
 export function StaffLinkGate({ linkKey, resolve, children, who, go = replace }: Props) {
   const me = useQuery({ ...meQuery, ...(who && { queryFn: who }), retry: false });
   const staff = isStaffRole(me.data?.role);

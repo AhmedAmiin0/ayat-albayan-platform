@@ -16,16 +16,11 @@ interface SavedRepliesSheetProps {
   onClose: () => void;
   /** Fills the composer; nothing is sent. */
   onPick: (reply: SavedReply) => void;
-  /** A picked reply's «أكمل الرد» form, shown in the list's place in the same Modal (iOS presents one at a time). */
+  /** Shown in the same Modal since iOS presents one at a time. */
   form?: ReactNode;
 }
 
-/**
- * The quick-replies button's sheet (owner 2026-10-26, as WhatsApp Business): a search over titles
- * and texts, «المشتركة / ردودي» as a segmented control and the same rows as the «/» list. A tap
- * fills the composer. Adding, editing and deleting her own replies sits behind «إدارة». Mounted only
- * while open, so the list is fetched on demand.
- */
+/** Mounted only while open, so the list is fetched on demand. */
 export function SavedRepliesSheet({ onClose, onPick, form }: SavedRepliesSheetProps) {
   const { color } = useTheme();
   const replies = useSavedReplies();

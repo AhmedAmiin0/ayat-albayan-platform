@@ -68,10 +68,7 @@ function Webhook({ view }: { view: LineCheckView }) {
   );
 }
 
-/**
- * Each failed Graph call: «تعذّر الاستعلام: …» with a known Meta code (or kapso_auth) in words (messages.errors),
- * else Meta's message as data (dir auto); the code in an LTR island, Meta's raw text as the title.
- */
+/** Meta's raw text is shown as data (dir auto) and as the title. */
 function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
   if (errors.length === 0) return null;
   const [before, after] = t.templates.settings.lines.callFailed.split('{message}');
@@ -92,11 +89,7 @@ function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
   );
 }
 
-/**
- * One WhatsApp line in «خطوط واتساب» (docs/12 §13.10): its name, and once checked whether the
- * server has it configured (an unconfigured notifications line is act: nothing can send; the chat
- * line is optional, said in a hint), Meta's facts, the webhook link, failed calls and when it was checked.
- */
+/** An unconfigured notifications line means nothing can send; the chat line is optional. */
 export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | null }) {
   const s = t.templates.settings.lines;
   const clock = useClock();

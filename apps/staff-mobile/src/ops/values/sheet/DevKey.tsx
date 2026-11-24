@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { t, type, useTheme, AppText, Ltr } from '@ab/mobile-kit';
 
-/** «للمطوّر», closed by default: opens to the setting's key (LTR), as the web sheet's <details>. */
 export function DevKey({ settingKey }: { settingKey: string }) {
   const { color } = useTheme();
   const [open, setOpen] = useState(false);

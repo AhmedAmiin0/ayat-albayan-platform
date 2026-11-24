@@ -6,20 +6,16 @@ import { WaText } from './WaText';
 /** One line as WhatsApp's list: line breaks and runs of spaces fold into one space. */
 const oneLine = (s: string): string => s.replace(/\s+/g, ' ').trim();
 
-/**
- * The row reads the ticks' status word before the preview (the ticks add no stop of their own);
- * failed is the row's «لم تُرسل» chip already.
- */
+/** The ticks add no stop of their own; a failed send already shows its own chip. */
 function ticksWord(th: ThreadView): string | undefined {
   if (th.last_direction !== 'outbound' || th.last_status === 'failed') return undefined;
   return `${t.enums.messageStatus[th.last_status]} · ${stripWaMarkup(oneLine(threadPreview(th)))}`;
 }
 
-/** «مسوّدة:» in the act colour before the unsent text, as WhatsApp's «Draft:» (review 10-29 #4). */
 function DraftWord() {
   const { color } = useTheme();
   return (
-    // Hidden from the reader: the row's preview label already starts with «مسوّدة:».
+    // Hidden from screen readers since the row's preview label already starts with the draft word.
     <AppText
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"

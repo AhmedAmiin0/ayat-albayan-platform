@@ -1,4 +1,9 @@
-import { readSettings, SETTING_KEYS, type ConfigParityDiff, type ConfigParityResponse } from '@ab/shared';
+import {
+  readSettings,
+  SETTING_KEYS,
+  type ConfigParityDiff,
+  type ConfigParityResponse,
+} from '@ab/settings';
 import { Controller, ForbiddenException, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { isDeepStrictEqual } from 'node:util';

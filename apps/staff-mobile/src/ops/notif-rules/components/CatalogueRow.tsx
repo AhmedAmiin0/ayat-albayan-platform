@@ -17,7 +17,7 @@ interface CatalogueRowProps {
   toggles: CatalogueToggles;
 }
 
-/** The lines under the name: when, facts, and on a v2 answer the blocker and «معتمد جزئيًا» on their own. */
+/** On a v2 answer the blocker and the partial-approval note get their own lines. */
 function linesOf(entry: NotificationEntryView): string[] {
   if (ruleOf(entry) === null) return [whenOf(entry), factsOf(entry)];
   const extra = [heldLine(entry), partialLine(entry)].filter((l): l is string => l !== null);

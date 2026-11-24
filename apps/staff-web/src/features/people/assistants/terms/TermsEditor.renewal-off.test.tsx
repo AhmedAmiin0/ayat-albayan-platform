@@ -5,8 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ASSISTANT } from '@/features/people/assistants/fixtures';
 import { TermsEditor } from './TermsEditor';
 
-// «عمولة التجديد» off (owner 2026-11-01): the API sends renewal_share_percent 0 and the hint
-// says it is paused.
+// Renewal commission off is sent as renewal_share_percent 0.
 const T = t.assistants.terms;
 const withShare = (share: number) => ({
   ...ASSISTANT,

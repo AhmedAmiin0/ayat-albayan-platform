@@ -32,12 +32,7 @@ type Saved = Pick<InvoiceRow, 'path' | 'mime' | 'size_bytes'>;
  */
 type InvoiceScope = { phones: readonly string[]; maxBytes: number; waived?: boolean };
 
-/**
- * The فاتورة of a non-trial booking (R-PAY-03, R-MSG-06): a file in the private `invoices` bucket,
- * either uploaded by the client to a signed URL or copied by the server from a WhatsApp image / PDF
- * of the booked family's own chat. Mime and size are always read from Storage, never trusted from
- * the client. `resolve` runs after the plan was checked, so a clash never copies a file.
- */
+/** R-PAY-03, R-MSG-06: mime and size come from Storage, never the client; clashes copy nothing. */
 @Injectable()
 export class BookingInvoices {
   constructor(

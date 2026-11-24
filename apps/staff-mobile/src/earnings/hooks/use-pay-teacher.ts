@@ -8,7 +8,7 @@ import type { PayInput } from '@/earnings/lib/pay-draft';
 import { uploadTeacherReceipt } from './upload-receipt';
 
 /**
- * «سجّل دفعة» for a teacher: the receipt goes up first (once, a retry after a failed POST does not
+ * Records a teacher payment: the receipt goes up first (once, a retry after a failed POST does not
  * upload it again), then the payment with this form's clientRequestId, re-sent until the API
  * answers: a retry after a lost reply returns the payment already recorded (rule 8).
  */

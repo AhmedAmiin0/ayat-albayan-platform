@@ -11,7 +11,6 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 const v2 = t.reports.v2;
 const p = v2.picker;
 
-/** Attended; «التسميع» = الفاتحة 1–7 picked from the list and graded ممتاز. */
 function fillQuran() {
   pick(v2.attendanceTitle, v2.attendance.on_time);
   const [recited] = screen.getAllByRole('button', { name: v2.pickRange });
@@ -68,7 +67,7 @@ describe('the new report form: send and autosave', () => {
       }),
     );
     expect(apiSend.mock.calls.find((c) => c[0] === 'POST')?.[2]).not.toHaveProperty('homework');
-    // Sent: read-only until «تعديل التقرير», which re-opens the same report («حفظ التعديل»).
+    // Sent: read-only until edited, which re-opens the same report.
     expect(screen.queryByRole('button', { name: v2.send })).toBeNull();
     expect(screen.getByRole('radio', { name: v2.attendance.on_time }).matches(':disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.reports.edit }));
