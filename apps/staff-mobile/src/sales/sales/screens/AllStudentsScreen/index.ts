@@ -1,1 +1,1 @@
-export { AllStudentsScreen, type StudentsView } from './AllStudentsScreen';
+export { AllStudentsScreen } from './AllStudentsScreen';
