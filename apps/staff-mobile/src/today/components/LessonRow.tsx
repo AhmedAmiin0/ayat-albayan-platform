@@ -13,12 +13,7 @@ interface LessonRowProps<L extends TodayLesson> {
   compact?: boolean;
 }
 
-/**
- * One lesson in «بقية اليوم» (docs/29 §4): the local time, the students and «أ. سلمى · 30 دقيقة»,
- * and at the end a 7pt dot with the status word in its tone (short, and wrapping between words, never
- * cut mid-word: owner 2026-10-28). The whole row is one button: no
- * buttons on it, every action is in the sheet.
- */
+/** The whole row is one button (docs/29 §4); every action is in the sheet. */
 export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = false }: LessonRowProps<L>) {
   const { color } = useTheme();
   const statusText = useLessonStatusText();

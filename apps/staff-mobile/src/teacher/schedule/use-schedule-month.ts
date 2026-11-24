@@ -12,11 +12,7 @@ const isoWindow = (w: { from: Date; to: Date }) => ({
   to: w.to.toISOString(),
 });
 
-/**
- * The month view's state (owner 2026-11-14): the shown month (following the clock until she
- * steps), the picked day (today by default when shown), and ONE lessons query of the whole grid,
- * polled while «جدولي» is in front. Closed lessons stay hidden, as on the week.
- */
+/** One lessons query for the whole grid, polled while in front; closed lessons stay hidden. */
 export function useScheduleMonth() {
   const tz = useViewerTz();
   const today = viewerToday(useNow(), tz);

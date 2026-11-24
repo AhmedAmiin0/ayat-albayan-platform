@@ -16,11 +16,7 @@ const row = { flexDirection: 'row', gap: 2 } as const;
 const dot = { width: 6, height: 6, borderRadius: 3 } as const;
 const headStyle = { flex: 1, textAlign: 'center', fontFamily: type.ui[600], fontSize: type.size.xs } as const;
 
-/**
- * The month as whole weeks السبت → الجمعة (owner 2026-11-14), right to left: each day a 44pt cell
- * with its number and a dot when she has lessons; today ringed in gold, the picked day washed,
- * borrowed days muted.
- */
+/** Whole weeks Saturday to Friday, right to left, each day a 44pt cell. */
 export function MonthGrid({ month, today, picked, days, onPick }: MonthGridProps) {
   const { color } = useTheme();
   const weeks = monthCells(month, { today, picked, days });

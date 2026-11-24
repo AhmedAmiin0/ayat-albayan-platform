@@ -5,7 +5,7 @@ import { t, Button, type ButtonVariant } from '@ab/mobile-kit';
 import type { LeadContext } from './use-teacher-plan';
 import { RoomJoinButton } from '@/teacher/lesson-actions';
 
-/** The lead and peer actions a button draws here; «إلغاء الحلقة» lives in the sheet only. */
+/** Cancel lives in the sheet only. */
 export type LeadAction = Exclude<PlanAction, 'cancel'>;
 
 const REPORT_LABEL: Record<ReportStage, string> = {
@@ -56,11 +56,7 @@ interface TeacherRowActionProps {
   ctx: LeadContext;
 }
 
-/**
- * One of the teacher's lesson buttons by a LEAD lookup (docs/48): «ادخل الحلقة» (the classroom, or
- * her fixed link), «سأحضر» (optimistic) or the report by its stage, in the variant the surface
- * gives it (filled on the hero; outlined on a row unless it is the live join).
- */
+/** Filled on the hero, outlined on a row unless it is the live join (docs/48). */
 export function TeacherRowAction({ action, variant, ctx }: TeacherRowActionProps) {
   return LEAD[action](ctx, variant);
 }

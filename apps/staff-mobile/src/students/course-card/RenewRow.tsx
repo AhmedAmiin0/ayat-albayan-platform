@@ -6,11 +6,7 @@ import { renewHref } from '@/students/profile/renew';
 import { ActionRow } from './ActionRow';
 import type { StudentRef } from '@ab/shared';
 
-/**
- * «جدّد الاشتراك» in the admin's «إجراءات الدورة» (owner 2026-11-17: ANY time): the subscribe
- * screen prefilled from the last package, the new package starting on the day picked there. Shown
- * once the balance answers, so it always opens prefilled.
- */
+/** Renew any time, prefilled from the last package; shown once the balance answers. */
 export function RenewRow({ student }: { student: StudentRef }) {
   const balance = useStudentBalance(student.id);
   const to = useStudentHref();

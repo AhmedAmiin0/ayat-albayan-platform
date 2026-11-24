@@ -6,8 +6,7 @@ import { booked, SUN_17 } from '@/booking/testing/fixtures';
 import { fakeBookingApi } from '@/booking/testing/test-utils';
 import { profile, quote, saved } from './fixtures';
 
-// The chats API plus subscriptions: the guardian's child starts with a finished package, and
-// POST /subscriptions starts a new one, so the chat chip and the list tag turn «مشترك» on refetch.
+// The finished package makes a new subscription turn the chat to subscribed on refetch.
 
 /** `hold`: POST /subscriptions waits for state.release(), so a test can tap twice while it is in flight. */
 export function subscribeBackend({ hold = false } = {}) {

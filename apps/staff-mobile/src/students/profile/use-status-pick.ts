@@ -6,7 +6,6 @@ import { useActionKeys } from '@/students/course-actions/ActionButtons';
 import { useCurrentPackage, useHeldPackage } from '@/students/course-actions/course-actions-api';
 import type { StatusAsk } from '@/students/course-card/StatusSheets';
 
-/** «متوقف» while the package is read: «جارٍ التحميل», or the error when it cannot be read. */
 type StopRead = 'idle' | 'waiting' | 'failed';
 const STOP_READ_LINE: Record<StopRead, string | null> = {
   idle: null,
@@ -14,12 +13,7 @@ const STOP_READ_LINE: Record<StopRead, string | null> = {
   failed: t.common.error,
 };
 
-/**
- * Where a status pill leads (owner 2026-11-17): «موقوف مؤقتًا» opens the pause; «متوقف» opens the
- * stop of the current package, or, with no package (404, or no key to ask), `setNow` sets it at
- * once. While the package is not known yet it waits for it (never mistaken for «no package»); a
- * failed read says so. The rest are set at once.
- */
+/** Stopped waits for the package, never mistaken for no package; with none it is set at once. */
 export function useStatusPick(studentId: string, setNow: (status: StudentStatus) => void) {
   const keys = useActionKeys();
   const sub = useCurrentPackage({ studentId, given: undefined, keys });
@@ -40,7 +34,7 @@ export function useStatusPick(studentId: string, setNow: (status: StudentStatus)
   };
   return {
     ask,
-    /** The package «إلغاء الاشتراك» stops (kept while its sheet is open). */
+    /** Kept while the cancel sheet is open. */
     stopping,
     line: STOP_READ_LINE[read],
     waiting: read === 'waiting',

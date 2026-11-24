@@ -21,12 +21,7 @@ interface TeacherHeroProps {
   onReport: (lessonId: string) => void;
 }
 
-/**
- * Her lesson under way, else her next one today (docs/48, pickHero), on HeroFrame: the lead line,
- * her word on a next lesson («بانتظار تأكيدك» / «حضورك مؤكَّد»), the time large, then ONE filled
- * lead (lessonPlan), one outlined peer (her link or the report) and «التفاصيل». The screen keys it
- * by lesson id, so a refused «سأحضر» never leaks to the next lesson.
- */
+/** One filled lead (docs/48); keyed by lesson id so a refused confirm never leaks to the next. */
 export function TeacherHero({ hero, onDetails, ...o }: TeacherHeroProps) {
   const { lesson } = hero;
   const now = useNow();

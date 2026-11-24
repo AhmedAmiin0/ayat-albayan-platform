@@ -4,7 +4,6 @@ import { balanceOf, page, subscription, SUB_ID } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { BalanceCard } from '@/students/profile/BalanceCard/BalanceCard';
 
-// «تعديل عدد الحلقات المستخدمة» on the admin's profile card (owner 2026-11-02).
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

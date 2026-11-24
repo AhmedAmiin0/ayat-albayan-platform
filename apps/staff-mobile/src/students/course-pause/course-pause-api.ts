@@ -10,8 +10,7 @@ import type { CoursePausePreview, CoursePauseResult, CoursePauseStart, CoursePau
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
-// «إيقاف مؤقت» (owner 2026-10-28, docs/11 §7b): the same routes in the admin and the sales trees
-// (courses.pause); the paths and the key are @ab/client-core's, shared with web.
+// Course pause (docs/11 §7b): same routes in admin and sales trees (courses.pause).
 
 /** GET /students/:id/course-pause: the open pause (or null) and the past ones. */
 export const useCoursePause = (studentId: string) =>
@@ -28,10 +27,7 @@ export const usePausePreview = (input: { studentId: string; from: string; until:
     queryFn: () => apiFetch<CoursePausePreview>(coursePausePreviewPath(input)),
   });
 
-/**
- * After a write: the pause state, the student's file and lists (the status chip «موقوف مؤقتًا»), and
- * sales' schedule / «تفاصيل الطالب» (lessons cancelled or booked back).
- */
+/** Lessons are cancelled or booked back, so sales' schedule and details refresh too. */
 function useRefresh(studentId: string) {
   const client = useQueryClient();
   return () =>
@@ -53,7 +49,7 @@ export function useStartPause(studentId: string) {
   });
 }
 
-/** PATCH …/until { untilDate } (null = until «استئناف»). */
+/** A null untilDate means until resume. */
 export function useChangeUntil(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({

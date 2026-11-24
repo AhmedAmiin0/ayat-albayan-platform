@@ -5,7 +5,7 @@ import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { Card } from '@/teacher/report/v2/ui/Card';
 import { GradePills } from '@/teacher/report/v2/ui/GradePills';
 
-/** «التقدير العام»: preselected from the rows' grades until the teacher picks one. */
+/** Preselected from the rows' grades until the teacher picks one. */
 export function OverallCard({ s }: { s: V2EntryState }) {
   const v2 = t.reports.v2;
   const suggested = suggestOverall(s.values.program, s.values.content);

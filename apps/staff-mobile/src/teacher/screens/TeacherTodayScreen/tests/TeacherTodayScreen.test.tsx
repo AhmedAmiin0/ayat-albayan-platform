@@ -36,13 +36,12 @@ test('the short date, no zone line, the hero and one row; no due block (2026-11-
   const hero = within(await screen.findByTestId('teacher-hero-actions'));
   expect(screen.getByText(shortDate(NOW))).toBeTruthy();
   expect(screen.queryByText(/الأوقات بتوقيتك/)).toBeNull();
-  // The hero: «سأحضر» filled, her own link as the one peer, «التفاصيل».
   expect(hero.getByRole('button', { name: t.teacherBoard.confirm })).toBeTruthy();
   expect(hero.getByRole('button', { name: t.teacherDash.join })).toBeTruthy();
   expect(screen.queryByTestId('due-reports')).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/teachers/me/pending-reports');
   expect(within(screen.getByTestId('today-rest')).getByText('سلمى علي')).toBeTruthy();
-  // No «جلسات مباشرة», no per-row «إلغاء الحلقة» (it lives in the sheet), not tomorrow's lesson.
+  // Cancel lives in the sheet, never on a row; tomorrow's lesson is not shown.
   expect(screen.queryByText('جلسات مباشرة')).toBeNull();
   expect(screen.queryByRole('button', { name: t.teacherBoard.cancel })).toBeNull();
   expect(screen.queryByText('ريم سالم')).toBeNull();

@@ -9,7 +9,6 @@ interface PauseSheetFrameProps {
   children: ReactNode;
 }
 
-/** The page sheet of «إيقاف الدورة مؤقتًا» and «نهاية الإيقاف», like «تغيير الموعد»: the student's file stays under it. */
 export function PauseSheetFrame({ open, title, onClose, children }: PauseSheetFrameProps) {
   return (
     <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>

@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { type, useTheme, NuqtaGlyph, toneColors, AppText } from '@ab/mobile-kit';
 
-/** «دورك» note (docs/07 §6 hamish): small saffron nuqta + ink 600 words, like the web row. */
+/** Same as the web row (docs/07 §6). */
 export function StudentNote({ text }: { text: string }) {
   const { color } = useTheme();
   return (

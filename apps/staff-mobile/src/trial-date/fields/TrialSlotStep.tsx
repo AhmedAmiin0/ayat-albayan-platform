@@ -13,10 +13,7 @@ interface TrialSlotStepProps {
   onPick: (startsAt: string) => void;
 }
 
-/**
- * «الموعد» of «موعد تجريبي جديد»: «مدة الحلقة» (the last trial's, changeable; owner 2026-11-02)
- * over the booking's slot grid for that length.
- */
+/** The length defaults to the last trial's and is changeable. */
 export function TrialSlotStep({ onLength, ...slots }: TrialSlotStepProps) {
   return (
     <View style={{ gap: 16 }}>
