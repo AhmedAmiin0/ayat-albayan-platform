@@ -5,7 +5,7 @@ import { CACHE_STORE } from '@/common/infra/cache/shared-cache';
 import { appRole } from '@/config/role/app-role';
 import { jobBeats } from './beat-book';
 import { BeatMirror, BeatReader } from './beat-share';
-import type { BeatShareDeps } from './beat-share.types';
+import type { BeatShareDeps } from './beat-share';
 
 const shareDeps = (store: CacheStore, guard: CacheGuard): BeatShareDeps => ({
   store,

@@ -454,12 +454,12 @@
       "count": 1
     }
   },
-  "src/common/db/list-sort.test.ts": {
+  "src/common/db/list-sort/tests/list-sort.test.ts": {
     "typescript/prefer-return-this-type": {
       "count": 1
     }
   },
-  "src/common/db/list-sort.ts": {
+  "src/common/db/list-sort/list-sort.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -565,12 +565,12 @@
       "count": 4
     }
   },
-  "src/common/infra/cache/shared-cache.fallback.test.ts": {
+  "src/common/infra/cache/shared-cache/tests/fallback.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/common/infra/cache/shared-cache.ts": {
+  "src/common/infra/cache/shared-cache/shared-cache.ts": {
     "complexity": {
       "count": 2
     },
@@ -596,7 +596,7 @@
       "count": 1
     }
   },
-  "src/common/push/dispatch/push.audience.ts": {
+  "src/common/push/dispatch/push.audience/push.audience.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
     },
@@ -618,7 +618,7 @@
       "count": 2
     }
   },
-  "src/common/push/dispatch/push.lock-screen.ts": {
+  "src/common/push/dispatch/push.lock-screen/push.lock-screen.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -706,7 +706,7 @@
       "count": 1
     }
   },
-  "src/common/push/push.service.ts": {
+  "src/common/push/push.service/push.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
     },
@@ -1024,12 +1024,12 @@
       "count": 1
     }
   },
-  "src/common/storage/storage.paths.test.ts": {
+  "src/common/storage/storage.paths/tests/storage.paths.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/common/storage/storage.paths.ts": {
+  "src/common/storage/storage.paths/storage.paths.ts": {
     "complexity": {
       "count": 1
     },
@@ -1284,7 +1284,7 @@
       "count": 9
     }
   },
-  "src/config/role/background-job.ts": {
+  "src/config/role/background-job/background-job.ts": {
     "stylistic/max-len": {
       "count": 6
     }

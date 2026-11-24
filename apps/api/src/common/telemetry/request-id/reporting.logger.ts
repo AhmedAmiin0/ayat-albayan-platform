@@ -1,6 +1,6 @@
 import type { ErrorReporter, ReportTags } from '@ab/core';
 import { jobBeats } from '@/common/jobs/beats';
-import type { LoggedFailures } from '@/common/jobs/beats/beat-book.types';
+import type { LoggedFailures } from '@/common/jobs/beats/beat-book';
 import { currentRequestId } from './request-id';
 import { RequestIdLogger } from './request-id.logger';
 
