@@ -1,6 +1,6 @@
 import type { Page, Response } from '@playwright/test';
 
-/** GET /settings/public, the one request the cover asks («تحت الصيانة»). */
+/** The only request the maintenance cover makes. */
 export const PUBLIC_SETTINGS = '**/settings/public';
 
 /**

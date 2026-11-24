@@ -23,13 +23,12 @@ const REQUIRED_TEXTS = ['recited', 'newMemorization', 'revision', 'notes', 'home
 const identity = (page: Page) => page.getByRole('region', { name: ar.reports.identity });
 const labelOf = (radio: Locator) => radio.locator('xpath=ancestor::label');
 
-/** «الحضور»: the native radio is visually hidden, so the chip's label is what a teacher clicks. */
+/** The native radio is visually hidden, so the chip's label is what a teacher clicks. */
 export async function pickAttendance(page: Page, attendance: Attendance): Promise<void> {
   const group = identity(page).getByRole('group', { name: ar.reports.attendance });
   await labelOf(group.getByRole('radio', { name: ar.enums.attendance[attendance] })).click();
 }
 
-/** One grade row («التلاوة والنطق» … «التقدير العام للحلقة»), clicked on its pip label. */
 export async function pickGrade(page: Page, input: { row: string; grade: Grade }): Promise<void> {
   const row = page.getByRole('group', { name: input.row });
   await row.getByTitle(ar.enums.grade[input.grade], { exact: true }).click();

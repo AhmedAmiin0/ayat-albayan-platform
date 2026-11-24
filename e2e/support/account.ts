@@ -4,18 +4,7 @@ import { ar, expect } from './core/fixtures';
 import { withSql } from './core/schedule';
 import { stamp } from './people/users-control';
 
-// Helpers of the «حسابي» specs (account*.spec.ts, R-ACC-01..05). Every run gets its own stamp,
-// so the desktop and mobile projects never share an email, a phone or a name.
-//
-// Assumptions about the /account page (align the web page with these):
-// - the page heading is ar.account.title;
-// - each part is a <section aria-labelledby> whose heading is ar.account.<part>.title, so it is
-//   the ARIA region of that name (name, phone, email, password, avatar);
-// - inside a region: fields by ar.json label (ar.account.name.label, phone.label, email.label,
-//   password.new, password.confirm, currentPassword) and one button ar.account.save;
-// - the avatar region has a file input labelled ar.account.avatar.choose, then a button
-//   ar.account.avatar.upload; the saved photo is an <img alt="ar.account.avatar.alt({name})">;
-// - toasts show ar.account.toast.*, server errors show ar.account.errors.<code>.
+// Each run gets its own stamp so desktop and mobile projects never share an email, phone or name.
 
 const A = ar.account;
 

@@ -2,11 +2,7 @@ import { seedConfig } from './platform/config-seed';
 import { resetDb, seedFxRate, seedSettings, seedTeacherRow, seedUser } from './core/db';
 import { USERS } from './core/users';
 
-/**
- * Clean DB + default settings (then the seeder's metadata rows, as an API boot leaves them, docs/26
- * §2b) + one account per role before the run; the teacher account owns a
- * teachers row (abrar@e2e.local → «أبرار»). Journeys add their own data.
- */
+/** Clean DB, default settings, seeder metadata (docs/26 §2b) and one account per role. */
 export default async function globalSetup(): Promise<void> {
   await resetDb();
   await seedFxRate();

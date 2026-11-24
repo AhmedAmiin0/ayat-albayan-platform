@@ -1,10 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { AccountSetupPage, parseReturnSearch, requireSetupPending } from '@/features/people/auth';
 
-/**
- * /account-setup «أكمل حسابك» (docs/46 A4): a teacher on her code-made login only.
- * ?redirect=<same-origin path>: where to land once set up (owner 2026-11-14).
- */
+/** Teacher on a code-made login only (docs/46 A4); ?redirect= is a same-origin landing path. */
 export const Route = createFileRoute('/account-setup/')({
   validateSearch: parseReturnSearch,
   beforeLoad: ({ context }) => requireSetupPending(context.queryClient),
