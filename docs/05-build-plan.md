@@ -9,7 +9,8 @@ The owner asked for: **use workflows (multi-agent) to build faster, Playwright f
 3. Every agent prompt must repeat the two hard constraints: **≤150 lines per file, ≤3 params per function**, and "write unit tests in the same PR".
 4. Agents work in **git worktrees** (one branch per module) and merge through the integrator; never two agents on the same file.
 5. Each phase: builders → verifier (checks lint/typecheck/tests in CI or a cloud session, reads the diff against requirements IDs) → fix loop (max 2) → merge.
-6. Never invent requirement behaviour — if a requirement ID is ambiguous, leave a `TODO(R-XXX-nn): question` and list it in the phase summary.
+6. Commits and PR titles follow the Angular convention (CLAUDE.md rule 25): `<type>(<scope>): <subject>`, e.g. `feat(api/booking): hold the slot while the guardian pays`. Map the type from the branch prefix: `feat/` → feat, `fix/` → fix, `ci/` → ci, `docs/` → docs, `chore/` → chore, `refactor/`, `move/` and `cut/` → refactor, `chore/comments-*` → docs. The scope names the workspace the change lives in (`repo` when it spans several). The PR body lists «behaviour → test» and the why; the squash subject is the title plus ` (#n)`.
+7. Never invent requirement behaviour — if a requirement ID is ambiguous, leave a `TODO(R-XXX-nn): question` and list it in the phase summary.
 
 ## 1. Phases
 
@@ -94,6 +95,7 @@ return { verified, result }
 
 ## 3. Definition of done (per phase)
 - The PR's GitHub Actions CI is green: `pnpm turbo lint typecheck test`, from Phase 2 `pnpm turbo e2e` (a cloud session may run lint, typecheck and unit tests first; never the owner's PC). A PR runs only the e2e specs its change reaches, desktop only; the full suite runs on the push to develop or with `gh workflow run ci.yml --ref <branch>`.
+- The PR title passes workflow `pr-title` (Angular header, CLAUDE.md rule 25).
 - No file > 150 lines, no function > 3 params (lint enforces; CI fails otherwise).
 - Every requirement ID listed for the phase appears in a test name or a code comment `// R-XXX-nn`.
 - `PHASE_SUMMARY.md` lists what was built, tests added (count), residual TODOs/questions for the owner.

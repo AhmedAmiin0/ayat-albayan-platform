@@ -26,11 +26,7 @@ interface HistoryCall {
   query: PortalHistoryQuery;
 }
 
-/**
- * «حضرها» / «غاب عنها» (docs/50 §5): the caller's student's past lessons of one list, newest first,
- * a keyset page by starts_at, each with its sent report and visible recording. And this month's
- * counts for the lessons card.
- */
+/** docs/50 §5: newest first, keyset by starts_at, with sent report and visible recording. */
 @Injectable()
 export class PortalHistoryService {
   constructor(

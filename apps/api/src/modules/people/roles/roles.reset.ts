@@ -3,8 +3,7 @@ import type { AuditEntry } from '@/common/audit/audit.service';
 import { isSystemAdmin, type RoleState } from './roles.logic';
 import type { RoleRecord } from './roles.store';
 
-// «استعادة الافتراضي» (owner 2026-10-12): the built-in teacher / sales / assistant roles go back to
-// the grants they were seeded with; the system admin stays fixed and custom roles have no default.
+// Built-in roles go back to seeded grants; admin is fixed, custom roles have no default.
 
 type ResetProblem = 'admin_role_fixed' | 'not_system_role';
 
