@@ -45,11 +45,7 @@ interface StatesInput {
   requestId: string;
 }
 
-/**
- * The Stripe part of «إلغاء مع استرداد» (owner 2026-11-02): what each payment-link card can still
- * refund (every refund listed from Stripe, this stop's own kept apart so a replay plans the same
- * split) and the refund itself. The webhook (LinkRefunds) records the refund row, once.
- */
+/** Each card's refundable amount; this stop's own refunds kept apart so a replay plans the same. */
 @Injectable()
 export class StopRefundCards {
   constructor(private readonly clients: StripeClients) {}

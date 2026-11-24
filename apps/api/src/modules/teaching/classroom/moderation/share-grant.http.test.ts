@@ -5,8 +5,6 @@ import { sentBody as bodyOf } from '@/modules/teaching/classroom/livekit/livekit
 import { http, participantRow } from './moderation.fakes';
 import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
-// «اطلب مشاركة الشاشة» → «سماح» / «إيقاف مشاركة» (owner, 2026-10-05): LiveKit UpdateParticipant.
-
 const lesson = (identity = 'guest-0123456789ab') => `/lessons/${LESSON_ID}/room/participants/${identity}/share`;
 const meeting = (identity = 'guest-0123456789ab') => `/meetings/${MEETING_ID}/participants/${identity}/share`;
 interface Permission {

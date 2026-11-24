@@ -25,11 +25,7 @@ export function ratingPatch(tap: RatingTap): Required<Pick<TablesUpdate<'lesson_
   return { quick_rating: tap.rating, quick_rated_at: tap.at.toISOString(), quick_rating_wa_id: tap.waMessageId };
 }
 
-/**
- * New rows for children with no feedback row yet: made by the button (source whatsapp_button),
- * without a link (token_hash null; a later «ابعت طلب الرأي» gives the row one). expires_at is the
- * tap: there is no link to keep alive.
- */
+/** Button-made rows have no link (token_hash null); expires_at is the tap. */
 export function ratingInserts(tap: RatingTap, lesson: RatedLesson): TablesInsert<'lesson_feedback'>[] {
   const at = tap.at.toISOString();
   return lesson.studentIds.map((studentId) => ({

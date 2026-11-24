@@ -6,7 +6,7 @@ import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import type { AutoHeldRepo } from './auto-held.repo';
 import { OutcomeCorrection } from './outcome-correction';
 
-// «تصحيح الحالة» (owner 2026-11-03). The fixture lesson ran 14:00–14:45Z on 2026-10-04.
+// The fixture lesson ran 14:00-14:45Z on 2026-10-04.
 const AFTER = new Date('2026-10-04T16:00:00Z');
 
 interface Setup {

@@ -5,7 +5,7 @@ import { MEETING_ID, meetingRow, NOW, scheduledRow } from '@/modules/teaching/cl
 import { OPEN_PHONE, openThread, STUDENT_A, STUDENT_B, stored } from './meeting-invites.fakes';
 import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
-// «أعد الإرسال» reaches only whom add() would let the caller invite (R-MEET-02).
+// A resend reaches only whom add() would let the caller invite (R-MEET-02).
 let s: MeetingServices;
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const REQ = '00000000-0000-4000-8000-0000000000dd';
