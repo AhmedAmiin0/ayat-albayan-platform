@@ -13,7 +13,11 @@ import { RegistrationResults } from '@/registration-check/components/Registratio
 /** The chat's number (from the thread header), checked at once. */
 type Params = { phone?: string };
 
-/** docs/16 row 23: shows name, code, status and teacher only; needs students.check_registration. */
+/**
+ * /…/registration-check[?phone=…] (docs/16 row 23), from the sales chat header
+ * (the thread's number filled in and checked) and the students tab header: is this family or child
+ * already registered? Name, code, status and teacher only. Needs students.check_registration.
+ */
 export function RegistrationCheckScreen() {
   const params = useLocalSearchParams<Params>();
   const first = searchOf('phone', params.phone ?? '');

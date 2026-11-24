@@ -9,15 +9,16 @@
 // GitHub's generated notes since the family's previous tag. Any failure only warns: the run stays green
 // (deploy-baseline.mjs reads green runs) and a tag is a label, never part of the release.
 // Usage: GH_TOKEN=… GH_REPO=o/r KIND=app SHA=<40 hex> node tools/scripts/ci-checks/release-tags/release-tag.mjs
-//   apk and aab also need PROFILE, VERSION, GITHUB_RUN_NUMBER (EAS_URL optional); ota needs CHANNEL.
+//   apk and aab also need PROFILE, VERSION, GITHUB_RUN_NUMBER (EAS_URL, or ARTIFACT_URL and SHA256 for
+//   a runner build, optional); ota needs CHANNEL.
 import { execFileSync } from 'node:child_process';
 import { appendFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { about, readLinks } from './release-notes.mjs';
 
 const NAME = /^[a-z][a-z0-9-]{0,30}$/;
 const BUILD = { PROFILE: NAME, VERSION: /^\d+\.\d+\.\d+$/, GITHUB_RUN_NUMBER: /^\d+$/ };
 const RULES = { app: {}, apk: BUILD, aab: BUILD, ota: { CHANNEL: NAME } };
-const EAS_URL = /^https:\/\/expo\.dev\/[\w./-]+$/;
 
 /** The release the env describes, checked: its values end up in a tag name. */
 export function readRelease(env) {
@@ -32,7 +33,7 @@ export function readRelease(env) {
     version: env.VERSION,
     run: env.GITHUB_RUN_NUMBER,
     channel: env.CHANNEL,
-    easUrl: EAS_URL.test(env.EAS_URL ?? '') ? env.EAS_URL : '',
+    ...readLinks(env),
   };
 }
 
@@ -81,20 +82,9 @@ export function plan(tags, release, now) {
   return { tag: `${prefix(release)}${day}-${n}`, previous };
 }
 
-const easLink = (r) => (r.easUrl ? ` EAS build: ${r.easUrl}` : '');
-
-const ABOUT = {
-  app: () => 'Web app https://app.ayatalbayan.com and API https://api.ayatalbayan.com (deploy-staging).',
-  apk: (r) => `Android APK, EAS profile ${r.profile}, app version ${r.version}.${easLink(r)}`,
-  aab: (r) =>
-    `Android App Bundle (AAB) for Google Play, build ${r.profile}, app version ${r.version}.` +
-    easLink(r),
-  ota: (r) => `Over-the-air update (JavaScript only) to the EAS channel ${r.channel}.`,
-};
-
 /** `gh release create` arguments: a line on what shipped, then GitHub's notes since the previous tag. */
 export function createArgs(step, release, runUrl) {
-  const notes = `${ABOUT[release.kind](release)}\n\nCommit ${release.sha}, released by ${runUrl}`;
+  const notes = `${about(release)}\n\nCommit ${release.sha}, released by ${runUrl}`;
   return [
     'release',
     'create',

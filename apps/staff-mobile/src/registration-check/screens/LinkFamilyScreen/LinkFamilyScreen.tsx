@@ -29,10 +29,11 @@ import { checkErrorText, searchOf, useRegistrationCheck } from '@/registration-c
 /** The chat's number and its lead (ThreadView.lead_id), from the chat's «⋮» menu. */
 type Params = { phone?: string; leadId?: string };
 
-/** The code stays left-to-right inside the Arabic sentence. */
+/** The confirm question with the family's name and code, the code kept left-to-right. */
 const confirmText = (m: RegistrationMatch) =>
   t.inbox.linkFamily.confirm.replace('{name}', m.name).replace('{code}', ltr(m.code));
 
+/** After the answer: linked now or already linked to this family, then back to the chat. */
 function LinkDone({ linked, onBack }: { linked: boolean; onBack: () => void }) {
   const { color } = useTheme();
   return (
@@ -49,9 +50,9 @@ function LinkDone({ linked, onBack }: { linked: boolean; onBack: () => void }) {
 }
 
 /**
- * /…/inbox/link-family?phone&leadId (owner 2026-10-29), inside the chat's group in the admin and sales
- * trees: find the student by name or code (GET /sales/registration-check), pick one, confirm, and the
- * chat's number becomes the second number of that student's family (leads.link_family). Who follows up
+ * /…/inbox/link-family?phone&leadId, inside the chat's group in the admin and sales trees: find
+ * the student by name or code (GET /sales/registration-check), pick one, confirm, and the chat's
+ * number becomes the second number of that student's family (leads.link_family). Who follows up
  * the lead does not change; back in the chat it shows the family as on the main number.
  */
 export function LinkFamilyScreen() {

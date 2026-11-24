@@ -2610,9 +2610,6 @@
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
     },
-    "@typescript-eslint/no-unnecessary-type-conversion": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     }
@@ -7941,7 +7938,7 @@
   },
   "src/modules/reporting/dashboard/work/work.mapper.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
-      "count": 2
+      "count": 1
     },
     "complexity": {
       "count": 1

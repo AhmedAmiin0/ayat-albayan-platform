@@ -6,6 +6,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { AllStudentsScreen } from '@/sales/sales/screens/AllStudentsScreen';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
+// The two ways in: the sales chat header (the number filled in) and the students tab header.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
@@ -39,7 +40,7 @@ test('the sales chat header opens the check for this number, in the sales tree',
   const client = asSales([...BASE, 'students.check_registration']);
   await renderWithQuery(<TreeBaseProvider value="/sales"><ThreadScreen /></TreeBaseProvider>, client);
   await screen.findByText(inbound.body ?? '');
-  // An item of the header's «⋮» menu (review 2026-10-29 #13).
+  // An item of the header's overflow menu.
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.chatMenu }));
   await fireEvent.press(await screen.findByRole('button', { name: t.registrationCheck.action }));
   await waitFor(() =>

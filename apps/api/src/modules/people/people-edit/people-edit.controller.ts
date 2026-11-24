@@ -47,10 +47,11 @@ export class PeopleEditController {
   ) {}
 
   @Get('students/:id')
-  view(
+  async view(
     @ZodParam('id', peopleIdSchema) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<PeopleEditView> {
+    await this.owners.student(user, id);
     return this.views.view(id, isAdmin(user));
   }
 
