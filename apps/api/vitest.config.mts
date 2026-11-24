@@ -5,7 +5,7 @@ import { defineConfig } from 'vitest/config';
 // swc keeps Nest decorator metadata that esbuild/oxc would drop.
 export default defineConfig({
   plugins: [swc.vite({ module: { type: 'es6' } })],
-  // `@/x` → src/x, as in tsconfig.json `paths` (the build rewrites it with tsc-alias).
+  // `@/x` → src/x, as the root tsconfig.base.json `paths` (the build rewrites it with tsc-alias).
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   test: {
     include: ['src/**/*.test.ts'],

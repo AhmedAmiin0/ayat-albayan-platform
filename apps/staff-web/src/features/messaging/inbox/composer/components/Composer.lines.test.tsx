@@ -29,7 +29,6 @@ describe('the reply line in the composer (review W1, W8)', () => {
     ]);
     renderWithClient(<ThreadPane phone={PHONE} listSearch={{ page: 1 }} />);
     expect(await screen.findByText(replyFrom)).toBeTruthy();
-    // W2: the desktop composer is the compact one: the «قالب» icon toggle, no «رسالة عادية | قالب» control.
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.modeTemplate }));
     expect(screen.getByRole('button', { name: t.inbox.composer.modeTemplate }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.queryByText(replyFrom)).toBeNull();

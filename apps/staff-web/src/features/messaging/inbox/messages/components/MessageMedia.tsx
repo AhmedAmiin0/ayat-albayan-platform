@@ -84,14 +84,7 @@ function fileErrorText(error: unknown): string {
   return error instanceof ApiError && error.status === 410 ? t.inbox.mediaExpired : t.common.error;
 }
 
-/**
- * The file in a bubble (R-MSG-05, W6), theirs or one we sent (D2). A PDF shows its page 1 card as
- * it scrolls in (PdfCard). An image opens on demand: «عرض صورة» fetches a signed URL of our copy,
- * then a thumbnail (full size in a new tab) or a named link; a voice note or video «تشغيل رسالة
- * صوتية» plays in the bubble (D1); a sticker or a GIF shows itself at once (StickerMedia, owner
- * 2026-11-01). Other files (locations…) keep their label. Teacher mode gets the label only: the API
- * refuses them the file (403 media_forbidden).
- */
+/** Teacher mode gets the label only: the API refuses them the file (403 media_forbidden). */
 export function MessageMedia({ message: m }: { message: MessageView }) {
   const kind = t.inbox.media[mediaKind(m.media_mime)];
   const teacher = useInboxMode() === 'teacher';
@@ -106,8 +99,7 @@ export function MessageMedia({ message: m }: { message: MessageView }) {
     );
   }
   const view = <FileView message={m} kind={kind} />;
-  // A PDF shows page 1 by itself once on screen, as WhatsApp (owner 2026-11-01); today's «عرض ملف»
-  // if it cannot.
+  // A PDF shows page 1 once on screen, as WhatsApp; it falls back to the view button if it cannot.
   if (!teacher && isPdfMime(m.media_mime)) return <PdfCard message={m} fallback={view} />;
   if (!teacher && isChatViewMime(m.media_mime)) return view;
   return <Label kind={kind} forbidden={teacher} />;

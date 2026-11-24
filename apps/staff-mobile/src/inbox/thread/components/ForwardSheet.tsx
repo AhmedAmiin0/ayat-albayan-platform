@@ -4,17 +4,14 @@ import { t, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { ForwardPicker } from './ForwardPicker';
 
 interface ForwardSheetProps {
-  /** The message chosen for «إعادة توجيه»; null hides the sheet. */
+  /** Null hides the sheet. */
   message: MessageView | null;
   /** The open chat: never offered as a target. */
   phone: string;
   onClose: () => void;
 }
 
-/**
- * «إعادة توجيه الرسالة», full height (as the template sheet). The picker mounts per message, so each
- * forward starts with no chat picked and an empty search.
- */
+/** The picker mounts per message so each forward starts clean. */
 export function ForwardSheet({ message, phone, onClose }: ForwardSheetProps) {
   return (
     <Modal

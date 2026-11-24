@@ -9,7 +9,6 @@ interface ListSheetProps {
   children: ReactNode;
 }
 
-/** The page sheet the lists open in (as «محادثة جديدة»): an h2 title, «إغلاق», the content. */
 export function ListSheet({ open, title, onClose, children }: ListSheetProps) {
   return (
     <Modal visible={open} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>

@@ -32,7 +32,6 @@ test('one child: a short pill at the row’s end (never a full-width button); it
 test('one renewal and one new child: «لأيّ طالب؟» lists each with its own kind and form', async () => {
   const sara = child({ id: 'c2', name: 'sara', code: 'AB-0184', subscription: null });
   await panel(family([sara, child({ subscription: usedUp })]));
-  // Not every child renews: the pill says «اشتراك جديد» and names no one.
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.new }));
   const sheet = screen.getByTestId('thread-menu');
   expect(sheet.props.accessibilityLabel).toBe(s.pickStudent);

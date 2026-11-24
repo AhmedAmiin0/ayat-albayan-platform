@@ -15,12 +15,6 @@ export interface IncomingCallProps {
   onSilence: () => void;
 }
 
-/**
- * A family calling the academy's chat number (docs/28 §3.2): full screen, «رفض» (red) and «قبول». Every
- * staff member who may answer that chat sees it; the first «قبول» takes the call and the screen closes
- * for the others. An alertdialog with a focus trap: focus starts on the caller's name (never on a
- * button a stray key could press), Esc silences the ring, focus returns where it was.
- */
 export function IncomingCall({ name, phone, onAccept, onDecline, onSilence }: IncomingCallProps) {
   const ref = useRef<HTMLDivElement>(null);
   const nameId = useId();

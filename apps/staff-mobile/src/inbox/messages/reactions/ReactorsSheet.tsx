@@ -8,12 +8,11 @@ interface ReactorsSheetProps {
   message: MessageView | null;
   /** The chat's name (the contact). */
   contact: string | null;
-  /** «إزالة» on ours; absent = ours cannot be changed here (a closed window, a read-only chat). */
+  /** Absent means ours cannot be changed here (closed window or read-only chat). */
   onRemove?: (m: MessageView) => void;
   onClose: () => void;
 }
 
-/** Who reacted: the contact, then our staff member with «إزالة» (owner 2026-10-27). */
 export function ReactorsSheet({ message: m, contact, onRemove, onClose }: ReactorsSheetProps) {
   const { color } = useTheme();
   const lines = m ? reactorLines(m.reactions, contact) : [];

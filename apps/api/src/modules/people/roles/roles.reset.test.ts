@@ -5,8 +5,7 @@ import { errorCode } from '@/common/http/errors';
 import { profile, rolesHarness } from './roles.fakes';
 import { resetGrants } from './roles.reset';
 
-// «استعادة الافتراضي» (owner 2026-10-12): POST /roles/:id/reset for the built-in teacher / sales /
-// assistant roles only.
+// Only the built-in teacher, sales and assistant roles can be reset.
 
 const codeOf = (p: Promise<unknown>) =>
   p.then(

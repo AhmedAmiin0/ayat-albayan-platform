@@ -13,8 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: jest.fn(),
 }));
 
-// Staff's answers about a «أرسل عبر واتساب» (docs/19): the platform never sends such a row itself,
-// so the bubble's line and the «!» sheet give the stop path back (sent-manually), never a retry.
+// docs/19: the platform never sends such a row itself, so only the stop path, never a retry.
 
 const held = message({
   id: 'm-held',

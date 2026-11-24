@@ -62,13 +62,7 @@ function QuotedMessage({ quote, outbound }: { quote: MessageQuote; outbound: boo
   );
 }
 
-/**
- * The message a bubble answers (owner 2026-10-25, WhatsApp's look 2026-10-31), at its top: a bar
- * at the inline-start, who wrote it, its first line (a file's icon and kind) and a photo's or
- * PDF's thumb. A click scrolls the original into view and highlights it; one older than the loaded
- * pages is said in a polite toast. WhatsApp quoted a message we never stored: «رسالة غير متاحة»,
- * greyed, no click.
- */
+/** An original older than the loaded pages is announced in a polite toast. */
 export function QuoteBlock({ quote, outbound }: QuoteBlockProps) {
   if (!isUnavailableQuote(quote)) return <QuotedMessage quote={quote} outbound={outbound} />;
   return (

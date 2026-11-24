@@ -8,11 +8,7 @@ import { TemplateVerifier } from '@/modules/messaging/whatsapp/templates/sync/te
 const TIMING = { firstMs: 5 * 60_000, everyMs: 24 * 60 * 60_000 };
 const said = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
-/**
- * Owner 2026-11-07: our copy of the CRM's template text fills without anyone pressing «مزامنة».
- * One GET templates per configured crm line per run, through the template sync (the only code
- * that reads a line's list); statuses untouched. A failure is logged; the next run tries again.
- */
+/** One templates GET per crm line per run via the template sync; statuses untouched. */
 @BackgroundJob({ name: 'crm-template-copy' })
 @Injectable()
 export class CrmCopyRefresh extends TickerJob {

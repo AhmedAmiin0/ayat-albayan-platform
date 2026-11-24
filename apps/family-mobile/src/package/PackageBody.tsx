@@ -44,10 +44,7 @@ function PackageView({ view, tz }: { view: PortalPackageView; tz: string }) {
   );
 }
 
-/**
- * «الباقة» (docs/50 §2, canvas Package): a guardian's or an adult student's only (the caller
- * checks seesMoney): the package, the amount due, how to pay, the payments.
- */
+/** docs/50 §2: only for a viewer who sees money (the caller checks seesMoney). */
 export function PackageBody({ student }: { student: PortalStudent }) {
   const pkg = useChildPackage(student.id, true);
   return <LoadState query={pkg}>{(view) => <PackageView view={view} tz={student.tz} />}</LoadState>;

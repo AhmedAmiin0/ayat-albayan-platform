@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
 import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
-// POST /subscriptions/:id/cancel «إلغاء الباقة» (owner 2026-10-28): never a delete; only a package nothing hangs on.
+// Cancelling never deletes: only a package nothing hangs on.
 
 const url = `/subscriptions/${SUB_ID}/cancel`;
 const cancelled = subRow({ status: 'cancelled', cancelled_at: '2026-10-28T09:00:00Z', cancelled_by: ADMIN.id, cancel_reason: 'خطأ' });

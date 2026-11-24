@@ -8,7 +8,7 @@ import { fill } from '@/sales/sales/lib/sales-text';
 import { HistoryEntryCard } from '@/sales/sales/components/HistoryEntryCard';
 import { StartDateEdit, UsedBeforeEdit } from '@/subscribe';
 
-/** «الاشتراك»: the current one outlined (the history's card, no money); the past ones collapsed behind «الاشتراكات السابقة (n)». */
+/** No money; the current one outlined and past ones collapsed. */
 export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 'subscriptions' | 'current_id'> }) {
   const [open, setOpen] = useState(false);
   const s = t.sales.student;

@@ -1,4 +1,4 @@
-import { settingDef, type ConfigEntry, type SettingKey } from '@ab/shared';
+import { settingDef, type ConfigEntry, type SettingKey } from '@ab/settings';
 import { settings } from '@/ops/shared/fixtures';
 import { meta } from './values-fixtures';
 
@@ -36,7 +36,6 @@ export interface EntriesAnswer {
   entries: ConfigEntry[] | Error;
 }
 
-/** GET answers for «القيم» with GET /config/entries too. */
 export const entriesAnswer =
   ({ permissions, entries }: EntriesAnswer) =>
   (path: string): Promise<unknown> => {

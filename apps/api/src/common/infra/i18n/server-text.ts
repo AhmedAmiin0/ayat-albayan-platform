@@ -9,7 +9,7 @@ import enBundle from '@ab/shared/i18n/en.json';
 // module-level constant would not, so producers read leaves when they build a text.
 // Parent-facing output stays Arabic (owner decision pending on English), hence only `ar` here.
 
-/** The bundled defaults, never mutated: the editor's «الأصل» and the base every refresh starts from. */
+/** The bundled defaults are never mutated: every refresh starts from them. */
 export const BUNDLES = { ar: arBundle, en: enBundle } as const;
 
 /** The academy's Arabic copy with overrides applied. Read it; only TranslationsService writes it. */

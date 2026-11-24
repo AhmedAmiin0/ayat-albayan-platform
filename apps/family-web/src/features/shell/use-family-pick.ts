@@ -7,9 +7,7 @@ import { useSyncExternalStore } from 'react';
 import { meQuery } from '@ab/web-kit/auth/me';
 import { usePortalHome } from './use-portal-home';
 
-// «اختر الطالب» (owner 2026-11-16, docs/50 §6): the student the family pages work as, from
-// /portal/me and the pick this profile saved in the browser (@ab/client-core familyPick,
-// pickStore). Blocked storage (private mode) keeps the pick for this page view only.
+// docs/50 §6: blocked storage (private mode) keeps the pick for this page view only.
 
 const browser: SeenStorage = {
   getItem: (key) => Promise.resolve().then(() => localStorage.getItem(key)),

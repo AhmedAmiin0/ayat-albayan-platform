@@ -18,11 +18,10 @@ const STYLE: Record<ShownState, { tone: Tone; glyph: Glyph }> = {
 
 export interface EvolutionStateLineProps {
   state: EvolutionState | null;
-  /** When Evolution said it (webhook or «افحص الاتصال»); null = never. */
+  /** Null means never known. */
   at: string | null;
 }
 
-/** «حالة الاتصال»: one chip in words, and when it was last known. */
 export function EvolutionStateLine({ state, at }: EvolutionStateLineProps) {
   const clock = useClock();
   const shown = shownState(state);

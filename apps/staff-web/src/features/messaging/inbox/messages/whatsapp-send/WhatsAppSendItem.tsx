@@ -10,7 +10,6 @@ interface Props {
   className: string;
 }
 
-/** «أرسل عبر واتساب» in the bubble's menu (BubbleMenu); the bubble's line shows how it went. */
 export function WhatsAppSendItem({ message: m, pick, className }: Props) {
   const send = useWhatsAppSend();
   return (

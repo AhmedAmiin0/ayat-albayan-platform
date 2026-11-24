@@ -14,11 +14,7 @@ import { openStudentReportPdf } from './student-api';
 const pdfError = (e: unknown): string =>
   e instanceof ApiError && e.status === 409 ? t.reports.error.pdf_not_ready : t.common.error;
 
-/**
- * «التقارير»: the student's sent reports exactly as the teacher's «سجل التقارير» lists them (date,
- * lesson number, grade, «تحميل PDF» once ready). A row opens the report read-only (owner
- * 2026-11-06): the API shows it to the student's owning assistant only (404 for another one).
- */
+/** Opens the report read-only; the API shows it only to the owning assistant. */
 export function ReportsSection({ studentId, reports }: { studentId: string; reports: SalesStudentDetails['reports'] }) {
   const tz = useViewerTz();
   const [error, setError] = useState<string | null>(null);

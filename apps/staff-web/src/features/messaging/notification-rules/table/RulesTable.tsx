@@ -25,10 +25,6 @@ export interface RulesTableProps {
   onTab: (tab: AudienceTab) => void;
 }
 
-/**
- * «الإشعارات», one audience at a time (ولي الأمر · المعلم/ة · العميل · فريق الأكاديمية · يدوي):
- * five columns from 640px; on a phone two (الإشعار | التشغيل) and a tap opens the row's sheet.
- */
 export function RulesTable({ entries, lines, tab, onTab }: RulesTableProps) {
   const phone = usePhone();
   const [open, setOpen] = useState<string | null>(null);

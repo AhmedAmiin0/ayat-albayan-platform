@@ -5,15 +5,7 @@ import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
 
-/**
- * Over a salesperson's chat with a family (R-ASST-01/04, owner 2026-10-12): ONE money pill (owner 2026-10-29:
- * no child names on the strip, the child is picked inside): «جدّد الاشتراك» while one of hers is due for a
- * renewal (that child preselected when she is the only one due, the form prefilled from her last package;
- * owner 2026-10-15/26), else «اشتراك جديد»; the payment method (bank transfer, or a Stripe link in the test
- * build) is chosen inside too. «سجّل تحويلًا بنكيًا» while one of their packages is owed. Needs
- * self.sales_money; nothing on a lead's chat («تسجيل طالب جديد» is in «⋮») or another's family.
- * Pills in the chat's action strip (SalesChatActions).
- */
+/** One money pill on a family chat (R-ASST-01/04); needs self.sales_money, never on a lead. */
 export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
   const allowed = useHolds('self.sales_money');
   const base = useTreeBase();

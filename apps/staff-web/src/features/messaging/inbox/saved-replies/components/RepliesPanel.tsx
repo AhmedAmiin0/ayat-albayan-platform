@@ -26,12 +26,7 @@ function emptyText(picker: RepliesPicker): string {
   return picker.tab === 'shared' || picker.bySlash ? S.emptyShared : S.emptyMine;
 }
 
-/**
- * «الردود السريعة» docked right above the message box, as WhatsApp Business (owner 2026-10-26). After «/»
- * it is only the list: both tabs, searched by the box's own text, driven from the box (↑ ↓ Enter Esc).
- * From the button it has a head (PanelHead): tabs, «إدارة», its own search. A press outside the
- * composer closes it. Picking only fills the box.
- */
+/** A press outside the composer closes it; picking only fills the box. */
 export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: RepliesPanelProps) {
   const { list, keys } = picker;
   const ref = useRef<HTMLElement>(null);

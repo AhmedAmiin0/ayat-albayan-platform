@@ -12,7 +12,7 @@ import { PortalAssetsService } from './portal-assets.service';
 
 const fileParams = z.object({ id: z.uuid(), fileId: z.uuid() });
 
-/** «التسجيلات» and «ملفات الحلقة» of the family portal: same scope key as PortalController. */
+/** Family portal recordings and lesson files: same scope key as PortalController. */
 @ApiTags('portal')
 @ApiBearerAuth()
 @Permissions('self.portal')
@@ -38,7 +38,7 @@ export class PortalAssetsController {
     return this.assets.lesson({ user, studentId, lessonId });
   }
 
-  /** `?download=<name>`: the link saves the file under that name («تنزيل»), not shown. */
+  /** ?download=<name> makes the link save the file under that name instead of showing it. */
   @Post('lesson-files/:fileId/url')
   @HttpCode(200)
   fileUrl(

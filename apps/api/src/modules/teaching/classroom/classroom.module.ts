@@ -57,15 +57,7 @@ import { StudentLinkAdminController, StudentLinkPublicController } from './stude
 import { StudentLinkRepo } from './student-link/student-link.repo';
 import { StudentLinkService } from './student-link/student-link.service';
 
-/**
- * Online classrooms on the self-hosted LiveKit (docs/09, tools/livekit): staff join with their
- * login (POST /lessons/:id/room/join), the family with a one-lesson link (POST /public/join/:token,
- * sent by «ابعت لينك الحلقة» through the inbox Outbox), and the admin assigns teaching assistants
- * per student. Staff may remove someone from the room (blocked for that lesson), every lesson is
- * recorded (LiveKit egress into the `recordings` bucket, POST /livekit/webhook). Staff may open the room
- * early (POST /lessons/:id/room/open) and a student has a long-lived link (/public/student/:token). «اجتماع داخلي» is a
- * standalone room with no lesson (/meetings, /public/meetings/:token), instant or scheduled with invitees (R-MEET-01..03). TemplateRegistry comes from the global WhatsappModule.
- */
+/** Online classrooms on self-hosted LiveKit (docs/09): staff, family links, internal meetings. */
 @Module({
   imports: [InboxModule, TeachersModule],
   controllers: [

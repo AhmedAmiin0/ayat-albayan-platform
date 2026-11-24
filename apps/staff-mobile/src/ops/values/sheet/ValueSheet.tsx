@@ -1,4 +1,4 @@
-import type { SettingKey, SettingMeta } from '@ab/shared';
+import type { SettingKey, SettingMeta } from '@ab/settings';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { t, shape, useTheme, ScreenHeader } from '@ab/mobile-kit';
@@ -27,10 +27,7 @@ interface DescribingProps {
   onCancel: () => void;
 }
 
-/**
- * The sheet while «عدّل الوصف» is open: «تعديل الوصف» with the row's name under it, then the editor.
- * Screen-reader focus moves to that title, so the mode change is announced.
- */
+/** Screen-reader focus moves to the title so the mode change is announced. */
 function Describing({ valueKey, description, onDone, onCancel }: DescribingProps) {
   const titleRef = useRef<AppTextNode>(null);
   useEffect(() => {
@@ -50,12 +47,7 @@ function Describing({ valueKey, description, onDone, onCancel }: DescribingProps
   );
 }
 
-/**
- * A row's bottom sheet (docs/26b §2 phone, states.html#values-phone). A tap outside, the back
- * gesture and «إلغاء» all ask first when an edit is not saved. Mount it only while a row is open.
- * The scrim is a sibling of the sheet and hidden from screen readers, so the sheet's editor and
- * buttons are each reachable on their own (never grouped into one «إغلاق» button).
- */
+/** Unsaved edits always ask first; the scrim is hidden from readers so controls stay separate. */
 export function ValueSheet(props: ValueSheetProps) {
   const { valueKey, saved, canWrite, meta, onSaved, onClose } = props;
   const { color } = useTheme();

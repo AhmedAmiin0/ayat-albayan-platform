@@ -16,7 +16,7 @@ import {
 
 // Pure edits of the v2 form's content (one change each), so the screens stay declarative.
 
-/** «الدرس النظري / التجويد»: one topic; tapping the chosen one again clears it. */
+/** One topic; tapping the chosen one again clears it. */
 export const toggleTajweed = (c: ReportContent, topic: TajweedTopic): ReportContent => ({
   ...c,
   tajweed: c.tajweed === topic ? null : topic,
@@ -57,7 +57,7 @@ export function gradeRate(
   return withIslamic(c, { rates: { ...islamicOf(c).rates, [change.rate]: change.grade } });
 }
 
-/** The picker's «تمّ»: a part's new range (index -1 adds one), keeping the grade it had. */
+/** Index -1 adds a new part; the existing grade is kept. */
 export function placeRange(
   c: ReportContent,
   change: { kind: SegmentKind; index: number; range: SurahRange },

@@ -20,7 +20,6 @@ export class BookingService {
     private readonly queries: BookingRepo,
   ) {}
 
-  /** POST /booking/check: what «احجز» would clash with, before the review step. */
   check(req: BookingRequest, opts?: PrepareOptions): Promise<Conflict[]> {
     return this.planner.conflicts(req, opts);
   }

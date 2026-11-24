@@ -43,12 +43,7 @@ export function v2DraftColumns(form: Partial<ReportV2Draft>): FormColumns {
   return out;
 }
 
-/**
- * v2 submit → the whole row and the content to store. Absent / excused: no content, no grades,
- * no homework or plan (the form hides them); only the note stays. Attended: the taught program's
- * content, and the v1 grade and text columns it fills (legacyGrades / legacyTexts) so history,
- * the chart and the Google sheet (التسميع / الحفظ الجديد / المراجعة) read it.
- */
+/** Absent or excused stores only the note; attended also fills v1 columns for history. */
 export function v2SubmitColumns(form: ReportV2Submit): { columns: FormColumns; content: ReportContent } {
   const present = form.attendance ? attended(form.attendance) : false;
   const content = form.attendance ? keptContent(form.attendance, form.program, form.content) : form.content;

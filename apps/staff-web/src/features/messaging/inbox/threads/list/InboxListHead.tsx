@@ -7,19 +7,12 @@ import { LiveDot } from './LiveDot';
 import { NewChatForm, NewChatToggle } from './NewChatForm';
 
 export interface InboxListHeadProps {
-  /** The conversations the list holds: «12 محادثة» (none while loading). */
   total?: number | undefined;
-  /** Extra items before «محادثة جديدة» (sales: the running lessons chip). */
   head?: ReactNode;
-  /** «محادثة جديدة» opened a number (E.164). */
   onOpen: (phone: string) => void;
 }
 
-/**
- * The list column's first row (docs/07 principle 4): the screen's ONE cartouche, the count, `head`
- * and the icon-only «محادثة جديدة» (admin and sales), whose form unfolds under the row. Admin and
- * sales also see the realtime dot (a teacher never joins the channel: no dot).
- */
+/** A teacher never joins the realtime channel, so no live dot for them. */
 export function InboxListHead({ total, head, onOpen }: InboxListHeadProps) {
   const mode = useInboxMode();
   const [open, setOpen] = useState(false);

@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem } from '@ab/shared';
+import type { IntegrationConfigItem } from '@ab/catalog';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { STRIPE_FEATURE_KEY } from '@/core/lib/stripe-flag';
@@ -6,7 +6,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { seedFullAccess } from '@/test/staff-me';
 import { StripeSwitchRow } from './StripeSwitchRow';
 
-// The owner's hard rule (docs/30): «الدفع الإلكتروني» exists only in the Stripe test app.
+// docs/30: the online payment switch exists only in the Stripe test app.
 const mockFlag = { on: false };
 jest.mock('@/sales-subscribe/payment-link/flag', () => ({
   get STRIPE_FEATURE() {
@@ -70,7 +70,7 @@ test('the test app, an admin: the switch (off by default) saves STRIPE_ENABLED a
   expect(screen.getByText(S.hint)).toBeTruthy();
   await fireEvent(toggle, 'valueChange', true);
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PUT', '/settings/integrations', { values: { STRIPE_ENABLED: 'true' } }));
-  // The chat's «دفع إلكتروني» / «رابط دفع» follow the switch at once.
+  // The chat's payment actions follow the switch at once.
   await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: STRIPE_FEATURE_KEY }));
   const missing = new RegExp(t.integrations.keys.STRIPE_WEBHOOK_SECRET.label);
   expect(await screen.findByText(missing)).toBeTruthy();

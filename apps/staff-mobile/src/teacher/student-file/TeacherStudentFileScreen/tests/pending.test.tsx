@@ -40,7 +40,6 @@ test('this student’s pending reports only, each opening its form', async () =>
   await renderWithQuery(<TeacherStudentFileScreen />);
   expect(await screen.findByText(counted(t.reports.pendingCount, 1))).toBeTruthy();
   expect(screen.queryByText('سلمى')).toBeNull();
-  // The pending row comes first; the log's own row offers the same «اكتب التقرير».
   const [first] = screen.getAllByText(t.reports.open);
   if (!first) throw new Error('no pending row');
   await fireEvent.press(first);

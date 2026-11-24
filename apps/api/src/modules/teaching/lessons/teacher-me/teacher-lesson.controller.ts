@@ -8,10 +8,7 @@ import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { TeacherLessonService } from './teacher-lesson.service';
 
-/**
- * docs/46 C3/C4: the teacher's own cancel and «سأحضر», under self.teacher. Never the admin's
- * /lessons/:id/cancel (lessons.write); 403 on another teacher's lesson.
- */
+/** docs/46 C3/C4: under self.teacher, never the admin cancel route; 403 on another's lesson. */
 @ApiTags('teachers')
 @ApiBearerAuth()
 @Permissions('self.teacher')

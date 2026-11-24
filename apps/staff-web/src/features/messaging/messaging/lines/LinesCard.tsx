@@ -8,11 +8,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { checkLines, linesCheckQuery } from '@/features/messaging/messaging/api';
 import { LineRow } from './LineRow';
 
-/**
- * «خطوط واتساب» (docs/12 §13.10, R-MSG-05): the notifications and chat lines as Meta reports them.
- * Nothing is fetched on mount; «افحص الخطوط» asks the server now. A failed check is a Toast; at
- * rest the card has no role=status / role=alert (the settings page owns those).
- */
+/** Nothing is fetched on mount; at rest the card has no status or alert role. */
 export function LinesCard() {
   const s = t.templates.settings.lines;
   const queryClient = useQueryClient();

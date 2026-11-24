@@ -6,11 +6,7 @@ import { byCurrency, walletMoney } from '@/sales-money/lib/money-text';
 
 const W = t.assistantPortal.wallet;
 
-/**
- * «محفظتي»'s balance: one block per currency (never summed across them). Line 1 «مستحق لك» and the
- * amount, bold and tabular; line 2 «هذا الشهر +X · دُفع لك Y». Nothing yet: «لا رصيد مستحق الآن».
- * Below zero (a commission voided after it was paid): «يُخصم من كشفك القادم» and the amount without a sign.
- */
+/** Never summed across currencies; a negative balance is deducted from the next statement. */
 export function WalletCard({ wallet }: { wallet: Readonly<Record<string, WalletTotals>> }) {
   const { color } = useTheme();
   const rows = byCurrency(wallet);

@@ -3,35 +3,27 @@ import type { MessageStatus } from '@ab/catalog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 
-// Read is the WhatsApp-like blue (--read), the rest the tick grey (--tick); failed is saffron, the
-// «دورك» tone of its row word and the bubble's ring.
+// Failed uses saffron, the same tone as its row word and the bubble's ring.
 const INK: Record<TickTone, string> = { muted: 'text-tick', read: 'text-read', act: 'text-act' };
 
 export interface DeliveryTicksProps {
   status: MessageStatus;
-  /** «أُرسلت … · وصلت … · قُرئت …» (deliveryTitle): the tooltip; else the status word. */
   times?: string;
-  /** In a thread row: its own «لم تُرسل» already says failed, so the ticks carry no word for it. */
+  /** In a thread row the row's own failed word already says it, so the ticks carry none. */
   inList?: boolean;
-  /** The row's error_code: a send that may have gone reads «لم يتأكد الإرسال بعد» (bubbleWord). */
+  /** A send that may have gone reads as unconfirmed rather than failed. */
   errorCode?: string | null;
   className?: string;
 }
 
-// Text needs AA, unlike the glyph: «يدويًا» in the muted text ink, «لم تُرسل» inherits saffron.
+// Text needs AA contrast, unlike the glyph.
 const WORD = {
   failed: { text: t.enums.messageStatus.failed, ink: '' },
   unconfirmed: { text: t.messages.unconfirmedTick, ink: '' },
   manual: { text: t.messages.manualTick, ink: 'text-ink-3' },
 } as const;
 
-/**
- * WhatsApp-style ticks on OUR message (packages/shared ticks.ts): an image named by the status word,
- * the times on hover. As in WhatsApp, delivered vs read is the same two ticks told apart by colour
- * only (docs/07 principle 3 carve-out): the word goes to assistive tech and the hover title. Failed
- * has its own «!» and says «لم تُرسل» (as on mobile), or «لم يتأكد الإرسال بعد» when the send may
- * have gone (bubbleWord, docs/19); sent by hand keeps its short word «يدويًا».
- */
+/** Delivered vs read differ by colour only (docs/07 principle 3 carve-out). */
 export function DeliveryTicks(props: DeliveryTicksProps) {
   const { status, times, inList = false, className, errorCode } = props;
   const kind = messageTicks(status);

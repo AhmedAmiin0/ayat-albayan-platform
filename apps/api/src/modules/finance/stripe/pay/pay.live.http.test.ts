@@ -14,8 +14,7 @@ const HTML = 'text/html,application/xhtml+xml,*/*;q=0.8';
 const NOTICE = 'صفحة دفع تجريبية';
 const LIVE_URL = 'https://checkout.stripe.com/c/pay/cs_live_new';
 
-// Go live (owner 2026-11-01, docs/30): under FEATURE_STRIPE=live only a live key loads, so the
-// family's pages take real cards and never say «صفحة دفع تجريبية».
+// Under FEATURE_STRIPE=live only a live key loads, so no sandbox notice (docs/30).
 describe('the family pages under FEATURE_STRIPE=live', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

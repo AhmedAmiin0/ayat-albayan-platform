@@ -19,7 +19,7 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 
-// docs/12 §13.10: a plain word for the line on each bubble; no «سيصل ردّك عبر …» note any more (owner 2026-10-27).
+// docs/12 §13.10: a plain word for the line on each bubble.
 const CHAT = t.enums.waLine.chat;
 const NOTIFICATIONS = t.enums.waLine.notifications;
 const replyFrom = (word: string) => t.inbox.line.replyFrom.replace('{line}', word);

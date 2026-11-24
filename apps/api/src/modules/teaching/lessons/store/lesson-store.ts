@@ -61,10 +61,7 @@ export class LessonStore {
     if (notice) await this.events.scheduleChanged(notice);
   }
 
-  /**
-   * «عدّل الوقت» (R-SCH-11): edit_lesson_time carries its own audit row. A time edit has no
-   * `changes[]`, so the balance alerts (R-SUB-02) are told explicitly. 409 stale_time on a lost race.
-   */
+  /** R-SCH-11: no changes[], so balance alerts (R-SUB-02) are told explicitly; 409 stale_time. */
   async retime(change: TimeEditChange, asked?: ScheduleChange): Promise<void> {
     const moving = { notice: asked, to: change.to.starts_at, messages: change.messages };
     const { notice, messages } = await this.family(moving);

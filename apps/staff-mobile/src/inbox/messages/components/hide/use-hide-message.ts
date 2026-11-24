@@ -3,10 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@ab/mobile-kit';
 import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
 
-/**
- * «حذف من المنصة» (POST) / «إظهار» (DELETE) on one WhatsApp bubble (owner 2026-10-30). Staff only:
- * nothing goes to WhatsApp. The open chat re-reads, so the placeholder comes from the API.
- */
+/** Staff only: nothing goes to WhatsApp; the placeholder comes from the API on re-read. */
 export function useHideMessage(phone: string) {
   const client = useQueryClient();
   return useMutation({

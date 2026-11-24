@@ -41,7 +41,7 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
   expect(screen.queryByText('https://meet.example.org/salma')).toBeNull();
   await openRow('سلمى');
   expect(screen.getByRole('header', { name: 'سلمى' })).toBeTruthy();
-  // Owner 2026-10-28: any lesson not over yet is hers to move, cancel and (scheduled) confirm: no «للاطلاع فقط».
+  // Any lesson not over yet is hers to move, cancel and confirm, so no read-only note.
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
   expect(screen.getByRole('button', { name: t.sales.lessonActions.reschedule })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.sales.lessonActions.cancel })).toBeTruthy();
@@ -54,12 +54,12 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit, t.editTime.action, t.reports.view]) {
     expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
   }
-  // Owner 2026-10-26: sales see the lesson's link, full, with «انسخ الرابط».
+  // Sales see the lesson's full link with a copy button.
   expect(screen.getByText('https://meet.example.org/salma')).toBeTruthy();
   expect(screen.getByRole('button', { name: t.lessons.copyLink })).toBeTruthy();
   // Any student's name opens their details (owner 2026-10-28).
   expect(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeTruthy();
-  // Not running: no «ادخل الحلقة» in the sheet, and none on the rows (the running one's is in its sheet).
+  // Not running: no join in the sheet, and never on the rows.
   expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();
 });
 

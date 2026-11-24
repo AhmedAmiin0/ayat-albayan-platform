@@ -2,7 +2,7 @@ import type { CrmReportKind } from '@ab/shared';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { AR, localDate } from './render/pdf-text';
 
-/** «AB-0183_2026-09-29_تقرير-الحلقة.pdf»: code, the lesson's local date, reports.pdfFileSuffix. */
+/** Code, the lesson's local date, then reports.pdfFileSuffix. */
 export function reportFileName(input: { code: string; startsAt: Date; tz: string }): string {
   return `${input.code}_${localDate(input.startsAt, input.tz)}_${AR.reports.pdfFileSuffix}.pdf`;
 }
@@ -17,7 +17,7 @@ export interface ReportReadyInput {
   pdfPath: string;
   /** {{3}}: the teacher's display name. */
   teacherName: string;
-  /** {{4}}: the family's «رأيك يهمّنا» link (shortened), else the web origin. */
+  /** The shortened feedback link, else the web origin. */
   feedbackUrl: string;
   /**
    * The lesson's rule is a trial (schedule_rules.package = 'trial'): the CRM's

@@ -50,8 +50,7 @@ describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals
   });
 
   it('every registry key is classified: a new key fails here until it is automatic or sent on an action', () => {
-    // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «أرسل طلب الرأي».
-    // lesson_join_link is both: the reminders job's (settings.meeting_link_auto) is automatic, the admin's send carries created_by.
+    // lesson_join_link is automatic from the reminders job but manual when created_by is set.
     const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'teacher_new_student'];
     // A schedule change a person made (owner 2026-10-30): never held by the automatic switch.
     onAction.push('lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed');

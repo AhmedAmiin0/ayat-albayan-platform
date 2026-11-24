@@ -1,23 +1,24 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "verbatimModuleSyntax": true,
-    "erasableSyntaxOnly": true,
-    "resolveJsonModule": true,
-    "types": ["jest"],
-    "paths": { "@/*": ["./src/*"] }
+    // Mirrors what expo/tsconfig.base (expo 57) sets apart from the root base; re-check on an Expo upgrade.
+    "target": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "module": "preserve",
+    "moduleDetection": "force",
+    "customConditions": ["react-native"],
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": null,
+    "types": ["jest"]
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    // `import x from './x.png'`: the declaration the shared kit's own marks use.
-    "../../packages/mobile-kit/assets/images.d.ts"
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": [
+    "${configDir}/node_modules",
+    "${configDir}/babel.config.js",
+    "${configDir}/metro.config.js",
+    "${configDir}/jest.config.js",
+    "${configDir}/android",
+    "${configDir}/ios"
   ]
 }

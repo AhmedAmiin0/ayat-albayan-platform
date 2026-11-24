@@ -10,9 +10,7 @@ interface JoinActionProps {
   lesson: PortalLesson;
   student: PortalStudent;
   now: Date;
-  /** A schedule row: the small «ادخل» or nothing (no hint line). */
   short?: boolean;
-  /** The room is live: «ادخل الآن» on the card. */
   live?: boolean;
 }
 
@@ -45,10 +43,7 @@ function JoinNow({ lesson, studentId, short, live, ink }: JoinNowProps) {
   );
 }
 
-/**
- * «ادخل الحلقة», only inside the join window (it lights up by itself as the clock ticks); before
- * it, why not (@ab/client-core lessonWait), in the family's words on the student's clock.
- */
+/** Only inside the join window; before it, the reason, on the student's clock. */
 export function JoinAction(props: JoinActionProps) {
   const { lesson, student, now, short = false, live = false } = props;
   const { color } = useTheme();

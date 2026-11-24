@@ -17,12 +17,6 @@ import { useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesTeacherRow } from '@/sales/sales/components/SalesTeacherRow';
 import { TeacherFiltersBar } from '@/sales/sales/components/TeacherFiltersBar';
 
-/**
- * «المعلمون» of the salesperson (web /sales/teachers, master-detail): every active teacher with counts
- * and «في حلقة الآن», searchable and filtered by program and gender; a row opens the teacher's students.
- * The list screens' one compact top (owner 2026-10-28): «المعلمون · 40» (the rows shown) on the title's line,
- * the pill search and the pills 8pt apart, the rows in one inset card.
- */
 export function SalesTeachersScreen() {
   const { color } = useTheme();
   const list = useSalesTeachers();

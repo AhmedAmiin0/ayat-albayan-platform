@@ -13,14 +13,7 @@ import { useViewerTz } from '@/core/lib/clock';
 
 const S = t.assistantPortal.students;
 
-/**
- * One student I brought (web my-student-columns): the readable code, the guardian's phone (owner
- * 2026-10-27), when, whether the first subscription is paid, and my own commission. Never a price or
- * another person's money. In the sales tree a tap opens the student's chat (docs/31 §2: hers
- * when she holds its one seat, else who follows it or «تولَّ المحادثة»): a full screen in
- * (sales-chat), pushed as is (no tab list to anchor). The name, the row's header, opens the
- * student's file in either tree (owner 2026-10-30).
- */
+/** Never a price or another person's money; docs/31 §2 decides which chat a tap opens. */
 export function MyStudentItem({ student }: { student: MyStudentRow }) {
   const tz = useViewerTz();
   const c = student.commission;

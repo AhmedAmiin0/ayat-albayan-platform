@@ -6,7 +6,6 @@ import { PressCard } from '@/ui';
 
 interface ProfileCardProps {
   name: string;
-  /** «ولي أمر» or «طالب · رمز الطالب AB-2041». */
   line: string;
   /** The signed photo URL, else null (the initials), as on the profile page. */
   photo: string | null;
@@ -14,7 +13,6 @@ interface ProfileCardProps {
   seed: string | null;
 }
 
-/** «حسابي»'s head (canvas Account): the avatar, the name and who signed in → the profile page. */
 export function ProfileCard({ name, line, photo, seed }: ProfileCardProps) {
   const { color } = useTheme();
   return (

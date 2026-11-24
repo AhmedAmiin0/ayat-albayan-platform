@@ -10,7 +10,6 @@ export function numberErrorCode(error: unknown): NumberError | null {
   return isNumberError(body.message) ? body.message : null;
 }
 
-/** A failed numbers call in words: the known code, else «حدث خطأ». */
 export function numberErrorText(error: unknown): string {
   const code = numberErrorCode(error);
   return code ? t.numbers.errors[code] : t.numbers.errors.generic;

@@ -20,14 +20,7 @@ function weeksTo(endsOn: string, tz: string, now: Date): number {
   return Math.max(1, Math.ceil((end - now.getTime()) / WEEK));
 }
 
-/**
- * «مدّ الجدول» (owner 2026-11-17), admins and assistants (courses.reschedule; an assistant her own
- * students while the ownership rule holds): the package's lessons with no date yet are booked
- * after the course's planned end on its own days and times. The rules of its latest set end on
- * the new last day and the generator tops each up (RuleExtendService: the clashes are stored on
- * the new lessons, never blocking; audited). Idempotent: once booked, nothing is left to book.
- * No message is sent; the sheet says so.
- */
+/** Clashes are stored, never blocking; idempotent; no message is sent. */
 @Injectable()
 export class CourseExtend {
   constructor(

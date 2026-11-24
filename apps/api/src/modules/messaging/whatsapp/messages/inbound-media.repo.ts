@@ -19,14 +19,13 @@ export type MediaMessage = {
   media_refusal?: string | null;
   /** The file's caption. */
   body: string | null;
-  /** A sent file's name (thread-file-send); «تنزيل» saves under it. */
   media_name?: string | null;
   created_at: string;
   /** The receiving line: its token is the only one that can fetch the media id (null = notifications; calls = the calls number). */
   line: NumberPurpose | null;
   /** Its number (null = not stamped: legacy rows); the old CRM number's history is stamped with it. */
   number?: MediaNumber | null;
-  /** Hidden from the platform («حذف من المنصة»): its file is refused like an unknown message. */
+  /** Its file is refused like an unknown message. */
   hidden_at?: string | null;
   /** Meta's message part ({type, [type]: …}); a «sticker» is never a receipt (receiptMime). */
   interactive_payload?: unknown;

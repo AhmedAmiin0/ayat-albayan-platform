@@ -9,7 +9,7 @@ import { useCallsEnabled } from '@/inbox/thread/calls/state/call-context';
 
 type View = 'threads' | 'leads' | 'calls';
 
-/** The switcher's pills: the chats, then the leads (admin tree) and «المكالمات» (calls on, docs/28). */
+/** Calls appear only when calls are on (docs/28). */
 const views = (has: { leads: boolean; calls: boolean }): FilterPill<View>[] => [
   { value: 'threads', label: t.inbox.title },
   ...(has.leads ? [{ value: 'leads' as const, label: t.nav.leads }] : []),
@@ -27,12 +27,7 @@ function body(view: View, switcher: ReactNode) {
   return view === 'threads' ? <ThreadsList switcher={switcher} /> : <LeadsList switcher={switcher} />;
 }
 
-/**
- * The «المحادثات» tab (R-MOB-02: leads + threads, reply, send a template): every WhatsApp thread
- * first — guardians and teachers included — and the new-leads pipeline one tap away. A role with
- * only one of inbox.read / leads.read gets that list alone, without the switcher. The leads stay in the
- * admin tree: the sales tree's «المحادثات» is the chats alone, as the web /sales/inbox.
- */
+/** R-MOB-02: a role with only inbox.read or leads.read gets that list without the switcher. */
 export function InboxScreen() {
   const can = usePermissions();
   const hasThreads = canOpen(can, 'inbox');

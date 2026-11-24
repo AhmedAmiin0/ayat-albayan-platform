@@ -16,6 +16,10 @@ name: mobile
 # app family + profile production + ota-update (lane L06, owner 2026-11-22): an OTA to the store build, channel
 # and EAS environment production, by hand only (an automatic run or action both is refused), behind the same
 # native-change guard compared with the last production build. runtimeVersion is the native fingerprint.
+# builder github (owner 2026-11-24, docs/09 «Android build on the runner»): the build job runs `eas build --local`
+# on the GitHub runner instead of Expo's servers (their free Android builds can run out for the month). The same
+# profile, EAS environment and remote keystore; the file is uploaded as the run's artifact and tagged like a cloud
+# build, and that tag is how the OTA guard knows the build (native/last-build.mjs). expo (default) is unchanged.
 # Automatic runs (deploy-staging) send no profile: the staff app's preview, or app=family on channel preview.
 # deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/env/deploy-baseline.mjs):
 # a stripe-test run is titled «... stripe-test» and a family run «... family-preview», so neither is ever taken
@@ -48,6 +52,11 @@ on:
         type: choice
         options: [preview, stripe-test, production]
         default: preview
+      builder:
+        description: "Where the Android build runs: expo (EAS cloud, the default) or github (eas build --local on this runner, the file uploaded as the run's artifact)"
+        type: choice
+        options: [expo, github]
+        default: expo
       force_ota:
         description: "I confirm: ship the OTA although a native change was found (the installed app may crash until a new APK is installed)"
         type: boolean
@@ -71,10 +80,13 @@ jobs:
   build:
     if: ${{ inputs.action == 'build-android-apk' || inputs.action == 'both' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: ${{ inputs.builder == 'github' && 120 || 60 }}
     environment: mobile
     outputs:
+      # A runner build has no expo.dev page: the release links its artifact instead.
       eas_url: ${{ steps.eas.outputs.url }}
+      artifact_url: ${{ steps.upload.outputs.artifact-url }}
+      sha256: ${{ steps.runner.outputs.sha256 }}
     steps:
       - name: Develop only
         env:
@@ -118,6 +130,7 @@ jobs:
       # The family app: preview (APK) unless profile production (eas.json production: AAB, environment production).
       - name: EAS build (Android APK or the family AAB of the chosen profile, built on Expo's servers)
         id: eas
+        if: ${{ inputs.builder != 'github' }}
         working-directory: ${{ env.APP_DIR }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
@@ -130,6 +143,58 @@ jobs:
           npx --yes "$EAS_CLI" build --platform android --profile "$PROFILE" --non-interactive 2>&1 | tee "$RUNNER_TEMP/eas-build.log"
           url=$(grep -oE 'https://expo\.dev/accounts/[^[:space:]]+/builds/[0-9a-f-]+' "$RUNNER_TEMP/eas-build.log" | tail -1 || true)
           echo "url=$url" >> "$GITHUB_OUTPUT"
+      # builder github: the runner's own Android SDK (ANDROID_HOME) with Java 17, and room for Gradle.
+      - name: Free disk space for the Android build
+        if: ${{ inputs.builder == 'github' }}
+        run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost && df -h /
+      - uses: actions/setup-java@v5
+        if: ${{ inputs.builder == 'github' }}
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Android SDK (the runner's)
+        if: ${{ inputs.builder == 'github' }}
+        run: |
+          test -d "${ANDROID_HOME:-}" || { echo "::error::the runner has no Android SDK at ANDROID_HOME"; exit 1; }
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
+          java -version
+      # The app template caps the Gradle daemon at 512 MB of metaspace: the release lint ran out and the
+      # daemon hung until the job timed out. GRADLE_USER_HOME's gradle.properties overrides the project's.
+      - name: Gradle memory for the runner build
+        if: ${{ inputs.builder == 'github' }}
+        run: |
+          mkdir -p ~/.gradle
+          {
+            echo 'org.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=2g -Dfile.encoding=UTF-8'
+            echo 'kotlin.daemon.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g'
+          } >> ~/.gradle/gradle.properties
+      # Pulls the profile's EAS environment (values never printed), checks the family store build's API and
+      # Firebase file, builds with the remote keystore, then writes the sha256 and versionCode to the summary.
+      - name: Runner build (eas build --local, the profile's EAS environment and remote keystore)
+        id: runner
+        if: ${{ inputs.builder == 'github' }}
+        working-directory: ${{ env.APP_DIR }}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          APP: ${{ inputs.app || 'staff' }}
+          PROFILE: ${{ inputs.app == 'family' && (inputs.profile == 'production' && 'production' || 'preview') || inputs.profile || 'preview' }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: bash ../../tools/scripts/ci-checks/eas-local-build.sh
+      # The very file the build wrote and the summary hashed: stored as is (no recompression).
+      - name: Upload the runner build
+        id: upload
+        if: ${{ inputs.builder == 'github' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.runner.outputs.artifact }}
+          path: ${{ steps.runner.outputs.file }}
+          retention-days: 30
+          compression-level: 0
+          if-no-files-found: error
+      - name: Remove the pulled EAS environment
+        if: ${{ always() && inputs.builder == 'github' }}
+        run: rm -rf "$RUNNER_TEMP/eas-env" "$APP_DIR/.eas"
 
   ota:
     needs: build
@@ -193,18 +258,24 @@ jobs:
         run: |
           hash=$(npx expo-updates fingerprint:generate --platform android | jq -r .hash)
           echo "Family runtime (fingerprint): \`$hash\`" >> "$GITHUB_STEP_SUMMARY"
-      # APP_DIR (workflow env) tells native-changes.mjs which app to compare; the last build is that app's own.
+      # APP_DIR (workflow env) tells native-changes.mjs which app to compare; the last build is that app's own,
+      # from EAS or from the runner (builder github), whichever is newer. fetch-depth 0 brings the tags.
       - name: Native-change guard (OTA = JavaScript only)
         working-directory: ${{ env.APP_DIR }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           FORCE: ${{ inputs.force_ota }}
+          APP: ${{ inputs.app || 'staff' }}
+          # action both with builder github: this run's runner build, which is not tagged yet.
+          JUST_BUILT: ${{ inputs.action == 'both' && inputs.builder == 'github' && needs.build.result == 'success' && github.sha || '' }}
           PROFILE: ${{ inputs.app == 'family' && (inputs.profile == 'production' && 'production' || 'preview') || inputs.profile || 'preview' }}
         run: |
           test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
-          last=$(npx --yes "$EAS_CLI" build:list --platform android --build-profile "$PROFILE" --status finished --limit 1 --json --non-interactive \
+          eas=$(npx --yes "$EAS_CLI" build:list --platform android --build-profile "$PROFILE" --status finished --limit 1 --json --non-interactive \
             | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const b=JSON.parse(s)[0];console.log(b&&b.gitCommitHash||"")})')
           cd ../..
+          # The newest of the last EAS cloud build and the last runner build (its release tag).
+          last=$(node tools/scripts/ci-checks/native/last-build.mjs "$eas" "$JUST_BUILT")
           if [ -z "$last" ]; then
             echo "::warning::no finished $PROFILE build found, so a native change cannot be ruled out"
             rc=1
@@ -287,6 +358,8 @@ jobs:
           # The family APK: mobile-family-v<version>-b<run> (release-tag.mjs prefixes a non-preview profile).
           PROFILE: ${{ inputs.app == 'family' && 'family' || inputs.profile || 'preview' }}
           EAS_URL: ${{ needs.build.outputs.eas_url }}
+          ARTIFACT_URL: ${{ needs.build.outputs.artifact_url }}
+          SHA256: ${{ needs.build.outputs.sha256 }}
         run: VERSION=$(jq -r .expo.version "$APP_DIR/app.json") node tools/scripts/ci-checks/release-tags/release-tag.mjs
       # The family Google Play bundle: aab-family-production-v<version>-b<run>, never a mobile-… APK tag.
       - name: Tag the AAB
@@ -295,6 +368,8 @@ jobs:
           KIND: aab
           PROFILE: family-production
           EAS_URL: ${{ needs.build.outputs.eas_url }}
+          ARTIFACT_URL: ${{ needs.build.outputs.artifact_url }}
+          SHA256: ${{ needs.build.outputs.sha256 }}
         run: VERSION=$(jq -r .expo.version "$APP_DIR/app.json") node tools/scripts/ci-checks/release-tags/release-tag.mjs
       - name: Tag the OTA
         if: ${{ needs.ota.result == 'success' }}

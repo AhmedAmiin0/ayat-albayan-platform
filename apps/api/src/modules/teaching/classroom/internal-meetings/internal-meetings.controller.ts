@@ -43,10 +43,7 @@ const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
 const identitySchema = z.string().regex(IDENTITY);
 const participantNotFound = () => notFound('participant_not_found');
 
-/**
- * «اجتماع داخلي», staff side: any staff login creates (now or scheduled, with invitees: R-MEET-01/02),
- * lists, joins; the creator or an admin ends it. Scheduling and invitees: MeetingInvitesController.
- */
+/** Internal meetings, staff side (R-MEET-01/02): the creator or an admin ends it. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.write')
@@ -89,7 +86,7 @@ export class InternalMeetingsController {
     await this.routes.meetings.end({ user, id });
   }
 
-  /** «رابط جديد»: a fresh link; the previous one stops working. */
+  /** A fresh link; the previous one stops working. */
   @Post(':id/link')
   @HttpCode(200)
   link(

@@ -7,8 +7,7 @@ const SENT = '2026-10-27T10:00:00.123456+00:00';
 const PORTAL = `/portal/students/${ST}/channel`;
 const reads = (base: string) => `${base}/messages/${M}/reads`;
 
-// ✓✓ and «معلومات الرسالة»: the chat's current members (teacher p-t1, guardian p-g, student p-s,
-// owning assistant p-sa) against their read marks, to the microsecond.
+// Read ticks and message info: current members against their read marks, to the microsecond.
 describe('student channel read state over HTTP', () => {
   let t: App;
   beforeAll(async () => {

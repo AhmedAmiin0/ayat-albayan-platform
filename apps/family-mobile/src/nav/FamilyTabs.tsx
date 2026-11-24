@@ -18,13 +18,7 @@ const ICON: Record<FamilyTab, TabIconName> = {
   account: 'account',
 };
 
-/**
- * The bottom tabs (owner 2026-11-15, 2026-11-16): الرئيسية · الجدول · التقارير · حسابي of the
- * student in view (a student's own, a guardian's only or picked child); «التقارير» waits until
- * that student is known. A guardian of several children with no pick yet goes to «اختر الطالب»
- * first: every tab passes through this layout, and the redirect runs only while the tabs are in
- * focus, so a push or a link to a child, report or package above them still opens.
- */
+/** Picker redirect runs only while tabs are focused, so deep links above them still open. */
 export function FamilyTabs() {
   const pick = useFamilyPick();
   if (pick.state === 'choose') return <Redirect href={PICK_HREF} />;

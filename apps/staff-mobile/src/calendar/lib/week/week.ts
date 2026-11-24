@@ -12,8 +12,7 @@ import {
 } from '@ab/time';
 import { locale } from '@ab/mobile-kit';
 
-// Calendar days for the mobile schedule (R-SCH-01, R-TCH-02): the week runs السبت → الجمعة on the
-// viewer's calendar (docs/34), like the web grid. Dates are local YYYY-MM-DD; pure, unit-tested.
+// R-SCH-01, R-TCH-02: the week runs Saturday to Friday on the viewer's calendar (docs/34); pure.
 
 /**
  * Academy-week math and today's Riyadh day, the web grid's own (shared since docs/27 E6). academy
@@ -60,10 +59,10 @@ const DAY: DateFields = { weekday: 'long', day: 'numeric', month: 'long' };
 const calendarText = (date: string, fields: DateFields) =>
   dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, fields);
 
-/** «السبت 3 أكتوبر». Intl puts «، » after the weekday; the app writes it with a space. */
+/** Intl puts a comma after the weekday; the app writes a space. */
 export function dayLabel(date: string): string {
   return calendarText(date, DAY).replace(/[،,]\s*/, ' ');
 }
 
-/** «3 أكتوبر – 9 أكتوبر»: moved to the kit (the family's slot picker pages weeks too). */
+/** Moved to the kit because the family's slot picker pages weeks too. */
 export { weekLabel } from '@ab/mobile-kit';

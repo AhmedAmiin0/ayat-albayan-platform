@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SubscriptionsService } from '@/modules/finance/subscriptions';
-import { SalesMoneyScope } from '@/modules/sales/sales-money/sales-money.scope';
+import { SalesMoneyScope } from '@/modules/sales/sales-money/shared';
 
 /** Who the assistant ownership rule binds: the sales base role; the admin never. */
 const isAssistant = (user: AuthUser): boolean => user.role === 'sales';

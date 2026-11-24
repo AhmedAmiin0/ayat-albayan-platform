@@ -8,8 +8,7 @@ import { box, editBar, OWN, pickEdit, showChat } from '@/features/messaging/inbo
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
-// Follow-up to #694 (items 4, 6): a sent correction ends only the «تعديل» tap it came from, and
-// gives the box back the draft it held before that tap.
+// A sent correction ends only the edit tap it came from and restores the draft held before it.
 const FIX = message({ id: 'fix', direction: 'outbound', status: 'queued', body: 'تصحيح: six', corrects_id: OWN.id });
 const sendText = (text: string) => {
   fireEvent.change(box(), { target: { value: text } });

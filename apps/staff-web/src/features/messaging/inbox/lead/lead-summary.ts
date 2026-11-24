@@ -6,9 +6,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { qualForm } from './qualification/qualification-form';
 
-// The short aside of a lead thread: what is known about the student at a glance, and the same
-// facts pre-filled into «تسجيل الطالب» (R-LEAD-03, R-STU-02).
-
 export type SummaryRow = { label: string; value: string };
 
 const CITY: Record<string, string | undefined> = t.tz;
@@ -34,7 +31,7 @@ export function leadSummary(lead: InboxLead, clock: Clock): SummaryRow[] {
   return rows.filter((r) => r.value.trim() !== '');
 }
 
-/** «تسجيل الطالب» pre-filled from the lead; the thread's phone is the guardian's. */
+/** The thread's phone is the guardian's. */
 export function registerInitial(lead: InboxLead): Partial<CreateStudentValues> {
   const q = qualForm(lead.qualification);
   return {

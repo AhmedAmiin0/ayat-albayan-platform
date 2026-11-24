@@ -12,12 +12,7 @@ interface RequestInput {
 }
 
 
-/**
- * The family's «اطلب موعدًا آخر» (owner 2026-11-17): a lesson_proposals row requested_by 'family',
- * answered by staff like a teacher's proposal (ProposalDecisionService); the lesson keeps its time
- * until then. «سحب الطلب» withdraws it. The caller (the portal) already decided the lesson is the
- * login's own student's.
- */
+/** A family's reschedule request is answered like a teacher's proposal; time kept until then. */
 @Injectable()
 export class FamilyRequestService {
   constructor(

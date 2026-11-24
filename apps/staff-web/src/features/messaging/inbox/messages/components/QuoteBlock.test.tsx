@@ -10,8 +10,7 @@ import { PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture'
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { QuoteBlock } from './QuoteBlock';
 
-// The quote on top of a bubble, WhatsApp's look (owner 2026-10-31): sender, snippet, icon, thumb,
-// and «رسالة غير متاحة» for a message WhatsApp quoted that we never stored.
+// A quoted message we never stored shows as unavailable.
 vi.mock('@/features/messaging/inbox/messages/lib/jump-to-message', () => ({ jumpToMessage: vi.fn(() => true) }));
 
 const quote = (patch: Partial<MessageQuote> = {}): MessageQuote => ({

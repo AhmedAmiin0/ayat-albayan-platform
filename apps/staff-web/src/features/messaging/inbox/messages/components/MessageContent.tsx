@@ -32,7 +32,6 @@ function ForwardedLabel() {
   );
 }
 
-/** Who sent ours (D4): «أرسلها: سارة» for staff, «رسالة تلقائية» for a job; nothing for theirs or history. */
 export function SenderLine({ message: m }: { message: MessageView }) {
   const line = senderLine(m);
   if (!line) return null;
@@ -52,7 +51,6 @@ export function emptyText(m: Pick<MessageView, 'interactive_payload'>): string {
   return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
 }
 
-/** Why there is nothing to show, and for Meta's 131060 «اطلب إعادة الإرسال» where she may write. */
 function EmptyLine({ message: m }: { message: MessageView }) {
   return (
     <>
@@ -65,11 +63,7 @@ function EmptyLine({ message: m }: { message: MessageView }) {
 const isEmpty = (m: MessageView): boolean => !m.body && !m.media_mime && !m.template_key;
 const hasMedia = (m: MessageView): boolean => Boolean(m.media_mime || m.media_url);
 
-/**
- * What was said: «مُعاد توجيهها», the quote it answers, the template's name, «ضغطة زرّ» on a tapped button,
- * a template's header, the media, the text, its footer, what a quick reply did and what to do now.
- * A message deleted for everyone shows only that; an edited one «تم التعديل» (owner 2026-10-30).
- */
+/** A message deleted for everyone shows only that. */
 /** The caption under the media; none when it is only a PDF's name (on its card, 2026-11-01). */
 const shownCaption = (m: MessageView): string | null => (pdfCaptionIsName(m) ? null : m.body);
 

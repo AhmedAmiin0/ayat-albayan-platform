@@ -34,8 +34,7 @@ declare module '@tanstack/react-router' {
 
 // The inbox's unsent replies and drafts go when the session ends (sign-out, another tab).
 rememberUntilSessionEnd();
-// «تحت الصيانة» (owner 2026-11-21): a lesson room is never covered; the sign-in stays open so an
-// admin can get in while the switch is on.
+// Maintenance never covers a lesson room, and sign-in stays open so an admin can get in.
 const maintenance = {
   staff: true,
   rooms: /^\/(classroom|meeting|join|s|m)\//,

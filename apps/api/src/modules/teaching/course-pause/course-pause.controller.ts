@@ -17,12 +17,7 @@ import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { CoursePausePreviews } from './preview/course-pause.preview';
 import { CoursePauseService } from './course-pause.service';
 
-/**
- * «إيقاف مؤقت» / «استئناف» of a student's course (owner 2026-10-28, docs/11 §7b, docs/16 row 37c). One narrow key,
- * courses.pause (system admin and sales by default, migration 958), for ANY student: the admin's student file and
- * the assistant's «تفاصيل الطالب» call the same routes. 404 student_not_found; 400 date_in_past / invalid_range;
- * 409 already_paused / pause_not_open. A pause queues no message (its lessons' queued reminders are dropped).
- */
+/** Course pause (docs/11 §7b): courses.pause for any student; a pause queues no message. */
 @ApiTags('course-pause')
 @ApiBearerAuth()
 @Controller('students/:id/course-pause')
@@ -49,14 +44,14 @@ export class CoursePauseController {
     return this.previews.preview(id, query);
   }
 
-  /** What «استئناف الدورة» does now: the lessons booked back, the days the package moves. */
+  /** Resume preview: the lessons booked back and the days the package moves. */
   @Get('resume-preview')
   @Permissions('courses.pause')
   resumePreview(@ZodParam('id', z.uuid()) id: string): Promise<CourseResumePreview> {
     return this.previews.resume(id);
   }
 
-  /** `{ fromDate?, untilDate?, reason? }` (Riyadh dates; from defaults to today, until null = until «استئناف»). */
+  /** Riyadh dates; from defaults to today; until null means until resumed. */
   @Post()
   @HttpCode(201)
   @Permissions('courses.pause')
@@ -81,7 +76,7 @@ export class CoursePauseController {
     return this.pauses.setUntil({ studentId: id, body, actor: user });
   }
 
-  /** «استئناف الدورة» now: lessons back from today, the package's dates moved by the paused days. `{ subscriptionId? }`. */
+  /** Resume now: lessons back from today, package dates moved by the paused days. */
   @Post('resume')
   @HttpCode(200)
   @Permissions('courses.pause')

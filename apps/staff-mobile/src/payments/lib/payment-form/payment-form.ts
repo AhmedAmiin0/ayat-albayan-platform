@@ -1,11 +1,11 @@
+import type { PaymentMethod } from '@ab/catalog';
 import {
   countsForMoney,
   owesMore,
   parseAmount,
-  type PaymentMethod,
   type StudentBalanceView,
   type SubscriptionView,
-} from '@ab/shared';
+} from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { type Attachment, withAttachment } from '@/payments/receipts/attachments';
 import type { PaymentInput } from '@/payments/lib/optimistic';
@@ -22,7 +22,7 @@ export interface PaymentDraft {
   daysAgo: number;
   /** Any method but a bank transfer: one optional slip photo. */
   receipt: Receipt | null;
-  /** A bank transfer: «المرفقات», up to 5 (owner 2026-10-12). */
+  /** Bank transfers only, up to 5. */
   attachments: Attachment[];
 }
 

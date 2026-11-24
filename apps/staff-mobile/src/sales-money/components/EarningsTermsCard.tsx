@@ -7,7 +7,7 @@ import { commissionNote, myCommissionText, salaryFrom } from '@/sales-money/lib/
 
 const p = t.assistantPortal.earnings;
 
-/** «شروطي» (web EarningsTerms): my monthly salary and my commission, as the administration set them. Read-only. */
+/** Read-only. */
 export function EarningsTermsCard({ terms }: { terms: AssistantTermsView | null }) {
   const { color } = useTheme();
   const { salary, commission } = terms ?? { salary: null, commission: null };

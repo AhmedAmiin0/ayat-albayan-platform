@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { partPaidText } from './payment-lines';
 
-// Owner 2026-10-28: 81 SAR (90 − 10%), 80 received → still «غير مدفوعة», 1 left.
+// 81 due with 80 received is still unpaid with 1 left.
 describe('partPaidText', () => {
   it('80 of 81 SAR: paid, price, symbol and what is left', () => {
     expect(partPaidText({ paid: 80, price: 81, currency: 'SAR' })).toBe('مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1');

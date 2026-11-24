@@ -19,12 +19,7 @@ import { useSalesLive } from '@/sales/sales/lib/sales-api';
 
 type Row = ReturnType<typeof joinableRows>[number];
 
-/**
- * «الحلقات الجارية الآن» (web /sales/live): every lesson running now in the academy, re-read every
- * minute, with the classroom assistant's row and «ادخل الحلقة» (POST /lessons/:id/room/join lets them
- * in as `assistant`, or as `sales` on their own trial; the web classroom opens in the browser).
- * The count on the title's line and the lessons in one inset card (owner 2026-10-28: one container rule).
- */
+/** Every lesson running now, re-read every minute; join lets them in as assistant. */
 export function SalesLiveScreen() {
   const { color } = useTheme();
   const live = useSalesLive();

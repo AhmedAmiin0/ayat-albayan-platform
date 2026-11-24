@@ -28,14 +28,13 @@ test('rows: name, LTR code, guardian, status word; «يحتاج معلم/ة» on
   await renderWithQuery(<StudentsScreen />);
   expect(await screen.findByText('هدى')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/students?page=1&pageSize=25');
-  // Owner 2026-10-28: the total on the title's line, one header «الطلاب · 3», no separate count line.
+  // The total sits on the title's line, with no separate count line.
   expect(screen.getByRole('header', { name: `${t.nav.students} · 3` })).toBeTruthy();
   expect(screen.queryByText(t.students.count.replace('{n}', '3'))).toBeNull();
   expect(screen.getByText(ltr('AB-0183'))).toBeTruthy();
   expect(screen.getAllByText('أم هدى')).toHaveLength(3);
   // The status pill and the row both say it.
   expect(screen.getAllByText(t.enums.studentStatus.churned)).toHaveLength(2);
-  // هدى (active, no teacher) only: يوسف churned, مريم has a teacher.
   expect(screen.getAllByText(t.alerts.needsTeacher)).toHaveLength(1);
 });
 

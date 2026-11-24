@@ -1,5 +1,4 @@
-// A quote's «انتقل إلى الرسالة الأصلية»: the original bubble scrolled into the log's view, focused
-// and highlighted briefly (data-flash). No smooth scroll under prefers-reduced-motion.
+// No smooth scroll under prefers-reduced-motion.
 
 /** How long the original stays highlighted. */
 export const FLASH_MS = 1500;

@@ -6,13 +6,12 @@ import { ThreadListsDialog } from '@/features/messaging/inbox/lists/components/T
 import { useListsAccess } from './use-lists-access';
 
 export interface ThreadListsAction {
-  /** «القوائم» for the header's «المزيد» (null without inbox.lists or in teacher mode). */
+  /** Null without inbox.lists or in teacher mode. */
   item: ReactNode;
   /** The checklist, outside the menu (it portals; SalesChatFrame keeps it across 900px). */
   dialog: ReactNode;
 }
 
-/** The open chat's «القوائم» entry and its checklist dialog (docs/22 §4), admin and sales. */
 export function useThreadListsAction(phone: string, lists: readonly ChatListRef[] | undefined): ThreadListsAction {
   const access = useListsAccess();
   const [open, setOpen] = useState(false);

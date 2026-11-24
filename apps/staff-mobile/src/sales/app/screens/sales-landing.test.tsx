@@ -3,9 +3,7 @@ import { renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { SalesTabs } from './SalesTabs';
 
-// Where a salesperson lands on sign-in and app open (owner 2026-10-27): the gate swaps in /sales
-// (app/_layout.tsx) and its tabs open on their first visible tab: «اليوم» with self.sales_academy
-// (as «جدول الحلقات»), else «المحادثات». A pushed chat still opens the chat.
+// She lands on today with self.sales_academy, else the inbox; a pushed chat opens the chat.
 let mockHeld: Permission[] = [];
 jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({
   ...jest.requireActual('@ab/mobile-kit/auth/use-permissions'),

@@ -14,7 +14,6 @@ export interface ListChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   pressed: boolean;
 }
 
-/** One chip of the «القوائم» row: a toggle button, pressed while its list is shown. */
 export function ListChip({ pressed, className, ...props }: ListChipProps) {
   return (
     <button

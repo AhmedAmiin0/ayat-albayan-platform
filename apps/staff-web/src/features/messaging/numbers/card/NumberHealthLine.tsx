@@ -8,7 +8,6 @@ import { useClock } from '@ab/web-kit/lib/clock';
 const c = t.numbers.chips;
 const h = t.numbers.health;
 
-/** The last line check: a glyph and «سليم» / «فشل آخر فحص» (+ quality) and when; «لم يُفحص بعد» before any. */
 export function NumberHealthLine({ view }: { view: NumberView }) {
   const clock = useClock();
   if (!view.health || !view.checked_at) {

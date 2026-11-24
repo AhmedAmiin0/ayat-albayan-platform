@@ -1,4 +1,4 @@
-import type { SettingsMetaResponse } from '@ab/shared';
+import type { SettingsMetaResponse } from '@ab/settings';
 import { settings } from '@/ops/shared/fixtures';
 
 export const meta: SettingsMetaResponse = {
@@ -7,7 +7,6 @@ export const meta: SettingsMetaResponse = {
   },
 };
 
-/** GET answers for «القيم»: /auth/me with these permissions, /settings, /config/meta. */
 export const valuesAnswer = (permissions: string[]) => (path: string) =>
   Promise.resolve(
     path === '/auth/me' ? { role: 'admin', permissions } : path === '/config/meta' ? meta : settings,

@@ -5,10 +5,7 @@ import { forAudience, type TemplateView } from '@ab/shared';
 export const audienceOf = (rows: readonly TemplateView[] | undefined, teacher: boolean) =>
   (rows ?? []).filter((row) => forAudience(row.key, teacher));
 
-/**
- * «إعادة فتح المحادثة» (owner 2026-11-14): the reopen choices among this user's approved templates
- * for this chat's audience (the picker's own list, TemplateList), on the chat line only.
- */
+/** Only this user's approved templates for the chat's audience, on the chat line. */
 export function reopenAllowed(
   rows: readonly TemplateView[] | undefined,
   teacher: boolean,

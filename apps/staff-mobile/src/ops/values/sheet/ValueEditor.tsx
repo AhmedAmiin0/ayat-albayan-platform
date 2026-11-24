@@ -1,4 +1,4 @@
-import { settingDef, type SettingKey } from '@ab/shared';
+import { settingDef, type SettingKey } from '@ab/settings';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, Field, FilterPills } from '@ab/mobile-kit';
@@ -11,7 +11,6 @@ interface ValueEditorProps {
   setDraft: (patch: Partial<Draft>) => void;
 }
 
-/** «مفعّل / مغلق» as two 44pt radios (a switch, or a number that can be off). */
 function OnOff({ label, on, set }: { label: string; on: boolean; set: (on: boolean) => void }) {
   const m = t.mobileAdmin.settings;
   return (
@@ -65,7 +64,6 @@ function Box({ valueKey, draft, setDraft }: ValueEditorProps) {
   );
 }
 
-/** The switch label of a number that can be off («احسب الإلغاء المتأخر»), else the row's name. */
 function toggleLabel(key: SettingKey): string {
   const def = settingDef(key);
   const path = def.type === 'int' ? def.toggleLabelKey : undefined;

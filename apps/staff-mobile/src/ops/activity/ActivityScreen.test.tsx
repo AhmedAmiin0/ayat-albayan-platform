@@ -50,17 +50,16 @@ test('rows: action, actor with role, item, Riyadh time and the result', async ()
   expect(screen.getByText(t.activity.error.replace('{status}', '403'))).toBeTruthy();
   expect(screen.getByText(new RegExp(t.activity.unknownUser))).toBeTruthy();
   expect(lastUrl()).toBe('/activity?page=1&pageSize=25');
-  // Owner 2026-10-28: the total on the title's line, «سجل النشاط · 2», no separate count line.
   expect(screen.getByRole('header', { name: `${t.activity.title} · 2` })).toBeTruthy();
 });
 
 test('role and item pills filter on the server and reset to page 1', async () => {
   await renderWithQuery(<ActivityScreen />);
   await screen.findByText(t.activity.actions.expenses.create);
-  // «معلم/ة» is both a role and an item: the role pills come first.
+  // The teacher label is both a role and an item; the role pills come first.
   await fireEvent.press(screen.getAllByRole('tab', { name: t.activity.roles.teacher })[0] as never);
   await waitFor(() => expect(lastUrl()).toBe('/activity?role=teacher&page=1&pageSize=25'));
-  // «طالب» is also a role now (the item pills come last).
+  // The student label is also a role; the item pills come last.
   await fireEvent.press(screen.getAllByRole('tab', { name: t.activity.entities.students }).at(-1) as never);
   await waitFor(() => expect(lastUrl()).toContain('entity=students'));
 });

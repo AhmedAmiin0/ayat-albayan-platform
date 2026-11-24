@@ -17,11 +17,7 @@ const countQuery = (prefix: string, path: string, enabled: boolean) => ({
   select: (p: Total) => p.total,
 });
 
-/**
- * Fihris counts from data the Phase 1 API really returns (docs/07 §7). New leads are the admin's
- * work («دورك»), so that count is saffron and only shown when non-zero.
- * TODO(R-SCH-03, R-REP-05, R-SUB-02): الجدول / التقارير / الاشتراكات counts when those land.
- */
+/** Counts from data the Phase 1 API returns (docs/07 §7); new leads in saffron, only when > 0. */
 export function useNavCounts(can: (p: Permission) => boolean = () => true): NonNullable<AdminNavProps['counts']> {
   useInboxLive(); // a realtime connect / drop re-reads the badge's poll interval
   const [students, teachers, newLeads, applicants, unread] = useQueries({

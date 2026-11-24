@@ -27,6 +27,5 @@ export async function walkToReview(time = '17:00') {
   await fireEvent.press(await screen.findByRole('button', { name: t.booking.mobile.keepTeacher.replace('{teacher}', maryam.display_name_ar) }));
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${time}`) }));
   await screen.findByText(t.trialDate.mobile.newTime);
-  // The clash check has answered: «احجز» is enabled (or the clash notice shows).
   await waitFor(() => expect(screen.queryByText(t.common.loading)).toBeNull());
 }

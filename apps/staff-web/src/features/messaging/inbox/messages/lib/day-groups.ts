@@ -4,7 +4,6 @@ import { viewerZone } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
-// Date separators in the chat log (phones, owner 2026-10-05): «اليوم», «أمس», else the date.
 // Days are the viewer's local days, like every time on the page.
 
 const DAY_DATE = { weekday: 'long', day: 'numeric', month: 'long' } as const;
@@ -24,7 +23,6 @@ interface LogCalls {
 /** «2026-10-01»: the viewer's local day (the browser's zone). */
 const dayKey = (at: Date): string => chatDayKey(at, viewerZone());
 
-/** «اليوم» / «أمس» / «الخميس 1 أكتوبر». */
 export function dayLabel(at: Date, now: Date): string {
   const ago = calendarDaysBetween(dayKey(at), dayKey(now));
   if (ago === 0) return t.inbox.dayToday;

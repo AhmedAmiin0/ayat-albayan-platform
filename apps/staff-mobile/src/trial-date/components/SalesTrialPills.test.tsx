@@ -6,7 +6,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { familyOf, familyThread, KID, KID2, kid } from '@/sales-subscribe/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// The salesperson's family chat: one «موعد تجريبي جديد» for her students with no running subscription.
+// One trial pill for her students with no running subscription.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
@@ -45,7 +45,7 @@ test.each(['active', 'pending_renewal', 'expired'] as StudentStatus[])('%s: no t
   expect(strip.queryByRole('button', { name: new RegExp(`^${t.trialDate.action}`) })).toBeNull();
 });
 
-// Owner 2026-10-29 («Many trial buttons»): one pill, then «لأيّ طالب؟» names each allowed child.
+// One pill, then a sheet names each allowed child.
 test('several of hers: ONE pill; its sheet lists each allowed child and opens the one picked', async () => {
   serve(kid(), kid({ id: KID2, name: 'سلمى', status: 'active' }), kid({ id: 'k3', code: 'AB-0202', name: 'نور', status: 'new' }));
   const strip = await open();

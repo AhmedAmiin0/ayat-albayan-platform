@@ -2,7 +2,6 @@ import { screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { PATH, press, show, stateOf, SUB } from './test-util';
 
-// The open editor: bounds from GET …/lessons-used-before, «حفظ» only for a change.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

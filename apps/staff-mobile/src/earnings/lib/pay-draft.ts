@@ -5,7 +5,7 @@ import { paidAtFor } from '@/core/lib/money/paid-day';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { egp } from './format';
 
-/** What the admin has entered in «سجّل دفعة». The method is not preselected: the receipt says which. */
+/** The admin's payment form entry. The method is not preselected: the receipt says which. */
 export interface PayDraft {
   amountText: string;
   method?: PaymentMethod;
@@ -28,7 +28,10 @@ interface PayCheck {
   errors: { amount?: string; method?: string };
 }
 
-/** The payment to send, or why not. `ceiling` = what the ticked sessions (or the whole balance) still owe. */
+/**
+ * The payment to send, or why not. `ceiling` = what the ticked sessions (or the whole balance)
+ * still owe.
+ */
 export function checkPayDraft(draft: PayDraft, ctx: { ceiling: number; now: Date; earningIds: string[] | undefined }): PayCheck {
   const amount = parseAmount(draft.amountText);
   const problem = amountProblem({ amount, text: draft.amountText, ceiling: ctx.ceiling });

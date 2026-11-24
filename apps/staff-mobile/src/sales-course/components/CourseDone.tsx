@@ -11,7 +11,6 @@ interface CourseDoneProps {
   body: BookingRequest;
   view: SalesCourseView;
   onDone: () => void;
-  /** On to the package's transfer, when the wizard came from «احفظ الاشتراك». */
   transfer?: (() => void) | undefined;
 }
 
