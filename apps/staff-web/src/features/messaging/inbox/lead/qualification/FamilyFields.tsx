@@ -7,9 +7,6 @@ import { cn } from '@ab/web-kit/lib/utils';
 import type { QualFieldsProps } from './QualificationFields';
 import type { QualTextField } from './qualification-form';
 
-// The first registration form's questions that had no field (research-forms 9), with its wording
-// and options, in its order: after «الدولة» the family block, at the end «نوع الحلقة» + notes.
-
 const choice = <T extends string>(list: readonly T[], value: string): T | '' => list.find((x) => x === value) ?? '';
 
 function TextField({ name, label, ...props }: QualFieldsProps & { name: QualTextField; label: string }) {
@@ -29,7 +26,6 @@ function TextField({ name, label, ...props }: QualFieldsProps & { name: QualText
   );
 }
 
-/** «المدينة», «بتملا الاستمارة بصفتك», «اسم ولي الأمر», «صلة القرابة بالطالب», «رقم تواصل بديل». */
 export function FamilyFields(props: QualFieldsProps) {
   const { form, onChange } = props;
   return (
@@ -60,7 +56,6 @@ export function FamilyFields(props: QualFieldsProps) {
   );
 }
 
-/** «نوع الحلقة» (فردي · جماعي) and «ملاحظات أو طلبات خاصة», last as on the form. */
 export function RequestFields({ form, errors, onChange }: QualFieldsProps) {
   return (
     <div className="grid gap-3">

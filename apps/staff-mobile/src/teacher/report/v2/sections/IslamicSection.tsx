@@ -8,7 +8,6 @@ import { Card } from '@/teacher/report/v2/ui/Card';
 import { GradePills } from '@/teacher/report/v2/ui/GradePills';
 import { Pills } from '@/teacher/report/v2/ui/Pills';
 
-/** Islamic studies (attended): «المجال», «موضوع الدرس», «المحفوظ (اختياري)», then the two graded rows. */
 export function IslamicSection({ s }: { s: V2EntryState }) {
   const v2 = t.reports.v2;
   const islamic = s.values.content.islamic;

@@ -9,7 +9,6 @@ interface PrefSwitchRowProps {
 
 const labelStyle = { flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.sm } as const;
 
-/** One «تخصيص» switch: a 56pt row, the label at the start and the native switch at the end. */
 export function PrefSwitchRow({ label, value, onChange }: PrefSwitchRowProps) {
   const { color } = useTheme();
   return (

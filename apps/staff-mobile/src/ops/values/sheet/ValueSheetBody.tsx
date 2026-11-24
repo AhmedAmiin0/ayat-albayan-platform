@@ -19,11 +19,10 @@ interface ValueSheetBodyProps {
   meta: SettingMeta | undefined;
   sheet: ValueSheetState;
   description: SheetDescription;
-  /** «عدّل الوصف»: the sheet switches to the description editor. */
   onDescribe: () => void;
 }
 
-/** The full description, then «عدّل الوصف» when this admin may edit it (docs/26b §2 phone). */
+/** docs/26b §2. */
 function Description({ description, onDescribe }: Pick<ValueSheetBodyProps, 'description' | 'onDescribe'>) {
   return (
     <>
@@ -45,7 +44,7 @@ function SavedText({ valueKey, saved }: { valueKey: SettingKey; saved: unknown }
   );
 }
 
-/** ONE ButtonRow (docs/07 §6 «الأزرار», forms): «احفظ» (primary) at the reading start, «إلغاء» (secondary). */
+/** docs/07 §6: primary at the reading start. */
 function Actions({ sheet }: { sheet: ValueSheetState }) {
   return (
     <ButtonRow>

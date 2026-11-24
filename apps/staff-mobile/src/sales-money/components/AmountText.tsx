@@ -7,7 +7,7 @@ interface AmountTextProps {
   strong?: boolean;
 }
 
-/** «145 ر.س»: tabular digits, the amount isolated, its own currency on every row. */
+/** Tabular digits, amount isolated, its own currency on every row. */
 export function AmountText({ amount, currency, strong = false }: AmountTextProps) {
   const { color } = useTheme();
   return (

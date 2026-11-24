@@ -8,7 +8,6 @@ import { SheetLines } from './SheetLines';
 export interface TeacherPick {
   teacherId: string;
   keep: boolean;
-  /** «المعلم الحالي: …» / «المعلم الجديد: …»: the review names both (owner 2026-11-17). */
   lines: string[];
 }
 
@@ -24,14 +23,12 @@ interface Option {
   display_name_ar: string;
 }
 
-/** «المعلم الحالي: …» (when known) and «المعلم الجديد: …» of the pick. */
 function pickLines(current: Option | undefined, picked: Option | undefined): string[] {
   const c = t.courseActions.teacher;
   const now = current ? [c.reviewCurrent.replace('{name}', current.display_name_ar)] : [];
   return [...now, c.reviewNew.replace('{name}', picked?.display_name_ar ?? '')];
 }
 
-/** «تغيير المعلم»'s first step (owner 2026-10-30): the new teacher, then same or new days. */
 export function TeacherStep({ studentId, currentId, onPick }: TeacherStepProps) {
   const options = useTeacherOptions(studentId);
   const [picked, setPicked] = useState<string | null>(null);

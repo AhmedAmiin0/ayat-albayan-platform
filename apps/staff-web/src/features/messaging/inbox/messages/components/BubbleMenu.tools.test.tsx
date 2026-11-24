@@ -30,7 +30,6 @@ const menu = () => {
   return within(box);
 };
 const menuLabels = () => menu().getAllByRole('button').map((b) => b.textContent);
-/** The menu's «تنزيل» (the PDF card under the bubble has its own). */
 const menuDownload = () => menu().getByRole('button', { name: t.inbox.download.label.replace('{name}', 'خطة الحفظ.pdf') });
 
 beforeEach(() => {

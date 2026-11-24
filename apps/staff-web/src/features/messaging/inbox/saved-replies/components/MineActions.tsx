@@ -6,7 +6,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const S = t.savedReplies;
 
-/** «ردودي»'s «رد جديد» under the list (edit / delete sit on each row: RowActions). */
 export function MineActions({ onAdd }: { onAdd: () => void }) {
   return (
     <Button type="button" size="sm" variant="secondary" onMouseDown={(e) => e.preventDefault()} onClick={onAdd}>
@@ -22,10 +21,7 @@ export interface RowActionsProps {
   onDelete: (reply: SavedReply) => void;
 }
 
-/**
- * One «ردودي» row's own edit and delete, beside its option (never inside it): they act on that row,
- * whatever the highlight (a hover on the way, or a touch that never moves it).
- */
+/** Row actions sit beside the option so they act on that row whatever the highlight. */
 export function RowActions({ reply, onEdit, onDelete }: RowActionsProps) {
   return (
     <span className="flex shrink-0 items-center">

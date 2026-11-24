@@ -15,7 +15,6 @@ function Item({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** «ينتهي في … · المالك … · أُنشئ … · الجمهور …» under the title (board LinkXWebDetail). */
 export function MetaLine({ link }: { link: ShortLinkDetail }) {
   const dates = useLinkDates();
   return (

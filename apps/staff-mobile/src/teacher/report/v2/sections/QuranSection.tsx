@@ -15,10 +15,7 @@ interface Target {
   index: number;
 }
 
-/**
- * The Quran lesson (attended): the three tracks, then «الدرس النظري / التجويد». A new part opens
- * the picker right after the track's last part today, else after the last saved one (entry.memory).
- */
+/** A new part starts after the track's last part today, else after the last saved one. */
 export function QuranSection({ s }: { s: V2EntryState }) {
   const v2 = t.reports.v2;
   const [target, setTarget] = useState<Target | null>(null);

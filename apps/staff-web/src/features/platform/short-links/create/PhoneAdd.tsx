@@ -11,10 +11,7 @@ interface PhoneAddProps {
   onAdd: (e164: string) => void;
 }
 
-/**
- * «أضف رقمًا»: a WhatsApp number that is not on the platform, typed as the gate takes it (the
- * country picker, a whole number pasted with +) and checked as the API checks it.
- */
+/** A WhatsApp number not on the platform, entered and checked the same way as the gate and API. */
 export function PhoneAdd({ onAdd }: PhoneAddProps) {
   const entry = usePhoneEntry();
   const [bad, setBad] = useState(false);

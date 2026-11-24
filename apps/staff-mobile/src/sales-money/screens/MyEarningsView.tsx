@@ -10,11 +10,7 @@ import { MyStatementCard } from '@/sales-money/components/MyStatementCard';
 
 const p = t.assistantPortal.earnings;
 
-/**
- * «الكشوف» of «محفظتي» (web MyEarnings, R-ASST-06), read-only: my terms, this month so far and my monthly
- * statements, every amount in its own currency (never summed across them). The commissions and the
- * balance are «العمولات» (MyWalletView).
- */
+/** R-ASST-06: read-only; amounts in their own currency, never summed across currencies. */
 export function MyEarningsView() {
   const earnings = useMyEarnings();
   const d = earnings.data;

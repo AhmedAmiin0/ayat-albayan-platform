@@ -9,19 +9,11 @@ import { useSeenOnce } from './use-seen-once';
 
 interface PdfCardProps {
   message: MessageView;
-  /** Today's «عرض ملف» (FileView), when page 1 cannot answer (no preview, a failing render…). */
+  /** Used when page 1 cannot render (no preview, a failing render). */
   fallback: ReactNode;
 }
 
-/**
- * A chat PDF like WhatsApp's (owner 2026-10-29, 2026-11-01 «do it like WhatsApp»): the top of page
- * 1, a «PDF» badge, the name and «12 صفحة · PDF · 1.2 ميغابايت», with no click first. Every PDF (a
- * family's, an echo, an import, a forward) asks page 1 once the card has been on screen
- * (useSeenOnce); the API renders it in the ayat-pdf sandbox and keeps it. A click opens the PDF
- * itself in the browser's viewer (a new tab), signed on that click (useOpenPdf). The card holds its
- * size while it waits (an empty strip, aria-busy); a thumb that fails to load (its URL expired in a
- * tab left open) is asked again once, then the strip stays empty.
- */
+/** Page 1 renders in the ayat-pdf sandbox; an expired thumb is retried once, then stays empty. */
 export function PdfCard({ message: m, fallback }: PdfCardProps) {
   const { ref, seen } = useSeenOnce();
   const first = useQuery({ ...threadPdfPageQuery(m.phone_e164, m.id, 1), enabled: seen });

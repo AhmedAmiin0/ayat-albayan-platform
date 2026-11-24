@@ -16,11 +16,11 @@ const S = t.savedReplies;
 export interface AttachmentFieldProps {
   file: DraftFile;
   onChange: (file: DraftFile) => void;
-  /** An upload is running: the dialog's «حفظ» waits for it. */
+  /** An upload is running, so saving waits for it. */
   onBusy: (busy: boolean) => void;
 }
 
-/** «المرفق (اختياري)»: one JPEG, PNG or PDF within the chat's limits, uploaded as soon as it is picked. */
+/** One JPEG, PNG or PDF within the chat's limits, uploaded as soon as it is picked. */
 export function AttachmentField({ file, onChange, onBusy }: AttachmentFieldProps) {
   const input = useRef<HTMLInputElement>(null);
   const maxBytes = useUploadMaxBytes();

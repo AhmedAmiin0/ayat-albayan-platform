@@ -9479,11 +9479,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/files/report-files.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/reports/files/report-files.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 3
@@ -9498,7 +9493,12 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/files/report-files.student-pdf.test.ts": {
+  "src/modules/reporting/reports/files/tests/http.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/files/tests/student-pdf.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -9533,19 +9533,14 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/report-access.ts": {
+  "src/modules/reporting/reports/report-entry.controller.ts": {
     "typescript/consistent-type-imports": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/report-lesson.queries.ts": {
-    "complexity": {
-      "count": 2
+      "count": 3
     },
     "stylistic/max-len": {
+      "count": 2
+    },
+    "ab/zod-inputs": {
       "count": 4
     }
   },
@@ -9553,11 +9548,6 @@
     "typescript/consistent-type-definitions": {
       "count": 4
     },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/reporting/reports/report.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -9587,17 +9577,36 @@
       "count": 7
     }
   },
-  "src/modules/reporting/reports/reports.module.ts": {
+  "src/modules/reporting/reports/shared/report-access.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 1
+    },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.queries.ts": {
+  "src/modules/reporting/reports/shared/report-gate.ts": {
+    "typescript/consistent-type-imports": {
+      "count": 3
+    },
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.service.ts": {
+  "src/modules/reporting/reports/shared/report-lesson.queries.ts": {
+    "complexity": {
+      "count": 2
+    },
+    "stylistic/max-len": {
+      "count": 4
+    }
+  },
+  "src/modules/reporting/reports/shared/reports.queries.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/shared/reports.service.ts": {
     "typescript/consistent-type-imports": {
       "count": 3
     },
@@ -9608,12 +9617,7 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/reports.settings.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/reporting/reports/reports.settings.ts": {
+  "src/modules/reporting/reports/shared/reports.settings.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
     },
@@ -9621,15 +9625,9 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/submit/report-entry.controller.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 3
-    },
+  "src/modules/reporting/reports/shared/tests/settings.test.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/reporting/reports/submit/report-follow-up.ts": {
@@ -9643,16 +9641,6 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/submit/report-form.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/reporting/reports/submit/report-form.mapper.test.ts": {
-    "stylistic/max-len": {
-      "count": 6
-    }
-  },
   "src/modules/reporting/reports/submit/report-form.mapper.ts": {
     "complexity": {
       "count": 1
@@ -9664,29 +9652,11 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/submit/report-gate.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 3
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/submit/report-pdf.queue.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/reporting/reports/submit/report-pdf.queue.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/submit/report-rpc.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -9698,11 +9668,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/submit/report-submit.http.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -9720,11 +9685,6 @@
       "count": 3
     }
   },
-  "src/modules/reporting/reports/submit/submit-plan.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/reports/submit/submit-plan.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2
@@ -9737,6 +9697,36 @@
     },
     "ab/module-boundaries": {
       "count": 2
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/form.http.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/form.mapper.test.ts": {
+    "stylistic/max-len": {
+      "count": 6
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/pdf.queue.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/plan.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/rpc.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/submit/tests/submit.http.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/modules/reporting/reports/teacher-link/teacher-link-files.controller.ts": {
@@ -9769,25 +9759,7 @@
       "count": 3
     }
   },
-  "src/modules/reporting/reports/teacher/teacher-reports.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/teacher/teacher-reports.mapper.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/reporting/reports/teacher/teacher-reports.mapper.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/teacher/teacher-reports.queries.test.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -9814,7 +9786,30 @@
       "count": 3
     }
   },
-  "src/modules/reporting/reports/test-app.ts": {
+  "src/modules/reporting/reports/teacher/tests/http.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/teacher/tests/mapper.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/teacher/tests/queries.test.ts": {
+    "typescript/consistent-type-definitions": {
+      "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/reporting/reports/tests/mapper.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/tests/test-app.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -9831,16 +9826,6 @@
     },
     "ab/zod-inputs": {
       "count": 4
-    }
-  },
-  "src/modules/reporting/reports/v2/report-v2.form.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 7
-    }
-  },
-  "src/modules/reporting/reports/v2/report-v2.mapper.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
@@ -9865,7 +9850,17 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/v2/report-v2.submit.http.test.ts": {
+  "src/modules/reporting/reports/v2/tests/form.http.test.ts": {
+    "stylistic/max-len": {
+      "count": 7
+    }
+  },
+  "src/modules/reporting/reports/v2/tests/mapper.test.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/reporting/reports/v2/tests/submit.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }

@@ -13,11 +13,7 @@ interface TrialDateFlowProps {
   fallback: () => void;
 }
 
-/**
- * Loads the student's trial history first: allowed (no running subscription) → the wizard; a
- * subscriber → the history with «هذا الطالب مشترك…» in place of the action; loading / a failed
- * read → the header over the history's own states.
- */
+/** A subscriber sees the history with the reason in place of the action. */
 export function TrialDateFlow({ studentId, name, program, fallback }: TrialDateFlowProps) {
   const { color } = useTheme();
   const history = useTrialHistory(studentId);

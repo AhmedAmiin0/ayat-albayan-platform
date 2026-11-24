@@ -12,11 +12,6 @@ export interface EditStripProps {
   returnFocus: RefObject<HTMLElement | null>;
 }
 
-/**
- * «تعديل الرسالة» above the box (owner 2026-11-07), as WhatsApp: the original's first line and
- * ✕ (the box gets back its draft from before the edit: usePicks), then one line on what the
- * family gets (a new «تصحيح:» reply). Nothing while no message is being corrected.
- */
 export function EditStrip({ returnFocus }: EditStripProps) {
   const { editing, cancelEdit } = useChatActions();
   if (!editing) return null;

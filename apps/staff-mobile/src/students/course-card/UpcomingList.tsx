@@ -9,17 +9,12 @@ import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { AdminLessonSheet, useLessonAction } from '@/today';
 import { useCardLesson } from './course-card-api';
 
-/** While a tapped lesson is read: «جارٍ التحميل»; gone meanwhile: «غير موجود». */
 function pickLine(read: ReturnType<typeof useCardLesson>): string | null {
   if (read.isFetching) return t.common.loading;
   return read.data === null || read.isError ? t.common.notFound : null;
 }
 
-/**
- * «الحلقات القادمة» of the course (owner 2026-11-17: the admin's file had no lessons list): the
- * day, the time in the viewer's zone and the status chip («مؤكدة» / «للتأكيد»); a tap opens the
- * admin's «تفاصيل الحلقة» with «غيّر الميعاد» and the row's other actions.
- */
+/** Times in the viewer's zone; a tap opens the admin's lesson details. */
 export function UpcomingList({ lessons }: { lessons: readonly CourseCardLesson[] }) {
   const viewer = useViewerClock();
   const [picked, setPicked] = useState<CourseCardLesson | null>(null);

@@ -11,7 +11,6 @@ interface OpenPackagePickerProps {
   onChange: (subscriptionId: string) => void;
 }
 
-/** «الاشتراك»: which of her owed packages the transfer pays, and what is still due on it (part-paid: what was paid of what, owner 2026-10-28). */
 export function OpenPackagePicker({ packages, value, onChange }: OpenPackagePickerProps) {
   const { color } = useTheme();
   const line = (weight: 500 | 600, ink: string) => ({

@@ -14,11 +14,7 @@ const G = t.shortLinks.gate;
 const loginHref = (code: string): string =>
   `/login${defaultStringifySearch({ redirect: `/l/${code}` })}`;
 
-/**
- * Boards LinkXGatePhone / PhoneError: the title hidden, «للمتابعة، أكّد رقمك عبر واتساب», the
- * number (the kit's field, any country), «أرسل الرمز», and the way to sign in instead. While
- * WhatsApp codes cannot be sent, the page says so and only signing in is left.
- */
+/** While WhatsApp codes cannot be sent, the page says so and only signing in is left. */
 export function PhoneScreen({ gate }: { gate: Gate }) {
   const { phone } = gate;
   return (

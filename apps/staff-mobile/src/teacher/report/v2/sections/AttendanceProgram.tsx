@@ -4,7 +4,6 @@ import { t, Section } from '@ab/mobile-kit';
 import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { Pills } from '@/teacher/report/v2/ui/Pills';
 
-/** «الحضور» (a 2×2 grid) and «البرنامج» (three equal buttons), the first two questions. */
 export function AttendanceProgram({ s }: { s: V2EntryState }) {
   const v2 = t.reports.v2;
   const attendances = ATTENDANCES.map((a) => ({ value: a, label: v2.attendance[a] }));

@@ -9,7 +9,7 @@ interface EditAmountButtonProps {
   edit: AmountEditMutation;
 }
 
-/** «تعديل المبلغ» on a payment row; the sheet mounts only while open (a fresh field each time). */
+/** The sheet mounts only while open, so the field starts fresh each time. */
 export function EditAmountButton({ payment, edit }: EditAmountButtonProps) {
   const [open, setOpen] = useState(false);
   const show = () => {

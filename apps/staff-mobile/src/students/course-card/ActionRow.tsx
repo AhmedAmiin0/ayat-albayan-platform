@@ -6,14 +6,10 @@ interface ActionRowProps {
   /** What the action does, under the title (the board's second line). */
   hint: string;
   onPress: () => void;
-  /** «إلغاء الاشتراك»: the title in the danger ink. */
   danger?: boolean;
 }
 
-/**
- * One row of «إجراءات الدورة» (owner 2026-11-17): the action and what it does, 56pt at least,
- * a hairline under it like a list row; the screen reader hears the action, then the hint.
- */
+/** At least 56pt; the screen reader hears the action, then the hint. */
 export function ActionRow({ title, hint, onPress, danger = false }: ActionRowProps) {
   const { color } = useTheme();
   const size = type.size.xs;

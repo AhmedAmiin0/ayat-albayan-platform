@@ -48,7 +48,6 @@ function ThreadItem({ thread: th, now }: { thread: ThreadView; now: Date }) {
   );
 }
 
-/** «أحدث الرسائل»: the newest WhatsApp conversations (GET /threads, first page), each opens in the inbox. */
 export function RecentInbox({ className }: { className?: string }) {
   const threads = useQuery(threadsQuery({ page: 1 }));
   const items = threads.data?.items.slice(0, RECENT_THREADS);

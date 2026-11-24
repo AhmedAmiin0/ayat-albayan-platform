@@ -16,12 +16,7 @@ interface CourseMoveSheetProps {
   onDone: () => void;
 }
 
-/**
- * «تغيير المعلم» / «تغيير موعد الحلقات» from the student's file (owner 2026-10-30): the course (GET
- * …/change), for a teacher change its new teacher first, then the assistant's «تغيير أيام الحلقات»
- * flow against the profile's route (remaining lessons, the clash check; the admin may override
- * with a reason, sales never). Slots are the admin's or the assistant's by the viewer's role.
- */
+/** The admin may override a clash with a reason, sales never. */
 export function CourseMoveSheet({ sub, kind, onClose, onDone }: CourseMoveSheetProps) {
   const admin = useIsAdmin();
   const view = useMoveView({ ...sub, kind });

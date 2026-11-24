@@ -6,9 +6,7 @@ import { StateChip } from '@/features/platform/short-links/shared/LinkChips';
 import type { LinkSection } from '@/features/platform/short-links/shared/link-routes';
 import { ExpiryCell, OwnerCell, ShortUrlCell, TitleCell, UsageCell } from './LinkCells';
 
-// The list's columns (board LinkXWebList): title, short link, users, visitors / limit, expiry,
-// state, and the owner for whoever sees every link (short_links.all). Phones stack each row as a
-// card, where the use and the owner carry a short label («الزيارات 7 من 12», «المالك: …»).
+// The owner column shows only with short_links.all; phones stack each row as a card.
 
 const C = t.shortLinks.list.columns;
 const col = createColumnHelper<DataTableFeatures, ShortLinkRow>();

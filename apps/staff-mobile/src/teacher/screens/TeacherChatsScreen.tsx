@@ -1,10 +1,7 @@
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList';
 import { Screen } from '@ab/mobile-kit';
 
-/**
- * The teacher's «المحادثات» (R-TCH-03, R-MSG-05): the shared thread list in teacher mode — the
- * guardians of the students she teaches and her own chat with the academy, no leads.
- */
+/** Teacher mode (R-TCH-03, R-MSG-05): her students' guardians and the academy chat, no leads. */
 export function TeacherChatsScreen() {
   return (
     <Screen list>

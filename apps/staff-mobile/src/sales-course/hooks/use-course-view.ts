@@ -10,12 +10,7 @@ export interface CourseViewState {
   block: CourseBlock | null;
 }
 
-/**
- * GET /sales/booking/course, with the first bookable view latched while the screen is open: «احجز»
- * refetches the course, and the fresh read (course_exists, the course is hers now) must not swap
- * the wizard's booked panel for that refusal. Only a read fetched since the screen opened latches: a
- * cached or persisted view may be stale (a course booked since, another subscription).
- */
+/** The first fresh bookable view is latched so a later course_exists read cannot replace it. */
 export function useCourseView(studentId: string): CourseViewState {
   const course = useSalesCourse(studentId);
   const [latched, setLatched] = useState<SalesCourseView | null>(null);

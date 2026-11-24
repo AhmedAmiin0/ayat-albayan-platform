@@ -25,10 +25,7 @@ function Loaded({ numbers, parity }: { numbers: NumberView[]; parity: ParityView
   );
 }
 
-/**
- * «الأرقام» on the phone (docs/23 §3 phase 3): the source in use, the parity state and every
- * number with its role, phone, state and last check. Read-only: editing stays on the web.
- */
+/** docs/23 §3 phase 3: read-only, editing stays on the web. */
 export function NumbersList() {
   const numbers = useNumbers();
   const parity = useParity();

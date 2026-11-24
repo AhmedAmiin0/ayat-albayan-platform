@@ -8,7 +8,7 @@ import { paymentBackend, SIGNED } from './testing/flow-backend';
 const m = t.payments.mobile;
 const FIRST = t.payments.attachmentN.replace('{n}', '1');
 const price = subscription().price;
-// «مشترك» is also the student's own status word: count it before paying, so the card's chip is told apart.
+// The subscribed word is also a student status, so count it first to tell the chip apart.
 const seen = { activeWords: 0 };
 
 beforeEach(async () => {
@@ -16,7 +16,6 @@ beforeEach(async () => {
   armCamera();
 });
 
-/** Students → search → the student → «سجّل دفعة» → the amount, bank, and a camera photo in «المرفقات». */
 async function toPaymentForm(backend: ReturnType<typeof paymentBackend>['backend']) {
   const app = await renderApp({ url: '/students', backend });
   await fireEvent.changeText(await screen.findByLabelText(t.students.searchPlaceholder), 'هدى');

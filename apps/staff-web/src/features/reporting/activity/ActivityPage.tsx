@@ -16,7 +16,7 @@ export interface ActivityPageProps {
   onSearch: (next: ListUrlState) => void;
 }
 
-/** «سجل النشاط» (owner, 2026-10-05): every change made through the API, newest first. Admin only. */
+/** Every change made through the API, newest first; admin only. */
 export function ActivityPage({ search, onSearch }: ActivityPageProps) {
   const activity = useQuery(activityQuery(search));
   const data = activity.data;

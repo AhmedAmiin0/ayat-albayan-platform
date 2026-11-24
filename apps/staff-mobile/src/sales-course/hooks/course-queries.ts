@@ -14,10 +14,7 @@ export function useSalesCourse(studentId: string) {
   });
 }
 
-/**
- * POST /sales/booking/check: the whole course's clashes (every week, every day) and the course
- * guard's refusals, before «احجز». Keyed by the body minus its idempotency key; never retried.
- */
+/** Keyed by the body minus its idempotency key; never retried. */
 export function useCourseCheck(body: BookingRequest | null) {
   const key: Partial<BookingRequest> = { ...body };
   delete key.clientRequestId;
@@ -38,12 +35,7 @@ async function saveDraft(body: BookingRequest): Promise<BookingResult | null> {
   return saved.state === 'booked' ? saved.booking : null;
 }
 
-/**
- * «احجز» (R-ASST-01): POST /sales/booking, or in hold mode (unpaid with an open payment link,
- * owner 2026-11-06) the draft kept until the payment (null; booked at once if paid meanwhile),
- * re-sent with the wizard's one clientRequestId on every
- * retry, so a lost reply replays to the first booking (rule 8). The schedule and the course refetch.
- */
+/** R-ASST-01: hold mode keeps a draft until payment; one clientRequestId per wizard (rule 8). */
 export function useBookCourse(hold = false) {
   const client = useQueryClient();
   return useMutation({

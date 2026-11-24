@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { LessonsModule } from '@/modules/teaching/lessons';
-import { ReportsModule } from '@/modules/reporting/reports';
+import {
+  ReportFilesModule,
+  ReportHistoryModule,
+  ReportsSharedModule,
+} from '@/modules/reporting/reports';
 import { TrialDateRepo } from '@/modules/teaching/booking';
 import { SalesModule } from '@/modules/sales/sales';
 import { SalesStudentAttendanceController, StudentAttendanceController } from './attendance/student-attendance.controller';
@@ -22,7 +26,10 @@ import { SalesTeacherOverviewRepo } from './teachers/sales-teacher-overview.repo
 
 /** docs/16 rows 36-37, docs/46 C5: thin; reads and writes are the admin's and teacher's. */
 @Module({
-  imports: [SalesModule, LessonsModule, ReportsModule],
+  imports: [
+    ...[SalesModule, LessonsModule, ReportsSharedModule, ReportFilesModule],
+    ReportHistoryModule,
+  ],
   controllers: [SalesStudentController, SalesLessonActionsController, SalesTeacherOverviewController, SalesStudentAttendanceController,
     StudentAttendanceController, TeacherAttendanceController],
   providers: [SalesStudentScope, SalesStudentRepo, TrialDateRepo, SalesStudentReads, SalesStudentService, LessonServices, SalesLessonActions,

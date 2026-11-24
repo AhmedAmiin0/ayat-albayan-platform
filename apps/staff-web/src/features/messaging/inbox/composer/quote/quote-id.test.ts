@@ -2,8 +2,7 @@ import { afterEach, expect, it } from 'vitest';
 import { clearTabMemories } from '@/features/messaging/inbox/shared/tab-memory';
 import { quotePins } from './quote-id';
 
-// docs/44 BUG7 (review of PR #667): «عرض سعر»'s pinned id lives per chat outside the dialog,
-// is released only by an answer, and a sign-out drops it and anything settling after it.
+// docs/44 BUG7: the quote's pinned id is per chat, released only by an answer, dropped on sign-out.
 
 afterEach(clearTabMemories);
 

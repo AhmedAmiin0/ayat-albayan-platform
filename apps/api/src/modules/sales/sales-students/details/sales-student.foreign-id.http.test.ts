@@ -7,13 +7,13 @@ import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { StorageService } from '@/common/storage/storage.service';
 import { ReportAttachmentsQueries } from '@/modules/reporting/reports/files/report-attachments.queries';
-import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
+import { ReportsQueries } from '@/modules/reporting/reports/shared/reports.queries';
 import {
   REPORT_ID,
   SIBLING_ID,
   STUDENT_ID,
   submittedRow,
-} from '@/modules/reporting/reports/reports.fakes';
+} from '@/modules/reporting/reports/tests/reports.fakes';
 import { verify } from '@/modules/sales/sales/academy/sales-academy.fakes';
 
 const SIGNED = { url: 'https://storage/signed', expires_at: '2026-10-27T16:00:00.000Z' };

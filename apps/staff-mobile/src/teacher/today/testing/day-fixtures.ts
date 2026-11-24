@@ -1,8 +1,7 @@
 import type { PendingReportView } from '@ab/shared';
 import { jana, lesson, yusuf } from '@/today/testing/fixtures';
 
-// «اليوم» test day (docs/48): 1 Oct 2026 at 14:00Z. Times are UTC instants, so the day holds in
-// every zone from UTC to UTC+5.
+// Test day 1 Oct 2026 14:00Z; UTC instants keep the day the same from UTC to UTC+5.
 
 export const NOW = new Date('2026-10-01T14:00:00Z');
 
@@ -12,7 +11,6 @@ export const held = lesson({
   starts_at: '2026-10-01T13:00:00.000Z',
   ends_at: '2026-10-01T13:45:00.000Z',
 });
-/** 17:00Z, ahead, waiting for her «سأحضر», on her own fixed link: the hero. */
 export const later = lesson({
   id: 'later',
   starts_at: '2026-10-01T17:00:00.000Z',
@@ -21,7 +19,6 @@ export const later = lesson({
   platform_classroom: false,
   students: [jana],
 });
-/** 18:30Z, ahead: the one «بقية اليوم» row. */
 export const evening = lesson({
   id: 'evening',
   starts_at: '2026-10-01T18:30:00.000Z',

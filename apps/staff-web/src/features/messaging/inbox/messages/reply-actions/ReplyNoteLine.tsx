@@ -26,11 +26,6 @@ function ActionButton({ message: m, note }: { message: MessageView; note: ReplyN
   );
 }
 
-/**
- * Under a guardian's quick reply (R-SCH-03, owner 2026-10-28): what was done («تم تأكيد حلقة …», «تم
- * تغيير موعد الحلقة») or what to do now: «تغيير الموعد» / «تأكيد الحلقة» for the lesson it refers to
- * (replyLesson). The buttons are secondary, one line each (whitespace-nowrap), wrapping under the text.
- */
 export function ReplyNoteLine({ message: m }: { message: MessageView }) {
   const actions = useReplyActions();
   // The lesson's time in the viewer's zone (docs/34), not the academy's default.

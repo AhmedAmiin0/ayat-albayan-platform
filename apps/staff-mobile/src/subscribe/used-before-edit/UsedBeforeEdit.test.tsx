@@ -3,7 +3,6 @@ import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { press, show, stateOf, SUB } from './test-util';
 
-// «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): when the action shows at all.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

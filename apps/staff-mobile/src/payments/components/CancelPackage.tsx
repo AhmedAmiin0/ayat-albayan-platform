@@ -23,10 +23,7 @@ function cancelErrorText(error: unknown): string {
   return (typeof code === 'string' ? messages[code] : undefined) ?? t.common.error;
 }
 
-/**
- * «إلغاء الباقة» (owner 2026-10-28): a package made by mistake is cancelled, never deleted. The button opens
- * the confirm (what it means, an optional reason); the API refuses a package with money or lessons.
- */
+/** A mistaken package is cancelled, never deleted; the API refuses one with money or lessons. */
 export function CancelPackage({ cancel, stale, onDone }: CancelPackageProps) {
   const client = useQueryClient();
   const { color } = useTheme();
