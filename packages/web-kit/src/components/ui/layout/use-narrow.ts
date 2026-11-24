@@ -1,7 +1,7 @@
 import { useCallback, useSyncExternalStore } from 'react';
 
 const NARROW = '(max-width: 47.99rem)';
-/** Tailwind's `max-sm`: below 640px, where forms open as full-screen sheets (owner, 2026-10-05). */
+/** Tailwind's `max-sm`: below 640px, where forms open as full-screen sheets. */
 const PHONE = '(max-width: 39.99rem)';
 /** Below Tailwind's `shell` (900px): no sidebar fihris, so the open chat takes the whole screen. */
 const BELOW_SHELL = '(max-width: 56.24rem)';

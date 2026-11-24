@@ -3,7 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * Who the room is for. ONE room (ClassroomRoom / LiveRoom / ControlBar) serves the staff pages and
- * the family portal (owner 2026-11-19): the family's extras are switched on here, never forked.
+ * the family portal: the family's extras are switched on here, never forked.
  */
 export type RoomVariant = 'staff' | 'family';
 
