@@ -6,7 +6,7 @@ interface CategoryPickerProps {
   onChange: (value: AuthorCategory) => void;
 }
 
-/** «خدمية» or «تسويقية»: picked from the text (an offer is marketing) until the author picks. */
+/** Guessed from the text (an offer is marketing) until the author picks. */
 export function CategoryPicker({ value, onChange }: CategoryPickerProps) {
   const { color } = useTheme();
   const words = t.templates.author.categories;

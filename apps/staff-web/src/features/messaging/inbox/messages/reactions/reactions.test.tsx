@@ -7,8 +7,7 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog';
 import { emojiLabel } from './ReactionRow';
 
-// «تفاعل» on the web (owner 2026-10-27): the six emoji on top of the bubble's menu, the pill under the
-// bubble. The API is a mock: nothing reaches WhatsApp.
+// The API is a mock: nothing reaches WhatsApp.
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 

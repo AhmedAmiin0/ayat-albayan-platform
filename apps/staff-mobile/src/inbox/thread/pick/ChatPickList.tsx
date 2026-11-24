@@ -17,7 +17,6 @@ interface ChatPickListProps {
   exclude: (thread: ThreadView) => boolean;
   /** What the rows read besides the thread (the picks), so a pick redraws them. */
   extraData?: unknown;
-  /** A line between the search and the list (the forward's «المختار: 2 من 5»). */
   note?: ReactNode;
   testID?: string;
 }

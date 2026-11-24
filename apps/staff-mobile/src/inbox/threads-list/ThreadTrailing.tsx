@@ -21,11 +21,7 @@ export function TurnBadge({ thread: th }: { thread: ThreadView }): ReactNode {
   return th.unread_count > 0 ? <UnreadCount n={th.unread_count} /> : null;
 }
 
-/**
- * Line 1's end as WhatsApp's chat list (owner 2026-10-29): the last message's time (the clock today,
- * «أمس», the weekday, else the date), 12sp ink-3, the accent while the chat has unread messages.
- * `now` is the list's one clock (ThreadsList → useToday).
- */
+/** `now` is the list's one clock (useToday). */
 export function ThreadTime({ thread: th, now }: { thread: ThreadView; now: Date }) {
   const cycle = useClockCycle();
   const { color } = useTheme();

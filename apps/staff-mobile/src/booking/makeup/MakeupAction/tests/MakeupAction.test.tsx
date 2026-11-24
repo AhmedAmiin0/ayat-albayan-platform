@@ -6,7 +6,7 @@ import { MakeupAction } from '@/booking/makeup/MakeupAction/MakeupAction';
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (h: unknown) => mockPush(h) } }));
 
-// «الأربعاء 30 سبتمبر»: three days before the fake now.
+// Three days before the fake now.
 const recent = { starts_at: '2026-09-30T13:00:00.000Z', ends_at: '2026-09-30T13:45:00.000Z' };
 const row = (over: Parameters<typeof lesson>[0]) => lesson({ ...recent, ...over });
 

@@ -10,7 +10,7 @@ interface UnpayConfirmProps {
   onCancel: () => void;
 }
 
-/** «إلغاء الدفع» needs a reason of three letters or more (the API checks it too); the strip keeps what was typed. */
+/** Cancelling a payment needs a reason of three letters or more, which the API also checks. */
 export function UnpayConfirm({ message, busy, onConfirm, onCancel }: UnpayConfirmProps) {
   const { color } = useTheme();
   const [reason, setReason] = useState('');

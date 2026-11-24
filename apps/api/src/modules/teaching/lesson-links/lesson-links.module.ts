@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
-import { ReportsModule } from '@/modules/reporting/reports';
+import { ReportsSharedModule } from '@/modules/reporting/reports';
 import { TeacherJoin } from './join.service';
 import { LegacyReportLinks } from './legacy.service';
 import { LegacyReportLinkController, TeacherJoinController } from './lesson-links.controller';
@@ -15,7 +15,7 @@ import { TeacherLessonLinks } from './teacher-lesson-links';
  * of both button tokens for the reminders and the new-student alert. No short links.
  */
 @Module({
-  imports: [ReportsModule],
+  imports: [ReportsSharedModule],
   controllers: [TeacherJoinController, LegacyReportLinkController],
   providers: [
     RateLimitRepo,

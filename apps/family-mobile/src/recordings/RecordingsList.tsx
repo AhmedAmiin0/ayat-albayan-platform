@@ -9,7 +9,7 @@ interface RecordingsListProps {
   student: PortalStudent;
 }
 
-/** «حلقات يوسف التي تُعقد على Google Meet لا تُسجَّل.», then when a recording shows up here. */
+/** Google Meet lessons are not recorded, so the empty state says so. */
 function Empty({ name }: { name: string }) {
   const { color } = useTheme();
   const note = { fontSize: type.size.sm, color: color.ink3, textAlign: 'center' as const };

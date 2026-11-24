@@ -35,10 +35,7 @@ export function currentRows(rows: readonly KeptRow[], ids: Partial<Record<LineHe
   return rows.flatMap(({ phone_number_id: id, ...row }) => (id !== null && id === ids[row.line] ? [row] : []));
 }
 
-/**
- * public.wa_line_health (migration 20261022000600): the last good «افحص الخطوط» per line, so the
- * number shows without a live Meta call. Never a token or secret. A failed write never fails the check.
- */
+/** Migration 20261022000600: last good check per line; never a secret; write failures ignored. */
 @Injectable()
 export class LineHealthStore {
   private readonly log = new Logger(LineHealthStore.name);

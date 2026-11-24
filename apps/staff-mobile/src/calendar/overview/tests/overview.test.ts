@@ -25,7 +25,7 @@ test('a day: every teacher by name, even with nothing booked; lessons and free g
   ]);
   expect(s?.items).toEqual([]);
   expect(s?.timeOff.map((off) => off.id)).toEqual(['off1']);
-  // عمر's window and gap run past midnight: clipped to the Riyadh day.
+  // A window and gap past midnight are clipped to the Riyadh day.
   expect(o?.items).toEqual([
     {
       kind: 'free',

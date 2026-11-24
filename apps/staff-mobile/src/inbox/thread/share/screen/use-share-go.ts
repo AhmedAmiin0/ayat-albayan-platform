@@ -11,11 +11,7 @@ export type ShareKind = 'text' | 'files';
 
 export const shareKind = (items: SharedItems): ShareKind => (items.files.length > 0 ? 'files' : 'text');
 
-/**
- * What the chooser's button does (docs/38 §mobile 8–11). Text: into the chat's box (never over her
- * draft), then the chat replaces the chooser; staff press send there. Files: one by one, then the
- * chat, or the chooser keeps the failed ones for «إعادة المحاولة» (same ids) and «فتح المحادثة».
- */
+/** docs/38 §mobile 8-11: text never overwrites her draft; failed files retry with the same ids. */
 /** Whether the chooser is still on screen: a send that ends after she left never moves her. */
 function useStillHere() {
   const here = useRef(true);

@@ -2,8 +2,6 @@ import { vi, type Mock } from 'vitest';
 import { detail, message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
-// The chat search tests' chat (test-only): a newest page and an older page behind «رسائل أقدم».
-
 export const PATH = '/threads/%2B966501234567';
 export const id = (n: number) => `b0000000-0000-4000-8000-00000000000${n}`;
 export const NEW = message({ id: id(2), body: 'درس الإسلام اليوم', created_at: '2026-10-02T10:00:00Z' });

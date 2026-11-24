@@ -12,11 +12,11 @@ interface RescheduleSlotsParams {
   to: string;
   /** Grid step in minutes (the edit sheet asks for 15); the API defaults to the duration. */
   stepMin?: number;
-  /** The lesson being edited in place: not a clash with itself («عدّل الوقت»). */
+  /** The lesson being edited is not a clash with itself. */
   excludeLessonId?: string;
   /** The slots route: the admin's GET /booking/slots, or sales' scoped GET /sales/booking/slots (her students only). */
   path?: string;
-  /** Sales' «تغيير الموعد»: the lesson being moved, so its students may be any family's (docs/16 row 37). */
+  /** Sales: the lesson being moved, so its students may be any family's (docs/16 row 37). */
   lessonId?: string;
 }
 
@@ -43,11 +43,7 @@ export function useRescheduleSlots(p: RescheduleSlotsParams) {
   });
 }
 
-/**
- * POST /lessons/:id/reschedule. On success every lesson list (Today, the calendars) refetches:
- * the old lesson closes as «اتغير ميعادها» and the new one waits for the guardian's confirmation,
- * which the API has already queued on WhatsApp.
- */
+/** Every lesson list refetches; the API already queued the guardian's WhatsApp confirmation. */
 export function useReschedule(lessonId: string) {
   const client = useQueryClient();
   return useMutation({

@@ -18,11 +18,7 @@ function Action({ message: m, note }: { message: MessageView; note: ReplyNote })
   return <Button variant="secondary" label={a.reschedule} accessibilityLabel={fill(a.rescheduleLabel, note.when)} onPress={() => openMove(m.id, lesson)} />;
 }
 
-/**
- * Under a guardian's quick reply (R-SCH-03, owner 2026-10-28): what was done («تم تأكيد حلقة …»,
- * «تم تغيير موعد الحلقة») or what to do now, «تغيير الموعد» / «تأكيد الحلقة» for the lesson it refers
- * to (replyLesson), as a secondary button sized to its one-line label.
- */
+/** R-SCH-03. */
 export function ReplyNoteLine({ message: m }: { message: MessageView }) {
   const actions = useReplyActions();
   const small = useSmallText();

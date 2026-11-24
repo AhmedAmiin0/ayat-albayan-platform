@@ -1,5 +1,3 @@
-// The browser side of «نسخ» and «تنزيل» (owner 2026-10-26).
-
 /** Puts `text` on the clipboard; false when the browser refuses (http, old browser, denied). */
 export async function copyText(text: string): Promise<boolean> {
   try {

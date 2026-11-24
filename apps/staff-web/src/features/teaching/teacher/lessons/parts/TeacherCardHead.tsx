@@ -1,4 +1,6 @@
-import { isOpenLesson, lessonWhenAt, type LessonView, subscriptionStatusStyle } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { LessonTags, studentNames, studentTimes } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

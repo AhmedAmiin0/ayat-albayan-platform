@@ -1,4 +1,4 @@
-import type { ReceivablesView } from '@ab/shared';
+import type { ReceivablesView } from '@ab/money';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText, money } from '@ab/mobile-kit';
 import { fxMissingText } from './receivables';

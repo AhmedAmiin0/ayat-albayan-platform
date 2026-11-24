@@ -14,16 +14,12 @@ interface CourseActionsSectionProps {
   studentId: string;
   /** The package; absent or null = the student's current one, as the server answers it. */
   subscriptionId?: string | null | undefined;
-  /**
-   * false: no «تغيير المعلم» / «تغيير موعد الحلقات» (sales' student who is not hers while the
-   * ownership rule holds: the API would refuse not_your_student); «إلغاء الاشتراك» stays.
-   */
+  /** False hides teacher and time changes (the API would refuse not_your_student). */
   moves?: boolean;
   /** The package whose course the moves change (owner 2026-11-06); absent = the package. */
   movesOf?: string | null | undefined;
-  /** «مدّ الجدول» is offered: the card counts lessons without a date (owner 2026-11-17). */
+  /** Offered when the card counts lessons without a date. */
   extend?: boolean;
-  /** The package's rows, before «إلغاء الاشتراك». */
   extra?: ReactNode;
   /** The guardian's phone: the stop's done block opens the chat. */
   chatPhone?: string | undefined;
@@ -47,11 +43,7 @@ const keysOf = (moves: boolean | undefined) => KEYS_OF[moves === false ? 'false'
 
 const isMove = (open: Open): open is CourseMoveKind => open === 'teacher' || open === 'times';
 
-/**
- * «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» / «مدّ الجدول» in the admin's student
- * file and sales' «تفاصيل الطالب» (owner 2026-10-30, 2026-11-17), ANY student, each behind its own
- * key. Nothing without a package or a key but the package's own rows.
- */
+/** Any student, each action behind its own key; nothing without a package or a key. */
 export function CourseActionsSection(props: CourseActionsSectionProps) {
   const { studentId, subscriptionId, movesOf } = props;
   const keys = keysOf(props.moves)(useActionKeys());

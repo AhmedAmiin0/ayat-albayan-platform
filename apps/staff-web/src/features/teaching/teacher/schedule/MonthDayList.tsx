@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { dayMonthLabel } from '@/features/teaching/schedule';
 import { TeacherLessonRow } from '@/features/teaching/teacher/lessons/TeacherLessonRow';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -3,7 +3,6 @@ import { MINE, OTHER, studentsApp } from '@/modules/sales/sales-students/sales-s
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 
-// «العائلة» (owner 2026-11-02): the guardian and the siblings on «تفاصيل الطالب».
 describe('GET /sales/students/:id `family`', () => {
   let t: App;
   beforeAll(async () => {

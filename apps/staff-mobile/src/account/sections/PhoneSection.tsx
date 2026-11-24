@@ -11,10 +11,7 @@ import {
 } from '@ab/mobile-kit';
 import { patchProfile } from '@/account/hooks/account-api';
 
-/**
- * «رقم الهاتف» (R-ACC-02): E.164 typed with its country code (the API normalises and checks it);
- * a change, or removing it, needs the current password.
- */
+/** R-ACC-02: E.164 normalised by the API; changing or removing needs the current password. */
 export function PhoneSection({ profile }: { profile: AccountProfile }) {
   const [phone, setPhone] = useState(profile.phone_e164 ?? '');
   const [password, setPassword] = useState('');

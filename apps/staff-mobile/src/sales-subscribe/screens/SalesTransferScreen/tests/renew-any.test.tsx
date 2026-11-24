@@ -45,7 +45,6 @@ test('not hers: the transfer and the chat receipts carry the chat phone; «إل�
   await waitFor(() => expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({ subscriptionId: SUB, messageId: MSG, phone: CHAT }));
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   await waitFor(() => expect(sent('/sales/payments')[0]?.[2]).toMatchObject({ subscriptionId: SUB, phone: CHAT }));
-  // Done: «احجز أيام الحلقات الآن» for it too (owner 2026-11-01, docs/16 row 38).
   expect(await screen.findByRole('button', { name: m.openMyPayments })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.booking.bookCourseDays })).toBeTruthy();
 });

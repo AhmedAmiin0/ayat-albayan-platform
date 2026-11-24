@@ -1,3 +1,4 @@
+/// <reference types="../../../assets/images.d.ts" />
 import { Animated, Image, View } from 'react-native';
 import { usePulse } from '../motion/use-pulse';
 import { type Palette, type ThemeName, useTheme } from '../../theme';

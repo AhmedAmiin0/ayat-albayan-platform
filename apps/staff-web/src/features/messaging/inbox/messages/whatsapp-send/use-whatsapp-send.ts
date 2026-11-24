@@ -11,7 +11,7 @@ import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { rereadSentChat } from '@/features/messaging/inbox/api/send-cache';
 import { startAppSend } from './whatsapp-send.api';
 
-/** One «أرسل عبر واتساب»: the row, and the tab opened in the click (null: blocked). */
+/** Null tab means the popup was blocked. */
 interface SendVars {
   message: MessageView;
   tab: Window | null;
@@ -41,11 +41,7 @@ function openIn(tab: Window | null, url: string): boolean {
   return tab !== null;
 }
 
-/**
- * «أرسل عبر واتساب» (owner 2026-11-06, docs/19): app-send first (the platform keeps off the row
- * for 10 minutes; nothing is marked sent), then WhatsApp Web. A refused tap closes the blank tab.
- * «افتح واتساب مجددًا» runs the same: the window is extended and WhatsApp opens again.
- */
+/** App-send keeps the platform off the row for 10 minutes and marks nothing sent (docs/19). */
 export function useWhatsAppSend(): (m: MessageView) => void {
   const client = useQueryClient();
   const send = useMutation({
@@ -69,10 +65,7 @@ export function useWhatsAppSend(): (m: MessageView) => void {
 const isRow = (vars: unknown, id: string): boolean =>
   (vars as SendVars | undefined)?.message.id === id;
 
-/**
- * The row's «أرسل عبر واتساب» taps leave the cache once staff answered (sent-manually): an
- * earlier tap's error no longer describes the row, so it stops showing under the line.
- */
+/** After staff answered, an earlier tap's error no longer describes the row. */
 export function clearWhatsAppSend(client: QueryClient, id: string): void {
   const cache = client.getMutationCache();
   const mine = cache.findAll({
@@ -82,7 +75,6 @@ export function clearWhatsAppSend(client: QueryClient, id: string): void {
   for (const m of mine) cache.remove(m);
 }
 
-/** The last «أرسل عبر واتساب» of this row in this session (busy and error only). */
 export function useWhatsAppSendState(id: string): SendState | undefined {
   const states = useMutationState({
     filters: { mutationKey: KEY, predicate: (m) => isRow(m.state.variables, id) },

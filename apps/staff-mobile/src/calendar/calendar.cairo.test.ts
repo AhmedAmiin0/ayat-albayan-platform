@@ -34,9 +34,9 @@ test('the viewer’s midnight follows Cairo’s DST, never a fixed +03:00', () =
 
 test('agenda: a lesson past Riyadh midnight sits under the Cairo viewer’s own day', () => {
   const cairo = agendaDays([pastRiyadhMidnight], SAT, CAIRO);
-  expect(cairo[0]?.lessons.map((l) => l.id)).toEqual(['late']); // السبت, read 23:30
+  expect(cairo[0]?.lessons.map((l) => l.id)).toEqual(['late']);
   const riyadh = agendaDays([pastRiyadhMidnight], SAT, RIYADH);
-  expect(riyadh[1]?.lessons.map((l) => l.id)).toEqual(['late']); // الأحد, read 00:30
+  expect(riyadh[1]?.lessons.map((l) => l.id)).toEqual(['late']);
 });
 
 const overview: ScheduleOverview = {

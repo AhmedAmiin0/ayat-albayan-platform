@@ -4,7 +4,6 @@ import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BOOKING, REQ, setup, SUB, USER } from './course-draft.fakes';
 import { draftRequestId } from './course-draft.rules';
 
-// «اختر أيام الحلقات» before the payment (owner 2026-11-06).
 describe('CourseDrafts', () => {
   it('first save on a held package: a draft, nothing booked, nobody told (no 409)', async () => {
     const t = setup({ held: [true, true] });

@@ -1,5 +1,6 @@
 import type { PlanAction } from '@ab/client-core';
-import { clockOf, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { LessonReportLinks } from '@/features/reporting/reports';
 import { StaffJoinButton } from '@/features/teaching/classroom';
 import { LessonActions, studentNames } from '@/features/teaching/schedule';

@@ -36,15 +36,7 @@ export const actorOf = (user: AuthUser): ChangeActor => ({
   anyStudent: !ownsOnly(user),
 });
 
-/**
- * «تغيير المعلم» and «تغيير موعد الحلقات» from the student's profile (owner 2026-10-30): the same
- * CourseChange as the lesson drawer's «تغيير أيام الحلقات» (the remaining count kept, the conflict
- * check, one transaction, audited), by whoever holds the route's key (an assistant: actorOf). The
- * admin may override a clash with a reason; every other holder never (403 override_not_allowed). A
- * teacher change also moves students.teacher_id (the family channel follows it). Past lessons,
- * reports and earnings are never touched; the calendar sync hears every moved and new lesson
- * through the lessons' outbox triggers (docs/24).
- */
+/** Same CourseChange; only admins override clashes; past lessons, reports, earnings untouched. */
 @Injectable()
 export class ProfileCourse {
   constructor(
@@ -54,7 +46,7 @@ export class ProfileCourse {
     private readonly repo: ProfileCourseRepo,
   ) {}
 
-  /** The course to change, with its current teacher and «من تاريخ»'s default (the next lesson). */
+  /** The default start date is the next lesson. */
   async view(
     studentId: string,
     picked: string | undefined,
@@ -70,6 +62,11 @@ export class ProfileCourse {
       ...view,
       nextLesson: changeEffectiveFrom(upcoming, { tz: view.course.tz, now: new Date() }),
     };
+  }
+
+  /** 403 not_your_student before anything of another assistant's student is read (actorOf). */
+  assertStudent(studentId: string, user: AuthUser): Promise<void> {
+    return this.course.ownsStudent(studentId, actorOf(user));
   }
 
   check(move: Move): Promise<CourseChangeCheck> {

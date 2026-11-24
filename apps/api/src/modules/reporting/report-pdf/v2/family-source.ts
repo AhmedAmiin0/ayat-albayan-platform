@@ -19,15 +19,11 @@ const contentOf = (raw: unknown): ReportContent => {
   return parsed.success ? parsed.data : reportContentSchema.parse({});
 };
 
-/** The later of this lesson's start and now: «الحلقة القادمة» must start after both. */
+/** The next lesson must start after both this lesson's start and now. */
 const nextAfter = (at: { startsAt: string; now: Date }): string =>
   new Date(Math.max(Date.parse(at.startsAt), at.now.getTime())).toISOString();
 
-/**
- * Two small reads (a handful of reports a day): the student's v2 history for the juz progress
- * (v1 reports are never read) and the next booked lesson for «الحلقة القادمة» (a late report or
- * a re-render never names a lesson already past).
- */
+/** v1 reports are never read; a late report or re-render never names a past lesson. */
 export async function loadFamilyExtras(db: Db, report: V2Report, at: { startsAt: string; now: Date }): Promise<FamilyExtras> {
   let history = db
     .from('lesson_reports')

@@ -16,8 +16,7 @@ import type { CourseCardLesson, LessonView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 
-// «الدورة والباقة» (owner 2026-11-17): the card, «مدّ الجدول» and the resume's preview; paths,
-// keys and parsers are @ab/client-core's, shared with web.
+// Paths, keys and parsers are shared with web through @ab/client-core.
 
 /** GET the card: the admin's route or the assistant's (any student). */
 export const useCourseCard = (input: { studentId: string; tree: CardTree }) =>
@@ -39,14 +38,13 @@ export const useCardLesson = (lesson: CourseCardLesson | null) =>
     staleTime: 0,
   });
 
-/** GET «مدّ الجدول»'s preview of the package. */
 export const useExtendPreview = (input: { studentId: string; subscriptionId: string }) =>
   useQuery({
     queryKey: [...courseCardKey(input.studentId), 'extend', input.subscriptionId],
     queryFn: async () => parseExtendPreview(await apiFetch(courseExtendPreviewPath(input))),
   });
 
-/** GET what «استئناف الدورة» does now (only while asking). */
+/** Only fetched while asking. */
 export const useResumePreview = (input: { studentId: string; enabled: boolean }) =>
   useQuery({
     queryKey: [...courseCardKey(input.studentId), 'resume'],
@@ -71,7 +69,7 @@ function useCardRefresh(studentId: string) {
   };
 }
 
-/** POST «مدّ الجدول» { subscriptionId }: idempotent (nothing left, nothing booked). */
+/** Idempotent: with nothing left, nothing is booked. */
 export function useExtendCourse(studentId: string) {
   const refresh = useCardRefresh(studentId);
   return useMutation({

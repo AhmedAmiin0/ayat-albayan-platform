@@ -6,7 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard';
 import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
-// «إلغاء الباقة» on the profile's package card (owner 2026-10-28): a confirm with an optional reason.
+// Confirm with an optional reason.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

@@ -5,11 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useFamilyPick, usePickChild } from '@/features/shell';
 import { ChildSummaryCard } from './ChildSummaryCard';
 
-/**
- * «اختر الطالب» (owner 2026-11-16): one card per child, a guardian who studies first as «أنا»; a
- * card makes the pages that child's (saved in this browser) and goes home. Shown in place of the
- * home until a guardian of several picks (with the hint), and at /children to switch.
- */
+/** Shown instead of home until a guardian of several picks; saved in this browser. */
 export function PickChildPage({ home }: { home: PortalHome }) {
   const navigate = useNavigate();
   const pickChild = usePickChild();

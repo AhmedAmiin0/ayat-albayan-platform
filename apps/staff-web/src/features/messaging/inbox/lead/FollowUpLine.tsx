@@ -34,10 +34,7 @@ export function followUpText(lead: InboxLead, total: number | undefined, clock: 
   return lines;
 }
 
-/**
- * The hamish note of the thread and the per-lead pause (L2). A lead who sent «وقف» opted out of
- * marketing: resuming asks first.
- */
+/** A lead who opted out of marketing by message must be confirmed before resuming. */
 export function FollowUpLine({ lead, onDone }: FollowUpLineProps) {
   const queryClient = useQueryClient();
   const settings = useQuery(settingsQuery);

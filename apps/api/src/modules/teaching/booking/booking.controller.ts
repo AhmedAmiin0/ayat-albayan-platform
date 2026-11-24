@@ -45,7 +45,7 @@ export class BookingController {
     return this.slotsService.slots(query);
   }
 
-  /** «وقت آخر»: the next 14 days of the server clock, inside the teacher hours or not. */
+  /** The next 14 days of the server clock, inside the teacher hours or not. */
   @Get('outside-slots')
   outsideSlots(
     @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,

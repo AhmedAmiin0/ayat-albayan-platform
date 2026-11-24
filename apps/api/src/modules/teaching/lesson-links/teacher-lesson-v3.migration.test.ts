@@ -5,9 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 import { templateButtons } from '@/modules/messaging/whatsapp/messages/wa-json';
 
-// Migration 20261106001300 seeds teacher_lesson_v3 (owner 2026-11-06). No database in unit tests:
-// this pins the SQL to the shared definition, and its buttons to what the sender and «القوالب»
-// read.
+// No database in unit tests: pins the migration SQL to the shared template definition.
 const sql = readFileSync(join(MIGRATIONS_DIR, '20261106001300_teacher_lesson_v3.sql'), 'utf8');
 const jsonAfter = (n: number): unknown => {
   const literals = [...sql.matchAll(/'(\[[^']*\])'::jsonb/g)].map((m) => m[1] ?? '');

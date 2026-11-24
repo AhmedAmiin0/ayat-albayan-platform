@@ -16,11 +16,7 @@ interface TimePickerFieldProps {
   required?: boolean;
 }
 
-/**
- * A time picked on Expo's native time dialog (rule 6, never typed; owner 2026-11-07), shown in
- * «تنسيق الوقت» (12 / 24 h). The picked minute is kept as is (the dialog has no step): the
- * availability check decides whether it is free.
- */
+/** Rule 6, never typed; the minute is kept as is and the availability check decides. */
 export function TimePickerField(props: TimePickerFieldProps) {
   const { label, time, onChange, error, testID = 'time-picker-open', required } = props;
   const cycle = useClockCycle();

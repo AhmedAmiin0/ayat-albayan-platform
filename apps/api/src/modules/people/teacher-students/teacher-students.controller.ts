@@ -7,10 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodQuery } from '@/common/http/zod-inputs';
 import { TeacherStudentsService } from './teacher-students.service';
 
-/**
- * Teacher tab «الطلاب»: my subscribed or my trial students, never both in one list. Scoped by the
- * signed-in profile (no `:id`); the static `me` segment wins over `teachers/:id`.
- */
+/** Never both kinds in one list; the static `me` segment wins over `teachers/:id`. */
 @ApiTags('teachers')
 @ApiBearerAuth()
 @Permissions('self.teacher')

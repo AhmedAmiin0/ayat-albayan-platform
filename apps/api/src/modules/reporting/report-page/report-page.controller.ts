@@ -28,7 +28,7 @@ export class ReportPageController {
     return this.pages.signedIn({ by: 'public', value: publicId }, user);
   }
 
-  /** The apps' «عرض التقرير» from a report list (they hold the report's uuid). */
+  /** The apps hold the report's uuid. */
   @Get('by-report/:id')
   byReportId(
     @ZodParam('id', z.uuid()) id: string,

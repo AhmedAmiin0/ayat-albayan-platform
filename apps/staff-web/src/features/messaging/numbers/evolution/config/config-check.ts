@@ -6,7 +6,7 @@ import type { ConfigDraft, ConfigErrors } from './config-draft';
 
 const c = t.numbers.evolution.config;
 
-/** The schema's own words (evolution-config.ts); any other issue reads «القيمة غير صالحة». */
+/** Any issue other than the schema's own message gets a generic invalid-value text. */
 const messageSchema = z
   .enum(['proxy_host', 'proxy_needed', 'invalid_id', 'invalid'])
   .catch('invalid');

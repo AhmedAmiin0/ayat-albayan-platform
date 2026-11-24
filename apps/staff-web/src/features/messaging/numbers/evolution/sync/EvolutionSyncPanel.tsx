@@ -10,11 +10,10 @@ const s = t.numbers.evolution.sync;
 export interface EvolutionSyncPanelProps {
   view: NumberView;
   evolution: NumberEvolutionView;
-  /** numbers.manage: «مزامنة الآن» and «تحقق» call Evolution, so only managers see them. */
+  /** Both buttons call Evolution, so only numbers.manage sees them. */
   manage: boolean;
 }
 
-/** The last push read back (or the latest press), with «مزامنة الآن» and «تحقق». */
 export function EvolutionSyncPanel({ view, evolution, manage }: EvolutionSyncPanelProps) {
   const sync = useEvolutionSync(view.id);
   return (

@@ -17,8 +17,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
 
-// An academy that requires lesson confirmation (as before 2026-11-02; OFF: the no-confirm test).
-// «Now» Thursday 1 Oct 16:20 Riyadh. Hers: سلمى at 18:00 (mine). Another family's: يوسف at 19:00.
+// An academy that requires lesson confirmation; the no-confirm case has its own test.
 const NOW = new Date('2026-10-01T13:20:00Z');
 const MINE = scheduleLesson({
   id: 'l2', starts_at: '2026-10-01T15:00:00.000Z', ends_at: '2026-10-01T15:45:00.000Z', status: 'scheduled',
@@ -77,7 +76,7 @@ test('while the cancel form is open «تأكيد الحلقة» is hidden: «ت�
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
   expect(screen.getByRole('button', { name: a.confirmCancel })).toBeTruthy();
   expect(screen.queryByRole('button', { name: a.confirm })).toBeNull();
-  // The form's «رجوع» (the screen header's own comes first).
+  // The form's back button; the screen header's own comes first.
   const back = screen.getAllByRole('button', { name: t.common.back }).pop();
   if (!back) throw new Error('no «رجوع»');
   await fireEvent.press(back);

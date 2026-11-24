@@ -8,7 +8,7 @@ import { linkErrorText, minLine, referenceLine } from './link-text';
 
 interface LinkPriceSectionProps {
   quote: UseQueryResult<PaymentLinkQuoteView>;
-  /** «مبلغ مخصص» on: the admin's lowest amount is said too. */
+  /** With a custom amount on, the admin's lowest amount is shown too. */
   custom: boolean;
 }
 

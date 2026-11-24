@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
 import { liveText } from './live-text';
 
-/** A schedule row's live line (canvas RoomXLivePush): «● جارية الآن · المعلم/ة في الغرفة». */
 export function LiveLine({ live }: { live: LiveRoom }) {
   const { color } = useTheme();
   return (

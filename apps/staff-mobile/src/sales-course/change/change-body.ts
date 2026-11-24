@@ -1,8 +1,7 @@
-import { dayTimesKeeping, type CourseChangeRequest, type PrefilledPick } from '@ab/shared';
+import { dayTimesKeeping, type PrefilledPick } from '@ab/shared';
+import type { CourseChangeRequest } from '@ab/schedule';
 
-// «تغيير أيام الحلقات» (owner 2026-10-18): new weekdays and times for the lessons of a running course
-// that have not happened yet. The teacher, the length and the zone stay the course's. Pure. The
-// slot step's first picks are shared changePicks (from the later of changeOpensOn and startsOn).
+// Teacher, length and zone stay the course's; first picks come from changePicks. Pure.
 
 interface ChangeInput {
   subscriptionId: string;
@@ -24,12 +23,7 @@ export function changeRequest({ subscriptionId, picks, tz, requestId, prefilled 
   return { subscriptionId, ...rule, ...(dayTimes.length > 0 ? { dayTimes } : {}), clientRequestId: requestId };
 }
 
-/**
- * The student profile's «تغيير المعلم» / «تغيير موعد الحلقات» (owner 2026-10-30): the same
- * flow against another route, optionally with a new teacher (its slots and the body's
- * teacherId), straight to the review with the course's own days (a teacher change keeping
- * them), and the admin's clash override.
- */
+/** Admin targets may change the teacher and override clashes. */
 export interface ChangeTarget {
   /** POST `${path}/check` and `${path}`. */
   path: string;
@@ -39,7 +33,6 @@ export interface ChangeTarget {
   review?: boolean | undefined;
   /** The admin: a clash may be saved with a reason (override.reason). */
   override?: boolean | undefined;
-  /** Lines the review and the result lead with («المعلم الجديد: …», owner 2026-11-17). */
   lines?: readonly string[] | undefined;
 }
 
@@ -55,7 +48,7 @@ export function withTeacher(
   return { ...body, teacherId: target.teacherId };
 }
 
-/** The admin's «احفظ رغم التعارض»: the body with override.reason; none = the body as it is. */
+/** Without a reason the body is unchanged. */
 export function withOverride(
   body: CourseChangeRequest,
   reason: string | undefined,

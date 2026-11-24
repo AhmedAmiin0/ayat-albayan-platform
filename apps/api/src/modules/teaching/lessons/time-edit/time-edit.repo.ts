@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-/** The one read «عدّل الوقت» needs beyond the lesson itself (service role; the controller guards). */
+/** The one read the time edit needs beyond the lesson (service role; the controller guards). */
 @Injectable()
 export class TimeEditRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

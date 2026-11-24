@@ -8,12 +8,7 @@ import { BackgroundJob } from '@/config/role/background-job';
 
 const MINUTE = 60_000;
 
-/**
- * «تقييم الحلقة» after a lesson (owner 2026-10-05, migration 195). Right after a lesson is marked
- * completed / late (LessonEvents, after the commit), and every 5 minutes as the catch-up sweep over
- * the last 36 h (a missed event, the switch turned on later, the template approved later). Both
- * paths are idempotent through the dedup key lesson_rating:{lesson}:{guardian} (rule 8).
- */
+/** Event plus a 5-minute catch-up over 36 h; idempotent via its dedup key (rule 8). */
 @BackgroundJob({ name: 'lesson-rating' })
 @Injectable()
 export class RatingJob extends TickerJob implements OnModuleInit {

@@ -14,7 +14,7 @@ export interface DeleteListDialogProps {
   onDeleted: () => void;
 }
 
-/** «حذف القائمة» confirm: only the list and its memberships go; never a chat, message, lead or family. */
+/** Deleting removes only the list and its memberships, never a chat, message, lead or family. */
 export function DeleteListDialog({ list, onClose, onDeleted }: DeleteListDialogProps) {
   const queryClient = useQueryClient();
   const remove = useMutation({

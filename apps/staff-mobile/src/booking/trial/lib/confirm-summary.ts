@@ -11,12 +11,11 @@ export type SummaryRow = [label: string, value: string];
 const durations: Record<string, string | undefined> = t.enums.duration;
 const durationText = (min: number) => durations[String(min)] ?? String(min);
 
-/** «من الشات» or «اترفعت من الجهاز»: where the invoice came from. */
 function invoiceLine(invoice: InvoiceDraft): string {
   return invoice.source === 'whatsapp' ? t.booking.invoice.fromChat : t.booking.mobile.invoiceUploaded;
 }
 
-/** The lines «احجز» commits to: the type, who, which parent number, with whom, when (Riyadh + family). */
+/** What booking commits to, with times in Riyadh and the family's zone. */
 export function summary(d: TrialDraft, viewer: ViewerClock): SummaryRow[] {
   const phone = normalizePhone(d.phone);
   const rows: SummaryRow[] = [

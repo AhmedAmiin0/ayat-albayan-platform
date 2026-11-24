@@ -11,17 +11,10 @@ import { callApi } from '@/features/messaging/calls/api/calls-api';
 export interface PermissionDialogProps {
   ask: PermissionAsk;
   onClose: () => void;
-  /** The request went out (the bubble shows in the chat): the provider shows «أُرسل طلب الإذن». */
   onSent: () => void;
 }
 
-/**
- * No permission to call this number yet (docs/28 §3.1): inside the 24 h window «اطلب إذن الاتصال»
- * sends WhatsApp's own permission request; from a calls number (§10) outside its window, the
- * approved template of the settings (or, unset, the button is not offered and the sheet says why).
- * The family's last answer on the calls number shows under it. Nothing is sent until the button is
- * pressed.
- */
+/** Nothing is sent until pressed (docs/28 §3.1); outside the window only an approved template. */
 export function PermissionDialog({ ask: sheet, onClose, onSent }: PermissionDialogProps) {
   const client = useQueryClient();
   const clock = useClock();

@@ -18,7 +18,7 @@ const OUTCOME: Partial<Record<AttendanceKind, PortalOutcome>> = {
   absent: 'absent',
   excused: 'excused',
 };
-/** «حضرها» / «غاب عنها»: an excused absence is still «غاب عنها». */
+/** An excused absence still counts as absent. */
 const LIST: Record<PortalOutcome, PortalHistoryStatus> = {
   attended: 'attended',
   absent: 'absent',

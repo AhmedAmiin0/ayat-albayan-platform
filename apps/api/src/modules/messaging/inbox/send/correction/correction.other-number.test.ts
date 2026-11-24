@@ -7,8 +7,7 @@ import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
 import { target } from './correction.fakes';
 
-// Review of #694 (round 4, item 2): a correction that would leave from another line than its
-// original has no reply context, so the family would get a bare «تصحيح: …» in another chat: 409.
+// A correction from another line than its original has no reply context, so it is refused with 409.
 const NOW = new Date('2026-10-31T10:00:00Z');
 const ORIGINAL = target().id;
 const LINES = {

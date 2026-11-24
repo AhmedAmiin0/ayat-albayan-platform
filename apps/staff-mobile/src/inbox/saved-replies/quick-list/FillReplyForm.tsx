@@ -22,13 +22,7 @@ interface FillReplyFormProps {
 const valueOf = (slot: ReplySlot, typed: Record<string, string>, known: SavedReplyValues): string =>
   typed[slot.key] ?? (slot.kind === 'auto' ? (known[slot.key]?.trim() ?? '') : '');
 
-/**
- * «أكمل الرد» (owner 2026-10-27): one input per blank of the reply, and per placeholder (prefilled),
- * the first one focused; a live preview of the text; «أدرج» puts it in the box (blanks left empty stay
- * as written, to edit there) and «إلغاء» puts nothing. Inputs follow the typed text's direction (a link
- * is LTR). Shown inside the quick-replies sheet's frame (FILL_FRAME): one Modal, swapped content.
- * A name still loading (the profile) fills its input when it arrives, unless already typed over.
- */
+/** Unfilled blanks stay as written; a name that loads late fills its input unless typed over. */
 export function FillReplyForm({ reply, known, onInsert, onCancel }: FillReplyFormProps) {
   const { color } = useTheme();
   const [slots] = useState(() => replySlots(reply.body));

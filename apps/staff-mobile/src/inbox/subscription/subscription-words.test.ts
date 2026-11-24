@@ -19,15 +19,15 @@ test('the badge chip: shape from the shared map, the word from ar.json', () => {
 test('a child: the package and what is left, the due on its own, a chip only when it needs the admin', () => {
   expect(packageText(sub())).toBe(`${t.enums.packageSize['8']} · بقيت حلقتان`);
   expect(packageText(sub({ package_size: null }))).toBe(`${t.pricing.packages.custom.name} · بقيت حلقتان`);
-  expect(packageText(usedUp)).toBe(t.enums.packageSize['8']); // expired: no «فاضل» under «انتهت الباقة»
+  expect(packageText(usedUp)).toBe(t.enums.packageSize['8']);
   expect(packageText(null)).toBe(t.subscriptions.empty);
   expect(dueLine(sub())).toBe(s.due.replace('{amount}', money(120, 'SAR')));
   expect(dueLine(sub({ due_amount: 0 }))).toBeNull();
-  // Part of it came (owner 2026-10-28): what was paid of what, not just «عليه».
+  // A partial payment shows what was paid of the price.
   expect(dueLine(sub({ price: 81, paid_amount: 80, due_amount: 1 }))).toBe(partPaidLine({ paid: 80, price: 81, currency: 'SAR' }));
   expect(childChip(sub())).toEqual({ ...subscriptionStatusStyle.unpaid, label: t.enums.subscriptionStatus.unpaid });
   expect(childChip(sub({ status: 'paused', due_amount: 0 }))?.label).toBe(t.enums.subscriptionStatus.paused);
-  // Paid in full and used up: the DB says unpaid until renewed, the chat must not say «غير مدفوع».
+  // Paid in full and used up stays unpaid in the DB until renewed, but must not read as unpaid.
   expect(childChip(sub({ status: 'unpaid', due_amount: 0, lessons_remaining: 0 }))).toBeNull();
   expect(childChip(null)).toBeNull();
 });
@@ -39,7 +39,6 @@ test('a guardian: the one child whose package ended gets «جدّد الاشتر
     accessibilityLabel: `${s.renew} — يوسف`,
     href: { pathname: '/inbox/subscribe', params: { studentId: CHILD_ID, phone: PHONE, renew: '1' } },
   });
-  // Everyone running: an extra package («اشتراك جديد», as the web).
   expect(subscribeAction({ people: family([running]), phone: PHONE })).toEqual({
     label: t.subscriptions.new,
     accessibilityLabel: `${t.subscriptions.new} — سارة`,
@@ -48,7 +47,7 @@ test('a guardian: the one child whose package ended gets «جدّد الاشتر
 });
 
 test('several children qualify: «لأيّ طالب؟» rows, each with its code and its own new / renew', () => {
-  // Two children named يوسف (the API allows it): the code tells them apart. Both isolated (bidi).
+  // The API allows duplicate child names, so the code tells them apart; both bidi-isolated.
   const twin = child({ id: 'c2', code: 'AB-0184', subscription: null });
   const action = subscribeAction({ people: family([twin, child({ subscription: usedUp })]), phone: PHONE });
   expect(action).toEqual({

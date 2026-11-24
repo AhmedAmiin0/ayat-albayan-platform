@@ -3,8 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadFileQuery } from '@/features/messaging/inbox/api/api';
 
-// Stickers and GIFs in the chat (owner 2026-11-01), signed as the bubble renders (not on a click:
-// a sticker or a GIF is only itself), from the same cache as «عرض».
+// Signed as the bubble renders rather than on click, since a sticker or GIF is only itself.
 
 type Kind = 'sticker' | 'gif';
 
@@ -24,8 +23,7 @@ function Pending({ failed, kind }: { failed: boolean; kind: Kind }) {
   return <div aria-hidden="true" className={size} />;
 }
 
-/** The sticker uncut at 150 px, with no frame and no «تنزيل», as WhatsApp; a GIF plays at once,
- *  muted and looping (WhatsApp sends it as an mp4 video). */
+/** A GIF plays muted and looping because WhatsApp sends it as an mp4 video. */
 export function StickerMedia({ message: m, kind }: { message: MessageView; kind: Kind }) {
   const file = useQuery(threadFileQuery(m.phone_e164, m.id));
   if (!file.data) return <Pending failed={file.isError} kind={kind} />;

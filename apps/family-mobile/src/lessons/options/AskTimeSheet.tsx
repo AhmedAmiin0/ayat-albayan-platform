@@ -28,11 +28,7 @@ interface AskTimeSheetProps {
   onSend: (ask: { startsAt: string; note: string }) => void;
 }
 
-/**
- * «اطلب موعدًا آخر» (canvas LessonXReschedule): the staff move sheet's frame and slot picker on
- * the student's clock — the teacher's free starts of a week — a note for the academy, and «أرسل
- * الطلب». The lesson keeps its time until the academy answers.
- */
+/** The lesson keeps its time until the academy answers. */
 export function AskTimeSheet(props: AskTimeSheetProps) {
   return (
     <RescheduleFrame open={props.open} onClose={props.onClose} title={t.portal.actions.request}>

@@ -19,10 +19,7 @@ interface DescriptionAudit {
 
 const json = (v: unknown): Json => (v === undefined ? null : (v as Json));
 
-/**
- * The audit rows of «القيم» writes: the same entity as PATCH /settings ('settings', the nil id). A value
- * is action 'update' with that key's before/after; a description is 'describe:<key>'.
- */
+/** Audited as 'settings' (nil id): a value is 'update', a description 'describe:<key>'. */
 @Injectable()
 export class ConfigEntriesAudit {
   constructor(private readonly audit: AuditService) {}

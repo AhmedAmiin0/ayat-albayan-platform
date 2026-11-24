@@ -26,11 +26,11 @@ const gridQuery = z.object({
   studentIds: idList.optional(),
   /** Grid step; defaults to the duration. TODO(R-SCH-06): owner to pick 15 / 30 / duration. */
   stepMin: z.coerce.number().int().min(5).max(180).optional(),
-  /** «عدّل الوقت»: this lesson is not busy against itself when it is moved or resized in place. */
+  /** The lesson is not busy against itself when moved or resized in place. */
   excludeLessonId: z.uuid().optional(),
-  /** «تغيير أيام الحلقات»: this course's lessons (of `studentIds` only) are not busy: they move. */
+  /** This course's lessons are not busy since they move. */
   excludeCourse: z.uuid().optional(),
-  /** Sales' «تغيير الموعد»: the lesson she moves; its students may be any family's (read by /sales/booking/slots, ignored elsewhere). */
+  /** Its students may be any family's; read by /sales/booking/slots only. */
   lessonId: z.uuid().optional(),
 });
 
@@ -39,7 +39,7 @@ export const slotsQuerySchema = gridQuery
   .extend({ from: instant, to: instant })
   .refine((q) => Date.parse(q.from) < Date.parse(q.to), { message: 'from_before_to', path: ['to'] });
 
-/** GET /booking/outside-slots («وقت آخر»): no from/to, the server counts 14 days from its own now. */
+/** The server counts 14 days from its own now. */
 export const outsideSlotsQuerySchema = gridQuery;
 
 /** GET /booking/makeup-candidates?studentId (R-SCH-10). */

@@ -6,7 +6,7 @@ import { weekLabel } from '@/calendar';
 import { t, BackButton, ErrorState, Screen, ScreenHeader, Section, useNow } from '@ab/mobile-kit';
 import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { useSummary, useWork, weekRange } from '@/ops/dashboard/dashboard-queries';
-import type { WorkTab } from '@ab/shared';
+import type { WorkTab } from '@ab/money';
 import { kpisOf } from '@/ops/dashboard/kpis';
 import { KpiTile } from '@/ops/dashboard/KpiTile';
 import { WorkPanel } from '@/ops/dashboard/WorkPanel';
@@ -14,11 +14,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 const back = () => backWithin('/more');
 
-/**
- * «لوحة المتابعة» (R-RPT-01, R-RPT-02): the web's KPI strip for the current Riyadh week, then the
- * queue behind it. A tile with work behind it picks the list below. No charts (the web has them).
- * Offline the saved numbers stay with their «آخر تحديث».
- */
+/** R-RPT-01, R-RPT-02: the current Riyadh week; no charts; offline keeps saved numbers. */
 export function DashboardScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();

@@ -9,19 +9,13 @@ import { CommissionEntry } from './CommissionEntry';
 import { WalletCard } from './WalletCard';
 
 const W = t.assistantPortal.wallet;
-/** Both «محفظتي» queries (earnings and the commissions list): one invalidation refreshes them. */
+/** One shared prefix so one invalidation refreshes both queries. */
 const MINE = ['sales', 'me'] as const;
 
 const keyOf = (c: MyCommissionRow) => c.id;
 const renderEntry = ({ item }: { item: MyCommissionRow }) => <CommissionEntry entry={item} />;
 
-/**
- * «العمولات» of «محفظتي» (owner 2026-10-29, web MyWallet): the balance per currency, then my commissions
- * newest first, 20 a page. A new «عمولة جديدة» on the bell refreshes both (useBellSignal: no extra
- * request), so does a pull; coming back to the screen or the app refetches as every query does. Once the
- * rows are in, the balance has its own spinner and retry (never rows under a blank header); before that the
- * list's one spinner or error stands for both, and its retry reloads both.
- */
+/** The bell's new commission refreshes both with no extra request (useBellSignal). */
 export function MyWalletView() {
   const earnings = useMyEarnings();
   const list = usePagedList<MyCommissionRow>({ path: '/sales/me/commissions', pageSize: 20 });

@@ -1,4 +1,4 @@
-import { teacherCancelSchema } from '@ab/shared';
+import { teacherCancelSchema } from '@ab/schedule';
 import { useId, useState, type SubmitEvent } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';

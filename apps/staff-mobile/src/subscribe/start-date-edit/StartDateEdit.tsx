@@ -14,11 +14,7 @@ interface StartDateEditProps {
 
 type Mode = 'closed' | 'open' | 'saved';
 
-/**
- * «تعديل تاريخ البدء» (owner 2026-11-03) on the student's current package, beside
- * «تعديل عدد الحلقات المستخدمة»: only with subscriptions.edit_terms (never
- * subscriptions.set_start_date alone), never on a cancelled package.
- */
+/** Only with subscriptions.edit_terms (not set_start_date alone), never on a cancelled package. */
 export function StartDateEdit({ sub, stale }: StartDateEditProps) {
   const [mode, setMode] = useState<Mode>('closed');
   const canEdit = useHolds('subscriptions.edit_terms') && sub.status !== 'cancelled';

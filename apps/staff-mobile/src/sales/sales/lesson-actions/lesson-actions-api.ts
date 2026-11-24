@@ -10,18 +10,13 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend, pathKey } from '@ab/mobile-kit';
 
-/**
- * May she move or cancel this lesson (docs/16 row 37)? It must be open, not over and have a student,
- * and she must hold the key. ANY student's lesson, hers or another family's, a group for all its
- * students (owner 2026-10-28). The API checks every one of these again. «تأكيد الحلقة» (row 37b, also
- * any lesson) is `canSalesConfirm` from @ab/shared.
- */
+/** Any open, not-over lesson with a student and her key (docs/16 row 37); the API re-checks. */
 export function canChangeLesson(lesson: SalesScheduleLesson, input: { now: Date; can: (key: 'lessons.reschedule' | 'lessons.cancel') => boolean }) {
   const ok = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime() && lesson.students.length > 0;
   return { reschedule: ok && input.can('lessons.reschedule'), cancel: ok && input.can('lessons.cancel') };
 }
 
-/** «جدول الحلقات» and «اليوم» read the same day query, «تفاصيل الطالب» its «الجدول»: refetch both after a change. */
+/** Schedule, today and student details share the day query, so refetch both after a change. */
 const useRefreshSchedule = () => {
   const client = useQueryClient();
   return () =>
@@ -50,7 +45,7 @@ export function useSalesConfirm(lessonId: string) {
   });
 }
 
-/** POST /sales/lessons/:id/cancel { reason? }: this lesson only, «ألغتها الإدارة», no message to the family. */
+/** This lesson only, cancelled by the academy, with no message to the family. */
 export function useSalesCancel(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({
@@ -59,7 +54,6 @@ export function useSalesCancel(lessonId: string) {
   });
 }
 
-/** POST /sales/lessons/:id/correct { to } (owner 2026-11-03): «تصحيح حالة الحلقة». */
 export function useSalesCorrect(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({

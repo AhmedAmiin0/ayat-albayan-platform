@@ -39,10 +39,7 @@ export class LeadProfileService {
     return updated;
   }
 
-  /**
-   * R-LEAD-05: pause clears next_follow_up_at; resume recomputes it from the follow_up_slots hours. The pause is
-   * the admin's (follow_up_paused_by); a lead's own «وقف» is recorded as theirs by the webhook.
-   */
+  /** R-LEAD-05: pause clears next_follow_up_at, resume recomputes it from follow_up_slots. */
   async followUp({ id, patch, actorId }: LeadPatch<LeadFollowUp>): Promise<LeadRow> {
     const lead = await this.find(id);
     const hours = await this.followUpHours();

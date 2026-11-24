@@ -3,7 +3,6 @@ import { AppText, Avatar, raisedCard, shape, type, useTheme } from '@ab/mobile-k
 
 interface ProfileHeroProps {
   name: string;
-  /** «ولي أمر» or «طالب · رمز الطالب AB-2041». */
   line: string;
   /** The signed photo URL, else null (the initials). */
   photo: string | null;

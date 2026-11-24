@@ -18,18 +18,7 @@ import { useChoiceRows, useThreadList } from '@/inbox/threads-list/use-thread-li
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { useToday } from '@/core/lib/time/use-today';
 
-/**
- * «المحادثات» (R-MOB-02): every WhatsApp thread — a guardian's reschedule request or a teacher's
- * «هتأخر» is found here, not only through its push. Tap → the thread (reply, send a template).
- * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags. The admin and
- * sales (the same tabs) start a chat by number: «محادثة جديدة». Rows carry no tags (owner 2026-11-06),
- * only the family's avatar ring; both trees filter by «بانتظار ردّك», the lead stage and
- * the academy's chat lists «القوائم» (docs/22); a teacher gets none of them.
- * The top is compact as WhatsApp's (owner 2026-10-27, «This topbar takes alot of space»): a one-line
- * h2 title with its icon actions, a pill search, ONE chip row (All · Unread · Waiting · stages · lists · ＋), 8pt apart.
- * «الرسائل» under the chats (docs/37): the messages holding the words, from 3 characters; no
- * «no chats» line while message hits show.
- */
+/** R-MOB-02, R-TCH-03: a teacher gets only her own threads and no filters; docs/22, docs/37. */
 const keyOf = (th: ThreadView) => th.phone_e164;
 
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {

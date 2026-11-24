@@ -4,7 +4,6 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { balance, profile, quote, saved } from '@/subscribe/fixtures';
 import { SubscribeScreen } from '@/subscribe/SubscribeScreen/SubscribeScreen';
 
-// «حلقات مستخدمة من الباقة» (owner 2026-10-28): the admin's package from a first day already past.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

@@ -10,7 +10,7 @@ export interface SalesLessonRow {
   id: string;
   starts_at: string;
   ends_at: string;
-  /** «افتح الحلقة الآن» (migration 190): widens joinable_window. */
+  /** Migration 190: widens joinable_window. */
   room_opened_at?: string | null;
   status: LessonStatus;
   teacher: { display_name_ar: string } | null;

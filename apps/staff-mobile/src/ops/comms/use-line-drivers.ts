@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem } from '@ab/shared';
+import type { IntegrationConfigItem } from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { STRIPE_FEATURE_KEY } from '@/core/lib/stripe-flag';
@@ -18,10 +18,7 @@ export function useIntegrations(enabled = true) {
   });
 }
 
-/**
- * PUT plain values, the web «التكاملات» save (a line's driver, «الدفع الإلكتروني»): the API checks
- * and audits them (key names only); the answer (every item) replaces the cached list.
- */
+/** The API checks and audits key names only; the response replaces the cached list. */
 export function useSaveIntegrationValues() {
   const qc = useQueryClient();
   return useMutation({
@@ -29,7 +26,7 @@ export function useSaveIntegrationValues() {
       apiSend<IntegrationConfigItem[]>('PUT', PATH, body),
     onSuccess: (items) => {
       qc.setQueryData(pathKey(PATH), items);
-      // «الدفع الإلكتروني» shows or hides the payment buttons now, not after use-stripe.ts's 5 min.
+      // Invalidated now so payment buttons update without waiting for use-stripe's 5 min.
       void qc.invalidateQueries({ queryKey: STRIPE_FEATURE_KEY });
     },
   });

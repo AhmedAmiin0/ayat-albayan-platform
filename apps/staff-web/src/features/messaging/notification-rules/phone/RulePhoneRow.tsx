@@ -11,17 +11,12 @@ import { onOffWord } from '@/features/messaging/notification-rules/switch/RuleSw
 const r = t.notificationRules;
 const cell = 'border-b border-rule px-2 py-2.5 text-start align-top';
 
-/** The switch column's word on a phone: «لا يمكن إيقافه», or «مفعّل» / «مغلق». */
 function switchWord(entry: NotificationEntryView): string {
   if (entry.locked) return r.locked;
   return onOffWord(entry.rule ? entry.rule.enabled : entry.blocker !== 'row_off');
 }
 
-/**
- * The phone row (below 640px, docs/26b §3 «Phone»): الإشعار | التشغيل. Under the name the state and
- * its short reason; the second cell is one 44px button that opens the row's bottom sheet (a tap
- * anywhere on the row opens it too).
- */
+/** Phone layout below 640px (docs/26b §3); the whole row opens the sheet. */
 export function RulePhoneRow({ entry, onOpen }: { entry: NotificationEntryView; onOpen: (key: string) => void }) {
   const canEdit = editableRule(entry, useRules().canManage) !== null;
   const name = t.notificationCatalogue.entries[entry.key].name;

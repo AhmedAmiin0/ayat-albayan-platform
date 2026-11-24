@@ -22,7 +22,8 @@ function setup({ declined = false, enrolled = true, ok = true, types = [1, 2] } 
     setDeclined: async () => void (flags.declined = true),
   };
   const text = () => ({ reason: 'R', enableReason: 'E', cancel: 'C' });
-  return { lock: new BioLockStore({ native, flags: bioFlags, text }), auth, flags };
+  const lock = new BioLockStore({ native: Promise.resolve(native), flags: bioFlags, text });
+  return { lock, auth, flags };
 }
 
 test('a fresh sign-in offers once, naming the face on a phone with both', async () => {

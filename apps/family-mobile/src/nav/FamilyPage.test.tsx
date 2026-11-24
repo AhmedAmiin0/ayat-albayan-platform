@@ -4,7 +4,7 @@ import { AppText } from '@ab/mobile-kit';
 import { FamilyPage } from './FamilyPage';
 import { showSwitched } from './switch-store';
 
-// «تُعرض الآن صفحة …» floats over the page (canvas SwitchDone): no layout shift.
+// The switch note floats over the page so there is no layout shift.
 
 test('the switch note floats at the bottom, outside the scrolling body', async () => {
   await render(

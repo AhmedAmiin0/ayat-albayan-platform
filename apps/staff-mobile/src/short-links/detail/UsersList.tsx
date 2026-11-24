@@ -7,7 +7,6 @@ import { PersonRow } from '@/short-links/ui/PersonRow';
 
 const D = () => t.shortLinks.detail;
 
-/** «لم يُعتمد قالب الإشعارات بعد», «لا يوجد رقم واتساب…», else «تعذّر الإرسال (code)». */
 function sendErrorText(code: string): string {
   const known: Partial<Record<string, string>> = {
     template_not_approved: D().sendErrors.template_not_approved,
@@ -29,10 +28,6 @@ function UserRow({ user, opened }: { user: ShortLinkUser; opened: boolean }) {
   );
 }
 
-/**
- * «المستخدمون» (board LinkXStaffDetail): every listed person by name and role or by number, the
- * WhatsApp send of each, and who has not opened the link yet.
- */
 export function UsersList({ link }: { link: ShortLinkDetail }) {
   const users = link.userList;
   const waiting = notOpenedCount(link);

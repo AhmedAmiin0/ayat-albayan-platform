@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { alertPlan, statusChanges, unpaidFlagged, type PlanBalance, type PlanPackage } from './packages.plan';
 
-// «إلغاء الباقة» (owner 2026-10-28): a cancelled package is skipped by every decision over a student's packages.
+// A cancelled package is skipped by every decision over a student's packages.
 
 const pkg = (id: string, patch: Partial<PlanPackage> = {}): PlanPackage => ({ id, status: 'unpaid', price: 145, lessons_total: 4, ...patch });
 const bal = (entries: [string, number, number][]) =>

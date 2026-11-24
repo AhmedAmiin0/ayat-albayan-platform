@@ -1,5 +1,5 @@
 import { teacherCanPropose, type PlanAction } from '@ab/client-core';
-import { isOpenLesson, type LessonView } from '@ab/shared';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';

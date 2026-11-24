@@ -16,7 +16,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [...granted], can: (p: string) => granted.has(p) }),
 }));
 
-/** Standard, SA, 45 min, 1 student: 180 ر.س; sales floor 180 × 0.85 = 153 → 150. */
+/** Sales floor is 85% of the price rounded down to the nearest 10 (180 x 0.85 = 153 -> 150). */
 const SA = '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=0';
 const QUOTE = fakePricingApi(SA) as Quote;
 const T = t.subscriptions.customPrice;

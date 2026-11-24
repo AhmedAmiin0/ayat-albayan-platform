@@ -1,13 +1,13 @@
+import type { PaymentMethod } from '@ab/catalog';
 import {
   roundCents,
-  type PaymentMethod,
   type PaymentView,
   type StudentBalanceView,
   type SubscriptionView,
-} from '@ab/shared';
+} from '@ab/money';
 import type { Attachment } from '@/payments/receipts/attachments';
 import type { Receipt } from '@/core/lib/receipts/receipt';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 /** One payment as the form hands it to the mutation. */
 export interface PaymentInput {
@@ -19,7 +19,7 @@ export interface PaymentInput {
   /** ISO instant, never ahead of now (paid-day.ts). */
   paidAt: string;
   receipt: Receipt | null;
-  /** A bank transfer's «المرفقات» (none otherwise). */
+  /** Bank transfers only. */
   attachments?: Attachment[];
 }
 

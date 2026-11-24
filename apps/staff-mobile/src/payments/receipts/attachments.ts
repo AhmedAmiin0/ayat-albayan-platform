@@ -1,9 +1,8 @@
-import { PAYMENT_ATTACHMENTS_MAX } from '@ab/shared';
+import { PAYMENT_ATTACHMENTS_MAX } from '@ab/money';
 import { useRef } from 'react';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 
-// «المرفقات» of a bank transfer (owner 2026-10-12): up to PAYMENT_ATTACHMENTS_MAX images / PDFs, all
-// optional. The admin's payment form (bank only) and the salesperson's transfer share this list.
+// Up to PAYMENT_ATTACHMENTS_MAX images or PDFs, all optional; shared by admin and sales forms.
 
 /** From the chat: already copied under the package (its path). A photo: uploaded on save. */
 export type Attachment =

@@ -14,10 +14,7 @@ interface SectionsInput {
   chats: number;
 }
 
-/**
- * The chats list's search sections (docs/37): the head (hint or «المحادثات») above the chats,
- * «الرسائل» under them, and whether any message hit shows (the «no chats» line then stays away).
- */
+/** docs/37: a message hit suppresses the no-chats line. */
 export function useSearchSections({ q, mode, base, now, chats }: SectionsInput) {
   const found = useMessageHits(q);
   const hits = found.hits.length > 0;

@@ -37,12 +37,7 @@ function noted(r: ThreadRow, m: LastRow | undefined): ListedThreadRow {
     : r;
 }
 
-/**
- * The chats list's words for a last message that does not show its own content: Meta's 131060
- * «رسالة لم يصل محتواها» (owner 2026-10-27), and (owner 2026-10-30) a message deleted for
- * everyone, the ad's automatic welcome or an unsupported echo (marker-notes.ts). One read by pk
- * for the page's last messages (a deleted one keeps its body, so any row can be one).
- */
+/** One read by pk of the page's last messages, since a deleted one keeps its body. */
 export async function markUnsupported(
   db: Db,
   rows: readonly ThreadRow[],

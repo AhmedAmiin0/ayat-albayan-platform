@@ -1,4 +1,5 @@
-import type { LessonProposalRequest, LessonView, PayoutView, TeacherMe } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
+import type { LessonProposalRequest, LessonView, TeacherMe } from '@ab/schedule';
 import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { LESSONS_KEY, type Window } from '@/features/teaching/schedule';

@@ -11,11 +11,7 @@ export interface EditTimeDoneProps {
   onClose: () => void;
 }
 
-/**
- * The edit landed: a short «الوقت اتعدّل», the new time, the guardian's WhatsApp confirmation when
- * one was queued, and the two follow-ups the API reports: a draft payout month that must be
- * calculated again, and a report PDF that is re-made (the guardian is not sent it twice).
- */
+/** Reports a queued guardian confirmation, a payout month to recalculate and a re-made PDF. */
 export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
   const viewer = useViewerClock();
   const { color } = useTheme();

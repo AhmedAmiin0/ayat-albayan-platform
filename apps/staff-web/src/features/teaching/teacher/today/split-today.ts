@@ -1,4 +1,4 @@
-import { isClosedLesson, isOpenLesson, type LessonView } from '@ab/shared';
+import { isClosedLesson, isOpenLesson, type LessonView } from '@ab/schedule';
 
 // docs/48 day rows rule: web lessonsOnDay keeps closed lessons, so the split drops them itself.
 

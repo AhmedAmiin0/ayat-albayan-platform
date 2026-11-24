@@ -1,5 +1,7 @@
 import type { Hero } from '@ab/client-core';
-import { clockOf, counted, isOpenLesson, type LessonView, type TeacherMe } from '@ab/shared';
+import { counted } from '@ab/core';
+import { isOpenLesson, type LessonView, type TeacherMe } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { useId } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';

@@ -5,7 +5,7 @@ import { t, FilterPills } from '@ab/mobile-kit';
 
 export interface ListView {
   status: LinkStatusTab;
-  /** «كل الموظفين» (`all`), «روابطي» (`mine`) or an owner's profile id. */
+  /** `all`, `mine` or an owner's profile id. */
   owner: OwnerPick;
   search: string;
 }
@@ -24,7 +24,6 @@ const L = () => t.shortLinks.list;
 const statusPills = () =>
   LINK_STATUS_TABS.map((s) => ({ value: s, label: s === 'all' ? L().all : t.shortLinks.state[s] }));
 
-/** «كل الموظفين», «روابطي», then one pill per owner (board LinkXStaffList). */
 const ownerPills = (owners: LinkOwner[]) => [
   { value: 'all', label: L().allStaff },
   { value: 'mine', label: L().mine },

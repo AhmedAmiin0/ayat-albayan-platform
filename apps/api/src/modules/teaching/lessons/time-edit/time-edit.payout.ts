@@ -6,11 +6,7 @@ import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { isPayoutLocked, payoutScope, type TimeEditPlan } from './time-edit.plan';
 import { TimeEditRepo } from './time-edit.repo';
 
-/**
- * The payout side of «عدّل الوقت» (E3, R-PAY-02): an approved or paid month is frozen, so an edit
- * that would have to re-price or re-home a lesson in it is refused; a draft month is allowed and
- * flagged stale (the admin presses «احسب مستحقات الشهر» again, nothing regenerates automatically).
- */
+/** E3, R-PAY-02: approved or paid months are frozen; a draft month is flagged stale. */
 @Injectable()
 export class TimeEditPayout {
   constructor(

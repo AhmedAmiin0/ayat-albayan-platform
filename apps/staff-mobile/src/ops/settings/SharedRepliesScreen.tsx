@@ -12,7 +12,7 @@ import { replyError } from '@/inbox/saved-replies/lib/reply-error';
 import { ReplyRow } from '@/inbox/saved-replies/components/ReplyRow';
 import { SubScreenHeader } from '@/ops/shared/SubScreenHeader';
 
-/** «إلى الأعلى» / «إلى الأسفل» (none at the ends, none while a move is saving) and «احذف», 44pt each. */
+/** No move at the ends or while a move is saving; 44pt targets. */
 function RowActions(p: { reply: SavedReply; first: boolean; last: boolean; busy: boolean; onMove: (d: 'up' | 'down') => void; onDelete: () => void }) {
   const { color } = useTheme();
   const name = (s: string) => s.replace('{title}', p.reply.title);
@@ -31,12 +31,7 @@ function RowActions(p: { reply: SavedReply; first: boolean; last: boolean; busy:
   );
 }
 
-/**
- * «الردود السريعة» in «الإعدادات» (owner 2026-10-25): the SHARED list every inbox user sees, for
- * holders of saved_replies.manage (the entry is hidden otherwise; the API refuses anyway). A tap
- * edits a reply; up / down reorder it; «رد جديد» adds one at the end. Personal replies live in the chat.
- * The replies sit in one inset card (owner 2026-10-28: one container rule).
- */
+/** Needs saved_replies.manage, which the API also enforces; personal replies live in the chat. */
 export function SharedRepliesScreen() {
   const replies = useSavedReplies();
   const move = useMoveReply();

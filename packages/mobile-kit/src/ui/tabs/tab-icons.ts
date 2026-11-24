@@ -1,3 +1,4 @@
+/// <reference types="../../../assets/images.d.ts" />
 import type { ImageSourcePropType } from 'react-native';
 import account from '../../../assets/tabs/account.png';
 import home from '../../../assets/tabs/home.png';

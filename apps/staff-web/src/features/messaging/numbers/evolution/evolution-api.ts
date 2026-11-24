@@ -22,7 +22,6 @@ export type EvolutionQrAnswer = z.infer<typeof evolutionQrSchema>;
 const base = (id: string) => `/admin/numbers/${encodeURIComponent(id)}/evolution`;
 const key = (id: string, what: 'state' | 'qr') => [...NUMBERS_QUERY_KEYS.numbers, id, 'evolution', what];
 
-/** GET …/evolution/state («افحص الاتصال»): Evolution's connectionState now. */
 export const evolutionStateQuery = (id: string) =>
   queryOptions({
     queryKey: key(id, 'state'),

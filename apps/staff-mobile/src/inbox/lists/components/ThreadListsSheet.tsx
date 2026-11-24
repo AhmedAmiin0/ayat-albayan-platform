@@ -17,11 +17,7 @@ interface ThreadListsSheetProps {
   onClose: () => void;
 }
 
-/**
- * A chat's «القوائم»: every list of the academy, checked when the chat is in it. A tap saves at
- * once (optimistic; a refusal unticks it again with «تعذر حفظ التغيير»). «قائمة جديدة» at the end
- * creates a list and puts this chat in it in one go. Nothing is sent to the family.
- */
+/** Optimistic save that reverts on refusal; nothing is sent to the family. */
 export function ThreadListsSheet({ phone, member, open, onClose }: ThreadListsSheetProps) {
   const query = useChatLists(open);
   const lists = listsOf(query.data);

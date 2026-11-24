@@ -6,7 +6,7 @@ import { pickDay } from '@/test/pickers/native-picker';
 import { StartDateEdit } from './StartDateEdit';
 import type { StartDatePackage } from './use-start-date-edit';
 
-// «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms only, StartDayPicker.
+// Only with subscriptions.edit_terms.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

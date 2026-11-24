@@ -1,4 +1,5 @@
-import { type LessonView, lessonWhenAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { studentNames } from '@/features/teaching/schedule';

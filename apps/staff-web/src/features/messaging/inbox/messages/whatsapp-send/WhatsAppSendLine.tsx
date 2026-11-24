@@ -30,13 +30,7 @@ const COPY: Record<Line, { text: () => string; button: () => string }> = {
   },
 };
 
-/**
- * «أرسل عبر واتساب» in the bubble's status lines (owner 2026-11-06, docs/19), admin only: a staff
- * text the 24 h window stopped says why and offers the action; while its window is open it says
- * it is being sent from WhatsApp and offers «افتح واتساب مجددًا» (the same call: it extends it)
- * and «أرسلتها». With no echo once it passes, the platform never sends it: the line asks «هل
- * أرسلتها من واتساب؟» («نعم، أرسلتها») and offers the action again (never put back to sending).
- */
+/** Admin only (docs/19); with no echo once the window passes, the platform never sends it. */
 export function WhatsAppSendLine({ message: m, now }: LineProps) {
   const send = useWhatsAppSend();
   const state = useWhatsAppSendState(m.id);

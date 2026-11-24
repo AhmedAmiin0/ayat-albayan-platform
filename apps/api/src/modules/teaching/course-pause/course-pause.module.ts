@@ -9,10 +9,7 @@ import { CoursePausePreviews } from './preview/course-pause.preview';
 import { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
 
-/**
- * «إيقاف الدورة مؤقتًا» (owner 2026-10-28, docs/11 §7b): pause / extend / resume a student's course for ANY
- * student (courses.pause), and the hourly automatic resume on the day after until (CoursePauseJob).
- */
+/** Course pause, extend and resume for any student (docs/11 §7b), plus the hourly auto-resume. */
 @Module({
   imports: [SchedulingModule, SubscriptionsModule],
   controllers: [CoursePauseController],

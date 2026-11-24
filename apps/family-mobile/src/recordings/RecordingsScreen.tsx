@@ -9,10 +9,7 @@ import { useChildRecordings } from './use-assets';
 
 const paramsSchema = z.object({ id: z.string().min(1) });
 
-/**
- * «التسجيلات» of the child in view (canvas RecXFamilyList), `recordings/[id]`: recordings staff
- * made visible, of sent lessons with one student, by month; each opens the lesson page.
- */
+/** Only recordings staff made visible, of sent single-student lessons, by month. */
 export function RecordingsScreen() {
   const { id } = paramsSchema.parse(useLocalSearchParams());
   const student = studentOf(usePortalMe().data, id);

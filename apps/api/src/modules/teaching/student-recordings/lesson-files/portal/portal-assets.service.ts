@@ -16,18 +16,13 @@ interface StudentCall {
 
 interface FileCall extends StudentCall {
   fileId: string;
-  /** The name a «تنزيل» link saves under. */
   download?: string | undefined;
 }
 
-/** «تنزيل»: the link's saving name, when one was asked for. */
 const saveAs = (call: FileCall): { download?: string } =>
   call.download ? { download: call.download } : {};
 
-/**
- * «التسجيلات» and the family's lesson page (docs/31 scope: PortalScopes first, 404 for anyone
- * else's student). A lesson's assets reach the family once its report was sent to them.
- */
+/** docs/31 scope (404 for another's student); assets reach the family once the report was sent. */
 @Injectable()
 export class PortalAssetsService {
   constructor(

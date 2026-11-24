@@ -1,4 +1,4 @@
-import { teacherPageOn, withPublicDefaults, type TeacherPage } from '@ab/shared';
+import { teacherPageOn, withPublicDefaults, type TeacherPage } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { publicConfigQuery, usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 

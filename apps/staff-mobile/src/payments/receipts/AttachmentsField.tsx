@@ -10,11 +10,7 @@ export interface AttachmentsFieldProps {
   onChange: (value: Attachment[]) => void;
 }
 
-/**
- * «المرفقات» of the admin's payment (owner 2026-10-12): shown for a bank transfer only, optional, up
- * to 5 photos from the camera or the gallery, each removable; uploaded on save through
- * POST /payments/receipt-upload-url (use-record-payment).
- */
+/** Bank transfers only, up to 5 photos, uploaded on save via POST /payments/receipt-upload-url. */
 export function AttachmentsField({ value, onChange }: AttachmentsFieldProps) {
   const p = t.payments;
   return (

@@ -9,7 +9,6 @@ import { actorOf } from '@/modules/teaching/booking/profile/profile-course.servi
 import { ProfileCourseRepo } from '@/modules/teaching/booking/profile/profile-course.repo';
 import { planExtend, type ExtendPlan } from './course-extend.plan';
 
-/** The package «مدّ الجدول» books and its plan. */
 export interface PlannedExtend {
   id: string;
   plan: ExtendPlan;
@@ -22,11 +21,7 @@ export interface ExtendTarget {
   user: AuthUser;
 }
 
-/**
- * «مدّ الجدول»'s plan for a package of the student: 404 subscription_not_found (another
- * student's, or none), 403 not_your_student (an assistant, not hers while the ownership rule
- * holds: CourseChange.owned), 404 course_not_found, 409 course_paused.
- */
+/** 404 for another student's package; 403 when not hers while the rule holds. */
 @Injectable()
 export class CourseExtendReader {
   constructor(

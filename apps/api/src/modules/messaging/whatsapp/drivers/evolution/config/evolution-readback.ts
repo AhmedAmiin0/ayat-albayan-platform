@@ -4,8 +4,7 @@ import {
   settingsBody, type proxyFound, type settingsFound, type webhookFound,
 } from './evolution-push-bodies';
 
-// Read back = equal (owner 2026-11-06: «متزامن / غير متزامن»). Pure comparisons of what Evolution
-// answers on …/find with the number's stored config; the proxy password is never compared.
+// Pure comparisons of Evolution's find answer with the stored config; never the proxy password.
 
 type Settings = z.infer<typeof settingsFound>;
 type Webhook = z.infer<typeof webhookFound>;

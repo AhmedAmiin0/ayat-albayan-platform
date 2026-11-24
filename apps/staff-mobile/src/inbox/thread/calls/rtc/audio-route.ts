@@ -1,9 +1,6 @@
 import { setAudioModeAsync } from 'expo-audio';
 
-// Speaker vs earpiece for a call (docs/28 §5 «مكبر الصوت»). react-native-webrtc has no routing API of
-// its own; expo-audio's audio mode routes the session. Outside a call the app runs one PLAYBACK mode,
-// set at start (applyPlaybackMode) and put back after every call, so voice notes and videos behave the
-// same before and after a call. Best effort: a failure keeps the current route.
+// docs/28 §5: react-native-webrtc cannot route audio, so expo-audio's mode does; best effort.
 
 /**
  * The app's playback mode, chosen deliberately: Android takes audio focus («doNotMix», the players'

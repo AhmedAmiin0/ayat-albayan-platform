@@ -18,7 +18,7 @@ interface StaffNotice {
   invitee: StoredInvitee;
   /** PushService subject (dedup): inviteSubject(), or `cancel:<meeting>`. */
   subject: string;
-  /** Replaces «دعوة إلى اجتماع» (a reschedule, a cancellation). */
+  /** Replaces the meeting invitation text for a reschedule or a cancellation. */
   title?: string;
 }
 

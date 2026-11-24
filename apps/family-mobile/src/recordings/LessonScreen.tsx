@@ -11,11 +11,7 @@ import { useLessonAssets } from './use-assets';
 /** lesson/[id]?student= (rule 12: route params are parsed, never trusted). */
 const paramsSchema = z.object({ id: z.string().min(1), student: z.string().min(1) });
 
-/**
- * «حلقة الثلاثاء 11 نوفمبر» (canvas RecXFamilyLesson), pushed above the tabs, «name · 6:30 – 7:15
- * م» under it: the lesson's recording in the in-app player, its report, and the files staff
- * shared, once the report was sent.
- */
+/** Recording, report and staff files show only once the report was sent. */
 export function LessonScreen() {
   const params = paramsSchema.parse(useLocalSearchParams());
   const input = { studentId: params.student, lessonId: params.id };

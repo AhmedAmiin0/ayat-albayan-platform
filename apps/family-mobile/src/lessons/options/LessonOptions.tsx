@@ -16,21 +16,14 @@ interface LessonOptionsProps {
   title: OptionsTitle;
   /** What the card says once an action lands. */
   onNotice: (message: string) => void;
-  /**
-   * What opens the menu (a list row): handed `open`, or null when the lesson offers nothing.
-   * Default: the card's «خيارات الحلقة» button, and nothing without options.
-   */
+  /** Receives open, or null when the lesson offers nothing. */
   children?: (open: (() => void) | null) => ReactNode;
 }
 
 const menuButton = (open: (() => void) | null) =>
   open ? <Button variant="secondary" label={t.portal.actions.menuTitle} onPress={open} /> : null;
 
-/**
- * «خيارات الحلقة» on the lesson card and the list rows (owner 2026-11-17: «add button to accept or
- * reject or reschedule»): the family's own buttons, never the WhatsApp quick reply. Nothing once
- * it started, nor on a group lesson.
- */
+/** The family's own buttons, never the WhatsApp quick reply; none once started or in a group. */
 export function LessonOptions(props: LessonOptionsProps) {
   const { lesson, student, now, title, onNotice, children = menuButton } = props;
   const [sheet, setSheet] = useState<Sheet>(null);

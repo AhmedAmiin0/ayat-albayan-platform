@@ -24,20 +24,7 @@ export const isAutoHeldCorrection = (
   body: { by: CancelBy; scope?: string },
 ): boolean => lesson.status === 'completed' && body.by !== 'admin' && body.scope !== 'rule';
 
-/**
- * «لم تنعقد؟» (owner 2026-11-02): a lesson the auto-held job closed and no report has spoken for
- * since
- * (AutoHeldRepo.correctable) becomes «ألغاها المعلم/ة» (cancelled_by_teacher, not counted) or
- * «اعتذر
- * الطالب» (excused, counted exactly per isChargeable / late_cancel_hours at the time of the
- * correction,
- * like any excuse). The only way out of `completed` outside a report; compare-and-set on completed,
- * audited (action cancel, after.correction auto_held_correction). Any other completed lesson, or
- * one that ended over 14 days ago: 409 not_auto_held (its outcome is the report's); its earning
- * already paid per session: 409 earning_paid. The lesson is over: nobody is messaged.
- * ponytail: the report check is read before the commit; a report filed in that instant keeps the
- * correction (no migration here). Move the check into an RPC if that is ever seen.
- */
+/** Correcting an auto-held lesson: the only way out of completed outside a report. */
 @Injectable()
 export class AutoHeldCorrection {
   constructor(
