@@ -2,8 +2,7 @@ import type { NotificationsPage } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { notificationsQuery, useMarkRead } from '@ab/web-kit/push/notifications-api';
 
-// «الإشعارات» of the family pages (R-NOT-01): the same GET /me/notifications and «mark read» as
-// the staff bell (the kit's notifications API); guardian / student hold notifications.push.
+// R-NOT-01: same endpoint and mark-read as the staff bell; families hold notifications.push.
 
 export type FamilyAlerts = NotificationsPage;
 

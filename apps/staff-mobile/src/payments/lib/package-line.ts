@@ -1,16 +1,13 @@
-import { alertFor, packageProgress, SETTING_DEFAULTS, type StudentBalanceView } from '@ab/shared';
+import { alertFor, packageProgress, type StudentBalanceView } from '@ab/money';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { t } from '@ab/mobile-kit';
 
 /** settings.renewal_alert_remaining's default (docs/11 §2: 2), used until GET /settings answers. */
 export const RENEWAL_DEFAULT = SETTING_DEFAULTS.renewal_alert_remaining;
 
 export interface PackageLine {
-  /** «فاضل حلقتين», «الباقة خلصت», «حضر حلقة زيادة عن الباقة». */
   label: string;
-  /**
-   * Saffron «دورك» (docs/07 §1.2): exactly when the renewal / unpaid alert is due (alertFor), so at
-   * or under the threshold and never for a paused or trial package.
-   */
+  /** docs/07 §1.2: exactly when alertFor is due, never for a paused or trial package. */
   alert: boolean;
 }
 

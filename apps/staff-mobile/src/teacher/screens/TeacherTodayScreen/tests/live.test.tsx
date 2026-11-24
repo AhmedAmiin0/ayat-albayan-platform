@@ -13,8 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
-// «تنبيهات اليوم» adds a second observer of the bell's polled query, which trips @sinonjs fake
-// timers' interval bookkeeping here; its own tests cover it (teacher/alerts).
+// Mocked: a second observer of the bell's polled query breaks fake timers; it has its own tests.
 jest.mock('@/teacher/alerts', () => ({
   ...jest.requireActual('@/teacher/alerts'),
   TodayAlerts: () => null,
@@ -22,7 +21,7 @@ jest.mock('@/teacher/alerts', () => ({
 let mockFocused = true;
 jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 
-// docs/48 «Reactivity»: two GETs every 30 s, only while «اليوم» is in front.
+// Two GETs every 30 s, only while today is in front (docs/48).
 /** Ended 15 min ago in our classroom: its join window stays open until ends_at + 120 min. */
 const ended = { ...held, platform_classroom: true };
 const calls = (prefix: string) =>

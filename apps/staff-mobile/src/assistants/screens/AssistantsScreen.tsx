@@ -16,10 +16,7 @@ const TABS = (): { value: Tab; label: string }[] => [
   { value: 'statements', label: t.assistants.tabs.statements },
 ];
 
-/**
- * «فريق المبيعات» (admin, assistantpay.read; web /admin/assistants, R-ASST-05): the sales staff and
- * their terms, the commission ledger of all of them, the monthly statements. The server owns every rule.
- */
+/** R-ASST-05: admin with assistantpay.read; the server owns every rule. */
 export function AssistantsScreen() {
   const [tab, setTab] = useState<Tab>('list');
   const [notice, setNotice] = useState<string | null>(null);

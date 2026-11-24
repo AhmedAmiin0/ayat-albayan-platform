@@ -28,22 +28,10 @@ export interface TextComposerProps {
   phone: string;
   /** Sits before the box (the template toggle). */
   leading?: ReactNode;
-  /** «الردود السريعة» (saved-replies/ReplyComposer): its panel and chip above the row, its keys first, its file after the text. */
   extras?: ComposerExtras;
 }
 
-/**
- * A session message (H3), only inside the 24 h window: one auto-growing line with a round send icon
- * button. Each send gets its own clientRequestId at submit; a failed one is kept with its id and
- * reason, and only that same text sent again reuses it (rule 8): any successful send for the chat,
- * or the box no longer holding that text, forgets it. The draft lives in draft-store (a thread switch
- * or a remount keeps it, with the failure's line); the box empties at once on send and text typed
- * meanwhile is never wiped. While this chat's send is in flight no box for it can send (mutationKey),
- * even one mounted since. A send settling after a sign-out writes nothing back (generations).
- * «رد» (owner 2026-10-25): the quoted strip above the box; a sent answer clears it, a failed one keeps it.
- * «تعديل» (owner 2026-11-07) likewise: EditStrip, and the send carries `correctsId`.
- * The send itself (optimistic bubble, newest-page refresh) is useTextSend.
- */
+/** A failed send keeps its clientRequestId; only the same text resent reuses it (rule 8). */
 export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const errorId = useId();
   const area = useRef<HTMLTextAreaElement>(null);
@@ -70,7 +58,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, COMPACT_MAX_PX)}px`;
   }, [text]);
-  // A correction leaves room for the API's «تصحيح: » (round 4): the same limit as threadTextSchema.
+  // A correction leaves room for the API's correction prefix: the same limit as threadTextSchema.
   const tooLong = text.length > WA_TEXT_MAX - (fix.correctsId ? CORRECTION_PREFIX_ROOM : 0);
   // The failure's line follows the draft (a box mounted since the send still says why), else this box's.
   // Not a stored session_closed: this box mounts only where a text goes (ComposerPhone), and the
@@ -79,7 +67,7 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   const failedHere = !pending && keepsFailed(stored, text) ? sendErrorCodeText(stored.code) : null;
   const local = send.isError && !pending ? sendErrorText(send.error) : null;
   const error = tooLong ? t.inbox.composer.tooLong : (failedHere ?? local);
-  // In edit mode a text that is only «تصحيح:» has nothing to send (the API's 400 empty_correction).
+  // In edit mode a text that is only the correction prefix is empty (400 empty_correction).
   const words = stripCorrectionPrefix(fix.correctsId ? correctionPrefixes() : [], text);
   const blocked = !words || tooLong || pending;
   const submit = () => {

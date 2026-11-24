@@ -12,20 +12,15 @@ import type { LessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { ATTENDANCE_STYLE } from '@/sales/sales/student/attendance-text';
 import { fill } from '@/sales/sales/lib/sales-text';
 
-// What «سجل الحضور» says (owner 2026-10-28): the viewer's day and date, the month names, the
-// totals, a row's chip and tags. The chips are «الحضور»'s (ATTENDANCE_STYLE) and the lesson statuses'. Pure.
-
 const DAY_DATE = { weekday: 'short', day: 'numeric', month: 'numeric' } as const;
 
-/** «الثلاثاء، 27/10»: the lesson's weekday and date on the viewer's calendar `tz`. */
+/** The lesson's weekday and date on the viewer's calendar `tz`. */
 export function dayDateOf(iso: string, tz: string): string {
   return dateText(new Date(iso), { tz, locale }, DAY_DATE);
 }
 
-/** "2026-10" → «أكتوبر 2026». */
 export const monthOf = (month: string): string => monthText(month, locale);
 
-/** The totals row, in the owner's order: حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت. */
 export function totalsItems(totals: Record<AttendanceTotalKind, number>): { key: string; label: string; n: number }[] {
   const w = t.sales.student.log.totals;
   return [
@@ -38,11 +33,7 @@ export function totalsItems(totals: Record<AttendanceTotalKind, number>): { key:
   ];
 }
 
-/**
- * The status chip: the student's own day as «الحضور» says it (حضر / غاب / اعتذر / لم يُسجَّل); a cancelled
- * or moved lesson by its status (who cancelled it, «تغيّر موعدها»; `status` follows the academy's
- * lesson_confirmation_required, useLessonStatusText).
- */
+/** A cancelled or moved lesson shows its status, which follows lesson_confirmation_required. */
 export function rowChip(
   row: Pick<AttendanceTableRow, 'kind' | 'status'>,
   status: Pick<LessonStatusText, 'look' | 'label'>,
@@ -51,7 +42,6 @@ export function rowChip(
   return { ...ATTENDANCE_STYLE[row.kind], label: t.sales.student.kind[row.kind] };
 }
 
-/** «تجريبية» · «تعويضية» · «موعد بديل» · «متأخر», in that order, only those that apply. */
 export function rowTags(row: AttendanceTableRow): string[] {
   const w = t.sales.student.log;
   return [
@@ -62,16 +52,12 @@ export function rowTags(row: AttendanceTableRow): string[] {
   ];
 }
 
-/** «سبب الإلغاء: …» under a cancelled lesson, else null. */
 export const cancelLine = (row: Pick<AttendanceTableRow, 'cancel_reason'>): string | null =>
   row.cancel_reason ? fill(t.sales.student.log.cancelReason, { reason: row.cancel_reason }) : null;
 
 type MoveRow = Pick<AttendanceTableRow, 'moved_to' | 'moved_from' | 'move_reason'>;
 
-/**
- * Under a moved lesson (docs/47): «نُقلت إلى …», «بدلًا من موعد …» and «سبب تغيير الموعد: …»,
- * only those the row carries (an old API sends none), the times in `tz` on the viewer's clock.
- */
+/** Moved lesson lines (docs/47), only those the row carries (an old API sends none). */
 export function moveLines(row: MoveRow, tz: string, cycle: ClockCycle): string[] {
   const w = t.sales.student.log;
   const when = (iso: string) => whenIn(new Date(iso), tz, cycle);
@@ -83,10 +69,7 @@ export function moveLines(row: MoveRow, tz: string, cycle: ClockCycle): string[]
   return lines.flatMap(([value, text]) => (value ? [text(value)] : []));
 }
 
-/**
- * The report cell: the staff logs say sent / not sent; the teacher's file passes her action's word
- * (docs/47 «تعديل التقرير» …), or null for a row that offers none («—»).
- */
+/** The teacher's file passes her action word (docs/47); null means no action. */
 export function reportCell(
   row: Pick<AttendanceTableRow, 'report_sent'>,
   label?: string | null,

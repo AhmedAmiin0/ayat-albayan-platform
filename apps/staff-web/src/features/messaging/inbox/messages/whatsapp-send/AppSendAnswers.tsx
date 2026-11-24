@@ -13,12 +13,7 @@ interface Props {
   answers: readonly AppSendAnswer[];
 }
 
-/**
- * Staff's answer about a «أرسل عبر واتساب» (docs/19): «أرسلتها» while pending and «نعم، أرسلتها»
- * after an unconfirmed one record the manual send (POST sent-manually: the platform stops for
- * good). A row handed to WhatsApp is never put back to automatic sending (no retry answer). On
- * success the row's earlier tap error is cleared: it no longer describes the row.
- */
+/** Recording a manual send stops the platform for good; such a row is never put back (docs/19). */
 export function AppSendAnswers({ message: m, answers }: Props) {
   const client = useQueryClient();
   const refresh = (row: MessageView) => {

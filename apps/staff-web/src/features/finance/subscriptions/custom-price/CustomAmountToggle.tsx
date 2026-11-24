@@ -6,11 +6,7 @@ const OPTIONS = [{ value: CUSTOM, label: t.paymentLinks.customAmount }];
 
 interface Props { on: boolean; onChange: (on: boolean) => void }
 
-/**
- * «مبلغ مخصص» (owner 2026-11-01) beside the discount pills, in their pill style: a pressed toggle.
- * On shows the amount box; off hides it and the calculator price stands (the payment link's amount
- * and, owner 2026-11-02, the package price of a bank transfer or an admin's package).
- */
+/** Off keeps the calculator price for links, bank transfers and admin packages. */
 export function CustomAmountToggle({ on, onChange }: Props) {
   return (
     <SegmentedControl

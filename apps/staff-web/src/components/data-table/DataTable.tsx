@@ -55,7 +55,7 @@ export interface DataTableProps<T extends RowData> {
   sort?: DataTableSort;
   /** Sort the loaded rows locally: every accessor column, Arabic collation. */
   clientSort?: boolean;
-  /** Server column filters (`meta.filter` columns): the toolbar's search box and «تصفية» panel. */
+  /** Server column filters from `meta.filter` columns. */
   filters?: DataTableFilters;
   /** Filter the loaded rows locally (`meta.filter` columns). */
   clientFilter?: boolean;

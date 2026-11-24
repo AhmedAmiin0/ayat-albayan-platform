@@ -5,27 +5,24 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const c = () => t.notificationCatalogue;
 
-/** The state chip: «يُرسل» ok / «لا يُرسل» neutral (struck) / «يدوي» neutral (hollow). */
 export function stateChip(entry: Pick<NotificationEntryView, 'state'>): { tone: Tone; glyph: Glyph; label: string } {
   if (entry.state === 'on') return { tone: 'ok', glyph: 'fill', label: c().states.on };
   if (entry.state === 'manual') return { tone: 'neutral', glyph: 'hollow', label: c().states.manual };
   return { tone: 'neutral', glyph: 'struck', label: c().states.off };
 }
 
-/** The first blocker in words («لأن إرسال الرسائل متوقف»), or null; the v2 classroom_off has its words in notificationRules. */
+/** Null when nothing blocks; the v2 classroom_off text lives in notificationRules. */
 export function blockerText(entry: Pick<NotificationEntryView, 'blocker'>): string | null {
   if (!entry.blocker) return null;
   return entry.blocker === 'classroom_off' ? t.notificationRules.blockers.classroom_off : c().blockers[entry.blocker];
 }
 
-/** When: the trigger in words, then the timing setting's value («قبل الحلقة بـ60 دقيقة»). */
 export function whenText(entry: Pick<NotificationEntryView, 'key' | 'timing'>): string {
   const trigger = c().entries[entry.key].trigger;
   if (!entry.timing) return trigger;
   return `${trigger} · ${c().timing[entry.timing.key].replace('{value}', entry.timing.value)}`;
 }
 
-/** Channels joined in words: «جرس المنصة، إشعار الجوال والمتصفح». */
 export const channelsText = (entry: Pick<NotificationEntryView, 'channels'>): string =>
   entry.channels.map((ch) => c().channels[ch]).join(t.common.listSeparator);
 
@@ -43,10 +40,7 @@ export interface NumberPart {
   phone: string | null;
 }
 
-/**
- * Which numbers a row leaves from: its templates' lines with the kept phones; free-text WhatsApp
- * rows reply from the chat's number; bell / push rows have none («لا ينطبق»).
- */
+/** Free-text WhatsApp rows reply from the chat's number; bell and push rows have none. */
 export function numberParts(entry: Pick<NotificationEntryView, 'lines' | 'channels'>, lines: readonly LineHealthView[]): NumberPart[] {
   if (!entry.channels.includes('whatsapp')) return [{ label: c().noNumber, phone: null }];
   if (entry.lines.length === 0) return [{ label: c().chatNumber, phone: null }];

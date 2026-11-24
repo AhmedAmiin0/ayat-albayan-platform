@@ -17,10 +17,10 @@ const toSalesThread = (data: unknown, can: Can) => {
 
 const toSalesStudents = (_data: unknown, can: Can) => (canOpen(can, 'salesStudents') ? '/sales/students' : SALES_MORE);
 
-/** A lesson → «اليوم», her landing, when she sees the academy schedule. */
+/** A lesson goes to her today screen when she sees the academy schedule. */
 const toSalesToday = (_data: unknown, can: Can) => (canOpen(can, 'salesSchedule') ? '/sales/today' : SALES_MORE);
 
-/** R-MEET-03: «الاجتماعات» is back for sales (docs/16 row 12b, reversed 2026-10-12). */
+/** R-MEET-03: meetings are back for sales (docs/16 row 12b). */
 const toSalesMeetings = (_data: unknown, can: Can) => (canOpen(can, 'salesMeetings') ? '/sales/more/meetings' : SALES_MORE);
 
 /**
@@ -33,15 +33,10 @@ const toSalesChannel = (data: unknown, can: Can) => {
   return student ? `/sales/students/channel/${student}` : '/sales/students';
 };
 
-/** «عمولة جديدة» → «محفظتي» (owner 2026-10-29), with self.sales_earnings. */
+/** A new commission opens her wallet, with self.sales_earnings. */
 const toSalesWallet = (_data: unknown, can: Can) => (canOpen(can, 'salesEarnings') ? '/sales/more/earnings' : SALES_MORE);
 
-/**
- * A message → that number's chat in «المحادثات» (the list without a phone); a new student, a
- * report or a payment due → «الطلاب»; a student's chat message → that chat; a meeting invite →
- * «الاجتماعات» (with meetings.read); a lesson to confirm → «اليوم» (with self.sales_academy); a
- * new commission → «محفظتي»; anything else → «المزيد».
- */
+/** Anything without a specific target opens the More screen. */
 const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   new_lead: toSalesThread,
   new_message: toSalesThread,
@@ -56,19 +51,16 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   // docs/31 §2: the owning assistant hears her students' chats (owner 2026-11-16).
   channel_message: toSalesChannel,
   commission_earned: toSalesWallet,
-  // Teachers and families only today (owner 2026-10-30); a salesperson would open «الطلاب».
+  // Sent to teachers and families only for now; a salesperson would open students.
   lesson_rescheduled: toSalesStudents,
   lesson_cancelled: toSalesStudents,
   course_paused: toSalesStudents,
   course_resumed: toSalesStudents,
-  // Owner 2026-11-05: a payment for her student → «الطلاب».
+  // A payment for her student opens students.
   payment_received: toSalesStudents,
 };
 
-/**
- * «احجز أيام الحلقات» (owner 2026-11-06: a package paid with no course): the course wizard of that
- * student (data `open: 'course'`), from her chats; null when the push is not one.
- */
+/** A package paid with no course opens that student's course wizard; null when not one. */
 function toSalesCourse(data: unknown, can: Can): string | null {
   const student = pushStudentId(data);
   const wizard = pushField(data, 'open') === OPEN_COURSE && student;
@@ -83,7 +75,7 @@ export function salesRouteFor(data: unknown, can: Can = () => true): string | nu
 
 const assistantHome = (can: Can) => (canOpen(can, 'assistantLessons') ? '/assistant/lessons' : '/assistant/more');
 
-/** A meeting invite → «اجتماعات داخلية» (under «حلقاتي»); everything else → «حلقاتي». */
+/** A meeting invite opens internal meetings; everything else her lessons. */
 export function assistantRouteFor(data: unknown, can: Can = () => true): string | null {
   const kind = pushKind(data);
   if (!kind) return null;

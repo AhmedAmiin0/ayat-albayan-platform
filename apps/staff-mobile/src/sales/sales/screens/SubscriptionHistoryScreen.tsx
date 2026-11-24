@@ -5,10 +5,7 @@ import { HistoryEntryCard } from '@/sales/sales/components/HistoryEntryCard';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { useSubscriptionHistory } from '@/sales/sales/lib/sales-api';
 
-/**
- * «سجل اشتراكات …» (web: «السجل» on «مؤكدة»): the student's subscriptions oldest first, the opened one
- * outlined. Only one of mine answers; anything else is a 404 «لم نجد ما تبحث عنه».
- */
+/** Only one of mine answers; anything else is a 404. */
 export function SubscriptionHistoryScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const history = useSubscriptionHistory(id);

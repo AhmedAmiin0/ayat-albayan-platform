@@ -12,7 +12,6 @@ import { apiErrorText } from '@/features/finance/subscriptions/format';
 export type CancelBody = { reason?: string };
 
 type Props = {
-  /** «باقة ٨ حلقات · سهيلة»: which package is cancelled. */
   label: string;
   /** POST /subscriptions/:id/cancel (admin) or POST /sales/subscriptions/:id/cancel (her own student's). */
   cancel: (body: CancelBody) => Promise<unknown>;
@@ -22,10 +21,7 @@ type Props = {
   onDone: () => void;
 };
 
-/**
- * «إلغاء الباقة» (owner 2026-10-28): a package made by mistake is cancelled, never deleted. Asks once, with an
- * optional reason; the API refuses a package with money or lessons (409, shown here).
- */
+/** Cancelled, never deleted; the API refuses a package with money or lessons (409). */
 export function CancelPackageDialog({ label, cancel, staleKey = MONEY_KEY, onClose, onDone }: Props) {
   const formId = useId();
   const queryClient = useQueryClient();

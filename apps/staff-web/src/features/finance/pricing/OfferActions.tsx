@@ -15,10 +15,7 @@ export interface OfferActionsProps {
   stale: boolean;
 }
 
-/**
- * «انسخ العرض للعميل» (the screen's one filled button) and «أرسله على واتساب», both with the
- * site's offer text. No clipboard (http, old browser, denied) → an error toast; WhatsApp still works.
- */
+/** Without clipboard access an error toast shows; WhatsApp still works. */
 export function OfferActions({ quote, stale }: OfferActionsProps) {
   const [outcome, setOutcome] = useState<Outcome>(null);
   // The guardian reads it on WhatsApp: Arabic whatever the UI language (parent-facing output).

@@ -5,7 +5,7 @@ import { TeacherUsername } from './TeacherUsername';
 import type { Teacher } from '@ab/shared';
 import { teacherFixture } from '@ab/shared/testing';
 
-// «اسم المستخدم» of the teacher's login (docs/30 §7).
+// docs/30 §7.
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

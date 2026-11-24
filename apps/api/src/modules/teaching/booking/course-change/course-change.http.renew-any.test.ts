@@ -15,8 +15,7 @@ import { CourseLessonRepo } from './course-change.lessons';
 import { CourseChangeRepo } from './course-change.repo';
 import { CourseChangeWriter } from './course-change.writer';
 
-// «تغيير أيام الحلقات» with sales.renew_any (owner 2026-11-01, docs/16 row 38): ANY student's
-// course, another assistant's (S1 is salesA's) or nobody's (S2), never over a clash.
+// docs/16 row 38: any student's course with sales.renew_any, never over a clash.
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';
 const D = 'd1000000-0000-4000-8000-00000000000d';

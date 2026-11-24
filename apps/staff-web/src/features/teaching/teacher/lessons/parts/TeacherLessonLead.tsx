@@ -1,5 +1,5 @@
 import type { PlanAction, WayIn } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { StaffJoinButton } from '@/features/teaching/classroom';

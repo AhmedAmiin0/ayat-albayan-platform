@@ -2,7 +2,7 @@ import { round2 } from '@ab/core';
 import { egp } from '@/earnings/lib/format';
 import { money } from '@ab/mobile-kit';
 
-/** «145 ج.م» / «20 ر.س»: Western digits, isolated; EGP is the academy's own money (docs/11). */
+/** Western digits, isolated; EGP is the academy's own currency (docs/11). */
 export function amountText(amount: number, currency = 'EGP'): string {
   const rounded = round2(amount);
   return currency === 'EGP' ? egp(rounded) : money(rounded, currency);

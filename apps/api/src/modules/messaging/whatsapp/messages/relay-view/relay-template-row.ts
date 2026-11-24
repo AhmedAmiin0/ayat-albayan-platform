@@ -3,10 +3,7 @@ import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/mes
 import { numberedParams } from '@/modules/messaging/whatsapp/templates/names/template-match';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// A template the old Apps Script sent through the script relay, shown like our own template rows
-// (owner 2026-11-02): «قالب: …», the filled body and its buttons. Read side only, no DB write:
-// the relay row stays as the relay wrote it (no template_key, so the sender never treats it as a
-// template) and keeps its readable body «[name]\nvalue 1\nvalue 2…» (relay.kinds.ts).
+// Read side only: the relay row keeps no template_key so the sender never treats it as one.
 
 type RelayRow = Pick<ThreadMessageRow, 'direction' | 'dedup_key' | 'body' | 'template_key'>;
 

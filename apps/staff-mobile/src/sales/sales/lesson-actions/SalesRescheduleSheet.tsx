@@ -5,11 +5,11 @@ import { SalesRescheduleForm } from './SalesRescheduleForm';
 interface SalesRescheduleSheetProps {
   lesson: SalesScheduleLesson | null;
   onClose: () => void;
-  /** «تم» after the move: the lesson shown under it is gone from its old time, so its details close too. */
+  /** After the move the lesson is gone from its old time, so its details close too. */
   onDone: () => void;
 }
 
-/** «تغيير الموعد» as a page sheet over «تفاصيل الحلقة» (the admin's frame, sales' one-lesson form); null = closed. */
+/** Null means closed. */
 export function SalesRescheduleSheet({ lesson, onClose, onDone }: SalesRescheduleSheetProps) {
   return (
     <RescheduleFrame open={lesson !== null} onClose={onClose}>

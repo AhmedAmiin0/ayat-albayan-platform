@@ -6,7 +6,7 @@ import { chatSendError } from '@/inbox/thread/send/send-error';
 import { sendKey } from '@/inbox/thread/hooks/thread-cache';
 import { type Outgoing, threadQuery, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 
-/** A number read by «التالي»: a chat already (WhatsApp opens it) or new (its first template). */
+/** An existing chat opens as WhatsApp does; a new number needs its first template. */
 export interface FoundNumber {
   phone: string;
   kind: 'new' | 'existing';
@@ -18,10 +18,7 @@ export interface FoundNumber {
 const kindOf = (page: ThreadDetail | undefined): FoundNumber['kind'] =>
   page?.thread != null || (page?.messages.length ?? 0) > 0 ? 'existing' : 'new';
 
-/**
- * «التالي»: GET /threads/:phone into the chat's own cache (threadQuery), so the chat opens on it
- * and a send's queued bubble lands in it at once.
- */
+/** Reads into the chat's own cache so the chat opens on it and a queued send lands at once. */
 export function useLookupNumber() {
   const client = useQueryClient();
   return useMutation({
@@ -36,11 +33,7 @@ export function useLookupNumber() {
   });
 }
 
-/**
- * «أرسل» on a new number: the chat's own template send (useSendMessage: POST
- * /threads/:phone/template with a clientRequestId, the queued row in the chat and on top of the
- * chats list at once). One send at a time, a retry keeps its id; `onSent` once the API took it.
- */
+/** One send at a time; a retry keeps its clientRequestId; `onSent` fires once the API took it. */
 export function useFirstTemplate(phone: string, onSent: () => void) {
   const send = useSendMessage(phone);
   const templateId = useTemplateId();

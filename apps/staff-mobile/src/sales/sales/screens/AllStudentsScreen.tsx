@@ -30,14 +30,7 @@ const keyOf = (s: SalesStudentView) => s.id;
 // Keyed by the student: «no phone» under a tapped row is its own state, never a recycled row's.
 const renderRow = ({ item }: { item: SalesStudentView }) => <AllStudentRow key={item.id} student={item} />;
 
-/**
- * «كل الطلاب» of the salesperson (web /sales/students, SalesStudents): every student of the academy,
- * paged and searched on the server (name or code), read-only; «طلابي» is a filter of the same page
- * (GET /sales/me/students: the ones I brought, paid or not, my commission). Scrolling loads the next page.
- * `asTab`: the sales tree's «الطلاب» tab, a tab root with no «رجوع» («تحقق من التسجيل» there instead,
- * a 44pt icon with its spoken name). The list screens' one compact top (owner 2026-10-28): «كل الطلاب · 233»
- * on the title's line, the pills, the pill search, 8pt apart, so the first row shows within ~180pt.
- */
+/** Every student, paged and searched on the server, read-only. */
 export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const [view, setView] = useState<StudentsView>('all');

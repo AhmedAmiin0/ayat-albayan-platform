@@ -1,6 +1,6 @@
 import type { AccountProfile } from '@ab/shared';
 
-// «حسابي» fixtures (R-ACC-01): GET /me/profile as the API answers it.
+// Account fixtures (R-ACC-01).
 
 export const profileFixture: AccountProfile = {
   id: 'u1',

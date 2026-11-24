@@ -1,8 +1,7 @@
 import { emptyContent, type MemoryView, type Program, type ReportFormResponse, type ReportView } from '@ab/shared';
 import { reportView } from '@ab/shared/testing';
 
-// «تقرير الحلقة» test rows in the GET /lessons/:id/report-form shape (abrar's lesson, test-only).
-// FULL_GRADES and reportView live in @ab/shared/testing (shared with the other app).
+// Test-only rows in the report-form shape; shared builders live in @ab/shared/testing.
 export { FULL_GRADES, reportView } from '@ab/shared/testing';
 
 /** Saturday 3 Oct 2026, 16:00 Riyadh (13:00Z), started; one student with a 4-lesson package. */

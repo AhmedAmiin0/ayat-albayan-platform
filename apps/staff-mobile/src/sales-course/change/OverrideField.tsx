@@ -1,4 +1,4 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { useState, type ReactNode } from 'react';
 import { t, Field } from '@ab/mobile-kit';
 import type { ChangeTarget } from './change-body';
@@ -8,10 +8,7 @@ interface OverrideInput {
   check: { isSuccess: boolean; data: { conflicts: Conflict[] } | undefined };
 }
 
-/**
- * The review's save gate: blocked until the check answers clean. With the target's override
- * (the admin, owner 2026-10-30, R-SCH-04) a clash may be saved with «سبب تجاوز التعارض».
- */
+/** Blocked until a clean check; only the admin may override a clash with a reason (R-SCH-04). */
 export function useOverride({ target, check }: OverrideInput): {
   field: ReactNode;
   reason: string | undefined;

@@ -75,7 +75,7 @@ test('an excused lesson that started: its row leads with the report, shown once'
   mockApiFetch.mockImplementation(answer([later, excused], []));
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   await openRow('سلمى علي');
-  // No due block on «اليوم» any more (owner 2026-11-14): the row's lead is the one way in.
+  // The row's lead is the one way into the report.
   expect(screen.getAllByRole('button', { name: t.reports.open })).toHaveLength(1);
   expect(
     screen.queryAllByRole('button', { name: new RegExp(`^${t.reports.open} — سلمى علي`) }),

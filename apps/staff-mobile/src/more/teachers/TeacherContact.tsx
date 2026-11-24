@@ -1,9 +1,10 @@
-import { clickToChatLink, formatPhone, teacherName } from '@ab/shared';
+import { clickToChatLink, formatPhone } from '@ab/core';
+import { teacherName } from '@ab/schedule';
 import { Linking } from 'react-native';
 import { t, type, useTheme, Button, Ltr, locale, Section } from '@ab/mobile-kit';
 import type { Teacher } from '@ab/shared';
 
-/** «رقم التواصل»: the LTR phone and a WhatsApp chat. Nothing at all when no phone is on file. */
+/** Renders nothing when no phone is on file. */
 export function TeacherContact({ teacher }: { teacher: Teacher }) {
   const { color } = useTheme();
   const phone = teacher.phone_e164;

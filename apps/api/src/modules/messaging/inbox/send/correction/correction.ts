@@ -14,7 +14,6 @@ interface CorrectionSend {
   role?: string | null;
 }
 
-/** The send after «تعديل»: the prefixed text replying to the original, and the row's link. */
 interface Corrected<S extends CorrectionSend> {
   send: S;
   /** corrects_id and the text without its prefix (an exact retry is recognised, #694 follow-up). */
@@ -46,11 +45,7 @@ export function checkTarget(row: CorrectionTarget | null, s: CorrectionSend): Co
   return row;
 }
 
-/**
- * The family's text: the admins' prefix (inbox.correction.prefix, «الترجمات») once, a typed one
- * (theirs or the bundled default) dropped. 400 empty_correction when nothing is left, 400 too_long
- * when the prefixed text passes WhatsApp's limit (an admin's long wording, round 4).
- */
+/** The admins' prefix is added once and a typed one dropped; 400 when empty or too long. */
 function bodyOf(own: string): string {
   const prefix = ar.inbox.correction.prefix;
   const body = `${prefix}${own}`;
@@ -66,13 +61,7 @@ const refusalOf = (body: string, prefix: string): string | undefined =>
     { code: 'too_long', breaks: body.length > WA_TEXT_MAX },
   ].find((r) => r.breaks)?.code;
 
-/**
- * «تعديل» in a WhatsApp chat (owner 2026-11-07): a send with correctsId becomes a NEW text,
- * «تصحيح: » (ar.json, admins may reword it) + the new text, sent as a reply to the original (its
- * wamid, the «رد» path), linked by corrects_id. The rights are checked on the picked message,
- * which is never a correction itself (checkTarget), and a leading prefix is dropped (bodyOf).
- * Every other send rule is the text's own.
- */
+/** A correction is a new text replying to the original, linked by corrects_id. */
 export async function correctionOf<S extends CorrectionSend>(
   repo: CorrectionRepo | undefined,
   s: S,

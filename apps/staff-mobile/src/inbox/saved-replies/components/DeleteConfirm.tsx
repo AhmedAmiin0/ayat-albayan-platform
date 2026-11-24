@@ -5,7 +5,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { useDeleteReply } from '@/inbox/saved-replies/hooks/api';
 import { replyError } from '@/inbox/saved-replies/lib/reply-error';
 
-/** «حذف الرد …؟» under its row: the reply and its file go for good; sent messages stay. */
+/** The reply and its file go for good; sent messages stay. */
 export function DeleteConfirm({ reply, onDone }: { reply: SavedReply; onDone: () => void }) {
   const remove = useDeleteReply();
   return (

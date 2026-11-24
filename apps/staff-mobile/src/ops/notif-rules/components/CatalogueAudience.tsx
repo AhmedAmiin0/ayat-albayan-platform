@@ -15,10 +15,7 @@ interface CatalogueAudienceProps {
   initialAudience?: AudienceTab;
 }
 
-/**
- * The rows one audience at a time (docs/26b §6 1.10, same pills as the web): ولي الأمر first, so
- * each view fits a 390×844 phone. Changing the pill closes an open question (its row leaves view).
- */
+/** docs/26b §6 1.10: guardian first so each view fits a 390x844 phone. */
 export function CatalogueAudience({ data, canManage, toggles, initialAudience }: CatalogueAudienceProps) {
   const [tab, setTab] = useState<AudienceTab>(initialAudience ?? 'guardian');
   const rows = rowsOf(data.entries, tab);

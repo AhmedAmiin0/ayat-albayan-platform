@@ -16,17 +16,14 @@ import {
   StopRefunds,
 } from './refund';
 
-/**
- * «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): stop the course, keep the money;
- * «إلغاء مع استرداد» (owner 2026-11-02) refunds what the attended lessons did not use.
- */
+/** Stopping keeps the money; cancel with refund returns what attended lessons left unused. */
 @Module({
   imports: [SubscriptionsModule, PaymentsModule, SalesModule],
   controllers: [CourseStopController],
   providers: [
     CourseStop,
     CourseStopRepo,
-    // «إلغاء مع استرداد» (owner 2026-11-02): its own Stripe client (the keys of «التكاملات»).
+    // Refund on cancel uses its own Stripe client with the integration keys.
     { provide: STRIPE_FACTORY, useValue: stripeFactory },
     ...[StripeClients, StopRefundCards, StopRefundLedger, StopRefundRepo, StopRefunds],
     ...[CourseStopSettings, StopRefundGate, StopOwedCalc],

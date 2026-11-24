@@ -9,10 +9,7 @@ const PHOTO_KEYS = [USERS_KEY, pathKey('/teachers'), pathKey('/sales/teachers')]
 /** Students and guardians never carry a photo (owner 2026-10-28: initials only). */
 const isStaffRole = (role: UserDetail['role']): boolean => role !== 'student' && role !== 'guardian';
 
-/**
- * The user's photo on their page: with users.write and a staff login «الصورة» (change / remove),
- * otherwise the photo or the initials alone.
- */
+/** Change or remove needs users.write and a staff login. */
 export function UserPhoto({ user, canWrite }: { user: UserDetail; canWrite: boolean }) {
   const photo = user.avatar_url ?? null;
   if (canWrite && isStaffRole(user.role)) {

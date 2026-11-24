@@ -13,7 +13,7 @@ export interface PortalLessonRow {
   ends_at: string;
   status: LessonStatus;
   room_opened_at: string | null;
-  /** «إنهاء الحلقة للجميع» (migration 20261117100100); optional in test fakes. */
+  /** Migration 20261117100100; optional in test fakes. */
   room_ended_at?: string | null;
   meeting_link: string | null;
   teacher: { display_name_ar: string; display_name_en: string | null; meeting_mode: string | null } | null;
@@ -21,7 +21,7 @@ export interface PortalLessonRow {
   lesson_students: { student_id: string; chargeable?: boolean }[];
 }
 
-/** A family's «اطلب موعدًا آخر» on one of the lessons (lesson_proposals requested_by 'family'). */
+/** lesson_proposals rows with requested_by 'family'. */
 export interface PortalRequestRow {
   id: string;
   lesson_id: string;
@@ -47,7 +47,7 @@ const LESSON = 'id, teacher_id, starts_at, ends_at, status, room_opened_at, room
 /** The family's own words and the academy's answer to them; never a teacher's proposal. */
 const REQUEST = 'id, lesson_id, status, proposed_starts_at, note, decision_note, decided_at, created_at';
 
-/** «الحلقات القادمة» reads (service role; PortalScopes already decided the student is the caller's). */
+/** Service role; PortalScopes already decided the student is the caller's. */
 @Injectable()
 export class PortalLessonsRepo {
   constructor(

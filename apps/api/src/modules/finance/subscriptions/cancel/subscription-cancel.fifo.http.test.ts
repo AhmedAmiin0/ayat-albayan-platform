@@ -4,9 +4,7 @@ import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/mone
 import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
 
-// «إلغاء الباقة» review (owner 2026-10-28): lessons a package used FIFO (v_subscription_balance) block the
-// cancel even on rules without subscription_id; future lessons merely projected into it do not; nor may an
-// earlier package be cancelled once a later one earned its commission as a renewal because of it.
+// Lessons used FIFO block a cancel; merely projected future lessons do not.
 
 const url = `/subscriptions/${SUB_ID}/cancel`;
 const balance = (patch: Partial<BalanceRow>): Map<string, BalanceRow> =>

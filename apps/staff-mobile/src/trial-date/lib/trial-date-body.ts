@@ -10,7 +10,7 @@ export interface TrialDateDraft {
   /** Pre-selected as the last trial's teacher (history.items[0]); changeable. */
   teacher: { id: string; name: string } | null;
   startsAt: string | null;
-  /** «رابط الحلقة» (owner 2026-11-02): typed on the review; empty = the teacher's own link. */
+  /** Empty means the teacher's own link. */
   meetingLink: string;
 }
 

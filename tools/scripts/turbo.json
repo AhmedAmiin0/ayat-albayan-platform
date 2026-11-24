@@ -18,6 +18,7 @@
         "$TURBO_ROOT$/refactor/lanes-v2/**",
         "$TURBO_ROOT$/apps/staff-mobile/package.json",
         "$TURBO_ROOT$/patches/**",
+        "$TURBO_ROOT$/package.json",
         "$TURBO_ROOT$/pnpm-workspace.yaml"
       ]
     }

@@ -12,10 +12,6 @@ interface CorrectedProps {
   children: ReactNode;
 }
 
-/**
- * A corrected original (owner 2026-11-07): greyed, and its time row carries «صُحِّحت»
- * (CorrectedMark), a tap on which goes to the correction.
- */
 export function Corrected({ to, onJump, children }: CorrectedProps) {
   if (!to) return children;
   return (

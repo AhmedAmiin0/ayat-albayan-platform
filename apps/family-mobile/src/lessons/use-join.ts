@@ -4,9 +4,7 @@ import { Linking, Vibration } from 'react-native';
 import { portalSend } from '@/portal';
 import { enterRoom, joinWay, useRoomsInApp, type JoinWay } from '@/room';
 
-// «ادخل الحلقة» (docs/50 §2, mirrors the web portal's LessonAction): a Meet lesson opens its own
-// link; our classroom opens inside the app while settings.family_meetings_in_app is on (owner
-// 2026-11-16), else in the phone's browser through a signed room link (no second sign-in).
+// Classroom opens in-app while family_meetings_in_app is on, else a signed browser link.
 
 /** A light tap under the finger (React Native's own vibration: no native module to ship). */
 const HAPTIC_MS = 12;

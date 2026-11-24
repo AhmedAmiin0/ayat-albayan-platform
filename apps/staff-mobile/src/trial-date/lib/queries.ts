@@ -5,8 +5,7 @@ import type { BookingMode } from '@ab/client-core';
 import { bookingPath, useBookingMode } from '@/booking/shared/booking-mode';
 import type { TrialDateBody } from './trial-date-body';
 
-// «موعد تجريبي جديد» (R-SCH-06/07, R-STU-05, R-ASST-01): the history, the clash check and the
-// booking, under /booking (admin) or /sales/booking (a salesperson, her own students only).
+// Trial booking (R-SCH-06/07, R-STU-05, R-ASST-01) under /booking, or /sales/booking for sales.
 
 const historyKey = (mode: BookingMode, studentId: string) => [...pathKey(bookingPath(mode, '/trial-dates')), studentId];
 
@@ -51,10 +50,7 @@ function refreshAfterTrialDate(client: QueryClient, o: { mode: BookingMode; stud
   if (o.mode === 'sales') void client.invalidateQueries({ queryKey: ['sales', 'money', 'family'] });
 }
 
-/**
- * «احجز الموعد الجديد»: POST {base}/trial-date with the wizard's one clientRequestId, re-sent on
- * every retry, so a lost reply replays to the first booking (rule 8).
- */
+/** One clientRequestId per wizard re-sent on retry, so a lost reply replays the first (rule 8). */
 export function useTrialDate(studentId: string) {
   const client = useQueryClient();
   const mode = useBookingMode();

@@ -14,7 +14,6 @@ interface Props {
   onDone: () => void;
 }
 
-/** «تأكيد تعديل المبلغ»: old → new, then the write; an API refusal is said in the dialog. */
 export function AmountConfirm({ payment, amount, save, onClose, onDone }: Props) {
   const body = T.confirmBody
     .replace('{old}', moneyText(payment.amount, payment.currency))

@@ -19,14 +19,7 @@ export interface MenuBarProps {
   className?: string;
 }
 
-/**
- * Phones and tablets (< 900px, owner 2026-10-05: "make it simpler"): ONE compact bar (logo mark,
- * the page title, «القائمة» — with a saffron dot while staff have unread notifications). The menu
- * opens the Dialog sheet: «الإشعارات» (staff), the full nav, then theme, language and logout at its
- * foot; following a link or opening a notification closes it. The title is a
- * pseudo-element: the page's own h1 names the page, the bar only echoes it (no second heading
- * or text node).
- */
+/** Below 900px one compact bar; its title is a pseudo-element so the page's h1 is the heading. */
 export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   // Open on the page it was opened on only: any navigation closes the sheet.

@@ -26,7 +26,6 @@ export function leadListParams({ q, status, filters }: LeadListQuery): ListParam
   };
 }
 
-/** How many of source / assignee / order are set: the number on «تصفية (n)». */
 export function activeFilterCount({ source, assignee, sort, dir }: LeadFilters): number {
   return [source, assignee, leadSortValue({ sort, dir })].filter(Boolean).length;
 }

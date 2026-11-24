@@ -3,10 +3,7 @@ import { ar } from '@/common/infra/i18n/server-text';
 import type { CellValue, Rows } from '@/modules/platform/google-sync/google-client.port';
 import { textCell } from './attendance-row';
 
-// «سجل الطلاب المشتركين» (docs/24 §2.6): the platform upserts ONLY the row of a student it writes
-// for, matched by the folder link (column G) first, then by the normalised Arabic name (column A).
-// It recomputes first/last/count from that student's attendance sheet, so whatever the old script
-// does to the same row stays consistent. A new student gets a new row.
+// docs/24 §2.6: upserts only its student's row, matched by folder link then name.
 
 export interface SummaryStudent {
   name: string;

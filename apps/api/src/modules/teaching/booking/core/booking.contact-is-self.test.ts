@@ -7,8 +7,7 @@ import type { BookingRepo } from './booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1, a docs/13 deviation): the lead path's new student
-// carries contact_is_self into create_booking, which inserts it (migration 775).
+// docs/30 §1 (a docs/13 deviation): contact_is_self is inserted by create_booking (migration 775).
 
 const MIGRATION = '20261028000775_create_booking_contact_is_self';
 const sql = readFileSync(migrationPath(`${MIGRATION}.sql`), 'utf8')

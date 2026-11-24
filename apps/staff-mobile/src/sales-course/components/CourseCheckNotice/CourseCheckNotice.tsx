@@ -15,12 +15,7 @@ export interface CourseCheckNoticeProps {
   onChangeSlot: () => void;
 }
 
-/**
- * Under the review (R-SCH-04): what the course would clash with in any week, or the course guard's
- * refusal (wrong day count, a course already there…). A clash blocks the assistant (owner
- * 2026-10-18: no override), so its way out is other times. A check that failed otherwise (offline,
- * a server error) offers to run it again, or «احجز» would stay disabled for good.
- */
+/** R-SCH-04: the assistant has no override; a failed check offers a rerun so booking can go. */
 export function CourseCheckNotice({ check, onChangeSlot }: CourseCheckNoticeProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

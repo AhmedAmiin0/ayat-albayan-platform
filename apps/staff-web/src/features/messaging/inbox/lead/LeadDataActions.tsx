@@ -13,11 +13,7 @@ export interface LeadDataActionsProps {
   onDone: (message: string, tone?: 'error') => void;
 }
 
-/**
- * The aside's two doors (R-LEAD-03, R-LEAD-06, R-STU-02): «تسجيل الطالب» opens the short student
- * form pre-filled from the lead (the lead is converted and linked to the new guardian), and
- * «تعديل البيانات» opens every qualification question in a dialog, out of the aside's way.
- */
+/** Registering converts the lead and links it to the new guardian (R-LEAD-03, R-STU-02). */
 export function LeadDataActions({ lead, onDone }: LeadDataActionsProps) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState<'register' | 'edit' | null>(null);

@@ -5,7 +5,7 @@ import { t, FilterPills } from '@ab/mobile-kit';
 
 type Span = 'all' | 'one';
 
-/** The ledger's month (web FilterBar with «كل الأشهر»): every month (''), or one picked with the arrows. */
+/** Empty string means every month. */
 export function MonthFilter({ month, onChange }: { month: string; onChange: (month: string) => void }) {
   const items: { value: Span; label: string }[] = [
     { value: 'all', label: t.assistants.ledger.allMonths },

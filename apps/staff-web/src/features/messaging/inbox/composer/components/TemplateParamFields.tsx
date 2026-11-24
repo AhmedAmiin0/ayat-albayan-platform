@@ -21,7 +21,6 @@ const c = t.inbox.composer;
 interface FreeSlot { tpl: TemplateView; slot: ParamSlot }
 const required = (label: string) => c.required.replace('{field}', label);
 
-/** «نص الرسالة» across both columns (owner 2026-11-14). */
 function FreeText(props: Omit<TemplateParamFieldsProps, 'template'> & FreeSlot) {
   const { tpl, slot, values, onChange } = props;
   return (
@@ -41,7 +40,7 @@ function FreeText(props: Omit<TemplateParamFieldsProps, 'template'> & FreeSlot) 
  */
 export function TemplateParamFields({ template: tpl, values, missing, onChange }: TemplateParamFieldsProps) {
   const url = urlButton(tpl);
-  // «نص الرسالة» (owner 2026-11-14): a template whose variable is the staff's own text.
+  // A template whose variable is the staff's own free text.
   const free = freeTextField(tpl);
   const params = toParamsInput(tpl, values);
   const preview = renderTemplateBody(tpl.body_ar, params);

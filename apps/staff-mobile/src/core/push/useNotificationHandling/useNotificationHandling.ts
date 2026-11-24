@@ -54,8 +54,7 @@ export function useNotificationHandling(tree: PushTree = 'admin'): void {
       const kind = pushKind(data);
       const message = kind === 'new_lead' || kind === 'new_message';
       if (message) void client.invalidateQueries({ queryKey: ['leads'] });
-      refreshForPush(client, tree, kind); // docs/48: the teacher's screens; other trees: nothing
-      // The thread, the chats list, the tab badge and «القوائم» (owner 2026-10-27: the list followed no push).
+      refreshForPush(client, tree, kind); // docs/48: refreshes the thread, chats list and badge.
       if (phone) void refreshInbox(client, phone);
       else if (message) refreshLists(client);
     });

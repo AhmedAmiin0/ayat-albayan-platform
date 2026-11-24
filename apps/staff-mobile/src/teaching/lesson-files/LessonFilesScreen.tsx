@@ -11,12 +11,7 @@ import { LessonFilesBody } from './LessonFilesBody';
 
 const paramsSchema = z.object({ id: z.string().min(1) });
 
-/**
- * «ملفات الحلقة» for staff (canvas RecXStaffLessonFiles / RecXStaffUpload): the lesson's recording
- * with its show-to-family switch, the files staff added, and «أضف ملفًا للحلقة». The admin from
- * the students tab, the teacher under their reports (`admin` false); the API keeps a teacher to
- * their own lessons.
- */
+/** The API keeps a teacher to their own lessons. */
 export function LessonFilesScreen({ admin = true }: { admin?: boolean }) {
   const { id } = paramsSchema.parse(useLocalSearchParams());
   const query = useLessonAssets(id);

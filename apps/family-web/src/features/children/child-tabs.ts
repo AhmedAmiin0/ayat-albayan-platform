@@ -16,7 +16,7 @@ type ChildSearch = z.infer<typeof tabSearch>;
 export const parseChildSearch = (search: Record<string, unknown>): ChildSearch =>
   tabSearch.parse(search);
 
-/** «المحادثة»: shown while family_chat_enabled is on, with the child's unread count. */
+/** Shown while family_chat_enabled is on, with the child's unread count. */
 export interface ChatTab {
   on: boolean;
   unread: number;
@@ -34,7 +34,7 @@ function tabOption(pill: ChildTabPill): TabOption<ChildTab> {
   return { value: pill.value, label: pill.label, badge: badge?.count, ariaLabel: badge?.label };
 }
 
-/** The page's tabs for this login with their words; «المحادثة» last while the chat is on. */
+/** Chat last while the chat is on. */
 export function tabOptions(kind: PortalKind, student: PortalStudent, chat: ChatTab = NO_CHAT) {
   const own = readsOwn(portalViewer(kind, student));
   return childTabs({ kind, student, chatOn: chat.on }).map((value) =>
@@ -42,6 +42,6 @@ export function tabOptions(kind: PortalKind, student: PortalStudent, chat: ChatT
   );
 }
 
-/** The tab asked for when this login has it, else «القادمة». */
+/** The tab asked for when this login has it, else the upcoming tab. */
 export const shownTab = (tabs: readonly { value: ChildTab }[], asked?: ChildTab): ChildTab =>
   tabs.some((tab) => tab.value === asked) && asked ? asked : 'upcoming';

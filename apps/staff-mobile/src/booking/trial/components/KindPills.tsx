@@ -16,10 +16,7 @@ const kinds: FilterPill<Exclude<BookingKind, 'makeup'>>[] = [
   { value: 'package', label: t.booking.kind.package },
 ];
 
-/**
- * «نوع الحجز *» on the first step: «حلقة تجريبية مجانية بس» · «اشتراك». «حجز تعويضي» is the third
- * type but lives on the missed lesson's row in the schedule (R-SCH-10); the hint says so.
- */
+/** Makeup is the third type but lives on the missed lesson's row (R-SCH-10). */
 export function KindPills({ value, onChange }: KindPillsProps) {
   return (
     <View style={{ gap: 8 }}>

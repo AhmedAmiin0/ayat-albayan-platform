@@ -22,11 +22,7 @@ function Problems({ s, block }: { s: V2EntryState; block: ReportFormResponse['su
   return <>{lines.map((line, i) => (line ? <ErrorLine key={i} message={line} /> : null))}</>;
 }
 
-/**
- * The end of a v2 report: what stops the send, the sent state with its edit window, then
- * «أرسل التقرير إلى الأسرة» (an edit: «حفظ التعديل», after «تعديل التقرير») and «احفظ مسودة» while a draft as ONE ButtonRow
- * (send first; docs/07 §6, stacked full width when the labels do not fit), and the save line.
- */
+/** Send and draft as one ButtonRow, send first (docs/07 §6), stacked when labels do not fit. */
 export function V2Footer({
   s,
   block,

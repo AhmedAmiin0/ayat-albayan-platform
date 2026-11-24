@@ -1,9 +1,7 @@
 import { addCalendarDays, asciiDigits, localDateIn } from '@ab/shared';
 import type { CellValue } from '@/modules/platform/google-sync/google-client.port';
 
-// Column A of «سجل حضور — <student>» holds the lesson date as the script wrote it. Read with
-// UNFORMATTED_VALUE a real date is a serial number (days since 1899-12-30); text dates are parsed
-// in the shapes the sheets use. Everything becomes yyyy-mm-dd, or null for anything else.
+// Serial dates count from 1899-12-30; text dates are parsed; all become yyyy-mm-dd or null.
 
 /** Day 0 of a Sheets serial date. */
 const EPOCH = '1899-12-30';
@@ -16,7 +14,7 @@ export function sheetDate(cell: CellValue): string | null {
     return addCalendarDays(EPOCH, Math.floor(cell));
   }
   if (typeof cell !== 'string') return null;
-  // Arabic-Indic and Persian digits → ASCII, so «٢٠٢٦/١٠/٢١» parses too.
+  // Arabic-Indic and Persian digits become ASCII so localized dates parse.
   const s = asciiDigits(cell.trim());
   const iso = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/.exec(s);
   if (iso) return ymd(Number(iso[1]), Number(iso[2]), Number(iso[3]));

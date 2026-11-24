@@ -101,7 +101,6 @@ export function payoutRows(rows: readonly PayoutIn[]): Cell[][] {
   ];
 }
 
-/** «45 دقيقة» from the enum labels; a pro-rated length reads «50 دقيقة». */
 function durationText(minutes: number): string {
   const standard = DURATIONS.find((d) => d === minutes);
   return standard === undefined ? ar.earnings.minutes.replace('{count}', String(minutes)) : ar.enums.duration[standard];

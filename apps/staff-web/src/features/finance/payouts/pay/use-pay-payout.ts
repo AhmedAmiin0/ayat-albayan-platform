@@ -9,10 +9,7 @@ import { payPayout, type PayoutView } from '@/features/finance/payouts/api';
 
 export type PayPayoutInput = { day: string; method: PaymentMethod; note: string; file: File | null };
 
-/**
- * «تأكيد الدفع» of a monthly payout: the receipt is uploaded once per file to the teacher's
- * receipts folder (the per-session pay dialog's pattern), then POST /payouts/:id/pay.
- */
+/** The receipt is uploaded once per file, then the payout is paid. */
 export function usePayPayout(payout: PayoutView, onSaved: () => void) {
   const queryClient = useQueryClient();
   const [receiptOnce] = useState(() => uploadOnce<File>());

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { ClosedNote } from './ClosedNote';
 
-// The closed window's note, a full-width line over «أرسل قالبًا» (owner 2026-10-27): never cut, it wraps.
+// The closed-window note is never cut; it wraps.
 test('a known chat: the whole «sessionClosed», with no line limit', async () => {
   await render(<ClosedNote known />);
   const note = screen.getByTestId('closed-note');

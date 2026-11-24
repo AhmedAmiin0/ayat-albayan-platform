@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { t, EmptyState, InsetGroup } from '@ab/mobile-kit';
-import type { DashboardWork, WorkList, WorkTab } from '@ab/shared';
+import type { DashboardWork, WorkList, WorkTab } from '@ab/money';
 import { Note } from '@/core/ui/feedback/Note';
 import { PendingRow, TaskListRow, UnpaidListRow } from './WorkRows';
 
@@ -13,10 +13,7 @@ const EMPTY: Record<WorkTab, string> = {
 const listOf = (w: DashboardWork, tab: WorkTab): WorkList<unknown> =>
   tab === 'reports' ? w.pending_reports : tab === 'unpaid' ? w.unpaid : w.tasks;
 
-/**
- * The queue behind the KPI tiles: one list at a time, oldest first, in one inset card (owner
- * 2026-10-28: one container rule), «و{n} أخرى» under it when truncated.
- */
+/** Oldest first; a truncation line shows the remainder. */
 export function WorkPanel({ tab, work }: { tab: WorkTab; work: DashboardWork }) {
   const list = listOf(work, tab);
   const more = list.total - list.items.length;

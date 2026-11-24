@@ -7,7 +7,7 @@ import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { EditStartDateAction } from './EditStartDateAction';
 
-// «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms only; a native date input.
+// Only with subscriptions.edit_terms.
 const apiSend = vi.hoisted(() => vi.fn());
 const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({

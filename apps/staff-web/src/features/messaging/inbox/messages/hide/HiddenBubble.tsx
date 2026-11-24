@@ -12,13 +12,7 @@ import { useHideRights } from './use-hide-rights';
 
 const h = t.inbox.hide;
 
-/**
- * A message hidden from the platform («حذف من المنصة», owner 2026-10-30): a muted placeholder that
- * says
- * it is still on the customer's phone, who hid it and when; no content, file or actions, only
- * «إظهار»
- * for the admin.
- */
+/** Hidden messages are still on the customer's phone; only the admin can unhide them. */
 export function HiddenBubble({ message: m }: { message: MessageView }) {
   const clock = useClock();
   const { unhide: mayShow } = useHideRights();

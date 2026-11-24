@@ -32,7 +32,7 @@ export function useStopMoney(preview: CourseStopPreview | undefined) {
 }
 type MoneyView = ReturnType<typeof useStopMoney>;
 
-/** «مبلغ مخصص»: 0 up to the allowed maximum. */
+/** A custom amount from 0 up to the allowed maximum. */
 function CustomAmount({ view, max }: { view: MoneyView; max: string }) {
   const s = t.courseActions.stop;
   return (
@@ -95,10 +95,7 @@ function OwePart({
 
 const MODES = ['cancel', 'refund'] as const;
 
-/**
- * «إلغاء فقط» (what the family still owes) / «إلغاء مع استرداد» (the refund amount), then one
- * summary line: the refund and what remains owed (owner 2026-11-06, as on web).
- */
+/** Cancel only keeps what the family owes; cancel with refund returns the refund amount. */
 export function StopMoneyChoice({
   preview,
   view,

@@ -8,18 +8,14 @@ import { heroPrimary } from './hero-primary';
 
 interface HeroActionsProps {
   lesson: TodayLesson;
-  /** The lesson is under way (the hero's «جارية الآن»). */
   running: boolean;
   busy: boolean;
-  /** None: read-only, the salesperson (docs/16): no «تأكيد», «ادخل الحلقة» only while it runs. */
+  /** Absent means read-only sales (docs/16): no confirm, join only while it runs. */
   onConfirm?: () => void;
   onDetails: () => void;
 }
 
-/**
- * The hero's two buttons (docs/29 §3, docs/07 §6 «الأزرار»): ONE ButtonRow of equal cells, the filled
- * one (heroPrimary) at the reading start, then «التفاصيل» (the sheet, secondary) always.
- */
+/** One ButtonRow of equal cells (docs/29 §3, docs/07 §6), details always secondary. */
 export function HeroActions({ lesson, running, busy, onConfirm, onDetails }: HeroActionsProps) {
   const join = useJoinClassroom(lesson);
   const { required } = useLessonStatusText();

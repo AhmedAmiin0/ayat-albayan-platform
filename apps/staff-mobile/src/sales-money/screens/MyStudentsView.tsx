@@ -8,7 +8,6 @@ import { MyStudentItem } from '@/sales-money/components/MyStudentItem';
 
 const renderRow = ({ item }: ListRenderItemInfo<MyStudentRow>) => <MyStudentItem student={item} />;
 
-/** «طلابي» (web MyStudents): the students I brought, newest first; GET /sales/me/students only. */
 export function MyStudentsView() {
   const list = useMyStudents();
   const inset = useTabBarInset();

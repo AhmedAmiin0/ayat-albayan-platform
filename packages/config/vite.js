@@ -1,6 +1,6 @@
 // The Vite + Vitest config of every web workspace (apps/staff-web, apps/family-web and
 // packages/web-kit, docs/51 §2): one factory, so the configs are not clones. The kit ships SOURCE
-// (the React Compiler and import.meta.env need Vite), so every app aliases `@ab/web-kit` to it.
+// (the React Compiler and import.meta.env need Vite), resolved through its package.json `exports`.
 import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
@@ -48,7 +48,7 @@ export function webConfig(options) {
     ],
     ...(cacheDir ? { cacheDir } : {}),
     resolve: {
-      alias: { '@/': `${dir}/src/`, '@ab/web-kit/': `${kitSrc}/` },
+      alias: { '@/': `${dir}/src/` },
       // One React, one query client and one router for the app and the kit's sources.
       dedupe: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
     },

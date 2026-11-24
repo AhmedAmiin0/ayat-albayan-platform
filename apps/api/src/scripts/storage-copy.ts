@@ -9,10 +9,7 @@ import { loadEnv, validOverlay } from '@/config/env/env';
 import { storageEnv } from '@/config/env/env.storage';
 import { copyToMinio, tallyLine } from './storage-copy.plan';
 
-// Inside the worker container (docs/45 «Bulk copy»; tools/scripts/storage/copy-to-minio.sh):
-//   node dist/scripts/storage-copy.js            dry-run: counts per bucket
-//   node dist/scripts/storage-copy.js --apply    copies what MinIO lacks (re-runnable)
-// MinIO's config is the one saved in «التكاملات» (env as the fallback). Prints counts only.
+// Run in the worker container (docs/45): dry-run by default, --apply copies; re-runnable.
 
 async function main(): Promise<void> {
   const boot = loadEnv(process.env);

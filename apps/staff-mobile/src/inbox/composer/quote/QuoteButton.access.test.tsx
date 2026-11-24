@@ -32,7 +32,6 @@ async function open(opts: { teacher?: boolean; permissions?: string[]; last?: st
   await screen.findByText(inbound.body ?? '');
 }
 const quote = () => screen.queryByRole('button', { name: t.inbox.quote.open });
-/** Open window (owner 2026-10-27): «عرض سعر» is in the bar; the paperclip's sheet has no such tile. */
 const paperclip = async () => {
   const clip = screen.queryByRole('button', { name: t.inbox.composer.attach });
   if (clip) await fireEvent.press(clip);

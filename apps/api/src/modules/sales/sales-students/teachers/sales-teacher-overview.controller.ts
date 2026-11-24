@@ -17,10 +17,7 @@ export class SalesTeacherOverviewService {
   }
 }
 
-/**
- * One teacher's «الجدول» and «الحضور» for the salesperson as the academy's assistant (owner 2026-10-28,
- * docs/16 row 36b): the weekly slots in Riyadh with the students, and the last 30 days' lessons. Never money or a link.
- */
+/** docs/16 row 36b: weekly slots in Riyadh and the last 30 days; never money or a link. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('self.sales_academy')

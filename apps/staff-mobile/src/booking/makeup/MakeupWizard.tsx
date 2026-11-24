@@ -20,13 +20,7 @@ import { useBookMakeup } from './use-book-makeup';
 
 type Filter = { program: Program; gender: Gender | null };
 
-/**
- * «حجز تعويضي» for one missed lesson (R-SCH-10): المعلم/ة (the original's, or another) → الميعاد →
- * الفاتورة → المراجعة. The student and the lesson length come from the missed lesson (no contact
- * step, no package, no lead). The invoice is required like a package's; there is no «من الشات»
- * here because a lesson row knows no guardian number. ponytail: the teacher filter starts at
- * quran (LessonView has no program); pass it down when the row grows one.
- */
+/** R-SCH-10: teacher filter starts at quran because LessonView has no program yet. */
 export function MakeupWizard({ source }: { source: MakeupSource }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

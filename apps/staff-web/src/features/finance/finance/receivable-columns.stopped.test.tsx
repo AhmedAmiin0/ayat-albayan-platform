@@ -13,8 +13,7 @@ vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
-// Review 2026-11-06: a stopped course owes its stored decision (owedFor), so «دُفع X من Y» names
-// that, never the package's price. 400 SAR stopped owing 150, 100 paid.
+// A stopped course owes its stored decision (owedFor), never the package's price.
 const STOPPED = {
   id: 'a',
   student: { id: 's-a', code: 'AB-0001', name: 'سهيلة' },

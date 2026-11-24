@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Share } from 'react-native';
 import { ApiError, t, ltr } from '@ab/mobile-kit';

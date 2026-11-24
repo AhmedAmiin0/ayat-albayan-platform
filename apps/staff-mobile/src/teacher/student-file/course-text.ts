@@ -25,10 +25,7 @@ const END_TEXT: Record<CourseEndKey, (end: CourseEnd, tz: string) => string> = {
   unknown: () => f().courseEndUnknown,
 };
 
-/**
- * «بداية الدورة: …», the end («تنتهي الدورة بعد 3 حلقات» …, its instant on `tz`'s calendar) and
- * «الحلقات: 5 من 8». The start is a calendar date, shown with no zone shift.
- */
+/** The start is a calendar date, shown with no zone shift; the end instant uses `tz`. */
 export function courseLines(course: TeacherCourseView, tz: string): string[] {
   const end = courseEndOf(course);
   return [

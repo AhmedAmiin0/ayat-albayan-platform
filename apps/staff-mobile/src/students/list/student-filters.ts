@@ -1,13 +1,13 @@
 import { STUDENT_FILTER_KEYS, STUDENT_STATUSES, type StudentSortKey, type StudentStatus } from '@ab/shared';
 
-/** «الترتيب» choices: the server's default (newest) or one column, ascending (GET /students ?sort=&dir=). */
+/** The server's default (newest) or one column ascending (GET /students ?sort=&dir=). */
 export const SORT_CHOICES = ['newest', 'name', 'code', 'remaining'] as const;
 export type SortChoice = (typeof SORT_CHOICES)[number];
 const SORT_KEY: Record<Exclude<SortChoice, 'newest'>, StudentSortKey> = { name: 'name', code: 'code', remaining: 'remaining' };
 
 export type FilterKey = (typeof STUDENT_FILTER_KEYS)[number];
 
-/** The list's filters as the web's StudentFilters: '' = «الكل». Same names as the API query (R-STU-01). */
+/** An empty string means all; names match the API query (R-STU-01). */
 export type StudentFilters = Record<FilterKey, string> & { sort: SortChoice };
 
 export const NO_FILTERS: StudentFilters = { status: '', teacher: '', program: '', package: '', weekly: '', tz: '', sort: 'newest' };
@@ -34,7 +34,7 @@ export function countOf(counts: unknown, status: StudentStatus): number | undefi
   return typeof n === 'number' ? n : undefined;
 }
 
-/** «الكل»: the sum of the per-status counts, undefined until every one is known. */
+/** Undefined until every per-status count is known. */
 export function totalOf(counts: unknown): number | undefined {
   const all = STUDENT_STATUSES.map((s) => countOf(counts, s));
   return all.every((n): n is number => n !== undefined) ? all.reduce((a, b) => a + b, 0) : undefined;

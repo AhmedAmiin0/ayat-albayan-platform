@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 import { SubscriptionsPage } from '@/features/finance/subscriptions/SubscriptionsPage';
 
-// The packages list: a cancelled package (owner 2026-10-28) is history only — «ملغاة», no money action.
+// A cancelled package is history only, with no money action.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));

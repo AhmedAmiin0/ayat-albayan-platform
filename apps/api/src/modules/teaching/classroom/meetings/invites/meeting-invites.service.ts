@@ -32,12 +32,7 @@ export class MeetingInvitesDeps {
 
 type Target = { user: AuthUser; id: string };
 
-/**
- * The invitees of a meeting (R-MEET-02): the list, «أضف مدعوين» and «أعد الإرسال» for its creator or an
- * admin (403; 410 once ended), and the picker's options for anyone with meetings.write: staff by name
- * and role, students by name and code within what the caller may already see. Never a phone. Who may
- * send WhatsApp through all of it: InvitePolicy (meeting-invite.policy.ts).
- */
+/** Meeting invitees (R-MEET-02): creator or admin only (403; 410 once ended); never a phone. */
 @Injectable()
 export class MeetingInvitesService {
   constructor(
@@ -60,13 +55,7 @@ export class MeetingInvitesService {
     return this.flow.invite({ meeting: row, actorId: t.user.id, invitees: resolved, win, now, policy });
   }
 
-  /**
-   * «أعد الإرسال»: staff get the bell row again; anyone else a NEW personal link (only theirs is
-   * replaced) and, when the caller may chat and the window is open, the chat text again. A retried
-   * request id whose text was already queued sends and rotates nothing (the answer has no link); one
-   * that queued nothing (window_closed, chat_not_allowed, invite_limit) returns a fresh link to copy.
-   * Only whom add() would let the caller invite: a typed phone admin / sales (403), a student in scope (404).
-   */
+  /** Resend: a retried request id whose text was already queued sends and rotates nothing. */
   async resend(t: Target & { inviteeId: string; body: unknown }, now = new Date()): Promise<MeetingInviteResult> {
     const { clientRequestId } = parseOrThrow(resendMeetingInviteSchema, t.body);
     const { row, win } = await this.meetings.managedOpen(t, now);

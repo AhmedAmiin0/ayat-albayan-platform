@@ -26,7 +26,7 @@ const bioFlags: BioFlags = {
 };
 const make = () =>
   new BioLockStore({
-    native,
+    native: Promise.resolve(native),
     flags: bioFlags,
     text: () => ({ reason: 'R', enableReason: 'E', cancel: 'C' }),
   });

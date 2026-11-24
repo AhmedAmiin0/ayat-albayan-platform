@@ -4,7 +4,6 @@ import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { openUrl } from './use-report-page';
 
-/** The teacher's attachments, then the PDF (or «يجري إعداد ملف PDF» while it renders). */
 export function ReportPageFiles({ view }: { view: ReportPageView }) {
   const s = t.reportPage;
   return (

@@ -14,12 +14,7 @@ interface RescheduleDoneProps {
   onClose: () => void;
 }
 
-/**
- * The move landed, said like the booking's success (BookedPanel): a fill nuqta and an Amiri title,
- * then the new time, the new lesson's status («يحتاج تأكيد» until the guardian answers, «مجدولة»
- * when the academy requires no confirmation) and that
- * the WhatsApp confirmation is on its way (the API queued it with the move). No box.
- */
+/** Needs confirmation until the guardian answers, or is scheduled when none is required. */
 export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProps) {
   const viewer = useViewerClock();
   const { color } = useTheme();

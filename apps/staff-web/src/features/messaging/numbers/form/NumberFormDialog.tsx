@@ -21,10 +21,7 @@ const saveNumber = async (input: { view?: NumberView; draft: ReturnType<typeof d
   return Object.keys(body).length === 0 ? null : updateNumber({ id: input.view.id, body });
 };
 
-/**
- * «إضافة رقم» / «تعديل الرقم»: field errors under each field and a summary alert; a 409 (phone id
- * used by another number) in words, on the phone id field too.
- */
+/** A 409 means the phone id is used by another number. */
 export function NumberFormDialog({ view, onClose }: { view?: NumberView; onClose: () => void }) {
   const formId = useId();
   const [draft, setDraft] = useState(() => draftOf(view));

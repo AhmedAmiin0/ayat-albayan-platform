@@ -2,8 +2,7 @@ import type { HomePrefs } from '@ab/client-core';
 import type { LessonView } from '@ab/shared';
 import type { teacherDay } from './teacher-day';
 
-// «تخصيص» on «اليوم» (owner 2026-11-14), applied to the day: a hidden hero leaves its lesson in
-// «بقية اليوم» (first: it is under way or next), hidden ended lessons drop the fold. Pure.
+// A hidden hero leaves its lesson first in the rest of the day; hidden ended drops the fold; pure.
 
 type Day = ReturnType<typeof teacherDay>;
 
