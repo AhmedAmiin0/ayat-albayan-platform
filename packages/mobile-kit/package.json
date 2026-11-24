@@ -32,7 +32,8 @@
     "./ui/tabs/AppNativeTabs": "./src/ui/tabs/AppNativeTabs.tsx",
     "./babel": "./babel.cjs",
     "./jest-config": "./jest.base.cjs",
-    "./jest-setup": "./jest.shared.cjs"
+    "./jest-setup": "./jest.shared.cjs",
+    "./metro": "./metro.cjs"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
