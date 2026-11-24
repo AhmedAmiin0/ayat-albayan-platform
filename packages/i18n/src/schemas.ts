@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { LOCALES } from '@ab/core';
 
-// /i18n endpoints: the public overrides map and the admin «الترجمات» editor.
+// /i18n endpoints: the public overrides map and the admin translations editor.
 
 export const MAX_TRANSLATION_LENGTH = 2000;
 
@@ -31,8 +31,8 @@ export interface TranslationKeyRow {
   enOverride: string | null;
   /**
    * docs/26 §3: set only on a settings row's hint key (its Arabic text is that row's
-   * description, edited on «القيم»): the settings key. The ar column is then read-only here
-   * (PUT/DELETE of the ar override → 409 `edit_on_values`); en stays editable.
+   * description, edited on the values page): the settings key. The ar column is then read-only
+   * here (PUT/DELETE of the ar override → 409 `edit_on_values`); en stays editable.
    */
   valuesKey?: string;
 }

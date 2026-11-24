@@ -2,9 +2,9 @@ import { addCalendarDays, weekdayOfDate, weekStartOfDate } from './calendar/inde
 
 // Academy-week calendar math on local dates "YYYY-MM-DD" (R-SCH-01, rule 6). Plain calendar
 // arithmetic, no zone involved (the date-fns facade, calendar.ts). Shared by the web schedule grid
-// and the mobile calendar (docs/27 E6); weeks run السبت → الجمعة like the availability grid.
+// and the mobile calendar (docs/27 E6); weeks run Saturday → Friday like the availability grid.
 
-/** Weekday of a calendar date: 0 = الأحد … 6 = السبت (`byday`, teacher_availability numbering). */
+/** Weekday of a calendar date: 0 = Sunday … 6 = Saturday (`byday`, teacher_availability). */
 export const weekdayOf = weekdayOfDate;
 
 /** The date `days` later (negative: earlier); crosses months and years. */
