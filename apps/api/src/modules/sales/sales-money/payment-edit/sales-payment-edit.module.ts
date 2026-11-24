@@ -3,7 +3,7 @@ import { SalesMoneyReadsModule } from '@/modules/sales/sales-money/reads';
 import { SalesMoneySharedModule } from '@/modules/sales/sales-money/shared';
 import { SalesPaymentAmount } from './sales-payment-amount';
 
-/** «تعديل المبلغ» of her transfer, served by SalesPaymentsController (PATCH :id/amount). */
+/** Transfer amount edit, served by SalesPaymentsController (PATCH :id/amount). */
 @Module({
   imports: [SalesMoneySharedModule, SalesMoneyReadsModule],
   providers: [SalesPaymentAmount],

@@ -6,7 +6,7 @@ import { AnyPackageCancel } from './any-package-cancel.service';
 import { SalesPackageCancel } from './sales-package-cancel';
 
 /**
- * «إلغاء الباقة» on the admin's SubscriptionCancel: ANY student's package (POST /sales/packages,
+ * Package cancel on the admin's SubscriptionCancel: ANY student's package (POST /sales/packages,
  * subscriptions.stop) here, her own student's (SalesPackageCancel) on SalesSubscribeController.
  */
 @Module({
