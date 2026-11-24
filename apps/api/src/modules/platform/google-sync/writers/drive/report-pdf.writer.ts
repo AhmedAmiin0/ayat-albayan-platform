@@ -27,7 +27,7 @@ export class ReportPdfWriter implements ItemWriter {
 
   async write(item: SyncItem, ctx: WriteCtx): Promise<ItemResult> {
     const src = await this.source.report(item.subject_id);
-    if (!src || !src.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
+    if (!src?.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
     if (!src.pdfReady || !src.pdfPath) return later(item, 'pdf_not_ready');
     const need = await this.drive.need(src.studentId);
     if (need.kind === 'unmapped') return { state: 'skipped', reason: 'student_unmapped' };

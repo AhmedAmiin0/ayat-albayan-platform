@@ -35,7 +35,12 @@ const fileErrorText = (e: unknown): string => sendErrorCodeText(e instanceof Cha
 /** An image's thumbnail (an object URL, revoked on unmount) or the PDF's name and size. */
 function Chip({ file }: { file: File }) {
   const url = file.type.startsWith('image/') ? URL.createObjectURL(file) : null;
-  useEffect(() => () => void (url && URL.revokeObjectURL(url)), [url]);
+  useEffect(
+    () => () => {
+      if (url) URL.revokeObjectURL(url);
+    },
+    [url],
+  );
   if (url) return <img src={url} alt={file.name} className="h-11 w-auto max-w-24 rounded-md border border-rule object-cover" />;
   return (
     <span className="flex min-w-0 items-center gap-1.5 rounded-md border border-rule bg-sunk px-2 py-1 text-xs text-ink-2">

@@ -28,7 +28,9 @@ describe('the app and the setting around a live call', () => {
     await fireEvent.press(await screen.findByTestId('call-button'));
     await screen.findByTestId('call-screen');
     mockFetch.mockImplementation(routes({ config: { ...ON, enabled: false }, active: [] }));
-    await act(async () => void (await client.refetchQueries({ queryKey: ['calls', 'config'] })));
+    await act(async () => {
+      await client.refetchQueries({ queryKey: ['calls', 'config'] });
+    });
     await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', '/calls/out1/end'));
   });
 
@@ -37,7 +39,7 @@ describe('the app and the setting around a live call', () => {
     const handlers: ((s: AppStateStatus) => void)[] = [];
     const change = (s: AppStateStatus) => handlers.forEach((h) => h(s));
     jest.spyOn(AppState, 'addEventListener').mockImplementation((_type, handler) => {
-      handlers.push(handler as (s: AppStateStatus) => void);
+      handlers.push(handler);
       return { remove: () => undefined };
     });
     mockFetch.mockImplementation(routes({ config: ON, active: [placed] }));

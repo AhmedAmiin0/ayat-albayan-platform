@@ -49,7 +49,7 @@ export function verifyWebhook(input: WebhookCheck): boolean {
   const token = input.authorization?.replace(/^Bearer\s+/i, '').trim();
   if (!input.rawBody || !token) return false;
   const claims = signedClaims(token, input.config.apiSecret);
-  if (!claims || claims.iss !== input.config.apiKey || !fresh(claims, input.now)) return false;
+  if (claims?.iss !== input.config.apiKey || !fresh(claims, input.now)) return false;
   const digest = createHash('sha256').update(input.rawBody).digest('base64');
   return typeof claims.sha256 === 'string' && safeEqual(claims.sha256, digest);
 }

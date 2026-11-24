@@ -13,7 +13,12 @@ type Props = { file: File | null; onChange: (file: File | null) => void; error?:
 export function ReceiptField({ file, onChange, error }: Props) {
   const id = useId();
   const preview = useMemo(() => (file?.type.startsWith('image/') ? URL.createObjectURL(file) : null), [file]);
-  useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview]);
+  useEffect(
+    () => () => {
+      if (preview) URL.revokeObjectURL(preview);
+    },
+    [preview],
+  );
 
   return (
     <div className="grid content-start gap-1.5">

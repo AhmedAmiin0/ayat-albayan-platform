@@ -31,7 +31,7 @@ describe('«القيم» — confirmations and the row menu', () => {
     expect(document.activeElement?.textContent).toBe(t.common.cancel);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.cancel }));
     expect(apiSend).not.toHaveBeenCalled();
-    expect((within(row).getByRole('switch', { name: ALWAYS }) as HTMLInputElement).checked).toBe(true);
+    expect((within(row).getByRole<HTMLInputElement>('switch', { name: ALWAYS })).checked).toBe(true);
     fireEvent.click(within(row).getByRole('switch', { name: ALWAYS }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: v.confirmYes.teachersAlwaysAvailable.off }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/teachers_always_available', { value: false, expectedVersion: 1 }));

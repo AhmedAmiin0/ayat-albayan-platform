@@ -5,7 +5,8 @@ import { SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
 import { catalogueViews, entryView, type CatalogueInputs } from '../catalogue-state.js';
 import { notificationEntry, type NotificationKey } from '../../catalogue.js';
 
-const approvedAll = new Map(TEMPLATE_KEYS.map((k) => [k, { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine }]));
+const tpl = (status: TemplateStatus, line: WaLine) => ({ status, line });
+const approvedAll = new Map(TEMPLATE_KEYS.map((k) => [k, tpl('approved', 'notifications')]));
 const ALL_ON: AcademySettings = {
   ...SETTING_DEFAULTS,
   messaging_enabled: true,
@@ -46,8 +47,8 @@ describe('entryView: the first blocker, fail-closed', () => {
 
   it('one approved variant is enough; the rows list each variant with its status and number', () => {
     const templates = new Map([
-      ['lesson_reminder', { status: 'pending' as TemplateStatus, line: 'notifications' as WaLine }],
-      ['lesson_reminder_meet', { status: 'approved' as TemplateStatus, line: 'chat' as WaLine }],
+      ['lesson_reminder', tpl('pending', 'notifications')],
+      ['lesson_reminder_meet', tpl('approved', 'chat')],
     ]);
     const v = view('lesson_reminder', { templates });
     expect(v.state).toBe('on');

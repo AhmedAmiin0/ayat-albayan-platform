@@ -32,6 +32,6 @@ export class RulesSourceSettings {
   async writeLegacy(values: Partial<RuleSettings>, actorId: string): Promise<void> {
     const only = Object.fromEntries(Object.entries(values).filter(([k]) => (RULE_SETTING_KEYS as readonly string[]).includes(k)));
     if (Object.keys(only).length === 0) return;
-    await this.store.write(only as Partial<RuleSettings>, actorId);
+    await this.store.write(only, actorId);
   }
 }

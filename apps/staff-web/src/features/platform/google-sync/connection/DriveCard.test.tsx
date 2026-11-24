@@ -46,6 +46,6 @@ describe('Drive card', () => {
   it('the search needs a connected account', async () => {
     const connection = { status: 'disconnected' as const, email: null, scopes: [] as string[], connected_at: null, last_error: null };
     renderGoogle({ apiFetch, status: googleStatus({ connection, discovery: null }) });
-    expect(((await screen.findByRole('button', { name: s.discover })) as HTMLButtonElement).disabled).toBe(true);
+    expect((await screen.findByRole<HTMLButtonElement>('button', { name: s.discover })).disabled).toBe(true);
   });
 });

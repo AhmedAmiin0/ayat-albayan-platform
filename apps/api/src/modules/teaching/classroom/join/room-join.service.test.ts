@@ -1,4 +1,5 @@
-import { ForbiddenException, HttpException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ADMIN, ASSISTANT, CLOSED, CONFIG, decode, EARLY, GUARDIAN, LESSON_ID, OPEN, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from '@/modules/teaching/classroom/classroom.fakes';
 import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';

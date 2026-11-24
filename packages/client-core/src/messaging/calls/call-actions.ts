@@ -75,6 +75,12 @@ function dropLocal(rt: CallRuntime, peer: CallPeer | null): void {
   if (peer && rt.peer.current !== peer) peer.close();
 }
 
+/** Hung up while a request was in flight: the call exists on the server now, so end it there. */
+async function dropAndEnd(rt: CallRuntime, peer: CallPeer | null, id: string): Promise<void> {
+  dropLocal(rt, peer);
+  await rt.platform.sends.endCall(id).catch(() => undefined);
+}
+
 function failed(rt: CallRuntime, input: { live: () => boolean; error: unknown }): void {
   if (!input.live()) return;
   teardown(rt);
@@ -94,8 +100,10 @@ export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<vo
     const sdp = peer ? await peer.offer() : null;
     if (!sdp || !live()) return dropLocal(rt, peer);
     const view = await sends.startCall({ phone: target.phone, sdp, clientRequestId: rt.platform.requestId() });
-    // Hung up while the request was in flight: the call exists now, so end it.
-    if (!live()) return void (dropLocal(rt, peer), await sends.endCall(view.id).catch(() => undefined));
+    if (!live()) {
+      await dropAndEnd(rt, peer, view.id);
+      return;
+    }
     rt.markId();
     rt.setSession((s) => (s ? { ...s, id: view.id } : s));
     rt.refresh();
@@ -115,7 +123,10 @@ export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallVie
     const sdp = peer ? await peer.answer(row.offer_sdp ?? '') : null;
     if (!sdp || !live()) return dropLocal(rt, peer);
     await sends.acceptCall(row.id, sdp);
-    if (!live()) return void (dropLocal(rt, peer), await sends.endCall(row.id).catch(() => undefined));
+    if (!live()) {
+      await dropAndEnd(rt, peer, row.id);
+      return;
+    }
     rt.markId();
     rt.refresh();
   } catch (error) {

@@ -20,7 +20,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const P = t.paymentLinks;
 const TRIAL = '7a000000-0000-4000-8000-000000000001';
 const ref = P.referencePrice.replace('{amount}', String(SALES_QUOTE.afterDiscount)).replace('{currency}', 'ر.س');
-const amountBox = () => screen.getByRole('spinbutton', { name: P.agreedAmount.replace('{currency}', 'ر.س') }) as HTMLInputElement;
+const amountBox = () => screen.getByRole<HTMLInputElement>('spinbutton', { name: P.agreedAmount.replace('{currency}', 'ر.س') });
 const posted = (path: string) => apiSend.mock.calls.filter(([, p]) => p === path).map((c) => c[2] as Record<string, unknown>);
 
 /** «اشتراك جديد» in the Stripe test build with the API's switch on, «دفع إلكتروني» picked. */

@@ -2,7 +2,7 @@ import { GOOGLE_SCOPES } from '@ab/shared';
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { kickConfigReload } from '@/config/role/worker-kick';
-import { GoogleAccountQueries } from './google-account.queries';
+import type { GoogleAccountQueries } from './google-account.queries';
 import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
 import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';

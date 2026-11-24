@@ -22,7 +22,7 @@ describe('recordSend: every inbox send is audited under who sent it', () => {
     const a = audit();
     const scope = { teacherId: 'tch-1', teacherName: 'أبرار' } as never;
     await recordSend(a as unknown as AuditService, { sent: sent(), action: 'thread_text', user: TEACHER, scope, sales: null });
-    await recordSend(a as unknown as AuditService, { sent: sent(), action: 'thread_text', user: SALES, scope: null, sales: { salesId: SALES.id } as never });
+    await recordSend(a as unknown as AuditService, { sent: sent(), action: 'thread_text', user: SALES, scope: null, sales: { salesId: SALES.id } });
     expect(a.record.mock.calls[0]?.[0].after).toMatchObject({ teacher_id: 'tch-1', teacher_name: 'أبرار' });
     expect(a.record.mock.calls[1]?.[0].after).toMatchObject({ sales_id: SALES.id });
   });
@@ -30,7 +30,7 @@ describe('recordSend: every inbox send is audited under who sent it', () => {
   it('a sent file logs its mime and name in place of template_key', async () => {
     const a = audit();
     const media = { media_mime: 'application/pdf', media_name: 'خطة.pdf' };
-    await recordSend(a as unknown as AuditService, { sent: sent(), action: 'thread_file', user: SALES, scope: null, sales: { salesId: SALES.id } as never, media });
+    await recordSend(a as unknown as AuditService, { sent: sent(), action: 'thread_file', user: SALES, scope: null, sales: { salesId: SALES.id }, media });
     expect(a.record.mock.calls[0]?.[0].after).toEqual({ phone: view.phone_e164, ...media, status: 'sent', sales_id: SALES.id });
   });
 

@@ -55,7 +55,7 @@ describe('ColumnFilterText', () => {
   it('an outside change replaces the draft; its own echo does not', () => {
     const onChange = vi.fn();
     const { rerender } = render(<ColumnFilterText ariaLabel="الاسم" value="" onChange={onChange} placeholder="بحث" />);
-    const box = screen.getByRole('searchbox') as HTMLInputElement;
+    const box = screen.getByRole<HTMLInputElement>('searchbox');
     expect(box.placeholder).toBe('بحث');
     rerender(<ColumnFilterText ariaLabel="الاسم" value="بلال" onChange={onChange} />);
     expect(box.value).toBe('بلال');

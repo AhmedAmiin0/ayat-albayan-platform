@@ -15,7 +15,8 @@ const ALL_ON = {
   ...{ messaging_enabled: true, auto_messages_enabled: true, reminder_24h_enabled: true },
   ...{ teacher_whatsapp_lesson_reminder: true, teacher_whatsapp_new_student: true },
 } satisfies Partial<AcademySettings>;
-const approved = new Map(TEMPLATE_KEYS.map((k) => [k, { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine }]));
+const tpl = (status: TemplateStatus, line: WaLine) => ({ status, line });
+const approved = new Map(TEMPLATE_KEYS.map((k) => [k, tpl('approved', 'notifications')]));
 
 interface Setup {
   settings?: AcademySettings;

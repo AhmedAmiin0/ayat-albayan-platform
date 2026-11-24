@@ -78,7 +78,7 @@ export function diffRanges(text: string, other: string): DiffRange[] {
     let end = l.index + 1;
     while (isMark(chars[end])) end++;
     const last = ranges.at(-1);
-    if (last && last.end === l.index) last.end = end;
+    if (last?.end === l.index) last.end = end;
     else ranges.push({ start: l.index, end });
   }
   return ranges;

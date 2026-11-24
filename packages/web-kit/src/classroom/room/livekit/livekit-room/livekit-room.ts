@@ -107,8 +107,12 @@ export function createLivekitRoom(): RoomClient {
       listeners.add(listener);
       return () => void listeners.delete(listener);
     },
-    setMic: (on) => moderation.self(async () => void (await room.localParticipant.setMicrophoneEnabled(on))),
-    setCamera: (on) => moderation.self(async () => void (await room.localParticipant.setCameraEnabled(on))),
+    setMic: (on) => moderation.self(async () => {
+      await room.localParticipant.setMicrophoneEnabled(on);
+    }),
+    setCamera: (on) => moderation.self(async () => {
+      await room.localParticipant.setCameraEnabled(on);
+    }),
     onModerated: (listener) => moderation.on(listener),
     setShare: async (on) => {
       if (on && last.boardShareOn) await setBoard(null);

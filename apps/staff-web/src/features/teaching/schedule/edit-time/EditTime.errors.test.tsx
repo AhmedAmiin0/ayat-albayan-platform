@@ -54,7 +54,7 @@ describe('«عدّل الوقت» refusals (R-SCH-11)', () => {
     apiSend.mockRejectedValueOnce(refuse(409, 'stale_time', { starts_at: BUSY }));
     moveToMonday();
     expect(await screen.findByText(t.lessons.error.stale_time)).toBeTruthy();
-    expect((screen.getByRole('button', { name: t.lessons.timeEdit.submit }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: t.lessons.timeEdit.submit })).disabled).toBe(true);
     pick.time('19:00'); // editing does not clear it
     expect(screen.getByText(t.lessons.error.stale_time)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledTimes(1);
@@ -70,7 +70,7 @@ describe('«عدّل الوقت» refusals (R-SCH-11)', () => {
     apiSend.mockRejectedValueOnce(refuse(status, code));
     moveToMonday();
     expect(await screen.findByText(t.lessons.error[code as keyof typeof t.lessons.error])).toBeTruthy();
-    expect((screen.getByRole('button', { name: t.lessons.timeEdit.submit }) as HTMLButtonElement).disabled).toBe(false);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: t.lessons.timeEdit.submit })).disabled).toBe(false);
     pick.time('19:00');
     await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
   });

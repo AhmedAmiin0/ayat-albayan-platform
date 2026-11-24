@@ -40,7 +40,7 @@ function asStroke(v: unknown): Stroke | null {
 /** A list of identities; absent (an older client) reads as none. */
 function asIdentities(v: unknown): string[] | null {
   if (v === undefined) return [];
-  return Array.isArray(v) && v.every((x) => typeof x === 'string') ? (v as string[]) : null;
+  return Array.isArray(v) && v.every((x) => typeof x === 'string') ? v : null;
 }
 
 function asSync(v: Obj): BoardMessage | null {

@@ -31,7 +31,7 @@ export function parseStudentFilters(s: Record<string, unknown>): StudentsFilters
     const text = Array.isArray(v) ? v.join(',') : v;
     if (typeof text === 'string' && text) out[key] = text;
   }
-  return out as StudentsFilters;
+  return out;
 }
 
 /** Query-string pairs for GET /students: only the filters that are set. */

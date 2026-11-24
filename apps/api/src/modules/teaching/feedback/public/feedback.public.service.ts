@@ -44,7 +44,7 @@ export class FeedbackPublicService {
     await this.limit.check({ ip: call.ip, token: call.token });
     const { lessonId, studentId } = this.verified(call.token, now);
     const ctx = await this.queries.byTokenHash(hashToken(call.token));
-    if (!ctx || ctx.row.lesson_id !== lessonId || ctx.row.student_id !== studentId) throw invalid();
+    if (ctx?.row.lesson_id !== lessonId || ctx.row.student_id !== studentId) throw invalid();
     if (Date.parse(ctx.row.expires_at) <= now.getTime()) throw expired();
     return ctx;
   }

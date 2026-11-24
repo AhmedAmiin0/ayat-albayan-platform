@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import type { AuthUser } from '@/common/auth/verify-token';
+
 import { readerOf } from '@/common/settings/settings.fakes';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import type { CourseLessonRepo } from './course-change.lessons';
@@ -33,8 +33,8 @@ export const RULE_A: ChangeRule = {
   schedule_rule_students: [student],
 };
 export const RULE_B: ChangeRule = { ...RULE_A, id: 'rb', byday: [3], first_rule_id: 'ra' };
-export const SALES: ChangeActor = { user: { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' } as AuthUser, role: 'sales' };
-export const ADMIN: ChangeActor = { user: { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'admin' } as AuthUser, role: 'admin' };
+export const SALES: ChangeActor = { user: { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' }, role: 'sales' };
+export const ADMIN: ChangeActor = { user: { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'admin' }, role: 'admin' };
 /** Sun 25 Oct 17:00 + Tue 27 Oct 19:30 (Riyadh). */
 export const BODY = {
   subscriptionId: SUB_ID,

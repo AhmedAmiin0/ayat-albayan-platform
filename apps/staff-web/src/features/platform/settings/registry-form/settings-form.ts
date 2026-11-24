@@ -23,7 +23,7 @@ export type SettingsErrors = Partial<Record<string, string>>;
 export type SettingsResult = { ok: true; value: SettingsUpdate } | { ok: false; errors: SettingsErrors };
 
 /** The keys the generic form edits, in page order (SETTINGS_LAYOUT, section by section). */
-export const FORM_KEYS: SettingKey[] = (Object.values(SETTINGS_LAYOUT).flat() as SettingKey[]).filter((k) => settingDef(k).form !== false);
+export const FORM_KEYS: SettingKey[] = Object.values(SETTINGS_LAYOUT).flat().filter((k) => settingDef(k).form !== false);
 
 export const onKey = (field: string): string => `${field}On`;
 export const str = (form: SettingsForm, key: string): string => {
@@ -36,7 +36,7 @@ export const flag = (form: SettingsForm, key: string): boolean => form[key] === 
 export const shapeId = (field: string, name: string): string => `${field}.${name}`;
 
 function shapeFields(field: string, def: JsonDef, v: AcademySettings[SettingKey]): SettingsForm {
-  const obj: Record<string, string> = v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, string>) : {};
+  const obj: Record<string, string> = v !== null && typeof v === 'object' && !Array.isArray(v) ? v : {};
   return Object.fromEntries(def.shape.map((f) => [shapeId(field, f.name), obj[f.name] ?? '']));
 }
 

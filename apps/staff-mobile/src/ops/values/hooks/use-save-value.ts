@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, type AcademySettings, type SettingKey, type SettingsMetaResponse } from '@ab/shared';
+import { SETTING_FIELD_OF, type SettingKey, type SettingsMetaResponse } from '@ab/shared';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
@@ -50,7 +50,7 @@ export function useSaveValue() {
     onSuccess: ({ answer }, { key }) => {
       // The settings object replaces the cached copy; any other answer refetches it.
       if (isObject(answer) && Object.hasOwn(answer, key)) {
-        qc.setQueryData(pathKey(SETTINGS), answer as AcademySettings);
+        qc.setQueryData(pathKey(SETTINGS), answer);
       } else void qc.invalidateQueries({ queryKey: pathKey(SETTINGS) });
       void qc.invalidateQueries({ queryKey: pathKey(META) });
     },

@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { PROFILE_KEY, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { TodayHeader } from './TodayHeader';
+import type * as mockReactNative from 'react-native';
 
 // The header's bell: the admin's always; the salesperson's only with notifications.push (as «المحادثات»).
 let mockHeld: Permission[] = [];
@@ -11,7 +12,7 @@ jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({
   useHolds: (p: Permission) => mockHeld.includes(p),
 }));
 jest.mock('@/notifications/BellButton', () => {
-  const { Text: MockText } = jest.requireActual<typeof import('react-native')>('react-native');
+  const { Text: MockText } = jest.requireActual<typeof mockReactNative>('react-native');
   return { BellButton: ({ tree }: { tree: string }) => <MockText>{`bell:${tree}`}</MockText> };
 });
 

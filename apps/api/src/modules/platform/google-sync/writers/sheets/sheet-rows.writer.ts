@@ -34,7 +34,7 @@ export class SheetRowsWriter implements ItemWriter {
 
   private async attendance(item: SyncItem, ctx: WriteCtx): Promise<ItemResult> {
     const src = await this.source.report(item.subject_id);
-    if (!src || !src.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
+    if (!src?.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
     const date = localDate(src.startsAt, TZ);
     const pdf = await this.data.items.sibling({ kind: 'report_pdf', subjectId: item.subject_id });
     if (!ctx.live) return planned({ method: 'POST', target: 'sheet:attendance', summary: date });
@@ -74,7 +74,7 @@ export class SheetRowsWriter implements ItemWriter {
 
   private async summary(item: SyncItem, ctx: WriteCtx): Promise<ItemResult> {
     const src = item.report_id ? await this.source.report(item.report_id) : null;
-    if (!src || !src.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
+    if (!src?.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
     const acct = await this.data.account.get();
     if (!acct.summary_sheet_id || !acct.drive_confirmed_at) return { state: 'skipped', reason: 'drive_unconfirmed' };
     const need = await this.drive.need(src.studentId);

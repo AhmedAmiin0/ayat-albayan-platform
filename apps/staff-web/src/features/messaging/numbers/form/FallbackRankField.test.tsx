@@ -67,7 +67,7 @@ describe('«ترتيب البديل»', () => {
     const { client } = renderPanel(apiFetch);
     const c = await card();
     act(() => client.setQueryData(numbersQuery.queryKey, [numberView({ fallback_rank: 42 })]));
-    await waitFor(() => expect((c.getByRole('spinbutton', { name: r.label }) as HTMLInputElement).value).toBe('42'));
+    await waitFor(() => expect((c.getByRole<HTMLInputElement>('spinbutton', { name: r.label })).value).toBe('42'));
   });
 
   it('without numbers.manage the rank is text', async () => {

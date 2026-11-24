@@ -22,7 +22,7 @@ async function mountBar({ connectingFor }: { connectingFor?: number } = {}) {
   await act(async () => undefined); // Reduce Motion is read asynchronously
   return store;
 }
-const advance = (ms: number) => act(async () => void jest.advanceTimersByTime(ms));
+const advance = (ms: number) => act(async () => jest.advanceTimersByTime(ms));
 const measure = () => fireEvent(screen.getByTestId('connecting-bar-measure'), 'layout', { nativeEvent: { layout: { height: CARD } } });
 const height = () => screen.getByTestId('connecting-bar-reveal');
 const heightRuns = () => timing.mock.calls.map(([, config]) => config).filter((config) => config.useNativeDriver === false);

@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { KickService } from './kick.service';

@@ -1,5 +1,5 @@
 import { GRADES, REPORT_RUBRICS } from '@ab/shared';
-import { View } from 'react-native';
+import type { View } from 'react-native';
 import { t, Section, FormLabel } from '@ab/mobile-kit';
 import { ChoiceChips } from './ChoiceChips';
 import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';

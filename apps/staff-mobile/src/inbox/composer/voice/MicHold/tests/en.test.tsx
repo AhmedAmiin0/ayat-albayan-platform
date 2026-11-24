@@ -1,6 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen, waitFor } from '@testing-library/react-native';
 import { hold, lift, moveTo, openChat, rec, resetVoice, tick, voiceRow } from '@/inbox/composer/voice/voice-test-kit';
+import type * as mockVoiceTestKit from '@/inbox/composer/voice/voice-test-kit';
 
 // An English phone (LTR): the start is on the LEFT, so the slide to cancel goes left (dx < 0).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -18,7 +19,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
 }));
-jest.mock('expo-audio', () => jest.requireActual<typeof import('@/inbox/composer/voice/voice-test-kit')>('@/inbox/composer/voice/voice-test-kit').audioMock());
+jest.mock('expo-audio', () => jest.requireActual<typeof mockVoiceTestKit>('@/inbox/composer/voice/voice-test-kit').audioMock());
 jest.mock('@/inbox/composer/voice/voice-support', () => ({ voiceSupported: () => true }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),

@@ -71,12 +71,16 @@ test('opening a chat clears its unread badge once the API answered; a refetch wi
   expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
   expect(spy).not.toHaveBeenCalledWith({ queryKey: ['threads', PHONE] }); // the thread is not fetched twice
   spy.mockClear();
-  await act(async () => void (await result.current.refetch()));
+  await act(async () => {
+    await result.current.refetch();
+  });
   expect(spy).not.toHaveBeenCalled();
   // A newer received message in the open chat reads it again.
   const later = message({ id: 'm4', direction: 'inbound', body: 'تمام', created_at: '2026-10-02T08:20:00Z' });
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, later]));
-  await act(async () => void (await result.current.refetch()));
+  await act(async () => {
+    await result.current.refetch();
+  });
   await waitFor(() => expect(spy).toHaveBeenCalledWith(HIDDEN_LISTS));
 });
 

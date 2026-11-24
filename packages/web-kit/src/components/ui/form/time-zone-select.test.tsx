@@ -7,7 +7,7 @@ import { TimeZoneSelect, tzCity } from './time-zone-select';
 describe('TimeZoneSelect (rule 6)', () => {
   it('lists the curated zones by city with the id as an LTR island', () => {
     render(<TimeZoneSelect aria-label={t.students.tz} value="Africa/Cairo" onValue={vi.fn()} />);
-    const select = screen.getByLabelText(t.students.tz) as HTMLSelectElement;
+    const select = screen.getByLabelText<HTMLSelectElement>(t.students.tz);
     expect(select.options).toHaveLength(TZ_OPTIONS.length);
     expect(select.selectedOptions[0]?.textContent).toBe(`${t.tz['Africa/Cairo']} (⁦Africa/Cairo⁩)`);
   });
@@ -15,7 +15,7 @@ describe('TimeZoneSelect (rule 6)', () => {
   it('keeps a stored zone outside the list and reports the pick', () => {
     const onValue = vi.fn();
     render(<TimeZoneSelect aria-label={t.students.tz} value="Asia/Karachi" onValue={onValue} />);
-    const select = screen.getByLabelText(t.students.tz) as HTMLSelectElement;
+    const select = screen.getByLabelText<HTMLSelectElement>(t.students.tz);
     expect(select.value).toBe('Asia/Karachi');
     fireEvent.change(select, { target: { value: 'Asia/Riyadh' } });
     expect(onValue).toHaveBeenCalledWith('Asia/Riyadh');

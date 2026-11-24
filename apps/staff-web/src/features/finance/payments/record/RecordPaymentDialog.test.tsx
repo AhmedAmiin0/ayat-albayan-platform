@@ -44,7 +44,7 @@ describe('RecordPaymentDialog (R-PAY-01)', () => {
       </QueryClientProvider>,
     );
     const dialog = screen.getByRole('dialog', { name: t.finance.refundTitle });
-    expect((within(dialog).getByRole('textbox', { name: new RegExp(t.payments.amount) }) as HTMLInputElement).value).toBe('100');
+    expect((within(dialog).getByRole<HTMLInputElement>('textbox', { name: new RegExp(t.payments.amount) })).value).toBe('100');
     fireEvent.change(within(dialog).getByRole('combobox', { name: t.payments.currency }), { target: { value: 'USD' } });
     expect(within(dialog).getByText(t.finance.convertedHint.replace('{currency}', WEEKLY.currency))).toBeTruthy();
     apiSend.mockResolvedValue(PAYMENT);

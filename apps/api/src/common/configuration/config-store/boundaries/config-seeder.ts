@@ -20,7 +20,7 @@ interface SeedOutcome {
 type SeedLog = Pick<Logger, 'log' | 'warn' | 'error'>;
 
 const asOutcome = (data: unknown): SeedOutcome =>
-  data !== null && typeof data === 'object' && !Array.isArray(data) ? (data as SeedOutcome) : {};
+  data !== null && typeof data === 'object' && !Array.isArray(data) ? data : {};
 
 /** One log line per run: skipped (and why), or applied with the failed keys (a warning when any). */
 function report(out: SeedOutcome, log: SeedLog): void {

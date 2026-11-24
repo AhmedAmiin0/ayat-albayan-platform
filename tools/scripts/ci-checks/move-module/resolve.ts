@@ -39,7 +39,7 @@ function aliasesOf(root: string, scope: string): Alias[] {
   const opts = (config?.compilerOptions ?? {}) as { baseUrl?: string; paths?: Record<string, string[]> };
   return Object.entries(opts.paths ?? {}).flatMap(([key, targets]) => {
     const target = targets[0];
-    if (!key.endsWith('/*') || target === undefined || !target.endsWith('/*')) return [];
+    if (!key.endsWith('/*') || !target?.endsWith('/*')) return [];
     const dir = posix.join(scope, opts.baseUrl ?? '.', target.slice(0, -2));
     return [{ prefix: key.slice(0, -1), dir, scope }];
   });

@@ -31,7 +31,7 @@ export function StudentFilterBar({ value, onChange, searching = false }: Student
   const pills = [
     { value: '', label: L.statusAll, ...(total === undefined ? {} : { count: total }) },
     ...STUDENT_STATUSES.map((s: StudentStatus) => ({
-      value: s as string,
+      value: s,
       label: t.enums.studentStatus[s],
       ...studentStatusStyle[s],
       ...(countOf(counts.data, s) === undefined ? {} : { count: countOf(counts.data, s) }),

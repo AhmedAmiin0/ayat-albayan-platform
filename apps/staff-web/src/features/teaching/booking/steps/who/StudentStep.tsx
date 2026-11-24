@@ -57,7 +57,7 @@ export function StudentStep({ primary, siblings: all, picked, onPicked, onOpenSt
         <h3 className="text-sm font-semibold">{t.booking.pickStudents}</h3>
         <StudentSearch initial="" onSearch={setTerm} live />
         {results.isFetching && <p className="text-xs text-ink-3">{t.common.loading}</p>}
-        {results.data && results.data.items.length === 0 && <p className="text-sm text-ink-2">{t.students.empty}</p>}
+        {results.data?.items.length === 0 && <p className="text-sm text-ink-2">{t.students.empty}</p>}
         {results.data && results.data.items.length > 0 && (
           <ul className="grid gap-1">
             {results.data.items.map((s) => (

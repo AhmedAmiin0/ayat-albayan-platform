@@ -15,7 +15,7 @@ export const participantMeta = (role: JoinRole): string => JSON.stringify({ role
 export function roleOfMeta(metadata: string | undefined | null): JoinRole | null {
   try {
     const role = (JSON.parse(metadata ?? '') as Partial<ParticipantMeta>).role;
-    return typeof role === 'string' ? (role as JoinRole) : null;
+    return typeof role === 'string' ? role : null;
   } catch {
     return null;
   }

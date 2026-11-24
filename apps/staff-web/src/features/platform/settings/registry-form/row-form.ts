@@ -24,7 +24,7 @@ export function rowForm(key: SettingKey, value: Value): SettingsForm {
   const def = settingDef(key);
   const field = SETTING_FIELD_OF[key];
   if (def.type === 'json') {
-    const obj = value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, string>) : {};
+    const obj = value !== null && typeof value === 'object' && !Array.isArray(value) ? value : {};
     return Object.fromEntries(def.shape.map((f) => [shapeId(field, f.name), obj[f.name] ?? '']));
   }
   if (typeof value === 'boolean') return { [field]: value };

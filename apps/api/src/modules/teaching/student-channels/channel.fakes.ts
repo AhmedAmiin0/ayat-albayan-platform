@@ -68,9 +68,9 @@ export async function channelApp() {
     })),
     byClientId: vi.fn(async (_send: ClientSend): Promise<ChannelMessageRow | null> => null),
     closedReason: vi.fn(async (): Promise<ChannelClosedReason | null> => 'not_subscribed'),
-    setReadMark: vi.fn(async (row: { channelId: string; profileId: string; at: string }) => {
-      void row;
-    }),
+    setReadMark: vi.fn(
+      async (_row: { channelId: string; profileId: string; at: string }) => undefined,
+    ),
     teacherIds: vi.fn(async (): Promise<string[]> => ['t1']),
     teacherStudentIds: vi.fn(async () => [ST]),
     summaries: vi.fn(async (_in: SummaryInput): Promise<ChannelSummaryRow[]> => [

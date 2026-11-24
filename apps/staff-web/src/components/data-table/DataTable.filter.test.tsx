@@ -62,7 +62,7 @@ describe('DataTable filters', () => {
     const onChange = vi.fn();
     render(<DataTable columns={columns} data={DATA} filters={{ values: { st: 'active' }, onChange }} />);
     openFilters();
-    expect((screen.getByRole('combobox', { name: by('الحالة') }) as HTMLSelectElement).value).toBe('active');
+    expect((screen.getByRole<HTMLSelectElement>('combobox', { name: by('الحالة') })).value).toBe('active');
     expect(names()).toHaveLength(3);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'أحمد' } });
     act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));

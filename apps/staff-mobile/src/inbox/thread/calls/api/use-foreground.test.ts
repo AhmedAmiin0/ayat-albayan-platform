@@ -5,7 +5,7 @@ import { useForeground } from './use-foreground';
 test('only «background» counts as away (iOS «inactive» still shows the app)', async () => {
   let change: (s: AppStateStatus) => void = () => undefined;
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_type, handler) => {
-    change = handler as (s: AppStateStatus) => void;
+    change = handler;
     return { remove: () => undefined };
   });
   const { result } = await renderHook(() => useForeground());

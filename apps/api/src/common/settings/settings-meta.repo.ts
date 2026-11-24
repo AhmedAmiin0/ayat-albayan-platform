@@ -14,7 +14,7 @@ export class SettingsMetaRepo {
   async meta(): Promise<Record<string, SettingMeta>> {
     const res = await this.db.from('settings').select('key, value, updated_at, updated_by');
     if (res.error) throw new Error(`settings read failed: ${res.error.message}`);
-    const data = res.data.filter((r) => !neverWritten({ value: r.value as unknown, updatedBy: r.updated_by }));
+    const data = res.data.filter((r) => !neverWritten({ value: r.value, updatedBy: r.updated_by }));
     const ids = [...new Set(data.map((r) => r.updated_by).filter((id): id is string => id !== null))];
     const names = new Map<string, string>();
     if (ids.length > 0) {

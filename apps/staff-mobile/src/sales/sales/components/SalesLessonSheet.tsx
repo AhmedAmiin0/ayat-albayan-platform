@@ -31,7 +31,7 @@ export function SalesLessonSheet({ lesson, onClose, studentId }: SalesLessonShee
   const { required } = useLessonStatusText();
   const [moving, setMoving] = useState<SalesScheduleLesson | null>(null);
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
-  const justConfirmed = lesson !== null && lesson.id === confirmedId;
+  const justConfirmed = lesson?.id === confirmedId;
   const shown = lesson && justConfirmed ? { ...lesson, status: 'confirmed' as const } : lesson;
   const moves = shown ? canChangeLesson(shown, { now, can }).reschedule : false;
   const cancelInput = { now, holds: can('lessons.cancel'), required };

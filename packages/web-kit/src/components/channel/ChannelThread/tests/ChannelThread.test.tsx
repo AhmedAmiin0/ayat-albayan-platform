@@ -59,7 +59,7 @@ describe('ChannelThread (docs/31 §2)', () => {
     expect(await screen.findByText(c.empty)).toBeTruthy();
     fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: 'x'.repeat(2001) } });
     expect(screen.getByText(c.tooLong.replace('{n}', '2000'))).toBeTruthy();
-    expect((screen.getByRole('button', { name: c.send }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: c.send })).disabled).toBe(true);
     fireEvent.change(screen.getByLabelText(c.messageLabel), { target: { value: 'مرحبًا' } });
     fireEvent.click(screen.getByRole('button', { name: c.send }));
     expect(await screen.findByText(c.sendFailed)).toBeTruthy();

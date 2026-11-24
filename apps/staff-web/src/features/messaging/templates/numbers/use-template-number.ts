@@ -30,7 +30,7 @@ export function useTemplateNumber(onNotice: (notice: Notice) => void) {
     onError: (e) => onNotice({ message: templateErrorText(e), tone: 'error' }),
     // Only the pick that was saved: a newer one (if any) keeps its dialog.
     onSettled: (_a, _e, { key, number_id }) =>
-      setPicking((cur) => (cur && cur.template.key === key && cur.numberId === number_id ? null : cur)),
+      setPicking((cur) => (cur?.template.key === key && cur.numberId === number_id ? null : cur)),
   });
   const confirm = () =>
     picking && save.mutate({ key: picking.template.key, number_id: picking.numberId });

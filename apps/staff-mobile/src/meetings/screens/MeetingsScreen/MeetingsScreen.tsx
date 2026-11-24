@@ -26,7 +26,7 @@ export function MeetingsScreen({ allow }: { allow?: MeetingAllow }) {
   const back = <BackButton onPress={() => router.back()} />;
   let body = <AppText>{t.common.loading}</AppText>;
   if (meetings.isError && !meetings.data) body = <ErrorState onRetry={() => void meetings.refetch()} />;
-  else if (meetings.data && meetings.data.length === 0) body = <EmptyState title={t.meetings.internal.empty} />;
+  else if (meetings.data?.length === 0) body = <EmptyState title={t.meetings.internal.empty} />;
   else if (meetings.data) body = <>{meetings.data.map((m) => <MeetingRow key={m.id} meeting={m} tz={tz} />)}</>;
   return (
     <Screen>

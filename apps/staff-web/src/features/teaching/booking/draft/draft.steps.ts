@@ -45,7 +45,7 @@ export function stepReady(d: BookingDraft, step: StepKey): boolean {
     case 'invoice':
       return d.invoice !== null;
     case 'teacher':
-      return d.teacher !== null && d.teacher.has_availability;
+      return d.teacher?.has_availability === true;
     case 'slot':
       return slotReady(d);
     case 'package':

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LineBadge } from './LineBadge';
 
-const lang = vi.hoisted(() => ({ locale: 'ar' as 'ar' | 'en' }));
+const lang = vi.hoisted(() => ({ locale: 'ar' }));
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => {
   const real = await orig<{ t: object }>();
   return {

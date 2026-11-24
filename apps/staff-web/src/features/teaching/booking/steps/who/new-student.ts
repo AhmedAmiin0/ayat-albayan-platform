@@ -49,7 +49,7 @@ export const isNewStudent = (d: { leadId: string | null; newStudent: NewStudentD
 
 /** Name, guardian name, a phone that becomes E.164 and, when typed, an age 3–99. */
 export function newStudentReady(s: NewStudentDraft | null): boolean {
-  if (!s || !s.name.trim() || !s.guardianName.trim() || !normalizePhone(s.guardianPhone).ok) return false;
+  if (!s?.name.trim() || !s.guardianName.trim() || !normalizePhone(s.guardianPhone).ok) return false;
   return parseAge(s.age ?? '') !== undefined;
 }
 

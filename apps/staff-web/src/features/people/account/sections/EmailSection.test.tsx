@@ -43,7 +43,7 @@ describe('EmailSection (R-ACC-03)', () => {
     expect(apiSend).toHaveBeenCalledWith('PUT', '/me/email', { email: 'new@ab.co', current_password: 'secret-1' });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ['me', 'profile'] });
     await vi.waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ['auth', 'me'] }));
-    expect((s.getByLabelText(M.label) as HTMLInputElement).value).toBe('');
+    expect((s.getByLabelText<HTMLInputElement>(M.label)).value).toBe('');
   });
 
   it('409 email_taken shows at the email', async () => {

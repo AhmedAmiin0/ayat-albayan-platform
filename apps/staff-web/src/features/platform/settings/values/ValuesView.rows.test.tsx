@@ -49,7 +49,7 @@ describe('«القيم» rows — after a save', () => {
     apiFetch.mockImplementation(async (path: string) => (path === '/settings' ? { ...SETTINGS, fx_fresh_hours: 6 } : routed?.(path)));
     fireEvent.click(within(row).getByRole('button', named(t.common.save, FX)));
     await screen.findByText(v.saved);
-    await waitFor(() => expect((within(row).getByLabelText(FX) as HTMLInputElement).value).toBe('6'));
+    await waitFor(() => expect((within(row).getByLabelText<HTMLInputElement>(FX)).value).toBe('6'));
     fireEvent.click(menuButton());
     fireEvent.click(within(row).getByRole('menuitem', { name: new RegExp(v.restorePrevious) }));
     await waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('PATCH', '/config/entries/fx_fresh_hours', { value: SETTINGS.fx_fresh_hours, expectedVersion: 1 }));

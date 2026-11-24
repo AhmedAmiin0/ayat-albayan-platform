@@ -65,7 +65,7 @@ export async function dropOrphans(o: {
   for (const d of o.desired) {
     const id = keyId(d.key);
     const e = o.existing.get(id);
-    if (!e || e.targetId !== null || !o.scope.only.has(d.key.entity)) continue;
+    if (e?.targetId !== null || !o.scope.only.has(d.key.entity)) continue;
     if (Object.values(d.record.refs).some((nk) => gone.has(keyId(nk)))) gone.add(id);
   }
   for (const id of gone) o.existing.delete(id);

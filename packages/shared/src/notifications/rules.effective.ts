@@ -36,7 +36,7 @@ function validChannels(entry: NotificationEntry, stored: readonly string[] | nul
 export function validTiming(key: string, stored: unknown): AnyRuleTiming | null {
   if (!isTimedKey(key) || stored === null || stored === undefined) return null;
   const parsed = RULE_TIMING_SCHEMAS[key].safeParse(stored);
-  return parsed.success ? (parsed.data as AnyRuleTiming) : null;
+  return parsed.success ? parsed.data : null;
 }
 
 /**

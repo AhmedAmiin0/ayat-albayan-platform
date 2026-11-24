@@ -58,7 +58,7 @@ export class InboundCalls {
   private async ringing(actor: CallActor, id: string): Promise<CallRow & { wa_call_id: string }> {
     await this.gate.assertOn();
     const row = await this.kit.queries.get(id);
-    if (!row || row.direction !== 'inbound' || !maySee(actor, row.phone_e164)) throw notFound('call_not_found');
+    if (row?.direction !== 'inbound' || !maySee(actor, row.phone_e164)) throw notFound('call_not_found');
     if (row.status === 'ended') throw conflict('call_ended');
     if (row.status !== 'ringing' || !row.wa_call_id) throw conflict('already_taken');
     return { ...row, wa_call_id: row.wa_call_id };

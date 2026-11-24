@@ -4,6 +4,7 @@ import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { chatImage, expiredImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
+import type * as HttpApi from '@ab/mobile-kit/lib/http/api';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -96,7 +97,7 @@ test('a file from the chat → receipt-from-chat → POST /sales/payments with i
 });
 
 test('an expired chat file (410): the reason, nothing chosen', async () => {
-  const { ApiError } = jest.requireActual<typeof import('@ab/mobile-kit/lib/http/api')>('@ab/mobile-kit/lib/http/api');
+  const { ApiError } = jest.requireActual<typeof HttpApi>('@ab/mobile-kit/lib/http/api');
   mockApiSend.mockRejectedValue(new ApiError(410, { code: 'media_expired' }));
   await renderWithQuery(<SalesTransferScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));

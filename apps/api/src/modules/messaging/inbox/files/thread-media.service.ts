@@ -93,7 +93,7 @@ export class ThreadMediaService {
   async bubbleObject(input: { phone: string; messageId: string }): Promise<{ msg: MediaMessage; file: InboundFile }> {
     const msg = await this.queries.message(input.messageId);
     // A message hidden from the platform keeps its file away from staff too («حذف من المنصة»).
-    if (!msg || msg.phone_e164 !== input.phone || msg.hidden_at) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (msg?.phone_e164 !== input.phone || msg.hidden_at) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     if (msg.direction === 'outbound' && msg.media_path) {
       return { msg, file: { bucket: BUCKETS.waMedia, path: msg.media_path, mime: baseMime(msg.media_mime) } };
     }

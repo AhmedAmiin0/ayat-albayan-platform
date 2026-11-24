@@ -49,7 +49,7 @@ describe('InternalMeetingsList — the creator manages a scheduled meeting', () 
     open();
     fireEvent.click(await screen.findByRole('button', { name: M.reschedule }));
     const dialog = screen.getByRole('dialog', { name: M.reschedule });
-    expect((within(dialog).getByLabelText(t.meetingInvites.time) as HTMLSelectElement).value).toBe('15:00');
+    expect((within(dialog).getByLabelText<HTMLSelectElement>(t.meetingInvites.time)).value).toBe('15:00');
     fireEvent.change(within(dialog).getByLabelText(t.meetingInvites.time), { target: { value: '16:30' } });
     fireEvent.change(within(dialog).getByLabelText(t.meetingInvites.duration), { target: { value: '90' } });
     fireEvent.click(within(dialog).getByRole('button', { name: t.meetingInvites.save }));

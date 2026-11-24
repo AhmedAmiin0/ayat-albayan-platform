@@ -1,7 +1,8 @@
 import { PermissionsAndroid, Platform } from 'react-native';
 import type { MicAnswer, RtcDeps } from './media';
+import type * as WebRtcModule from '@livekit/react-native-webrtc';
 
-type WebRtc = typeof import('@livekit/react-native-webrtc');
+type WebRtc = typeof WebRtcModule;
 
 /** RECORD_AUDIO at call time (the manifest declares it, docs/28 PR 2); iOS prompts on getUserMedia. */
 async function askMic(): Promise<MicAnswer> {

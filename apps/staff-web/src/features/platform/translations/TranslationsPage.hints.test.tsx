@@ -64,7 +64,7 @@ describe('TranslationsPage — Arabic rows of registry hints', () => {
     renderPage();
     fireEvent.click((await screen.findByText(HINT_KEY)).closest('tr') as HTMLElement);
     const dialog = within(screen.getByRole('dialog'));
-    const ar = dialog.getByLabelText(t.translations.arabic) as HTMLTextAreaElement;
+    const ar = dialog.getByLabelText<HTMLTextAreaElement>(t.translations.arabic);
     expect(ar.readOnly).toBe(true);
     expect(dialog.getByText(t.translations.arabicOnValues)).toBeTruthy();
     expect(dialog.getByRole('link', { name: t.translations.editOnValues }).getAttribute('href')).toBe(HREF);

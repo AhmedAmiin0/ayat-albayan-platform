@@ -24,7 +24,7 @@ export function ChatMediaSheet({ phone, onPick, onClose }: ChatMediaSheetProps) 
       <FormLabel>{t.booking.invoice.fromChat}</FormLabel>
       {media.isPending ? <Note>{t.common.loading}</Note> : null}
       {media.isError ? <ErrorState onRetry={() => void media.refetch()} /> : null}
-      {media.data && media.data.length === 0 ? <Note>{t.booking.invoice.chatEmpty}</Note> : null}
+      {media.data?.length === 0 ? <Note>{t.booking.invoice.chatEmpty}</Note> : null}
       {media.data?.some((item) => item.expired) ? <Note>{t.booking.invoice.expired}</Note> : null}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         {(media.data ?? []).map((item) => (

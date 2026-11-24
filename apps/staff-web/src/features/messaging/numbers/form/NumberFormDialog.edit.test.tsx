@@ -26,7 +26,7 @@ afterEach(() => {
 describe('«تعديل الرقم»', () => {
   it('starts from the record and PATCHes only the changed fields', async () => {
     const dialog = await openEdit();
-    expect((within(dialog).getByLabelText(n.fields.label, { exact: false }) as HTMLInputElement).value).toBe('Notifications line');
+    expect((within(dialog).getByLabelText<HTMLInputElement>(n.fields.label, { exact: false })).value).toBe('Notifications line');
     fireEvent.change(within(dialog).getByLabelText(n.fields.waba_id), { target: { value: '' } });
     fireEvent.change(within(dialog).getByLabelText(n.fields.provider), { target: { value: 'kapso' } });
     apiSend.mockResolvedValue(numberView());

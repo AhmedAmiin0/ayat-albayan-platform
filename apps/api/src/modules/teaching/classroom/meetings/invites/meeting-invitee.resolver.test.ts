@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { TeacherScopes } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ADMIN, ASSISTANT, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';

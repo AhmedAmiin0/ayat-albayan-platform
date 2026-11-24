@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';

@@ -26,9 +26,9 @@ jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
     },
   };
 });
-const { mockGate } = jest.requireMock('@ab/mobile-kit/auth/use-auth-gate') as {
+const { mockGate } = jest.requireMock<{
   mockGate: { initial: string; set: (s: string) => void };
-};
+}>('@ab/mobile-kit/auth/use-auth-gate');
 
 const stub = (label: string) => () => <Text>{label}</Text>;
 const app = {

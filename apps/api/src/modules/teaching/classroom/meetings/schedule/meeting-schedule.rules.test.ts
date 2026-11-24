@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { rescheduleTimes, scheduleTimes } from './meeting-schedule.rules';
 

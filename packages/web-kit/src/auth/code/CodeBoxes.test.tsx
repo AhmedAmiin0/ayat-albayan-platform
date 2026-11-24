@@ -10,7 +10,7 @@ function Harness() {
   return <CodeBoxes digits={digits} onDigits={setDigits} />;
 }
 
-const box = (n: number) => screen.getByLabelText(t.familyAuth.codeDigit.replace('{n}', String(n))) as HTMLInputElement;
+const box = (n: number) => screen.getByLabelText<HTMLInputElement>(t.familyAuth.codeDigit.replace('{n}', String(n)));
 const values = () => [1, 2, 3, 4, 5, 6].map((n) => box(n).value).join('');
 const paste = (n: number, text: string) => fireEvent.paste(box(n), { clipboardData: { getData: () => text } });
 

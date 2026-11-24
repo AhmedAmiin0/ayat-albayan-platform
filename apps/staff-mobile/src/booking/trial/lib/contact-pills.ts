@@ -5,7 +5,7 @@ import type { FilterPill } from '@ab/mobile-kit';
 
 const NONE = { value: '', label: t.common.unset } as const;
 
-export const TZ_PILLS = TZ_OPTIONS.map((tz) => ({ value: tz as string, label: cityOf(tz) }));
+export const TZ_PILLS = TZ_OPTIONS.map((tz) => ({ value: tz, label: cityOf(tz) }));
 
 export const GENDER_PILLS: FilterPill<Gender | ''>[] = [
   NONE,
