@@ -13,7 +13,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => p !== 'numbers.manage' || can.manage }),
 }));
 
-// «ترتيب البديل» (docs/23c decision 9): 0–999, saved through the number PATCH (numbers.manage).
+// docs/23c decision 9: range 0-999, saved through the number PATCH.
 
 const r = t.numbers.fallbackRank;
 const card = async () => within(await screen.findByRole('article', { name: 'Notifications line' }));

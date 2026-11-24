@@ -7,7 +7,7 @@ import { integrationText, optionText } from '@/features/platform/integrations/in
 /** An unknown key name stays an LTR island that wraps at phone width (no horizontal page scroll). */
 const WRAP = 'whitespace-normal break-all';
 
-/** What the line lacks, by the «التكاملات» label (docs/23a §E H3); a key outside the registry as written. */
+/** A key outside the registry is shown as written (docs/23a §E H3). */
 function GapNames({ gaps }: { gaps: readonly string[] }) {
   const known = gaps.filter(isIntegrationKey).map((k) => integrationText(k).label);
   const other = gaps.filter((k) => !isIntegrationKey(k));
@@ -24,7 +24,6 @@ type ScopeView = Partial<
   Pick<LineCheckView, 'crm_send_scope' | 'crm_template_scopes_missing' | 'crm_read_scopes_missing'>
 >;
 
-/** «ينقص … صلاحية {scopes} …» with the scopes as an LTR island; nothing when none is lacking. */
 interface ScopeNoteProps {
   text: string;
   lacking: readonly string[] | null | undefined;
@@ -43,11 +42,7 @@ function ScopeNote({ text, lacking }: ScopeNoteProps) {
 }
 type DriverView = Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> & ScopeView;
 
-/**
- * A crm line's key (GET /me): messages:send or not, the template scopes «مزامنة» and «إرسال إلى
- * ميتا» need (docs/39), and the read scopes that confirm a timed-out send (docs/19), when it lacks
- * them. Unknown (the call failed) shows nothing.
- */
+/** Unknown scopes (the call failed) show nothing (docs/39, docs/19). */
 function CrmScopes({ view }: { view: ScopeView }) {
   const s = t.templates.settings.lines;
   return (
@@ -60,12 +55,7 @@ function CrmScopes({ view }: { view: ScopeView }) {
   );
 }
 
-/**
- * The line's sending provider (docs/19: Meta directly, Kapso or the academy CRM) and, when it cannot send
- * yet, what it still lacks by its «التكاملات» label (never a value), in words when the chat line's phone id
- * is the notifications one, and on a crm line whether its key may send and lacks a templates scope
- * (GET /me; unknown = not shown).
- */
+/** Lacking keys are shown by label, never by value (docs/19). */
 export function LineDriver({ view }: { view: DriverView | null }) {
   const s = t.templates.settings.lines;
   if (!view) return null;

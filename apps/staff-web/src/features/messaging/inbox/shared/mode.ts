@@ -11,7 +11,6 @@ export const InboxModeContext = createContext<InboxMode>('admin');
 
 export const useInboxMode = (): InboxMode => useContext(InboxModeContext);
 
-/** Where the list and «رجوع» go (both routes share parseInboxSearch). */
 export function inboxBase(mode: InboxMode) {
   if (mode === 'teacher') return '/teacher/inbox' as const;
   return mode === 'sales' ? ('/sales/inbox' as const) : ('/admin/inbox' as const);

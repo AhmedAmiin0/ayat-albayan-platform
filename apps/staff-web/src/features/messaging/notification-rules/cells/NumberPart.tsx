@@ -25,11 +25,7 @@ export interface NumberPartProps {
   lines: readonly LineHealthView[];
 }
 
-/**
- * «من رقم · القالب»: WhatsApp rows pick a number (null = «رقم القالب», which shows the template's
- * lines and phones under it) and show the template's approval, «معتمد جزئيًا» when only some
- * variants are approved. Bell / push rows: «لا ينطبق».
- */
+/** Null number means the template's own number; partly approved when only some variants are. */
 export function NumberPart({ entry, row, lines }: NumberPartProps) {
   const api = useRules();
   const id = useId();

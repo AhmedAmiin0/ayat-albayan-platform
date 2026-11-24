@@ -19,11 +19,7 @@ export interface EvolutionStatusProps {
 
 type Open = 'qr' | 'config' | null;
 
-/**
- * An Evolution number on its card (docs/19 «Evolution driver»): the engine, the last connection
- * state (by webhook, or the latest «افحص الاتصال»), on Baileys «رمز QR» to link the phone,
- * «إعدادات Evolution», and whether the saved options match Evolution («متزامن»).
- */
+/** docs/19 Evolution driver. */
 export function EvolutionStatus({ view, evolution, manage }: EvolutionStatusProps) {
   const [open, setOpen] = useState<Open>(null);
   const check = useEvolutionCheck(view.id);

@@ -72,13 +72,7 @@ const logAnchor = (id: string | null, onNewest: () => void): LogAnchor | undefin
 const isReady = (live: Pages, window: { waiting: boolean }): boolean =>
   live.data !== undefined && !window.waiting;
 
-/**
- * The open chat's log (docs/37 NEW 3): the live pages, or the window around a search hit. The
- * URL's `msg` is decided once per value after the live first page loads (client-core jumpPlan):
- * a hit on screen scrolls, any other opens the window with one request (?around=). Older pages
- * page inside the window; «الانتقال إلى أحدث رسالة», closing the search and her own send go
- * back to the live chat. The live query stays mounted (header, composer, read stamp, poll).
- */
+/** docs/37 NEW 3: the `msg` anchor is decided once per value after the first live page loads. */
 export function useThreadLog(phone: string, live: Pages) {
   const { msg, anchor } = useChatAnchor();
   const [view, setView] = useState(LIVE_VIEW);
