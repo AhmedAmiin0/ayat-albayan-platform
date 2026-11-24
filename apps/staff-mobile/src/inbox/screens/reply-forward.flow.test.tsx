@@ -6,9 +6,6 @@ import { inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 
 beforeEach(resetApp);
 
-// «رد» and «إعادة توجيه» (owner 2026-10-25) through the real router: the list → a full-screen chat →
-// a long press → the strip / the picker, against the in-memory chats API.
-
 async function openLeadChat(permissions?: string[]) {
   const { backend, log } = inboxBackend();
   const first = log[PHONE]?.[0];

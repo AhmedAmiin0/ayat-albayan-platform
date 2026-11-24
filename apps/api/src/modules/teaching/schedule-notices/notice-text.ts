@@ -7,7 +7,7 @@ import type { Notice } from './notice.types';
 /** Meta rejects a param with a newline, a tab or 4+ spaces in a row: one line, single spaces. */
 export const oneLine = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
-/** «الاثنين 2 نوفمبر، 11:00 ص»: the day, then the 12-hour clock, wall-clock in `tz`. */
+/** The day, then the 12-hour clock, as wall-clock time in tz. */
 export function noticeWhen(at: Date, tz: string): string {
   const opts = { tz, locale: 'ar', cycle: '12' } as const;
   const clock = clockOf(at, opts);

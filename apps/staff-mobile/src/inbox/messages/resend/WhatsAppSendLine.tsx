@@ -68,12 +68,7 @@ function SendLine({ message: m, phone, line }: LineProps & { line: Line }) {
   );
 }
 
-/**
- * «أرسل عبر واتساب» under a staff text the 24 h window stopped (owner 2026-11-06), admin only: why,
- * and the action; while its window is open (app_send_until, re-read every minute) «جارٍ الإرسال من
- * واتساب…», «افتح واتساب مجددًا» (extends it) and «أرسلتها». With no echo once it passes, the
- * platform never sends it: «هل أرسلتها من واتساب؟» with «نعم، أرسلتها» (never put back).
- */
+/** Admin only; without an echo the platform never sends it; a confirmed manual send is final. */
 function WhatsAppSendLine(p: LineProps) {
   const now = useNow();
   return <SendLine {...p} line={appSendLineOf(p.message, now)} />;

@@ -22,11 +22,7 @@ type StudentIds = z.output<typeof studentIds>;
 const READS = 'messages/:messageId/reads';
 const UPLOAD = 'attachments/upload-url';
 
-/**
- * The student chat upgrade (docs/31 §2), on every audience's route as ChannelAccess resolves it:
- * a participant asks where to PUT a photo, PDF or voice note (then posts the message with its
- * path); anyone let into the chat, a monitor too, sees who read a message («معلومات الرسالة»).
- */
+/** Chat upgrade (docs/31 §2): participants upload media; anyone let in sees message read info. */
 @ApiTags('student-channels')
 @ApiBearerAuth()
 @Controller()

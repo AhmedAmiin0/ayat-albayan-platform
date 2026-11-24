@@ -3,10 +3,8 @@ import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import type { ColumnFilterControl } from './types';
 
-/** «تصفية حسب {col}»: every filter control's accessible name (the panel and the search box). */
 export const filterByLabel = (label: string) => t.table.filterBy.replace('{col}', label);
 
-/** A column filter as a labelled field in the panel: a search box, or a select with «الكل». */
 export function ControlField({ control: c }: { control: ColumnFilterControl }) {
   const ariaLabel = filterByLabel(c.label);
   return (

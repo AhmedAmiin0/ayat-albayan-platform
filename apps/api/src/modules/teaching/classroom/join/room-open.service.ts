@@ -5,13 +5,7 @@ import { conflict, notFound } from '@/common/http/errors';
 import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { LessonRoleService } from './lesson-role.service';
 
-/**
- * POST /lessons/:id/room/open («افتح الحلقة الآن»): the admin, or the lesson's own teacher, opens the
- * room before the usual 15 minutes. It stamps lessons.room_opened_at once (idempotent: a second call
- * keeps the first time), and the window then opens at min(room_opened_at, starts_at − 15 min) for
- * everyone, guests included. Only a lesson that can still take place (scheduled / confirmed) whose
- * room has not closed yet: 409 lesson_not_open, 410 join_closed.
- */
+/** Stamped once; window opens at min(room_opened_at, starts_at - 15 min); 409 or 410 otherwise. */
 @Injectable()
 export class RoomOpenService {
   constructor(

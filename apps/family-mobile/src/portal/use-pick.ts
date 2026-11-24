@@ -5,8 +5,7 @@ import type { PortalStudent } from '@ab/shared';
 import { useMeId } from '@ab/mobile-kit';
 import { usePortalMe } from './use-portal-me';
 
-// «اختر الطالب» (owner 2026-11-16, docs/50 §6): the student the app works as, from /portal/me
-// and the pick this profile saved on the phone (@ab/client-core familyPick, pickStore).
+// docs/50 §6: the student the app works as, from /portal/me and this profile's saved pick.
 
 const store = pickStore(AsyncStorage);
 
@@ -17,10 +16,7 @@ export function useFamilyPick(): FamilyPick {
   return familyPick(me, saved.savedId, saved.ready);
 }
 
-/**
- * The child a guardian of several works as, else null (a student's own or an only child needs no
- * name): named in «حسابي» and under «الجدول» and «التقارير».
- */
+/** null for a student's own login or an only child, which need no name. */
 export function usePickedChild(): PortalStudent | null {
   const me = usePortalMe().data;
   const pick = useFamilyPick();

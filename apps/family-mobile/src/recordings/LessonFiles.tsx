@@ -10,7 +10,7 @@ interface LessonFilesProps {
   files: readonly PortalLessonFile[];
 }
 
-/** «ملفات الحلقة»: the report's PDF first, then the files staff shared (canvas RecXLessonFiles). */
+/** The report's PDF first, then the files staff shared. */
 export function LessonFiles({ studentId, reportId, files }: LessonFilesProps) {
   const pdf = useOpenFile();
   const open = useOpenLessonFile(studentId);

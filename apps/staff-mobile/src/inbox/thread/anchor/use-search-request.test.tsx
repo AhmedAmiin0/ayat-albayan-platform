@@ -2,8 +2,6 @@ import { act, renderHook } from '@testing-library/react-native';
 import { requestSearch } from './search-request';
 import { useSearchRequest } from './use-search-request';
 
-// The chat under the student's details after «بحث في الرسائل»: its bar opens, once.
-
 const PHONE = '+966500000123';
 
 test('a mounted chat opens its bar when asked, once; another chat is not', async () => {

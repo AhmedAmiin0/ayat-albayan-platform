@@ -4,13 +4,10 @@ import { Select } from '@ab/web-kit/components/ui/form/select';
 import type { FilterOption } from '@/components/data-table/data-table-features';
 import type { FilterChip } from './types';
 
-// Building blocks for a page's own filters in the «تصفية» panel (ExtraFilters): labelled
-// fields, and the chip of a set value.
-
 export interface SelectFilterFieldProps {
   label: string;
   value: string | undefined;
-  /** The first option is «الكل» (value '' = no filter). */
+  /** The first option is all, value '' meaning no filter. */
   options: FilterOption[];
   onChange: (value: string) => void;
 }

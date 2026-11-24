@@ -1,4 +1,3 @@
-// Fixtures for the «عدّل الوقت» service tests (not shipped; excluded from the build by *.fakes.ts).
 import type { AcademySettings, LessonTimeEdit } from '@ab/shared';
 import { vi } from 'vitest';
 import type { TimeEditChange } from '@/modules/teaching/scheduling/change-set';

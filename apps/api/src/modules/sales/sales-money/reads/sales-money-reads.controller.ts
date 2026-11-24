@@ -10,8 +10,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { SalesChatReceipts } from '@/modules/sales/sales-money/chat/sales-chat-receipts.service';
-import { SalesMoney } from '@/modules/sales/sales-money/sales-money.service';
+import { SalesChatReceipts } from '@/modules/sales/sales-money/chat';
+import { SalesMoneyFamily } from './sales-money-family.service';
 
 /** What the sales subscribe flow reads (docs/16 rows 16–19): her students of a chat and its receipt files. */
 @ApiTags('sales')
@@ -20,14 +20,14 @@ import { SalesMoney } from '@/modules/sales/sales-money/sales-money.service';
 @Controller('sales/money')
 export class SalesMoneyReadsController {
   constructor(
-    private readonly money: SalesMoney,
+    private readonly families: SalesMoneyFamily,
     private readonly receipts: SalesChatReceipts,
   ) {}
 
   /** Her students in the family of this chat (every child with sales.renew_any), each with the packages still owed. */
   @Get('family')
   family(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesFamilyView> {
-    return this.money.familyOf(parseOrThrow(salesFamilyQuerySchema, query).phone, user);
+    return this.families.familyOf(parseOrThrow(salesFamilyQuerySchema, query).phone, user);
   }
 
   /** The images / PDFs her student's family sent in its chat (last 30 days, metadata only). */

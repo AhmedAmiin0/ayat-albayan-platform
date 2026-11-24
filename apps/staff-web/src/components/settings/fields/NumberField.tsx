@@ -7,7 +7,6 @@ export interface NumberFieldProps extends RowExtras {
   onChange: (value: string) => void;
   hint?: string;
   error?: string;
-  /** A list of numbers («24، 72») instead of one. */
   list?: boolean;
   disabled?: boolean;
 }

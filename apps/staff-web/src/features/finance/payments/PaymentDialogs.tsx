@@ -13,7 +13,7 @@ import { ReceiptDialog } from './attachments/ReceiptDialog';
 
 type Props = { payment: PaymentView; action: PaymentAction; onClose: () => void; onDone: (message: string) => void };
 
-/** The dialog behind a payment row action: receipt, «المرفقات», edit, or delete after a confirm (audited by the API). */
+/** Delete asks first and is audited by the API. */
 export function PaymentDialogs({ payment, action, onClose, onDone }: Props) {
   const queryClient = useQueryClient();
   const remove = useMutation({

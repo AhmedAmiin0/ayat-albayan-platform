@@ -6,8 +6,6 @@ import { selectedLine } from '@/inbox/thread/hooks/forward-text';
 import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
-// «إعادة توجيه» (owner 2026-10-25): the menu → a picker of up to five chats → POST /threads/forward.
-
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

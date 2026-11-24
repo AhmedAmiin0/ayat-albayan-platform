@@ -14,12 +14,7 @@ export interface CallScreenProps {
   actions: { hangup: () => void; toggleMute: () => void; minimise: () => void };
 }
 
-/**
- * The call, full screen like WhatsApp's (docs/28 §5): the big initials, the name, «جارٍ الاتصال…» →
- * «يرنّ…» → the mm:ss timer, and كتم / إنهاء (red). A modal: focus stays inside, Esc and «تصغير» keep
- * the call in the bar while the user goes on working, focus returns where it was. The live region
- * announces the phase only; the ticking timer is shown, not read out. The web has no speaker switch.
- */
+/** A modal (docs/28 §5); the live region announces the phase only, not the timer. */
 export function CallScreen({ session, row, phase, actions }: CallScreenProps) {
   const ref = useRef<HTMLDivElement>(null);
   const nameId = useId();

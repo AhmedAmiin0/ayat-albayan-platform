@@ -30,7 +30,7 @@ interface CallProviderProps {
   children: ReactNode;
   /** A staff tree that may call; false (assistant, signed out) = a plain wrapper, no query at all. */
   enabled?: boolean;
-  /** Teachers never see a family's number: an unnamed caller is «رقم غير معروف» for them. */
+  /** Teachers never see a family's number. */
   showsPhone?: boolean;
   /** Tests inject fakes; the app uses react-native-webrtc. */
   rtc?: RtcDeps | null;

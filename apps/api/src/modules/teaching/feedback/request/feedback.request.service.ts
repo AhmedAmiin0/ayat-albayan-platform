@@ -11,12 +11,7 @@ import { issueLink } from '@/modules/teaching/feedback/links/feedback.links';
 type RequestInput = { lessonId: string; body: FeedbackRequest; actorId: string };
 type Link = { row: FeedbackRow; token: string; exp: number };
 
-/**
- * POST /lessons/:id/feedback-request («ابعت طلب الرأي»): an explicit admin send, never a job, so
- * settings.auto_messages_enabled is not read. The message goes through the Outbox like any inbox
- * template; its dedup key carries the link's expiry, so a second press while the link is alive is a
- * replay (nothing new is sent) and a resend with a new link is a new message.
- */
+/** Explicit admin send, never a job; dedup key carries link expiry so a re-press replays. */
 @Injectable()
 export class FeedbackRequestService {
   constructor(

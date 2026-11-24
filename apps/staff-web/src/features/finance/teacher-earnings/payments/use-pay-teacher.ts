@@ -8,11 +8,7 @@ import { earningsKey, payTeacher, uploadTeacherReceipt, type Scope } from '@/fea
 
 export type PayInput = { form: PaymentForm; file: File | null; earningIds: string[] | undefined };
 
-/**
- * The «سجّل دفعة» save. One clientRequestId per open dialog, re-sent on every retry, and the
- * receipt uploaded once per file: a reply lost after the API recorded the payment is answered
- * with that payment (replayed) instead of paying the teacher twice.
- */
+/** One clientRequestId per dialog and one upload per file, so a lost reply never pays twice. */
 export function usePayTeacher(teacherId: string, onSaved: (replayed: boolean) => void) {
   const queryClient = useQueryClient();
   const scope: Scope = { kind: 'admin', teacherId };
