@@ -12,10 +12,7 @@ export interface SheetBellProps {
   onPick: () => void;
 }
 
-/**
- * «الإشعارات» at the top of the «القائمة» sheet (< 900px), for staff holding notifications.push:
- * the unread count, and a tap reveals the bell's panel inline (closed by default).
- */
+/** Only for staff with notifications.push; the panel is closed by default. */
 export function SheetBell({ onPick }: SheetBellProps) {
   const allowed = usePermissions().can('notifications.push');
   const unread = useQuery({ ...notificationsQuery, enabled: allowed }).data?.unread ?? 0;

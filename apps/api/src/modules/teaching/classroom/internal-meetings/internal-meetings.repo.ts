@@ -21,7 +21,7 @@ export interface NewMeeting {
   clientRequestId: string | null;
 }
 
-/** Reads and writes of «اجتماع داخلي» (service role; the services guard, migrations 193, 410). */
+/** Internal meeting reads and writes (service role; the services guard, migrations 193, 410). */
 @Injectable()
 export class InternalMeetingsRepo {
   constructor(
@@ -102,7 +102,7 @@ export class InternalMeetingsRepo {
     if (error) throw dbError(error);
   }
 
-  /** Stamps cancelled_at once; false when it already was, or the meeting was ended («إنهاء») meanwhile. */
+  /** Stamps cancelled_at once; false when already cancelled or the meeting was ended meanwhile. */
   async cancel(id: string, at: string): Promise<boolean> {
     const { data, error } = await this.db
       .from('meetings')
@@ -122,7 +122,7 @@ export class InternalMeetingsRepo {
     return data?.full_name ?? null;
   }
 
-  /** «رابط جديد»: the hash is replaced in place, so the previous link stops working. */
+  /** The hash is replaced in place, so the previous link stops working. */
   async rotate(id: string, hash: string): Promise<void> {
     const { error } = await this.db.from('meetings').update({ link_token_hash: hash }).eq('id', id);
     if (error) throw dbError(error);

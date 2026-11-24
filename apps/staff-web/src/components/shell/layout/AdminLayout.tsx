@@ -20,12 +20,7 @@ export interface AdminLayoutProps {
   children: ReactNode;
 }
 
-/**
- * Admin layout (docs/07 §7): the mint fihris sidebar from 900px; below it ONE compact bar whose
- * «القائمة» opens the same nav in a sheet (phones and portrait tablets, owner 2026-10-05). Both are
- * viewport-high columns: running head (breadcrumbs + clocks, from 640px), then the work page whose
- * content scrolls by itself.
- */
+/** Sidebar from 900px, a menu sheet below it (docs/07 §7); only the page content scrolls. */
 export function AdminLayout({ nav, title, children }: AdminLayoutProps) {
   const { data: me } = useQuery(meQuery);
   const aside = useRef<HTMLElement>(null);
@@ -39,11 +34,7 @@ export function AdminLayout({ nav, title, children }: AdminLayoutProps) {
   return (
     <div className="flex h-dvh flex-col overflow-hidden shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
       <MenuBar home="/admin" title={title} nav={nav} email={me?.email} className="shell:hidden sm:mx-2" />
-      {/* `relative`: absolutely positioned sr-only text in a long sidebar stays inside its scroll clip.
-          From 900px the rhythm is a 4px grid: 24 on top, 24 logo → fihris, 16 between groups; the sticky
-          foot owns the 24 at the bottom, so it stays on screen on short viewports. scroll-pb-64 (256px)
-          is the foot's height (~230px with the clock format and the «حسابي» chip) and more: a focused or current link
-          scrolls clear of the sticky foot. It scrolls down only, never sideways (owner 2026-10-18). */}
+      {/* scroll-pb-64 exceeds the sticky foot's height so a focused link scrolls clear of it. */}
       <aside
         ref={aside}
         className={cn(

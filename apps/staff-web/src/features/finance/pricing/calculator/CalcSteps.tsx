@@ -47,16 +47,12 @@ const DISCOUNT_OPTIONS = DISCOUNTS.map((d) => ({
 export interface CalcStepsProps {
   sel: Selection;
   onChange: (patch: Partial<Selection>) => void;
-  /** The free 0–100 field beside the pills (the calculator); the chat's «عرض سعر» has the pills only. */
+  /** The chat's quote sheet has the pills only. */
   freeDiscount?: boolean;
-  /** Beside the pills: the chat's «مبلغ مخصص» (owner 2026-11-15). */
   discountExtra?: ReactNode;
 }
 
-/**
- * The five calculator steps (docs/08 §3): country, duration, package, students, discount. Shared by
- * «حاسبة الأسعار» and the chat's «عرض سعر» sheet.
- */
+/** The five calculator steps (docs/08 §3), shared with the chat's quote sheet. */
 export function CalcSteps({ sel, onChange, freeDiscount = true, discountExtra }: CalcStepsProps) {
   const weekly = sel.pkg === 'weekly';
   return (

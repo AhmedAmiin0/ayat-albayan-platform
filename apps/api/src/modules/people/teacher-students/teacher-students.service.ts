@@ -10,12 +10,7 @@ const DAY = 86_400_000;
 /** Students on a lesson of mine in the last 60 days or later still count as mine. */
 const LOOKBACK_DAYS = 60;
 
-/**
- * GET /teachers/me/students (teacher tab «الطلاب»): my students of one kind. Mine = teacher_id is my
- * teachers row, or on one of my lessons (lesson_students). subscribed = active, pending_renewal or
- * expired (the package ended, not churned), trial = not subscribed yet: new, trial, pending_subscription
- * (TEACHER_STUDENT_STATUSES, owner 2026-10-15).
- */
+/** Mine: teacher_id or on one of my lessons; subscribed includes ended packages, not churned. */
 @Injectable()
 export class TeacherStudentsService {
   constructor(

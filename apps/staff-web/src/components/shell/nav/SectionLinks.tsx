@@ -13,7 +13,7 @@ export interface SectionLink {
   activeOptions?: { exact?: boolean; includeSearch?: boolean };
   /** Dynamic roles: the permission that opens the page. */
   permission: Permission;
-  /** A count after the label, part of the link's name (like AdminNav's): «3 غير مقروءة». */
+  /** The count is part of the link's name. */
   count?: string | undefined;
 }
 
@@ -24,10 +24,6 @@ export interface SectionLinksProps {
   can?: (permission: Permission) => boolean;
 }
 
-/**
- * A role's own pages (teacher, sales) as ONE list: a vertical list of 44px rows in the «القائمة»
- * sheet (< 900px), a row of links under the logo from 900px (docs/07 §7).
- */
 export function SectionLinks({ label, items, can = () => true }: SectionLinksProps) {
   return (
     <nav aria-label={label}>

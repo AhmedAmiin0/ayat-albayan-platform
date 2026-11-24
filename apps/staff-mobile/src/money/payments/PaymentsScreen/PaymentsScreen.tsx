@@ -1,4 +1,5 @@
-import type { PaymentKind, PaymentView } from '@ab/shared';
+import type { PaymentKind } from '@ab/catalog';
+import type { PaymentView } from '@ab/money';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';

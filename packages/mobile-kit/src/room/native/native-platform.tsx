@@ -10,13 +10,7 @@ type TrackRef = ComponentProps<LiveKitNative['sdk']['VideoTrack']>['trackRef'];
 
 const fill = { flex: 1 } as const;
 
-/**
- * The real platform of the room screen, or null on a binary without LiveKit (the room then opens
- * the web).
- */
-export function nativeRoomPlatform(): RoomPlatform | null {
-  const n = liveKitNative();
-  if (!n) return null;
+function platformOf(n: LiveKitNative): RoomPlatform {
   const { VideoTrack } = n.sdk;
   const { RTCView } = n.rtc;
   return {
@@ -33,4 +27,13 @@ export function nativeRoomPlatform(): RoomPlatform | null {
     audio: nativeAudio(n),
     devices: deviceMemory,
   };
+}
+
+/**
+ * The real platform of the room screen, or null on a binary without LiveKit (the room then opens
+ * the web).
+ */
+export async function nativeRoomPlatform(): Promise<RoomPlatform | null> {
+  const n = await liveKitNative();
+  return n ? platformOf(n) : null;
 }

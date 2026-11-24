@@ -30,7 +30,7 @@ interface CallProviderProps {
   children: ReactNode;
   /** A staff tree that may call; false (assistant, signed out) = a plain wrapper, no query at all. */
   enabled?: boolean;
-  /** Teachers never see a family's number: an unnamed caller is «رقم غير معروف» for them. */
+  /** Teachers never see a family's number. */
   showsPhone?: boolean;
   /** Tests inject fakes; the app uses react-native-webrtc. */
   rtc?: RtcDeps | null;
@@ -46,7 +46,7 @@ export function CallProvider({ children, enabled = true, showsPhone = true, rtc 
   const config = useQuery({ ...callConfigQuery, enabled }).data;
   const live = enabled ? config : undefined;
   const foreground = useForeground();
-  const deps = useMemo(() => (rtc === undefined ? nativeRtc() : rtc), [rtc]);
+  const deps = useMemo(() => (rtc === undefined ? nativeRtc : () => Promise.resolve(rtc)), [rtc]);
   const s = useCallSession({ config: live, rtc: deps, foreground });
   const [ask, setAsk] = useState<PermissionAsk | null>(null);
   const [silenced, setSilenced] = useState<string | null>(null);

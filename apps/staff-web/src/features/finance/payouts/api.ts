@@ -31,7 +31,7 @@ export const unpayPayout = (id: string, reason: string) => apiSend<PayoutView>('
 
 export const payoutReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/payouts/${id}/receipt`);
 
-/** «مستحقات المعلمين»: earned / paid / owed per teacher from the ledger. */
+/** Earned, paid and owed per teacher from the ledger. */
 export const earningsSummaryQuery = () =>
   queryOptions({
     queryKey: [...MONEY_KEY, 'teacher-earnings', 'summary'],

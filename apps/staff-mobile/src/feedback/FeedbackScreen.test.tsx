@@ -23,10 +23,10 @@ test('each teacher’s average on top, then every answer and the request still w
   expect(await screen.findByText('يوسف أحمد · أبرار')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/feedback?page=1&pageSize=25');
   expect(screen.getByRole('header', { name: text.title })).toBeTruthy();
-  // أبرار: 4.5 of 5 from 12 answers, 83 % yes. هند: nobody answered yet.
+  // The first teacher: 4.5 of 5 from 12 answers, 83 % yes. The second: nobody answered yet.
   expect(screen.getByText(text.averageLine.replace('{avg}', '4.5').replace('{n}', '12'))).toBeTruthy();
   expect(screen.getByText(text.recommendLine.replace('{pct}', '83'))).toBeTruthy();
-  // The answer: type, rating, «نعم», the note, the contact number (isolated LTR).
+  // The answer: type, rating, yes, the note, the contact number (isolated LTR).
   expect(screen.getByText(`${text.ratingValue.replace('{n}', '5')} · ${text.answer.yes}`)).toBeTruthy();
   expect(screen.getByText('الحلقة كانت ممتازة')).toBeTruthy();
   expect(screen.getByText(`${text.contact}: ${ltr('+966 55 214 7730')}`)).toBeTruthy();

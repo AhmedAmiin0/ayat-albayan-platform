@@ -1,6 +1,4 @@
-export { type FamilyStudentRow, SalesFamilyRepo } from './reads/sales-family.repo';
-export { toSalesQuote } from './sales-money.mapper';
 export { SalesMoneyModule } from './sales-money.module';
-export { assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
 export { salesStartsOn } from './sales-start';
-export { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+export { assertSalesDiscount, SalesMoneyScope, SalesMoneySharedModule, toSalesQuote } from './shared';
+export { SalesTeacherAssign, SalesTeacherAssignModule } from './teacher';

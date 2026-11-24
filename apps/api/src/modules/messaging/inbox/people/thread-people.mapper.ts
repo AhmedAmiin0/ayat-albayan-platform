@@ -63,7 +63,7 @@ interface BadgeStudentRow {
   subscriptions: { id: string; status: SubscriptionStatus }[];
 }
 
-/** A list row's family tags: the badge, «مش مدفوع» and the avatar ring (absent = none). */
+/** Absent ring means none. */
 export type FamilyTag = { badge: SubscriptionBadge; unpaid: boolean; ring?: FamilyRing | null };
 
 /**

@@ -15,7 +15,7 @@ export class LinkDeps {
   ) {}
 }
 
-/** «المعلم/ة» of the subscribe step: only for her own student (the bank path's scope), then assigned. */
+/** The subscribe step's teacher: own student only (the bank path's scope), then assigned. */
 @Injectable()
 export class LinkSalesDeps {
   constructor(

@@ -6,8 +6,7 @@ import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query'
 import { student } from '@/portal/portal.fixtures';
 import { HomeScreen } from './HomeScreen';
 
-// «الرئيسية» of a guardian of two (owner 2026-11-16): the child this profile picked on this phone
-// earlier, as that child's page in the guardian's words; another profile's pick never counts.
+// A guardian of two lands on the child this profile picked; other profiles' picks don't count.
 
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -50,7 +49,7 @@ beforeAll(() => AsyncStorage.setItem(PICKED_CHILD_KEY, SAVED));
 test("this profile's saved pick: that child's page, «حضرها» and «الباقة»", async () => {
   await show('g1');
   expect(await screen.findByRole('header', { name: 'يوسف' })).toBeTruthy();
-  // Today's date over the name: «أهلًا بك» would hail the parent by the child's name.
+  // A guardian sees today's date, not a greeting that would hail the parent by the child's name.
   expect(screen.queryByText(t.portal.app.home.greeting)).toBeNull();
   expect(screen.getByRole('tab', { name: t.portal.attendedTab })).toBeTruthy();
   expect(screen.getByRole('tab', { name: t.portal.packageTab })).toBeTruthy();

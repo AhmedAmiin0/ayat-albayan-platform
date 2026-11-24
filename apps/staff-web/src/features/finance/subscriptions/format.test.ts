@@ -39,7 +39,7 @@ describe('money text (docs/07 §6, Western digits)', () => {
       id: 'k1', kind: 'renewal_due' as const, subject_type: 'subscription', subject_id: 'sub-1',
       student: WEEKLY.student, title: 'بقيت حلقتان', due_at: null, done_at: null, created_at: '2026-10-02T09:00:00Z',
     };
-    // The stored balance («بقيت حلقتان» when raised) can be stale: never shown.
+    // The stored balance can be stale, so it is never shown.
     expect(taskText(task)).toBe('باقة سهيلة قاربت على الانتهاء');
     expect(taskText({ ...task, title: null })).toBe('باقة سهيلة قاربت على الانتهاء');
     expect(taskText({ ...task, kind: 'subscription_unpaid' })).toBe('انتهت باقة سهيلة وتحتاج إلى تجديد');

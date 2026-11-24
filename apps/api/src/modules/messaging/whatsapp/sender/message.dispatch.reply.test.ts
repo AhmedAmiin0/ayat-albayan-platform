@@ -6,8 +6,7 @@ import { dueMessage } from './sender.fakes';
 import { mediaMessage } from '@/modules/messaging/whatsapp/messages/wa-components';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «رد» / «إعادة توجيه» (owner 2026-10-25): the quoted wamid rides a text AND a file; a forwarded voice
-// note or video goes as its own type on Meta / Kapso, as a document on the crm driver.
+// The quoted wamid rides texts and files; crm sends voice notes and videos as documents.
 
 const client = { sendTemplate: vi.fn(), sendText: vi.fn(), sendDocument: vi.fn() };
 const lines = { notifications: client, chat: client } as unknown as WhatsappLines;

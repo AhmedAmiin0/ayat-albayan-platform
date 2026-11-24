@@ -1,8 +1,13 @@
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useState } from 'react';
 import { Linking } from 'react-native';
 import { parseTarget, roomWebUrl } from './join-target';
-import { type RoomTarget, nativeRoomPlatform, RoomNotice, RoomScreen, type BackSource } from '@ab/mobile-kit/room';
+import {
+  type BackSource,
+  RoomNotice,
+  RoomScreen,
+  type RoomTarget,
+  useNativeRoom,
+} from '@ab/mobile-kit/room';
 import { t } from '@ab/mobile-kit';
 import { fetchJoin } from './fetch-join';
 import { staffHost } from './staff-host';
@@ -12,11 +17,7 @@ const back = () => {
   if (router.canGoBack()) router.back();
 };
 
-/**
- * No room screen: a bad or stale link («انتهت صلاحية الدخول»), or LiveKit missing or failing to
- * load in this binary (its own words, and the browser: never the expiry line, which sent the user
- * round the same loop).
- */
+/** Never the expiry line for a LiveKit failure, which sent the user round the same loop. */
 function RoomUnavailable({ target }: { target: RoomTarget | null }) {
   const browser = target
     ? {
@@ -34,13 +35,9 @@ function RoomUnavailable({ target }: { target: RoomTarget | null }) {
   );
 }
 
-/**
- * app/room/[kind]/[id]: the room screen with the device's LiveKit, the staff's host powers and
- * the student channel. Never a crash: a notice with «فتح في المتصفح» where the room cannot start.
- */
+/** Never a crash: a notice with an open-in-browser action where the room cannot start. */
 export function RoomRoute() {
-  // `direct`: from the «بدأت الحلقة» push (straight in, the microphone on); `student`: the
-  // lesson's student, whose channel is the in-room «المحادثة».
+  // direct: from the lesson-started push, straight in; student: whose channel is the room chat.
   const params = useLocalSearchParams<{
     kind?: string;
     id?: string;
@@ -48,10 +45,14 @@ export function RoomRoute() {
     student?: string;
   }>();
   const target = parseTarget(params.kind, params.id);
-  const [platform] = useState(nativeRoomPlatform);
+  const native = useNativeRoom();
   const chat = useRoomChat(params.student ?? null);
   const navigation = useNavigation();
   const backSource: BackSource = (listener) => navigation.addListener('beforeRemove', listener);
+  const platform = native.data;
+  if (target && native.isPending) {
+    return <RoomNotice testID="room-loading" message={t.mobileRoom.connecting} busy />;
+  }
   if (!target || !platform) return <RoomUnavailable target={target} />;
   return (
     <RoomScreen

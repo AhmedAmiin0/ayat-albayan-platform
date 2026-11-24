@@ -9,7 +9,7 @@ type ContextQuery = Range & {
   studentIds: readonly string[];
   /** A lesson being edited in place (R-SCH-11): it must not count as busy against itself. */
   excludeLessonId?: string | undefined;
-  /** «تغيير أيام الحلقات»: the lessons of this course (of these students) move, so they are not busy. */
+  /** This course's lessons move, so they are not busy. */
   excludeCourse?: string | undefined;
 };
 type ConflictContextRows = Omit<ConflictInput, 'proposed'>;

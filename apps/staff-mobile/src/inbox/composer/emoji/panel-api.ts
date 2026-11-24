@@ -73,7 +73,6 @@ export function usePanelSend(phone: string, onError: (message: string) => void) 
   });
 }
 
-/** «أضف إلى المفضلة» / «أزل من المفضلة» on a sticker bubble; the panel's list refetches. */
 export function useStickerFavourite(m: Pick<MessageView, 'id' | 'interactive_payload'>) {
   const client = useQueryClient();
   const list = useStickers();

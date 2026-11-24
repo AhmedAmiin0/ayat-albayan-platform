@@ -4,8 +4,7 @@ import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { NOW, REQ, TARGET_ID, reactionHarness, request, target } from './reaction.fakes';
 import { reactionKey } from './thread-reaction.service';
 
-// «تفاعل» (owner 2026-10-27): the guard is the text send's; ours is set at once; ONE idempotent job.
-// Fakes only: no line client, no Meta, no Kapso, no CRM.
+// The guard is the text send's; ours is set at once; one idempotent job.
 
 const TEACHER = { teacherId: 'tch-1', teacherName: 'أبرار', phones: new Set([PHONE]), ownPhone: '+201001234567' };
 const TWO_LINES: [string, string][] = [

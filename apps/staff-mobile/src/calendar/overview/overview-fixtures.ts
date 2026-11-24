@@ -1,9 +1,7 @@
 import type { OverviewTeacher, ScheduleOverview } from '@ab/schedule';
 import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
 
-// Test-only GET /lessons/overview rows for the week of Saturday 26 Sep 2026 (Riyadh UTC+3).
-// Thursday 1 Oct: أبرار (Cairo) held 10:00, has 16:00 and 17:00 booked and 10:45–16:00 free;
-// سارة is off all day; عمر has nothing booked and is free 20:00 to midnight.
+// Test-only overview rows for the week of Saturday 26 Sep 2026 (Riyadh UTC+3).
 
 const base: OverviewTeacher = {
   id: 't1',

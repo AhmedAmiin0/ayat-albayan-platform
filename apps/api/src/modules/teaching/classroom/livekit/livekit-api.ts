@@ -93,7 +93,7 @@ export class LivekitApi {
     });
   }
 
-  /** «إخراج»: permissions revoked (UpdateParticipant), then disconnected; gone counts as done. */
+  /** Permissions revoked, then disconnected; already gone counts as done. */
   async revokeAndRemove(input: { room: string; identity: string }): Promise<void> {
     const grant = { roomAdmin: true, room: input.room };
     const body = { ...input, permission: NO_PERMISSION };
@@ -104,11 +104,7 @@ export class LivekitApi {
     await this.removeParticipant(input);
   }
 
-  /**
-   * «سماح» / «إيقاف مشاركة»: a guest's publish sources with or without the screen (UpdateParticipant
-   * replaces the whole permission, so subscribe and data stay on). Taking the screen away makes
-   * LiveKit unpublish a running share.
-   */
+  /** UpdateParticipant replaces the whole permission, so subscribe and data stay on. */
   async setScreenShare(input: { room: string; identity: string; allow: boolean }): Promise<void> {
     const screen = input.allow ? ['SCREEN_SHARE', 'SCREEN_SHARE_AUDIO'] : [];
     const permission = {
@@ -122,10 +118,7 @@ export class LivekitApi {
     await this.call({ method, body, grant: { roomAdmin: true, room: input.room } }, ignoredAnswer);
   }
 
-  /**
-   * Closes the room for everyone inside («إنهاء», the max-duration job). Already gone (not_found)
-   * counts as done: false. A running egress ends with the room.
-   */
+  /** Already gone (not_found) counts as done and returns false; egress ends with the room. */
   async deleteRoom(room: string, now = new Date()): Promise<boolean> {
     const input = { method: 'livekit.RoomService/DeleteRoom', body: { room } };
     return this.call({ ...input, grant: { roomCreate: true } }, ignoredAnswer, now).then(

@@ -27,14 +27,7 @@ export function causeOf(entry: Pick<AuditEntry, 'entity' | 'action' | 'entityId'
   return payment ? { via: 'payment', paymentId: entry.entityId } : { via: 'event' };
 }
 
-/**
- * After every subscription / payment write: the audit row (R-NFR-03); then MoneyFollowUps: a new package
- * converts the family's lead (R-LEAD-01), a new payment turns a not-subscribed or package-ended student
- * active («مشترك»), deleting that payment reverts it (owner 2026-10-12, 2026-10-15); then the student's package statuses, alerts and the
- * «بانتظار التجديد» rule are recomputed (R-SUB-01/02; journey 3: a full payment → the package active).
- * Last, a payment tells PackageEvents (its package's weekly days picked before the payment are
- * booked once it is active, owner 2026-11-06).
- */
+/** Audit (R-NFR-03), follow-ups, then recompute statuses and alerts (R-SUB-01/02). */
 @Injectable()
 export class MoneyWrites {
   constructor(

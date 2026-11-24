@@ -10,7 +10,6 @@ interface ListCheckRowProps {
   onToggle: () => void;
 }
 
-/** One list in a chat's «القوائم» checklist: a 44pt checkbox row, its name and how many chats. */
 export function ListCheckRow({ list, checked, onToggle }: ListCheckRowProps) {
   const { color } = useTheme();
   return (

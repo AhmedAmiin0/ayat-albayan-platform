@@ -18,13 +18,7 @@ const phonesOf = (rows: readonly WaitingRow[]): string[] => [
 const reopenSince = (rows: readonly WaitingRow[]): Date =>
   new Date(Math.min(...rows.map((r) => Date.parse(r.scheduled_for ?? r.created_at))) - DAY_MS);
 
-/**
- * At the start of every sender pass: held texts whose family wrote on the chat line since the
- * hold began become due again (answered); held texts whose reopen template failed or expired
- * unsent fail now with REOPEN_FAILED (orphaned), never left «بانتظار رد العائلة» for 7 days.
- * First, «أرسل عبر واتساب» rows with no echo become app_send_unconfirmed (AppSendExpiry); if that
- * write fails nothing is released this pass.
- */
+/** Held texts are released on reply or failed when their reopen failed, never left for 7 days. */
 @Injectable()
 export class WindowRelease {
   private readonly log = new Logger('WindowRelease');
@@ -50,7 +44,7 @@ export class WindowRelease {
   /** One page (after `after`), then the next while pages are full: at most `pages` per pass. */
   private async page(at: { after: string | null; pages: number; now: Date }): Promise<number> {
     const rows = await this.repo.waiting(at.after);
-    // Held (a deadline) behind a template; one under «بدون قالب» asked for none: never orphaned.
+    // Held behind a template; one held without a template is never orphaned.
     const held = rows.filter((r) => r.expires_at !== null && !heldWithoutTemplate(r.error_text));
     const [inbound, reopens] = await Promise.all([
       this.repo.lastChatInbound(phonesOf(rows)),

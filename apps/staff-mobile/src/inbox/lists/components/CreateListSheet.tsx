@@ -12,7 +12,6 @@ interface CreateListSheetProps {
   onCreated: (list: ChatList) => void;
 }
 
-/** «قائمة جديدة»: the name, «إنشاء»; a taken name or the 30-list limit shows under the field. */
 export function CreateListSheet({ open, onClose, onCreated }: CreateListSheetProps) {
   const create = useCreateList();
   const close = () => {

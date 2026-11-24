@@ -5,18 +5,13 @@ import { t } from '@ab/mobile-kit';
 import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
 import { ThreadMenu, type ThreadMenuItem } from './ThreadMenu';
 
-/**
- * «تفاصيل الطالب» in the sales tree, the student file in the admin's, both inside the chat group
- * (app/(sales-chat)/sales/inbox/student, app/(admin-chat)/inbox/student) so «رجوع» returns to the chat,
- * not to the tabs (owner 2026-10-29). None in the assistant's tree.
- */
+/** Routes stay inside the chat group so back returns to the chat, not the tabs. */
 const detailsHref = (base: TreeBase, id: string, phone: string): Href | null =>
   base === '/assistant' ? null : inTree(base, `/inbox/student/${id}${phoneQuery(phone)}` as Href);
 
-/** `?phone=` of the chat: the details screen offers «بحث في الرسائل» back in it (docs/37 NEW 2). */
+/** docs/37 NEW 2. */
 const phoneQuery = (phone: string): string => (phone ? `?phone=${encodeURIComponent(phone)}` : '');
 
-/** «مريم · AB-0200 · نشط · أبرار»: who, which code, the status and the teacher (owner 2026-11-02). */
 export const studentLine = (s: ThreadStudentView): string =>
   [s.name, s.code, t.enums.studentStatus[s.status], ...(s.teacher_name ? [s.teacher_name] : [])].join(' · ');
 

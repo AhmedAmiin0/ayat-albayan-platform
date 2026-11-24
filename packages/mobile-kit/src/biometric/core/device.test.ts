@@ -59,7 +59,7 @@ test('flags: in the keystore as «1», deleted when off; no keystore reads as of
     setItemAsync: jest.fn(async (k: string, v: string) => void saved.set(k, v)),
     deleteItemAsync: jest.fn(async (k: string) => void saved.delete(k)),
   };
-  const flags = bioFlags({ ...none, store } as unknown as BioNative);
+  const flags = bioFlags(Promise.resolve({ ...none, store } as unknown as BioNative));
   await flags.setEnabled(true);
   await flags.setDeclined();
   expect(await flags.enabled()).toBe(true);
@@ -67,7 +67,7 @@ test('flags: in the keystore as «1», deleted when off; no keystore reads as of
   await flags.setEnabled(false);
   expect(await flags.enabled()).toBe(false);
   expect(store.deleteItemAsync).toHaveBeenCalledWith('ab.biometric.enabled');
-  expect(await bioFlags(none).enabled()).toBe(false);
+  expect(await bioFlags(Promise.resolve(none)).enabled()).toBe(false);
   store.getItemAsync.mockRejectedValueOnce(new Error('keystore'));
   expect(await flags.declined()).toBe(false);
 });

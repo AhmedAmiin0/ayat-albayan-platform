@@ -16,10 +16,7 @@ import { useDebounced } from './use-debounced';
 
 const sectionTitle = 'font-display text-h4 font-bold text-ink';
 
-/**
- * /admin/pricing «حاسبة الأسعار» (docs/08): the site's staff calculator. Every price comes from
- * GET /pricing/quote and /pricing/catalog; the steps only choose what to ask for.
- */
+/** Every price comes from the API (docs/08); the steps only choose what to ask for. */
 export function PricingPage() {
   const [sel, setSel] = useState<Selection>(INITIAL_SELECTION);
   const asked = useDebounced(sel);
@@ -73,7 +70,7 @@ export function PricingPage() {
   );
 }
 
-/** «أسعار كل الخطط» (GET /pricing/catalog), with the rate's source when the prices are converted. */
+/** Shows the rate's source when prices are converted. */
 function CatalogSection({ asked }: { asked: Selection }) {
   const catalog = useQuery(catalogQuery(asked));
   return (

@@ -4,14 +4,11 @@ import { t, AppText, Button, shape, type, useTheme } from '@ab/mobile-kit';
 export interface ConflictNoticeProps {
   /** One Arabic line per clash (booking.conflict.<kind>). */
   lines: readonly string[];
-  /** «اختر موعدًا آخر»: back to the free slots, fetched afresh; none = the times are on screen. */
+  /** Back to freshly fetched free slots; none means the times are already on screen. */
   onChangeSlot?: (() => void) | undefined;
 }
 
-/**
- * 409 conflict (R-SCH-04, issue B3): the slot was taken between listing and booking. Mobile has no
- * «احجز رغم التعارض»; the way out is another slot (an override with a reason stays on the web).
- */
+/** R-SCH-04, B3: mobile has no override; a reason-backed override stays on the web. */
 export function ConflictNotice({ lines, onChangeSlot }: ConflictNoticeProps) {
   const { color } = useTheme();
   const text = {

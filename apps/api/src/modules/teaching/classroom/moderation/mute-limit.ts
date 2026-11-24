@@ -3,7 +3,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
 
-/** Mutes per staff login per 10 minutes: «كتم الجميع» in a full class is one call per student. */
+/** Mutes per staff login per 10 minutes: muting a full class is one call per student. */
 export const MUTES_PER_WINDOW = 120;
 
 /**

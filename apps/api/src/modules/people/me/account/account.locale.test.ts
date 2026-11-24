@@ -4,8 +4,6 @@ import { bodyPipeOf } from '@/common/http/zod-inputs.test-util';
 import { AccountController } from './account.controller';
 import { accountKit, ME } from './account.fakes';
 
-// PATCH /me/locale (owner 2026-11-16): «اللغة» from the API, for every signed-in login.
-
 const setup = () => {
   const kit = accountKit();
   const me = { setLocale: vi.fn().mockResolvedValue(undefined) };

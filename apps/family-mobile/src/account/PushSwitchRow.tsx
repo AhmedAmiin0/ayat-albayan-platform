@@ -1,7 +1,7 @@
 import { t, SwitchRow, AppText, type, useTheme } from '@ab/mobile-kit';
 import { useDevicePush } from './use-device-push';
 
-/** «الإشعارات على هذا الجهاز»: on/off for this phone only (docs/50 §6), with what it covers. */
+/** On/off for this phone only (docs/50 §6). */
 export function PushSwitchRow({ hint }: { hint: string }) {
   const { color } = useTheme();
   const push = useDevicePush();

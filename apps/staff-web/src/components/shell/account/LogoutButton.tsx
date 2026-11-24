@@ -5,7 +5,7 @@ import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
 import { signOut } from '@ab/web-kit/auth/sign-in';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** «تسجيل الخروج» icon button (the door glyph is drawn RTL-native). Visible at every width. */
+/** The door glyph is drawn RTL-native; visible at every width. */
 export function LogoutButton({ className }: { className?: string }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();

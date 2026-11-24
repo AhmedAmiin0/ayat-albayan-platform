@@ -1,5 +1,5 @@
 import { cancelAnswerSchema, teacherLessonPaths } from '@ab/client-core';
-import type { TeacherCancelRequest } from '@ab/shared';
+import type { TeacherCancelRequest } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { apiSend } from '@ab/web-kit/lib/http/api';

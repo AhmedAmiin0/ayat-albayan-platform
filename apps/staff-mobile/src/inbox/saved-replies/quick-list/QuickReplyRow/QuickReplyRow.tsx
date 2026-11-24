@@ -10,7 +10,7 @@ interface QuickReplyRowProps {
   onPress: () => void;
 }
 
-/** «/» isolated with its title (FSI … PDI), so «/greeting» and «/ترحيب» both read slash-first. */
+/** Isolated (FSI to PDI) so the title always reads slash-first. */
 export const slashTitle = (title: string) => isolate(`/${title}`);
 
 /**

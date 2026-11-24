@@ -48,21 +48,7 @@ import { TeacherConfirmRepo } from './teacher-me/teacher-confirm.repo';
 import { TeacherLessonController } from './teacher-me/teacher-lesson.controller';
 import { TeacherLessonDeps, TeacherLessonService } from './teacher-me/teacher-lesson.service';
 
-/**
- * Lesson lists (week / day / student), confirm, status, reschedule, cancel, and the teacher's own
- * routes (/teachers/me, /teachers/me/lessons, its cancel / «سأحضر» (docs/46), proposals).
- * R-SCH-03, R-SCH-07,
- * R-SCH-08, R-TCH-03, R-LES-01..03.
- * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm);
- * TeacherMeQueries for the teacher-mode inbox (which children of a guardian the teacher sees);
- * RescheduleOneService and LessonCancelService for sales' one-lesson move / cancel (docs/16 row 37).
- * GET /lessons/overview is the all-teachers calendar (R-SCH-09). PATCH /lessons/:id/time is
- * «عدّل الوقت» (R-SCH-11): one lesson edited in place. AutoHeldJob (owner 2026-11-02): with
- * no confirmation required, a lesson still open 30 min after its end counts as held;
- * AutoHeldCorrection undoes it. With one required (owner 2026-11-03, the default) it settles
- * confirmed → completed and reminded → no_show (OutcomeSettleService); OutcomeCorrection is
- * «تصحيح الحالة» (POST /lessons/:id/correct, and sales' own route).
- */
+/** Lesson lists, confirm, status, reschedule, cancel and the teacher's own routes (R-SCH). */
 @Module({
   imports: [SchedulingModule, SubscriptionsModule, TeachersModule, ScheduleNoticesModule],
   controllers: [

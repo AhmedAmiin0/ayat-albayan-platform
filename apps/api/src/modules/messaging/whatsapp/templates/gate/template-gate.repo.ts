@@ -20,11 +20,7 @@ async function sendableRows(db: Db): Promise<TemplateRow[]> {
   return templateRows(data);
 }
 
-/**
- * The crm gate (docs/19 «crm driver»): a CRM_GATED_KEYS key on a crm line whose CRM template
- * (teacher_new_student → teacher_lesson_v2) is approved, whatever its own Meta status. Read live on
- * every call: a line's driver can change at runtime («التكاملات»), a cached copy never keeps it.
- */
+/** Read live every call (docs/19), since a line's driver can change at runtime. */
 function gateSendable(rows: TemplateRow[]): TemplateRow[] {
   const keys = gateApprovedKeys(rows, (r) => onCrm(r.line));
   return rows.filter((r) => keys.has(r.key));

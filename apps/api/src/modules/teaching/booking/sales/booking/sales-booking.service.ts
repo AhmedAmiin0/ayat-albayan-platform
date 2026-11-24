@@ -110,23 +110,17 @@ export class SalesBookingOptions {
     return (await this.teachers.list(q)).map((t) => ({ ...t, meeting_link: null }));
   }
 
-  /** Her grid, scoped (`scoped`); «تغيير الموعد» / renew_any: docs/16 rows 37–38. */
+  /** docs/16 rows 37-38. */
   async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
     return this.slotsService.slots({ ...q, ...(await this.scoped(q, user)) });
   }
 
-  /** «وقت آخر»: the same scope as `slots`, over the server's next 14 days. */
+  /** Same scope as `slots`, over the server's next 14 days. */
   async outsideSlots(q: OutsideSlotsQuery, user: AuthUser): Promise<OutsideSlotsResponse> {
     return this.slotsService.outside({ ...q, ...(await this.scoped(q, user)) });
   }
 
-  /**
-   * `excludeLessonId` is kept only for a lesson of the grid's own students (her student's trial that
-   * «موعد تجريبي جديد» moves); any other is dropped. `excludeCourse` («تغيير أيام الحلقات») frees
-   * only her own students' course lessons (any while the rule does not enforce). `lessonId` (her
-   * «تغيير الموعد», lessons.reschedule): a grid of exactly that lesson's students reads whoever's
-   * they are (owner 2026-10-28). sales.renew_any: ANY student's grid. A read, nothing booked.
-   */
+  /** Exclusions are honoured only within her scope; renew_any opens any grid; read only. */
   private async scoped(q: OutsideSlotsQuery, user: AuthUser) {
     const ids = q.studentIds ?? [];
     if (!can(user, 'sales.renew_any')) await this.assertOwnGrid(q, user);
