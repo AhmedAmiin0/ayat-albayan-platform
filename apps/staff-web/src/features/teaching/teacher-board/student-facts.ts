@@ -1,4 +1,6 @@
-import { counted, PROGRAMS, TEACHER_STUDENT_KINDS, type TeacherStudentKind } from '@ab/shared';
+import { TEACHER_STUDENT_KINDS, type TeacherStudentKind } from '@ab/shared';
+import { PROGRAMS } from '@ab/catalog';
+import { counted } from '@ab/core';
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
 import { z } from 'zod';
 import { apiFetch } from '@ab/web-kit/lib/http/api';

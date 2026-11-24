@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { ModerationRepo, principalColumns, principalOf } from './moderation.repo';
 import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 

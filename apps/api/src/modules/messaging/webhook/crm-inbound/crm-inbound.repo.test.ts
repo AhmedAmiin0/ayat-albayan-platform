@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { CrmInboundRepo } from './crm-inbound.repo';
 import { RECEIVED_AT, WAMID } from './crm-inbound.fakes';
 
