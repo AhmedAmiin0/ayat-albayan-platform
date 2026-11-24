@@ -6,8 +6,7 @@ import { renderWithQuery } from '@/test/query';
 import { familyOf, KID, kid, PHONE } from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
-// «أيام الحلقات» on the chat's «اشتراك جديد» (owner 2026-11-06): for the resolved child (picked,
-// preselected or the only one) while GET /sales/booking/course lets her book its package.
+// Lesson days for the resolved child while GET /sales/booking/course allows booking its package.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

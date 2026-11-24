@@ -8,7 +8,6 @@ interface LinkChipProps {
   label: string;
 }
 
-/** A link's state («فعّال», «اكتمل العدد»…) or a send («قيد الإرسال», «فشل»…): glyph and word. */
 export function LinkChip({ look, label }: LinkChipProps) {
   return <StatusChip tone={TONE[look.tone]} glyph={look.glyph} label={label} size="sm" />;
 }

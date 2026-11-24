@@ -9,25 +9,15 @@ import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 interface SalesLessonRowProps {
   lesson: SalesScheduleLesson;
-  /** Opens «تفاصيل الحلقة», where every action lives («ادخل الحلقة» first while it runs). */
+  /** Opens the lesson details, where every action lives. */
   onOpen?: (lesson: SalesScheduleLesson) => void;
   /** A list over several days: the day and time go in the row's spoken name too. */
   dated?: boolean;
-  /** «للتأكيد» or «مؤكدة» is chosen, so every row shares that status: only «جارية الآن» still shows. */
+  /** A status filter is picked so every row shares it; only the running state still shows. */
   hideStatus?: boolean;
 }
 
-/**
- * One lesson in sales' day, laid out like Today's LessonRow (docs/29 §4): the local time on ONE line,
- * the students over «تجريبية · أ. سامية · 45 دقيقة», and at the end a 7pt dot with a word in its tone: the
- * status, or «جارية الآن» while it runs; a running lesson not yet confirmed shows both, one over the
- * other (no status word under «للتأكيد» / «مؤكدة», `hideStatus`). The row is one 44pt button to «تفاصيل
- * الحلقة» (`onOpen`) with no buttons on it (UX review 2026-10-29: «ادخل الحلقة» is the sheet's first
- * action). Its hint reads the local day and time, the status and the second line; `dated` puts the day
- * and time in its name too. In the day's inset card (owner 2026-10-28: one container rule) it takes the
- * card's 16pt padding and leaves the rule between rows to the card; alone (a student's «الحلقات القادمة»)
- * it keeps its own rule. The time cell widens with the font scale (up to 1.3×) before the text shrinks.
- */
+/** Like Today's LessonRow (docs/29 §4): one 44pt button to the details, no buttons on it. */
 export function SalesLessonRow(props: SalesLessonRowProps) {
   const { lesson, onOpen, dated = false, hideStatus = false } = props;
   const { color } = useTheme();
@@ -45,7 +35,7 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
   const subtitle = [hint, rowSubtitle(lesson)].filter(Boolean).join(' · ');
   const when = `${dayLabel(wallParts(lesson.starts_at, tz).date)} ${time}`;
   const label = t.lessons.sheet.openRow.replace('{names}', who);
-  // A running lesson already confirmed reads «جارية الآن» alone; one still to confirm keeps its word too.
+  // A running confirmed lesson shows only running; one still to confirm keeps its status too.
   const status = !running || lesson.status !== 'confirmed';
   const words = [
     ...(running ? [{ word: t.lessons.sheet.live, tone: toneColors(color, 'ok').fg }] : []),

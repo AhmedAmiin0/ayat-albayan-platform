@@ -10,7 +10,7 @@ import { SmallHeading } from './SmallHeading';
 interface HistoryEntryCardProps {
   entry: SalesHistoryEntry | SalesStudentSubscription;
   current: boolean;
-  /** «تفاصيل الطالب» (docs/16 row 36): package, status, dates and lessons only; no status changes, no payments. */
+  /** Student details (docs/16 row 36): no status changes or payments. */
   brief?: boolean;
 }
 
@@ -51,7 +51,7 @@ export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntry
   );
 }
 
-/** The status changes and the linked payments (the history only, never «تفاصيل الطالب»). */
+/** Status changes and linked payments appear in the history only, never in student details. */
 function HistoryEvents({ lines }: { lines: ReturnType<typeof historyLines> }) {
   const { color } = useTheme();
   const h = t.sales.history;
