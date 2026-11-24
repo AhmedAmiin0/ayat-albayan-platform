@@ -1,4 +1,4 @@
-// Lane L06 (owner 2026-11-22): deploy-staging also OTAs the family app. «plan» diffs
+// Lane L06: deploy-staging also OTAs the family app. «plan» diffs
 // apps/family-mobile + packages since the family's own last OTA (else its last build), checks
 // native changes against the family's own last green preview build, and «ota» dispatches
 // app=family (channel preview).

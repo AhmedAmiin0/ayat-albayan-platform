@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { SalesCourseRepo } from './sales-course.repo';
 
 // PR #642 review: only a weekly course with no package makes a student «imported».

@@ -1,4 +1,4 @@
-import type { BookingResult } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { chatPhone, mediaPhone, subscribeTarget } from './booked';
 import { emptyDraft } from '@/features/teaching/booking/draft/draft';
