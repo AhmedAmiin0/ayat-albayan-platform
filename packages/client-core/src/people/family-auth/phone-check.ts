@@ -1,4 +1,4 @@
-import { asciiDigits, normalizePhone } from '@ab/shared';
+import { asciiDigits, normalizePhone } from '@ab/core';
 import type { Country } from './countries.js';
 // Typed with + / 00: the picked country is ignored (the paste split's own rule).
 import { isInternational } from './country-dial.js';

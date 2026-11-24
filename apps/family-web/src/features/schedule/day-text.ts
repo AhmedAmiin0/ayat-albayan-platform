@@ -1,4 +1,4 @@
-import { dateRangeText, dateText } from '@ab/shared';
+import { dateRangeText, dateText } from '@ab/time';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 // A week's days are calendar dates («YYYY-MM-DD») already on the viewer's clock: they are read at

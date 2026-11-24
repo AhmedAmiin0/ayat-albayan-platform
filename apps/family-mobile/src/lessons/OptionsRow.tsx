@@ -1,4 +1,5 @@
-import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { ClockOptions } from '@ab/time';
 import { useState, type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';

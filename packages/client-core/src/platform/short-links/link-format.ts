@@ -1,4 +1,5 @@
-import type { Glyph, ShortLinkRow, ShortLinkSendStatus, ShortLinkUser } from '@ab/shared';
+import type { ShortLinkRow, ShortLinkSendStatus, ShortLinkUser } from '@ab/shared';
+import type { Glyph } from '@ab/money';
 import { fillSlots } from '../../teaching/reports/index.js';
 
 // The words around a link in the list and the detail (boards LinkXWebList, LinkXWebDetail,

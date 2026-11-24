@@ -1,4 +1,5 @@
-import type { MessageStatus, MessageView, SyncMessage, ThreadDetail } from '@ab/shared';
+import type { MessageView, SyncMessage, ThreadDetail } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { furtherOf, storedStatus, withStoredRows, withStoredTicks } from './store-view.js';
 

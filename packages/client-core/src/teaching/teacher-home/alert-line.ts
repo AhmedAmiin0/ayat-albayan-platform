@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
 import { fillSlots } from '../reports/index.js';
 import type { AlertParts, ChangeText } from './alert-parts.js';
 

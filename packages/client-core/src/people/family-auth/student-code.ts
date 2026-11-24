@@ -1,4 +1,5 @@
-import { asciiDigits, normalizeStudentCode } from '@ab/shared';
+import { normalizeStudentCode } from '@ab/shared';
+import { asciiDigits } from '@ab/core';
 
 /** Still on its way to a whole code («A», «AB», «AB-»): nothing to say yet. */
 const PARTIAL = /^(A|AB|AB-)$/i;

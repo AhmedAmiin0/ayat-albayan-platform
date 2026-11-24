@@ -1,4 +1,4 @@
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { liveTick } from './live-tick.js';
 
