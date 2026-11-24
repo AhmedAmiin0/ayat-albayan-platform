@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { convertPayment, netPaid, paymentState } from './payment-state.js';
+import { convertPayment, netPaid, netPaidIn, paymentState } from './payment-state.js';
 
 describe('paymentState («مدفوع جزئيًا» is derived)', () => {
   it('none / partial / full by cents', () => {
@@ -20,6 +20,24 @@ describe('netPaid (a refund counts against what was paid)', () => {
   it('payments minus refunds, in cents', () => {
     expect(netPaid([{ amount: 300.1, kind: 'payment' }, { amount: 150.2, kind: 'payment' }, { amount: 50.05, kind: 'refund' }])).toBe(400.25);
     expect(netPaid([])).toBe(0);
+  });
+});
+
+describe('netPaidIn (only rows in the package currency count)', () => {
+  const rows = [
+    { amount: 300, kind: 'payment', currency: 'SAR' },
+    { amount: 50.1, kind: 'refund', currency: 'SAR' },
+    { amount: 999, kind: 'payment', currency: 'USD' },
+  ] as const;
+
+  it('skips a legacy row in another currency', () => {
+    expect(netPaidIn(rows, 'SAR')).toBe(249.9);
+    expect(netPaidIn(rows, 'USD')).toBe(999);
+  });
+
+  it('no row in that currency is 0', () => {
+    expect(netPaidIn(rows, 'EGP')).toBe(0);
+    expect(netPaidIn([], 'SAR')).toBe(0);
   });
 });
 

@@ -2561,9 +2561,6 @@
     "complexity": {
       "count": 1
     },
-    "typescript/no-unnecessary-type-conversion": {
-      "count": 2
-    },
     "typescript/no-unnecessary-condition": {
       "count": 1
     }
@@ -7817,7 +7814,7 @@
       "count": 5
     },
     "typescript/no-unnecessary-type-conversion": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/reporting/dashboard/work/work.queries.ts": {

@@ -22,6 +22,17 @@ export function netPaid(rows: readonly { amount: number; kind: 'payment' | 'refu
 }
 
 /**
+ * netPaid over the rows in `currency` only: a legacy row stored in another currency (before
+ * payments were converted on entry) is not money toward this package.
+ */
+export function netPaidIn(
+  rows: readonly { amount: number; kind: 'payment' | 'refund'; currency: string }[],
+  currency: string,
+): number {
+  return netPaid(rows.filter((r) => r.currency === currency));
+}
+
+/**
  * An amount sent in another currency, in the package currency: `rate` = package units per 1 unit
  * of what was sent (cross rate through SAR: rate(SAR→package) / rate(SAR→sent)), 2 decimals.
  */

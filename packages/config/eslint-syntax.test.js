@@ -40,6 +40,16 @@ test('F-1: an else-if chain of 3+, not of 2', () => {
   assert.deepEqual(lint('if (a) {} else if (b) {} else {}'), []);
 });
 
+test('M-1: a hand-made refund-signed sum, not a signed amount on its own', () => {
+  const code = [
+    "rows.reduce((n, r) => n + (r.kind === 'refund' ? -r.amount : r.amount), 0);",
+    "rows.reduce((n, r) => n + (r.kind === 'refund' ? -1 : 1) * r.amount, 0);",
+  ].join('\n');
+  assert.deepEqual(lint(code), Array(2).fill('ab/no-refund-sums'));
+  const fine = "const shown = p.kind === 'refund' ? -p.amount : p.amount;\nnetPaid(rows);";
+  assert.deepEqual(lint(fine), []);
+});
+
 test('tests and syntaxExempt turn off only their groups', () => {
   const code = "await fetch(u);\nJSON.parse(s);\nif (a) {} else if (b) {} else if (c) {}";
   assert.deepEqual(lint(code, 'src/a.test.ts'), ['ab/no-if-chains']);
