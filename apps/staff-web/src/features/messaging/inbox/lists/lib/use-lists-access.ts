@@ -1,7 +1,7 @@
 import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 
-/** «القوائم» shows with inbox.lists, never in teacher mode (owner 2026-10-20: teachers get no lists). */
+/** Requires inbox.lists and is never shown in teacher mode. */
 export function useListsAccess(): boolean {
   const mode = useInboxMode();
   const { can } = usePermissions();

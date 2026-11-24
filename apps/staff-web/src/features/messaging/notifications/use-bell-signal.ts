@@ -4,11 +4,7 @@ import { useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { notificationsQuery } from '@ab/web-kit/push/notifications-api';
 
-/**
- * Invalidates `refresh` once the bell shows a new row of `kind` (owner 2026-10-29: «محفظتي» moves when a
- * commission is earned). This observer sets no interval: the header bell's 30 s poll and the window's focus
- * bring the row, so watching costs no request.
- */
+/** Sets no interval: the header bell's 30 s poll and window focus bring the row. */
 export function useBellSignal(kind: PushKind, refresh: QueryKey): void {
   const client = useQueryClient();
   const { data: newest } = useQuery({ ...notificationsQuery, refetchInterval: false, staleTime: 30_000, select: (p) => newestOfKind(p, kind) });

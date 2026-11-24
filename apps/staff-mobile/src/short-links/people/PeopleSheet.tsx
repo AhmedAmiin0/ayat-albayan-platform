@@ -23,7 +23,7 @@ export interface PeoplePicked {
 }
 
 interface PeopleSheetProps extends PeoplePicked {
-  /** The form's «عدد المستخدمين المسموح به», for «تم · 5 من 5 مسموح». */
+  /** The form's allowed user limit, for the picked count. */
   maxUsers: number | null;
   onDone: (picked: PeoplePicked) => void;
   onClose: () => void;
@@ -44,7 +44,6 @@ const unlisted = (phone: string) => ({
   unregistered: true,
 });
 
-/** The numbers added so far, each with «حذف». */
 function PhoneList({ phones, onRemove }: { phones: string[]; onRemove: (e164: string) => void }) {
   return (
     <InsetGroup>
@@ -66,10 +65,6 @@ function PhoneList({ phones, onRemove }: { phones: string[]; onRemove: (e164: st
   );
 }
 
-/**
- * «من يمكنه فتح الرابط» (board LinkXStaffPeople): search the platform's users (name and role),
- * filter by kind, tick them, add numbers that are not on the platform, then «تم».
- */
 export function PeopleSheet({ maxUsers, onDone, onClose, ...start }: PeopleSheetProps) {
   const [people, setPeople] = useState(start.people);
   const [phones, setPhones] = useState(start.phones);

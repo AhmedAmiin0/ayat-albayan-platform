@@ -13,12 +13,7 @@ export const unreadRetry = (count: number, error: unknown): boolean =>
  */
 export const unreadPollMs = (): number => liveInterval(inboxLive.isLive(), env.inboxListRefreshMs);
 
-/**
- * The academy's unread chats, for the admin nav badge and the sales «المحادثات» count and tab
- * title: ONE query (one key, one path) over the chats list's own summary (GET /threads, unread,
- * one row). Under ['threads'], so a send, an opened chat and every realtime event that re-reads
- * the list re-read it too. A hidden tab does not poll (owner 2026-10-27): it catches up when shown.
- */
+/** One query under ['threads'] so every re-read refreshes it; a hidden tab does not poll. */
 export const unreadCountQuery = (enabled: boolean) => ({
   enabled,
   queryKey: [...UNREAD_COUNT_KEY],

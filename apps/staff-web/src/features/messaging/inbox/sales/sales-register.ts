@@ -2,9 +2,7 @@ import type { ThreadView } from '@ab/shared';
 import { draftFromLead } from '@/features/teaching/booking/booking-entries';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 
-// «تسجيل طالب جديد» in a sales chat (SalesRegisterAction): which threads offer it and its prefill.
-
-/** A lead still in the funnel, not yet a family (the admin's «حجز حلقة تجريبية» rule in QuickActions). */
+/** A lead still in the funnel, not yet a family. */
 export const canRegisterFrom = (th: ThreadView): th is ThreadView & { lead_id: string } =>
   !!th.lead_id && !th.guardian_id && !th.teacher_id && th.lead_status !== 'converted' && th.lead_status !== 'lost';
 

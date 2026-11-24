@@ -12,10 +12,7 @@ export interface LeadStatusChangeProps {
   onDone: (message: string, tone?: 'error') => void;
 }
 
-/**
- * «تغيير الحالة» (R-LEAD-01 funnel). The API owns the allowed moves (lead state machine) and
- * refuses the rest with 409 invalid_transition, shown in words.
- */
+/** The API owns the allowed moves and refuses others with 409 invalid_transition (R-LEAD-01). */
 export function LeadStatusChange({ lead, onDone }: LeadStatusChangeProps) {
   const queryClient = useQueryClient();
   const [to, setTo] = useState<LeadStatus | ''>('');

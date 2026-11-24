@@ -9,13 +9,10 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const r = t.notificationRules;
 
-/** «في الانتظار: رسالتان» (GET /messages/gate's queued count, the same one «الإرسال» shows). */
+/** Same queued count as GET /messages/gate. */
 export const queuedWords = (n: number): string => (n === 0 ? r.strip.queued.zero : counted(r.strip.queued, n));
 
-/**
- * The state strip of «الإشعارات» (docs/26b §3): sending, automatic messages, the queued count, and
- * the way to «نظرة عامة», which changes them. Every row's «هل يُرسل الآن؟» depends on these two.
- */
+/** Every row's send state depends on the sending and automatic-messages switches (docs/26b §3). */
 export function RulesStateStrip({ settings }: { settings: AcademySettings }) {
   const gate = useQuery(sendGateQuery);
   const sending = sendingChip(settings.messaging_enabled, gate.data);

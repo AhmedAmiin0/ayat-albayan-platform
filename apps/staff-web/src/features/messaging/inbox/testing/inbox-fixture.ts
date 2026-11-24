@@ -61,7 +61,7 @@ export const detail = (messages: MessageView[], patch: Partial<ThreadView> = {})
   people: { guardian: null, lead: null, students: [] },
 });
 
-/** A guardian's child in `people.students`; `sub` patches an «8 حلقات» package, 3 left, unpaid. */
+/** `sub` patches an 8-lesson package with 3 left and unpaid. */
 export function pupil(patch: Partial<ThreadStudentView> = {}, sub?: Partial<ThreadSubscriptionView> | null): ThreadStudentView {
   const package8: ThreadSubscriptionView = {
     id: 'sub-1',

@@ -14,7 +14,6 @@ import { draftFromThread } from './sales-register';
 
 const noop = () => undefined;
 
-/** «تسجيل طالب جديد» in a lead's sales chat header; `compact` (the phone header, W3): an icon button. */
 export function SalesRegisterButton({ compact, onOpen }: { compact: boolean; onOpen: () => void }) {
   return compact ? (
     <IconButton label={t.inbox.registerNew} onClick={onOpen} className="text-lapis">
@@ -28,15 +27,7 @@ export function SalesRegisterButton({ compact, onOpen }: { compact: boolean; onO
   );
 }
 
-/**
- * «تسجيل طالب جديد» (R-ASST-01, docs/16): the booking wizard in sales mode, in a dialog over the
- * conversation. Guardian + student + teacher + trial time, through /sales/booking, so the student is
- * credited to the salesperson (brought_by). No price, no invoice, no package. Closing it, or «ارجع
- * للمحادثة» after booking, stays in the same chat, refreshed (the number is a family now). Closing
- * with ✕ or Esc keeps the draft and step for this phone (docs/20 W9); a booking clears them. A past
- * first lesson is dropped on reopening (resumable), and one line says so (F). The sales chat holds
- * its open state above the width switch (useSalesFamilyActions, m13), with the lead thread as opened.
- */
+/** Booked via /sales/booking so the student is credited to the salesperson (R-ASST-01, docs/16). */
 export function SalesRegisterDialog({ thread, onClose }: { thread: ThreadView & { lead_id: string }; onClose: () => void }) {
   const queryClient = useQueryClient();
   const phone = thread.phone_e164;

@@ -9,11 +9,7 @@ import { syncErrorText, syncResultText } from './template-sync-text';
 
 const s = t.numbers.templateSync;
 
-/**
- * «مزامنة القوالب مع هذا الرقم» (templates.manage; docs/23c decision 9): reads that number's WABA list
- * into its approvals (module mode), or runs its line's sync as «القوالب» does (legacy, a
- * crm line). The outcome is one line in a polite live region; «القوالب» refetches.
- */
+/** Module mode reads the WABA list; legacy or crm runs its line's sync (docs/23c decision 9). */
 export function NumberTemplateSync({ view }: { view: NumberView }) {
   const queryClient = useQueryClient();
   const allowed = usePermissions().can('templates.manage');

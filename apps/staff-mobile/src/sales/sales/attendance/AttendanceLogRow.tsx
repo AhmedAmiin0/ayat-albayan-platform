@@ -23,7 +23,7 @@ export const COLUMNS: Record<'date' | 'time' | 'teacher' | 'status' | 'report', 
   report: { flex: 0.8 },
 };
 
-/** The report column; wider in the teacher's file, whose cell holds «تعديل التقرير» (docs/47). */
+/** Wider in the teacher's file, whose cell holds the edit report action (docs/47). */
 export const reportColumn = (wide: boolean): ViewStyle =>
   wide ? { flex: 1.5 } : COLUMNS.report;
 
@@ -48,7 +48,6 @@ interface AttendanceLogRowProps {
   reportLabel?: string | null;
 }
 
-/** One past lesson of «سجل الحضور»: the five cells, then the trial / makeup tags and the cancel reason. */
 export const AttendanceLogRow = memo(function AttendanceLogRow({ row, striped, cycle, onOpen, tz: zone, reportLabel }: AttendanceLogRowProps) {
   const { color } = useTheme();
   const tz = useLogTz(zone);

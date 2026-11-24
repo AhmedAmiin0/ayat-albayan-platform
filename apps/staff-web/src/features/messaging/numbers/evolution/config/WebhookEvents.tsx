@@ -16,7 +16,7 @@ export interface WebhookEventsProps {
 const toggled = (events: readonly EvolutionEvent[], event: EvolutionEvent) =>
   EVOLUTION_EVENTS.filter((e) => (e === event) !== events.includes(e));
 
-/** «الأحداث المرسلة»: one checkbox per Evolution event (names as Evolution spells them). */
+/** Event names are spelled as Evolution spells them. */
 export function WebhookEvents({ events, error, onChange }: WebhookEventsProps) {
   const hintId = useId();
   return (

@@ -2,13 +2,13 @@ import { t } from '@ab/mobile-kit';
 import { FormField } from './FormField';
 
 interface MaxUsersFieldProps {
-  /** Digits as typed; empty = «بلا حد». */
+  /** Digits as typed; empty means no limit. */
   value: string;
   onChange: (maxUsers: string) => void;
   error?: string | undefined;
 }
 
-/** «عدد المستخدمين المسموح به»: distinct people who may open the link; empty is «بلا حد». */
+/** Distinct people who may open the link; empty means no limit. */
 export function MaxUsersField({ value, onChange, error }: MaxUsersFieldProps) {
   const F = t.shortLinks.form;
   return (

@@ -14,12 +14,7 @@ export interface ReplyActionsProviderProps {
   children: ReactNode;
 }
 
-/**
- * The reply notes' actions for one chat (owner 2026-10-28). The web has the admin's reschedule drawer
- * only (sales' web schedule is read-only, docs/16 row 37): sales confirm here and move from the app.
- * Teacher mode: none. A move is remembered per chat for the session (the family lesson leaves the list).
- * No «تأكيد الحلقة» while no confirmation is required (owner 2026-11-02): «نعم» confirms itself.
- */
+/** Sales' web schedule is read-only (docs/16 row 37), so sales confirm here and move in the app. */
 export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsProviderProps) {
   const mode = useInboxMode();
   const { can } = usePermissions();

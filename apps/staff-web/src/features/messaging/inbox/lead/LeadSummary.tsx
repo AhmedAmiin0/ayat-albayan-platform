@@ -4,7 +4,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { leadSummary } from './lead-summary';
 
-/** «بيانات الطالب» at a glance in the aside: only what is filled (R-LEAD-03). Read-only. */
 export function LeadSummary({ lead }: { lead: InboxLead }) {
   const headingId = useId();
   const rows = leadSummary(lead, useClock());

@@ -40,7 +40,6 @@ test('back goes one step (params → templates → the number, still typed); clo
   await toTemplates([OPENER]);
   await fireEvent.press(await screen.findByText(t.templates.names.follow_up_slots));
   expect(screen.getByLabelText(t.inbox.composer.paramNames.student_name)).toBeTruthy();
-  // The header's back (the form's own «رجوع» does the same).
   await fireEvent.press(screen.getByTestId('new-chat-back'));
   expect(screen.getByText(t.templates.names.follow_up_slots)).toBeTruthy();
   await fireEvent.press(screen.getByTestId('new-chat-back'));

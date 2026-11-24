@@ -19,10 +19,7 @@ interface ScheduleFieldsProps {
   tz: string;
 }
 
-/**
- * The time of a scheduled meeting without a date picker: 14 day chips (today first, the viewer's
- * calendar), hour ±1 (0–23, shown «5 م» in 12 h; the slot keeps 24 h) and minute ±15 steppers, a length of 15..240 by 15, and the zone it reads in.
- */
+/** No date picker: 14 day chips in the viewer's calendar; length 15 to 240 by 15; 24 h slot. */
 export function ScheduleFields({ slot, onChange, tz }: ScheduleFieldsProps) {
   const { color } = useTheme();
   const cycle = useClockCycle();

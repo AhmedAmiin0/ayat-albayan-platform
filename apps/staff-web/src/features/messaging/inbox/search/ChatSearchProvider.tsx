@@ -14,12 +14,7 @@ export interface ChatSearchProviderProps {
   children: ReactNode;
 }
 
-/**
- * «بحث» inside the open chat (owner 2026-11-02), as WhatsApp: the header's button opens a bar,
- * typing (debounced) asks the API, the bubbles light up the words. Each step sets the chat's
- * anchor (the URL's `msg`, docs/37): ThreadPane's log scrolls to a hit it shows, or opens the
- * window around it with one request. Closing goes back to the live chat at its newest message.
- */
+/** Each step sets the chat's anchor (the URL's `msg`, docs/37); closing returns to the newest. */
 export function ChatSearchProvider({ phone, children }: ChatSearchProviderProps) {
   const [state, dispatch] = useReducer(chatSearchReducer, CHAT_SEARCH_CLOSED);
   const { query, ...found } = useSearchResults(phone, state);

@@ -1,8 +1,6 @@
 import { EVOLUTION_DEFAULT_EVENTS, type EvolutionConfig, type NumberView } from '@ab/shared';
 
-// «إعدادات Evolution» as typed: numbers stay text until submit (an emptied field is null, so the
-// schema names it), ids are text ('' = null). config-check.ts parses it with zod. The webhook URL
-// is never typed: the server builds it (NumberEvolutionView.hook_url, shown read-only).
+// Numbers stay text until submit (empty is null); the webhook URL is always server-built.
 
 type Cfg = EvolutionConfig;
 export interface ConfigDraft {
@@ -56,5 +54,4 @@ export const patchSection = <K extends ConfigSection>(
   patch: Partial<ConfigDraft[K]>,
 ): ConfigDraft => ({ ...draft, [key]: { ...draft[key], ...patch } });
 
-/** «استعادة الأحداث الافتراضية»: what the platform reads. */
 export const defaultEvents = () => [...EVOLUTION_DEFAULT_EVENTS];

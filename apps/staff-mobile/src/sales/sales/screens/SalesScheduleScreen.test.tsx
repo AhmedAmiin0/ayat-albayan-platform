@@ -6,7 +6,7 @@ import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from './SalesScheduleScreen';
 
-// An academy that requires lesson confirmation (the pills and rows say «للتأكيد»).
+// An academy that requires lesson confirmation.
 const statusWord = lessonStatusText(true).word;
 
 const mockApiFetch = jest.fn();
@@ -44,14 +44,14 @@ test('today in Riyadh: one-line time, students over «kind · أ. teacher · len
   expect(screen.getByText('18:00').props.numberOfLines).toBe(1);
   expect(screen.getByText('سلمى').props.numberOfLines).toBe(1);
   const teacher = t.today.teacherTitled.replace('{teacher}', 'أبرار محمد');
-  // The kind leads, so a one-line cut takes the teacher's name, never «تجريبية».
+  // The kind leads, so a one-line cut drops the teacher's name, never the trial tag.
   expect(screen.getByText(`${t.schedule.trialTag} · ${teacher} · ${t.enums.duration['30']}`)).toBeTruthy();
   expect(screen.getByText(new RegExp(`^${t.booking.makeup.tag} · `))).toBeTruthy();
-  // The running (confirmed) lesson reads «جارية الآن» only; the other its short status.
+  // The running confirmed lesson shows only running; the other its short status.
   expect(screen.getByText(t.lessons.sheet.live)).toBeTruthy();
   expect(screen.queryByText(statusWord('confirmed'))).toBeNull();
   expect(screen.getByText(statusWord('scheduled'))).toBeTruthy();
-  // «ادخل الحلقة» lives in the sheet, not on the row; no permissions note over the day.
+  // Join lives in the sheet, not on the row.
   expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();
   expect(screen.queryByText(t.sales.lessonActions.ownNote)).toBeNull();
   expect(screen.queryByRole('button', { name: t.lessons.rescheduleSubmit })).toBeNull();

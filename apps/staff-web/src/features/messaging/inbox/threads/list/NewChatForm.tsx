@@ -7,11 +7,7 @@ import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «محادثة جديدة» (admin and sales): type a family's WhatsApp number, open its chat (E.164 in the URL,
- * like a lead's «افتح المحادثة»). A number without messages opens NewThread: the first template.
- * Opened by NewChatToggle in the list's head row, so the conversations list keeps the column.
- */
+/** A number without messages opens NewThread to send the first template. */
 export function NewChatForm({ onOpen }: { onOpen: (phone: string) => void }) {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | undefined>(undefined);
@@ -62,7 +58,6 @@ export function NewChatForm({ onOpen }: { onOpen: (phone: string) => void }) {
   );
 }
 
-/** «محادثة جديدة» as an icon-only disclosure in the list's head row; the form unfolds below the row. */
 export function NewChatToggle({ open, onToggle }: { open: boolean; onToggle: () => void }) {
   return (
     <IconButton label={t.inbox.newChat.title} aria-expanded={open} onClick={onToggle} className="text-lapis aria-expanded:bg-sunk">

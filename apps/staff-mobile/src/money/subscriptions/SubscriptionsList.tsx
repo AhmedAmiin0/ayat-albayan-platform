@@ -23,7 +23,7 @@ const PILLS: FilterPill<SubscriptionFilter | 'all'>[] = [
 
 const keyOf = (s: SubscriptionView) => s.id;
 
-/** «الباقات»: GET /subscriptions with a status chip row and a server-side student-name search. */
+/** Student-name search runs server side. */
 export function SubscriptionsList() {
   const { color } = useTheme();
   const [filter, setFilter] = useState<SubscriptionFilter | 'all'>('all');
@@ -33,8 +33,7 @@ export function SubscriptionsList() {
     path: '/subscriptions',
     params: subscriptionParams(filter, search),
   });
-  // A new threshold redraws the rows (it is in their chip); a refetch of one page does not. Keyed by the
-  // package: FlashList recycles a row, which would carry an open «إلغاء الباقة» confirm onto another one.
+  // Keyed by package because FlashList recycling would carry an open cancel confirm to another row.
   const renderItem = useCallback(
     ({ item }: { item: SubscriptionView }) => (
       <SubscriptionItem key={item.id} sub={item} {...(threshold === undefined ? {} : { threshold })} />

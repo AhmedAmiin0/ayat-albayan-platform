@@ -7,12 +7,7 @@ import { putEvolutionConfig, pushEvolutionSync, readEvolutionSync } from './evol
 
 const e = t.numbers.evolution;
 
-/**
- * «مزامنة الآن» (POST, the numbers refetch) and «تحقق» (GET, reads only): the latest answer of
- * either, whether one runs, and the last failure (a new press clears the other's). A failed push
- * drops the earlier answer, so the server's stored state shows (final review 4: never a stale
- * «متزامن»).
- */
+/** A failed push drops the earlier answer so a stale synced state is never shown. */
 export function useEvolutionSync(id: string) {
   const [last, setLast] = useState<EvolutionSyncView | null>(null);
   const clear = () => setLast(null);
@@ -37,7 +32,6 @@ export function useEvolutionSync(id: string) {
   };
 }
 
-/** «احفظ وزامن»: PUT the options; the answer (the sync view) stays shown in the dialog. */
 export function useSaveEvolutionConfig() {
   const [answer, setAnswer] = useState<EvolutionSyncView | null>(null);
   const save = useNumbersMutation(putEvolutionConfig, { onDone: setAnswer, note: e.config.saved });

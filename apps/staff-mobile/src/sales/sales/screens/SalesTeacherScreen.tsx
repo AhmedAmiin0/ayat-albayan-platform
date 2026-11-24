@@ -28,12 +28,7 @@ import { TeacherOverviewTab } from '@/sales/sales/teacher/TeacherOverviewTab';
 type TeacherTab = 'students' | 'schedule' | 'attendance';
 const TABS: readonly TeacherTab[] = ['students', 'schedule', 'attendance'];
 
-/**
- * One teacher's page, switched «الطلاب · الجدول · الحضور» (owner 2026-10-28; default «الطلاب»). «الطلاب»
- * (the detail of «المعلمون», web drawer parity): name, code, program, status and the next lesson in Riyadh
- * time, switched «مشترك · تجريبي · الكل» (default «مشترك»), plus their day in the read-only schedule and the
- * teacher's fixed meeting link; a row opens the student's details in either tree (studentDetailsHref). «الجدول» / «الحضور»: TeacherOverviewTab.
- */
+/** A row opens the student's details in either tree; the next lesson shows in Riyadh time. */
 export function SalesTeacherScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();

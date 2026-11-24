@@ -4,7 +4,6 @@ import { clearAllDrafts, getDraft, setDraft } from '@/features/messaging/inbox/c
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { usePicks } from './use-picks';
 
-// Review of PR #694 (1, 4, 5) and its follow-up (4, 6): the box's draft around «تعديل».
 const OWN = message({ id: 'own', direction: 'outbound', status: 'sent', body: 'الساعة الخامسة' });
 const OTHER = message({ id: 'other', direction: 'outbound', body: 'الساعة السادسة' });
 const typed = () => getDraft(PHONE).text;

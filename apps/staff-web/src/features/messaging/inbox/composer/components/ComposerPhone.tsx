@@ -69,17 +69,7 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
   return [gateNote, replyFrom, until].filter((n): n is string => !!n);
 }
 
-/**
- * The reply box at every width (phones since owner 2026-10-05, desktop since W2): pinned under the
- * log: the notices in one line, then a one-line growing message box with the template toggle
- * before it and a round «أرسل» after it. Outside the 24 h window ReopenBar on top (2026-11-14):
- * the reopen picker, the live template's tick, or (none allowed) what they can do; then templates.
- * Staff (not teachers) also get a paperclip wherever a text goes (D2; after the window too on a
- * Kapso chat line, owner 2026-11-01): a picked file swaps the box for FileComposer. The File lives
- * here only (never in the draft store), for this chat only. Staff also get «الردود السريعة»
- * (ReplyComposer) wherever a text goes; where none can, its button shows locked.
- * «عرض سعر» (owner 2026-10-26, staff with pricing.read) sits beside them at every window (copy still works).
- */
+/** Opening a closed chat sends nothing: the starter template goes with the first send. */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const inbox = useInboxMode();
@@ -104,7 +94,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Icon name="template" className="size-5" />
     </IconButton>
   );
-  // «الردود السريعة» where no text can go: shown locked with why (session messages only).
+  // Saved replies where no text can go show locked, since they are session messages only.
   const locked = !typing && replies && <SavedRepliesButton locked />;
   const quote = access.quote && <QuoteButton thread={thread} onFilled={() => onMode('text')} />;
   const attach = typing && files && (

@@ -5,8 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { details } from '@/sales/sales/student/fixtures';
 import { SalesStudentScreen } from '@/sales/sales/student/SalesStudentScreen/SalesStudentScreen';
 
-// «إلغاء الباقة» in the assistant's «تفاصيل الطالب» (owner 2026-11-02): ANY student,
-// subscriptions.stop, next to «إلغاء الاشتراك», only while the server says the package is unused.
+// Package cancel only while the server says the package is unused.
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

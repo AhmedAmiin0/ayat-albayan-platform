@@ -9,10 +9,7 @@ const SHOWN_NUMBERS = 1;
 
 const h = () => t.communicationsHub;
 
-/**
- * «الأرقام وحالتها» on the overview: the first numbers as read-only rows with their health chip, the
- * rest counted, and a button to the «الأرقام» tab. Editing stays on the web.
- */
+/** Read-only; editing stays on the web. */
 export function NumbersSummary({ onOpen }: { onOpen: () => void }) {
   const query = useNumbers();
   const numbers = query.data;

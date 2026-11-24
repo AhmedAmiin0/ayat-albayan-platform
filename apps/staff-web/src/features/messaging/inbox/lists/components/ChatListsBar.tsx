@@ -13,11 +13,7 @@ export interface ChatListsBarProps {
   onPick: (list: string | undefined) => void;
 }
 
-/**
- * The «القوائم» row above the conversations (docs/22 §4) with its create and edit dialogs. Quiet while
- * loading (a chip-high placeholder) and on error (one line): the chats below never wait for it.
- * Rendered only with inbox.lists outside teacher mode (InboxPage).
- */
+/** Quiet while loading and on error so the chats below never wait for it (docs/22 §4). */
 export function ChatListsBar({ active, onPick }: ChatListsBarProps) {
   const lists = useQuery(chatListsQuery);
   const [dialog, setDialog] = useState<'new' | 'edit' | null>(null);
