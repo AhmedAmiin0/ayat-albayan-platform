@@ -41,8 +41,7 @@ test('«الجدول» today: every teacher, the free one too, with load, window
     'سارة',
     'عمر',
   ]);
-  // أبرار: held 10:00, then 16:00 and 17:00; the cancelled 16:00 is gone. Her 10:45–16:00 gap is
-  // over (it is 16:20 Riyadh time): a gap in the past is not offered.
+  // A gap in the past is not offered.
   const rows = screen.getAllByText(/^(جودى خالد|يوسف أحمد|جنى وليد)$/).map((n) => n.props.children);
   expect(rows).toEqual(['جودى خالد', 'يوسف أحمد', 'جنى وليد']);
   expect(screen.queryByText(`متاح ${ltr('10:45 – 16:00')}`)).toBeNull();
@@ -50,7 +49,6 @@ test('«الجدول» today: every teacher, the free one too, with load, window
   expect(
     screen.getByText(new RegExp(t.booking.teacherLoad.replace('{n}', '3').replace('{max}', '10'))),
   ).toBeTruthy();
-  // سارة: off all day, nothing booked. عمر: nothing booked, free till midnight.
   expect(screen.getByText(/^إجازة · .* · سفر$/)).toBeTruthy();
   expect(screen.getAllByText(t.schedule.noLessons)).toHaveLength(2);
   expect(screen.getByText(`متاح ${ltr('20:00 – 24:00')}`)).toBeTruthy();

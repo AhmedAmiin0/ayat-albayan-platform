@@ -50,12 +50,14 @@ describe('CourseStopRepo', () => {
     expect(rpc).toHaveBeenCalledWith('course_stop_plan', { p_subscription: 's1', p_at: NOW.toISOString() });
   });
 
-  it('paid: payments minus refunds', async () => {
+  it('paid: payments minus refunds in the package currency', async () => {
     const rows = [
-      { amount: 200, kind: 'payment' },
-      { amount: 50, kind: 'refund' },
+      { amount: 200, kind: 'payment', currency: 'SAR' },
+      { amount: 50, kind: 'refund', currency: 'SAR' },
+      { amount: 30, kind: 'payment', currency: 'USD' },
     ];
-    expect(await repoOf(chain({ data: rows, error: null })).paid('s1')).toBe(150);
+    const sub = { id: 's1', currency: 'SAR' };
+    expect(await repoOf(chain({ data: rows, error: null })).paid(sub)).toBe(150);
   });
 
   it('stop: one stop_course call carrying the clientRequestId; its answer parsed', async () => {

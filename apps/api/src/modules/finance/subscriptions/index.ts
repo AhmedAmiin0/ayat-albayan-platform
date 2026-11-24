@@ -21,7 +21,6 @@ export {
 } from './subscriptions.mapper';
 export { SubscriptionsModule } from './subscriptions.module';
 export {
-  cents,
   type StudentRef,
   type SubListQuery,
   type SubRow,

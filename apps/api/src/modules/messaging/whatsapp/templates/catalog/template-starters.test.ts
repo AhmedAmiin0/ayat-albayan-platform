@@ -5,7 +5,7 @@ import { TemplateStarters } from './template-starters';
 import type { TemplatesRepo } from './templates.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// «متاح للمعلمين والمبيعات» (the restricted allow-list) (owner 2026-10-12, docs/16): the admin's per-template flag, audited.
+// The restricted allow-list flag per template (docs/16), audited.
 
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };

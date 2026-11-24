@@ -3,8 +3,7 @@ import { HttpWhatsappClient } from './whatsapp.client';
 import { KAPSO_ENV, kapsoFetch } from './drivers/kapso/kapso.fakes';
 import { scriptedFetch, STUB_ENV, templateRow } from './whatsapp.fakes';
 
-// «تعديل» on Meta (owner 2026-11-14): POST /{template id} with the components only (the name and
-// the category never change); Kapso through ?hsm_id=. Fakes, no network.
+// POST /{template id} with components only (name and category never change); no network.
 
 const BASE = 'http://127.0.0.1:4010/kapso/v24.0';
 const display = { header: null, buttons: [{ type: 'quick_reply', text: 'نعم' }] };

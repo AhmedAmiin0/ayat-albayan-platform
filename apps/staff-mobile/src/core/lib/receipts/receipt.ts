@@ -46,10 +46,7 @@ export function toReceipt(asset: ImagePicker.ImagePickerAsset): Receipt | null {
   return { uri: asset.uri, mime, bytes, size: bytes.byteLength };
 }
 
-/**
- * «صوّر الإيصال» (camera, after the permission flow) or «اختار من الصور» (the system photo
- * picker, no permission needed). null when cancelled or refused.
- */
+/** Gallery needs no permission; null when cancelled or refused. */
 export async function pickReceipt(source: ReceiptSource): Promise<Receipt | null> {
   if (source === 'camera' && !(await ensureCameraPermission())) return null;
   const result =

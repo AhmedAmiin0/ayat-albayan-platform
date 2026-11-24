@@ -4,9 +4,10 @@ import { Note } from '@/core/ui/feedback/Note';
 import type { RegistrationCheckBy } from '@ab/shared';
 
 /**
- * The answer: «مسجّل: n طالب» and each child (name, code, status — any of the eight, expired and churned
- * included —, teacher or «لم يُحدَّد معلم بعد»), «أول 10 نتائج فقط» when there were more; else
- * «لا يوجد طالب…» for the mode searched. With `onPick` each child is a button (the link-family picker).
+ * The answer: the registered count and each child (name, code, status — any of the eight, expired
+ * and churned included —, teacher or a no-teacher-yet line), a first-10-only note when there were
+ * more; else the not-found line for the mode searched. With `onPick` each child is a button (the
+ * link-family picker).
  */
 export function RegistrationResults({ view, by, onPick }: {
   view: RegistrationCheckView;

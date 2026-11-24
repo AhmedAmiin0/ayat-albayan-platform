@@ -1,7 +1,4 @@
-// One page of a filtered keyset list (docs/50 §5 history). The database orders by starts_at; which
-// rows belong to «حضرها» or «غاب عنها» is decided in code (attendanceKind), so a page reads batches
-// until it is full. The cursor is always a row boundary the client has seen or a batch boundary
-// already scanned, so no row is skipped or repeated across pages.
+// Membership is decided in code, so a page reads batches; cursors never skip or repeat rows.
 
 interface Dated {
   starts_at: string;

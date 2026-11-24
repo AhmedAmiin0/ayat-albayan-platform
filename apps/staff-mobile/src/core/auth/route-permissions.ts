@@ -1,10 +1,7 @@
 import type { Permission } from '@ab/catalog';
 import type { Can } from '@ab/mobile-kit';
 
-/**
- * The permission each mobile screen needs, mirroring ADMIN_PAGES / admin-nav-items on the web.
- * Tab and «المزيد» row keys, not URLs: one table for tabs, rows and tests.
- */
+/** Mirrors the web's ADMIN_PAGES; keys are tab and row keys, not URLs. */
 export const ROUTE_PERMISSION = {
   today: 'lessons.read',
   schedule: 'lessons.read',
@@ -30,14 +27,14 @@ export const ROUTE_PERMISSION = {
   salesEarnings: 'self.sales_earnings',
   // Meetings for every staff role holding meetings.read (owner 2026-10-12).
   salesMeetings: 'meetings.read',
-  // «فريق المبيعات» (web admin-nav-items 'assistants'): the sales staff's terms, commissions and statements.
+  // Sales team: the sales staff's terms, commissions and statements.
   assistants: 'assistantpay.read',
   // The classroom assistant's tree (web /assistant/): the lessons they assist and internal meetings.
   assistantLessons: 'self.assistant',
   meetings: 'meetings.read',
-  // «القوالب» (owner 2026-11-14): write and edit allow-list templates; sales by default, the admin.
+  // Allow-list templates: sales by default and the admin.
   templates: 'templates.author',
-  // «الروابط المختصرة» (owner 2026-11-17, docs/19): sales and the admin; short_links.all shows all.
+  // docs/19: sales and the admin; short_links.all shows everyone's.
   shortLinks: 'short_links.manage',
 } as const satisfies Record<string, Permission>;
 

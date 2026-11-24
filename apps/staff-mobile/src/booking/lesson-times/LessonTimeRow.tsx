@@ -7,7 +7,7 @@ import { PickNotice } from './PickNotice';
 import type { RowCheck } from './row-check';
 
 interface LessonTimeRowProps {
-  /** 0-based: «اليوم 1», and the fields' test ids. */
+  /** 0-based; numbers the day label and the fields' test ids. */
   index: number;
   row: LessonRow;
   bounds: DayBounds;
@@ -17,7 +17,7 @@ interface LessonTimeRowProps {
   /** The student's zone (the row's wall clock). */
   tz: string;
   onChange: (patch: Partial<LessonRow>) => void;
-  /** «احذف اليوم 2» when the days a week are not fixed. */
+  /** Only when the days a week are not fixed. */
   onRemove?: (() => void) | undefined;
 }
 

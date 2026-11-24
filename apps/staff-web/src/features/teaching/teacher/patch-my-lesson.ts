@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 

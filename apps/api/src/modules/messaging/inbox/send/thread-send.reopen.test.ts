@@ -7,8 +7,7 @@ import type { Outbox } from './outbox';
 import { ThreadSendService, type ThreadSend } from './thread-send.service';
 import type { ThreadTemplate } from '@ab/shared';
 
-// «إعادة فتح المحادثة» (owner 2026-11-14): the existing template send, its permission checks
-// first, then the reopen stamp. Fakes only: nothing is sent.
+// The template send's permission checks run first, then the reopen stamp.
 
 const NOW = new Date('2026-11-14T09:00:00Z');
 const REQ = 'c0000000-0000-4000-8000-000000000001';

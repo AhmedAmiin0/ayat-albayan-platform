@@ -9,10 +9,7 @@ const meFields = z.looseObject({
   email: z.string().nullable().catch(null),
 });
 
-/**
- * A teacher still on her code-made login (docs/46 A4): her tree shows «أكمل حسابك» until she sets
- * an email and a password. Reads the cached /auth/me (the gate loaded it before the tree mounted).
- */
+/** docs/46 A4: until an email and password are set; reads the cached /auth/me. */
 export function useNeedsSetup(): boolean {
   const me = useQuery({
     queryKey: pathKey('/auth/me'),

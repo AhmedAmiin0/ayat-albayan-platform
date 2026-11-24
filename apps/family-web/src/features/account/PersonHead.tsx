@@ -14,10 +14,7 @@ interface Props {
   detail?: ReactNode;
 }
 
-/**
- * «حسابي»'s person heading: the initial, the role, the name and one line under it. The whole card
- * opens «الملف الشخصي» (/profile), as the family app's card does.
- */
+/** The whole card opens the profile, as the family app's card does. */
 export function PersonHead({ name, role, detail }: Props) {
   return (
     <Card asChild pressable>

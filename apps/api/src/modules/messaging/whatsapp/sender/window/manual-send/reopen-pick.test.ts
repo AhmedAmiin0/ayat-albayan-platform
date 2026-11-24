@@ -11,8 +11,7 @@ import type { WindowSettings } from '@/modules/messaging/whatsapp/sender/window/
 import { ReopenPick } from './reopen-pick';
 import type { ReopenBubble, ReopenPickRepo } from './reopen-pick.repo';
 
-// «إعادة فتح المحادثة» (owner 2026-11-14): a staff-picked template is THE reopen of its window.
-// Fakes only: no database, nothing sent.
+// A staff-picked template is the reopen of its window; fakes only, nothing sent.
 
 const DAY = `reopen:${PHONE}:2026-11-03`;
 const bubble = (over: Partial<ReopenBubble> = {}): ReopenBubble => ({
