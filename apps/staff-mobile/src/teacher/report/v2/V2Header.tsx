@@ -1,4 +1,5 @@
-import { teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import type { ReportFormEntry, ReportFormLesson } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { fillSlots } from '@ab/client-core';
 import { View } from 'react-native';
 import { useClockCycle, whenIn } from '@/core/lib/clock';

@@ -1,4 +1,5 @@
-import { otherZoneClock, type ClockCycle, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { otherZoneClock, type ClockCycle } from '@ab/time';
 import { t, locale } from '@ab/mobile-kit';
 import { durationLabel, studentTimes } from '@/today';
 

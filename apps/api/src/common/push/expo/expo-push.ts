@@ -1,4 +1,5 @@
-import { type AnyPushKind, wakesInbox } from '@ab/shared';
+import { wakesInbox } from '@ab/shared';
+import type { AnyPushKind } from '@ab/catalog';
 import { z } from 'zod';
 import { ar } from '@/common/infra/i18n/server-text';
 import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';

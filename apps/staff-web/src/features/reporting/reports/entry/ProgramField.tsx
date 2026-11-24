@@ -11,7 +11,7 @@ export interface ProgramFieldProps {
 
 const OPTIONS = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 
-/** «البرنامج *» as the report form asks it: القرآن الكريم / اللغة العربية / الدراسات الإسلامية, prefilled from the student. */
+/** Program choice as the report form asks it, prefilled from the student. */
 export function ProgramField({ name, value, onChange, disabled }: ProgramFieldProps) {
   return (
     <RadioChips name={name} legend={t.reports.program} options={OPTIONS} value={value} onChange={onChange} disabled={disabled} required />

@@ -1,4 +1,5 @@
-import { counted, dateText } from '@ab/shared';
+import { counted } from '@ab/core';
+import { dateText } from '@ab/time';
 import { dayLabel } from '@/calendar';
 import { t, locale } from '@ab/mobile-kit';
 

@@ -1,4 +1,4 @@
-import { addCalendarDays } from '@ab/shared';
+import { addCalendarDays } from '@ab/time';
 import type { ActivityListQuery, ActivityPage, ActivitySortKey, ActivityView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { dbError } from '@/common/http/http';

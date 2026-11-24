@@ -1,4 +1,4 @@
-import type { ClockCycle } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { bookFailure } from '@/booking/shared/booking-errors';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { ApiError, t } from '@ab/mobile-kit';

@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { View } from 'react-native';
 import { t, InsetGroup } from '@ab/mobile-kit';
 import { PendingReportRow } from '@/core/ui/lists/ReportRows';

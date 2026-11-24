@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 
 /** Admin LessonView or the narrower sales lesson; zones may be absent in an old sales cache. */
 export type TodayLesson = Pick<LessonView, 'id' | 'starts_at' | 'ends_at' | 'status'> &

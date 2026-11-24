@@ -16,14 +16,10 @@ import { useReportApi } from '@/features/reporting/reports/report-api';
 import { useAutosave } from './use-autosave';
 import { useReportMode } from '@/features/reporting/reports/send/use-report-mode';
 
-/** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
+/** The program is the report's own, else the student's prefill. */
 const entryValuesOf = reportEntryValues;
 
-/**
- * One student's report on the form (R-REP-02): local values, debounced draft autosave while a
- * draft, submit (first send or «حفظ التعديل») with the same validation as the API. `studentProgram`
- * prefills «البرنامج» until the report has its own.
- */
+/** Submit uses the API's validation; `studentProgram` prefills until the report has its own. */
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const queryClient = useQueryClient();
   const api = useReportApi();

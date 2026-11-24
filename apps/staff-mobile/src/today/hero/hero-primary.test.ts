@@ -1,4 +1,4 @@
-import { allowedLessonEvents } from '@ab/shared';
+import { allowedLessonEvents } from '@ab/schedule';
 import { lesson } from '@/today/testing/fixtures';
 import { heroPrimary } from './hero-primary';
 

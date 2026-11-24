@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert } from '@ab/db';
-import type { AssistantTermsInput, AssistantTermsView } from '@ab/shared';
+import type { AssistantTermsInput, AssistantTermsView } from '@ab/money';
 
 export type TermsRow = Tables<'assistant_terms'>;
 

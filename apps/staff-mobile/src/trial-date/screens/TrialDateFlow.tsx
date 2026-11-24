@@ -1,4 +1,4 @@
-import type { Program } from '@ab/shared';
+import type { Program } from '@ab/catalog';
 import { backOr } from '@/core/nav/back-within';
 import { ScrollView } from 'react-native';
 import { t, type, useTheme, AppText, BackButton, ScreenHeader } from '@ab/mobile-kit';

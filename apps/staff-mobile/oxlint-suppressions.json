@@ -7443,9 +7443,6 @@
     }
   },
   "src/subscribe/form-prefill.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     },
@@ -7555,11 +7552,6 @@
   },
   "src/teacher/report/components/ReportTextField/ReportTextField.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/teacher/report/components/RubricSection.tsx": {
-    "typescript/consistent-type-imports": {
       "count": 1
     }
   },

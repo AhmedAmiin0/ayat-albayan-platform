@@ -1,4 +1,5 @@
-import { counted, type QuoteResponse } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { QuoteResponse } from '@ab/money';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText, ltr, money } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

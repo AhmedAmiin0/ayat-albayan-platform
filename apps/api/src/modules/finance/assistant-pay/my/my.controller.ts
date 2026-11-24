@@ -1,11 +1,11 @@
+import type { Page } from '@ab/core';
 import type {
   MyCommissionRow,
   MyEarnings,
   MyPaymentRow,
   MyStudentRow,
-  Page,
   PaymentAttachmentView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

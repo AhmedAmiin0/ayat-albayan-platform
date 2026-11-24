@@ -1,4 +1,4 @@
-import type { LessonView, RescheduleRequest, SlotsResponse } from '@ab/shared';
+import type { LessonView, RescheduleRequest, SlotsResponse } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 

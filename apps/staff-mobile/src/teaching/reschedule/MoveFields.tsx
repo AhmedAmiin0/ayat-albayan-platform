@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { ConflictNotice, ruleFromSlot } from '@/booking';

@@ -1,5 +1,5 @@
 import type { Hero } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { useJoinClassroom } from '@/classroom';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

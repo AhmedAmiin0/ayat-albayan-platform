@@ -6,7 +6,7 @@ import {
   type TodayAlert,
   todayAlerts,
 } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useHolds, t, locale, notificationsListQuery } from '@ab/mobile-kit';
 import { useClockCycle } from '@/core/lib/clock';

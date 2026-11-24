@@ -34,10 +34,7 @@ function serverError(error: unknown): string {
   return text === t.common.error ? R.error.generic : text;
 }
 
-/**
- * «التحقق من التسجيل» (docs/16 row 23): by the guardian's phone or by the child's name / code, is the
- * family already a student? Only the name, code, status and teacher come back (never a phone or money).
- */
+/** Only name, code, status and teacher come back, never a phone or money (docs/16 row 23). */
 export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDialogProps) {
   const formId = useId();
   const [by, setBy] = useState<RegistrationCheckBy>(phone ? 'phone' : 'name');

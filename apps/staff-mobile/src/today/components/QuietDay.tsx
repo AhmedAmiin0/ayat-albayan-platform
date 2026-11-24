@@ -1,4 +1,5 @@
-import { addCalendarDays, addDaysIn, counted, RIYADH_TZ } from '@ab/shared';
+import { counted } from '@ab/core';
+import { addCalendarDays, addDaysIn, RIYADH_TZ } from '@ab/time';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';

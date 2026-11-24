@@ -13,15 +13,11 @@ import {
 interface SalesPackageCancelProps {
   studentId: string;
   subscriptionId: string;
-  /** Which package, in the confirm («سهيلة · AB-0183»). */
   label: string;
   onDone: (message: string) => void;
 }
 
-/**
- * «إلغاء الباقة» next to «إلغاء الاشتراك» (owner 2026-11-02): subscriptions.stop, ANY student,
- * shown only when the server's check (the cancel's own: no lessons, no payments) lets it run.
- */
+/** Needs subscriptions.stop; shown only when the server's check (no lessons or payments) allows. */
 export function SalesPackageCancel(props: SalesPackageCancelProps) {
   const { studentId, subscriptionId, label, onDone } = props;
   // The server gates it (subscriptions.stop): a 403 without the key hides the button too.

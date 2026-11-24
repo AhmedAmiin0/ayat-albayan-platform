@@ -1,4 +1,5 @@
-import { RULE_SETTING_KEYS, type AcademySettings, type RuleSettings } from '@ab/shared';
+import { RULE_SETTING_KEYS, type RuleSettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 
 /** Tests only: the rule-owned keys of `over` (what fakePolicy reads as its legacy settings). */
 export function ruleSettingsOf(over: Partial<AcademySettings> = {}): Partial<RuleSettings> {

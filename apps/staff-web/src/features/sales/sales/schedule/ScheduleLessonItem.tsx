@@ -8,11 +8,7 @@ import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { otherDayNote } from './other-day';
 import { SalesLessonDrawer } from './SalesLessonDrawer';
 
-/**
- * One lesson in sales' read-only day: the admin's chip (the viewer's time, students, status, «تجريبية» /
- * «تعويضية») opening the read-only lesson drawer, and on a running lesson «جارية الآن» with «ادخل
- * الحلقة» (she joins as the classroom assistant, docs/16). No edit, cancel, move, book or report action.
- */
+/** She joins a running lesson as the classroom assistant (docs/16); nothing here edits. */
 export function ScheduleLessonItem({ lesson, now }: { lesson: SalesScheduleLesson; now: Date }) {
   const running = isRunningLesson(lesson, now);
   const [open, setOpen] = useState(false);

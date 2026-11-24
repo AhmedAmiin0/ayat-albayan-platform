@@ -5,7 +5,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { OPEN_SUB, student } from '@/features/sales/sales-money/sales-money-fixture';
 import { SalesMoneyFlow } from '@/features/sales/sales-money/SalesMoneyFlow';
 
-// «إلغاء الباقة» from her transfer step (owner 2026-10-28): a package she made by mistake, nothing paid.
+// Cancelling a package she made by mistake, with nothing paid.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

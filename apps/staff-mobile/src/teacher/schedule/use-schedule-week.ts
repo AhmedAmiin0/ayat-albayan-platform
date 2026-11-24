@@ -1,4 +1,4 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { addDays, agendaDays, useLessonDetails, viewerToday, weekStart, weekWindow } from '@/calendar';
 import { useViewerTz } from '@/core/lib/clock';
 import { usePullRefresh, useScreenFocused, useNow } from '@ab/mobile-kit';

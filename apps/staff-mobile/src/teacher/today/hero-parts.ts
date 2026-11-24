@@ -5,7 +5,8 @@ import {
   type PlanAction,
   type WayIn,
 } from '@ab/client-core';
-import type { ClockCycle, joinWindow, LessonView } from '@ab/shared';
+import type { joinWindow, LessonView } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { opensAtLine } from '@/classroom';
 import type { LeadAction } from '@/teacher/lessons/TeacherRowAction';
 import { teacherWord } from '@/teacher/lessons/teacher-word';

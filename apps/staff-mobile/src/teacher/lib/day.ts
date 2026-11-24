@@ -1,4 +1,4 @@
-import { isClosedLesson, type LessonView } from '@ab/shared';
+import { isClosedLesson, type LessonView } from '@ab/schedule';
 import { localDate } from '@/today/lib/timeline';
 
 // Today (R-TCH-03): her own lessons on her own calendar day, in her zone; pure.

@@ -14,7 +14,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
 import { verifyChallenge, verifySignature } from './parse/webhook.signature';
-import { RESPONSE_BUDGET_MS, WEBHOOK_CONFIG, WebhookService, within, type WebhookConfig } from './webhook.service';
+import { RESPONSE_BUDGET_MS, WebhookService, within, type WebhookConfig } from './webhook.service';
+import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 
 /** The bits of the Fastify request / reply used here (no direct `fastify` dependency). */
 interface RawRequest {

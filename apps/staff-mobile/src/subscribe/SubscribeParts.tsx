@@ -1,4 +1,5 @@
-import type { QuoteResponse, StudentRef } from '@ab/shared';
+import type { StudentRef } from '@ab/shared';
+import type { QuoteResponse } from '@ab/money';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { View } from 'react-native';
 import {

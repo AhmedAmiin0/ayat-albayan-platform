@@ -1,7 +1,8 @@
 import { Controller, Headers, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
-import { RESPONSE_BUDGET_MS, WEBHOOK_CONFIG, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import { RESPONSE_BUDGET_MS, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 import { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import { verifyWacrmSignature, WACRM_TOLERANCE_MS } from '@/modules/messaging/webhook/parse/webhook.wacrm-signature';
 import { CrmInbound, CrmInboundJob } from '@/modules/messaging/webhook/crm-inbound';

@@ -17,10 +17,7 @@ export function isPlainClick(e: Pick<MouseEvent, 'button' | 'metaKey' | 'ctrlKey
   return e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
 }
 
-/**
- * «تقرير الحلقة» from a lesson card or drawer. A real <a href> that navigates in-app when a
- * router is mounted (the lesson cards are also rendered without one, in their unit tests).
- */
+/** A real anchor so lesson cards also render without a router in their unit tests. */
 export function ReportLink(props: ReportLinkProps) {
   const { href, children, size = 'sm', variant = 'secondary', className } = props;
   const router = useRouter({ warn: false });

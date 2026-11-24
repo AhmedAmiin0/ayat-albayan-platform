@@ -1,4 +1,4 @@
-import { GOOGLE_REDIRECT_URI_PRODUCTION } from '@ab/shared';
+import { GOOGLE_REDIRECT_URI_PRODUCTION } from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset, optionalSecret, optionalUrl } from './env.blank';
