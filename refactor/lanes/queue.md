@@ -1,6 +1,6 @@
 # Refactor lane queue
 
-Read by the hourly cloud builder. Take lanes top to bottom. A lane is **taken** when its branch exists on origin (open, merged or closed PR). A lane is **ready** when every branch in «Needs» has a merged PR into develop. Briefs come from the 2026-11-22 refactor plan (docs/57, docs/58); paths in them may have moved since: `git grep` the symbol.
+Read by the hourly cloud builder. Take lanes top to bottom. No lane adds a rule or a guard with a baseline (docs/59): it fixes every existing site first, in numbered PRs when there are many, and the rule turns on at zero in the last one. Such a lane lists its branches in order; each one is taken and ready on its own, and the next needs the one before it merged. A lane is **taken** when its branch exists on origin (open, merged or closed PR). A lane is **ready** when every branch in «Needs» has a merged PR into develop. Briefs come from the 2026-11-22 refactor plan (docs/57, docs/58); paths in them may have moved since: `git grep` the symbol.
 
 ## L12: Keep receipt files on delete and replace
 
@@ -371,10 +371,10 @@ Tests: the shape tests are the deliverable. The move keeps the existing tests un
 
 Req: R-PAY-01, R-NFR-06.
 
-## L35: Query-key lint with a baseline
+## L35: Query-key lint, every literal fixed first
 
-- Branch: `ci/query-key-lint`
-- Needs: nothing
+- Branches, in order: `ci/query-key-lint-1` … `ci/query-key-lint-9` (the fixes), then `ci/query-key-lint` (the rule)
+- Needs: nothing (each numbered PR needs the one before it merged)
 - Audit items: WEB-3+SPT-08
 
 Goal (audits WEB-3 and SPT-08; docs/57 G3):
@@ -382,12 +382,11 @@ Goal (audits WEB-3 and SPT-08; docs/57 G3):
 - A few roots are not paths (reply-lesson ×3, portal-recording-url ×2, portal-lesson-file-url ×2, thread-file ×2), so path-prefix invalidation never reaches them.
 
 Work:
-- Add the lint rule ab/query-key-factory: a queryKey must come from pathKey, listKey or a *.keys.ts. Baseline today's literals.
-- First check whether any write should refresh the non-path roots, and move those to path keys.
-- Add one queryOptions in client-core for /auth/me, which 3 or more staff-mobile files fetch.
-- Write per-domain factories when a domain is next touched.
+- PR 1 (`ci/query-key-lint-1`): check whether any write should refresh the non-path roots and move those to path keys; add one queryOptions in client-core for /auth/me, which 3 or more staff-mobile files fetch.
+- PRs 2–9: replace the inline literals with per-domain factories (`x.keys.ts`) or pathKey/listKey, one domain at a time, at most 20 files per PR, until `git grep "queryKey: \["` finds none outside `*.keys.ts`.
+- Last PR (`ci/query-key-lint`): add the lint rule ab/query-key-factory (a queryKey must come from pathKey, listKey or a *.keys.ts) at zero violations: no suppression, no baseline.
 
-Tests first: rule tests with valid and invalid cases.
+Tests first: each fix PR keeps the invalidation tests of the queries it touches green (adds one when missing); the last PR has rule tests with valid and invalid cases.
 
 Req: R-NFR-05.
 
@@ -518,14 +517,14 @@ Req: R-REP-01, R-REP-02.
 - Needs: `ci/query-key-lint`
 - Audit items: WEB-6
 
-Needs lane L35 (the G3 lint infrastructure).
+Needs lane L35 (the G3 lint infrastructure). Split into numbered PRs: `fix/booking-server-time` (slice 1), then `fix/client-now-2` … `fix/client-now-4`, the rule in the last one.
 
 Goal (audit WEB-6; docs/57 R16): booking, makeup and package screens use the PC's clock (MakeupAction.tsx:20, LessonRows.tsx:70, SlotPicker.tsx:35, pricing-form.ts:53). The server already re-checks (booking.plan.ts:14-21).
 
 Work:
-- client-core learns a clock offset from the API's Date header.
-- A web-kit useServerNow() replaces new Date() at those decision sites.
-- Add ab/no-client-now with a baseline of today's 55 sites.
+- Slice 1: client-core learns a clock offset from the API's Date header; a web-kit useServerNow() replaces new Date() at those decision sites.
+- Slices 2–3: replace the rest of today's 55 sites, at most 20 files per PR: a business decision reads server time; a UI timer or animation moves into a named `*.timer.ts` or animation hook, the rule's one exemption.
+- Last slice: add ab/no-client-now at zero violations: no suppression, no baseline.
 
 Tests first: with a skewed fake clock and a Date header, past slots are marked by server time.
 
@@ -543,9 +542,8 @@ Goal (audit BE-11): DriverCaps has 4 booleans (drivers/driver-caps.ts:7-16), and
 
 First slice:
 - Grow DriverCaps into a per-driver record (a rule 11 map) covering holdKey and mediaSource, and replace those call sites.
-- Add a guard that bans provider literals outside drivers/ and config/env, with a baseline that only shrinks: 34 today, lowered in this PR.
 
-templateSource, reopen, parity, and the moves of crm-copy, crm-sent and crm-confirm come in later slices.
+templateSource, reopen, parity, and the moves of crm-copy, crm-sent and crm-confirm come in later slices, at most 20 files each, until none of the 34 provider literals is left outside drivers/ and config/env. The last slice adds the guard that bans them there, at zero: no baseline.
 
 Tests first: a table test per driver and capability, checked against today's behaviour.
 
