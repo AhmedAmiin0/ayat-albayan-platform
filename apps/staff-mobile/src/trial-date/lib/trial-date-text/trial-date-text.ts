@@ -1,15 +1,12 @@
 import {
-  attendanceStyle,
-  counted,
-  leadStatusStyle,
-  lessonStatusStyle,
   lessonWhenText,
   warnsTrialDate,
-  type StatusStyle,
   type TrialDateRow,
   type TrialHistory,
   type TrialOutcome,
 } from '@ab/shared';
+import { counted } from '@ab/core';
+import { attendanceStyle, leadStatusStyle, lessonStatusStyle, type StatusStyle } from '@ab/money';
 import { whenIn, type ViewerClock } from '@/core/lib/clock';
 import { t, locale, isolate } from '@ab/mobile-kit';
 

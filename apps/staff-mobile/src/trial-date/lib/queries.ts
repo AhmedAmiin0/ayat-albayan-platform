@@ -1,4 +1,5 @@
-import type { Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
+import type { TrialDateResult, TrialHistory } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 import type { BookingMode } from '@ab/client-core';

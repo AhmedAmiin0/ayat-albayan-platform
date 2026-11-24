@@ -1,4 +1,10 @@
-import { emptyContent, type MemoryView, type Program, type ReportFormResponse, type ReportView } from '@ab/shared';
+import {
+  emptyContent,
+  type MemoryView,
+  type ReportFormResponse,
+  type ReportView,
+} from '@ab/shared';
+import type { Program } from '@ab/catalog';
 import { reportView } from '@ab/shared/testing';
 
 // Test-only rows in the report-form shape; shared builders live in @ab/shared/testing.

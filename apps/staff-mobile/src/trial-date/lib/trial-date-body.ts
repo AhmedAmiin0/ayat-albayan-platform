@@ -1,4 +1,5 @@
-import { trialLength, type Duration, type TrialHistory } from '@ab/shared';
+import { trialLength, type TrialHistory } from '@ab/shared';
+import type { Duration } from '@ab/catalog';
 import { ruleFromSlot } from '@/booking/shared/slots';
 
 /** What the trial-date wizard holds: the student, the family's zone, the length, the picks. */

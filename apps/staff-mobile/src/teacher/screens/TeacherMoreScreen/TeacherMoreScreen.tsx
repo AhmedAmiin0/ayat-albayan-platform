@@ -1,4 +1,5 @@
-import { teacherName, type TeacherGate } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
+import type { TeacherGate } from '@ab/settings';
 import { type Href, router } from 'expo-router';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';

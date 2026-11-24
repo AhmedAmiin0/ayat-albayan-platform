@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { InsetGroup } from '@ab/mobile-kit';
 import { TeacherLessonRow } from '@/teacher/lessons/TeacherLessonRow';
 import { EndedFold } from '@/today';

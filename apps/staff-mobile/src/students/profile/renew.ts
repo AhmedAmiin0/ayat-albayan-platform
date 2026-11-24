@@ -1,4 +1,6 @@
-import { isPackageEnded, renewalPricing, type LastPackage, type StudentStatus } from '@ab/shared';
+import { isPackageEnded } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
+import { renewalPricing, type LastPackage } from '@ab/money';
 
 // Renew any time the student has a package, prefilled from the last one (shared with web).
 

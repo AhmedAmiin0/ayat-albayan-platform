@@ -1,5 +1,5 @@
 import { nextOpenLesson, pickHero, type Hero } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { lessonsOn } from '@/teacher/lib/day';
 
 // One padded aheadWindow read (docs/48); pure.

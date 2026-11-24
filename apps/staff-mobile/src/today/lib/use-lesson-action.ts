@@ -1,4 +1,5 @@
-import { CANCEL_STATUS, type CancelRequest, type CorrectTo, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { CANCEL_STATUS, type CancelRequest, type CorrectTo } from '@ab/schedule';
 import { useEffect } from 'react';
 import { ApiError, t } from '@ab/mobile-kit';
 import {

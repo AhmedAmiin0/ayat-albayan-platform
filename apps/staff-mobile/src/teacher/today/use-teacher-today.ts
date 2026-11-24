@@ -1,4 +1,4 @@
-import { deviceTimeZone } from '@ab/shared';
+import { deviceTimeZone } from '@ab/time';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t, usePullRefresh, useScreenFocused, useNow } from '@ab/mobile-kit';
 import { clockAt } from '@/inbox';

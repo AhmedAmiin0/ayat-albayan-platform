@@ -1,5 +1,4 @@
 import {
-  addCalendarDays,
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
   parseDiscount,
@@ -7,7 +6,8 @@ import {
   type PricingDuration,
   type SiteCountry,
   type SubscriptionPricing,
-} from '@ab/shared';
+} from '@ab/money';
+import { addCalendarDays } from '@ab/time';
 import { ApiError, t } from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import type { PlanChoice } from '@/finance/pricing/selection';

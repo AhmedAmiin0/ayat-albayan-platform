@@ -1,4 +1,4 @@
-import { avatarTone, avatarTones } from '@ab/shared';
+import { avatarTone, avatarTones } from '@ab/catalog';
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';

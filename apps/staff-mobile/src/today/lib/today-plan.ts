@@ -1,5 +1,5 @@
 import { pickHero, type Hero as CoreHero } from '@ab/client-core';
-import { zonedFieldsIn } from '@ab/shared';
+import { zonedFieldsIn } from '@ab/time';
 import { applyFilter, type TodayFilter } from './timeline';
 import type { TodayLesson } from './today-lesson';
 

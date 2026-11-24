@@ -1,4 +1,4 @@
-import { subscriptionAlreadyStarted } from '@ab/shared';
+import { subscriptionAlreadyStarted } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 

@@ -1,4 +1,4 @@
-import type { TeacherGate } from '@ab/shared';
+import type { TeacherGate } from '@ab/settings';
 import { Redirect } from 'expo-router';
 import type { ComponentType, ReactNode } from 'react';
 import { ActivityIndicator } from 'react-native';

@@ -1,5 +1,5 @@
 import type { Hero } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
