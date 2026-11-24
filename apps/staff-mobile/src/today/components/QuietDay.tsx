@@ -9,11 +9,7 @@ import { localDate, visibleLessons } from '@/today/lib/timeline';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 import type { TodaySource } from '@/today/lib/today-source';
 
-/**
- * Nothing left today (docs/29 §6): a check in a lapis-wash circle, «انتهت حلقات اليوم», tomorrow's
- * count and first time once the tree's day query for tomorrow answers (no line while it loads or
- * fails), and «جدول الغد» to the tree's schedule tab on that day.
- */
+/** Tomorrow's line shows only once its query answers (docs/29 §6), none while loading or failed. */
 export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; source: TodaySource<L> }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
@@ -22,9 +18,7 @@ export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; so
   const tomorrow = addDaysIn(now, 1, RIYADH_TZ);
   const next = visibleLessons(source.useDay(tomorrow).data ?? []);
   const first = next[0];
-  // The schedule's `date` param is tomorrow on the calendar it pages by: the admin's «الجدول» by
-  // viewer days (docs/34), the salesperson's «جدول الحلقات» by Riyadh days (docs/34 b). Calendar
-  // days, not now + 24 h: a day the viewer's clock changes is 23 or 25 h long.
+  // Calendar days, not now + 24 h: admin pages by viewer days, sales by Riyadh days (docs/34).
   const date = addCalendarDays(localDate(now, source.schedule === '/schedule' ? tz : RIYADH_TZ), 1);
   return (
     <View style={{ alignItems: 'center', gap: 12, paddingVertical: 24 }}>

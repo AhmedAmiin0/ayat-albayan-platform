@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 
-// «رابط دفع» (docs/30, with FEATURE_STRIPE (test or live)): the calculator price, the link, her links and their cancel.
+// docs/30: requires FEATURE_STRIPE (test or live).
 
 const LINKS = ['sales', 'payment-links'] as const;
 

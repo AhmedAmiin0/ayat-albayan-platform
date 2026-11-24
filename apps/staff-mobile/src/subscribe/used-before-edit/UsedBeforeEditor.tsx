@@ -17,7 +17,7 @@ interface EditorProps {
 
 const e = t.salesMoney.usedBeforeEdit;
 
-/** The stepper from the server's state: starts at min(stored, max), «حفظ» only for a change. */
+/** Starts at min(stored, max); save only for a change. */
 function Form({ state, stale, onDone }: Omit<EditorProps, 'id'> & { state: UsedBeforeState }) {
   const m = t.salesMoney;
   const stored = state.lessons_used_before;
@@ -46,7 +46,7 @@ function Form({ state, stale, onDone }: Omit<EditorProps, 'id'> & { state: UsedB
   );
 }
 
-/** The open editor: the server's state first; a blocked package says why, with «إلغاء» only. */
+/** A blocked package says why, with cancel only. */
 export function UsedBeforeEditor({ id, stale, onDone }: EditorProps) {
   const state = useUsedBeforeState(id);
   const blocked = state.data?.blocked ?? null;

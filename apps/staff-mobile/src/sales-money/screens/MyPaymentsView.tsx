@@ -8,7 +8,7 @@ import { MyPaymentItem } from '@/sales-money/components/MyPaymentItem';
 
 const renderRow = ({ item }: ListRenderItemInfo<MyPaymentRow>) => <MyPaymentItem payment={item} />;
 
-/** «مدفوعاتي» (web MyPayments): the payments I recorded and no others (the API answers only for me). */
+/** The API answers only with the caller's own payments. */
 export function MyPaymentsView() {
   const list = useMyPayments();
   const P = t.assistantPortal.payments;

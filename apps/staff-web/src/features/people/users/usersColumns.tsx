@@ -12,7 +12,6 @@ import { useClock } from '@ab/web-kit/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, UserView>();
 
-/** «آخر دخول» in the viewer's cycle (12 or 24 h), or «لم يدخل بعد». */
 function LastSignIn({ iso }: { iso: string | null }) {
   const clock = useClock();
   return <>{iso ? formatDateTime(iso, clock) : t.users.never}</>;

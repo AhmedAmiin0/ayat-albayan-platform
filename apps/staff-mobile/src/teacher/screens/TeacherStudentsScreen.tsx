@@ -32,19 +32,13 @@ interface StudentsEmptyProps {
   retry: () => void;
 }
 
-/** The empty list of this kind, the failed read with a retry, or «جاري التحميل». */
 function StudentsEmpty({ kind, loaded, failed, retry }: StudentsEmptyProps) {
   const s = t.teacherStudents;
   if (loaded) return <EmptyState title={kind === 'trial' ? s.emptyTrial : s.emptySubscribed} />;
   return failed ? <ErrorState message={s.loadFailed} onRetry={retry} /> : <Note>{t.common.loading}</Note>;
 }
 
-/**
- * «الطلاب» (R-TCH-03): my students in two separate lists, «مشتركين» and «تجريبي», one at a time —
- * never mixed. No phone, guardian or money. Pull to refresh; offline the saved list stays. The list
- * screens' compact top (owner 2026-10-28): the shown list's total on the title's line, the pills 8pt
- * under it, the rows in one inset card inside the gutter.
- */
+/** Subscribed and trial never mixed (R-TCH-03); no phone, guardian or money. */
 export function TeacherStudentsScreen() {
   const [kind, setKind] = useState<TeacherStudentKind>('subscribed');
   const list = useMyStudents(kind);

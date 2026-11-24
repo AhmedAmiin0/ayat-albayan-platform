@@ -7,10 +7,7 @@ interface ShowAllProps {
   onToggle: () => void;
 }
 
-/**
- * «عرض الكل ({n})» / «عرض أقل» under a history longer than its first rows; nothing otherwise. Full
- * width: never a shrink-wrapped multi-word button (docs/07 §6).
- */
+/** Full width, never a shrink-wrapped multi-word button (docs/07 §6). */
 export function ShowAll({ total, all, onToggle }: ShowAllProps) {
   if (total <= HISTORY_CAP) return null;
   return (

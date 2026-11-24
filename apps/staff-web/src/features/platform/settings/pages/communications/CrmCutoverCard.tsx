@@ -15,11 +15,7 @@ const ask = (done: boolean) =>
     ? { title: h.crmUnmarkTitle, description: h.crmUnmarkConfirm, yes: h.crmUnmarkYes }
     : { title: h.crmMarkTitle, description: h.crmMarkConfirm, yes: h.crmMarkYes };
 
-/**
- * «نقل الرقم من نظام CRM» (crm_cutover_done, docs/09 step 3; docs/26b §6a 1.2–1.3): the state in a
- * line and one button, which asks first both ways (cancel focused) and then writes through PUT
- * /messages/gate/cutover. The warning on «نظرة عامة» and in the sending confirmation follows it.
- */
+/** Asks first both ways with cancel focused (docs/09 step 3, docs/26b §6a 1.2-1.3). */
 export function CrmCutoverCard({ settings }: { settings: AcademySettings }) {
   const done = settings.crm_cutover_done;
   const [asking, setAsking] = useState(false);

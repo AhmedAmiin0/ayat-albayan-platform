@@ -4,21 +4,18 @@ import { t, type, useTheme, AppText, Chevron } from '@ab/mobile-kit';
 interface ValueRowProps {
   label: string;
   value: string;
-  /** settings.write and an editable scalar: the spoken name says «عدّل». */
   editable: boolean;
-  /** Its save is in flight: a second line «جارٍ الحفظ…». */
   saving?: boolean;
   /** Opens the sheet. Without it the row is plain text (a value read from another page). */
   onPress?: () => void;
 }
 
-/** The spoken name: «عدّل «…»: …» when editable, else «الاسم: القيمة»; then the saving line. */
 function rowName({ label, value, editable, saving }: Omit<ValueRowProps, 'onPress'>): string {
   const name = editable ? t.mobileValues.edit.replace('{label}', label).replace('{value}', value) : `${label}: ${value}`;
   return saving ? `${name}${t.common.listSeparator}${t.settingsValues.saving}` : name;
 }
 
-/** One row of the two-column table (الاسم | القيمة): the whole row is the 44pt+ button; the table's card draws the fill and rules. */
+/** The whole row is the 44pt button. */
 export function ValueRow(props: ValueRowProps) {
   const { label, value, saving, onPress } = props;
   const { color } = useTheme();

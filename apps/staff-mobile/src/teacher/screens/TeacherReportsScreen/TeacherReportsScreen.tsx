@@ -44,12 +44,7 @@ interface Rows {
   more?: () => void;
 }
 
-/**
- * «التقارير» (R-TCH-03, R-REP-05): the reports still to write, the ones I sent (edit while the
- * window is open, else read), and each of my current students' history (boardStudents). Pull to refresh; offline the saved
- * lists stay. The list screens' compact top (owner 2026-10-28): h2 title, the pills 8pt under it, the rows
- * in one inset card.
- */
+/** Reports (R-TCH-03, R-REP-05); edit while the window is open; offline the lists stay. */
 export function TeacherReportsScreen() {
   const [view, setView] = useState<View>('pending');
   const me = useTeacherMe();

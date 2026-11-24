@@ -10,7 +10,6 @@ export interface DialogActionsProps {
   onConfirm?: () => void;
 }
 
-/** «إلغاء» and the dialog's one primary action. */
 export function DialogActions({ onCancel, label, disabled, form, onConfirm }: DialogActionsProps) {
   return (
     <>

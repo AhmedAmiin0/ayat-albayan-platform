@@ -26,7 +26,7 @@ interface CourseInput {
   picks: readonly string[];
   /** Idempotency key, the same on every retry of this wizard (rule 8). */
   requestId: string;
-  /** «تابِع بنفس الأيام»'s prefilled picks: a day still on one keeps its own time (DST-safe). */
+  /** A still-prefilled day keeps its own time, which stays DST-safe. */
   prefilled?: readonly PrefilledPick[];
 }
 

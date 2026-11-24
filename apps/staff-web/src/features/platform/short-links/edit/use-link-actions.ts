@@ -9,14 +9,10 @@ import {
   useResendLink, useRevokeLink, useUpdateLink,
 } from '@/features/platform/short-links/api/use-short-links';
 
-// The detail's actions (board LinkXWebDetail): which dialog is open, «أعد الإرسال», «إيقاف
-// الرابط», and the toast or alert they end with; and the PATCH behind «تعديل» and «تمديد».
-
 const D = t.shortLinks.detail;
 
 export type LinkDialog = 'extend' | 'edit' | 'revoke' | null;
 
-/** A refused action in words: «لم نجد هذا الرابط» or the generic line. */
 export const failureText = (e: unknown): string =>
   linkServerErrors(e).form === 'not_found' ? D.errors.not_found : D.errors.generic;
 
@@ -45,7 +41,7 @@ export function useLinkActions(code: string) {
   };
 }
 
-/** «تعديل» / «تمديد»: the form check, then PATCH; each field's refusal for the dialog. */
+/** The form check, then PATCH; each field's refusal goes to the dialog. */
 export function usePatchLink(link: Pick<ShortLinkDetail, 'code'>, onSaved: () => void) {
   const tz = useViewerTz();
   const [errors, setErrors] = useState<LinkFieldErrors>({});

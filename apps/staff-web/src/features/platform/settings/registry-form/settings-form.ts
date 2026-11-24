@@ -64,7 +64,7 @@ export function settingsForm(s: AcademySettings): SettingsForm {
 
 /** A blank box is not 0: it fails validation like any other bad number. */
 const num = (v: string): number => (v.trim() === '' ? Number.NaN : Number(v.trim()));
-/** «24، 72», «24, 72» or «24 72». */
+/** Accepts comma, Arabic comma or space separated numbers. */
 const list = (v: string): number[] => v.split(/[\s,،]+/).filter(Boolean).map(Number);
 /** Any typed phone → E.164 when it can be read; otherwise sent as typed and refused. */
 const phone = (v: string): string => {

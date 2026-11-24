@@ -56,7 +56,7 @@ function Matches({ search, ...props }: { search: string } & PeoplePickerProps) {
   );
 }
 
-/** «أضف من مستخدمي المنصة»: system users by name or number (GET /short-links/people). */
+/** System users by name or number (GET /short-links/people). */
 export function PeoplePicker({ picked, onPick }: PeoplePickerProps) {
   const id = useId();
   const [search, setSearch] = useState('');

@@ -3,7 +3,6 @@ import type { StudentListItem } from '@ab/shared';
 
 type TeacherCellProps = { row: StudentListItem; onOpen: (studentId: string) => void };
 
-/** The teacher, or «لسه مفيش معلم» + «تعيين», which opens the profile's teacher picker. */
 export function TeacherCell({ row, onOpen }: TeacherCellProps) {
   if (row.teacher_name) return <span>{row.teacher_name}</span>;
   return (

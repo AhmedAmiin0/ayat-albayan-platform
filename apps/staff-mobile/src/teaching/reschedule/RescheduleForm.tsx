@@ -9,21 +9,17 @@ import { useReschedule } from './queries';
 import { familyTz, lessonDuration, type Scope } from './reschedule-body';
 import { RescheduleDone } from './RescheduleDone';
 
-/** «جودى خالد، يوسف أحمد»: the lesson's students in the heading. */
 const namesOf = (lesson: LessonView) =>
   lesson.students.map((s) => s.name).join(t.common.listSeparator);
 
 export interface RescheduleFormProps {
   lesson: LessonView;
   onClose: () => void;
-  /** «تم» on the success panel; onClose when absent (a chat's reply note remembers the move). */
+  /** Falls back to onClose when absent. */
   onDone?: (() => void) | undefined;
 }
 
-/**
- * «تغيير ميعاد الحلقة» (R-SCH-07, journey 4): who and when now, then the move (MoveFields); once
- * the API answers, the new time and the guardian's confirmation (RescheduleDone).
- */
+/** Reschedule (R-SCH-07, journey 4). */
 export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps) {
   const tz = familyTz(lesson);
   const durationMin = lessonDuration(lesson);
@@ -54,7 +50,7 @@ export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps)
   );
 }
 
-/** Who and when now, over the move: «يوسف أحمد» then «الموعد الحالي: …» in the family's zone. */
+/** Current time in the family's zone. */
 export function RescheduleHeading({ names, startsAt, tz }: { names: string; startsAt: string; tz: string }) {
   const { color } = useTheme();
   const cycle = useClockCycle();

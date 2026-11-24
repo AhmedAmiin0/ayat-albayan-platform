@@ -22,7 +22,7 @@ interface FamilyEditFieldsProps {
   notes: boolean;
 }
 
-/** «بيانات العائلة»: the guardian's name, main number (E.164), country, zone and (admin) notes. */
+/** The main number is E.164; notes are admin only. */
 export function FamilyEditFields({ value, onChange, invalid, notes }: FamilyEditFieldsProps) {
   const specs = SPECS.filter((s) => notesFilter(notes)(s.key));
   const error = (key: string) => (invalid.includes(key) ? E.invalid : null);

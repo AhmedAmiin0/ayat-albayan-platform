@@ -35,7 +35,6 @@ export function outcomeOf(key: SettingKey, answer: unknown): SaveOutcome {
 
 const SAVE_KEY = ['settings', 'value-save'] as const;
 
-/** The keys being saved now: their rows say «جارٍ الحفظ…» on the second line. */
 export function useSavingKeys(): SettingKey[] {
   return useMutationState({
     filters: { mutationKey: SAVE_KEY, status: 'pending' },
@@ -62,7 +61,7 @@ export function useSaveValue() {
   });
 }
 
-/** GET /config/meta («آخر تعديل»); the sheet leaves the line out when it fails or is missing. */
+/** The sheet omits the line when it fails or is missing. */
 export function useConfigMeta() {
   return useQuery({
     queryKey: pathKey(META),

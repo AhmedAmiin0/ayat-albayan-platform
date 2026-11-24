@@ -17,7 +17,6 @@ import { HUB_PATHS } from './hub-paths';
 export interface HubHit {
   id: string;
   label: string;
-  /** «القيم › الأكاديمية» / «التواصل». */
   where: string;
   href: string;
   /** The setting's row key (shown small, LTR), for settings only. */

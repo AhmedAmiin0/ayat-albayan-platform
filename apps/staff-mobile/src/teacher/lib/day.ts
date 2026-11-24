@@ -1,7 +1,7 @@
 import { isClosedLesson, type LessonView } from '@ab/shared';
 import { localDate } from '@/today/lib/timeline';
 
-// «اليوم» for the teacher (R-TCH-03): her own lessons on her own calendar day, in her zone. Pure.
+// Today (R-TCH-03): her own lessons on her own calendar day, in her zone; pure.
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -29,11 +29,7 @@ export function lessonsOn(lessons: readonly LessonView[], date: string, tz: stri
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 
-/**
- * «اليوم»'s one lessons read (docs/48): dayWindow's padded start, then 15 days on, so lessonsOn
- * still finds today's lessons and nextOpenLesson the next one within two weeks. Under the API's
- * 31-day cap and stable for the whole day.
- */
+/** Padded start plus 15 days, so the next lesson within two weeks is found; under 31 days. */
 export function aheadWindow(date: string): { from: string; to: string } {
   const { from } = dayWindow(date);
   return { from, to: new Date(Date.parse(from) + 15 * DAY).toISOString() };

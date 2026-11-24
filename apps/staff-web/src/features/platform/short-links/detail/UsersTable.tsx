@@ -14,13 +14,13 @@ const SEND_ERRORS: Readonly<Record<string, string>> = {
   no_phone: D.sendErrors.no_phone,
 };
 
-/** Why a send failed, in words («لم يُعتمد قالب الإشعارات بعد»), or the code itself. */
+/** Why a send failed in words, or the code itself. */
 const sendErrorText = (code: string): string =>
   SEND_ERRORS[code] ?? fillSlots(D.sendErrors.unknown, { code });
 
 interface UsersTableProps {
   link: ShortLinkDetail;
-  /** «أعد الإرسال» on a failed row (null once the link is revoked). */
+  /** Null once the link is revoked. */
   onResend: (() => void) | null;
   pending: boolean;
 }
@@ -44,7 +44,6 @@ function SendCell({ user, onResend, pending }: SendCellProps) {
   );
 }
 
-/** «المستخدمون» (board LinkXWebDetail): each listed user, their WhatsApp send and their visit. */
 export function UsersTable({ link, onResend, pending }: UsersTableProps) {
   const dates = useLinkDates();
   const rows = link.userList.map((user) => {

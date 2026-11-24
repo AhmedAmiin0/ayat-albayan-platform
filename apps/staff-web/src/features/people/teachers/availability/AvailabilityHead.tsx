@@ -22,7 +22,7 @@ function ZoneText({ template, tz }: { template: string; tz: string }) {
 }
 
 
-/** «من الجمعة 30 أكتوبر القاهرة بترجع ساعة» when the zone shifts within 30 days (docs/07 §8). */
+/** Shown when the zone shifts within 30 days (docs/07 §8). */
 function dstTemplate(tz: string): string | null {
   const shift = nextDstTransition(tz, new Date());
   if (!shift) return null;
@@ -31,11 +31,7 @@ function dstTemplate(tz: string): string | null {
   return (shift.dir === 'back' ? t.availability.dstBack : t.availability.dstForward).replace('{date}', date);
 }
 
-/**
- * Panel title, the zone the grid is saved in (rule 6), and the note line saying so, with the DST
- * warning. TODO(R-SCH-01): the «بتوقيتها | بتوقيت الرياض» view switch (shows the week converted
- * to the admin's zone; weekday-shifting conversion lands with scheduling).
- */
+/** The grid is saved in the teacher's zone (rule 6). */
 export function AvailabilityHead({ tz, onTz }: Props) {
   const id = useId();
   const dst = useMemo(() => dstTemplate(tz), [tz]);

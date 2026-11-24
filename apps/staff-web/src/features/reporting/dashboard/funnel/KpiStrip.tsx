@@ -30,10 +30,6 @@ function Figure({ kpi, loading }: { kpi: Kpi; loading: boolean }): ReactNode {
   );
 }
 
-/**
- * The work column's switcher (docs/07 §6): four counts in a 2×2 grid, Western digits; each a
- * filter link: «يحتاج تأكيد» opens the schedule filtered to it, the other three pick the queue below.
- */
 export function KpiStrip({ summary, work }: KpiStripProps) {
   const counts = summary ?? { needs_confirmation: 0, pending_reports: 0, unpaid_subscriptions: 0, open_tasks: 0 };
   const kpis = kpisOf(counts, usePublicConfig().lesson_confirmation_required);

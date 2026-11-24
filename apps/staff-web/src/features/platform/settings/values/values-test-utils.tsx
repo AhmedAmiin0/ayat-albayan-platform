@@ -9,8 +9,7 @@ import { SETTINGS } from '@/test/settings-fixture';
 import type { ValuesSearch } from './values-search';
 import { ValuesView } from './ValuesView';
 
-// Shared by the «القيم» component tests (not app code). Each test file mocks '@/lib/api',
-// '@/features/auth/use-permissions' and '@tanstack/react-router' (Link → inbox MockLink) itself.
+// Shared by the values component tests; each file mocks the api, permissions and router itself.
 
 export interface ValuesFixture {
   settings?: Partial<AcademySettings>;
@@ -39,7 +38,6 @@ function Harness({ initial, onSearch }: { initial: ValuesSearch; onSearch: (s: V
   );
 }
 
-/** Renders «القيم» against routed apiFetch answers; returns the query client and the search log. */
 export function renderValues(apiFetch: Mock, fx: ValuesFixture = {}) {
   const settings = { ...SETTINGS, ...fx.settings };
   routeFetch(apiFetch, [

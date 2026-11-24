@@ -21,13 +21,12 @@ function VisitorCell({ visitor }: { visitor: ShortLinkVisitor }) {
   );
 }
 
-/** «7 زائرين من 12», or «23 · بلا حد» for a link without a limit. */
 const countText = (link: ShortLinkDetail): string =>
   link.maxUsers === null
     ? usageText(link, t.shortLinks.list)
     : fillSlots(D.visitorsOf, { n: link.visitors, max: link.maxUsers });
 
-/** «سجل الزوار» (board LinkXWebDetail): each distinct visitor, their last visit and opens. */
+/** Each distinct visitor, their last visit and opens. */
 export function VisitorsTable({ link }: { link: ShortLinkDetail }) {
   const dates = useLinkDates();
   const rows = link.visitorList.map((v) => [

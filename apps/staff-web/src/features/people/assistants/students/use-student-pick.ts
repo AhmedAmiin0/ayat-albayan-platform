@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { usePermissions } from '@ab/web-kit/auth/use-permissions';
 
-/** What the students table needs to draw its «تحديد» column. */
 export type PickColumn = { isPicked: (id: string) => boolean; toggle: (id: string) => void };
 
 export type StudentPick = {
@@ -13,7 +12,7 @@ export type StudentPick = {
   clear: () => void;
 };
 
-/** The students list's row selection for the bulk «تعيين مسؤول مبيعات» (kept while paging). */
+/** Selection is kept while paging. */
 export function useStudentPick(): StudentPick {
   const enabled = usePermissions().can('assistantpay.write');
   const [picked, setPicked] = useState<ReadonlySet<string>>(new Set());

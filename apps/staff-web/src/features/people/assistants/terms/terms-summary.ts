@@ -7,7 +7,6 @@ import type { AssistantTermsView } from '@/features/people/assistants/api';
 /** A plain day (YYYY-MM-DD) shown as a date: noon UTC, so no zone moves it to another day. */
 export const dayText = (day: string): string => formatDate(`${day}T12:00:00Z`);
 
-/** «70% من سعر الاشتراك» / «50 ر.س عن كل طالب», or «غير محددة». */
 export function commissionText(c: AssistantTermsView['commission']): string {
   if (!c) return t.assistants.notSet;
   return c.type === 'percent'
@@ -15,7 +14,6 @@ export function commissionText(c: AssistantTermsView['commission']): string {
     : t.assistants.commissionFixed.replace('{amount}', moneyText(c.value, c.currency ?? ''));
 }
 
-/** «3000 ج.م», or «غير محدد». */
 export function salaryText(s: AssistantTermsView['salary']): string {
   return s ? moneyText(s.amount, s.currency) : t.assistants.notSet;
 }

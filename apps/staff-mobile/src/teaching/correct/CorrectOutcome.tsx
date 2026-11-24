@@ -15,18 +15,12 @@ interface CorrectOutcomeProps {
   error?: string | undefined;
 }
 
-/** «ستُسجَّل الحلقة «غائب». يُحسب الغياب من الباقة.» (owner 2026-11-17). */
 const askText = (to: CorrectTo): string => {
   const c = t.lessons.correct;
   return `${c.ask.replace('{to}', c.to[to])} ${c.counts[to]}`;
 };
 
-/**
- * «تصحيح حالة الحلقة» (owner 2026-11-03): an ended lesson still «يحتاج تأكيد», or one the job
- * settled, recorded as «انعقدت» | «غائب» | «اعتذر الطالب» | «ألغاها المعلم/ة» (POST …/correct).
- * The title, its hint, the outlined choices in one row; a choice asks first and says whether the
- * lesson counts from the package (owner 2026-11-17).
- */
+/** Ended needs-confirmation or job-settled lessons; a choice asks first and says if it counts. */
 export function CorrectOutcome({ targets, onCorrect, busy = false, error }: CorrectOutcomeProps) {
   const [asking, setAsking] = useState<CorrectTo | null>(null);
   const c = t.lessons.correct;

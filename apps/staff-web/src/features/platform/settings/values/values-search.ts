@@ -1,4 +1,4 @@
-/** «المعدَّلة فقط» / «العامة فقط» (desktop filters; like the search, they list every group under «الكل»). */
+/** Desktop filters; like the search, they list every group in the all-results view. */
 export type ValuesFilter = 'modified' | 'public';
 
 /** The search params of /admin/settings/values: the group in view, the search text, a filter. */
@@ -19,5 +19,4 @@ export function parseValuesSearch(search: Record<string, unknown>): ValuesSearch
   return out;
 }
 
-/** Is the page showing «الكل» (a search or a filter) rather than one group? */
 export const showsAll = (s: ValuesSearch): boolean => (s.q ?? '').trim() !== '' || s.filter !== undefined;

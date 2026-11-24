@@ -17,13 +17,13 @@ interface SummaryCardProps {
  * 2026-10-28: «need confirmation» broke in two): short words, shrunk to fit at a large font scale, and
  * the number and label centred alike in each column.
  */
-/** The column words: OFF (no confirmation required) the scheduled ones are simply «قادمة». */
+/** Without required confirmation, scheduled lessons read as upcoming. */
 const LABELS: Record<'on' | 'off', Record<TodayFilter, string>> = {
   on: t.today.summary,
   off: { ...t.today.summary, scheduled: t.lessons.noConfirm.scheduledShort },
 };
 
-/** OFF (no confirmation required), the middle column is «قادمة» in ink. */
+/** Without required confirmation, the middle column reads as upcoming. */
 export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
   const { color } = useTheme();
   const { required } = useLessonStatusText();

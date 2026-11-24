@@ -10,16 +10,13 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { StaffPresenceBody } from './StaffPresenceBody';
 
-/** «حالة الفريق» on «المستخدمون» (docs/33 §2): only an admin (base role) is shown the staff. */
+/** Only a base-role admin is shown the staff (docs/33 §2). */
 export function StaffPresencePanel() {
   const role = useQuery(meQuery).data?.role;
   return role === 'admin' ? <StaffPresenceCard /> : null;
 }
 
-/**
- * Open at first, collapsible to its header («متصلون الآن: n») for the users table; the staff
- * online first, then by last seen, newest first. Watches at most PRESENCE_WATCH_MAX topics.
- */
+/** Watches at most PRESENCE_WATCH_MAX topics. */
 function StaffPresenceCard() {
   const [open, setOpen] = useState(true);
   const id = useId();

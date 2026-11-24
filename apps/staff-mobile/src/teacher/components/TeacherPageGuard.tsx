@@ -9,11 +9,7 @@ const SPINNER = { paddingVertical: 32 };
 
 interface Props { gate: TeacherGate; children: ReactNode }
 
-/**
- * A teacher route behind its academy switch (owner 2026-11-13): a spinner until the settings
- * answer, the screen when on, «اليوم» when off (a link, a push tap, a saved route), an error
- * with retry when the settings cannot be read.
- */
+/** When the academy switch is off, a link or push tap lands on today; an error offers retry. */
 export function TeacherPageGuard({ gate, children }: Props) {
   const { state, retry } = useTeacherGateState(gate);
   const { color } = useTheme();

@@ -10,8 +10,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// docs/19: the WABA name («اسم القالب في واتساب») is edited on crm and meta lines' rows (every driver sends
-// it, «CRM → Meta»); a save replaces the row and closes.
+// docs/19: every driver sends the WABA name, so it is editable on crm and meta rows.
 
 const s = t.templates.crmName;
 const ON_CRM = template({ key: 'renewal_due', status: 'approved', line: 'notifications' });

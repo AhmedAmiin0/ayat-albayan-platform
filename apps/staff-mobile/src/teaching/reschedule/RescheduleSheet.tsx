@@ -6,14 +6,11 @@ interface RescheduleSheetProps {
   /** The lesson to move; null = closed. */
   lesson: LessonView | null;
   onClose: () => void;
-  /** «تم» after the move; onClose when absent. */
+  /** Falls back to onClose when absent. */
   onDone?: () => void;
 }
 
-/**
- * «غيّر الميعاد» as a page sheet over whichever screen opened it (Today, a teacher's calendar,
- * «الجدول»), so that screen and its tab stay underneath. A new lesson starts a fresh form.
- */
+/** A page sheet so the opening screen and its tab stay underneath; a new lesson resets the form. */
 export function RescheduleSheet({ lesson, onClose, onDone }: RescheduleSheetProps) {
   return (
     <RescheduleFrame open={lesson !== null} onClose={onClose}>

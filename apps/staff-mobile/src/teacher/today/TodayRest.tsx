@@ -8,7 +8,6 @@ export interface RowHandlers {
   onOpen: (lesson: LessonView) => void;
   onReport: (lessonId: string) => void;
   onNotice: (text: string) => void;
-  /** «صفوف مضغوطة» (owner 2026-11-14). */
   compact?: boolean;
 }
 
@@ -21,7 +20,7 @@ interface TodayRestProps {
 
 const titleStyle = { fontFamily: type.ui[700], fontSize: 15, lineHeight: 24 } as const;
 
-/** «بقية اليوم · N» (docs/48): her open, not-ended lessons in one card, each with one lead. */
+/** One lead per lesson (docs/48). */
 export function TodayRest({ lessons, noOther, rows }: TodayRestProps) {
   const { color } = useTheme();
   if (noOther) return <Note>{t.teacherToday.noOther}</Note>;

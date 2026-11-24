@@ -22,16 +22,7 @@ import { useTemplateActions } from './use-template-actions';
 import { useTemplateLines } from './lines/use-template-lines';
 import { useTemplateNumber } from './numbers/use-template-number';
 
-/**
- * Template health (R-MSG-01, issue C1): every registry row with Meta's status. Each number syncs
- * with its own WABA from its block (owner 2026-10-18); a not-submitted / rejected / missing row can
- * be sent to Meta for review from its own number (T3) and any row moved to the other number, each
- * only after its explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted allow-list)
- * picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
- * «يُرسل من» picks each template's own number (templates.manage, after its dialog; docs/23c decision 9).
- * A crm line (docs/39) syncs its statuses from the CRM and submits through it (hand-set marks: fallback).
- * «قالب جديد» (owner 2026-10-31) adds a row; once saved, its «إرسال إلى ميتا» dialog opens.
- */
+/** R-MSG-01: each number syncs with its own WABA; submit and move need an explicit confirm. */
 export function TemplateHealth({ headingId }: { headingId: string }) {
   const templates = useQuery(templatesQuery);
   const lines = useTemplateLines();

@@ -11,7 +11,6 @@ interface ChangeUntilSheetProps {
   onDone: () => void;
 }
 
-/** «نهاية الإيقاف» as a page sheet over the student's file. */
 export function ChangeUntilSheet({ studentId, pause, onClose, onDone }: ChangeUntilSheetProps) {
   return (
     <PauseSheetFrame open={pause !== null} title={t.coursePause.changeUntilTitle} onClose={onClose}>

@@ -12,7 +12,6 @@ export interface StaffPhotoTarget {
 
 const base = ({ kind, id }: StaffPhotoTarget) => `/${kind}/${encodeURIComponent(id)}/avatar`;
 
-/** POST …/avatar/upload-url → upload to the signed URL → PUT …/avatar {path} (the «حسابي» flow). */
 export const uploadStaffPhoto = (target: StaffPhotoTarget, file: File) =>
   uploadPhoto<StaffPhotoView>(base(target), file);
 

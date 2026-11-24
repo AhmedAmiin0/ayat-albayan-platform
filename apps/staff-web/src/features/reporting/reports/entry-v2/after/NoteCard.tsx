@@ -16,7 +16,6 @@ export interface NoteCardProps {
 
 const toggled = (list: readonly QuickNote[], q: QuickNote) => (list.includes(q) ? list.filter((x) => x !== q) : [...list, q]);
 
-/** «ملاحظة للأسرة (اختياري)»: quick notes, the teacher's words, then the attachments. */
 export function NoteCard({ s, report }: NoteCardProps) {
   const v2 = t.reports.v2;
   const id = useId();

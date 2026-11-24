@@ -20,7 +20,7 @@ interface HeroButtons {
   peer: LeadAction | null;
 }
 
-/** The filled lead, and ONE outlined peer: her link, «سأحضر» or the report (cancel: the sheet). */
+/** Cancel lives in the sheet; one outlined peer at most. */
 export function heroButtons(plan: LessonPlan): HeroButtons {
   const peer = plan.peers.find(isButton);
   return { lead: isButton(plan.lead) ? plan.lead : null, peer: isButton(peer) ? peer : null };
@@ -34,15 +34,12 @@ interface EarlyInput {
   clock: { tz: string; cycle: ClockCycle };
 }
 
-/** «تُفتح الساعة 19:45» while the classroom is not open yet (room mode only). */
+/** Room mode only. */
 export function earlyLine({ win, way, clock }: EarlyInput): string | null {
   if (way !== 'room' || win?.state !== 'early') return null;
   return opensAtLine(win.opens_at, clock.cycle, clock.tz);
 }
 
-/**
- * Her word on the hero: on a next lesson, and on a running one whose room is live («الطالب
- * ينتظرك» / «الحلقة جارية الآن», canvas RoomXTeacherToday); null otherwise.
- */
+/** Null unless next, or running with a live room. */
 export const heroWord = (hero: Hero<LessonView>, now: Date) =>
   hero.kind === 'next' || isRoomLive(hero.lesson.room) ? teacherWord(hero.lesson, now) : null;
