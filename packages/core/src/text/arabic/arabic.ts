@@ -3,7 +3,7 @@
 const TASHKEEL = /[ؐ-ًؚ-ٰٟۖ-ۭ]/g;
 const TATWEEL = /ـ/g;
 
-/** Strips tashkeel/tatweel, unifies hamza/taa marbuta/ya forms, lowercases Latin, collapses spaces. */
+/** Strips tashkeel/tatweel, unifies hamza/taa marbuta/ya, lowercases Latin, collapses spaces. */
 export function normalizeArabic(input: string): string {
   return input
     .replace(TASHKEEL, '')

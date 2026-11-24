@@ -67,9 +67,15 @@ export interface ZonedFields {
 
 /** The wall-clock fields of `at` in `zone`, as numbers. */
 export function zonedFieldsIn(at: Date | number, zone: string): ZonedFields {
-  const fields = format(at, 'yyyy M d H m s', { in: inZone(zone) }).split(' ').map(Number);
-  const [year = 0, month = 1, day = 1, hour = 0, minute = 0, second = 0] = fields;
-  return { year, month, day, hour, minute, second };
+  const local = inZone(zone)(at);
+  return {
+    year: local.getFullYear(),
+    month: local.getMonth() + 1,
+    day: local.getDate(),
+    hour: local.getHours(),
+    minute: local.getMinutes(),
+    second: local.getSeconds(),
+  };
 }
 
 /** 0 = الأحد … 6 = السبت: the weekday `at` falls on in `zone` (the DB `byday` numbering). */

@@ -4,7 +4,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 1
     }
   },
   "src/assistant/first-paid/first-paid.ts": {
@@ -47,7 +47,7 @@
   },
   "src/assistant/schemas.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -78,12 +78,12 @@
   },
   "src/assistant/terms-dates.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/assistant/views.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 2
     }
   },
   "src/assistant/wallet.test.ts": {

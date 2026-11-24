@@ -77,7 +77,7 @@ export const JS_ONLY = {
   'no-with': 'error',
 };
 
-/** Tests and fakes (eslint.js testRules + syntaxBlocks): long blocks, fetch and raw shapes. */
+/** Tests and fakes (eslint-typed.js testRules, syntaxBlocks): long blocks, fetch, raw shapes. */
 export const TEST_OFF = [
   'max-lines-per-function',
   'no-restricted-globals',

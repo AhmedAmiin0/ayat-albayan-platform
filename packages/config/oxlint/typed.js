@@ -1,6 +1,7 @@
 // Type-aware rules (tsgolint, `oxlint --type-aware`): typescript-eslint's strictTypeChecked and
-// stylisticTypeChecked presets plus eslint.js typedRules, with the options ESLint resolves today
-// (docs/31b-oxlint-mapping.md). TypeScript files only: ESLint's disableTypeChecked leaves JS files.
+// stylisticTypeChecked presets plus eslint-typed.js typedRules, with the options ESLint resolves
+// today (docs/31b-oxlint-mapping.md). TypeScript files only: ESLint's disableTypeChecked leaves
+// JS files.
 
 /** Preset rules that take no option (ESLint resolves their defaults the same way). */
 const PLAIN = [

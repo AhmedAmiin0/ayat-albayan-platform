@@ -34,6 +34,18 @@ describe('zonedFieldsIn', () => {
       second: 7,
     });
   });
+
+  it('rolls into the next year and keeps a half-hour offset', () => {
+    const newYear = Date.parse('2026-12-31T18:45:30Z');
+    expect(zonedFieldsIn(newYear, 'Asia/Kolkata')).toEqual({
+      year: 2027,
+      month: 1,
+      day: 1,
+      hour: 0,
+      minute: 15,
+      second: 30,
+    });
+  });
 });
 
 describe('engineHourCycle', () => {

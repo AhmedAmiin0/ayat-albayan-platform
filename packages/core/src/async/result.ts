@@ -1,6 +1,12 @@
 /** A small Result type (docs/27 D4: no Effect-TS): a value, or a typed error, never a throw. */
-export type Ok<T> = { ok: true; value: T };
-export type Err<E> = { ok: false; error: E };
+export interface Ok<T> {
+  ok: true;
+  value: T;
+}
+export interface Err<E> {
+  ok: false;
+  error: E;
+}
 export type Result<T, E = string> = Ok<T> | Err<E>;
 
 export const ok = <T>(value: T): Ok<T> => ({ ok: true, value });
