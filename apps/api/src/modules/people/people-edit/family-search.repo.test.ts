@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { FamilySearchRepo } from './family-search.repo';
 
 function setup(results: Record<string, FakeResult[]>) {

@@ -1,4 +1,4 @@
-import { leadStatusStyle } from '@ab/shared';
+import { leadStatusStyle } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { leadSourceWord, leadStatusChip } from './lead-words';
 

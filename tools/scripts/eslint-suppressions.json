@@ -476,7 +476,7 @@
   },
   "ci-checks/release-tags/release-tag.mjs": {
     "max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "ci-checks/roll-fake.mjs": {

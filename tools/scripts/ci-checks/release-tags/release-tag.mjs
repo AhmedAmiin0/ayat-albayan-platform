@@ -1,4 +1,4 @@
-// Release tags (docs/09 «Release tags», owner 2026-10-30): one git tag + one GitHub Release per shipped
+// Release tags (docs/09 «Release tags»): one git tag + one GitHub Release per shipped
 // release, made by the «release» jobs of deploy-staging.yml (KIND=app) and mobile.yml (KIND=apk / ota) with
 // the run's GITHUB_TOKEN (tags it makes start no workflow, so nothing loops).
 //   app  v<YYYY.MM.DD>-<n>                the web + API deploy (UTC day; n = 1 + that day's highest n)

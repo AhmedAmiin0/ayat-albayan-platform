@@ -1,5 +1,6 @@
 import { bookingPicksFrom } from '@ab/client-core';
-import { courseEndsOn, dayTimesKeeping, inWeekOrder, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/shared';
+import { dayTimesKeeping, inWeekOrder } from '@ab/shared';
+import { courseEndsOn, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/schedule';
 import type { BookingDraft } from './draft';
 
 // The picked slots of the booking wizard (owner 2026-10-18: «اختر موعدًا لكل يوم»). A package picks

@@ -1,4 +1,5 @@
-import { round2, type ExpenseView } from '@ab/shared';
+import { round2 } from '@ab/core';
+import type { ExpenseView } from '@ab/money';
 
 interface CategoryTotal {
   category: string;
