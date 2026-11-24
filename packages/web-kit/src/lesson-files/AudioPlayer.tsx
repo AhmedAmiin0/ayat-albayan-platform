@@ -14,7 +14,7 @@ interface Props {
 }
 
 /**
- * The in-browser audio player (owner 2026-11-17): play/pause, ±10 s, speed and the saved stop over
+ * The in-browser audio player: play/pause, ±10 s, speed and the saved stop over
  * an <audio> element, the same rules as the family app's player (@ab/client-core).
  */
 export function AudioPlayer({ id, url, label, className }: Props) {

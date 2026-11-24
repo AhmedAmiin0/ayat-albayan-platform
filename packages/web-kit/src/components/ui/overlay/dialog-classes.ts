@@ -1,4 +1,4 @@
-// Dialog layouts (owner, 2026-10-05). Below `sm` (640px) a form is a full-screen sheet and a short
+// Dialog layouts. Below `sm` (640px) a form is a full-screen sheet and a short
 // confirm (delete / void / yes-no, no fields: `compact`) a floating card at the top, actions
 // stacked with the primary on top. From `sm` a form is an aside: a full-height panel at the
 // inline-end (like the schedule Drawer); `layout: 'center'` (wide or visual content: comparisons,

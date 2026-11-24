@@ -17,7 +17,7 @@ export interface SlotGridProps {
   studentTz: string;
   /** starts_at of the picked slot. */
   value: string | null;
-  /** A package's other picked starts (one per weekday, owner 2026-10-18): shown picked too. */
+  /** A package's other picked starts (one per weekday): shown picked too. */
   also?: readonly string[] | undefined;
   onPick: (slot: SlotView) => void;
 }

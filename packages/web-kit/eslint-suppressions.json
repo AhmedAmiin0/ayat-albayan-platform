@@ -434,7 +434,7 @@
   },
   "src/classroom/room/livekit/use-room.ts": {
     "max-len": {
-      "count": 3
+      "count": 2
     },
     "max-lines-per-function": {
       "count": 1
@@ -525,7 +525,7 @@
   },
   "src/components/channel/use-channel-live.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/ui/display/avatar.tsx": {
@@ -708,7 +708,7 @@
   },
   "src/components/ui/overlay/dialog.tsx": {
     "max-len": {
-      "count": 2
+      "count": 1
     },
     "no-restricted-syntax": {
       "count": 1
