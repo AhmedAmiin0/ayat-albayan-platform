@@ -10,7 +10,7 @@ import { useEarningsPayments, useEarningsSessions } from '@/earnings/hooks/queri
 import type { EarningsScope } from '@/earnings/lib/scope';
 import { SessionItem } from './SessionItem';
 
-// Owner 2026-10-28 (one container rule): the sessions and the payments sit in one inset card under the header.
+// The sessions and the payments sit in one inset card under the header.
 type Common = { scope: EarningsScope; header: ReactElement };
 type Query = { isPending: boolean; isError: boolean; isRefetching: boolean; refetch: () => unknown };
 
@@ -31,7 +31,8 @@ interface SessionsListProps extends Common {
 /** The sessions, newest first, paged; with `onToggle` (admin) each payable one can be ticked. */
 export function SessionsList({ scope, header, filter, selected, onToggle }: SessionsListProps) {
   const list = useEarningsSessions(scope, filter);
-  // A tick changes `selected`: the visible rows get the new map, memo redraws only the one whose tick changed.
+  // A tick changes `selected`: the visible rows get the new map, memo redraws only the one whose
+  // tick changed.
   const renderItem = useCallback(
     ({ item }: { item: TeacherEarningView }) => (
       <SessionItem row={item} checked={selected?.has(item.id) ?? false} {...(onToggle ? { onToggle } : {})} />

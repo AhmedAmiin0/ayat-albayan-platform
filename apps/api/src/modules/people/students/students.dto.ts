@@ -12,7 +12,7 @@ export const studentCreateRequestSchema = studentCreateSchema
     guardian_id: z.uuid().optional(),
     guardian: guardianCreateSchema.optional(),
     force: z.boolean().default(false),
-    /** «تسجيل الطالب» from the inbox: the lead to convert and link to the guardian. */
+    /** The lead to convert and link to the guardian. */
     lead_id: z.uuid().optional(),
   })
   .refine((v) => Boolean(v.guardian_id) !== Boolean(v.guardian), {

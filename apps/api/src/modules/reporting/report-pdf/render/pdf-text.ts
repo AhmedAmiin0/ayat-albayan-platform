@@ -39,24 +39,22 @@ export function localDate(at: Date, tz: string): string {
   return new Date(dayInZone(at.getTime(), tz)).toISOString().slice(0, 10);
 }
 
-/** «الثلاثاء» for `at` in `tz` (enums.weekday). */
 export function weekdayName(at: Date, tz: string): string {
   const day = String(weekdayOfDay(dayInZone(at.getTime(), tz))) as keyof typeof ar.enums.weekday;
   return ar.enums.weekday[day];
 }
 
-/** «الرياض» for a curated zone, else the IANA id itself. */
+/** A curated zone's city, else the IANA id itself. */
 export function cityOf(tz: string): string {
   return (ar.tz as Record<string, string>)[tz] ?? tz;
 }
 
-/** «ساعة» for the four standard lengths, else «50 دقيقة». */
 export function durationText(minutes: number): string {
   const known = (ar.enums.duration as Record<string, string>)[String(minutes)];
   return known ?? fill(ar.reports.pdf.minutes, { n: minutes });
 }
 
-/** «17:00 بتوقيت الرياض» (docs/07 principle 7: every time shows its zone). */
+/** docs/07 principle 7: every time shows its zone. */
 export function timeWithZone(at: Date, tz: string): string {
   return fill(ar.reports.pdf.timeValue, { time: ltr(clockTime(at, tz)), city: esc(cityOf(tz)) });
 }

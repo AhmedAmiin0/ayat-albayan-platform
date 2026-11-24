@@ -17,13 +17,7 @@ import { assertMayTouch } from '@/modules/people/users/users.rules';
 const uuid = new ParseUUIDPipe();
 type Kind = 'teacher' | 'user';
 
-/**
- * A staff member's photo, by an admin (owner 2026-10-28): the same signed upload + register + remove
- * as «حسابي» (type and size re-checked from Storage and the bytes) through StaffPhotoAdmin.
- * /teachers/:id/avatar: teachers.write like every other teacher field (admin only), with or without a
- * login. /users/:id/avatar: users.write and the same «may touch this login» rules as every other change
- * (403 system_admin_only / permission_not_held); 400 avatar_not_staff for a student or guardian login.
- */
+/** Same upload flow as self photos; users.write and the usual login rules; staff only. */
 @ApiTags('staff-photos')
 @ApiBearerAuth()
 @Controller()

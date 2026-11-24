@@ -25,7 +25,7 @@ function Card({ label, amount, strong }: { label: string; amount: number; strong
   );
 }
 
-/** «إجمالي المستحق | اللي اتدفع | المتبقي», and what was paid above a corrected lesson, if anything. */
+/** Total due, paid and remaining, and what was paid above a corrected lesson, if anything. */
 export function EarningsSummary({ balance }: { balance: TeacherEarningsBalanceView }) {
   const { color } = useTheme();
   return (
