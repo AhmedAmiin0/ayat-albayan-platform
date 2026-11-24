@@ -4,10 +4,6 @@ import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 /** The line under the bar: the tap hint, or the microphone blocked in Settings. */
 export type VoiceNote = 'hint' | 'blocked' | null;
 
-/**
- * Under a tap on the microphone: how to record (a hold, not a tap), or, when the microphone is
- * blocked for the app, where to allow it, with «افتح الإعدادات».
- */
 export function VoiceNoteLine({ note }: { note: VoiceNote }) {
   const { color } = useTheme();
   if (!note) return null;

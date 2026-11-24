@@ -15,10 +15,7 @@ import { reopenAllowed } from '@/inbox/composer/reopen/reopen-choices';
 
 const PATH = '/messaging/templates';
 
-/**
- * GET /messaging/templates (docs/12 T1), kept to what Meta has approved: nothing else can go out.
- * lesson_rating is left out: only the web inbox's «إرسال تقييم الحلقة» picks its lesson and buttons.
- */
+/** Only Meta-approved templates; lesson_rating is left out since only the web picks its lesson. */
 export function useApprovedTemplates(enabled: boolean) {
   return useQuery({
     queryKey: pathKey(PATH),
@@ -38,14 +35,10 @@ interface TemplatePickerProps {
   teacher: boolean;
   onClose: () => void;
   onSend: (out: Outgoing) => void;
-  /** «إعادة فتح المحادثة»: chat-line templates only, opened on the academy's (owner 2026-11-14). */
+  /** Chat-line templates only, opened on the academy's. */
   reopen?: { preferred: string | undefined; values?: TemplateParamsInput | undefined };
 }
 
-/**
- * «اختار القالب» sheet: this person's approved templates by their Arabic name, then the chosen
- * one's params and preview. Sending closes the sheet; the row shows in the thread at once.
- */
 export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
   const reopen = props.reopen;

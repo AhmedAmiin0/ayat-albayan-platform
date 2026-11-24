@@ -21,13 +21,7 @@ export interface EditTimeFormProps {
   onClose: () => void;
 }
 
-/**
- * «عدّل الوقت» (R-SCH-11): who and when now, the new length and start (a move: free slots; a
- * correction of a held lesson: same-day times), the reason, what it will change, then «احفظ
- * التعديل». A clash found by the API replaces the form with «اختار ميعاد تاني» (no save to press
- * again); a locked payout holds the length back until it is put back; an edit whose answer never
- * arrived says it is not sure it landed. Booking over a clash with a reason stays on the web.
- */
+/** Edit time (R-SCH-11): an API clash replaces the form; booking over a clash stays on the web. */
 export function EditTimeForm({ lesson, onClose }: EditTimeFormProps) {
   const cycle = useClockCycle();
   const viewerZone = useViewerTz();
