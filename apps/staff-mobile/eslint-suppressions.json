@@ -2337,7 +2337,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 3
     },
     "max-lines-per-function": {
       "count": 1
@@ -2436,7 +2436,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/composer/voice/MicHold/tests/en.test.tsx": {
@@ -2616,7 +2616,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 5
     },
     "no-nested-ternary": {
       "count": 1
@@ -2670,7 +2670,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 8
+      "count": 5
     },
     "no-restricted-syntax": {
       "count": 1
@@ -2679,11 +2679,6 @@
   "src/inbox/lists/components/ChatListChips/tests/ChatListChips.test.tsx": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/inbox/lists/components/ChatListChips/tests/access.test.tsx": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/inbox/lists/components/ChatListChips/tests/choice.test.tsx": {
@@ -2756,7 +2751,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 13
+      "count": 6
     },
     "max-lines-per-function": {
       "count": 1
@@ -2783,7 +2778,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 9
+      "count": 4
     }
   },
   "src/inbox/messages/components/MessageFile/tests/MessageFile.test.tsx": {
