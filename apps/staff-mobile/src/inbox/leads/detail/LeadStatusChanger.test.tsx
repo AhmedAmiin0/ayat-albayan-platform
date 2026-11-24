@@ -1,4 +1,4 @@
-import { LEAD_STATUSES } from '@ab/shared';
+import { LEAD_STATUSES } from '@ab/catalog';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, listKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';

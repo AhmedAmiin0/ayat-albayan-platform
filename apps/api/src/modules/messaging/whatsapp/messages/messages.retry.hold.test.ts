@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import type { MessageViews } from './message.views';
 import { MessagesRepo } from './messages.repo';
 import { MessagesService } from './messages.service';
