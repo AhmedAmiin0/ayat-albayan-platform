@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, type SettingKey, type SettingsMetaResponse } from '@ab/shared';
+import { SETTING_FIELD_OF, type SettingKey, type SettingsMetaResponse } from '@ab/settings';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 

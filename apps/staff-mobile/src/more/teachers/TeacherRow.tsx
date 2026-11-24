@@ -1,5 +1,6 @@
 import { memo } from 'react';
-import { teacherName, teacherStatusStyle } from '@ab/shared';
+import { teacherStatusStyle } from '@ab/money';
+import { teacherName } from '@ab/schedule';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { t, locale, type, useTheme, AppText, StatusChip, Avatar } from '@ab/mobile-kit';

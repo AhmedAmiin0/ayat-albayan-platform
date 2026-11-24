@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { useState } from 'react';
 import { ActivityIndicator, Image, Linking, View } from 'react-native';
 import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';

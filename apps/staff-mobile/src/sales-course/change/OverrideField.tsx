@@ -1,4 +1,4 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { useState, type ReactNode } from 'react';
 import { t, Field } from '@ab/mobile-kit';
 import type { ChangeTarget } from './change-body';

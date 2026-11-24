@@ -1,4 +1,7 @@
-import { formatPhone, type ClockCycle, type Glyph, type NumberView, type ParityView, type Tone } from '@ab/shared';
+import type { NumberView, ParityView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import type { Glyph, Tone } from '@ab/money';
+import type { ClockCycle } from '@ab/time';
 import { t, ltr } from '@ab/mobile-kit';
 import { formatAt } from '@/ops/activity/activity-format';
 
