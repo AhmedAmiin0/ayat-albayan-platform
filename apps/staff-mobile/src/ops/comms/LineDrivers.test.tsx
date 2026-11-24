@@ -1,4 +1,4 @@
-import type { IntegrationConfigItem } from '@ab/shared';
+import type { IntegrationConfigItem } from '@ab/catalog';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';

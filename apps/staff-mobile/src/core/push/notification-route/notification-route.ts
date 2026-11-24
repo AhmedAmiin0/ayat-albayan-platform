@@ -25,7 +25,7 @@ const toStudent = (data: unknown) => {
 /** The internal meetings list (the room itself opens from there, in the browser). */
 const ADMIN_MEETINGS = '/more/live/meetings';
 
-/** «إعدادات الأكاديمية»: the Google sync status card is on it (docs/24 §3). */
+/** Academy settings hold the Google sync status card (docs/24 §3). */
 const ADMIN_SETTINGS = '/more/ops/settings';
 
 /**
@@ -47,7 +47,7 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   google_sync_alert: () => ADMIN_SETTINGS,
   // docs/31 §2: the chat's teacher, family and assistant; never sent to an admin.
   channel_message: () => '/',
-  // «محفظتي» (owner 2026-10-29): salespeople only; never sent to an admin.
+  // Salespeople only; never sent to an admin.
   commission_earned: () => '/',
   // A schedule change (owner 2026-10-30): the student.
   lesson_rescheduled: toStudent,
@@ -60,17 +60,14 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
 
 const tabOf = (href: string): TabRoute => (href.startsWith('/inbox') ? 'inbox' : href.startsWith('/students') ? 'students' : 'today');
 
-/** May the role open this admin href? «المزيد» is always there; its rows need their own permission. */
+/** More is always there; its rows need their own permission. */
 function adminOpens(href: string, can: Can): boolean {
   if (href === ADMIN_MEETINGS) return can('meetings.read');
   if (href === ADMIN_SETTINGS) return canOpen(can, 'settings');
   return tabOpen(can, tabOf(href));
 }
 
-/**
- * The admin screen a tapped push opens; null for anything that is not one of our pushes (stay put).
- * A push into a screen the role cannot see (a hidden tab goes nowhere) opens «المزيد» instead.
- */
+/** null for anything not our push; a screen the role cannot see opens More instead. */
 export function routeFor(data: unknown, can: Can = () => true): string | null {
   const kind = pushKind(data);
   if (!kind) return null;
@@ -80,7 +77,7 @@ export function routeFor(data: unknown, can: Can = () => true): string | null {
 
 const TEACHER_TODAY = '/teacher/today';
 
-/** A family's message in a student channel (docs/31 §2) → «رسائل الطلاب» on that student. */
+/** A family's message in a student channel (docs/31 §2) opens that student's chat. */
 const toTeacherChannel = (data: unknown) => {
   const student = pushStudentId(data);
   return student ? `/teacher/more/messages/${student}` : '/teacher/more/messages';

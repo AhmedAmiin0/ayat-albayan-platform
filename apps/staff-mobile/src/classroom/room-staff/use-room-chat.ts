@@ -22,11 +22,7 @@ function useAudience(): StaffAudience | null {
 const unreadOf = (rows: readonly TeacherChannelRow[], studentId: string): number =>
   rows.find((r) => r.student_id === studentId)?.unread ?? 0;
 
-/**
- * The in-room «المحادثة» of the staff app (owner 2026-11-16, canvas RoomXTeacherChat): THE student
- * channel (never a LiveKit chat), as a sheet over the live room, with the teacher's unread count.
- * None without the lesson's student, or for a role that has no channel view; hidden on a trial.
- */
+/** The student channel, never a LiveKit chat; hidden on a trial or without the lesson's student. */
 export function useRoomChat(studentId: string | null): RoomChat | null {
   const audience = useAudience();
   const rows = useTeacherChannels(audience === 'teacher' && studentId !== null).data ?? [];

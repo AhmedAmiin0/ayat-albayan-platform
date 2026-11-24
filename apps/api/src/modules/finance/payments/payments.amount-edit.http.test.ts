@@ -6,7 +6,7 @@ import { conflict } from '@/common/http/errors';
 
 const URL = `/payments/${PAYMENT_ID}`;
 
-// «تعديل المبلغ» on the admin's PATCH (owner 2026-11-02): manual payments only, audited.
+// Amount edits on the admin's PATCH: manual payments only, audited.
 describe('PATCH /payments/:id amount', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

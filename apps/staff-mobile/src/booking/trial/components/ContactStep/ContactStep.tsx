@@ -23,19 +23,13 @@ type Contact = Pick<
 
 interface ContactStepProps {
   value: Contact;
-  /** The trial asks «المده» here; a package asks it on its own step. */
+  /** A trial asks the duration here; a package asks it on its own step. */
   withDuration: boolean;
   onChange: (patch: Partial<Contact>) => void;
   onNext: () => void;
 }
 
-/**
- * Step 1 «الطالب» (R-LEAD-06), the registration form's questions in its order and words: «اسم
- * الطالب», «رقم الواتساب (مع كود الدولة) *» with the form's help (prefilled from the lead, checked
- * by normalizePhone, rule 7), the parent's name, «سن الطالب», «النوع», «المده» for a trial and
- * «عرفت عننا منين؟» (prefilled from the lead). The family's zone stays a pick, never typed: the
- * slot clock and the rule's zone depend on it. Required ones carry «*».
- */
+/** R-LEAD-06: phone checked by normalizePhone (rule 7); the zone is picked, never typed. */
 export function ContactStep({ value, withDuration, onChange, onNext }: ContactStepProps) {
   const [tried, setTried] = useState(false);
   const phone = phoneProblem(value.phone);

@@ -244,7 +244,7 @@ jobs:
           LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
           CONF: >-
             ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', '*/*/vite.config.ts', 'packages/config/vite.js', 'tsconfig*.json',
-            '*/*/tsconfig*.json', 'packages/config/tsconfig/**') || hashFiles('*/*/babel.config.cjs',
+            '*/*/tsconfig*.json') || hashFiles('*/*/babel.config.cjs',
             '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/mobile-kit/jest.base.cjs', 'packages/mobile-kit/babel.cjs') }}
           KIND: ${{ matrix.vcache && 'vitest' || 'jest' }}
           SHARD: ${{ matrix.vcache || matrix.jcache }}
@@ -418,6 +418,7 @@ jobs:
       - run: pnpm guard:packages
       - run: pnpm guard:tsconfig
       - run: pnpm guard:comments
+      - run: pnpm guard:escapes
       - run: pnpm guard:units
       - run: pnpm guard:move-only
       # On a PR: every suppressions file per file and per rule against the base branch's (docs/59), and the

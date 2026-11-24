@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { ltr } from '@ab/mobile-kit';
 import { addInvitee, fromOption, fromPhone, isFull, removeInvitee, type DraftInvitee } from './invitee-draft';
 

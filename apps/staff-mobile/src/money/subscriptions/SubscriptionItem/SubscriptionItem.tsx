@@ -1,5 +1,13 @@
 import { memo } from 'react';
-import { cancelOffered, countsForMoney, isCancelled, owesMore, packageProgress, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
+import {
+  cancelOffered,
+  countsForMoney,
+  isCancelled,
+  owesMore,
+  packageProgress,
+  subscriptionStatusStyle,
+  type SubscriptionView,
+} from '@ab/money';
 import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';

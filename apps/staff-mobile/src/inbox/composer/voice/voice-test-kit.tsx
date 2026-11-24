@@ -81,7 +81,6 @@ export async function openChat(mockApiFetch: jest.Mock) {
   await screen.findByText(asked.body ?? '');
 }
 
-/** «رد» on the inbound message: the next send answers it. */
 export async function replyToAsked() {
   await fireEvent(await screen.findByTestId('bubble-m1'), 'longPress');
   await fireEvent.press(within(screen.getByTestId('message-menu')).getByRole('button', { name: t.inbox.reply.action }));

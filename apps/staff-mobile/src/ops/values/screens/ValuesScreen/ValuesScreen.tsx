@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import {

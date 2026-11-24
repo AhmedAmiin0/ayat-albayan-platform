@@ -20,7 +20,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('@ab/mobile-kit/room', () => ({
   ...jest.requireActual('@ab/mobile-kit/room'),
-  liveKitNative: () => mockNative,
+  useNativeRoom: () => ({ data: mockNative }),
   handOff: (...args: unknown[]) => mockHandOff(...args),
 }));
 

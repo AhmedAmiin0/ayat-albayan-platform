@@ -1,4 +1,4 @@
-import type { AdminTaskView } from '@ab/shared';
+import type { AdminTaskView } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
 /** «قاربت الباقة على الانتهاء» / «انتهت الباقة وتحتاج إلى تجديد» (the student is the row's title). */

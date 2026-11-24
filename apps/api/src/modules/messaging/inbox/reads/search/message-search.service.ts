@@ -20,14 +20,7 @@ interface SearchScope {
 
 const EMPTY: MessageSearchPage = { items: [], next_cursor: null };
 
-/**
- * «بحث في كل الرسائل» (owner 2026-11-06, docs/37) with the same visibility as reading each chat,
- * resolved per request in ThreadReads.list's order (rule 9): a salesperson every chat without the
- * link templates (SalesScope, owner 2026-10-11); the admin every chat; a teacher only her scope's
- * phones (her families and her own read-only chat; an empty scope reads nothing); any other role
- * 403 and an unlinked teacher 404 (TeacherScopes.of). The academy's own numbers are hidden for all.
- * Any change to SalesScope / TeacherScope must change this too (its tests pin every role).
- */
+/** Same visibility as reading each chat (docs/37, rule 9); keep in sync with the scopes. */
 @Injectable()
 export class MessageSearchService {
   constructor(
