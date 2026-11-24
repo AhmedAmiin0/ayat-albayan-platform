@@ -10,7 +10,7 @@ import { workItem, workLink } from '@/features/reporting/dashboard/today/Pending
 import { taskText } from './work-text';
 import type { TaskRow } from '@ab/money';
 
-/** Open admin tasks (renewal due, unpaid) with «خلصت» (POST /admin-tasks/:id/done, docs/11 S8). */
+/** Open admin tasks (renewal due, unpaid), done via POST /admin-tasks/:id/done (docs/11 S8). */
 export function TasksList({ items }: { items: readonly TaskRow[] }) {
   const qc = useQueryClient();
   const [toast, setToast] = useState<{ message: string; tone: 'info' | 'error' } | null>(null);

@@ -8,8 +8,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
-// The dates of the short-link screens, in the viewer's zone and clock: «20 نوفمبر», «الجمعة 20
-// نوفمبر»، «الجمعة 20 نوفمبر 2026، 14:06», and the expiry line («بعد 3 أيام», «انتهى …»).
+// Dates in the viewer's zone and clock, plus the relative expiry line.
 
 const DAY = { day: 'numeric', month: 'long' } as const;
 const WEEKDAY = { weekday: 'long', day: 'numeric', month: 'long' } as const;

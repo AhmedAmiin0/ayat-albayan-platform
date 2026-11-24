@@ -3,7 +3,7 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 type StudentNoteProps = { text: string | null; className?: string };
 
-/** Action note («دورك»): 9px saffron nuqta + ink 600 words, one inline run (docs/07 §6 hamish). */
+/** docs/07 §6 hamish note style. */
 export function StudentNote({ text, className }: StudentNoteProps) {
   if (!text) return null;
   return (

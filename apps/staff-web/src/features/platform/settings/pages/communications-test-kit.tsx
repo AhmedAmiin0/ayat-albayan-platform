@@ -10,7 +10,7 @@ import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
 import { CommunicationsPage } from './CommunicationsPage';
 import type { CommunicationsTab } from './page-search';
 
-// Shared by the «التواصل» page tests (not app code). Each test file mocks @/lib/api and the router's Link.
+// Each test file mocks @/lib/api and the router's Link.
 
 export interface Gate {
   open: boolean;
@@ -21,7 +21,6 @@ export interface Gate {
 export interface RenderCommunications {
   apiFetch: Mock;
   tab?: CommunicationsTab;
-  /** `?audience=` (with «الإشعارات»). */
   audience?: NotificationAudience;
   settings?: Partial<AcademySettings>;
   gate?: Gate;
@@ -44,7 +43,7 @@ function Harness({ initial, audience, renderGuard }: HarnessProps) {
   return <CommunicationsPage tab={tab} audience={audience} onTab={setTab} {...(renderGuard ? { renderGuard } : {})} />;
 }
 
-/** «التواصل» with every GET it may make answered (first prefix wins). */
+/** The first matching prefix wins. */
 export function renderCommunications(input: RenderCommunications): QueryClient {
   const settings = { ...SETTINGS, ...input.settings };
   const gate = input.gate ?? { open: settings.messaging_enabled, reason: settings.messaging_enabled ? null : 'switch_off', queued: 0 };

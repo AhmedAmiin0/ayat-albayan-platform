@@ -13,7 +13,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
-// «يُرسل من» with templates.manage (docs/23c decision 9): pick → confirm → PUT …/number.
+// docs/23c decision 9.
 
 const s = t.templates.sendFrom;
 const NAME = t.templates.names.booking_confirmation_plain;

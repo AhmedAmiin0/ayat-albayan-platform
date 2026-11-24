@@ -15,19 +15,12 @@ export interface IntegrationsPanelProps {
   onSaved: (message: string) => void;
   /** Only these groups are shown, drafted and saved by this panel (integration-places.ts); all when absent. */
   groups?: readonly IntegrationGroup[] | undefined;
-  /** The section's heading (default «التكاملات»). */
   title?: string | undefined;
   /** The first line under it (default the integrations intro). */
   intro?: string | undefined;
 }
 
-/**
- * «التكاملات» (owner, 2026-10-12: config in the database): the WhatsApp lines, the test-safety
- * guards, LiveKit, Expo and the exchange-rate URL. A value saved here wins over the server's env;
- * clearing it brings the server's value back. Secrets are write-only (Vault). The Google sync
- * (docs/24 §3) has its own page, «مزامنة Google» (/admin/settings/google, docs/26b §3). With
- * `groups`, it is one place's share of them (docs/23 phase 6: «التواصل» › «الحماية» / «الأرقام»).
- */
+/** A saved value wins over the server's env and clearing restores it; secrets are write-only. */
 export function IntegrationsPanel({ query, onSaved, groups, title, intro }: IntegrationsPanelProps) {
   const list = useQuery(integrationsQuery);
   if (!(groups ? groupsMatch(groups)(query) : integrationsMatch(query))) return null;

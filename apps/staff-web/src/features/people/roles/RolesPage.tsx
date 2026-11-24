@@ -11,10 +11,7 @@ import { UsersList } from './UsersList';
 
 const P = t.permissions.page;
 
-/**
- * «الأدوار والصلاحيات» (owner, 2026-10-05): roles with their permission matrix, and the staff users
- * with the role each holds. Needs roles.manage (the API checks it on every call too).
- */
+/** Needs roles.manage; the API checks it on every call too. */
 export function RolesPage() {
   const roles = useQuery(rolesQuery);
   const users = useQuery(staffUsersQuery);

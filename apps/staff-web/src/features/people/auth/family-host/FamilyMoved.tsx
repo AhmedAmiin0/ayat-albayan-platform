@@ -1,11 +1,7 @@
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «انتقلت صفحات الأسرة» (docs/51 §3): what a family sees here while the browser opens the family
- * host, and what an installed app. icon keeps (no silent jump: the new address must be added to
- * the Home Screen for notifications).
- */
+/** The new address must be added to the Home Screen for notifications (docs/51 §3). */
 export function FamilyMoved({ url }: { url: string }) {
   const F = t.familyWeb.moved;
   return (

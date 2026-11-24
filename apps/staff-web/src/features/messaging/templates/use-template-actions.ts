@@ -8,11 +8,7 @@ import { moveTemplateLine, setStarter, submitTemplate, syncFailedText, templateE
 /** The one toast of the template section. */
 export type Notice = Pick<ToastProps, 'message' | 'tone'>;
 
-/**
- * The per-row actions of template health: submit to Meta (T3, after its dialog), move to the other
- * number (after its dialog), the «متاح للمعلمين والمبيعات» switch. Every outcome is one toast; a move
- * whose re-sync on the new number failed says why (never only «نُقل»).
- */
+/** Every outcome is one toast; a failed re-sync after a move says why. */
 export function useTemplateActions() {
   const queryClient = useQueryClient();
   const [notice, setNotice] = useState<Notice | null>(null);

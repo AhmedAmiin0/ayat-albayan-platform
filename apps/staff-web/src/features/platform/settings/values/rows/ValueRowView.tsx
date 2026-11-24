@@ -11,7 +11,6 @@ import { SettingValueRow } from './SettingValueRow';
 
 export interface RowEnv {
   phone: boolean;
-  /** «الكل»: name each row's group under its label. */
   showGroup: boolean;
   google: GoogleSyncSettings | undefined;
   custom: CustomValues;

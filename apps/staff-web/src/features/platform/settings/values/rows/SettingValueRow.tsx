@@ -20,7 +20,6 @@ import { cellClass, headClass, rowClass } from './row-classes';
 export interface SettingValueRowProps {
   settingKey: SettingKey;
   group: ValuesGroupId;
-  /** «الكل» results name the group under the label. */
   groupName?: string | undefined;
 }
 

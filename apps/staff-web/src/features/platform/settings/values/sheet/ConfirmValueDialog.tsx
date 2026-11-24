@@ -13,10 +13,10 @@ import type { PendingConfirm } from '@/features/platform/settings/values/hooks/u
 const v = t.settingsValues;
 const c = v.confirm;
 
-/** The typed number matches the days, typed on any keypad («٣٠» is 30). */
+/** The typed number matches the days on any keypad, so Arabic-Indic digits count too. */
 export const typedMatches = (typed: string, days: number): boolean => westernDigits(typed) === String(days);
 
-/** «حذف البيانات الأقدم من 3 أيام؟» (the counted form, never «3 يومًا»). */
+/** Uses the counted plural form of days. */
 export const typedTitle = (days: number): string => c.typedTitleCount.replace('{count}', counted(v.units.days, days));
 
 const YES: Partial<Record<SettingKey, { on: string; off: string }>> = {
@@ -26,7 +26,7 @@ const YES: Partial<Record<SettingKey, { on: string; off: string }>> = {
   sales_require_assignee: v.confirmYes.salesRequireAssignee,
 };
 
-/** The yes button says what it does to that switch («أتِح كل المعلمين للحجز» / «أوقف…»). */
+/** The yes button says what it does to that switch. */
 export function plainYes(key: SettingKey, value: unknown): string {
   const words = YES[key];
   if (!words || typeof value !== 'boolean') return c.plainYes;
@@ -74,11 +74,7 @@ function TypedDialog({ pending, onYes, onClose }: ConfirmValueDialogProps) {
   );
 }
 
-/**
- * The registry's confirmation before a row saves (VALUE_CONFIRM): a plain dialog for the
- * booking-wide switches (their hint is the impact), typed for retention days that delete data.
- * «إلغاء» is the default focus.
- */
+/** Plain confirm for booking-wide switches, typed confirm for retention days that delete data. */
 export function ConfirmValueDialog({ pending, onYes, onClose }: ConfirmValueDialogProps) {
   if (pending.kind === 'typed') return <TypedDialog pending={pending} onYes={onYes} onClose={onClose} />;
   const words = settingText(pending.key);

@@ -1,7 +1,7 @@
 import type { NumberView, TemplateView } from '@ab/shared';
 import type { TemplateStatus } from '@ab/catalog';
 
-// Per-number approval of one template (docs/23c decisions 3–4), for the «يُرسل من» cell. Pure.
+// Per-number approval of one template (docs/23c decisions 3-4).
 
 /** A number's approval: Meta's status there, or not synced yet (no message_template_numbers row). */
 export type NumberApprovalState = TemplateStatus | 'not_synced';
@@ -42,6 +42,6 @@ export function approvalOf(tpl: Tpl, number: NumberView): NumberApprovalState {
 export const approvalRows = (tpl: Tpl, numbers: readonly NumberView[]): NumberApprovalRow[] =>
   shownNumbers(tpl, numbers).map((number) => ({ number, state: approvalOf(tpl, number) }));
 
-/** «معتمد جزئيًا»: approved on some shown numbers, not on all of them. */
+/** Approved on some shown numbers but not all. */
 export const isPartial = (rows: readonly NumberApprovalRow[]): boolean =>
   rows.some((r) => r.state === 'approved') && rows.some((r) => r.state !== 'approved');

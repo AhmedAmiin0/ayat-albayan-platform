@@ -6,10 +6,7 @@ import type { Teacher } from '@ab/shared';
 
 type Props = { teacher: Teacher; value: string; onChange: (value: string) => void };
 
-/**
- * «اسم المستخدم» of the teacher's login (docs/30 §7): an LTR island, lower-cased on blur. Without a login
- * (profile_id null) it is disabled with the note to create the login on «المستخدمون» first.
- */
+/** Without a login (profile_id null) it is disabled (docs/30 §7). */
 export function TeacherUsernameField({ teacher, value, onChange }: Props) {
   const T = t.familyAuth.teacherUsername;
   const hasLogin = !!teacher.profile_id;

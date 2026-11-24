@@ -15,11 +15,7 @@ import { SourceSwitch } from './import/SourceSwitch';
 
 const n = t.numbers;
 
-/**
- * «الأرقام» (docs/23 §3 phase 3): each WhatsApp number as a card, the import of today's setup, the
- * parity between the two and the source switch. Sends stay on «التكاملات» until the switch flips.
- * Without numbers.manage everything is shown read-only.
- */
+/** docs/23 §3 phase 3: sends stay on integrations until the source switch flips. */
 export function NumbersPanel({ query, onSaved }: { query: string; onSaved: (message: string) => void }) {
   const { can } = usePermissions();
   const manage = can('numbers.manage');

@@ -9,9 +9,6 @@ import { LINK_ROUTES, type LinkSection } from '@/features/platform/short-links/s
 import { RoleTag } from '@/features/platform/short-links/shared/PersonLine';
 import { useLinkDates } from '@/features/platform/short-links/shared/use-link-dates';
 
-// The list's cells (board LinkXWebList): the title opening the link, the short path with «نسخ»
-// and the host it opens, the expiry with its countdown, and the owner with their role.
-
 const L = t.shortLinks.list;
 const TITLE_LINK =
   'inline-flex max-w-[260px] items-center gap-1 font-semibold whitespace-normal text-ink ' +
@@ -48,7 +45,7 @@ export function ShortUrlCell({ row }: RowProps) {
   );
 }
 
-/** The date in bold, then the countdown, «يُحذف …» once ended, or «أُوقف · يُحذف …». */
+/** Countdown, then the deletion date once ended or revoked. */
 export function ExpiryCell({ row }: RowProps) {
   const dates = useLinkDates();
   const { parts, text } = dates.expiry(row);
@@ -61,7 +58,7 @@ export function ExpiryCell({ row }: RowProps) {
   );
 }
 
-/** «7 من 12»; on a phone's stacked card «الزيارات 7 من 12» (no column header there). */
+/** Phone cards add a short label since there is no column header there. */
 export function UsageCell({ row }: RowProps) {
   return (
     <span className="tabular-nums">

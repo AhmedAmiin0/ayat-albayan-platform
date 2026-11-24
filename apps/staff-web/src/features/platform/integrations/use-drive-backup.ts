@@ -40,7 +40,6 @@ const viewSchema = z.object({
 });
 export type DriveBackupView = z.infer<typeof viewSchema>;
 
-/** `1.4 غيغابايت` over a gigabyte, whole megabytes below. */
 export function bytesText(bytes: number): string {
   if (bytes >= GB) return b.sizeGb.replace('{n}', (bytes / GB).toFixed(1));
   return b.sizeMb.replace('{n}', String(Math.max(0, Math.round(bytes / MB))));
@@ -70,7 +69,6 @@ function quotaLine(q: DriveBackupView['quota']): string | null {
   return b.quota.replace('{free}', bytesText(free)).replace('{limit}', bytesText(limit));
 }
 
-/** «لم يُنسخ … ملفًا …» and each named object (size, why); empty when nothing was skipped. */
 export function skippedLines(v: DriveBackupView): string[] {
   const { count, items } = v.skipped;
   if (count === 0) return [];
@@ -83,7 +81,7 @@ export function skippedLines(v: DriveBackupView): string[] {
   return [counted(b.skipped, count), ...named];
 }
 
-/** «ينتظر … توفّر المساحة في Google Drive», or null when nothing waits. */
+/** Null when nothing waits. */
 export const waitingLine = (v: DriveBackupView): string | null =>
   v.waiting > 0 ? counted(b.waiting, v.waiting) : null;
 
@@ -98,10 +96,7 @@ export function backupLines(v: DriveBackupView): string[] {
 /** The API's gate on GET /settings/integrations/storage-backup (backup-status.controller.ts). */
 const READ_PERMISSION = 'settings.write';
 
-/**
- * The status under «التخزين»; read once when the page opens, and only by a user the API lets read
- * it (`allowed`): no request, and no false load error, for the others. A 4xx is not retried.
- */
+/** Only requested for permitted users, avoiding a false load error; a 4xx is not retried. */
 export function useDriveBackup() {
   const allowed = usePermissions().can(READ_PERMISSION);
   const query = useQuery({
