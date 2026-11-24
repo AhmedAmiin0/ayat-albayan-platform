@@ -38,7 +38,9 @@ Nothing in this plan runs on the owner's PC. GitHub Actions and cloud routines r
 
 - api is CommonJS, so `verbatimModuleSyntax` would turn every ESM import into TS1286/TS1287. Nest DI uses constructor
   parameter properties, which `erasableSyntaxOnly` forbids. `consistent-type-imports` (§3) covers api instead.
-- mobile keeps `extends: expo/tsconfig.base` (it carries `customConditions: react-native` and `module: preserve`) and lists the flags itself.
+- every tsconfig extends the root `tsconfig.base.json` (the former `base.json`); web and api add the React and Nest
+  options themselves. Mobile copies the options `expo/tsconfig.base` sets apart from it (`customConditions:
+  react-native`, `module: preserve`, …); an Expo upgrade re-checks them.
 - tools/scripts drops its own copy of the flags and extends `base.json`. Its `include` still covers only `move-module`.
   The other CI scripts are `.mjs` and get lint without types (§3).
 - tools/\* and e2e run under Node type stripping. There, a type imported without `import type` fails at runtime with

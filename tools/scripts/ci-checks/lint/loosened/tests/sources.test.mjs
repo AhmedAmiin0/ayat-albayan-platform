@@ -12,7 +12,7 @@ test('sourcePaths: the shared config, every package config and the root lint fil
     'packages/config/oxlint/testing/lint-code.js',
     'packages/config/type-imports/rule.js',
     'packages/config/type-imports/rule.test.js',
-    'packages/config/tsconfig/base.json',
+    'tsconfig.base.json',
     'apps/api/lint.blocks.mjs',
     'apps/api/src/a.js',
     '.oxlintrc.json',
