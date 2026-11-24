@@ -24,7 +24,7 @@ interface ChildBodyProps {
   kind: PortalKind;
 }
 
-/** Each tab's panel; «التسجيلات» and «المحادثة» have none: each opens its own screen. */
+/** Recordings and chat have no panel: each opens its own screen. */
 const PANEL: Record<ChildTab, (p: ChildBodyProps & { own: boolean }) => ReactNode> = {
   upcoming: (p) => <UpcomingPanel student={p.student} own={p.own} />,
   attended: (p) => <HistoryPanel student={p.student} status="attended" />,
@@ -34,13 +34,7 @@ const PANEL: Record<ChildTab, (p: ChildBodyProps & { own: boolean }) => ReactNod
   chat: () => null,
 };
 
-/**
- * One child's page body (docs/50 §6, canvas Child): «القادمة» · «حضرها» · «غاب عنها» · «الباقة»
- * (the last only for a viewer who sees money: @ab/client-core childTabs). The panel animates in.
- * «المحادثة» only while settings.family_chat_enabled is on (off while the settings load or fail),
- * for every login, a child's own too (owner 2026-11-16), as the last pill with its unread count;
- * the pills fit one row (canvas ChatXFamilyEntry). «التسجيلات» opens the child's recordings.
- */
+/** Package tab only for a viewer who sees money; chat only while family_chat_enabled is on. */
 export function ChildBody({ student, kind }: ChildBodyProps) {
   const chatOn = familyChatOn(usePublicConfig());
   const tabs = childTabs({ kind, student, chatOn });
@@ -52,7 +46,6 @@ export function ChildBody({ student, kind }: ChildBodyProps) {
     setTab(next);
     motion.play();
   };
-  // A pill swaps the panel; «التسجيلات» and «المحادثة» push their screen above the child's page.
   const pick: Record<ChildTab, (next: ChildTab) => void> = {
     upcoming: show,
     attended: show,

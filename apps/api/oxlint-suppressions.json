@@ -13839,7 +13839,7 @@
   },
   "src/modules/teaching/scheduling/conflicts/busy.repo.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/teaching/scheduling/conflicts/conflict-checker.ts": {
@@ -13884,7 +13884,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/forbidden-imports": {
       "count": 2
@@ -14067,9 +14067,6 @@
     "typescript/consistent-type-imports": {
       "count": 3
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/zod-inputs": {
       "count": 5
     }
@@ -14085,9 +14082,6 @@
   "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
     "typescript/consistent-type-imports": {
       "count": 3
-    },
-    "stylistic/max-len": {
-      "count": 1
     },
     "ab/zod-inputs": {
       "count": 4
@@ -14189,7 +14183,7 @@
       "count": 4
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/zod-inputs": {
       "count": 4
