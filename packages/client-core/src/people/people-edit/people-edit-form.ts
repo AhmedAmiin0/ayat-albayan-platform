@@ -8,8 +8,7 @@ import {
 } from '@ab/shared';
 import type { z } from 'zod';
 
-// «تعديل البيانات» on web and mobile: every field a string while typing; on save only the changed
-// fields go, parsed by the API's own schemas (blank → null, the age a number, the phone E.164).
+// Strings while typing; on save only changed fields go, parsed by the API's own schemas.
 
 export type StudentForm = Record<
   | 'name'
@@ -98,7 +97,6 @@ export const familyPatchOf = (
   current: FamilyForm,
 ): PatchResult<PeopleGuardianPatch> => patchOf(peopleGuardianPatchSchema, { initial, current });
 
-/** «ولي أمر جديد» of «ربط بولي أمر آخر»: name, phone and zone, as the API parses them. */
 export type NewFamilyForm = Record<'name' | 'phone_e164' | 'tz', string>;
 
 export function newFamilyOf(form: NewFamilyForm): PatchResult<z.output<typeof newFamilySchema>> {

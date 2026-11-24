@@ -4,7 +4,6 @@ import { AppText } from '../../ui/primitives/AppText';
 import { useSmallText } from '../../chat-ui/bubble/use-small-text';
 import { BubbleText } from './BubbleText';
 
-/** The words: «تم حذف هذه الرسالة» once deleted, else the text or a file's caption (if any). */
 export function BubbleContent({ message: m }: { message: ChannelMessageView }) {
   const small = useSmallText('ink3');
   if (m.deleted) {

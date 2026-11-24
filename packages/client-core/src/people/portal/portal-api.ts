@@ -32,7 +32,7 @@ const student = (id: string) => `${ROOT}/students/${enc(id)}`;
 /** Every portal query sits under this key: one invalidation refreshes the whole portal. */
 export const PORTAL_KEY = pathKey(ROOT);
 
-/** useInfiniteQuery's options for «حضرها» / «غاب عنها» (newest first, cursor = last starts_at). */
+/** Newest first; the cursor is the last starts_at. */
 export interface PortalHistoryPages {
   queryKey: unknown[];
   queryFn: (ctx: { pageParam: string | undefined }) => Promise<PortalHistory>;
@@ -88,7 +88,7 @@ export function portalQueries(client: ApiClient): PortalQueries {
   return {
     /** GET /portal/me: the login's kind and students. */
     portalHomeQuery: read(`${ROOT}/me`, portalHomeSchema),
-    /** The next 14 days + «ما المطلوب» + this month's counts, re-read every 30 seconds. */
+    /** The next 14 days plus prep and this month's counts, re-read every 30 seconds. */
     portalLessonsQuery: (studentId: string) => ({
       ...read(`${student(studentId)}/lessons`, portalLessonsSchema),
       refetchInterval: PORTAL_REFRESH_MS,
@@ -103,7 +103,7 @@ export function portalQueries(client: ApiClient): PortalQueries {
       ...read(`/report-pages/by-report/${enc(reportId)}`, reportPageViewSchema),
       retry: false as const,
     }),
-    /** «المحادثة»'s badge: the student chat's unread count, re-read with the lessons. */
+    /** The chat badge's unread count, re-read with the lessons. */
     portalUnreadQuery: (studentId: string) => ({
       ...read(portalUnreadPath(studentId), channelUnreadSchema),
       refetchInterval: PORTAL_REFRESH_MS,

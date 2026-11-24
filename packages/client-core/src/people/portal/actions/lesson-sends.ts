@@ -10,9 +10,7 @@ import type { ApiClient } from '../../../core/http/index.js';
 import { pathKey } from '../../../core/keys/index.js';
 import type { PortalRead } from '../portal-api.js';
 
-// «خيارات الحلقة», shared by the family app and the web portal: the family's
-// own confirm, excuse, «اطلب موعدًا آخر» with its free times, and «سحب الطلب». Every answer is
-// parsed (rule 12); after a write the caller refreshes PORTAL_KEY.
+// Shared by family app and web portal; answers are parsed (rule 12), then PORTAL_KEY refreshes.
 
 export interface FamilyLessonInput {
   studentId: string;

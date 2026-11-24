@@ -1,9 +1,7 @@
 import { RESEND_SECONDS } from '../../core/auth/index.js';
 import { ApiError, apiErrorCode } from '../../core/http/index.js';
 
-// The gate's phone and code steps (boards LinkXGatePhoneError, LinkXGateCodeError): what a failed
-// call says (the shortLinks.gate.errors keys) and when «أعد إرسال الرمز» comes back (the family
-// sign-in's RESEND_SECONDS).
+// Resend timing reuses the family sign-in's RESEND_SECONDS.
 
 export const GATE_PHONE_ERRORS = [
   'invalid_phone',
@@ -35,7 +33,6 @@ const CODE_BY_STATUS: Readonly<Record<number, GateCodeError>> = {
   429: 'too_many_requests',
 };
 
-/** POST …/otp/start failed: the shortLinks.gate.errors key («اكتب رقم واتساب صحيحًا…»). */
 export function phoneStepError(e: unknown): GatePhoneError {
   const byCode = apiErrorCode(e) === 'codes_unavailable' ? 'codes_unavailable' : undefined;
   return byCode ?? PHONE_BY_STATUS[statusOf(e)] ?? 'generic';
@@ -46,11 +43,7 @@ export function codeStepError(e: unknown): GateCodeError {
   return CODE_BY_STATUS[statusOf(e)] ?? 'generic';
 }
 
-/**
- * Whole seconds before the code can be sent again (0 = «أعد إرسال الرمز» shows now). Whether the
- * button is on is the family sign-in's own canResend({ left, busy }) (people/family-auth), not a
- * second helper of the same name (the two clash in client-core's index).
- */
+/** 0 means resend shows now; enabling uses the family sign-in's canResend to avoid a name clash. */
 export function resendSecondsLeft(sentAt: number, now: number): number {
   const left = Math.ceil(RESEND_SECONDS - (now - sentAt) / 1000);
   return Math.min(RESEND_SECONDS, Math.max(0, left));

@@ -1,6 +1,4 @@
-// One player sounds at a time (recordings spec §6): a player that starts takes the stage and the
-// one that played before it is stopped; the recordings list reads who plays to mark its row
-// («قيد التشغيل»). An external store (useSyncExternalStore), one per page.
+// One player sounds at a time (recordings spec §6); starting one stops the previous.
 
 export interface NowPlaying {
   subscribe: (listener: () => void) => () => void;

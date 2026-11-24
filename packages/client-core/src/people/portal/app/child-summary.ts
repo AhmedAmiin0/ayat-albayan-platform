@@ -9,8 +9,7 @@ import { isAhead } from '../lesson-window.js';
 import { monthsOf } from '../history.js';
 import { newReportCount } from '../report-seen.js';
 
-// «اختر الطالب» (canvas Children) and «التقارير»: a child's card in numbers, from the
-// reads the app already holds (each may still be loading: undefined), and the reports by month.
+// Each read may still be loading (undefined).
 
 export interface ChildSummary {
   /** Lessons still ahead in the next 14 days. */
@@ -21,7 +20,7 @@ export interface ChildSummary {
   remaining: number | null;
   /** The newest sent report. */
   lastReport: PortalReport | null;
-  /** Sent reports not opened on this device («جديد»). */
+  /** Sent reports not yet opened on this device. */
   newReports: number;
 }
 
@@ -58,7 +57,7 @@ export function childSummary(input: ChildSummaryInput, now: Date): ChildSummary 
 export const reportAt = (r: Pick<PortalReport, 'lesson_starts_at' | 'sent_at'>): string =>
   r.lesson_starts_at ?? r.sent_at;
 
-/** The student's «التقارير»: newest first, under their month on the family's clock. */
+/** Newest first, grouped by month on the family's clock. */
 export const reportMonths = (
   reports: readonly PortalReport[],
   tz: string,

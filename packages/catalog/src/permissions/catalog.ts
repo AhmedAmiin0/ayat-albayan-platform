@@ -78,10 +78,7 @@ export function permissionGroups(): PermissionGroup[] {
   }));
 }
 
-/**
- * The built-in roles whose grants the admin may switch off (or on) and restore to defaultGrantsOf with
- * «استعادة الافتراضي». The system admin stays fixed; self.* keys are never grants.
- */
+/** Built-in roles whose grants the admin may change and restore; the system admin stays fixed. */
 export const EDITABLE_SYSTEM_ROLES = ['teacher', 'assistant', 'sales'] as const satisfies readonly UserRole[];
 export type EditableSystemRole = (typeof EDITABLE_SYSTEM_ROLES)[number];
 

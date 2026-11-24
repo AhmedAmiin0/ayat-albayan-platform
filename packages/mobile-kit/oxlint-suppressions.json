@@ -79,7 +79,7 @@
   },
   "src/auth/use-permissions.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     },
     "ab/no-untyped-api-calls": {
       "count": 1

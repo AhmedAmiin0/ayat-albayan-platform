@@ -1,7 +1,6 @@
 import type { PortalLessons } from '@ab/shared';
 
-// «ما المطلوب للحلقة القادمة» (docs/50 §2): the newest sent report's homework and next plan. An
-// empty text is hidden, and with both empty there is no card at all.
+// docs/50 §2: from the newest sent report; with both texts empty there is no card.
 
 export interface PrepareCard {
   homework: string | null;

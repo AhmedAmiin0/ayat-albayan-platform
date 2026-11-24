@@ -85,7 +85,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/auth/verify-role.ts": {

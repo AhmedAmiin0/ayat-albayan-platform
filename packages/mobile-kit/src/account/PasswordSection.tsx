@@ -6,7 +6,7 @@ import { usePasswordForm } from './use-password-form';
 
 const hint = t.account.password.hint.replace('{n}', String(DEFAULT_PASSWORD_MIN));
 
-/** «كلمة السر» (R-ACC-04): current, new, confirm. The session stays signed in. */
+/** R-ACC-04: the session stays signed in after a password change. */
 export function PasswordSection() {
   const { values, setCurrent, setNext, setConfirm, action, save, empty } = usePasswordForm();
   return (

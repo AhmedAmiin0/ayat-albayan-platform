@@ -5,7 +5,6 @@ import { isPending } from './pending.js';
 
 export interface MenuOffers {
   reply: boolean;
-  /** «معلومات الرسالة»: who read my message. */
   reads: boolean;
   edit: boolean;
   delete: boolean;

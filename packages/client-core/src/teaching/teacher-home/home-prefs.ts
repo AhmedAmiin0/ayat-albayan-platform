@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-// «تخصيص» on the teacher's «اليوم» (owner 2026-11-14): which alerts show, the ended lessons, the
-// hero and the row density. Saved per device (web localStorage, mobile AsyncStorage); a server
-// copy is a later option. Anything unreadable falls back field by field to the defaults.
+// Saved per device; anything unreadable falls back field by field to the defaults.
 
 export const ALERT_KINDS = ['soon', 'confirm', 'changed', 'report', 'bell'] as const;
 export type AlertKind = (typeof ALERT_KINDS)[number];

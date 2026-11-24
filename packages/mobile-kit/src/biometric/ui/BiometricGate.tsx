@@ -25,11 +25,7 @@ function LockLayer({ kind, lock }: { kind: BioKind | null; lock: LockState }) {
   return showsLock(lock) ? <LockScreen kind={kind} failed={lock.failed} /> : <LockCover />;
 }
 
-/**
- * «الدخول بالبصمة» (owner 2026-11-15) around a signed-in app: the lock or its cover lies over the
- * tree (hidden from screen readers meanwhile), and the one-time offer after a fresh sign-in. With
- * the switch off (or no biometrics, or an APK without the module) it renders the app alone.
- */
+/** The lock covers the tree, hidden from screen readers; without the switch it renders the app. */
 export function BiometricGate({ signedIn, children }: BiometricGateProps) {
   const { lock, kind, offer } = useBioLock();
   const covering = signedIn && isCovering(lock);

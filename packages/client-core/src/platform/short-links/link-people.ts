@@ -6,16 +6,12 @@ import {
   type ShortLinkVisitor,
 } from '@ab/shared';
 
-// Who a link's users and visitors are (boards LinkXWebDetail, LinkXStaffDetail): a system user
-// by name and role (activity.roles), a verified phone with the person it matched («يطابق: …»)
-// or «رقم غير مسجّل», and how they came in («دخل بحسابه» / «تأكّد عبر واتساب»).
-
 export type RoleKey = ActivityRole | 'unknown';
 
 const ROLES = new Set<string>(ACTIVITY_ROLES);
 const isRole = (role: string): role is ActivityRole => ROLES.has(role);
 
-/** activity.roles.<key> of a profile's role («ولي الأمر», «المبيعات»…); unknown: «دون دور». */
+/** An unknown role maps to `unknown`. */
 export const roleKey = (role: string): RoleKey => (isRole(role) ? role : 'unknown');
 
 export interface PersonLook {
@@ -24,9 +20,8 @@ export interface PersonLook {
   role: RoleKey | null;
   /** The number to show (E.164), when the row is a phone. */
   phone: string | null;
-  /** A phone that matched a known person (shows «يطابق: <name>»). */
   matched: boolean;
-  /** «رقم غير مسجّل»: a phone with no person. */
+  /** A phone with no person. */
   unregistered: boolean;
 }
 
@@ -78,7 +73,7 @@ const samePerson = (user: ShortLinkUser, v: ShortLinkVisitor): boolean =>
 const samePhone = (user: ShortLinkUser, v: ShortLinkVisitor): boolean =>
   user.phone !== null && v.phone === user.phone;
 
-/** The listed user's visit («فتح الرابط» column), or null: «لم يفتحه». */
+/** Null when the listed user never opened it. */
 export function visitOf(
   user: ShortLinkUser,
   visitors: readonly ShortLinkVisitor[],
@@ -86,7 +81,6 @@ export function visitOf(
   return visitors.find((v) => samePerson(user, v) || samePhone(user, v)) ?? null;
 }
 
-/** «5 لم يفتحوا الرابط بعد». */
 export const notOpenedCount = (link: Pick<ShortLinkDetail, 'userList' | 'visitorList'>): number =>
   link.userList.filter((u) => visitOf(u, link.visitorList) === null).length;
 

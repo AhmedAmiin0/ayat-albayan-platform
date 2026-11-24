@@ -11,7 +11,7 @@ export function authErrorText(error: unknown, fallback: string): string {
   return t.familyAuth.errors[code];
 }
 
-/** A sign-in refusal: too many tries says so, anything else is «بيانات الدخول غير صحيحة». */
+/** Too many tries says so; anything else is the generic wrong-credentials text. */
 export function loginErrorText(error: unknown): string {
   return signInError(error) === 'too_many_requests' ? t.familyAuth.errors.too_many_requests : t.auth.invalidCredentials;
 }

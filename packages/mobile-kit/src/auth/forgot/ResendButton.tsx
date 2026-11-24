@@ -9,7 +9,7 @@ interface ResendButtonProps {
   onPress: () => void;
 }
 
-/** «أعد إرسال الرمز», disabled with the seconds left while the timer runs (client-core rules). */
+/** Disabled with the seconds left while the timer runs (client-core rules). */
 export function ResendButton({ resendIn, busy, onPress }: ResendButtonProps) {
   return (
     <Button

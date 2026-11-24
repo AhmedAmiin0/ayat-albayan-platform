@@ -43,11 +43,9 @@ function Identifier({ label, value, onChange, note }: IdentifierProps) {
 }
 
 interface PasswordSignInProps {
-  /** The identifier's label: «البريد الإلكتروني…» (staff) or «كود الطالب» (family app). */
   label: string;
   /** A quiet line under the identifier. */
   hint?: string;
-  /** Under the button: other ways in, «نسيت كلمة السر؟». */
   children?: ReactNode;
   /** While typing: why the identifier cannot be right (shown; the button waits), or null. */
   check?: Check;

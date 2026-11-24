@@ -16,12 +16,7 @@ interface ChannelThreadProps {
   frame?: ThreadFrame;
 }
 
-/**
- * One student's channel (docs/31 §2), embeddable (no Screen: a sheet in the lesson room mounts it
- * too): the messages, live over the socket, polled as the fallback. A participant writes, answers
- * and marks read; before the subscription and the teacher's assignment only the closed card. A
- * monitor gets «للاطلاع فقط» and no composer.
- */
+/** docs/31 §2: live over the socket, polled as fallback; monitors are read-only. */
 export function ChannelThread({ refs, media, frame }: ChannelThreadProps) {
   const { color } = useTheme();
   const { query, mode, first } = useChannelThread(refs);
