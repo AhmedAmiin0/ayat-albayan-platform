@@ -2834,7 +2834,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 13
+      "count": 12
     },
     "ab/no-restricted-syntax": {
       "count": 4
@@ -2862,7 +2862,7 @@
   },
   "src/inbox/messages/components/MessageList/tests/older.test.tsx": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/inbox/messages/components/MessageList/tests/quote.test.tsx": {
@@ -2979,9 +2979,6 @@
   "src/inbox/messages/hooks/bubble-offers/bubble-offers.ts": {
     "complexity": {
       "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/inbox/messages/hooks/message-text/message-text.ts": {
@@ -2989,7 +2986,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -3280,7 +3277,7 @@
   },
   "src/inbox/messages/resend/ResendSheet/ResendSheet.tsx": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/inbox/messages/resend/ResendSheet/tests/ResendSheet.test.tsx": {
@@ -3537,7 +3534,7 @@
   },
   "src/inbox/saved-replies/hooks/use-saved-reply/use-saved-reply.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/inbox/saved-replies/lib/reply-error.ts": {
@@ -3547,7 +3544,7 @@
   },
   "src/inbox/saved-replies/lib/reply-text/reply-text.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/saved-replies/quick-list/FillPreview.tsx": {
@@ -3611,7 +3608,7 @@
   },
   "src/inbox/screens/InboxScreen/InboxScreen.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/inbox/screens/InboxScreen/tests/threads.test.tsx": {
@@ -3641,7 +3638,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     },
     "typescript/no-useless-default-assignment": {
       "count": 1
@@ -3652,12 +3649,12 @@
   },
   "src/inbox/screens/ThreadScreen/tests/actions.test.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/inbox/screens/ThreadScreen/tests/forward.test.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/screens/ThreadScreen/tests/keyboard.test.tsx": {
@@ -3670,7 +3667,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/screens/ThreadScreen/tests/read.test.tsx": {
@@ -3683,7 +3680,7 @@
   },
   "src/inbox/screens/ThreadScreen/tests/reply.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/screens/ThreadScreen/tests/send.test.tsx": {
@@ -3785,7 +3782,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     },
     "ab/no-shape-checks": {
       "count": 3
@@ -3858,9 +3855,6 @@
   "src/inbox/thread/calls/entries/CallEntry/CallEntry.tsx": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/inbox/thread/calls/entries/CallEntry/tests/CallEntry.test.tsx": {
@@ -4153,14 +4147,9 @@
       "count": 11
     }
   },
-  "src/inbox/thread/components/ThreadHeaderActions/tests/link.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/inbox/thread/components/ThreadHeaderActions/tests/register.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/thread/components/ThreadMenu.tsx": {
