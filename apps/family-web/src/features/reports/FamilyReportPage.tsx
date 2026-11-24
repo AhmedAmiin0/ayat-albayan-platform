@@ -3,11 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ReportView } from '@ab/web-kit/portal/report/ReportView';
 import type { ReportSearch } from './report-search';
 
-/**
- * A sent report opened from a child's «حضرها», a student's «التقارير» or a bell row (docs/51 §6):
- * the parents' PDF content, the PDF and the visible recording. «رجوع» goes back, or home when
- * the report was the first page (a push, a pasted link): never out of the app.
- */
+/** docs/51 §6: back goes home when the report was the first page, never out of the app. */
 export function FamilyReportPage({ reportId, search }: { reportId: string; search: ReportSearch }) {
   const router = useRouter();
   const navigate = useNavigate();

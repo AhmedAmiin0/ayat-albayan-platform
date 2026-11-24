@@ -72,6 +72,11 @@ export class ProfileCourse {
     };
   }
 
+  /** 403 not_your_student before anything of another assistant's student is read (actorOf). */
+  assertStudent(studentId: string, user: AuthUser): Promise<void> {
+    return this.course.ownsStudent(studentId, actorOf(user));
+  }
+
   check(move: Move): Promise<CourseChangeCheck> {
     return this.guarded(move, (actor) => this.course.check(move.body, actor));
   }

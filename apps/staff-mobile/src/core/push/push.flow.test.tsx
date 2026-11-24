@@ -15,7 +15,7 @@ jest.mock('expo-constants', () => ({
 }));
 
 const TOKEN = 'ExponentPushToken[flow]';
-// The inbox has an unread thread: the tab's name carries its count («المحادثات، 1 غير مقروءة»).
+// The tab's accessible name carries the unread count.
 const inboxTab = new RegExp(`^${t.nav.conversations}`);
 const tap = (data: Record<string, unknown>) => ({ notification: { request: { content: { data } } } });
 

@@ -10,10 +10,7 @@ interface AgendaDayProps {
   guardian: boolean;
 }
 
-/**
- * A day of the agenda: «اليوم · الأحد 16 نوفمبر» (or the date) over its lessons. The strip scrolls
- * here (under the sticky header) and the ring flashes once (use-jump-to-day).
- */
+/** The strip scrolls here under the sticky header and the ring flashes once. */
 export function AgendaDay({ day, today, guardian }: AgendaDayProps) {
   const text = longDay(day.day);
   const id = dayId(day.day);

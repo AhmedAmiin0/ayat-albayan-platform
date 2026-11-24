@@ -13,16 +13,7 @@ interface BookTrialInput {
   choice?: StudentChoice;
 }
 
-/**
- * «احجز» (R-MOB-02, R-LEAD-06): POST /booking (a trial, or a paid package from the chat; a sales
- * registration posts the trial to /sales/booking, which credits the new student to her). One
- * clientRequestId per wizard (made when it mounts: the invoice uploads under it), re-sent on every
- * retry (a 409 wrote nothing; a lost reply replays to the first booking), so a double tap or a
- * retry books once (rule 8). Afterwards the lead shows
- * trial_booked / converted at once when the funnel allows it (as the API's leadTarget moves it; it
- * may leave a filtered inbox list), then the inbox lists refetch before the lead, since the lead
- * screen reads its lead out of them; the chats refetch too (the number is a guardian now).
- */
+/** One clientRequestId per wizard resent on retry, so a double tap books once (rule 8). */
 export function useBookTrial(requestId: string) {
   const client = useQueryClient();
   const path = bookingPath(useBookingMode());

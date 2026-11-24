@@ -7,7 +7,7 @@ type App = Awaited<ReturnType<typeof portalApp>>;
 const url = (id: string, query: string) => `/portal/students/${id}/history?${query}`;
 const NOW = '2026-10-27T08:00:00.000Z';
 
-// docs/50 §5 item 1: «حضرها» / «غاب عنها», newest first, a keyset page; same scope as /portal.
+// docs/50 §5 item 1: newest first, keyset; same scope as /portal.
 describe('GET /portal/students/:id/history', () => {
   let t: App;
   beforeAll(async () => {

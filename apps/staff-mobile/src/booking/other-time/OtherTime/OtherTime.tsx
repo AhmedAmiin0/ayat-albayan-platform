@@ -4,7 +4,7 @@ import { t, Button } from '@ab/mobile-kit';
 import type { OtherTimeProps } from './OtherTime.types';
 import { OtherTimeList } from '@/booking/other-time/OtherTimeList';
 
-/** «وقت آخر» under the free times: opens every start of the next two weeks (the server's). */
+/** Opens every start of the next two weeks, from the server. */
 export function OtherTime(props: OtherTimeProps) {
   const [open, setOpen] = useState(false);
   return (

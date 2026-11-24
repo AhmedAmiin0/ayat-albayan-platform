@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { SettingsSlice } from '@/common/settings/settings-slice';
 
-/** The admin's two sending switches: the kill switch (fail-closed) and «الرسائل التلقائية». */
+/** The kill switch is fail-closed. */
 const KEYS = ['messaging_enabled', 'auto_messages_enabled'] as const satisfies readonly SettingKey[];
 type WhatsappSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

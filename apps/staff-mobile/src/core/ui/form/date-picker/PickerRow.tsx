@@ -3,7 +3,6 @@ import { t, AppText, Chevron, shape, type, useTheme, ErrorLine, FormLabel } from
 
 interface PickerRowProps {
   label: string;
-  /** The shown value, or the placeholder («اختر الساعة») while empty. */
   text: string;
   empty: boolean;
   /** Spoken after the label: what a tap does. */

@@ -71,10 +71,7 @@ interface SendOptions {
   linkPreview: boolean;
 }
 
-/**
- * `linkPreview` on a text only. Never `delay` or `presence` (owner 2026-11-06: «dont make the
- * family see typing»): Evolution shows «يكتب…» to the recipient for the delay before sending.
- */
+/** Never delay or presence, since Evolution would show the family typing during the delay. */
 export function withOptions(send: EvolutionSend, opts: SendOptions): EvolutionSend {
   const preview = send.path === 'message/sendText' ? { linkPreview: opts.linkPreview } : {};
   return { path: send.path, body: { ...send.body, ...preview } };

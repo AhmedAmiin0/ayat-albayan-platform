@@ -16,7 +16,7 @@ import { teacherSearchFilter } from './teachers.mapper';
 import type { Page } from '@ab/shared';
 
 export type Teacher = Tables<'teachers'>;
-/** A row of GET /teachers: the teacher and her «مشترك / تجريبي» counts (R-TCH-03, owner 2026-10-12). */
+/** R-TCH-03. */
 type TeacherListRow = Omit<Teacher, 'avatar_path'> & TeacherStudentCounts & { avatar_url: string | null };
 
 /** The stored path never leaves the API: views carry a signed avatar_url instead. */
@@ -55,7 +55,7 @@ export class TeachersRepo {
     return { items, total: count ?? 0, page, pageSize };
   }
 
-  /** «مشترك» (active) and «تجريبي» (new, trial, pending_subscription; owner 2026-10-15) students per teacher of one page (≤ 100 ids: one `.in()`), past max_rows. */
+  /** One page is at most 100 ids, so one `.in()`, past max_rows. */
   async studentCounts(teacherIds: readonly string[]): Promise<Map<string, TeacherStudentCounts>> {
     if (teacherIds.length === 0) return new Map();
     const rows = await readAll((from, to) =>

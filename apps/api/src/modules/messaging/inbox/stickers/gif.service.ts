@@ -21,18 +21,12 @@ const GIF_MIME = 'video/mp4';
 export const gifPath = (s: { actorId: string; requestId: string }): string =>
   `out/${s.actorId}/${s.requestId}/gif.mp4`;
 
-/**
- * The GIF tab (owner 2026-11-01): GIPHY's search or trending GIFs, and a GIF sent as WhatsApp's
- * `video` (WhatsApp has no GIF type). Its mp4 is fetched by the API (the app only names GIPHY's
- * id), kept in wa-media/out/… and queued as this staff member's message with `{ type: 'gif' }`,
- * so the bubbles play it muted and looping. The key is read per call («التكاملات» › GIPHY):
- * without it the list says so (`configured: false`) and a send is 503 giphy_not_configured.
- */
+/** WhatsApp has no GIF type, so a GIF goes as muted looping video; 503 without a key. */
 @Injectable()
 export class GifService {
   /** Test seam: GIPHY's transport (unset = the http client's global fetch). */
   fetch?: FetchLike;
-  /** GIPHY_API_KEY of «التكاملات» (env the fallback); tests swap it. */
+  /** Read per call from integrations, env as fallback; tests swap it. */
   key = (): string | undefined => loadEnv().GIPHY_API_KEY;
 
   constructor(

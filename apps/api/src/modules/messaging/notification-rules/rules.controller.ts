@@ -7,12 +7,7 @@ import { CLIENT_HEADER, parseClientTag, UNTAGGED } from '@/common/telemetry/clie
 import { RulesService } from './rules.service';
 import { RulesWriter } from './store/rules.writer';
 
-/**
- * «ماذا يُرسل ومتى» (docs/23 §3 phases 1 and 4). GET for whoever may read the settings page
- * (settings.read): the frozen v1 shape without X-AB-Client, v2 with it. PATCH a row's rule
- * (notifications.manage): 404 unknown key, 422 invalid / locked / not_editable / unknown_number,
- * 428 confirmation_required for an essential row's OFF; answers the row in the v2 shape.
- */
+/** docs/23 §3: v1 shape without X-AB-Client, v2 with it; 428 before an essential row's off. */
 @ApiTags('notifications')
 @ApiBearerAuth()
 @Controller('admin/notifications')
@@ -35,7 +30,7 @@ export class RulesController {
   }
 }
 
-/** docs/26b m7: the same write under «التواصل» (PATCH /admin/communications/notifications/:key). */
+/** docs/26b m7: the same write under PATCH /admin/communications/notifications/:key. */
 @ApiTags('notifications')
 @ApiBearerAuth()
 @Controller('admin/communications/notifications')

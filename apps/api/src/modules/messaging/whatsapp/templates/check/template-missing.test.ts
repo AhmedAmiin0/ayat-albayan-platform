@@ -7,7 +7,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { absentOnCrm, absentOnWaba, TemplateMissing } from './template-missing';
 
-// «تحقق من القالب» (owner 2026-10-31): Meta #132001 through the CRM marks the template missing.
+// Meta #132001 through the CRM marks the template missing.
 
 const META_132001 = 'Meta API error: (#132001) Template name does not exist in the translation';
 const crm = (status: number, code: string, message?: string) => {

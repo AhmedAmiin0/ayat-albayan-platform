@@ -19,7 +19,7 @@ const WHITELIST = new Set([
   // Kapso's own conversation record (owner 2026-10-26): its Platform API, beside the Meta proxy.
   'modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts',
   'modules/messaging/whatsapp/lines/lines.check.ts',
-  // «افحص الخطوط»'s switch preflight (docs/19 «CRM → Meta»): one read-only GET of subscribed apps.
+  // The switch preflight (docs/19): one read-only GET of subscribed apps.
   'modules/messaging/whatsapp/lines/lines.check.meta.ts',
   // The script relay (docs/19): the line's current client, its allow-list, the script's own sends.
   'modules/messaging/whatsapp/relay/relay.line.ts',
@@ -34,7 +34,7 @@ const WHITELIST = new Set([
   'modules/messaging/whatsapp/templates/sync/template-verifier.ts',
   'modules/messaging/whatsapp/templates/sync/template-line-sync.ts',
   'modules/messaging/whatsapp/templates/sync/template-submit.ts',
-  // «تعديل» (owner 2026-11-14): Meta's edit and the PDF's sample, the admin's or author's act.
+  // Meta's edit and the PDF's sample, done by the admin or the author.
   'modules/messaging/whatsapp/templates/edit/template-edit.meta.ts',
   'modules/messaging/whatsapp/templates/edit/template-editor.ts',
   // One number's template sync (docs/23c decision 4): a read-only list from that number's own client.

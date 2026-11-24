@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CONFIG_QUERY_KEYS } from './query-keys';
 import { updateSettings } from './settings-api';

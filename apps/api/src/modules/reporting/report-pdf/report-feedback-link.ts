@@ -9,14 +9,7 @@ interface Pair {
   studentId: string;
 }
 
-/**
- * session_report_pdf's {{4}} (docs/19 «Report flow»): the family's «رأيك يهمّنا» page for this
- * lesson
- * and student (FamilyFeedbackLinks: live link, else a new one), shortened (one code per lesson and
- * student). Never blocks the report: without a secret, a guardian or a short link it is the long
- * page,
- * and without any link the academy's web address (logged).
- */
+/** docs/19: never blocks the report; falls back to the long page, then the web address (logged). */
 @Injectable()
 export class ReportFeedbackLink {
   private readonly log = new Logger(ReportFeedbackLink.name);

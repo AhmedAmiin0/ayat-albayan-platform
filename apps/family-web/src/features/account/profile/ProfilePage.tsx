@@ -9,7 +9,6 @@ import { ProfileDetails } from './ProfileDetails';
 import { ProfileHero } from './ProfileHero';
 import { useOwnProfile } from './use-own-profile';
 
-/** The hero and «بياناتي», then a guardian's children beside them (a student has none). */
 function ProfileBody({ profile, home }: { profile: OwnProfile; home: PortalHome }) {
   const own = ownStudent(home);
   return (
@@ -28,11 +27,7 @@ function ProfileBody({ profile, home }: { profile: OwnProfile; home: PortalHome 
   );
 }
 
-/**
- * «الملف الشخصي» (/profile, from the card on «حسابي», as on the family app): the photo or
- * initials, the name, the WhatsApp number, a real email, a student's code, a guardian's children.
- * Read-only: the academy changes the details («لتعديل بياناتك راسل الأكاديمية»).
- */
+/** Read-only: the academy changes the details. */
 export function ProfilePage({ home }: { home: PortalHome }) {
   const profile = useOwnProfile();
   return (

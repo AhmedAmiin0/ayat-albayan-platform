@@ -89,7 +89,7 @@ export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat')
     category,
     body_ar: body,
     footer_ar: comps.find((c) => c.type === 'FOOTER')?.text ?? null,
-    // Like tools/migrate's CRM import: the composers label them «المتغير n».
+    // Labelled as numbered variables like tools/migrate's CRM import.
     params: Array.from({ length: n }, (_, i) => `var_${i + 1}`),
     buttons,
     display: metaDisplay(comps),

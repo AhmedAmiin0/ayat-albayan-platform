@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';
 
-/** The finance block's currency; whether «يحتاج تأكيد» is counted at all. */
 const KEYS = ['reporting_currency', 'lesson_confirmation_required'] as const satisfies readonly SettingKey[];
 export type DashboardSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
