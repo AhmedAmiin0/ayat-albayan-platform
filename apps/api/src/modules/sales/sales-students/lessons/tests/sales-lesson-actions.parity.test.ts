@@ -7,9 +7,9 @@ import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { LessonCancelService, RescheduleOneService } from '@/modules/teaching/lessons';
-import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
-import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
-import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
+import type { SalesStudentRepo } from '@/modules/sales/sales-students/shared/sales-student.repo';
+import type { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
+import { type LessonServices, SalesLessonActions } from '@/modules/sales/sales-students/lessons/sales-lesson-actions.service';
 import { fakeCorrection } from '@/modules/teaching/lessons/auto-held/auto-held.fakes';
 
 // The owner's rule (docs/16 row 37): a salesperson's move / cancel has the admin's side effects exactly —

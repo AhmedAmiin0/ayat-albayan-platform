@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, forbidden, notFound } from '@/common/http/errors';
 import { SalesOwnershipRule, SalesRepo, type SalesOwnership } from '@/modules/sales/sales';
-import { type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
+import { type LessonFacts, SalesStudentRepo } from './sales-student.repo';
 
 interface StudentAccess {
   own: SalesOwnership;

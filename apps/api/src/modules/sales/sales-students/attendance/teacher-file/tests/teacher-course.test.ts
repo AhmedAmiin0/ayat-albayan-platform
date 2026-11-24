@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CoursePackageRow } from '@/modules/sales/sales-students/attendance/student-attendance.rows';
-import { courseOf, teacherCourseOf, toTeacherCourse, type CourseBalance } from './teacher-course';
+import { courseOf, teacherCourseOf, toTeacherCourse, type CourseBalance } from '@/modules/sales/sales-students/attendance/teacher-file/teacher-course';
 
 type Over = Partial<CoursePackageRow>;
 const pkg = (id: string, starts_on: string, over: Over = {}): CoursePackageRow => ({

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { toStudentFamily } from './sales-student-family.mapper';
-import type { DetailsStudentRow } from './sales-student.repo';
+import { toStudentFamily } from '@/modules/sales/sales-students/details/sales-student-family.mapper';
+import type { DetailsStudentRow } from '@/modules/sales/sales-students/shared/sales-student.repo';
 
 const sibling = { id: 's2', code: 'AB-0002', name: 'أخ', status: 'active' as const };
 const self = { id: 's1', code: 'AB-0001', name: 'طالب', status: 'trial' as const };

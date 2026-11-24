@@ -1,7 +1,7 @@
 import { COURSE_PAUSE_REASON } from '@ab/shared';
 import { AUTO_NO_SHOW_REASON } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
-import { familyReason } from './lesson-row-notes';
+import { familyReason } from '@/modules/sales/sales-students/attendance/lesson-row-notes';
 
 const AT = '2026-11-01T22:30:00Z';
 const lesson = (status: 'excused' | 'cancelled_by_admin' | 'no_show', over = {}) => ({

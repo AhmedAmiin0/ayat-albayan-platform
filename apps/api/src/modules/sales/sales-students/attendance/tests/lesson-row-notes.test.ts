@@ -1,7 +1,7 @@
 import { COURSE_PAUSE_REASON } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { moveOf, reasonShown, seriesEnded } from './lesson-row-notes';
-import { lessonRow, TEACHER_ROW } from './student-attendance.fakes';
+import { moveOf, reasonShown, seriesEnded } from '@/modules/sales/sales-students/attendance/lesson-row-notes';
+import { lessonRow, TEACHER_ROW } from '@/modules/sales/sales-students/attendance/student-attendance.fakes';
 
 const OTHER_TEACHER = '7e000000-0000-4000-8000-000000000002';
 /** 2 Nov 2026 01:30 in Riyadh, still 1 Nov in UTC. */

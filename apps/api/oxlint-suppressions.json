@@ -10240,7 +10240,7 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-students/attendance/student-attendance.mapper.test.ts": {
+  "src/modules/sales/sales-students/attendance/tests/student-attendance.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -10279,12 +10279,12 @@
       "count": 3
     }
   },
-  "src/modules/sales/sales-students/details/sales-student.http.test.ts": {
+  "src/modules/sales/sales-students/details/tests/sales-student.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/details/sales-student.mapper.test.ts": {
+  "src/modules/sales/sales-students/details/tests/sales-student.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10300,7 +10300,7 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-students/details/sales-student.others.http.test.ts": {
+  "src/modules/sales/sales-students/details/tests/sales-student.others.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -10313,7 +10313,7 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/details/sales-student.repo.ts": {
+  "src/modules/sales/sales-students/shared/sales-student.repo.ts": {
     "typescript/consistent-type-imports": {
       "count": 1
     },
@@ -10337,12 +10337,12 @@
       "count": 5
     }
   },
-  "src/modules/sales/sales-students/lessons/sales-lesson-actions.http.test.ts": {
+  "src/modules/sales/sales-students/lessons/tests/sales-lesson-actions.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/lessons/sales-lesson-actions.parity.test.ts": {
+  "src/modules/sales/sales-students/lessons/tests/sales-lesson-actions.parity.test.ts": {
     "complexity": {
       "count": 1
     },
@@ -10364,12 +10364,12 @@
       "count": 3
     }
   },
-  "src/modules/sales/sales-students/lessons/sales-lesson-confirm.service.test.ts": {
+  "src/modules/sales/sales-students/lessons/tests/sales-lesson-confirm.service.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
   },
-  "src/modules/sales/sales-students/sales-student-scope.ts": {
+  "src/modules/sales/sales-students/shared/sales-student-scope.ts": {
     "typescript/consistent-type-imports": {
       "count": 2
     }
@@ -10377,11 +10377,6 @@
   "src/modules/sales/sales-students/sales-students.fakes.ts": {
     "stylistic/max-len": {
       "count": 6
-    }
-  },
-  "src/modules/sales/sales-students/sales-students.module.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/modules/sales/sales-students/sales-students.schedule.fakes.ts": {
@@ -10405,12 +10400,12 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.http.test.ts": {
+  "src/modules/sales/sales-students/teachers/tests/sales-teacher-overview.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.mapper.test.ts": {
+  "src/modules/sales/sales-students/teachers/tests/sales-teacher-overview.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }

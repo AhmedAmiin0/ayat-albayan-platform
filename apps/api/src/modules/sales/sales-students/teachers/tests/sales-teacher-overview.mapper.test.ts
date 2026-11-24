@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { NOW, teacherLesson, teacherLessons, teacherRule } from './sales-teacher-overview.fakes';
-import { overviewWindow, toTeacherOverview } from './sales-teacher-overview.mapper';
+import { NOW, teacherLesson, teacherLessons, teacherRule } from '@/modules/sales/sales-students/teachers/sales-teacher-overview.fakes';
+import { overviewWindow, toTeacherOverview } from '@/modules/sales/sales-students/teachers/sales-teacher-overview.mapper';
 
 describe('toTeacherOverview', () => {
   it('weekly: one row per weekday in Riyadh (19:00 Cairo = 20:00 Riyadh) with names and codes; a trial rule left out', () => {

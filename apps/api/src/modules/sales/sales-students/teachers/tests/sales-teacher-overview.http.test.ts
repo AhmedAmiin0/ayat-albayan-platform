@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
-import { NOW, TEACHER } from './sales-teacher-overview.fakes';
+import { NOW, TEACHER } from '@/modules/sales/sales-students/teachers/sales-teacher-overview.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const SECRET = /price|rate|payout|balance|amount|meeting|link|secret|290/i;

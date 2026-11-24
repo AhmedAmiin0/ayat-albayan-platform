@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { StudentAttendanceRepo } from './student-attendance.repo';
+import { StudentAttendanceRepo } from '@/modules/sales/sales-students/attendance/student-attendance.repo';
 
 const SECRET = /meeting|link|notes|price|amount|subscription|\*/;
 

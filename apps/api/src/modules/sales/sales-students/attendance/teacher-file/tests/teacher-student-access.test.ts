@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { TeacherMeRepo } from '@/modules/teaching/lessons';
 import type { StudentAttendanceRepo } from '@/modules/sales/sales-students/attendance/student-attendance.repo';
-import { TeacherStudentAccess } from './teacher-student-access';
+import { TeacherStudentAccess } from '@/modules/sales/sales-students/attendance/teacher-file/teacher-student-access';
 
 const NOW = new Date('2026-10-28T10:00:00Z');
 const ME = { id: 'tr1', tz: 'Africa/Cairo', students: [{ id: 's-mine' }] };

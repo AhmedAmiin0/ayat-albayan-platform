@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { HELD_REPORT, NOW, octoberLessons } from './student-attendance.fakes';
-import { toAttendanceTable } from './student-attendance.mapper';
-import { rowReport } from './teacher-row-report';
+import { HELD_REPORT, NOW, octoberLessons } from '@/modules/sales/sales-students/attendance/student-attendance.fakes';
+import { toAttendanceTable } from '@/modules/sales/sales-students/attendance/student-attendance.mapper';
+import { rowReport } from '@/modules/sales/sales-students/attendance/teacher-row-report';
 
 const SUBMITTED = '2026-10-28T09:45:00Z';
 const report = { id: 'r', lesson_id: 'l', submitted_at: SUBMITTED, sent_at: null };

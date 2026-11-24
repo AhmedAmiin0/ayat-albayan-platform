@@ -4,9 +4,9 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import { LessonStatusService } from '@/modules/teaching/lessons';
 import { appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
-import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
-import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
-import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
+import type { SalesStudentRepo } from '@/modules/sales/sales-students/shared/sales-student.repo';
+import type { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
+import { type LessonServices, SalesLessonActions } from '@/modules/sales/sales-students/lessons/sales-lesson-actions.service';
 
 // Through the real LessonStatusService: any lesson, no teacher-only check, no message, idempotent.
 const SALES: AuthUser = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' };

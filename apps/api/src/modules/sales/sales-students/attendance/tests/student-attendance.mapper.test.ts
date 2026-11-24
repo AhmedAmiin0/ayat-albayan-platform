@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { attendanceWindow, monthsOf, toAttendanceTable, upcomingRows } from './student-attendance.mapper';
-import { HELD_REPORT, lessonRow, MOVED_TO, NOW, octoberLessons } from './student-attendance.fakes';
+import { attendanceWindow, monthsOf, toAttendanceTable, upcomingRows } from '@/modules/sales/sales-students/attendance/student-attendance.mapper';
+import { HELD_REPORT, lessonRow, MOVED_TO, NOW, octoberLessons } from '@/modules/sales/sales-students/attendance/student-attendance.fakes';
 
 const input = { month: '2026-10', reports: [HELD_REPORT], starts: [], mine: true };
 const table = () => toAttendanceTable({ ...input, lessons: octoberLessons() }, NOW);

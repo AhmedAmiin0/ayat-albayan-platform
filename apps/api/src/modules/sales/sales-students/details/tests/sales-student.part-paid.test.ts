@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { HistoryBundle } from '@/modules/sales/sales';
-import { toStudentDetails } from './sales-student.mapper';
-import type { DetailsStudentRow, PriceRow } from './sales-student.repo';
+import { toStudentDetails } from '@/modules/sales/sales-students/details/sales-student.mapper';
+import type { DetailsStudentRow, PriceRow } from '@/modules/sales/sales-students/shared/sales-student.repo';
 
 // Only with prices (self.sales_money).
 const student = {

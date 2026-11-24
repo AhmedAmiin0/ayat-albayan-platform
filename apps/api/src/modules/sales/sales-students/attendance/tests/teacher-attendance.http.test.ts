@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
-import { HELD_REPORT, lessonRow, NOW, STUDENT } from './student-attendance.fakes';
+import { HELD_REPORT, lessonRow, NOW, STUDENT } from '@/modules/sales/sales-students/attendance/student-attendance.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const TEACHER_ROW = '7e000000-0000-4000-8000-000000000001';
