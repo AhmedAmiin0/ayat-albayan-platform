@@ -10,18 +10,13 @@ export interface CourseChangeFormProps {
   view: CourseChangeView;
   /** After the change (the text to show or toast). */
   onDone: (message: string) => void;
-  /** «رجوع» from the first step to the caller's screen; absent = none. */
+  /** Back from the first step to the caller's screen; absent means none. */
   onBack?: (() => void) | undefined;
 }
 
 type Stage = 'pick' | 'review';
 
-/**
- * «تغيير أيام الحلقات» (owner 2026-10-18): new days and times for the course's lessons that have not
- * happened yet, the teacher, length and zone kept. The same form for the assistant (sales chat, her
- * own student, never over a clash) and the admin (a lesson's drawer, over a clash with a reason); the
- * booking mode picks the routes. One idempotency key per form (rule 8).
- */
+/** Future lessons only; one idempotency key per form (rule 8); the admin may override clashes. */
 export function CourseChangeForm({ view, onDone, onBack }: CourseChangeFormProps) {
   const [prefilled] = useState(() => currentPicks(view.course, new Date()));
   const [picks, setPicks] = useState(() => prefilled.map((p) => p.at));

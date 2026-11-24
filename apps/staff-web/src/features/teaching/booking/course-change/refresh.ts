@@ -4,10 +4,7 @@ import { refreshAfterSalesWrite } from '@/features/sales/sales-money/api';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { CHECK_KEY } from './api';
 
-/**
- * After «تغيير أيام الحلقات»: the calendar and slot grids, the change reads, and her sales reads. The
- * still-mounted series check is left alone: re-asked now it would answer no_change before «تم».
- */
+/** The mounted series check is left alone: re-asked now it would answer no_change. */
 export async function refreshAfterCourseChange(queryClient: QueryClient, mode: BookingMode): Promise<void> {
   await Promise.all([
     queryClient.invalidateQueries({ queryKey: LESSONS_KEY }),

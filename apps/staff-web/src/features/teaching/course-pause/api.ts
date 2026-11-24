@@ -13,8 +13,7 @@ import type { CoursePausePreview, CoursePauseResult, CoursePauseStart, CoursePau
 import { keepPreviousData, queryOptions, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
-// «إيقاف الدورة مؤقتًا» (owner 2026-10-28): apps/api/src/modules/teaching/course-pause. Paths and the key
-// come from @ab/client-core (the same as mobile).
+// Paths and the key come from @ab/client-core, the same as mobile.
 
 export const coursePauseQuery = (studentId: string) =>
   queryOptions({
@@ -22,7 +21,7 @@ export const coursePauseQuery = (studentId: string) =>
     queryFn: () => apiFetch<CoursePauseState>(coursePausePath(studentId)),
   });
 
-/** «ستُلغى N حلقات…»: the lessons the window would take the student out of. */
+/** The lessons the window would take the student out of. */
 export const coursePausePreviewQuery = (input: { studentId: string; from: string; until: string | null }) =>
   queryOptions({
     queryKey: [...coursePauseKey(input.studentId), 'preview', input.from, input.until],
@@ -30,7 +29,7 @@ export const coursePausePreviewQuery = (input: { studentId: string; from: string
     placeholderData: keepPreviousData,
   });
 
-/** «استئناف الدورة الآن؟»: the lessons back and the days the package moves (owner 2026-11-17). */
+/** The lessons coming back and the days the package moves. */
 export const resumePreviewQuery = (studentId: string) =>
   queryOptions({
     queryKey: [...courseCardKey(studentId), 'resume'],
@@ -44,7 +43,7 @@ export const startCoursePause = (studentId: string, body: CoursePauseStart) =>
 export const changePauseUntil = (studentId: string, untilDate: string | null) =>
   apiSend<CoursePauseResult>('PATCH', coursePauseUntilPath(studentId), { untilDate });
 
-/** subscriptionId: a package row's «استئناف» (that package: its pause, or its old package-only pause); none from the banner. */
+/** A package row's resume passes subscriptionId for its pause; the banner passes none. */
 export const resumeCoursePause = (studentId: string, subscriptionId?: string) =>
   subscriptionId
     ? apiSend<CoursePauseResult>('POST', coursePauseResumePath(studentId), { subscriptionId })

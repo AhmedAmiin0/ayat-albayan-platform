@@ -12,10 +12,7 @@ export interface TrialDateNotesProps {
   tz: string;
 }
 
-/**
- * What «احجز الموعد الجديد» does (owner 2026-10-25): it moves the upcoming trial (kept in the
- * history as «نُقلت»), or books a new trial lesson; from the 3rd date on, a warning (never a block).
- */
+/** It moves the upcoming trial or books a new one; from the 3rd date a warning, never a block. */
 export function TrialDateNotes({ trial, tz }: TrialDateNotesProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const moves = trial.upcomingId !== null;

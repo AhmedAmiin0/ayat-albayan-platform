@@ -37,10 +37,7 @@ const GENDER_CHIPS: { value: GenderChip; label: string }[] = [
 ];
 const PROGRAM_CHIPS = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 
-/**
- * Step 2 (R-SCH-06): teachers filtered by program and gender preference, with their load. A
- * teacher with no weekly availability is shown «مش متاح» with the reason, never hidden.
- */
+/** A teacher without weekly availability is shown unavailable with the reason, never hidden. */
 export function TeacherStep(props: TeacherStepProps) {
   const { program, genderPref, teacher, onChange } = props;
   const teachers = useQuery(bookingTeachersQuery({ program, gender: genderPref }, useBookingMode()));

@@ -16,10 +16,7 @@ export interface PackageStepProps {
   onChange: (patch: Partial<Pick<BookingDraft, 'pkg' | 'durationMin' | 'startsAt' | 'extra'>>) => void;
 }
 
-/**
- * The registration form's paid options in its order. 20 and 28 stay in the DB, not here. The
- * form's first option «حلقة تجريبية مجانية بس» moved to «نوع الحجز» (R-SCH-10, KindStep).
- */
+/** The form's paid options in order; 20 and 28 stay in the DB; the free trial moved to KindStep. */
 const ORDER = ['4', '8', '12', '16'] as const satisfies readonly PackageSize[];
 
 /**
@@ -96,7 +93,7 @@ function PackageChoice({ draft, students, onPick }: { draft: BookingDraft; stude
   );
 }
 
-/** The quote's total, or why there is no price; nothing for a trial (its label already says «مجانية»). */
+/** Nothing for a trial, whose label already says free. */
 export function PackagePrice({ input }: { input: PriceInput }) {
   const selection = quoteSelection(input);
   const quote = useQuery({ ...quoteQuery(selection ?? { ...emptySelection }), enabled: selection !== null });
