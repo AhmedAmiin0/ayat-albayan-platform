@@ -4,10 +4,7 @@ import { monthLabel } from '@/teacher/lib/payout-text';
 import { wholeText } from '@/finance/shared/format';
 import type { MonthFinance } from '@ab/money';
 
-/**
- * One month: the margin on top, then revenue, teacher cost and expenses on their own lines (they wrap, never clip).
- * It sits in «حسب الشهر»'s inset card (owner 2026-10-28: one container rule), which draws the fill and rules.
- */
+/** Amounts wrap onto their own lines, never clip. */
 export function MonthRow({ month: m, currency }: { month: MonthFinance; currency: string }) {
   const { color } = useTheme();
   const line = (label: string, value: number, strong = false) => (

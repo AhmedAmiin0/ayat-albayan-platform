@@ -5,8 +5,7 @@ import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { setComposerText } from '@/inbox/composer/draft-store';
 
-// Follow-up to #694 (items 4, 6): a sent correction ends only the «تعديل» tap it came from, and
-// gives the box back the draft it held before that tap.
+// A sent correction ends only the edit tap it came from and restores the draft held before it.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

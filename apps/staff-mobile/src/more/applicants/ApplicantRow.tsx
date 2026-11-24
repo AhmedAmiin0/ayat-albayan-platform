@@ -1,4 +1,5 @@
-import { formatPhone, jobApplicantStatusStyle } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { jobApplicantStatusStyle } from '@ab/money';
 import { memo } from 'react';
 import { t, ListRow, ltr, StatusChip } from '@ab/mobile-kit';
 import type { JobApplicant } from '@/core/lib/staff/types';

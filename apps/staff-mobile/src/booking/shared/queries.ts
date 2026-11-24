@@ -20,10 +20,10 @@ interface SlotsParams {
   from: string;
   to: string;
   durationMin: number;
-  /** «تغيير أيام الحلقات»: `?studentIds=a,b`, whose lessons of `excludeCourse` are not busy (they move). */
+  /** These students' lessons of excludeCourse are not busy because they move. */
   studentIds?: string;
   excludeCourse?: string;
-  /** «موعد تجريبي جديد»: the upcoming trial the new date moves is not busy. */
+  /** A new trial date: the upcoming trial it moves is not busy. */
   excludeLessonId?: string;
 }
 

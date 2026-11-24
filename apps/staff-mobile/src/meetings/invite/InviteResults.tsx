@@ -1,4 +1,4 @@
-import type { MeetingInviteResult } from '@ab/shared';
+import type { MeetingInviteResult } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

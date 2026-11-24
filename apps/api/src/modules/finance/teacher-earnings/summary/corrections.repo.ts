@@ -23,10 +23,7 @@ export type SummaryRow = {
   oldest_unpaid_at: string | null;
 };
 
-/**
- * The correction RPCs of migration 20261005000201 (each one transaction with its audit row) and
- * the «مستحقات المعلمين» summary view (20261005000202). Service role; the controllers guard.
- */
+/** Correction RPCs of migration 20261005000201, each one transaction with its audit row. */
 @Injectable()
 export class CorrectionsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

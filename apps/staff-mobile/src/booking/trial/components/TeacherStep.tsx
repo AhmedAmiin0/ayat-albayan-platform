@@ -29,7 +29,6 @@ const genderPills = (): { value: GenderPill; label: string }[] => [
   ...GENDERS.map((g) => ({ value: g, label: t.teachers.genderLabel[g] })),
 ];
 
-/** «{n} من {max} طالب», or «{n} طالب حاليًا» when the teacher has no maximum. */
 export function teacherLoad(
   o: Pick<BookingTeacherOption, 'students_count' | 'max_students'>,
 ): string {
@@ -39,11 +38,7 @@ export function teacherLoad(
     : t.booking.teacherLoad.replace('{n}', n).replace('{max}', String(o.max_students));
 }
 
-/**
- * Step 2 (R-SCH-06): program + teacher-gender preference, then the matching teachers with their
- * load. One without weekly availability is shown «مش متاح» with the reason, never hidden, and
- * can't be picked. Tapping a teacher moves on to the slots.
- */
+/** R-SCH-06: a teacher without weekly availability is shown unavailable, never hidden. */
 export function TeacherStep({ program, gender, onFilter, onPick }: TeacherStepProps) {
   const { color } = useTheme();
   const teachers = useBookingTeachers({ program, gender });

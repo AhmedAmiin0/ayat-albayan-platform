@@ -6,8 +6,7 @@ import { migrationPath } from '@/common/db/repo-paths.test-util';
 import { PaymentsRepo, type PaymentRow } from './payments.repo';
 import { writePayment } from './payment-amount-edit';
 
-// «تعديل المبلغ» atomic (review 2026-11-05): the check and the write in one locked
-// transaction.
+// The amount edit's check and write run in one locked transaction.
 const sql = readFileSync(migrationPath('20261105001000_payment_amount_set.sql'), 'utf8');
 const code = sql.replace(/--.*$/gm, '');
 

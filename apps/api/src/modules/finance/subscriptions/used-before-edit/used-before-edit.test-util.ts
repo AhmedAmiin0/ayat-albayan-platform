@@ -28,7 +28,7 @@ export function balanceOf(used: number): Map<string, BalanceRow> {
 
 const SPECIAL: Partial<Record<string, readonly Permission[]>> = { sales: ['subscriptions.edit_terms'] };
 
-/** «مساعد خاص»: the system sales role plus subscriptions.edit_terms (owner 2026-11-03). */
+/** The system sales role plus subscriptions.edit_terms. */
 const withEditTerms: PermissionResolver = async (user) => [
   ...(await systemResolver(user)),
   ...(SPECIAL[user.role ?? ''] ?? []),

@@ -3,7 +3,6 @@ import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { message } from '@/inbox/shared/thread-fixtures';
 import { useComposeTarget } from './use-compose-target';
 
-// Review of PR #694 (1, 4, 5) and its follow-up (4, 6): the box's draft around «تعديل».
 const A = '+966552147730';
 const B = '+966552147731';
 const own = message({ id: 'o1', body: 'الساعة الخامسة' });

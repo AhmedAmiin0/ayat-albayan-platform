@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 20261028000933/934 «إلغاء الباقة» (owner 2026-10-28): the value, the columns, then every reader.
+// Migrations 20261028000933/934: the value, the columns, then every reader.
 
 const dir = MIGRATIONS_DIR;
 const read = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');

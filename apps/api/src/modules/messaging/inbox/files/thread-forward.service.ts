@@ -47,16 +47,10 @@ function assertForwardable(row: ThreadMessageRow | null, who: Omit<ForwardInput,
   return row;
 }
 
-/** A template, a message hidden from the platform («حذف من المنصة») or an empty row. */
 const nothingToCopy = (row: ThreadMessageRow): boolean =>
   row.template_key !== null || row.hidden_at !== null || (!row.body?.trim() && !row.media_mime);
 
-/**
- * «إعادة توجيه» (owner 2026-10-25): one message copied to 1–5 chats, each through the normal session
- * send path (the actor's own scope, the 24 h window, the line; the sender's gates stay as they are).
- * A target that refuses is skipped with its reason; the others still go. The request id is reused
- * per target: the dedup key carries the phone, so a retried forward returns the same rows.
- */
+/** Refusing targets are skipped; the dedup key carries the phone so retries are idempotent. */
 @Injectable()
 export class ThreadForwardService {
   private readonly log = new Logger(ThreadForwardService.name);

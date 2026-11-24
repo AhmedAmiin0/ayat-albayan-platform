@@ -8,13 +8,7 @@ import { DetailsFact, DetailsLine } from './DetailsGroup';
 
 type LinkNote = 'copied' | 'failed' | null;
 
-/**
- * «رابط الحلقة» for every role (owner 2026-10-26: «see the meeting url and copy it»): «عبر الفصل» in
- * our classroom (the families' links are per-family secrets: «انسخ رابط الطالب» gets one), else the
- * full http(s) URL as selectable LTR text on its own line (one line, cut in the middle), then the
- * ButtonRow «انسخ الرابط» (the share sheet when the clipboard fails) | «افتح الرابط» at the card's own
- * padding, not under the value column (owner 2026-10-28: indented, unequal buttons), else «لا يوجد رابط».
- */
+/** In our classroom family links are per-family secrets, so only the full external URL is shown. */
 export function DetailsLink({ link, platform }: { link: string | null; platform: boolean }) {
   const { color } = useTheme();
   const [note, setNote] = useState<LinkNote>(null);

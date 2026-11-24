@@ -13,7 +13,7 @@ export const URL = `/subscriptions/${SUB_ID}/start-date`;
 /** Today (Asia/Riyadh) moved by n days, YYYY-MM-DD. */
 export const dayFromToday = (n: number): string => daysBefore(riyadhToday(), -n);
 
-/** «مساعد خاص»: salesA = the system sales role plus subscriptions.edit_terms; salesB not. */
+/** salesA is the system sales role plus subscriptions.edit_terms; salesB is not. */
 const withEditTerms: PermissionResolver = async (user) => {
   const special: readonly Permission[] = user.id.startsWith('a1') ? ['subscriptions.edit_terms'] : [];
   return [...(await systemResolver(user)), ...special];

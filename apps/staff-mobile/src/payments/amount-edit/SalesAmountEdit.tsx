@@ -1,4 +1,4 @@
-import type { MyPaymentRow } from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { useHolds } from '@ab/mobile-kit';
 import { salesAmountEditable } from './amount-edit';
 import { EditAmountButton } from './EditAmountButton';

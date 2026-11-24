@@ -26,18 +26,11 @@ const stepNames = (): Record<Step, string> => ({
 
 interface TrialWizardProps {
   lead: BookingLead;
-  /** The chat's «اشترك»: starts as a package (a paid size), then its subscription. */
+  /** Starts as a package (a paid size), then its subscription. */
   subscribe?: boolean;
 }
 
-/**
- * Booking for a lead (R-MOB-02, R-LEAD-06): «نوع الحجز» with الطالب → المعلم/ة → (الباقة) → الميعاد
- * → (الفاتورة) → المراجعة. From the lead screen it starts as the quick trial, from the chat's
- * «اشترك» as a package; the type pills on the first step switch between them, and the steps follow
- * (a package asks the size and the invoice, a trial neither). After a package it goes on to that
- * child's subscription (R-SUB-01). «رجوع» steps back (and clears a failed attempt); after a
- * booking it returns to the conversation.
- */
+/** R-MOB-02, R-LEAD-06: a package asks size and invoice, a trial neither; then R-SUB-01. */
 export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -51,7 +44,7 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
   const book = useBookTrial(requestId);
   // The sales tree has no lead screen: a wizard opened without history falls back to its chats.
   const base = useTreeBase();
-  // A salesperson's registration from the chat is always a trial («تسجيل طالب جديد»).
+  // A salesperson's registration from the chat is always a trial.
   const title = useBookingMode() === 'sales' ? t.inbox.registerNew : draft.kind === 'trial' ? t.booking.trialTitle : t.subscriptions.new;
   const patch = (p: Partial<TrialDraft>) => setDraft((d) => ({ ...d, ...p }));
   const at = steps.indexOf(step);

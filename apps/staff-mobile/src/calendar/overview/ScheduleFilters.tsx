@@ -28,7 +28,6 @@ const genderPills = (): FilterPill<TeacherFilter['gender']>[] => [
   ...GENDERS.map((g) => ({ value: g, label: t.teachers.genderLabel[g] })),
 ];
 
-/** اليوم | الأسبوع, the week's day pills with counts (day view), then program and gender. */
 export function ScheduleFilters({ view, filter, days, date, ...on }: ScheduleFiltersProps) {
   return (
     <View style={{ gap: 4, paddingTop: 4 }}>

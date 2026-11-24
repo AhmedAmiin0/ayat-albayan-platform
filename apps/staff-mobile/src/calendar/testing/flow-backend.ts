@@ -4,9 +4,7 @@ import { muscat, pending } from '@/today/testing/fixtures';
 import { FakeBackend } from '@/test/fake-backend';
 import { abrar, omar } from '@/calendar/overview/overview-fixtures';
 
-// The teachers + lessons API for the calendar and reschedule flows. Week 26 Sep – 2 Oct 2026
-// (Riyadh, UTC+3); «now» is Thursday 1 Oct 16:20 (tests set fake timers to it). Two lessons of
-// أبرار (a Cairo teacher) on Thursday: 16:00 waiting and 17:00 confirmed; عمر has nothing booked.
+// Week 26 Sep - 2 Oct 2026 (Riyadh, UTC+3); now is Thursday 1 Oct 16:20.
 
 export const NOW = new Date('2026-10-01T13:20:00Z');
 const TEACHER = { id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' };

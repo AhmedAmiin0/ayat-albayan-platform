@@ -8,17 +8,11 @@ import { useNow } from '@ab/mobile-kit';
 
 /** What joining needs of a lesson (an assistant's session has no more than this). */
 export type JoinableLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'ends_at' | 'room_opened_at'> & {
-  /** The lesson's students: the first one's channel is the in-room «المحادثة». */
+  /** The first student's channel is the in-room chat. */
   students?: readonly { id: string }[];
 };
 
-/**
- * «ادخل الحلقة»: the join window (re-checked every minute) and the press. A press asks the API first
- * (POST /lessons/:id/room/join) so a refusal reads in the app, and only on success opens the room:
- * inside the app (docs/35, settings.meetings_in_app) or the web classroom in the system browser.
- * Inside a page sheet (SheetLeave) the sheet closes first.
- * `win` is null for a lesson that is no longer open.
- */
+/** API first so a refusal shows in the app (docs/35); win is null for a lesson no longer open. */
 export function useJoinClassroom(lesson: JoinableLesson) {
   const now = useNow();
   const [busy, setBusy] = useState(false);
@@ -46,10 +40,7 @@ export function useJoinClassroom(lesson: JoinableLesson) {
   return { win, busy, error, join };
 }
 
-/**
- * Whether «ادخل الحلقة» is live now: then it is the sheet's ONE filled button and «تأكيد» steps down to
- * a secondary in the row (docs/07 §6 «الأزرار»); early or closed, the confirm stays the primary.
- */
+/** When live it is the sheet's one filled button and confirm becomes secondary (docs/07 §6). */
 export function useJoinOpen(lesson: JoinableLesson): boolean {
   const now = useNow();
   const config = useJoinWindow();

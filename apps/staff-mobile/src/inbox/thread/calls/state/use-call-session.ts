@@ -27,7 +27,7 @@ function useBackgroundNote(input: { store: CallStore; foreground: boolean; live:
 }
 
 /** The device's call and the incoming rings (docs/28 §3), polled while calls are on and the app is in front. */
-export function useCallSession(input: { config: CallConfigView | undefined; rtc: RtcDeps | null; foreground: boolean }): CallSessionApi {
+export function useCallSession(input: { config: CallConfigView | undefined; rtc: () => Promise<RtcDeps | null>; foreground: boolean }): CallSessionApi {
   const client = useQueryClient();
   const [store] = useState(() => new CallStore(mobileCalls, () => void client.invalidateQueries({ queryKey: [...CALLS_KEY] })));
   const state = useSyncExternalStore(store.subscribe, store.get);
