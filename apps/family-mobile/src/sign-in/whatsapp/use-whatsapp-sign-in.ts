@@ -6,11 +6,7 @@ import { phoneRegion } from '@/sign-in/phone/countries';
 
 export type WhatsAppStep = 'phone' | 'code';
 
-/**
- * The WhatsApp sign-in (docs/50 §4, POST /auth/code/request | verify): the number (country +
- * national, checked while typing) → the code → the session. Each answer is felt (a success or an
- * error haptic); a code that went out moves to the code step, «غيّر الرقم» moves back.
- */
+/** docs/50 §4: number, then code, then session; each answer gives a haptic. */
 export function useWhatsAppSignIn() {
   const flow = useCodeSignIn(authApi.familyCodes);
   const still = useA11yPref('reduceMotion');

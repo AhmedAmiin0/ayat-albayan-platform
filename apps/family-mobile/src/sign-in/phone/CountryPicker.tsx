@@ -13,10 +13,7 @@ interface CountryPickerProps {
   onClose: () => void;
 }
 
-/**
- * «اختر الدولة»: every country (flag, name, calling code), the phone's own and the academy's usual
- * ones first, searchable by name or code; a virtualised list.
- */
+/** The phone's own and the academy's usual countries first; searchable; virtualised. */
 export function CountryPicker({ open, current, onPick, onClose }: CountryPickerProps) {
   const { color } = useTheme();
   const [query, setQuery] = useState('');

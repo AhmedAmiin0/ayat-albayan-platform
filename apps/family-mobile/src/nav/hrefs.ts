@@ -13,7 +13,7 @@ const packageHref = (studentId: string) => `/package/${enc(studentId)}` as const
 export const chatHref = (studentId: string) => `/chat/${enc(studentId)}` as const;
 export const ALERTS_HREF = '/alerts';
 export const PROFILE_HREF = '/profile';
-/** «اختر الطالب»: forced for a guardian with no pick yet, pushed from «حسابي» to switch. */
+/** Forced for a guardian with no pick yet, pushed from the account screen to switch. */
 export const PICK_HREF = '/pick-child';
 
 interface ReportLink {
@@ -31,7 +31,7 @@ export function reportHref({ studentId, reportId, recordingId }: ReportLink): st
   return `/report/${enc(reportId)}?${query.toString()}`;
 }
 
-/** Opens a report and marks it opened on this phone («جديد» goes at once). */
+/** Opens a report and marks it opened on this phone so the new mark goes at once. */
 export function openReport(link: ReportLink): void {
   markReportSeen(link.reportId);
   router.push(reportHref(link));
@@ -44,8 +44,7 @@ const OPEN: Openers = {
   child: (t) => router.push(childHref(t.studentId)),
   package: (t) => router.push(packageHref(t.studentId)),
   chat: (t) => router.push(chatHref(t.studentId)),
-  // «بدأت الحلقة»: straight into the room, the microphone on, while lessons open in the app;
-  // else the child's page, where the live card's «ادخل الآن» opens the browser room.
+  // Lesson-started push goes straight into the room while lessons open in-app, else the child page.
   live: (t) =>
     void roomsInAppNow().then((inApp) =>
       router.push(inApp ? roomHref({ ...t, direct: true }) : childHref(t.studentId)),
