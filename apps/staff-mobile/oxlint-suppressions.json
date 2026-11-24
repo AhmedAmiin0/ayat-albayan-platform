@@ -573,11 +573,6 @@
       "count": 2
     }
   },
-  "src/booking/screens/BookTrial.package.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/booking/screens/BookTrialScreen.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -649,7 +644,7 @@
   },
   "src/booking/shared/queries.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/no-untyped-api-calls": {
       "count": 2
@@ -675,11 +670,6 @@
       "count": 3
     }
   },
-  "src/booking/trial/components/ConfirmStep.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/booking/trial/components/ContactStep/ContactStep.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -696,11 +686,6 @@
       "count": 1
     }
   },
-  "src/booking/trial/components/DurationPills.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/booking/trial/components/MultiFooter.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -714,7 +699,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/booking/trial/components/TrialWizard.tsx": {
@@ -741,7 +726,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -754,7 +739,7 @@
   },
   "src/booking/trial/lib/confirm-summary.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/booking/trial/lib/draft.ts": {
@@ -777,9 +762,6 @@
     }
   },
   "src/booking/trial/lib/package-choice.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -794,17 +776,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
-    }
-  },
-  "src/calendar/agenda/AgendaItemRow.tsx": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 3
     }
   },
   "src/calendar/agenda/AgendaLessonRow/AgendaLessonRow.tsx": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/calendar/agenda/LessonRowActions/LessonRowActions.tsx": {
@@ -812,7 +789,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 4
@@ -824,22 +801,11 @@
     }
   },
   "src/calendar/agenda/RowDefaultActions.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/calendar/agenda/Tag.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/calendar/agenda/agenda.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 3
     },
@@ -852,12 +818,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/calendar/details/DetailsLink.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/calendar/details/DetailsStudentRow.tsx": {
@@ -871,11 +837,6 @@
       "count": 1
     }
   },
-  "src/calendar/details/DetailsStudents.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/calendar/details/DetailsTeacher.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -883,7 +844,7 @@
   },
   "src/calendar/details/LessonDetailsSheet.test.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "typescript/restrict-template-expressions": {
       "count": 1
@@ -894,25 +855,17 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     }
   },
   "src/calendar/details/StudentPackageLine.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 2
     }
   },
-  "src/calendar/details/details-text.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/calendar/details/details-text.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/calendar/details/use-lesson-details.test.tsx": {
@@ -930,11 +883,6 @@
       "count": 1
     }
   },
-  "src/calendar/live/LiveBadge.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/calendar/overview/TeacherHeader.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -942,7 +890,7 @@
   },
   "src/calendar/overview/overview-text.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 2
@@ -974,11 +922,6 @@
       "count": 1
     }
   },
-  "src/calendar/route.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/calendar/screens/DayScheduleScreen/DayScheduleScreen.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -990,7 +933,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     },
     "ab/module-boundaries": {
       "count": 3
@@ -1009,7 +952,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 2
@@ -1039,7 +982,7 @@
   },
   "src/classroom/assistants/AssistantLessonItem.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/assistants/AssistantLessonsList.tsx": {
@@ -1078,7 +1021,7 @@
   },
   "src/classroom/links/CopyLinkAction.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/classroom/links/JoinClassroomButton/JoinClassroomButton.tsx": {
@@ -1086,7 +1029,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 1
     }
   },
   "src/classroom/links/SendLinkAction/SendLinkAction.tsx": {
@@ -1097,7 +1040,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/classroom/links/join-text.ts": {
@@ -1116,11 +1059,6 @@
       "count": 2
     },
     "ab/no-shape-checks": {
-      "count": 2
-    }
-  },
-  "src/classroom/links/use-join-classroom.ts": {
-    "stylistic/max-len": {
       "count": 2
     }
   },
@@ -1143,7 +1081,7 @@
   },
   "src/classroom/recordings/RecordingRow.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/recordings/RecordingsList.tsx": {
@@ -1151,7 +1089,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
@@ -1214,7 +1152,7 @@
   },
   "src/core/auth/route-permissions.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/core/auth/use-tab-open.ts": {
@@ -1242,7 +1180,7 @@
   },
   "src/core/lib/money/format/format.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/core/lib/money/paid-day/paid-day.ts": {
@@ -1360,7 +1298,7 @@
   },
   "src/core/lib/stripe-flag.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/core/lib/time/use-following-day.ts": {
@@ -1391,7 +1329,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/core/nav/routing.permissions.test.tsx": {
@@ -1419,7 +1357,7 @@
   },
   "src/core/nav/tree-base.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     },
     "ab/no-restricted-syntax": {
       "count": 3
@@ -1451,7 +1389,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1481,9 +1419,6 @@
     }
   },
   "src/core/push/useNotificationHandling/useNotificationHandling.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
@@ -1535,7 +1470,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 14
+      "count": 13
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -1554,7 +1489,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 7
     },
     "ab/no-restricted-syntax": {
       "count": 1
