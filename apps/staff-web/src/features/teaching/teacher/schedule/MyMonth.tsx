@@ -1,4 +1,5 @@
-import { counted, type TeacherMe } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { TeacherMe } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';

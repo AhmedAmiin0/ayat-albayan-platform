@@ -2,9 +2,7 @@ import type { OutboundTemplate } from '@ab/shared';
 import type { TeacherLessonTokens } from '@/modules/teaching/lesson-links';
 import { lessonValues, oneLine, type TeacherLessonInput } from './teacher-lesson.crm';
 
-// teacher_lesson_v3 (owner 2026-11-06): the teacher's lesson notice with the «ادخل الحلقة» and
-// «تقرير الحلقة» link buttons on our own domains. Sent by the same-day reminder and the new-student
-// alert once its registry row is approved; until then they keep their own templates.
+// Used by the same-day reminder and new-student alert once approved; until then old templates.
 
 interface TeacherLessonV3Input extends TeacherLessonInput {
   /** {{6}}: the lesson's own meeting link, written in the text as well (Meet, fixed, classroom). */

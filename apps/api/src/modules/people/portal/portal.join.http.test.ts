@@ -5,7 +5,7 @@ type App = Awaited<ReturnType<typeof portalApp>>;
 const JOIN = `/portal/students/${S1}/lessons/${L1}/join`;
 const PLATFORM = { display_name_ar: 'أبرار', display_name_en: null, meeting_mode: 'platform' };
 
-// «ادخل الحلقة» of a classroom lesson: the student-link guest admission, for this student and lesson, inside the window.
+// Only for this student and lesson, inside the window.
 describe('POST /portal/students/:id/lessons/:lessonId/join', () => {
   let t: App;
   beforeAll(async () => {

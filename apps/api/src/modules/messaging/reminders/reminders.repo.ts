@@ -12,10 +12,7 @@ import { roomLinkRows } from './plan/reminders.room';
 const LESSON_SELECT =
   'id, starts_at, ends_at, status, meeting_link, teacher:teachers(id, display_name_ar, phone_e164, tz, meeting_mode, status, profile:profiles!teachers_profile_id_fkey(disabled_at)), lesson_students(student:students(id, name, code, guardian:guardians(id, phone_e164, tz)))' as const;
 
-/**
- * Every key the reminder job queues: its rows for a lesson that was cancelled are dropped. With
- * lesson_join_link (a platform lesson, reminders.links.ts) the admin's «ابعت لينك الحلقة» rows are dropped too.
- */
+/** Rows of a cancelled lesson for these keys are dropped, manual join links included. */
 export const REMINDER_KEYS = [
   'lesson_reminder',
   'lesson_reminder_meet',
