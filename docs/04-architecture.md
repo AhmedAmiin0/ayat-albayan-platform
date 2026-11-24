@@ -9,7 +9,7 @@
 | API | **NestJS 10** (TypeScript, Fastify adapter) | Owns all business logic & WhatsApp webhooks. Talks to Postgres via `postgres.js`/Kysely + Supabase service client for Storage/Auth admin |
 | Web (admin + teacher + guardian portal) | **React 19 + Vite + TanStack** (Router, Query, Table, Form) + Tailwind + shadcn/ui (RTL) | Single app, role-based routes |
 | Mobile (admin) | **Expo SDK 51+ / React Native**, expo-router, TanStack Query, expo-notifications | EAS Build; same `packages/api-client` |
-| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (eslint/tsconfig/prettier) | |
+| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (eslint/prettier; shared TypeScript options sit in the root `tsconfig.base.json`) | |
 | Messaging | Meta WhatsApp Cloud API v20+ | Webhook → Nest; outbound via Nest `MessagingModule` |
 | PDF | `@react-pdf/renderer` or Playwright-Chromium HTML→PDF in Nest worker | Arabic fonts (Amiri / Noto Naskh), RTL |
 | Jobs | BullMQ (Redis on Upstash) **or** pg-boss on Supabase Postgres (preferred: no extra infra) | Reminders, PDF generation, calendar mirror |
@@ -44,7 +44,7 @@ ayat-albayan/
 │  ├─ db/                        # supabase/ (config, migrations, seed), generated types
 │  ├─ shared/                    # enums, zod schemas, i18n/ar.json + en.json, pure utils (phone, tz, money, …)
 │  ├─ client-core/               # web + mobile: http client, query keys and options, non-UI hooks (usePermissions)
-│  └─ config/                    # eslint config (+ the module-boundaries rule), tsconfig, prettier
+│  └─ config/                    # eslint config (+ the module-boundaries rule), prettier
 ├─ tools/
 │  ├─ migrate/                   # Google Sheets → Supabase import (dry-run + apply)
 │  ├─ wa-stub/  google-stub/  livekit/
@@ -184,24 +184,26 @@ compiler for every Babel caller while app.json `experiments.reactCompiler` is tr
 code (docs/31a §3.2). Web (React 19.2, docs/32 x1) gets the React 19 rules once x2–x5 remove the old uses. TypeScript flags: docs/31a §2.
 Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
 violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns
-them off in ESLint, which keeps the type-aware, custom and react-hooks rules. An inline disable for an Oxlint rule is
-`// oxlint-disable-next-line <rule> -- why`. Oxlint fails on every directive that hid nothing in its own run
-(`--report-unused-disable-directives-severity=error`), an `eslint-disable` included, so an ESLint-only rule gets no
-inline disable: its exception goes in `eslint-suppressions.json`, where `pnpm guard:lint` counts it. `typecheck` runs
+them off in ESLint, which keeps the type-aware, custom and react-hooks rules. There are no inline disables
+(docs/59): no `eslint-disable` or `oxlint-disable` comment, no `@ts-` escape. `typecheck` runs
 `tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
+Tsconfigs: the shared compiler options live in the root `tsconfig.base.json`. Every tsconfig extends only that
+file (by relative path) or a file in its own folder, never a package, and keeps only the options that differ
+for it (React, Nest or Expo ones). The mobile tsconfigs copy what `expo/tsconfig.base` sets apart from the root
+base, so an Expo upgrade re-checks them.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.repo.ts` (class `XRepo`, the only injector of `DB`; no new `*.queries.ts`, docs/32 D2) + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 Unit folders: a unit with 3+ files (code, props, types, tests...) lives in its own folder named after it, with an `index.ts` that only re-exports; its tests go in `tests/` when it has 2+ (`ThreadPane.chat.test.tsx` → `ThreadPane/tests/chat.test.tsx`; `<Unit>.test.tsx` keeps its name); a plain code + test pair stays as it is. A file's unit is the longest non-test code stem it extends (`env.blank.test.ts` → `env.blank`); `X.<role>.ts` (props, types, styles, schemas, mapper, fakes, fixtures, constants, hooks, builder, variants) belongs to `X`. In apps/api each feature folder with a controller is its own Nest module. `pnpm units:fold -- --dry-run` plans the moves, `--write --paths <dir...>` makes them on a `move/*` branch.
 
-Structure guards (docs/27 §1, Wave F). Each fails CI against a baseline that may only shrink. The duplicate, cycle and lint counts store none: on a PR, CI checks the merge base out beside the head and fails only when the head is above the base branch's own measure, so no PR edits `refactor/guards/` to record an improvement and no two PRs conflict there. The knip and queries lists stay in `refactor/guards/`: a new entry fails, a fixed one passes, and ci's `baselines` job drops it after a green push to `develop`:
+Structure guards (docs/27 §1, Wave F). No suppressions (docs/59-no-suppressions.md): the baselines below are old debt that only shrinks; no PR adds an entry, raises a number or adds a baseline file. The duplicate, cycle and lint counts store none: on a PR, CI checks the merge base out beside the head and fails only when the head is above the base branch's own measure, so no PR edits `refactor/guards/` to record an improvement and no two PRs conflict there. The knip, queries, units and folder-cap lists stay in `refactor/guards/` and `refactor/folder-cap/`: `pnpm guard:baselines` fails on a new entry, a raised number or a new file against the base branch (entries follow their moved files), a fixed one passes, and ci's `baselines` job drops it after a green push to `develop`. A PR that loosens a lint config (a rule off or warn, a new ignore or exemption, a raised limit) gets a «lint rules loosened» annotation (`pnpm guard:loosened`) and merges only with the owner's go:
 
 | Guard | Rule | Baseline | Run |
 |-------|------|----------|-----|
 | Module boundaries | import another module (api `modules/<domain>/<module>`, web `features/<domain>/<feature>`, mobile `src/<feature>`, a `packages/*/src/<folder>`) only through its `index.ts`; tests, fakes and `test/`/`testing/` folders are exempt | `eslint-suppressions.json` per package (ESLint bulk suppressions) | `pnpm turbo lint`; after removing deep imports `eslint . --prune-suppressions` in that package |
-| Folder cap | ≤ 12 code files (tests not counted) and ≤ 12 sub-folders per folder | `refactor/folder-cap/<app>.json` (a new, grown or stale entry fails) | `node tools/scripts/ci-checks/folder-cap.mjs --strict` (`--write <app>` after a split) |
+| Folder cap | ≤ 12 code files (tests not counted) and ≤ 12 sub-folders per folder | `refactor/folder-cap/<app>.json` (a new, grown or stale entry fails) | `node tools/scripts/ci-checks/folder-cap.mjs --strict` (`--write <app>` after a split), `pnpm guard:baselines` |
 | Duplicated code | jscpd `--min-lines 8` (`.jscpd.json`, tests ignored): clones, duplicated lines and cross-app clones (fixtures aside), none above the base branch's (jscpd also runs in the base checkout) | none: measured on both sides | `pnpm guard:dup` |
 | Import cycles | top folders of `packages/shared/src` (docs/32 k1a): cycle edges not above the base branch's | none: measured on both sides | `pnpm guard:cycles` |
 | Dead code | knip (`knip.json`): no new unused file, export, type or dependency | `refactor/guards/knip.json` (fixed entries leave it on `develop`) | `pnpm guard:knip` |
-| Lint ratchet | the lint job fails on any violation not in that package's `eslint-suppressions.json`; the gate sums them per rule over every package and fails on a total above the base branch's own sum (a rule the PR turns on gets its one-time baseline) or an entry whose file is gone | none: derived from both sides' `eslint-suppressions.json` | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package (docs/31a §5.3) |
+| No new suppressions | the lint job fails on any violation not in that package's `eslint-suppressions.json` (Oxlint: `oxlint-suppressions.json`); the gate holds both kinds to the base branch's per file, per rule and per rule total, and fails on a new entry, a new suppressions file, an empty one (delete it) or an entry whose file is gone. A rule a PR turns on or tightens has no baseline: its violations are fixed in that PR | none: derived from both sides' suppressions files | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package (docs/31a §5.3) |
 | Unit folders | no folder gains a floating unit (3+ files outside a folder named after it, or 2+ tests beside it in its own folder); api `modules/`, route trees, packages/db and e2e/ are not counted | `refactor/guards/units.json` (fixed folders leave it on `develop`) | `pnpm guard:units` (`-- --write` on develop) |
 | Move only | on a `move/*` branch: pure renames, changed module-path strings, added export-only `index.ts` files and baseline keys that follow their files (counts equal or lower); anything else fails, naming the file | none: compared with the merge base | `pnpm guard:move-only` |
 

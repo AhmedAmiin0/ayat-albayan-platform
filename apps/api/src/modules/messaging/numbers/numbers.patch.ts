@@ -19,13 +19,7 @@ function evolutionFields(before: NumberRow, body: Omit<NumberUpdate, 'is_default
   return {};
 }
 
-/**
- * What a PATCH also changes so a row never says something false:
- * - a new phone id drops the phone, health and check time cached for the old one (#134 item 9),
- *   and an Evolution number's last push (it named the old instance: «غير متزامن» until pushed);
- * - a role change or a disable unsets is_default, so the default never moves to the other role
- *   silently and a disabled ex-default can't collide with a newer default when re-enabled.
- */
+/** So a row never lies: a new phone id drops cached health; a role change unsets is_default. */
 export function numberPatch(before: NumberRow, body: Omit<NumberUpdate, 'is_default'>): NumberPatch {
   const patch: NumberPatch = { ...body, ...evolutionFields(before, body) };
   if (body.phone_number_id !== undefined && body.phone_number_id !== before.phone_number_id) {

@@ -4,12 +4,11 @@ import type { CrmLineEnv } from '@/config/env/env';
 import { crmJson, type CrmConn } from '@/modules/messaging/whatsapp/drivers/crm/crm-http';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «افحص الخطوط» on a crm line (docs/19 «crm driver»): one read-only GET /me with the line's key. Never a
-// test message. The number, its WABA and its phone facts are the CRM's: every Meta field stays null.
+// One read-only GET /me (docs/19), never a test message; Meta fields stay null.
 
 /** The scope POST /messages needs. */
 const CRM_SEND_SCOPE = 'messages:send';
-/** The scopes «مزامنة» and «إرسال إلى ميتا» need on a crm line (docs/39). */
+/** Template sync and submit on a crm line need these scopes (docs/39). */
 const CRM_TEMPLATE_SCOPES = ['templates:read', 'templates:write'] as const;
 /** The read scopes that confirm a timed-out send (docs/19 «Confirming an uncertain send»). */
 const CRM_READ_SCOPES = ['conversations:read', 'messages:read', 'contacts:read'] as const;

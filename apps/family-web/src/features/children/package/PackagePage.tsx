@@ -37,11 +37,7 @@ function PackageOf({ home, student }: { home: PortalHome; student: PortalStudent
   );
 }
 
-/**
- * «الباقة» on its own page (/package/<id>, as the family app's `package/[id]`): the package, the
- * amount due, the payments and how to pay. A child's own login never reads it (anti-goal,
- * docs/50 §4): no «الباقة» heading and no request, through a stale link too.
- */
+/** A child's own login never reads it (anti-goal, docs/50 §4), even through a stale link. */
 export function PackagePage({ home, studentId }: { home: PortalHome; studentId: string }) {
   const student = home.students.find((s) => s.id === studentId);
   if (!student) return <EmptyState title={t.common.notFound} />;

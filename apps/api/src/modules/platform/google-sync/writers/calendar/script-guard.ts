@@ -1,15 +1,12 @@
 import type { GoogleClient, GoogleListedEvent } from '@/modules/platform/google-sync/google-client.port';
 import { EVENT, PLATFORM_SOURCE } from '@/modules/platform/google-sync/google-format';
 
-/** «حلقة —»: the script's titles (and ours) start with it; the tag tells ours apart. */
+/** Script and our titles share the prefix; the tag tells ours apart. */
 const TITLE = EVENT.titlePrefix.trim();
 
 const isTagged = (e: GoogleListedEvent): boolean => e.extendedProperties?.private?.['ab_source'] === PLATFORM_SOURCE;
 
-/**
- * The old Apps Script's event for this slot (docs/24 «نقل تقويم معلم إلى المنصة»): not tagged as ours,
- * not cancelled, starting at the same instant, titled «حلقة — …» or carrying the script's sheet line.
- */
+/** docs/24: untagged, not cancelled, same start, with the script's title or sheet line. */
 export function isScriptEvent(e: GoogleListedEvent, startsAt: string): boolean {
   if (e.status === 'cancelled' || isTagged(e)) return false;
   if (Date.parse(e.start?.dateTime ?? '') !== Date.parse(startsAt)) return false;

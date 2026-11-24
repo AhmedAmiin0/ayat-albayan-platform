@@ -3,12 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import type { CrmStatusDeps } from './template-crm-status';
 import { REGISTRY_ENTITY_ID, toTemplateView } from './template.mapper';
 
-/**
- * A template's name / language on the WhatsApp account («اسم القالب في واتساب», docs/19, migration 680):
- * what every driver sends instead of meta_name / language (waba-template.ts); null = the default
- * (crmTemplateName). Set on any line, so a line switched from crm to meta keeps sending the WABA's own
- * templates; audited.
- */
+/** WABA name and language every driver sends (docs/19, migration 680); null is the default. */
 export async function setCrmName(deps: CrmStatusDeps, input: TemplateCrmNameInput & { key: string }, actorId: string): Promise<TemplateView> {
   const { key, crm_name, crm_language } = input;
   const row = await deps.queries.get(key);

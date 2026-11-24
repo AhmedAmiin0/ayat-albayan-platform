@@ -124,12 +124,19 @@ jobs:
       # A proven pure move (docs/32 g1): plain folder moves only (move-e2e.mjs: a move map in the diff, no
       # identifier or file-name renames, no route moves, nothing e2e reads at start-up) and pure-move-check green.
       # Typecheck and the unit tests still run; e2e is skipped. FAIL SAFE: anything else = e2e as usual.
-      - name: move PR
+      # A comment-only branch (chore/comments-*) skips e2e too: guard:comments fails the required «guards»
+      # job unless the code is unchanged, so nothing e2e could catch can reach develop through it.
+      - name: move or comment-only PR
         id: move
         if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
         env:
           BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
+          if [[ "$HEAD_REF" == chore/comments-* ]]; then
+            echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::comment-only branch: e2e skipped"
+            exit 0
+          fi
           if git diff --name-status -M50% "origin/$BASE_REF...HEAD" | node tools/scripts/ci-checks/pure-move/move-e2e.mjs \
             && node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD; then
             echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::pure folder move: e2e skipped"
@@ -237,7 +244,7 @@ jobs:
           LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
           CONF: >-
             ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', '*/*/vite.config.ts', 'packages/config/vite.js', 'tsconfig*.json',
-            '*/*/tsconfig*.json', 'packages/config/tsconfig/**') || hashFiles('*/*/babel.config.cjs',
+            '*/*/tsconfig*.json') || hashFiles('*/*/babel.config.cjs',
             '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/mobile-kit/jest.base.cjs', 'packages/mobile-kit/babel.cjs') }}
           KIND: ${{ matrix.vcache && 'vitest' || 'jest' }}
           SHARD: ${{ matrix.vcache || matrix.jcache }}
@@ -371,12 +378,14 @@ jobs:
 
   # Code-health gates (docs/27 Wave F). Counts are measured on both sides, never stored: on a PR the merge base is
   # checked out beside the head (GUARD_BASE) and jscpd (clones, duplicated lines, cross-app clones), cycles,
-  # package boundaries (both sides under the head's refactor/guards/packages.json) and lint (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a new violation, this
-  # gate on a count raised by hand or an entry whose file is gone) fail only above the base branch's own measure.
+  # package boundaries (both sides under the head's refactor/guards/packages.json) and lint (docs/59: every
+  # eslint- and oxlint-suppressions.json per file and per rule; the lint job fails on a new violation, this gate on a
+  # count raised by hand, a new entry or file, or an entry whose file is gone) fail only above the base branch's.
   # Equal or below passes with nothing to edit, so PRs never touch a baseline and never conflict on one. knip and
   # queries (and the floating units) keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
   # job «baselines» drops it on develop. Pushes print the counts (each change was compared on its PR). The e2e area
-  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
+  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). tsconfig has no
+  # baseline: a tsconfig that names anything outside its own folder fails. No secrets.
   guards:
     needs: changes
     if: needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'
@@ -407,22 +416,19 @@ jobs:
       - run: pnpm guard:queries
       - run: pnpm guard:cycles
       - run: pnpm guard:packages
+      - run: pnpm guard:tsconfig
       - run: pnpm guard:comments
       - run: pnpm guard:units
       - run: pnpm guard:move-only
-      - name: pnpm guard:lint (on a PR, against the base branch's suppressions)
-        run: |
-          if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi
-          # The lint config sources of both sides (ESLint, Oxlint, lint.blocks.mjs): a rule only the head names gets
-          # its one-time baseline.
-          configs() {
-            git ls-tree -r --name-only "$1" \
-              | grep -E '(^packages/config/(oxlint/)?[^/]+|(^|/)eslint\.config|(^|/)lint\.blocks)\.[cm]?js$' \
-              | grep -v '\.test\.' | while read -r f; do git show "$1:$f"; done
-          }
-          configs "$(git -C "$GUARD_BASE" rev-parse HEAD)" > "$RUNNER_TEMP/configs-base.txt"
-          configs HEAD > "$RUNNER_TEMP/configs-head.txt"
-          pnpm guard:lint -- --configs "$RUNNER_TEMP/configs-base.txt" "$RUNNER_TEMP/configs-head.txt"
+      # On a PR: every suppressions file per file and per rule against the base branch's (docs/59), and the
+      # refactor/guards and refactor/folder-cap baselines: only shrink, never a new entry or file.
+      - run: pnpm guard:lint
+      - run: pnpm guard:baselines
+      # A head lint config looser than the base's (a rule off or warn, a new ignore or exemption, a raised limit):
+      # a «lint rules loosened» annotation, never a failure; such a PR merges only with the owner's go.
+      - name: Lint config loosened?
+        continue-on-error: true
+        run: pnpm guard:loosened
       - run: node tools/scripts/ci-checks/e2e-areas/guard.mjs
 
   # develop only, after green guards (or guards skipped because a green PR run checked this tree): drop the knip, queries and units entries that are fixed (the gates pass on them, so

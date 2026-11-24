@@ -1,5 +1,6 @@
 import { type HomePrefs, nextOpenLesson, pickHero } from '@ab/client-core';
-import { counted, type LessonView, type TeacherMe } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { LessonView, TeacherMe } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { lessonsOnDay } from '@/features/teaching/schedule';

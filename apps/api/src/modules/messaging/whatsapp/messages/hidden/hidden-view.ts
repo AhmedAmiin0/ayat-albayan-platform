@@ -1,11 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
 
-/**
- * «حذف من المنصة» (owner 2026-10-30): a hidden row reaches every staff reader as a placeholder: no
- * text, file, template or links, and nothing to reply to or forward. It is still on the customer's
- * phone (WhatsApp's API cannot delete it), so the time, side and ticks stay.
- */
+/** Still on the customer's phone (the API cannot delete), so time, side and ticks stay. */
 export function withHidden(
   view: MessageView,
   row: Pick<ThreadMessageRow, 'hidden_at' | 'hider'>,

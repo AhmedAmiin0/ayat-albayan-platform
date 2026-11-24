@@ -16,10 +16,7 @@ import { USER_STORE, type UserRow, type UserStore } from './store/users.store';
 
 export { actorOf, type Actor } from './users.rules';
 
-/**
- * «المستخدمون»: the directory and the pickers. PATCH /users/:id, creation and the lifecycle live in
- * sibling services (update/, lifecycle/).
- */
+/** PATCH, creation and lifecycle live in sibling services. */
 @Injectable()
 export class UsersService {
   constructor(

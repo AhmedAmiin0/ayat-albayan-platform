@@ -19,12 +19,7 @@ import { useAvailability, useTeacher, useWeekLessons } from '@/calendar/lib/quer
 import { addDays, viewerToday, weekLabel, weekStart, weekWindow } from '@/calendar/lib/week';
 import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
-/**
- * «جدول المعلم/ة» (R-TCH-02, R-SCH-01): one teacher's week, السبت → الجمعة, as a day-by-day agenda
- * on the viewer's clock with the teacher's own beside it when it differs, and each day's
- * availability as a faint line. ‹ › moves a week; a lesson's «غيّر الميعاد» opens the reschedule
- * sheet and «عدّل الوقت» the in-place edit sheet; a tap on the row opens «تفاصيل الحلقة». Pull to refresh; offline the saved week stays with its «آخر تحديث».
- */
+/** R-TCH-02, R-SCH-01: offline the saved week stays with its last update time. */
 export function TeacherCalendarScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();

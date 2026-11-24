@@ -15,10 +15,7 @@ interface StatementButtonsProps {
   onAction: (action: Exclude<StatementAction, 'receipt'>) => void;
 }
 
-/**
- * One button per allowed action (at most three), in the web's order (statementActions), as ONE ButtonRow
- * of outlined buttons (docs/07 §6); «إلغاء الدفع» is the danger one. «الإيصال» opens a signed link.
- */
+/** At most three actions in the web's order (docs/07 §6); the receipt opens a signed link. */
 export function StatementButtons({ statement, can, linesOpen, onAction }: StatementButtonsProps) {
   const [receiptError, setReceiptError] = useState(false);
   const label: Record<StatementAction, string> = {

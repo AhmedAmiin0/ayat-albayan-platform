@@ -4,9 +4,9 @@ import { useEffect, useRef } from 'react';
 import { notificationsListQuery } from '@ab/mobile-kit';
 
 /**
- * Refreshes `refresh` when a new bell row of `kind` arrives (owner 2026-10-29: «محفظتي» moves when a
- * commission lands). It watches the bell's own query and adds no interval of its own: the header bell's
- * 30 s poll (and the app coming back to the foreground) carries the news, so no extra request is made.
+ * Refreshes `refresh` when a new bell row of `kind` arrives (the wallet moves when a commission
+ * lands). It watches the bell's own query and adds no interval of its own: the header bell's 30 s
+ * poll (and the app coming back to the foreground) carries the news, so no extra request is made.
  */
 export function useBellSignal(kind: PushKind, refresh: QueryKey): void {
   const queryClient = useQueryClient();

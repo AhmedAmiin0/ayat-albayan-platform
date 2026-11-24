@@ -5,14 +5,9 @@ import { t, cityOf } from '@ab/mobile-kit';
 import { formatTimeOff } from '@/more/schedule';
 import { clockIn, isolated, rangeOf } from '@/core/lib/clock';
 
-// The words of a «الجدول» teacher section (R-SCH-01): who the teacher is, their load, the day's
-// windows and free gaps on the viewer's clock, and time off. Pure, unit-tested in Arabic and
-// English.
+// R-SCH-01: teacher section wording on the viewer's clock; pure, tested in Arabic and English.
 
-/**
- * «20:00 – 24:00»: the viewer's wall clock `tz`; an end on midnight reads 24:00 like the web's day
- * track (12 h: «12:00 ص», the end of the day).
- */
+/** On the viewer's wall clock tz; an end on midnight reads 24:00 like the web's day track. */
 export function spanClock(span: Span, cycle: ClockCycle, tz: string): { from: string; to: string } {
   const to = clockIn(new Date(span.ends_at), tz, cycle);
   return {
@@ -21,10 +16,7 @@ export function spanClock(span: Span, cycle: ClockCycle, tz: string): { from: st
   };
 }
 
-/**
- * «معلمة · القرآن الكريم، اللغة العربية · 3 من 10 طالب · القاهرة»: where the teacher lives, named
- * when not the academy's city (docs/34: a place, not a clock; kept).
- */
+/** The teacher's city is named only when not the academy's (docs/34: a place, not a clock). */
 export function teacherMeta(teacher: OverviewTeacher): string {
   const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator);
   return [
@@ -37,7 +29,7 @@ export function teacherMeta(teacher: OverviewTeacher): string {
     .join(' · ');
 }
 
-/** «متاح 16:00 – 18:00، 20:00 – 22:00 بتوقيت القاهرة» on the viewer's clock `tz`, or null. */
+/** On the viewer's clock tz, or null. */
 export function windowsLine(
   windows: readonly Span[],
   cycle: ClockCycle,
@@ -55,7 +47,7 @@ export function windowsLine(
 
 const RANGE = '{from} – {to}';
 
-/** «فاضي 17:00 – 19:00»: the whole range one LTR island, so Arabic never reads it «19:00 – 17:00». */
+/** The whole range is one LTR island so Arabic never reverses it. */
 export function freeLabel(span: Span, cycle: ClockCycle, tz: string): string {
   const { from, to } = spanClock(span, cycle, tz);
   if (t.schedule.free.includes(RANGE)) return t.schedule.free.replace(RANGE, rangeOf(from, to, cycle));
@@ -63,7 +55,6 @@ export function freeLabel(span: Span, cycle: ClockCycle, tz: string): string {
   return t.schedule.free.replace('{from}', isolated(from, cycle)).replace('{to}', isolated(to, cycle));
 }
 
-/** «إجازة · الخميس 1 أكتوبر · سفر». */
 export function timeOffLine(off: OverviewTimeOff, cycle: ClockCycle): string {
   return [
     t.schedule.dayOff,

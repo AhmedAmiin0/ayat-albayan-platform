@@ -19,11 +19,7 @@ import { SessionGroupList } from '@/classroom/sessions/SessionGroupList';
 import { SESSION_GROUPS } from '@ab/client-core';
 import { groupSessions } from '@/classroom/sessions/sessions';
 
-/**
- * «الحلقات المباشرة» (admin): every teacher's lessons of a Riyadh day in three groups (now,
- * upcoming, ended), each with enter / send link / copy link / recordings. Mirrors the web
- * /admin/classrooms; the day shares Today's cache key, so a lesson change refreshes both.
- */
+/** Mirrors web /admin/classrooms; shares Today's cache key so a lesson change refreshes both. */
 export function AdminSessionsScreen() {
   const now = useNow();
   const win = useJoinWindow();

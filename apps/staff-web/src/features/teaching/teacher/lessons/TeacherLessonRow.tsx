@@ -1,5 +1,7 @@
 import type { Density } from '@ab/client-core';
-import { clockOf, type LessonView, subscriptionStatusStyle } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
+import type { LessonView } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { LessonTags, studentNames, studentTimes } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

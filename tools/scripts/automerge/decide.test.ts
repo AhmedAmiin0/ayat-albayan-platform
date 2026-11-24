@@ -40,3 +40,8 @@ test('a reviewed non-lane PR merges only when green too; a stale review skips', 
   const pushed = { ...aReviewedFacts(), suites: [{ created_at: '2026-11-23T01:00:00Z' }] };
   assert.match(decide(pushed).reason, /head is newer than the review/);
 });
+
+test('a PR whose title breaks the angular header is skipped, naming the rule', () => {
+  const reason = decide(withPr({ title: 'Cut shared from db' })).reason;
+  assert.match(reason, /^title: the header is not <type>\(<scope>\): <subject>/);
+});

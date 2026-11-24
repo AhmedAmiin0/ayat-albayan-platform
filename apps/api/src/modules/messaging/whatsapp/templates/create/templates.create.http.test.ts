@@ -3,8 +3,7 @@ import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// POST /messaging/templates «قالب جديد» (owner 2026-10-31): templates.manage, admins only, no Meta
-// call.
+// templates.manage, admins only, no Meta call.
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const CREATE_URL = '/messaging/templates';

@@ -33,7 +33,9 @@ Nothing in this plan runs on the owner's PC. GitHub Actions and cloud routines r
 
 - api is CommonJS, so `verbatimModuleSyntax` would turn every ESM import into TS1286/TS1287. Nest DI uses constructor
   parameter properties, which `erasableSyntaxOnly` forbids. `consistent-type-imports` (§3) covers api instead.
-- mobile keeps `extends: expo/tsconfig.base` (it carries `customConditions: react-native` and `module: preserve`) and lists the flags itself.
+- every tsconfig extends the root `tsconfig.base.json` (the former `base.json`); web and api add the React and Nest
+  options themselves. Mobile copies the options `expo/tsconfig.base` sets apart from it (`customConditions:
+  react-native`, `module: preserve`, …); an Expo upgrade re-checks them.
 - tools/scripts drops its own copy of the flags and extends `base.json`. Its `include` still covers only `move-module`.
   The other CI scripts are `.mjs` and get lint without types (§3).
 - tools/\* and e2e run under Node type stripping. There, a type imported without `import type` fails at runtime with
@@ -198,14 +200,16 @@ no-unsafe-enum-comparison, prefer-return-this-type, return-await.
 PR 1 changes every tsconfig, so its CI runs the full e2e set, including the api boot. In-flight branches rebase onto it
 and fix the violations they add; that is the point of PR 1.
 
-The gate counts per rule across the repo, not per file. ESLint already enforces per-file counts, and a per-file gate
-would fail on every file move. The known gap: a PR can fix one violation and add another of the same rule elsewhere,
-and the totals stay equal. Review catches that, and a new inline `// oxlint-disable-next-line` too: the gate does not
-count them (2 today). Oxlint fails on any directive that hid nothing in its run (`--report-unused-disable-directives-severity=error`),
-an `eslint-disable` included, so an ESLint-only rule has no inline disable: its exception goes in the counted
-suppressions file. A PR that turns on a rule over existing violations raises a total
-on purpose, so the gate fails it: fix the violations in that PR, or the owner merges it past the red check after reading
-the `lint.json` diff.
+That one-time baseline is history. Since docs/59-no-suppressions.md there are no suppressions: no disable
+or ignore comment, no `@ts-` escape, no cast or rename made only to quiet a rule, no rule switched off or loosened,
+no new baseline entry. The entries left in the suppressions files are old debt being removed. `pnpm guard:lint`
+compares every `eslint-suppressions.json` and `oxlint-suppressions.json` with the base branch's, per file and per
+rule (entries follow renamed files), and keeps the per-rule totals check: a count may only fall, and a file entry,
+a rule entry or a suppressions file the base lacks fails. A workspace whose file is gone never gets one back, and a
+file left empty is deleted. A PR that turns on a rule or tightens a limit brings that rule's violations to zero in
+the same PR; nothing writes a baseline for it (`eslint --suppress-all` and the Oxlint gate's `--suppress-all` are
+gone). The guards job annotates a PR that loosens a lint config («lint rules loosened»); it merges only with the
+owner's go.
 
 ### 5.2 Order
 
@@ -228,9 +232,8 @@ eslint . --prune-suppressions     # drop the entries this PR fixed or whose file
 pnpm lint:prune                   # the same in every package (turbo, no cache)
 ```
 
-A new rule (docs/32 §1) enters with its one-time `eslint --suppress-rule` baseline: on a PR the gate also gets the
-ESLint config sources of both sides (`--configs`), and a rule that only the head's configs name may start above 0.
-After that PR its total only shrinks; a preset rule that no config names keeps its base total.
+A new rule turns on only when the code already passes it (docs/59): its lane fixes every site first, and the PR
+that turns it on has no suppression for it. `eslint --suppress-rule` and `--suppress-all` are never run.
 
 A conflict in an `eslint-suppressions.json`: take develop's side, then re-run `--prune-suppressions` on the merge result.
 
@@ -238,7 +241,7 @@ Since docs/32 g3 (`max-len` 100, `max-lines-per-function` 50, `ab/max-params`, t
 carry an entry, so shortening one baselined line or splitting one long function is enough to need a prune. Nobody
 has to run ESLint by hand for it: when the CI lint job fails, its last step («Suppressions to prune») prints the
 pruned `eslint-suppressions.json` diff. Commit that diff; `pnpm guard:lint` has nothing to write (it compares
-the totals with the base branch, 20b713d61).
+every file with the base branch's). A file left as `{}` is deleted.
 
 ## 6. Fix lanes
 

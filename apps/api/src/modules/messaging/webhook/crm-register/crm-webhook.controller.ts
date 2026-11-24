@@ -7,12 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import type { CrmWebhookResult } from './crm-webhook.schemas';
 import { CrmWebhookRegistrar } from './crm-webhook.service';
 
-/**
- * «ربط علامات التسليم من نظام CRM تلقائيًا» in «التكاملات» (docs/19 «crm driver»): same
- * permission as PUT /settings/integrations/secrets/:key. Registers the CRM's delivery-ticks
- * webhook and stores its secret; the answer and the audit row hold the endpoint id and key name,
- * never the secret.
- */
+/** Same permission as the secrets PUT (docs/19); answers and audit never hold the secret. */
 @ApiTags('settings')
 @ApiBearerAuth()
 @Permissions('settings.write')

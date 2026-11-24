@@ -9,7 +9,7 @@ import type { CrmCopiesRepo } from './crm-copies.repo';
 import { CrmCopyRefresh } from './crm-copy-refresh.job';
 import { sentOnCrm } from './crm-sent-template';
 
-// The copy fills without anyone pressing «مزامنة»: the daily job, and the crm line's own sync.
+// The copy fills without a manual sync: the daily job and the crm line's own sync.
 
 const NOW = new Date('2026-11-07T08:00:00Z');
 const LIST: MetaTemplate[] = [];
