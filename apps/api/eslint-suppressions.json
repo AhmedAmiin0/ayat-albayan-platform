@@ -411,11 +411,6 @@
       "count": 1
     }
   },
-  "src/common/db/list-sort/tests/list-sort.test.ts": {
-    "@typescript-eslint/prefer-return-this-type": {
-      "count": 1
-    }
-  },
   "src/common/db/list-sort/list-sort.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -425,6 +420,11 @@
     },
     "max-len": {
       "count": 2
+    }
+  },
+  "src/common/db/list-sort/tests/list-sort.test.ts": {
+    "@typescript-eslint/prefer-return-this-type": {
+      "count": 1
     }
   },
   "src/common/db/read-all.test.ts": {
@@ -522,11 +522,6 @@
       "count": 4
     }
   },
-  "src/common/infra/cache/shared-cache/tests/fallback.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/common/infra/cache/shared-cache/shared-cache.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 1
@@ -536,6 +531,11 @@
     },
     "max-len": {
       "count": 10
+    }
+  },
+  "src/common/infra/cache/shared-cache/tests/fallback.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/common/infra/cache/ttl-cache.ts": {
@@ -945,17 +945,17 @@
       "count": 1
     }
   },
-  "src/common/storage/storage.paths/tests/storage.paths.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/common/storage/storage.paths/storage.paths.ts": {
     "complexity": {
       "count": 1
     },
     "max-len": {
       "count": 9
+    }
+  },
+  "src/common/storage/storage.paths/tests/storage.paths.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/common/storage/storage.service.test.ts": {
@@ -2249,14 +2249,30 @@
       "count": 8
     }
   },
+  "src/modules/finance/subscriptions/alerts/tests/unpaid-flags.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
   "src/modules/finance/subscriptions/alerts/unpaid-flags.service.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/alerts/tests/unpaid-flags.test.ts": {
+  "src/modules/finance/subscriptions/cancel/subscription-cancel.repo.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "complexity": {
+      "count": 1
+    },
     "max-len": {
-      "count": 3
+      "count": 6
+    }
+  },
+  "src/modules/finance/subscriptions/cancel/subscription-cancel.service.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/modules/finance/subscriptions/cancel/tests/subscription-cancel.fifo.http.test.ts": {
@@ -2275,22 +2291,6 @@
     }
   },
   "src/modules/finance/subscriptions/cancel/tests/subscription-cancel.repo.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/subscriptions/cancel/subscription-cancel.repo.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 6
-    }
-  },
-  "src/modules/finance/subscriptions/cancel/subscription-cancel.service.ts": {
     "max-len": {
       "count": 2
     }
@@ -2316,16 +2316,6 @@
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/money/tests/balance.teacher.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/subscriptions/money/tests/commission-bell.test.ts": {
-    "max-len": {
-      "count": 6
-    }
-  },
   "src/modules/finance/subscriptions/money/commission-bell.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -2346,11 +2336,6 @@
       "count": 4
     }
   },
-  "src/modules/finance/subscriptions/money/tests/money-follow-ups.test.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/finance/subscriptions/money/money-follow-ups.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -2362,14 +2347,42 @@
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/money/tests/money-writes.test.ts": {
+  "src/modules/finance/subscriptions/money/money-writes.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/subscriptions/money/packages.plan.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/subscriptions/money/packages.service.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/money/tests/balance.teacher.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/money/money-writes.ts": {
+  "src/modules/finance/subscriptions/money/tests/commission-bell.test.ts": {
     "max-len": {
-      "count": 3
+      "count": 6
+    }
+  },
+  "src/modules/finance/subscriptions/money/tests/money-follow-ups.test.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/money/tests/money-writes.test.ts": {
+    "max-len": {
+      "count": 1
     }
   },
   "src/modules/finance/subscriptions/money/tests/packages.plan.cancelled.test.ts": {
@@ -2382,20 +2395,31 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/money/packages.plan.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/modules/finance/subscriptions/money/tests/packages.service.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/finance/subscriptions/money/packages.service.ts": {
+  "src/modules/finance/subscriptions/shared/subscription-creator.ts": {
+    "ab/module-boundaries": {
+      "count": 1
+    },
+    "max-len": {
+      "count": 4
+    }
+  },
+  "src/modules/finance/subscriptions/shared/subscriptions.repo.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-condition": {
+      "count": 1
+    },
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/shared/subscriptions.service.ts": {
     "max-len": {
       "count": 2
     }
@@ -2430,14 +2454,6 @@
       "count": 3
     }
   },
-  "src/modules/finance/subscriptions/student-lifecycle/tests/student-deactivation.test.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/subscriptions/student-lifecycle/student-deactivation.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 2
@@ -2449,19 +2465,9 @@
       "count": 8
     }
   },
-  "src/modules/finance/subscriptions/student-lifecycle/tests/student-expiry.job.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
   "src/modules/finance/subscriptions/student-lifecycle/student-expiry.repo.ts": {
     "max-len": {
       "count": 2
-    }
-  },
-  "src/modules/finance/subscriptions/student-lifecycle/tests/student-renewal.plan.test.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-renewal.plan.ts": {
@@ -2470,11 +2476,6 @@
     },
     "max-len": {
       "count": 12
-    }
-  },
-  "src/modules/finance/subscriptions/student-lifecycle/tests/student-renewal.test.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/finance/subscriptions/student-lifecycle/student-renewal.ts": {
@@ -2496,12 +2497,27 @@
       "count": 4
     }
   },
-  "src/modules/finance/subscriptions/shared/subscription-creator.ts": {
-    "ab/module-boundaries": {
+  "src/modules/finance/subscriptions/student-lifecycle/tests/student-deactivation.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/tests/student-expiry.job.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/tests/student-renewal.plan.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/student-lifecycle/tests/student-renewal.test.ts": {
+    "max-len": {
+      "count": 2
     }
   },
   "src/modules/finance/subscriptions/subscriptions.controller.ts": {
@@ -2523,16 +2539,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/tests/http.test.ts": {
-    "max-len": {
-      "count": 3
-    }
-  },
-  "src/modules/finance/subscriptions/tests/http.used-before.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/subscriptions/subscriptions.mapper.ts": {
     "@typescript-eslint/no-unnecessary-type-conversion": {
       "count": 2
@@ -2544,6 +2550,16 @@
       "count": 3
     }
   },
+  "src/modules/finance/subscriptions/tests/http.test.ts": {
+    "max-len": {
+      "count": 3
+    }
+  },
+  "src/modules/finance/subscriptions/tests/http.used-before.test.ts": {
+    "max-len": {
+      "count": 1
+    }
+  },
   "src/modules/finance/subscriptions/tests/migration-932.test.ts": {
     "max-len": {
       "count": 1
@@ -2552,22 +2568,6 @@
   "src/modules/finance/subscriptions/tests/replay.http.test.ts": {
     "max-len": {
       "count": 1
-    }
-  },
-  "src/modules/finance/subscriptions/shared/subscriptions.repo.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-condition": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/modules/finance/subscriptions/shared/subscriptions.service.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/finance/subscriptions/tests/test-app.fakes.ts": {
@@ -2583,14 +2583,6 @@
       "count": 4
     }
   },
-  "src/modules/finance/subscriptions/trial/tests/student-trial-status.test.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/subscriptions/trial/student-trial-status.ts": {
     "@typescript-eslint/no-meaningless-void-operator": {
       "count": 1
@@ -2602,14 +2594,6 @@
       "count": 10
     }
   },
-  "src/modules/finance/subscriptions/trial/tests/student-trial.plan.test.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 2
-    },
-    "max-len": {
-      "count": 2
-    }
-  },
   "src/modules/finance/subscriptions/trial/student-trial.plan.ts": {
     "complexity": {
       "count": 1
@@ -2619,6 +2603,22 @@
     }
   },
   "src/modules/finance/subscriptions/trial/student-trial.repo.ts": {
+    "max-len": {
+      "count": 2
+    }
+  },
+  "src/modules/finance/subscriptions/trial/tests/student-trial-status.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
+    "max-len": {
+      "count": 1
+    }
+  },
+  "src/modules/finance/subscriptions/trial/tests/student-trial.plan.test.ts": {
+    "@typescript-eslint/consistent-type-definitions": {
+      "count": 2
+    },
     "max-len": {
       "count": 2
     }
@@ -4240,7 +4240,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     },
     "no-nested-ternary": {
       "count": 1
@@ -5569,10 +5569,10 @@
   },
   "src/modules/messaging/whatsapp/messages/wa-components.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/messages/wa-json.test.ts": {
@@ -7767,9 +7767,6 @@
     }
   },
   "src/modules/reporting/dashboard/finance/finance.service.ts": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
     "max-len": {
       "count": 3
     }
@@ -9264,7 +9261,7 @@
   },
   "src/modules/teaching/booking/core/booking.repo.ts": {
     "@typescript-eslint/consistent-type-definitions": {
-      "count": 5
+      "count": 1
     },
     "@typescript-eslint/no-unnecessary-condition": {
       "count": 1
@@ -9276,7 +9273,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/modules/teaching/booking/core/booking.service.replay.test.ts": {
@@ -11986,9 +11983,6 @@
     }
   },
   "src/modules/teaching/student-recordings/student-recordings.service.ts": {
-    "@typescript-eslint/no-import-type-side-effects": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },

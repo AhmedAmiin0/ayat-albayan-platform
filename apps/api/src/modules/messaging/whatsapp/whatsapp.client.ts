@@ -2,7 +2,7 @@ import { WA_ERROR } from '@ab/catalog';
 import { recipientAllowed, type GraphEnv } from '@/config/env/env';
 import { z } from 'zod';
 import type { Http } from '@/common/infra/http/http.types';
-import { graphHttp, graphSend, type FetchLike, type GraphConn } from './drivers/meta/graph';
+import { graphHttp, graphSend, type GraphConn } from './drivers/meta/graph';
 import { fetchMedia, templateEditPath } from './drivers/kapso/kapso';
 import type { CrmBody } from './drivers/crm/crm-body';
 import { sentSchema, submitSchema } from './drivers/meta/meta-shapes';

@@ -1,7 +1,7 @@
 import { canTransitionLead } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
 import type { LeadView } from '@ab/shared';
-import type { LeadSource, LeadStatus } from '@ab/catalog';
+import type { LeadStatus } from '@ab/catalog';
 import type { Page } from '@ab/core';
 import {
   BadRequestException,
