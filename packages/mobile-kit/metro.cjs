@@ -11,7 +11,7 @@ const appAlias = (appDir, next) => (context, name, platform) => {
   return next(context, target, platform);
 };
 
-/** `appDir`: the app's folder (its metro.config's __dirname). */
+/** `appDir`: the app's folder (its metro.config.mjs `import.meta.dirname`). */
 const metroConfig = (appDir) => {
   const { getDefaultConfig } = require('expo/metro-config');
   const config = getDefaultConfig(appDir);
