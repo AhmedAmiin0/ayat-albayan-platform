@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { LessonFilesSection } from '@/features/teaching/lesson-files';
 import { Drawer, studentNames } from '@/features/teaching/schedule';
 import { TeacherLessonCard } from './TeacherLessonCard';

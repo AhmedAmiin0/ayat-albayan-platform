@@ -1,4 +1,4 @@
-import type { TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';

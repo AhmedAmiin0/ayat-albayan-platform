@@ -1,5 +1,5 @@
 import { alertLine, alertParts, type AlertParts, type AlertWords, todayAlerts } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { usePermissions } from '@/features/people/auth';
 import { notificationsQuery } from '@/features/messaging/notifications';
