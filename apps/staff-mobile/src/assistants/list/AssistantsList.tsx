@@ -8,10 +8,6 @@ import type { AssistantRow } from '@ab/client-core';
 
 const renderRow = ({ item }: ListRenderItemInfo<AssistantRow>) => <AssistantItem assistant={item} />;
 
-/**
- * «مسؤولو المبيعات» (web AssistantsList): each salesperson with their salary and commission terms, in
- * one inset card inside the gutter (owner 2026-10-28: one container rule).
- */
 export function AssistantsList() {
   const list = useAssistants();
   const cells = useInsetRows(renderRow, list.data?.length ?? 0);

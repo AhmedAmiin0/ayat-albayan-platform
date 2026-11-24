@@ -14,13 +14,12 @@ import type { BookingKind, InvoiceDraft } from '@/booking/shared/contract';
 import { DEFAULT_MINUTES } from './package-choice';
 import type { LeadView } from '@ab/shared';
 
-// «حجز حلقة تجريبية» (or a package, from the chat's «اشترك») for a lead (R-MOB-02, R-LEAD-06):
-// the wizard's state. Pure; the screens only edit a TrialDraft (booking-body.ts sends it).
+// R-MOB-02, R-LEAD-06: the wizard state; pure, sent by booking-body.ts.
 
 /** What the wizard needs of the lead: a cached GET /leads row (with its answers), or the chat's lead. */
 export type BookingLead = Pick<LeadView, 'id' | 'name' | 'phone_e164'> & {
   source?: LeadSource;
-  /** leads.qualification (jsonb): «بيانات الطالب» prefill the child (R-LEAD-03). */
+  /** leads.qualification jsonb prefills the child (R-LEAD-03). */
   qualification?: unknown;
 };
 
@@ -30,40 +29,40 @@ export const isLeadSource = (v: unknown): v is LeadSource => LEAD_SOURCES.some((
 export interface TrialDraft {
   leadId: string;
   studentName: string;
-  /** «سن الطالب» as typed; empty = not asked (optional on the form). */
+  /** As typed; empty means not asked (optional). */
   age: string;
-  /** «النوع» of the child; not the teacher-gender preference below. */
+  /** The child's gender, not the teacher-gender preference below. */
   studentGender: Gender | null;
   guardianName: string;
   /** Prefilled from the lead's WhatsApp number, editable (a parent may book from another one). */
   phone: string;
   /** The family's zone: the new student's, the guardian's and the rule's (docs/10 §5 route 14). */
   tz: string;
-  /** «عرفت عننا منين؟»: the guardian's source, prefilled from the lead's. */
+  /** The guardian's source, prefilled from the lead's. */
   source: LeadSource | null;
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent / false = «ولي الأمر». */
+  /** docs/30 §1: absent or false means the number is the guardian's. */
   contactIsSelf?: boolean;
   program: Program;
-  /** Teacher-gender preference (R-SCH-06); null = «مش فارقة». */
+  /** Teacher-gender preference (R-SCH-06); null means no preference. */
   gender: Gender | null;
   teacher: BookingTeacherOption | null;
   /** The picked free slot (UTC instant); a package's earliest pick (picks.ts). */
   startsAt: string | null;
-  /** «وقت آخر»: `startsAt` lies outside the teacher hours; the booking sends outsideHours. */
+  /** startsAt lies outside the teacher's hours; the booking sends outsideHours. */
   outsideHours?: boolean;
-  /** «نوع الحجز»: a trial or a package (a makeup has its own wizard: makeup-draft.ts). */
+  /** A trial or a package; a makeup has its own wizard (makeup-draft.ts). */
   kind: Exclude<BookingKind, 'makeup'>;
   /** 'trial' for a trial, else a paid size (8, 12…); set together with `kind` (kindPatch). */
   pkg: PackageSize;
-  /** «الفاتورة»: the payment proof, required for a package, never asked for a trial. */
+  /** Payment proof, required for a package, never asked for a trial. */
   invoice: InvoiceDraft | null;
-  /** «المده»: the lesson length the slots and the rule use (the form's default 45). */
+  /** The lesson length the slots and the rule use; default 45. */
   durationMin: Duration;
   /** A paid package's other picks (one per family-tz weekday, each with its own time), sorted. */
   extra: string[];
 }
 
-/** «وقت آخر» goes with a trial only: a package's day rows never set it. */
+/** Outside-hours times go with a trial only; a package's day rows never set it. */
 export const isOutside = (d: Pick<TrialDraft, 'outsideHours' | 'kind'>): boolean =>
   d.outsideHours === true && d.kind !== 'package';
 
@@ -88,10 +87,7 @@ export function tzForPhone(phone: string): string {
 
 const ZONES: readonly string[] = TZ_OPTIONS;
 
-/**
- * The lead prefills the wizard: the number, the parent's name (asked, else the WhatsApp name) and
- * whatever «بيانات الطالب» already holds (the child's name, age, gender and zone), plus the source.
- */
+/** The parent's name falls back to the WhatsApp name. */
 export function draftFromLead(lead: BookingLead, pkg: PackageSize = 'trial'): TrialDraft {
   const q = qualForm(lead.qualification);
   return {
@@ -123,14 +119,14 @@ export function phoneProblem(phone: string): PhoneProblem | null {
   return p.ok ? null : p.reason;
 }
 
-/** «سن الطالب» is optional; typed, it is a whole number 3–99 (the form's own check). */
+/** Optional; when typed, a whole number 3-99. */
 export function ageValid(age: string): boolean {
   const text = age.trim();
   const n = Number(text);
   return !text || (/^\d+$/.test(text) && n >= 3 && n <= 99);
 }
 
-/** «التالي» on the first step: both names, a phone that normalizes to E.164, a sane age. */
+/** Both names, a phone that normalizes to E.164, and a sane age. */
 export function contactReady(
   d: Pick<TrialDraft, 'studentName' | 'guardianName' | 'phone' | 'age'>,
 ): boolean {

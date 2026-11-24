@@ -88,7 +88,7 @@ test('sales: read-only, the lesson link (owner 2026-10-26), no report, no packag
   expect(screen.getByText('https://meet.example/abc')).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.report.submitted)).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s2/balance');
-  // Outside the sales tree (the admin's «المزيد» › «المبيعات») the admin's student file; studentHref covers the sales tree.
+  // Outside the sales tree it opens the admin's student file; studentHref covers the sales tree.
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
   expect(router.push).toHaveBeenCalledWith('/students/s2', { withAnchor: true });
 });

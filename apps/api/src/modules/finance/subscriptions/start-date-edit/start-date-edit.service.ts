@@ -56,15 +56,7 @@ function assertAllowed(view: SubscriptionView, input: StartDateEditInput): void 
   if (problem) throw ERRORS[problem](problem);
 }
 
-/**
- * «تعديل تاريخ البدء» (owner 2026-11-03): admins and assistants holding
- * subscriptions.edit_terms, ANY student (as UsedBeforeEdit). Refusals: 404
- * subscription_not_found, 409 already_cancelled / start_date_changed, 400 start_date_too_old /
- * used_before_needs_past_start (startDateEditProblem), checked first: the same day then answers
- * without a write. ONLY starts_on is written (renews_on, lessons, rules, payments, commissions
- * stay); audited with the row before / after through MoneyWrites, which recomputes the student's
- * statuses and alerts (the balance's FIFO order follows starts_on).
- */
+/** Only starts_on is written; recompute follows since the balance FIFO follows starts_on. */
 @Injectable()
 export class StartDateEdit {
   constructor(

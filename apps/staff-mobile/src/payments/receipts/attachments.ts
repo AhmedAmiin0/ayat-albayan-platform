@@ -1,4 +1,4 @@
-import { PAYMENT_ATTACHMENTS_MAX } from '@ab/shared';
+import { PAYMENT_ATTACHMENTS_MAX } from '@ab/money';
 import { useRef } from 'react';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 

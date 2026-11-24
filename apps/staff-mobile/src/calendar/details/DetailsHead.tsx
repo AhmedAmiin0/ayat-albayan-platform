@@ -6,11 +6,7 @@ import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 import { Tag } from '@/calendar/agenda/Tag';
 import type { DetailsLesson } from './details-text';
 
-/**
- * The sheet's first line: the status chip (nuqta + word), «جارية الآن» while it runs, then the
- * kind tags «تجريبية» / «تعويضية» and «عُدّل الوقت» after an in-place edit (R-SCH-09/10/11);
- * «أكّد المعلم الحضور» once the teacher said «سأحضر» (docs/46 C4, never the status).
- */
+/** R-SCH-09/10/11 tags; the teacher's attendance confirmation never changes status (docs/46 C4). */
 export function DetailsHead({ lesson }: { lesson: DetailsLesson }) {
   const now = useNow();
   return (

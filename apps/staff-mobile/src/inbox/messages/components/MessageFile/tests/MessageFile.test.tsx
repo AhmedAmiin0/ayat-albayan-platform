@@ -46,7 +46,7 @@ const noPreview = () => Promise.reject(new ApiError(422, { code: 'pdf_no_preview
 /** W6 answers `file`; the bubble's other reads (/auth/me for its actions) get nothing. */
 const serve = (file: () => Promise<unknown>) =>
   mockApiFetch.mockImplementation((path: string) => (path === PATH ? file() : path === PDF_1 ? noPreview() : Promise.resolve(null)));
-/** «عرض ملف»: the PDF card asks page 1 as it shows; it has no preview, so today's opener stays. */
+/** The PDF card has no preview of its own, so the existing opener stays. */
 const pdfOpener = () => screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
 
 beforeEach(() => {

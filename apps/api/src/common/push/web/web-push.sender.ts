@@ -11,7 +11,7 @@ import { vapidAuthorization, type VapidKeys } from './web-push.vapid';
 /** One POST to a push service; the status is all we read. Injectable: tests never reach the network. */
 export type WebPushTransport = (req: { url: string; headers: Record<string, string>; body: Buffer }) => Promise<{ status: number }>;
 export const WEB_PUSH_TRANSPORT = Symbol('WEB_PUSH_TRANSPORT');
-/** The VAPID keys now (webPushEnv(loadEnv()), read per send: «التكاملات» may change them); null = off. */
+/** Read per send since integrations may change the keys; null means web push is off. */
 export const WEB_PUSH_KEYS = Symbol('WEB_PUSH_KEYS');
 export type WebPushKeysSource = () => VapidKeys | null;
 

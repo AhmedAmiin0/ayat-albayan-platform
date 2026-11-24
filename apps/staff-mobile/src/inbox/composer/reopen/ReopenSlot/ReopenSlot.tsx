@@ -31,11 +31,7 @@ const carried = (draft: string) => (SLOT ? { [SLOT]: draft } : {});
 const carriesDraft = (out: Outgoing): boolean =>
   out.kind === 'template' && out.key === MESSAGE_TEMPLATE;
 
-/**
- * «إعادة فتح المحادثة» (owner 2026-11-14, «like Kapso»): the bar of a known chat whose window
- * closed, and its template sheet (chat-line templates this user may send, opened on the
- * academy's `chat_reopen_template`, prefilled and editable, with the preview).
- */
+/** Opens on the academy's chat_reopen_template; only chat-line templates this user may send. */
 export function ReopenSlot(props: ReopenSlotProps) {
   const { phone, thread, open, teacher } = props;
   const state = useReopenBar({ phone, thread, open, teacher });

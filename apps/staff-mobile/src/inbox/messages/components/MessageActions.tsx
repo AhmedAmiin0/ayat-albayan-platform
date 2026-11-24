@@ -4,12 +4,7 @@ import { t, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 
-/**
- * Under a row the admin handed to their own WhatsApp (R-MSG-03; retry and «أرسلها بنفسك» are in
- * FailedSheet, a tap on «! لم تُرسل»): the question «هل أرسلتها؟» comes from the row itself, so it
- * survives closing the app, and stays in the bubble as a pending answer. Yes records the manual
- * send, no puts it back in the queue.
- */
+/** R-MSG-03: the sent-it question comes from the row so it survives closing the app. */
 export function MessageActions({ message: m, phone }: { message: MessageView; phone: string }) {
   const retry = useMessageAction(phone, 'retry');
   const manual = useMessageAction(phone, 'sent-manually');

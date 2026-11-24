@@ -3,10 +3,7 @@ import { counted } from '@ab/core';
 import { pickProgress } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 
-// What the step shows around its rows: the picks they make, the repeated weekdays, whether
-// «التالي» opens, the heading note, the course's progress and whether a day can be added or
-// removed (the days a week are not fixed). A past time keeps «التالي» shut (the API refuses or
-// silently skips it). Pure.
+// A past time keeps next shut because the API refuses or silently skips it; pure.
 
 /** Most a weekly package can have: one row per weekday. */
 const MAX_ROWS = 7;

@@ -23,7 +23,7 @@ beforeEach(() => {
   mockApiFetch.mockImplementation(fakeBookingApi().fetch);
 });
 
-/** The inbox row as GET /leads returns it, with what «بيانات الطالب» already holds. */
+/** The inbox row as GET /leads returns it, with the student details already held. */
 function seeded(qualification: Record<string, unknown> = {}) {
   const client = createTestQueryClient();
   const row = { ...huda, qualification };
@@ -44,7 +44,7 @@ test('step 1 asks the registration form’s questions in its words, prefilled fr
   expect(radio(t.students.gender, t.enums.gender.female)).toBeChecked();
   expect(screen.getByLabelText(t.guardians.phone)).toBeTruthy();
   expect(screen.getByText(t.guardians.phoneHint)).toBeTruthy();
-  // «المدة» with its help, 45 by default; «كيف عرفت عنا؟» from the lead's source.
+  // Duration defaults to 45; the source comes from the lead.
   expect(radio(t.booking.pickDuration, t.enums.duration['45'])).toBeChecked();
   expect(screen.getByText(t.booking.durationHint)).toBeTruthy();
   expect(radio(t.guardians.source, t.enums.leadSource.facebook_ad)).toBeChecked();

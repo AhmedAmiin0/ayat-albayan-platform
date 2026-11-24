@@ -5,7 +5,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { AmountText } from '@/sales-money/components/AmountText';
 import { byCurrency } from '@/sales-money/lib/money-text';
 
-/** The totals a statement froze (web StatementTotals): per currency, the total then «الراتب + العمولات + التسويات = الإجمالي». */
+/** Per currency, as the statement froze them. */
 export function StatementTotals({ totals }: { totals: Readonly<Record<string, CurrencyTotals>> }) {
   const entries = byCurrency(totals);
   if (entries.length === 0) return <Note>—</Note>;

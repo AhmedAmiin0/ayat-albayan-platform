@@ -102,7 +102,7 @@ test('a lesson’s «غيّر الموعد» is in view on its row (no hidden ta
   serve({ [THIS_WEEK]: [done, pending] });
   await renderWithQuery(<TeacherCalendarScreen />, confirmingQueryClient());
   const move = await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` });
-  // One action: the held lesson (جودى) cannot move.
+  // The held lesson cannot move.
   expect(screen.getAllByRole('button', { name: new RegExp(t.lessons.rescheduleSubmit) })).toHaveLength(1);
   await fireEvent.press(move);
   expect(await screen.findByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();

@@ -5,7 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
-// A photo sent while answering a message goes with replyToMessageId (owner 2026-10-25 «رد»).
+// A photo sent while replying to a message carries replyToMessageId.
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

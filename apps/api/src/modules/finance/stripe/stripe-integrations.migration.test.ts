@@ -3,7 +3,7 @@ import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 997 (Stripe in «التكاملات», docs/30), read as text: no database in unit tests.
+// Migration 997 (docs/30) read as text: no database in unit tests.
 const sql = readFileSync(migrationPath('20261101000997_stripe_integrations.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 
