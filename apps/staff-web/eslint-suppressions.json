@@ -6933,20 +6933,14 @@
     }
   },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.tsx": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
     "@typescript-eslint/no-confusing-void-expression": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 2
     },
     "complexity": {
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 4
     },
     "max-lines-per-function": {
       "count": 1

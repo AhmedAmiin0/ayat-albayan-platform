@@ -1,5 +1,4 @@
-// The imported student status (docs/06 «Student status»): «مشترك» (active) only
-// with evidence of a CURRENT subscription. Pure; the evidence is gathered in facts.ts.
+// Imported status (docs/06): active only with evidence of a current subscription; pure.
 import type { StudentStatus } from '@ab/catalog';
 import { SETTINGS_REGISTRY } from '@ab/settings';
 
@@ -15,9 +14,9 @@ export type PaymentState = 'current' | 'grace' | 'ended';
 interface StatusEvidence {
   /** The best payment period of the student, or null when nothing was paid. */
   payment: PaymentState | null;
-  /** A «مشترك» weekly booking still running on the import date (lessons ahead). */
+  /** A subscribed weekly booking still running on the import date. */
   series: boolean;
-  /** An attended lesson report (on_time / late) or a booking marked «تمت». */
+  /** An attended lesson report (on_time or late) or a booking marked done. */
   attended: boolean;
 }
 
@@ -52,11 +51,7 @@ const RANK: Record<PaymentState, number> = { current: 3, grace: 2, ended: 1 };
 export const bestPayment = (a: PaymentState | undefined, b: PaymentState): PaymentState =>
   a && RANK[a] >= RANK[b] ? a : b;
 
-/**
- * active: a current payment or a running «مشترك» series · pending_renewal / expired: only past
- * payments · pending_subscription: attended but never paid · new: nothing (whatever HUB says).
- * Never trial: bookings do not make trial students on import.
- */
+/** Never trial: bookings do not make trial students on import. */
 export function importedStatus(e: StatusEvidence): StudentStatus {
   if (e.payment === 'current' || e.series) return 'active';
   if (e.payment === 'grace') return 'pending_renewal';

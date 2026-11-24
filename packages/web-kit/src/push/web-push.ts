@@ -1,7 +1,6 @@
 import { deleteWebPush, saveWebPush } from './web-push-api';
 
-// This browser's push subscription (R-NOT-01): public/sw.js shows what arrives. Subscribing asks
-// for permission, so it only ever runs from a click («فعّل إشعارات المتصفح»), never on load.
+// R-NOT-01: subscribing asks for permission, so it only runs from a click, never on load.
 
 export const SW_URL = '/sw.js';
 /** Longest sign-out waits for the subscription to be forgotten. */

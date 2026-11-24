@@ -4,7 +4,7 @@ import { moneyText } from '@ab/web-kit/lib/money-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { dayText } from './package-text';
 
-/** «سجل المدفوعات»: date, kind and amount, newest first; a refund is a minus. None: hidden. */
+/** Newest first; a refund is a minus; hidden when there are none. */
 export function PaymentsList({ payments }: { payments: PortalPayment[] }) {
   if (payments.length === 0) return null;
   return (

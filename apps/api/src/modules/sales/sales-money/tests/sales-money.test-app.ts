@@ -14,7 +14,7 @@ import { PushModule } from '@/common/push/push.module';
 import { SettingsModule } from '@/common/settings/settings.module';
 import { AvatarsModule } from '@/common/storage/avatars/avatars.module';
 import { StorageOpsModule } from '@/common/storage/probe';
-import { moneyAppOf } from '@/modules/finance/subscriptions/test-app';
+import { moneyAppOf } from '@/modules/finance/subscriptions/tests/test-app';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';

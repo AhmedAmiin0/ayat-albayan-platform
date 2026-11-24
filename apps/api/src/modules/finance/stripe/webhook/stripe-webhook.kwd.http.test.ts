@@ -5,8 +5,8 @@ import {
   STUDENT_ID,
   SUB_ID,
   subRow,
-} from '@/modules/finance/subscriptions/money/money.fakes';
-import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
+} from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
 import { sessionEvent } from '@/modules/finance/stripe/testing/stripe-events.fakes';
 import {

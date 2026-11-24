@@ -2,8 +2,8 @@ import { SETTING_DEFAULTS, systemPermissionsOf } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';
-import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { SUB_ID, subRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 

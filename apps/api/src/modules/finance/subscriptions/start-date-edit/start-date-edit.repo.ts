@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import type { SubRow } from '@/modules/finance/subscriptions/subscriptions.repo';
+import type { SubRow } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { SELECT } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 
 interface StartsOnWrite {

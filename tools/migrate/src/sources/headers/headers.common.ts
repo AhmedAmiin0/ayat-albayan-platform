@@ -8,7 +8,7 @@ export const SUBS_FILE = 'تقارير آيات البيان/سجل الطلاب
 export const HEART_FILE = 'Ayat ALBayan Heart.xlsx';
 export const FIN_FILE = 'Main income statment.xlsx';
 
-/** «تقرير الحلقة» Google Form: HUB «تقارير الحلقات» and REP «Form Responses 1». */
+/** The lesson report Google Form: HUB reports tab and REP "Form Responses 1". */
 export const REPORT_FIELDS: Record<string, string> = {
   Timestamp: 'submitted_at',
   'معرّف الطالب (لا تعدله)': 'legacy_code', // A2: empty in every row
@@ -16,7 +16,7 @@ export const REPORT_FIELDS: Record<string, string> = {
   'اسم الطالب / الطالبة': 'student_name',
   'تاريخ الحلقة': 'lesson_date',
   'رقم الحلقة': 'lesson_number_text', // A5: ignored, numbering is derived (v_lesson_sequence)
-  البرنامج: 'program', // القرآن الكريم · اللغة العربية
+  البرنامج: 'program', // Quran or Arabic
   الحضور: 'attendance', // values.ts attendance
   'رابط الاجتماع': 'meeting_link',
   'التسميع (المُسمَّع)': 'recited',
@@ -33,17 +33,17 @@ export const REPORT_FIELDS: Record<string, string> = {
   'ملاحظات المعلمة': 'notes',
   'الواجب المطلوب قبل الحلقة القادمة': 'homework',
   'خطة الحلقة القادمة': 'next_plan',
-  'المرفقات (اختياري)': 'attachments', // Drive links to images in «المرفقات (اختياري) (File responses)»
+  'المرفقات (اختياري)': 'attachments', // Drive links to attachment images
 };
 
-/** «تقويم الحجوزات» (HUB and BOOK; each adds its own teacher columns). */
+/** Bookings calendar (HUB and BOOK; each adds its own teacher columns). */
 export const BOOKING_FIELDS: Record<string, string> = {
-  الاسم: 'name', // A4: «X وY» = two children on one row
+  الاسم: 'name', // A4: two children on one row
   الرقم: 'phone', // A8: 4 formats
   التاريخ: 'date',
   'وقت البداية': 'start_time',
   'المدة (دقيقة)': 'duration_min', // 30 · 45 · 60 · 90
-  التكرار: 'recurrence', // «أسبوعي: السبت,الثلاثاء حتى 2026-10-17»; empty = one-off
+  التكرار: 'recurrence', // weekly days with an until date; empty = one-off
   الحالة: 'status', // values.schedule.ts bookingStatus
   'نوع الحلقة': 'package_text', // values.ts packageSize
   ملاحظات: 'notes',
@@ -52,7 +52,7 @@ export const BOOKING_FIELDS: Record<string, string> = {
   'عدد الطلاب': 'student_count',
 };
 
-/** «كل المحادثات» (HUB and BOOK hold the same 107 phones). */
+/** The conversations tab (HUB and BOOK hold the same 107 phones). */
 export const CONVERSATION_FIELDS: Record<string, string> = {
   التاريخ: 'date',
   اليوم: 'weekday',

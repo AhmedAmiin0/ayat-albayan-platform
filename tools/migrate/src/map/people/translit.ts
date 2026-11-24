@@ -1,7 +1,4 @@
-// HEART / FIN write names in Latin («Hala», «tala»); the registry in Arabic. Comparing
-// consonant skeletons tells siblings on one phone apart (هالة → hl ← Hala). Pure.
-// Crude skeleton (vowels, ع, و/ي dropped; emphatics folded); only used as a tie-break
-// between the children of one guardian phone, never to find a student on its own.
+// Latin vs Arabic consonant skeletons only break ties between siblings on one phone; pure.
 import { normalizeArabic } from '@ab/core';
 
 const AR: Record<string, string> = {
@@ -35,7 +32,7 @@ const LATIN: readonly (readonly [RegExp, string])[] = [
   [/sh|ch/g, 's'],
   [/kh|q|c|x/g, 'k'],
   [/th/g, 't'],
-  [/gh/g, '_'], // غ, kept apart from g = ج
+  [/gh/g, '_'], // ghain, kept apart from g (jeem)
   [/dh/g, 'd'],
   [/ph|v/g, 'f'],
   [/p/g, 'b'],
@@ -44,7 +41,7 @@ const LATIN: readonly (readonly [RegExp, string])[] = [
   [/[aeiouyw'-]/g, ''],
 ];
 
-// Doubled letters collapse; a final h is dropped on both sides (ة/ـه/ح ~ «-a», «-ah»).
+// Doubled letters collapse; a final h is dropped on both sides.
 const squeeze = (s: string): string => s.replace(/(.)\1+/g, '$1').replace(/h$/, '');
 
 export function arabicSkeleton(name: string): string {

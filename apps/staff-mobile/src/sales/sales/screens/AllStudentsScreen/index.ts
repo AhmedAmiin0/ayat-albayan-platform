@@ -1,0 +1,1 @@
+export { AllStudentsScreen } from './AllStudentsScreen';

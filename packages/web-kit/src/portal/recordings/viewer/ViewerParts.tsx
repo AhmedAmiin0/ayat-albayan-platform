@@ -15,10 +15,7 @@ interface Shown {
   url: string;
 }
 
-/**
- * A PDF in the browser's own reader (pages, zoom and print are the browser's): no PDF library.
- * A phone browser that cannot show one inline still has «افتح في نافذة جديدة».
- */
+/** The browser's own reader, no PDF library; a phone can still open it in a new window. */
 function PdfView({ file, url }: Shown) {
   return (
     <iframe
@@ -47,10 +44,7 @@ interface ActionsProps {
   url: string | undefined;
 }
 
-/**
- * «تنزيل» saves the file under its own name (a saving link minted on the tap; a failure says
- * so), «افتح في نافذة جديدة» hands the shown link to the browser.
- */
+/** The saving link is minted on the tap; a failure says so. */
 export function ViewerActions({ studentId, file, url }: ActionsProps) {
   const save = useSaveLessonFile(studentId);
   if (!url) return null;
