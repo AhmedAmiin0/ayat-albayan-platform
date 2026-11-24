@@ -12,10 +12,12 @@ const FREED_DAYS = 4;
 /**
  * Other specs commit lessons for the shared e2e teacher, so a move onto BASE + 2 days could hit
  * teacher_clash depending on run order; inside this rolled-back transaction the window is freed.
+ * The statuses are every one teacher_clash counts (OCCUPYING_LESSON_STATUSES in @ab/schedule).
  */
 async function freeTeacherWindow(tx: Tx, teacher: string): Promise<void> {
   await tx`update public.lessons set status = 'cancelled_by_admin'
-    where teacher_id = ${teacher} and status in ('scheduled', 'confirmed')
+    where teacher_id = ${teacher}
+      and status in ('scheduled', 'confirmed', 'completed', 'late', 'no_show')
       and starts_at < ${iso(BASE + FREED_DAYS * DAY)} and ends_at > ${iso(BASE)}`;
 }
 
