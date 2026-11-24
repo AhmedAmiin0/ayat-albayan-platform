@@ -2,7 +2,7 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface QuoteActionsProps {
-  /** The 24 h window: outside it only «انسخ» works. */
+  /** Outside the 24 h window only copying works. */
   open: boolean;
   /** No quote yet, or the previous choice's: nothing may leave. */
   ready: boolean;
@@ -12,7 +12,6 @@ export interface QuoteActionsProps {
   onCopy: () => void;
 }
 
-/** The sheet's footer: «انسخ», «عدّل قبل الإرسال», then «أرسل العرض» (the filled one). */
 export function QuoteActions(p: QuoteActionsProps) {
   const off = !p.open || !p.ready;
   return (

@@ -8,7 +8,7 @@ export interface ProgramFieldProps {
   onChange: (value: Program) => void;
 }
 
-/** «البرنامج» of a new student (R-STU-01); quran by default. */
+/** R-STU-01: quran by default. */
 export function ProgramField({ value, onChange }: ProgramFieldProps) {
   return (
     <Field label={t.students.program}>

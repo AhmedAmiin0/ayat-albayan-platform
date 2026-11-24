@@ -5,7 +5,7 @@ import { storageProbeProblem, useStorageProbe } from '@/features/platform/integr
 
 const s = t.integrations.storageProbe;
 
-/** Under «تخزين الملفات» in «التكاملات» (docs/45): tests MinIO before (and after) the switch. */
+/** docs/45: tests MinIO before and after the switch. */
 export function StorageProbeButton({ onNote }: { onNote: (message: string) => void }) {
   const probe = useStorageProbe();
   return (

@@ -8,9 +8,7 @@ import PickChild from '../../app/pick-child';
 import Layout from '../../app/_layout';
 import Login from '../../app/login';
 
-// docs/50 §7: the family app's own router root. Signed in (guardian / student) → the tabs' home of
-// the student in view («اختر الطالب» first for a guardian of several); out → the sign-in. The gate
-// is a settable status here (role rules: verify-role.family.test.ts).
+// docs/50 §7: signed in goes to the tabs, out to sign-in; role rules live in their own test.
 
 const mockApiFetch = jest.fn();
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));

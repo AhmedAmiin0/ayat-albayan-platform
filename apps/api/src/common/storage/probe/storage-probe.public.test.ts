@@ -13,7 +13,7 @@ const MINIO: MinioEnv = {
   secretKey: 's',
 };
 
-// Item 10 of the pre-cut-over review: a wrong MINIO_PUBLIC_URL must fail «اختبار الاتصال».
+// A wrong MINIO_PUBLIC_URL must fail the connection test.
 describe('«اختبار الاتصال» through the public URL (docs/45)', () => {
   it('PUTs to a signed slot as the apps do, GETs it back signed, and deletes it', async () => {
     const s3 = fakeS3();

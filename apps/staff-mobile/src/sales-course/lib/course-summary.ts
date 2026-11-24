@@ -1,14 +1,12 @@
-import { counted, type BookingRequest, type SalesCourseView } from '@ab/shared';
+import type { BookingRequest, SalesCourseView } from '@ab/shared';
+import { counted } from '@ab/core';
 import type { SummaryRow } from '@/booking/trial/lib/confirm-summary';
 import type { ViewerClock } from '@/core/lib/clock';
 import { t, whenText } from '@ab/mobile-kit';
 
 const durations: Record<string, string | undefined> = t.enums.duration;
 
-/**
- * «8 حلقات · 45 دقيقة»: the plan's size (a custom count's lessons) and length, the value of the
- * review's «الباقة» row (the row already says it is the package; no prefix inside it).
- */
+/** The review row already names the package, so no prefix inside it. */
 export function courseFixedText(sub: SalesCourseView['subscription']): string {
   if (!sub) return '';
   const size = sub.package ? t.enums.packageSize[sub.package] : counted(t.schedule.lessonCount, sub.lessons_total);

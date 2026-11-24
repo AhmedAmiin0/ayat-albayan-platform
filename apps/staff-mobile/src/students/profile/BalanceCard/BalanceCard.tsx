@@ -1,4 +1,4 @@
-import { cancelOffered, subscriptionStatusStyle } from '@ab/shared';
+import { cancelOffered, subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
 import {
   apiSend,
@@ -18,13 +18,7 @@ import { useRenewalThreshold, useStudentBalance } from '@/payments/hooks/queries
 import { RecentPayments } from '@/payments/components/RecentPayments';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 
-/**
- * «رصيد الحلقات» (R-SUB-01/03, R-MOB-02): what is left (shared packageProgress; saffron only when
- * the renewal alert is due), the current package and what is paid of it, «إلغاء الباقة» while
- * nothing is paid (owner 2026-10-28), «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), then the
- * latest payments. «سجّل دفعة» moved to «الدورة والباقة» (PayRow, owner 2026-11-17).
- * Nothing while the balance is unknown; a student without a package says so.
- */
+/** Balance (R-SUB-01/03, R-MOB-02): saffron only when renewal is due; nothing while unknown. */
 export function BalanceCard({ studentId }: { studentId: string }) {
   const { color } = useTheme();
   const balance = useStudentBalance(studentId).data;

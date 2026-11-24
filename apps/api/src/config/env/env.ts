@@ -1,4 +1,4 @@
-import { isIntegrationKey } from '@ab/shared';
+import { isIntegrationKey } from '@ab/catalog';
 import { z } from 'zod';
 import { numbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { blankIsUnset, optionalSecret } from './env.blank';

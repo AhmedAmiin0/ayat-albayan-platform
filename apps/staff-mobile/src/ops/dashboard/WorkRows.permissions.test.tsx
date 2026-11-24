@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import type { PendingReportRow, UnpaidRow } from '@ab/shared';
+import type { PendingReportRow, UnpaidRow } from '@ab/money';
 import { PendingRow, UnpaidListRow } from './WorkRows';
 
 let mockHeld: string[] = [];

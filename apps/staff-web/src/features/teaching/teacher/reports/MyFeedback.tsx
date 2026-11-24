@@ -17,7 +17,7 @@ export interface MyFeedbackProps {
   onSearch: (patch: ServerListPatch) => void;
 }
 
-/** /teacher/feedback «آراء الطلاب»: only my students' answers (no phone, no guardian), sortable and filterable, and my average. */
+/** Only her students' answers, with no phone or guardian data. */
 export function MyFeedback({ search, onSearch }: MyFeedbackProps) {
   const state = serverListState(search, MY_FEEDBACK_LIST_KEYS);
   const table = serverListProps(state, onSearch);

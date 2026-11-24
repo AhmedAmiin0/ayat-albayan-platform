@@ -3,11 +3,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 
-// Teacher payouts (R-PAY-02, R-TCH-04, issue E3) on /admin/payouts. Last month, because approving
-// waits until the month is over in the teacher's zone. A lesson counts once its report is in (the
-// report completes it, R-REP-03): «احسب مستحقات الشهر» = lessons × the rate per duration (EGP),
-// a no-show is not paid (payout_count_no_show off); «اعتماد» is refused while a report is missing,
-// then «إعادة الحساب» → «اعتماد» → «اتدفعت».
+// Payouts (R-PAY-02, R-TCH-04, E3): last month, since approval waits for month end; no-show unpaid.
 
 /** The e2e API (playwright.config.ts webServer, port 3100). */
 const API = 'http://localhost:3100';
@@ -19,7 +15,6 @@ function lastMonth(now = new Date()): string {
   return new Date(Date.UTC(y, m - 2, 1)).toISOString().slice(0, 7);
 }
 
-/** «45 دقيقة: 2 × 70 = 140 ج.م», the breakdown line of the payouts table. */
 function line(duration: '45' | '60', lessons: number, rate: number): string {
   const text = ar.payouts.line
     .replace('{lessons}', String(lessons))
@@ -88,14 +83,14 @@ test.describe('payouts — last month from submitted reports → approve → pai
     const month = lastMonth();
     const lessons = await seedMonth(teacherId, month);
 
-    // «أبرار» sends three of the four reports: two attended 45-minute lessons and one absence.
+    // Three of four reports: two attended 45-minute lessons and one absence.
     const teacher = await asRole('teacher');
     await teacher.goto('/teacher');
     await submitReport(teacher, { lessonId: lessons.a, attendance: 'on_time' });
     await submitReport(teacher, { lessonId: lessons.b, attendance: 'on_time' });
     await submitReport(teacher, { lessonId: lessons.absent, attendance: 'absent' });
 
-    // Admin: «احسب مستحقات الشهر» → 2 × 70 = 140 ج.م (the no-show is not paid).
+    // 2 x 70 = 140 EGP; the no-show is not paid.
     const admin = await asRole('admin');
     await admin.goto(`/admin/payouts?month=${month}`);
     await admin.getByRole('button', { name: ar.payouts.generate }).click();
@@ -111,7 +106,7 @@ test.describe('payouts — last month from submitted reports → approve → pai
     await expect(admin.getByRole('alert').filter({ hasText: ar.payouts.error.reports_pending })).toBeVisible();
     expect(await payoutOf(teacherId, month)).toMatchObject({ status: 'draft' });
 
-    // Its report arrives → «إعادة الحساب» adds the 60-minute lesson: 140 + 90 = 230 ج.م.
+    // The late report adds the 60-minute lesson on recalculation: 140 + 90 = 230 EGP.
     await submitReport(teacher, { lessonId: lessons.last, attendance: 'on_time' });
     await admin.getByRole('button', { name: ar.payouts.regenerate }).click();
     await expect(row).toContainText(line('60', 1, 90));
@@ -119,7 +114,7 @@ test.describe('payouts — last month from submitted reports → approve → pai
     await expect(total).toContainText(`230 ${ar.payouts.currency}`);
     expect(await payoutOf(teacherId, month)).toEqual({ status: 'draft', lessons_count: 3, amount: 230 });
 
-    // «اعتماد» → «دُفعت» asks to confirm (date, method, receipt) → paid; only «إلغاء الدفع» is left.
+    // Approve, then marking paid asks for date, method and receipt; only undo-payment is left.
     await row.getByRole('button', { name: ar.payouts.approve }).click();
     await expect(row.getByText(ar.enums.payoutStatus.approved)).toBeVisible();
     await row.getByRole('button', { name: ar.payouts.markPaid }).click();

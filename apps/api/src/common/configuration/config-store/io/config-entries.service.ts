@@ -8,7 +8,7 @@ import {
   type ConfigEntryResult,
   type SeedEntry,
   type SettingDef,
-} from '@ab/shared';
+} from '@ab/settings';
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { CONFIG_KEYS, configDef, seedEntryOf } from '@/common/configuration/config-store/store/config-defs';

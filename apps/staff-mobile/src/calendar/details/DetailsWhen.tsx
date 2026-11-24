@@ -3,11 +3,7 @@ import { DetailsGroup, DetailsLine } from './DetailsGroup';
 import { clockLines, lengthLine, seriesLine, whenLine, type DetailsLesson } from './details-text';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 
-/**
- * «الموعد»: the viewer's date and time first (the screen's clock), each student's and the teacher's
- * own clock under it, the length, the weekly series it belongs to and, for a makeup, the missed
- * lesson it replaces («لا تُخصم من الباقة»).
- */
+/** A makeup shows the missed lesson it replaces, which is not deducted from the package. */
 export function DetailsWhen({ lesson }: { lesson: DetailsLesson }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

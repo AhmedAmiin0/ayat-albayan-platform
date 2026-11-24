@@ -2,9 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { openNav } from '../../support/core/nav';
 
-// Owner, 2026-10-05: "enhance the responsive view and make it simpler". Below 900px every area has
-// ONE compact bar (mark, page title, «القائمة»); the nav, theme, language and logout open in a
-// sheet. No scrolling nav row and no breadcrumbs on phones. From 900px the sidebar / header row.
+// Below 900px one compact bar and a menu sheet; no scrolling nav row or breadcrumbs on phones.
 
 const menu = (page: Page) => page.getByRole('button', { name: ar.nav.menu, exact: true });
 

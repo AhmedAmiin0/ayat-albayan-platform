@@ -13,7 +13,7 @@ import { z } from 'zod';
 import type { PushEvent } from '@/common/push/push.service';
 import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
-import type { Contact } from '@/modules/messaging/webhook/webhook.repo';
+import type { Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
 
 // Pure parts of storing an inbound message (R-MSG-04, R-LEAD-01) and the admin push (R-MOB-01).
 
@@ -96,7 +96,7 @@ export function orderedAt(at: Date, latestInSecond: Date | null): Date {
 
 const MEDIA_LABELS: Record<string, string> = ar.inbox.media;
 
-/** Push text: what they wrote, else «أرسل صورة» / «أرسل رسالة صوتية» / … ; Meta's `unsupported` never arrived. */
+/** Meta's `unsupported` type never arrives. */
 export function pushPreview(m: InboundEvent): string {
   if (m.body?.trim()) return m.body.trim();
   if (m.type === 'unsupported') return ar.notifications.unsupported;
@@ -123,10 +123,7 @@ function messageSubject({ m, phone, intent }: Pick<PushInput, 'm' | 'phone' | 'i
   return `${phone}:${Math.floor(m.at.getTime() / PUSH_BUCKET_MS)}`;
 }
 
-/**
- * new_lead for a number we did not know (subject = the new lead), else new_message — titled
- * «طلب تغيير ميعاد من …» when it asks to move a lesson.
- */
+/** new_lead for an unknown number, else new_message, titled differently for reschedule asks. */
 export function inboundPush(input: PushInput): { kind: PushKind; event: PushEvent } {
   const { m, phone, newLeadId } = input;
   const text = pushPreview(m);

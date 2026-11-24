@@ -59,7 +59,7 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
     expect(within(sun11).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('true');
     expect(within(await day(3, 14)).getByRole('button', { name: /19:30/ }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.queryByRole('region', { name: weekdayDay(0, 4) })).toBeNull();
-    // «الأسبوع السابق» reaches this week: the old Sunday 4 October slot is there, not pressed.
+    // Previous week reaches this week: the old Sunday 4 October slot is there, not pressed.
     fireEvent.click(screen.getByRole('button', { name: t.schedule.prevWeek }));
     const sun4 = await day(0, 4);
     expect(within(sun4).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('false');
@@ -78,7 +78,7 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
     routeRenewal(apiFetch, RUNNING);
     routeChangeSend(apiSend, CHECK);
     openDialog();
-    // Booked ahead: it has not started yet, so it is not called «جارية».
+    // Booked ahead: it has not started yet, so it is not called running.
     expect(await screen.findByText(t.booking.courseChange.upcoming)).toBeTruthy();
     expect(screen.queryByText(t.booking.courseBlocked.course_exists)).toBeNull();
     fireEvent.click(await changeButton());

@@ -11,10 +11,7 @@ interface CardLessonDrawerProps {
   onDone: (message: string) => void;
 }
 
-/**
- * A card lesson opens the admin's lesson drawer (owner 2026-11-17), with «تغيير الميعاد» and the
- * rest of its actions; «جارٍ التحميل» until its full view is read, «غير موجود» when it moved.
- */
+/** Loading until the full view is read; not found when the lesson moved. */
 export function CardLessonDrawer({ lesson, onClose, onDone }: CardLessonDrawerProps) {
   const read = useQuery(cardLessonQuery(lesson));
   if (read.data) return <LessonDrawer lesson={read.data} onClose={onClose} onDone={onDone} />;

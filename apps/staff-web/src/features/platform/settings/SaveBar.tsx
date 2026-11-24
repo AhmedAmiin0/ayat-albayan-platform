@@ -3,7 +3,7 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { SettingsFormState } from './registry-form/use-settings-form';
 
-/** The one «حفظ» for every registry field, pinned under the sections (the switches save on their own). */
+/** The one save for every registry field; the switches save on their own. */
 export function SaveBar({ state }: { state: SettingsFormState }) {
   return (
     <div className="sticky bottom-0 z-10 grid gap-2 border-t border-rule bg-page py-3">

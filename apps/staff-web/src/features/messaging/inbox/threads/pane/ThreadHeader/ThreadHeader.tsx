@@ -21,7 +21,6 @@ import { ChatSearchBar, ChatSearchToggle } from '@/features/messaging/inbox/sear
 
 export interface ThreadHeaderProps {
   thread: ThreadView;
-  /** The list's URL state without the open thread (the phone-width «رجوع»). */
   listSearch: InboxSearch;
   headingId: string;
   /** The family's subscription (threadBadge); null for a teacher or an unknown number. */
@@ -30,18 +29,12 @@ export interface ThreadHeaderProps {
   action?: ReactNode;
   /** Sales: which children the chat is about (SalesFamilyLine), in the second row. */
   line?: ReactNode;
-  /** The chat's lists «القوائم» (admin and sales with inbox.lists), quiet chips in the second row. */
   lists?: readonly ChatListRef[] | undefined;
   /** May this user call from this chat (docs/28: the phone icon, shown only while calls are on)? */
   callable?: boolean;
 }
 
-/**
- * Two rows that never wrap (W3): the name (truncated), the phone and the actions; then the chips on
- * one line that scrolls sideways: who the number is (lead status chip / guardian / teacher), the
- * window, «مشترك» and the source (admin), the sales children line, the chat's lists and the times' city
- * (principle 7).
- */
+/** Two rows that never wrap (W3); the chips row scrolls sideways. */
 export function ThreadHeader({ thread: th, listSearch, headingId, badge, action, line, lists, callable = false }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();

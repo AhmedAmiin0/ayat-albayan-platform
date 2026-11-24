@@ -27,7 +27,6 @@ function Counts({ counts }: { counts: GoogleStatusView['counts'] }) {
   );
 }
 
-/** «سجل المزامنة»: the last 100 items, «زامن الآن», the known gap and the counts. */
 export function SyncLog({ status, onNote }: { status: GoogleStatusView; onNote: (message: string) => void }) {
   const queryClient = useQueryClient();
   const list = useQuery(googleItemsQuery);

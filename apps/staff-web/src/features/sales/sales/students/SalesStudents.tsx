@@ -14,10 +14,6 @@ interface SalesStudentsProps {
   chat?: { studentId: string; onClose: () => void };
 }
 
-/**
- * /sales/students «الطلاب»: every student of the academy, or «طلابي» (the ones I brought, with my
- * commission).
- */
 export function SalesStudents({ view, onView, chat }: SalesStudentsProps) {
   return (
     <>

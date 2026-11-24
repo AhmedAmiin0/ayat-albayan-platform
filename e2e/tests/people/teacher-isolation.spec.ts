@@ -5,11 +5,7 @@ import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 import { dropHiba, HIBA_AMOUNT, HIBA_MONTH, seedAbrarPayout, seedHiba, type HibaSeed } from '../../support/people/teacher-isolation';
 
-// Teacher isolation (R-NFR-02, R5 ownership, rule 9) through the API and the UI. teacher-mode.spec
-// has the other teacher's chat in the UI (not_your_thread) and her calendar; teacher-rls.sql.spec
-// the messages and draft-payout rows. Added here: «أبرار» against «هبة»'s chat on the API, lesson,
-// report (read, draft, submit, attachments, PDF), history and payouts, the admin-only routes, and
-// what her own lists answer. A 403 must be the guard's, so «هبة»'s rows are untouched afterwards.
+// Teacher isolation (R-NFR-02, R5, rule 9): a 403 must come from the guard, rows stay untouched.
 
 const OWN_AMOUNT = 321;
 /** Yesterday to next week (the API caps a window at 31 days). */
@@ -25,7 +21,7 @@ async function call(page: Page, req: Call): Promise<{ status: number; json: unkn
   return { status: res.status(), json: await res.json().catch(() => null) };
 }
 
-/** Everything of «هبة»'s that a teacher request must answer 403 to. */
+/** Everything of the other teacher that a teacher request must answer 403 to. */
 function refused(h: HibaSeed): Call[] {
   const phone = encodeURIComponent(h.phone);
   return [
@@ -76,7 +72,7 @@ test.describe('teacher isolation (R-NFR-02, rule 9)', () => {
       expect((await call(teacher, { method: 'GET', path: `/lessons/${mine.todayLessonId}/report-form` })).status).toBe(200);
       expect((await call(teacher, { method: 'GET', path: `/students/${mine.studentId}/reports` })).status).toBe(200);
 
-      // Her lists never carry «هبة»'s rows (scoped by the login: any id in the query is ignored).
+      // Scoped by the login: any id in the query is ignored.
       const lists = ['/teachers/me', `/teachers/me/lessons?${WINDOW}&teacherId=${hiba.teacherId}`,
         '/teachers/me/pending-reports', '/teachers/me/reports', '/threads'];
       for (const path of lists) {
@@ -107,7 +103,7 @@ test.describe('teacher isolation (R-NFR-02, rule 9)', () => {
       await seedAbrarPayout({ teacherId: abrar, amount: OWN_AMOUNT });
       const teacher = await asRole('teacher');
       await teacher.goto('/teacher');
-      // Her running lesson is the hero of «اليوم» (docs/48).
+      // Her running lesson is the hero of today (docs/48).
       await expect(teacher.getByRole('region', { name: ar.today.running })).toContainText(`سدرة ${tag}`);
       await expect(teacher.getByText(hiba.studentName)).toHaveCount(0);
 

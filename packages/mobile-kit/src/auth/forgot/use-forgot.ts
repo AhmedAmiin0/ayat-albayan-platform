@@ -15,10 +15,7 @@ interface NewPassword {
   confirm: string;
 }
 
-/**
- * «نسيت كلمة المرور؟» (docs/30 §7): identifier → WhatsApp code → new password. `side`: whose codes
- * must be open (staff in the staff app; the family flag in the family app, docs/50 §6).
- */
+/** docs/30 §7: `side` picks whose codes must be open (the family flag in the family app). */
 export function useForgot(side: CodesSide = 'staff') {
   const [step, setStep] = useState<ForgotStep>('checking');
   const [identifier, setIdentifier] = useState('');
@@ -56,7 +53,7 @@ export function useForgot(side: CodesSide = 'staff') {
     });
 
   const reset = async ({ code, password, confirm }: NewPassword) => {
-    // Arabic-Indic digits and spaces fold the way the API folds them (a pasted «١٢٣ ٤٥٦» works).
+    // Arabic-Indic digits and spaces fold the way the API folds them, so pasted codes work.
     const digits = loginCode.safeParse(code);
     if (!digits.success) return setError(t.familyAuth.errors.code_incomplete);
     if (password !== confirm) return setError(t.familyAuth.passwordsDiffer);

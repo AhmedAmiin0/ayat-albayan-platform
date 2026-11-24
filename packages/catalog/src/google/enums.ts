@@ -27,10 +27,7 @@ export const GOOGLE_SKIP_REASONS = [
 ] as const;
 export type GoogleSkipReason = (typeof GOOGLE_SKIP_REASONS)[number];
 
-/**
- * teachers.calendar_owner (docs/24 «نقل تقويم معلم إلى المنصة»): who builds the teacher's Google Calendar.
- * 'script' (default) = the old Apps Script from the bookings sheet; 'platform' = every lesson of the teacher.
- */
+/** docs/24: 'script' (default) is the old Apps Script; 'platform' writes every lesson. */
 export const TEACHER_CALENDAR_OWNERS = ['script', 'platform'] as const;
 export type TeacherCalendarOwner = (typeof TEACHER_CALENDAR_OWNERS)[number];
 
@@ -38,10 +35,7 @@ export type TeacherCalendarOwner = (typeof TEACHER_CALENDAR_OWNERS)[number];
 export const GOOGLE_ACCOUNT_STATUSES = ['disconnected', 'connected', 'error'] as const;
 export type GoogleAccountStatus = (typeof GOOGLE_ACCOUNT_STATUSES)[number];
 
-/**
- * The OAuth scopes the owner grants once (docs/24 §3): events, Drive files, sheets, the account's email,
- * plus the read-only calendar list (discovery of the «آيات البيان — …» calendars needs it; events alone cannot list them).
- */
+/** Granted once (docs/24 §3); the read-only calendar list is needed to discover calendars. */
 export const GOOGLE_SCOPES = [
   'https://www.googleapis.com/auth/calendar.events',
   'https://www.googleapis.com/auth/calendar.calendarlist.readonly',

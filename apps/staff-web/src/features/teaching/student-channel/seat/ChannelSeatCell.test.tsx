@@ -12,8 +12,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// Owner 2026-11-16 «any assistant can subscribe to the chating channel but only 1» and «who
-// brought the student have the priority»: the chat cell of «كل الطلاب» and «طلابي».
+// Only one assistant may hold a student chat, and the student's bringer has priority.
 const S = t.studentChannel.seat;
 const SEAT = '/sales/students/s1/channel/seat';
 const free: ChannelSeat = { holder: null, mine: false, bringer: false, canTake: true };

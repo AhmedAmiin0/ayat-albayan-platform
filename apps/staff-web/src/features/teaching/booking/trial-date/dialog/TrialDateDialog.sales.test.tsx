@@ -24,7 +24,7 @@ async function toReview(answers: unknown[]) {
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
   await waitFor(() => expect(abrar).toHaveProperty('checked', true));
   next();
-  next(); // «مدة الحلقة»: the last trial's length, kept
+  next(); // The last trial's length is kept.
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
   fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
   next();

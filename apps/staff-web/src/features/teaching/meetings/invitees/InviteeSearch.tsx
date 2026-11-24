@@ -20,7 +20,6 @@ interface Props {
 }
 
 
-/** «الفريق» / «الطلاب»: a debounced search (GET /meetings/invitee-options?q=), each result adds a chip. */
 export function InviteeSearch({ kind, picked, onAdd, disabled }: Props) {
   const [search, setSearch] = useState('');
   const q = useDebounced(search.trim(), 250);

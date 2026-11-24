@@ -15,7 +15,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
 }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-// «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with «بدأ الاشتراك سابقًا»; standard = 12 lessons.
+// Used lessons only when started before; the standard package is 12 lessons.
 const creates = () => apiSend.mock.calls.filter(([, path]) => path === '/sales/subscriptions').map((c) => c[2] as Record<string, unknown>);
 const past = daysBefore(todayIn('Asia/Riyadh'), 30);
 

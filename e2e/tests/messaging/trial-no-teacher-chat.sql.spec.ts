@@ -2,11 +2,7 @@ import { expect, test } from '@playwright/test';
 import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 
-// Owner, 2026-10-11: «for the trial session, students and teachers cannot chat together; they will
-// need the sales to manage between them, or the system». Migration 20261007000001 against the real
-// database, rolled back: a trial family leaves «أبرار»'s chat scope (the function, my_thread_phones
-// and the messages policy), a family with an active child stays, her own chat stays, and she still
-// reads her trial student's row (teacher_student_ids is unchanged).
+// Migration 20261007000001: a trial family leaves the teacher's chat scope; rows stay readable.
 
 const PHONE = { trial: '+966500700001', mixed: '+966500700002', active: '+966500700003', own: '+966500700004' };
 

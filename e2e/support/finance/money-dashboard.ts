@@ -7,7 +7,7 @@ import { addDays, riyadh, seedLesson, withSql } from '../core/schedule';
 // Seed + helpers for the dashboard and exports specs (A8): leads in three statuses from one source,
 // a paid package (revenue), a second package still unpaid, two lessons with outcomes today, one expense.
 
-/** The Riyadh week (Saturday → Friday) holding `today`, like the dashboard's «هذا الأسبوع». */
+/** The Riyadh week (Saturday to Friday) holding `today`, like the dashboard's current week. */
 export function weekOf(today = riyadhToday()): { from: string; to: string } {
   const dow = new Date(`${today}T00:00:00Z`).getUTCDay(); // 6 = Saturday
   const from = addDays(today, -((dow + 1) % 7));

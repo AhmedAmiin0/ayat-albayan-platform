@@ -22,12 +22,7 @@ const byStaff = (r: AppSendRow): boolean => r.created_by !== null;
 /** No file of any kind (a stored one, or a mime on the row): v1 is text only. */
 const textOnly = (r: AppSendRow): boolean => r.media_path === null && r.media_mime === null;
 
-/**
- * «أرسل عبر واتساب» may start on this row: a staff text, held after the window (awaiting_reply)
- * or failed for a window reason (canSendViaWhatsApp), on the chat line or a row never routed
- * (the only number in the WhatsApp Business app, so the only one whose echo comes back), with no
- * wamid: WhatsApp's echo is never attached over one, so such a row would be sent twice.
- */
+/** No wamid allowed, since WhatsApp's echo is never attached over one and it would go twice. */
 export function appSendable(r: AppSendRow): boolean {
   const view = { ...r, replyable: r.wa_message_id !== null };
   return byStaff(r) && textOnly(r) && canSendViaWhatsApp(view);

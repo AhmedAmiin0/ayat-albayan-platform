@@ -10,7 +10,7 @@ import { VisibleBox } from './VisibleBox';
 
 const F = t.lessonFiles;
 
-/** One file staff added: its name and size, «يراه الطالب وولي الأمر», open and remove (asked). */
+/** Removal asks first. */
 export function LessonFileItem({ file }: { file: LessonFileView }) {
   const visible = useFileVisibility();
   const open = useOpenFile();

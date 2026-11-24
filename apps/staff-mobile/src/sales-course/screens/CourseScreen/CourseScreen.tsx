@@ -22,18 +22,9 @@ import { CurrentCourse } from '@/sales-course/change/CurrentCourse';
 import { CourseWizard } from '@/sales-course/components/CourseWizard';
 import { useCourseView, type CourseViewState } from '@/sales-course/hooks/use-course-view';
 
-/** The student; the chat's number and the new package, when «اشتراك جديد» goes on to its transfer. */
 type Params = { studentId?: string; phone?: string; subscriptionId?: string };
 
-/**
- * /inbox/sales-course?studentId=…[&phone=…&subscriptionId=…] (R-ASST-01, owner 2026-10-18): the
- * assistant books the weekly days of the subscription she sold: المعلم/ة → أيام الحلقات → المراجعة.
- * A student she cannot book shows why (courseBlocked). Opened right after «احفظ الاشتراك» it then
- * goes on to the transfer («سجّل التحويل البنكي», also offered to skip the days for now, and
- * whenever the wizard is not shown: a refusal, a failed read, still loading). A student with a course
- * (view.current: running today, else booked ahead) is offered «تغيير أيام الحلقات» beside the wizard or
- * the refusal; it replaces the course_exists refusal.
- */
+/** R-ASST-01: a blocked student shows why; an existing course offers the change flow instead. */
 export function CourseScreen() {
   const params = useLocalSearchParams<Params>();
   const { course, view, block } = useCourseView(params.studentId ?? '');
@@ -47,7 +38,7 @@ export function CourseScreen() {
       ? () => router.replace(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId } }))
       : undefined;
   const change = current ? { course: current, open: () => setChanging(true) } : undefined;
-  // The course shown with «تغيير أيام الحلقات» answers course_exists: no refusal line then.
+  // An existing course shown with the change action answers course_exists, so no refusal line.
   const refusal = change && block === 'course_exists' ? null : block;
   const content = () => {
     if (view && current && changing) {

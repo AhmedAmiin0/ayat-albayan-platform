@@ -25,13 +25,7 @@ export interface AppShellProps {
   homePage?: ReactNode;
 }
 
-/**
- * Signed-in layout (docs/07 §7): margin + running head + ONE work page. Child routes render
- * inside the page and own its title; the section home shows `title`. Below 900px every area gets
- * the same compact bar with «القائمة» (MenuBar). Admin and teacher layouts are viewport-high
- * frames: only the page content scrolls, never the browser page. Every signed-in user is tracked
- * «متصل الآن» here while the tab is visible (docs/33).
- */
+/** Only the page content scrolls (docs/07 §7); every signed-in user is tracked online (docs/33). */
 export function AppShell({ title, home, nav, topNav, titles = [], wide, homePage }: AppShellProps) {
   usePresenceSelf();
   const isHome = useChildMatches().length === 0;

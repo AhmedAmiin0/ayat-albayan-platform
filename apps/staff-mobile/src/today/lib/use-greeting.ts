@@ -2,10 +2,7 @@ import { useMyProfile, t } from '@ab/mobile-kit';
 import { useViewerTz } from '@/core/lib/clock';
 import { firstName, greetingPart } from './today-plan';
 
-/**
- * «مساء الخير يا أحمد» by the local clock, the first name once the profile loads: the header line of
- * every tree's «اليوم» (owner 2026-10-28: no «اليوم» title under the tab of the same name).
- */
+/** The greeting is every tree's header line, by the local clock. */
 export function useGreeting(now: Date): string {
   const name = firstName(useMyProfile().data?.full_name);
   const greeting = t.today.greeting[greetingPart(now, useViewerTz())];

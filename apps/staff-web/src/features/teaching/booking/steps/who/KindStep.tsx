@@ -11,10 +11,7 @@ export interface KindStepProps {
   onChange: (patch: Partial<BookingDraft>) => void;
 }
 
-/**
- * «نوع الحجز» at the top of step 1 (R-SCH-10): trial, subscription or makeup. The steps that
- * follow depend on it (a trial has no invoice, a makeup picks the missed lesson).
- */
+/** Booking kind (R-SCH-10) decides the following steps. */
 export function KindStep({ draft, leadPath, onChange }: KindStepProps) {
   return (
     <div className="grid gap-1.5">

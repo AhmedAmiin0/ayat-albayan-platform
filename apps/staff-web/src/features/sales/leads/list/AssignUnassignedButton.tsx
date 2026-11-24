@@ -3,7 +3,6 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { assignUnassigned } from '@/features/sales/sales/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** «عيّن العملاء من غير مسؤول»: spreads every ownerless lead, then says «اتعيّن {n} عميل». */
 export function AssignUnassignedButton() {
   const queryClient = useQueryClient();
   const run = useMutation({

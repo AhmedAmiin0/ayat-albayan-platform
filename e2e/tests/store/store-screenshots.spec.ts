@@ -15,7 +15,7 @@ import type { StoreFamily } from '../../support/store/store.types';
 const P = ar.portal;
 const S = P.app.schedule;
 
-/** «الجدول» opens on this week: on a Friday run the demo lessons start in the next one. */
+/** On a Friday run the demo lessons start in the next week. */
 const TO_WEEK: Record<StoreFamily['week'], (page: Page) => Promise<void>> = {
   this: () => Promise.resolve(),
   next: (page) => page.getByRole('button', { name: S.next }).click(),

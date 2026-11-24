@@ -1,4 +1,4 @@
-import type { MeetingInviteeKind } from '@ab/shared';
+import type { MeetingInviteeKind } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button } from '@ab/mobile-kit';
@@ -16,7 +16,6 @@ interface InviteeSearchProps {
   disabled: boolean;
 }
 
-/** «الفريق» / «الطلاب»: search by name (or a student's code), then tap a result to invite it. */
 export function InviteeSearch({ kind, onAdd, disabled }: InviteeSearchProps) {
   const [q, setQ] = useState('');
   const options = useInviteeOptions(q);

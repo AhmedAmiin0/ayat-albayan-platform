@@ -1,4 +1,3 @@
-// Test fixtures for «اجتماع داخلي» (not shipped; excluded from the build by *.fakes.ts).
 import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { vi } from 'vitest';
 import { TEACHER } from '@/modules/teaching/classroom/classroom.fakes';

@@ -8,11 +8,10 @@ export interface ScopeRadiosProps {
   onChange: (scope: Scope) => void;
   /** A one-off lesson (no rule) can only be changed alone (API 400 no_rule). */
   ruleAllowed: boolean;
-  /** «الإلغاء يشمل» or «التغيير يشمل». */
   label: string;
 }
 
-/** «الحلقة دي بس» | «الحلقة دي وكل اللي بعدها» (R-SCH-07). */
+/** This lesson only, or it and every later one (R-SCH-07). */
 export function ScopeRadios({ value, onChange, ruleAllowed, label }: ScopeRadiosProps) {
   return (
     <fieldset className="grid gap-1">

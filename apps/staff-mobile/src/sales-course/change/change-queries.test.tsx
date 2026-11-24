@@ -1,4 +1,4 @@
-import type { CourseChangeRequest } from '@ab/shared';
+import type { CourseChangeRequest } from '@ab/schedule';
 import { renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';

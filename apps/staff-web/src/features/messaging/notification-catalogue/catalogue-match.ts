@@ -1,9 +1,6 @@
 import { matchesText } from '@/components/settings/search/settings-search';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * Does the search match «الإشعارات» (its title or intro, editable now: docs/26b §3)? Its old name
- * «ماذا يُرسل ومتى» still finds it; the old read-only intro («للاطلاع فقط») is never matched or shown.
- */
+/** The old name still matches; the old read-only intro is never matched (docs/26b §3). */
 export const catalogueMatch = (query: string): boolean =>
   matchesText(`${t.notificationRules.title} ${t.notificationRules.intro} ${t.notificationCatalogue.title}`, query);

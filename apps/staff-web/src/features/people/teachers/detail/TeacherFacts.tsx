@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { meetingModeText } from '@/features/people/teachers/form/meeting-mode-text';
 import type { Teacher } from '@ab/shared';
 
-/** «البيانات» tab: the teacher record as label / value rows (R-TCH-01). Empty values are left out. */
+/** R-TCH-01: empty values are left out. */
 export function TeacherFacts({ teacher }: { teacher: Teacher }) {
   const rows: [string, ReactNode][] = [
     [t.teachers.displayNameAr, teacher.display_name_ar],

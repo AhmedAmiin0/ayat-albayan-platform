@@ -1,11 +1,5 @@
-import {
-  DEFAULT_MEETING_DURATION,
-  localDateIn,
-  MEETING_DURATION_MAX,
-  MEETING_DURATION_MIN,
-  wallToUtc,
-  zonedFieldsIn,
-} from '@ab/shared';
+import { DEFAULT_MEETING_DURATION, MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/schedule';
+import { localDateIn, wallToUtc, zonedFieldsIn } from '@ab/time';
 import { addDays } from '@/calendar/lib/week';
 
 // The schedule form's wall clock (rule 6): a local day, an hour and a minute in the viewer's zone,

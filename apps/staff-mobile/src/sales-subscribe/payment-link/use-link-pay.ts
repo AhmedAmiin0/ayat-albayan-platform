@@ -1,9 +1,5 @@
-import type {
-  PaymentLinkCreate,
-  PaymentLinkQuoteView,
-  PaymentLinkView,
-  SubscriptionPricing,
-} from '@ab/shared';
+import type { PaymentLinkCreate, PaymentLinkQuoteView, PaymentLinkView } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { refreshFamily } from '@/sales-subscribe/lib/family';
@@ -17,7 +13,7 @@ type LinkExtra = Omit<
 >;
 
 interface LinkPayInput {
-  /** '' while «دفع إلكتروني» is not picked: nothing is asked. */
+  /** Empty while online payment is not picked: nothing is fetched. */
   studentId: string;
   pricing: SubscriptionPricing;
   /** The chat: its family refetches once the link (and its unpaid package) exists. */
@@ -29,13 +25,7 @@ const checkOf = (text: string, priced: PaymentLinkQuoteView | undefined) =>
   priced &&
   checkAmount(text, { reference: priced.quote.afterDiscount, maxDiscountPct: priced.max_discount_pct });
 
-/**
- * «دفع إلكتروني» inside «اشتراك جديد» (owner 2026-10-29, docs/30, FEATURE_STRIPE test or live):
- * the calculator price as the reference (POST /sales/payment-links/quote), the amount (that price
- * after the pill; with «مبلغ مخصص» on (owner 2026-11-01) the one she types: a new package or child
- * resets it; > 0, not below the admin's minimum), then POST /sales/payment-links with the form's
- * own student, package, start day and teacher. The API makes the unpaid package with the link.
- */
+/** Online payment (docs/30): a custom amount must be > 0 and not below the admin's minimum. */
 export function useLinkPay({ studentId, pricing, phone }: LinkPayInput) {
   const client = useQueryClient();
   const key = `${studentId}|${JSON.stringify(pricing)}`;
@@ -46,7 +36,7 @@ export function useLinkPay({ studentId, pricing, phone }: LinkPayInput) {
   const quote = useLinkQuote(studentId, pricing);
   const priced = quote.isSuccess && !quote.isPlaceholderData ? quote.data : undefined;
   const reference = priced ? String(priced.quote.afterDiscount) : '';
-  // «مبلغ مخصص» off: always the calculator price after the pill; a typed one counts only when on.
+  // With a custom amount off, always the calculator price; a typed amount counts only when on.
   const amountText = custom && typed?.key === key ? typed.text : reference;
   const check = checkOf(amountText, priced);
   const create = useCreateLink();

@@ -6,10 +6,7 @@ import type { CustomPrice } from './use-custom-price';
 
 const c = t.subscriptions.customPrice;
 
-/**
- * «سعر الباقة (ر.س)» while «مبلغ مخصص» is on: the typed package price in the quote's currency,
- * the calculator's price under it. Nothing while off or before a quote.
- */
+/** Nothing while off or before a quote. */
 export function CustomPriceField({ price }: { price: CustomPrice }) {
   const quote = price.quote;
   if (!price.on || !quote) return null;

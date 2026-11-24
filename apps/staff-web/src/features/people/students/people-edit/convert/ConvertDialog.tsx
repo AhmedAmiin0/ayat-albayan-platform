@@ -12,11 +12,7 @@ import { useConvert } from './use-convert';
 const E = t.peopleEdit;
 
 
-/**
- * «تحويل إلى طالب / ولي أمر» (owner 2026-11-02, people.switch_role): «الطالب هو ولي الأمر», the
- * guardian who is the learner as a student of their family, and a student row that is really the
- * parent as the family's guardian (only without any history or login). Each behind a confirm.
- */
+/** Turning a student into the guardian needs no history or login; each step asks first. */
 export function ConvertDialog({ view, onClose, onDone }: PeopleDialogProps) {
   const can = roleActions(view);
   const c = useConvert(view, onDone);

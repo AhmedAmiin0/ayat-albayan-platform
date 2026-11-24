@@ -22,10 +22,10 @@ export function useActionKeys(): ActionKeys {
 
 interface ActionRowsProps {
   keys: ActionKeys;
-  /** «مدّ الجدول»: lessons of the package have no date (courses.reschedule, like the times). */
+  /** Package lessons without a date can be extended (courses.reschedule, like the times). */
   extend?: boolean | undefined;
   onOpen: (next: Open) => void;
-  /** The package's rows («جدّد الاشتراك», «سجّل دفعة»), before the destructive one. */
+  /** The package's rows go before the destructive one. */
   extra?: ReactNode;
 }
 
@@ -47,10 +47,7 @@ function moveRows(keys: ActionKeys, extend: boolean): Row[] {
   ];
 }
 
-/**
- * «إجراءات الدورة» (owner 2026-11-17): one row per key held, each with what it does; «إلغاء
- * الاشتراك» last, as the destructive one.
- */
+/** One row per key held; cancel subscription last, as the destructive one. */
 export function ActionButtons({ keys, extend = false, onOpen, extra }: ActionRowsProps) {
   const stop = t.courseActions.stop;
   return (

@@ -1,4 +1,5 @@
-import { quote, type StudentStatus } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
+import { quote } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { balanceOf, subscription } from '@/payments/fixtures';

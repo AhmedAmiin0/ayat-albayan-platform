@@ -12,18 +12,14 @@ import type { CourseActionDialogProps } from './StopCourseDialog';
 
 export type MoveDialogProps = CourseActionDialogProps & { mode: BookingMode };
 
-/** The course with its picks opening on «من تاريخ»'s default: the next lesson's day. */
+/** Picks open on the default start date: the next lesson's day. */
 export function fromNextLesson(view: ProfileCourseView, from?: string): ProfileCourseView {
   const start = from ?? view.nextLesson?.startsOn;
   if (!start || start <= view.course.startsOn) return view;
   return { ...view, course: { ...view.course, startsOn: start } };
 }
 
-/**
- * «تغيير موعد الحلقات» (owner 2026-10-30): the drawer's «تغيير أيام الحلقات» form on the
- * profile's course-times routes: new days and times from the next lesson, the remaining count
- * kept, the same clash check (the admin may save over it with a reason).
- */
+/** Remaining count kept; same clash check, which the admin may override with a reason. */
 export function ChangeTimesDialog({
   studentId,
   subscriptionId,

@@ -4,9 +4,7 @@ import { resetAbrar } from '../../support/core/schedule';
 import { USERS } from '../../support/core/users';
 import { seedPackageStudent } from '../../support/finance/money';
 
-// owner 2026-11-14 «send the portal url that is authenticated instead of the opened form»:
-// teacher_lesson_v3's «تقرير الحلقة» opens /teacher-report/<lesson id> (its Meta base is fixed),
-// which goes to the signed-in /teacher/report/<id>; a signed-out teacher signs in and lands there.
+// The report link opens /teacher-report/<lesson id>, which redirects to the signed-in report.
 
 test('a signed-out teacher opens the sent report link, signs in, and lands on that report', async ({
   browser,

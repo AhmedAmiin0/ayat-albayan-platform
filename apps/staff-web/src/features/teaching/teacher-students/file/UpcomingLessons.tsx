@@ -11,10 +11,7 @@ export interface UpcomingLessonsProps {
   tz: string;
 }
 
-/**
- * «الحلقات القادمة خلال 14 يومًا» (docs/47): the log's columns over the coming lessons, so a
- * cancel shows its reason and a move its new time; the chip reads the lesson's status.
- */
+/** Uses the log's columns so a cancel shows its reason and a move its new time (docs/47). */
 export function UpcomingLessons({ rows, studentId, tz }: UpcomingLessonsProps) {
   const clock = useClock();
   return (

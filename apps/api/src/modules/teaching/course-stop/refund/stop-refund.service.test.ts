@@ -4,8 +4,7 @@ import { cardRefundKey } from './stop-refund.cards';
 import { cardRow, kit, listed, planOf, REQ, row } from './stop-refund.fakes';
 import { manualRefundKey } from './stop-refund.plan';
 
-// «إلغاء مع استرداد» (owner 2026-11-02): card first through Stripe (the webhook records the row),
-// the rest one manual row; idempotent on the stop's clientRequestId. 290 paid (200 card + 90 bank).
+// Card refunds go first through Stripe, the rest as one manual row; idempotent per request.
 const actor = { id: 'a1', reason: 'سفر' };
 
 describe('StopRefunds.plan', () => {

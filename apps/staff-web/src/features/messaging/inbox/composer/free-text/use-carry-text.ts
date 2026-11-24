@@ -26,7 +26,6 @@ export interface CarryText {
   clear: () => void;
 }
 
-/** «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft and the template that carries it. */
 export function useCarryText(phone: string, teacher: boolean): CarryText {
   const stored = useSyncExternalStore(subscribeDrafts, () => getDraft(phone));
   const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });

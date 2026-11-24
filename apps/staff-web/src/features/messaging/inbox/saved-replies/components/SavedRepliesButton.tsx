@@ -11,11 +11,7 @@ export interface SavedRepliesButtonProps {
   onClick?: () => void;
 }
 
-/**
- * «الردود السريعة» beside the message box. Locked after the window (templates only): it stays
- * focusable (aria-disabled) so its reason is read; a tap or click shows the reason beside it (touch
- * screens have no tooltip), in the same row so the composer keeps its height.
- */
+/** Locked after the window but focusable (aria-disabled) so its reason is read. */
 export function SavedRepliesButton({ locked = false, pressed = false, onClick }: SavedRepliesButtonProps) {
   const hintId = useId();
   const [hint, setHint] = useState(false);

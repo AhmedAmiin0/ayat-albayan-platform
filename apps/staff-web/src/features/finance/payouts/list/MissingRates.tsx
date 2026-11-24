@@ -4,7 +4,6 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
-/** «45 والـ60» / «45 and 60» for the sentence «سعر حلقة الـ{durations} دقيقة …». */
 export function durationsText(durations: readonly number[]): string {
   return durations.join(t.payouts.durationsJoiner);
 }

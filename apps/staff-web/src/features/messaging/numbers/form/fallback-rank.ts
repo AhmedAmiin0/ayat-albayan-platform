@@ -1,4 +1,4 @@
-// «ترتيب البديل» (docs/23c decision 9). Pure.
+// docs/23c decision 9.
 
 export const RANK_MIN = 0;
 export const RANK_MAX = 999;

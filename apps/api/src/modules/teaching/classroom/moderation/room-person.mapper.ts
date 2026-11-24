@@ -1,5 +1,4 @@
-// Which guest links of a lesson are one person's (owner 2026-11-16, review): «إخراج» blocks them
-// all. Pure: RoomPersonRepo reads the lesson's links and students.
+// Removal blocks every guest link of a lesson that belongs to one person.
 
 /** A lesson_join_links row as the removal reads it. */
 export interface LinkRow {

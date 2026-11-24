@@ -7,7 +7,6 @@ import { thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList/ThreadsList';
 
-// Review 2026-10-29 #2 / #3: «بانتظار ردّك» and the lead-stage chips on the chats' one row.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
@@ -99,7 +98,7 @@ test('a stage chip asks GET /threads?status= (the sales scope reads every lead) 
   expect(await screen.findByText(fresh.display_name ?? '')).toBeTruthy();
   expect(screen.queryByText(answered.display_name ?? '')).toBeNull();
   expect(chips().getByRole('tab', { name: t.enums.leadStatus.trial_booked, selected: true })).toBeTruthy();
-  // «مشترك» and «مفقود» are not chips: a family by then, or not chased from here.
+  // Converted and lost leads are not chips: a family by then, or not chased from here.
   expect(chips().queryByRole('tab', { name: t.enums.leadStatus.converted })).toBeNull();
   expect(chips().queryByRole('tab', { name: t.enums.leadStatus.lost })).toBeNull();
 });

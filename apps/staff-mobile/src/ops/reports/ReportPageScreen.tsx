@@ -13,11 +13,7 @@ const lessonStart = (view: ReportPageView): Date => new Date(view.lesson.starts_
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/'));
 
-/**
- * «عرض التقرير» (owner 2026-11-06): the report's live page, read-only, for its readers (the
- * student's owning assistant, the teacher, the admin): the saved answers, the teacher's files and
- * the PDF. No edit here, ever.
- */
+/** Read-only for the owning assistant, the teacher and the admin; no edit here, ever. */
 export function ReportPageScreen() {
   const params = useLocalSearchParams<{ reportId?: string; publicId?: string }>();
   const query = useReportPage(params);

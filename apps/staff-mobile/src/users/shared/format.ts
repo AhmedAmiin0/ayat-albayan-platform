@@ -1,4 +1,6 @@
-import type { ClockCycle, LinkCandidate, UserRole, UserRoleOption, UserStatus } from '@ab/shared';
+import type { LinkCandidate, UserRoleOption, UserStatus } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import type { ClockCycle } from '@ab/time';
 import { t, locale, ltr } from '@ab/mobile-kit';
 import { formatAt } from '@/ops/activity/activity-format';
 
@@ -13,7 +15,7 @@ export const statusStyle = (status: UserStatus) =>
 export const lastSignIn = (iso: string | null, cycle: ClockCycle, tz: string): string =>
   iso ? formatAt(iso, cycle, tz) : t.users.never;
 
-/** «يوسف علي AB-0007»: the name, then the student code as an LTR island. */
+/** The student code is an LTR island. */
 export const recordText = (r: Pick<LinkCandidate, 'name' | 'code'>): string => (r.code ? `${r.name} ${ltr(r.code)}` : r.name);
 
 /** A role's name in the UI language (the web's roleName). */

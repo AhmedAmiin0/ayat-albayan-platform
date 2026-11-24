@@ -8,8 +8,7 @@ import type { SalesStudentRepo } from '@/modules/sales/sales-students/details/sa
 import type { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
 import { type LessonServices, SalesLessonActions } from './sales-lesson-actions.service';
 
-// «تأكيد الحلقة» (owner 2026-10-28) through the teacher's real LessonStatusService over the fake store:
-// any lesson, she is confirmed_by, no teacher-only check, no message, idempotent.
+// Through the real LessonStatusService: any lesson, no teacher-only check, no message, idempotent.
 const SALES: AuthUser = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' };
 const NOW = new Date('2026-10-03T10:00:00Z'); // before the fixture lesson (2026-10-04 14:00Z)
 const access = { assertCanTouch: vi.fn(async () => Promise.reject(new Error('teacher-only rule'))) };

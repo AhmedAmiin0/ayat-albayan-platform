@@ -18,11 +18,7 @@ export interface ChatMediaPickerProps {
   onClose: () => void;
 }
 
-/**
- * «من الشات» (R-MSG-06): the family's recent inbound images and PDFs with thumbnails. The API
- * downloads a file from WhatsApp the first time it is shown, and copies the chosen one into the
- * invoices bucket when the booking is made: the browser never re-downloads it.
- */
+/** The API downloads a file from WhatsApp once (R-MSG-06) and copies the chosen one on booking. */
 export function ChatMediaPicker({ phone, onPick, onClose }: ChatMediaPickerProps) {
   const list = useQuery(threadMediaQuery(phone));
   return (
@@ -41,7 +37,7 @@ export function ChatMediaPicker({ phone, onPick, onClose }: ChatMediaPickerProps
   );
 }
 
-/** «صورة · <time>» or «ملف PDF · <time>»: the card's name for a screen reader. */
+/** The card's name for a screen reader. */
 export function mediaCardLabel(item: Pick<ThreadMediaItem, 'mime' | 'created_at'>, clock: Clock): string {
   const label = isImage(item.mime) ? t.booking.invoice.chatImageCard : t.booking.invoice.chatPdfCard;
   return label.replace('{time}', fullTime(item.created_at, clock));

@@ -19,10 +19,7 @@ export type GoogleSettingsInput = z.infer<typeof googleSettingsSchema>;
 export const googleTeacherMapSchema = z.object({ calendar_id: calendarId.nullable() }).strict();
 export type GoogleTeacherMapInput = z.infer<typeof googleTeacherMapSchema>;
 
-/**
- * PUT /admin/google/students/:id: confirm the student's existing folder and attendance sheet, or
- * both null = «أنشئ مجلدًا جديدًا» on the first report. A sheet without a folder is refused.
- */
+/** Both null means create a new folder on the first report; a sheet without a folder is refused. */
 export const googleStudentMapSchema = z
   .object({ folder_id: fileId.nullable(), attendance_sheet_id: fileId.nullable() })
   .strict()

@@ -1,15 +1,11 @@
-import { USER_ROLES } from '@ab/shared';
+import { USER_ROLES } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { PortalShell, SHELL_OF } from '@/components/shell/nav/SectionShells';
 import { FamilyMoved, leaveForFamilyHost } from '@/features/people/auth';
 import { meQuery, requireRole } from '@ab/web-kit/auth/me';
 
-/**
- * /account «حسابي» (R-ACC-01..05): every signed-in role, inside the shell that role normally gets
- * (admin sidebar, teacher/sales top bar, assistant/portal top bar). The page is the index child.
- * A family is sent to the family host once it is live (VITE_FAMILY_ORIGIN, docs/51 §3).
- */
+/** Every signed-in role in its usual shell (R-ACC-01..05); a family goes to the family host. */
 export const Route = createFileRoute('/account')({
   beforeLoad: async ({ context, location }) => {
     const movedTo = await leaveForFamilyHost(context.queryClient, {

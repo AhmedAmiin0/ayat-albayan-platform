@@ -6,7 +6,6 @@ import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
 import { SideSheetCloseContext } from '@/features/messaging/inbox/shared/side-sheet';
 
 export interface ThreadSideSheetProps {
-  /** The button's text and the sheet's title: «بيانات العميل والتسجيل» / «الأبناء والاشتراكات». */
   label: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;

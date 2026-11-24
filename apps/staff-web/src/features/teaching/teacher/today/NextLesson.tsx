@@ -1,4 +1,5 @@
-import { type LessonView, lessonWhenAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { studentNames } from '@/features/teaching/schedule';
@@ -11,7 +12,6 @@ export interface NextLessonProps {
   tz: string;
 }
 
-/** «حلقتك القادمة: الأحد 16 نوفمبر 4:00 م · يوسف» (or none in two weeks) and «افتح جدولي». */
 export function NextLesson({ next, tz }: NextLessonProps) {
   const clock = useClock();
   const line = next

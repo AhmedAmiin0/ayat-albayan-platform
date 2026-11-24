@@ -11,7 +11,7 @@ export type { RowStatus, SaveEnd };
 export interface SaveInput {
   value: unknown;
   confirmText?: string | undefined;
-  /** «احفظ قيمتي» after a conflict: the newer version the 409 named. */
+  /** Keeping the admin's value after a conflict sends the newer version the 409 named. */
   version?: number | undefined;
 }
 
@@ -19,7 +19,7 @@ export interface RowSaves {
   status: (key: SettingKey) => RowStatus;
   /** One PATCH /config/entries/:key with the row's version; rows save independently of each other. */
   run: (key: SettingKey, input: SaveInput) => Promise<SaveEnd>;
-  /** Forgets a failed save (the row was edited or put back), so no stale «أعد المحاولة» stays. */
+  /** Forgets a failed save so no stale retry stays. */
   clearFailed: (key: SettingKey) => void;
   /** Forgets a failed save or a conflict (the edit was dropped). */
   clear: (key: SettingKey) => void;
@@ -32,7 +32,6 @@ async function versionOf(client: QueryClient, key: SettingKey): Promise<number> 
   return hit.version;
 }
 
-/** The settings, «آخر تعديل», the public config and the entries are read again after a write. */
 export const refreshValues = (client: QueryClient) =>
   Promise.all(
     [CONFIG_QUERY_KEYS.settings, CONFIG_QUERY_KEYS.settingsMeta, CONFIG_QUERY_KEYS.publicConfig, CONFIG_QUERY_KEYS.entries].map((queryKey) =>
@@ -40,12 +39,7 @@ export const refreshValues = (client: QueryClient) =>
     ),
   );
 
-/**
- * Each row's own save (docs/26b §2 «One save model»): PATCH /config/entries/:key with the row's
- * `version`. The status lives per key, so saving row A never touches row B, and it outlives a group
- * switch. The answered row goes into the entries cache (the next save, e.g. «تراجع», sends its new
- * version); a 409 conflict keeps the edit and refetches, so the conflict row can show the newer value.
- */
+/** Per-key status (docs/26b §2) outlives group switches; a 409 keeps the edit and refetches. */
 export function useRowSaves(): RowSaves {
   const queryClient = useQueryClient();
   const [statuses, setStatuses] = useState<Partial<Record<SettingKey, RowStatus>>>({});

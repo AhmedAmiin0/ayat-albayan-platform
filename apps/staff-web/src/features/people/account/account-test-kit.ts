@@ -5,8 +5,7 @@ import { createElement, type ReactElement } from 'react';
 import { vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 
-// Shared by the «حسابي» tests (not a test itself): a profile, API errors and a render wrapper.
-// Each test file mocks '@/lib/api' (apiFetch for GET /me/profile, apiSend for the changes).
+// Each test file mocks '@/lib/api'.
 
 export const PROFILE: AccountProfile = {
   id: 'u1',

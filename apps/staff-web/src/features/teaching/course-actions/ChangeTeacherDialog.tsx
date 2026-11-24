@@ -57,10 +57,7 @@ function TeacherSteps({ studentId, mode, view, teachers, onDone }: StepsProps) {
   );
 }
 
-/**
- * «تغيير المعلم» (owner 2026-10-30): the remaining lessons move to another teacher, on the same
- * days or new ones, from the next lesson by default; the clash check is the new teacher's.
- */
+/** Remaining lessons move from the next lesson by default; the clash check is the new teacher's. */
 export function ChangeTeacherDialog({
   studentId,
   subscriptionId,

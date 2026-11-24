@@ -7,7 +7,7 @@ export interface BioSnapshot {
   lock: LockState;
   /** The device's method, once known (null: no biometrics, the feature hides). */
   kind: BioKind | null;
-  /** «استخدم البصمة للدخول في المرة القادمة؟» is waiting (a fresh sign-in, never declined). */
+  /** Offered only after a fresh sign-in when never declined. */
   offer: boolean;
 }
 
@@ -18,7 +18,8 @@ interface BioText {
 }
 
 export interface BioLockDeps {
-  native: BioNative;
+  /** The modules, imported on first use: every native step waits for them. */
+  native: Promise<BioNative>;
   flags: BioFlags;
   /** The OS prompt's words, read when it opens (the i18n bundle). */
   text: () => BioText;

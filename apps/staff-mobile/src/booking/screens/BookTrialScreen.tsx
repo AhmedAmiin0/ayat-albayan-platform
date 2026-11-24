@@ -10,12 +10,9 @@ type Params = {
   /** From a chat: the lead's number and WhatsApp name, so no cached inbox list is needed. */
   phone?: string;
   name?: string;
-  /**
-   * 'subscribe' = the chat's «اشترك»: the wizard offers the paid packages too. 'register' = a
-   * salesperson's «تسجيل طالب جديد»: the trial through /sales/booking (credited to her).
-   */
+  /** 'subscribe' offers paid packages too; 'register' books a sales trial, credited to her. */
   mode?: string;
-  /** The lead's source from the chat, for «عرفت عننا منين؟». */
+  /** The lead's source from the chat, for the how-did-you-hear question. */
   source?: string;
 };
 
@@ -25,12 +22,7 @@ function chatLead({ leadId, phone, name, source }: Params): BookingLead | undefi
   return { id: leadId, phone_e164: phone, name: name ?? null, ...(isLeadSource(source) ? { source } : {}) };
 }
 
-/**
- * /inbox/book?leadId=… (R-MOB-02 «quick book trial»), opened from the lead screen; the lead comes
- * from the cached inbox like the lead screen's. From a chat's «اشترك» (…&phone&name&mode=subscribe)
- * the chat's own lead is enough, as for a salesperson's registration (…&mode=register), which then
- * returns to the same chat. A link without a known lead says so.
- */
+/** R-MOB-02: the lead comes from the cached inbox or the chat; an unknown lead says so. */
 export function BookTrialScreen() {
   const { leadId = '', phone, name, mode, source } = useLocalSearchParams<Params>();
   const cached = useCachedLead(leadId);

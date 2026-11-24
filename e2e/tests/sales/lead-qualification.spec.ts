@@ -6,9 +6,7 @@ import { withSql } from '../../support/core/schedule';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 import { sidePanel } from '../../support/messaging/thread-panel';
 
-// Lead qualification in the thread (R-LEAD-03, L1) and the funnel's state machine (R-LEAD-01):
-// every «بيانات الطالب» question by its registration-form label lands in leads.qualification, and
-// a status move the funnel does not allow is refused in words. Messaging stays off (nothing sent).
+// Lead qualification (R-LEAD-03, L1) and funnel moves (R-LEAD-01); messaging stays off.
 
 const day = ar.enums.weekday;
 const L = ar.leads;
@@ -17,13 +15,11 @@ const exact = { exact: true } as const;
 const leadOf = (phone: string) => withSql((sql) => sql<{ status: string; qualification: unknown }[]>`
   select status, qualification from public.leads where phone_e164 = ${phone}`).then((rows) => rows[0]);
 
-/** «تغيير الحالة» → the option → «غيّر»; the answer is the page's toast. */
 async function moveTo(page: Page, status: keyof typeof ar.enums.leadStatus): Promise<void> {
   await page.getByLabel(L.changeStatus, exact).selectOption({ label: ar.enums.leadStatus[status] });
   await page.getByRole('button', { name: ar.inbox.applyStatus, exact: true }).click();
 }
 
-/** «تعديل البيانات» in the aside → the titled dialog holding the full qualification form. */
 async function openEdit(page: Page): Promise<Locator> {
   const panel = await sidePanel(page, 'lead');
   await panel.getByRole('button', { name: ar.inbox.editLeadData, exact: true }).click({ timeout: 30_000 });
@@ -46,7 +42,7 @@ test.describe('lead qualification and status (R-LEAD-03, R-LEAD-01)', () => {
     const admin = await asRole('admin');
     await openThread(admin, name);
     const panel = await sidePanel(admin, 'lead');
-    // The aside is short: a summary, then «تعديل البيانات» opens every question in a dialog.
+    // The aside shows a summary; editing opens every question in a dialog.
     await expect(panel.getByText(ar.inbox.noLeadData, exact)).toBeVisible({ timeout: 30_000 });
     let form = await openEdit(admin);
 

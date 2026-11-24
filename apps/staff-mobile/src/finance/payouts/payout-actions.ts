@@ -13,7 +13,7 @@ export function payoutActions(p: Pick<PayoutView, 'status' | 'has_receipt'>): Pa
   return p.has_receipt ? ['receipt', 'unpay'] : ['unpay'];
 }
 
-/** Shown beside «تأكيد الدفع»: the cash still due after per-session payments. The API recomputes it. */
+/** Cash still due after per-session payments; the API recomputes it. */
 export const dueOf = (p: Pick<PayoutView, 'amount' | 'ledger_paid'>): number =>
   Math.max(0, round2(p.amount - (p.ledger_paid ?? 0)));
 

@@ -16,7 +16,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** The featured (bulk) tier: «بدلاً من 420 ر.س» struck, and «وفّر 8%». Both numbers from the API. */
+/** Both numbers come from the API. */
 function Savings({ q }: { q: QuoteResponse }) {
   if (q.insteadOf === null || q.savingsPct === null) return null;
   return (

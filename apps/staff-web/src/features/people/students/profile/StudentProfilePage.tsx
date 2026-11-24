@@ -34,20 +34,17 @@ import { usePermissions } from '@/features/people/auth';
 import { CourseCardPanel } from '@/features/teaching/course-actions';
 import { TestChip, TestFlagSwitch } from '@/features/people/test-accounts';
 
-/** Once the package ended «جدّد الاشتراك» leads the head; before, it waits in «⋯» (2026-11-17). */
+/** Renew leads the head only once the package ended; before that it sits in the overflow menu. */
 const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
   ended ? { primary: nodes.renew, extra: nodes.book } : { primary: nodes.book, extra: nodes.renew };
 
-/**
- * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
- * «سجل التقارير» and «احجز» links, code / guardian / effective link, the edit form and the merge tool.
- */
+/** R-STU-04, R-STU-05. */
 export function StudentProfilePage({ studentId }: { studentId: string }) {
   const { data: student, error, isPending } = useQuery(studentQuery(studentId));
   const [editGuardian, setEditGuardian] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const { can } = usePermissions();
-  // «تحويل إلى ولي أمر» removed this student row: its file is gone, back to the list.
+  // Converting to a guardian removed this student row, so the file is gone.
   const [removed, setRemoved] = useState<string | null>(null);
   if (removed) return <RemovedStudent notice={removed} />;
   if (isPending) return <p className="text-ink-3">{t.common.loading}</p>;
@@ -55,7 +52,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     const notFound = error instanceof ApiError && error.status === 404;
     return <FormAlert>{notFound ? t.common.notFound : t.common.error}</FormAlert>;
   }
-  // The family's second number (owner 2026-10-29), linked from a lead chat; removed from «تعديل ولي الأمر».
+  // The second number was linked from a lead chat and is removed from the guardian edit.
   const second = secondPhoneOf(student.guardian.phones);
   const chatPhone = student.guardian.phone_e164;
   const meta = [

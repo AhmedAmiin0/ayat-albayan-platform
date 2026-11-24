@@ -9,7 +9,6 @@ interface ExpenseRowProps {
   categories: readonly ExpenseCategoryView[] | undefined;
 }
 
-/** «إعلانات · 250 ج.م»; under it the paid day, the vendor, «إيصال مرفق». A monthly draft wears «مسودة». */
 export function ExpenseRow({ expense: e, categories }: ExpenseRowProps) {
   const parts = [
     e.paid_on ? localDay(e.paid_on) : null,

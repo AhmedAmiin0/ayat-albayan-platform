@@ -6,11 +6,7 @@ import { SalesOwnershipRule } from '@/modules/sales/sales';
 /** Who the assistant ownership rule binds: the sales base role; the admin never. */
 const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
 
-/**
- * The assistant ownership rule of PR #612 (SalesOwnershipRule) on /people/*: ANY student and family
- * while «اشتراط التعيين» is OFF (the default); only hers while the rule enforces it, 403
- * not_your_student / not_your_family. The admin is never bound.
- */
+/** Any student while sales_require_assignee is off (default); the admin is never bound. */
 @Injectable()
 export class PeopleOwnership {
   constructor(private readonly rule: SalesOwnershipRule) {}

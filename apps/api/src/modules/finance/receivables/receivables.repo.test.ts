@@ -2,8 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { ReceivablesRepo } from './receivables.repo';
 
-// «مستحق على الطلاب»: an unused-cancelled package (owner 2026-10-28) is never owed, like a trial
-// one; a STOPPED one (owner 2026-10-30, migration 991) still is.
+// An unused-cancelled package is never owed; a stopped one still is (migration 991).
 
 describe('receivables OWING', () => {
   it('the packages query reads every status that can owe and a stopped package, never trial or unused', async () => {

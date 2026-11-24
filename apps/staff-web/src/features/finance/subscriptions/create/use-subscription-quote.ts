@@ -15,10 +15,7 @@ export function usePricingBody(form: PricingForm): SubscriptionPricing {
   return held.form === form ? held.pricing : pricingBody(form);
 }
 
-/**
- * POST /subscriptions/quote (debounced): the price the package will be stored with. One query per
- * student and inputs, shared by the preview and «مبلغ مخصص»; none while no student is picked.
- */
+/** Debounced; one query per student and inputs; none while no student is picked. */
 export function useSubscriptionQuote(studentId: string, pricing: SubscriptionPricing) {
   const settled = useDebounced(pricing, 300);
   return useQuery({

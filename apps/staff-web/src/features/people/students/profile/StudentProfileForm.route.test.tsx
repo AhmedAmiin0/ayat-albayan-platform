@@ -8,7 +8,7 @@ import type { StudentProfile } from '@ab/shared';
 const api = vi.hoisted(() => ({ apiFetch: vi.fn(), apiSend: vi.fn() }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), ...api }));
 
-// owner 2026-11-17: «موقوف مؤقتًا» / «متوقف» open the pause / the stop, never a bare status change.
+// Pause and stop statuses open their dialogs, never a bare status change.
 const STUDENT = {
   id: 's1', name: 'سهيلة', program: 'quran', status: 'active', teacher_id: null, tz: 'Asia/Riyadh',
   level: null, memorized: null, goal: null, riwaya: null, meeting_link_override: null, notes: null,

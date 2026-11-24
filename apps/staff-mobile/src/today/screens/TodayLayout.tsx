@@ -15,7 +15,7 @@ import { todayPlan, type Hero } from '@/today/lib/today-plan';
 import type { TodaySource } from '@/today/lib/today-source';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-/** The lesson whose «تفاصيل الحلقة» is open (null: closed), and how to close it. */
+/** Null means closed. */
 interface OpenDetails<L extends TodayLesson> {
   lesson: L | null;
   close: () => void;
@@ -23,22 +23,13 @@ interface OpenDetails<L extends TodayLesson> {
 
 interface TodayLayoutProps<L extends TodayLesson> {
   source: TodaySource<L>;
-  /** The hero card «الحلقة التالية»; `onDetails` opens its lesson's sheet. */
   hero: (hero: Hero<L>, onDetails: () => void) => ReactNode;
-  /** The tree's «تفاصيل الحلقة» sheet, with what it may do there. */
   sheet: (details: OpenDetails<L>) => ReactNode;
-  /** Said once a lesson change lands (the admin's تأكيد / إلغاء). */
   notice?: string;
-  /** «طلبات الأسر» (owner 2026-11-17): the families' requests this tree answers. */
   requests?: ReactNode;
 }
 
-/**
- * The calm «اليوم» body (docs/29), the same for every tree: the greeting and date, a summary card
- * whose columns filter the day, the hero, «بقية اليوم» as quiet rows and the ended lessons folded
- * away; a quiet day once all is done. A tap on any lesson opens the tree's sheet. Pull to refresh;
- * offline the saved day stays with its «آخر تحديث».
- */
+/** The same calm body for every tree (docs/29); offline the saved day stays. */
 export function TodayLayout<L extends TodayLesson>(props: TodayLayoutProps<L>) {
   const { source, hero: heroCard, sheet, notice, requests } = props;
   const cycle = useClockCycle();

@@ -13,7 +13,6 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 
-// «الدورة والباقة» (owner 2026-11-17): the course, its next lessons and «مدّ الجدول».
 const c = t.courseCard;
 const PKG = {
   ...{ status: 'active', lessonsTotal: 12, used: 9, left: 3, paid: 360, owed: 360 },

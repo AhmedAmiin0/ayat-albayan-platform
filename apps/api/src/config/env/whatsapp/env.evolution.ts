@@ -1,8 +1,17 @@
 import {
-  EVOLUTION_HOOK_INTERNAL, EVOLUTION_INTERNAL_DEFAULT, evolutionBase, evolutionHookUrl,
-  type EvolutionConfig, type EvolutionHookOrigin, evolutionBaseAllowed, evolutionInternalHosts,
-  evolutionInternalList, type WaLine,
+  EVOLUTION_HOOK_INTERNAL,
+  evolutionHookUrl,
+  type EvolutionConfig,
+  type EvolutionHookOrigin,
 } from '@ab/shared';
+import {
+  EVOLUTION_INTERNAL_DEFAULT,
+  evolutionBase,
+  evolutionBaseAllowed,
+  evolutionInternalHosts,
+  evolutionInternalList,
+  type WaLine,
+} from '@ab/catalog';
 import { z } from 'zod';
 import { numbersOverlay, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import type { Env } from '@/config/env/env';

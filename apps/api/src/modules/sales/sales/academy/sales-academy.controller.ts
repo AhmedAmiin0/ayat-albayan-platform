@@ -17,12 +17,7 @@ import { withMine } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
 import { SalesScheduleService } from '@/modules/sales/sales/schedule/sales-schedule.service';
 import type { Page } from '@ab/shared';
 
-/**
- * Sales as the academy's assistant too (docs/16): teachers, every student and the lessons running now
- * and the academy's day, read-only (self.sales_academy), and the history of a subscription she made
- * (self.sales, with «الاشتراكات»).
- * Read-only, whitelisted; the room itself is entered through POST /lessons/:id/room/join.
- */
+/** docs/16: read-only and whitelisted; rooms are entered via POST /lessons/:id/room/join. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Controller('sales')

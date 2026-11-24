@@ -2,7 +2,6 @@ import { Pressable, View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import type { DraftInvitee } from './invitee-draft';
 
-/** The picked invitees as chips; tapping one («إزالة …») takes it off the list. */
 export function InviteeChips({ list, onRemove }: { list: readonly DraftInvitee[]; onRemove: (key: string) => void }) {
   const { color } = useTheme();
   if (list.length === 0) return null;

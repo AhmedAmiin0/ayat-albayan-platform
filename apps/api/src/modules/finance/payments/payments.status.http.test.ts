@@ -7,7 +7,7 @@ const REQUEST = '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a11';
 const body = { subscriptionId: SUB_ID, amount: 145, currency: 'SAR', method: 'bank', paidAt: '2026-10-01T09:00:00Z', clientRequestId: REQUEST };
 const FLIP = { after: { status: 'active', via: 'payment', payment_id: PAYMENT_ID }, at: '2026-10-01T09:00:00Z' };
 
-// Owner 2026-10-12 / 2026-10-15 (docs/11 §7): the → «مشترك» flip is linked to its payment and its from-status.
+// The flip to subscribed is linked to its payment and its from-status (docs/11 §7).
 describe('payments and the student status', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

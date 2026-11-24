@@ -13,10 +13,7 @@ export interface EntityActivityProps extends ActivityScope {
   hideEmpty?: boolean;
 }
 
-/**
- * «النشاط» of one student / teacher: the same GET /activity, scoped to the entity, newest first.
- * The page lives in local state (the profile's URL stays the profile's).
- */
+/** The page lives in local state so the profile's URL stays the profile's. */
 export function EntityActivity({ entity, entityId, hideEmpty = false }: EntityActivityProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const [page, setPage] = useState(1);

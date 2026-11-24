@@ -14,8 +14,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { ChatUploadError } from '@/features/messaging/inbox/api/api.files';
 
-// «الردود السريعة» (owner 2026-10-25): the shared list and the caller's own, filled into the composer.
-// Nothing here sends a message; stage() only copies the attachment for the chat's own file send.
+// Nothing here sends a message; stage() only copies the attachment for the chat's file send.
 
 export const SAVED_REPLIES_KEY = ['saved-replies'] as const;
 
@@ -54,7 +53,6 @@ export const refreshReplies = (queryClient: QueryClient) => queryClient.invalida
 
 const FILE_ERRORS: Record<string, string | undefined> = t.inbox.error;
 
-/** A dialog's inline error: the API's saved-replies or file code in words, else «تعذّر الحفظ». */
 export function replyErrorText(error: unknown): string {
   if (error instanceof ChatUploadError) return t.inbox.error.file_upload;
   const code = errorCode(error);

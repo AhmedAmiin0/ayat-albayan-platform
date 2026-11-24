@@ -1,7 +1,6 @@
 import { NO_REACTIONS, nextReaction, REACTION_EMOJIS, type MessageReactions, type MessageView } from '@ab/shared';
 
-// «تفاعل» (owner 2026-10-27) for web and mobile: the endpoint, the optimistic change, the pill and the
-// «who reacted» lines. Pure: the apps own the request, the cache and the UI.
+// Pure: the apps own the request, the cache and the UI.
 
 /** PUT {emoji, clientRequestId}: ours on that message (null removes it). */
 export const reactionPath = (phone: string, messageId: string): string =>
@@ -37,7 +36,7 @@ export function reactionPill(r: MessageReactions | undefined): PillItem[] {
   }, []);
 }
 
-/** One line of the «who reacted» sheet; `mine` = ours, removable («إزالة»). */
+/** `mine` marks ours, which is removable. */
 export interface ReactorLine {
   emoji: string;
   /** The contact's name (the chat's title) or the staff member's; null = say «you» / «the academy». */

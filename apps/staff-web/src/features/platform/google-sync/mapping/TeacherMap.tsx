@@ -12,7 +12,7 @@ interface Props {
   onNote: (message: string) => void;
 }
 
-/** «المعلمون والتقاويم»: one row per active teacher; nothing is used until «تأكيد». */
+/** Nothing is used until confirmed. */
 export function TeacherMap({ calendars, onNote }: Props) {
   const list = useQuery(googleTeachersQuery);
   return (

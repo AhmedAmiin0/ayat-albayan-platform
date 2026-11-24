@@ -14,9 +14,7 @@ interface ChannelScreenProps {
   title?: string;
   /** The app's picker, recorder and player; absent → text only. */
   media?: ChannelMediaPort;
-  /** A line under the head (the room's «الحلقة الآن» banner); absent → none. */
   banner?: ReactNode;
-  /** A header action at the end (the seated assistant's «مغادرة المحادثة»); absent → none. */
   trailing?: ReactNode;
 }
 

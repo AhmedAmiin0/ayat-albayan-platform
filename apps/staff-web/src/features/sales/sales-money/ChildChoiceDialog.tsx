@@ -6,10 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 type Props = { title: string; students: SalesFamilyStudent[]; onPick: (student: SalesFamilyStudent) => void; onClose: () => void };
 
-/**
- * «لأيّ طالب؟» (owner 2026-10-29: no child names in the chat's actions): one «أيام الحلقات» or «موعد تجريبي جديد»
- * for the family, and with several of her children this picks one; the action's own dialog opens next.
- */
+/** No child names in chat actions: one action per family, then this picks the child. */
 export function ChildChoiceDialog({ title, students, onPick, onClose }: Props) {
   const cancel = (
     <Button type="button" variant="ghost" onClick={onClose}>

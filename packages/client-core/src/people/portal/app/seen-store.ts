@@ -1,8 +1,6 @@
 import { parseSeen, SEEN_REPORTS_KEY, withSeen } from '../report-seen.js';
 
-// «جديد» on a device whose storage answers later (the app's AsyncStorage): the opened report ids
-// as an external store (useSyncExternalStore). Read once on first use; a mark shows at once on
-// every reader and is then saved. A failed read or write keeps this run's marks only.
+// A failed read or write keeps this run's marks only.
 
 export interface SeenStorage {
   getItem: (key: string) => Promise<string | null>;

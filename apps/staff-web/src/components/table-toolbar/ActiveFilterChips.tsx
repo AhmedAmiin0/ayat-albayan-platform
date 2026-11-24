@@ -7,7 +7,7 @@ import type { FilterChip } from './types';
 export interface ActiveFilterChipsProps {
   chips: FilterChip[];
   onClearAll: () => void;
-  /** Focus goes here when the row disappears (its last chip removed, or «مسح الكل»): the «تصفية» button. */
+  /** Focus target when the chip row disappears. */
   onEmpty?: (() => void) | undefined;
 }
 
@@ -22,16 +22,12 @@ const CHIP = [
 const CHIP_X =
   'grid size-5 shrink-0 place-items-center rounded-full text-ink-3 transition-colors duration-[120ms] group-hover:bg-rule group-hover:text-ink max-sm:size-7';
 
-/**
- * The set filters as removable chips («المعلم: أبرار ×»), then «مسح الكل»; nothing when none is set.
- * Removing a chip unmounts the button that has focus, so focus moves first: to the next chip (the
- * previous one for the last), or out of the row to `onEmpty` when nothing is left (WCAG 2.4.3).
- */
+/** Removing a chip moves focus to a neighbour, or to `onEmpty` when none is left (WCAG 2.4.3). */
 export function ActiveFilterChips({ chips, onClearAll, onEmpty }: ActiveFilterChipsProps) {
   const list = useRef<HTMLUListElement>(null);
   if (chips.length === 0) return null;
   const remove = (c: FilterChip, i: number) => {
-    // The chips are the first buttons of the list, «مسح الكل» the last, which stays while chips remain.
+    // The chips are the first buttons; clear all is last and stays while chips remain.
     if (chips.length > 1) list.current?.querySelectorAll('button')[i === chips.length - 1 ? i - 1 : i + 1]?.focus();
     else onEmpty?.();
     c.onRemove();

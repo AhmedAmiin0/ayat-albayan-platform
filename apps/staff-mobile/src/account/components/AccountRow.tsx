@@ -3,7 +3,7 @@ import { t, ListRow, useMyProfile } from '@ab/mobile-kit';
 
 export type AccountHref = '/more/account' | '/teacher/more/account' | '/sales/more/account' | '/assistant/more/account';
 
-/** «حسابي» in «المزيد» (R-ACC-01): every role has it, no permission needed; the name under it. */
+/** R-ACC-01: every role has it, no permission needed. */
 export function AccountRow({ href }: { href: AccountHref }) {
   const profile = useMyProfile();
   return <ListRow title={t.account.nav} subtitle={profile.data?.full_name} onPress={() => router.push(href)} />;

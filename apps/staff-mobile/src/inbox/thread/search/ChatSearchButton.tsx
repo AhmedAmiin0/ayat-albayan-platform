@@ -2,7 +2,7 @@ import { t, IconButton, useTheme } from '@ab/mobile-kit';
 import { SearchIcon } from '@/inbox/shared/chat-icons';
 import { useChatSearch } from './search-context';
 
-/** «بحث» as an icon where the header has no «⋮» (a teacher's chat); the menu has it otherwise. */
+/** Only where the header has no menu, i.e. a teacher's chat. */
 export function ChatSearchButton() {
   const { color } = useTheme();
   const search = useChatSearch();

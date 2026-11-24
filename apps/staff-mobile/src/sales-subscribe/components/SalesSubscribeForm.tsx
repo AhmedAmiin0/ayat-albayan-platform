@@ -1,4 +1,5 @@
-import { chatBinding, RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
+import { chatBinding, type SalesFamilyStudent } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useHolds, t, Button, ErrorLine } from '@ab/mobile-kit';
@@ -29,7 +30,7 @@ interface SalesSubscribeFormProps {
   /** The picked child, '' = none yet; the screen holds it (its title follows the child). */
   studentId: string;
   onPick: (id: string) => void;
-  /** «جدّد الاشتراك»: a child due for one starts from its `renewal` (still editable), again on a new pick. */
+  /** A due child starts from its `renewal`, still editable. */
   renew?: boolean;
   /** Back to the chat once a payment link's text is in its box. */
   onDone: () => void;
@@ -37,15 +38,10 @@ interface SalesSubscribeFormProps {
 
 const pl = t.paymentLinks;
 
-/**
- * The child, the admin's calculator inputs, the API's price, the first day (only with subscriptions.set_start_date),
- * «المعلم/ة» (the trial's unless she picks another; teacherId). «طريقة الدفع» (owner 2026-10-29) where both exist:
- * «تحويل بنكي» saves the package (on to its weekly days, then the transfer; the screen is replaced), «دفع إلكتروني»
- * (a Stripe build, her own child) makes a link from the same fields: the agreed amount, then the link to send.
- */
+/** The start date needs subscriptions.set_start_date; online payment is a Stripe build only. */
 export function SalesSubscribeForm({ phone, students, studentId, onPick, renew = false, onDone }: SalesSubscribeFormProps) {
   const child = students.find((s) => s.id === studentId);
-  // A single «جدّد الاشتراك» lists all her children: only one due starts from its last package.
+  // Only the one due child starts from its last package.
   const seedOf = (id: string) => {
     const s = renew ? students.find((x) => x.id === id) : undefined;
     return s?.renew_due ? renewalForm(s.renewal) : INITIAL_FORM;
@@ -77,7 +73,7 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
   const [method, setMethod] = useState<PayMethod>('bank');
   const online = canOnline && method === 'online';
   const pay = useLinkPay({ studentId: online ? studentId : '', pricing, phone });
-  // «مبلغ مخصص» (owner 2026-11-02): the package price of «تحويل بنكي»; the link has its own.
+  // The custom amount sets the bank-transfer package price; the link has its own.
   const custom = useCustomPrice(quote.data);
   const pill = online
     ? { on: pay.custom, onChange: pay.setCustom }

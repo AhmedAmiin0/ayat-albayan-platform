@@ -9,10 +9,7 @@ import { usePermissions } from '@/features/people/auth';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 import { canSalesCorrect } from './correct/correctable';
 
-/**
- * Which SalesLessonSteps apply to `lesson` at `now` for the signed-in salesperson. «تغيير الموعد»
- * waits until a running lesson is over: its drawer offers «ادخل الحلقة» only.
- */
+/** Reschedule waits until a running lesson is over; its drawer offers only join. */
 export function useSalesLessonRights(lesson: SalesScheduleLesson, now: Date) {
   const { can } = usePermissions();
   const required = usePublicConfig().lesson_confirmation_required;

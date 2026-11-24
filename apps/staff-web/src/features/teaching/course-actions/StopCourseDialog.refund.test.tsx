@@ -6,8 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SUB } from './course-actions-fixture';
 import { StopCourseDialog } from './StopCourseDialog';
 
-// The stop sheet's money (owner 2026-11-06): «إلغاء فقط» with what is still owed, or «إلغاء مع
-// استرداد» with the refund amount; the person chooses, a summary line says the outcome.
+// Cancel only with what is owed, or cancel with a refund; a summary line says the outcome.
 const perms = vi.hoisted(() => ({ list: [] as string[] }));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),

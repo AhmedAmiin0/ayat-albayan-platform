@@ -15,20 +15,13 @@ export interface ContinueChoiceProps {
   draft: Pick<BookingDraft, 'program' | 'genderPref'>;
   /** ISO now: the new start is never before today. */
   now: string;
-  /** «تابِع بنفس الأيام» / «عدّل الأيام السابقة»: the wizard opens with the previous teacher and days picked. */
+  /** The wizard opens with the previous teacher and days picked. */
   onContinue: () => void;
-  /** «اختر أيامًا أخرى»: the empty picker on the same opening week. */
+  /** The empty picker on the same opening week. */
   onOther: () => void;
 }
 
-/**
- * A renewal's first question (owner 2026-10-18), inside «أيام الحلقات» before the wizard: the
- * previous course's days and the new start, then continue on them (primary) or pick other days.
- * With another day count than before (!continueFits) it says so and offers «عدّل الأيام السابقة»
- * (the picker prefilled, to bring the days to the new count) instead. Either primary needs the previous
- * teacher still bookable here (in the wizard's teacher list, with availability). While the list loads the
- * status line says so; a failed read (or refetch) is the error alert with a retry, never «unavailable».
- */
+/** Either primary needs the previous teacher still bookable; a failed read shows a retry alert. */
 /** The primary label: the days saved before the payment are edited, a previous course continued. */
 const sameLabel = (view: SalesCourseView): string =>
   view.draft ? t.booking.courseChange.draftEdit : t.booking.courseChange.continueSameDays;
@@ -39,7 +32,7 @@ export function ContinueChoice({ view, draft, now, onContinue, onOther }: Contin
     bookingTeachersQuery({ program: draft.program, gender: draft.genderPref }, 'sales'),
   );
   const fits = continueFits(view);
-  // isSuccess, not data: a failed refetch keeps the last list, never an enabled «تابِع» beside the error.
+  // isSuccess, not data: a failed refetch keeps the last list, never an enabled continue beside it.
   const bookable =
     teachers.isSuccess &&
     teachers.data.some((o) => o.id === view.previous?.teacherId && o.has_availability);

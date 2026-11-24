@@ -3,8 +3,7 @@ import app from '../app.json';
 import appConfig from '../app.config';
 import pkg from '../package.json';
 
-// docs/38: Android's share sheet → «مشاركة إلى…». Intent filters live in the APK, so the types are
-// the owner's v1 decision (text and links, photos, PDFs; no video, audio or */*).
+// docs/38: intent filters live in the APK, so the share types are a v1 decision.
 const name = (p: unknown): unknown => (Array.isArray(p) ? p[0] : p);
 const sharing = (plugins: ExpoConfig['plugins']) => plugins?.find((p) => name(p) === 'expo-sharing');
 

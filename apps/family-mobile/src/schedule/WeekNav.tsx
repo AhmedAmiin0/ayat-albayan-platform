@@ -12,12 +12,10 @@ const TITLE: readonly (() => string)[] = [
 
 interface WeekNavProps {
   offset: number;
-  /** «15 – 21 نوفمبر». */
   range: string;
   onChange: (offset: number) => void;
 }
 
-/** «هذا الأسبوع» with its days, between «الأسبوع السابق» and «الأسبوع التالي» (canvas Schedule). */
 export function WeekNav({ offset, range, onChange }: WeekNavProps) {
   const { color } = useTheme();
   const S = t.portal.app.schedule;

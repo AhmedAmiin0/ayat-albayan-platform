@@ -12,11 +12,7 @@ export interface ThreadResultsProps {
   threads: ThreadView[];
 }
 
-/**
- * The chats matching the box (name / number) and, from 3 folded characters, «الرسائل» below
- * them (docs/37 NEW 1). «المحادثات» labels the chats only when both sections show; with no
- * chat but message hits, the hits stand alone (no «لا توجد محادثات»).
- */
+/** With no chat but message hits, the hits stand alone (docs/37 NEW 1). */
 export function ThreadResults({ search, threads }: ThreadResultsProps) {
   // One ticking clock for every row (not one timer per row): the times turn into dates at midnight.
   const now = useNow();

@@ -9,17 +9,11 @@ import { SheetLines } from './SheetLines';
 
 interface StopDoneViewProps {
   done: StopDone;
-  /** The guardian's phone: «افتح المحادثة»; absent (or above a chat already) = no button. */
+  /** Absent, or when already above a chat, means no open-chat button. */
   chatPhone?: string | undefined;
-  /** «تم» (and before the chat opens): the sheet closes. */
   onClose: () => void;
 }
 
-/**
- * After «إلغاء الاشتراك» (owner 2026-11-17, board CourseXStopDone): what was done and the
- * student's status now, «الخطوة التالية» in its own block, who was told, then «افتح المحادثة»
- * (the family's chat in this tree) beside «تم».
- */
 export function StopDoneView({ done, chatPhone, onClose }: StopDoneViewProps) {
   const { color } = useTheme();
   const base = useTreeBase();

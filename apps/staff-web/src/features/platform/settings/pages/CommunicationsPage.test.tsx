@@ -42,10 +42,8 @@ describe('«التواصل» (/admin/settings/communications)', () => {
     expect(screen.getByText(s.autoMessages)).toBeTruthy();
     expect(screen.getByRole('tabpanel', { name: ct.overview })).toBeTruthy();
     expect(screen.queryByRole('region', { name: t.notificationRules.title })).toBeNull();
-    // The feedback mode is the «أزرار تقييم الحلقة» row of «الإشعارات» now, not a switch here.
     expect(screen.queryByText(s.feedbackMode)).toBeNull();
     expect(screen.queryByRole('heading', { name: t.templates.title })).toBeNull();
-    // «مواعيد الرسائل» is gone: its two values are edited in «القيم» › «الرسائل».
     expect(screen.queryByRole('tab', { name: ct.timing })).toBeNull();
     expect(screen.queryByLabelText(t.settings.reminderLookaheadHours)).toBeNull();
   });
@@ -75,7 +73,7 @@ describe('«التواصل» (/admin/settings/communications)', () => {
     expect(screen.getByRole('heading', { name: s.lines.title })).toBeTruthy();
     expect(screen.getByRole('button', { name: s.lines.check })).toBeTruthy();
     expect(screen.queryByRole('button', { name: s.enableTitle })).toBeNull();
-    // The legacy line rows of «التكاملات», folded (still read while comms_source = legacy).
+    // Legacy line rows are still read while comms_source is legacy.
     const legacy = screen.getByText(t.communicationsHub.linesLegacyTitle, { selector: 'summary' }).closest('details');
     expect(legacy?.open).toBe(false);
   });

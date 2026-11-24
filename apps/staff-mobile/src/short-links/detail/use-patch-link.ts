@@ -5,10 +5,7 @@ import { useState } from 'react';
 import { useViewerTz } from '@/core/lib/clock';
 import { useUpdateLink } from '@/short-links/api/link-hooks';
 
-/**
- * «تعديل» / «تمديد» of a link: the form check, then PATCH /short-links/:code; each field's
- * refusal for the sheet, which closes once saved.
- */
+/** Each field's refusal goes to the sheet, which closes once saved. */
 export function usePatchLink(code: string, onSaved: () => void) {
   const [errors, setErrors] = useState<LinkFieldErrors>({});
   const tz = useViewerTz();

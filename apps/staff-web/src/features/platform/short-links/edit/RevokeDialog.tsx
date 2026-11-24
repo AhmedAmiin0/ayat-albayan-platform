@@ -12,7 +12,7 @@ interface RevokeDialogProps {
   failure: string | null;
 }
 
-/** «إيقاف الرابط؟»: it stops at once for everyone and never runs again. */
+/** Revoking stops the link at once for everyone and it never runs again. */
 export function RevokeDialog({ onConfirm, onClose, pending, failure }: RevokeDialogProps) {
   const actions = (
     <>

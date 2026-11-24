@@ -25,15 +25,11 @@ const DIALOGS: Record<
 
 export interface PeopleEditActionsProps {
   studentId: string;
-  /** «تحويل إلى ولي أمر» removed the student row: the page leaves it (with the notice). */
+  /** Converting to a guardian removed the student row, so the page leaves it. */
   onRemoved?: (notice: string) => void;
 }
 
-/**
- * «تعديل البيانات» · «ربط بولي أمر آخر» · «تحويل إلى طالب / ولي أمر» (owner 2026-11-02) for one
- * student, on the assistant's «الطلاب» and the admin's student file. Only the actions the role
- * holds; the dialog opens on the loaded edit view; the last success shows under the buttons.
- */
+/** Only the actions the role holds are shown. */
 export function PeopleEditActions({ studentId, onRemoved }: PeopleEditActionsProps) {
   const { can } = usePermissions();
   const [open, setOpen] = useState<PeopleActionKind | null>(null);

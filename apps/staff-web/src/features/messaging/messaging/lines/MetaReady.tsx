@@ -11,11 +11,7 @@ const ROWS: readonly (readonly [keyof Ready, Label, Label])[] = [
   ['app_subscribed', 'metaAppSubscribed', 'metaAppNotSubscribed'],
 ];
 
-/**
- * «الجاهزية للإرسال عبر ميتا مباشرة» (docs/19 «CRM → Meta»): on a meta line, and on a crm line
- * before its switch, whether the app secret and the verify token are set and the app subscribed to
- * the WABA. A fact the server could not learn (null) is left out; nothing without the block.
- */
+/** A fact the server could not learn (null) is left out (docs/19). */
 export function MetaReady({ ready }: { ready: Ready | undefined }) {
   const s = t.templates.settings.lines;
   if (!ready) return null;

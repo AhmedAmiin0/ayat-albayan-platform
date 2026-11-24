@@ -1,8 +1,6 @@
 import postgres from 'postgres';
 
-// «اللغة» lives on the login (profiles.locale) and an unset one learns the browser's saved choice.
-// The journeys share one login per role and pick their language per page (localStorage), so each
-// page starts from a login that never chose: one spec's English must not follow the next one.
+// Language lives on the login; each page starts from a login that never chose, isolating specs.
 
 /** Clears the saved language of the login with this email (local/CI database only). */
 export async function forgetProfileLocale(email: string): Promise<void> {

@@ -1,6 +1,5 @@
 import type { BioNative } from './native';
 
-/** The method the device has, which names every string («البصمة», «Face ID», «بصمة العين»). */
 export type BioKind = 'fingerprint' | 'face' | 'iris';
 
 /** One prompt's answer: in, said no / failed, or the biometrics are gone from the device. */

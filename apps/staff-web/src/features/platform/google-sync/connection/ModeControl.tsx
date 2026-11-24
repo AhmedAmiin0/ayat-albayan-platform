@@ -12,7 +12,7 @@ interface Props {
   save: ReturnType<typeof useSaveSettings>;
 }
 
-/** «تجربة بدون كتابة | كتابة فعلية»: back to the dry run is immediate, live asks first naming its targets. */
+/** Back to dry run is immediate; live asks first, naming its targets. */
 export function ModeControl({ status, save }: Props) {
   const [confirming, setConfirming] = useState(false);
   const mode = status.settings.mode;

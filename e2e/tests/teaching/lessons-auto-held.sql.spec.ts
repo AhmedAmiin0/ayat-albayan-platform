@@ -7,12 +7,7 @@ import {
 } from '../../support/teaching/day-times';
 import { rolledBack, type Tx } from '../../support/edit-time';
 
-// «انعقدت» by default: the auto-held job's change set through the real
-// apply_lesson_changes (AutoHeldService: scheduled → completed, attendance and chargeable
-// untouched,
-// audit reason auto_held, actor null), then its correction (completed → cancelled_by_teacher, not
-// chargeable). Pins what it does to the package balance and to teacher pay (sync_teacher_earning,
-// migration 200: a completed non-trial lesson earns its rate, as a reported one does). Rolled back.
+// Auto-held (migration 200): a completed non-trial lesson earns its rate; corrections don't.
 
 type Seeded = DaySeed & { lessonId: string; subscriptionId: string };
 

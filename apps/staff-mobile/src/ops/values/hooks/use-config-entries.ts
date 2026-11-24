@@ -1,13 +1,15 @@
-import type { ConfigEntriesResponse, ConfigEntry, ConfigEntryResult, SettingKey } from '@ab/shared';
+import type {
+  ConfigEntriesResponse,
+  ConfigEntry,
+  ConfigEntryResult,
+  SettingKey,
+} from '@ab/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, t, refreshOverrides, locale, pathKey } from '@ab/mobile-kit';
 
 const ENTRIES = '/config/entries';
 
-/**
- * GET /config/entries (docs/26 §2f): the stored descriptions. No retry: an older API has no such
- * route, and the sheet then shows today's text without «عدّل الوصف» (never an error).
- */
+/** docs/26 §2f: no retry since an older API lacks the route; the sheet then hides editing. */
 function useConfigEntries() {
   return useQuery({
     queryKey: pathKey(ENTRIES),

@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 const F = t.shortLinks.form;
 
 interface MaxUsersFieldProps {
-  /** Digits as typed; empty = «بلا حد». */
+  /** Digits as typed; empty means no limit. */
   value: string;
   onChange: (next: string) => void;
   /** The listed people and numbers: the cap the hint names (0 = no list). */
@@ -15,7 +15,6 @@ interface MaxUsersFieldProps {
   error?: string | undefined;
 }
 
-/** «عدد المستخدمين المسموح به»: a number, or «بلا حد» (board LinkXWebCreate). */
 export function MaxUsersField({ value, onChange, listed, error }: MaxUsersFieldProps) {
   const boxId = useId();
   const unlimited = value === '';

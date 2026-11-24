@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t } from '@ab/mobile-kit';
 import { lesson, yusuf } from '@/today/testing/fixtures';
 import { teacherWord } from '@/teacher/lessons/teacher-word/teacher-word';

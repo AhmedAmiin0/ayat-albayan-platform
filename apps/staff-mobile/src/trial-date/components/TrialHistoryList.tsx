@@ -11,7 +11,6 @@ import { TrialHistoryRow } from './TrialHistoryRow';
 interface TrialHistoryListProps {
   /** GET …/trial-dates; undefined while it loads (or after it failed). */
   history: TrialHistory | undefined;
-  /** The read failed: «تعذّر تحميل…» with a retry. */
   onRetry?: () => void;
 }
 
@@ -24,11 +23,7 @@ function stateOf(history: TrialHistory | undefined, failed: boolean): State {
   return history.items.length === 0 ? 'empty' : 'rows';
 }
 
-/**
- * «مواعيد الحلقة التجريبية» (R-STU-05, R-SCH-07): every trial time picked for the student, newest
- * pick first, the count in the header; the first five, then «عرض الكل». Loading, empty and a
- * failed read (with retry) say so.
- */
+/** Newest pick first (R-STU-05, R-SCH-07), the first five then show all. */
 export function TrialHistoryList({ history, onRetry }: TrialHistoryListProps) {
   const { color } = useTheme();
   const [all, setAll] = useState(false);

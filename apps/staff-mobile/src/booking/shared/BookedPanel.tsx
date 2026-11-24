@@ -11,11 +11,10 @@ export interface BookedPanelProps {
   teacherName: string;
   /** The family's zone, for the lesson's local time. */
   tz: string;
-  /** «ارجع للمحادثة» (the web's words). */
   onDone: () => void;
-  /** After a paid package: «اعمل الاشتراك» opens its subscription instead (subscriptionHref). */
+  /** After a paid package, opens its subscription instead (subscriptionHref). */
   next?: Href | null;
-  /** A makeup: «الحجز التعويضي اتعمل», and never a subscription to offer. */
+  /** A makeup never offers a subscription. */
   makeup?: boolean;
 }
 

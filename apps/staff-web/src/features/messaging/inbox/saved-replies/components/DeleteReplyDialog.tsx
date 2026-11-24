@@ -13,7 +13,7 @@ export interface DeleteReplyDialogProps {
   onClose: () => void;
 }
 
-/** «حذف الرد»: the reply and its file go; messages already sent stay as they are. */
+/** Deleting removes the reply and its file; messages already sent stay as they are. */
 export function DeleteReplyDialog({ reply, onClose }: DeleteReplyDialogProps) {
   const queryClient = useQueryClient();
   const remove = useMutation({

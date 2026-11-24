@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { View } from 'react-native';
 import { t, InsetGroup } from '@ab/mobile-kit';
 import { PendingReportRow } from '@/core/ui/lists/ReportRows';
@@ -14,11 +14,7 @@ interface PendingBlockProps {
   tz: string;
 }
 
-/**
- * At the top of the file (docs/47): this student's started lessons still missing a sent report,
- * each opening its form; the oldest two, under «n تقارير معلّقة» (the log offers the rest as
- * «اكتب التقرير»). Nothing when none is pending.
- */
+/** The oldest two pending reports (docs/47); the log offers the rest; nothing when none. */
 export function PendingBlock({ studentId, tz }: PendingBlockProps) {
   const pending = usePendingReports();
   const rows = (pending.data ?? []).filter((r) => r.student.id === studentId);

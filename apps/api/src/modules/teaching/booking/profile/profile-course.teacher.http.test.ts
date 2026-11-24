@@ -11,8 +11,7 @@ import {
   T_OLD,
 } from './profile-course.fakes';
 
-// «تغيير المعلم» from the student's profile (owner 2026-10-30): the remaining lessons move to the
-// new teacher.
+// The remaining lessons move to the new teacher.
 type App = Awaited<ReturnType<typeof profileApp>>;
 const URL = `/students/${S1}/course-teacher/change`;
 const MOVE = { ...BODY, teacherId: T_NEW };

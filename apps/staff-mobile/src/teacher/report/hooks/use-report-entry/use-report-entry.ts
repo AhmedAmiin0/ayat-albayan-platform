@@ -5,12 +5,11 @@ import {
   submitBody,
   submitProblem,
   type FormValues,
-  type Grade,
-  type Program,
   type ReportAttachmentView,
   type ReportView,
   type Rubric,
 } from '@ab/shared';
+import type { Grade, Program } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { dropStoredDraft, useStoredDraft, viewWithDraft } from '@/teacher/report/drafts';
@@ -18,7 +17,7 @@ import { refreshAfterSubmit, submitReport } from '@/teacher/report/hooks/api';
 import { useAutosave } from '@/teacher/report/hooks/use-autosave';
 import { useFormMode } from '@/teacher/report/hooks/use-form-mode';
 
-/** Form values; «البرنامج *» is the report's own, else the student's (the prefill; @ab/client-core). */
+/** The program is the report's own, else the student's prefill. */
 const entryValuesOf = reportEntryValues;
 
 interface Restore {
@@ -39,11 +38,7 @@ function useRestoredDraft(input: Restore, setValues: Dispatch<SetStateAction<For
   });
 }
 
-/**
- * One student's report on the form (R-REP-02): local values, the debounced draft autosave while a
- * draft, and the submit (first send or «حفظ التعديل») with the API's own checks first. Nothing is
- * shown as sent until the API says so: offline, the submit fails and says it was not sent.
- */
+/** Nothing shows as sent until the API says so; offline the submit fails and says so (R-REP-02). */
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const client = useQueryClient();
   const [own, setReport] = useState(initial);

@@ -4,7 +4,6 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useBubbleTools } from '@/features/messaging/inbox/messages/lib/use-bubble-tools';
 
-/** «تنزيل» under an opened file (the thumbnail, the PDF link, the player): saves it under its name. */
 export function DownloadButton({ message: m, name }: { message: MessageView; name: string }) {
   const tools = useBubbleTools();
   return (

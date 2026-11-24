@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { OtherTimeProps } from './OtherTime.types';
 import { OtherTimeList } from './OtherTimeList';
 
-/** «وقت آخر» under the free times: every start of the server's next two weeks. */
+/** Every start of the server's next two weeks. */
 export function OtherTime(props: OtherTimeProps) {
   const [open, setOpen] = useState(false);
   return (

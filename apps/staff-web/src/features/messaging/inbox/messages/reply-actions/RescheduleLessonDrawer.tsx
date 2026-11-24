@@ -20,7 +20,7 @@ export interface RescheduleLessonDrawerProps {
   onMoved: () => void;
 }
 
-/** «تغيير الموعد» from a reply note: the admin's lesson drawer, opened straight on its reschedule form (R-SCH-07). */
+/** Opens the admin's lesson drawer straight on its reschedule form (R-SCH-07). */
 export function RescheduleLessonDrawer({ lesson, onClose, onMoved }: RescheduleLessonDrawerProps) {
   const read = useQuery({ queryKey: ['reply-lesson', lesson.id], queryFn: () => readLesson(lesson), staleTime: 0 });
   const done = () => {

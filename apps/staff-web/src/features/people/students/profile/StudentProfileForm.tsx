@@ -21,13 +21,11 @@ import type { StudentProfile } from '@ab/shared';
 type SelectName = 'gender' | 'program' | 'status' | 'teacher_id';
 type FieldName = Exclude<keyof ProfileValues, 'contact_is_self'>;
 
-/** Reading order: who (with the form's «سن الطالب» and «النوع») and with whom, what they study, then logistics. */
 const FIELDS: FieldName[] = [
   'name', 'age', 'gender', 'status', 'teacher_id', 'program', 'level', 'memorized',
   'goal', 'riwaya', 'tz', 'meeting_link_override', 'notes',
 ];
 const LTR: FieldName[] = ['meeting_link_override', 'age'];
-/** The link's own hint; the status's comes from useStatusPick (its note, or «جارٍ التحميل»). */
 const HINTS: Partial<Record<FieldName, string>> = {
   meeting_link_override: t.students.meetingLinkHint,
 };
@@ -49,7 +47,7 @@ export function StudentProfileForm({ student, chatPhone }: StudentProfileFormPro
   const queryClient = useQueryClient();
   const { data: teachers = [] } = useQuery(teacherOptionsQuery);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
-  // «موقوف مؤقتًا» / «متوقف» lead to their dialogs (owner 2026-11-17); the rest are set at once.
+  // Pause and stop statuses lead to their dialogs; other statuses are set at once.
   const status = useStatusPick(student.id);
   const pick = (name: SelectName, value: string, set: (v: never) => void) => {
     const picked = statusOf(name, value);

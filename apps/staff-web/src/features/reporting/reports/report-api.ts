@@ -43,7 +43,7 @@ export interface ReportApi {
   submitReportV2: Call<ReportV2SubmitBody>;
   /** A failed call in the form's words. */
   errorText: (error: unknown) => string;
-  /** Whether the form shows «المرفقات» (the link too since 2026-11-06). */
+  /** Whether the form shows attachments, the signed link included. */
   attachments: boolean;
   files: AttachmentCalls;
 }

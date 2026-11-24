@@ -6,11 +6,7 @@ import { dropTemplate } from '../sales/sales-portal';
 import { withSql } from '../core/schedule';
 import { syncNumber } from './template-numbers';
 
-// The restricted template allow-list: every role without templates.manage or templates.send_all
-// (teachers, sales…) lists and sends only the flagged rows. The stub's chat WABA has
-// free_trial_invite, welcome_greeting and academy_welcome (tools/wa-stub defaultChatTemplates); the
-// chat number's «مزامنة مع Meta» imports all three and flags only the first two. The third default,
-// trial_reschedule, is seeded flagged and listed once Meta approves it on the chat WABA.
+// Roles without templates.manage or templates.send_all list and send only the flagged rows.
 
 /** The imported defaults; with RESCHEDULE, the three restricted defaults. */
 const IMPORTED = ['free_trial_invite', 'welcome_greeting'] as const;
@@ -39,12 +35,9 @@ export async function dropChatRows(): Promise<void> {
   for (const key of CHAT_KEYS) await dropTemplate(key);
 }
 
-/**
- * The chat number's «مزامنة مع Meta» re-imports the chat rows with their default flags; then the admin
- * submits trial_reschedule and the stub approves it on the chat WABA, so all three defaults are listed.
- */
+/** Sync imports the chat rows with default flags; trial_reschedule is then approved by the stub. */
 export async function importChatRows(admin: Page): Promise<void> {
-  await admin.goto('/admin/settings/communications?tab=templates'); // «التواصل» › «القوالب»
+  await admin.goto('/admin/settings/communications?tab=templates');
   await syncNumber(admin, 'chat');
   await expect.poll(async () => (await chatRows()).length).toBe(CHAT_KEYS.length);
   await approveReschedule(await accessToken(admin));

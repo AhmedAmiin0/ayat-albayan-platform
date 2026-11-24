@@ -9,7 +9,7 @@ import { GoogleAdminService } from './google-admin.service';
 import { GoogleOAuthService } from '@/modules/platform/google-sync/oauth/google-oauth.service';
 import { GoogleStatusService } from './google-status.service';
 
-/** «التكاملات» → Google (docs/24 §3): the connection, the two switches, discovery and the Drive root. Admins only. */
+/** docs/24 §3: admins only. */
 @ApiTags('google-sync')
 @ApiBearerAuth()
 @Permissions('settings.write')

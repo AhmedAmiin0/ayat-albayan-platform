@@ -10,10 +10,7 @@ const F = t.lessonFiles;
 
 const isKind = (v: string): v is LessonFileKind => LESSON_FILE_KINDS.some((k) => k === v);
 
-/**
- * «أضف ملفًا للحلقة»: the kind, «يراه الطالب وولي الأمر» for the new files, then one or more
- * files; a line per file says where it stands, «إلغاء» drops the ones still waiting.
- */
+/** Cancel drops the files still waiting. */
 export function UploadBox({ lessonId }: { lessonId: string }) {
   const [kind, setKind] = useState<LessonFileKind>('homework');
   const [visible, setVisible] = useState(true);

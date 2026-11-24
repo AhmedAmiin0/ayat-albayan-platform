@@ -1,4 +1,3 @@
-// HTTP harness of «إلغاء الاشتراك» (test-only, excluded from the build by *.fakes.ts).
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';

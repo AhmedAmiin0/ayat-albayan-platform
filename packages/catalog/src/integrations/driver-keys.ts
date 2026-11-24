@@ -2,12 +2,11 @@ import type { WaLine } from '../enums/messaging.js';
 import type { IntegrationKey, WaProvider } from './keys/index.js';
 import type { IntegrationConfigItem } from './views.js';
 
-// What a line needs to send under each driver (docs/19), by key NAME: the phone's readiness before a
-// switch. The API's lineGaps (env.gaps.ts) stays the final word («افحص الخطوط»).
+// Keys each driver needs (docs/19), by name; the API's lineGaps (env.gaps.ts) has the final word.
 
 const CRM_KEYS: readonly IntegrationKey[] = ['WACRM_API_BASE', 'WACRM_API_KEY'];
 const KAPSO_KEYS: readonly IntegrationKey[] = ['KAPSO_API_BASE', 'KAPSO_API_KEY'];
-/** An Evolution number's instance and token live on the number («الأرقام»); only the base here. */
+/** An Evolution number's instance and token live on the number; only the base lives here. */
 const EVOLUTION_KEYS: readonly IntegrationKey[] = ['EVOLUTION_API_BASE'];
 const NOTIFICATION_IDS: readonly IntegrationKey[] = ['WA_PHONE_NUMBER_ID', 'WA_WABA_ID'];
 const CHAT_IDS: readonly IntegrationKey[] = ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID'];

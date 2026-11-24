@@ -10,15 +10,11 @@ export interface ReplyConfirmButtonProps {
   phone: string;
   lessonId: string;
   route: ConfirmRoute;
-  /** «تأكيد حلقة الأحد 4 أكتوبر 17:00 (بتوقيت الرياض)»: which lesson, for the screen reader and the tooltip. */
+  /** Names the lesson for the screen reader and the tooltip. */
   label: string;
 }
 
-/**
- * «تأكيد الحلقة» under a guardian's «نعم» (owner 2026-10-28): scheduled → confirmed by the viewer's
- * route (replyRights), no message to anyone. Either way the chat re-reads, so the note then reads
- * «تم تأكيد حلقة …», or the button goes when the lesson changed elsewhere.
- */
+/** Moves scheduled to confirmed via the viewer's route, sending no message to anyone. */
 export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfirmButtonProps) {
   const client = useQueryClient();
   const confirm = useMutation({

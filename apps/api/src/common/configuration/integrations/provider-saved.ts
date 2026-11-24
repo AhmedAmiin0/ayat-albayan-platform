@@ -1,4 +1,4 @@
-import { WA_LINES, WA_PROVIDERS, type WaLine, type WaProvider } from '@ab/shared';
+import { WA_LINES, WA_PROVIDERS, type WaLine, type WaProvider } from '@ab/catalog';
 import { Logger } from '@nestjs/common';
 import { z } from 'zod';
 

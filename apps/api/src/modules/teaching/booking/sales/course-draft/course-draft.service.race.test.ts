@@ -4,8 +4,7 @@ import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BOOKING, REQ, setup, SUB, USER } from './course-draft.fakes';
 import { draftRequestId } from './course-draft.rules';
 
-// PR #648 review: a draft saved while the payment lands, and «احجز» racing the payment, never
-// book two courses; a draft is removed only as the version that was booked.
+// A draft racing the payment never books two courses; removed only as the booked version.
 const keyed = (savedAt: string) =>
   expect.objectContaining({ clientRequestId: draftRequestId({ subscriptionId: SUB, savedAt }) });
 

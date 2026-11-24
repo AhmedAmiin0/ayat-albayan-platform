@@ -2,8 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { REQUIRE_ON } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
 import { BODY, profileApp, RESULT, S1, SALES, SUB_ID, T_NEW } from './profile-course.fakes';
 
-// «تعديل حجز الطالب» by an assistant (owner 2026-11-02): the profile's course routes follow THE
-// ownership rule (SalesOwnershipRule): her own students only while it is enforced; the admin ANY.
+// Course routes follow SalesOwnershipRule: own students while enforced; the admin any.
 type App = Awaited<ReturnType<typeof profileApp>>;
 const TIMES = `/students/${S1}/course-times/change`;
 const TEACHER = `/students/${S1}/course-teacher/change`;

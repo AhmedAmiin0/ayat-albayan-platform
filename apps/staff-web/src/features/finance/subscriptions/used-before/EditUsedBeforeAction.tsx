@@ -21,11 +21,7 @@ export interface EditUsedBeforeActionProps {
   pkg: UsedBeforePackage;
 }
 
-/**
- * The card's «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02), for admins and assistants
- * (subscriptions.edit_terms); never on a cancelled package, nor on one starting today or later
- * with nothing to lower.
- */
+/** Needs subscriptions.edit_terms; never on a cancelled package or a future start at zero. */
 export function EditUsedBeforeAction({ pkg }: EditUsedBeforeActionProps) {
   const allowed = usePermissions().can('subscriptions.edit_terms');
   const [open, setOpen] = useState(false);

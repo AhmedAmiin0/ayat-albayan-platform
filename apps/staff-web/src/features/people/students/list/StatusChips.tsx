@@ -5,12 +5,11 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 export interface StatusChipsProps {
   value: readonly StudentStatus[];
   onToggle: (status: StudentStatus) => void;
-  /** Per-status counts after the label, e.g. «مشترك ١٢». */
   counts?: Partial<Record<StudentStatus, number>> | undefined;
   legend?: string;
 }
 
-/** «الحالة» as checkbox chips: several at once; none checked = every status. */
+/** None checked means every status. */
 export function StatusChips({ value, onToggle, counts, legend = t.students.status }: StatusChipsProps) {
   return (
     <fieldset className="flex flex-wrap items-center gap-2">

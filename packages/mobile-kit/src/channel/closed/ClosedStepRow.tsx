@@ -6,13 +6,11 @@ import type { ClosedStep } from '@ab/client-core';
 import { CurrentPill } from './CurrentPill';
 import { StepMark } from './StepMark';
 
-/** The line under a step: «تم.» once done, else what happens in it. */
 const noteOf = (step: ClosedStep): string => {
   const c = t.studentChannel.closedCard;
   return step.state === 'done' ? c.done : c.notes[step.key];
 };
 
-/** One step of the closed card: its mark, its name (with «الخطوة الحالية»), its line. */
 export function ClosedStepRow({ step, n }: { step: ClosedStep; n: number }) {
   const { color } = useTheme();
   const c = t.studentChannel.closedCard;

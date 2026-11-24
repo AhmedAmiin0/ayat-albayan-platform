@@ -12,17 +12,12 @@ export interface LineSyncOptions {
   onNotice: (notice: Notice) => void;
 }
 
-/** «تعذّرت مزامنة {line}: {error}» as an error toast. */
 const failed = (line: WaLine, error: string): Notice => ({
   message: t.templates.perNumber.syncFailed.replace('{line}', t.enums.waLine[line]).replace('{error}', error),
   tone: 'error',
 });
 
-/**
- * «مزامنة مع Meta» for one number (owner 2026-10-18): only its rows against its own WABA. The answer
- * replaces the registry cache (and refetches the catalogue) and stays shown; the success toast only when this line's read was ok
- * (the API answers 200 with ok:false when Meta or Kapso refused that line).
- */
+/** The API answers 200 with ok:false when Meta or Kapso refused that line. */
 export function useLineSync({ line, onNotice }: LineSyncOptions) {
   const queryClient = useQueryClient();
   const [result, setResult] = useState<TemplateLineSync | null>(null);
@@ -30,7 +25,7 @@ export function useLineSync({ line, onNotice }: LineSyncOptions) {
     mutationFn: () => checkTemplateHealth(line),
     onSuccess: (view) => {
       queryClient.setQueryData(templatesQuery.queryKey, view.templates);
-      // «ماذا يُرسل ومتى» shows each row's template status: refetch it on the same page (#134 item 10).
+      // The catalogue shows each row's template status, so refetch it (#134 item 10).
       void queryClient.invalidateQueries({ queryKey: CATALOGUE_QUERY_KEY });
       const mine = view.lines.find((l) => l.line === line) ?? null;
       setResult(mine);

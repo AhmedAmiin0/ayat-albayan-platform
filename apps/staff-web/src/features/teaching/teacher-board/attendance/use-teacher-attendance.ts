@@ -7,11 +7,7 @@ import { apiFetch } from '@ab/web-kit/lib/http/api';
 const readLog = async (url: string): Promise<StudentAttendanceTable> =>
   attendanceTableSchema.parse(await apiFetch(url));
 
-/**
- * «سجل الحضور» of one of her students (docs/46 C5): GET /teachers/me/students/:id/attendance,
- * her own lessons only, months on her calendar. `month` null: the current one. The last month
- * stays on screen while the next loads; a cancel or confirm re-reads it (under LESSONS_KEY).
- */
+/** Her own lessons only (docs/46 C5); null month is current; the last month stays while loading. */
 export function useTeacherAttendance(studentId: string, month: string | null) {
   const path = teacherLessonPaths.attendance(studentId);
   const url = month ? `${path}?month=${month}` : path;

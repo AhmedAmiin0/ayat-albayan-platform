@@ -15,10 +15,7 @@ export interface WebhookSectionProps extends SectionProps<'webhook'> {
   hookUrl: string | null;
 }
 
-/**
- * «إشعارات الأحداث» (Evolution's /webhook/set): on / off, which of our origins, and the events.
- * The URL is the server's, shown read-only (security review: it receives the instance token).
- */
+/** The URL is server-built and read-only because it receives the instance token. */
 export function WebhookSection({ value, errors, onChange, hookUrl }: WebhookSectionProps) {
   return (
     <ConfigFieldset legend={t.numbers.evolution.config.sections.webhook}>

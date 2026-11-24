@@ -7,11 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MeError } from './MeError';
 import { StudentsBoard } from './StudentsBoard';
 
-/**
- * /teacher/students «الطلاب» (R-TCH-03, docs/48): a thin page around the same TeacherBoard as
- * the home «طلابي» tab (segments, search, soonest next lesson first); a row opens «ملف الطالب».
- * Data first: a failed background refetch never covers a good board.
- */
+/** Same board as the home tab (R-TCH-03, docs/48); a failed background refetch never covers it. */
 export function TeacherStudents() {
   const me = useQuery(teacherMeQuery);
   return (

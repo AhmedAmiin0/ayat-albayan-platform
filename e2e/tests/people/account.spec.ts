@@ -4,10 +4,7 @@ import { seedUser } from '../../support/core/db';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { dropLogins, expectSignedIn, signInAs } from '../../support/people/users-control';
 
-// «حسابي» (R-ACC-01/02/05): a dedicated assistant opens /account, renames themself, changes the
-// phone with the current password (a wrong one is refused with errors.wrong_password), and uploads
-// a photo that is stored in the private avatars bucket and shown back. Label/region assumptions:
-// see e2e/support/account.ts.
+// Account (R-ACC-01/02/05): phone change needs the current password; photo in private bucket.
 
 const USER = accountUser('account');
 const A = ar.account;

@@ -3,10 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const filterButton = () => ({ name: new RegExp(`^${t.table.filter}`) });
 
-/**
- * Unit tests: clicks the table toolbar's «تصفية» (its name ends with the active count when any
- * is set) and returns the panel; `scope` picks the table when the page has several.
- */
+/** The filter button's name ends with the active count when set; `scope` picks the table. */
 export function openFilters(scope?: HTMLElement): HTMLElement {
   const root = scope ? within(scope) : screen;
   fireEvent.click(root.getByRole('button', filterButton()));
@@ -19,7 +16,7 @@ export async function findFilters(): Promise<HTMLElement> {
   return screen.getByRole('dialog', { name: t.table.filter });
 }
 
-/** Closes the panel with «عرض النتائج»; its name carries the count when the page knows it («عرض النتائج (14)»). */
+/** Its name carries the result count when the page knows it. */
 export function closeFilters(): void {
   fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${t.table.showResults}`) }));
 }
@@ -34,7 +31,7 @@ export function liveSummary(): HTMLElement {
   return el;
 }
 
-/** Clicks the first «مسح الكل» (the chip row's; the panel has its own while open). */
+/** Clicks the chip row's clear-all; the panel has its own while open. */
 export function clearAllFilters(): void {
   const [first] = screen.getAllByRole('button', { name: t.table.clearAll });
   if (first) fireEvent.click(first);

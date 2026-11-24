@@ -2,9 +2,7 @@ import { z } from 'zod';
 import type { UserRole } from './roles.js';
 import { GRANTABLE_PERMISSIONS, type Permission } from '../catalog.js';
 
-// «الأدوار والصلاحيات»: the bodies of POST/PATCH /roles and PATCH /users/:id/role, and the rows
-// the API answers with. A role's base_role (its scope: own lessons, own students, …) is fixed at
-// creation; only its names and grants change afterwards.
+// A role's base_role (its scope) is fixed at creation; only its names and grants change later.
 
 /** Base roles a custom role may build on: staff only (guardians have no admin pages). */
 export const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const satisfies readonly UserRole[];
@@ -46,7 +44,6 @@ export interface RoleView {
   users: number;
 }
 
-/** A row of the «المستخدمون» table: a staff profile and the role it holds. */
 export interface StaffUserView {
   id: string;
   full_name: string;

@@ -11,7 +11,7 @@ import { FxSettings } from './fx.settings';
     FxSettings,
     FxService,
     FxRepo,
-    // FX_API_URL read per fetch: the admin may change it in «التكاملات» (no restart).
+    // FX_API_URL is read per fetch so the admin can change it in integrations without a restart.
     { provide: FX_FETCHER, useFactory: (): FxFetcher => ({ latest: () => new OpenErApiFetcher(loadEnv().FX_API_URL).latest() }) },
   ],
   exports: [FxService],

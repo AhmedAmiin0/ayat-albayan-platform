@@ -24,7 +24,6 @@ interface StatementsPanelProps {
   onNotice: (text: string) => void;
 }
 
-/** «الكشوف الشهرية» (web StatementsPanel): a month's statements: generate, approve, pay with receipt, reopen, un-pay. */
 export function StatementsPanel({ assistants, assistantId = '', can, onNotice }: StatementsPanelProps) {
   const [filter, setFilter] = useState<StatementFilter>({ assistantId, month: currentMonth(), status: '' });
   const [payingId, setPayingId] = useState<string | null>(null);

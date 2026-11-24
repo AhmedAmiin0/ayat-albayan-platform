@@ -7,7 +7,7 @@ import { callErrorText } from './call-words.js';
 /** What the async call steps read and write (CallStore). */
 export interface CallRuntime {
   platform: CallPlatform;
-  /** The device's WebRTC; null = none here (the call says «لا يدعم المكالمات»). */
+  /** Null means the device has no WebRTC, so calls are unsupported. */
   makePeer: PeerMaker | null;
   iceServers: readonly CallIceServer[];
   peer: { current: CallPeer | null };
@@ -104,7 +104,7 @@ export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<vo
   }
 }
 
-/** Inbound «قبول»: our answer to the family's offer, then POST accept (the first one to accept wins). */
+/** The first one to accept wins. */
 export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallView; name: string }): Promise<void> {
   const { row } = input;
   const { sends } = rt.platform;
@@ -123,7 +123,7 @@ export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallVie
   }
 }
 
-/** «إنهاء» (any phase): cancels an attempt in flight, closes everything local, then WhatsApp terminate. */
+/** Cancels an attempt in flight, closes local media, then WhatsApp terminate. */
 export async function hangUp(rt: CallRuntime, session: CallSession | null): Promise<void> {
   rt.attempt.current += 1;
   teardown(rt);

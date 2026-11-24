@@ -1,5 +1,5 @@
-import { wallInstant, zonedPartsIn } from '@ab/shared';
-import type { LessonView } from '@ab/shared';
+import { wallInstant, zonedPartsIn } from '@ab/time';
+import type { LessonView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
@@ -26,10 +26,7 @@ export interface ProposeFormProps {
   bare?: boolean;
 }
 
-/**
- * «اقترح ميعاد تاني» (R-SCH-08): a native date + a time select in the teacher's zone (never free
- * text, rule 6) and an optional note. The admin approves it as a reschedule, conflicts checked there.
- */
+/** Date and time in the teacher's zone, never free text (rule 6); the admin checks conflicts. */
 export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormProps) {
   const queryClient = useQueryClient();
   const clock = useClock();

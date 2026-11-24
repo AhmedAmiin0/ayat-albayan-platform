@@ -25,12 +25,7 @@ interface DraftSaver {
   save: (body: string) => Promise<ReportView>;
 }
 
-/**
- * Debounced draft save while `enabled` (R-REP-02), shared by both form versions. Each saved draft
- * also goes into the saved form, so reopening it (even offline) shows what was typed. `flush`
- * saves the current body now («احفظ مسودة»). Each body is kept on the phone until the server has
- * it; a failed one is sent again once the phone is online or the app is back in front.
- */
+/** Debounced (R-REP-02); each body stays on the phone until the server has it, retried online. */
 export function useDraftAutosave(input: DraftSaver): { state: SaveState; flush: () => void } {
   const client = useQueryClient();
   const settled = useSettled(input.body, AUTOSAVE_MS);

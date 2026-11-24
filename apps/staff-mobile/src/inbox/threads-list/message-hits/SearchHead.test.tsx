@@ -2,9 +2,6 @@ import { render, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { SearchHead } from './SearchHead';
 
-// Above the chats while searching (docs/37): the hint at 1–2 characters, «المحادثات» when both
-// sections show; the hits themselves stay under the chats.
-
 test('1–2 characters: the three-character hint, above the chats', async () => {
   await render(<SearchHead q="در" asked={false} both={false} />);
   expect(screen.getByTestId('message-hits-hint').props.children).toBe(t.inbox.messageSearch.hint);

@@ -5,9 +5,7 @@ import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar, withSql } from '../../support/core/schedule';
 import { reportRow, storedObject } from '../../support/reporting/teacher-extra';
 
-// «المرفقات (اختياري)» (R-REP-02, R7–R9): a signed upload to Storage, then the report_attachments
-// row; the teacher removes a file again (row and object); a type or size the bucket would refuse
-// is turned down in the form with the Arabic reason and nothing is stored.
+// Attachments (R-REP-02, R7-R9): a refused type or size is turned down before storing anything.
 
 const BUCKET = 'report-attachments';
 const PDF = Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n');

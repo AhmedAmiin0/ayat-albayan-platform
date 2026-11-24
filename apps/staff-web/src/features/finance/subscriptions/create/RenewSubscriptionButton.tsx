@@ -16,12 +16,7 @@ export interface RenewSubscriptionButtonProps {
   primary?: boolean;
 }
 
-/**
- * «جدّد الاشتراك» on the student profile (owner 2026-10-15): once the package ended
- * (pending_renewal / expired), and ANY time the student has a package (owner 2026-11-17: the new
- * package starts on the day picked in the dialog). Opens «اشتراك جديد» for this student, the
- * calculator prefilled from the last package (the profile's balance query, its `current`).
- */
+/** Renew any time the student has a package, prefilled from the last one. */
 /** Package-ended, or a package to renew from (owner 2026-11-17: ANY time). */
 const offered = (ended: boolean, balance: { current: unknown } | undefined): boolean =>
   ended || Boolean(balance?.current);

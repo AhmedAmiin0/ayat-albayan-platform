@@ -1,14 +1,10 @@
-import type { QuoteResponse, SubscriptionPricing, SubscriptionView } from '@ab/shared';
+import type { QuoteResponse, SubscriptionPricing, SubscriptionView } from '@ab/money';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 
-/**
- * POST /subscriptions/quote (R-SUB-01): the price the save would store, from the catalog in the
- * guardian's currency. A POST, so it is keyed by its body. While a new choice loads the last price
- * stays (placeholder), and `isPlaceholderData` keeps «حفظ» off until the shown price is the one.
- */
+/** A POST keyed by its body; save stays off until the shown price is the current one. */
 export function useSubscriptionQuote(studentId: string, pricing: SubscriptionPricing) {
   return useQuery({
     queryKey: ['subscriptions', 'quote', studentId, pricing],
@@ -23,19 +19,13 @@ export interface SubscribeInput {
   pricing: SubscriptionPricing;
   /** Local YYYY-MM-DD, picked from the day chips. */
   startsOn: string;
-  /** «حلقات مستخدمة من الباقة» (owner 2026-10-28): only with a past startsOn, only above 0. */
+  /** Only with a past startsOn, only above 0. */
   lessonsUsedBefore?: number;
-  /** «مبلغ مخصص» (owner 2026-11-02): the package price; omitted = the quote's. */
+  /** The package price; omitted means the quote's. */
   customPrice?: number;
 }
 
-/**
- * «اعمل الاشتراك» → POST /subscriptions with an idempotency key (rule 8): the same body re-sent (a
- * retry after a 502, a dropped reply, or the screen opened again) carries the same clientRequestId
- * and the API returns the package it already made; a changed child, price or day is a new key. A
- * second tap while a save is in flight joins it (one POST). Afterwards the chat («مشترك»), its
- * list, the leads (the family's lead turns «مشترك», R-LEAD-01) and the balance refetch.
- */
+/** Idempotent (rule 8): the same body keeps its clientRequestId; a second tap joins the save. */
 export function useCreateSubscription() {
   const client = useQueryClient();
   const inflight = useRef<Promise<SubscriptionView> | null>(null);

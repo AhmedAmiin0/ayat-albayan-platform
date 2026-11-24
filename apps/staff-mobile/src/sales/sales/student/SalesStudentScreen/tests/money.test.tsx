@@ -1,4 +1,5 @@
-import { DEFAULT_RENEWAL_PRICING, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesFamilyStudent, SalesMoneySubscriptionView } from '@ab/shared';
+import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { TreeBaseProvider } from '@/core/nav/tree-base';

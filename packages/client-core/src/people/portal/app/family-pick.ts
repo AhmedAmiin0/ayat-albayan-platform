@@ -1,9 +1,6 @@
 import type { PortalHome, PortalStudent } from '@ab/shared';
 
-// Which student the family app works as (docs/50 §6): a student login is their
-// own; a guardian with one child is that child; a guardian with more picks one on «اختر الطالب»
-// (saved on the phone: pick-store.ts) and switches from «حسابي». The pages a push or a link opens
-// (child/[id], report/[id], package/[id]) are never filtered by the pick.
+// docs/50 §6: pages opened from a push or a link are never filtered by the pick.
 
 export type FamilyPick =
   | { state: 'loading' | 'choose' | 'empty' }

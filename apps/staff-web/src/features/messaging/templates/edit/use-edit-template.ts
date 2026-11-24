@@ -3,10 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { authoredTemplatesQuery, editTemplate } from './edit-api';
 
-/**
- * «حفظ التعديل»: PATCH the admin's or the author's route, then both lists read again (the API has
- * already re-synced that number, so the status shows «قيد المراجعة»).
- */
+/** The API has already re-synced that number, so the status shows under review. */
 export function useEditTemplate(onSaved: (tpl: AuthorTemplate) => void) {
   const queryClient = useQueryClient();
   return useMutation({

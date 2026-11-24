@@ -14,7 +14,6 @@ type Outcome = { channel: MeetingInviteChannel; status: MeetingInviteStatus; err
 /** The creator may not send WhatsApp (owner policy 2026-10-13): the invitation is a link to copy. */
 const linkOnly = (i: Outcome) => i.error_code === 'chat_not_allowed';
 
-/** One recipient's line: staff «أُرسل إشعار في التطبيق», WhatsApp «أُرسلت» / «النافذة مغلقة» / «رابط للنسخ» / «بلغت الحد اليومي…» / … */
 export function inviteStatusText(i: Outcome): string {
   if (i.channel === 'in_app' && (i.status === 'sent' || i.status === 'pending')) return R.inApp;
   if (i.status === 'failed' && i.error_code === 'invite_limit') return R.inviteLimit;
@@ -30,11 +29,11 @@ export const copyPayload = (i: { link: string | null; invitation_text: string | 
 
 type Row = { kind: MeetingInviteeKind; display_name: string; status: MeetingInviteStatus };
 
-/** «أعد الإرسال»: never staff or a cancelled row; a typed phone for admin and sales only (the API answers 403). */
+/** Never staff or a cancelled row; a typed phone for admin and sales only (the API answers 403). */
 export const mayResend = (i: Row, mayInvitePhones: boolean): boolean =>
   i.kind !== 'staff' && i.status !== 'cancelled' && (i.kind !== 'phone' || mayInvitePhones);
 
-/** The row's name; a phone row whose name the API hides reads «رقم هاتف». */
+/** A phone row whose name the API hides reads as a phone number. */
 export const inviteeName = (i: Row): string => i.display_name || (i.kind === 'phone' ? t.meetingInvites.tabs.phone : '');
 
 /** A shown number reads left to right. */

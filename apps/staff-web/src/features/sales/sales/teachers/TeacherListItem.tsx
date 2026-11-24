@@ -12,11 +12,7 @@ export interface TeacherListItemProps {
   onSelect: (id: string) => void;
 }
 
-/**
- * One teacher in «المعلمون»: photo (or initials), name, «معلمة · القرآن الكريم», «مشترك n · تجريبي n» (owner 2026-10-12)
- * and today's lessons as counts, and «في حلقة الآن» (green chip: information, not the salesperson's
- * job, so never saffron). The whole row opens the teacher's students (≥ 44px tall).
- */
+/** The in-lesson chip is green (information, not her job), never saffron; row is at least 44px. */
 export function TeacherListItem({ teacher, selected, onSelect }: TeacherListItemProps) {
   const name = teacherLabel({ display_name_ar: teacher.name, display_name_en: teacher.name_en });
   return (

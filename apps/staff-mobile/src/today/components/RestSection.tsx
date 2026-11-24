@@ -6,11 +6,10 @@ import { RowsCard } from './RowsCard';
 interface RestSectionProps<L extends TodayLesson> {
   lessons: readonly L[];
   onOpen: (lesson: L) => void;
-  /** «الكل»: back to every lesson of the day. */
   onShowAll: () => void;
 }
 
-/** «بقية اليوم · N» with «الكل» at the end, then the rows (docs/29 §4). Nothing when none is left. */
+/** Nothing when none is left (docs/29 §4). */
 export function RestSection<L extends TodayLesson>({ lessons, onOpen, onShowAll }: RestSectionProps<L>) {
   const { color } = useTheme();
   if (lessons.length === 0) return null;

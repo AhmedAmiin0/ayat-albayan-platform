@@ -5,10 +5,7 @@ import { Permissions } from '@/common/auth/decorators';
 import { TemplateManagerGuard } from '@/modules/messaging/whatsapp/templates/catalog/template-manager.guard';
 import { TemplateNumbers } from './template-numbers.service';
 
-/**
- * One number's template sync (docs/23c decision 9), beside «الأرقام»'s routes but owned by the template
- * registry: templates.manage and never a sales / classroom-assistant / teacher based role.
- */
+/** docs/23c decision 9: needs templates.manage, never a sales, assistant or teacher based role. */
 @ApiTags('messaging')
 @ApiBearerAuth()
 @Permissions('templates.manage')
