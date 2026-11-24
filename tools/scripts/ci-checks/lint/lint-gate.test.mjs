@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { aboveBase, gone, newRule, oxlintSuppressed, tightenedRule, totals } from './lint-gate.mjs';
+import { aboveBase, gone, newRule, tightenedRule, totals } from './lint-gate.mjs';
 
 test('totals sums each rule over every file of every package, rules sorted', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 }, 'ab/module-boundaries': { count: 1 } } };
@@ -16,7 +16,7 @@ test('aboveBase: equal or below the base branch passes with nothing to edit; abo
   assert.deepEqual(aboveBase({ ...base }, base), []);
   // Fixed violations (a lower total, a rule gone): no baseline to lower, the PR only prunes.
   assert.deepEqual(aboveBase({ complexity: 5, 'max-depth': 1 }, base), []);
-  // `eslint . --suppress-all` raised the suppressions: above the base branch's own totals.
+  // A baseline raised by hand: above the base branch's own totals.
   const raised = { complexity: 7, eqeqeq: 1, 'max-depth': 2 };
   assert.deepEqual(aboveBase(raised, base), [
     'above the base branch: complexity 5 -> 7 (fix the new violations)',
@@ -24,25 +24,11 @@ test('aboveBase: equal or below the base branch passes with nothing to edit; abo
   ]);
 });
 
-test('gone: an entry whose file was deleted or moved fails (ESLint never lints that file)', () => {
+test('gone: an entry whose file was deleted or moved fails (a removed file stays gone)', () => {
   const byFile = { 'src/a.ts': { complexity: { count: 1 } }, 'src/old.ts': { 'max-depth': { count: 2 } } };
   const exists = (path) => path === 'apps/staff-web/src/a.ts';
-  assert.deepEqual(gone('apps/staff-web', byFile, exists), ['gone: apps/staff-web/src/old.ts (eslint . --prune-suppressions)']);
+  assert.deepEqual(gone('apps/staff-web', byFile, exists), ['gone: apps/staff-web/src/old.ts (pnpm lint:prune)']);
   assert.deepEqual(gone('apps/staff-web', {}, exists), []);
-});
-
-test('oxlintSuppressed: a rule oxlint runs may have no suppressed violation, whatever its prefix', () => {
-  const now = { '@typescript-eslint/max-params': 2, complexity: 240, 'no-regex-spaces': 2 };
-  const rc = {
-    rules: { 'typescript/no-explicit-any': 'error', 'max-params': 'error' },
-    overrides: [{ rules: { 'eslint/no-regex-spaces': 'error' } }],
-  };
-  assert.deepEqual(oxlintSuppressed(rc, now), [
-    'oxlint runs @typescript-eslint/max-params, which has 2 suppressed: keep it in ESLint',
-    'oxlint runs no-regex-spaces, which has 2 suppressed: keep it in ESLint',
-  ]);
-  assert.deepEqual(oxlintSuppressed({ rules: { eqeqeq: 'error' } }, now), []);
-  assert.deepEqual(oxlintSuppressed({}, now), []);
 });
 
 test('aboveBase: a rule the PR turns on gets its one-time baseline; a known or preset rule does not', () => {

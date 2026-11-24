@@ -4,7 +4,7 @@
 // app.json, web public/). Covers every place a path is written: imports, re-exports, `import()`,
 // `import('x').T`, `import x = require()`, require and the vi / jest mock calls.
 // `pnpm imports:absolute -- <workspace|paths> --write` rewrites existing ones; those that predate
-// the rule sit in eslint-suppressions.json (docs/32 R12).
+// the rule sit in oxlint-suppressions.json (docs/32 R12).
 import { dirname, resolve, sep } from 'node:path';
 
 /** Calls whose first string argument is a module path (as in move-module/specifiers.ts). */

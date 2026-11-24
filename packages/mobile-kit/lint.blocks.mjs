@@ -1,5 +1,5 @@
-// The shared mobile kit's own lint blocks (flat-config shape), read by eslint.config.js and by
-// Oxlint (oxlint.full.config.ts): docs/31b-oxlint-mapping.md. Its modules import each other by
+// The shared mobile kit's own lint blocks (flat-config shape), read by oxlint.config.ts:
+// docs/31b-oxlint-mapping.md. Its modules import each other by
 // relative path (no `@/` alias: two apps consume these sources).
 import { forbiddenImports, reactRestrictions, syntaxExempt } from '@ab/config/lint';
 

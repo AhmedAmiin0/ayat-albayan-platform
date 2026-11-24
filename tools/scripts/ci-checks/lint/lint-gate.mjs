@@ -1,21 +1,18 @@
-// Lint ratchet (docs/31a §5.1): the violations that predate a rule sit in each package's
-// eslint-suppressions.json (`eslint . --suppress-all`). On a PR, CI checks the base branch out
-// beside it (GUARD_BASE): no per-rule total, summed over every package, may rise above the base's
-// own sum (a count raised by hand; a rule the PR turns on gets its one-time baseline, newRule).
-// The totals are derived from both trees, never stored, so a PR that fixes violations only prunes
-// its suppressions and no two PRs conflict on a totals file. Per rule over the whole repo, not per
-// file: ESLint itself enforces the per-file counts. Also fails on an entry whose file is gone
-// (ESLint lints only files that exist, so it never reports those), and when the root .oxlintrc.json
-// (the first lint pass, no bulk suppressions) runs a rule that has suppressed violations.
+// Lint ratchet (docs/31b §4): the violations that predate a rule sit in each package's
+// oxlint-suppressions.json; oxlint/gate.mjs holds every file to its exact per-rule count. On a PR,
+// CI checks the base branch out beside it (GUARD_BASE): no per-rule total, summed over every
+// package, may rise above the base's own sum (a count raised by hand; a rule the PR turns on gets
+// its one-time baseline, newRule). Also fails on an entry whose file is gone (a removed file stays
+// gone: Oxlint never reports a file that does not exist).
 // Usage: [GUARD_BASE=<base checkout>] node tools/scripts/ci-checks/lint/lint-gate.mjs
-//   [--configs <base ESLint config sources> <head ones>] (a rule the PR turns on: newRule)
-//   or: --oxlint <report.json> [--prune | --suppress-all] (oxlint-gate.mjs)
+//   [--configs <base lint config sources> <head ones>] (a rule the PR turns on: newRule)
+//   or: --oxlint <report.json> [--prune] (oxlint/gate.mjs)
 import { existsSync, globSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readJson } from './json-file.mjs';
 import { BASELINE, oxlintCli } from './oxlint/gate.mjs';
-import { baselineFile, oxlintrcFile } from './oxlint/schemas.mjs';
+import { baselineFile } from './oxlint/schemas.mjs';
 
 const DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
 const FILES = (name) => DIRS.map((dir) => `${dir}/${name}`);
@@ -51,7 +48,7 @@ const named = (text, rule) =>
   (/^[\w-]+$/.test(rule) && new RegExp(`(^|[\\s{,])${rule}\\s*:`, 'm').test(text));
 
 /**
- * A rule this PR turns on: its quoted name is in the head's ESLint config sources and in none of
+ * A rule this PR turns on: its quoted name is in the head's lint config sources and in none of
  * the base's. A preset rule that no config names keeps its base total until a reviewed config edit
  * names it.
  */
@@ -62,7 +59,7 @@ export const newRule = (configs) => (rule) =>
 export function gone(dir, byFile, exists) {
   return Object.keys(byFile)
     .filter((key) => !exists(`${dir}/${key}`))
-    .map((key) => `gone: ${dir}/${key} (eslint . --prune-suppressions)`);
+    .map((key) => `gone: ${dir}/${key} (pnpm lint:prune)`);
 }
 
 // The numbers in each `rule: [ … ]` entry of a config source (`complexity: ['error', { max: 8 }]`).
@@ -82,23 +79,7 @@ export const tightenedRule = (configs) => (rule) => {
   return head.length > 0 && base.length > 0 && Math.max(...head) < Math.min(...base);
 };
 
-const bare = (rule) => rule.replace(/^(eslint|typescript|@typescript-eslint)\//, '');
-
-/**
- * Rules the root .oxlintrc.json runs that still have suppressed violations. Oxlint has no bulk
- * suppressions, so such a rule must stay in ESLint. `typescript/x`, `@typescript-eslint/x` and `x`
- * are one rule here
- * (eslint-plugin-oxlint turns the base rule and its typescript-eslint extension off together).
- */
-export function oxlintSuppressed(oxlintrc, now) {
-  const blocks = [oxlintrc, ...(oxlintrc.overrides ?? [])];
-  const moved = new Set(blocks.flatMap((b) => Object.keys(b.rules ?? {})).map(bare));
-  return Object.keys(now)
-    .filter((rule) => moved.has(bare(rule)))
-    .map((rule) => `oxlint runs ${rule}, which has ${now[rule]} suppressed: keep it in ESLint`);
-}
-
-/** `--configs <base> <head>`: both sides' ESLint config sources (none given: no new rule). */
+/** `--configs <base> <head>`: both sides' lint config sources (none given: no new rule). */
 function configTexts(args) {
   const at = args.indexOf('--configs');
   if (at === -1) return { base: '', head: '' };
@@ -109,21 +90,10 @@ const never = () => false;
 const baselines = (configs) => ({ isNew: newRule(configs), isTightened: tightenedRule(configs) });
 const sum = (byRule) => Object.values(byRule).reduce((a, b) => a + b, 0);
 
-/** The `name` suppressions files of the tree at `dir`: their paths and contents. */
-function suppressions(dir, name = 'eslint-suppressions.json') {
-  const paths = globSync(FILES(name), { cwd: dir }).sort();
+/** The oxlint-suppressions.json files of the tree at `dir`: their paths and contents. */
+function suppressions(dir) {
+  const paths = globSync(FILES(BASELINE), { cwd: dir }).sort();
   return { paths, files: paths.map((p) => readJson(join(dir, p), baselineFile)) };
-}
-
-/**
- * The Oxlint baselines' per-rule totals against the base branch's (oxlint-gate.mjs holds each
- * file to its count; this refuses a count raised by hand). None on the base: their first PR.
- */
-function oxlintAboveBase(root, dir, configs) {
-  const base = dir ? suppressions(dir, BASELINE).files : [];
-  if (base.length === 0) return [];
-  const now = totals(suppressions(root, BASELINE).files);
-  return aboveBase(now, totals(base), baselines(configs)).map((line) => `oxlint ${line}`);
 }
 
 function main(args) {
@@ -136,9 +106,7 @@ function main(args) {
   const exists = (path) => existsSync(join(root, path));
   const diff = [
     ...(base ? aboveBase(now, base, baselines(configTexts(args))) : []),
-    ...oxlintAboveBase(root, dir, configTexts(args)),
     ...paths.flatMap((p, i) => gone(dirname(p), files[i], exists)),
-    ...oxlintSuppressed(readJson(join(root, '.oxlintrc.json'), oxlintrcFile), now),
   ];
   const against = base ? `the base branch ${sum(base)}` : 'no base branch given (GUARD_BASE)';
   console.log(`lint: ${sum(now)} suppressed in ${paths.length} packages, ${against}`);

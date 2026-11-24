@@ -45,6 +45,3 @@ service-account*.json
 *.ics
 calendar-diff.sql
 oxlint-report.json
-# ESLint findings that ci's lint row saves for lint parity (eslint-findings.mjs)
-.lint/
-lint-parity-report.json

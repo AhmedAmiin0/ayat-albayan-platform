@@ -1,8 +1,8 @@
 // docs/27 §1 rule 6: import another module only through its index.ts, never its internals.
 // A "module" is the first path under the package root that matches `module` (a regex source), e.g.
 // `src/modules/[^/]+/[^/]+` for the api. Imports inside the same module, and of shared folders that match
-// no module, are free. Existing deep imports live in each package's eslint-suppressions.json (ESLint bulk
-// suppressions); a new one fails lint.
+// no module, are free. Existing deep imports live in each package's oxlint-suppressions.json; a new
+// one fails lint.
 import { dirname, relative, resolve } from 'node:path';
 import { forbiddenImportsRule } from './eslint-imports.js';
 import { maxParamsRule } from './eslint-params.js';

@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { Linter } from 'eslint';
 import { forbiddenImports } from './eslint-boundaries.js';
 import { forbiddenImportsRule } from './eslint-imports.js';
+import { lintCode, withCode } from './oxlint/testing/lint-code.js';
 import { testRule } from './rule-testers.js';
 
 const db = [{ bans: [{ regex: '(^|/)db\\.module(\\.js)?$', names: ['DB', 'Db'], message: 'repo only' }] }];
@@ -32,7 +32,9 @@ testRule({ name: 'forbidden-imports', rule: forbiddenImportsRule }, {
 
 test('forbiddenImports: the ban applies to `files`, never to tests or `ignores`', () => {
   const block = forbiddenImports({ files: ['src/**/*.ts'], ignores: ['**/*.repo.ts'], bans: db[0].bans });
-  const linter = new Linter({ cwd: '/pkg' });
-  const lint = (file) => linter.verify("import { DB } from './db.module.js';", [block], `/pkg/${file}`).filter((m) => m.ruleId).length;
-  assert.deepEqual(['src/a.ts', 'src/a.repo.ts', 'src/a.test.ts', 'lib/a.ts'].map(lint), [1, 0, 0, 0]);
+  const files = ['src/a.ts', 'src/a.repo.ts', 'src/a.test.ts', 'lib/a.ts'];
+  const code = "import { DB } from './db.module.js';\nexport { DB };\n";
+  const found = lintCode({ blocks: [block], files: withCode(files, code) });
+  const lint = (file) => found.filter((d) => d.file === file).length;
+  assert.deepEqual(files.map(lint), [1, 0, 0, 0]);
 });

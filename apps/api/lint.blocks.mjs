@@ -1,5 +1,5 @@
-// The api's own lint blocks (flat-config shape), read by eslint.config.mjs and by Oxlint
-// (oxlint.full.config.ts): docs/31b-oxlint-mapping.md.
+// The api's own lint blocks (flat-config shape), read by oxlint.config.ts:
+// docs/31b-oxlint-mapping.md.
 import {
   boundaries,
   forbiddenImports,

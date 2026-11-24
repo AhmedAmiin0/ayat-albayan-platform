@@ -4,7 +4,6 @@
   "type": "module",
   "description": "Shared React DOM code of the staff web app (apps/staff-web) and the family web app (apps/family-web), docs/51 §2: SOURCE, built by each app's Vite (aliased @ab/web-kit/* → src/*).",
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsgo --noEmit",
     "test": "vitest run"
   },
@@ -35,7 +34,6 @@
     "@types/react": "~19.2.18",
     "@types/react-dom": "~19.2.3",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
-    "eslint": "^10.0.0",
     "jsdom": "^30.1.1",
     "typescript": "~6.0.3",
     "vite": "^8.3.2",

@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./eslint": "./eslint.js",
     "./lint": "./lint.js",
     "./oxlint": "./oxlint/config.js",
     "./prettier": "./prettier.json",
@@ -11,34 +10,25 @@
     "./vite": {
       "types": "./vite.d.ts",
       "default": "./vite.js"
-    },
-    "./eslint-web": "./eslint-web.js"
+    }
   },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
     "test": "node --test"
   },
   "dependencies": {
-    "@eslint/js": "^10.0.0",
     "@rolldown/plugin-babel": "0.2.4",
     "@stylistic/eslint-plugin": "5.10.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/router-plugin": "^1.168.42",
     "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint-plugin-jsx-a11y": "6.10.2",
-    "eslint-plugin-oxlint": "1.95.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^16.0.0",
-    "typescript-eslint": "^8.71.0"
+    "eslint-plugin-react-hooks": "^7.1.1"
   },
   "peerDependencies": {
-    "eslint": "^10.0.0",
     "vite": "^8.3.2",
     "vitest": "^5.0.3"
   },
   "devDependencies": {
-    "eslint": "^10.0.0",
     "oxlint": "1.95.0",
     "vite": "^8.3.2",
     "vitest": "^5.0.3"

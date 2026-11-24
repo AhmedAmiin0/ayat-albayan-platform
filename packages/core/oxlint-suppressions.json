@@ -22,17 +22,17 @@
       "count": 2
     }
   },
-  "src/phone/tests/reject.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/phone/phone.ts": {
     "complexity": {
       "count": 2
     },
     "stylistic/max-len": {
       "count": 2
+    }
+  },
+  "src/phone/tests/reject.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
     }
   },
   "src/schemas/common.ts": {

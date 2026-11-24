@@ -4,34 +4,34 @@
     ".": {
       "entry": [
         "tools/livekit/token-server.mjs",
-        "oxlint.full.config.ts",
+        "oxlint.config.ts",
         "docs/design/family-app/render.mjs"
       ],
       "ignoreBinaries": ["supabase"]
     },
     "docs/design/brand/tools": {
-      "entry": ["build.mjs", "check.mjs"]
+      "entry": ["build.mjs", "check.mjs", "lint.blocks.mjs"]
     },
     "apps/api": {
-      "entry": ["src/main.ts", "src/scripts/*.ts", "src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts"],
+      "entry": ["src/main.ts", "src/scripts/*.ts", "src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts", "lint.blocks.mjs"],
       "project": ["src/**/*.ts"],
       "ignore": ["src/modules/*/*/index.ts"],
       "ignoreDependencies": ["@fontsource/amiri", "@fontsource/ibm-plex-sans-arabic"]
     },
     "apps/staff-web": {
-      "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
+      "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}", "lint.blocks.mjs"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignore": ["src/routeTree.gen.ts"],
       "ignoreDependencies": ["zod"]
     },
     "apps/family-web": {
-      "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}"],
+      "entry": ["src/main.tsx", "src/routes/**/*.{ts,tsx}", "lint.blocks.mjs"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignore": ["src/routeTree.gen.ts"],
       "ignoreDependencies": ["zod"]
     },
     "apps/staff-mobile": {
-      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
+      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs", "lint.blocks.mjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",
@@ -43,7 +43,7 @@
       ]
     },
     "apps/family-mobile": {
-      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs"],
+      "entry": ["index.ts", "app/**/*.{ts,tsx}", "app.config.ts", "jest.setup.cjs", "lint.blocks.mjs"],
       "project": ["{app,src}/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",
@@ -53,14 +53,43 @@
         "zod"
       ]
     },
+    "packages/catalog": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/core": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/i18n": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/money": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/schedule": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/settings": {
+      "entry": ["src/index.ts", "src/seed/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/shared": {
+      "entry": ["src/index.ts", "src/testing/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/time": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"]
+    },
+    "packages/config": {
+      "entry": ["lint.blocks.mjs"]
+    },
     "packages/db": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"],
       "ignore": ["src/types.ts", "supabase/**"]
     },
     "packages/client-core": {
+      "entry": ["src/index.ts", "lint.blocks.mjs"],
       "ignoreDependencies": ["zod"]
     },
     "packages/mobile-kit": {
-      "entry": ["src/index.ts", "babel.cjs", "jest.base.cjs", "jest.shared.cjs"],
+      "entry": ["src/index.ts", "babel.cjs", "jest.base.cjs", "jest.shared.cjs", "lint.blocks.mjs"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",
@@ -72,7 +101,7 @@
       ]
     },
     "packages/web-kit": {
-      "entry": ["src/**/*.{ts,tsx}", "src/index.css"],
+      "entry": ["src/**/*.{ts,tsx}", "src/index.css", "lint.blocks.mjs"],
       "project": ["src/**/*.{ts,tsx}"]
     },
     "tools/scripts": {
@@ -80,17 +109,18 @@
       "project": ["**/*.{mjs,ts}"]
     },
     "tools/migrate": {
-      "entry": ["src/cli.ts"]
+      "entry": ["src/cli.ts", "lint.blocks.mjs"]
     },
     "tools/wa-stub": {
-      "entry": ["src/server.ts"]
+      "entry": ["src/server.ts", "lint.blocks.mjs"]
     },
     "tools/google-stub": {
-      "entry": ["src/server.ts"]
+      "entry": ["src/server.ts", "lint.blocks.mjs"]
     },
     "e2e": {
       "entry": [
         "playwright.config.ts",
+        "lint.blocks.mjs",
         "tests/**/*.ts",
         "support/durations-reporter.ts",
         "scripts/*.ts"

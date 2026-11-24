@@ -1,6 +1,6 @@
-// Every ESLint rule of every package, under Oxlint (docs/31b-oxlint-mapping.md): the .oxlintrc.json
-// rules plus, per package, the base rules of @ab/config and its own lint.blocks.mjs, scoped to its
-// folder. `pnpm lint:oxfull` runs it; `pnpm lint:parity` checks it misses nothing ESLint finds.
+// The one lint config (docs/31b-oxlint-mapping.md): @ab/config's core rules, then per package the
+// base rules of @ab/config and its own lint.blocks.mjs, scoped to its folder. `pnpm lint` runs it
+// type-aware and holds the report to each package's oxlint-suppressions.json.
 import { globSync, readFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { compose } from '@ab/config/oxlint';
@@ -17,6 +17,7 @@ const packages = await Promise.all(
     return { dir: dirname(file), ...lint };
   }),
 );
-const oxlintrc = JSON.parse(readFileSync(`${root}/.oxlintrc.json`, 'utf8'));
+const core = `${root}/packages/config/oxlint/core-rules.json`;
+const oxlintrc = JSON.parse(readFileSync(core, 'utf8'));
 
 export default compose({ oxlintrc, packages });

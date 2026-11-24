@@ -157,9 +157,9 @@ jobs:
   # cache lives in the GitHub Actions cache
   # (rharkor/caching-for-turbo: a local cache server, one cache entry per task hash, no token or outside service),
   # shared by every job and run, so a task a change did not touch is replayed instead of re-run.
-  # Lint: Oxlint first (seconds, the rules of .oxlintrc.json), then ESLint for the type-aware, custom and
-  # react-hooks rules. Typecheck: tsgo (TypeScript 7, @typescript/native-preview); e2e lints and typechecks
-  # against @ab/shared only (e2e/turbo.json), so neither job builds api or web.
+  # Lint: Oxlint only (docs/31b), type-aware through tsgolint. Typecheck: tsgo (TypeScript 7,
+  # @typescript/native-preview); e2e typechecks against @ab/shared only (e2e/turbo.json), so it builds
+  # neither api nor web.
   verify:
     name: verify (${{ matrix.name }})
     needs: changes
@@ -170,28 +170,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Type-aware lint (docs/31a): more heap, fewer packages at once. Every package is linted (--continue)
-          # and saves its findings, bulk-suppressed ones included (eslint-findings.mjs, a turbo output), so the
-          # Oxlint parity steps below compare against this ESLint run instead of running ESLint a second time.
-          # Two rows (11-18): api alone took 7.5 of the 13 min, so it has its own machine and lints on two
-          # threads (ESLint --concurrency=2: the same findings, half the time; 4 threads run out of memory).
-          # `scope` (LINT_SCOPE) gives each row's Oxlint, its baselines and the parity the same packages:
-          # `apps/api` and `!apps/api` are complementary (ci-lint-row.test.mjs), so every package is still
-          # held to ESLint, Oxlint's baselines and the parity, exactly once.
-          - name: lint + parity (oxlint)
-            task: lint
-            filter: --filter=!api
-            scope: '!apps/api'
-            opts: --concurrency=3 --continue --log-prefix=task
-            heap: --max-old-space-size=6144
-            args: '-- -f "$GITHUB_WORKSPACE/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs"'
-          - name: lint + parity (oxlint api)
-            task: lint
-            filter: --filter=api
-            scope: apps/api
-            opts: --continue --log-prefix=task
-            heap: --max-old-space-size=6144
-            args: '-- -f "$GITHUB_WORKSPACE/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs" --concurrency=2'
+          # Every package in one Oxlint run (docs/31b): `pnpm lint` builds the workspace packages' types first.
+          - { name: lint, task: lint }
           # Every typecheck and both Metro bundles (only the two Expo apps have a bundle task) in one turbo graph;
           # a red row's log names the failing task. Metro bundle of each mobile app (docs/32 x0, critic correction
           # 11): the same Babel config as an OTA, so React Compiler output, Metro resolution errors and barrel
@@ -222,9 +202,6 @@ jobs:
           node-version-file: .nvmrc
       - uses: ./.github/actions/pnpm-store
       - run: pnpm i --frozen-lockfile
-      - name: Oxlint
-        if: matrix.task == 'lint'
-        run: pnpm lint:ox --format github
       - name: Turbo cache (GitHub Actions cache)
         uses: rharkor/caching-for-turbo@760158c05c47e7a764f78e9a22ca3b5a6ed8c52e # v2.5.2
       # A new lockfile, vitest config or tsconfig (swc and oxc read compilerOptions) starts empty; otherwise the
@@ -256,6 +233,7 @@ jobs:
         if: matrix.vcache || matrix.jcache
         run: touch "$RUNNER_TEMP/vitest-start"
       - id: turbo
+        if: matrix.task != 'lint'
         run: |
           start=$SECONDS
           status=0
@@ -265,7 +243,6 @@ jobs:
           echo "turbo ${{ matrix.task }}: $((SECONDS - start)) s" >> "$GITHUB_STEP_SUMMARY"
           exit "$status"
         env:
-          NODE_OPTIONS: ${{ matrix.heap }}
           JEST_CACHE_DIR: ${{ matrix.jcache && format('{0}/node_modules/.jest-cache', github.workspace) || '' }}
       # Saved only when vitest (or jest) wrote new transforms (not when turbo replayed the task), also after a red test (the
       # transforms are still right), and only when nothing was restored, i.e. a new lockfile or config (~50 MB per
@@ -284,63 +261,25 @@ jobs:
         with:
           path: ${{ steps.vkey.outputs.dir }}
           key: ${{ steps.vcache.outputs.cache-primary-key }}
-      # ESLint fails on a suppression that no longer occurs (a fixed long line, a split function). On a red lint
-      # the log shows the pruned eslint-suppressions.json to commit (or run `pnpm lint:prune` in a cloud session,
-      # never on the owner's PC; docs/31a §5). Only when ESLint printed that message, and only for the packages
-      # that printed it (turbo's «<package>:lint:» prefix); the message with no package found = every package.
-      # A red lint from a real violation alone ends without this re-lint.
-      - name: Suppressions to prune (commit this diff)
-        if: failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'
-        env:
-          NODE_OPTIONS: ${{ matrix.heap }}
+      # `pnpm lint`: every package with oxlint.config.ts (type-aware, warnings denied), the report held to each
+      # package's oxlint-suppressions.json: a new violation fails, and so does a fixed one until its count is
+      # pruned (docs/31b §4).
+      - name: Lint (oxlint)
+        id: lint
+        if: matrix.task == 'lint'
         run: |
-          stale=$(sed 's/\x1b\[[0-9;]*m//g' "$RUNNER_TEMP/turbo.log" | grep -F 'suppressions left that do not occur anymore' || true)
-          if [ -z "$stale" ]; then echo "no stale suppressions: nothing to prune"; exit 0; fi
-          filters=$(sed -nE 's/^([@A-Za-z0-9._/-]+):lint: .*/--filter=\1/p' <<< "$stale" | sort -u | tr '\n' ' ')
-          echo "pruning: ${filters:-every package}"
-          pnpm turbo lint --force --continue --concurrency=3 $filters -- --prune-suppressions > /dev/null 2>&1 || true
-          git --no-pager diff -- '*eslint-suppressions.json'
-
-      # Oxlint parity (owner 2026-11-07 «go with oxlint», docs/31b-oxlint-mapping.md): ESLint still gates (step
-      # above); these steps prove Oxlint can take over with no lost coverage, and run even after a red ESLint.
-      # «Oxlint (every rule)»: oxlint.full.config.ts (every ESLint rule of every package, type-aware) held to each
-      # package's oxlint-suppressions.json, the exact per-file, per-rule counts (lint-gate.mjs --oxlint).
-      # «Parity»: the findings turbo lint saved (no suppressions; a package with no saved file is linted again)
-      # against that same Oxlint report; red when Oxlint misses a finding ESLint reports, outside the reviewed
-      # parity/gaps.json, or a rule ESLint turns on for a file is off or set otherwise in Oxlint. Both need the
-      # workspace packages built (their types), as turbo lint does.
-      - name: Build the workspace packages (parity)
-        if: ${{ !cancelled() && matrix.task == 'lint' && steps.turbo.outcome != 'skipped' }}
-        run: pnpm turbo build --filter='./packages/*' --cache-dir=.turbo/cache
-      - name: Oxlint (every rule)
-        id: oxfull
-        if: ${{ !cancelled() && matrix.task == 'lint' && steps.turbo.outcome != 'skipped' }}
-        env:
-          LINT_SCOPE: ${{ matrix.scope }}
-        run: pnpm lint:oxfull
-      - name: Parity with ESLint
-        if: ${{ !cancelled() && matrix.task == 'lint' && steps.oxfull.outcome != 'skipped' }}
-        env:
-          LINT_PARITY_ESLINT: ${{ github.workspace }}
-          LINT_PARITY_OXLINT: oxlint-report.json
-          LINT_SCOPE: ${{ matrix.scope }}
-          NODE_OPTIONS: ${{ matrix.heap }}
-        run: pnpm lint:parity
-      # A count below the baseline fails until pruned: the log shows the pruned files to commit.
+          start=$SECONDS
+          status=0
+          pnpm lint || status=$?
+          echo "pnpm lint: $((SECONDS - start)) s" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+      # A count below the baseline fails until pruned: the log shows the pruned baselines to commit (or run
+      # `pnpm lint:prune` in a cloud session, never on the owner's PC).
       - name: Oxlint baselines to prune (commit this diff)
-        if: failure() && steps.oxfull.outcome == 'failure'
-        env:
-          LINT_SCOPE: ${{ matrix.scope }}
+        if: failure() && steps.lint.outcome == 'failure'
         run: |
-          pnpm lint:oxfull -- --prune > /dev/null 2>&1 || true
+          node tools/scripts/ci-checks/lint/oxlint/run.mjs --prune > /dev/null 2>&1 || true
           git --no-pager diff -- '*oxlint-suppressions.json'
-      - name: Parity details
-        if: failure() && matrix.task == 'lint'
-        uses: actions/upload-artifact@v4
-        with:
-          name: lint-parity-report${{ matrix.scope == 'apps/api' && '-api' || '' }}
-          path: lint-parity-report.json
-          if-no-files-found: ignore
 
   # Refactor guards (docs/27 §4). Folder cap: an error since Wave F (a new crowded folder, an allow-listed one
   # that grew, a stale allow-list entry). Pure-move check: for move PRs (refactor/* and cloud/refactor-* heads
@@ -371,7 +310,7 @@ jobs:
 
   # Code-health gates (docs/27 Wave F). Counts are measured on both sides, never stored: on a PR the merge base is
   # checked out beside the head (GUARD_BASE) and jscpd (clones, duplicated lines, cross-app clones), cycles,
-  # package boundaries (both sides under the head's refactor/guards/packages.json) and lint (docs/31a §5.1: per-rule totals of every eslint-suppressions.json; the lint job fails on a new violation, this
+  # package boundaries (both sides under the head's refactor/guards/packages.json) and lint (docs/31b §4: per-rule totals of every oxlint-suppressions.json; the lint job fails on a new violation, this
   # gate on a count raised by hand or an entry whose file is gone) fail only above the base branch's own measure.
   # Equal or below passes with nothing to edit, so PRs never touch a baseline and never conflict on one. knip and
   # queries (and the floating units) keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
@@ -413,11 +352,11 @@ jobs:
       - name: pnpm guard:lint (on a PR, against the base branch's suppressions)
         run: |
           if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi
-          # The lint config sources of both sides (ESLint, Oxlint, lint.blocks.mjs): a rule only the head names gets
-          # its one-time baseline.
+          # The lint config sources of both sides (@ab/config, its core rules, lint.blocks.mjs): a rule only the head
+          # names gets its one-time baseline.
           configs() {
             git ls-tree -r --name-only "$1" \
-              | grep -E '(^packages/config/(oxlint/)?[^/]+|(^|/)eslint\.config|(^|/)lint\.blocks)\.[cm]?js$' \
+              | grep -E '((^packages/config/(oxlint/)?[^/]+|(^|/)lint\.blocks)\.[cm]?js|^packages/config/oxlint/core-rules\.json)$' \
               | grep -v '\.test\.' | while read -r f; do git show "$1:$f"; done
           }
           configs "$(git -C "$GUARD_BASE" rev-parse HEAD)" > "$RUNNER_TEMP/configs-base.txt"
@@ -534,7 +473,7 @@ jobs:
       - if: failure()
         run: docker logs api || true
 
-  # The required aggregate for branch protection: every verify job (lint parity is in the lint row) and the guards passed, or a docs-only change
+  # The required aggregate for branch protection: every verify job (lint included) and the guards passed, or a docs-only change
   # skipped them all (changes said code=false); on a PR the refactor job (folder cap, pure moves) passed too.
   # A develop push whose tree a green PR run already checked (changes said verified=true) passes with verify and the
   # guards skipped. Anything else (a failed or cancelled job, a failed changes job) is red.

@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { Linter } from 'eslint';
 import { noParentImports } from './eslint-boundaries.js';
 import { aliasable, isParent, noParentImportsRule } from './eslint-parent-imports.js';
+import { lintCode, withCode } from './oxlint/testing/lint-code.js';
 import { testRule } from './rule-testers.js';
 
 const parent = (spec) => ({ messageId: 'parent', data: { spec } });
@@ -52,8 +52,10 @@ test('aliasable: `../` into the alias folder only', () => {
 });
 
 test('noParentImports: the rule applies to `files`, tests included, never to `ignores`', () => {
-  const block = noParentImports({ root: '/pkg', files: ['src/**/*.ts'], ignores: ['src/gen/**'] });
-  const linter = new Linter({ cwd: '/pkg' });
-  const lint = (file) => linter.verify("import { a } from '../a';", [block], `/pkg/${file}`).filter((m) => m.ruleId).length;
-  assert.deepEqual(['src/x/a.ts', 'src/x/a.test.ts', 'src/gen/a.ts', 'lib/a.ts'].map(lint), [1, 1, 0, 0]);
+  const files = ['src/x/a.ts', 'src/x/a.test.ts', 'src/gen/a.ts', 'lib/a.ts'];
+  const code = "import { a } from '../a';\nexport { a };\n";
+  const blocksFor = (root) => [noParentImports({ root, files: ['src/**/*.ts'], ignores: ['src/gen/**'] })];
+  const found = lintCode({ blocksFor, files: withCode(files, code) });
+  const lint = (file) => found.filter((d) => d.file === file).length;
+  assert.deepEqual(files.map(lint), [1, 1, 0, 0]);
 });

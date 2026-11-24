@@ -1,7 +1,7 @@
 {
   "eslint-boundaries.js": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "eslint-domains.js": {
@@ -17,14 +17,6 @@
   "eslint-react.js": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "eslint.js": {
-    "stylistic/max-len": {
-      "count": 9
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     }
   }
 }

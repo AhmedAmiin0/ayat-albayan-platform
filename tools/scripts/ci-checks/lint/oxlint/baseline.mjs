@@ -1,6 +1,6 @@
 // The Oxlint baseline (docs/31b-oxlint-mapping.md §4). Oxlint has no bulk suppressions, so the
-// violations that predate a rule sit in each package's oxlint-suppressions.json, in the shape of
-// ESLint's eslint-suppressions.json: { "<package-relative file>": { "<rule>": { "count": n } } }.
+// violations that predate a rule sit in each package's oxlint-suppressions.json:
+// { "<package-relative file>": { "<rule>": { "count": n } } }.
 // The gate reads Oxlint's JSON report (`--format json`) and holds every file to its exact
 // per-rule count: above it fails (a new violation), below it fails until pruned (`--prune`
 // rewrites the files; a count only ever goes down, an entry never appears).

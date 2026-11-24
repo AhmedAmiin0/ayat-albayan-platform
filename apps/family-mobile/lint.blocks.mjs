@@ -1,5 +1,5 @@
-// The family app's lint blocks (flat-config shape), read by eslint.config.js and by Oxlint
-// (oxlint.full.config.ts, docs/31b). Its screens sit on @ab/mobile-kit (docs/50 §7).
+// The family app's lint blocks (flat-config shape), read by oxlint.config.ts (docs/31b). Its
+// screens sit on @ab/mobile-kit (docs/50 §7).
 import {
   boundaries,
   domainModuleRegex,

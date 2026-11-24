@@ -2,6 +2,11 @@
 
 Status: **proposal**, part of refactor v2 (docs/31). Owner request, 2026-10-30: «put a strict rules for types and linting».
 
+**ESLint is gone (owner 2026-11-24, docs/31b).** Oxlint, type-aware via tsgolint, runs every rule below
+(`pnpm lint`, `oxlint.config.ts`); each package's `oxlint-suppressions.json` is the only baseline. The rule set and
+its reasons here still hold; the ESLint mechanics (`eslint.js`, `eslint . --…`, `eslint-suppressions.json`) are
+history: §5.3 is the current process.
+
 Measured by probe PR #393 (closed, not merged) on `develop` @ `012ffa06`, CI run 40971961301 (lint job 123790703101,
 typecheck job 123790703132). Versions: TS 6.0.3, ESLint 10.11.0, typescript-eslint 8.71.0, eslint-plugin-react-hooks
 7.1.1, eslint-plugin-jsx-a11y 6.10.2. The counts are a snapshot. PR 1 records the exact counts on its own base.
@@ -109,7 +114,7 @@ not a native key in `native-changes.mjs`. The memo calls that predate it are in 
 
 | package                       | on top of the factory                                                                                                   | off              |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| api                           | boundaries, settings-reader restriction, `parserOptions: { emitDecoratorMetadata: true, experimentalDecorators: true }` | n/a              |
+| api                           | boundaries, settings-reader restriction, `ab/consistent-type-imports` (decorator-metadata aware) in place of the native rule | n/a        |
 | web                           | `reactConfig`, boundaries, `jsx-a11y` `flatConfigs.recommended` on `src/**/*.tsx` with `aria-role: { ignoreNonDOM: true }` (new), `noRawEffect` | n/a |
 | mobile                        | `reactConfig`, boundaries, `AppText` + feature-index restrictions, `noRawEffect` on `src/` and `app/`                   | n/a              |
 | shared, client-core, db       | boundaries (not db), `explicit-module-boundary-types` on `src/` outside `TESTS`; db keeps `src/types.ts` out of lint (still type-checked) | n/a |
@@ -117,10 +122,9 @@ not a native key in `native-changes.mjs`. The memo calls that predate it are in 
 | tools/scripts                 | factory; first lint ever: `eslint.config.js`, a `lint` script, devDeps `@ab/config` + `eslint`                          | `no-console`     |
 | e2e                           | factory; `no-floating-promises` catches a Playwright call without `await`                                               | `no-console`     |
 
-The api `parserOptions` stop `consistent-type-imports` from turning an injected class into `import type`. That change
-would make TypeScript emit `Object` in `design:paramtypes`, and Nest would fail at bootstrap, not at typecheck.
+In the api, `ab/consistent-type-imports` keeps an injected class a value import: `import type` would make TypeScript
+emit `Object` in `design:paramtypes`, and Nest would fail at bootstrap, not at typecheck (docs/31b §3.2).
 `explicit-module-boundary-types` checks functions only, so the 177 exported zod schemas need no annotation.
-Every package's `lint` script becomes `eslint . --max-warnings 0`.
 
 ## 4. Measured violations (probe)
 
@@ -223,22 +227,20 @@ Run these in a cloud session, never on the owner's PC (owner, 2026-11-01). A red
 to commit instead (below).
 
 ```
-eslint . --fix                    # L0 only
-eslint . --prune-suppressions     # drop the entries this PR fixed or whose file it deleted; both fail CI anyway
-pnpm lint:prune                   # the same in every package (turbo, no cache)
+pnpm lint          # oxlint over every package, held to each oxlint-suppressions.json
+pnpm lint:prune    # lower the counts this PR fixed and drop the entries of deleted files
 ```
 
-A new rule (docs/32 §1) enters with its one-time `eslint --suppress-rule` baseline: on a PR the gate also gets the
-ESLint config sources of both sides (`--configs`), and a rule that only the head's configs name may start above 0.
-After that PR its total only shrinks; a preset rule that no config names keeps its base total.
+Each package's `oxlint-suppressions.json` holds exact per-file, per-rule counts: a count above it fails (a new
+violation), a count below it fails until pruned, and nothing writes a new entry (docs/31b §4). A new rule (docs/32 §1)
+enters with its one-time baseline: on a PR the gate also gets the lint config sources of both sides (`--configs`),
+and a rule that only the head's configs name may start above 0. After that PR its total only shrinks.
 
-A conflict in an `eslint-suppressions.json`: take develop's side, then re-run `--prune-suppressions` on the merge result.
+A conflict in an `oxlint-suppressions.json`: take develop's side, then re-run `pnpm lint:prune` on the merge result.
 
-Since docs/32 g3 (`max-len` 100, `max-lines-per-function` 50, `ab/max-params`, the R8 import bans) most files
-carry an entry, so shortening one baselined line or splitting one long function is enough to need a prune. Nobody
-has to run ESLint by hand for it: when the CI lint job fails, its last step («Suppressions to prune») prints the
-pruned `eslint-suppressions.json` diff. Commit that diff; `pnpm guard:lint` has nothing to write (it compares
-the totals with the base branch, 20b713d61).
+When the CI lint job fails on a fixed violation, its last step («Oxlint baselines to prune») prints the pruned
+`oxlint-suppressions.json` diff. Commit that diff; `pnpm guard:lint` has nothing to write (it compares the totals
+with the base branch).
 
 ## 6. Fix lanes
 

@@ -734,8 +734,8 @@ their *logic* belongs in cc, their pieces in the kits).
 ## 9. Enforcement
 
 All checks follow the repo's pattern: a rule or guard that fails only on **new** violations, with a
-baseline that may only shrink (`eslint-suppressions.json` per package for lint rules, oxlint parity in
-`oxlint-suppressions.json`, or a JSON list under `refactor/guards/` pruned by ci `baselines`).
+baseline that may only shrink (`oxlint-suppressions.json` per package for lint rules, or a JSON list under
+`refactor/guards/` pruned by ci `baselines`).
 
 | Rule | Check | Where it runs | Baseline | Oxlint parity | False positives / exceptions |
 |---|---|---|---|---|---|
@@ -761,10 +761,10 @@ baseline that may only shrink (`eslint-suppressions.json` per package for lint r
 | R15 | §8.4 lint rules; `tokens.gen.css` freshness test; showcase-sibling guard; design-review output in the PR | lint, test, guards, review | suppressions + `refactor/guards/showcase.json` | `no-restricted-syntax` native for JSX elements; colour/arbitrary regex as plugin | QR colours, third-party widgets (LiveKit, Stripe Elements), the PDF report page |
 | R16 | `ab/no-client-now`: `Date.now()`/`new Date()` with no argument banned in app and kit code except in `*.timer.ts`/animation hooks; endpoints deciding by time return `server_now` (contract test) | lint + api tests | eslint-suppressions | `no-restricted-syntax` | countdown/animation timers, telemetry timestamps |
 
-New ESLint rules live in `packages/config/eslint-*.js` with their rule tests (pattern of
-`eslint-zod-inputs.test.js`); each lands **in one PR with its baseline** generated in a cloud session
-(`eslint . --suppress-all` for that rule only) and its oxlint twin, so CI stays green and only new code
-is held to it. Total new suppressions are reported in the PR; `guard:lint` keeps every total shrinking.
+New lint rules are `ab/*` Oxlint JS-plugin rules in `packages/config` with their Oxlint RuleTester tests
+(pattern of `eslint-zod-inputs.test.js`), registered in `oxlint/ab-plugin.js`. Oxlint is the only linter
+and nothing writes a new `oxlint-suppressions.json` entry (docs/31b §4), so a rule lands with the
+violations it finds fixed in the same PR; `guard:lint` keeps every total shrinking.
 
 ## 10. Lanes
 

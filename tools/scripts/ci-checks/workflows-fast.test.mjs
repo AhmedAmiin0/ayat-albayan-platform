@@ -67,7 +67,7 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries 
   assert.match(base.run, /merge-base "origin\/\$BASE_REF" HEAD\)\n.*worktree add --detach "\$RUNNER_TEMP\/base"[\s\S]*\.bin\/jscpd"\)\n.*GUARD_BASE=/);
   const lint = runs.find((r) => r.includes('pnpm guard:lint -- --configs'));
   assert.ok(lint?.includes('if [ -z "${GUARD_BASE:-}" ]; then pnpm guard:lint; exit; fi'));
-  // A rule the PR turns on (named only in the head's ESLint configs) gets its one-time baseline.
+  // A rule the PR turns on (named only in the head's lint configs) gets its one-time baseline.
   assert.match(lint, /--configs "\$RUNNER_TEMP\/configs-base\.txt" "\$RUNNER_TEMP\/configs-head\.txt"/);
   assert.equal(ci.jobs.guards.steps[0].with?.['fetch-depth'], 0);
   assert.equal(ci.jobs.guards.if, "needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'");

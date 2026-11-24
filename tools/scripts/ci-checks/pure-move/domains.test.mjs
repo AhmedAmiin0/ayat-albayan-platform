@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { followDomains } from './domains.mjs';
 
-const FILE = 'apps/staff-mobile/eslint.config.js';
+const FILE = 'apps/staff-mobile/lint.blocks.mjs';
 const cfg = (list) => `import x from 'y';\nconst DOMAINS = [${list}];\nexport default x(DOMAINS);\n`;
 const R = [['apps/staff-mobile/src/sales/a.ts', 'apps/staff-mobile/src/sales/sales/a.ts']];
 const follow = (base, head, renames = R) =>
@@ -35,7 +35,7 @@ test('the lint blocks (docs/31b) follow too', () => {
   assert.equal(followDomains(cfg(''), cfg("'sales'"), { file: blocks, renames: R }), cfg(''));
 });
 
-test('only eslint configs; other edits in the file still show', () => {
+test('only lint blocks; other edits in the file still show', () => {
   const metro = 'apps/staff-mobile/metro.config.js';
   assert.equal(followDomains(cfg(''), cfg("'sales'"), { file: metro, renames: R }), cfg("'sales'"));
   const head = cfg("'sales'").replace('x(DOMAINS)', 'x([])');

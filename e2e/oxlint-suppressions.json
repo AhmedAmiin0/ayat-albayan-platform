@@ -389,9 +389,6 @@
     }
   },
   "support/teaching/classroom-live.ts": {
-    "typescript/consistent-type-imports": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -531,11 +528,6 @@
       "count": 1
     },
     "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "tests/finance/pricing-offer.spec.ts": {
-    "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -937,9 +929,6 @@
       "count": 5
     },
     "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },

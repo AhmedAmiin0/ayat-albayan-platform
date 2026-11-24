@@ -1,5 +1,5 @@
 // eslint-plugin-jsx-a11y's flatConfigs.recommended rules with the options it sets (web .tsx files),
-// written out so the same list runs under ESLint and Oxlint's native jsx-a11y rules.
+// written out for Oxlint's native jsx-a11y rules.
 // role="admin" / "teacher" on our own components is a prop, not an ARIA role (aria-role).
 
 const PLAIN = [

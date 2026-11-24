@@ -16,7 +16,7 @@ test('.mts, .cts and .jsx files count as code', () => {
 });
 
 test('a modified code file or suppressions file passes', () => {
-  const out = 'M\ta.ts\nM\tB.tsx\nM\tc.js\nM\td.mjs\nM\te.cjs\nM\tx/eslint-suppressions.json\n';
+  const out = 'M\ta.ts\nM\tB.tsx\nM\tc.js\nM\td.mjs\nM\te.cjs\nM\tx/oxlint-suppressions.json\n';
   assert.deepEqual(fileFailures(entries(`${out}M\tx/oxlint-suppressions.json\n`)), []);
 });
 

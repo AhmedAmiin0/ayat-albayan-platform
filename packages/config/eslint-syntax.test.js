@@ -1,19 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { Linter } from 'eslint';
-import tseslint from 'typescript-eslint';
-import { boundariesPlugin } from './eslint-boundaries.js';
 import { syntaxBlocks, syntaxExempt } from './eslint-syntax.js';
+import { lintCode } from './oxlint/testing/lint-code.js';
 
-const linter = new Linter({ cwd: '/pkg' });
-const base = {
-  files: ['**/*.ts'],
-  languageOptions: { parser: tseslint.parser, globals: { fetch: 'readonly' } },
-  plugins: { ab: boundariesPlugin },
-};
 const lint = (code, file = 'src/a.ts', extra = []) =>
-  linter.verify(code, [base, ...syntaxBlocks(['**/*.test.*']), ...extra], `/pkg/${file}`)
-    .map((m) => m.ruleId);
+  lintCode({ blocks: [...syntaxBlocks(['**/*.test.*']), ...extra], files: { [file]: code } })
+    .map((d) => d.rule);
 
 test('H-1: fetch and globalThis.fetch; a local named fetch is fine', () => {
   assert.deepEqual(lint('await fetch(u);'), ['no-restricted-globals']);

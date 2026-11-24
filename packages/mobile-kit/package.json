@@ -35,7 +35,6 @@
     "./jest-setup": "./jest.shared.cjs"
   },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsgo --noEmit",
     "test": "jest"
   },
@@ -112,7 +111,6 @@
     "@types/jest": "^30.0.0",
     "@types/react": "~19.2.2",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
-    "eslint": "^10.0.0",
     "jest": "^30.5.2",
     "jest-expo": "~57.0.5",
     "react-test-renderer": "19.2.3",

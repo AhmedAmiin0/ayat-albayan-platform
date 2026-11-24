@@ -10,9 +10,6 @@
   "src/auth/code/CodeBoxes.test.tsx": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
     }
   },
   "src/auth/code/CodeBoxes.tsx": {
@@ -186,17 +183,11 @@
     },
     "ab/no-shape-checks": {
       "count": 3
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
     }
   },
   "src/classroom/board/model/model.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "typescript/prefer-optional-chain": {
-      "count": 1
     }
   },
   "src/classroom/board/model/reducer/reducer.ts": {
@@ -286,18 +277,10 @@
   "src/classroom/room/components/ClassroomRoom/tests/boardRequest.test.tsx": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
     }
   },
   "src/classroom/room/components/ClassroomRoom/tests/en.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/ClassroomRoom/tests/mute.test.tsx": {
-    "typescript/consistent-type-imports": {
       "count": 1
     }
   },
@@ -312,13 +295,7 @@
     }
   },
   "src/classroom/room/components/ClassroomRoom/tests/shareRequest.test.tsx": {
-    "typescript/consistent-type-imports": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -397,7 +374,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "typescript/no-unsafe-enum-comparison": {
       "count": 1
@@ -521,9 +498,6 @@
   },
   "src/components/channel/ChannelThread/tests/ChannelThread.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -924,9 +898,6 @@
   "src/push/web-push-session.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 5
     }
   },
   "src/push/web-push-session.ts": {

@@ -1,23 +1,13 @@
-// The `ab/*` rule tests run each case list under both linters (docs/31b §6): ESLint's RuleTester
-// and Oxlint's (oxlint/plugins-dev), which loads the same rule object as a JS plugin does.
+// The `ab/*` rule tests run each case list under Oxlint's RuleTester (oxlint/plugins-dev), which
+// loads the rule object as the `ab` JS plugin does (docs/31b §6).
 import { describe, it } from 'node:test';
-import { RuleTester as ESLintTester } from 'eslint';
-import { RuleTester as OxlintTester } from 'oxlint/plugins-dev';
-import tseslint from 'typescript-eslint';
+import { RuleTester } from 'oxlint/plugins-dev';
 
-for (const Tester of [ESLintTester, OxlintTester]) {
-  Tester.describe = describe;
-  Tester.it = it;
-}
+RuleTester.describe = describe;
+RuleTester.it = it;
 
-const ESLINT = {
-  js: { ecmaVersion: 2024, sourceType: 'module' },
-  ts: { parser: tseslint.parser, sourceType: 'module' },
-};
-
-/** `cases` ({ valid, invalid }) of `rule` under ESLint and Oxlint; `lang`: 'js' or 'ts'. */
+/** `cases` ({ valid, invalid }) of `rule` under Oxlint; `lang`: 'js' or 'ts'. */
 export function testRule({ name, rule, lang = 'js' }, cases) {
-  new ESLintTester({ languageOptions: ESLINT[lang] }).run(name, rule, cases);
   const languageOptions = { sourceType: 'module', parserOptions: { lang } };
-  new OxlintTester({ eslintCompat: true, languageOptions }).run(`${name} (oxlint)`, rule, cases);
+  new RuleTester({ eslintCompat: true, languageOptions }).run(name, rule, cases);
 }

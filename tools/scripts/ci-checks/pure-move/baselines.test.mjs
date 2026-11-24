@@ -15,7 +15,7 @@ delete moved['src/features/payouts/PayoutsPage.tsx'];
 delete moved['src/features/payouts/use-pay.ts'];
 Object.assign(moved, { 'src/features/payouts/list/PayoutsPage.tsx': entry(4), 'src/features/payouts/pay/use-pay.ts': entry(3) });
 const texts = (base, head) => ({ base: JSON.stringify(base, null, 2), head: JSON.stringify(head, null, 2) });
-const FILE = 'apps/staff-web/eslint-suppressions.json';
+const FILE = 'apps/staff-web/oxlint-suppressions.json';
 
 test('relative pairs: only moves inside the package, without its prefix', () => {
   assert.deepEqual(relativePairs('apps/staff-web', [...RENAMES, ['apps/staff-web/src/a.ts', 'packages/x/src/a.ts']]), [
@@ -45,7 +45,7 @@ test('suppressions: a changed count, an added or dropped key, an unmoved rename 
   wrong['src/features/payouts/use-pay2.ts'] = entry(3);
   assert.equal(suppressionsMoved(FILE, texts(SUPP, wrong), RENAMES), false);
   assert.equal(suppressionsMoved(FILE, { base: '{}', head: 'not json' }, RENAMES), false);
-  assert.equal(suppressionsMoved('apps/staff-mobile/eslint-suppressions.json', texts(SUPP, moved), RENAMES), false, 'other package');
+  assert.equal(suppressionsMoved('apps/staff-mobile/oxlint-suppressions.json', texts(SUPP, moved), RENAMES), false, 'other package');
 });
 
 test('suppressions: two entries landing on one key, or a file moved onto a stale key, fail', () => {
@@ -84,7 +84,7 @@ test('classifyBaseline: only baseline files, edited in place', () => {
   assert.deepEqual(classifyBaseline({ status: 'M', from: FILE, to: FILE }, read, ctx), { kind: 'paths' });
   assert.equal(classifyBaseline({ status: 'M', from: FILE, to: FILE }, read, { renames: [] }).kind, 'bad');
   assert.equal(classifyBaseline({ status: 'A', from: FILE, to: FILE }, read, ctx).kind, 'bad');
-  assert.equal(classifyBaseline({ status: 'R100', from: FILE, to: 'packages/x/eslint-suppressions.json' }, read, ctx).kind, 'bad');
+  assert.equal(classifyBaseline({ status: 'R100', from: FILE, to: 'packages/x/oxlint-suppressions.json' }, read, ctx).kind, 'bad');
   assert.equal(classifyBaseline({ status: 'D', from: 'refactor/folder-cap/web.json', to: 'refactor/folder-cap/web.json' }, read, ctx).kind, 'bad');
   assert.equal(classifyBaseline({ status: 'M', from: 'refactor/guards/knip.json', to: 'refactor/guards/knip.json' }, read, ctx).kind, 'bad');
   assert.equal(classifyBaseline({ status: 'M', from: 'apps/staff-web/package.json', to: 'apps/staff-web/package.json' }, read, ctx), null);
