@@ -9,7 +9,6 @@ import type { SkippedItem } from '@/modules/platform/drive-backup/run/summary';
 /** At most this many names in the skipped alert (the rest only counted). */
 const NAMES_SHOWN = 5;
 
-/** «bucket/key (size، why)». */
 const itemText = (t: SkippedItem): string =>
   ar.googleSync.alerts.backupSkippedItem
     .replace('{name}', t.id)

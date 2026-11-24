@@ -9,7 +9,7 @@ export interface ReportPdfModel {
   endsAt: Date;
   /** The guardian's zone: the PDF is theirs, like the report_ready message. */
   tz: string;
-  /** «رقم الحلقة» outside a package (R-LES-03): v_lesson_sequence.seq, else completed before + 1. */
+  /** R-LES-03: v_lesson_sequence.seq, else completed before plus one. */
   lessonNo: number;
   /** This lesson's place in the package it consumed, null when it consumed none (trial, excused). */
   slot: PackageSlot | null;
@@ -23,7 +23,6 @@ export interface ReportPdfModel {
   notes: string | null;
   homework: string | null;
   nextPlan: string | null;
-  /** Render time, for the «تقرير صادر آليًا» stamp. */
   generatedAt: Date;
   /** The footer's contact line (settings.academy_contact); absent = the built-in CONTACT. */
   contact?: PdfContact;

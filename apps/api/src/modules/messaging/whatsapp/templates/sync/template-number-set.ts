@@ -5,9 +5,7 @@ import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '@/modules/messa
 import type { ApprovalRow, NumberRef, TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «الرقم» of one template (docs/23 phase 5, docs/23c decisions 3, 4, 9): message_templates.number_id,
-// the step after the catalogue row's number in routeTemplate's order. null = the role's default number.
-// Never blocked by approval: the answer only warns when the chosen number has not approved it yet.
+// docs/23 phase 5, docs/23c: null is the role's default; never blocked, only a warning.
 
 export interface NumberSetDeps {
   queries: Pick<TemplatesRepo, 'get' | 'update' | 'approvals' | 'numberRef'>;

@@ -5,7 +5,7 @@ import type { RoleRecord } from '@/modules/people/roles/roles.store';
 import { forbidden } from '@/common/http/errors';
 import type { ProfilePatch, StaffProfile } from './store/users.store';
 
-// Pure rules of «المستخدمون»: who may touch whom, and that the academy always keeps an active admin.
+// Pure rules: who may touch whom, and the academy always keeps an active admin.
 
 export interface UserState extends RoleState {
   profiles: readonly StaffProfile[];

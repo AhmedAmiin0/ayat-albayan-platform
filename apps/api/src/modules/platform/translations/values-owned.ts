@@ -1,13 +1,7 @@
 import { isOwnedSettingKey, SEED_ENTRIES } from '@ab/shared';
 import { ConflictException } from '@nestjs/common';
 
-/**
- * docs/26 §3: the hint key of a settings row → that row's key. Its Arabic text is the row's description,
- * edited on «القيم» (config_describe writes the ar override in the same transaction), so «الترجمات»
- * refuses the ar override of these keys; en stays editable. The first row naming a hint key wins. Keys a
- * module route owns (send gate, comms_source, Google) are left out, like the one-time copy of migration
- * config_describe: their ar hints stay editable in «الترجمات» by `settings.write` holders.
- */
+/** docs/26 §3: ar hints of settings rows are edited on values only; module-owned keys excluded. */
 export const VALUES_HINT_KEYS: ReadonlyMap<string, string> = (() => {
   const out = new Map<string, string>();
   for (const e of SEED_ENTRIES) if (e.hintKey && !isOwnedSettingKey(e.key) && !out.has(e.hintKey)) out.set(e.hintKey, e.key);

@@ -52,7 +52,7 @@ export class PortalController {
     return this.lessons.upcoming({ user, studentId });
   }
 
-  /** «حضرها» / «غاب عنها» (docs/50 §5): a keyset page of past lessons, newest first. */
+  /** docs/50 §5: a keyset page of past lessons, newest first. */
   @Get('students/:id/history')
   history(
     @ZodParam('id', z.uuid()) studentId: string,
@@ -62,17 +62,13 @@ export class PortalController {
     return this.past.history({ user, studentId, query });
   }
 
-  /** «ادخل الحلقة» of a classroom lesson: the room join itself; 404, 409 not_classroom_lesson, 403, 410, 429, 503. */
   @Post('students/:id/lessons/:lessonId/join')
   @HttpCode(200)
   join(@Param('id', UUID) studentId: string, @Param('lessonId', UUID) lessonId: string, @CurrentUser() user: AuthUser): Promise<RoomJoinResult> {
     return this.lessons.join({ user, studentId, lessonId });
   }
 
-  /**
-   * The family app's «ادخل الحلقة» in the phone's browser: a signed /join link of the lesson, no
-   * second sign-in, until its room closes; 404, 409 not_classroom_lesson, 410, 429, 503.
-   */
+  /** A signed link with no second sign-in, until the room closes. */
   @Post('students/:id/lessons/:lessonId/room-link')
   @HttpCode(200)
   roomLink(
@@ -84,7 +80,7 @@ export class PortalController {
   }
 }
 
-/** «تقارير الحلقات» and «الباقة»: same scope key and scoping as PortalController. */
+/** Same scope key and scoping as PortalController. */
 @ApiTags('portal')
 @ApiBearerAuth()
 @Permissions('self.portal')

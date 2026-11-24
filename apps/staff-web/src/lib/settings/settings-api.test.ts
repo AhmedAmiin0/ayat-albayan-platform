@@ -1,4 +1,4 @@
-import { PUBLIC_CONFIG_QUERY_KEY, SETTING_DEFAULTS } from '@ab/shared';
+import { PUBLIC_CONFIG_QUERY_KEY, SETTING_DEFAULTS } from '@ab/settings';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CONFIG_QUERY_KEYS } from './query-keys';
 import { settingsQuery, updateSettings } from './settings-api';

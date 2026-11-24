@@ -12,11 +12,7 @@ interface FamilyNow {
 
 type LessonExtras = Required<Pick<PortalLessons, 'prepare' | 'month'>>;
 
-/**
- * What rides on GET …/lessons beside the lessons (docs/50 §2, §6): «ما المطلوب للحلقة القادمة»
- * from the newest sent report and this month's attended / absent counts, and each lesson's live
- * room (who is inside, ended for everyone). The student is already scoped by the caller.
- */
+/** docs/50 §2, §6: the student is already scoped by the caller. */
 @Injectable()
 export class PortalLessonExtras {
   constructor(

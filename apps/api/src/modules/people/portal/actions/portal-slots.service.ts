@@ -16,12 +16,7 @@ export function freeStarts(slots: readonly SlotView[], row: PortalLessonRow, now
     .map((s) => ({ starts_at: s.starts_at, ends_at: s.ends_at }));
 }
 
-/**
- * «اطلب موعدًا آخر»'s times (owner 2026-11-17): the academy's own slot grid (SlotsService, the
- * teacher's availability and every clash: the teacher's and the lesson's students' lessons,
- * time-off) for the lesson's teacher, length and students, read on the student's clock. 409
- * lesson_started, unsupported_duration; 400 range_too_large past 14 days.
- */
+/** The academy's slot grid with every clash, on the student's clock; max 14 days. */
 @Injectable()
 export class PortalSlotsService {
   constructor(
