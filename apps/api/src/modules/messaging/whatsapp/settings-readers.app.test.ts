@@ -20,7 +20,7 @@ import { ReceivablesSettings } from '@/modules/finance/receivables/receivables.s
 import { RemindersSettings } from '@/modules/messaging/reminders/reminders.settings';
 import { ReportPdfSettings } from '@/modules/reporting/report-pdf/report-pdf.settings';
 import { ReportsSettings } from '@/modules/reporting/reports/shared/reports.settings';
-import { WebhookSettings } from '@/modules/messaging/webhook/webhook.settings';
+import { WebhookSettings } from '@/modules/messaging/webhook/shared/webhook.settings';
 import { SendGate } from './gate/send-gate';
 import { WhatsappSettings } from './whatsapp.settings';
 

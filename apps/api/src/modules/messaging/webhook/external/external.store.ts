@@ -2,7 +2,7 @@ import { ACCOUNT_CODE_TEMPLATE, isHiddenPayload, type NumberPurpose, waIdToE164 
 import { Injectable } from '@nestjs/common';
 import { orderedAt } from '@/modules/messaging/webhook/inbound/webhook.inbound';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
-import { WebhookRepo } from '@/modules/messaging/webhook/webhook.repo';
+import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
 import { externalMessage, type ExternalMessage } from './external-message';
 import { externalRow } from './external-row';
 import { ExternalRepo } from './external.repo';

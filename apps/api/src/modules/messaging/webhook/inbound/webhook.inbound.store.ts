@@ -6,7 +6,7 @@ import { RatingStore } from '@/modules/teaching/lesson-rating/rating.store';
 import type { RatingTap } from '@/modules/teaching/lesson-rating/rating.rows';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { inboundRow, orderedAt, type RowInput } from './webhook.inbound';
-import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/webhook.repo';
+import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
 
 export interface LeadLink {
   id: string | null;
