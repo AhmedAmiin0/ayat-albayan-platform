@@ -78,10 +78,11 @@ export function normalizePhone(input: string): PhoneResult {
 
 /**
  * The phone part of a list search box (R-STU-02, R-LEAD-01): the digits to find inside phone_e164,
- * or null to search by name. Typed on any keyboard (٠-٩, ۰-۹, spaces, dashes, dots, brackets, +),
- * at least 3 digits. A local number (one leading 0, e.g. 05… or 01…) → its national digits, so it
- * is found under any country code (a UAE 05… is not read as Saudi); a whole international number
- * → its E.164 digits; a partial one → its digits without a leading 00.
+ * or null to search by name. Typed on any keyboard (Arabic-Indic and Persian digits, spaces,
+ * dashes, dots, brackets, +), at least 3 digits. A local number (one leading 0, e.g. 05… or 01…)
+ * → its national digits, so it is found under any country code (a UAE 05… is not read as Saudi);
+ * a whole international number → its E.164 digits; a partial one → its digits without a leading
+ * 00.
  */
 export function searchDigits(term: string): string | null {
   const digits = asciiDigits(term).replace(NOISE, '').replace(/\+/g, '');
