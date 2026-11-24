@@ -8,7 +8,6 @@ import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 
 const A = t.classroom.assistants;
 
-/** One assistant's session: time, students, teacher, «ادخل الحلقة» (the TA's day and the sales «الحلقات الجارية»). */
 export function AssistantLessonItem({ view, lesson }: { view: AssistantLessonView; lesson: JoinableLesson }) {
   const { color } = useTheme();
   const tz = useViewerTz();

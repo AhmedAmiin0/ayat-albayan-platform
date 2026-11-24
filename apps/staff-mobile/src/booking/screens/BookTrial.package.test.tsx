@@ -23,7 +23,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: jest.fn() }));
 jest.mock('@/booking/invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() }));
 const mockReplace = jest.fn();
-// The chat's «اشترك»: the lead's id, number and WhatsApp name, and the package mode.
+// The chat's subscribe action passes the lead's id, number, WhatsApp name and package mode.
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, push: jest.fn(),
     replace: (h: unknown) => mockReplace(h) },
@@ -78,7 +78,7 @@ test('a lead from the chat books a package: size, a time per day, the required i
     .find((p) => p.startsWith('/booking/slots'));
   expect(slotsPath).toContain('durationMin=60');
 
-  // «الفاتورة *»: «التالي» does not pass without it; the photo uploads under the wizard's request id.
+  // The invoice is required to continue; the photo uploads under the wizard's request id.
   expect(screen.getByText(`خطوة 5 من 6 · ${t.booking.invoice.label}`)).toBeTruthy();
   await press('button', t.booking.next);
   expect(await screen.findByText(t.booking.error.invoice_required)).toBeTruthy();
@@ -86,7 +86,6 @@ test('a lead from the chat books a package: size, a time per day, the required i
   expect(await screen.findByLabelText(PREVIEW)).toBeTruthy();
   await press('button', t.booking.next);
 
-  // «المراجعة»: the type, the package, its length, the invoice and each day with its time.
   expect(screen.getByText(t.booking.kind.package)).toBeTruthy();
   expect(screen.getByText(t.enums.packageSize['12'])).toBeTruthy();
   expect(screen.getByText(t.booking.mobile.invoiceUploaded)).toBeTruthy();
@@ -133,7 +132,7 @@ test('«حلقة تجريبية مجانية فقط» is a type here: no package
   await press('radio', t.booking.kind.trial);
   expect(screen.getByText('خطوة 1 من 4 · الطالب')).toBeTruthy();
   expect(screen.getByRole('header', { name: t.booking.trialTitle })).toBeTruthy();
-  // A trial takes the form's «المدة» on the first step, 45 by default.
+  // A trial takes the duration on the first step, 45 by default.
   expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await press('button', t.booking.next);

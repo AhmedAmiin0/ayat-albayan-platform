@@ -6,10 +6,7 @@ import { RECORDING_CHIP, recordingTime, type RecordingSource } from './recording
 import { playRecording } from './recordings-api';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-/**
- * One recording: start time, status chip, and «شغّل» once the file exists (a fresh link on every tap).
- * A row of the list's inset card, which draws the fill and the rules (owner 2026-10-28).
- */
+/** A fresh link on every tap. */
 export function RecordingRow({ source, rec }: { source: RecordingSource; rec: LessonRecordingView }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

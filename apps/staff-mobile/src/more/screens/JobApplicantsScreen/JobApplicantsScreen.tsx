@@ -1,4 +1,5 @@
-import { JOB_APPLICANT_STATUSES, jobApplicantStatusStyle } from '@ab/shared';
+import { JOB_APPLICANT_STATUSES } from '@ab/catalog';
+import { jobApplicantStatusStyle } from '@ab/money';
 import { useState } from 'react';
 
 import {

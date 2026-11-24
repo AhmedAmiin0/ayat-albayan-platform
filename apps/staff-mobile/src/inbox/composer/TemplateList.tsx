@@ -20,10 +20,6 @@ interface TemplateListProps {
   only?: ((rows: TemplateView[]) => TemplateView[]) | undefined;
 }
 
-/**
- * The approved templates by their Arabic name and body, in one inset card (owner 2026-10-28: one
- * container rule): the chat's «اختر القالب» sheet and «محادثة جديدة»'s template step.
- */
 export function TemplateList({ templates, teacher, onPick, only }: TemplateListProps) {
   // Without templates.manage or templates.send_all, and always for sales, an assistant or a
   // teacher, only the admin's allow-list (owner 2026-10-12 / 10-15 / 10-18): none ticked (or not

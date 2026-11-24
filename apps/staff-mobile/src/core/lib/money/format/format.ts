@@ -12,24 +12,24 @@ import { t, currencyName, locale, ltr, money } from '@ab/mobile-kit';
 
 // Money lines (docs/07 §2: Western digits, LTR values isolated). Strings come from ar.json only.
 
-/** «8 حلقات في الشهر», or «10 حلقات» for a custom count (package null). */
+/** A custom count when package is null. */
 export function packageName(sub: Pick<SubscriptionView, 'package' | 'lessons_total'>): string {
   return sub.package ? t.enums.packageSize[sub.package] : counted(t.today.count, sub.lessons_total);
 }
 
 const DAY = { day: 'numeric', month: 'long', year: 'numeric' } as const;
 
-/** «1 أكتوبر 2026»: the day of an instant in the viewer's `tz` (docs/34; useViewerTz). */
+/** The day of an instant in the viewer's tz (docs/34). */
 export function instantDay(iso: string, tz: string): string {
   return dateText(new Date(iso), { tz, locale }, DAY);
 }
 
-/** «1 أكتوبر 2026» for a local date (YYYY-MM-DD, e.g. starts_on), whatever the phone's zone. */
+/** For a local YYYY-MM-DD date, whatever the phone's zone. */
 export function localDay(date: string): string {
   return dateText(new Date(`${date}T12:00:00Z`), { tz: 'UTC', locale }, DAY);
 }
 
-/** «8 حلقات في الشهر · من 24 سبتمبر 2026»: tells two packages of one student apart. */
+/** Tells two packages of one student apart. */
 export function packageFrom(sub: SubscriptionView): string {
   return t.payments.mobile.packageFrom
     .replace('{package}', packageName(sub))
@@ -39,14 +39,14 @@ export function packageFrom(sub: SubscriptionView): string {
 /** A package with what it is owed for (owedFor) and what was paid. */
 type PaidPackage = OwedPackage & { paid: number; currency: string };
 
-/** «دُفع 72.5 من 145 ر.س»: of what it is owed for (a stopped course: its stored decision). */
+/** Of what it is owed; a stopped course uses its stored decision. */
 export function paidOf(sub: PaidPackage): string {
   return t.payments.paidOf
     .replace('{paid}', ltr(formatAmount(sub.paid)))
     .replace('{price}', money(owedFor(sub), sub.currency));
 }
 
-/** «2 من 4 حلقة»: this package's own count (FIFO, docs/11 §2). */
+/** This package's own count (FIFO, docs/11 §2). */
 export function usedOf(sub: SubscriptionView): string {
   return t.subscriptions.usedOf
     .replace('{used}', String(sub.balance.lessons_used))
@@ -55,10 +55,7 @@ export function usedOf(sub: SubscriptionView): string {
 
 const amount = (n: number) => ltr(formatAmount(n));
 
-/**
- * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1» while 0 < paid < price (owner 2026-10-28: why a package of
- * 81 with 80 received is still «غير مدفوعة»), else null. The rule stays: only net paid ≥ price is paid.
- */
+/** Only while 0 < paid < price, else null; only net paid at or above price counts as paid. */
 export function partPaidLine(sub: PaidPackage): string | null {
   const part = partPaidOf(sub);
   if (!part) return null;
@@ -69,10 +66,9 @@ export function partPaidLine(sub: PaidPackage): string | null {
     .replace('{due}', amount(part.due));
 }
 
-/** The part-paid line, else «دُفع 72.5 من 145 ر.س». */
 export const paidLine = (sub: PaidPackage): string => partPaidLine(sub) ?? paidOf(sub);
 
-/** Before saving a receipt smaller than what is still due: «المبلغ أقل من المستحق بـ 1 ر.س، …», else null. */
+/** Warns before saving a receipt smaller than what is still due, else null. */
 export function shortfallLine(input: { amount: number | null; due: number; currency: string }): string | null {
   const short = input.amount === null ? 0 : receiptShortfall({ amount: input.amount, due: input.due });
   if (short <= 0) return null;

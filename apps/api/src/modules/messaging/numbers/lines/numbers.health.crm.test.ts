@@ -5,9 +5,7 @@ import type { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { healthTarget } from './numbers.health-target';
 import { NumbersHealth } from './numbers.health';
 
-// A crm line's «افحص الخطوط» (GET /me, no phone id) is kept on its role's crm number (owner
-// 2026-11-07:
-// «فشل آخر فحص» stuck since 25 Oct because a crm check had no phone id to be written under).
+// A crm line check (no phone id) is kept on its role's crm number.
 
 const crmView = (over: Partial<LineCheckView> = {}): LineCheckView => ({
   line: 'notifications',

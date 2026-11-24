@@ -117,7 +117,7 @@ const viewOf = (parts: Parts, now: Date): EvolutionSyncView => ({
   parts,
 });
 
-/** A webhook read back as pushed but switched off: no inbound, so never «متزامن». */
+/** A webhook read back but switched off means no inbound, so never synced. */
 const hookState = (state: EvolutionSyncState, c: EvolutionConfig): EvolutionSyncState =>
   (state === 'synced' && !c.webhook.enabled ? 'disabled' : state);
 

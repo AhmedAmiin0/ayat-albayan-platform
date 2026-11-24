@@ -23,7 +23,7 @@ export function StateNote({ status, empty, emptyTitle }: StateNoteProps) {
   return empty ? <EmptyState title={emptyTitle} /> : null;
 }
 
-/** «تعذّر التحديث…»: the cached data is shown but the last refresh failed (offline). */
+/** Cached data is shown but the last refresh failed. */
 export function StaleNote({ isError, hasData }: { isError: boolean; hasData: boolean }) {
   return isError && hasData ? <Note>{t.mobileFinance.stale}</Note> : null;
 }

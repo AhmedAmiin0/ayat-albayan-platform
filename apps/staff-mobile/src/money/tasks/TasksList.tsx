@@ -1,4 +1,4 @@
-import type { AdminTaskView } from '@ab/shared';
+import type { AdminTaskView } from '@ab/money';
 import { ActivityIndicator } from 'react-native';
 import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';

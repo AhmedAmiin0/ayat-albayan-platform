@@ -14,7 +14,7 @@ import {
 } from '@ab/mobile-kit';
 import { changeEmail } from '@/account/hooks/account-api';
 
-/** «البريد الإلكتروني» (R-ACC-03): the sign-in email, changed at once, with the current password. */
+/** R-ACC-03: the sign-in email changes at once and needs the current password. */
 export function EmailSection({ profile }: { profile: AccountProfile }) {
   const { color } = useTheme();
   const [email, setEmail] = useState('');

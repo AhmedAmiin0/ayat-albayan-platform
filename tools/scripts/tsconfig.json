@@ -1,5 +1,5 @@
 {
-  "extends": "@ab/config/tsconfig/base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "es2023",
     "module": "nodenext",
@@ -11,6 +11,7 @@
     "ci-checks/move-module.ts",
     "ci-checks/move-module/**/*.ts",
     "ci-checks/deploy/**/*.ts",
+    "ci-checks/lint/commit-header/**/*.ts",
     "imports/**/*.ts",
     "automerge/**/*.ts",
     "units/**/*.ts"

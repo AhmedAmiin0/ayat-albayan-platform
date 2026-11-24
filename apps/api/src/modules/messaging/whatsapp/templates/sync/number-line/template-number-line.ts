@@ -11,11 +11,7 @@ import {
 } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 
-// The number card's sync through its line (owner 2026-11-07): under legacy a number has no client
-// of
-// its own, so «مزامنة القوالب مع هذا الرقم» runs exactly the sync «القوالب» runs for the number's
-// role
-// (template-line-sync.ts: the Meta / Kapso list, or the CRM's). Read-only, never sends.
+// Under legacy a number has no client of its own, so it runs its role's line sync; read-only.
 
 /**
  * A calls-only number (docs/28 §10) has no line and no templates: nothing read, nothing written.
@@ -71,11 +67,7 @@ export async function syncByLine(
   return lineAsNumber(await deps.syncLine(line, now), numberId);
 }
 
-/**
- * Module mode, a crm number: its role's own number reads the CRM's list as «القوالب» does for that
- * line
- * (docs/39); any other crm number answers crm_managed (its key is not the line's, nothing is read).
- */
+/** Only the role's own crm number reads the CRM list (docs/39); others answer crm_managed. */
 export async function syncCrmNumber(
   deps: NumberLineDeps,
   n: OverlayNumber,

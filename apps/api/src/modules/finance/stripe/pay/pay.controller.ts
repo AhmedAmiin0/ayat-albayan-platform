@@ -14,14 +14,7 @@ import { PayLimit } from './pay-limit';
 import { appCookie, appPlatform, appReturnUrl, fromApp } from './pay-return';
 import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from './pay-reply';
 
-/**
- * The family's payment pages, served by the API (no login, no web build; docs/30): GET /pay/:token is a small
- * Arabic page (the first name, the package, the amount; no other personal data) whose «ادفع الآن» opens
- * GET /pay/:token/checkout (303 to Stripe Checkout); Stripe comes back to /done or /cancelled (text only;
- * a link the app opened also gets «العودة إلى التطبيق», pay-return.ts).
- * The web PayPage still reads GET /pay/:token as JSON (Accept: application/json). Rate-limited; 404 while
- * Stripe is off.
- */
+/** Public pages (docs/30): no personal data beyond the first name; rate-limited; 404 when off. */
 @ApiTags('stripe')
 @Public()
 @UseGuards(StripeEnabledGuard)

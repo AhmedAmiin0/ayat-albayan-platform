@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { t, EmptyState, InsetGroup } from '@ab/mobile-kit';
-import type { DashboardWork, WorkList, WorkTab } from '@ab/shared';
+import type { DashboardWork, WorkList, WorkTab } from '@ab/money';
 import { Note } from '@/core/ui/feedback/Note';
 import { PendingRow, TaskListRow, UnpaidListRow } from './WorkRows';
 

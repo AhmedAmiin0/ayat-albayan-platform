@@ -62,7 +62,6 @@ export class InvoicesRepo {
     return { rows: data.flatMap(toRow), total: count ?? 0 };
   }
 
-  /** The bookings with a student whose name contains `name` (the «الطلاب» filter). */
   private async ruleIdsNamed(name: string): Promise<string[]> {
     const { data, error } = await this.db
       .from('schedule_rule_students')

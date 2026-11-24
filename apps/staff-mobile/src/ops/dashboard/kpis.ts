@@ -1,5 +1,5 @@
 import { t } from '@ab/mobile-kit';
-import type { DashboardCounts, WorkTab } from '@ab/shared';
+import type { DashboardCounts, WorkTab } from '@ab/money';
 
 export interface Kpi {
   key: 'activeStudents' | 'needsConfirm' | WorkTab;

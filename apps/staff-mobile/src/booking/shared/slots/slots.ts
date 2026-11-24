@@ -25,7 +25,7 @@ export function windowStart(now: Date, from?: string): Date {
   return Number.isNaN(at) || at <= now.getTime() ? now : new Date(at);
 }
 
-/** The rule fields a slot fixes in the family's zone: local day, «HH:MM», weekday 0 = الأحد. */
+/** Local day, HH:MM and weekday in the family's zone; weekday 0 is Sunday. */
 export function ruleFromSlot(
   startsAt: string,
   tz: string,

@@ -79,16 +79,10 @@ export function lessonValues(input: TeacherLessonInput): LessonValues | null {
   };
 }
 
-/** «سهيلة (AB-0101) ومريم (AB-0102)»: each student with their code, joined. */
 const namesWithCodes = (students: readonly { name: string; code: string }[]): string =>
   joinNames(students.map((s) => fill(ar.templates.teacherReminderCrmStudent, s)));
 
-/**
- * teacher_new_student's teacher_lesson_v2, its FOUR body slots: [teacher, students with their
- * codes «سهيلة (AB-0101)», the lesson time in the teacher's tz, its duration]; buttons [«ادخل
- * الحلقة» the Meet code or our classroom path, «تقرير الحلقة» teacher/report/<id>]. null when a
- * value is missing: Meta values only.
- */
+/** Four body slots and two buttons; null when a value is missing (Meta values only). */
 export function teacherLessonCrm(input: TeacherLessonInput): CrmValues | null {
   const v = lessonValues(input);
   const who = coded(input);
@@ -130,13 +124,7 @@ function lineLinks(input: TeacherReminderInput): { join: string; report: string 
   return { join: ownJoin(lesson, origin), report };
 }
 
-/**
- * The same-day reminder as the CRM's teacher_lesson_reminder (the old script's: {{1}} the teacher,
- * {{2}} one line, no buttons): «<the time in the teacher's tz> · سهيلة (AB-0101) ومريم (AB-0102) ·
- * رابط الحلقة: <join> · تقرير الحلقة: <report>». join: the lesson's own link, else our classroom;
- * report: the teacher's signed-in portal page (owner 2026-11-14). Direct links, no short links
- * (owner 2026-11-06). null when a value is missing: Meta's values only.
- */
+/** Direct links, no short links; null when a value is missing (Meta values only). */
 export function teacherReminderCrm(input: TeacherReminderInput): CrmValues | null {
   const { lesson, origin } = input;
   const who = coded({ teacher: input.teacher, students: lesson.students });

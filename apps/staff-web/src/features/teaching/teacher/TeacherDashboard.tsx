@@ -1,5 +1,5 @@
-import { zonedPartsIn } from '@ab/shared';
-import type { TeacherMe } from '@ab/shared';
+import { zonedPartsIn } from '@ab/time';
+import type { TeacherMe } from '@ab/schedule';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';

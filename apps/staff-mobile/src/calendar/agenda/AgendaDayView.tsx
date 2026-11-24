@@ -7,22 +7,18 @@ import { dayLabel } from '@/calendar/lib/week';
 
 interface AgendaDayViewProps {
   day: AgendaDay;
-  /** Today on the Riyadh calendar: a gold-soft start rule and a plain «النهارده» (gold marks, green acts, §1.1). */
+  /** Today on the Riyadh calendar. */
   today: boolean;
   /** The day's faint availability line (agenda.availabilityLine), or null. */
   available: string | null;
   onReschedule: (lesson: LessonView) => void;
-  /** «عدّل الوقت» on a row that allows it; absent for a teacher's own calendar. */
+  /** Absent for a teacher's own calendar. */
   onEditTime?: (lesson: LessonView) => void;
   /** A tap on a lesson row opens its details sheet. */
   onOpen?: (lesson: LessonView) => void;
 }
 
-/**
- * One day of the week agenda: «السبت 3 أكتوبر», the teacher's availability as a faint line, then
- * the lessons in time order, in one inset card (owner 2026-10-28: one container rule). A day without
- * lessons stays, light, so the week reads whole.
- */
+/** A day without lessons stays, light, so the week reads whole. */
 export function AgendaDayView({ day, today, available, onReschedule, onEditTime, onOpen }: AgendaDayViewProps) {
   const { color } = useTheme();
   const empty = day.lessons.length === 0;

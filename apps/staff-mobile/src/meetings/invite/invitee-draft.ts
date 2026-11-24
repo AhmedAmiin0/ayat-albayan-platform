@@ -1,4 +1,9 @@
-import { formatPhone, MAX_MEETING_INVITEES, normalizePhone, type MeetingInviteeInput, type MeetingInviteeOption } from '@ab/shared';
+import { formatPhone, normalizePhone } from '@ab/core';
+import {
+  MAX_MEETING_INVITEES,
+  type MeetingInviteeInput,
+  type MeetingInviteeOption,
+} from '@ab/schedule';
 import { ltr } from '@ab/mobile-kit';
 
 // The invitees picked before a create: what the chip says and what POST /meetings receives. A staff

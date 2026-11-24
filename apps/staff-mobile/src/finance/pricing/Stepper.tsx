@@ -13,9 +13,7 @@ export interface StepperProps {
   step?: number;
   /** Go round past an edge (a clock: 23 → 0) instead of stopping there. */
   wrap?: boolean;
-  /** The readout (default the plain number): «14», «60 دقيقة». */
   format?: (value: number) => string;
-  /** The buttons' own names (default «أقل» / «أكثر»). */
   names?: { less: string; more: string };
 }
 

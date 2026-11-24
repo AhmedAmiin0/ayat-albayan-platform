@@ -30,12 +30,7 @@ const filterPills = (): FilterPill<Filter>[] => [
   ...LEAD_STATUSES.map((s) => ({ value: s, label: t.enums.leadStatus[s], ...leadStatusStyle[s] })),
 ];
 
-/**
- * The leads pipeline (R-MOB-02 inbox, R-MOB-03 offline): GET /leads by status, name/phone search,
- * source, owner and order (default newest inbound first). The API returns only the selected filter's total, so only that pill counts.
- * The list screens' one compact top (owner 2026-10-28), as the chats: «… · 107» on the title's line, the
- * pill search, ONE row («تصفية» then the status pills), 8pt apart; the rows in the inset card.
- */
+/** R-MOB-02, R-MOB-03: the API returns only the selected filter's total, so only it counts. */
 export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -43,8 +38,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const [status, setStatus] = useState<Filter>('all');
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
   const list = usePagedList<LeadView>({ path: '/leads', params: leadListParams({ q, status, filters }) });
-  // The rows' clock: moves on every fetch (a refresh, a refocus), so «منذ دقيقة» does not stay forever.
-  // Never before the list opened (a saved page's fetch time can be old); read once, render stays pure.
+  // The row clock moves on every fetch but never before the list opened; read once to stay pure.
   const [opened] = useState(() => Date.now());
   const now = Math.max(opened, list.dataUpdatedAt);
   const renderRow = useCallback(({ item }: { item: LeadView }) => <LeadRow lead={item} now={now} />, [now]);

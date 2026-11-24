@@ -1,4 +1,9 @@
-import { driverMissing, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
+import {
+  driverMissing,
+  type IntegrationConfigItem,
+  type WaLine,
+  type WaProvider,
+} from '@ab/catalog';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, FilterPills, Ltr } from '@ab/mobile-kit';

@@ -1,4 +1,4 @@
-import { parseAmount } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 import { Note } from '@/more';
 import { shortfallLine } from '@/core/lib/money/format';
 

@@ -124,12 +124,19 @@ jobs:
       # A proven pure move (docs/32 g1): plain folder moves only (move-e2e.mjs: a move map in the diff, no
       # identifier or file-name renames, no route moves, nothing e2e reads at start-up) and pure-move-check green.
       # Typecheck and the unit tests still run; e2e is skipped. FAIL SAFE: anything else = e2e as usual.
-      - name: move PR
+      # A comment-only branch (chore/comments-*) skips e2e too: guard:comments fails the required «guards»
+      # job unless the code is unchanged, so nothing e2e could catch can reach develop through it.
+      - name: move or comment-only PR
         id: move
         if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
         env:
           BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
+          if [[ "$HEAD_REF" == chore/comments-* ]]; then
+            echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::comment-only branch: e2e skipped"
+            exit 0
+          fi
           if git diff --name-status -M50% "origin/$BASE_REF...HEAD" | node tools/scripts/ci-checks/pure-move/move-e2e.mjs \
             && node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD; then
             echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::pure folder move: e2e skipped"
@@ -237,7 +244,7 @@ jobs:
           LOCK: ${{ hashFiles('pnpm-lock.yaml') }}
           CONF: >-
             ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', '*/*/vite.config.ts', 'packages/config/vite.js', 'tsconfig*.json',
-            '*/*/tsconfig*.json', 'packages/config/tsconfig/**') || hashFiles('*/*/babel.config.cjs',
+            '*/*/tsconfig*.json') || hashFiles('*/*/babel.config.cjs',
             '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/mobile-kit/jest.base.cjs', 'packages/mobile-kit/babel.cjs') }}
           KIND: ${{ matrix.vcache && 'vitest' || 'jest' }}
           SHARD: ${{ matrix.vcache || matrix.jcache }}
@@ -377,7 +384,8 @@ jobs:
   # Equal or below passes with nothing to edit, so PRs never touch a baseline and never conflict on one. knip and
   # queries (and the floating units) keep their lists in refactor/guards/ (paths a move rewrites): a new entry fails, a fixed one passes and
   # job «baselines» drops it on develop. Pushes print the counts (each change was compared on its PR). The e2e area
-  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). No secrets.
+  # guard: every e2e spec is in e2e/areas.json or its developOnly list (none can silently never run on a PR). tsconfig has no
+  # baseline: a tsconfig that names anything outside its own folder fails. No secrets.
   guards:
     needs: changes
     if: needs.changes.outputs.code == 'true' && needs.changes.outputs.verified != 'true'
@@ -408,6 +416,7 @@ jobs:
       - run: pnpm guard:queries
       - run: pnpm guard:cycles
       - run: pnpm guard:packages
+      - run: pnpm guard:tsconfig
       - run: pnpm guard:comments
       - run: pnpm guard:units
       - run: pnpm guard:move-only

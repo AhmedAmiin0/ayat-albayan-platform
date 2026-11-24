@@ -30,7 +30,6 @@ export interface AttachWrite {
   patch: TablesUpdate<'messages'>;
 }
 
-/** The read and the compare-and-set of the «أرسل عبر واتساب» attach (manual-echo.service.ts). */
 @Injectable()
 export class ManualEchoRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

@@ -1,4 +1,9 @@
-import type { CreateMeeting, MeetingCreateResult, MeetingInviteeOption, UpdateMeeting } from '@ab/shared';
+import type {
+  CreateMeeting,
+  MeetingCreateResult,
+  MeetingInviteeOption,
+  UpdateMeeting,
+} from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 
