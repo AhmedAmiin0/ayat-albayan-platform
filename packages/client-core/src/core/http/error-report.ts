@@ -1,4 +1,4 @@
-import { createErrorReporter, type ErrorReporter, type ReportTransport } from '@ab/shared';
+import { createErrorReporter, type ErrorReporter, type ReportTransport } from '@ab/core';
 
 /** How a host hands its uncaught errors over (window events on web, ErrorUtils on a phone). */
 export type UncaughtSource = (handler: (error: unknown) => void) => void;

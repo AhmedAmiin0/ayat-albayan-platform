@@ -46,7 +46,7 @@ export function placeholdersIn(body: string): SavedReplyPlaceholder[] {
   return SAVED_REPLY_PLACEHOLDERS.filter((key) => body.includes(placeholderToken(key)));
 }
 
-// Quick replies (owner 2026-10-26, as WhatsApp): which letters of a reply match what was typed
+// Quick replies, as in WhatsApp: which letters of a reply match what was typed
 // after «/», for the web and mobile lists to draw in bold.
 
 /** A run of a reply's text, `match` when it is part of what was typed after «/». */

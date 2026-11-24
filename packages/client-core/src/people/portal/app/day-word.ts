@@ -1,4 +1,4 @@
-import { calendarDaysBetween, dateText, localDateIn, type ClockOptions } from '@ab/shared';
+import { calendarDaysBetween, dateText, localDateIn, type ClockOptions } from '@ab/time';
 
 // «اليوم» / «غدًا» instead of the date on a lesson card (canvas Home, Schedule): which, if either.
 

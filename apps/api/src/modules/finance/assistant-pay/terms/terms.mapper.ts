@@ -3,10 +3,7 @@ import type { AssistantTermsInput, AssistantTermsView } from '@ab/money';
 
 export type TermsRow = Tables<'assistant_terms'>;
 
-/**
- * An assistant with no row yet has both parts null. `renewalShare`: the share a new renewal earns now
- * (renewalShareNow): renewal_commission_percent, 0 while «عمولة التجديد» is off.
- */
+/** No row yet means both parts null; renewalShare is 0 while the renewal commission is off. */
 export function toTermsView(assistantId: string, row: TermsRow | null, renewalShare: number): AssistantTermsView {
   if (!row) return { assistant_id: assistantId, commission: null, salary: null, renewal_share_percent: renewalShare };
   const { commission_type: type, commission_starts_on: since, salary_currency: currency, salary_starts_on: from } = row;

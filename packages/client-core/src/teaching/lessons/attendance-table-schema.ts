@@ -1,9 +1,5 @@
-import {
-  ATTENDANCES,
-  LESSON_STATUSES,
-  REPORT_STATUSES,
-  type StudentAttendanceTable,
-} from '@ab/shared';
+import type { StudentAttendanceTable } from '@ab/shared';
+import { ATTENDANCES, LESSON_STATUSES, REPORT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 
 // GET /teachers/me/students/:id/attendance (docs/46 C5): the sales «سجل الحضور» table, parsed at

@@ -5,7 +5,7 @@ import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/te
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 import { balanceOf, editApp, URL } from './used-before-edit.test-util';
 
-// «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): the weekly package, 4 lessons, 1 a week: 0..3.
+// The weekly package, 4 lessons, 1 a week: lessons used before may be 0..3.
 describe('PATCH /subscriptions/:id/lessons-used-before', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

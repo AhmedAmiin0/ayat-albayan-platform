@@ -1,4 +1,4 @@
-import { wallParts, type Conflict, type SlotView } from '@ab/shared';
+import { wallParts, type Conflict, type SlotView } from '@ab/schedule';
 
 // What the slot data (GET /booking/slots, the grid's own answer) already says about a time picked
 // on the time input, before the series check (POST …/check) decides: free, busy (its conflicts, the

@@ -1,4 +1,4 @@
-import { lessonEndResultSchema, type LessonEndResult, type MuteSource } from '@ab/shared';
+import { lessonEndResultSchema, type LessonEndResult, type MuteSource } from '@ab/schedule';
 import type { ApiClient } from '../../core/http/index.js';
 
 // The lesson room's host controls for web and both apps (owner 2026-11-16): «إنهاء الحلقة للجميع»,

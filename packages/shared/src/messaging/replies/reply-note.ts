@@ -6,7 +6,7 @@ import { lessonNotEnded, type ReplyLesson, type ReplyRights } from './reply-less
 import type { MessageView } from '../chat/views.js';
 
 // The line under an inbound quick reply (R-MSG-05, R-SCH-03): what the system did, and what staff can
-// do now (owner 2026-10-28). Pure; the web and the app fill inbox.quickReply.<key> with `when` and
+// do now. Pure; the web and the app fill inbox.quickReply.<key> with `when` and
 // draw `action` as a secondary button (inbox.replyAction).
 
 export type ReplyNoteKey = 'confirmed' | 'reschedule' | 'rescheduleNoLesson' | 'rescheduled' | 'stop';

@@ -1,4 +1,4 @@
-import { settingDef, type SettingKey } from '@ab/shared';
+import { settingDef, type SettingKey } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import {
   shapeParts,

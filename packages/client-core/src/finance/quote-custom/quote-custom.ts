@@ -1,4 +1,4 @@
-import { parseAmount } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 
 /** What the field needs from GET /pricing/quote (useCustomPrice starts from its price). */
 export interface QuotedTotal {

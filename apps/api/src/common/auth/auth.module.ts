@@ -20,12 +20,7 @@ import { createTokenVerifier, type AuthUser } from './verify-token';
 export class AuthController {
   constructor(private readonly zones: MeZoneRepo) {}
 
-  /**
-   * Who am I — used by web/mobile after login to route by role and gate pages by permission,
-   * `tz`: the zone their screens read times in (docs/34 §2; null → the device's), `locale`:
-   * their language (profiles.locale; null → the app keeps its own), and `is_test`: a test
-   * account (docs/56), for the «تجريبي» chip and the client-side checks it may skip.
-   */
+  /** tz null means the device's zone, locale null keeps the app's language (docs/34 §2). */
   @Get('me')
   @SignedIn()
   async me(@CurrentUser() user: AuthUser): Promise<AuthMe> {

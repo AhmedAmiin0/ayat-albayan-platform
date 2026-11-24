@@ -1,11 +1,10 @@
+import type { PortalKind, PortalStudent } from '@ab/shared';
 import {
   PUBLIC_CONFIG_PATH,
   PUBLIC_CONFIG_QUERY_KEY,
   PUBLIC_SETTING_DEFAULTS,
-  type PortalKind,
-  type PortalStudent,
   type PublicConfig,
-} from '@ab/shared';
+} from '@ab/settings';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';

@@ -15,7 +15,7 @@ export const CRM_SHAPE = {
    * a line switched to crm is not configured (tests point it at tools/wa-stub's crm prefix).
    */
   WACRM_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
-  /** The CRM's account-scoped API key (scope messages:send): the Bearer of every call (Vault via «التكاملات»). */
+  /** The CRM's account-scoped API key (scope messages:send), the Bearer of every call. */
   WACRM_API_KEY: optionalSecret,
   /** HMAC key of POST /webhooks/wacrm (X-Wacrm-Signature). Unset = that route answers 401. */
   WACRM_WEBHOOK_SECRET: optionalSecret,

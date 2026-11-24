@@ -1,5 +1,5 @@
 import { dayWord, type WeekDay } from '@ab/client-core';
-import { dateText, type ClockOptions } from '@ab/shared';
+import { dateText, type ClockOptions } from '@ab/time';
 import { View } from 'react-native';
 import { AppText, InsetGroup, InsetSeparator, t, type, useTheme } from '@ab/mobile-kit';
 import { ScheduleRow } from './ScheduleRow';

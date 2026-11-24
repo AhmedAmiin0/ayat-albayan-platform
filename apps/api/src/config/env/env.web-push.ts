@@ -4,11 +4,7 @@ import type { Env } from './env';
 import { blankIsUnset } from './env.blank';
 import type { VapidKeys } from '@/common/push/web/web-push.vapid';
 
-/**
- * Browser push (R-NOT-02, docs/09). All three or none: any unset = browser push is off (GET
- * /me/web-push/key answers null, nothing is sent). Generated once with the one-liner in docs/09;
- * the private key is a secret (Vault via «التكاملات», or env), never committed.
- */
+/** Browser push (R-NOT-02, docs/09): all three keys or none; the private key is a Vault secret. */
 export const WEB_PUSH_SHAPE = {
   WEB_PUSH_VAPID_PUBLIC_KEY: z.preprocess(blankIsUnset, vapidPublicKey.optional()),
   /** 32-byte P-256 private key, base64url. */

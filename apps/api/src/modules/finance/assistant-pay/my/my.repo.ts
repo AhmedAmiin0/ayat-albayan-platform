@@ -74,7 +74,7 @@ export class MyRepo {
     return data;
   }
 
-  /** «عمولاتي»: one page of my commissions (earned and voided), newest first; index (assistant_id, earned_at). */
+  /** One page of my commissions, newest first; index (assistant_id, earned_at). */
   async commissionPage(assistantId: string, q: PageQuery): Promise<{ rows: MyCommissionSource[]; total: number }> {
     const from = (q.page - 1) * q.pageSize;
     const { data, count, error } = await this.db

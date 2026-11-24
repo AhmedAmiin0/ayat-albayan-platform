@@ -14,9 +14,15 @@
     "eas-build-post-install": "pnpm --dir ../.. --filter \"family-mobile^...\" build"
   },
   "dependencies": {
+    "@ab/catalog": "workspace:*",
     "@ab/client-core": "workspace:*",
+    "@ab/core": "workspace:*",
     "@ab/mobile-kit": "workspace:*",
+    "@ab/money": "workspace:*",
+    "@ab/schedule": "workspace:*",
+    "@ab/settings": "workspace:*",
     "@ab/shared": "workspace:*",
+    "@ab/time": "workspace:*",
     "@config-plugins/react-native-webrtc": "15.0.2",
     "@expo-google-fonts/noto-sans-arabic": "^0.4.3",
     "@expo/ui": "~57.0.26",

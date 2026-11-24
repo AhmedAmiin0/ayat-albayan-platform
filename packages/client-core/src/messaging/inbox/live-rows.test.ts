@@ -1,4 +1,5 @@
-import type { MessageStatus, MessageView } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { applyLiveRows, liveEvent, type LiveRow, patchChat, patchList } from './live-rows.js';
 

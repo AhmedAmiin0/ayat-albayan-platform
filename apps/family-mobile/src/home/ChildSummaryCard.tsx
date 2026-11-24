@@ -1,5 +1,6 @@
 import { isSelfChild, packageSummary, reportAt } from '@ab/client-core';
-import type { ClockOptions, PortalKind, PortalReport, PortalStudent } from '@ab/shared';
+import type { PortalKind, PortalReport, PortalStudent } from '@ab/shared';
+import type { ClockOptions } from '@ab/time';
 import { View } from 'react-native';
 import { AppText, Chevron, t, type, useTheme } from '@ab/mobile-kit';
 import { Figure, NewMark, PressCard, StudentIdentity } from '@/ui';

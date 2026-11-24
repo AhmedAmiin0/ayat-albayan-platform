@@ -1,4 +1,5 @@
-import type { CourseStopResult, StudentStatus } from '@ab/shared';
+import type { CourseStopResult } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { fill } from './course-card-text.js';
 
 // What «إلغاء الاشتراك» did (owner 2026-11-17, boards CourseXStopDone and CourseXWebDone): the

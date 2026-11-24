@@ -1,4 +1,4 @@
-import { settingDef, type SettingDef, type SettingKey, type SettingType } from '@ab/shared';
+import { settingDef, type SettingDef, type SettingKey, type SettingType } from '@ab/settings';
 import { z } from 'zod';
 
 // «القيم» on both apps (docs/36 f5): one classifier picks what kind of value a setting holds; each

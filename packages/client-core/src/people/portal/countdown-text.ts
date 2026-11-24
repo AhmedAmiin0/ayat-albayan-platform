@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
 import { clockParts, type CountdownParts, type LessonClock } from './countdown.js';
 
 // The live countdown in words (moved from the web portal's card, docs/50 §7): each app passes its

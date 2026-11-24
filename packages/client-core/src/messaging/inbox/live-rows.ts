@@ -1,9 +1,5 @@
-import {
-  MESSAGE_DIRECTIONS,
-  MESSAGE_STATUSES,
-  type MessageStatus,
-  type MessageView,
-} from '@ab/shared';
+import type { MessageView } from '@ab/shared';
+import { MESSAGE_DIRECTIONS, MESSAGE_STATUSES, type MessageStatus } from '@ab/catalog';
 import { z } from 'zod';
 import { laterStatus, type TickRow } from '../ticks/index.js';
 import { changedPhone } from './inbox-live.js';

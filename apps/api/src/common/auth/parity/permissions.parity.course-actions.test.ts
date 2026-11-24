@@ -2,9 +2,7 @@ import { systemPermissionsOf, USER_ROLES } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 
-// Owner 2026-10-30: «إلغاء الاشتراك» / «تغيير المعلم» / «تغيير موعد الحلقات» from the student's
-// profile, one key each, held by the system admin and sales by default (migration 990), never a
-// teacher or a family.
+// Student profile course actions: one key each, admin and sales by default, never a teacher.
 describe('the student profile course actions', () => {
   let routes: RouteAccess[];
   beforeAll(async () => {
@@ -18,7 +16,7 @@ describe('the student profile course actions', () => {
       .sort();
 
   it('each key gates exactly its own routes', () => {
-    // «إلغاء الباقة» of the assistant (owner 2026-11-02) shares the stop's key.
+    // The assistant's package cancel shares the stop's key.
     expect(gated('subscriptions.stop')).toEqual([
       'AnyPackageCancelController.cancel',
       'AnyPackageCancelController.check',
@@ -28,7 +26,7 @@ describe('the student profile course actions', () => {
     expect(gated('students.change_teacher')).toEqual(
       ['change', 'check', 'options', 'view'].map((h) => `CourseTeacherController.${h}`),
     );
-    // «مدّ الجدول» (owner 2026-11-17) shares the times' key: admins and assistants.
+    // Extending the schedule shares the times' key: admins and assistants.
     expect(gated('courses.reschedule')).toEqual([
       'CourseExtendController.book',
       'CourseExtendController.preview',
@@ -46,8 +44,7 @@ describe('the student profile course actions', () => {
     },
   );
 
-  // Owner 2026-11-02 «إلغاء مع استرداد»: an inline check of the stop (CourseStop), never a route
-  // gate; the system admin's only by default (never sales; prod roles get it from «الأدوار»).
+  // Refund is an inline check of the stop, never a route gate; system admin only by default.
   it('subscriptions.refund gates no route and is held by the system admin only', () => {
     expect(gated('subscriptions.refund')).toEqual([]);
     const holders = USER_ROLES.filter((who) => systemPermissionsOf(who).includes('subscriptions.refund'));

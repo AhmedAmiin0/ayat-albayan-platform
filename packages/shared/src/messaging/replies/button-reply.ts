@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { parseOrNull } from '../payload/index.js';
 
-// A family's tap on a template button (owner 2026-10-28): WhatsApp shows it as their message with
+// A family's tap on a template button: WhatsApp shows it as their message with
 // the tapped label, quoting our template. The webhook keeps Meta's part as
 // messages.interactive_payload: `{ type: 'button', button: { text, payload } }` (a template quick
 // reply) or `{ type: 'interactive', interactive: { type: 'button_reply' | 'list_reply', …: { id,

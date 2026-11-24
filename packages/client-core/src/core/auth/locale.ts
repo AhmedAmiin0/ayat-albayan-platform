@@ -1,4 +1,5 @@
-import { localeUpdateSchema, LOCALES, type Locale } from '@ab/shared';
+import { localeUpdateSchema } from '@ab/shared';
+import { LOCALES, type Locale } from '@ab/core';
 import { z } from 'zod';
 import type { ApiClient } from '../http/index.js';
 

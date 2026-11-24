@@ -1,5 +1,6 @@
 import { packageSummary } from '@ab/client-core';
-import { subscriptionStatusStyle, type PortalPackage } from '@ab/shared';
+import type { PortalPackage } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
 import { AppText, StatusChip, raisedCard, t, type, useTheme } from '@ab/mobile-kit';
 import { DueBox } from './DueBox';

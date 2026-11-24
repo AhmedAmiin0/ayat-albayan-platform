@@ -1,4 +1,5 @@
-import { clockOf, type ClockOptions, type PortalLesson } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
+import { clockOf, type ClockOptions } from '@ab/time';
 import type { LessonWait } from './lesson-window.js';
 
 // Why a lesson card has no «ادخل الحلقة» (lessonWait), in the family's words (moved from the web
