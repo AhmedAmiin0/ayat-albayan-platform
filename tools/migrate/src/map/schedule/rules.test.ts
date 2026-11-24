@@ -1,4 +1,4 @@
-// schedule_rules + links from invented «تقويم الحجوزات» rows (B1, A4, gotcha 7).
+// schedule_rules and links from invented booking rows (B1, A4, gotcha 7).
 import { describe, expect, it } from 'vitest';
 import { keys } from '../../keys.ts';
 import { bundleOf, pipeline, row, studentRow } from '../../sources/sheets/fixtures.ts';

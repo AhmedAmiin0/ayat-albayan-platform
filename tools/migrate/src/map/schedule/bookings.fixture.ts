@@ -1,4 +1,4 @@
-// Shared invented «تقويم الحجوزات» rows for the booking tests (never real export rows).
+// Shared invented booking rows for the tests, never real export rows.
 import { keys } from '../../keys.ts';
 import { bundleOf, pipeline, row, studentRow } from '../../sources/sheets/fixtures.ts';
 import type { Cell, SourceRow } from '../../types.ts';

@@ -4,7 +4,7 @@ import { t, type } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { myStudent } from '@/sales-money/testing/fixtures';
 import { renderWithQuery } from '@/test/query';
-import { AllStudentsScreen } from './AllStudentsScreen';
+import { AllStudentsScreen } from '@/sales/sales/screens/AllStudentsScreen';
 import { student } from '@/sales/sales/testing/fixtures';
 
 const mockApiFetch = jest.fn();

@@ -933,7 +933,7 @@
   },
   "src/testing/test-setup.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1

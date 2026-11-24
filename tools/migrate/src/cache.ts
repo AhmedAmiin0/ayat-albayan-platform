@@ -30,7 +30,7 @@ export function writeText(path: string, text: string): void {
 export const cachePath = {
   sheet: (id: string) => `${CACHE_DIR}sheets/${id}.json`,
   sheetManifest: () => `${CACHE_DIR}sheets/manifest.json`,
-  /** Zip entries under «تقارير آيات البيان/» that are not workbooks: PDFs, images, docx. */
+  /** Zip entries in the reports folder that are not workbooks: PDFs, images, docx. */
   files: () => `${CACHE_DIR}sheets/files.json`,
   crm: (table: string) => `${CACHE_DIR}crm/${table}.json`,
   crmCursor: () => `${CACHE_DIR}crm/cursor.json`,

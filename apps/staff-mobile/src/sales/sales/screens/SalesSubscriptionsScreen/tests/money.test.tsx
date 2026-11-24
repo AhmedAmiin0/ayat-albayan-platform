@@ -6,7 +6,7 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { details } from '@/sales/sales/student/fixtures';
 import { subscription } from '@/sales/sales/testing/fixtures';
-import { SalesSubscriptionsScreen } from './SalesSubscriptionsScreen';
+import { SalesSubscriptionsScreen } from '@/sales/sales/screens/SalesSubscriptionsScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));

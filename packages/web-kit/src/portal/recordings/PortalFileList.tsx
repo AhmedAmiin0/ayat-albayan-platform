@@ -30,10 +30,7 @@ function Item({ title, line, action }: { title: string; line?: string; action: R
   );
 }
 
-/**
- * «ملفات الحلقة · 4» for the family (board FamFilesWebLesson): the report's PDF first, then a
- * voice note plays here and a picture or a PDF opens in the viewer on the page.
- */
+/** The report's PDF first; a voice note plays here, a picture or PDF opens in the page viewer. */
 export function PortalFileList({ studentId, reportId, files }: Props) {
   const [viewing, setViewing] = useState<string | null>(null);
   const count = files.length + (reportId ? 1 : 0);

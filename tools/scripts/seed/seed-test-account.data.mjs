@@ -17,7 +17,7 @@ export const TEST_TEACHER = {
   status: 'active',
   max: 10,
   rates: { rate_30: 60, rate_45: 85, rate_60: 110, rate_90: 160 },
-  /** [weekday 0=الأحد … 6=السبت, start, end] in the teacher's tz: Sun–Thu 16:00–22:00. */
+  /** [weekday 0=Sunday ... 6=Saturday, start, end] in the teacher's tz: Sun-Thu 16:00-22:00. */
   availability: [0, 1, 2, 3, 4].map((d) => [d, '16:00', '22:00']),
 };
 

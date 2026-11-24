@@ -9,7 +9,7 @@ configure({ asyncUtilTimeout: 4000 });
 
 afterEach(cleanup);
 
-// Times read 24 h unless a test picks 12 h: jsdom's en-US locale would otherwise mean 12 h («تلقائي»).
+// jsdom's en-US locale would otherwise mean 12 h, so tests default to 24 h.
 localStorage.setItem(CLOCK_STORAGE_KEY, '24');
 
 // Times read in the viewer's zone (docs/34): pinned to Riyadh before every test so expectations
