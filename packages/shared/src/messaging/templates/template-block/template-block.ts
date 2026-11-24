@@ -1,8 +1,8 @@
 import type { TemplateButton, TemplateParams } from '../templates.js';
 
-// A template as WhatsApp draws it (owner 2026-10-28: «not able to see the template like whatsapp if it
-// have buttons»): the header over the body, the grey footer, and the buttons under the bubble. Display
-// only: the sender keeps reading message_templates.buttons.
+// A template as WhatsApp draws it, buttons included: the header over the body, the grey footer,
+// and the buttons under the bubble. Display only: the sender keeps reading
+// message_templates.buttons.
 
 export const TEMPLATE_HEADER_KINDS = ['text', 'image', 'video', 'document', 'location'] as const;
 export type TemplateHeaderKind = (typeof TEMPLATE_HEADER_KINDS)[number];

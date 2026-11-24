@@ -48,7 +48,7 @@ const plainText = (m: SendRow): boolean =>
 
 /**
  * A row WhatsApp accepted and then refused (131047 by status) keeps its wamid: the app's echo
- * could never attach to it (a wamid is never overwritten), so it has no button (review 2026-11-06).
+ * could never attach to it (a wamid is never overwritten), so it has no button.
  */
 const noWamid = (m: SendRow): boolean => m.replyable !== true;
 
@@ -82,7 +82,7 @@ export const APP_SEND_MS = 10 * 60_000;
 /**
  * After the window passed the platform still waits this long before it may send the row, and a
  * message (echo, status, catch-up every 10 min) still attaches within it: whatever confirms the
- * app send lands before the platform could send it too (review 2026-11-06).
+ * app send lands before the platform could send it too.
  */
 export const APP_SEND_GRACE_MS = 15 * 60_000;
 

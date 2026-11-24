@@ -101,7 +101,7 @@ describe('a message’s reads', () => {
   });
 });
 
-// Owner 2026-11-16 «… but only 1»: the seat answer, a name only.
+// Only one assistant holds the seat: the seat answer, a name only.
 describe('the assistant seat as the apps read it', () => {
   const held = { holder: { id: 'p1', name: 'سارة' }, mine: false, bringer: false, canTake: false };
 

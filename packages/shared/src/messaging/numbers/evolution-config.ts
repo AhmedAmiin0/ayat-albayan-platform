@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-// Every Evolution option of one number (owner 2026-11-06: «make all the evolution api options
-// configurable»; docs/19 «Evolution driver»). Stored in wa_numbers.evolution_config (no secret:
-// the instance token, the Cloud access token and the proxy password are number secrets in Vault)
-// and pushed to Evolution on save: /settings/set, /webhook/set, /proxy/set.
+// Every Evolution option of one number, all configurable (docs/19 «Evolution driver»). Stored in
+// wa_numbers.evolution_config (no secret: the instance token, the Cloud access token and the proxy
+// password are number secrets in Vault) and pushed to Evolution on save: /settings/set,
+// /webhook/set, /proxy/set.
 
 /** Evolution v2's webhook events (EventController.events). */
 export const EVOLUTION_EVENTS = [
@@ -54,7 +54,7 @@ export const evolutionHookUrl = (origin: string | null, instance: string): strin
 
 /**
  * /settings/set: Evolution's instance behaviour (groups ignored, nothing automatic). No
- * `always_online` (owner 2026-11-06: families never see us «online»): the push pins it off, and a
+ * `always_online` (families never see us «online»): the push pins it off, and a
  * stored value is dropped on read.
  */
 export const evolutionBehaviourSchema = z.object({

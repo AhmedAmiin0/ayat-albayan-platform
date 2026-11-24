@@ -3,7 +3,7 @@ import { renderTemplateBody } from './templates/render.js';
 import { templateStarterSchema, threadTemplateSchema } from './schemas.js';
 import { BODY_SLOTS } from './templates/templates.js';
 
-// Starter templates (owner 2026-10-12, docs/12 §13.18): any registry key, up to nine variables.
+// Starter templates (docs/12 §13.18): any registry key, up to nine variables.
 
 const nine = Object.fromEntries(BODY_SLOTS.map((s) => [s, `v${s}`]));
 
