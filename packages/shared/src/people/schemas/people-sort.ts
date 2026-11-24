@@ -34,7 +34,6 @@ export const teacherColumnQueryShape = {
   status: z.preprocess(blank, z.enum(TEACHER_STATUSES).optional()),
 };
 
-/** «موجود / غير موجود» filter of a link column (CV, recitation). */
 export const PRESENCE_FILTERS = ['yes', 'no'] as const;
 export type PresenceFilter = (typeof PRESENCE_FILTERS)[number];
 const presence = z.preprocess(blank, z.enum(PRESENCE_FILTERS).optional());

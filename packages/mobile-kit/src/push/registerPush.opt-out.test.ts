@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { setPushOptOut } from './device-key';
 import { registerPush } from './registerPush';
 
-// docs/50 §6: «الإشعارات على هذا الجهاز» off keeps registerPush away (no prompt, no token, no PUT).
+// docs/50 §6: device opt-out keeps registerPush away (no prompt, no token, no PUT).
 
 const mockApiSend = jest.fn();
 jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));

@@ -15,7 +15,7 @@ const mediaSchema = z.enum(['video', 'audio']);
 export const lessonAssetRecordingSchema = z.object({
   id: z.string(),
   status: z.enum(STUDENT_RECORDING_STATUSES),
-  /** «7:00 م – 7:42 م» on the staff screen; ended_at null while it runs. */
+  /** ended_at is null while it runs. */
   started_at: z.string(),
   ended_at: z.string().nullable(),
   duration_seconds: z.number().nullable(),
@@ -79,10 +79,7 @@ export const portalLessonAssetsSchema = z.object({
 });
 export type PortalLessonAssets = z.output<typeof portalLessonAssetsSchema>;
 
-/**
- * POST …/lesson-files/:fileId/url?download=<name>: «تنزيل» in the family's viewer. With a name
- * the link saves the file under it (Content-Disposition: attachment) instead of showing it.
- */
+/** With a download name the link saves the file (Content-Disposition: attachment). */
 export const portalLessonFileUrlQuerySchema = z.object({
   download: z.string().trim().min(1).max(160).optional(),
 });

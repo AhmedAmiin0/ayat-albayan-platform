@@ -1,10 +1,7 @@
 import { z } from 'zod';
 import { LESSON_STATUSES, SUBSCRIPTION_STATUSES } from '@ab/catalog';
 
-// «الدورة والباقة»: one group on the student file (admin) and on the sales
-// screen with the course summary, the upcoming lessons and «مدّ الجدول» (book the package's
-// lessons left without a date after the course's planned end). Pure schemas; the API answers
-// them and the apps parse them (rule 12).
+// Course and package card; extend books lessons left after the planned end; pure schemas (rule 12).
 
 const localDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
@@ -16,7 +13,6 @@ export const courseCardLessonSchema = z.object({
 });
 export type CourseCardLesson = z.infer<typeof courseCardLessonSchema>;
 
-/** The card's package (owner 2026-11-17: «بقيت 3 حلقات», «12 حلقة · 9 من 12 · دُفع X من Y»). */
 export const courseCardPackageSchema = z.object({
   status: z.enum(SUBSCRIPTION_STATUSES),
   lessonsTotal: z.number().int(),
@@ -27,7 +23,7 @@ export const courseCardPackageSchema = z.object({
   /** What the package is owed for (owedFor: a stopped course's stored decision). */
   owed: z.number(),
   currency: z.string(),
-  /** «يُتوقع أن تنتهي يوم …» (an instant); null = not known. */
+  /** The projected end instant; null when not known. */
   projectedEndAt: z.string().nullable(),
 });
 export type CourseCardPackage = z.infer<typeof courseCardPackageSchema>;
@@ -43,7 +39,7 @@ export const courseCardSchema = z.object({
   course: z
     .object({
       teacherName: z.string().nullable(),
-      /** Each weekday (0 = الأحد) with its "HH:MM" in the course zone. */
+      /** Each weekday (0 = Sunday) with its "HH:MM" in the course zone. */
       days: z.array(z.object({ weekday: z.number().int(), startTimeLocal: z.string() })),
       tz: z.string(),
       /** The course's planned last local day (its rules' ends_on). */
@@ -51,7 +47,7 @@ export const courseCardSchema = z.object({
       /** The last booked lesson of the course (its instant); null = none. */
       lastAt: z.string().nullable(),
       lessonsTotal: z.number().int(),
-      /** Lessons of the package with no date yet: «مدّ الجدول» books them. */
+      /** Lessons of the package with no date yet; extending the schedule books them. */
       unbooked: z.number().int(),
     })
     .nullable(),
@@ -70,7 +66,7 @@ export const courseExtendQuerySchema = z.object({ subscriptionId: z.uuid().optio
 export const courseExtendSchema = z.strictObject({ subscriptionId: z.uuid() });
 export type CourseExtendRequest = z.infer<typeof courseExtendSchema>;
 
-/** «مدّ الجدول»'s preview: the lessons it books, on the course's own days and times. */
+/** The lessons extending books, on the course's own days and times. */
 export const courseExtendPreviewSchema = z.object({
   subscriptionId: z.string(),
   /** The instants of the lessons it books, earliest first (empty = nothing to book). */
@@ -93,7 +89,7 @@ export const courseExtendResultSchema = z.object({
 });
 export type CourseExtendResult = z.infer<typeof courseExtendResultSchema>;
 
-/** GET …/course-pause/resume-preview: what «استئناف الدورة» does now. */
+/** What resuming the course does now. */
 export const courseResumePreviewSchema = z.object({
   /** The instants of the lessons booked back (from today on), earliest first. */
   back: z.array(z.string()),

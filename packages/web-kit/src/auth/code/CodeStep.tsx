@@ -12,17 +12,16 @@ interface Props {
   submitLabel: string;
   busyLabel: string;
   onSubmit: () => void;
-  /** «غيّر الرقم» / «رجوع»: back to the first step. */
   backLabel: string;
   /** Fields between the code and the submit button (the new password). */
   children?: ReactNode;
-  /** Above the boxes instead of «إن كان الحساب موجودًا…» (the family sign-in names the number). */
+  /** Replaces the default note above the boxes (the family sign-in names the number). */
   note?: ReactNode;
 }
 
 const BOX_ERRORS = new Set([t.familyAuth.errors.invalid_code, t.familyAuth.errors.code_incomplete]);
 
-/** «أعد إرسال الرمز» then «غيّر الرقم», in the order every code step uses (client-core). */
+/** Resend then change number, the order every code step uses (client-core). */
 const ACTIONS: Record<CodeStepAction, (props: Props) => ReactNode> = {
   resend: ({ flow }) => (
     <Button
@@ -41,10 +40,6 @@ const ACTIONS: Record<CodeStepAction, (props: Props) => ReactNode> = {
   ),
 };
 
-/**
- * The code sent on WhatsApp, as the family app: the note, the six boxes, the submit, then one
- * centred column of «أعد إرسال الرمز» (after a countdown) and «غيّر الرقم».
- */
 export function CodeStep(props: Props) {
   const { flow, submitLabel, busyLabel, onSubmit, children, note } = props;
   return (

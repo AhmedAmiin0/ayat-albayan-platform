@@ -19,7 +19,7 @@ export type RoomStatus =
 /** One tile of the grid: a participant's camera, or a shared screen (viewing only). */
 export interface RoomTile {
   key: string;
-  /** The LiveKit identity (`<role>-<hex>`): what the host's mute and «إخراج» name. */
+  /** The LiveKit identity (`<role>-<hex>`) the host's mute and remove name. */
   identity: string;
   /** From the token's metadata; null when absent or malformed. */
   role: JoinRole | null;
@@ -38,7 +38,7 @@ export interface RoomSnapshot {
   tiles: readonly RoomTile[];
   micOn: boolean;
   camOn: boolean;
-  /** LiveKit's egress records the room: the «جارٍ التسجيل» pill. */
+  /** LiveKit egress is recording the room. */
   recording: boolean;
 }
 

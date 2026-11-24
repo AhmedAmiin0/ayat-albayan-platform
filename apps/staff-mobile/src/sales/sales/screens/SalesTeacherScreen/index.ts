@@ -1,0 +1,1 @@
+export { SalesTeacherScreen } from './SalesTeacherScreen';

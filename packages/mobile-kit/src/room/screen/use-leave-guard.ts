@@ -12,11 +12,7 @@ export type BackSource = (listener: (e: BeforeRemove) => void) => () => void;
 /** Only a step back is held: a sign-out (reset) or a replace still navigates away. */
 const BACK: readonly string[] = ['GO_BACK', 'POP'];
 
-/**
- * While in the room, Android's back (a GO_BACK / POP of this screen) asks «تغادر الحلقة؟» first
- * instead of dropping the lesson (canvas RoomXLeave). Without a navigator source (a test of the
- * bare screen) it does nothing.
- */
+/** Android back asks first instead of dropping the lesson; no navigator source does nothing. */
 export function useLeaveGuard(source: BackSource | undefined, active: boolean, onAsk: () => void) {
   const ask = useEffectEvent(onAsk);
   useEffect(() => {

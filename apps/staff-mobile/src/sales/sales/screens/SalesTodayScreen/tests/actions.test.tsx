@@ -3,7 +3,7 @@ import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson } from '@/sales/sales/testing/fixtures';
-import { SalesTodayScreen } from './SalesTodayScreen';
+import { SalesTodayScreen } from '@/sales/sales/screens/SalesTodayScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));

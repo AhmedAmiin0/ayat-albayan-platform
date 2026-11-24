@@ -6,7 +6,6 @@ import type { SheetName } from '../live/LiveSheet';
 import { useRoomSession, type RoomSessionInput } from '../state/use-room-session';
 import { useLeaveGuard, type BackSource } from './use-leave-guard';
 
-/** The in-room «المحادثة»: the student channel, opened by the app as a sheet over the room. */
 export interface RoomChat {
   unread: number;
   open: () => void;
@@ -20,7 +19,7 @@ export interface RoomScreenInput extends RoomSessionInput {
   chat?: RoomChat | null | undefined;
   /** Who the lesson says is inside (its `room.inRoom`), where the app knows it. */
   presence?: readonly RoomPresence[] | undefined;
-  /** «فتح في المتصفح»: the app opens its web room (it leaves the room first); absent: none. */
+  /** The app leaves the room before opening its web room. */
   onBrowser?: (() => void) | undefined;
   /** The navigator's `beforeRemove`: Android's back asks first while in the room. */
   backSource?: BackSource | undefined;
@@ -31,17 +30,13 @@ const roleOf = (joined: Joined) => joined?.role ?? null;
 /** The join answer turned the chat off: a trial lesson. */
 const lockedChat = (joined: Joined): boolean => joined?.chat === false;
 
-/** «المحادثة»'s count and press; null when this room shows no chat control. */
+/** Null when this room shows no chat control. */
 function chatControl(chat: RoomChat | null, locked: boolean, explain: () => void) {
   if (!chat || (locked && chat.whenLocked === 'hide')) return null;
   return { unread: locked ? 0 : chat.unread, open: locked ? explain : chat.open };
 }
 
-/**
- * The room screen's state over the session: the one panel open at its foot, the host's panel,
- * the guarded leave (back asks first; «غادر» stays on the screen as RoomXLeft, only «رجوع»
- * exits), «فتح في المتصفح» and the chat control.
- */
+/** Leaving stays on the screen; only back exits. */
 export function useRoomScreen(props: RoomScreenInput) {
   const { onExit, host, chat, presence, backSource, onBrowser, ...input } = props;
   const session = useRoomSession(input);

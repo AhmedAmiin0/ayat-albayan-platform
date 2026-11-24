@@ -1,4 +1,4 @@
-import { systemPermissionsOf } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { subRow } from '@/modules/finance/subscriptions/money/money.fakes';

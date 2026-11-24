@@ -10,7 +10,6 @@ interface PhotoViewerProps {
   uri: string;
   /** Its kind and caption, for the screen reader. */
   label: string;
-  /** Under the photo on a raised pill (the chat's «تنزيل»). */
   footer?: ReactNode;
   onClose: () => void;
 }
@@ -20,7 +19,7 @@ interface PhotoViewerProps {
  */
 function ZoomPhoto({ uri, label }: { uri: string; label: string }) {
   const window = useWindowDimensions();
-  // The pan limit is the photo's area (under «إغلاق», above «تنزيل»), measured once laid out.
+  // The pan limit is the photo's area between close and download, measured once laid out.
   const [size, setSize] = useState({ width: window.width, height: window.height });
   const zoom = useZoom({ size, reduceMotion: useA11yPref('reduceMotion') });
   return (
@@ -46,10 +45,7 @@ function ZoomPhoto({ uri, label }: { uri: string; label: string }) {
   );
 }
 
-/**
- * A chat photo full screen (owner 2026-10-26), RN core only (no native module: the APK updates by
- * OTA): black, the photo uncut, «إغلاق» at the top start, Android's back closes it, «تنزيل» below.
- */
+/** RN core only, no native module, so the APK updates by OTA; Android back closes it. */
 export function PhotoViewer({ uri, label, footer, onClose }: PhotoViewerProps) {
   return (
     <Modal

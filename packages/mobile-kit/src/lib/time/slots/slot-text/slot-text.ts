@@ -23,21 +23,20 @@ export interface ViewerClock {
 
 const cities: Record<string, string | undefined> = t.tz;
 
-/** «القاهرة»; a zone without an ar.json city keeps its id (LTR). */
+/** A zone without an ar.json city keeps its id (LTR). */
 export const cityOf = (tz: string): string => cities[tz] ?? ltr(tz);
 
-/** «الأوقات بتوقيتك (القاهرة)»: the note over times read in the viewer's zone `tz`. */
+/** The note over times read in the viewer's zone `tz`. */
 export const zoneNote = (tz: string): string => t.schedule.zoneNote.replace('{city}', cityOf(tz));
 
 interface SlotDay<S> {
   /** The viewer's local date, YYYY-MM-DD. */
   date: string;
-  /** «الأحد 4 أكتوبر». */
   label: string;
   slots: S[];
 }
 
-/** «الأحد 4 أكتوبر» of an instant on the `tz` calendar (lessonWhenText without its clock). */
+/** An instant's day on the `tz` calendar (lessonWhenText without its clock). */
 export function dayLabel(at: Date, tz: string): string {
   return lessonWhenText(at, tz, locale).replace(/\s\d{2}:\d{2}$/, '');
 }
@@ -76,7 +75,6 @@ export function slotTimes(
   return { main: clockOf(at, { ...viewer, locale }), local };
 }
 
-/** «الأحد 4 أكتوبر 17:00 بتوقيتك، عند الطالب الأحد 4 أكتوبر 18:00 بتوقيت الرياض». */
 export function whenText(startsAt: string, tz: string, viewer: ViewerClock): string {
   const at = new Date(startsAt);
   const own = `${lessonWhenAt(at, { ...viewer, locale })} ${t.schedule.viewerTime}`;

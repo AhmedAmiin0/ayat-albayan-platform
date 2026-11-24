@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import { restoreAppearance, saveAppearance, type AppearancePref } from './appearance';
 
-/**
- * The «المظهر» setting: [current choice, choose]. Mounting also restores the saved choice, which
- * covers the case where the root layout has not restored it yet.
- */
+/** Mounting also restores the saved choice in case the root layout has not yet. */
 export function useAppearancePref(): [AppearancePref, (pref: AppearancePref) => void] {
   const [pref, setPref] = useState<AppearancePref>('auto');
   useEffect(() => {

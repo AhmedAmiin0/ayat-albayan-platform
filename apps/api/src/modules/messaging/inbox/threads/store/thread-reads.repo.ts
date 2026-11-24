@@ -1,4 +1,4 @@
-import { onMessagingLine } from '@ab/shared';
+import { onMessagingLine } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { newestPerLine, type ReadMark } from '@/modules/messaging/inbox/reads/read-marks';

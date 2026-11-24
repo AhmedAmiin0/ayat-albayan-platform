@@ -8,7 +8,6 @@ interface TileActionProps {
   icon: (ink: string) => ReactNode;
 }
 
-/** A small round button on a tile's top corner, a solid inverse chip: «بدّل الكاميرا», «تكبير». */
 export function TileAction({ label, onPress, icon }: TileActionProps) {
   const { color } = useTheme();
   return (

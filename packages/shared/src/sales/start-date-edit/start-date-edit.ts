@@ -2,11 +2,7 @@ import { z } from 'zod';
 import { localDate } from '@ab/core';
 import { daysBefore, SALES_START_BACK_DAYS } from '../start-date.js';
 
-// «تعديل تاريخ البدء»: PATCH /subscriptions/:id/start-date, admins and assistants holding
-// subscriptions.edit_terms. Only starts_on changes (renews_on, lessons, rules, payments and
-// commissions stay). The range is the sales create's (salesStartDate with «بدأ الاشتراك سابقًا»):
-// any day from a year back on; with lessons counted before the platform (lessons_used_before > 0)
-// the start stays before today (the used-before rule, usedBeforeProblem). Pure.
+// Only starts_on changes; with lessons used before the platform, the start stays before today.
 
 /** PATCH /subscriptions/:id/start-date. */
 export const startDateEditSchema = z.strictObject({ startsOn: localDate });
@@ -28,7 +24,7 @@ export interface StartDateEditInput {
 
 type Bounds = Pick<StartDateEditInput, 'today' | 'lessonsUsedBefore'>;
 
-/** The earliest day the edit accepts: a year back, as the create's «بدأ الاشتراك سابقًا». */
+/** The earliest day accepted: a year back, as on create. */
 export const startDateEditMin = (today: string): string => daysBefore(today, SALES_START_BACK_DAYS);
 
 const countedBefore = (b: Bounds): boolean => b.lessonsUsedBefore > 0;

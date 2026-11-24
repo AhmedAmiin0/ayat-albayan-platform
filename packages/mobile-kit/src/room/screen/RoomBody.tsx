@@ -13,7 +13,6 @@ interface RoomBodyProps {
   platform: RoomPlatform;
 }
 
-/** In the room: the grid, the controls, «كتمك المعلم» and the panel open at the foot. */
 function Live({ screen, platform }: RoomBodyProps) {
   const { session: s } = screen;
   const controls = {

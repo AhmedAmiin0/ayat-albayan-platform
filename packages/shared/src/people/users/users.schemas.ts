@@ -4,8 +4,7 @@ import { USER_ROLES } from '@ab/catalog';
 import { needsExistingRecord, PASSWORD_MAX } from './validation.js';
 import { isFamilyEmail } from './sign-in.js';
 
-// «المستخدمون»: the bodies and query of /users. The API answers with the views
-// in users.views.ts. Passwords are never part of a view or a log.
+// Passwords are never part of a view or a log.
 
 export const USER_STATUSES = ['active', 'disabled'] as const;
 export type UserStatus = (typeof USER_STATUSES)[number];

@@ -1,4 +1,4 @@
-import { uploadMaxBytes } from '@ab/shared';
+import { uploadMaxBytes } from '@ab/settings';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';

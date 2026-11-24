@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { Program, StudentStatus } from '@ab/catalog';
 
-/** The two separate lists of the teacher's «الطلاب» tab: never one mixed list. */
+/** The teacher's students tab keeps two separate lists, never one mixed list. */
 export const TEACHER_STUDENT_KINDS = ['subscribed', 'trial'] as const;
 export type TeacherStudentKind = (typeof TEACHER_STUDENT_KINDS)[number];
 

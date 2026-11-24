@@ -6,7 +6,7 @@ import { ApiError, t, ltr } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { teacher } from '@/sales/sales/testing/fixtures';
-import { SalesTeacherScreen } from './SalesTeacherScreen';
+import { SalesTeacherScreen } from '@/sales/sales/screens/SalesTeacherScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));

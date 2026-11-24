@@ -1,4 +1,5 @@
-import { phoneE164, type ThreadReopenView } from '@ab/shared';
+import type { ThreadReopenView } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

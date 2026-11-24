@@ -88,7 +88,7 @@ test('a 410 lesson_ended join or one’s own end is final; a drop is dropped', (
     step: 'closed',
     why: 'endedAll',
   });
-  // One's own «إنهاء الحلقة للجميع» lands live, or after LiveKit's DeleteRoom closed the room.
+  // One's own end-for-all lands live, or after DeleteRoom closed the room.
   expect(nextPhase(live, { type: 'ended' })).toEqual({ step: 'closed', why: 'endedAll' });
   expect(nextPhase({ step: 'preview', notice: null }, { type: 'ended' })).toEqual({
     step: 'preview',

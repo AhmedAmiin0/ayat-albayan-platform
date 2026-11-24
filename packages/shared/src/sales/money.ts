@@ -27,13 +27,13 @@ export const salesSubscriptionCreateSchema = z.strictObject({
   pricing: subscriptionPricingSchema,
   /** Omitted = the default day (today, Riyadh). */
   startsOn: localDate.optional(),
-  /** «بدأ الاشتراك سابقًا»: allows a past startsOn (subscriptions.set_start_date only). */
+  /** Allows a past startsOn (subscriptions.set_start_date only). */
   alreadyStarted: z.boolean().optional(),
-  /** «حلقات مستخدمة من الباقة»: only with alreadyStarted; 0..usedBeforeMax: every lesson but one. */
+  /** Only with alreadyStarted; every lesson but one at most. */
   lessonsUsedBefore: z.int().min(0).max(LESSONS_USED_BEFORE_MAX).optional(),
-  /** «المعلم/ة»: students.teacher_id once subscribed; opens the student channel. */
+  /** students.teacher_id once subscribed; opens the student channel. */
   teacherId: z.uuid().optional(),
-  /** «مبلغ مخصص»: the package price, not the quote's (the link's cap). */
+  /** The package price, not the quote's (the link's cap). */
   customPrice: moneyAmount.optional(),
   clientRequestId: z.uuid(),
   phone: chatPhone,

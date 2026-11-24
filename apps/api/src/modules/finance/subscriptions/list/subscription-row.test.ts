@@ -1,4 +1,4 @@
-import type { FxRate, SubscriptionCreate } from '@ab/shared';
+import type { FxRate, SubscriptionCreate } from '@ab/money';
 import { describe, expect, it, vi } from 'vitest';
 import type { FxService } from '@/modules/finance/fx/fx.service';
 import { PricingService } from '@/modules/finance/pricing/pricing.service';

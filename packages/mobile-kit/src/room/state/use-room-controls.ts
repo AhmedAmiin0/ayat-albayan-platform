@@ -2,10 +2,7 @@ import { useState } from 'react';
 import type { AudioOutput } from '../model/audio-output';
 import type { RoomAudio, RoomClient, RoomSnapshot } from '../model/room-types';
 
-/**
- * «كتمك المعلم» (canvas RoomXNotice): the microphone went off without one's own «كتم». Derived on
- * the change (no effect): it goes once the microphone is on again.
- */
+/** Derived on the change, no effect; it clears once the microphone is on again. */
 function useMutedByStaff(micOn: boolean) {
   const [was, setWas] = useState(micOn);
   const [selfOff, setSelfOff] = useState(false);
@@ -18,12 +15,7 @@ function useMutedByStaff(micOn: boolean) {
   return { byStaff, mutingSelf: () => setSelfOff(true) };
 }
 
-/**
- * The in-room controls: كتم, الكاميرا, تبديل الكاميرا, the audio output. Joining never forces an
- * output (a headset stays the headset); `syncOutput` reads what LiveKit chose so the button names
- * it, and the button steps to the next one. `reset` on every join: the client starts each join on
- * the front camera, so one's own tile is mirrored again after a rejoin.
- */
+/** Joining never forces an output; `reset` per join since each join starts on the front camera. */
 export function useRoomControls(client: RoomClient, audio: RoomAudio, snap: RoomSnapshot) {
   const [output, setOutput] = useState<AudioOutput | null>(null);
   const [front, setFront] = useState(true);

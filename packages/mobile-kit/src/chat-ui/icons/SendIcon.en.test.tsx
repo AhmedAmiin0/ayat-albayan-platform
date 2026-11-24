@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { SendIcon } from './chat-glyphs';
 
-// English (LTR): «أرسل» sits on the right, the plane points right as drawn.
+// English (LTR): send sits on the right and the plane points right as drawn.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });

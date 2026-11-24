@@ -31,7 +31,7 @@ export interface Teacher {
   calendar_owner_changed_by: string | null;
   google_calendar_id: string | null;
   mirror_enabled: boolean;
-  /** The teacher's login (null = none yet, created on «المستخدمون») (docs/30). */
+  /** The teacher's login; null until created on the users page (docs/30). */
   profile_id: string | null;
   /** That login's sign-in username (docs/30); null without one; GET /teachers rows carry none. */
   username?: string | null;
@@ -42,10 +42,10 @@ export interface Teacher {
   updated_at: string;
 }
 
-/** A row of GET /teachers: the teacher and their current students by kind («مشترك · تجريبي»). */
+/** A row of GET /teachers: the teacher and their current students by kind. */
 export type TeacherListRow = Teacher & TeacherStudentCounts;
 
-/** GET /teachers/:id/availability: wall-clock «HH:MM» in `tz`, weekday 0 = الأحد. */
+/** Wall-clock "HH:MM" in `tz`, weekday 0 = Sunday. */
 export type AvailabilityRow = AvailabilitySlot & { id: string };
 
 /** GET /teachers/:id/time-off: UTC instants, newest first. */

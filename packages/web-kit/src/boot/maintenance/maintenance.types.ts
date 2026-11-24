@@ -1,6 +1,5 @@
 import type { AnyRouter } from '@tanstack/react-router';
 
-/** What an app's boot.tsx tells the cover (owner 2026-11-21, «تحت الصيانة»). */
 export interface MaintenanceOptions {
   /** The staff app: admins pass the switch; the family app never passes it. */
   staff?: boolean | undefined;

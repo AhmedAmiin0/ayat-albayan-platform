@@ -1,4 +1,5 @@
-import { DEFAULT_DURATION, type RuleTiming } from '@ab/shared';
+import type { RuleTiming } from '@ab/shared';
+import { DEFAULT_DURATION } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AvailabilityQuery } from '@/modules/people/teachers/availability/availability.query';
 import { FollowUpsRepo } from './follow-ups.repo';

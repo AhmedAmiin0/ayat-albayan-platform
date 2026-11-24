@@ -28,7 +28,7 @@ export const FAMILY_EMAIL_DOMAIN = 'family.invalid';
 export const isFamilyEmail = (email: string | null | undefined): boolean =>
   !!email && email.toLowerCase().endsWith(`@${FAMILY_EMAIL_DOMAIN}`);
 
-/** The 6-digit code: Arabic-Indic digits and spaces are folded first (a pasted «١٢٣ ٤٥٦» works). */
+/** Arabic-Indic digits and spaces are folded first, so a pasted code works. */
 export const LOGIN_CODE_LENGTH = 6;
 const digits = (s: string) => asciiDigits(s).replace(/\s/g, '');
 export const loginCode = z

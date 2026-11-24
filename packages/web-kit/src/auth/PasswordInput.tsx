@@ -11,13 +11,7 @@ type Props = FieldControlProps & {
   autoComplete?: 'current-password' | 'new-password';
 };
 
-/**
- * Password with an eye at the inline-end (docs/design login, .pw): a toggle button named «إظهار»
- * (aria-pressed) that shows the typed text, which matters most on touch keyboards. The name must
- * not contain «كلمة السر»: e2e finds the input by that label. An LTR island like the email on
- * every caller (dots and Latin characters start at the left in either UI language): the wrapper,
- * not the input alone, so the button and the input's end padding sit on the same side.
- */
+/** The label must not contain the password label e2e uses; the wrapper is the LTR island. */
 export function PasswordInput({ value, onValue, autoComplete = 'current-password', ...field }: Props) {
   const [shown, setShown] = useState(false);
   return (

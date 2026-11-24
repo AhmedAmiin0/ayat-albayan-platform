@@ -1,6 +1,6 @@
 import type { FxService } from '@/modules/finance/fx/fx.service';
 import { PricingService } from '@/modules/finance/pricing/pricing.service';
-import { renewalPricing, type SubscriptionCreate } from '@ab/shared';
+import { renewalPricing, type SubscriptionCreate } from '@ab/money';
 import { describe, expect, it, vi } from 'vitest';
 import { quoteQueryFor } from '@/modules/finance/subscriptions/subscriptions.dto';
 import { subscriptionRow } from './subscription-row';
