@@ -1,4 +1,4 @@
-import type { AssistantStatementLineView } from '@ab/shared';
+import type { AssistantStatementLineView } from '@ab/money';
 import { useState } from 'react';
 import { t, Button } from '@ab/mobile-kit';
 import { StatementLines } from './StatementLines';

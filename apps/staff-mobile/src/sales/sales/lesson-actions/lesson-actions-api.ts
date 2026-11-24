@@ -1,12 +1,11 @@
-import {
-  isOpenLesson,
-  type CorrectTo,
-  type LessonStatus,
-  type SalesCancel,
-  type SalesLessonMoved,
-  type SalesReschedule,
-  type SalesScheduleLesson,
+import type {
+  SalesCancel,
+  SalesLessonMoved,
+  SalesReschedule,
+  SalesScheduleLesson,
 } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { isOpenLesson, type CorrectTo } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend, pathKey } from '@ab/mobile-kit';
 

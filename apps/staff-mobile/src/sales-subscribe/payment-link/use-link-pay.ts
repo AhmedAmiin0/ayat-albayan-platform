@@ -1,9 +1,5 @@
-import type {
-  PaymentLinkCreate,
-  PaymentLinkQuoteView,
-  PaymentLinkView,
-  SubscriptionPricing,
-} from '@ab/shared';
+import type { PaymentLinkCreate, PaymentLinkQuoteView, PaymentLinkView } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { refreshFamily } from '@/sales-subscribe/lib/family';

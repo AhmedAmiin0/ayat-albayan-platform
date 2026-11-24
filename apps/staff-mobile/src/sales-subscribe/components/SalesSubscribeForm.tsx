@@ -1,4 +1,5 @@
-import { chatBinding, RIYADH_TZ, type SalesFamilyStudent } from '@ab/shared';
+import { chatBinding, type SalesFamilyStudent } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useHolds, t, Button, ErrorLine } from '@ab/mobile-kit';

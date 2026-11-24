@@ -1,11 +1,11 @@
+import type { PaymentMethod } from '@ab/catalog';
 import {
   formatAmount,
   type AssistantStatementLineView,
   type AssistantStatementView,
   type AssistantTermsView,
   type MyCommissionRow,
-  type PaymentMethod,
-} from '@ab/shared';
+} from '@ab/money';
 import { t, isolate, ltr, currencyName, money } from '@ab/mobile-kit';
 import { localDay, instantDay } from '@/core/lib/money/format';
 import { monthLabel } from '@/teacher/lib/payout-text';

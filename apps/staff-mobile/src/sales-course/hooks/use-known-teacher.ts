@@ -1,4 +1,5 @@
-import { teacherName, type Program } from '@ab/shared';
+import type { Program } from '@ab/catalog';
+import { teacherName } from '@ab/schedule';
 import { useBookingTeachers } from '@/booking/shared/queries';
 import { locale } from '@ab/mobile-kit';
 

@@ -1,4 +1,4 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { View } from 'react-native';
 import { bookFailure, conflictLine, isCodedRefusal, ConflictNotice } from '@/booking';
 import { t, AppText, ErrorState, NuqtaGlyph, type, useTheme, ErrorLine } from '@ab/mobile-kit';

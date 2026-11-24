@@ -1,4 +1,11 @@
-import { inWeekOrder, timeGroups, wallParts, WEEK_ORDER, type Conflict, type CourseChangeRequest, type DayTime } from '@ab/shared';
+import { inWeekOrder, WEEK_ORDER } from '@ab/shared';
+import {
+  timeGroups,
+  wallParts,
+  type Conflict,
+  type CourseChangeRequest,
+  type DayTime,
+} from '@ab/schedule';
 import { dayAtText } from '@/booking/shared/picks';
 import type { ViewerClock } from '@/core/lib/clock';
 import { t } from '@ab/mobile-kit';

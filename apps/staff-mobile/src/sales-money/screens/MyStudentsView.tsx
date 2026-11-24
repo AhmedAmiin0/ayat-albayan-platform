@@ -1,4 +1,4 @@
-import type { MyStudentRow } from '@ab/shared';
+import type { MyStudentRow } from '@ab/money';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t, useTabBarInset } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';

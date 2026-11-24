@@ -1,4 +1,5 @@
-import { DEFAULT_RENEWAL_PRICING, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesFamilyStudent, SalesMoneySubscriptionView } from '@ab/shared';
+import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
 import { pickMoneyAction } from './money-action';
 
 const PHONE = '+966501112223';

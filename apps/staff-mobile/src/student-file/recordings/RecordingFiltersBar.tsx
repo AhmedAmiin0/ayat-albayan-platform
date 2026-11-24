@@ -1,4 +1,4 @@
-import { STUDENT_RECORDING_STATUSES } from '@ab/shared';
+import { STUDENT_RECORDING_STATUSES } from '@ab/schedule';
 import { t, FilterPills } from '@ab/mobile-kit';
 import {
   DATE_PRESETS, type DatePreset, type RecordingFilters, type StatusFilter,

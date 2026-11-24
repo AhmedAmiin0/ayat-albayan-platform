@@ -1,4 +1,5 @@
-import { type FamilyPhone, formatPhone, secondPhoneOf } from '@ab/shared';
+import { type FamilyPhone, secondPhoneOf } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
