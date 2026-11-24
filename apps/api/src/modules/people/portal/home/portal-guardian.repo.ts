@@ -5,10 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 
 const guardianRow = z.object({ name: z.string(), phone_e164: z.string() });
 
-/**
- * «حسابي»'s heading (GET /portal/me): a guardian login's own name and WhatsApp number (service
- * role, read by the caller's profile id only). Nothing else of the guardian row crosses the wire.
- */
+/** Only the guardian login's own name and number cross the wire. */
 @Injectable()
 export class PortalGuardianRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

@@ -14,10 +14,7 @@ interface FileCall {
   id: string;
 }
 
-/**
- * «تقارير الحلقات» (docs/31): the reports already sent to the family, newest first. A file opens by a
- * signed link minted per tap (a PDF 5 minutes, a recording an hour for playback); the list carries none.
- */
+/** docs/31: files open by a signed link minted per tap; the list carries none. */
 @Injectable()
 export class PortalReportsService {
   constructor(
@@ -33,10 +30,7 @@ export class PortalReportsService {
     return { reports: rows.map((r) => toPortalReport(r, recordings)) };
   }
 
-  /**
-   * «ما المطلوب» of a student the caller already scoped: the newest sent report's homework and next
-   * plan (never a draft); null without a sent report.
-   */
+  /** Never a draft; null without a sent report. */
   async prepare(studentId: string): Promise<PortalPrepare | null> {
     const [newest] = await this.queries.sent(studentId, 1);
     if (!newest) return null;

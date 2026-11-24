@@ -7,8 +7,7 @@ import {
   syncNumber, type NumberSyncDeps,
 } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
 
-// The number card's sync through its line (owner 2026-11-07): legacy → the line sync «القوالب»
-// runs.
+// Under legacy the number card's sync runs the line sync.
 
 const NOW = new Date('2026-11-07T09:00:00Z');
 const AT = NOW.toISOString();
