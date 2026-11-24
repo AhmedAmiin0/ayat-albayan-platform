@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
-import SalesTodayRoute from '../../../../app/sales/today';
+import SalesTodayRoute from '../../../../../../app/sales/today';
 import { scheduleLesson } from '@/sales/sales/testing/fixtures';
 
 const mockApiFetch = jest.fn();

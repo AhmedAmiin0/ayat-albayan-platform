@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { t, ltr } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { teacher } from '@/sales/sales/testing/fixtures';
-import { SalesTeacherScreen } from './SalesTeacherScreen';
+import { SalesTeacherScreen } from '@/sales/sales/screens/SalesTeacherScreen';
 
 const mockApiFetch = jest.fn();
 let mockId = 't1';
