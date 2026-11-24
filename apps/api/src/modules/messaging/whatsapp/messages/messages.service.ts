@@ -9,11 +9,7 @@ import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/temp
 
 /** A held text that failed (reopen_*): its 7-day hold starts again from this retry (11-06). */
 const restartOf = (code: string | null): Date | null => (isHoldFailure(code) ? new Date() : null);
-/**
- * app_send_unconfirmed (docs/19): the platform handed the text to WhatsApp and staff did not
- * confirm. It may have gone out from the app (an echo can still come), so it is never put back
- * to automatic sending: staff answer «نعم، أرسلتها» or tap «أرسل عبر واتساب» again.
- */
+/** It may have gone out from the app, so it is never put back to automatic sending (docs/19). */
 const handedToWhatsApp = (code: string | null): boolean => code === APP_SEND_UNCONFIRMED;
 /** Not failed, a calls-number row (docs/28 §10: staff ask again) or handed to WhatsApp. */
 const closed = (r: MessageRow): boolean =>

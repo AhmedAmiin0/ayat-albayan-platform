@@ -4,8 +4,7 @@ import { loadEnv } from '@/config/env/env';
 import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { inboundPlace } from './crm-inbound.place';
 
-// Where a CRM message.received lands (owner 2026-11-21): the notifications line, and in module
-// mode the crm notifications number (its line marker shows «خط الإشعارات»).
+// CRM inbound lands on the notifications line, or the crm notifications number in module mode.
 
 const CRM = {
   SUPABASE_URL: 'http://127.0.0.1:54321',

@@ -2,10 +2,7 @@ import { z } from 'zod';
 import { baseMime, lenientLabel, parseOrNull } from '@ab/shared';
 import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
 
-// The files the chat pickers offer (the booking's «من الشات», the sales «اختر صورة الإيصال من
-// المحادثة»; owner 2026-10-31: stickers filled the list and the PDF never showed): a photo or a PDF
-// the family sent, never a sticker (WhatsApp sends one as image/webp) or a voice note. receiptMime
-// (one message) and RECEIPT_FILTERS (the query, before its limit) say the same: keep them in step.
+// A photo or PDF only, never a sticker (image/webp) or voice note; keep both filters in step.
 
 const PHOTOS: readonly string[] = ['image/jpeg', 'image/png', 'image/heic'];
 const WEBP = 'image/webp';

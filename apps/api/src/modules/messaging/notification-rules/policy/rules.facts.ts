@@ -7,7 +7,7 @@ import { RulesRepo, type Reach } from '@/modules/messaging/notification-rules/ru
 interface CatalogueFacts {
   inputs: Omit<CatalogueInputs, 'rules'>;
   lines: LineHealthView[];
-  /** Only when asked (v2): the head counts behind «سيصل إلى N». */
+  /** Only when asked (v2): the head counts behind the reach estimate. */
   reach: Reach | null;
 }
 

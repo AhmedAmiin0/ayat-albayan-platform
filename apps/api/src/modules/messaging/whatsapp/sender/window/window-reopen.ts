@@ -86,13 +86,10 @@ export const LOST: FailWhy = {
   text: 'the reopen template failed or expired unsent, so no reply was asked for',
 };
 
-/**
- * A held text's error_text under «بدون قالب» (owner 2026-11-06): no reopen template was asked for,
- * so the release never fails it as orphaned (window-release); the family's next message sends it.
- */
+/** No reopen template was asked for, so the release never fails it as orphaned. */
 export const NO_TEMPLATE_NOTE = 'held without a reopen template: waiting for the family to write';
 
-/** Held under «بدون قالب»: error_text starts with NO_TEMPLATE_NOTE (a Kapso note may follow). */
+/** A Kapso note may follow the prefix. */
 export const heldWithoutTemplate = (errorText: string | null): boolean =>
   errorText?.startsWith(NO_TEMPLATE_NOTE) ?? false;
 
