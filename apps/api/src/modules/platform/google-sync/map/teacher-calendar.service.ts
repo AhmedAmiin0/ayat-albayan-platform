@@ -6,11 +6,7 @@ import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 const fail = (what: string, error: { message: string }) => new Error(`google ${what} failed: ${error.message}`);
 const ownerOf = (v: string): TeacherCalendarOwner => (TEACHER_CALENDAR_OWNERS as readonly string[]).includes(v) ? (v as TeacherCalendarOwner) : 'script';
 
-/**
- * «تقويم المعلم» (docs/24 «نقل تقويم معلم إلى المنصة»): who builds a teacher's Google Calendar. The
- * switch is a plain column write; the DB stamps and audits it and its trigger queues that teacher's
- * lessons (to write when 'platform', to drop our own events when back to 'script').
- */
+/** docs/24: a column write; the DB stamps, audits and queues the teacher's lessons. */
 @Injectable()
 export class TeacherCalendarService {
   constructor(

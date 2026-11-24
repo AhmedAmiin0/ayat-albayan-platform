@@ -1,6 +1,5 @@
 {
   "DELETE /lesson-files/:id": "apps/api/src/modules/teaching/student-recordings/lesson-files/lesson-files.foreign-id.test.ts",
-  "DELETE /me/push-tokens/:token": "apps/api/src/modules/people/me/me.foreign-id.http.test.ts",
   "DELETE /people/guardians/:id/phones/:phone": "apps/api/src/modules/people/people-edit/people-edit.foreign-id.writes.http.test.ts",
   "DELETE /portal/students/:id/channel/messages/:messageId": "apps/api/src/modules/teaching/student-channels/channel.delete.http.test.ts",
   "DELETE /recordings/:id": "apps/api/src/modules/teaching/student-recordings/student-recordings.foreign-id.http.test.ts",

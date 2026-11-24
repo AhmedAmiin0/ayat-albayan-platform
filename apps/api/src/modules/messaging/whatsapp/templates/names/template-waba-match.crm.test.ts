@@ -3,7 +3,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { crmSyncPatch } from './template-waba-match';
 
-// docs/39: «مزامنة» on a crm line reads each row by crmTemplateName / crmTemplateLanguage.
+// docs/39: a crm line sync reads each row by crmTemplateName and crmTemplateLanguage.
 
 const NOW = new Date('2026-11-07T10:00:00Z');
 const crm = (name: string, over: Partial<MetaTemplate> = {}): MetaTemplate => ({

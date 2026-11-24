@@ -39,11 +39,7 @@ export function latestRequest(
 /** More than one student: the family's buttons would act on the others' lesson too. */
 export const isGroupLesson = (row: PortalLessonRow): boolean => row.lesson_students.length > 1;
 
-/**
- * «خيارات الحلقة» (owner 2026-11-17). `counts`: an excused lesson's own outcome
- * (lesson_students.chargeable); any other, whether «أعتذر» now would count from the package —
- * the cancel's own rule (isChargeable of 'excused' under late_cancel_hours).
- */
+/** `counts` uses the cancel's own rule under late_cancel_hours. */
 export function familyOf(row: PortalLessonRow, ctx: FamilyContext): PortalLessonFamily {
   const excused = row.status === 'excused';
   const own = row.lesson_students.find((s) => s.student_id === ctx.studentId);

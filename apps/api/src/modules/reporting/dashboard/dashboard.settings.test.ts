@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { DashboardSettings } from './dashboard.settings';
 
-/** FinanceService's read before the reader existed + DashboardService's «يحتاج تأكيد» switch. */
 const BEFORE = ['reporting_currency', 'lesson_confirmation_required'] as const;
 
 describe('DashboardSettings', () => {
