@@ -7,7 +7,8 @@ import {
 } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 import { CourseMoveRoutes } from './course-move.routes';
 import { ProfileCourse } from './profile-course.service';
@@ -27,7 +28,11 @@ export class CourseTeacherController extends CourseMoveRoutes {
 
   /** The teachers to pick from: the student's program and gender preference (booking wizard). */
   @Get('teachers')
-  options(@Param('id', ParseUUIDPipe) id: string): Promise<BookingTeacherOption[]> {
+  async options(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<BookingTeacherOption[]> {
+    await this.course.assertStudent(id, user);
     return this.teachers.list({ studentId: id });
   }
 }

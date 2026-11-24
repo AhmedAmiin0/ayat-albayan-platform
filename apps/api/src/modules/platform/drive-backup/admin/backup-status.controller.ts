@@ -4,7 +4,7 @@ import { Permissions } from '@/common/auth/decorators';
 import { BackupStatusService } from './backup-status.service';
 import type { BackupStatusView } from './backup-view';
 
-/** Under «التخزين» in «التكاملات» (docs/45 §5): same permission as the storage probe. */
+/** docs/45 §5: same permission as the storage probe. */
 @ApiTags('settings')
 @ApiBearerAuth()
 @Permissions('settings.write')

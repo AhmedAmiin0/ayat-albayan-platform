@@ -12,14 +12,7 @@ import { AppSendRepo } from './app-send.repo';
 const refused = (row: ThreadMessageRow) =>
   waHttpError('not_app_send', 409, { status: row.status, error_code: row.error_code });
 
-/**
- * «أرسل عبر واتساب» (owner 2026-11-06, docs/19): the tap only keeps the platform off the row for
- * APP_SEND_MS (app_send_until); the WhatsApp Business app's echo confirms the send (ManualEcho).
- * Nothing is marked sent here, so nothing is lost when WhatsApp never opens. A second tap
- * extends the window (idempotent). Staff who sent the text from the app BEFORE tapping: its
- * message (stored as an external row) is adopted by the held row first (one bubble, its reopen
- * cancelled as on an attach) and the tap answers 409 with the row now sent.
- */
+/** The tap only holds the row off for APP_SEND_MS (docs/19); the echo confirms; idempotent. */
 @Injectable()
 export class AppSend {
   constructor(

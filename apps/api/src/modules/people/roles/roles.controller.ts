@@ -24,7 +24,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { RolesService } from './roles.service';
 
-/** «الأدوار والصلاحيات»: roles, their grants and the catalog. All behind roles.manage. */
+/** All behind roles.manage. */
 @ApiTags('roles')
 @ApiBearerAuth()
 @Permissions('roles.manage')
@@ -67,7 +67,7 @@ export class RolesController {
     return this.roles.update(id, { ...body, actorId: user.id });
   }
 
-  /** «استعادة الافتراضي» (system teacher / sales / assistant): 400 admin_role_fixed / not_system_role, 403, 409 as update. */
+  /** 400 admin_role_fixed or not_system_role, 403, 409 as update. */
   @Post('roles/:id/reset')
   @HttpCode(200)
   reset(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<RoleView> {

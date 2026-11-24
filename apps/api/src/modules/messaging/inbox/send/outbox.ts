@@ -30,18 +30,7 @@ type Outbound = Omit<TablesInsert<'messages'>, 'direction' | 'status'>;
 export const SETTLE_POLL_MS = 500;
 export const SETTLE_POLLS = 10;
 
-/**
- * Queue the row (rule 8: a replayed dedup_key returns the first row, nothing new is queued) and kick
- * the sender. Gate closed → the pass sends nothing and the row stays `queued` with no error.
- *   send()   answers with the row as it is after one whole sender pass (≤ 50 rows): callers that
- *            report the outcome (the feedback request, «ابعت لينك الحلقة»: message_status). On an API
- *            copy (docs/09) the pass runs on the worker and its kick may time out (30 s, a busy
- *            worker): a row still queued is read again for at most SETTLE_POLLS × SETTLE_POLL_MS
- *            (5 s); after that the answer is `queued` and the worker's own poll sends it.
- *   queue()  the inbox's text, template and file sends (owner 2026-10-27 «instant send»): answers as
- *            soon as the row is queued; the pass runs in the background and the chat's next refresh
- *            shows sent / failed. Duplicate-send safety is the same dedup_key as send().
- */
+/** Rule 8: a replayed dedup_key returns the first row; send() waits one pass, queue() doesn't. */
 @Injectable()
 export class Outbox {
   constructor(

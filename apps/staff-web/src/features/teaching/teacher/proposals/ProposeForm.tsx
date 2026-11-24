@@ -1,5 +1,5 @@
-import { wallInstant, zonedPartsIn } from '@ab/shared';
-import type { LessonView } from '@ab/shared';
+import { wallInstant, zonedPartsIn } from '@ab/time';
+import type { LessonView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

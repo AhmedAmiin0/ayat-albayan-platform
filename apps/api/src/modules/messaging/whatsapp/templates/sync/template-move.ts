@@ -7,9 +7,7 @@ import { templateStamp } from '@/modules/messaging/whatsapp/sender/send-line';
 import { REGISTRY_ENTITY_ID, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 
-// «نقل إلى الرقم الآخر» (owner 2026-10-18: «which number it goes to»): the admin moves a template to
-// the other line (WABA). Its Meta state belonged to the old WABA, so it starts over as not_submitted
-// and the new line is synced at once: approved if the template is there, else the admin submits it.
+// Meta state belonged to the old WABA, so it restarts as not_submitted and the new line syncs.
 
 interface MoveDeps extends LineSyncDeps {
   queries: Pick<TemplatesRepo, 'all' | 'get' | 'update' | 'insert' | 'relaneQueued'>;

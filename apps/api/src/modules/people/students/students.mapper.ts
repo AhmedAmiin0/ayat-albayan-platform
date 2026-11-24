@@ -22,7 +22,7 @@ export type StudentListItem = Omit<StudentListRow, 'guardian' | 'teacher'> & {
   guardian_name: string;
   guardian_phone: string;
   teacher_name: string | null;
-  /** students.is_test (docs/56), read beside the view for the «تجريبي» chip. */
+  /** students.is_test (docs/56). */
   is_test?: boolean;
 };
 
@@ -74,7 +74,7 @@ export function toProfile(row: StudentProfileRow): StudentProfile {
   };
 }
 
-/** PostgREST or() filter on name (Arabic-normalised, so سهيلة finds سهيله) or code. */
+/** Name is Arabic-normalised so spelling variants match. */
 export function studentNameOrCodeFilter(term: string): string | null {
   const name = orSafe(normalizeArabic(term));
   const code = orSafe(term);

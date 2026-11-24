@@ -32,7 +32,7 @@ export class TemplateEditsController {
     @Inject(TemplateEditor) private readonly editor: TemplateEditor,
   ) {}
 
-  /** «تعديل»: body, footer, buttons (Meta's edit rules; a code-bound one: words only); audited. */
+  /** Follows Meta's edit rules; a code-bound template allows word changes only; audited. */
   @Patch(':key/content')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
@@ -52,7 +52,7 @@ export class TemplateEditsController {
     return this.admin.submit(key, user.id);
   }
 
-  /** «نقل إلى الرقم الآخر»: the number it goes from, then that number's sync; audited. */
+  /** Moves the template to the other number, then syncs that number; audited. */
   @Patch(':key/line')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
@@ -64,10 +64,7 @@ export class TemplateEditsController {
     return this.admin.moveLine({ key, line: input.line }, user.id);
   }
 
-  /**
-   * «الرقم» (docs/23c decision 9): the template's own number, null = its role's default; audited.
-   * 404 template_not_found / unknown_number. Never blocked: not_approved_on_number only warns.
-   */
+  /** docs/23c decision 9: null is the role's default; never blocked, only a warning. */
   @Put(':key/number')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
@@ -79,10 +76,7 @@ export class TemplateEditsController {
     return this.numbers.setNumber({ key, number_id: input.number_id }, user.id);
   }
 
-  /**
-   * A crm line's template (docs/19): «معتمد في نظام CRM» / «غير متاح في نظام CRM» by hand;
-   * 409 not_crm_line; audited.
-   */
+  /** Crm line only (docs/19), set by hand; 409 not_crm_line; audited. */
   @Put(':key/crm-status')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
@@ -94,10 +88,7 @@ export class TemplateEditsController {
     return this.admin.setCrmStatus({ key, status: input.status }, user.id);
   }
 
-  /**
-   * «اسم القالب في واتساب» (docs/19): the WABA name / language every driver sends; blank = the
-   * default; any line; audited.
-   */
+  /** docs/19: blank is the default; any line; audited. */
   @Put(':key/crm-name')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)

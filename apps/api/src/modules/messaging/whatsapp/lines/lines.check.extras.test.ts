@@ -3,7 +3,7 @@ import { loadEnv } from '@/config/env/env';
 import { stubEnvs, TWO_LINES_ENV } from '@/modules/messaging/whatsapp/whatsapp.lines.fakes';
 import { driverOf } from './lines.check.driver';
 
-// The per-driver extras of «افحص الخطوط» (docs/36 h4: a Record per provider, no ternary chain).
+// docs/36 h4: a Record per provider, no ternary chain.
 
 const KAPSO = { WA_CHAT_PROVIDER: 'kapso', KAPSO_API_BASE: 'http://localhost:4010/kapso' };
 

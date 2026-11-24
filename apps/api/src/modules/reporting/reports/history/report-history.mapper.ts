@@ -18,7 +18,6 @@ import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';
 interface HistoryParts {
   rows: readonly HistoryRow[];
   lessons: readonly HistoryLesson[];
-  /** lesson_id → «رقم الحلقة» (v_lesson_sequence). */
   seq: ReadonlyMap<string, number>;
   page: PageQuery;
   /** The reader, now and settings.report_teacher_edit_minutes (docs/46 B7); none for sales. */
@@ -39,10 +38,7 @@ interface Joined {
   at: number;
 }
 
-/**
- * R5 (R-REP-05, issue D2): submitted reports newest lesson first, one page of them, and the grade
- * series of all of them oldest first (gradeScore: 5 = ممتاز … 1).
- */
+/** R5 (R-REP-05, D2): newest lesson first, the grade series oldest first. */
 export function historyResponse(p: HistoryParts): StudentReportsResponse {
   const byId = new Map(p.lessons.map((l) => [l.id, l]));
   const joined: Joined[] = p.rows
