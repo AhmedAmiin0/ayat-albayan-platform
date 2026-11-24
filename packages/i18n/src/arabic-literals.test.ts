@@ -27,6 +27,19 @@ describe('arabicLiterals', () => {
     expect(arabicLiterals(src)).toEqual([{ line: 2, text: '<p>نص</p>' }]);
   });
 
+  it('an escaped quote does not end the string', () => {
+    expect(arabicLiterals("const a = 'it\\'s سلام';")).toHaveLength(1);
+  });
+
+  it('a template literal runs on across lines; a quoted string stops at the line end', () => {
+    expect(arabicLiterals(['`a', 'سلام`'].join('\n')).map((h) => h.line)).toEqual([2]);
+    expect(arabicLiterals(["'a", '// سلام'].join('\n'))).toEqual([]);
+  });
+
+  it('a star inside a block comment does not close it', () => {
+    expect(stripComments('/* a * b / سلام */x')).toBe('x');
+  });
+
   it('keeps line numbers after a block comment', () => {
     expect(stripComments('/* a\nb */x').split('\n')).toEqual(['', 'x']);
   });
