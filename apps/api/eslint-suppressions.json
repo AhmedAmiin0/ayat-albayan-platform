@@ -8149,7 +8149,7 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/files/report-files.http.test.ts": {
+  "src/modules/reporting/reports/files/tests/http.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -8168,7 +8168,7 @@
       "count": 7
     }
   },
-  "src/modules/reporting/reports/files/report-files.student-pdf.test.ts": {
+  "src/modules/reporting/reports/files/tests/student-pdf.test.ts": {
     "max-len": {
       "count": 3
     }
@@ -8200,12 +8200,12 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/report-access.ts": {
+  "src/modules/reporting/reports/shared/report-access.ts": {
     "ab/module-boundaries": {
       "count": 1
     }
   },
-  "src/modules/reporting/reports/report-lesson.queries.ts": {
+  "src/modules/reporting/reports/shared/report-lesson.queries.ts": {
     "complexity": {
       "count": 2
     },
@@ -8221,7 +8221,7 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/report.mapper.test.ts": {
+  "src/modules/reporting/reports/tests/mapper.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -8253,12 +8253,12 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/reports.queries.ts": {
+  "src/modules/reporting/reports/shared/reports.queries.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.service.ts": {
+  "src/modules/reporting/reports/shared/reports.service.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -8266,17 +8266,17 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/reports.settings.test.ts": {
+  "src/modules/reporting/reports/shared/tests/settings.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/reporting/reports/reports.settings.ts": {
+  "src/modules/reporting/reports/shared/reports.settings.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/reporting/reports/submit/report-entry.controller.ts": {
+  "src/modules/reporting/reports/report-entry.controller.ts": {
     "ab/zod-inputs": {
       "count": 4
     },
@@ -8292,12 +8292,12 @@
       "count": 2
     }
   },
-  "src/modules/reporting/reports/submit/report-form.http.test.ts": {
+  "src/modules/reporting/reports/submit/tests/form.http.test.ts": {
     "max-len": {
       "count": 2
     }
   },
-  "src/modules/reporting/reports/submit/report-form.mapper.test.ts": {
+  "src/modules/reporting/reports/submit/tests/form.mapper.test.ts": {
     "max-len": {
       "count": 6
     }
@@ -8313,12 +8313,12 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/submit/report-gate.ts": {
+  "src/modules/reporting/reports/shared/report-gate.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/reporting/reports/submit/report-pdf.queue.test.ts": {
+  "src/modules/reporting/reports/submit/tests/pdf.queue.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -8328,7 +8328,7 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/submit/report-rpc.test.ts": {
+  "src/modules/reporting/reports/submit/tests/rpc.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -8344,7 +8344,7 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/submit/report-submit.http.test.ts": {
+  "src/modules/reporting/reports/submit/tests/submit.http.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -8360,7 +8360,7 @@
       "count": 3
     }
   },
-  "src/modules/reporting/reports/submit/submit-plan.test.ts": {
+  "src/modules/reporting/reports/submit/tests/plan.test.ts": {
     "max-len": {
       "count": 1
     }
@@ -8379,12 +8379,12 @@
       "count": 3
     }
   },
-  "src/modules/reporting/reports/teacher/teacher-reports.http.test.ts": {
+  "src/modules/reporting/reports/teacher/tests/http.test.ts": {
     "max-len": {
       "count": 1
     }
   },
-  "src/modules/reporting/reports/teacher/teacher-reports.mapper.test.ts": {
+  "src/modules/reporting/reports/teacher/tests/mapper.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -8397,7 +8397,7 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/teacher/teacher-reports.queries.test.ts": {
+  "src/modules/reporting/reports/teacher/tests/queries.test.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -8421,7 +8421,7 @@
       "count": 3
     }
   },
-  "src/modules/reporting/reports/test-app.ts": {
+  "src/modules/reporting/reports/tests/test-app.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
     },
@@ -8437,12 +8437,12 @@
       "count": 4
     }
   },
-  "src/modules/reporting/reports/v2/report-v2.form.http.test.ts": {
+  "src/modules/reporting/reports/v2/tests/form.http.test.ts": {
     "max-len": {
       "count": 7
     }
   },
-  "src/modules/reporting/reports/v2/report-v2.mapper.test.ts": {
+  "src/modules/reporting/reports/v2/tests/mapper.test.ts": {
     "max-len": {
       "count": 2
     }
@@ -8466,7 +8466,7 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/v2/report-v2.submit.http.test.ts": {
+  "src/modules/reporting/reports/v2/tests/submit.http.test.ts": {
     "max-len": {
       "count": 1
     }
