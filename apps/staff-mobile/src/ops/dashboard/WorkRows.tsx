@@ -2,7 +2,7 @@ import { pushInTab } from '@/core/nav/back-within';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { ListRow } from '@ab/mobile-kit';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
-import type { PendingReportRow, TaskRow, UnpaidRow } from '@ab/shared';
+import type { PendingReportRow, TaskRow, UnpaidRow } from '@ab/money';
 import { pendingSubtitle, taskText, unpaidSubtitle } from './work-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 

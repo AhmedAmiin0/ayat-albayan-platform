@@ -1,14 +1,14 @@
+import { CURRENCY_ISOS } from '@ab/money';
 import {
-  CURRENCY_ISOS,
   isEditableValueKey,
   settingDef,
   settingZod,
-  tzChoices,
   VALUE_CONFIRM,
   byType,
   type SettingKey,
   type SettingTypeTable,
-} from '@ab/shared';
+} from '@ab/settings';
+import { tzChoices } from '@ab/time';
 import { t } from '@ab/mobile-kit';
 import { ascii } from '@/ops/shared/ascii-digits';
 

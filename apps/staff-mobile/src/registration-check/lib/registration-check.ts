@@ -1,4 +1,5 @@
-import { normalizePhone, REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
+import { REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import type { RegistrationCheckBy, RegistrationCheckQuery } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString, t } from '@ab/mobile-kit';

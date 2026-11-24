@@ -1,4 +1,5 @@
-import { hourLabel, MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/shared';
+import { MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/schedule';
+import { hourLabel } from '@ab/time';
 import { useClockCycle } from '@/core/lib/clock';
 import { locale, t, type, useTheme, AppText, FilterPills } from '@ab/mobile-kit';
 import { useMemo } from 'react';

@@ -1,4 +1,5 @@
-import { clickToChatLink, formatPhone, teacherName } from '@ab/shared';
+import { clickToChatLink, formatPhone } from '@ab/core';
+import { teacherName } from '@ab/schedule';
 import { Linking } from 'react-native';
 import { t, type, useTheme, Button, Ltr, locale, Section } from '@ab/mobile-kit';
 import type { Teacher } from '@ab/shared';
