@@ -8703,7 +8703,7 @@
   },
   "src/users/panels/PanelButtons.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/users/panels/ResetPasswordPanel.tsx": {
@@ -8754,7 +8754,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/users/shared/api.ts": {

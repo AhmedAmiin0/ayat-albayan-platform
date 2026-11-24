@@ -5,7 +5,7 @@ import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { callListQuery } from '@/features/messaging/calls/api/calls-api';
 import { CallsLogRow } from './CallsLogRow';
 
-/** «المكالمات» (docs/28 §5): every call this user may see, newest first (the API scopes a teacher's). */
+/** Newest first (docs/28 §5); the API scopes a teacher's calls. */
 export function CallsLog() {
   const calls = useQuery(callListQuery({ enabled: true, phone: null }));
   // One ticking clock for the whole log (hooks before the early returns): dates switch at midnight.

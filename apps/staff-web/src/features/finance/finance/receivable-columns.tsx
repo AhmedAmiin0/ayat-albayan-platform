@@ -9,10 +9,7 @@ const col = createColumnHelper<DataTableFeatures, ReceivableRow>();
 
 const bucketOptions = AGING_BUCKETS.map((b) => ({ value: b, label: t.finance.aging[b] }));
 
-/**
- * «مستحق على الطلاب» (client sort + filter: the whole list is loaded): student, guardian, owed,
- * paid of price, days late, aging. Names filter by text, the aging by its bucket.
- */
+/** Client sort and filter, since the whole list is loaded. */
 export const receivableColumns = col.columns([
   col.accessor((r) => r.student.name, {
     id: 'student',

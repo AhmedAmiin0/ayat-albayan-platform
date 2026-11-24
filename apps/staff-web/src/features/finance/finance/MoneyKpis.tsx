@@ -5,10 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receivablesQuery } from './api';
 import { KpiTile } from './kpi-tile';
 
-/**
- * Two money numbers on the dashboard: «مستحق للمعلمين» (the ledger, EGP) and «مستحق على الطلاب»
- * (receivables in the reporting currency); each opens the page behind it.
- */
+/** Teachers owed comes from the ledger in EGP; students owing in the reporting currency. */
 export function MoneyKpis() {
   const dues = useQuery(earningsSummaryQuery());
   const owed = useQuery(receivablesQuery);

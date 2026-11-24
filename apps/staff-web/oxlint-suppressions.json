@@ -161,15 +161,7 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/components/shell/account/MenuFoot.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -179,11 +171,6 @@
     }
   },
   "src/components/shell/account/SideFoot.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/components/shell/header/MenuBell.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -195,7 +182,7 @@
   },
   "src/components/shell/layout/AdminLayout.tsx": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -228,7 +215,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/shell/layout/PageFrame.tsx": {
@@ -248,7 +235,7 @@
   },
   "src/components/shell/layout/TopBarLayout.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -269,11 +256,6 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/components/shell/nav/NavSkeleton.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -283,9 +265,6 @@
     }
   },
   "src/components/shell/nav/SectionShells.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/module-boundaries": {
       "count": 3
     }
@@ -319,11 +298,6 @@
       "count": 1
     }
   },
-  "src/components/table-toolbar/ActiveFilterChips.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/components/table-toolbar/DataTableToolbar.tsx": {
     "complexity": {
       "count": 1
@@ -337,12 +311,12 @@
   },
   "src/components/table-toolbar/FilterPanel.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/components/table-toolbar/FilterSummary.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/table-toolbar/TableToolbar.test.tsx": {
@@ -355,7 +329,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 4
     }
   },
   "src/components/table-toolbar/controls.ts": {
@@ -370,7 +344,7 @@
   },
   "src/features/finance/expenses/AddCategory.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -400,7 +374,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/finance/expenses/ExpenseYearTable.tsx": {
@@ -496,7 +470,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -526,7 +500,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -590,7 +564,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -651,7 +625,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 5
     },
     "ab/module-boundaries": {
       "count": 1
@@ -668,9 +642,6 @@
   "src/features/finance/payments/attachments/AttachmentPicker.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/finance/payments/attachments/AttachmentsDialog.test.tsx": {
@@ -683,7 +654,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/finance/payments/attachments/AttachmentsField.tsx": {
@@ -717,7 +688,7 @@
   },
   "src/features/finance/payments/attachments/attachments.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/finance/payments/payment-columns.tsx": {
@@ -725,9 +696,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/module-boundaries": {
@@ -795,15 +763,10 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     },
     "ab/module-boundaries": {
       "count": 2
-    }
-  },
-  "src/features/finance/payments/record/ShortfallNote.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/finance/payments/record/ShortfallNote.tsx": {
@@ -811,7 +774,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/finance/payments/record/SubscriptionPicker.tsx": {
@@ -834,9 +797,6 @@
   "src/features/finance/payments/record/use-record-payment.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -963,18 +923,8 @@
       "count": 3
     }
   },
-  "src/features/finance/payouts/shared/LedgerPaid.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/finance/payouts/shared/MonthSelect.tsx": {
     "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
-  "src/features/finance/pricing/OfferActions.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -988,13 +938,10 @@
   },
   "src/features/finance/pricing/PlansTable.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/finance/pricing/PricingPage.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -1007,16 +954,10 @@
   "src/features/finance/pricing/calculator/CalcSteps.tsx": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/finance/pricing/calculator/QuoteResult.tsx": {
     "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -1027,9 +968,6 @@
   },
   "src/features/finance/pricing/calculator/Stepper.tsx": {
     "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -1098,7 +1036,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1111,7 +1049,7 @@
   },
   "src/features/finance/subscriptions/cancel/CancelPackageDialog.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/finance/subscriptions/cancel/CancelPackageDialog.tsx": {
@@ -1119,12 +1057,12 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/features/finance/subscriptions/cancel/subscription-columns.cancelled.test.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/finance/subscriptions/create/CreateSubscriptionDialog.tsx": {
@@ -1138,12 +1076,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/finance/subscriptions/create/CreateSubscriptionDialog.used-before.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/finance/subscriptions/create/NoCommissionNote.tsx": {
@@ -1154,7 +1092,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/finance/subscriptions/create/PricingFields.test.tsx": {
@@ -1206,9 +1144,6 @@
   "src/features/finance/subscriptions/create/UsedBeforeField.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/finance/subscriptions/create/pricing-form.ts": {
@@ -1219,17 +1154,12 @@
       "count": 1
     }
   },
-  "src/features/finance/subscriptions/create/use-start-day.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/features/finance/subscriptions/format.ts": {
     "complexity": {
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -1251,11 +1181,6 @@
       "count": 8
     }
   },
-  "src/features/finance/subscriptions/subscription-columns.pause.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/finance/subscriptions/subscription-columns.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -1264,7 +1189,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/finance/subscriptions/use-subscription-filters.test.tsx": {
@@ -1289,11 +1214,6 @@
     "no-nested-ternary": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/finance/teacher-earnings/MyEarnings.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -1363,7 +1283,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 3
@@ -1385,7 +1305,7 @@
   },
   "src/features/finance/teacher-earnings/payments/VoidPaymentDialog.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 2
@@ -1442,14 +1362,9 @@
       "count": 1
     }
   },
-  "src/features/messaging/calls/entries/CallEntry.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/messaging/calls/entries/call-text.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/calls/entries/use-thread-calls.tsx": {
@@ -1460,16 +1375,6 @@
   "src/features/messaging/calls/header/CallButton.tsx": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/features/messaging/calls/log/CallsLog.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/calls/log/CallsLogRow.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/messaging/calls/rtc/call-peer.test.ts": {
@@ -1510,9 +1415,6 @@
   "src/features/messaging/calls/screen/CallScreen.tsx": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/messaging/calls/screen/IncomingCall.tsx": {

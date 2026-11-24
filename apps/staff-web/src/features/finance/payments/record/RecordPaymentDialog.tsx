@@ -21,9 +21,9 @@ import { useRecordPayment } from './use-record-payment';
 
 type Props = {
   subscription?: SubscriptionView;
-  /** «سجّل كدفعة» from a booking: the invoice is the receipt, nothing to upload. */
+  /** The booking's invoice is the receipt, so nothing to upload. */
   invoiceId?: string;
-  /** «استرداد»: money given back, counted against what was paid. */
+  /** A refund is counted against what was paid. */
   kind?: PaymentKind;
   /** The student whose packages to offer (from an invoice). */
   student?: PickedStudent;
@@ -36,7 +36,7 @@ const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind ==
 const dueIn = (s: SubscriptionView | null, opts: { kind: PaymentKind; currency: string }): number | null =>
   s && opts.kind === 'payment' && opts.currency === s.currency ? dueOf(s, s.paid) : null;
 
-/** «تسجيل دفعة» / «استرداد» (R-PAY-01): package, amount (any currency with a rate), method, date, receipt, and «المرفقات» for a bank payment. */
+/** Any currency with a rate (R-PAY-01); attachments only for a bank payment. */
 export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment', student: preset, onClose, onSaved }: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();
