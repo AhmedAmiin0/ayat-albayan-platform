@@ -17,7 +17,7 @@ const HIT = {
 };
 const q = (text: string) => `/threads/search?q=${encodeURIComponent(text)}`;
 
-// «بحث في كل الرسائل» (owner 2026-11-06, docs/37): GET /threads/search beside GET /threads/:phone.
+// GET /threads/search sits beside GET /threads/:phone (docs/37).
 describe('GET /threads/search', () => {
   let t: App;
   beforeAll(async () => {

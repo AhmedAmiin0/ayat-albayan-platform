@@ -25,7 +25,7 @@ const afterSheet = (): Promise<void> => new Promise((r) => setTimeout(r, SHEET_C
 /** Falls back to the browser when LiveKit is missing, never a room screen that cannot start. */
 export async function openRoom(target: RoomTarget, inApp: boolean, options: OpenOptions = {}) {
   const answer = await sendJoin(target);
-  if (roomMode(inApp, liveKitNative() !== null) === 'browser') {
+  if (roomMode(inApp, (await liveKitNative()) !== null) === 'browser') {
     await Linking.openURL(roomWebUrl(target));
     return;
   }

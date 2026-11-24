@@ -1,8 +1,13 @@
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useState } from 'react';
 import { Linking } from 'react-native';
 import { parseTarget, roomWebUrl } from './join-target';
-import { type RoomTarget, nativeRoomPlatform, RoomNotice, RoomScreen, type BackSource } from '@ab/mobile-kit/room';
+import {
+  type BackSource,
+  RoomNotice,
+  RoomScreen,
+  type RoomTarget,
+  useNativeRoom,
+} from '@ab/mobile-kit/room';
 import { t } from '@ab/mobile-kit';
 import { fetchJoin } from './fetch-join';
 import { staffHost } from './staff-host';
@@ -40,10 +45,14 @@ export function RoomRoute() {
     student?: string;
   }>();
   const target = parseTarget(params.kind, params.id);
-  const [platform] = useState(nativeRoomPlatform);
+  const native = useNativeRoom();
   const chat = useRoomChat(params.student ?? null);
   const navigation = useNavigation();
   const backSource: BackSource = (listener) => navigation.addListener('beforeRemove', listener);
+  const platform = native.data;
+  if (target && native.isPending) {
+    return <RoomNotice testID="room-loading" message={t.mobileRoom.connecting} busy />;
+  }
   if (!target || !platform) return <RoomUnavailable target={target} />;
   return (
     <RoomScreen

@@ -12,12 +12,7 @@ export interface HideInput {
   user: AuthUser;
 }
 
-/**
- * «حذف من المنصة» (owner 2026-10-30): staff who reply in the inbox (admin, sales) hide a WhatsApp
- * message from every staff screen; the admin shows it again («إظهار»). Nothing goes to WhatsApp
- * (its
- * API cannot delete a sent message): it is still on the customer's phone. Each change is audited.
- */
+/** Nothing goes to WhatsApp since its API cannot delete a sent message; each change is audited. */
 @Injectable()
 export class MessageHideService {
   constructor(

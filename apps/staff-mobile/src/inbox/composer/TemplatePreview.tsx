@@ -7,11 +7,6 @@ import { TemplateFrame } from '@/inbox/messages/template/TemplateFrame';
 
 const PAD = { x: 12, bottom: 12 };
 
-/**
- * «شكل الرسالة»: the live preview under the template's fields, as the family will see it in WhatsApp
- * (owner 2026-10-28): the header, the body with the params filled in (aligned by its own language,
- * ContentText), the grey footer and the buttons under it.
- */
 export function TemplatePreview({ template, params }: { template: TemplateView; params: TemplateParamsInput }) {
   const { color } = useTheme();
   const text = renderTemplateBody(template.body_ar, params);

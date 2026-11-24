@@ -9,7 +9,6 @@ import { cachedThread, detail, message, PHONE, thread } from '@/inbox/shared/thr
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 import { CORRECTED_OPACITY } from './Corrected';
 
-// «تعديل» (owner 2026-11-07): the original greys with «صُحِّحت»; a tap goes to the correction.
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),

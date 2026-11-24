@@ -1,4 +1,4 @@
-// «لم تُحجز أيام الحلقات» (owner 2026-11-06): pure rules of paid packages with no weekly course.
+// Pure rules for paid packages that have no weekly course.
 
 /** How long a package stays active without its course before the staff are told. */
 const COURSE_DUE_AFTER_MS = 2 * 3_600_000;

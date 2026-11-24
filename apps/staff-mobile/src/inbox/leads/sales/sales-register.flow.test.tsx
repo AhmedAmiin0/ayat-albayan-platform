@@ -28,7 +28,6 @@ async function openLeadChat(backend: ReturnType<typeof salesBackend>) {
   return app;
 }
 
-/** «تسجيل طالب جديد» lives in the chat header's «⋮» (owner 2026-10-30). */
 const openMenu = async () =>
   fireEvent.press(within(await screen.findByTestId('chat-header')).getByRole('button', { name: t.inbox.chatMenu }));
 

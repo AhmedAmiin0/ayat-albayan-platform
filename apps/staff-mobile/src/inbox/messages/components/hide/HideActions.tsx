@@ -15,11 +15,7 @@ interface HideActionsProps {
   onClose: () => void;
 }
 
-/**
- * The long-press menu's «حذف من المنصة» (admin, sales) with a confirm that says plainly the message
- * stays on the customer's phone, «إظهار» on a hidden one (the admin), «تعديل» (a correction) on
- * a text this viewer may correct, and why there is none on our other messages.
- */
+/** Hiding keeps the message on the customer's phone, and the confirm says so. */
 export function HideActions({ message: m, offers, phone, onClose }: HideActionsProps) {
   const [asking, setAsking] = useState(false);
   const hide = useHideMessage(phone);

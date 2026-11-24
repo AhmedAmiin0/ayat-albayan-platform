@@ -6,11 +6,7 @@ import type { Db } from './db/db.module';
 /** A name/code search matches at most this many students (their ids then go in the list's URL). */
 export const STUDENT_MATCH_LIMIT = 200;
 
-/**
- * A list's «الطالب» text filter where the table has no FK to students (lesson_feedback,
- * lesson_reports reference lesson_students): the ids of students whose name or code contains the
- * term. null = no usable term (no filter); [] = nobody matches (the caller answers an empty page).
- */
+/** null means no usable term (no filter); [] means nobody matches (an empty page). */
 export async function studentIdsMatching(db: Db, term: string): Promise<string[] | null> {
   const safe = orSafe(term);
   if (!safe) return null;

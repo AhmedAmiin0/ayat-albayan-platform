@@ -5,10 +5,7 @@ import { View } from 'react-native';
 import { apiSend, t, pathKey, Button, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 
-/**
- * R-LEAD-04 on mobile: «نقل لطلبات التوظيف» → inline confirm → POST /leads/:id/reclassify.
- * The lead leaves the funnel, so on success the screen pops back and every lead list refetches.
- */
+/** R-LEAD-04: the lead leaves the funnel, so success pops back and every lead list refetches. */
 export function LeadReclassify({ id }: { id: string }) {
   const client = useQueryClient();
   const [asking, setAsking] = useState(false);

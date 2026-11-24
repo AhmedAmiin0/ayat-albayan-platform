@@ -9,7 +9,7 @@ import { NextLessonCard } from './NextLessonCard';
 
 jest.mock('@ab/mobile-kit/room', () => ({
   ...jest.requireActual('@ab/mobile-kit/room'),
-  liveKitNative: () => ({}),
+  useNativeRoom: () => ({ data: {} }),
 }));
 
 // The lapis card (canvas Child) and its live state (owner 2026-11-16, canvas RoomXLiveHome).
