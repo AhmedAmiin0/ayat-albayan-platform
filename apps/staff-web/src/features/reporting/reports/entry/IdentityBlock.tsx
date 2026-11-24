@@ -16,7 +16,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** Lesson number (R-LES-03), with the package line when the student has one (R-SUB-03). */
+/** R-LES-03 lesson number; R-SUB-03 adds the package line for a student who has one. */
 function lessonNo(entry: ReportFormEntry): string {
   if (!entry.package) return String(entry.lesson_no);
   const { lessons_used, lessons_total } = entry.package;
