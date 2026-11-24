@@ -65,7 +65,7 @@ test('where a tap goes per role: admin file and sent report, teacher reports, sa
   const sent = { ...yusuf, report: { id: 'r1', status: 'submitted' as const } };
   expect(studentHref('admin', { id: 's1' })).toBe('/students/s1');
   expect(studentHref('teacher', { id: 's1' })).toBe('/teacher/reports/student/s1');
-  // Sales opens «تفاصيل الطالب» of any student (owner 2026-10-28); the admin tree's sales pages the admin's file.
+  // Sales opens any student's details; in the admin tree it opens the admin's file.
   expect(studentHref('sales', { id: 's1' })).toBe('/sales/students/s1');
   expect(studentHref('sales', { id: 's1' }, '')).toBe('/students/s1');
   expect(reportHref('admin', pending, sent)).toBe('/students/reports/view/r1');

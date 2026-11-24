@@ -14,7 +14,7 @@ function lessonHost(lessonId: string): RoomHost {
 
 const HOSTS: Record<RoomKind, (id: string) => RoomHost | null> = {
   lesson: lessonHost,
-  // A meeting has its own «إنهاء» on its page; the room offers the list only.
+  // A meeting has its own end action on its page; the room offers the list only.
   meeting: () => null,
 };
 

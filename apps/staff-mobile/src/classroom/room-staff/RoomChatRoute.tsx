@@ -16,10 +16,7 @@ const SCREENS: Record<Audience, () => ReactNode> = {
   admin: () => <AdminChannelScreen />,
 };
 
-/**
- * app/room-chat/[studentId]: the student channel as a sheet over the live room (the room keeps
- * running beneath; its back returns to it). The same screen as «رسائل الطلاب», mounted as is.
- */
+/** The room keeps running beneath; back returns to it. */
 export function RoomChatRoute() {
   const params = useLocalSearchParams<{ audience?: string }>();
   return SCREENS[audienceSchema.parse(params.audience)]();

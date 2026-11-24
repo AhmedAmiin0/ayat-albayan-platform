@@ -4,8 +4,8 @@ test('calendar arithmetic crosses months and years', () => {
   expect(addDays('2026-09-30', 1)).toBe('2026-10-01');
   expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
   expect(addDays('2026-10-03', -7)).toBe('2026-09-26');
-  expect(weekdayOf('2026-10-03')).toBe(6); // السبت
-  expect(weekdayOf('2026-10-04')).toBe(0); // الأحد
+  expect(weekdayOf('2026-10-03')).toBe(6);
+  expect(weekdayOf('2026-10-04')).toBe(0);
 });
 
 test.each([

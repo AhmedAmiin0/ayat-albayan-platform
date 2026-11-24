@@ -1,6 +1,6 @@
 import type { Span } from '@ab/schedule';
 
-// The «الجدول» spans (availability windows, free gaps) cut to the period on screen. Pure.
+// Availability windows and free gaps cut to the period on screen; pure.
 
 const QUARTER = 15 * 60_000;
 /** Bookable free gaps are at least 30 min (the web board's rule). */
@@ -18,10 +18,7 @@ export function clip(span: Span, from: number, to: number): Span | null {
 export const clipAll = (spans: readonly Span[], from: number, to: number): Span[] =>
   spans.flatMap((s) => clip(s, from, to) ?? []);
 
-/**
- * Touching spans as one: the API's windows are cut at Riyadh midnight, so a Cairo viewer's all-day
- * availability would read «00:00 – 23:00، 23:00 – 24:00» instead of «00:00 – 24:00».
- */
+/** The API cuts windows at Riyadh midnight, so touching spans are joined for other zones. */
 export function joined(spans: readonly Span[]): Span[] {
   const out: Span[] = [];
   for (const s of [...spans].sort((a, b) => ms(a.starts_at) - ms(b.starts_at))) {

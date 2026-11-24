@@ -12,11 +12,7 @@ const back = () => {
   if (router.canGoBack()) router.back();
 };
 
-/**
- * No room screen: a bad or stale link («انتهت صلاحية الدخول»), or LiveKit missing or failing to
- * load in this binary (its own words, and the browser: never the expiry line, which sent the user
- * round the same loop).
- */
+/** Never the expiry line for a LiveKit failure, which sent the user round the same loop. */
 function RoomUnavailable({ target }: { target: RoomTarget | null }) {
   const browser = target
     ? {
@@ -34,13 +30,9 @@ function RoomUnavailable({ target }: { target: RoomTarget | null }) {
   );
 }
 
-/**
- * app/room/[kind]/[id]: the room screen with the device's LiveKit, the staff's host powers and
- * the student channel. Never a crash: a notice with «فتح في المتصفح» where the room cannot start.
- */
+/** Never a crash: a notice with an open-in-browser action where the room cannot start. */
 export function RoomRoute() {
-  // `direct`: from the «بدأت الحلقة» push (straight in, the microphone on); `student`: the
-  // lesson's student, whose channel is the in-room «المحادثة».
+  // direct: from the lesson-started push, straight in; student: whose channel is the room chat.
   const params = useLocalSearchParams<{
     kind?: string;
     id?: string;

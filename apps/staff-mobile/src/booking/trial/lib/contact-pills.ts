@@ -12,10 +12,7 @@ export const GENDER_PILLS: FilterPill<Gender | ''>[] = [
   ...GENDERS.map((g) => ({ value: g, label: t.enums.gender[g] })),
 ];
 
-/**
- * «عرفت عننا منين؟»: the form's four answers. «أخرى» is not one of them, so it is offered only
- * when the lead already carries it (a prefilled answer must not vanish).
- */
+/** Other is offered only when the lead already carries it, so a prefilled answer never vanishes. */
 export function sourcePills(current: LeadSource | null): FilterPill<LeadSource | ''>[] {
   return [
     NONE,

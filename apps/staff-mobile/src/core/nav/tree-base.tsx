@@ -26,8 +26,7 @@ export function inTree(base: TreeBase, href: Href): Href {
   return { ...href, pathname: `${base}${href.pathname}` };
 }
 
-/** A student's details in the tree the page runs in: «تفاصيل الطالب» in the sales tree, the admin's
- * student file otherwise. */
+/** The sales tree opens student details, otherwise the admin's student file. */
 export const studentDetailsHref = (base: TreeBase, id: string): Href =>
   base === '/sales' ? `/sales/students/${id}` : `/students/${id}`;
 
@@ -38,12 +37,7 @@ export function InChatProvider({ children }: { children: ReactNode }) {
   return <InChatContext.Provider value>{children}</InChatContext.Provider>;
 }
 
-/**
- * A tab's student route (`/students/…`, `/sales/students/…`) moved to the chat group's own copy
- * (app/(admin-chat)/inbox/student/…, app/(sales-chat)/sales/inbox/student/…); anything else as is. From a
- * chat group, a push to a tab's route stacks a second tab host above the chat (expo-router PUSHes it at the
- * root), so «رجوع» landed on that host's first tab (owner 2026-10-29); the copy stays in the chat's stack.
- */
+/** A push from a chat group stacks a second tab host at the root, so the chat's copy keeps back. */
 export function chatStudentHref(href: Href): Href {
   const move = (path: string) => path.replace(/^(\/sales)?\/students\//, '$1/inbox/student/');
   if (typeof href === 'string') return move(href);

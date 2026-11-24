@@ -1,10 +1,7 @@
 import { t } from '@ab/mobile-kit';
 import type * as WeekModule from '@/calendar/lib/week/week';
 
-// A phone in Bogotá (UTC-5) or Cairo (UTC+3 until 29 Oct 2026) still reads the academy's Riyadh
-// calendar: today, the السبت week start and each label's weekday never follow the device's zone.
-// jest cannot switch the process zone, so the device is emulated: Date's local getters and Intl's
-// default zone are that zone's, and the module is loaded after.
+// The device zone never moves the Riyadh calendar; jest emulates the zone since it can't switch it.
 type Week = typeof WeekModule;
 const GETTERS = ['FullYear', 'Month', 'Date', 'Day', 'Hours', 'Minutes'] as const;
 

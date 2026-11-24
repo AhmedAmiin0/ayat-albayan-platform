@@ -16,7 +16,7 @@ async function shareLink(lessonId: string): Promise<void> {
   if (result.action === Share.dismissedAction) throw new Dismissed();
 }
 
-/** «انسخ رابط الطالب»: no WhatsApp message is sent; Share.share carries it (its sheet has Copy; core/lib/clipboard is not wired here yet). */
+/** Sends no WhatsApp message; Share.share carries it because clipboard is not wired here yet. */
 export function CopyLinkAction({ lessonId }: { lessonId: string }) {
   const copy = useMutation({ mutationFn: shareLink });
   return (
