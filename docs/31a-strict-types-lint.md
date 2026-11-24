@@ -202,14 +202,16 @@ no-unsafe-enum-comparison, prefer-return-this-type, return-await.
 PR 1 changes every tsconfig, so its CI runs the full e2e set, including the api boot. In-flight branches rebase onto it
 and fix the violations they add; that is the point of PR 1.
 
-The gate counts per rule across the repo, not per file. ESLint already enforces per-file counts, and a per-file gate
-would fail on every file move. The known gap: a PR can fix one violation and add another of the same rule elsewhere,
-and the totals stay equal. Review catches that, and a new inline `// oxlint-disable-next-line` too: the gate does not
-count them (2 today). Oxlint fails on any directive that hid nothing in its run (`--report-unused-disable-directives-severity=error`),
-an `eslint-disable` included, so an ESLint-only rule has no inline disable: its exception goes in the counted
-suppressions file. A PR that turns on a rule over existing violations raises a total
-on purpose, so the gate fails it: fix the violations in that PR, or the owner merges it past the red check after reading
-the `lint.json` diff.
+That one-time baseline is history. Since docs/59-no-suppressions.md there are no suppressions: no disable
+or ignore comment, no `@ts-` escape, no cast or rename made only to quiet a rule, no rule switched off or loosened,
+no new baseline entry. The entries left in the suppressions files are old debt being removed. `pnpm guard:lint`
+compares every `eslint-suppressions.json` and `oxlint-suppressions.json` with the base branch's, per file and per
+rule (entries follow renamed files), and keeps the per-rule totals check: a count may only fall, and a file entry,
+a rule entry or a suppressions file the base lacks fails. A workspace whose file is gone never gets one back, and a
+file left empty is deleted. A PR that turns on a rule or tightens a limit brings that rule's violations to zero in
+the same PR; nothing writes a baseline for it (`eslint --suppress-all` and the Oxlint gate's `--suppress-all` are
+gone). The guards job annotates a PR that loosens a lint config («lint rules loosened»); it merges only with the
+owner's go.
 
 ### 5.2 Order
 
@@ -232,15 +234,15 @@ pnpm lint:prune    # lower the counts this PR fixed and drop the entries of dele
 ```
 
 Each package's `oxlint-suppressions.json` holds exact per-file, per-rule counts: a count above it fails (a new
-violation), a count below it fails until pruned, and nothing writes a new entry (docs/31b §4). A new rule (docs/32 §1)
-enters with its one-time baseline: on a PR the gate also gets the lint config sources of both sides (`--configs`),
-and a rule that only the head's configs name may start above 0. After that PR its total only shrinks.
+violation), a count below it fails until pruned, and nothing writes a new entry (docs/31b §4). A new rule turns on
+only when the code already passes it (docs/59): its lane fixes every site first, and the PR that turns it on has no
+suppression for it.
 
 A conflict in an `oxlint-suppressions.json`: take develop's side, then re-run `pnpm lint:prune` on the merge result.
 
 When the CI lint job fails on a fixed violation, its last step («Oxlint baselines to prune») prints the pruned
-`oxlint-suppressions.json` diff. Commit that diff; `pnpm guard:lint` has nothing to write (it compares the totals
-with the base branch).
+`oxlint-suppressions.json` diff. Commit that diff; `pnpm guard:lint` has nothing to write (it compares every file
+with the base branch's). A file left as `{}` is deleted.
 
 ## 6. Fix lanes
 

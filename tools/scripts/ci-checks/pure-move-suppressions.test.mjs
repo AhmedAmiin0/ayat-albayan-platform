@@ -1,4 +1,4 @@
-// End to end on a git repo: a move of a file with ESLint bulk suppressions (keyed package-relative).
+// End to end on a git repo: a move of a file with lint baseline entries (keyed package-relative).
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, renameSync, writeFileSync } from 'node:fs';

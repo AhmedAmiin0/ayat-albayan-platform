@@ -381,7 +381,7 @@
   },
   "ci-checks/pure-move-suppressions.test.mjs": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "ci-checks/pure-move-tokens.mjs": {

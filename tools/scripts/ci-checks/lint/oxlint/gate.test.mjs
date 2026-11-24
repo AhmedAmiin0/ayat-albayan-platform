@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -16,19 +16,22 @@ function fixture() {
   return { root, report: join(root, 'report.json'), baseline: join(root, 'e2e', BASELINE) };
 }
 const write = (path, value) => writeFileSync(path, JSON.stringify(value));
-const read = (path) => readFileSync(path, 'utf8');
 
-test('no baseline: every finding is a new violation, and prune never writes one', () => {
+test('no baseline: every finding is a new violation, and no mode writes one', () => {
   const { root, report, baseline } = fixture();
   const line = 'new violation: e2e/a.ts max-depth 0 -> 2 (fix it)';
   assert.deepEqual(oxlintGate({ root, report }), [line]);
   assert.deepEqual(oxlintGate({ root, report, mode: 'prune' }), [line]);
-  assert.equal(read(baseline), '{}\n');
+  assert.equal(existsSync(baseline), false);
+  assert.throws(() => oxlintGate({ root, report, mode: 'suppress-all' }), /unknown mode/);
 });
 
-test('a mode other than check or prune is refused (no suppress-all)', () => {
-  const { root, report } = fixture();
-  assert.throws(() => oxlintGate({ root, report, mode: 'suppress-all' }), /unknown mode/);
+test('prune deletes a baseline with no entry left: the package is clean', () => {
+  const { root, report, baseline } = fixture();
+  write(baseline, { 'a.ts': { 'max-depth': { count: 2 } } });
+  writeFileSync(report, JSON.stringify({ diagnostics: [] }));
+  assert.deepEqual(oxlintGate({ root, report, mode: 'prune' }), []);
+  assert.equal(existsSync(baseline), false);
 });
 
 test('a lower count fails until pruned; prune never raises a count', () => {

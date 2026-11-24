@@ -93,13 +93,14 @@ a new finding shows as a new violation):
 ## 4. Baselines (`oxlint-suppressions.json`)
 
 Oxlint has no bulk suppressions. Each package keeps `oxlint-suppressions.json`
-(`{ file: { rule: { count } } }`, package-relative). `pnpm lint` writes Oxlint's JSON report
-(`oxlint-report.json`) and `lint-gate.mjs --oxlint` holds **every file to its exact per-rule count**:
-above it fails (a new violation, fix it); below it fails until pruned (`pnpm lint:prune`, then commit the
-baselines: a count only goes down, an entry never appears); a finding outside every package or a parse
-error always fails. Nothing writes a new entry (the one-time `--suppress-all` of the carry-over is
-gone). On a PR, `pnpm guard:lint` also refuses any per-rule total above the base branch's (a count
-raised by hand) and an entry whose file is gone.
+(`{ file: { rule: { count } } }`, package-relative): old debt that only shrinks (docs/59). `pnpm lint`
+writes Oxlint's JSON report (`oxlint-report.json`) and `lint-gate.mjs --oxlint` holds **every file to
+its exact per-rule count**: above it fails (a new violation, fix it); below it fails until pruned
+(`pnpm lint:prune`, then commit the baselines: a count only goes down, an entry never appears, a file
+left empty is deleted); a finding outside every package or a parse error always fails. On a PR,
+`pnpm guard:lint` also holds every file to the base branch's, per file and per rule (renames
+followed): no count raised by hand, no new entry, no new file, no per-rule total above the base's, no
+entry whose file is gone. Nothing writes a baseline (`--suppress-all` is gone).
 
 ## 5. Parity check (removed)
 
