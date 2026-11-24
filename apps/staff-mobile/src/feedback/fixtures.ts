@@ -1,5 +1,7 @@
 import type { FeedbackRowView, TeacherFeedbackSummary } from './types';
 
+// Student feedback test rows in the GET /feedback shape.
+
 export const answered: FeedbackRowView = {
   id: 'f-1',
   lesson_id: 'l-1',

@@ -248,9 +248,6 @@
     }
   },
   "src/assistant-app/AssistantMoreScreen.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 2
     }
@@ -1678,7 +1675,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -1686,12 +1683,12 @@
   },
   "src/earnings/components/EarningsSummary.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/earnings/components/PayForm.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -1760,7 +1757,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/earnings/lib/scope.ts": {
@@ -1962,9 +1959,6 @@
     }
   },
   "src/feedback/feedback-text.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -5199,15 +5193,10 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/no-restricted-syntax": {
       "count": 1
-    }
-  },
-  "src/notifications/use-bell-signal.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/ops/activity/ActivityFilterBar.tsx": {
@@ -5946,23 +5935,10 @@
   },
   "src/registration-check/components/RegistrationForm.tsx": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/registration-check/components/RegistrationResults.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/registration-check/lib/link-family.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
   "src/registration-check/lib/link-family.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -5973,9 +5949,6 @@
   "src/registration-check/lib/registration-check.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 3
@@ -6001,7 +5974,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1

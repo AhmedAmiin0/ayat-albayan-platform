@@ -6,6 +6,7 @@ import type { FeedbackRowView, TeacherFeedbackSummary, TeacherFeedbackView } fro
 /** GET /feedback (admin): every request and answer, newest first, paged. */
 export const useFeedbackList = () => usePagedList<FeedbackRowView>({ path: '/feedback' });
 
+/** GET /feedback/summary (admin): the average, answers and yes share per teacher. */
 export function useFeedbackSummary() {
   const path = '/feedback/summary';
   return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<TeacherFeedbackSummary[]>(path) });

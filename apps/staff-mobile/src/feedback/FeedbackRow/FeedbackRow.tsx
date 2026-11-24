@@ -11,6 +11,12 @@ import type { FeedbackListRow } from '@ab/shared';
 
 const text = t.mobile.feedback;
 
+/**
+ * One feedback answer (or a request still waiting): student and teacher, then the answer as a
+ * bold line of its own (rating and recommend answer, a filled nuqta) or the hollow no-reply chip,
+ * then the lesson type and day, the note (aligned by its own words), and the contact number when
+ * the API sent it (admins only).
+ */
 export const FeedbackRow = memo(function FeedbackRow({ row }: { row: FeedbackListRow }) {
   const { color } = useTheme();
   const answer = answerLine(row);
