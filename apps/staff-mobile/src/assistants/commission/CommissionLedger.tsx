@@ -21,7 +21,6 @@ interface CommissionLedgerProps {
   onNotice: (text: string) => void;
 }
 
-/** «العمولات» (web CommissionLedger): salesperson / month / status filters, the cards, the earned total per currency. */
 export function CommissionLedger({ assistants, assistantId = '', canWrite, onNotice }: CommissionLedgerProps) {
   const [filter, setFilter] = useState<LedgerFilter>({ assistantId, month: '', status: '' });
   const set = (patch: Partial<LedgerFilter>) => setFilter((f) => ({ ...f, ...patch }));

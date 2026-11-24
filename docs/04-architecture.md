@@ -9,7 +9,7 @@
 | API | **NestJS 10** (TypeScript, Fastify adapter) | Owns all business logic & WhatsApp webhooks. Talks to Postgres via `postgres.js`/Kysely + Supabase service client for Storage/Auth admin |
 | Web (admin + teacher + guardian portal) | **React 19 + Vite + TanStack** (Router, Query, Table, Form) + Tailwind + shadcn/ui (RTL) | Single app, role-based routes |
 | Mobile (admin) | **Expo SDK 51+ / React Native**, expo-router, TanStack Query, expo-notifications | EAS Build; same `packages/api-client` |
-| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (eslint/tsconfig/prettier) | |
+| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (eslint/prettier; shared TypeScript options sit in the root `tsconfig.base.json`) | |
 | Messaging | Meta WhatsApp Cloud API v20+ | Webhook → Nest; outbound via Nest `MessagingModule` |
 | PDF | `@react-pdf/renderer` or Playwright-Chromium HTML→PDF in Nest worker | Arabic fonts (Amiri / Noto Naskh), RTL |
 | Jobs | BullMQ (Redis on Upstash) **or** pg-boss on Supabase Postgres (preferred: no extra infra) | Reminders, PDF generation, calendar mirror |
@@ -44,7 +44,7 @@ ayat-albayan/
 │  ├─ db/                        # supabase/ (config, migrations, seed), generated types
 │  ├─ shared/                    # enums, zod schemas, i18n/ar.json + en.json, pure utils (phone, tz, money, …)
 │  ├─ client-core/               # web + mobile: http client, query keys and options, non-UI hooks (usePermissions)
-│  └─ config/                    # eslint config (+ the module-boundaries rule), tsconfig, prettier
+│  └─ config/                    # eslint config (+ the module-boundaries rule), prettier
 ├─ tools/
 │  ├─ migrate/                   # Google Sheets → Supabase import (dry-run + apply)
 │  ├─ wa-stub/  google-stub/  livekit/
@@ -187,6 +187,10 @@ violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule th
 them off in ESLint, which keeps the type-aware, custom and react-hooks rules. There are no inline disables
 (docs/59): no `eslint-disable` or `oxlint-disable` comment, no `@ts-` escape. `typecheck` runs
 `tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
+Tsconfigs: the shared compiler options live in the root `tsconfig.base.json`. Every tsconfig extends only that
+file (by relative path) or a file in its own folder, never a package, and keeps only the options that differ
+for it (React, Nest or Expo ones). The mobile tsconfigs copy what `expo/tsconfig.base` sets apart from the root
+base, so an Expo upgrade re-checks them.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.repo.ts` (class `XRepo`, the only injector of `DB`; no new `*.queries.ts`, docs/32 D2) + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 Unit folders: a unit with 3+ files (code, props, types, tests...) lives in its own folder named after it, with an `index.ts` that only re-exports; its tests go in `tests/` when it has 2+ (`ThreadPane.chat.test.tsx` → `ThreadPane/tests/chat.test.tsx`; `<Unit>.test.tsx` keeps its name); a plain code + test pair stays as it is. A file's unit is the longest non-test code stem it extends (`env.blank.test.ts` → `env.blank`); `X.<role>.ts` (props, types, styles, schemas, mapper, fakes, fixtures, constants, hooks, builder, variants) belongs to `X`. In apps/api each feature folder with a controller is its own Nest module. `pnpm units:fold -- --dry-run` plans the moves, `--write --paths <dir...>` makes them on a `move/*` branch.
 

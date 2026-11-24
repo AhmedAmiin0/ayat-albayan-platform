@@ -10,10 +10,7 @@ interface ReceiptPickerProps {
   onChange: (receipt: Receipt) => void;
 }
 
-/**
- * «صورة الإيصال» (R-MOB-02): the camera or the gallery, a thumbnail once picked. A photo over the
- * bucket's 10 MB is refused here, before any upload. Optional: a cash payment has no slip.
- */
+/** R-MOB-02: over the bucket's 10 MB is refused before upload; optional for cash. */
 export function ReceiptPicker({ receipt, onChange }: ReceiptPickerProps) {
   const { color } = useTheme();
   const [error, setError] = useState<string>();

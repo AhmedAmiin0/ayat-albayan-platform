@@ -1,7 +1,7 @@
 import type { AlertTarget, ChildTab } from '@ab/client-core';
 import type { PortalKind } from '@ab/shared';
 
-/** A child page's tab an alert opens; none = «القادمة». */
+/** A child page's tab an alert opens; none means the upcoming tab. */
 type AlertTab = Extract<ChildTab, 'package' | 'chat'>;
 
 /** Where a bell row opens on the family pages: a TanStack `to` with its params and search. */
@@ -11,7 +11,7 @@ type AlertLink =
   | { to: '/portal'; search: { tab?: AlertTab } }
   | { to: '/schedule' };
 
-/** Who opens it: the login's kind, and whether «المحادثة» exists (family_chat_enabled). */
+/** The login's kind, and whether the chat tab exists (family_chat_enabled). */
 interface AlertViewer {
   kind: PortalKind;
   chatOn: boolean;
@@ -27,7 +27,7 @@ const CHILD_PAGE: Readonly<Record<PortalKind, (id: string, tab?: AlertTab) => Al
   student: (_id, tab) => ({ to: '/portal', search: { tab } }),
 };
 
-/** A chat alert's tab: «المحادثة» only while it exists. */
+/** The chat tab only while it exists. */
 const chatTab = (chatOn: boolean): AlertTab | undefined => (chatOn ? 'chat' : undefined);
 
 const LINKS: Linkers = {
@@ -38,9 +38,9 @@ const LINKS: Linkers = {
   }),
   child: ({ studentId }, { kind }) => CHILD_PAGE[kind](studentId),
   package: ({ studentId }, { kind }) => CHILD_PAGE[kind](studentId, 'package'),
-  // The child's «المحادثة» while family_chat_enabled is on; off: the child's page.
+  // The child's chat tab while family_chat_enabled is on; off, the child's page.
   chat: ({ studentId }, { kind, chatOn }) => CHILD_PAGE[kind](studentId, chatTab(chatOn)),
-  // «بدأت الحلقة»: «القادمة», where the lesson's card joins the room in the page.
+  // Lesson started: the upcoming tab, where the lesson card joins the room.
   live: ({ studentId }, { kind }) => CHILD_PAGE[kind](studentId),
   schedule: () => ({ to: '/schedule' }),
 };

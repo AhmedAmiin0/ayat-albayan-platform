@@ -14,7 +14,7 @@ import { expoReceiptsTransport, RECEIPTS_TRANSPORT, type ReceiptsTransport } fro
     PushReceiptsJob,
     {
       provide: RECEIPTS_TRANSPORT,
-      // EXPO_* read per call: the admin may change them in «التكاملات» (no restart).
+      // Read per call so the admin can change them in integrations without a restart.
       useFactory: (): ReceiptsTransport => (ids) => {
         const env = loadEnv();
         return expoReceiptsTransport({ base: env.EXPO_API_BASE, accessToken: env.EXPO_ACCESS_TOKEN })(ids);

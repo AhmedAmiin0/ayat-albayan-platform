@@ -11,11 +11,7 @@ interface RowDefaultActionsProps {
   onEditTime?: ((lesson: LessonView) => void) | undefined;
 }
 
-/**
- * An agenda row's actions when the screen gives none of its own (a teacher's calendar): one ButtonRow,
- * «عدّل الوقت» | «غيّر الميعاد», both secondary and equal width (docs/07 §6), each only when the lesson
- * allows it. Nothing otherwise.
- */
+/** Used when the screen gives no actions of its own; docs/07 §6 equal secondary buttons. */
 export function RowDefaultActions({ lesson, onReschedule, onEditTime }: RowDefaultActionsProps) {
   const move = canReschedule(lesson);
   const edit = onEditTime && editMode(lesson) ? onEditTime : null;

@@ -7,9 +7,7 @@ import {
 } from '@/modules/messaging/whatsapp/drivers/evolution/evolution-instance';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «افحص الخطوط» on an Evolution line (docs/19 «Evolution driver»): one read-only
-// connectionState with the instance token. Never a test message. The instance name shows as the
-// phone id; Meta's phone facts stay null and `status` carries Evolution's state (open, close, …).
+// One read-only connectionState (docs/19), never a test message; Meta facts stay null.
 
 interface EvolutionCheckInput {
   line: WaLine;

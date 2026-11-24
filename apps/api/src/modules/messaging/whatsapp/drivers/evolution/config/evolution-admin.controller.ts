@@ -10,11 +10,7 @@ import { instanceQr, instanceState } from '@/modules/messaging/whatsapp/drivers/
 
 const ID = z.uuid();
 
-/**
- * An Evolution number's connection (docs/19 «Evolution driver»): its state («افحص الاتصال») and
- * the QR to link the phone. numbers.manage: the QR links a WhatsApp account to the academy.
- * Two read calls to the number's own instance; never a send; no token leaves the server.
- */
+/** numbers.manage since the QR links a WhatsApp account; read calls only, no token leaves. */
 @ApiTags('numbers')
 @ApiBearerAuth()
 @Controller('admin/numbers/:id/evolution')
