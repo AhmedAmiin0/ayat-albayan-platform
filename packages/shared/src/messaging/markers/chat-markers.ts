@@ -1,4 +1,4 @@
-// WhatsApp actions that are not messages of their own (owner 2026-10-30): an edit, a revoke
+// WhatsApp actions that are not messages of their own: an edit, a revoke
 // (deleted for everyone) or a reaction, from the WhatsApp Business app (smb_message_echoes,
 // Kapso's history) or from the family. Each is kept as a hidden marker row (migration 992:
 // message_is_reaction covers all three) that the database applies to the message it names

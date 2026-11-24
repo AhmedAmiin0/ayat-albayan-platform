@@ -6,7 +6,7 @@ import { z } from 'zod';
  * The CRM's name for a template when it is not its meta_name: the teacher's new-student alert
  * goes as the old script's teacher_lesson_v2, both same-day teacher reminders as its
  * teacher_lesson_reminder ({{1}} the teacher, {{2}} one line, no buttons; the CRM's account has
- * no teacher_lesson_reminder_meet: Meta #132001 on 2026-10-31).
+ * no teacher_lesson_reminder_meet: Meta #132001).
  */
 export const CRM_DEFAULT_NAMES: Readonly<Record<string, string>> = {
   teacher_new_student: 'teacher_lesson_v2',
@@ -32,7 +32,7 @@ export const crmTemplateName = (t: CrmNamed): string => t.crm_name || CRM_DEFAUL
 
 /**
  * Keys that, on a crm line, are also approved by the CRM template they go as (crmTemplateName),
- * not only by their own row (owner 2026-11-02: the teacher's alert waited on teacher_new_student
+ * not only by their own row (the teacher's alert waited on teacher_new_student
  * while the CRM held teacher_lesson_v2 approved). The same-day reminders keep their own status.
  */
 export const CRM_GATED_KEYS: readonly string[] = ['teacher_new_student'];

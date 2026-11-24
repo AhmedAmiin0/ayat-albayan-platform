@@ -1,5 +1,5 @@
 // Clickable links in a chat message (W11, web and mobile). A link is an http(s) URL, or `www.` and a
-// host, which opens as `https://www.…` (owner 2026-10-26). `javascript:`, `ftp:`, other schemes and
+// host, which opens as `https://www.…`. `javascript:`, `ftp:`, other schemes and
 // bare domains without `www.` stay text. Signed links never reach sales (the API strips them).
 
 export interface TextPart {

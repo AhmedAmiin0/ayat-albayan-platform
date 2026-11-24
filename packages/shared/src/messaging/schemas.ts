@@ -25,7 +25,7 @@ export const threadTextSchema = z.object({
   message: 'too_long',
 });
 
-/** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF (owner 2026-10-19 #2) or voice note (2026-10-27). */
+/** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF or voice note. */
 export const threadFileUploadSchema = z.object({
   clientRequestId: z.uuid(),
   mime: z.enum(CHAT_FILE_MIMES, { message: 'file_type' }),
@@ -69,11 +69,11 @@ export const threadRatingSchema = z.object({ clientRequestId: z.uuid() });
 
 /**
  * PATCH /messaging/templates/:key/starter: the admin offers a template to sales to start a chat, or
- * stops. Named like the TemplateView field it sets (decision 2026-10-12), not camelCase.
+ * stops. Named like the TemplateView field it sets, not camelCase.
  */
 export const templateStarterSchema = z.object({ sales_starter: z.boolean() });
 
-/** POST /messaging/templates/health: one line (WABA) only; none = every configured line (owner 2026-10-18). */
+/** POST /messaging/templates/health: one line (WABA) only; none = every configured line. */
 export const templateHealthSchema = z.object({ line: z.enum(WA_LINES).optional() });
 
 /** PATCH /messaging/templates/:key/line: the number this template goes from (audited). */

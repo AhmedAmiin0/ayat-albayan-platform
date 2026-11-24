@@ -2,7 +2,7 @@ import { RATING_TEMPLATE } from '../../lesson/rating.js';
 import { ACCOUNT_CODE_TEMPLATE } from '../../../people/users/index.js';
 import { TEMPLATE_KEYS } from '../templates.js';
 
-// Code-bound templates (owner 2026-11-14): the platform sends them by itself with a fixed number of
+// Code-bound templates: the platform sends them by itself with a fixed number of
 // variables and fixed buttons (the reminders, booking_*, teacher_lesson_*, report_ready* =
 // session_report_* on Meta, renewal_due, account_code, lesson_join_link, the feedback and rating
 // ones…). An edit may change their wording only.

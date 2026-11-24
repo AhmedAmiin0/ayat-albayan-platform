@@ -7,7 +7,7 @@ import {
 
 // messages.interactive_payload of a message the business sent outside the app (an echo of the
 // WhatsApp Business app, or an item of Kapso's history), read from Meta's message object. It
-// replaces the old «[edit]» / «[image]» placeholder bodies (owner 2026-10-30): the row says what it
+// replaces the old «[edit]» / «[image]» placeholder bodies: the row says what it
 // is, the client words it (marker-notes.ts) or shows the file.
 
 /** WhatsApp's own format per media type, when neither Meta nor Kapso names the file's mime. */

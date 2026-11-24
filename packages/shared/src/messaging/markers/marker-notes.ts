@@ -4,8 +4,8 @@ import type { HiddenMark } from '../message-actions/hidden.js';
 import type { CorrectionMark } from '../message-actions/correction/index.js';
 import { payloadTypeOf } from '../payload/index.js';
 
-// What a bubble (or the chats list's last line) shows instead of its own content (owner
-// 2026-10-30): a message deleted for everyone, the click-to-WhatsApp ad's automatic welcome
+// What a bubble (or the chats list's last line) shows instead of its own content: a
+// message deleted for everyone, the click-to-WhatsApp ad's automatic welcome
 // (Kapso's «errors» echo), or a message the WhatsApp Business app sent that the API cannot read
 // («unsupported»).
 
