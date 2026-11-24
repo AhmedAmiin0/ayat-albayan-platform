@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type SalesScheduleLesson } from '@ab/shared';
+import type { SalesScheduleLesson } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

@@ -1,4 +1,4 @@
-import type { MeetingInviteeView } from '@ab/shared';
+import type { MeetingInviteeView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

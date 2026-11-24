@@ -1,4 +1,5 @@
-import { currentPackage, type SalesHistoryEntry } from '@ab/shared';
+import type { SalesHistoryEntry } from '@ab/shared';
+import { currentPackage } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

@@ -1,4 +1,5 @@
-import { formatAmount, walletStateStyle, type MyCommissionRow, type PaymentMethod } from '@ab/shared';
+import type { PaymentMethod } from '@ab/catalog';
+import { formatAmount, walletStateStyle, type MyCommissionRow } from '@ab/money';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { monthLabel } from '@/features/finance/payouts';

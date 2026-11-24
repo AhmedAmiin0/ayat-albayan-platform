@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { egressOutcome } from './livekit-webhook';
 import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import { lessonTarget } from '@/modules/teaching/classroom/recordings/recording-target';

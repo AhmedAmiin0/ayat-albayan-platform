@@ -1,4 +1,4 @@
-import type { MyPaymentRow } from '@ab/shared';
+import type { MyPaymentRow } from '@ab/money';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { salesAmountEditable } from '@/features/finance/payments';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

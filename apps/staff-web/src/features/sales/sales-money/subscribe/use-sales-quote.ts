@@ -1,4 +1,4 @@
-import type { SubscriptionPricing } from '@ab/shared';
+import type { SubscriptionPricing } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounced } from '@/features/finance/pricing';
 import { useCustomPrice } from '@/features/finance/subscriptions';

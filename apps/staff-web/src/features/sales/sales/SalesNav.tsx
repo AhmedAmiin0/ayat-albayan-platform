@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { SectionLinks, type SectionLink } from '@/components/shell/nav/SectionLinks';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

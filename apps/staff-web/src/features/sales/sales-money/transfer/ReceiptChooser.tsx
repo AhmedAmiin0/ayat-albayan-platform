@@ -1,4 +1,4 @@
-import { PAYMENT_ATTACHMENTS_MAX } from '@ab/shared';
+import { PAYMENT_ATTACHMENTS_MAX } from '@ab/money';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { AttachmentItems } from '@/features/finance/payments/attachments/AttachmentItems';

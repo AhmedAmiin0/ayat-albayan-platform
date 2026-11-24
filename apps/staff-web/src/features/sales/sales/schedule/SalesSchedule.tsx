@@ -1,4 +1,4 @@
-import { ACADEMY_TZ, zonedPartsIn } from '@ab/shared';
+import { ACADEMY_TZ, zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';

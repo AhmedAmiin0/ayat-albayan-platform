@@ -1,4 +1,4 @@
-import type { CorrectTo } from '@ab/shared';
+import type { CorrectTo } from '@ab/schedule';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

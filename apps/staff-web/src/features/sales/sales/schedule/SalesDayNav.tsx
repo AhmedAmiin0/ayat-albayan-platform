@@ -1,4 +1,4 @@
-import { addDays, weekdayOf } from '@ab/shared';
+import { addDays, weekdayOf } from '@ab/time';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { dayMonthLabel } from '@/features/teaching/schedule';

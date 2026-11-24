@@ -1,6 +1,6 @@
 import { t } from '@ab/mobile-kit';
 import { activeMonths, summaryWarnings } from './summary-lines';
-import type { DashboardResponse } from '@ab/shared';
+import type { DashboardResponse } from '@ab/money';
 
 const month = (m: string, revenue: number, extra: { cost?: number; expenses?: number } = {}) => {
   const { cost = 0, expenses = 0 } = extra;

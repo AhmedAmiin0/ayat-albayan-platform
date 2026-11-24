@@ -1,5 +1,5 @@
-import type { TimeEditResult } from '@ab/shared';
-import { zonedPartsIn } from '@ab/shared';
+import type { TimeEditResult } from '@ab/schedule';
+import { zonedPartsIn } from '@ab/time';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useEffect } from 'react';

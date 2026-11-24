@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { AlertsRepo } from './alerts.repo';
 import { toBalance } from '@/modules/finance/subscriptions/money/balance.repo';
@@ -88,7 +88,14 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
     expect(await q.studentsOfLessons([])).toEqual([]);
     expect(calls).toHaveLength(0);
     expect(await q.studentsOfLessons(['l1'])).toEqual(['a', 'b']);
-    expect(await q.studentsWithPackages()).toEqual(['a']);
+    expect(await q.sweepStudents(new Date('2026-10-02T09:00:00Z'))).toEqual(['a']);
+  });
+
+  it('the sweep skips a student whose packages all ended, unless one changed since the last sweep', async () => {
+    const { db, argsOf } = fakeDb({ subscriptions: [{ data: [] }] });
+    await new AlertsRepo(db, fakePolicy()).sweepStudents(new Date('2026-10-02T09:00:00Z'));
+    const live = 'status.not.in.(expired,cancelled),updated_at.gte."2026-10-02T09:00:00.000Z"';
+    expect(argsOf('subscriptions', 'or')).toEqual([live]);
   });
 });
 

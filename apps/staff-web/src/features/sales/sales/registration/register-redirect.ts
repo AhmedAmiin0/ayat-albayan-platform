@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 
 /** Registration now lives in the chat, so old links open the sales inbox on that number. */
 export function registerRedirect(search: Record<string, unknown>) {

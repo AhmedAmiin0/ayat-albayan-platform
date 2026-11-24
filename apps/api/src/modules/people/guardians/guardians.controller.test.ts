@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { AuthModule } from '@/common/auth/auth.module';
 import { DB, DbModule } from '@/common/db/db.module';
-import { fakeDb, type FakeResult } from './fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { GuardiansModule } from './guardians.module';
 
 const results: Record<string, FakeResult[]> = {};

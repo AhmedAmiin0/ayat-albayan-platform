@@ -1,4 +1,5 @@
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow, Page } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
 import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';

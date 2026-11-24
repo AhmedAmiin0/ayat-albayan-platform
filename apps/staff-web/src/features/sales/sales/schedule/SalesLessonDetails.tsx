@@ -1,4 +1,5 @@
-import { lessonWhenAt, sameClockAt, type SalesScheduleLesson } from '@ab/shared';
+import { lessonWhenAt, type SalesScheduleLesson } from '@ab/shared';
+import { sameClockAt } from '@ab/time';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
