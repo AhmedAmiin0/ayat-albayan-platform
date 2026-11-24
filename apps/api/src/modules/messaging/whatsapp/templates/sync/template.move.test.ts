@@ -4,8 +4,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { templateStamp } from '@/modules/messaging/whatsapp/sender/send-line';
 import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «نقل إلى الرقم الآخر» (owner 2026-10-18): the row moves, its old WABA's state is dropped, and the new
-// line is synced at once, so the status follows the target WABA.
+// The row moves, its old WABA state is dropped and the new line syncs at once.
 
 const db = new Map<string, TemplateRow>();
 const queries = {

@@ -14,7 +14,7 @@ const fail = (what: string, message: string): Error => new Error(`${what} failed
 /** The reopen rows of one phone: `reopen:<E.164>:<day>[:<try>]` (reopenDedupKey). */
 const reopenKeys = (phone: string): string => `reopen:${phone}:%`;
 
-/** The read of «إعادة فتح المحادثة» (reopen-pick.ts): one phone's reopen rows since a time. */
+/** One phone's reopen rows since a time. */
 @Injectable()
 export class ReopenPickRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

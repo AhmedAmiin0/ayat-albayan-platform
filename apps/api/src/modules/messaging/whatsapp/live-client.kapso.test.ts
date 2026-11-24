@@ -3,7 +3,7 @@ import { setIntegrationOverlay } from '@/common/configuration/integrations/integ
 import { LiveWhatsappClient } from './live-client';
 import { RECORDED, scriptedFetch } from './whatsapp.fakes';
 
-// docs/19: switching a line's driver (or the Kapso key) in «التكاملات» applies to the next call.
+// docs/19: a driver or Kapso key change in integrations applies to the next call.
 
 const LINE = { WA_PHONE_NUMBER_ID: 'p1', WA_WABA_ID: 'w1', WA_ACCESS_TOKEN: 'token-a' };
 const KAPSO = { KAPSO_API_BASE: 'http://127.0.0.1:4010/kapso', KAPSO_API_KEY: 'key-a' };

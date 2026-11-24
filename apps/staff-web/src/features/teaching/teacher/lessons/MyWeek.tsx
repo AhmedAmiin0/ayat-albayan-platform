@@ -1,4 +1,6 @@
-import { addDays, counted, type LessonView, weekWindowIn, zonedPartsIn } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { LessonView } from '@ab/schedule';
+import { addDays, weekWindowIn, zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

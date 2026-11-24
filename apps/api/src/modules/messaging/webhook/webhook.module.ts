@@ -95,7 +95,6 @@ import { InboundListing } from '@/modules/messaging/webhook/external/inbound/inb
     InboundCatchUp,
     InboundGapAlert,
     InboundCatchUpJob,
-    // «التكاملات» › the CRM's delivery-ticks webhook in one click (docs/19 «crm driver»).
     { provide: CRM_WEBHOOK_SOURCE, useFactory: liveCrmWebhookSource },
     CrmWebhookRegistrar,
     // A timed-out crm send confirmed from the CRM (docs/19 «Confirming an uncertain send»).

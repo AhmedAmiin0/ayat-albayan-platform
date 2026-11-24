@@ -11,19 +11,14 @@ import { useInvoiceUpload } from '@/booking/invoice/use-invoice-upload';
 export interface InvoiceStepProps {
   /** The wizard's request id: the upload path is signed for it, and POST /booking sends it too. */
   requestId: string;
-  /** The guardian's WhatsApp number: «من الشات» lists what it sent. Absent: no such button. */
+  /** The guardian's WhatsApp number; absent means no from-chat button. */
   chatPhone?: string | null;
   value: InvoiceDraft | null;
   onChange: (invoice: InvoiceDraft | null) => void;
   onNext: () => void;
 }
 
-/**
- * «الفاتورة *»: the payment proof of a package or a makeup, required. From the phone (camera or
- * gallery; a PDF can only come from the chat, which needs no picker module) or «من الشات». The
- * photo uploads the moment it is picked; «التالي» waits for that, and a failed upload (offline
- * included) keeps the photo with «ارفعها تاني», so nothing is picked twice.
- */
+/** Required; uploads on pick, and a failed upload keeps the photo so nothing is picked twice. */
 export function InvoiceStep({ requestId, chatPhone, value, onChange, onNext }: InvoiceStepProps) {
   const up = useInvoiceUpload(requestId, onChange);
   const [chat, setChat] = useState(false);

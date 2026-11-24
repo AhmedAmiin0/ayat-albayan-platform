@@ -29,10 +29,7 @@ const VIEW: Readonly<Record<Shown, (read: ChildSummaryRead, ready: ReactNode) =>
   ready: (_read, ready) => <div className="grid animate-fade-in gap-3">{ready}</div>,
 };
 
-/**
- * A child card's figures once EVERY read is in: a skeleton until then, «تعذّر تحميل البيانات» with
- * a retry when one failed (never a false «no report yet»), then the figures fade in (no blink).
- */
+/** Waits for every read so a failure never shows a false empty state; retry on failure. */
 export function ReadState({ read, children }: { read: ChildSummaryRead; children: ReactNode }) {
   return <>{VIEW[shownOf(read)](read, children)}</>;
 }

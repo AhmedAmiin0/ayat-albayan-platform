@@ -20,7 +20,7 @@ function gathered(over: Record<string, unknown> = {}): string {
 test('a mergeable PR writes the subject, the scrubbed body and action=merge', () => {
   const dir = gathered();
   assert.deepEqual(run(dir), ['action=merge', `sha=${HEAD}`, 'reason=every condition holds']);
-  assert.equal(readFileSync(join(dir, 'subject.txt'), 'utf8'), 'Cut shared from db (#7)');
+  assert.equal(readFileSync(join(dir, 'subject.txt'), 'utf8'), 'refactor(shared): cut shared from db (#7)');
   assert.equal(readFileSync(join(dir, 'body.txt'), 'utf8'), 'Summary');
 });
 

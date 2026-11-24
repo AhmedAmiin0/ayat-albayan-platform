@@ -1,11 +1,6 @@
 import { palette } from '@ab/shared';
 
-// The report's stylesheet (docs/07 §13): always the light tokens, A4 portrait, 1em = 14px and
-// nothing below 12px. The frame, header, summary grid and ۞ sections follow the academy's own
-// certificate report (Brand library reportHtml: 2px gold outside a 1px gold-soft rule). Page margin
-// is 10mm, not docs/07's 18mm: the frame itself is the margin, and 18mm overflows at a 12px floor.
-// A long report flows onto a 2nd page (the frame repeats via box-decoration-break) and then gets
-// a code / date / page-number footer (pdf-pages.ts has the threshold).
+// docs/07 §13: always light, A4, 12px floor; 10mm margin since the frame is the margin.
 const c = palette.light;
 
 const tokens = `:root{--ink:${c.ink};--ink3:${c.ink3};--green:${c.lapisHover};--green2:${c.lapis};

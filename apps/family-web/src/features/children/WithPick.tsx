@@ -10,7 +10,6 @@ import { PickChildPage } from './PickChildPage';
 type Page = (student: PortalStudent, home: PortalHome) => ReactNode;
 type Waiting = Exclude<FamilyPick['state'], 'one'>;
 
-/** No student in view yet: the saved pick loading, «اختر الطالب», or no student linked. */
 const WAITING: Readonly<Record<Waiting, (home: PortalHome) => ReactNode>> = {
   loading: () => <ListSkeleton rows={3} />,
   choose: (home) => <PickChildPage home={home} />,
@@ -29,10 +28,7 @@ function Picked({ home, page }: { home: PortalHome; page: Page }) {
   );
 }
 
-/**
- * A page of the student in view (owner 2026-11-16, docs/50 §6): a student's own, an only child or
- * the child a guardian picked; «اختر الطالب» in its place until a guardian of several picks.
- */
+/** docs/50 §6: the picker shows in place until a guardian of several picks. */
 export function WithPick({ children }: { children: Page }) {
   return <WithHome>{(home) => <Picked home={home} page={children} />}</WithHome>;
 }

@@ -79,10 +79,7 @@ export class TranslationsService implements OnApplicationBootstrap, OnModuleDest
     return listKeys(query, this.maps);
   }
 
-  /**
-   * 404 unknown key; 409 `{ code: 'edit_on_values', settingKey }` for the ar text of a settings hint
-   * (edited on «القيم», docs/26 §3); 400 `{ message: 'placeholders_missing', missing }` when slots are dropped.
-   */
+  /** 409 for a settings hint's ar text (edited on values, docs/26 §3); 400 when slots drop. */
   async save(w: OverrideWrite): Promise<void> {
     const problem = overrideProblem(w.locale, w.key, w.value);
     if (problem?.kind === 'unknown_key') throw new NotFoundException({ message: 'unknown_key' });

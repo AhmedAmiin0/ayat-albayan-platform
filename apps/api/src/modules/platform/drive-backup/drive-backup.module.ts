@@ -16,7 +16,7 @@ import { DriveBackupJob } from './drive-backup.job';
 import { DriveBackupRunner } from './drive-backup.runner';
 import { MinioSource } from './source/minio-source';
 
-/** The real adapters: the Google env is read at call time (a client saved in «التكاملات»). */
+/** The Google env is read at call time, so a client saved in integrations applies. */
 export const httpBackupFactory: DriveBackupFactory = {
   drive: (refreshToken, signal) => {
     const env = googleEnv(loadEnv());
