@@ -15,11 +15,11 @@ const shortLabels: Readonly<Record<LessonStatus, string>> = {
 
 /** How a lesson status reads on screen, following settings.lesson_confirmation_required. */
 export interface LessonStatusText {
-  /** The academy asks for a confirmation: «يحتاج تأكيد» and the confirm actions exist. */
+  /** The academy asks for confirmation, so needs-confirmation and the confirm actions exist. */
   required: boolean;
-  /** A row chip's short word («للتأكيد», or «قادمة» when no confirmation is required). */
+  /** A row chip's short word, which depends on whether confirmation is required. */
   word: (status: LessonStatus) => string;
-  /** The whole word («يحتاج تأكيد», or «مجدولة»): detail heads, spoken labels. */
+  /** The full word for detail heads and spoken labels. */
   label: (status: LessonStatus) => string;
   /** The chip's tone and glyph: neutral for a scheduled lesson that needs no confirmation. */
   look: (status: LessonStatus) => StatusStyle;

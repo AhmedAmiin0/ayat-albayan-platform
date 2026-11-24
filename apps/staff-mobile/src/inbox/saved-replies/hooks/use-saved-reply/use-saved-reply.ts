@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { requestId } from '@/core/lib/http/request-id';
 import { filledText, slashAt, slashSearch } from '@/inbox/saved-replies/lib/reply-text';
 
-/** A picked reply's file, waiting for «أرسل». */
 export interface StagedFile {
   replyId: string;
   file: SavedReplyAttachment;
@@ -11,24 +10,14 @@ export interface StagedFile {
   requestId: string;
 }
 
-/**
- * Fills the box with a picked reply's final text (and stages its file). `ask` instead opens the sheet
- * on the reply's «أكمل الرد» form (blanks to fill first, owner 2026-10-27); `asking` is that reply.
- * One prop carries all three, so the «/» list and the sheet reach the same draft.
- */
+/** One prop carries all three so the slash list and the sheet reach the same draft. */
 export interface ReplyFill {
   (text: string, reply: SavedReply): void;
   ask: (reply: SavedReply) => void;
   asking: SavedReply | null;
 }
 
-/**
- * The composer's saved-reply state (owner 2026-10-26, as WhatsApp Business): «/» at the start of
- * the box or of a line docks the list over the composer, searched by what follows it; deleting
- * that «/», sending, or leaving the box closes it. The button opens the sheet instead. A pick only
- * changes the box's text and the chip: nothing is sent until «أرسل». `enabled` false (a teacher):
- * «/» is plain text.
- */
+/** A pick only changes the box and chip, nothing is sent; slash is plain text for teachers. */
 export function useSavedReplyDraft(input: { text: string; setText: (text: string) => void; enabled: boolean }) {
   const [slash, setSlash] = useState<number | null>(null);
   const [sheet, setSheet] = useState(false);
@@ -41,7 +30,7 @@ export function useSavedReplyDraft(input: { text: string; setText: (text: string
     sheet,
     staged,
     open: () => setSheet(true),
-    /** Closing the «أكمل الرد» form keeps a «/search» in the box: its list docks again. */
+    /** Closing the fill form keeps the slash search in the box, so its list docks again. */
     close: () => {
       setSheet(false);
       if (!asking) setSlash(null);

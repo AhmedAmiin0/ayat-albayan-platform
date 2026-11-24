@@ -16,8 +16,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, type SendMethod, t, pathKey } from '@ab/mobile-kit';
 
-// /people/* (owner 2026-11-02), the web's api.ts: «تعديل البيانات», «ربط بولي أمر آخر» and «تحويل»
-// for the assistant and the admin. Paths, keys and error words are @ab/client-core's.
+// The /people endpoints for the assistant and the admin; shared via @ab/client-core.
 
 const send = (method: SendMethod, path: string, body?: unknown): Promise<unknown> =>
   apiSend(method, path, body);

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { InvoicesPage } from '@/features/finance/finance/InvoicesPage';
 import { parseInvoicesSearch } from '@/features/finance/finance/search';
 
-/** /admin/invoices — every booking invoice (R-PAY-03), «سجّل كدفعة» from one; range, sort and filters in the URL. */
+/** Every booking invoice (R-PAY-03); range, sort and filters live in the URL. */
 export const Route = createFileRoute('/admin/(finance)/invoices')({
   validateSearch: parseInvoicesSearch,
   component: InvoicesRoute,

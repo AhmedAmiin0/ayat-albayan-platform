@@ -15,8 +15,7 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({
 }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft goes now inside academy_message. The API is
-// faked: nothing reaches WhatsApp.
+// The API is faked: nothing reaches WhatsApp.
 
 const BODY = 'السلام عليكم\nرسالة من الأكاديمية:\n\n{{1}}\n\nيسعدنا ردّكم.';
 const chat = { line: 'chat' as const, sales_starter: true };

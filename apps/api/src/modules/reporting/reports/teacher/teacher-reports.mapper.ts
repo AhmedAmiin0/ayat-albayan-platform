@@ -23,10 +23,7 @@ function identity(row: TeacherReportRow, p: TeacherReportParts): Pick<TeacherRep
 
 const instantOf = (at: string | null): Date | null => (at === null ? null : new Date(at));
 
-/**
- * One of my submitted reports (R-REP-02): «تعديل التقرير» while canEditReport for the teacher
- * (edit_until = first submit + report_teacher_edit_minutes), else «عرض التقرير».
- */
+/** R-REP-02: editable while canEditReport (first submit plus report_teacher_edit_minutes). */
 export function toTeacherReportView(row: TeacherReportRow, p: TeacherReportParts): TeacherReportView {
   const submittedAt = instantOf(row.submitted_at);
   const until = editUntil({ submittedAt, minutes: p.minutes });

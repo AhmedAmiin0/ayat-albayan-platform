@@ -27,7 +27,6 @@ test('rows: name, isolated phone, source, status chip; an unnamed lead is titled
   await renderWithQuery(<InboxScreen />);
   await openLeads();
   expect(await screen.findByText('هدى سالم')).toBeTruthy();
-  // Owner 2026-10-28: the total on the title's line, «كل المحادثات · 2».
   expect(screen.getByRole('header', { name: `${t.leads.title} · 2` })).toBeTruthy();
   expect(screen.getByText(ltr('+966 55 214 7730'))).toBeTruthy();
   expect(screen.getByText(ltr('+20 10 1234 5678'))).toBeTruthy();

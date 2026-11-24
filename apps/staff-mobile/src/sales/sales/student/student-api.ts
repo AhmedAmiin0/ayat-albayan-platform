@@ -21,12 +21,9 @@ export const useSalesStudent = (id: string) =>
 
 /** The weekly course on the student file (owner 2026-11-06: a link sale left unbooked). */
 interface CourseState {
-  /** «أيام الحلقات»: the package may be booked now (GET /sales/booking/course: blocked null). */
+  /** The package may be booked now (GET /sales/booking/course: blocked null). */
   book: boolean;
-  /**
-   * «تغيير المعلم» / «تغيير موعد الحلقات»: a course runs or is booked ahead (`current`), or an
-   * imported one blocks the wizard (course_exists without `current`).
-   */
+  /** A course runs or is booked ahead (`current`), or an imported one blocks the wizard. */
   moves: boolean;
   /** The package of `current`: the moves change that course, not a newer unbooked package. */
   movesOf: string | null;
@@ -48,17 +45,16 @@ export const courseState = (
 const hasCourse = (view: SalesCourseView): boolean =>
   Boolean(view.current) || view.blocked === 'course_exists';
 
-/** The course view of a student she acts on (owner 2026-11-06): «أيام الحلقات», or its moves. */
 export function useCourseState(studentId: string, acts: boolean): CourseState {
   const course = useSalesCourse(acts ? studentId : '');
   return courseState(course.data, course.isError);
 }
 
-/** «تحميل PDF» of one of my student's sent reports: a 1 h signed URL opened in the browser. */
+/** A 1 h signed URL opened in the browser. */
 export const openStudentReportPdf = (studentId: string, reportId: string): Promise<void> =>
   openSigned(`/sales/students/${studentId}/reports/${reportId}/pdf`);
 
-/** «إلغاء الباقة» (owner 2026-11-02): whether the cancel may run (block null), with the key. */
+/** Whether the package cancel may run (block null). */
 export const usePackageCancelCheck = (input: {
   subscriptionId: string | null;
   enabled: boolean;
@@ -76,7 +72,7 @@ export const usePackageCancelCheck = (input: {
 export const cancelAnyPackage = (subscriptionId: string, body: { reason?: string }) =>
   postPackageCancel(apiFetch, subscriptionId, body);
 
-/** What a cancel makes stale: as «إلغاء الاشتراك» (actions, student, sales, lessons, money). */
+/** The same keys the subscription cancel makes stale: actions, student, sales, lessons, money. */
 export const packageCancelStale = (studentId: string): QueryKey[] => [
   [...courseActionsKey(studentId)],
   pathKey('/students'),

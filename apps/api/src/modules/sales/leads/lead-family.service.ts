@@ -22,18 +22,7 @@ function linkError(error: PostgrestError): Error {
   return NOT_FOUND.includes(code) ? notFound(code) : conflict(code);
 }
 
-/**
- * «ربط بطالب موجود» (owner 2026-10-29): POST /leads/:id/link-family adds the lead chat's number as the SECOND
- * number of the family of the student with this code and moves the lead to converted, both with their audit
- * rows in ONE transaction (link_family_phone, migration 973; the lead row is locked, so a concurrent status move
- * cannot leave a linked number on a lead still in follow-up). It never sets leads.converted_guardian_id nor
- * leads.assigned_to: linking makes nobody an owner of that family. A retry is idempotent (linked: false).
- * 404 lead_not_found / student_not_found; 409 number_taken, family_has_second_number, teacher_number,
- * lead_has_family (the number is another family's main number).
- * A second number opens the family's login (owner 2026-11-17): once that login exists, only the
- * admin adds one (as the main number, PeopleEditService), else 409 guardian_has_login, a
- * non-admin's retry on such a family included (not linked: false).
- */
+/** One transaction with audit rows (migration 973); nobody becomes the family's owner. */
 @Injectable()
 export class LeadFamilyService {
   constructor(@Inject(DB) private readonly db: Db) {}

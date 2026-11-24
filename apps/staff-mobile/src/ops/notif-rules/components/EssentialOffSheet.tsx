@@ -8,7 +8,6 @@ import { ButtonRow } from '@/core/ui/actions';
 import { useFocusOnOpen } from '@/ops/notif-rules/hooks/use-focus-on-open';
 
 interface EssentialOffSheetProps {
-  /** The row's name («تأكيد الحجز وتغيير الموعد»). */
   name: string;
   busy: boolean;
   error: string | undefined;
@@ -16,12 +15,7 @@ interface EssentialOffSheetProps {
   onClose: () => void;
 }
 
-/**
- * «اكتب: إيقاف» for an essential row (states.html#mobile): the button stays off until the word is
- * typed exactly (ESSENTIAL_OFF_TEXT), then sends it as confirmText; the API logs the OFF. Not green:
- * the act removes something, so «إيقاف» is the danger button, «إلغاء» (secondary) beside it in one ButtonRow. Mount it only while the question is open. On open the screen reader
- * lands on the title (accessibilityViewIsModal alone is iOS-only).
- */
+/** The OFF word must be typed exactly and the API logs it; accessibilityViewIsModal is iOS-only. */
 export function EssentialOffSheet({ name, busy, error, onConfirm, onClose }: EssentialOffSheetProps) {
   const { color } = useTheme();
   const [typed, setTyped] = useState('');

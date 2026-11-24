@@ -10,10 +10,7 @@ interface PaidDayPickerProps {
   now: Date;
 }
 
-/**
- * «تاريخ الدفع» without typing (rule 6, no date-picker dependency): the day, then «يوم قبله» /
- * «يوم بعده». It starts at today and never goes past it (paid_at_future).
- */
+/** Rule 6, never typed; starts at today and never goes past it (paid_at_future). */
 export function PaidDayPicker({ daysAgo, onChange, now }: PaidDayPickerProps) {
   const { color } = useTheme();
   const m = t.payments.mobile;

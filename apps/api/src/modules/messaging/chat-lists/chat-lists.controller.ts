@@ -13,11 +13,7 @@ import {
 } from './chat-lists.guard';
 import { ChatListsService } from './chat-lists.service';
 
-/**
- * «القوائم» (owner 2026-10-20, docs/22 §3): the academy's shared chat lists, for the admin and the
- * assistants with inbox.lists (+ inbox.read); a teacher is 403 (ListsUserGuard, before any body
- * is parsed). A list only organises chats: no route here sends anything.
- */
+/** Shared chat lists (docs/22 §3); teachers get 403; nothing here sends. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.lists')

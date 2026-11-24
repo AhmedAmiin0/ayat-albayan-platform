@@ -8,7 +8,6 @@ import {
   usePeopleWrite,
 } from '@/students/people-edit/people-edit-api';
 
-/** «ربط بولي أمر آخر» (the web's useAttach): the state here, the logic in attachModel. */
 export function useAttach(view: PeopleEditView, onDone: (notice: string) => void): AttachModel {
   const [search, setSearch] = useState('');
   const [choice, setChoice] = useState<MoveChoice | null>(null);

@@ -11,10 +11,7 @@ const R = t.studentRecordings.visible;
 const isGroupRefusal = (e: unknown): boolean =>
   e instanceof ApiError && e.status === 409 && (e.body as { code?: string } | null)?.code === 'recording_group_lesson';
 
-/**
- * «إظهار للطالب» (off by default): the admin and the lesson's teacher decide whether the student
- * and guardian may watch it once their portal exists. Everyone else just reads the state.
- */
+/** Off by default; only the admin and the lesson's teacher may change it. */
 export function RecordingVisibility({ rec }: { rec: StudentRecordingView }) {
   const queryClient = useQueryClient();
   const toggle = useMutation({

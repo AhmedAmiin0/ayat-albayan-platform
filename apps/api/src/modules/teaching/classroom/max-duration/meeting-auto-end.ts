@@ -6,11 +6,7 @@ import { AUTO_END_REASON } from './max-duration.rule';
 const sameInstant = (a: string | null | undefined, b: Date): boolean =>
   typeof a === 'string' && Date.parse(a) === b.getTime();
 
-/**
- * The database half of «إنهاء» for the max-duration job: the same ends_at stamp the manual end
- * writes (InternalMeetingsQueries.end, kept once), plus one audit_log row with no actor and the
- * reason auto_max_duration, written only when this call stamped it.
- */
+/** The audit_log row is written only when this call stamped ends_at. */
 @Injectable()
 export class MeetingAutoEnd {
   constructor(

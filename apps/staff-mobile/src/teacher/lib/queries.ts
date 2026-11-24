@@ -1,4 +1,6 @@
-import type { LessonView, PayoutView, PendingReportView, TeacherMe } from '@ab/shared';
+import type { PendingReportView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
+import type { LessonView, TeacherMe } from '@ab/schedule';
 import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
@@ -21,10 +23,7 @@ export function isNotLinked(error: unknown): boolean {
 /** `live`: the screen is in front (useScreenFocused), so it re-reads every 30 s (docs/48). */
 const pollWhen = (live: boolean) => (live ? TEACHER_REFRESH_MS : false);
 
-/**
- * GET /teachers/me/lessons?from&to (≤ 31 days, every status). Keyed under ['lessons'] so «تأكيد»
- * (useLessonAction, path /lessons) patches it at once and every lesson change refetches it.
- */
+/** At most 31 days, every status; keyed under ['lessons'] so lesson changes refetch it. */
 export function useMyLessons(window: { from: string; to: string }, live = false) {
   return useQuery({
     queryKey: [...pathKey('/lessons'), 'mine', window],

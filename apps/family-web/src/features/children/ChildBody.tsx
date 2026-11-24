@@ -14,7 +14,7 @@ interface Props {
   /** The `?tab=` asked for; the page's own state otherwise. */
   tab?: ChildTab;
   onTab: (tab: ChildTab) => void;
-  /** The home shows the next lesson above the tabs: «القادمة» lists the rest. */
+  /** The home shows the next lesson above the tabs, so the upcoming tab lists the rest. */
   exceptNext?: boolean;
 }
 
@@ -26,12 +26,7 @@ const PREFIX = 'child';
 const END_GAP =
   '[--chat-end-gap:calc(9.5rem+env(safe-area-inset-bottom))] shell:[--chat-end-gap:6rem]';
 
-/**
- * One child's page body (docs/50 §6, canvas Child): القادمة · حضرها · غاب عنها · التسجيلات ·
- * الباقة (the last only for a viewer who sees money) · المحادثة (while family_chat_enabled is on,
- * its unread count on the tab). A report opens on its own page. Only the shown panel mounts
- * (the kit's ChildPanel, shared with the staff pages).
- */
+/** docs/50 §6: package tab only for a viewer who sees money; only the shown panel mounts. */
 export function ChildBody({ student, kind, tab, onTab, exceptNext }: Props) {
   const navigate = useNavigate();
   const tabs = tabOptions(kind, student, useChatTab(student.id));

@@ -1,4 +1,4 @@
-import type { AdminTaskView } from '@ab/shared';
+import type { AdminTaskView } from '@ab/money';
 import { ActivityIndicator } from 'react-native';
 import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -8,7 +8,7 @@ import { TaskItem } from './TaskItem';
 const keyOf = (task: AdminTaskView) => task.id;
 const renderRow = ({ item }: { item: AdminTaskView }) => <TaskItem task={item} />;
 
-/** «المهام»: GET /admin-tasks (open ones: renewal due, package unpaid). Read-only; the web marks them done. */
+/** Read-only; the web marks tasks done. */
 export function TasksList() {
   const { color } = useTheme();
   const list = usePagedList<AdminTaskView>({ path: '/admin-tasks', params: { open: 'true' } });

@@ -8,7 +8,6 @@ import { ValueRowView, type RowEnv } from './rows/ValueRowView';
 const v = t.settingsValues;
 
 export interface ValuesTableProps {
-  /** The group's name, or «الكل» for search/filter results. */
   caption: string;
   /** A short line under the caption (the module views: where they are edited). */
   note?: string | undefined;
@@ -33,18 +32,11 @@ function SkeletonRows({ cols }: { cols: number }) {
   );
 }
 
-/**
- * Fixed column widths, so a row turning dirty («حفظ» + «تراجع», «لم يُحفظ») never moves the
- * columns. Phones: the value gets 45% (its button holds the whole value, never cut short).
- */
+/** Fixed widths so a row turning dirty never moves columns; phones give the value 45%. */
 const DESKTOP_COLS = ['', 'w-[30%]', 'w-[15%]', 'w-[15%]', 'w-[12%]'];
 const PHONE_COLS = ['', 'w-[45%]'];
 
-/**
- * The key/value/description table (docs/26b §2): a caption naming the group and its count, column
- * headers, one row per value. Desktop: الاسم | القيمة | الافتراضي | آخر تعديل | إجراء; phones keep the
- * first two. While loading: skeleton rows of the real height and aria-busy on the table.
- */
+/** Table per docs/26b §2; phones keep the first two columns; skeleton rows while loading. */
 export function ValuesTable({ caption, note, rows, env, loading }: ValuesTableProps) {
   const cols = env.phone ? [v.cols.name, v.cols.value] : [v.cols.name, v.cols.value, v.cols.default, v.cols.last, v.cols.action];
   return (

@@ -4,7 +4,7 @@ import type { Env } from '@/config/env/env';
 // degrades to "unrestricted", and an empty list never means "everyone". The parser is shared with
 // the «التكاملات» form (@ab/shared integrations/recipients).
 
-export { EMPTY_RECIPIENTS, parseAllowedRecipients } from '@ab/shared';
+export { EMPTY_RECIPIENTS, parseAllowedRecipients } from '@ab/catalog';
 
 /** null ONLY when WA_ALLOWED_RECIPIENTS is unset or blank (= no restriction). */
 export function allowedRecipients(env: Env): readonly string[] | null {

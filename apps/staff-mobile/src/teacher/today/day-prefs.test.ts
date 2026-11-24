@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { shownDay } from './day-prefs';
 import type { teacherDay } from './teacher-day';
 

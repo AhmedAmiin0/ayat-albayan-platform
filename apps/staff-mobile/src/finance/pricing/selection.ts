@@ -9,10 +9,9 @@ import {
 } from '@ab/money';
 import type { ListParams } from '@ab/mobile-kit';
 
-// What the staff member picked on «حاسبة الأسعار». The API prices it (GET /pricing/quote); the
-// app only turns the choice into query params. Pill values are strings (FilterPills), hence `${}`.
+// The API prices the choice (GET /pricing/quote); pill values are strings, hence `${}`.
 
-/** «دولة تانية (بالدولار)»: the country is left out and the API quotes in USD. */
+/** The other-country choice omits the country and the API quotes in USD. */
 export type CountryChoice = SiteCountry | 'other';
 export type PlanChoice = PackageId | 'custom';
 
@@ -23,7 +22,7 @@ export interface Selection {
   /** Lessons for 'custom' only. */
   count: number;
   students: number;
-  /** A pill's value or what was typed in the free field («12.5», «١٢٫٥», «»); parsed when sent. */
+  /** Raw pill value or typed text, possibly with Arabic digits; parsed when sent. */
   discount: string;
 }
 

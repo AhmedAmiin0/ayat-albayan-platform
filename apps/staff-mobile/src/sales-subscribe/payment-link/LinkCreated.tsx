@@ -17,7 +17,7 @@ import { useViewerTz } from '@/core/lib/clock';
 
 interface LinkCreatedProps {
   link: PaymentLinkView;
-  /** The chat the link is for: «إرسال في المحادثة» fills its reply box. */
+  /** The chat the link is for; sending fills that chat's reply box. */
   phone: string;
   /** Back to the chat once its box holds the text. */
   onSent: () => void;
@@ -25,16 +25,7 @@ interface LinkCreatedProps {
 
 const pl = t.paymentLinks;
 
-/**
- * The link made: the reference vs the agreed amount, the link, then «إرسال في المحادثة» (the text goes into
- * the chat's box for HER to send: never sent for her; it leaves as any text, owner 2026-11-01: the box
- * rule, chatMaySend: after the 24 h window too on a Kapso chat line, a refusal on its bubble; only
- * where no text can go at all, the box's own closed note)
- * and «نسخ» (the clipboard, else the share sheet). «افتح الرابط» opens the page here, marked as from the app
- * (?from=<platform>): after Stripe it brings her back to /pay-done (owner 2026-10-29). The sent text stays unmarked.
- * «اختر أيام الحلقات» (owner 2026-11-06) pushes the course wizard over this screen: the picks
- * are kept as a draft and booked once the family pays.
- */
+/** The text goes into the chat box for her to send; ?from=<platform> returns her to /pay-done. */
 export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
   const tz = useViewerTz();
   const base = useTreeBase();

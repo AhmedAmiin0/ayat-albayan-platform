@@ -2,8 +2,7 @@ import type { BookingRequest, Conflict } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 
-// «وقت آخر» (owner 2026-11-21): a booking outside the teacher's weekly hours. The flag skips only
-// the hours check; every clash and the past (by the server clock) still refuse it.
+// The flag skips only the hours check; clashes and the past still refuse it.
 
 type OutsideFlag = Pick<BookingRequest, 'outsideHours' | 'startsAt'>;
 

@@ -13,7 +13,6 @@ const spinner = (color: string) => (
   <ActivityIndicator testID="send-spinner" size="small" color={color} />
 );
 
-/** «إرسال التقرير» / «حفظ التعديل»: disabled and spinning while the request is pending. */
 export function SendButton({ label, pending, disabled, onPress }: SendButtonProps) {
   return (
     <Button

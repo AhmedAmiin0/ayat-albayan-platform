@@ -8,7 +8,6 @@ export interface NumbersListProps {
   manage: boolean;
 }
 
-/** The cards, «لا توجد أرقام بعد» when none, or the load error. */
 export function NumbersList({ numbers, failed, manage }: NumbersListProps) {
   if (failed) return <p className="text-sm text-ink-2">{t.numbers.loadError}</p>;
   if (!numbers) return null;

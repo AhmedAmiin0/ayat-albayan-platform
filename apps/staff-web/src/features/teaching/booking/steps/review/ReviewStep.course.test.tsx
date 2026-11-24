@@ -22,7 +22,7 @@ const BASE: BookingDraft = {
 const COURSE: BookingDraft = { ...BASE, course: { perWeek: 2, lessonsTotal: 8, package: '8', startsOn: '2026-10-03' } };
 const CLASH = { kind: 'teacher_busy', startsAt: SLOT, endsAt: SLOT };
 
-/** The review with its own link state, so typing «رابط الحلقة» re-renders like the wizard does. */
+/** Own link state so typing the link re-renders like the wizard does. */
 function Review({ draft, onChangeSlot }: { draft: BookingDraft; onChangeSlot: () => void }) {
   const [link, setLink] = useState('');
   const d = { ...draft, meetingLink: link };

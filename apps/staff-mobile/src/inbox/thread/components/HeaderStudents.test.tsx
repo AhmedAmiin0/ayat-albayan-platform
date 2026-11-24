@@ -7,8 +7,7 @@ import { child, CHILD_ID } from '@/inbox/subscription/people-fixtures';
 import { ChatHeader } from './ChatHeader';
 import { studentLine, useHeaderStudents } from './HeaderStudents';
 
-// Owner 2026-10-29: tapping the chat's name or number opens the student's details, as WhatsApp's contact.
-// docs/37 NEW 2: the details screen gets the chat's phone (`?phone=`) for «بحث في الرسائل».
+// docs/37 NEW 2: the details screen gets the chat's phone for message search.
 const mockParams = jest.fn(() => ({ phone: '+966500000123' }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() }, useLocalSearchParams: () => mockParams() }));
 const Q = `?phone=${encodeURIComponent('+966500000123')}`;

@@ -34,12 +34,7 @@ function Tile({ value, label, act, live }: { value: number | undefined; label: s
   );
 }
 
-/**
- * The dashboard's first row (owner, 2026-10-05): four numbers the API already gives. Lessons today
- * and open now come from the day's lessons; «يحتاج تأكيد» and unpaid packages from the summary.
- * «يحتاج تأكيد» only while a confirmation is required (owner 2026-11-02): else three tiles.
- * Each tile is a link to the work behind it. Saffron only where there is work waiting.
- */
+/** The confirmation tile shows only while confirmation is required; highlighted only with work. */
 export function TodayKpis({ today, needsConfirmation, unpaid }: TodayKpisProps) {
   const required = usePublicConfig().lesson_confirmation_required;
   return (

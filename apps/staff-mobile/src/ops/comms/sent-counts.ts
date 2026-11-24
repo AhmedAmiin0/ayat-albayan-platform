@@ -2,9 +2,7 @@ import type { AudienceTab, NotificationAudience, NotificationEntryView } from '@
 import { audienceTabs, rowsOf } from '@/ops/notif-rules/lib/audience-tabs';
 import { nameOf } from '@/ops/notif-rules/lib/rule-words';
 
-// «ماذا يُرسل الآن» on the overview: per audience, how many of its notifications go out now and how
-// many do not. The grouping, labels and order are the catalogue's pills (audience-tabs); the state is
-// the API's own `state` per row (on = sent now). Manual rows are sent by a person, so they are left out.
+// State is the API's per-row `state`; manual rows are sent by a person, so they are left out.
 
 export interface SentRow {
   audience: NotificationAudience;

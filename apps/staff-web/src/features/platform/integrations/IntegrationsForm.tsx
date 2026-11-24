@@ -19,7 +19,7 @@ interface FormProps {
   onNote: (message: string) => void;
 }
 
-/** The groups and the plain values' own «حفظ التكاملات» (secrets save row by row). */
+/** Secrets save row by row. */
 export function IntegrationsForm({ items, query, onNote }: FormProps) {
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<IntegrationDraft>(() => draftOf(items));
@@ -34,7 +34,7 @@ export function IntegrationsForm({ items, query, onNote }: FormProps) {
       onNote(s.saved);
       // The chip and the gate note read GET /messages/gate (configured? allow-list?): ask again.
       void queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey });
-      // «الدفع الإلكتروني» shows or hides the chat's payment buttons now, not after 5 minutes.
+      // Refreshes the payment buttons now rather than after 5 minutes.
       void queryClient.invalidateQueries({ queryKey: stripeFeatureQuery.queryKey });
     },
   });

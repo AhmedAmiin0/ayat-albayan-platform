@@ -36,7 +36,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function SheetView({ entry, lines, onClose, row }: RuleSheetProps & { row: RuleRowState | null }) {
   const name = c.entries[entry.key].name;
   const [asking, setAsking] = useState(false);
-  // «إلغاء», Esc and the backdrop: a dirty row asks «تجاهل التغييرات؟» first (the draft is kept otherwise).
+  // A dirty row asks to discard first; otherwise the draft is kept.
   const close = () => (row?.dirty ? setAsking(true) : onClose());
   const actions = row ? (
     <>
@@ -85,12 +85,7 @@ function EditableSheet({ rule, ...props }: RuleSheetProps & { rule: Notification
   return <SheetView {...props} row={row} />;
 }
 
-/**
- * The phone editor of one row (docs/26b §3 «Phone»): a bottom sheet titled by the name, with the
- * state and its reason, the switch, the timing, the channels and the number; «إلغاء» then «احفظ».
- * Closing it with an unsaved change asks «تجاهل التغييرات؟» (the same dialog as «القيم»).
- * Without notifications.manage it opens read-only (no inputs, no actions).
- */
+/** Without notifications.manage it opens read-only (docs/26b §3). */
 export function RuleSheet(props: RuleSheetProps) {
   const rule = editableRule(props.entry, useRules().canManage);
   return rule ? <EditableSheet {...props} rule={rule} /> : <SheetView {...props} row={null} />;

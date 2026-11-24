@@ -22,15 +22,10 @@ interface OpenOptions extends RoomEntry {
 
 const afterSheet = (): Promise<void> => new Promise((r) => setTimeout(r, SHEET_CLOSE_MS));
 
-/**
- * «ادخل الحلقة» / «ادخل الاجتماع»: the join endpoint first, so a refusal reads where the button is
- * (it throws). Then the in-app room (the token handed over in memory), or the web page in the
- * browser when the setting is off, or LiveKit is missing or fails to load in this binary (never a
- * room screen that cannot start: it read «انتهت صلاحية الدخول» and sent the user round again).
- */
+/** Falls back to the browser when LiveKit is missing, never a room screen that cannot start. */
 export async function openRoom(target: RoomTarget, inApp: boolean, options: OpenOptions = {}) {
   const answer = await sendJoin(target);
-  if (roomMode(inApp, liveKitNative() !== null) === 'browser') {
+  if (roomMode(inApp, (await liveKitNative()) !== null) === 'browser') {
     await Linking.openURL(roomWebUrl(target));
     return;
   }

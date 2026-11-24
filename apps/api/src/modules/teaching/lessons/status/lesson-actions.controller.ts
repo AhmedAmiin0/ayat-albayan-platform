@@ -64,10 +64,7 @@ export class LessonActionsController {
     return this.views.many(ids, 'admin');
   }
 
-  /**
-   * «تصحيح الحالة» `{ to }` (owner 2026-11-03): an ended lesson still open, or one the job settled;
-   * 409 not_auto_held / earning_paid / invalid_transition (OutcomeCorrection).
-   */
+  /** Ended lesson still open, or one the job settled; 409 not_auto_held, earning_paid. */
   @Post(':id/correct')
   @HttpCode(200)
   @Permissions('lessons.write')

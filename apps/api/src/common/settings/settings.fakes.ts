@@ -1,4 +1,4 @@
-import { publicSettings, SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
+import { publicSettings, SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
 import { vi } from 'vitest';
 import type { SettingsService } from './settings.service';
 

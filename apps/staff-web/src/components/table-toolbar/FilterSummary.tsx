@@ -2,7 +2,7 @@ import { counted } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 
-/** «2 مفعّلة، 14 نتيجة»; «لا توجد تصفية مفعّلة» when none is set; the count alone when the total is unknown. */
+/** The count alone when the total is unknown. */
 export function filterSummary(count: number, resultCount?: number): string {
   if (count === 0) return t.table.noFilters;
   const active = t.table.activeCount.replace('{n}', String(count));
@@ -24,11 +24,7 @@ export interface FilterSummaryProps {
   live?: boolean;
 }
 
-/**
- * The applied filters, announced politely whenever they change (owner, 2026-10-05: one «تصفية»
- * everywhere). Always mounted, so a change from «2 مفعّلة» to none is announced too; it stays
- * screen-reader-only unless `visible` and a filter is set.
- */
+/** Always mounted so clearing filters is announced too; screen-reader only unless `visible`. */
 export function FilterSummary({ count, resultCount, visible = false, live = true }: FilterSummaryProps) {
   const liveProps = live ? ({ 'data-filter-summary': '', 'aria-live': 'polite', 'aria-atomic': true } as const) : {};
   return (

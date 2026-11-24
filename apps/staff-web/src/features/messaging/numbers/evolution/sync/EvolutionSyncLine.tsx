@@ -7,7 +7,6 @@ import { SYNC_STATE_STYLE, SYNC_WORD_STYLE, syncPartsOf, syncWordOf } from './sy
 
 const s = t.numbers.evolution.sync;
 
-/** The parts of the last push in words: «المثيل: متطابق · الوكيل: متخطّى …». */
 function SyncParts({ sync }: { sync: EvolutionSyncView }) {
   return (
     <ul className="flex flex-wrap gap-x-3 gap-y-1">
@@ -21,7 +20,6 @@ function SyncParts({ sync }: { sync: EvolutionSyncView }) {
   );
 }
 
-/** «المزامنة مع Evolution»: «متزامن» / «غير متزامن» / «لم تُزامن بعد», when, and each part. */
 export function EvolutionSyncLine({ sync }: { sync: EvolutionSyncView | null }) {
   const clock = useClock();
   const word = syncWordOf(sync);

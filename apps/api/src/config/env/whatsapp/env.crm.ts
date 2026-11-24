@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from '@/config/env/env';
 import { blankIsUnset, optionalSecret } from '@/config/env/env.blank';

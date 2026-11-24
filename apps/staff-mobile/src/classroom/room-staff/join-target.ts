@@ -7,14 +7,14 @@ const KINDS: readonly RoomKind[] = ['lesson', 'meeting'];
 export const joinPath = (target: RoomTarget): string =>
   target.kind === 'lesson' ? `/lessons/${target.id}/room/join` : `/meetings/${target.id}/join`;
 
-/** The web page of the same room: «فتح في المتصفح», and the path when the app cannot hold it. */
+/** Used for open-in-browser, and as the path when the app cannot hold the room. */
 export const roomWebUrl = (target: RoomTarget): string =>
   target.kind === 'lesson' ? classroomUrl(target.id) : meetingUrl(target.id);
 
-/** How the room opens: from the «بدأت الحلقة» push (no preview), and whose chat it offers. */
+/** From the lesson-started push there is no preview. */
 export interface RoomEntry {
   direct?: boolean;
-  /** The lesson's (first) student: the in-room «المحادثة» opens their channel. */
+  /** The first student, whose channel is the in-room chat. */
   studentId?: string | undefined;
 }
 

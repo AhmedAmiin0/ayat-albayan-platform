@@ -16,11 +16,7 @@ interface MakeupConfirmProps {
   onChangeInvoice: () => void;
 }
 
-/**
- * «المراجعة» of a makeup: type, student, the missed lesson, the new time and the invoice. No
- * package, no weekly days. A clash or a refused invoice shows its way out; «احجز» retries the same
- * request (rule 8), so an offline failure is safe to repeat.
- */
+/** Retry sends the same request (rule 8), so an offline failure is safe to repeat. */
 export function MakeupConfirm({ draft, busy, failure, onSubmit, ...go }: MakeupConfirmProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

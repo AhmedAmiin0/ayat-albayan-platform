@@ -21,11 +21,7 @@ import { PeopleOwnership } from './access/people-ownership';
 
 const moveBody = blanksToNull(familyMoveSchema);
 
-/**
- * «ربط بولي أمر آخر» (students.attach_guardian) and guardian ↔ student (people.switch_role), owner
- * 2026-11-02: the assistant's and the admin's, any student or family. Every write is audited;
- * nothing with money, lessons or chats is moved or deleted (FamilyMoveService, RoleSwitchService).
- */
+/** Every write is audited; nothing with money, lessons or chats is moved or deleted. */
 @ApiTags('people')
 @ApiBearerAuth()
 @Controller('people')
@@ -60,7 +56,7 @@ export class PeopleRoleController {
     return this.families.move({ studentId: id, move, actorId: user.id, allowed });
   }
 
-  /** «الطالب هو ولي الأمر»; 409 family_has_self. */
+  /** 409 family_has_self. */
   @Patch('students/:id/contact-self')
   @Permissions('people.switch_role')
   async contactSelf(
@@ -74,7 +70,7 @@ export class PeopleRoleController {
     return { id: row.id, contact_is_self: row.contact_is_self };
   }
 
-  /** «تحويل إلى طالب»: 201 { id, code }; 409 guardian_has_self / duplicate_student. */
+  /** 409 guardian_has_self or duplicate_student. */
   @Post('guardians/:id/to-student')
   @Permissions('people.switch_role')
   async toStudent(
@@ -85,7 +81,7 @@ export class PeopleRoleController {
     return this.roles.guardianToStudent(id, user.id);
   }
 
-  /** «تحويل إلى ولي أمر»: 200 { guardian_id }; 409 student_has_login / student_has_records. */
+  /** 409 student_has_login or student_has_records. */
   @Post('students/:id/to-guardian')
   @HttpCode(200)
   @Permissions('people.switch_role')

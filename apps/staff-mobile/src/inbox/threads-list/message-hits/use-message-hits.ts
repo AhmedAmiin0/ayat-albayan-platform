@@ -15,11 +15,7 @@ export interface MessageHitsState {
   loadMore: () => void;
 }
 
-/**
- * «الرسائل» under the chats (docs/37 NEW 1): every message the caller may read that holds the
- * words, newest first (GET /threads/search). SearchField already debounces the words; never on
- * disk (noPersist) and never polled.
- */
+/** docs/37 NEW 1: never persisted to disk and never polled; SearchField already debounces. */
 export function useMessageHits(q: string): MessageHitsState {
   const query = useInfiniteQuery({
     ...messageSearchPages(q, (path) => apiFetch(path)),

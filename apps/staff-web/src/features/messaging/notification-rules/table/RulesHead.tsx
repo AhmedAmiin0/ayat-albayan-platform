@@ -12,10 +12,7 @@ export interface RulesHeadProps {
   onUnsaved: () => void;
 }
 
-/**
- * The head of «الإشعارات»: the title, «للاطلاع فقط» without notifications.manage, and — like the
- * head of «القيم» (docs/26b §2 «Dirty») — the count «إشعاران لم يُحفظا» that leads to the first one.
- */
+/** Mirrors the dirty-count head of the values page (docs/26b §2). */
 export function RulesHead({ canManage, unsaved, onUnsaved }: RulesHeadProps) {
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">

@@ -16,12 +16,7 @@ export interface SalesFamilyLineProps {
   lessons: readonly ThreadLesson[];
 }
 
-/**
- * Which children a sales chat is about (W3), in the header's second row: each child's name, code,
- * status and teacher, then the next lesson. Never a «مشترك» badge: sales gets no packages here.
- * When none of the children are hers (GET /sales/money/family, the cached query of the header
- * actions), «يتابعه مساعد آخر أو الإدارة» explains why there are no money actions.
- */
+/** Sales never see a package badge here; sales gets no packages (W3). */
 export function SalesFamilyLine({ phone, people, lessons }: SalesFamilyLineProps) {
   const children = people.students;
   const family = useQuery({ ...salesFamilyQuery(phone), enabled: children.length > 0 });

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { packageSlot, type SlotPackage } from './pdf-model';
 
-// Migration 932 (owner 2026-10-28): 1 of 8 taken before the platform → the first platform lesson is «2 من 8».
+// Migration 932: one lesson taken before the platform shifts the first lesson's number.
 const first: SlotPackage = { id: 'a', lessonsTotal: 8, lessonsUsedBefore: 1, startsOn: '2026-10-27', createdAt: '2026-10-27T08:00:00Z' };
 const next: SlotPackage = { id: 'b', lessonsTotal: 8, startsOn: '2026-11-20', createdAt: '2026-11-20T08:00:00Z' };
 

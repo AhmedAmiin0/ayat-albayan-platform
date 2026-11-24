@@ -1,8 +1,12 @@
 import { DRIVE } from '@/modules/platform/google-sync/google-format';
 
+const FIRST_PRINTABLE = 0x20;
+const SEPARATORS = new Set(['/', '\\']);
+const isUnsafe = (c: string): boolean =>
+  SEPARATORS.has(c) || (c.codePointAt(0) ?? 0) < FIRST_PRINTABLE;
 /** A file name never carries a path separator or a control character. */
-// oxlint-disable-next-line no-control-regex -- control characters are exactly what is stripped
-const clean = (s: string): string => s.replace(/[\\/\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim();
+const clean = (s: string): string =>
+  Array.from(s, (c) => (isUnsafe(c) ? ' ' : c)).join('').replace(/\s+/g, ' ').trim();
 
 /**
  * «<student> — <yyyy-mm-dd>.pdf» as the old report flow names it; « (المنصة)» before .pdf when the

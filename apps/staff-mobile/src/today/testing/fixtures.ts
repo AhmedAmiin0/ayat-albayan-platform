@@ -1,4 +1,4 @@
-import { allowedLessonEvents, type LessonStudentView, type LessonView } from '@ab/shared';
+import { allowedLessonEvents, type LessonStudentView, type LessonView } from '@ab/schedule';
 
 // Test rows in the GET /lessons/day shape (docs/10 §5, LessonView). Thursday 1 Oct 2026; Riyadh is
 // UTC+3, so 13:00Z is 16:00 on the spine.

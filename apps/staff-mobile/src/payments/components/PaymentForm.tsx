@@ -1,4 +1,5 @@
-import { dueOf, PAYMENT_METHODS, type PaymentMethod, type StudentBalanceView } from '@ab/shared';
+import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
+import { dueOf, type StudentBalanceView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, FilterPills, type FilterPill, ErrorLine, useNow, FormLabel } from '@ab/mobile-kit';
@@ -18,7 +19,6 @@ const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map(
   label: t.enums.paymentMethod[m],
 }));
 
-/** While saving: «جارٍ الرفع…» when a photo goes up first, else «جارٍ الحفظ…». */
 function submitLabel(pending: boolean, draft: PaymentDraft): string {
   if (!pending) return t.payments.mobile.record;
   return draft.receipt || draft.attachments.some((a) => a.kind === 'file') ? t.payments.uploading : t.common.saving;
@@ -35,11 +35,7 @@ interface PaymentFormProps {
   onDone: () => void;
 }
 
-/**
- * «سجّل دفعة» (R-PAY-01, R-MOB-02): package, amount in its currency, method, day, then a bank
- * transfer's «المرفقات» (up to 5) or another method's receipt photo.
- * Errors show once a save was tried; a refused save keeps everything typed and picked.
- */
+/** R-PAY-01, R-MOB-02: bank transfers take up to 5 attachments; a refused save keeps all input. */
 export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: PaymentFormProps) {
   const now = useNow();
   const record = useRecordPayment(studentId);

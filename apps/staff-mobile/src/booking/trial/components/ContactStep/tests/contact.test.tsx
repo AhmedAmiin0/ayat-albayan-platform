@@ -7,7 +7,7 @@ import { draftFromLead } from '@/booking/trial/lib/draft';
 import { toBookingRequest } from '@/booking/trial/lib/booking-body';
 import { draft } from '@/booking/testing/fixtures';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1, a docs/13 deviation) on step 1.
+// docs/30 §1 deviation from docs/13: whose WhatsApp number it is, on step 1.
 
 const C = t.familyAuth.contactIsSelf;
 const REQ = '99999999-9999-4999-8999-999999999999';

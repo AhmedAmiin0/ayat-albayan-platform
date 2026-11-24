@@ -13,9 +13,7 @@ import type { Href } from 'expo-router';
 import { t, isolate, ltr, money } from '@ab/mobile-kit';
 import { partPaidLine } from '@/core/lib/money/format';
 
-// A chat's «مشترك» / «الباقة خلصت» / «مش مشترك» and the subscribe button (R-SUB-01): pure, from
-// GET /threads/:phone `people`. The rules (badge, child chip, new vs renew) are @ab/shared's, so
-// the list tag, the chat and the web all agree.
+// R-SUB-01: the rules come from @ab/shared so the list tag, the chat and the web agree.
 
 const s = () => t.inbox.subscription;
 type Chip = StatusStyle & { label: string };
@@ -27,14 +25,14 @@ export function badgeChip(badge: SubscriptionBadge): Chip {
   return { ...subscriptionStatusStyle.trial, label: s().badge.none };
 }
 
-/** A child's chip when the package needs the admin («مش مدفوع», «متوقف مؤقتًا»), like the web; else null. */
+/** Null unless the package needs the admin. */
 export function childChip(sub: ThreadSubscriptionView | null): Chip | null {
   const status = sub ? packageChip(sub) : null;
   if (status !== 'unpaid' && status !== 'paused') return null;
   return { ...subscriptionStatusStyle[status], label: t.enums.subscriptionStatus[status] };
 }
 
-/** «8 حلقات في الشهر · فاضل حلقتين»; an expired package by its name only; the web's «no package» line without one. */
+/** An expired package shows only its name. */
 export function packageText(sub: ThreadSubscriptionView | null): string {
   if (!sub) return t.subscriptions.empty;
   const name = sub.package_size ? t.enums.packageSize[sub.package_size] : t.pricing.packages.custom.name;
@@ -43,17 +41,15 @@ export function packageText(sub: ThreadSubscriptionView | null): string {
   return [name, remainingLabel].filter(Boolean).join(' · ');
 }
 
-/** «عليه 145 ر.س» while the newest package owes money («مدفوعة جزئيًا: …» once part of it came, owner 2026-10-28), else null. */
+/** Null unless the newest package owes money; a partial payment says how much came. */
 export function dueLine(sub: ThreadSubscriptionView | null): string | null {
   const part = sub ? partPaidLine({ paid: sub.paid_amount, price: sub.price, currency: sub.currency }) : null;
   if (part) return part;
   return sub && sub.due_amount > 0 ? s().due.replace('{amount}', money(sub.due_amount, sub.currency)) : null;
 }
 
-/** A package that still runs (lessons left, not ended): the family chip's «مشترك» for one child. */
 export const running = (student: ThreadStudentView) => subscriptionBadge([student]) === 'subscribed';
 
-/** One row of «لأيّ طالب؟»: «يوسف · AB-0183 — جدّد الاشتراك» and that child's own form. */
 interface SubscribeTarget {
   label: string;
   href: Href;
@@ -66,7 +62,6 @@ interface SubscribeLink {
   href: Href;
 }
 
-/** Several children qualify: the pill opens «لأيّ طالب؟», each row with its own new / renew. */
 interface SubscribePick {
   label: string;
   targets: SubscribeTarget[];
@@ -81,13 +76,7 @@ interface ActionInput {
   thread?: Pick<ThreadView, 'lead_name' | 'display_name'> | null;
 }
 
-/**
- * The thread's one subscribe pill. A guardian: the children without a running package (else every
- * child: an early renewal or an extra package), «جدّد الاشتراك» once a package ended, else «اشتراك
- * جديد» (subscribeKind, as the web); one such child → its form (the pill's spoken name names it),
- * several → «لأيّ طالب؟». A lead with no guardian yet (a converted one too): «اشترك» → the booking
- * wizard with a package step. A lost lead or anyone else: nothing.
- */
+/** A lead with no guardian goes to the booking wizard with a package step; lost leads none. */
 export function subscribeAction({ people, phone, thread }: ActionInput): SubscribeAction | null {
   if (people.guardian) return guardianAction(people.students, phone);
   if (!people.lead || people.lead.status === 'lost') return null;

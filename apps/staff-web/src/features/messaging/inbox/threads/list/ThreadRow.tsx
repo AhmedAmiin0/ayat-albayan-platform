@@ -16,14 +16,13 @@ export interface ThreadRowProps {
   /** The list's URL state; opening a thread keeps its filters. */
   search: InboxSearch;
   active: boolean;
-  /** The list's ticking clock (one useNow per list): «اليوم» turns into a date at midnight. */
+  /** The ticking clock turns today into a date at midnight. */
   now: Date;
 }
 
-/** Our last message did not go out: the admin's turn (saffron «دورك», docs/07), shown on the row. */
+/** Our last message failing makes it the admin's turn (docs/07). */
 const lastFailed = (th: ThreadView): boolean => th.last_direction === 'outbound' && th.last_status === 'failed';
 
-/** Line 2's end: «لم تُرسل» when our last send failed (the list ticks carry no word), else the unread count. */
 function TurnBadge({ thread: th, failed }: { thread: ThreadView; failed: boolean }) {
   if (failed) {
     return (
@@ -49,12 +48,7 @@ function rowLabel(th: ThreadView, name: string, failed: boolean): string {
     .join(' — ');
 }
 
-/**
- * One conversation (docs/07 §9, R-LEAD-02), two lines like WhatsApp (owner 2026-11-06: no tags):
- * ringed avatar · name (bold + saffron dot when unread) · time; the last message («أنت:» for ours,
- * after its ticks) · «لم تُرسل» or the unread count. The family's state is the avatar ring (green
- * subscribed, gray renewal due); a named contact shows no phone.
- */
+/** The family's state is the avatar ring; a named contact shows no phone (docs/07 §9). */
 export function ThreadRow({ thread: th, search, active, now }: ThreadRowProps) {
   const mode = useInboxMode();
   const name = threadTitle(th, mode);

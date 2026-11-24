@@ -6,9 +6,8 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 interface CurrentCourseProps {
   course: BookedCourse;
-  /** «تغيير أيام الحلقات»: opens the change flow. */
   onChange: () => void;
-  /** Beside another primary (the renewal's «تابِع» or the wizard): the change is the secondary. */
+  /** Secondary when another primary action sits beside it. */
   secondary?: boolean | undefined;
   /** Its days are already named just below (it is the renewal's previous course): not twice. */
   hideDays?: boolean | undefined;

@@ -59,13 +59,7 @@ function Row({ row, onOpen }: { row: SentRow; onOpen: (audience: NotificationAud
   );
 }
 
-/**
- * «ماذا يُرسل الآن» (docs/23 §2d mobile): per audience, how many notifications go out now and how
- * many do not, from GET /admin/notifications (the column heads say which is which, so no caption).
- * A row opens «الإشعارات» on that audience. With WhatsApp messaging off, a line under the rows says
- * the counted ones are in-app alerts only. The rows sit in one inset card under their column heads
- * (owner 2026-10-28: one container rule).
- */
+/** docs/23 §2d: with WhatsApp off, the counted ones are in-app alerts only. */
 export function WhatIsSent({ onOpen }: { onOpen: (audience: NotificationAudience) => void }) {
   const query = useCatalogue();
   const data = query.data;

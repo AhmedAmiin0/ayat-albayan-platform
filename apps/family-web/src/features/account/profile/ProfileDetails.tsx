@@ -9,10 +9,7 @@ function FactValue({ fact }: { fact: ProfileFact }) {
   return fact.ltr ? <Ltr>{fact.value}</Ltr> : <>{fact.value}</>;
 }
 
-/**
- * «بياناتي», read-only: the phone is the WhatsApp sign-in and the academy keeps the names, so the
- * note under it says who changes them.
- */
+/** Read-only: the phone is the WhatsApp sign-in and the academy keeps the names. */
 export function ProfileDetails({ facts }: { facts: readonly ProfileFact[] }) {
   const P = t.portal.app.profile;
   return (

@@ -9,11 +9,7 @@ import { LinkCancel } from './link-cancel';
 import { LinkCreate } from './link-create';
 import { LinkDeps } from './link-deps';
 
-/**
- * «رابط دفع» from the sales chat (owner 2026-10-28, docs/30; mounted with FEATURE_STRIPE (test or live),
- * 404 while «الدفع الإلكتروني» (STRIPE_ENABLED) is off). self.sales_money, like «اشتراك جديد». Her links only; an
- * admin sees every link.
- */
+/** Needs FEATURE_STRIPE and STRIPE_ENABLED (docs/30); her links only, admins see all. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('self.sales_money')

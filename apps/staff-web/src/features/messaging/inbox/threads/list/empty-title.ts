@@ -1,10 +1,7 @@
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 
-/**
- * The thread list's empty title. «لا محادثات في هذه القائمة بعد…» (docs/22 §4) only when the active
- * chat list is really empty: with a search, a status or «غير المقروءة» on top, it may have chats.
- */
+/** The empty-list title only applies when the list is truly empty, not filtered (docs/22 §4). */
 export function emptyTitle(search: InboxSearch): string {
   if (search.unread) return t.inbox.emptyUnread;
   return search.list && !search.q && !search.f_status ? t.inbox.lists.empty : t.inbox.empty;

@@ -21,14 +21,7 @@ export function readGoogleSettings(rows: readonly { key: string; value: unknown 
   };
 }
 
-/**
- * settings.google_* rows. Cached for SETTINGS_CACHE_MS (0 in e2e): read once per job tick and per synced
- * item before, now at most once per TTL. Only write() stores google_sync_enabled / google_sync_mode
- * («القيم» refuses them: owned_by_module) and it drops the cache, here and on the worker (kickConfigReload),
- * so an OFF applies at once.
- * An OFF written by raw SQL reaches read() within the TTL; fresh() (the per-item stop) sees it at once.
- * With Redis a write here announces `settings`, so the worker (which runs the sync) drops its copy at once.
- */
+/** Cached for SETTINGS_CACHE_MS; write() drops the cache everywhere so OFF applies at once. */
 @Injectable()
 export class GoogleSettings {
   private readonly cache: TtlCache<GoogleSyncSettings>;

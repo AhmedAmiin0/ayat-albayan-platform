@@ -54,7 +54,6 @@ function renderTrial() {
   );
 }
 
-/** Student → teacher → length → «وقت آخر» → Monday → 12:00, then the review. */
 async function pickOutsideNoon() {
   await screen.findByRole('radio', { name: t.booking.kind.trial });
   next();

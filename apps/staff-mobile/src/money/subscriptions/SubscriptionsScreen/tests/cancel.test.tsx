@@ -4,7 +4,7 @@ import { page, STUDENT, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SubscriptionsScreen } from '@/money/subscriptions/SubscriptionsScreen/SubscriptionsScreen';
 
-// «إلغاء الباقة» on the money list's package row (owner 2026-10-28); a cancelled row is history only.
+// A cancelled package row is history only.
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

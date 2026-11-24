@@ -5,7 +5,7 @@ import { t, pathKey } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// retry / «ابعتها بنفسك» / hand-off need messages.manage (admin-only): a salesperson never sees them.
+// Retry and hand-off need messages.manage (admin only), so a salesperson never sees them.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -34,7 +34,7 @@ test('a failed send in the sales tree: its status word, but no retry / click-to-
   );
   await screen.findByText(inbound.body ?? '');
   expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
-  // No sheet to read the rest in: the reason is never cut, its «أو أرسلها بنفسك» stays, and is no button.
+  // No sheet to read the rest in, so the reason is never cut and is not a button.
   const why = t.messages.errorLine.replace('{reason}', t.messages.errors['131049']);
   expect(screen.getByText(why).props.numberOfLines).toBeUndefined();
   expect(screen.queryByRole('button', { name: why })).toBeNull();

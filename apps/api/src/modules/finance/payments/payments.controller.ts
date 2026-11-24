@@ -63,7 +63,7 @@ export class PaymentsController {
     return this.payments.receipt(id);
   }
 
-  /** «المرفقات»: the legacy receipt first (id 'receipt'), then the files; signed for 1 h. */
+  /** The legacy receipt comes first (id 'receipt'), then the files, signed for 1 hour. */
   @Get(':id/attachments')
   @Permissions('payments.read')
   attachments(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentAttachmentView[]> {

@@ -11,10 +11,7 @@ import { paidAtFor, updatePayment, type PaymentView } from '@/features/finance/p
 import { paidAtDay } from './pay-day';
 import { PaymentFields, type PaymentForm } from './PaymentFields';
 
-/**
- * «تعديل الدفعة»: amount, method, date, note (PATCH, audited; the package status follows). A card
- * payment's amount is Stripe's (owner 2026-11-02): shown disabled and never sent.
- */
+/** Audited, and the package status follows; a card payment's amount is Stripe's and never sent. */
 export function EditPaymentDialog({ payment, onClose }: { payment: PaymentView; onClose: () => void }) {
   const formId = useId();
   const queryClient = useQueryClient();

@@ -6,14 +6,14 @@ import { Note } from '@/core/ui/feedback/Note';
 import { type FoundNumber, useLookupNumber } from './use-new-chat';
 
 interface PhoneStepProps {
-  /** The typed number: kept by the sheet, so «رجوع» from the templates finds it again. */
+  /** Kept by the sheet so going back from the templates finds it again. */
   value: string;
   onChange: (value: string) => void;
   onFound: (found: FoundNumber) => void;
   onClose: () => void;
 }
 
-/** Step 1: the family's WhatsApp number; «التالي» reads it (GET /threads/:phone) as E.164. */
+/** Read as E.164. */
 export function PhoneStep({ value, onChange, onFound, onClose }: PhoneStepProps) {
   const lookup = useLookupNumber();
   const [error, setError] = useState<string | null>(null);

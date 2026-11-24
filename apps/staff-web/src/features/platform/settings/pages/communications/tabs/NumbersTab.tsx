@@ -6,11 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const h = t.communicationsHub;
 
-/**
- * «الأرقام»: the numbers (docs/23 phase 3) and the WhatsApp lines check, as they were, then the old
- * line rows of «التكاملات» folded beside the check on a wide screen (still read while comms_source =
- * legacy; docs/26b §6a 10.1–10.15).
- */
+/** Legacy line rows are still read while comms_source is legacy (docs/26b §6a 10.1-10.15). */
 export function NumbersTab({ onNote }: { onNote: (message: string) => void }) {
   return (
     <div className="grid gap-6">

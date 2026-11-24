@@ -2,9 +2,7 @@ import { arabicLiterals } from '@ab/i18n';
 import { describe, expect, it } from 'vitest';
 import allow from './i18n-literals.allow.json';
 
-// «Nothing untranslated» (owner, 2026-10-05): no Arabic in string literals or JSX text of the
-// app's components. Copy lives in ar.json / en.json (the admins can override it, «الترجمات»).
-// A justified exception goes in i18n-literals.allow.json with its reason.
+// No Arabic in component string literals or JSX text; exceptions go in i18n-literals.allow.json.
 
 const sources = import.meta.glob<string>(['./**/*.tsx', '!./**/*.test.tsx'], { query: '?raw', import: 'default', eager: true });
 const allowed = new Set(Object.keys(allow.files));

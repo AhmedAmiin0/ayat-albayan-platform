@@ -1,5 +1,5 @@
 import { roleActions } from '@ab/client-core';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { View } from 'react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';
@@ -12,10 +12,7 @@ import { useAttach } from './use-attach';
 
 const E = t.peopleEdit;
 
-/**
- * «ربط بولي أمر آخر»: pick a family by name, number or a child's code, or a new guardian by
- * number, then confirm. Only students.guardian_id changes: packages, lessons and payments stay.
- */
+/** Only students.guardian_id changes; packages, lessons and payments stay. */
 export function AttachSheet({ view, onClose, onDone }: PeopleSheetProps) {
   const a = useAttach(view, onDone);
   const canMove = roleActions(view).canMove;

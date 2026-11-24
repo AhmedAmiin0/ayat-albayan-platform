@@ -1,9 +1,7 @@
 import { crmTemplateLanguage, crmTemplateName, type TemplateView } from '@ab/shared';
 import { canSubmit } from '@/features/messaging/templates/api';
 
-// «إرسال إلى ميتا» on a crm line (docs/39): the API submits through the CRM, except what only
-// the CRM dashboard can do (409 crm_managed, template-submit.ts / crm.client.ts). Pure: the
-// row's button shows exactly when the server would accept it.
+// docs/39: some crm rows can only be made in the CRM dashboard (409 crm_managed).
 
 /** Why a submittable crm row is made in the CRM dashboard instead. */
 export type CrmOnly = 'document' | 'named' | 'rejected';

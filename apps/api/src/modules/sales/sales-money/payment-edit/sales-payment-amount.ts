@@ -2,10 +2,12 @@ import { amountFromStripe, type PaymentAmount, type SalesPaymentView } from '@ab
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, forbidden } from '@/common/http/errors';
-import { toSalesPayment } from '@/modules/sales/sales-money/sales-money.mapper';
-import { SalesMoneyReads } from '@/modules/sales/sales-money/reads/sales-money.reads';
-import { SalesMoneyServices } from '@/modules/sales/sales-money/sales-money.services';
-import { SalesMoneyScope } from '@/modules/sales/sales-money/sales-money.scope';
+import { SalesMoneyReads } from '@/modules/sales/sales-money/reads';
+import {
+  SalesMoneyScope,
+  SalesMoneyServices,
+  toSalesPayment,
+} from '@/modules/sales/sales-money/shared';
 
 /**
  * «تعديل المبلغ» by the assistant (owner 2026-11-02), permission subscriptions.edit_terms (never

@@ -13,10 +13,7 @@ interface AttendanceSectionProps {
   attendance: SalesStudentDetails['attendance'];
 }
 
-/**
- * «الحضور»: the totals, then one line per past lesson (Riyadh time) with «حضر» / «غاب» / … newest first;
- * «عرض سجل الحضور» opens the month-by-month table (owner 2026-10-28).
- */
+/** Past lessons in Riyadh time, newest first. */
 export function AttendanceSection({ studentId, attendance }: AttendanceSectionProps) {
   const { color } = useTheme();
   const cycle = useClockCycle();

@@ -10,7 +10,6 @@ import { usePeopleWrite } from '@/features/people/students/people-edit/use-peopl
 
 const E = t.peopleEdit;
 
-/** The family's second number with «حذف الرقم الثاني» behind a confirm; nothing without one. */
 export function SecondPhone({
   guardian,
   onDone,

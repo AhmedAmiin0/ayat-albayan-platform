@@ -7,8 +7,6 @@ import { hitHref, MessageHits } from './MessageHits';
 import type { ThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import type { MessageHitsState } from './use-message-hits';
 
-// docs/37 NEW 1: «الرسائل» under the chats, a hit opens its chat at the message (`?msg=`).
-
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 const HIT: MessageSearchHit = {

@@ -1,5 +1,7 @@
 import type { Hero } from '@ab/client-core';
-import { clockOf, counted, isOpenLesson, type LessonView, type TeacherMe } from '@ab/shared';
+import { counted } from '@ab/core';
+import { isOpenLesson, type LessonView, type TeacherMe } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { useId } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
@@ -32,7 +34,7 @@ const SOON_MIN = 60;
 /** Whole minutes to the start of a coming hero (a running one has none). */
 const minutesOf = (h: Hero<LessonView>) => (h.kind === 'next' ? h.minutes : 0);
 
-/** «بعد 12 دقيقة» within the hour, else the start on her clock. */
+/** Relative time within the hour, else the start on her clock. */
 const nextLine: HeroText = (h, at) =>
   minutesOf(h) <= SOON_MIN
     ? counted(t.today.inMinutes, minutesOf(h))
@@ -43,10 +45,7 @@ const HERO_TEXT: Record<Hero['kind'], HeroText> = {
   next: (h, at) => `${t.today.next} · ${nextLine(h, at)}`,
 };
 
-/**
- * The top of «اليوم» (docs/48): the lesson under way or the next one today, its time large, ONE
- * filled lead and «التفاصيل». No hero: her fixed link (R-TCH-03) unless she is on the platform.
- */
+/** Without a hero, her fixed link shows (R-TCH-03) unless she uses the platform. */
 export function TodayHero({ hero, ...rest }: TodayHeroProps) {
   if (!hero) return rest.platform ? null : <JoinLink link={rest.me.meeting_link} />;
   return <HeroCard hero={hero} {...rest} />;

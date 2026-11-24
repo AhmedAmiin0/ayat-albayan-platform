@@ -6,7 +6,7 @@ import {
   type IntegrationConfigItem,
   type IntegrationPlainKey,
   type IntegrationSecretKey,
-} from '@ab/shared';
+} from '@ab/catalog';
 import { Body, Controller, Delete, Get, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

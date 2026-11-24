@@ -55,7 +55,7 @@ export function makeupParams(
 
 type Params = Partial<Record<keyof MakeupSource, string | string[]>>;
 
-/** The route's params back into a source; null when one is missing, so a bad link shows «مش لاقيين». */
+/** null when a param is missing, so a bad link shows not-found. */
 export function sourceFromParams(p: Params): MakeupSource | null {
   const one = (v: string | string[] | undefined) => (typeof v === 'string' && v ? v : null);
   const minutes = Number(one(p.durationMin));

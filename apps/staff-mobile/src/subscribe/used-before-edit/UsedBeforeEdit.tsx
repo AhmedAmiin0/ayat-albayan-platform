@@ -14,11 +14,7 @@ interface UsedBeforeEditProps {
 
 type Mode = 'closed' | 'open' | 'saved';
 
-/**
- * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02) on the student's current package, admins and
- * assistants (subscriptions.edit_terms); never on a cancelled package (editOffered). The
- * editor reads the server's state (max, booked course) before offering anything.
- */
+/** Needs subscriptions.edit_terms; never on a cancelled package. */
 export function UsedBeforeEdit({ sub, stale }: UsedBeforeEditProps) {
   const [mode, setMode] = useState<Mode>('closed');
   const canEdit = useHolds('subscriptions.edit_terms') && editOffered(sub);

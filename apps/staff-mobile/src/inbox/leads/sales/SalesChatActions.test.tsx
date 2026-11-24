@@ -5,8 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { SalesChatActions } from './SalesChatActions';
 import { thread } from '@/inbox/shared/thread-fixtures';
 
-// The action strip shows only once a pill will: no empty band over a family chat (review of #112),
-// and none over a lead's chat (owner 2026-10-30: «تسجيل طالب جديد» moved into the header's «⋮»).
+// The strip shows only once a pill will, so no empty band over a family or lead chat.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

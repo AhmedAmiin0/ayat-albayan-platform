@@ -21,11 +21,7 @@ import { VideoModal } from './VideoModal';
 export const VIDEO_TILE = { width: 220, height: 160 } as const;
 const PLAY = 56;
 
-/**
- * A video as WhatsApp shows it (owner 2026-10-27): a dark tile, a big round play button and «فيديو»;
- * the tap fetches it (W6: never before) and opens it full screen (VideoModal). The caption stays under
- * the bubble's file (MessageBubble); a failure stays in the bubble, «اضغط لإعادة المحاولة».
- */
+/** Fetched only on tap (W6); a failure stays in the bubble with a retry. */
 interface VideoTileProps {
   message: MessageView;
   phone: string;

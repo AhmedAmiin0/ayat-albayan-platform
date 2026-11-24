@@ -8,7 +8,7 @@ import type { ShortLinkDetail } from '@ab/shared';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 
-// «الروابط المختصرة» (docs/19): the reads and writes of @ab/client-core bound to the app's client.
+// Short links (docs/19).
 
 const client = { apiFetch, apiSend };
 const queries = shortLinkQueries(client);

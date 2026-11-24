@@ -30,10 +30,7 @@ export function draftFromStudent(s: ProfileWithPref, guardian: GuardianRow | und
   };
 }
 
-/**
- * A lead books a trial, unless «اشترك» in the chat asked for a regular package (R-SUB-01). What
- * «بيانات الطالب» captured and the lead's source prefill step 1 (research-forms item 2).
- */
+/** A lead books a trial unless a package was asked (R-SUB-01); lead data prefills step 1. */
 export function draftFromLead(search: BookSearch, lead: InboxLead | null): BookingDraft {
   const pkg = search.pkg ?? 'trial';
   const base = emptyDraft({ leadId: search.leadId ?? null, kind: pkg === 'trial' ? 'trial' : 'package' });

@@ -22,10 +22,7 @@ export interface ReplyEditorDialogProps {
   onClose: () => void;
 }
 
-/**
- * «رد جديد» / «تعديل الرد»: title (≤ 60), the text with its placeholder chips, and an optional image
- * or PDF. Shared by «التواصل» → «الردود السريعة» (the shared list) and the picker's «ردودي».
- */
+/** Title is at most 60 characters. */
 export function ReplyEditorDialog({ reply, scope, onClose }: ReplyEditorDialogProps) {
   const formId = useId();
   const box = useRef<HTMLTextAreaElement>(null);

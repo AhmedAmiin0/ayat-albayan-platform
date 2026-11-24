@@ -5,11 +5,7 @@ import { AlertSections } from './AlertSections';
 import { FamilyHeader } from './FamilyHeader';
 import { FamilyPage } from './FamilyPage';
 
-/**
- * «الإشعارات» (canvas Alerts), pushed above the tabs: GET /me/notifications by day; a tap marks
- * the row read and opens its report, child, package or chat (@ab/client-core alertTarget);
- * «تعليم الكل كمقروء» while any is unread.
- */
+/** A tap marks the row read and opens its target (@ab/client-core alertTarget). */
 export function AlertsScreen() {
   const list = useNotifications();
   const markRead = useMarkRead();

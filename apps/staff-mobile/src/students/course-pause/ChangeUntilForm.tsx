@@ -1,4 +1,5 @@
-import { riyadhToday, type CoursePauseView } from '@ab/shared';
+import type { CoursePauseView } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, ErrorLine } from '@ab/mobile-kit';
@@ -10,15 +11,11 @@ import { UntilField } from './UntilField';
 interface ChangeUntilFormProps {
   studentId: string;
   pause: CoursePauseView;
-  /** Saved: the sheet closes and the file says «حُفظت نهاية الإيقاف». */
   onDone: () => void;
   onClose: () => void;
 }
 
-/**
- * «تغيير نهاية الإيقاف»: extend or shorten the open pause (PATCH …/until), or switch the end off (until
- * «استئناف»). The end is never before the pause's first day nor before Riyadh today.
- */
+/** The end is never before the pause's first day nor before Riyadh today. */
 export function ChangeUntilForm({ studentId, pause, onDone, onClose }: ChangeUntilFormProps) {
   const [earliest] = useState(() => {
     // academy day (docs/34 b): a pause cuts at the academy's today.

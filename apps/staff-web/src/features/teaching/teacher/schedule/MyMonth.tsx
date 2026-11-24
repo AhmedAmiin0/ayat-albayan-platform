@@ -1,4 +1,5 @@
-import { counted, type TeacherMe } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { TeacherMe } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
@@ -11,10 +12,7 @@ import { MonthBody } from './MonthBody';
 import { MonthNav } from './MonthNav';
 import { useMyMonth } from './use-my-month';
 
-/**
- * «جدولي» month (owner 2026-11-14): her lessons on a Saturday-first month in her own days
- * (docs/34), one query per shown month. A day lists its lessons; a lesson opens the drawer.
- */
+/** Saturday-first month in her own days (docs/34), one query per shown month. */
 export function MyMonth({ toggle }: { toggle?: ReactNode }) {
   const m = useMyMonth();
   const me = useQuery(teacherMeQuery);

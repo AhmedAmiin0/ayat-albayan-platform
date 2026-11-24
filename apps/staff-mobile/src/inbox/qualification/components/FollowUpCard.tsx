@@ -18,10 +18,7 @@ interface FollowUpCardProps {
   offline: boolean;
 }
 
-/**
- * «المتابعة» (R-LEAD-05, L2), like the web's FollowUpLine: what the automation does next, and the
- * per-lead pause. A lead who sent «وقف» opted out of marketing: resuming asks first.
- */
+/** R-LEAD-05: a lead who opted out of marketing needs a confirm before resuming. */
 export function FollowUpCard({ lead, offline }: FollowUpCardProps) {
   const cycle = useClockCycle();
   const { color } = useTheme();

@@ -1,4 +1,4 @@
-import { systemPermissionsOf, type Permission } from '@ab/shared';
+import { systemPermissionsOf, type Permission } from '@ab/catalog';
 import type { AuthUser } from './verify-token';
 
 /** The user's profile is disabled: the guard answers 403 account_disabled, even with a valid JWT. */

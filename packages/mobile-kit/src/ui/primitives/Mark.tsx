@@ -1,3 +1,4 @@
+/// <reference types="../../../assets/images.d.ts" />
 import { Image } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import markLarge from '../../../assets/brand/mark.png';

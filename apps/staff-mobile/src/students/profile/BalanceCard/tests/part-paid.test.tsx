@@ -5,7 +5,7 @@ import { partPaidLine } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { BalanceCard } from '@/students/profile/BalanceCard/BalanceCard';
 
-// Owner 2026-10-28: a package of 81 with 80 received is still «غير مدفوعة»; the card says what is left.
+// A package of 81 with 80 received is still unpaid.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

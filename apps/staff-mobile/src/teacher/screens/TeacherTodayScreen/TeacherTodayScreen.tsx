@@ -15,14 +15,7 @@ import { TodayHeader } from '@/today';
 
 const toReport = (lessonId: string) => router.push(`/teacher/today/report/${lessonId}`);
 
-/**
- * «اليوم» (R-TCH-03, R-MOB-02, docs/48): one scroll, one pull. Her greeting and date, the notice
- * once an action lands, «تنبيهات اليوم» with «تخصيص» (owner 2026-11-14), the hero (pickHero: her
- * lesson under way or next) with ONE lead, «بقية اليوم» as compact rows (one lead each; a tap
- * opens the sheet with every action), the ended lessons folded (each with its report lead), and
- * the day end with her next lesson. Today's lessons only. Offline the saved day stays with its
- * «آخر تحديث» (R-MOB-03).
- */
+/** Today (R-TCH-03, R-MOB-02, docs/48): one lead per lesson; offline the day stays (R-MOB-03). */
 export function TeacherTodayScreen() {
   const v = useTeacherToday();
   const notice = useTimedNotice();

@@ -61,7 +61,7 @@ describe('StopCourseDialog «إلغاء الاشتراك» (owner 2026-10-30)', 
   it('needs a reason, posts it trimmed with one request id, then the done block', async () => {
     const { dialog, onDone } = open();
     await dialog.findByText(words.schedule);
-    // owner 2026-11-17: an empty reason says so clearly on «تأكيد الإلغاء», nothing is sent.
+    // An empty reason shows a clear error on confirm and nothing is sent.
     fireEvent.click(confirm() as HTMLButtonElement);
     expect(await dialog.findByText(words.reasonRequired)).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();

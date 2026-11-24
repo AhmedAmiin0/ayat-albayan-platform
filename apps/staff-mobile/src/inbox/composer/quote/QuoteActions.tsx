@@ -3,7 +3,7 @@ import { t, Button } from '@ab/mobile-kit';
 import { ButtonRow } from '@/core/ui/actions';
 
 interface QuoteActionsProps {
-  /** The 24 h window: outside it only «انسخ» works. */
+  /** Outside the 24 h window only copy works. */
   open: boolean;
   /** No quote yet, or the previous choice's: nothing may leave. */
   ready: boolean;
@@ -13,7 +13,7 @@ interface QuoteActionsProps {
   onCopy: () => void;
 }
 
-/** «أرسل العرض» (the one filled button, alone), then ONE ButtonRow «عدّل قبل الإرسال» | «انسخ» (docs/07 «الأزرار»). */
+/** docs/07: the one filled button sits alone, the others share one ButtonRow. */
 export function QuoteActions(p: QuoteActionsProps) {
   const off = !p.open || !p.ready;
   return (

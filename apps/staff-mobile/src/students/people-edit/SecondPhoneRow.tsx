@@ -1,4 +1,5 @@
-import { formatPhone, type PeopleEditView } from '@ab/shared';
+import type { PeopleEditView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, ltr } from '@ab/mobile-kit';
@@ -8,7 +9,7 @@ import { removeSecondPhone, usePeopleWrite } from './people-edit-api';
 
 const E = t.peopleEdit;
 
-/** The family's second number, «حذف الرقم الثاني» behind an inline confirm; nothing without one. */
+/** Removing it needs an inline confirm; nothing without a second number. */
 export function SecondPhoneRow({
   guardian,
   onDone,

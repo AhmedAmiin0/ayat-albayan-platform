@@ -5,7 +5,7 @@ import { groupByWeekday, gridTz, tzLabel } from '@/more/schedule';
 import { WeekdayRow } from './WeekdayRow';
 import type { AvailabilityRow, Teacher } from '@ab/shared';
 
-/** «المواعيد المتاحة», read-only: the weekly grid by day in one inset card, in the zone it was saved in. R-TCH-02. */
+/** R-TCH-02: read-only, in the zone it was saved in. */
 export function WeeklyAvailability({ teacher }: { teacher: Pick<Teacher, 'id' | 'tz'> }) {
   const path = `/teachers/${teacher.id}/availability`;
   const query = useQuery({

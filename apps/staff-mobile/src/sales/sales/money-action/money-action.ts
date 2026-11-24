@@ -1,9 +1,7 @@
 import type { SalesFamilyView } from '@ab/shared';
 import type { Href } from 'expo-router';
 
-// The one money action outside the chat (UX review 2026-10-29 #9): «تسجيل تحويل» while one of the
-// student's packages is owed, else «تجديد» when the API says a renewal is due, else nothing. It only
-// opens the chat's existing screens with the student and package picked; no money logic here. Pure.
+// Transfer while a package is owed, else renew when due; it holds no money logic; pure.
 
 interface MoneyTarget {
   studentId: string;

@@ -1,4 +1,5 @@
-import { quote, STUDENT_STATUSES, type QuoteOptions } from '@ab/shared';
+import { STUDENT_STATUSES } from '@ab/catalog';
+import { quote, type QuoteOptions } from '@ab/money';
 import { subscription } from '@/payments/fixtures';
 import { formFrom } from '@/subscribe/form-prefill';
 import { renewHref } from './renew';

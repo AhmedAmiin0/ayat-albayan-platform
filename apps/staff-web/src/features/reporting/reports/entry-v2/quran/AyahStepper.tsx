@@ -4,7 +4,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 
 export interface AyahStepperProps {
-  /** «من الآية» / «إلى الآية»: the group's name and the number's label. */
   label: string;
   value: number;
   onChange: (value: number) => void;

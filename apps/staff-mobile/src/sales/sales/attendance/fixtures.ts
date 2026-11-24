@@ -1,7 +1,5 @@
 import type { AttendanceTableRow, StudentAttendanceTable } from '@ab/shared';
 
-// «سجل الحضور» as the API answers it (tests only; sample names).
-
 export const logRow = (over: Partial<AttendanceTableRow> = {}): AttendanceTableRow => ({
   lesson_id: 'l1',
   starts_at: '2026-10-27T15:00:00.000Z',

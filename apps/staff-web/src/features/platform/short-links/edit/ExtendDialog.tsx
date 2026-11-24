@@ -17,7 +17,7 @@ interface ExtendDialogProps {
   onSaved: () => void;
 }
 
-/** «تمديد الرابط»: a new expiry; an expired link runs again until it. */
+/** An expired link runs again until the new expiry. */
 export function ExtendDialog({ link, onClose, onSaved }: ExtendDialogProps) {
   const formId = useId();
   const [expiry, setExpiry] = useState<LinkExpiry>({ kind: 'days', days: SHORT_LINK_DEFAULT_DAYS });

@@ -14,13 +14,7 @@ const AFTER_SHEET_MS = Platform.OS === 'ios' ? 350 : 0;
 
 const childLabel = (s: SalesFamilyStudent) => (s.code ? `${s.name} · ${s.code}` : s.name);
 
-/**
- * Over a salesperson's family chat (R-ASST-01): ONE «موعد تجريبي جديد» (owner 2026-10-29: one pill per
- * child crowded the strip). One of her students in the family with no running subscription: it opens
- * that child's trial-date screen (the history and the wizard) inside the chat's group; several: a sheet
- * «لأيّ طالب؟» names each. A subscriber gets none: the screen and the student file say why. Same gate and
- * cached family query as SalesChatMoney.
- */
+/** One pill (R-ASST-01) for her students with no running subscription; a subscriber gets none. */
 export function SalesTrialPills({ thread }: { thread: ThreadView | null }) {
   const money = useHolds('self.sales_money');
   const base = useTreeBase();

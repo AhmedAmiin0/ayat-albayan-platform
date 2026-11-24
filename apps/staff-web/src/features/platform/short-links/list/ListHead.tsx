@@ -11,7 +11,6 @@ interface ListHeadProps {
   onNew: () => void;
 }
 
-/** «الروابط المختصرة · 14 رابطًا» with «رابط جديد», then the line on what a link is. */
 export function ListHead({ total, onNew }: ListHeadProps) {
   return (
     <>

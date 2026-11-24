@@ -27,11 +27,7 @@ export interface ValuesViewProps {
   renderGuard?: (names: string[]) => ReactNode;
 }
 
-/**
- * /admin/settings/values «القيم» (docs/26b §2, owner 2026-10-23 «stick with table», «i dont like
- * long pages»): one group per view, each row saves on its own. The editors render only with
- * settings.write; without it every value is text («للاطلاع فقط»).
- */
+/** One group per view (docs/26b §2), each row saves on its own; editors need settings.write. */
 export function ValuesView({ search, onSearch, renderGuard }: ValuesViewProps) {
   const settings = useQuery(settingsQuery);
   const meta = useQuery(settingsMetaQuery);

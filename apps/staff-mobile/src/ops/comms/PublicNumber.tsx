@@ -1,13 +1,10 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { View } from 'react-native';
 import { t, ListRow, ltr, InsetGroup } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { useSettings } from '@/ops/settings/use-settings';
 
-/**
- * «الرقم المعلن للأسر» (docs/23 §2d): academy_whatsapp_e164 from GET /settings, LTR, read-only here
- * (it is edited in «القيم» ← الأكاديمية). Nothing until the settings arrive (the send state shows the error).
- */
+/** docs/23 §2d: read-only here; nothing renders until settings arrive. */
 export function PublicNumber() {
   const h = t.communicationsHub;
   const phone = useSettings().data?.academy_whatsapp_e164;

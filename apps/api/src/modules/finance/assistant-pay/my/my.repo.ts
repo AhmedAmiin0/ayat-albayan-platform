@@ -1,4 +1,4 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError, type PageQuery } from '@/common/http/http';

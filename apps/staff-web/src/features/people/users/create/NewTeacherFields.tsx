@@ -12,7 +12,6 @@ export interface NewTeacherFieldsProps {
   error?: string | undefined;
 }
 
-/** «معلم جديد»: the teacher row the login is created with. */
 export function NewTeacherFields({ value, onChange, error }: NewTeacherFieldsProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">

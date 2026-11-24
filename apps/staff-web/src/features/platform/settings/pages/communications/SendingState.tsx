@@ -5,10 +5,7 @@ import { sendGateQuery } from '@/features/messaging/messaging/api';
 import { sendingChip } from '@/features/messaging/messaging/sending-chip';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * The sending state in the head of «التواصل» (docs/26b §3 state strip), seen from every tab: the
- * same chip as the kill switch, named «إرسال الرسائل: …» so it never reads as the switch's own chip.
- */
+/** Named so it never reads as the kill switch's own chip (docs/26b §3). */
 export function SendingState({ settings }: { settings: AcademySettings }) {
   const gate = useQuery(sendGateQuery);
   const chip = sendingChip(settings.messaging_enabled, gate.data);

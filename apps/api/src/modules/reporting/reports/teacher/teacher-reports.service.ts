@@ -2,15 +2,12 @@ import type { Page, TeacherReportsQuery, TeacherReportView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PageQuery } from '@/common/http/http';
-import { ReportGate } from '@/modules/reporting/reports/submit/report-gate';
+import { ReportGate } from '@/modules/reporting/reports/shared/report-gate';
 import { ReportHistoryQueries } from '@/modules/reporting/reports/history/report-history.queries';
 import { toTeacherReportView } from './teacher-reports.mapper';
 import { TeacherReportsQueries } from './teacher-reports.queries';
 
-/**
- * GET /teachers/me/reports (teacher mode «التقارير», R-REP-02, R-TCH-03): my submitted reports,
- * newest first unless sorted, filterable (R-NFR-08), with the edit window. Drafts and missing reports stay in pending-reports.
- */
+/** R-REP-02, R-TCH-03, R-NFR-08: drafts and missing reports stay in pending-reports. */
 @Injectable()
 export class TeacherReportsService {
   constructor(

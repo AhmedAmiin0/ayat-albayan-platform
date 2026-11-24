@@ -1,5 +1,6 @@
 import { DEFAULT_HOME_PREFS, HOME_PREFS_KEY } from '@ab/client-core';
-import { PUBLIC_SETTING_DEFAULTS, type TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';

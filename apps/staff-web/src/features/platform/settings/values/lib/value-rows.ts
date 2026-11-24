@@ -12,8 +12,7 @@ import { isModified } from '@/features/platform/settings/registry-form/row-form'
 import { GROUP_IDS, groupKeys, isOwnedGroup, type ValuesGroupId } from './value-groups-view';
 import type { ValuesFilter } from '@/features/platform/settings/values/values-search';
 
-// The rows of «القيم»: settings rows (editable or module-owned), the three Google values (not
-// settings rows: google_settings via /admin/google/status) and the custom entries.
+// Google values are not settings rows: they come from /admin/google/status.
 
 export type GoogleField = keyof typeof GOOGLE_SETTING_KEYS;
 
@@ -84,12 +83,11 @@ export function rowMatches(row: ValueRow, query: RowQuery): boolean {
   return matchesText(text, query.q);
 }
 
-/** «الكل»: the matches from every group, in list order. */
+/** All matches from every group, in list order. */
 export function allRows(custom: readonly CustomConfigView[], query: RowQuery): ValueRow[] {
   return GROUP_IDS.flatMap((g) => groupRows(g, custom)).filter((row) => rowMatches(row, query));
 }
 
-/** The page head's counts over the editable values («28 قيمة · 5 معدَّلة · 8 عامة»). */
 export function valueCounts(settings: AcademySettings): { total: number; modified: number; public: number } {
   const keys = GROUP_IDS.filter((g) => !isOwnedGroup(g)).flatMap(groupKeys);
   return {

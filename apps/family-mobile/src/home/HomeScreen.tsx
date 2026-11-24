@@ -4,11 +4,6 @@ import { FamilyPage, GreetingHeader } from '@/nav';
 import { useFamilyPick, usePortalMe } from '@/portal';
 import { StudentHome } from './StudentHome';
 
-/**
- * «الرئيسية» (docs/50 §6): the page of the student in view, a student's own or the child a
- * guardian works as (only or picked; the picker itself is the tabs' redirect). Until that student
- * is known, a neutral greeting over a skeleton; no student linked: the note.
- */
 export function HomeScreen() {
   const me = usePortalMe();
   const pick = useFamilyPick();

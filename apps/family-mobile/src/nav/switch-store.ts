@@ -1,8 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-// The child switch (owner 2026-11-16, canvas SwitchSheet, SwitchDone): one sheet for every tab,
-// opened from any tab's header, and «تُعرض الآن صفحة …» after a switch, which outlives the page
-// it replaces (a new pick remounts home). Module state: one app, one switch.
+// The note after a switch outlives the page it replaces; module state: one app, one switch.
 
 /** How long the note after a switch stays. */
 export const SWITCH_NOTICE_MS = 4000;

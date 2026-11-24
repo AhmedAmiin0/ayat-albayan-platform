@@ -7,10 +7,7 @@ import { StudentPasswordForm } from './StudentPasswordForm';
 
 type View = 'password' | 'firstTime' | 'forgot';
 
-/**
- * The student code + password; «أول دخول؟» sets the first password with a code sent to the
- * guardian's WhatsApp, «نسيت كلمة المرور؟» resets it the same way. Both hide while codes are off.
- */
+/** First-password and reset use a WhatsApp code to the guardian; both hide while codes are off. */
 export function StudentSignIn({ codes }: { codes: boolean }) {
   const [view, setView] = useState<View>('password');
   const [saved, setSaved] = useState(false);

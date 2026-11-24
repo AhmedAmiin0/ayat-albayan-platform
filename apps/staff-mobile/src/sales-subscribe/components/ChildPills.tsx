@@ -8,7 +8,7 @@ interface ChildPillsProps {
   onChange: (id: string) => void;
 }
 
-/** «اختر الطالب»: only her students of the family, «يوسف · AB-0183». */
+/** Only her own students of the family. */
 export function ChildPills({ students, value, onChange }: ChildPillsProps) {
   return (
     <Section title={t.salesMoney.pickChild}>

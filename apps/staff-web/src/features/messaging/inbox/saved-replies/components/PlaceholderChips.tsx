@@ -15,7 +15,6 @@ export function insertAt(input: { value: string; token: string; at: number | nul
   return { text: input.value.slice(0, at) + input.token + input.value.slice(at), caret: at + input.token.length };
 }
 
-/** «اسم العميل» «اسم الطالب» «اسمك»: each inserts its placeholder at the caret of the text box. */
 export function PlaceholderChips({ target, value, onChange }: PlaceholderChipsProps) {
   const insert = (key: SavedReplyPlaceholder) => {
     const box = target.current;

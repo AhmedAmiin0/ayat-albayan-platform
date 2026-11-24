@@ -18,10 +18,6 @@ interface Props {
   wideReport?: boolean;
 }
 
-/**
- * Above the rows, fixed while they scroll: the month pills (newest first), the month's totals
- * «حضر · غاب · بعذر · متأخر · ألغيت · أُجّلت», then the table's column header.
- */
 export function AttendanceLogHead({ data, month, onMonth, tz: zone, wideReport }: Props) {
   const tz = useLogTz(zone);
   const { color } = useTheme();

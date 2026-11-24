@@ -4,8 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LineRow } from './LineRow';
 
-// docs/19 «crm driver»: a crm line shows «نظام CRM», whether its key may send, where ticks come from, and
-// a refused key in the CRM's own words. No Meta ids (the number is the CRM's).
+// docs/19 crm driver: no Meta ids are shown, since the number is the CRM's.
 
 const s = t.templates.settings.lines;
 const crmView: LineCheckView = {

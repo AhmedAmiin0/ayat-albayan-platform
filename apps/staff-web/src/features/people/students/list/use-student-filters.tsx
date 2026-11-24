@@ -8,7 +8,7 @@ import { STUDENT_SELECT_LABELS, StudentFilters, studentFilterOptions } from './S
 export interface StudentFiltersOptions {
   value: StudentsFilters;
   onChange: (next: StudentsFilters) => void;
-  /** «مسح الكل»: these filters and the given column filter keys, in one URL change. */
+  /** Clears these filters and the given column keys in one URL change. */
   onClearAll: (columnKeys: string[]) => void;
 }
 

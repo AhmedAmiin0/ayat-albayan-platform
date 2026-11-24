@@ -8,10 +8,7 @@ import { QuoteCard } from './QuoteCard';
 import { DEFAULT_SELECTION, type Selection } from './selection';
 import { useQuote } from './use-quote';
 
-/**
- * «حاسبة الأسعار» (docs/08): the site calculator's steps, the API's quote in the guardian's
- * currency (USD for any other country), and the offer sent on WhatsApp or shared.
- */
+/** Pricing calculator (docs/08): quotes in the guardian's currency, USD for any other country. */
 export function PricingScreen() {
   const { color } = useTheme();
   const [selection, setSelection] = useState<Selection>(DEFAULT_SELECTION);

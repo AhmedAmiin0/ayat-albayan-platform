@@ -8,8 +8,7 @@ import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { useCreateLink } from '@/features/platform/short-links/api/use-short-links';
 import { focusFirstInvalid } from './focus-invalid';
 
-// «رابط جديد»'s state: the form (client-core's LinkForm), each field's refusal (the form check
-// first, then the API's), and the create call; a created link hands its code on.
+// Field refusals show the form check first, then the API's; a created link hands its code on.
 
 export interface LinkFormState {
   form: LinkForm;

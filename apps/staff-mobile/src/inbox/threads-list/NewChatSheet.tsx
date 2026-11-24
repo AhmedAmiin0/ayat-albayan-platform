@@ -7,13 +7,7 @@ import { NewChatSteps } from './new-chat/NewChatSteps';
 /** The floating button's size; the chats list leaves this much room (plus 16pt) under its last row. */
 export const FAB = 56;
 
-/**
- * «محادثة جديدة» (admin and sales): one sheet with steps, like Kapso (NewChatSteps): the number,
- * then for a new number its allowed templates, the params and «أرسل»; a number with a chat opens
- * it. The trigger floats as a 56pt round button in the chats list's bottom inline-end corner,
- * above the tab bar, as WhatsApp (owner 2026-10-27: «Remove new chat from the top and make it a
- * floating circle icon in the bottom corner»). Render it last inside the list's frame.
- */
+/** Admin and sales only; render it last inside the list's frame so it floats above. */
 export function NewChatSheet() {
   const { color, elevation } = useTheme();
   const inset = useTabBarInset();

@@ -4,10 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-/**
- * Whitelisted lesson columns for sales: never reasons, attendance, notes or money. The lesson's
- * meeting_link and the teacher's meeting_mode (for «عبر الفصل») are in since owner 2026-10-26.
- */
+/** Never reasons, attendance, notes or money; meeting link and mode are included. */
 const SALES_SCHEDULE_SELECT =
   'id, starts_at, ends_at, status, makeup_of_id, meeting_link, teacher_confirmed_at, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz, meeting_mode), lesson_students(student:students(id, code, name, tz))' as const;
 
@@ -41,19 +38,12 @@ interface DayRange {
   teacherId?: string | undefined;
 }
 
-/**
- * The salesperson's read-only schedule (owner report 2026-10-12), read with the service role: one
- * Riyadh day of lessons and the next open lessons (for «الحلقة القادمة»). Each select is a whitelist.
- */
+/** Service role; one Riyadh day and the next open lessons; each select is a whitelist. */
 @Injectable()
 export class SalesScheduleRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /**
-   * Lessons overlapping [from, to), by start; a moved-away lesson (`rescheduled`) is left out.
-   * Overlapping, not starting inside: a lesson running across midnight is on both days (it is
-   * «في حلقة الآن» at 00:03).
-   */
+  /** Overlapping, not starting inside, so a lesson across midnight is on both days. */
   async day(range: DayRange): Promise<SalesScheduleRow[]> {
     let query = this.db
       .from('lessons')

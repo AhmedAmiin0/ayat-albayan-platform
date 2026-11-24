@@ -35,11 +35,7 @@ import { OwnNumbers } from './own/own-numbers';
 /** :id is a uuid, :name one of the two secret names (anything else is 400). */
 const SECRET_PARAMS = z.object({ id: z.uuid(), name: numberSecretNameSchema });
 
-/**
- * «الأرقام» (docs/23 §3 phase 3): WhatsApp numbers as records. Reading needs settings.read; every write
- * numbers.manage (RLS: admins read, the service role writes). Secrets are write-only: no route returns
- * a value. Nothing here sends a message or touches a sending switch.
- */
+/** docs/23 §3: reads need settings.read, writes numbers.manage; secrets are write-only. */
 @ApiTags('numbers')
 @ApiBearerAuth()
 @Controller('admin/numbers')
@@ -56,7 +52,7 @@ export class NumbersController {
     return this.numbers.list();
   }
 
-  /** «رسائل بين أرقام الأكاديمية»: how many inbound rows came from our own numbers in the last 7 days. */
+  /** Inbound rows from our own numbers in the last 7 days. */
   @Get('own-traffic')
   @Permissions('settings.read')
   async ownTraffic(): Promise<OwnTrafficView> {

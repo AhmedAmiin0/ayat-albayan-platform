@@ -9,7 +9,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const L = lesson({ id: 'l-7', status: 'scheduled', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
 
-/** docs/07 «الأزرار»: no shrink-wrapped multi-word button; each fills the drawer's column. */
+/** docs/07: no shrink-wrapped multi-word button; each fills the drawer's column. */
 describe('ClassroomActions buttons fill the drawer width', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });

@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/shared';
+import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/settings';
 import arBundle from '@ab/shared/i18n/ar.json';
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';

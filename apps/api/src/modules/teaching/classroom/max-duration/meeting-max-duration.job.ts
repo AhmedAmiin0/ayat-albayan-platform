@@ -20,20 +20,7 @@ interface MaxDurationSummary { ended: number; closed: number; failed: number }
 
 const why = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
-/**
- * Owner 2026-10-30 «close meetings longer than 2 hours»: every 5 minutes, single flight, in the
- * worker only (@BackgroundJob).
- * settings.meeting_max_minutes (0 = off) is the limit.
- * 1. A meeting not ended nor cancelled, started (else created) before the limit, is ended like
- *    «إنهاء» (ends_at + audit reason auto_max_duration) and its room closed.
- * 2. Any `lesson-`/`meeting-` room LiveKit created before the limit is closed in LiveKit only;
- *    other rooms never. The job reads nothing from lessons and writes none (status, attendance,
- *    report, earnings stay). Not lessons.room_opened_at: it is stamped once and kept when a lesson
- *    is moved, so it would close a fresh room. LiveKit drops an empty room (CreateRoom
- *    empty_timeout 600 s), so a room really open past the limit has an old creation time.
- * A running recording is stopped first, so the file is kept. One room's failure never stops the
- * run; a re-run finds nothing left (ended meetings are not selected, closed rooms not listed).
- */
+/** Closes meetings and rooms older than meeting_max_minutes; never touches lessons; idempotent. */
 @BackgroundJob({ name: 'meeting-max-duration' })
 @Injectable()
 export class MeetingMaxDurationJob extends TickerJob {

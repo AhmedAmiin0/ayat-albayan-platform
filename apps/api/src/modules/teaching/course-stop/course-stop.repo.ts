@@ -1,4 +1,4 @@
-import { currentPackage, type SubscriptionStatus } from '@ab/shared';
+import { currentPackage, netPaidIn, type SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
@@ -101,14 +101,14 @@ export class CourseStopRepo {
     return data.map((l) => l.starts_at).sort();
   }
 
-  /** Net paid (payments − refunds): shown, never changed. */
-  async paid(subscriptionId: string): Promise<number> {
+  /** Net paid in the package currency: shown, never changed. */
+  async paid(sub: Pick<StopSub, 'id' | 'currency'>): Promise<number> {
     const { data, error } = await this.db
       .from('payments')
-      .select('amount, kind')
-      .eq('subscription_id', subscriptionId);
+      .select('amount, kind, currency')
+      .eq('subscription_id', sub.id);
     if (error) throw dbError(error);
-    return data.reduce((sum, p) => sum + (p.kind === 'refund' ? -p.amount : p.amount), 0);
+    return netPaidIn(data, sub.currency);
   }
 
   /**

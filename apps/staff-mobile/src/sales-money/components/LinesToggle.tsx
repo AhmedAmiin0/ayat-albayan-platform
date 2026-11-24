@@ -1,9 +1,8 @@
-import type { AssistantStatementLineView } from '@ab/shared';
+import type { AssistantStatementLineView } from '@ab/money';
 import { useState } from 'react';
 import { t, Button } from '@ab/mobile-kit';
 import { StatementLines } from './StatementLines';
 
-/** «بنود الكشف» folded under its statement (the web's <details>), opened on demand. */
 export function LinesToggle({ lines }: { lines: readonly AssistantStatementLineView[] }) {
   const [open, setOpen] = useState(false);
   if (lines.length === 0) return null;

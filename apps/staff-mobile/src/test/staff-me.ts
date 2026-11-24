@@ -1,4 +1,4 @@
-import { GRANTABLE_PERMISSIONS, selfPermissionsOf, type UserRole } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS, selfPermissionsOf, type UserRole } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
 import { pathKey } from '@ab/mobile-kit';
 

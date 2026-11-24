@@ -6,11 +6,12 @@ import {
   teacherLessonState,
   type TeacherLessonState,
 } from '@ab/client-core';
-import { counted, type Glyph, type LessonView, type RoomPresence, type Tone } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { Glyph, Tone } from '@ab/money';
+import type { LessonView, RoomPresence } from '@ab/schedule';
 import { t } from '@ab/mobile-kit';
 
-// The teacher's own word for a lesson (docs/48 «State word lookup»): one per state, the same on
-// the «اليوم» rows, the hero chip and «جدولي». Each chip shows the nuqta AND the word (docs/07).
+// One word per state (docs/48), the same on rows, hero and schedule; chips show dot and word.
 
 interface TeacherWord {
   label: string;
@@ -33,7 +34,7 @@ const soonestClose = (lesson: WordLesson, now: Date): string | undefined =>
     .sort()
     .at(0);
 
-/** «سيُرسل إلى الأسرة بعد 12 دقيقة», counted to edit_until (docs/46 B5). */
+/** Counted to edit_until (docs/46 B5). */
 const sendsIn = (lesson: WordLesson, now: Date): string =>
   t.reports.familySend.sendsIn.replace(
     '{when}',
@@ -52,10 +53,7 @@ const WORDS: Record<Worded, (lesson: WordLesson, now: Date) => TeacherWord> = {
 const isWorded = (state: TeacherLessonState): state is Worded =>
   state !== 'status' && state !== 'done';
 
-/**
- * The room's own word first (owner 2026-11-16, canvas RoomXTeacherToday): «الطالب ينتظرك» while the
- * family waits inside without her, «الحلقة جارية الآن» while she is in.
- */
+/** The room's state comes first: the family waiting without her, or her in the room. */
 function roomWord(lesson: Pick<LessonView, 'room'>): TeacherWord | null {
   if (studentWaiting(lesson.room)) {
     return { label: t.teacherToday.waiting, tone: 'act', glyph: 'fill' };
@@ -73,9 +71,7 @@ export function teacherWord(lesson: WordLesson, now: Date): TeacherWord | null {
 
 export interface Waiting {
   name: string;
-  /** «يوسف ينتظرك في الغرفة». */
   line: string;
-  /** «دخل منذ 3 دقائق». */
   since: string;
 }
 

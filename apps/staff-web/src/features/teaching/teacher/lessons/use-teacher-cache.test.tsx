@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -14,7 +14,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   apiSend,
 }));
 
-// docs/48 web mutations: «سأحضر» is optimistic, cancel is write-through, only her lists change.
+// docs/48 web mutations: confirm is optimistic, cancel is write-through, only her lists change.
 const HOME = ['lessons', 'mine', 'home'];
 const WEEK = ['lessons', 'mine', 'week'];
 const OTHER = ['lessons', 'day', 'admin'];

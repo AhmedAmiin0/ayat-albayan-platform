@@ -7,10 +7,7 @@ import { MONEY_GROUP, visibleGroups, type NavKey } from './admin-nav-items';
 
 export { visibleGroups, type NavKey } from './admin-nav-items';
 
-// One vertical list: in the «القائمة» sheet (< 900px) on the card, ≥ 900px the fihris on the mint
-// (dark: green-grey) sidebar in cover ink. The current item is a tile (sunk in the sheet, white on
-// the sidebar) with a 4px emerald bar inset at the inline-start (right in RTL, left in LTR).
-// Spacing is a 4px grid: 12px to the icon, 8px icon → label, 40px tall (44 in the sheet and on touch).
+// The current item has a 4px bar at the inline-start; rows are 40px, 44 in the sheet and on touch.
 const LINK = cn(
   'group relative flex min-h-11 min-w-0 items-center gap-2 whitespace-nowrap rounded-md px-3 font-medium text-ink-2 transition-colors duration-150 ease-out',
   'before:absolute before:inset-y-2 before:start-0 before:w-1 before:rounded-full before:bg-transparent before:transition-colors before:duration-150',

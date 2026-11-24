@@ -51,12 +51,12 @@ const cities: Record<string, string | undefined> = t.tz;
 const durations: Record<string, string | undefined> = t.enums.duration;
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
-/** «16:00 بتوقيت القاهرة»; a zone without an ar.json city keeps its id (LTR). */
+/** A zone without a translated city keeps its id (LTR). */
 export function inCity(iso: string, tz: string, cycle: ClockCycle): string {
   return t.schedule.inCity.replace('{time}', clockIn(new Date(iso), tz, cycle)).replace('{city}', cities[tz] ?? ltr(tz));
 }
 
-/** «الخميس 1 أكتوبر 16:00 بتوقيتك»: on the viewer's clock `tz` (docs/34). */
+/** On the viewer's clock tz (docs/34). */
 export function whenLine(
   lesson: Pick<DetailsLesson, 'starts_at'>,
   cycle: ClockCycle,
@@ -67,10 +67,7 @@ export function whenLine(
 
 type ClockLesson = Pick<DetailsLesson, 'starts_at' | 'students' | 'teacher'>;
 
-/**
- * «عند الطالب 16:00 بتوقيت مسقط» once per student zone, then «عند المعلم/ة …», each only when its
- * clock differs from the viewer's `tz` at the start (Cairo = Riyadh in summer: no line).
- */
+/** Only when a clock differs from the viewer's tz at the start (Cairo equals Riyadh in summer). */
 export function clockLines(lesson: ClockLesson, cycle: ClockCycle, tz: string): string[] {
   const at = new Date(lesson.starts_at);
   const differs = (zone: string) => otherZoneClock(at, zone, { tz, cycle, locale }) !== null;
@@ -86,16 +83,13 @@ export function clockLines(lesson: ClockLesson, cycle: ClockCycle, tz: string): 
   return lines;
 }
 
-/** «45 دقيقة»; null for a length outside the duration enum. */
+/** null for a length outside the duration enum. */
 export function lengthLine(lesson: Pick<DetailsLesson, 'starts_at' | 'ends_at'>): string | null {
   const min = Math.round((Date.parse(lesson.ends_at) - Date.parse(lesson.starts_at)) / 60_000);
   return durations[String(min)] ?? null;
 }
 
-/**
- * «تتكرر أسبوعيًا: الأحد، الأربعاء · 16:00 بتوقيت مسقط» for a lesson of a weekly rule: its days
- * are kept in the family's zone (the first student's), so the time is read there. null for a one-off.
- */
+/** Rule days are kept in the first student's zone, so the time is read there; null if one-off. */
 export function seriesLine(lesson: Pick<DetailsLesson, 'rule_id' | 'rule_byday' | 'starts_at' | 'students'>, cycle: ClockCycle): string | null {
   const days = lesson.rule_byday ?? [];
   if (!lesson.rule_id || days.length === 0) return null;
@@ -112,17 +106,14 @@ export function reportState(lesson: Pick<DetailsLesson, 'status' | 'starts_at'>,
   return student.report?.status ?? 'none';
 }
 
-/**
- * The student file the role opens: the admin's quick view, a teacher's student reports; sales' «تفاصيل الطالب»
- * of any student (owner 2026-10-28), in the admin tree (`base` '') the admin's quick view.
- */
+/** Sales opens any student's details; in the admin tree (base '') the admin's quick view. */
 export function studentHref(role: DetailsRole, student: Pick<DetailsStudent, 'id'>, base: TreeBase = '/sales'): string {
   if (role === 'teacher') return `/teacher/reports/student/${student.id}`;
   if (role === 'sales' && base === '/sales') return `/sales/students/${student.id}`;
   return `/students/${student.id}`;
 }
 
-/** Where «عرض التقرير» goes: the teacher's report form of the lesson, the admin's sent report; none for sales. */
+/** The teacher's report form, the admin's sent report; none for sales. */
 export function reportHref(role: DetailsRole, lesson: Pick<DetailsLesson, 'id'>, student: DetailsStudent): string | null {
   if (role === 'teacher') return `/teacher/reports/${lesson.id}`;
   if (role === 'admin' && student.report?.status === 'submitted') return `/students/reports/view/${student.report.id}`;

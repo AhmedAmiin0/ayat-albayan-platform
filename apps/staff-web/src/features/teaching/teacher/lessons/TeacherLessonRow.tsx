@@ -1,5 +1,7 @@
 import type { Density } from '@ab/client-core';
-import { clockOf, type LessonView, subscriptionStatusStyle } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
+import type { LessonView } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { LessonTags, studentNames, studentTimes } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -17,9 +19,9 @@ export interface TeacherLessonRowProps {
   tz: string;
   onOpen: (lessonId: string) => void;
   onDone: (message: string) => void;
-  /** An ended row in «انتهت n حلقات اليوم»: muted, its report lead only (owner 2026-11-14). */
+  /** An ended row: muted, with its report lead only. */
   ended?: boolean;
-  /** «صفوف مضغوطة» (owner 2026-11-14): tighter, without the students' own clocks. */
+  /** Compact rows are tighter and drop the students' own clocks. */
   density?: Density;
 }
 
@@ -37,10 +39,7 @@ const OPEN =
   'flex min-w-0 flex-[1_1_16rem] items-center gap-3 rounded-md px-1 text-start ' +
   'transition-colors hover:bg-sunk';
 
-/**
- * One compact lesson line (docs/48): time · names · «عند الطالب …» · her word · tags, a 48px button
- * that opens the drawer with every action, and ONE lead beside it, secondary except a live join.
- */
+/** One compact lesson line (docs/48) with one lead, secondary except a live join. */
 export function TeacherLessonRow(props: TeacherLessonRowProps) {
   const { lesson, tz, onOpen, onDone, ended = false } = props;
   const d = DENSITY[props.density ?? 'comfortable'];

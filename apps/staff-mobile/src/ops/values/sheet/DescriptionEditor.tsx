@@ -1,4 +1,4 @@
-import { DESCRIPTION_MAX, type SettingKey } from '@ab/shared';
+import { DESCRIPTION_MAX, type SettingKey } from '@ab/settings';
 import { View } from 'react-native';
 import { t, Button, Field, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
@@ -9,19 +9,14 @@ export interface DescriptionEditorProps {
   valueKey: SettingKey;
   /** The text shown now; the box starts from it. */
   initial: string;
-  /** An admin wrote this text (descriptionEdited): «أعد الوصف الأصلي» is offered. */
   edited: boolean;
   /** After a save or restore the server took, with the message to announce. */
   onDone: (message: string) => void;
-  /** «إلغاء»: back to the value, nothing sent. */
+  /** Nothing is sent. */
   onCancel: () => void;
 }
 
-/**
- * «تعديل الوصف» inside the value sheet (docs/26b §2 phone, §4): a multiline box (16pt, ≥ 44pt),
- * a live «{n} / 500» counter, ONE ButtonRow «احفظ» (primary) | «إلغاء» (secondary), and «أعد الوصف الأصلي» for an edited text.
- * Errors stay inside the sheet.
- */
+/** docs/26b §2, §4: errors stay inside the sheet. */
 export function DescriptionEditor({ valueKey, initial, edited, onDone, onCancel }: DescriptionEditorProps) {
   const ed = useDescriptionEditor({ valueKey, initial, onDone });
   const d = t.mobileValues.description;

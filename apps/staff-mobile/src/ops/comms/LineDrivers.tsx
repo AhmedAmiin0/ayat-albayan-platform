@@ -1,4 +1,4 @@
-import { WA_LINES, type WaLine, type WaProvider } from '@ab/shared';
+import { WA_LINES, type WaLine, type WaProvider } from '@ab/catalog';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions, t, Section } from '@ab/mobile-kit';
@@ -8,12 +8,7 @@ import { driverName, driverValues } from './line-driver';
 import { LineDriverRow } from './LineDriverRow';
 import { useIntegrations, useSaveIntegrationValues } from './use-line-drivers';
 
-/**
- * «مزوّد الإرسال لكل خط» on the overview (docs/19, owner 2026-10-25: «switch between crm and other
- * drivers»): each line's driver, switched after its confirm; one save at a time. Hidden when the integrations
- * list cannot be read (no settings.read, an older API); the keys themselves are still set on the web. In module
- * mode (comms_source = module) each number's own provider sends and WA_PROVIDER is not read: a note, no switch.
- */
+/** docs/19: hidden without settings.read; in module mode each number's provider sends. */
 export function LineDrivers() {
   const h = t.communicationsHub;
   const query = useIntegrations();

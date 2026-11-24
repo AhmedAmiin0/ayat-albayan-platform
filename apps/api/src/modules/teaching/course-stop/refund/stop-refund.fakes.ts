@@ -1,4 +1,3 @@
-// Test kit of «إلغاء مع استرداد» (test-only, excluded from the build by *.fakes.ts).
 import { vi } from 'vitest';
 import type { SalesOwnershipRule } from '@/modules/sales/sales';
 import type { StripeClients } from '@/modules/finance/stripe';
@@ -15,7 +14,7 @@ export const listed = (data: object[]) => ({ autoPagingToArray: () => Promise.re
 
 export const REQ = 'e0000000-0000-4000-8000-0000000000e1';
 export const SUB = { id: 'sub1', studentId: 'st1', currency: 'SAR' };
-/** A custom refund amount (the sheet's «مبلغ مخصص»). */
+/** A custom refund amount. */
 const custom = (amount: number) => ({ choice: 'custom' as const, amount });
 /** StopRefunds.plan's input for a custom amount on SUB with the stop key REQ. */
 export const planOf = (amount: number) => ({ sub: SUB, requestId: REQ, ask: custom(amount) });
@@ -64,10 +63,7 @@ export function kit(input: { attended?: number; rate?: number } = {}) {
   return { service, stripe, repo, clients, ledger };
 }
 
-/**
- * StopRefundGate over fakes: the sales rule enforcing (her student 'hers') or off; «إلغاء فقط»'s
- * numbers 150 charged of 400.
- */
+/** StopRefundGate over fakes: sales rule enforcing or off; owed numbers 150 charged of 400. */
 export function gateKit(enforced: boolean) {
   const refunds = {
     preview: vi.fn().mockResolvedValue({ refund: 10 }),

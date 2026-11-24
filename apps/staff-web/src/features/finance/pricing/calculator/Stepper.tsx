@@ -11,13 +11,12 @@ export interface StepperProps {
   max: number;
   onChange: (value: number) => void;
   hint?: string | undefined;
-  /** The − / + buttons' names; default «أقل» / «أكثر». */
   stepLabels?: { less: string; more: string } | undefined;
   /** false: the value is shown, never typed (only the buttons change it). */
   typed?: boolean | undefined;
 }
 
-/** «أقل | n | أكثر» for whole numbers in [min, max]; typing works too (unless `typed` is false) and is clamped. */
+/** Typing works unless `typed` is false, and is clamped to [min, max]. */
 export function Stepper({
   label,
   value,

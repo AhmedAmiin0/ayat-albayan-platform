@@ -14,17 +14,14 @@ import { usePermissions } from '@/features/people/auth';
 export interface StopMoneyView {
   state: StopMoneyState;
   set: (patch: Partial<StopMoneyState>) => void;
-  /** «إلغاء مع استرداد»'s lines; null = not offered (no key, nothing paid, or unreadable). */
+  /** Null when not offered (no key, nothing paid, or unreadable). */
   breakdown: StopRefund | null;
   money: StopMoney | null;
-  /** «لا شيء» / «مبلغ مخصص» offered: subscriptions.refund on this student (mayLowerOwe). */
+  /** Zero or custom amounts need subscriptions.refund on this student (mayLowerOwe). */
   mayLower: boolean;
 }
 
-/**
- * The stop sheet's money choice (owner 2026-11-06): «إلغاء فقط» with what the family still owes,
- * or «إلغاء مع استرداد» with the refund amount (the same rules as mobile, @ab/client-core).
- */
+/** Uses the same rules as mobile (@ab/client-core). */
 export function useStopMoney(preview: CourseStopPreview | undefined): StopMoneyView {
   const [state, setState] = useState<StopMoneyState>(STOP_MONEY_START);
   const { can } = usePermissions();
