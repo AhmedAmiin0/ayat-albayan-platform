@@ -26,9 +26,9 @@ export interface ThreadSend<T> {
   sales?: SalesScope | null;
   /** No templates.send_all (owner 2026-10-12): the allow-list only (restrictedMay); absent: all. */
   restricted?: boolean;
-  /** «إعادة توجيه»: the message this copy was forwarded from (messages.forwarded_from_id). */
+  /** The message this copy was forwarded from (messages.forwarded_from_id). */
   forwardedFrom?: string;
-  role?: string | null; // the sender's base role («تعديل»: an admin corrects anyone's text)
+  role?: string | null; // The sender's base role: an admin corrects anyone's text.
 }
 
 /**
@@ -43,7 +43,7 @@ export function dedupKey<T>(s: ThreadSend<T>): string {
   return `${who}:${s.phone}:${s.input.clientRequestId}`;
 }
 
-/** The row's people (by phone, like v_threads) and author; a teacher's row names them («بعتها»). */
+/** People resolved by phone, like v_threads. */
 export function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
   return {
     phone_e164: s.phone,
@@ -55,7 +55,7 @@ export function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
   };
 }
 
-/** «رد»: the quoted message's id and wamid, resolved in this chat only (ThreadQuotes.target); none = {}. */
+/** Resolved in this chat only (ThreadQuotes.target); none is {}. */
 export async function replyOf(
   quotes: ThreadQuotes | undefined,
   s: ThreadSend<{ replyToMessageId?: string | undefined }>,
@@ -72,9 +72,9 @@ export async function replyOf(
  */
 @Injectable()
 export class ThreadSendService {
-  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes; // «رد» (the constructor is full)
-  @Inject(CorrectionRepo) private readonly corrections?: CorrectionRepo; // «تعديل» = a correction
-  @Optional() @Inject(ReopenPick) private readonly reopens?: ReopenPick; // «إعادة فتح المحادثة»
+  @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes; // The constructor is full.
+  @Inject(CorrectionRepo) private readonly corrections?: CorrectionRepo;
+  @Optional() @Inject(ReopenPick) private readonly reopens?: ReopenPick;
 
   constructor(
     private readonly queries: ThreadsRepo,
@@ -90,7 +90,7 @@ export class ThreadSendService {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
     const again = s.input.correctsId ? await this.outbox.replayOf(key) : null;
-    if (again) return withSameRequest(again, s.input); // «تعديل»: a retry's first row (#694)
+    if (again) return withSameRequest(again, s.input); // A correction retry's first row (#694).
     const thread = await this.queries.thread(s.phone);
     const at = { now, windows: () => this.queries.numberWindows(s.phone) };
     const fix = await correctionOf(this.corrections, s);
@@ -113,11 +113,11 @@ export class ThreadSendService {
   async template(s: ThreadSend<ThreadTemplate>, now = new Date()): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
     const key = dedupKey(s);
-    // Its link is signed per lesson and student by «ابعت طلب الرأي» (FeedbackModule); a hand-made button is a dead link.
+    // Its link is signed per lesson and student by FeedbackModule; a hand-made one is dead.
     if (s.input.key === 'lesson_feedback_request') throw waHttpError('use_feedback_request', 400);
-    // Likewise «ابعت لينك الحلقة» (ClassroomModule) mints the one-lesson token.
+    // ClassroomModule mints the one-lesson token.
     if (s.input.key === 'lesson_join_link') throw waHttpError('use_join_link', 400);
-    // «إرسال تقييم الحلقة» picks the lesson and its date itself (rule 6) and sets the button payloads.
+    // The rating send picks the lesson and its date itself (rule 6) and sets the payloads.
     if (s.input.key === 'lesson_rating') throw waHttpError('use_rating_button', 400);
     // The sign-in code (docs/30) is only ever sent by the API itself, never typed by hand.
     if (s.input.key === ACCOUNT_CODE_TEMPLATE) throw waHttpError('template_not_allowed', 403);

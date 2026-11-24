@@ -19,7 +19,6 @@ const listCalls = () => mockApiFetch.mock.calls.filter(([p]: [string]) => p === 
 
 beforeEach(() => mockApiFetch.mockReset());
 
-/** No list chips: the row holds «الكل», «غير مقروءة» and, for staff, «بانتظار ردّك» + the 6 worked lead stages. */
 function expectAllAndUnreadOnly(staff = 0) {
   const row = within(screen.getByLabelText(t.inbox.filterRow));
   expect(row.getAllByRole('tab')).toHaveLength(2 + staff);

@@ -16,6 +16,12 @@ describe('PDF name (docs/24 §1, §2.5)', () => {
     expect(studentFolderName('سارة/علي')).toBe('سارة علي');
     expect(attendanceSheetName('سارة')).toBe('سجل حضور — سارة');
   });
+
+  it('turns every control character into a space, and keeps the rest', () => {
+    const student = '\u0000a\u0007b\u001fc\u007fd\u0020e';
+    expect(pdfName({ student, date: '2026-10-21', alreadyInSheet: false }))
+      .toBe('a b c\u007fd e — 2026-10-21.pdf');
+  });
 });
 
 describe('content hash', () => {

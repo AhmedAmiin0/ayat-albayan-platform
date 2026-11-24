@@ -3,8 +3,7 @@ import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// PATCH /messaging/templates/:key/content «تعديل» (owner 2026-11-14): the admin, through the line's
-// driver, audited like the submit; code-bound words only; Meta's limits. Fakes, no network.
+// Admin edits via the line's driver, audited; code-bound words only; Meta's limits; no network.
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const url = (key: string) => `/messaging/templates/${key}/content`;

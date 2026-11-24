@@ -12,11 +12,7 @@ const MEMORY_DEPTH = 30;
 export class ReportLessonQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /**
-   * «رقم الحلقة» per student (issue A5): v_lesson_sequence.seq once this lesson is completed,
-   * else the student's completed lessons before it + 1.
-   * TODO(R-LES-03): v_lesson_sequence counts `completed` only; owner to confirm whether `late` counts.
-   */
+  /** Issue A5: v_lesson_sequence.seq once completed, else completed lessons before plus one. */
   async lessonNumbers(lesson: { id: string; starts_at: string }, studentIds: readonly string[]): Promise<Map<string, number>> {
     const out = new Map<string, number>();
     const { data, error } = await this.db

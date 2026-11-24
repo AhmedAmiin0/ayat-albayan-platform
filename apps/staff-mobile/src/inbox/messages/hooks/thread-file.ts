@@ -56,7 +56,7 @@ export function useThreadFile(phone: string, messageId: string): () => Promise<T
   return useCallback(() => client.fetchQuery(threadFileQuery(phone, messageId)), [client, phone, messageId]);
 }
 
-/** «تنزيل» (owner 2026-10-26): never cached, a fresh URL each tap, signed to save under the file's name. */
+/** Never cached: a fresh signed URL each tap, saved under the file's name. */
 export const fetchDownload = (phone: string, messageId: string): Promise<ThreadFile> =>
   apiFetch<ThreadFile>(`${threadFilePath(phone, messageId)}?download=1`);
 

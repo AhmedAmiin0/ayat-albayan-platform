@@ -6,7 +6,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { WEEKLY } from './money-fixture';
 import { SubscriptionsPage } from './SubscriptionsPage';
 
-// The packages list's «إيقاف مؤقت» (owner 2026-10-28) is the student's course pause, not a package flag.
+// The pause is the student's course pause, not a package flag.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

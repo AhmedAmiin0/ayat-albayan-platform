@@ -13,10 +13,7 @@ interface TeacherConfirm {
   actorId: string;
 }
 
-/**
- * «سأحضر» (docs/46 D1): one atomic, audited write that checks ownership, an open status and a
- * future start under a row lock. It never touches lessons.status.
- */
+/** Teacher attendance confirmation (docs/46 D1): atomic, audited, never touches lessons.status. */
 @Injectable()
 export class TeacherConfirmRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

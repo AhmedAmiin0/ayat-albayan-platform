@@ -37,10 +37,8 @@ function islamicParts({ content }: FamilyModel): string[] {
   return [...lines, ...ISLAMIC_RATES.map((k) => row(v.islamicRates[k], { grade: i?.rates[k] ?? null }))];
 }
 
-/** The rows and lines of «ما أنجزه اليوم», per program. */
 const PARTS: Record<Program, (m: FamilyModel) => string[]> = { quran: quranParts, arabic: arabicParts, islamic_studies: islamicParts };
 
-/** «ما أنجزه اليوم» then «التقدير العام». */
 export function doneHtml(m: FamilyModel): string {
   const parts = PARTS[m.program](m);
   const done = parts.length > 0 ? `<section><h2>${esc(f.doneToday)}</h2>${parts.join('')}</section>` : '';
@@ -48,7 +46,7 @@ export function doneHtml(m: FamilyModel): string {
   return done + overall;
 }
 
-/** «التقدّم في الحفظ»: pages held in the juz of today's new memorization (Quran, v2 history only). */
+/** Pages held in the juz of today's new memorization (Quran, v2 history only). */
 export function progressHtml(m: FamilyModel): string {
   const p = m.progress;
   if (!p) return '';
@@ -65,12 +63,10 @@ export function progressHtml(m: FamilyModel): string {
   ].join('');
 }
 
-/** «الواجب قبل الحلقة القادمة». */
 export function homeworkHtml(m: FamilyModel): string {
   return m.homework ? `<section><h2>${esc(v.homework)}</h2><p class="text">${para(m.homework)}</p></section>` : '';
 }
 
-/** «ملاحظة المعلم/ة»: the quick notes, then what the teacher wrote. */
 export function noteHtml(m: FamilyModel): string {
   const quick = m.content.quick.map((q) => v.quick[q]);
   const text = [quick.join('، '), m.notes?.trim() ?? ''].filter(Boolean).join('. ');

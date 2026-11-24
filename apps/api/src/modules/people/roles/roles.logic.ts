@@ -1,8 +1,7 @@
 import { effectivePermissions, GRANTABLE_PERMISSIONS, isGrantable, type Permission, type RoleView, type StaffUserView } from '@ab/shared';
 import type { ProfileRecord, RoleRecord } from './roles.store';
 
-// Pure rules of «الأدوار والصلاحيات»: which role a profile holds, what it may do, and whether a
-// change would leave the academy with nobody able to manage roles (or lock the actor out).
+// Pure rules, including whether a change leaves nobody able to manage roles.
 
 export interface RoleState {
   roles: readonly RoleRecord[];

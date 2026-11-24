@@ -50,10 +50,7 @@ export class BusyRepo {
     }));
   }
 
-  /**
-   * The lessons of an assistant course (schedule_rules.subscription_id, migration 470) of these
-   * students inside `span`: «تغيير أيام الحلقات» moves them, so the slot grid does not show them busy.
-   */
+  /** Changing course days moves these lessons, so the slot grid does not show them busy. */
   async courseLessonIds(input: { subscriptionId: string; studentIds: readonly string[]; span: UtcWindow }): Promise<string[]> {
     if (input.studentIds.length === 0) return [];
     const rows = await readAll((from, to) =>

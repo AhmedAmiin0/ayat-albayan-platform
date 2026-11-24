@@ -15,7 +15,7 @@ jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }
 
 beforeEach(() => {
   jest.clearAllMocks();
-  // The API offers «عدّل الوقت» on the pending lesson only (an admin's `move`).
+  // The API offers the time edit on the pending lesson only (an admin's move).
   const lessons = OVERVIEW.lessons.map((l) => (l.id === 'l-pending' ? { ...l, time_edit_mode: 'move' } : l));
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === THIS_WEEK) return { ...OVERVIEW, lessons };

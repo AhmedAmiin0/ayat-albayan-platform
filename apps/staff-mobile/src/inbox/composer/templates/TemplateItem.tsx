@@ -6,9 +6,8 @@ import { rejectionOf, statusWord } from './status-words';
 
 interface TemplateItemProps {
   template: AuthorTemplate;
-  /** Written by the signed-in user: «من إنشائك». */
   mine: boolean;
-  /** Present only where this user may edit it: the row opens «تعديل». */
+  /** Present only where this user may edit it. */
   onEdit?: () => void;
 }
 
@@ -19,10 +18,7 @@ function Badge({ label }: { label: string }) {
   return <AppText style={style}>{label}</AppText>;
 }
 
-/**
- * One template: its Meta name, the start of its body, the status chip («قيد المراجعة / معتمد /
- * مرفوض / غير متاح»), the badges, and Meta's reason under a rejected one.
- */
+/** Meta's rejection reason shows under a rejected one. */
 export function TemplateItem({ template, mine, onEdit }: TemplateItemProps) {
   const { color } = useTheme();
   const reason = rejectionOf(template);

@@ -12,11 +12,7 @@ import { invalidTransition } from './transition';
 /** Outcomes that only make sense once the lesson has started; `excuse` is allowed any time. */
 const AFTER_START: ReadonlySet<StatusRouteEvent> = new Set(['complete', 'mark_late', 'mark_no_show']);
 
-/**
- * `actor` null = the guardian's WhatsApp «نعم» (Phase 4 webhook): confirmed_by stays null. `anyLesson`:
- * the caller's route already decided who may confirm which lesson (sales' lessons.confirm, any lesson,
- * owner 2026-10-28), so LessonAccess's admin-or-own-teacher rule is skipped; the teacher route never sets it.
- */
+/** actor null means the guardian's WhatsApp yes; anyLesson skips the admin-or-own-teacher rule. */
 export type ConfirmInput = { lessonId: string; actor: AuthUser | null; anyLesson?: true };
 export type StatusInput = LessonStatusRequest & { lessonId: string; actor: AuthUser };
 
@@ -43,7 +39,7 @@ export class LessonStatusService {
     private readonly settings: LessonsSettings,
   ) {}
 
-  /** scheduled → confirmed. Already confirmed → unchanged (a guardian may answer «نعم» twice). */
+  /** Already confirmed stays unchanged; a guardian may answer yes twice. */
   async confirm({ lessonId, actor, anyLesson }: ConfirmInput): Promise<string> {
     const lesson = await this.store.get(lessonId);
     await this.assertMayConfirm(lesson, { actor, anyLesson });

@@ -30,7 +30,7 @@ const REPORT: Record<ReportState, { tone: Tone; glyph: Glyph }> = {
   none: { tone: 'act', glyph: 'hollow' },
 };
 
-/** «الباقة غير مدفوعة» (admin) and the report state, on one wrapping line; nothing when neither. */
+/** Nothing when neither applies. */
 function StudentChips({ unpaid, report }: { unpaid: boolean; report: ReportState | null }) {
   if (!unpaid && !report) return null;
   return (
@@ -51,11 +51,7 @@ interface DetailsStudentRowProps {
   here?: boolean;
 }
 
-/**
- * One student of the lesson: the name and its «AB-0182» code (a 44pt button to the student file
- * when the role may open it), «الباقة غير مدفوعة», the report state once one can be written, the
- * admin's package line and «عرض التقرير» on a sent report. No phone or guardian contact here.
- */
+/** No phone or guardian contact here. */
 export function DetailsStudentRow({ lesson, student, role, onLeave, here = false }: DetailsStudentRowProps) {
   const { color } = useTheme();
   const now = useNow();

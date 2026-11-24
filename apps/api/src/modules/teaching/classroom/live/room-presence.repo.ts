@@ -53,7 +53,7 @@ export class RoomPresenceRepo {
     if (error) throw dbError(error);
   }
 
-  /** «إنهاء الحلقة للجميع» / room_finished: everyone inside is out (no more events follow). */
+  /** Ending the room or room_finished: everyone inside is out; no more events follow. */
   async leaveAll(lessonId: string, at: string): Promise<void> {
     const { error } = await this.db
       .from('classroom_participants')

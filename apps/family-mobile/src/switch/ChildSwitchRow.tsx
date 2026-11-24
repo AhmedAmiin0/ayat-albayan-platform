@@ -16,7 +16,7 @@ function Check({ color }: { color: string }) {
   );
 }
 
-/** «الحلقة القادمة · اليوم 6:30 م» on the child's own clock, once their lessons are known. */
+/** On the child's own clock, once their lessons are known. */
 function useNextLine(student: PortalStudent): string | undefined {
   const lessons = useChildLessons(student.id).data;
   const now = useNow();
@@ -34,7 +34,6 @@ interface ChildSwitchRowProps {
   onPress: () => void;
 }
 
-/** Name («أنا» on a guardian's own row), the code on its own LTR line, the next lesson. */
 function RowWords({ name, code, next }: { name: string; code: string; next?: string }) {
   const { color } = useTheme();
   const small = { fontSize: type.size.xs, color: color.ink2 };
@@ -49,10 +48,6 @@ function RowWords({ name, code, next }: { name: string; code: string; next?: str
   );
 }
 
-/**
- * One child in the switch sheet (canvas SwitchSheet): avatar, name, code, the next lesson; the
- * current one on the green wash with ✓ (selected), «جديد» while a report waits unopened.
- */
 export function ChildSwitchRow({ student, kind, current, onPress }: ChildSwitchRowProps) {
   const { color } = useTheme();
   const reports = useChildReports(student.id).data?.reports ?? [];

@@ -3,10 +3,7 @@ import { useAlerts } from '@/features/alerts';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * The bell at the top (canvas): the unread badge (the solid danger fill and its own foreground:
- * AA in both themes), «الإشعارات» on a tap. The badge pops in when the first unread arrives.
- */
+/** The badge uses the solid danger fill with its own foreground for AA in both themes. */
 export function Bell() {
   const unread = useAlerts().data?.unread ?? 0;
   const label = unread > 0 ? t.bell.openUnread.replace('{n}', String(unread)) : t.bell.open;

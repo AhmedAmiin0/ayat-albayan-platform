@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { AdminTaskView } from '@ab/shared';
+import type { AdminTaskView } from '@ab/money';
 import { pushInTab } from '@/core/nav/back-within';
 import { useTabOpen } from '@/core/auth/use-tab-open';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';

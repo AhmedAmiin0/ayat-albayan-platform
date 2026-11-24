@@ -6,7 +6,7 @@ import { cardRow, REQ, row, SUB } from './stop-refund.fakes';
 import { StopRefundLedger } from './stop-refund.ledger';
 import { manualRefundKey, type RefundPlan } from './stop-refund.plan';
 
-// The manual leg of «إلغاء مع استرداد»: one refund row per stop and the admins' bell.
+// The manual refund leg: one refund row per stop and the admins' bell.
 const calc = { paid: 290, perLesson: 50, attended: 0, ratePercent: 100, charged: 0, refund: 290 };
 const plan = (rows = [cardRow(), row({ method: 'cash' })]): RefundPlan => ({
   sub: SUB,

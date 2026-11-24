@@ -5,10 +5,7 @@ import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { voidTeacherPayment, type TeacherPaymentView } from '@/features/finance/teacher-earnings/api';
 
-/**
- * «إلغاء الدفعة»: a wrong transfer is voided with a reason, never deleted. Its sessions are owed
- * again and it stays in the history struck through (and a monthly payout it paid goes back to approved).
- */
+/** Voided with a reason, never deleted; its sessions are owed again and a paid payout reverts. */
 export function VoidPaymentDialog({ payment, onClose }: { payment: TeacherPaymentView; onClose: () => void }) {
   const queryClient = useQueryClient();
   const save = useMutation({

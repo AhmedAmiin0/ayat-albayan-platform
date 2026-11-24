@@ -11,10 +11,9 @@ export { StaffCalls } from './thread/calls/state/StaffCalls';
 export { useInboxLive, useInboxRealtime } from './thread/live';
 export { useInboxStore } from './thread/local';
 export { clearInboxOnSignOut } from './sign-out';
-// A screen over the chat (sales-subscribe «رابط دفع») fills its reply box wherever a text goes (chatMaySend).
+// A screen over the chat fills its reply box wherever a text may go (chatMaySend).
 export { appendComposerText } from './composer/draft-store';
-// «بحث في الرسائل» on a student's details opened from a chat (docs/37).
+// Message search on a student's details opened from a chat (docs/37).
 export { MessageSearchRow } from './thread/anchor';
 export { chatMaySend } from './thread/hooks/chat-window';
-// «القوالب» (owner 2026-11-14): list, create and edit; reached from «المزيد».
 export { TemplateCreateScreen, TemplateEditScreen, TemplatesScreen } from './composer/templates';

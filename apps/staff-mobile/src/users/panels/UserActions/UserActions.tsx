@@ -16,10 +16,7 @@ export interface UserActionsProps {
   onDone: (message: string) => void;
 }
 
-/**
- * The account actions (users.write), as on the web: disable / enable, reset password, sign out
- * everywhere, delete. Enable and sign-out run after an inline «تأكيد»; the others open their step.
- */
+/** Needs users.write; enable and sign-out run after an inline confirm, the others open a step. */
 export function UserActions({ user, onMode, onDone }: UserActionsProps) {
   const A = t.users.actions;
   const { color } = useTheme();

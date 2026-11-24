@@ -1,9 +1,7 @@
 import { digest, goldenInstants } from '@ab/shared/testing';
 import { paidAtFor } from '@/core/lib/money/paid-day/paid-day';
 
-// Regression golden (docs/34 §7): the paid_at sent for «النهارده» … «من 30 يوم», hourly over the
-// sweep. Before the swap to the date-fns facade the old `now − n × 24 h` Riyadh-day code ran
-// beside the new calendar-day one here and agreed on every value; the digest is the old code's.
+// docs/34 §7: the digest is the old Riyadh-day code's, which agreed with the new on every value.
 
 const DAYS_AGO = [0, 1, 2, 3, 6, 7, 30];
 

@@ -44,11 +44,7 @@ const sameBody = (row: CorrectionEcho, text: string): boolean => {
   return bodies.some((b) => b.trim() === (row.body ?? '').trim());
 };
 
-/**
- * A replayed first row IS this request (review of #694): it corrects the same original with the
- * same text. The server decides from the stored row, so neither a stale client wording, an
- * admin's rewording nor a «حذف من المنصة» since turns a retry after a lost answer into a new send.
- */
+/** Decided from the stored row, so a retry after a lost answer is never a new send. */
 export function sameRequest(row: CorrectionEcho | undefined, input: ThreadText): boolean {
   if (!row || !input.correctsId || row.corrects_id !== input.correctsId) return false;
   return row.correction_text === null
@@ -64,16 +60,11 @@ export function withSameRequest<S extends { echo?: CorrectionEcho; replayed: boo
   return sent.replayed ? { ...sent, sameRequest: sameRequest(sent.echo, input) } : sent;
 }
 
-/** The reply fields the «رد» path resolved for a correction. */
 interface ReplyContext {
   reply_to_wa_id?: string | null;
 }
 
-/**
- * 409 correction_other_number: the correction would leave from another line or number than its
- * original, so WhatsApp gets no reply context and the family would read a bare «تصحيح: …» in
- * another chat (review of #694, round 4).
- */
+/** From another line WhatsApp has no reply context, so the family sees a bare correction. */
 export function assertRepliesToOriginal(correctsId: string | undefined, reply: ReplyContext): void {
   const bare = Boolean(correctsId) && !reply.reply_to_wa_id;
   if (bare) throw waHttpError('correction_other_number', HttpStatus.CONFLICT);

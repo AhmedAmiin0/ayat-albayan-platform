@@ -16,11 +16,7 @@ export function usePortalMe() {
 export const studentOf = (me: PortalHome | undefined, id: string): PortalStudent | null =>
   me?.students.find((s) => s.id === id) ?? null;
 
-/**
- * The page of the student in view reads in its own words («أهلًا بك», «حضرتها», «تقاريري»): a
- * student's own login and an adult who is their own contact (@ab/client-core readsOwn), never a
- * guardian's child. While /portal/me or the pick loads, a guardian's words only for a guardian.
- */
+/** Own-voice wording for a student or self-contact adult, never for a guardian's child. */
 export function ownPage(kind: PortalKind | undefined, student: PortalStudent | null): boolean {
   if (kind === undefined || student === null) return kind !== 'guardian';
   return readsOwn(portalViewer(kind, student));

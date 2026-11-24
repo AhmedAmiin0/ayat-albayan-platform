@@ -4,13 +4,7 @@ import { PaymentReceived } from '@/modules/finance/payments';
 import { CourseDue } from '@/modules/finance/subscriptions';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 
-/**
- * The payment links' staff alerts (never WhatsApp). A paid link is «تم استلام دفعة»
- * (payment_received: bell + device push) to the admins, the student's following assistant and the
- * link's assistant, once per payment. The admins' alerts (a dispute, a payment the platform could
- * not record) reuse the payment_due kind (its rule, its permission and its tap target: the
- * student), with their own title. Never throws (PushService and PaymentReceived swallow failures).
- */
+/** Staff alerts only, never WhatsApp; admin alerts reuse payment_due; never throws. */
 @Injectable()
 export class LinkAlerts {
   constructor(
@@ -19,12 +13,7 @@ export class LinkAlerts {
     private readonly courseDue: CourseDue,
   ) {}
 
-  /**
-   * The payment recorded from the link (not awaited: off the webhook's path). Nobody recorded it
-   * by hand, so nobody is left out: PaymentsService's own notice skips the link's assistant.
-   * While the package has no weekly course, the link's assistant reads «تم الدفع: احجز أيام
-   * الحلقات» and the tap opens the course wizard (owner 2026-11-06).
-   */
+  /** Not awaited, off the webhook path; nobody recorded it by hand so nobody is skipped. */
   paid(link: LinkRow, payment: { id: string; amount: number; currency: string }): void {
     void this.tellPaid(link, payment);
   }

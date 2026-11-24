@@ -7,8 +7,7 @@ const TEACHER = `/teachers/me/channels/${ST}/messages`;
 const MONITOR = `/students/${ST}/channel/messages`;
 const MARK = '2026-10-27T10:00:00.123456+00:00';
 
-// The page's people (the phone header «أبرار، أم سلمى، أنت») and the viewer's own read mark
-// (the unread band): the chat's current members (ChannelMembers), never a monitor.
+// The page's people and the viewer's read mark come from current members, never a monitor.
 describe('a channel page: its participants and my read mark', () => {
   let t: App;
   beforeAll(async () => {

@@ -3,7 +3,7 @@ import { parseAmount } from '@ab/money';
 import { useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** The create body's extra: `customPrice` only with «مبلغ مخصص» on (off = today's body). */
+/** Off sends the default body. */
 export interface CustomPriceBody { customPrice?: number }
 
 interface Typed { key: string; text: string }
@@ -19,11 +19,7 @@ const quotedText = (q: QuotedPrice | undefined): string => (q ? String(q.afterDi
 const textOf = (typed: Typed | null, q: QuotedPrice | undefined): string =>
   typed?.key === keyOf(q) ? typed.text : quotedText(q);
 
-/**
- * «مبلغ مخصص» on a package price (owner 2026-11-02): off = the quote's price, the body unchanged;
- * on = the amount typed (it starts from the quote, and a new quote starts it again), read with
- * parseAmount and sent as `customPrice`. Turning it off drops what was typed.
- */
+/** Off uses the quote; on sends the typed `customPrice`, restarted by a new quote. */
 export function useCustomPrice({ quote, active }: Opts) {
   const [on, setOn] = useState(false);
   const [typed, setTyped] = useState<Typed | null>(null);

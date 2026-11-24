@@ -1,4 +1,4 @@
-import type { MeetingCreateResult } from '@ab/shared';
+import type { MeetingCreateResult } from '@ab/schedule';
 import { View } from 'react-native';
 import { useViewerTz } from '@/core/lib/clock';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';

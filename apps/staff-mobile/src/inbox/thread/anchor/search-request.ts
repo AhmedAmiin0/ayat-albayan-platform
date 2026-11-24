@@ -2,9 +2,7 @@ import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 import { clearHeldSends } from '@/inbox/thread/send/pinned-send';
 import { listenerSet } from './listeners';
 
-// «بحث في الرسائل» on the student's details (docs/37 NEW 2): the screen asks, goes back, and the
-// chat under it (still mounted) opens its search bar. A one-shot per-phone ask, in memory only (a
-// store, not route params: it never depends on how expo-router merges params on the way back).
+// docs/37 NEW 2: an in-memory one-shot per phone, not route params, to avoid expo-router merges.
 
 const asked = new Set<string>();
 const changes = listenerSet();

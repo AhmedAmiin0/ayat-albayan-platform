@@ -14,14 +14,11 @@ export type EditorFile = { name: string; path?: string } | null;
 interface ReplyFileFieldProps {
   file: EditorFile;
   onChange: (file: EditorFile) => void;
-  /** An upload is running: the editor's «حفظ» waits for it (else the reply is saved without its file). */
+  /** Save waits for the upload, else the reply would be saved without its file. */
   onBusy?: (busy: boolean) => void;
 }
 
-/**
- * «المرفق (اختياري)»: a photo or a PDF picked as in the chat (pickChatFile: same types and limits),
- * uploaded at once through the signed URL; the chip removes it. Saved with the reply.
- */
+/** Same file types and limits as the chat (pickChatFile); uploaded at once via a signed URL. */
 export function ReplyFileField({ file, onChange, onBusy }: ReplyFileFieldProps) {
   const { color } = useTheme();
   const maxBytes = useUploadMaxBytes();

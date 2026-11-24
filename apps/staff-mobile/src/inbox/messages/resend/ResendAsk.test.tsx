@@ -9,7 +9,7 @@ import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ApiError } from '@ab/client-core';
 
-// Meta's 131060 on a new number's first message (owner 2026-10-27): clearer words and «اطلب إعادة الإرسال».
+// Meta 131060 on a new number's first message gets clearer words and a resend request.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

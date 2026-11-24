@@ -28,7 +28,7 @@ function HistoryMonths({ pages, ...p }: HistoryPanelProps & { pages: readonly Po
   ));
 }
 
-/** «حضرها» / «غاب عنها» (canvas Attended, Absent): newest first, by month, «عرض المزيد». */
+/** Newest first, grouped by month. */
 export function HistoryPanel({ student, status }: HistoryPanelProps) {
   const { color } = useTheme();
   const history = useChildHistory(student.id, status);

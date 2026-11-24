@@ -1,4 +1,9 @@
-import type { ConfigEntriesResponse, ConfigEntry, ConfigEntryPatchInput, ConfigEntryResult } from '@ab/shared';
+import type {
+  ConfigEntriesResponse,
+  ConfigEntry,
+  ConfigEntryPatchInput,
+  ConfigEntryResult,
+} from '@ab/settings';
 import { queryOptions, useQuery, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { CONFIG_QUERY_KEYS } from './query-keys';

@@ -12,15 +12,10 @@ import { WebhookDeps } from './webhook-deps';
 /** How long a refund waits (Stripe retries) for the payment it reverses to be recorded. */
 const RETRY_MS = 60 * 60_000;
 const FAILED = new Set(['failed', 'canceled']);
-/** A «إلغاء مع استرداد» card refund Stripe gave up on. */
 const stopRefundFailed = (r: Stripe.Refund): boolean =>
   FAILED.has(r.status ?? '') && Boolean(r.metadata?.course_stop);
 
-/**
- * charge.refunded → one refund payment per Stripe Refund (client_request_id = a uuid of the refund id), so a
- * replayed or out-of-order event never counts a refund twice and the paid rule and the commission re-evaluate
- * as for an admin's «استرداد» (refund.updated catches one still pending then). charge.dispute.created → a bell row for the admins only, nothing changed.
- */
+/** One refund payment per Stripe Refund id, so replays never double count. */
 @Injectable()
 export class LinkRefunds {
   constructor(
@@ -64,7 +59,7 @@ export class LinkRefunds {
     return 'refund_alerted';
   }
 
-  /** «إلغاء مع استرداد» (owner 2026-11-02): nothing reached the family; admins pay it by hand. */
+  /** Nothing reached the family; admins pay it by hand. */
   private async failed(refund: Stripe.Refund): Promise<string> {
     const text = `${fromStripeAmount(refund.amount, refund.currency)} ${refund.currency.toUpperCase()} ${refund.id}`;
     const title = ar.paymentLinks.bell.refundFailedTitle;

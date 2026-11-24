@@ -35,10 +35,7 @@ export class PaymentsService {
     return view;
   }
 
-  /**
-   * A retry of the same form (clientRequestId) returns the payment it already recorded, and re-runs its
-   * follow-ups (idempotent): a trial → «مشترك» flip lost to a failure after the insert is applied then.
-   */
+  /** A retry with the same clientRequestId returns that payment and re-runs follow-ups. */
   async create(input: PaymentWrite, actorId: string): Promise<PaymentView> {
     const replay = await this.replayOf(input.clientRequestId);
     if (replay) return this.replayed(replay, input, actorId);
@@ -90,7 +87,7 @@ export class PaymentsService {
     await this.writes.done({ actorId, entity: 'payments', entityId: id, action: 'delete', before }, studentOf(before));
   }
 
-  /** «المرفقات»: the legacy receipt first, then the files, each signed for 1 h. */
+  /** The legacy receipt first, then the files, each signed for 1 hour. */
   async attachments(id: string): Promise<PaymentAttachmentView[]> {
     return this.files.attachments.views(await this.row(id));
   }

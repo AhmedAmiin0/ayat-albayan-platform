@@ -5,12 +5,7 @@ import { ContentText } from '@/core/ui/primitives/ContentText';
 import { quoteOf, quoteText } from '@/inbox/messages/hooks/quote-text';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 
-/**
- * Over the composer while she corrects a message (owner 2026-11-07), as WhatsApp's edit bar:
- * «تعديل الرسالة» over the original's first line, ✕ beside them, then the one line that says
- * the family gets a new «تصحيح» reply (WhatsApp cannot edit a sent message). Shown only while
- * free text can go out.
- */
+/** WhatsApp cannot edit a sent message, so the family gets a new correction reply. */
 export function EditStrip() {
   const { color } = useTheme();
   const { editing, cancelEdit } = useChatActions();

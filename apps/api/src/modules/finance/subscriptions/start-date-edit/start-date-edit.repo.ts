@@ -11,7 +11,6 @@ interface StartsOnWrite {
   to: string;
 }
 
-/** The write of «تعديل تاريخ البدء» (service role; the route guards). starts_on only. */
 @Injectable()
 export class StartDateEditRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

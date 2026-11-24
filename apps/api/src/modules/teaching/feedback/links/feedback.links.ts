@@ -10,7 +10,7 @@ import {
 import { expiryOf, hashToken, signToken } from '@/modules/teaching/feedback/public/feedback.token';
 
 interface FeedbackLink {
-  /** The signed token of /feedback/<token> (the web page «رأيك يهمّنا»). */
+  /** The signed token of the public feedback page. */
   token: string;
   expiresAt: Date;
 }
@@ -23,15 +23,7 @@ interface Pair {
 const live = (row: FeedbackRow, now: Date): boolean =>
   row.submitted_at !== null || Date.parse(row.expires_at) > now.getTime();
 
-/**
- * The family's «رأيك يهمّنا» link for one student's lesson, for the report's WhatsApp message
- * (docs/19
- * «Report flow»): the row's live link when there is one (rebuilt from its expiry, the same token
- * the
- * admin's request sends; an answered one opens «already answered»), else a new 14-day link stored
- * like
- * «ابعت طلب الرأي» does. null when the secret is unset, or the student or guardian is not found.
- */
+/** Reuses the row's live link, else stores a new 14-day link; null when unset or not found. */
 @Injectable()
 export class FeedbackLinks implements FamilyFeedbackLinks {
   constructor(

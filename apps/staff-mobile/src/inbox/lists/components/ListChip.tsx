@@ -4,13 +4,11 @@ import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 export interface ListChipProps {
   label: string;
   onPress: () => void;
-  /** The active chip («الكل», «غير مقروءة» or a list): filled, announced selected. */
   selected?: boolean;
   /** A list's chip: long-press, or the named accessibility action, opens rename / delete. */
   onEdit?: () => void;
   /** «＋» (a new list) acts (opens the sheet) instead of filtering. */
   action?: boolean;
-  /** The spoken name when the visible label is only a sign («＋» → «قائمة جديدة»). */
   name?: string;
 }
 
@@ -33,10 +31,7 @@ const editProps = (onEdit: (() => void) | undefined) =>
       }
     : {};
 
-/**
- * One chip of the chats' row (ChatListChips): a 32pt pill, as WhatsApp's, with the hit area
- * stretched to 44pt. A list chip offers «تعديل القائمة» to screen readers as a named action.
- */
+/** A 32pt pill with a 44pt hit area; list chips expose edit as a named accessibility action. */
 export function ListChip({ label, onPress, selected = false, onEdit, action = false, name }: ListChipProps) {
   const ink = look(useTheme().color, { selected, action });
   return (

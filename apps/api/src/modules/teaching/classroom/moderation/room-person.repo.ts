@@ -12,11 +12,7 @@ type Column = 'join_link_id' | 'user_id';
 const idsOf = (principals: readonly Principal[], column: Column): string[] =>
   principals.flatMap((p) => principalColumns(p)[column] ?? []);
 
-/**
- * «إخراج» keeps a PERSON out, not one row (owner 2026-11-16, room server bugs): every guest link of
- * theirs in this lesson (personLinkIds: their family's students' links) and every LiveKit identity
- * (window) they hold now. A staff login is itself.
- */
+/** Removal keeps a person out, not one row: all their links and identities. */
 @Injectable()
 export class RoomPersonRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

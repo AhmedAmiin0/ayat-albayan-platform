@@ -12,7 +12,7 @@ interface DurationPillsProps {
   onChange: (minutes: Duration) => void;
 }
 
-/** «مدة الحلقة»: the form's «المده» choices (30 / 45 / 60 / 90) with its help text, 45 by default. */
+/** Choices 30, 45, 60, 90; 45 by default. */
 export function DurationPills({ value, onChange }: DurationPillsProps) {
   return (
     <View style={{ gap: 6 }}>

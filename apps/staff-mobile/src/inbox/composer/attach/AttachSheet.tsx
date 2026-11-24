@@ -8,9 +8,8 @@ interface AttachSheetProps {
   visible: boolean;
   onPick: (source: ChatFileSource) => void;
   onTemplate: () => void;
-  /** «الردود السريعة» (staff); absent → no tile. */
+  /** Absent means no quick-replies tile. */
   onReplies?: (() => void) | undefined;
-  /** «الرموز التعبيرية»: the pill's emoji sheet. */
   onEmoji: () => void;
   onClose: () => void;
 }
@@ -77,12 +76,7 @@ function Tiles(p: AttachSheetProps) {
   );
 }
 
-/**
- * The paperclip's sheet as WhatsApp Business (owner 2026-10-27, polished 2026-11-06): a drag
- * handle, then an even three-column grid, «المعرض» «الكاميرا» «مستند» «قالب» «ردود سريعة» «رموز»
- * (a teacher's five centre their last row). No «إلغاء» button: a swipe down, a tap outside or
- * Android's back closes it; each tile closes it before it acts.
- */
+/** No cancel button: swipe down, outside tap or Android back closes it. */
 export function AttachSheet(p: AttachSheetProps) {
   const { color } = useTheme();
   const swipe = useSwipeClose(p.onClose);
@@ -96,7 +90,7 @@ export function AttachSheet(p: AttachSheetProps) {
       onShow={swipe.reset}
     >
       <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-        {/* A sibling, not a parent: the reader reaches each tile, then «إلغاء» for the scrim. */}
+        {/* A sibling, not a parent, so screen readers reach each tile before the scrim. */}
         <Pressable
           testID="attach-scrim"
           accessibilityRole="button"

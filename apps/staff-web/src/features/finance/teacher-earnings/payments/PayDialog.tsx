@@ -26,7 +26,7 @@ type Props = {
   onSaved: (replayed: boolean) => void;
 };
 
-/** «تسجيل دفعة للمعلم/ة»: amount (default = what the ticked sessions owe), method, date, receipt, note. */
+/** The amount defaults to what the ticked sessions owe. */
 export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: Props) {
   const formId = useId();
   const ceiling = payCeiling(selected, outstanding);

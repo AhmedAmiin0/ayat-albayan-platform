@@ -18,7 +18,7 @@ export interface EventLesson {
   /** The lesson's own join URL (classroom page or the teacher's fixed link), already chosen. */
   link: string | null;
   kind: LessonKind;
-  /** The weekly rule's days (0 = Sunday) for «التكرار», null for a one-off lesson. */
+  /** 0 is Sunday; null for a one-off lesson. */
   byday: readonly number[] | null;
 }
 
@@ -27,7 +27,7 @@ export const eventWanted = (status: LessonStatus): boolean => !isClosedLesson(st
 
 const names = (l: EventLesson): string => l.students.map((s) => s.name.trim()).filter(Boolean).join('، ') || EVENT.newStudent;
 
-/** «حلقة — <name> · المنصة» (+ « (يحتاج تأكيد)» while nobody confirmed it). */
+/** Marked as needing confirmation while nobody confirmed it. */
 export function eventTitle(l: EventLesson): string {
   const confirm = l.status === 'scheduled' ? EVENT.needsConfirmation : '';
   return `${EVENT.titlePrefix}${names(l)}${EVENT.platformMarker}${confirm}`;

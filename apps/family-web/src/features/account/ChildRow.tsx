@@ -9,17 +9,14 @@ import { useChildTeacher } from './use-child-teacher';
 
 interface Props {
   student: PortalStudent;
-  /** The name to show: the child's, or «أنا» for a guardian who studies. */
+  /** The child's name, or a self label for a guardian who studies. */
   label: string;
   /** This child is the one the pages show now. */
   current: boolean;
   onChoose: () => void;
 }
 
-/**
- * One child on «حسابي»: the initial, the name, the code and the next lesson's teacher; «يُعرض
- * الآن» on the child in view, a chevron on the others. A tap makes the pages this child's.
- */
+/** A tap makes the pages this child's. */
 export function ChildRow({ student, label, current, onChoose }: Props) {
   const teacher = useChildTeacher(student.id);
   return (

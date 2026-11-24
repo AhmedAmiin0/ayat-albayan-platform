@@ -17,7 +17,6 @@ interface Props {
   onClose: () => void;
 }
 
-/** «تعديل مبلغ الدفعة»: one box for the new amount, the current one under it (checkAmount). */
 export function AmountForm({ payment, initial, onNext, onClose }: Props) {
   const formId = useId();
   const [text, setText] = useState(String(initial));

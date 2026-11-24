@@ -27,10 +27,7 @@ function FactRow({ fact }: { fact: ProfileFact }) {
   );
 }
 
-/**
- * «بياناتي», read-only: the phone is the WhatsApp sign-in and the academy keeps the names, so the
- * footer says who changes them.
- */
+/** Read-only: the phone is the WhatsApp sign-in and the academy keeps the names. */
 export function ProfileDetails({ facts }: { facts: readonly ProfileFact[] }) {
   const { color } = useTheme();
   const P = t.portal.app.profile;

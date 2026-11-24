@@ -13,7 +13,7 @@ type LaterOf = { id: string; studentId: string; createdAt: string };
 /** The cancelled row; null when it was already cancelled (a race); a block the DB guard raised (934). */
 type CancelResult = { row: SubRow } | { row: null; block: CancelBlock };
 
-/** «إلغاء الباقة» reads and the one write (service role; the controllers guard). Owner 2026-10-28. */
+/** Reads and the one write (service role; the controllers guard). */
 @Injectable()
 export class SubscriptionCancelRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

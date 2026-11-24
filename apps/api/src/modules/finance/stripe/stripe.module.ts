@@ -1,5 +1,5 @@
 import { type DynamicModule, Module } from '@nestjs/common';
-import { SalesMoneyModule } from '@/modules/sales/sales-money';
+import { SalesMoneySharedModule, SalesTeacherAssignModule } from '@/modules/sales/sales-money';
 import { PaymentsModule } from '@/modules/finance/payments';
 import { SubscriptionsModule } from '@/modules/finance/subscriptions';
 import { STRIPE_FACTORY, StripeClients, stripeFactory } from './gate/stripe-clients';
@@ -40,7 +40,10 @@ export class StripeTestModule {
     if (!stripeFeatureOn(env)) return { module: StripeTestModule };
     return {
       module: StripeTestModule,
-      imports: [SubscriptionsModule, PaymentsModule, SalesMoneyModule],
+      imports: [
+        ...[SubscriptionsModule, PaymentsModule],
+        ...[SalesMoneySharedModule, SalesTeacherAssignModule],
+      ],
       controllers: [
         StripeFeatureController,
         PaymentLinksController,
