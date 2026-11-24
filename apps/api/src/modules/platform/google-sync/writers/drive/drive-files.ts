@@ -10,11 +10,7 @@ import { brandStyle } from '@/modules/platform/google-sync/writers/sheets/sheet-
 type StudentDrive = { folderId: string; sheetId: string };
 type DriveNeed = { kind: 'ready'; drive: StudentDrive } | { kind: 'create'; folder: boolean; sheet: boolean; rootId: string | null } | { kind: 'unmapped' } | { kind: 'no_root' };
 
-/**
- * The student's Drive place (docs/24 §3): the admin-confirmed folder and sheet, or — confirmed as
- * «مجلد جديد» — a folder «<student>» under the confirmed root and «سجل حضور — <student>» with the
- * header and the Brand styling. Each new id is recorded at once, so a retry never makes a twin.
- */
+/** docs/24 §3: each new id is recorded at once, so a retry never makes a twin. */
 @Injectable()
 export class DriveFiles {
   constructor(
@@ -46,7 +42,7 @@ export class DriveFiles {
     }
     if (!folderId) return null;
     if (!need.folder) {
-      // An existing (script) folder without a confirmed sheet: use its «سجل حضور — …», never a twin.
+      // A script folder without a confirmed sheet reuses its attendance sheet, never a twin.
       const found = await google.findFiles({ name: attendanceSheetName(studentName), parentId: folderId, mimeType: MIME.sheet });
       if (found.length > 1) return null;
       if (found[0]) {

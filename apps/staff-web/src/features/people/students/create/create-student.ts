@@ -7,16 +7,16 @@ export type CreateStudentValues = {
   guardianPhone: string;
   guardianName: string;
   name: string;
-  /** «سن الطالب» as typed; '' = not given. */
+  /** '' means not given. */
   age: string;
   gender: Gender | '';
-  /** «عرفت عننا منين؟» for a new guardian; '' = not asked. */
+  /** '' means not asked. */
   source: LeadSource | '';
   tz: string;
   program: Program;
-  /** «المعلم/المعلمه»; '' = none yet (the form's empty option). */
+  /** '' means none yet. */
   teacher_id: string;
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); false = «ولي الأمر» (the default). */
+  /** False means the number belongs to the guardian, the default (docs/30 §1). */
   contactIsSelf: boolean;
 };
 
@@ -33,7 +33,7 @@ export const EMPTY_STUDENT: CreateStudentValues = {
   contactIsSelf: false,
 };
 
-/** «الخانة دي مطلوبة» for a blank (or spaces-only) value. */
+/** Blank or spaces-only counts as empty. */
 export function requiredError(value: string): string | undefined {
   return value.trim() ? undefined : t.common.required;
 }
@@ -44,7 +44,7 @@ export function phoneError(value: string): string | undefined {
   return r.ok ? undefined : t.common.phoneErrors[r.reason];
 }
 
-/** «سن الطالب» as the form validated it: null when blank, undefined when not a whole 3–99. */
+/** Null when blank, undefined when not a whole number from 3 to 99. */
 export function parseAge(value: string): number | null | undefined {
   const v = value.trim();
   if (!v) return null;
@@ -52,15 +52,11 @@ export function parseAge(value: string): number | null | undefined {
   return Number.isInteger(n) && n >= 3 && n <= 99 ? n : undefined;
 }
 
-/** The registration form's own message: «اكتب السن بالأرقام (من 3 لـ 99)». */
 export function ageError(value: string): string | undefined {
   return parseAge(value) === undefined ? t.students.ageInvalid : undefined;
 }
 
-/**
- * Form → POST /students. The guardian is found (or created) by phone; tz applies to both. `leadId`
- * («تسجيل الطالب» from the inbox thread) converts that lead and links it to the guardian.
- */
+/** The guardian is found or created by phone; `leadId` converts that lead and links it. */
 export function toCreateBody(v: CreateStudentValues, force: boolean, leadId?: string): CreateStudentBody {
   return {
     name: v.name.trim(),

@@ -12,16 +12,12 @@ interface HeroCardProps {
   busy?: boolean;
   /** Why the last confirm was refused (the status already rolled back). */
   error?: string;
-  /** None: read-only (the salesperson's «اليوم»), see HeroActions. */
+  /** Absent means read-only, see HeroActions. */
   onConfirm?: () => void;
   onDetails: () => void;
 }
 
-/**
- * «الحلقة التالية» (docs/29 §3): the lesson under way, else the next one, on the lapis wash: the lead
- * and the status chip, the local time large beside the students, then «تأكيد الحلقة» / «ادخل الحلقة»
- * and «التفاصيل» (no confirm when read-only). The live classroom of the old «جلسات مباشرة» lives here and in the sheet.
- */
+/** Next or running lesson (docs/29 §3); no confirm when read-only. */
 export function HeroCard({ hero, busy = false, error, onConfirm, onDetails }: HeroCardProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

@@ -2,10 +2,8 @@ import { Linking } from 'react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { fetchDownload } from '@/inbox/messages/hooks/thread-file';
 
-// «نسخ» and «تنزيل» in a chat (owner 2026-10-26), in one place: the installed APK has no sharing or
-// media-library module (core/lib/clipboard copies, not wired here yet), so this file is the only one a later build swaps.
+// The installed APK has no sharing or media-library module, so only this file changes later.
 
-/** What «نسخ النص» / «نسخ الرقم» shows: the sheet's title and the exact text. */
 export interface CopyRequest {
   title: string;
   text: string;
@@ -27,7 +25,7 @@ export async function downloadFile(input: { phone: string; messageId: string }):
   await saveFile(file.url);
 }
 
-/** Why a download failed, as MessageFile says it: 403 «غير مسموح», 410 gone, else try again. */
+/** 403 is not allowed, 410 is gone, anything else asks to try again. */
 export function downloadProblem(e: unknown): string {
   if (e instanceof ApiError && e.status === 403) return t.inbox.mediaNotAllowed;
   if (e instanceof ApiError && e.status === 410) return t.inbox.mediaExpired;

@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { Linking, Share } from 'react-native';
 import { t } from '@ab/mobile-kit';

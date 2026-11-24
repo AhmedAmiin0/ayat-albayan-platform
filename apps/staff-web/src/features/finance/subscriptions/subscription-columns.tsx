@@ -23,7 +23,7 @@ const col = createColumnHelper<DataTableFeatures, SubscriptionView>();
 
 type Handlers = {
   onPay: (s: SubscriptionView, kind: 'payment' | 'refund') => void;
-  /** «إيقاف مؤقت» / «استئناف»: the student's whole course (owner 2026-10-28), not this package alone. */
+  /** Pauses the student's whole course, not this package alone. */
   onPause: (s: SubscriptionView) => void;
   onResume: (s: SubscriptionView) => void;
   /** courses.pause */
@@ -32,7 +32,7 @@ type Handlers = {
   onOpen: (studentId: string) => void;
 };
 
-/** «الباقة» filter: the catalog sizes (a trial is never a package). */
+/** A trial is never a package. */
 const packageOptions = PACKAGE_SIZES.filter((p) => p !== 'trial').map((p) => ({ value: p, label: t.enums.packageSize[p] }));
 
 /**

@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LeadStudentStep } from './LeadStudentStep';
 import { leadParts } from './new-student';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1, a docs/13 deviation) on step 1 of the lead path.
+// Whose WhatsApp number it is, guardian or student (docs/30 §1, a docs/13 deviation).
 
 const C = t.familyAuth.contactIsSelf;
 const BASE = { name: 'جود', guardianName: 'منى', guardianPhone: '0501234567' };

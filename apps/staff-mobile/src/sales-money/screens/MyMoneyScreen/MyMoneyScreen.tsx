@@ -13,13 +13,9 @@ const VIEWS = (): { value: MoneyView; label: string }[] => [
   { value: 'payments', label: t.assistantPortal.nav.payments },
 ];
 
-/**
- * «محفظتي» of the salesperson (web /sales/earnings, SalesMoney), read-only: «العمولات» (the balance and
- * every commission, live after each payment), «الكشوف» (my terms, this month and my statements) and
- * «مدفوعاتي» (the payments I recorded) as filters of the same page.
- */
+/** Read-only. */
 export function MyMoneyScreen() {
-  // ?view=payments opens «مدفوعاتي» directly (the sales transfer's success screen links here).
+  // The sales transfer's success screen links here with ?view=payments.
   const params = useLocalSearchParams<{ view?: string }>();
   const [view, setView] = useState<MoneyView>(params.view === 'payments' ? 'payments' : params.view === 'statements' ? 'statements' : 'wallet');
   return (

@@ -1,5 +1,6 @@
-import { GRADES, REPORT_RUBRICS } from '@ab/shared';
-import { View } from 'react-native';
+import { REPORT_RUBRICS } from '@ab/shared';
+import { GRADES } from '@ab/catalog';
+import type { View } from 'react-native';
 import { t, Section, FormLabel } from '@ab/mobile-kit';
 import { ChoiceChips } from './ChoiceChips';
 import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';
@@ -13,10 +14,7 @@ interface RubricSectionProps {
   register: (key: string) => (node: View | null) => void;
 }
 
-/**
- * «التقييم التفصيلي»: «تقييم البنود *» (the six rows, each graded ممتاز … يحتاج إلى مراجعة), then
- * «التقدير العام للحلقة *». All required once the student attended (the API's missing_grades).
- */
+/** All grades required once the student attended (the API's missing_grades). */
 export function RubricSection({ s, locked, register }: RubricSectionProps) {
   const { values, problem } = s;
   return (

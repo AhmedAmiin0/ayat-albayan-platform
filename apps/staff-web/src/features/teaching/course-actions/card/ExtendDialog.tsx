@@ -16,10 +16,7 @@ interface ExtendDialogProps {
   onDone: (message: string) => void;
 }
 
-/**
- * «مدّ الجدول حتى نهاية الباقة؟» (owner 2026-11-17): the lessons it books on the course's own days
- * with their dates and the new last day, that nobody is told, then «مدّ الجدول» beside «رجوع».
- */
+/** Books lessons on the course's own days; nobody is told. */
 export function ExtendDialog({ studentId, subscriptionId, onClose, onDone }: ExtendDialogProps) {
   const preview = useQuery(extendPreviewQuery({ studentId, subscriptionId }));
   const done = (result: Parameters<typeof extendDoneText>[0]) => onDone(extendDoneText(result));

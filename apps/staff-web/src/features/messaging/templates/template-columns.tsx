@@ -28,27 +28,22 @@ function CheckedAt({ at }: { at: string }) {
 
 export interface TemplateColumnsInput {
   onSubmit: (tpl: TemplateView) => void;
-  /** «نقل إلى الرقم الآخر» asked for one row (it confirms in its dialog). */
   onMove: (tpl: TemplateView) => void;
   onEdit: (tpl: TemplateView) => void;
   /** Each number's formatted phone, when a lines check has run. */
   phones: PhoneMap;
   /** The server's facts for a number (a move to an unconfigured one is disabled). */
   factsOf: (line: WaLine) => TemplateLineView | undefined;
-  /** «متاح للمعلمين والمبيعات» (the restricted allow-list) switched for one row (owner 2026-10-12). */
   onStarter: (tpl: TemplateView, on: boolean) => void;
   /** The key whose starter flag is being saved: its switch waits. */
   saving: string | null;
-  /** «يُرسل من» (docs/23c decision 9): the numbers, templates.manage, and a pick (confirmed by the caller). */
+  /** docs/23c decision 9; the pick is confirmed by the caller. */
   sendFrom: Omit<SendFromCellProps, 'tpl'>;
   /** crm rows (docs/39): the status by hand as the fallback (`busy` = the key being saved) and the WABA name (meta too). */
   crmStatus: { busyKey: string | null; onSet: CrmStatusActionsProps['onSet']; onEditName: (tpl: TemplateView) => void };
 }
 
-/**
- * R-MSG-01 health table: name + Meta name, number, «يُرسل من» + per-number approvals, category, status (+ Meta's reason), quality, checked,
- * the sales starter switch. The whole registry is loaded, so it sorts and filters locally.
- */
+/** R-MSG-01: the whole registry is loaded, so it sorts and filters locally. */
 export function templateColumns({ onSubmit, onMove, onEdit, onStarter, saving, phones, factsOf, sendFrom, crmStatus }: TemplateColumnsInput) {
   const crmCell = (tpl: TemplateView) =>
     factsOf(tpl.line)?.provider === 'crm' ? (
@@ -68,7 +63,7 @@ export function templateColumns({ onSubmit, onMove, onEdit, onStarter, saving, p
       cell: (c) => <NameCell name={c.getValue()} tpl={c.row.original} />,
       meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_100%]', filter: { kind: 'text' } },
     }),
-    // «الرقم» (owner 2026-10-18): the number a row goes out from; still filtered by line.
+    // Still filtered by line.
     col.accessor('line', {
       header: () => t.templates.number,
       cell: (c) => <NumberCell line={c.getValue()} phone={phones[c.getValue()]} />,

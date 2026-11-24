@@ -12,8 +12,6 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn()
 // The bell reads its own API (notifications/BellButton.test).
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
-// The salesperson's «اليوم» (owner 2026-10-27): the day of her «جدول الحلقات», in the calm design.
-// Monday 12 Oct 2026, 18:10 Riyadh: يوسف (18:00) runs, سلمى (19:00) waits for confirmation.
 const running = scheduleLesson();
 const later = scheduleLesson({
   id: 'l2',
@@ -41,7 +39,7 @@ test('the calm header and the academy day of «جدول الحلقات»: the sa
   answer([held, running, later]);
   await renderWithQuery(<SalesTodayRoute />, confirmingQueryClient());
   expect(await screen.findByText(t.today.running)).toBeTruthy();
-  // No «اليوم» title (the tab says it): the greeting is the header line.
+  // No title, since the tab names it; the greeting is the header line.
   expect(screen.getByRole('header', { name: new RegExp(`^${t.today.greeting.evening}`) })).toBeTruthy();
   expect(screen.queryByText(t.today.title)).toBeNull();
   expect(screen.getByText('الاثنين 12 أكتوبر · بتوقيت الرياض')).toBeTruthy();

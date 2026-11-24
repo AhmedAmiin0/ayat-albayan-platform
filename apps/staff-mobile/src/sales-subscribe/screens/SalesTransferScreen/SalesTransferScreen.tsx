@@ -1,4 +1,5 @@
-import { cancelOffered, chatBinding, type SalesPaymentView } from '@ab/shared';
+import { chatBinding, type SalesPaymentView } from '@ab/shared';
+import { cancelOffered } from '@ab/money';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
@@ -20,15 +21,9 @@ import { OpenPackagePicker } from '@/sales-subscribe/components/OpenPackagePicke
 import { TransferDone } from '@/sales-subscribe/components/TransferDone';
 import { TransferForm } from '@/sales-subscribe/components/TransferForm';
 
-/** The chat's number; the package (right after «احفظ الاشتراك»). */
 type Params = { phone?: string; subscriptionId?: string };
 
-/**
- * /inbox/sales-transfer?phone=…[&subscriptionId=…] (R-ASST-04, owner 2026-10-12): the family's bank
- * transfer for one of HER owed packages, with its receipt; it counts at once (POST /sales/payments)
- * and a paid trial makes the student «مشترك». A package she made by mistake (nothing paid) is cancelled here
- * instead («إلغاء الباقة», owner 2026-10-28).
- */
+/** Bank transfer for her owed package (R-ASST-04); a paid trial makes the student subscribed. */
 export function SalesTransferScreen() {
   const params = useLocalSearchParams<Params>();
   const phone = params.phone ?? '';
@@ -37,7 +32,7 @@ export function SalesTransferScreen() {
   const [picked, setPicked] = useState(params.subscriptionId);
   const [done, setDone] = useState<SalesPaymentView | null>(null);
   const sub = chosenOpen(open, picked);
-  // A child not hers (sales.renew_any, docs/16 row 38): the transfer only, never «إلغاء الباقة» (hers only).
+  // A child not hers (sales.renew_any, docs/16 row 38) gets the transfer only, never cancel.
   const bind = sub ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone }) : {};
   const base = useTreeBase();
   const back = () => backWithin(inTree(base, '/inbox'));

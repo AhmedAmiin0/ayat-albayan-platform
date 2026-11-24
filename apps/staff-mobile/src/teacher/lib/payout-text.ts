@@ -1,7 +1,8 @@
-import { dateText, type PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
+import { dateText } from '@ab/time';
 import { t, locale } from '@ab/mobile-kit';
 
-// «مستحقاتي» lines (R-TCH-04): month names and amounts in the UI language, Western digits. Pure.
+// Payout lines (R-TCH-04) in the UI language with Western digits; pure.
 
 const MONTH = { month: 'long', year: 'numeric' } as const;
 const DAY = { day: 'numeric', month: 'long' } as const;
@@ -9,17 +10,15 @@ const DAY = { day: 'numeric', month: 'long' } as const;
 const inUtc = (at: Date, fields: typeof MONTH | typeof DAY) => dateText(at, { tz: 'UTC', locale }, fields);
 const durations: Record<string, string | undefined> = t.enums.duration;
 
-/** `YYYY-MM` → «أكتوبر 2026» (as the web's MonthSelect). */
 export function monthLabel(month: string): string {
   return inUtc(new Date(`${month.slice(0, 7)}-01T00:00:00Z`), MONTH);
 }
 
-/** «12 حلقة · 1800 ج.م». */
 export function payoutSummary(p: PayoutView): string {
   return `${t.payouts.lessons}: ${p.lessons_count} · ${p.amount} ${t.payouts.currency}`;
 }
 
-/** One line per lesson length: «45 دقيقة: 8 × 150 = 1200»; a missing rate shows «—». */
+/** A missing rate shows a dash. */
 export function breakdownLines(p: PayoutView): string[] {
   return p.breakdown.lines.map((line) => {
     const sum = t.payouts.line
@@ -31,7 +30,7 @@ export function breakdownLines(p: PayoutView): string[] {
   });
 }
 
-/** «اتدفعت 5 نوفمبر» / «اتعتمدت 2 نوفمبر», else nothing (a draft month). */
+/** Nothing for a draft month. */
 export function payoutWhen(p: PayoutView): string | null {
   if (p.paid_at) return t.payouts.paidAt.replace('{date}', inUtc(new Date(p.paid_at), DAY));
   if (p.approved_at) return t.payouts.approvedAt.replace('{date}', inUtc(new Date(p.approved_at), DAY));

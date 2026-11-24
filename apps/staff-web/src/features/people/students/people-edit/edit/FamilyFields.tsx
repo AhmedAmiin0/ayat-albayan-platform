@@ -14,7 +14,7 @@ export interface FamilyFieldsProps {
   notes: boolean;
 }
 
-/** «بيانات العائلة»: the guardian's name, main number (E.164), country, zone and (admin) notes. */
+/** Notes are admin only. */
 export function FamilyFields({ value, onChange, invalid, notes }: FamilyFieldsProps) {
   const error = (key: string) => (invalid.includes(key) ? t.peopleEdit.invalid : undefined);
   return (

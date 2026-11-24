@@ -7,7 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { LessonEndService } from './lesson-end.service';
 
-/** «إنهاء الحلقة للجميع»: the lesson's teacher or an admin (the service decides, per lesson). */
+/** End for everyone: the lesson's teacher or an admin (the service decides per lesson). */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.host')

@@ -1,9 +1,7 @@
 import type { PortalWayIn } from '@ab/shared';
 import { z } from 'zod';
 
-// Where «ادخل الحلقة» goes (owner 2026-11-16): our classroom opens inside the app while
-// settings.family_meetings_in_app is on and this binary carries LiveKit; else the browser link
-// (a Meet lesson: its own link) as before.
+// Classroom opens in-app while family_meetings_in_app is on and the binary has LiveKit.
 
 export type JoinWay = 'room' | 'link';
 
@@ -21,7 +19,7 @@ export const joinWay = (wayIn: PortalWayIn, inApp: boolean): JoinWay =>
 export interface RoomLink {
   studentId: string;
   lessonId: string;
-  /** From «بدأت الحلقة»: straight in, the microphone on (only a missing permission asked). */
+  /** From the lesson-started push: straight in with the microphone on. */
   direct?: boolean;
 }
 

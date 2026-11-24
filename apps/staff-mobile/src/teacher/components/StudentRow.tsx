@@ -1,19 +1,17 @@
-import { isPackageEnded, studentStatusStyle, type ClockCycle, type TeacherStudentView } from '@ab/shared';
+import { isPackageEnded, type TeacherStudentView } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
+import type { ClockCycle } from '@ab/time';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 import { router } from 'expo-router';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 
-/** «الحلقة الجاية: الأحد 5 أكتوبر 17:00» in the teacher's own time zone, or «مفيش حلقة جاية». */
+/** In the teacher's own time zone. */
 function nextLessonLine(startsAt: string | null, tz: string, cycle: ClockCycle): string {
   if (!startsAt) return t.teacherStudents.noNextLesson;
   return t.teacherStudents.nextLesson.replace('{when}', whenIn(new Date(startsAt), tz, cycle));
 }
 
-/**
- * One of my students: facts and next lesson; a tap opens their «سجل التقارير». A package-ended
- * student (pending_renewal or expired: still mine, lessons keep running) carries its status chip
- * (owner 2026-10-12, 2026-10-15).
- */
+/** A package-ended student is still hers and lessons keep running, so it shows a status chip. */
 export function StudentRow({ student: s, tz }: { student: TeacherStudentView; tz: string }) {
   const cycle = useClockCycle();
   const facts = [

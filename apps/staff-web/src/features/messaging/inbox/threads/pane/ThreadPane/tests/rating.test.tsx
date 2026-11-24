@@ -7,8 +7,6 @@ import { detail, message, PHONE, template } from '@/features/messaging/inbox/tes
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
 
-// The 24 h window in the header, «إرسال تقييم الحلقة» in a closed chat, the rating chip (migration 195).
-
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));

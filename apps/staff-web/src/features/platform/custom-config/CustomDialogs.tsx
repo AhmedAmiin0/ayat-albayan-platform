@@ -9,10 +9,7 @@ import type { CustomValues } from './use-custom-values';
 const c = t.config.custom;
 const p = t.settingsValues.customPublic;
 
-/**
- * «أضف قيمة» / «عدّل» in a dialog (the same validated form), the question before a value becomes
- * public («ستظهر هذه القيمة لأي زائر قبل تسجيل الدخول»), and the delete confirmation («نعم، احذفها»).
- */
+/** Making a value public asks first, since visitors see it before sign-in. */
 export function CustomDialogs({ custom }: { custom: CustomValues }) {
   const { editing, deleting } = custom;
   return (

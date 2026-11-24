@@ -6,11 +6,7 @@ import { TasksList } from '@/money/tasks/TasksList';
 
 type View = 'packages' | 'tasks';
 
-/**
- * «الاشتراكات والتجديدات» (web /admin/subscriptions): the packages with their status and the
- * renewal highlight, and the open admin-task queue. Read-only; «سجّل دفعة» opens the payment form.
- * The list screens' compact top (owner 2026-10-28): title, pills and search 8pt apart.
- */
+/** Read-only; the pay action opens the payment form. */
 export function SubscriptionsScreen() {
   const [view, setView] = useState<View>('packages');
   return (

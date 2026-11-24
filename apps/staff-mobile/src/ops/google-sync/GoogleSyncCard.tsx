@@ -34,10 +34,7 @@ function Body({ text }: { text: GoogleStatusText }) {
   );
 }
 
-/**
- * «مزامنة Google» (docs/24 §3): connection, switch, mode, queue counts and the last error, on
- * GET /admin/google/status. Read-only: no switch and no OAuth here; the web admin manages it.
- */
+/** docs/24 §3: read-only; switching and OAuth stay on the web admin. */
 export function GoogleSyncCard() {
   const { color } = useTheme();
   const query = useGoogleStatus();

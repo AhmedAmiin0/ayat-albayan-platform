@@ -12,7 +12,7 @@ export {
   type QualTextField as TextField,
 } from '@ab/shared';
 
-/** Day chips: السبت → الجمعة, the one shared week order (docs/07 §8). */
+/** The one shared week order (docs/07 §8). */
 export { WEEK_ORDER } from '@ab/shared';
 
 const LAST_MINUTE = 23 * 60 + 59;

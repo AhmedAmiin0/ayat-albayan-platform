@@ -26,11 +26,7 @@ interface Props {
 
 const e = t.salesMoney.startDateEdit;
 
-/**
- * «تعديل تاريخ البدء» (owner 2026-11-03): a native date input bounded as the server checks
- * (startDateEditMin / startDateEditMax: a year back; before today with lessons counted before),
- * «حفظ» only for another day.
- */
+/** Bounded as the server checks: a year back, or before today with lessons counted before. */
 export function EditStartDateDialog({ pkg, onClose, onSaved }: Props) {
   const formId = useId();
   const [value, setValue] = useState(pkg.starts_on);

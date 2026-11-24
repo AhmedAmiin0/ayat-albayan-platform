@@ -23,11 +23,7 @@ interface CreateTemplateDialogProps {
   onClose: () => void;
 }
 
-/**
- * «قالب جديد» (owner 2026-10-31): a new registry row, checked with the API's own schema before it
- * leaves (a refused field is marked, nothing is sent). Saving never reaches Meta: the caller then
- * offers the existing «إرسال إلى ميتا» dialog for that row (a crm number: the CRM steps instead).
- */
+/** Saving never reaches Meta; the caller then offers the submit dialog for that row. */
 export function CreateTemplateDialog(props: CreateTemplateDialogProps) {
   const { line, onCrm, onCreated, onClose } = props;
   const formId = useId();

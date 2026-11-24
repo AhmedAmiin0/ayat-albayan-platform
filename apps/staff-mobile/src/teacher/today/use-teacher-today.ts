@@ -1,4 +1,4 @@
-import { deviceTimeZone } from '@ab/shared';
+import { deviceTimeZone } from '@ab/time';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t, usePullRefresh, useScreenFocused, useNow } from '@ab/mobile-kit';
 import { clockAt } from '@/inbox';
@@ -8,10 +8,7 @@ import { localDate } from '@/today';
 import { teacherDateLine } from './header-line';
 import { teacherDay } from './teacher-day';
 
-/**
- * «اليوم»'s read (docs/48): ONE padded aheadWindow lessons query, polled every 30 s only while
- * the screen is in front; the pull spins for her own pull only.
- */
+/** One padded aheadWindow query, polled every 30 s only while in front (docs/48). */
 export function useTeacherToday() {
   const now = useNow();
   const tz = useViewerTz();

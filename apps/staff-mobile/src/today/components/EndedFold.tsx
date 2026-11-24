@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { type ReactNode, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -15,10 +15,7 @@ interface EndedFoldProps<L extends TodayLesson> {
   rows?: ReactNode;
 }
 
-/**
- * The day's ended lessons as one quiet row «انتهت 3 حلقات اليوم» (docs/29 §5); a tap unfolds them as
- * compact rows, each still opening the tree's sheet («عدّل الوقت» for the admin, R-SCH-11).
- */
+/** Ended lessons fold into one row (docs/29 §5); each still opens the sheet (R-SCH-11). */
 export function EndedFold<L extends TodayLesson>(props: EndedFoldProps<L>) {
   const { lessons, onOpen, open = false, rows } = props;
   const { color } = useTheme();

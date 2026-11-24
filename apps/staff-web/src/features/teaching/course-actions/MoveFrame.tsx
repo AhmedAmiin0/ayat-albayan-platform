@@ -8,7 +8,7 @@ export interface MoveFrameProps {
   kind: CourseMoveKind;
   /** admin: may save over a clash with a reason (R-SCH-04); sales never. */
   mode: BookingMode;
-  /** «تغيير المعلم»: the new teacher, sent with the check and the change. */
+  /** The new teacher, sent with the check and the change. */
   teacherId?: string | undefined;
   children: ReactNode;
 }

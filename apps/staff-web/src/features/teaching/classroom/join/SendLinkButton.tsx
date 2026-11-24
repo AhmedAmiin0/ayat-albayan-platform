@@ -36,7 +36,7 @@ function OneLinkButton({ lessonId, student, named, approved }: OneProps) {
   );
 }
 
-/** «ابعت لينك الحلقة» (admin): one button per student, since each family gets its own link. */
+/** One button per student, since each family gets its own link. */
 export function SendLinkButton({ lesson }: { lesson: LessonView }) {
   const eligible = isOpenLesson(lesson.status) && lesson.students.length > 0;
   const templates = useQuery({ ...templatesQuery, enabled: eligible });

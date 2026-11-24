@@ -4,9 +4,7 @@ import { addDays, resetAbrar, riyadh, seedFamily, withSql } from '../core/schedu
 import { DEMO } from './store-demo';
 import type { DemoLesson, DemoReport, StoreFamily } from './store.types';
 
-// The store screenshots' family (Google Play listing): one guardian, two children taught by the
-// e2e teacher «أبرار», an active 8-lesson package, two sent reports and lessons ahead. Fictional
-// names and text only, written to the CI database the workflow starts and throws away.
+// Store screenshots' family: fictional data only, written to the throwaway CI database.
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;

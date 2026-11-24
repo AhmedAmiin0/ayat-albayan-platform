@@ -14,10 +14,7 @@ type Row = Pick<RegistrationMatch, 'name' | 'status'> & { code: string | null; t
 /** Whitelist: the four keys of the answer, whatever else a row carries (the join's phone never leaves). */
 export const toMatch = (r: Row): RegistrationMatch => ({ name: r.name, code: r.code ?? '', status: r.status, teacher_name: r.teacher?.display_name_ar ?? null });
 
-/**
- * «التحقق من التسجيل» (docs/16 row 23), read with the service role: every status (new, trial, active, expired,
- * pending_renewal, churned, …), ordered by name, at most REGISTRATION_CHECK_MAX + 1 rows.
- */
+/** docs/16 row 23: every status, ordered by name, at most REGISTRATION_CHECK_MAX + 1 rows. */
 @Injectable()
 export class SalesRegistrationRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

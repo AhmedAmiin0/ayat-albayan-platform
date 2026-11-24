@@ -4,7 +4,7 @@ import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { numberParts } from './catalogue-text';
 
-/** «من رقم» of one notification: each line's name, then its number as an LTR island (never «0001 … 20+»). */
+/** The number is an LTR island so it never renders reversed. */
 export function NumberParts({ entry, lines }: { entry: NotificationEntryView; lines: readonly LineHealthView[] }) {
   return (
     <>

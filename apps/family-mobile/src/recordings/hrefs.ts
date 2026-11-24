@@ -1,6 +1,5 @@
 const enc = encodeURIComponent;
 
-/** «التسجيلات» of one child (pushed above the tabs). */
 export const recordingsHref = (studentId: string) => `/recordings/${enc(studentId)}` as const;
 
 /** The family's lesson page: its recording, report and files. */

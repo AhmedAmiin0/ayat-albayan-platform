@@ -11,12 +11,7 @@ import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 /** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
 const RESEND_TEXT = ar.inbox.resend.text;
 
-/**
- * «اطلب إعادة الإرسال» confirmed (owner 2026-10-27): the exact text, then «أرسل» through POST
- * /threads/:phone/text. The clientRequestId is the bubble's (ResendAsk), the same for every opening,
- * and the button is off while it goes: a double click, a retry or asking again sends once (the API
- * answers a known id with the first row). The composer's draft is never touched.
- */
+/** The bubble's clientRequestId is reused for every opening, so it sends once (rule 8). */
 export function ResendDialog({ phone, clientRequestId, onClose }: { phone: string; clientRequestId: string; onClose: () => void }) {
   const queryClient = useQueryClient();
   const send = useMutation({

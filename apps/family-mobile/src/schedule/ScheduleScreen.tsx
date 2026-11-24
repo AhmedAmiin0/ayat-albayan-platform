@@ -5,11 +5,7 @@ import { useWeek } from './use-week';
 import { WeekBody } from './WeekBody';
 import { WeekNav } from './WeekNav';
 
-/**
- * «الجدول» (docs/50 §6, canvas StudentSchedule): one academy week of the lessons still ahead on
- * this phone's clock, of the student in view («جدولي» for a student's own; a guardian of several
- * switches the child under the title).
- */
+/** docs/50 §6: one academy week of lessons still ahead, on this phone's clock. */
 export function ScheduleScreen() {
   const week = useWeek();
   const child = usePickedChild();

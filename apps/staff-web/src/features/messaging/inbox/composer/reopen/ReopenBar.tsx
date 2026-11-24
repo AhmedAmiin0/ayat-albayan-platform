@@ -25,7 +25,6 @@ export interface ReopenBarProps {
 const help = t.inbox.composer.noAllowedHelp;
 const bar = 'grid gap-1.5 rounded-md bg-gold-wash px-3 py-2 text-xs text-ink';
 
-/** «أُرسِل القالب»: the line, the template's tick, and (when they may type) that it is held. */
 function SentBar({ phone, sent, trying }: { phone: string; sent: ReopenSent; trying: boolean }) {
   const status = t.enums.messageStatus[useReopenTick(phone, sent)];
   return (
@@ -50,7 +49,7 @@ export function ReopenBar(props: ReopenBarProps) {
   const sent = thread.reopen_sent ?? null;
   const open = thread.session_open;
   const state = windowBar({ open, sent: sent !== null, noneAllowed: !!noneAllowed });
-  // «أرسِل الآن داخل قالب» (owner 2026-11-14): the draft goes now inside academy_message.
+  // The draft is sent now inside the academy_message template.
   const carrying = carriesText({ ...carry, bar: state });
   const views: Record<WindowBar, () => ReactNode> = {
     open: () => null,

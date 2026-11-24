@@ -11,10 +11,7 @@ interface TextTargets {
   editing: MessageView | null;
 }
 
-/**
- * The box's text with what it answers («رد») or corrects («تعديل», owner 2026-11-07). A correction
- * carries no reply and no prefix: the API adds «تصحيح: » and the reply to the original.
- */
+/** A correction carries no reply or prefix: the API adds both. */
 export function textOut(text: string, to: TextTargets): TextOut {
   if (to.editing) return { kind: 'text', text, correctsId: to.editing.id };
   return to.reply ? { kind: 'text', text, replyTo: quoteOf(to.reply) } : { kind: 'text', text };
@@ -24,21 +21,15 @@ export function textOut(text: string, to: TextTargets): TextOut {
 export const targetKey = (out: TextOut): string | undefined =>
   out.correctsId ? `correct:${out.correctsId}` : out.replyTo?.id;
 
-/** Nothing to send: an empty box, or in edit mode only «تصحيح:» (the API's empty_correction). */
+/** In edit mode a box holding only the correction prefix is empty (API empty_correction). */
 export const bareText = (text: string, editing: MessageView | null): boolean =>
   !stripCorrectionPrefix(editing ? correctionPrefixes() : [], text);
 
-/**
- * The box's longest text: in edit mode it leaves room for the API's «تصحيح: » (round 4 of #694,
- * the same limit as threadTextSchema), else WhatsApp's own.
- */
+/** In edit mode it leaves room for the API's correction prefix, as threadTextSchema does. */
 export const textMax = (editing: MessageView | null): number =>
   WA_TEXT_MAX - (editing ? CORRECTION_PREFIX_ROOM : 0);
 
-/**
- * The box's text target now, its «تعديل» session (taken at the tap) and its end once that text
- * went: its reply, or the edit it was sent from (never a newer one, #694 follow-up item 4).
- */
+/** An edit session ends only from its own tap, never a newer one (#694 follow-up item 4). */
 export function useTextTarget() {
   const { reply, setReply, editing, editSession, editSent } = useChatActions();
   const sent = (out: TextOut, session: string | null) => {

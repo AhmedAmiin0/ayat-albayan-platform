@@ -8,7 +8,7 @@ import {
   type AssistantTermsView,
   type BroughtByResult,
   type BroughtByView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

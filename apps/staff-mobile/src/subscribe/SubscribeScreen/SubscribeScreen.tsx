@@ -1,4 +1,4 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
@@ -29,7 +29,6 @@ import { useCreateSubscription, useSubscriptionQuote } from '@/subscribe/use-sub
 import { usePastUsedBefore } from '@/subscribe/UsedBeforeField';
 import type { StudentProfile, StudentRef } from '@ab/shared';
 
-/** studentId, the form's prefill (form-prefill) and, after a booking, the first lesson's day; renew from «جدّد الاشتراك». */
 type Params = FormPrefill & { studentId?: string; startsOn?: string; renew?: string };
 
 const back = () => backWithin('/inbox');
@@ -49,17 +48,10 @@ const familyOf = (p: StudentProfile | undefined) =>
   // docs/34 b: no family yet reads as the academy's zone (a data default, not a display).
   p ? { family: [p, ...p.siblings], tz: p.tz } : { family: [], tz: RIYADH_TZ };
 
-/** «يوسف · AB-0183». */
 const childLine = (s: StudentRef | undefined) =>
   s ? [s.name, s.code ? ltr(s.code) : null].filter(Boolean).join(' · ') : undefined;
 
-/**
- * /inbox/subscribe?studentId=… (R-SUB-01): «اشتراك جديد» / «جدّد الاشتراك» (its title) from a
- * chat, or right after booking a lead's package. The child (or a sibling), the calculator's inputs,
- * the API's price, the first day from chips (rule 6), then «اعمل الاشتراك» (POST /subscriptions),
- * «الاشتراك اتسجل» and back to the chat, now «مشترك». A first day before the academy's today (a booked
- * lesson already past) also asks «حلقات مستخدمة من الباقة» (owner 2026-10-28), sent only above 0.
- */
+/** A first day before the academy's today also asks lessons already used, sent only above 0. */
 export function SubscribeScreen() {
   const params = useLocalSearchParams<Params>();
   const first = params.studentId ?? '';
@@ -76,7 +68,7 @@ export function SubscribeScreen() {
   const save = useCreateSubscription();
   const priced = quote.isSuccess && !quote.isPlaceholderData;
   const used = usePastUsedBefore({ startsOn, quote: quote.data, now, today });
-  // «مبلغ مخصص» (owner 2026-11-02): off sends today's body, on the typed package price.
+  // Off sends the default body, on adds the typed package price.
   const custom = useCustomPrice(quote.data);
 
   return (

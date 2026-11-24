@@ -7,12 +7,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { StartDateEdit } from './start-date-edit.service';
 
-/**
- * «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms «تعديل بيانات الباقة», like
- * «تعديل عدد الحلقات المستخدمة» next to it: the system admin, and an assistant only when her
- * role holds it (never subscriptions.write, never subscriptions.set_start_date alone). ANY
- * student, as the used-before edit; teachers and families never.
- */
+/** Needs subscriptions.edit_terms (not set_start_date alone); never teachers or families. */
 @ApiTags('subscriptions')
 @ApiBearerAuth()
 @Permissions('subscriptions.edit_terms')

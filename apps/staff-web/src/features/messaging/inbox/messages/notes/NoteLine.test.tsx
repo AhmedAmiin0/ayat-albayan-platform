@@ -12,8 +12,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   apiSend: vi.fn(),
 }));
 
-// WhatsApp's edits and deletes (owner 2026-10-30): never a «[edit]» / «[revoke]» bubble; the
-// original shows its new text with «تم التعديل», or only «تم حذف هذه الرسالة».
+// WhatsApp edits and deletes never show as their own bubbles; the original reflects them.
 const NOW = new Date('2026-10-01T12:00:00Z');
 
 function bubble(patch: Partial<MessageView>) {

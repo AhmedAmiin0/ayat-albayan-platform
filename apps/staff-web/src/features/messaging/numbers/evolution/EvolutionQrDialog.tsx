@@ -9,11 +9,7 @@ import { useEvolutionQr } from './use-evolution';
 
 const e = t.numbers.evolution;
 
-/**
- * «اربط الرقم بمسح الرمز» (Baileys): fetched on open from Evolution's /instance/connect, with how
- * to scan it on the phone and «تحديث الرمز» (a QR expires in under a minute). The ban warning
- * comes first: never link the academy's main chat number.
- */
+/** A QR expires in under a minute; never link the academy's main chat number (ban risk). */
 export function EvolutionQrDialog({ view, onClose }: { view: NumberView; onClose: () => void }) {
   const qr = useEvolutionQr(view.id);
   return (

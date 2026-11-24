@@ -8,10 +8,7 @@ export function useSignedIn(): Me | null {
   return useContext(QueryClientContext)?.getQueryData(meQuery.queryKey) ?? null;
 }
 
-/**
- * «حذف من المنصة» for admin and sales, «إظهار» for the admin (owner 2026-10-30), from the signed-in
- * user (useSignedIn); the API enforces the same.
- */
+/** Hide for admin and sales, unhide for the admin; the API enforces the same. */
 export function useHideRights(): { hide: boolean; unhide: boolean } {
   const me = useSignedIn();
   return { hide: canHideMessages(me), unhide: canUnhideMessages(me) };

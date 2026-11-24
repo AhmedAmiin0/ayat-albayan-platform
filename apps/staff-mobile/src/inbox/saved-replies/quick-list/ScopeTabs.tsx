@@ -7,7 +7,6 @@ const TABS = (): { value: SavedReplyScope; label: string }[] => [
   { value: 'mine', label: t.savedReplies.tabMine },
 ];
 
-/** «المشتركة / ردودي» as a compact segmented control (two equal halves, 36pt, 44pt hit area). */
 export function ScopeTabs({ value, onChange }: { value: SavedReplyScope; onChange: (next: SavedReplyScope) => void }) {
   const { color } = useTheme();
   return (

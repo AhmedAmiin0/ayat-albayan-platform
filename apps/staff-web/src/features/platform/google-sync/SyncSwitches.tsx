@@ -19,7 +19,7 @@ interface Props {
   onNote: (message: string) => void;
 }
 
-/** «التشغيل»: sync on/off (ON asks first — naming its targets when the mode is live —, OFF is immediate), the mode, the window. */
+/** ON asks first, naming its targets in live mode; OFF is immediate. */
 export function SyncSwitches({ status, onNote }: Props) {
   const save = useSaveSettings(onNote);
   const [confirming, setConfirming] = useState(false);

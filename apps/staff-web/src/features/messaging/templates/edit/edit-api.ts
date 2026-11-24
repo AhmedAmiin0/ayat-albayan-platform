@@ -5,8 +5,7 @@ import { z } from 'zod';
 import { templateErrorText } from '@/features/messaging/templates/api';
 import { ApiError, apiFetch, apiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
 
-// «تعديل» and sales authoring (owner 2026-11-14). The admin edits through templates.manage's route;
-// an author (templates.author) lists, creates and edits through /messaging/templates/authored.
+// The admin edits via templates.manage; authors use /messaging/templates/authored.
 
 const AUTHORED = '/messaging/templates/authored';
 const path = (key: string) => encodeURIComponent(key);

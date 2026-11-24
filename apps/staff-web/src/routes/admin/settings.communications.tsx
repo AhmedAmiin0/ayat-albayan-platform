@@ -3,11 +3,7 @@ import { CommunicationsPage } from '@/features/platform/settings/pages/Communica
 import { communicationsSearch, parseCommunicationsSearch, shownTab, timingRedirect } from '@/features/platform/settings/pages/page-search';
 import { LeaveGuard } from '@/features/platform/settings/values/sheet/LeaveGuard';
 
-/**
- * /admin/settings/communications «التواصل» — docs/23 §2d, docs/26b §3: one tab at a time (`?tab=`),
- * «نظرة عامة» by default; `?audience=` opens «الإشعارات» on that audience. The old `?tab=timing` goes on to «القيم» › «الرسائل». Leaving the page with
- * unsaved «الإشعارات» rows asks first, naming them (switching tabs keeps them, so it never asks).
- */
+/** docs/23 §2d, docs/26b §3: old ?tab=timing redirects; unsaved rows ask before leaving. */
 export const Route = createFileRoute('/admin/settings/communications')({
   validateSearch: parseCommunicationsSearch,
   beforeLoad: ({ search }) => {

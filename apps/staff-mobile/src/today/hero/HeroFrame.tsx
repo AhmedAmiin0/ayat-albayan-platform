@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
 
 interface HeroFrameProps {
-  /** «جارية الآن» or «الحلقة التالية · بعد 12 دقيقة». */
   lead: string;
   /** At the end of the lead line: the status chip, or the teacher's word (none: nothing). */
   chip?: ReactNode;

@@ -1,7 +1,7 @@
 import { formatAmount, parseAmount, receiptShortfall } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** «المبلغ أقل من المستحق بـ 1 ر.س…» before saving a receipt short of what is due, else null (never blocks). */
+/** Null when not short; it never blocks the save. */
 export function shortfallText(input: { amount: number; due: number; currencyLabel: string }): string | null {
   const short = receiptShortfall(input);
   if (short <= 0) return null;

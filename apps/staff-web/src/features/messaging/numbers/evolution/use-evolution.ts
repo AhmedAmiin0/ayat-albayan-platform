@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { evolutionQrQuery, evolutionStateQuery } from './evolution-api';
 
-/** «افحص الاتصال»: asked only on the button (never on load), each press asks again. */
+/** Asked only on the button, never on load. */
 export function useEvolutionCheck(id: string) {
   const query = useQuery({ ...evolutionStateQuery(id), enabled: false });
   return {
@@ -12,7 +12,6 @@ export function useEvolutionCheck(id: string) {
   };
 }
 
-/** The QR dialog: fetched when it opens, «تحديث الرمز» asks Evolution again. */
 export function useEvolutionQr(id: string) {
   const query = useQuery(evolutionQrQuery(id));
   return {

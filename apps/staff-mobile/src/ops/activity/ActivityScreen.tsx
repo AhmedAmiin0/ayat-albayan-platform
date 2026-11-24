@@ -14,11 +14,7 @@ const keyOf = (r: ActivityView) => r.id;
 const renderRow = ({ item }: { item: ActivityView }) => <ActivityRow row={item} />;
 const back = () => backWithin('/more');
 
-/**
- * «سجل النشاط» (R-NFR-08, admin only): GET /activity, newest first, 25 a page. Filters are the API's
- * own (role, item, from / to day); the phone has no column sort. Offline the loaded rows stay. The list
- * screens' compact top (owner 2026-10-28): «سجل النشاط · 120», the last update under it only when offline.
- */
+/** R-NFR-08: admin only, 25 per page; filters are the API's; offline keeps loaded rows. */
 export function ActivityScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();

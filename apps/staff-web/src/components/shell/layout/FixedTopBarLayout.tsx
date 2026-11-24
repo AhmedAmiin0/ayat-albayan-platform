@@ -17,13 +17,7 @@ export interface FixedTopBarLayoutProps {
   children: ReactNode;
 }
 
-/**
- * The teacher's (and the salesperson's) layout: a fixed viewport-high frame. From 900px the
- * header, the row of links and the running head stay put; below it ONE compact bar whose
- * «القائمة» opens the same links in a sheet. The page fills the rest and ONLY its content scrolls.
- * The inbox (every page when `wide`) takes the full width, and from 1340px its clocks sit inside the
- * header row (no running-head row).
- */
+/** Only the page content scrolls; from 1340px the inbox's clocks sit in the header row. */
 export function FixedTopBarLayout({ topNav, bar, wide = false, children }: FixedTopBarLayoutProps) {
   const { data: me } = useQuery(meQuery);
   const inbox = isInboxPath(useRouterState({ select: (s) => s.resolvedLocation?.pathname }));

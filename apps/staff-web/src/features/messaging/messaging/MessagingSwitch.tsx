@@ -17,7 +17,7 @@ const s = t.templates.settings;
 const warning =
   'flex items-start gap-2 rounded-md bg-danger-soft px-3 py-2.5 text-sm text-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_35%,transparent)]';
 
-/** The cut-over is marked (and unmarked, both asking first) on «التواصل» › «الحماية» (docs/26b §6a 1.2–1.3). */
+/** docs/26b §6a 1.2-1.3: the cut-over is marked and unmarked on the safety settings page. */
 function SafetyLink() {
   return (
     <Link
@@ -30,14 +30,7 @@ function SafetyLink() {
   );
 }
 
-/**
- * The admin's messaging kill switch (settings.messaging_enabled, docs/12 §3.1). Until the owner
- * marks the number moved off the CRM (crm_cutover_done, docs/09 step 3, marked on «الحماية») a
- * warning stays on screen (a rollback to the CRM brings it back); WhatsApp not set up is named (the switch alone can't
- * open it) and the chip says so. It is the only switch for sending (docs/23: no env fuse), so both ways
- * ask first with cancel as the default: ON says how many queued messages go out at once, OFF who stops
- * getting messages. OFF applies at the next message: the sender reads it before every one.
- */
+/** The only sending gate (docs/23: no env fuse); OFF applies before the next message is sent. */
 export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
   const queryClient = useQueryClient();
   const gate = useQuery(sendGateQuery);

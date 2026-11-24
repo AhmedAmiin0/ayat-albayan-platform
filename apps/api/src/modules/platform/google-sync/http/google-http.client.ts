@@ -40,7 +40,7 @@ export class GoogleHttpClient implements GoogleClient {
   batchUpdate = (input: { spreadsheetId: string; requests: readonly object[] }) => this.sheets.batchUpdate(input);
 }
 
-/** The app's factory: reads the Google env at call time (the client id/secret may change in «التكاملات»). */
+/** Reads the Google env at call time, since the client id or secret may change. */
 export function httpFactory(env: () => GoogleEnv | null): GoogleClientFactory {
   return {
     client(refreshToken: string): GoogleClient {

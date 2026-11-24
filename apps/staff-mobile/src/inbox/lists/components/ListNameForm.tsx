@@ -4,7 +4,6 @@ import { View } from 'react-native';
 import { t, Button, Field, ErrorLine } from '@ab/mobile-kit';
 
 export interface ListNameFormProps {
-  /** «إنشاء» or «حفظ». */
   submitLabel: string;
   onSubmit: (name: string) => void;
   /** The name being renamed; empty for a new list. */
@@ -14,10 +13,7 @@ export interface ListNameFormProps {
   error?: string | null;
 }
 
-/**
- * «اسم القائمة» and its button: 1–30 characters after trimming (the shared chatListNameSchema), the
- * button stays off until the name is valid, so only the server's refusals need a line.
- */
+/** 1 to 30 characters after trimming (chatListNameSchema); only server refusals need a line. */
 export function ListNameForm({ submitLabel, onSubmit, initial = '', busy = false, error }: ListNameFormProps) {
   const [value, setValue] = useState(initial);
   const name = chatListNameSchema.safeParse(value);

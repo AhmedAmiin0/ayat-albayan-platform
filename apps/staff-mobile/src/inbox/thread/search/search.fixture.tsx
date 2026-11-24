@@ -8,8 +8,6 @@ import type { useThread } from '@/inbox/thread/hooks/use-thread';
 import { ChatSearchButton } from './ChatSearchButton';
 import { TITLE } from './search.data';
 
-// The chat search tests' chat (test-only): the header with «بحث», the list, the notice.
-
 type ThreadQuery = ReturnType<typeof useThread>;
 const hit = (m: MessageView) => ({ id: m.id, created_at: m.created_at, snippet: m.body ?? '' });
 

@@ -8,10 +8,7 @@ import { useClock } from '@ab/web-kit/lib/clock';
 
 const c = t.notificationCatalogue;
 
-/**
- * Each WhatsApp number as the last good «افحص الخطوط» kept it (docs/23a §E H2): shown without a
- * new Meta call; «لم يُفحص الرقم بعد» until a check succeeds once.
- */
+/** Shown from the last good check without a new Meta call (docs/23a §E H2). */
 export function NumbersLine({ lines }: { lines: readonly LineHealthView[] }) {
   const clock = useClock();
   return (

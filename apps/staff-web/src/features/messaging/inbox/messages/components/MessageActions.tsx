@@ -9,14 +9,7 @@ import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 import { canRetry, canSendByHand, isHandedOff } from '@/features/messaging/inbox/messages/lib/message-notes';
 
-/**
- * A send that didn't go out (R-MSG-03/05): «جرّب تاني» puts a failed row back in the queue (M1);
- * «ابعتها بنفسك من واتساب» opens wa.me with the text prefilled and tells the server (M3), which
- * holds the row so the sender never sends it too. The question «بعتّها؟» then comes from the row
- * itself, so it survives a refresh: yes records the manual send (M2), no puts it back (M1).
- * WhatsApp opens only once the server holds the row: if the sender claimed it meanwhile (409
- * not_manual) the admin is told it is going out, so the family never gets it twice.
- */
+/** WhatsApp opens only once the server holds the row, so it is never sent twice (R-MSG-03). */
 export function MessageActions({ message: m }: { message: MessageView }) {
   const queryClient = useQueryClient();
   const answered = (row: MessageView) => {

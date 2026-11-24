@@ -1,8 +1,4 @@
-// The unsent reply of each chat, kept for this tab's life (W5): it survives a thread switch (the
-// pane is keyed by phone), the «قالب» toggle and the window flipping. A failed send is kept with
-// its clientRequestId: sending that same text again reuses the id (rule 8), any other text gets a
-// fresh one. Subscribable, so a remounted composer sees a failure restored by the old one. A
-// sign-out bumps the generation: a send settling after it, started before, writes nothing back.
+// Unsent replies per chat live for the tab; a failed send keeps its clientRequestId (rule 8).
 
 import { SEND_UNCONFIRMED } from '@ab/client-core';
 

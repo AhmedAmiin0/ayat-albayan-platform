@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RowBounds } from './row-window';
 
 export interface LessonRowFieldsProps {
-  /** 0-based: «اليوم 1» … */
+  /** 0-based. */
   index: number;
   row: LessonRow;
   bounds: RowBounds;
@@ -16,7 +16,6 @@ export interface LessonRowFieldsProps {
   onRemove?: (() => void) | undefined;
   /** The date's error (the same weekday twice, or not in one week). */
   dateError?: string | undefined;
-  /** «بتوقيتك …، عند المعلم/ة …» once the time is set. */
   beside: string;
   /** The row's notice (RowNotice) once both are set. */
   children?: React.ReactNode;

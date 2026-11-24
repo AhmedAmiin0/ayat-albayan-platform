@@ -48,7 +48,7 @@ interface Props {
   problem?: (error: unknown) => string;
 }
 
-/** A 403 with opens_at reads «تُفتح الساعة …»; every other code has its own line. */
+/** A 403 with opens_at says when it opens; every other code has its own line. */
 function lessonProblem(error: unknown, cycle: ClockCycle): string {
   const opens = error instanceof ApiError && error.status === 403 ? opensAtOf(error) : null;
   return opens !== null ? opensAtText(opens, cycle) : classroomErrorText(error);

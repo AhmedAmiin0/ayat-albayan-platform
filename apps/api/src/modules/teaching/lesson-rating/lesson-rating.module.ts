@@ -9,12 +9,7 @@ import { RatingReads } from './rating.reads';
 import { RatingSendService } from './rating.send.service';
 import { RatingStore } from './rating.store';
 
-/**
- * «تقييم الحلقة» by WhatsApp buttons (migration 195, docs/12 §2.1): the automatic lesson_rating after
- * a lesson took place (RatingJob), the admin's «إرسال تقييم الحلقة» (POST /threads/:phone/rating),
- * and RatingStore for the webhook's button taps. The sender, registry and views come from the global
- * WhatsappModule; LessonEvents is global, so the lessons module never imports this one.
- */
+/** Lesson rating by WhatsApp buttons (migration 195, docs/12 §2.1); LessonEvents is global. */
 @Module({
   imports: [InboxModule],
   controllers: [RatingController],

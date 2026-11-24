@@ -1,3 +1,4 @@
+import type { SignedDownload, SignedUpload } from '@ab/shared';
 import {
   expenseCreateSchema,
   expenseListQuery,
@@ -6,9 +7,7 @@ import {
   monthStart,
   type ExpenseView,
   type ExpenseYearView,
-  type SignedDownload,
-  type SignedUpload,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

@@ -1,11 +1,8 @@
-import { isPackageEnded, renewalPricing, type LastPackage, type StudentStatus } from '@ab/shared';
+import { isPackageEnded } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
+import { renewalPricing, type LastPackage } from '@ab/money';
 
-// «جدّد الاشتراك» on the admin student file (owner 2026-10-15): once the package ended
-// (pending_renewal, expired), and ANY time the student has a package (owner 2026-11-17: the new
-// package starts on the day picked on the subscribe screen). It opens the existing «اشتراك
-// جديد» screen in the students tab, prefilled from the student's last package (renewalPricing,
-// shared with web: its tier or custom count, lesson length, discount and country), titled as a
-// renewal.
+// Renew any time the student has a package, prefilled from the last one (shared with web).
 
 interface RenewHref {
   pathname: '/students/subscribe';

@@ -18,13 +18,7 @@ interface CourseCardPanelProps {
 const GROUP = 'grid content-start gap-3';
 const HEAD = 'text-xs font-semibold text-ink-3';
 
-/**
- * «الدورة والباقة» (owner 2026-11-17, board CourseXWebPanel) on the student's file: «بقيت N حلقات»
- * with the package's status, the package and course lines, «الحلقات القادمة» (each opens its
- * drawer), the pause's banner, then two groups: «الدورة» («إيقاف مؤقت», «تغيير المعلم», «تغيير
- * موعد الحلقات», «مدّ الجدول») and «الباقة والمدفوعات» («إلغاء الاشتراك»), each behind its key,
- * with what it does. The moves need a booked course (no dead end on course_not_found).
- */
+/** Each action behind its key; moves need a booked course (no dead end on course_not_found). */
 export function CourseCardPanel({ studentId, tree = 'admin', chatPhone }: CourseCardPanelProps) {
   const card = useQuery(courseCardQuery({ studentId, tree })).data;
   const [notice, setNotice] = useState<string | null>(null);

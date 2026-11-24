@@ -10,10 +10,7 @@ import { TimeOffDialog } from './TimeOffDialog';
 import { formatTimeOff } from './time-off';
 import { useClock } from '@ab/web-kit/lib/clock';
 
-/**
- * «الإجازات» panel (docs/07 §8): date span, reason, delete; add opens a dialog. R-TCH-02.
- * TODO(R-SCH-07): the impact note «{n} حلقات واقعة في الإجازة دي…» + «انقل الحلقات» once lessons exist.
- */
+/** docs/07 §8, R-TCH-02. */
 export function TimeOffList({ teacherId }: { teacherId: string }) {
   const clock = useClock();
   const queryClient = useQueryClient();

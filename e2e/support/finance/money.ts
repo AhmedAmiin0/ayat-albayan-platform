@@ -1,9 +1,7 @@
 import { quote } from '@ab/money';
 import { seedFamily, withSql, type Family } from '../core/schedule';
 
-// Seed for journeys 2 and 3 (docs/03 §5): «أبرار» has a lesson today that has already started,
-// with a student whose package has 3 lessons left (R-SUB-02 fires at 2). Deterministic: call
-// resetAbrar() first; every call makes a fresh family. Prices come from the catalog (docs/08).
+// Journeys 2 and 3 (docs/03 §5): 3 lessons left, R-SUB-02 fires at 2; call resetAbrar() first.
 
 const MINUTE = 60_000;
 const DAY = 86_400_000;
@@ -57,11 +55,7 @@ export interface PackageSeed extends Family {
   price: number;
 }
 
-/**
- * «باقة الحلقة الأسبوعية» (4 × 90 min, SAR 145 at the catalog price) started a week ago, one
- * lesson completed 3 days ago, one lesson today → 3 left. `paid: false` (journey 3) leaves the
- * package `unpaid`; `paid: true` (journey 2) records the bank transfer and makes it `active`.
- */
+/** 4 x 90 min weekly package; `paid: false` leaves it `unpaid`, `paid: true` makes it `active`. */
 export async function seedPackageStudent(input: {
   teacherId: string;
   paid: boolean;

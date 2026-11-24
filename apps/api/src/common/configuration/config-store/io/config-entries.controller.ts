@@ -3,7 +3,7 @@ import {
   configEntryPatchSchema,
   type ConfigEntriesResponse,
   type ConfigEntryResult,
-} from '@ab/shared';
+} from '@ab/settings';
 import { Body, Controller, Get, Param, Patch, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '@/common/http/http';

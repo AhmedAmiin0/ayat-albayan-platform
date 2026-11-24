@@ -5,9 +5,7 @@ import { whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// «القوالب» for sales (owner 2026-11-14): templates.author. The permission matrix, the chat
-// line and the allow-list flag, the 5-a-day limit, and that none of it reaches templates.manage.
-// No Meta call.
+// Permission matrix, chat line, allow-list flag and the 5-a-day limit; no Meta call.
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const URL = '/messaging/templates/authored';

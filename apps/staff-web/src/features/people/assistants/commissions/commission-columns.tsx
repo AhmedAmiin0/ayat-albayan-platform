@@ -16,7 +16,7 @@ const L = t.assistants.ledger;
 
 type Handlers = { canWrite: boolean; onVoid: (c: AssistantCommissionView) => void };
 
-/** «أول اشتراك» (the full commission) or «تجديد (n%)» (its share, owner 2026-10-26). */
+/** A renewal earns only its share percent of the full first-subscription commission. */
 const kindText = (c: AssistantCommissionView): string => (c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first);
 
 /** Commission ledger: who earned what on which student's subscription (first or renewal); void with a reason. */

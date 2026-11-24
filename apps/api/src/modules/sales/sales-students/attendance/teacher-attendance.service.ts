@@ -13,12 +13,7 @@ interface TeacherAttendanceInput {
   month?: string | undefined;
 }
 
-/**
- * The teacher's «سجل الحضور» of a student she may open (docs/46 C5, docs/47 TeacherStudentAccess):
- * only her own lessons with that student (all time, month by month in her zone), the teacher's
- * reading (an auto-held lesson with no report is «لم يُسجَّل»), and per row her report's state
- * (write / edit inside her window / view). Another teacher's lesson never shows.
- */
+/** docs/46 C5: only her own lessons with the student, in her zone; others never show. */
 @Injectable()
 export class TeacherAttendanceService {
   constructor(

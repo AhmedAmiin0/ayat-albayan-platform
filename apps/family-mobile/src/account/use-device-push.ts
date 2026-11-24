@@ -15,10 +15,7 @@ async function switchDevicePush(on: boolean): Promise<void> {
   await APPLY[on ? 'on' : 'off']();
 }
 
-/**
- * «الإشعارات على هذا الجهاز» (docs/50 §6): `on` is undefined until the saved choice is read. Off
- * unregisters the token (DELETE /me/push-tokens/:token) and keeps registerPush away; on registers.
- */
+/** docs/50 §6: on is undefined until read; off unregisters the token and blocks registerPush. */
 export function useDevicePush() {
   const client = useQueryClient();
   const saved = useQuery({

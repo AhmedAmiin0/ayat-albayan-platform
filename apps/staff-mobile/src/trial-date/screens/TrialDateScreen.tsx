@@ -7,12 +7,7 @@ import { TrialDateFlow } from './TrialDateFlow';
 
 type Params = { studentId?: string; name?: string; program?: string };
 
-/**
- * «موعد تجريبي جديد» for one existing student (owner 2026-10-25):
- * /students/trial-date/:studentId (admin, from the student file, in the Students tab's stack) and
- * /sales/inbox/trial-date?studentId (a salesperson, from her family chat, inside (sales-chat)).
- * A link without the student says «غير موجود». The sales tree books through /sales/booking (her own students only), the admin through /booking.
- */
+/** Admin books through /booking, the sales tree through /sales/booking for her own students. */
 export function TrialDateScreen() {
   const { studentId = '', name = '', program } = useLocalSearchParams<Params>();
   const base = useTreeBase();

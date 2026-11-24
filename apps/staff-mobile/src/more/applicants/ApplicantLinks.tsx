@@ -9,10 +9,7 @@ interface Props {
   recitation: string | null | undefined;
 }
 
-/**
- * «فتح السيرة الذاتية» | «فتح تسجيل التلاوة» (one ButtonRow, outlined with the open icon: docs/07 §6): the
- * stored links, opened outside the app. Nothing if neither exists.
- */
+/** docs/07 §6: one ButtonRow; links open outside the app; nothing if neither exists. */
 export function ApplicantLinks({ cv, recitation }: Props) {
   const [failed, setFailed] = useState(false);
   const open = (url: string) => {

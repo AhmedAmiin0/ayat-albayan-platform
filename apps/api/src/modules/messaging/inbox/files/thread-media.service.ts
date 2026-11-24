@@ -19,12 +19,7 @@ interface PickedFile {
   file: InboundFile;
 }
 
-/**
- * The files a guardian sent in one chat, for «من الشات» on the booking screen (R-MSG-06) and
- * the sales receipt picker: photos and PDFs, never a sticker or a voice note (receiptMime). The
- * list is metadata only; each thumbnail is fetched lazily through `file`, which downloads from
- * Meta on first use and returns a signed URL of our own copy.
- */
+/** Photos and PDFs only (R-MSG-06); files are fetched from Meta lazily and signed. */
 @Injectable()
 export class ThreadMediaService {
   constructor(
@@ -74,14 +69,7 @@ export class ThreadMediaService {
     return { msg, file: await this.media.cache(servable({ ...msg, media_mime: mime })) };
   }
 
-  /**
-   * W6 only (a chat bubble): any file of this phone's chat. The ownership check runs first (404
-   * message_not_found). A stored outbound file (D2: staff sent it, out/…; or a cached echo) is signed
-   * as stored. Else chatServable: inbound images / PDFs, voice notes and videos (isChatViewMime), and
-   * echoes of the WhatsApp Business app (outbound with Meta's media id), cached from WhatsApp on first
-   * use; an outbound row with neither (imported history) is 410 media_expired. `download` («تنزيل»): the URL saves
-   * the file under downloadName (Content-Disposition) instead of opening it.
-   */
+  /** W6 only: ownership checked first (404); rows with no stored file are 410. */
   async bubbleFile(input: { phone: string; messageId: string; download?: boolean }): Promise<ThreadFile> {
     const { msg, file } = await this.bubbleObject(input);
     const named = input.download ? { download: downloadName(msg) } : {};
@@ -92,7 +80,7 @@ export class ThreadMediaService {
   /** bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file under the same rules. */
   async bubbleObject(input: { phone: string; messageId: string }): Promise<{ msg: MediaMessage; file: InboundFile }> {
     const msg = await this.queries.message(input.messageId);
-    // A message hidden from the platform keeps its file away from staff too («حذف من المنصة»).
+    // A message hidden from the platform keeps its file away from staff too.
     if (!msg || msg.phone_e164 !== input.phone || msg.hidden_at) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     if (msg.direction === 'outbound' && msg.media_path) {
       return { msg, file: { bucket: BUCKETS.waMedia, path: msg.media_path, mime: baseMime(msg.media_mime) } };

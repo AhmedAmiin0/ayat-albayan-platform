@@ -14,8 +14,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
-// apps/api assistant-pay module (owner, 2026-10-06; the salesperson, «مسؤول/ة المبيعات», is the base role sales). Reads need
-// assistantpay.read, writes assistantpay.write, approve assistantpay.approve. Amounts are per currency.
+// Reads need assistantpay.read, writes .write, approval .approve; amounts are per currency.
 export type {
   AssistantCommissionView,
   AssistantStatementView,
@@ -88,7 +87,6 @@ export async function uploadStatementReceipt(file: File, assistantId: string): P
   return signed.path;
 }
 
-/** Who brought a student and when (the profile's «جُلب بواسطة»). */
 export type BroughtBy = { assistant: { id: string; name: string } | null; brought_at: string | null };
 
 export const broughtByQuery = (studentId: string) =>

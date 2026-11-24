@@ -11,7 +11,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// docs/39: on a crm line «إرسال إلى ميتا» shows exactly when the API submits through the CRM.
+// docs/39: on a crm line submit shows exactly when the API submits through the CRM.
 
 const NEW = template({ key: 'renewal_due', meta_name: 'renewal_due', status: 'not_submitted', meta_id: null });
 const PDF = template({ key: 'report_ready', meta_name: 'report_ready', status: 'not_submitted', header_format: 'document' });

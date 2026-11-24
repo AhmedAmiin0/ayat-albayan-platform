@@ -7,7 +7,7 @@ export { commissionStatusStyle } from '@ab/money';
 /** The API's P0001 codes and the schema's messages, in Arabic. */
 export const errorText = (e: unknown): string => apiErrorText(e, { ...t.assistants.error });
 
-/** A form field's error key (a schema message) → text; unknown keys read «تحقق من هذه القيمة». */
+/** Unknown keys fall back to a generic check-this-value message. */
 export function fieldError(key: string | undefined): string | undefined {
   if (key === undefined) return undefined;
   const table: Record<string, string> = { ...t.assistants.error };

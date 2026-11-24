@@ -2,7 +2,6 @@ import { Pressable } from 'react-native';
 import { shape, type, useTheme, AppText, Chevron } from '@ab/mobile-kit';
 
 interface RangeButtonProps {
-  /** «سورة الملك · الآيات 1–15», or «اختر السورة والآيات» on an empty part. */
   label: string;
   onPress: () => void;
   disabled?: boolean;

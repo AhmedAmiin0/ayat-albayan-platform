@@ -9,11 +9,7 @@ import { ChannelReadState } from './channel-read-state';
 /** A participant's view of a closed channel has no messages (ChannelService.page). */
 const closed = (actor: ChannelActor): boolean => actor.mode === 'participant' && !actor.open;
 
-/**
- * GET …/messages/:messageId/reads («معلومات الرسالة»): any participant or monitor ChannelAccess
- * let into this channel; a message of another channel is 404 message_not_found; a participant's
- * closed channel is 409 channel_not_open.
- */
+/** Any participant or monitor let in; other channel's message 404; closed channel 409. */
 @Injectable()
 export class ChannelReadsService {
   constructor(

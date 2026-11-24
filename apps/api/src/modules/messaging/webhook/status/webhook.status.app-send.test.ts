@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import { statusPatch } from './webhook.status';
 
-// After the attach (docs/19) a «أرسل عبر واتساب» row is a plain sent row with the app's wamid:
-// WhatsApp's statuses for that wamid move it like any other, forward only.
+// After the attach (docs/19) WhatsApp's statuses move the row forward only, like any other.
 
 const at = new Date('2026-11-06T10:07:00Z');
 const event = (status: StatusEvent['status']): StatusEvent => ({

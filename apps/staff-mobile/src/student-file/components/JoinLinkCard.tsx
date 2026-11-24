@@ -13,11 +13,7 @@ function issueJoinLink(studentId: string): Promise<{ url: string }> {
   return apiSend<{ url: string }>('POST', `/students/${studentId}/join-link`);
 }
 
-/**
- * «رابط دخول الطالب» (web: StudentJoinLink): the link goes through the system share sheet (it has
- * Copy; core/lib/clipboard is not wired here yet). Only the hash is stored and the old link is already revoked, so the new
- * link stays on screen (selectable, with a re-share button) until the card goes away.
- */
+/** Only the hash is stored and the old link is revoked, so the new one stays on screen. */
 export function JoinLinkCard({ studentId, studentName }: { studentId: string; studentName: string }) {
   const [asking, setAsking] = useState(false);
   const [url, setUrl] = useState<string | null>(null);

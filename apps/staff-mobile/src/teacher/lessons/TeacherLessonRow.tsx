@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { AgendaLessonRow } from '@/calendar';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
@@ -15,11 +15,10 @@ interface TeacherLessonRowProps {
   /** A tap on the line opens TeacherLessonSheet. */
   onOpen: (lesson: LessonView) => void;
   onReport: (lessonId: string) => void;
-  /** Says what landed («سأحضر»). */
   onNotice: (text: string) => void;
   /** An ended row in the fold: the word and only its report lead (owner 2026-11-14). */
   quiet?: boolean;
-  /** «صفوف مضغوطة» (owner 2026-11-14): no students' clocks line. */
+  /** Compact rows drop the students' clocks line. */
   compact?: boolean;
 }
 
@@ -28,7 +27,7 @@ const CHIP_MAX = 140;
 /** No move on a teacher's row (the API never offers her `reschedule`). */
 const noMove = () => undefined;
 
-/** Outlined on a row, except the live join (docs/48: never five filled «سأحضر» on one day). */
+/** Outlined on a row except the live join, never many filled buttons on one day (docs/48). */
 const rowVariant = (lead: LeadAction, live: boolean): ButtonVariant =>
   lead === 'join' && live ? 'primary' : 'secondary';
 
@@ -38,11 +37,7 @@ const QUIET_LEADS: readonly LeadAction[] = ['report'];
 const rowLead = (lead: string | null, quiet = false): LeadAction | undefined =>
   (quiet ? QUIET_LEADS : OPEN_LEADS).find((a) => a === lead);
 
-/**
- * One of her lessons as a compact row (docs/48): time · names · «عند الطالب 15:00» · her word
- * (teacher-word) and ONE lead (lessonPlan) drawn by TeacherRowAction, never JoinAround's join,
- * which stays live two hours past the end. The line opens the sheet with every action.
- */
+/** One lead action per row (docs/48), never JoinAround's join, which stays live 2 h past end. */
 export function TeacherLessonRow(p: TeacherLessonRowProps) {
   const { lesson } = p;
   const now = useNow();
@@ -65,7 +60,7 @@ export function TeacherLessonRow(p: TeacherLessonRowProps) {
       meta={p.compact ? '' : studentClocks(lesson, { tz, cycle })}
       word={word?.label}
       chip={
-        // Capped so a long word («سيُرسل إلى الأسرة بعد …») never squeezes the names at 390 pt.
+        // Capped so a long word never squeezes the names at 390 pt.
         <View style={{ maxWidth: CHIP_MAX }}>
           {word ? (
             <StatusChip tone={word.tone} glyph={word.glyph} label={word.label} size="sm" />

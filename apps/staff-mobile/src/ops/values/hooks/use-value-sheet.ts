@@ -1,18 +1,18 @@
-import { SETTING_DEFAULTS, type SettingKey } from '@ab/shared';
+import { SETTING_DEFAULTS, type SettingKey } from '@ab/settings';
 import { useState } from 'react';
 import { ApiError, t } from '@ab/mobile-kit';
 import { ascii } from '@/ops/shared/ascii-digits';
 import { confirmOf, draftOf, parseDraft, sameValue, type Draft } from '@/ops/values/lib/value-draft';
 import { useSaveValue } from './use-save-value';
 
-/** edit: the editor; confirm: «احفظ» asked its question; closing: closing would drop the edit. */
+/** closing means closing would drop the unsaved edit. */
 type SheetStage = 'edit' | 'confirm' | 'closing';
 
 interface ValueSheetOptions {
   valueKey: SettingKey;
   /** The value GET /settings holds now. */
   saved: unknown;
-  /** Called after a save the server wrote (the screen announces «تم حفظ القيمة»). */
+  /** Called after the server wrote the save. */
   onSaved: () => void;
   onClose: () => void;
 }
@@ -84,7 +84,7 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
     saving: save.isPending,
     setDraft,
     setTyped,
-    /** «أعد القيمة الافتراضية»: the default goes into the draft; «احفظ» saves it. */
+    /** Only puts the default into the draft; saving is separate. */
     resetDefault: () => setDraft(draftOf(valueKey, SETTING_DEFAULTS[valueKey])),
     submit,
     confirmSave,

@@ -1,4 +1,5 @@
-import { teacherName, type TeacherGate } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
+import type { TeacherGate } from '@ab/settings';
 import { type Href, router } from 'expo-router';
 import { AccountHeaderAvatar } from '@/account/components/AccountHeaderAvatar';
 import { AccountRow } from '@/account/components/AccountRow';
@@ -23,12 +24,12 @@ interface MoreRow { title: string; href: Href; visible: (open: GateOpen) => bool
 
 const always = (): boolean => true;
 const gated = (gate: TeacherGate) => (open: GateOpen): boolean => open(gate);
-/** «كشوف الشهر» is one tap inside «أرباحي»; with «أرباحي» off it gets its own row. */
+/** Statements live inside earnings; with earnings off they get their own row. */
 const statementsAlone = (open: GateOpen): boolean => !open('earnings') && open('statements');
 
-/** The rows in order; the gated ones follow the academy switches (settings «صفحات المعلم»). */
+/** Gated rows follow the academy's teacher page switches. */
 const ROWS: readonly MoreRow[] = [
-  // Owner 2026-11-14: a main page; the native tab bar holds five, so it leads «المزيد».
+  // The native tab bar holds five, so availability leads the more screen.
   { title: t.availability.title, href: '/teacher/more/availability', visible: always },
   { title: t.teacherNav.students, href: '/teacher/more/students', visible: always },
   { title: t.teacherNav.messages, href: '/teacher/more/messages', visible: gated('messages') },
@@ -38,11 +39,7 @@ const ROWS: readonly MoreRow[] = [
   { title: t.mobileClassroom.meetingsRow, href: '/teacher/more/meetings', visible: gated('meetings') },
 ];
 
-/**
- * The teacher's «المزيد» (R-TCH-02, R-TCH-04, R-MOB-02): my students (subscribed and trial), my earnings per lesson (monthly statements one tap in), my weekly
- * availability and time-off (read-only; the admin edits them), «حسابي» (R-ACC-01), the appearance, the language,
- * sign-out. The rows sit in one inset card inside the gutter (owner 2026-10-28: one container rule).
- */
+/** Teacher more (R-TCH-02, R-TCH-04, R-MOB-02); availability is read-only, the admin edits it. */
 export function TeacherMoreScreen() {
   const me = useTeacherMe();
   const open = useTeacherGateOpen();

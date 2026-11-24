@@ -9,10 +9,7 @@ export interface TrialDateButtonProps {
   onOpen: () => void;
 }
 
-/**
- * «موعد تجريبي جديد» (owner 2026-10-25). A subscriber gets it disabled with the reason beside it
- * («هذا الطالب مشترك…»), so the admin knows to change the lesson days instead.
- */
+/** A subscriber gets it disabled with the reason, so the admin changes the lesson days instead. */
 export function TrialDateButton({ allowed, onOpen }: TrialDateButtonProps) {
   const reasonId = useId();
   return (

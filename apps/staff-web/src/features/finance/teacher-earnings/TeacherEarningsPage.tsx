@@ -19,10 +19,6 @@ import { PaymentsHistory } from './payments/PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
-/**
- * /admin/teachers/:teacherId/earnings «مستحقات المعلم»: balance cards, the sessions with ticks, a
- * pay dialog for the ticked ones (or everything outstanding), and the payments made so far.
- */
 export function TeacherEarningsPage({ teacherId }: { teacherId: string }) {
   const scope: Scope = { kind: 'admin', teacherId };
   const balance = useQuery(balanceQuery(scope));

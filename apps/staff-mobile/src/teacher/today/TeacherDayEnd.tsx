@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
@@ -21,11 +21,7 @@ interface TeacherDayEndProps {
 const titleStyle = { fontFamily: type.ui[700], fontSize: 17, lineHeight: 28 } as const;
 const lineStyle = { fontFamily: type.ui[400], fontSize: type.size.sm, lineHeight: 22 } as const;
 
-/**
- * Nothing open left today, or no lessons at all (docs/48): one card with «انتهت حلقات اليوم» or
- * «لا توجد حلقات اليوم», where her next lesson is («حلقتك القادمة: الأحد 16:00 · يوسف») or that
- * none is in the next two weeks, and «افتح جدولي».
- */
+/** Shows her next lesson, or that none falls in the next two weeks (docs/48). */
 export function TeacherDayEnd({ kind, next }: TeacherDayEndProps) {
   const { color } = useTheme();
   const tz = useViewerTz();

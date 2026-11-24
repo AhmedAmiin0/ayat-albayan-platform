@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const p = t.assistantPortal.earnings;
 
-/** «شروطي»: my monthly salary and my commission, as the administration set them. Read-only. */
+/** Read-only, as the administration set them. */
 export function EarningsTerms({ terms }: { terms: AssistantTermsView | null }) {
   const { salary, commission } = terms ?? { salary: null, commission: null };
   return (

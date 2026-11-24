@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ShortfallNote, shortfallText } from './ShortfallNote';
 
-// Owner 2026-10-28: a receipt of 80 against 81 due leaves the package «غير مدفوعة»; a note, never a block.
+// A receipt short of what is due leaves the package unpaid; a note, never a block.
 describe('shortfallText', () => {
   it('80 against 81 due: 1 short, in the package currency', () => {
     expect(shortfallText({ amount: 80, due: 81, currencyLabel: 'ر.س' })).toBe(

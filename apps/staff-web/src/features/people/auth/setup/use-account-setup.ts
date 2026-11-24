@@ -29,7 +29,6 @@ function useSaveSetup() {
   });
 }
 
-/** The «أكمل حسابك» form: its fields, the first problem to show, and the submit. */
 export function useAccountSetup() {
   const save = useSaveSetup();
   const [form, setForm] = useState<SetupForm>({ email: '', password: '', confirm: '' });

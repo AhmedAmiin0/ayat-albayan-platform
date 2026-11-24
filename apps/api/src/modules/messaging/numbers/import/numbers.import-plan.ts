@@ -7,10 +7,7 @@ import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 import type { SecretStatus } from '@/modules/messaging/numbers/config/numbers.secrets';
 
-// The import's plan (docs/23 §2e step 2), pure: per role, today's effective values and where each comes
-// from (DB = «التكاملات», env = the server), never a secret value. A role is imported when the legacy
-// config gives it a phone id of its own; a row with that phone id already there is left as it is. A
-// role whose new row would fail a wa_numbers id check (migration 620) is not importable (PR #142 item 16).
+// Pure plan (docs/23 §2e step 2), never a secret; a role failing migration 620 is skipped.
 
 export interface PlanInput {
   /** The legacy env (integration overlay on process.env, no numbers). */

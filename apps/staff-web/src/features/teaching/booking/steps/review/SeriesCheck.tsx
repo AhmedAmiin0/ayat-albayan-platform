@@ -42,14 +42,7 @@ export function useCourseClean(draft: BookingDraft): boolean {
   return isSeriesClean(useSeriesCheck(draft, draft.course !== null));
 }
 
-/**
- * Under the picked slot (R-SCH-04, R-SCH-06): what «احجز» would clash with over the whole series
- * (POST /booking/check), so a clash in a later week — time off, or the teacher's availability
- * after a DST change — shows before the review step, on the teacher's clock too. Silent on error
- * (the review step reports it), except for the assistant's course, which can't book until it is clean.
- * A course is checked only once its days are all picked (SlotDays shows the progress until then).
- * A renewal's prefilled day that clashes is named («موعد الأحد لم يعد متاحًا…», takenTexts).
- */
+/** Whole-series check (R-SCH-04) shows later clashes early; silent on error except courses. */
 export function SeriesCheck({ draft }: { draft: BookingDraft }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const { body, check } = useSeriesCheck(draft);

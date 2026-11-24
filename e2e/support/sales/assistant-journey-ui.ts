@@ -3,13 +3,10 @@ import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
 import { fillStable } from '../core/fill';
 
-// The assistant's buttons in a sales chat, driven like a person would (journey 7): «تسجيل طالب
-// جديد» (the booking wizard in sales mode: a free trial only), «اشتراك جديد» / «جدّد الاشتراك» (the
-// calculator with the site's discount pills) and «سجّل التحويل البنكي» (receipt optional).
+// Journey 7: sales mode books a free trial only; the receipt on a bank transfer is optional.
 
 const SM = ar.salesMoney;
 
-/** «تسجيل طالب جديد»: the child + guardian, «أبرار», the free trial next Sunday 16:00 Riyadh, back to the chat. */
 export async function registerWithTrial(page: Page, family: { name: string; guardian: string }): Promise<void> {
   await page.getByRole('button', { name: ar.inbox.registerNew }).click();
   const dialog = page.getByRole('dialog', { name: ar.inbox.registerNew });
@@ -32,10 +29,7 @@ export async function registerWithTrial(page: Page, family: { name: string; guar
   await expect(dialog).toHaveCount(0);
 }
 
-/**
- * The open «اشتراك جديد» dialog (`title`: «جدّد الاشتراك» for a renewal): the discount is the site's pills
- * only (0 / 5 / 10 / 15 %, no free number), `pkg` is picked and the package saved; the transfer step opens next.
- */
+/** The discount is the site's pills only (0/5/10/15 %, no free number). */
 export async function saveSubscription(page: Page, pkg: string, title = SM.newSubscription): Promise<Locator> {
   const dialog = page.getByRole('dialog', { name: title });
   const pills = dialog.getByRole('group', { name: ar.subscriptions.discount }).getByRole('button');
@@ -48,10 +42,7 @@ export async function saveSubscription(page: Page, pkg: string, title = SM.newSu
   return transfer;
 }
 
-/**
- * The open «سجّل التحويل البنكي» step: the amount starts at what is due, the currency is the package's
- * (read-only), no receipt is attached (optional). Saved → «أصبح الطالب مشتركًا».
- */
+/** Amount starts at what is due; the currency is the package's, read-only; receipt optional. */
 export async function saveTransfer(page: Page, currency: string): Promise<Locator> {
   const transfer = page.getByRole('dialog', { name: SM.stepTransfer });
   await expect(transfer.getByLabel(SM.currency, { exact: true })).toHaveValue(currency);
@@ -62,7 +53,6 @@ export async function saveTransfer(page: Page, currency: string): Promise<Locato
   return done;
 }
 
-/** «مدفوعاتي» from the result dialog: her payments list has a row for the child. */
 export async function expectInMyPayments(done: Locator, name: string): Promise<void> {
   const page = done.page();
   await done.getByRole('link', { name: SM.openMyPayments }).click();
@@ -70,7 +60,7 @@ export async function expectInMyPayments(done: Locator, name: string): Promise<v
   await expect(page.getByRole('row').filter({ hasText: name }).first()).toBeVisible();
 }
 
-/** «جدّد الاشتراك» from the chat: the dialog opens prefilled from the last package (`pkg`), then is saved. */
+/** The renewal dialog opens prefilled from the last package. */
 export async function renewFromChat(page: Page, pkg: string): Promise<Locator> {
   await page.getByRole('button', { name: ar.students.renew, exact: true }).click();
   const dialog = page.getByRole('dialog', { name: ar.students.renew });

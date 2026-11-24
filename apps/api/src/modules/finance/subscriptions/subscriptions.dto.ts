@@ -10,11 +10,7 @@ import { z } from 'zod';
 import { pageQuerySchema } from '@/common/http/http';
 import type { QuoteQuery } from '@/modules/finance/pricing/pricing.dto';
 
-/**
- * GET /subscriptions?status&studentId&paid&student&package&sort&dir&page&pageSize (S1, R-NFR-08).
- * `paid=partial` («مدفوع جزئيًا»): unpaid packages with at least one payment (the exact
- * 0 < paid < price is derived per row). `student`: part of the student's name.
- */
+/** S1 (R-NFR-08): paid=partial means unpaid packages with at least one payment. */
 export const subscriptionListQuery = pageQuerySchema.extend({
   status: z.enum(SUBSCRIPTION_STATUSES).optional(),
   studentId: z.uuid().optional(),

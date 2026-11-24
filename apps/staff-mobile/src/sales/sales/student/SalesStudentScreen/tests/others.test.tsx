@@ -1,4 +1,5 @@
-import { formatPhone, RIYADH_TZ } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { RIYADH_TZ } from '@ab/time';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { whenIn } from '@/core/lib/clock';

@@ -1,15 +1,9 @@
-import {
-  formatAmount,
-  linkAmountProblem,
-  parseAmount,
-  type PaymentLinkStatus,
-  type PaymentLinkView,
-  type StatusStyle,
-} from '@ab/shared';
+import { linkAmountProblem, type PaymentLinkStatus, type PaymentLinkView } from '@ab/shared';
+import { formatAmount, parseAmount, type StatusStyle } from '@ab/money';
 import { ApiError, t, ltr, currencyName } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales';
 
-// «رابط دفع» words and checks (docs/30). Pure: the API re-checks every amount.
+// Payment-link wording and checks (docs/30); pure, the API re-checks every amount.
 
 const pl = t.paymentLinks;
 

@@ -5,9 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { WEEKLY } from './money-fixture';
 import { SubscriptionsPage } from './SubscriptionsPage';
 
-// «إلغاء الاشتراك» keeps the money (migration 991): a stopped package still owes, so its row
-// takes a payment or a refund and shows what is paid; never a pause. An unused cancel is history
-// only.
+// A stopped package keeps owing (migration 991) and takes payments or refunds, never a pause.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));

@@ -19,16 +19,7 @@ interface JoinClassroomButtonProps {
   only?: 'open' | 'waiting';
 }
 
-/**
- * «ادخل الحلقة» on a lesson row (teacher and admin): live inside the settings' join window (15 minutes
- * before the start to 2 hours after the end by default) (re-checked every minute), else off with
- * «بتفتح الساعة …». The press is useJoinClassroom's: the API first, then the web classroom. Full width like
- * the sheet's other main buttons. The full-width wrapper alone did not stop «Join the» (owner
- * screenshots 2026-10-28 and 10-29): the fix is in Button, whose label box spans the button and keeps
- * Android's «…» (no adjustsFontSizeToFit). Filled only while it is live;
- * waiting (early, closed) it is an outlined, disabled secondary, so it never sits as a second filled
- * button beside «تأكيد» (docs/07 §6 «الأزرار»).
- */
+/** Filled only while live so it never sits beside a filled confirm (docs/07 §6). */
 export function JoinClassroomButton({ lesson, only }: JoinClassroomButtonProps) {
   const { win, busy, error, join } = useJoinClassroom(lesson);
   const cycle = useClockCycle();
@@ -54,10 +45,7 @@ export function JoinClassroomButton({ lesson, only }: JoinClassroomButtonProps) 
   );
 }
 
-/**
- * A lesson's actions with «ادخل الحلقة» around them: on top while it is live (the one primary), under
- * them while it waits (an outlined, disabled hint), so the filled button always leads (docs/07 §6).
- */
+/** On top while live, under while waiting, so the filled button always leads (docs/07 §6). */
 export function JoinAround({ lesson, children }: { lesson: JoinableLesson; children: ReactNode }) {
   return (
     <>

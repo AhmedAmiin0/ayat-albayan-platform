@@ -14,11 +14,7 @@ import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mut
 
 const s = t.numbers.source;
 
-/**
- * «مصدر إعداد الأرقام» (settings.comms_source): the source in use, and the switch. To «الأرقام» only
- * while the parity is empty (the API refuses otherwise); back to the current setup always. Both ask
- * first, stating the consequence; a refusal stays inside the dialog.
- */
+/** Switching to numbers only while parity is empty (the API refuses otherwise). */
 export function SourceSwitch({ parity, manage }: { parity: ParityView; manage: boolean }) {
   const queryClient = useQueryClient();
   const [target, setTarget] = useState<CommsSource | null>(null);

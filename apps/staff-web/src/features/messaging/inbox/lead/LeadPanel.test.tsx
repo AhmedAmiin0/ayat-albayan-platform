@@ -21,7 +21,6 @@ function renderPanel(row: InboxLead = lead()) {
   renderWithClient(<LeadPanel phone={PHONE} />);
 }
 
-/** The full qualification form lives in the «تعديل البيانات» dialog, not in the aside. */
 async function openEdit() {
   fireEvent.click(await screen.findByRole('button', { name: t.inbox.editLeadData }));
   return screen.getByRole('dialog', { name: t.inbox.editLeadDataTitle });

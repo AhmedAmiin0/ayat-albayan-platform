@@ -29,15 +29,12 @@ function sumOf(counts: StatusCounts | undefined, statuses: readonly StudentStatu
   return each.every((n) => n !== undefined) ? each.reduce<number>((sum, n) => sum + (n ?? 0), 0) : undefined;
 }
 
-/** «تجريبي» = not subscribed yet (new + trial + pending_subscription, owner 2026-10-15). */
+/** Trial means not subscribed yet: new, trial and pending_subscription. */
 function kindCounts(counts: StatusCounts | undefined): Record<StudentListKind, number | undefined> {
   return { all: sumOf(counts, STUDENT_STATUSES), active: num(counts?.active), trial: sumOf(counts, NOT_SUBSCRIBED_STATUSES) };
 }
 
-/**
- * «الكل · مشترك · تجريبي» above the students list (owner 2026-10-12), outside «تصفية»: the same
- * `status` filter as the status chips. Another combination of statuses presses no segment.
- */
+/** Uses the same `status` filter as the chips; other status combinations press no segment. */
 export function StudentKindSwitch({ status, counts, onChange }: StudentKindSwitchProps) {
   const n = kindCounts(counts);
   const options = (['all', 'active', 'trial'] as const).map((kind) => ({ value: kind, label: L[kind], count: n[kind] }));

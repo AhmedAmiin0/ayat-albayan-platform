@@ -10,7 +10,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { InstantLessonService } from './instant.service';
 
-/** «حلقة فورية»: an online lesson that starts now (admin only). */
+/** Admin only. */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('lessons.write')

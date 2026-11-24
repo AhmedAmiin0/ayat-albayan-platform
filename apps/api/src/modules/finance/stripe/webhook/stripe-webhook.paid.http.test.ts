@@ -51,9 +51,9 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     expect(m.payments.insert).toHaveBeenCalledWith(
       expect.objectContaining({ subscription_id: SUB_ID, amount: 120, currency: 'SAR', kind: 'payment', method: 'card', recorded_by: SALES_A.id, client_request_id: uuidFor(SESSION), paid_at: new Date(CREATED * 1000).toISOString() }),
     );
-    expect(m.activation.afterPayment).toHaveBeenCalledWith(STUDENT_ID, SALES_A.id, PAYMENT_ID); // recompute → «مشترك»
+    expect(m.activation.afterPayment).toHaveBeenCalledWith(STUDENT_ID, SALES_A.id, PAYMENT_ID);
     expect(s.links.markPaid).toHaveBeenCalledWith(LINK_ID, expect.objectContaining({ paymentId: PAYMENT_ID, paymentIntent: 'pi_1' }));
-    // «تم استلام دفعة»: the admins, the student's assistant and the link's (no recorder left out).
+    // Admins and both assistants are notified, with no recorder left out.
     expect(s.push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'payment_received', profileIds: [SALES_A.id], subject: `payment:${PAYMENT_ID}` }));
     expect(s.events.done).toHaveBeenCalledWith('evt_1', 'paid');
   });

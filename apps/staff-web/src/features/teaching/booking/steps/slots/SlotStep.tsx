@@ -17,10 +17,7 @@ export interface SlotStepProps {
   onChange: (patch: Pick<BookingDraft, 'startsAt' | 'extra' | 'outsideHours'>) => void;
 }
 
-/**
- * «الأحد 4 أكتوبر 17:00 بتوقيتك» in the viewer's zone `clock.tz` (useViewerTz()), + the family's
- * wall clock `tz` when it differs then.
- */
+/** In the viewer's zone `clock.tz`, plus the family's wall clock `tz` when it differs. */
 export function pickedText(startsAt: string, tz: string, clock: Clock & { tz: string }): string {
   const at = new Date(startsAt);
   const viewer = clock.tz;

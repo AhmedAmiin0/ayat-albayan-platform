@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';

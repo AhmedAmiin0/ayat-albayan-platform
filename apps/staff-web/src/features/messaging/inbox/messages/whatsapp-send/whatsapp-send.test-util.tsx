@@ -8,8 +8,6 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 
-// The bubble with «أرسل عبر واتساب» (WhatsAppSendLine*.test.tsx), and the tab window.open gives.
-
 export const NOW = new Date('2026-11-06T12:00:00Z');
 export const held: Partial<MessageView> = {
   id: 'm-held',

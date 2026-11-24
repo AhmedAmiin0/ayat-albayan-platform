@@ -5,7 +5,7 @@ import { t } from '@ab/mobile-kit';
 export type FieldsReport = Omit<ReportPageReport, 'version' | 'submitted_at' | 'edited_at'>;
 
 export interface ReportField {
-  /** Unique: the rubric repeats the words «الحفظ الجديد» and «المراجعة». */
+  /** Must be unique because the rubric repeats some labels. */
   key: string;
   label: string;
   /** null = the teacher left it blank. */

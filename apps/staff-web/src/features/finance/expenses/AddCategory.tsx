@@ -9,7 +9,6 @@ import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { addCategory } from './api';
 
-/** «إضافة بند»: the admin adds an expense category (Arabic name + a latin key), chosen right away. */
 export function AddCategory({ onAdded }: { onAdded: (key: string) => void }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);

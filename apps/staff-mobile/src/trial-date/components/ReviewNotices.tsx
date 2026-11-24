@@ -4,12 +4,11 @@ import { ErrorLine } from '@ab/mobile-kit';
 interface ReviewNoticesProps {
   /** The check's clashes, one line each (booking.conflict.<kind>). */
   clashes: readonly string[];
-  /** The failed «احجز», if any. */
   failure: BookFailure | null;
   onChangeSlot: () => void;
 }
 
-/** The clashes (from the check, or the 409 of the booking itself) with «اختر موعدًا آخر», or the refusal. */
+/** Clashes come from the check or the booking's own 409. */
 export function ReviewNotices({ clashes, failure, onChangeSlot }: ReviewNoticesProps) {
   if (clashes.length > 0) return <ConflictNotice lines={clashes} onChangeSlot={onChangeSlot} />;
   if (!failure) return null;

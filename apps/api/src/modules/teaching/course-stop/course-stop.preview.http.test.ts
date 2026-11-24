@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { SALES, stamped, STUDENT, stopApp, SUB } from './course-stop.fakes';
 
-// «إلغاء الاشتراك»'s confirm sheet: course_stop_plan's counts, the money kept, who stopped it.
 type App = Awaited<ReturnType<typeof stopApp>>;
 const URL = `/students/${STUDENT}/course-stop`;
 
@@ -26,7 +25,7 @@ describe('GET /students/:id/course-stop', () => {
       // owner 2026-11-02: sales hold no subscriptions.refund, so no refund lines.
       refund: null,
       refundUnavailable: false,
-      // «إلغاء فقط»'s numbers for everyone who may stop: 3 × 50 × 100 % and the price.
+      // Cancel-only numbers for everyone who may stop: 3 x 50 x 100 % and the price.
       owe: { charged: 150, price: 400 },
       stopped: null,
     });

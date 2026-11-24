@@ -15,11 +15,10 @@ export interface AttachmentsFieldProps {
   onChange: (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) => void;
   /** canEditReport: adding closes with the edit window. */
   editable: boolean;
-  /** The add button's word (default «اختر صورة»). */
   addLabel?: string;
 }
 
-/** صورة / ملف PDF / تسجيل صوتي and its size in MB (one decimal, Western digits), as on the web. */
+/** Size in MB with one decimal and Western digits, as on the web. */
 export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): string {
   const kind = file.mime === 'application/pdf' ? 'pdf' : file.mime.startsWith('audio/') ? 'audio' : 'image';
   const mb = t.reports.sizeMb.replace('{n}', Math.max(0.1, file.size / 1_048_576).toFixed(1));
@@ -28,11 +27,7 @@ export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): st
 
 const ERRORS: Record<string, string> = t.reports.error;
 
-/**
- * «المرفقات (اختياري)» (R-REP-02): each file opens through a signed URL; a photo from the gallery
- * (the system picker, no permission) goes up as its bytes, then is registered on the report.
- * ponytail: photos only on the phone; PDF / audio need expo-document-picker in the next APK.
- */
+/** Files open through a signed URL (R-REP-02); photos only, PDF and audio need a doc picker. */
 export function AttachmentsField({ reportId, files, onChange, editable, addLabel }: AttachmentsFieldProps) {
   const [local, setLocal] = useState<string | null>(null);
   const upload = useMutation({

@@ -19,7 +19,7 @@ export interface ResetPasswordDialogProps {
   onClose: () => void;
 }
 
-/** «إعادة تعيين كلمة السر»: typed, generated or an invite link; a generated one is shown once. */
+/** A generated password is shown once. */
 export function ResetPasswordDialog({ user, onBack, onClose }: ResetPasswordDialogProps) {
   const formId = useId();
   const [mode, setMode] = useState<CredentialMode>('generate');

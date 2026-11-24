@@ -14,14 +14,9 @@ const L = t.inbox.lists;
 export interface EditListDialogProps {
   list: ChatList;
   onClose: () => void;
-  /** The list is gone: the chip row goes back to «الكل». */
   onDeleted: () => void;
 }
 
-/**
- * «تعديل القائمة» (docs/22 §4): rename («حفظ») or «حذف القائمة», which asks first and says the chats
- * themselves stay (DeleteListDialog).
- */
 export function EditListDialog({ list, onClose, onDeleted }: EditListDialogProps) {
   const formId = useId();
   const queryClient = useQueryClient();

@@ -22,11 +22,7 @@ export function readDiscovery(raw: unknown): StoredDiscovery | null {
   return r.success ? r.data : null;
 }
 
-/**
- * Discovery (docs/24 §3): READ-ONLY Google calls — the calendar list, the root folder
- * «تقارير آيات البيان», the summary sheet «سجل الطلاب المشتركين» in it and its folder links.
- * Nothing found here is used until an admin confirms it.
- */
+/** docs/24 §3: read-only calls; nothing found is used until an admin confirms it. */
 export async function discover(google: GoogleClient, now = new Date()): Promise<StoredDiscovery> {
   const calendars: GoogleFound[] = (await google.listCalendars()).filter((c) => c.id !== 'primary').map((c) => ({ id: c.id, name: c.summary }));
   const roots = await google.findFiles({ name: DRIVE.rootFolder, mimeType: MIME.folder });

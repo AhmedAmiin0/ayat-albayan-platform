@@ -42,13 +42,7 @@ interface RefundPreview {
 
 const NONE: RefundPreview = { refund: null, unavailable: false };
 
-/**
- * Who may «إلغاء مع استرداد» (owner 2026-11-02 / 2026-11-05): a holder of subscriptions.refund
- * (403 refund_not_allowed); an assistant (base role sales) only on her own student while
- * SalesOwnershipRule enforces it (403 not_your_student), as «إلغاء الباقة» (#612). The sheet shows
- * refund lines only to whom the stop would let refund. «إلغاء فقط» below the default (nothing, or
- * a custom amount under attended × rate) forgives money: the same checks (review 2026-11-06).
- */
+/** Refund needs subscriptions.refund; sales only on her own student (#612); forgiving money too. */
 @Injectable()
 export class StopRefundGate {
   private readonly log = new Logger(StopRefundGate.name);
@@ -60,7 +54,7 @@ export class StopRefundGate {
     private readonly ledger: StopRefundLedger,
   ) {}
 
-  /** «إلغاء فقط»'s numbers (attended × rate, the price): no refund key needed. */
+  /** Cancel-only numbers (attended x rate, the price): no refund key needed. */
   owe(sub: RefundSub): Promise<StopOwe> {
     return this.owed.owe(sub);
   }
@@ -76,11 +70,7 @@ export class StopRefundGate {
     return this.owed.choose({ ...input, owe });
   }
 
-  /**
-   * The sheet's refund lines, none for whom may not refund this student. When they cannot be read
-   * (Stripe unconfigured or down for a card payment) the error is logged and the sheet says so
-   * («تعذّر حساب الاسترداد الآن»): «إلغاء فقط» never waits on Stripe; the stop's plan answers 503.
-   */
+  /** When Stripe cannot be read the error is logged; cancel-only never waits on Stripe. */
   async preview(user: AuthUser, sub: RefundSub): Promise<RefundPreview> {
     const allowed = can(user, 'subscriptions.refund') && (await this.owns(user, sub.studentId));
     return allowed ? this.read(sub) : NONE;

@@ -6,7 +6,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
-// The UI in English: the picked slot reads in English and joins with «, », not the Arabic «، ».
+// In English the picked slot joins with a Latin comma, not the Arabic one.
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 

@@ -16,7 +16,7 @@ export type GateError = GatePhoneError | GateCodeError;
 interface Sent {
   /** E.164, as the code went to it. */
   phone: string;
-  /** When it went (ms), for «أعد إرسال الرمز». */
+  /** When it was sent (ms), for the resend button. */
   at: number;
 }
 
@@ -35,12 +35,11 @@ export interface GatePhone {
   error: GateError | null;
   sending: boolean;
   verifying: boolean;
-  /** Seconds before «أعد إرسال الرمز» comes back (0 = now). */
+  /** Seconds before resend comes back (0 = now). */
   resendIn: number;
   send: () => void;
   resend: () => void;
   verify: () => void;
-  /** «غيّر الرقم»: back to the number. */
   back: () => void;
 }
 

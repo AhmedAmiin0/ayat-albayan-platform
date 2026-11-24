@@ -8,8 +8,7 @@ import { answer } from '@/inbox/lists/lib/list-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { detail, inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
-// «تسجيل طالب جديد» (owner 2026-10-30: «Move the registration to three dots»): FIRST in a salesperson's «⋮»
-// on a lead still in the funnel, in place of the pill over the chat.
+// First in a salesperson's menu on a lead still in the funnel.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

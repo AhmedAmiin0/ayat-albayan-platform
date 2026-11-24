@@ -22,33 +22,25 @@ import { type Draft, getDraft, requestIdFor, setDraft } from './draft-store';
 import { recordOwnSend } from './own-send';
 import { sendErrorCode } from './send-error';
 
-/**
- * A send, the message it answers («رد») or corrects («تعديل»), the tab-memory generations it
- * started in and what follows it (never sent).
- */
 export interface Sent {
   phone: string;
   text: string;
   clientRequestId: string;
   replyTo?: string | undefined;
   correctsId?: string | undefined;
-  /** The «تعديل» tap it was sent from: its success ends that edit only (#694 follow-up). */
+  /** The edit tap it was sent from: its success ends that edit only. */
   editSession?: string | undefined;
   gen: { draft: number; own: number };
   after?: (() => void) | undefined;
 }
 
-/**
- * What the box does around a send: «رد» / «تعديل» cleared after it, the focus back after either
- * outcome.
- */
 interface SendHooks {
   replyDone: (id: string) => void;
   editDone?: ((session: string) => void) | undefined;
   settled: () => void;
 }
 
-/** The body's links: the message it answers, or the one it corrects (the API adds «تصحيح: »). */
+/** The API adds the correction prefix to a corrected message itself. */
 const linksOf = ({ replyTo, correctsId }: Sent) => ({
   ...(replyTo ? { replyToMessageId: replyTo } : {}),
   ...(correctsId ? { correctsId } : {}),
@@ -86,13 +78,7 @@ const sentText = ({ text, correctsId }: Sent): SentText => ({
   correction: correctsId ? { id: correctsId } : undefined,
 });
 
-/**
- * A text got its 2xx (useMutation's own onSuccess: it runs after the box unmounted too): the
- * pinned id is released. An answer with another message is the FIRST one replayed under this id
- * (docs/44 M1): the edit comes back with the note and a fresh id. Checked on EVERY 2xx: a 409
- * session_closed is decided before the server's dedup lookup, so a released id may still replay.
- * Returns whether it was such a replay (then «رد» / «تعديل» stay picked: nothing new went out).
- */
+/** docs/44 M1: checked on every 2xx; a 409 session_closed is decided before the dedup lookup. */
 export function settleTextSend(view: Answer, sent: Sent): boolean {
   const now = getDraft(sent.phone);
   const lost = replayedOther(view, sentText(sent));
@@ -126,7 +112,7 @@ export function useTextSend(phone: string, hooks: SendHooks) {
     onSuccess: (view, sent) => {
       recordOwnSend(sent.phone, view.id, sent.gen.own);
       showSent(client, sent.clientRequestId, view);
-      // A replay brings the text back and keeps «رد» / «تعديل» (review of #694, as mobile).
+      // A replay brings the text back and keeps the reply or edit target picked.
       const replayed = settleTextSend(view, sent);
       if (!replayed) clearPicks(sent, hooks);
       sent.after?.();

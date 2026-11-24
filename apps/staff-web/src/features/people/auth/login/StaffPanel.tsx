@@ -11,11 +11,7 @@ import { StatusNote } from '@ab/web-kit/auth/login/StatusNote';
 
 type View = 'password' | 'code' | 'forgot';
 
-/**
- * «فريق الأكاديمية» (the default tab): email, username or phone + password, «نسيت كلمة المرور؟»,
- * and «الدخول برمز واتساب» for teachers while staff codes can be sent (docs/46 A6). While they are
- * off the reset is the admin's (docs/30 §4).
- */
+/** Code login only while staff codes can be sent (docs/46 A6); else admin resets (docs/30 §4). */
 export function StaffPanel() {
   const [view, setView] = useState<View>('password');
   const [saved, setSaved] = useState(false);

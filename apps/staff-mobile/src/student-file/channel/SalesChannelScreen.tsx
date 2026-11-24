@@ -5,12 +5,7 @@ import { SeatCard } from './SeatCard';
 import { useChannelSeat } from './use-channel-seat';
 import { useStaffChannelMedia } from './media/use-staff-channel-media';
 
-/**
- * The assistant's view of a student chat (/sales/students/channel/:id; owner 2026-11-16 «any
- * assistant can subscribe to the chating channel but only 1»): hers → the chat, where she writes,
- * with «مغادرة المحادثة» in the header (the card then comes back) and the phone's pickers,
- * microphone and player; otherwise SeatCard.
- */
+/** Only one assistant holds a student chat's seat; hers opens the chat, otherwise the seat card. */
 export function SalesChannelScreen() {
   const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const seat = useChannelSeat(id);

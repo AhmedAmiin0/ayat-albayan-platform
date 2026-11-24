@@ -1,4 +1,5 @@
-import { tzChoices, tzOptionLabel, type UserRoleOption } from '@ab/shared';
+import type { UserRoleOption } from '@ab/shared';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import { t } from '@ab/mobile-kit';
 import { Choice } from '@/users/shared/Choice';
 import type { EditForm } from './edit-form';

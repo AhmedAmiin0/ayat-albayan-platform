@@ -6,7 +6,6 @@ import { useSyncExternalStore } from 'react';
 // 4xx): the server dedups the id, so a retry, edited or not, is never a second message. Nothing is
 // guessed from reads. Templates, a resend, a new chat and files always use their own id.
 
-/** Which sender owns the pin: the chat box's texts, or «عرض سعر» (the quote sheet). */
 export type PinKind = 'box' | 'quote';
 
 export const PINS: Readonly<Record<PinKind, PinStore>> = {

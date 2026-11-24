@@ -10,15 +10,10 @@ interface RequestSheetProps {
   /** The request to answer; null = closed. */
   request: FamilyRequestView | null;
   onClose: () => void;
-  /** «اختر موعدًا آخر»'s slot grid (the assistant's); default staff's. */
+  /** The assistant's slot path; staff's by default. */
   slotsPath?: string;
 }
 
-/**
- * «تفاصيل الحلقة» of a family request (owner 2026-11-17): the lesson's status, what the family
- * asked and their note, the answer, then the lesson's current time on the viewer's clock (the
- * student's under it). The staff move sheet's frame.
- */
 export function RequestSheet({ request, onClose, slotsPath }: RequestSheetProps) {
   const title = request?.students.map((s) => s.name).join(t.common.listSeparator) ?? '';
   return (

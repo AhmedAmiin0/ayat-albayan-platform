@@ -19,7 +19,7 @@ const at = (template: string, iso: string, clock: Clock) => template.replace('{t
  */
 export function outboundNotes(m: MessageView, o: NotesInput): string[] {
   if (m.direction !== 'outbound') return [];
-  if (isHandedOff(m)) return []; // MessageActions asks «بعتّها؟» instead
+  if (isHandedOff(m)) return [];
   if (m.status === 'failed') return [t.messages.errorLine.replace('{reason}', errorText(m))];
   if (m.status === 'sent_manually') return m.sent_manually_at ? [at(t.messages.sentManuallyAt, m.sent_manually_at, o.clock)] : [];
   return m.status === 'queued' ? queuedNotes(m, o) : [];
@@ -32,8 +32,7 @@ const HELD: readonly [(m: MessageView) => boolean, () => string][] = [
 const heldNote = (m: MessageView): string | undefined => HELD.find(([is]) => is(m))?.[1]();
 
 function queuedNotes(m: MessageView, o: NotesInput): string[] {
-  // Held behind the reopen template (owner 2026-11-03), or our send with no answer (docs/44
-  // BUG7, «لم يتأكد الإرسال بعد»): no tries, no next try.
+  // Held behind the reopen template or unanswered (docs/44 BUG7): no tries, no next try.
   const held = heldNote(m);
   if (held) return [held];
   const notes: string[] = [];
@@ -41,7 +40,7 @@ function queuedNotes(m: MessageView, o: NotesInput): string[] {
   else if (m.scheduled_for && Date.parse(m.scheduled_for) > o.now.getTime()) {
     notes.push(at(t.messages.queuedFor, m.scheduled_for, o.clock));
   }
-  // Claimed by the sender right now (its lease, not a retry time): say so instead of «المحاولة الجاية».
+  // Claimed by the sender right now (its lease, not a retry time).
   if (m.error_code === 'sending') return [...notes, t.messages.sendingNow];
   if (m.attempts > 0) {
     notes.push(t.messages.attempts.replace('{n}', String(m.attempts)).replace('{max}', String(MAX_SEND_ATTEMPTS)));
@@ -53,7 +52,6 @@ function queuedNotes(m: MessageView, o: NotesInput): string[] {
   return notes;
 }
 
-/** «اتبعتت … · وصلت … · اتقرت …»: every delivery time Meta reported, for the status chip's title. */
 export function deliveryTitle(m: MessageView, clock: Clock): string {
   const steps: [string, string | null][] = [
     [t.messages.sentAt, m.sent_at],
@@ -63,7 +61,7 @@ export function deliveryTitle(m: MessageView, clock: Clock): string {
   return steps.flatMap(([text, iso]) => (iso ? [at(text, iso, clock)] : [])).join(' · ');
 }
 
-/** The admin opened wa.me for it (M3): the row waits for their «بعتّها؟» answer. */
+/** The admin opened wa.me for it (M3); the row waits for their answer. */
 export const isHandedOff = (m: MessageView): boolean => m.status === 'failed' && m.error_code === 'handed_off';
 
 /**

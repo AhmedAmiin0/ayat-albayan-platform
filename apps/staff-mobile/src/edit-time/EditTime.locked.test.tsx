@@ -41,7 +41,7 @@ test('payout_locked names the month and status, says a start-only fix still work
   await lockedOnSixty();
   expect(screen.getByText(t.editTime.startOnly)).toBeTruthy();
   expect(submit()).toBeDisabled();
-  // The note before saving («المدة اتغيرت…») would now be a promise the save cannot keep.
+  // The pre-save length-change notice would now promise what the save cannot keep.
   expect(screen.queryByText(t.editTime.payoutWarn)).toBeNull();
   expect(mockApiSend).toHaveBeenCalledTimes(1);
 });

@@ -13,10 +13,7 @@ import { TranslationEditor } from './TranslationEditor';
 import { translationColumns } from './translationColumns';
 import { translationKeysQuery, type TranslationsSearch } from './translations.api';
 
-/**
- * «الترجمات» (owner, 2026-10-05): every text of the interface, Arabic and English side by side,
- * the edited ones marked «معدّل». A row opens the editor; edits apply on the next page load.
- */
+/** Every interface text in both languages; edits apply on the next page load. */
 export function TranslationsPage() {
   const [search, setSearch] = useState<TranslationsSearch>({ search: '', section: '', page: 1 });
   const [editing, setEditing] = useState<TranslationKeyRow | null>(null);

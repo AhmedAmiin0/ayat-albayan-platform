@@ -5,8 +5,7 @@ import { history, HISTORY_ID } from '@/features/sales/sales/academy.fixtures';
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SubscriptionHistory } from './SubscriptionHistory';
 
-// «تعديل عدد الحلقات المستخدمة» on the student's CURRENT package (owner 2026-11-02, review B):
-// the newest active one, whichever subscription the history was opened from.
+// Edits the student's current package: the newest active one, whichever history it opened from.
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));

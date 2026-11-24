@@ -24,7 +24,7 @@ export type ParamValues = Partial<Record<ParamSlot | 'button', string>>;
 const SLOTS: readonly ParamSlot[] = BODY_SLOTS;
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
-/** The body variables a template takes, by position, with their human names («المتغير n» for an imported var_n). */
+/** Imported var_n variables get a numbered generic label. */
 export function paramFields(tpl: Pick<TemplateView, 'params'>): { slot: ParamSlot; label: string; fromLesson: boolean }[] {
   return SLOTS.slice(0, tpl.params.length).map((slot, i) => {
     const name = tpl.params[i] ?? '';
@@ -32,7 +32,6 @@ export function paramFields(tpl: Pick<TemplateView, 'params'>): { slot: ParamSlo
   });
 }
 
-/** The template's free-text slot («نص الرسالة», owner 2026-11-14) among its variables, or null. */
 export const freeTextField = (tpl: Pick<TemplateView, 'key' | 'params'>): ParamSlot | null =>
   paramFields(tpl).find((f) => f.slot === freeTextSlot(tpl.key))?.slot ?? null;
 

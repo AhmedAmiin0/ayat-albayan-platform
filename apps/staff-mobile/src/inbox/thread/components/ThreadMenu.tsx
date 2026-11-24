@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { t, Button } from '@ab/mobile-kit';
 import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 
-/** iOS presents one modal at a time: what an item opens (the copy sheet, «القوائم») waits for this one to close. */
+/** iOS presents one modal at a time, so what an item opens waits for this one to close. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
 
 export interface ThreadMenuItem {
@@ -15,16 +15,11 @@ interface ThreadMenuProps {
   open: boolean;
   /** In order; each closes the menu, then runs. */
   items: readonly ThreadMenuItem[];
-  /** What a screen reader calls the sheet (default «خيارات المحادثة»). */
   label?: string;
   onClose: () => void;
 }
 
-/**
- * The chat header's «⋮» (review 2026-10-29 #13, C5): the header keeps the call and this one button so
- * the name gets the width on a 360dp Android. A bottom sheet as the bubble menu: one full-width
- * secondary button per action (no primary: none outranks the others), then «إلغاء»; 48pt each.
- */
+/** One overflow button leaves the name the width on a 360dp Android; no item outranks another. */
 export function ThreadMenu({ open, items, label = t.inbox.chatMenu, onClose }: ThreadMenuProps) {
   // A chat left within the wait never runs its pending action (a push from a closed chat).
   const pending = useRef<ReturnType<typeof setTimeout> | null>(null);

@@ -18,10 +18,7 @@ export function askFor(entry: Pick<NotificationEntryView, 'audience' | 'essentia
   return on ? 'family-on' : 'family-off';
 }
 
-/**
- * «التشغيل»: locked rows say «لا يمكن إيقافه»; without notifications.manage (or a row that is not
- * editable) the state in words; else the switch, which saves at once after its confirmation.
- */
+/** The switch saves at once after its confirmation. */
 export function RuleSwitch({ entry, row }: { entry: NotificationEntryView; row: RuleRowState | null }) {
   const api = useRules();
   const [asking, setAsking] = useState<Asking>(null);

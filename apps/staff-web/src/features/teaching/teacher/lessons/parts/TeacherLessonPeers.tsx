@@ -1,5 +1,5 @@
 import { teacherCanPropose, type PlanAction } from '@ab/client-core';
-import { isOpenLesson, type LessonView } from '@ab/shared';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
@@ -37,11 +37,7 @@ const drawnHere = (plan: TeacherPlan) => (a: PlanAction) => !drawnElsewhere(plan
 const fallbackOf = (p: TeacherLessonPeersProps): string | null =>
   p.plan.way === 'room' && !p.plan.platform && isOpenLesson(p.lesson.status) ? p.fallbackLink : null;
 
-/**
- * The card's other actions (docs/48 lessonPlan peers), one secondary ButtonRow: the join after the
- * end or her own link, «سأحضر», the report, «اقترح موعدًا آخر»; then «إلغاء الحلقة» (danger-quiet,
- * a reason in a dialog that also offers the proposal while none is pending, owner Q5).
- */
+/** The card's secondary actions (docs/48), with cancel last; cancel also offers a proposal. */
 export function TeacherLessonPeers(props: TeacherLessonPeersProps) {
   const { lesson, plan, tz, onDone } = props;
   const [form, setForm] = useState<Form>(null);

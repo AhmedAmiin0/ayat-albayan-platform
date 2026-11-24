@@ -1,4 +1,4 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { ActivityIndicator } from 'react-native';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';

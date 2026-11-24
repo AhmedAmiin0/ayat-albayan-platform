@@ -1,13 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «سيصل ردّك عبر خط المحادثات» (docs/12 §13.10): the line a session reply leaves from, i.e. the
- * server's reply_line (the chat line whenever its window is open, §13.3). Only inside the 24 h
- * window and only when that line is known (null on a single line or in an old cache). Not shown in
- * template mode: a template leaves from its own registry line (a chat starter from chat, the rest
- * from notifications), not from reply_line.
- */
+/** docs/12 §13.10: session replies leave from reply_line; templates use their own registry line. */
 export function replyFromText(thread: ThreadView): string | null {
   const line = thread.reply_line;
   if (!thread.session_open || !line) return null;

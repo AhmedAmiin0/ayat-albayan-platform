@@ -8,10 +8,7 @@ export interface StarterToggleProps {
   onToggle: (next: boolean) => void;
 }
 
-/**
- * «متاح للمعلمين والمبيعات» (the restricted allow-list) for one template (owner 2026-10-12, docs/16): a checkbox drawn as a
- * switch (still a checkbox to assistive tech and tests), like the settings switches.
- */
+/** Drawn as a switch but still a checkbox to assistive tech and tests (docs/16). */
 export function StarterToggle({ name, checked, disabled, onToggle }: StarterToggleProps) {
   return (
     <span className="relative inline-flex">

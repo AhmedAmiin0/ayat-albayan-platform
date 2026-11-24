@@ -3,7 +3,7 @@ import type { AuditService } from '@/common/audit/audit.service';
 import type { Db } from '@/common/db/db.module';
 import { ProfileCourseRepo } from './profile-course.repo';
 
-// «تغيير المعلم»'s reads and the students.teacher_id compare-and-set (owner 2026-10-30).
+// Reads and the students.teacher_id compare-and-set.
 function chain(result: unknown) {
   const q: Record<string, ReturnType<typeof vi.fn>> = {};
   for (const k of ['select', 'eq', 'is', 'in', 'gte', 'order', 'limit', 'update'])

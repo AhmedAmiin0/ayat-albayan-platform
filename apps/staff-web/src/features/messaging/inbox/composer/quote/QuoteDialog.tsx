@@ -17,18 +17,10 @@ import { useQuoteOffer, useQuoteSend } from './use-quote-offer';
 export interface QuoteDialogProps {
   thread: ThreadView;
   onClose: () => void;
-  /** «عدّل قبل الإرسال» filled the box: the composer shows its message box. */
   onFilled: () => void;
 }
 
-/**
- * «عرض سعر» (owner 2026-10-26): the calculator's steps (pills only for the discount), the offer text
- * exactly as «حاسبة الأسعار» copies it, then send it in this chat, put it in the box to edit, or copy
- * it. Sending follows the text rule (useMaySend); where a text cannot go only copy works
- * (inbox.sessionClosed says why). «مبلغ مخصص» (owner 2026-11-15) beside the pills makes the typed
- * amount the offer's total. Works for a lead with no
- * student; nothing is created.
- */
+/** Works for a lead with no student and creates nothing; sending follows useMaySend. */
 export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
   const phone = thread.phone_e164;
   const offer = useQuoteOffer(phone);
@@ -36,7 +28,7 @@ export function QuoteDialog({ thread, onClose, onFilled }: QuoteDialogProps) {
   const [copied, setCopied] = useState<'ok' | 'failed' | null>(null);
   const may = useMaySend(thread);
   const text = offer.text;
-  // «مبلغ مخصص» not a valid amount: like a stale price, nothing may leave.
+  // An invalid custom amount blocks sending like a stale price does.
   const held = offer.stale || offer.invalid;
   const ready = text !== null && !held;
   const edit = () => {

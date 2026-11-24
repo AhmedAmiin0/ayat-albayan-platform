@@ -51,7 +51,7 @@ describe('POST /messaging/lines/check (docs/12 §13.9)', () => {
     expect(body[0]).toEqual(view('notifications', true));
     expect(t.lines.check).toHaveBeenCalledTimes(1);
     expect(t.audit.record).not.toHaveBeenCalled();
-    // The answer is kept for «ماذا يُرسل ومتى» (docs/23 phase 1): the store keeps the good rows only.
+    // Kept for the rules page (docs/23 phase 1): the store keeps good rows only.
     expect(t.health.save).toHaveBeenCalledWith(body);
   });
 

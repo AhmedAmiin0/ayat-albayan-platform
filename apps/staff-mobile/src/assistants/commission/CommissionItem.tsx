@@ -9,7 +9,7 @@ import { ReasonConfirm } from '@/assistants/statements/components/ReasonConfirm'
 
 interface CommissionItemProps {
   commission: AssistantCommissionView;
-  /** assistantpay.write: «إلغاء العمولة» on an earned commission (web commission-columns). */
+  /** assistantpay.write may cancel an earned commission. */
   canWrite: boolean;
   onNotice: (text: string) => void;
 }
