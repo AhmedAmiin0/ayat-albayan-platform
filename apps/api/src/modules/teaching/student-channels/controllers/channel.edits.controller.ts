@@ -18,12 +18,7 @@ const SALES = 'sales/students/:id/channel/messages/:messageId';
 const salesIds = z.object({ id: z.uuid(), messageId: z.uuid() });
 type SalesIds = z.output<typeof salesIds>;
 
-/**
- * «تعديل» / «حذف للجميع» (owner 2026-10-30): the sender edits their own text (15 min) and
- * deletes their own message (48 h) on the participant routes, the seated assistant's too (owner
- * 2026-11-16); the admin deletes any message on the monitor route (moderation). ChannelAccess
- * resolves the caller as for reading; ChannelEdits holds the rules.
- */
+/** Edit and delete for everyone: sender limits 15 min and 48 h; the admin deletes via monitor. */
 @ApiTags('student-channels')
 @ApiBearerAuth()
 @Controller()

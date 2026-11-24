@@ -2,9 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import { body, LESSON_ID, NOW, retimed, timeSetup } from './time-edit.fakes';
 
-// «عدّل الوقت» and the schedule-change notices: lesson_rescheduled only when the admin left
-// «notify» on AND the start moved; the family hears ONE message (lesson_rescheduled or the
-// booking confirmation, FamilyMoveNotice).
+// lesson_rescheduled only when notify is on and the start moved; the family gets one message.
 
 function setup(usable = false) {
   const s = timeSetup();

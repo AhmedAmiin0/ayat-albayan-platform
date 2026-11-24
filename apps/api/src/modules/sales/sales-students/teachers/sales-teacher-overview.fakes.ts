@@ -1,4 +1,4 @@
-// One teacher's «الجدول» / «الحضور» rows as the database could return them, secrets present (test-only, *.fakes.ts).
+// Secrets present on purpose (test-only).
 import type { Mock } from 'vitest';
 import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.repo';
 

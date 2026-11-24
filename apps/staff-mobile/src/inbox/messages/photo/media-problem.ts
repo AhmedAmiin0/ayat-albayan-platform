@@ -19,17 +19,14 @@ export interface PhotoBox {
   size: number;
   resizeMode: 'cover' | 'contain';
   border: boolean;
-  /** «تنزيل» under it; not under a sticker, as WhatsApp (owner 2026-11-01). */
+  /** No download under a sticker, as WhatsApp. */
   download: boolean;
 }
 
 const PHOTO: PhotoBox = { size: 220, resizeMode: 'cover', border: true, download: true };
 const STICKER: PhotoBox = { size: STICKER_SIZE, resizeMode: 'contain', border: false, download: false };
 
-/**
- * The box of a photo the bubble previews, or null: not a served image, or HEIC (Android does not
- * decode it reliably, so it keeps «عرض صورة»). A WhatsApp sticker (webp) is smaller and uncut.
- */
+/** HEIC is excluded since Android does not decode it reliably; stickers are smaller and uncut. */
 export function photoBox(mime: string | null): PhotoBox | null {
   const base = baseMime(mime);
   if (!isChatViewMime(mime) || !base.startsWith('image/') || base === 'image/heic') return null;

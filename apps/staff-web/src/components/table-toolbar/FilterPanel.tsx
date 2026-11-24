@@ -6,23 +6,17 @@ import { FilterSummary } from './FilterSummary';
 
 export interface FilterPanelProps {
   onClose: () => void;
-  /** «مسح الكل» in the footer, only while a filter is set. */
+  /** Only while a filter is set. */
   onClearAll?: (() => void) | undefined;
-  /** How many filters are set, and the rows they leave (when the page knows): «عرض النتائج (14)». */
   count?: number;
   resultCount?: number | undefined;
   children: ReactNode;
 }
 
-/**
- * «تصفية»: every filter as a labelled field in the Dialog (an aside panel from 640px, a
- * full-screen sheet on phones: title bar on top, body scrolling, the footer pinned above the home
- * indicator). Changes apply at once (the URL / table update behind it); the primary button names
- * how many rows they leave and only closes.
- */
+/** Changes apply at once; the primary button only closes and names how many rows remain. */
 export function FilterPanel({ onClose, onClearAll, count = 0, resultCount, children }: FilterPanelProps) {
   const primary = useRef<HTMLButtonElement>(null);
-  // «مسح الكل» leaves with the last filter: focus moves to the primary button first, not to the page behind the dialog.
+  // Clearing removes the last filter, so focus moves to the primary button, not behind the dialog.
   const clear = () => {
     primary.current?.focus();
     onClearAll?.();

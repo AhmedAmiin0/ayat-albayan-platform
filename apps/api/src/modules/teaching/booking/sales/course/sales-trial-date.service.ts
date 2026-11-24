@@ -21,14 +21,7 @@ const salesLinkSchema = z
 /** The booking scope's checks without the link: a trial DATE may carry her https link. */
 const withoutLink = (req: BookingRequest): BookingRequest => ({ ...req, meetingLink: null });
 
-/**
- * «موعد تجريبي جديد» for an assistant (R-ASST-01, owner 2026-10-25): the same scope as her trial
- * booking (SalesBookingScope: her own families' students while SalesOwnershipRule enforces it, any
- * otherwise), never over a clash, never an invoice, never a time already past. Unlike a new booking
- * she may set the trial's meeting link (https, owner 2026-11-02). A move books the trial's own
- * students: each of them must be hers too. 403 not_your_student / override_not_allowed; 400
- * date_in_past / meeting_link_invalid; the rest as TrialDates.
- */
+/** R-ASST-01: her scope, never over a clash, an invoice or a past time. */
 @Injectable()
 export class SalesTrialDates {
   constructor(

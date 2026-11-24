@@ -6,7 +6,7 @@ import { Permissions } from '@/common/auth/decorators';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { CourseCards } from './course-card.service';
 
-/** «الدورة والباقة» on the admin's student file (owner 2026-11-17): students.read. */
+/** students.read. */
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('students.read')
@@ -20,10 +20,7 @@ export class CourseCardController {
   }
 }
 
-/**
- * The same card on the assistant's «تفاصيل الطالب» (owner 2026-11-17): self.sales_academy, ANY
- * student (owner 2026-10-30, «Make all assistants see all»), as GET /sales/students/:id.
- */
+/** self.sales_academy, any student, as GET /sales/students/:id. */
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('self.sales_academy')

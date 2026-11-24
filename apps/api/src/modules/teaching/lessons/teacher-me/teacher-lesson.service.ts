@@ -24,11 +24,7 @@ export class TeacherLessonDeps {
   ) {}
 }
 
-/**
- * The teacher's own lesson actions (docs/46 C3, C4) under /teachers/me: her lessons only.
- * Cancel: ONE open lesson before its start, `by: 'teacher'` and `scope: 'one'` forced (status
- * cancelled_by_teacher: not charged, not paid, the existing rule). «سأحضر»: never the status.
- */
+/** docs/46 C3, C4: cancel one open lesson before start as cancelled_by_teacher. */
 @Injectable()
 export class TeacherLessonService {
   constructor(

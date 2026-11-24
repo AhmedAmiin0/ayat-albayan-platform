@@ -31,10 +31,7 @@ type Props = {
   onSaved: () => void;
 };
 
-/**
- * «اشتراك جديد» (R-SUB-01): calculator inputs → the API's quote → saved at that price. A start before
- * today (Riyadh) with subscriptions.set_start_date also asks «حلقات مستخدمة من الباقة» (owner 2026-10-28).
- */
+/** Priced by the API's quote (R-SUB-01); a past start with set_start_date asks used lessons. */
 export function CreateSubscriptionDialog({ student: preset, initial, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();

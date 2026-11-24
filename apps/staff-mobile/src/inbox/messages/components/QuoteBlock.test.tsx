@@ -10,8 +10,6 @@ import { PATH, pageUrl, pdfPage, pdfPath, SIGNED, signed } from '@/inbox/message
 import { PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { QuoteBlock } from './QuoteBlock';
 
-// The quote on top of a bubble, as WhatsApp draws it (owner 2026-10-31): who wrote it, the snippet
-// with a file's icon, a photo's or PDF's thumb, a tap to the original, «رسالة غير متاحة».
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

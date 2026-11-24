@@ -14,7 +14,7 @@ import { SessionsPanel } from './SessionsPanel';
 
 const MINE: Scope = { kind: 'mine' };
 
-/** /teacher/earnings «أرباحي»: earned, paid and outstanding, each lesson with its status, the payments (read only). */
+/** Read-only. */
 export function MyEarnings() {
   const balance = useQuery(balanceQuery(MINE));
   const pageOn = useTeacherPageOn();

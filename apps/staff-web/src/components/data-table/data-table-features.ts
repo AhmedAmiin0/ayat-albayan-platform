@@ -12,7 +12,6 @@ import { compareValues, matchesFilter } from './client-sort';
 
 export type SortDir = 'asc' | 'desc';
 export type FilterOption = { value: string; label: string };
-/** A column's filter control (table toolbar): a debounced search box, or a select with «الكل». */
 export type ColumnFilterDef = { kind: 'text' } | { kind: 'select'; options: FilterOption[] };
 
 /** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */
@@ -21,7 +20,7 @@ export interface DataTableColumnMeta {
   headClassName?: string;
   /** Server sort key (the API's `sort=` value); in `clientSort` tables any accessor column sorts. */
   sortKey?: string;
-  /** A filter for this column: in the «تصفية» panel, or the toolbar's search box (`search`). */
+  /** Shown in the filter panel, or as the toolbar's search box (`search`). */
   filter?: ColumnFilterDef;
   /** This text filter is the toolbar's search box (default: the first text filter). */
   search?: boolean;
@@ -56,7 +55,7 @@ export interface DataTableSort {
 export interface DataTableFilters {
   values: Record<string, string>;
   onChange: (key: string, value: string) => void;
-  /** «مسح الكل»: drops these keys in one change (one URL navigation instead of one per key). */
+  /** Drops these keys in one change, one URL navigation instead of one per key. */
   onClear?: (keys: string[]) => void;
 }
 

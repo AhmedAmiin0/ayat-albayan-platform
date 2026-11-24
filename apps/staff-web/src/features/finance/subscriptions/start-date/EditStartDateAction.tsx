@@ -10,11 +10,7 @@ export interface EditStartDateActionProps {
   pkg: StartDatePackage & { status: SubscriptionStatus | null };
 }
 
-/**
- * The card's «تعديل تاريخ البدء» (owner 2026-11-03), beside «تعديل عدد الحلقات المستخدمة»: only
- * with subscriptions.edit_terms (never subscriptions.set_start_date alone), never on a cancelled
- * package.
- */
+/** Only with subscriptions.edit_terms (not set_start_date alone), never on a cancelled package. */
 export function EditStartDateAction({ pkg }: EditStartDateActionProps) {
   const allowed = usePermissions().can('subscriptions.edit_terms');
   const [open, setOpen] = useState(false);

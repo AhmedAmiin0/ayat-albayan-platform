@@ -12,7 +12,6 @@ interface ReportRowProps {
   student: PortalStudent;
 }
 
-/** One sent report (canvas Reports): the lesson's day, the teacher, «جديد», the recording mark. */
 export function ReportRow({ report, student }: ReportRowProps) {
   const clock = { ...useFamilyClock(), tz: student.tz };
   const fresh = isNewReport(report.id, useSeenReports());

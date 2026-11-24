@@ -5,11 +5,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesStudentService } from './sales-student.service';
 
-/**
- * «تفاصيل الطالب» (owner 2026-10-27, docs/16 row 36): a tap on a student in «الطلاب» or in a
- * lesson's details. self.sales_academy (the gate of «الطلاب»); any student read in full (owner
- * 2026-10-30), `mine` on hers.
- */
+/** docs/16 row 36: self.sales_academy; any student read in full, `mine` on hers. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('self.sales_academy')
@@ -17,7 +13,7 @@ import { SalesStudentService } from './sales-student.service';
 export class SalesStudentController {
   constructor(private readonly students: SalesStudentService) {}
 
-  /** Any student: trial, «الجدول», attendance, subscriptions, sent reports; 404 student_not_found. */
+  /** Any student; 404 student_not_found. */
   @Get(':id')
   details(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SalesStudentDetails> {
     return this.students.details(user, id);

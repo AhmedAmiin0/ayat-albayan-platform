@@ -41,11 +41,7 @@ const PAGE = 1000;
 const MAX_PAGES = 10;
 const rangeOf = (page: number): [number, number] => [page * PAGE, page * PAGE + PAGE - 1];
 
-/**
- * «كل الطلاب»'s schedule, attendance and current package (owner 2026-10-30): one read per kind for
- * the WHOLE page of students, never one per row. Service role, whitelisted columns: never a price,
- * currency, payment, commission or link.
- */
+/** One read per kind for the whole page, never per row; never a price, payment or link. */
 @Injectable()
 export class SalesRosterRepo {
   private readonly log = new Logger(SalesRosterRepo.name);

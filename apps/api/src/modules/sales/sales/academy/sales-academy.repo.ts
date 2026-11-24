@@ -8,11 +8,7 @@ import { dbError } from '@/common/http/http';
 
 type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'>;
 
-/**
- * Whitelisted teacher columns: never rates, phone, calendar or load. The fixed meeting link is the one
- * exception (owner 2026-10-12, docs/16 rows 3 and 10): «رابط الحلقة الثابت» in «المعلمون» only; meeting_mode
- * (migration 490) only decides platform_classroom, it is not sent.
- */
+/** Never rates, phone, calendar or load; the fixed meeting link is the exception (docs/16). */
 export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs' | 'meeting_link' | 'meeting_mode'> & {
   students: Student[];
   /** The teacher's photo, signed with the rest of the list in one call (owner 2026-10-28); absent in fakes. */

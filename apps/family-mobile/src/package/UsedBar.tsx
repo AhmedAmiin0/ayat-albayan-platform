@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
 import { usedText } from './package-text';
 
-/** «استُخدمت 8 من 12» over a bar of the lessons used. */
 export function UsedBar({ summary }: { summary: PackageSummary }) {
   const { color } = useTheme();
   const ratio = summary.total > 0 ? Math.min(1, summary.used / summary.total) : 0;

@@ -64,7 +64,7 @@ function mocks() {
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
     checker: { check: vi.fn() },
     me: { me: vi.fn() },
-    // docs/46 C3/C4: «سأحضر»'s atomic write and the admins' cancel push.
+    // docs/46 C3/C4: the teacher confirmation write and the admins' cancel push.
     confirms: { confirm: vi.fn() },
     cancelPush: { notify: vi.fn() },
     unpaid: { studentIds: vi.fn() },

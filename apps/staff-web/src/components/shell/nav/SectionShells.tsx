@@ -13,23 +13,16 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { NavSkeleton } from './NavSkeleton';
 import { useNavCounts } from './use-nav-counts';
 
-// Each role's own shell (docs/07 §7), shared by its section route (/admin, /teacher, …) and by
-// «حسابي» (/account, R-ACC-01), which every signed-in role opens inside the shell it knows. The admin
-// and sales shells keep the inbox live over realtime (docs/12 §15); the teacher's keeps its polls.
+// Each role's shell (docs/07 §7) also hosts /account (R-ACC-01); admin and sales inbox live.
 
-/** «حسابي» in the compact bar's titles of every shell. */
 const ACCOUNT_TITLE = { to: '/account', label: t.account.title };
 
-/** The admin's titles: every nav page, the booking wizard (opened from several pages) and «حسابي». */
+/** The booking wizard opens from several pages, so it needs its own title. */
 const ADMIN_TITLES = [...ADMIN_NAV_ITEMS, { to: '/admin/book', label: t.booking.title }, ACCOUNT_TITLE];
-/** The teacher's titles: the nav pages, the report form (opened from «اليوم») and «حسابي». */
 const TEACHER_TITLES = [...TEACHER_NAV_ITEMS, { to: '/teacher/report', label: t.reports.formTitle }, ACCOUNT_TITLE];
 const SALES_TITLES = [...SALES_NAV_ITEMS, ACCOUNT_TITLE];
 
-/**
- * Admin: ONE permission-filtered AdminNav, rendered by the sidebar and the «القائمة» sheet alike; a
- * skeleton until /auth/me has loaded (docs/27 E2, D6).
- */
+/** One permission-filtered nav for sidebar and sheet; a skeleton until /auth/me (docs/27 E2). */
 export function AdminShell() {
   const { can, loaded } = usePermissions();
   const counts = useNavCounts(can);
@@ -53,10 +46,7 @@ export function TeacherShell() {
   );
 }
 
-/**
- * Sales: same as the teacher, with the salesperson's pages; «المحادثات» carries the unread count.
- * Every page in the chat's full width and frame (owner 2026-10-20).
- */
+/** Every page in the chat's full width and frame. */
 export function SalesShell() {
   const { can, loaded } = usePermissions();
   const unread = useSalesUnread(can);
@@ -74,7 +64,7 @@ export function AssistantShell() {
   return <AppShell title={t.classroom.assistants.homeTitle} home="/assistant" titles={[ACCOUNT_TITLE]} />;
 }
 
-/** Guardian and student portal (docs/31): the home is the portal page; «حسابي» is its only other page. */
+/** Guardian and student portal (docs/31); the account page is its only other page. */
 export function PortalShell() {
   return <AppShell title={t.portal.dashboardTitle} home="/portal" titles={[ACCOUNT_TITLE]} homePage={<PortalHome />} />;
 }

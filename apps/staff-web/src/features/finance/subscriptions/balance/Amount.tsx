@@ -3,7 +3,7 @@ import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { cn } from '@ab/web-kit/lib/utils';
 import { currencySymbol } from '@/features/finance/subscriptions/format';
 
-/** «145 ر.س»: the number is an LTR island, the Arabic symbol follows it (docs/07 §14.4). */
+/** The number is an LTR island with the symbol after it (docs/07 §14.4). */
 export function Amount({ amount, currency, className }: { amount: number; currency: string; className?: string }) {
   return (
     <span className="whitespace-nowrap">
