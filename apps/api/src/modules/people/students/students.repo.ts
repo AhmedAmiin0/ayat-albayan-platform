@@ -47,7 +47,7 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
   return { items, total: count ?? 0, page: q.page, pageSize: q.pageSize };
 }
 
-/** The page's test students (students.is_test, docs/56), for the «تجريبي» chip. */
+/** students.is_test (docs/56). */
 async function testStudents(db: Db, ids: readonly string[]): Promise<Set<string>> {
   if (ids.length === 0) return new Set();
   const { data, error } = await db.from('students').select('id').in('id', ids).eq('is_test', true);
@@ -72,7 +72,7 @@ async function searchFilter(db: Db, term: string): Promise<string | null> {
 
 type StatusCounts = Record<StudentStatus, number>;
 
-/** Students per status under the other filters, e.g. one teacher's «١٢ مشترك · ٣ تجريبي». */
+/** Counts per status under the other filters. */
 export async function countStudentsByStatus(db: Db, f: StudentListFilters): Promise<StatusCounts> {
   const rest: StudentListFilters = { ...f, status: undefined };
   const counts = await Promise.all(

@@ -6,10 +6,6 @@ import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { ChatNumber } from './chat-number';
 import { PortalGuardianRepo } from './portal-guardian.repo';
 
-/**
- * GET /portal/me: the switcher (my students, or myself), the login's language, renewal link, and a
- * guardian login's own name and number («حسابي»).
- */
 @Injectable()
 export class PortalHomeService {
   private readonly log = new Logger(PortalHomeService.name);

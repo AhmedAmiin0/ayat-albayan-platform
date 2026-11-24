@@ -124,12 +124,19 @@ jobs:
       # A proven pure move (docs/32 g1): plain folder moves only (move-e2e.mjs: a move map in the diff, no
       # identifier or file-name renames, no route moves, nothing e2e reads at start-up) and pure-move-check green.
       # Typecheck and the unit tests still run; e2e is skipped. FAIL SAFE: anything else = e2e as usual.
-      - name: move PR
+      # A comment-only branch (chore/comments-*) skips e2e too: guard:comments fails the required «guards»
+      # job unless the code is unchanged, so nothing e2e could catch can reach develop through it.
+      - name: move or comment-only PR
         id: move
         if: github.event_name == 'pull_request' && steps.diff.outputs.e2e == 'true'
         env:
           BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
+          if [[ "$HEAD_REF" == chore/comments-* ]]; then
+            echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::comment-only branch: e2e skipped"
+            exit 0
+          fi
           if git diff --name-status -M50% "origin/$BASE_REF...HEAD" | node tools/scripts/ci-checks/pure-move/move-e2e.mjs \
             && node tools/scripts/ci-checks/pure-move-check.mjs "origin/$BASE_REF" HEAD; then
             echo "e2e=false" | tee -a "$GITHUB_OUTPUT"; echo "::notice::pure folder move: e2e skipped"

@@ -25,7 +25,7 @@ export function toPortalReport(row: PortalReportRow, recordings: ReadonlyMap<str
 
 const textOf = (text: string | null | undefined): string | null => text?.trim() || null;
 
-/** «ما المطلوب للحلقة القادمة» (docs/50 §2) from the newest SENT report; blank reads null. */
+/** docs/50 §2: from the newest sent report; blank reads null. */
 export function toPrepare(row: PortalReportRow, texts: ReportTexts | null): PortalPrepare {
   return {
     homework: textOf(texts?.homework),

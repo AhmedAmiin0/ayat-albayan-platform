@@ -6156,7 +6156,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-number-set.test.ts": {
@@ -6169,7 +6169,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-number-sync.test.ts": {
@@ -6188,14 +6188,6 @@
   "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
     "ab/zod-inputs": {
       "count": 1
-    },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/templates/sync/template-numbers.service.ts": {
-    "max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-submit.ts": {
@@ -6221,7 +6213,7 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template.move.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template.submit-chat.test.ts": {
@@ -6507,9 +6499,6 @@
   "src/modules/people/portal/home/chat-number.ts": {
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/people/portal/lessons/portal-lessons.mapper.test.ts": {
@@ -6527,12 +6516,12 @@
   },
   "src/modules/people/portal/lessons/portal-lessons.repo.ts": {
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/people/portal/lessons/portal-lessons.service.ts": {
     "max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/modules/people/portal/portal-read-only.migration.test.ts": {
@@ -6548,9 +6537,6 @@
   "src/modules/people/portal/portal.controller.ts": {
     "ab/zod-inputs": {
       "count": 9
-    },
-    "max-len": {
-      "count": 1
     }
   },
   "src/modules/people/portal/portal.fakes.ts": {
@@ -6563,7 +6549,7 @@
   },
   "src/modules/people/portal/portal.join.http.test.ts": {
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/portal/portal.privacy.http.test.ts": {
@@ -6586,7 +6572,7 @@
   },
   "src/modules/people/portal/reports/portal-reports.service.ts": {
     "max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/people/portal/scope/portal-scope.repo.ts": {
@@ -6604,7 +6590,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/people/roles/roles.fakes.ts": {
@@ -6920,7 +6906,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/people/teachers/availability/availability.controller.test.ts": {
@@ -7007,7 +6993,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/people/teachers/teachers.mapper.ts": {
@@ -7035,7 +7021,7 @@
   },
   "src/modules/people/teachers/teachers.repo.ts": {
     "max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/modules/people/teachers/teachers.settings.ts": {
@@ -7106,9 +7092,6 @@
   "src/modules/people/users/photo/staff-photo.controller.ts": {
     "ab/zod-inputs": {
       "count": 6
-    },
-    "max-len": {
-      "count": 4
     }
   },
   "src/modules/people/users/store/users.fakes.store.ts": {
@@ -7194,7 +7177,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/people/users/users.module.ts": {
@@ -7223,7 +7206,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/platform/google-sync/admin/google-admin.service.test.ts": {
@@ -7273,7 +7256,7 @@
   },
   "src/modules/platform/google-sync/google-alerts.ts": {
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/platform/google-sync/google-client.port.ts": {
@@ -7294,7 +7277,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/modules/platform/google-sync/google-sync.fakes.ts": {
@@ -7335,7 +7318,7 @@
   },
   "src/modules/platform/google-sync/http/google-http.client.ts": {
     "max-len": {
-      "count": 12
+      "count": 11
     }
   },
   "src/modules/platform/google-sync/http/google-http.oauth.ts": {
@@ -7356,7 +7339,7 @@
       "count": 9
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/platform/google-sync/map/google-map.queries.ts": {
@@ -7465,7 +7448,7 @@
       "count": 3
     },
     "max-len": {
-      "count": 10
+      "count": 8
     }
   },
   "src/modules/platform/google-sync/sync/google-sync.job.ts": {
@@ -7594,7 +7577,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/platform/google-sync/writers/drive/drive-files.ts": {
@@ -7605,7 +7588,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/platform/google-sync/writers/drive/drive.waits.test.ts": {
@@ -7794,7 +7777,7 @@
   },
   "src/modules/platform/translations/translations.service.ts": {
     "max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/modules/platform/translations/values-owned.test.ts": {
@@ -7804,7 +7787,7 @@
   },
   "src/modules/platform/translations/values-owned.ts": {
     "max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/reporting/dashboard/dashboard.controller.test.ts": {
@@ -7846,7 +7829,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/reporting/dashboard/dashboard.service.test.ts": {
@@ -8066,11 +8049,6 @@
       "count": 5
     }
   },
-  "src/modules/reporting/report-pdf/render/pdf-model.before.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/report-pdf/render/pdf-model.test.ts": {
     "max-len": {
       "count": 1
@@ -8081,7 +8059,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/reporting/report-pdf/render/pdf-renderer.lazy.test.ts": {
@@ -8203,7 +8181,7 @@
   },
   "src/modules/reporting/report-pdf/v2/family-sections.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/reporting/report-pdf/v2/family-source.test.ts": {
@@ -8267,12 +8245,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/reporting/reports/files/report-files.student-pdf.test.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/reporting/reports/history/report-history.mapper.ts": {
@@ -8312,7 +8290,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/reporting/reports/report-row.ts": {
@@ -8383,7 +8361,7 @@
       "count": 4
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/reporting/reports/submit/report-follow-up.ts": {
@@ -8520,7 +8498,7 @@
   },
   "src/modules/reporting/reports/teacher/teacher-reports.service.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/reporting/reports/test-app.ts": {

@@ -1,4 +1,4 @@
-import type { TeacherPage } from '@ab/shared';
+import type { TeacherPage } from '@ab/settings';
 import { Navigate } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
