@@ -19,7 +19,7 @@ export interface StudentFieldsProps {
   notes: boolean;
 }
 
-/** «بيانات الطالب»: the fields an assistant may edit (never status, program, teacher or link). */
+/** An assistant may never edit status, program, teacher or link. */
 export function StudentFields({ value, onChange, invalid, notes }: StudentFieldsProps) {
   const error = (key: string) => (invalid.includes(key) ? t.peopleEdit.invalid : undefined);
   const gender = (key: 'gender' | 'teacher_gender_pref', label: string, none: string) => (

@@ -6,9 +6,7 @@ import { HUB_DESTINATIONS, HUB_PATHS, type HubDestination } from './hub-paths';
 import { HubLink } from './HubLink';
 import { HubStatus } from './HubStatus';
 
-// The hub table (docs/26b §1, hub.html): القسم | الحالة الآن | فتح. The whole row is the link: the
-// name is the row's one real <a>, stretched over the row; «افتح» only repeats it visually. Phones
-// (< 640px) drop the description line and the «فتح» column.
+// docs/26b §1: the name is the row's one real link stretched over the row.
 
 const H = t.settingsHub;
 

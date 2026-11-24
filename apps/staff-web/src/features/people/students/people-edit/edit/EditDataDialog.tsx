@@ -40,11 +40,7 @@ async function saveBoth(input: { view: PeopleEditView; initial: Forms; current: 
   if (hasChange(family.patch)) await saveFamily({ id: g.id, patch: family.patch });
 }
 
-/**
- * «تعديل البيانات» (owner 2026-11-02): the student's and the family's details in one form, saved
- * with PATCH /people/students/:id and /people/guardians/:id (people.edit); the family's second
- * number can be removed. Admin-only fields (status, program, teacher, link, source) are not here.
- */
+/** Needs people.edit; admin-only fields (status, program, teacher, link, source) are not here. */
 export function EditDataDialog({ view, onClose, onDone }: PeopleDialogProps) {
   const formId = useId();
   const [initial] = useState<Forms>(() => ({

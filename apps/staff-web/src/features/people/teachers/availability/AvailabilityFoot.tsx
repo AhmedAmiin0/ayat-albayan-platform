@@ -5,11 +5,7 @@ import { weeklyHoursLabel } from './track';
 
 type Props = { hours: number; pending: boolean; failed: boolean; onCancel: () => void; onSave: () => void };
 
-/**
- * Summary + إلغاء / حفظ المواعيد. حفظ stays enabled while the grid has an error: the save is
- * refused and focus moves to the first error instead (docs/07 §8).
- * TODO(R-SCH-01): «محجوز منها N حلقات» once lessons exist.
- */
+/** Save stays enabled with errors: it is refused and focus goes to the first (docs/07 §8). */
 export function AvailabilityFoot({ hours, pending, failed, onCancel, onSave }: Props) {
   return (
     <div className="mt-[18px] flex flex-wrap items-center justify-between gap-3 border-t border-rule pt-4">

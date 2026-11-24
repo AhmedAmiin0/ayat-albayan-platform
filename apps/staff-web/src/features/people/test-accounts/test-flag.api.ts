@@ -1,7 +1,6 @@
 import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** Which switch: «حساب تجريبي» (a login) or «طالب تجريبي» (a student). */
 export type TestFlagTarget = 'user' | 'student';
 
 const PATH: Readonly<Record<TestFlagTarget, (id: string) => string>> = {

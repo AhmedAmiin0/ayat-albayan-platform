@@ -6,7 +6,6 @@ import { customConfigQuery, deleteCustom, putCustom } from './custom-api';
 
 const c = t.config.custom;
 
-/** What «القيم» is doing with a custom value: adding, editing one, or asking before deleting one. */
 export type CustomEditing = { mode: 'add' } | { mode: 'edit'; entry: CustomConfigView } | null;
 export interface CustomSave {
   key: string;
@@ -19,10 +18,7 @@ export function turnsPublic(editing: CustomEditing, body: CustomConfigUpsert): b
   return editing.mode === 'add' || !editing.entry.isPublic;
 }
 
-/**
- * «قيم مخصصة» in «القيم»: the add/edit dialog and the delete confirmation (PUT and DELETE
- * /config/custom/:key, each audited), then the list is refetched and `onDone` gets the toast words.
- */
+/** PUT and DELETE /config/custom/:key are each audited. */
 export function useCustomValues(onDone: (message: string) => void) {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState<CustomEditing>(null);
@@ -48,7 +44,7 @@ export function useCustomValues(onDone: (message: string) => void) {
   return {
     editing,
     deleting,
-    /** A save that would show the value to visitors, waiting for «اجعلها عامة واحفظ». */
+    /** A save that would make the value public waits for explicit confirmation. */
     publicAsk,
     submit: (input: CustomSave) => (turnsPublic(editing, input.body) ? setPublicAsk(input) : save.mutate(input)),
     confirmPublic: () => {

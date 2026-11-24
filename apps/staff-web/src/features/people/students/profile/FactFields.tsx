@@ -5,8 +5,7 @@ import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «سن الطالب» and «النوع» as the registration form asks them (research-forms item 1): both
-// optional; the age is a whole number 3–99 (ageError has the form's message).
+// Both optional; the age is a whole number from 3 to 99.
 
 export interface AgeFieldProps {
   value: string;
@@ -60,10 +59,7 @@ interface ContactIsSelfFieldProps {
   onChange: (value: boolean) => void;
 }
 
-/**
- * «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1, NOT in the owner's Google Form: docs/13
- * deviation). Default «ولي الأمر» (false); «الطالب نفسه» = an adult student is their own contact.
- */
+/** Default false (guardian); true means an adult student is their own contact (docs/30 §1). */
 export function ContactIsSelfField({ name, value, onChange }: ContactIsSelfFieldProps) {
   const c = t.familyAuth.contactIsSelf;
   return (
