@@ -1,4 +1,4 @@
-import { isClosedLesson, isOpenLesson, type LessonView } from '@ab/shared';
+import { isClosedLesson, isOpenLesson, type LessonView } from '@ab/schedule';
 
 // docs/48 «Day rows rule»: «بقية اليوم» = today's lessons not closed and not ended, the hero out;
 // ended ones fold under «انتهت n حلقات اليوم». Web lessonsOnDay keeps closed lessons (unlike mobile

@@ -30,10 +30,7 @@ interface PayStatementFormProps {
   onCancel: () => void;
 }
 
-/**
- * «تأكيد الدفع» of a statement (web PayStatementDialog): method (bank by default), day, note and the
- * receipt photo; the receipt is uploaded first, then one request freezes the statement as paid.
- */
+/** The receipt uploads first, then one request freezes the statement as paid. */
 export function PayStatementForm({ statement, onDone, onCancel }: PayStatementFormProps) {
   const now = useNow();
   const pay = usePayStatement(statement);

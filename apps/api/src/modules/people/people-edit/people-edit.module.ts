@@ -13,12 +13,7 @@ import { PeopleViewService } from './people-view.service';
 import { RoleSwitchService } from './role-switch.service';
 import { StudentRecordsRepo } from './student-records.repo';
 
-/**
- * People edits by the assistant (owner 2026-11-02): «تعديل البيانات», «ربط بولي أمر آخر» and
- * guardian ↔ student, under /people/* with their own keys (people.edit,
- * students.attach_guardian, people.switch_role). The writes are the admin's services; the module
- * adds the narrower schemas, the checks and the audit rows.
- */
+/** The writes are the admin's services; this adds narrower schemas, checks and audit rows. */
 @Module({
   imports: [GuardiansModule, StudentsModule, SalesModule],
   controllers: [PeopleEditController, PeopleRoleController],

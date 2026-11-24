@@ -22,11 +22,7 @@ type Ids = z.infer<typeof ids>;
 
 const call = (p: Ids, user: AuthUser) => ({ user, studentId: p.id, lessonId: p.lessonId });
 
-/**
- * «خيارات الحلقة» (owner 2026-11-17): the family's «سأحضر», «أعتذر عن الحلقة», «اطلب موعدًا
- * آخر» (with its free times) and «سحب الطلب», on a lesson of the login's own student (same scope
- * key and scoping as PortalController). Every write answers PortalActionResult.
- */
+/** Lesson actions on the login's own student, scoped like PortalController. */
 @ApiTags('portal')
 @ApiBearerAuth()
 @Permissions('self.portal')
@@ -65,7 +61,7 @@ export class PortalLessonActionsController {
     return this.actions.request(call(p, user), body);
   }
 
-  /** «سحب الطلب»: 409 no_request when nothing waits. */
+  /** 409 no_request when nothing waits. */
   @Post('withdraw')
   @HttpCode(200)
   withdraw(@ZodParams(ids) p: Ids, @CurrentUser() user: AuthUser): Promise<PortalActionResult> {

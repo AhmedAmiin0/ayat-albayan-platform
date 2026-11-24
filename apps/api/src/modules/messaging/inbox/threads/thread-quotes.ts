@@ -13,7 +13,7 @@ export interface QuotedRow {
   template_key: string | null;
   /** Deleted for everyone (migration 992): the quote shows nothing of it. */
   deleted_at?: string | null;
-  /** Hidden from the platform («حذف من المنصة», 993): quoted with neither text nor file. */
+  /** Hidden rows (migration 993) are quoted with neither text nor file. */
   hidden_at?: string | null;
   sender?: { full_name: string } | null;
 }
@@ -67,11 +67,7 @@ export function quoteOf(row: QuotedRow): MessageQuote {
 const goneFromQuotes = (row: QuotedRow): boolean =>
   Boolean(row.deleted_at) || Boolean(row.hidden_at);
 
-/**
- * Each view with its quote (same chat only). A reply whose quoted row we do not hold (WhatsApp
- * named a wamid we never stored, owner 2026-10-31) gets the «رسالة غير متاحة» marker; a view that
- * answers nothing, or is hidden from the platform, is returned as it is.
- */
+/** A reply to a wamid we never stored gets the unavailable marker. */
 export function withQuotes(
   views: readonly MessageView[],
   quotes: ReadonlyMap<string, MessageQuote>,
@@ -83,10 +79,7 @@ export function withQuotes(
   });
 }
 
-/**
- * «رد» (owner 2026-10-25): a reply quotes a message of the SAME chat that WhatsApp knows (a wamid),
- * and a page's bubbles carry the messages they answer (one read per page, by id and phone).
- */
+/** A reply quotes a message of the same chat that WhatsApp knows (a wamid). */
 @Injectable()
 export class ThreadQuotes {
   constructor(@Inject(DB) private readonly db: Db) {}

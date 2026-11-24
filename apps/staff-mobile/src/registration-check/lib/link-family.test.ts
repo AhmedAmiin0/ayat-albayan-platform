@@ -2,7 +2,7 @@ import { LEAD_FAMILY_LINK_ERRORS } from '@ab/shared';
 import { ApiError, t } from '@ab/mobile-kit';
 import { linkFamilyErrorText } from './link-family';
 
-// POST /leads/:id/link-family refusals in her words (owner 2026-10-29): every shared code has its line.
+// POST /leads/:id/link-family refusals in her words: every shared code has its line.
 describe('linkFamilyErrorText', () => {
   it.each(LEAD_FAMILY_LINK_ERRORS.map((code) => [code]))('%s has its own line', (code) => {
     const status = code === 'lead_not_found' || code === 'student_not_found' ? 404 : 409;

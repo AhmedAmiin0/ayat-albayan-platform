@@ -3,11 +3,7 @@ import { t, BackButton, EmptyState, Screen, ScreenHeader } from '@ab/mobile-kit'
 import { sourceFromParams } from './makeup-draft';
 import { MakeupWizard } from './MakeupWizard';
 
-/**
- * /students/makeup/:lessonId?studentId&studentName&tz&missedAt&durationMin&teacherId&teacherName,
- * opened from a missed lesson's row in «الجدول» (admin tabs only: the route sits under (tabs), which
- * the root stack gates). A link without the lesson's facts says «مش لاقيين» instead of guessing.
- */
+/** Admin tabs only (root stack gates it); missing lesson facts show not-found, not a guess. */
 export function MakeupScreen() {
   const params = useLocalSearchParams();
   const source = sourceFromParams(params);

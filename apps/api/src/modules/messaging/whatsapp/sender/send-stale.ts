@@ -55,13 +55,7 @@ const isNewStudentAlert = (row: { template_key: string | null; dedup_key: string
   row.template_key === 'teacher_new_student' ||
   (row.dedup_key ?? '').startsWith('teacher_new_student:');
 
-/**
- * teacher_new_student is queued with expires_at = the first lesson's start (TeacherAlert): a lesson
- * moved since (edit_lesson_time) would announce the old time, so the row is dropped, like the
- * reminders edit_lesson_time expires; the teacher still gets the bell row and the lesson reminder.
- * A lesson no longer open (a trial moved to a new date by «موعد تجريبي جديد», or cancelled) drops it
- * too: the new lesson carries its own alert.
- */
+/** Dropped when the lesson moved or is no longer open, since it would announce the old time. */
 function newStudentRetimed(row: {
   template_key: string | null;
   dedup_key: string | null;
@@ -105,14 +99,7 @@ function followUpStale({ lead, dedup_key }: StaleInput): string | null {
   return cycle !== null && cycle !== followUpCycle(lead) ? 'lead wrote again' : null;
 }
 
-/**
- * What the jobs queue on their own: reminders (with the classroom's lesson_join_link when
- * a platform lesson: the teacher's meeting_mode, else settings.meeting_link_auto; the admin's
- * «ابعت لينك الحلقة» carries created_by and is not held),
- * follow-ups and renewal reminders (migration 162), and the lesson_rating after a completed lesson
- * (migration 195; the admin's «إرسال تقييم الحلقة» is not). Every other TEMPLATE_KEYS key goes out
- * because someone acted: a booking, a submitted report (message.worker.auto.test checks the split).
- */
+/** Job-queued keys; every other key is sent because someone acted (checked by a test). */
 export const AUTOMATIC_KEYS: readonly TemplateKey[] = [...REMINDER_KEYS, 'follow_up_slots', 'renewal_due', 'lesson_rating'];
 const AUTOMATIC: ReadonlySet<string> = new Set(AUTOMATIC_KEYS);
 

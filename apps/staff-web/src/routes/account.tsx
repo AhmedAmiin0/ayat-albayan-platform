@@ -1,4 +1,4 @@
-import { USER_ROLES } from '@ab/shared';
+import { USER_ROLES } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { PortalShell, SHELL_OF } from '@/components/shell/nav/SectionShells';

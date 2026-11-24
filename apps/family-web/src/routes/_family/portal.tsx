@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { parseChildSearch, WithPick } from '@/features/children';
 import { HomePage } from '@/features/home';
 
-/** «الرئيسية»: the student in view's page; `?tab=` opens a tab (an alert opens the package). */
+/** ?tab= opens a tab, so an alert can open the package. */
 export const Route = createFileRoute('/_family/portal')({
   validateSearch: parseChildSearch,
   component: Portal,

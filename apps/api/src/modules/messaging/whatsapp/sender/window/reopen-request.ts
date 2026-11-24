@@ -26,13 +26,7 @@ const HELD: HoldPlan = { note: null };
 const WAIT: HoldPlan = { note: NO_TEMPLATE_NOTE };
 const failNow = (why: FailWhy): HoldPlan => ({ fail: why, note: null });
 
-/**
- * The reopen template a held text needs (owner 2026-11-03; merge-gate review 2026-11-05): one that
- * is pending or went out in the last 24 h counts; a failed or expired one does not, and the next
- * try is queued under its own dedup key (at most REOPEN_TRIES a day). When none is live and none
- * can be queued, the caller fails the text at once with the reason (never held with nothing sent).
- * «بدون قالب» (owner 2026-11-06): nothing is queued and the text waits for the family (WAIT).
- */
+/** Pending or sent in 24 h counts; at most REOPEN_TRIES a day; else the text fails at once. */
 @Injectable()
 export class ReopenRequest {
   private readonly log = new Logger('ReopenRequest');
@@ -46,7 +40,7 @@ export class ReopenRequest {
     private readonly cancels: ReopenCancel,
   ) {}
 
-  /** The admin's choice (owner 2026-11-06): a starter template, or «بدون قالب» (wait). */
+  /** A starter template, or none (wait for the family). */
   async choice(): Promise<ReopenChoice> {
     return reopenChoiceOf((await this.settings.read()).chat_reopen_template);
   }

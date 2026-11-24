@@ -6,15 +6,11 @@ interface InvoicePreviewProps {
   /** The photo, or the chat file's thumbnail; null shows a file tile instead. */
   uri: string | null;
   mime: string;
-  /** Where it came from («اترفعت من الجهاز» / «من الشات»): in the tile and in the screen reader's label. */
+  /** Where it came from, shown in the tile and read by the screen reader. */
   caption: string;
 }
 
-/**
- * The picked invoice: its picture whole (contain, so a receipt's amount and date are not cropped),
- * or a tile with the receipt icon («ملف PDF» / the source) when there is none. The screen reader
- * hears «الفاتورة، من الشات» (plus PDF).
- */
+/** Contain, so a receipt's amount and date are not cropped. */
 export function InvoicePreview({ uri, mime, caption }: InvoicePreviewProps) {
   const { color } = useTheme();
   const pdf = mime === 'application/pdf';

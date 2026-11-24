@@ -3,7 +3,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { AmountText } from '@/sales-money/components/AmountText';
 import { byCurrency } from '@/sales-money/lib/money-text';
 
-/** «إجمالي العمولات المستحقة»: one amount per currency, one line each (web CurrencyList). Never summed across them. */
+/** One amount per currency; never summed across currencies. */
 export function CurrencyTotalsLine({ label, totals }: { label: string; totals: Readonly<Record<string, number>> }) {
   const entries = byCurrency(totals);
   return (

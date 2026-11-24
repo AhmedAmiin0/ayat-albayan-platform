@@ -3,9 +3,7 @@ import type { Env, MetaLineEnv } from '@/config/env/env';
 import { chatEnv, metaNotifications } from '@/config/env/whatsapp/env.meta';
 import type { FetchLike, GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 
-// «افحص الخطوط» for the switch to Meta (docs/19 «CRM → Meta»): the app secret and the verify token
-// set (booleans, never values) and the line's app subscribed to its WABA. A meta line reads it
-// from its own check; a crm line asks Meta once with the ids it would switch to (a read-only GET).
+// Preflight for the switch to Meta (docs/19): booleans only; a crm line does one read-only GET.
 
 type Apps = NonNullable<LineCheckView['subscribed_apps']>;
 type MetaReady = NonNullable<LineCheckView['meta_ready']>;
