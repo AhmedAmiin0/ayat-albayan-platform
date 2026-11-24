@@ -6608,17 +6608,17 @@
       "count": 4
     }
   },
-  "src/sales/sales/screens/AllStudentsScreen.mine.test.tsx": {
+  "src/sales/sales/screens/AllStudentsScreen/tests/mine.test.tsx": {
     "no-nested-ternary": {
       "count": 1
     }
   },
-  "src/sales/sales/screens/AllStudentsScreen.test.tsx": {
+  "src/sales/sales/screens/AllStudentsScreen/tests/AllStudentsScreen.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/screens/AllStudentsScreen.tsx": {
+  "src/sales/sales/screens/AllStudentsScreen/AllStudentsScreen.tsx": {
     "ab/module-boundaries": {
       "count": 2
     },
@@ -6646,12 +6646,12 @@
       "count": 1
     }
   },
-  "src/sales/sales/screens/SalesScheduleScreen.details.test.tsx": {
+  "src/sales/sales/screens/SalesScheduleScreen/tests/details.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/screens/SalesScheduleScreen.tsx": {
+  "src/sales/sales/screens/SalesScheduleScreen/SalesScheduleScreen.tsx": {
     "ab/module-boundaries": {
       "count": 1
     },
@@ -6671,7 +6671,7 @@
       "count": 1
     }
   },
-  "src/sales/sales/screens/SalesSubscriptionsScreen.tsx": {
+  "src/sales/sales/screens/SalesSubscriptionsScreen/SalesSubscriptionsScreen.tsx": {
     "max-len": {
       "count": 3
     },
@@ -6682,17 +6682,17 @@
       "count": 1
     }
   },
-  "src/sales/sales/screens/SalesTeacherScreen.tabs.test.tsx": {
+  "src/sales/sales/screens/SalesTeacherScreen/tests/tabs.test.tsx": {
     "max-len": {
       "count": 2
     }
   },
-  "src/sales/sales/screens/SalesTeacherScreen.test.tsx": {
+  "src/sales/sales/screens/SalesTeacherScreen/tests/SalesTeacherScreen.test.tsx": {
     "max-len": {
       "count": 1
     }
   },
-  "src/sales/sales/screens/SalesTeacherScreen.tsx": {
+  "src/sales/sales/screens/SalesTeacherScreen/SalesTeacherScreen.tsx": {
     "@typescript-eslint/no-useless-default-assignment": {
       "count": 1
     },
@@ -6731,7 +6731,7 @@
       "count": 1
     }
   },
-  "src/sales/sales/screens/SalesTodayScreen.actions.test.tsx": {
+  "src/sales/sales/screens/SalesTodayScreen/tests/actions.test.tsx": {
     "max-len": {
       "count": 2
     }

@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { teacher } from '@/sales/sales/testing/fixtures';
-import { SalesTeacherScreen } from './SalesTeacherScreen';
+import { SalesTeacherScreen } from '@/sales/sales/screens/SalesTeacherScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

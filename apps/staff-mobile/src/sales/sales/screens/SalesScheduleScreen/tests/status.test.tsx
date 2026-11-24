@@ -5,7 +5,7 @@ import { lessonStatusText } from '@/core/ui/feedback/lesson-status';
 import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
-import { SalesScheduleScreen } from './SalesScheduleScreen';
+import { SalesScheduleScreen } from '@/sales/sales/screens/SalesScheduleScreen';
 
 // An academy that requires lesson confirmation.
 const statusWord = lessonStatusText(true).word;

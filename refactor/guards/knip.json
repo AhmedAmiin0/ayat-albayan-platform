@@ -161,7 +161,7 @@
   "apps/staff-mobile/src/sales-money/index.ts types MoneyView",
   "apps/staff-mobile/src/sales-money/screens/MyMoneyScreen/MyMoneyScreen.tsx types MoneyView",
   "apps/staff-mobile/src/sales/sales/index.ts types StudentsView",
-  "apps/staff-mobile/src/sales/sales/screens/AllStudentsScreen.tsx types StudentsView",
+  "apps/staff-mobile/src/sales/sales/screens/AllStudentsScreen/AllStudentsScreen.tsx types StudentsView",
   "apps/staff-mobile/src/student-file/recordings/RecordingFiltersBar.tsx types RecordingFiltersBarProps",
   "apps/staff-mobile/src/teacher/report/components/AttachmentsField.tsx exports fileLabel",
   "apps/staff-mobile/src/teacher/report/components/AttachmentsField.tsx types AttachmentsFieldProps",
