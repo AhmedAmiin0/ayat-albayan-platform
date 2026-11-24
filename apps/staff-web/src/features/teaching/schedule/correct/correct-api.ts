@@ -1,4 +1,5 @@
-import type { CorrectTo, LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import type { CorrectTo } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@ab/web-kit/lib/http/api';
 import { LESSONS_KEY } from '@/features/teaching/schedule/api';

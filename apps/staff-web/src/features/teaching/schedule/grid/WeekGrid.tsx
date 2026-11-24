@@ -1,5 +1,5 @@
-import { weekDates, weekdayOf } from '@ab/shared';
-import type { LessonView, OverviewTeacher } from '@ab/shared';
+import { weekDates, weekdayOf } from '@ab/time';
+import type { LessonView, OverviewTeacher } from '@ab/schedule';
 import { useNarrow } from '@ab/web-kit/components/ui/layout/use-narrow';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';

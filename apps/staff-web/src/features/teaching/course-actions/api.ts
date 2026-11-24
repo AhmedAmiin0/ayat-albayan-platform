@@ -13,12 +13,12 @@ import {
   type StopMoneyAsk,
 } from '@ab/client-core';
 import type {
-  BookingTeacherOption,
   CourseStopPreview,
   CourseStopRequest,
   CourseStopResult,
   ProfileCourseView,
 } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

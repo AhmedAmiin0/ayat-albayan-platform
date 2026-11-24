@@ -1,7 +1,7 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { assistantError } from './assistant-pay.errors';
 import { AssistantRpc } from './assistant-pay.rpc';
 import { fakeSettings } from '@/common/settings/settings.fakes';

@@ -1,4 +1,5 @@
-import { counted, type ThreadStudentView } from '@ab/shared';
+import type { ThreadStudentView } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t, isolate } from '@ab/mobile-kit';
 import { childChip, running } from './subscription-words';
 

@@ -1,4 +1,5 @@
-import { parseAmount, type SalesMoneySubscriptionView, type SalesPaymentView } from '@ab/shared';
+import type { SalesMoneySubscriptionView, SalesPaymentView } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';

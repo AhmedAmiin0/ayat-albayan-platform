@@ -3,7 +3,7 @@ import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { AuditService } from '@/common/audit/audit.service';
 import { errorCode } from '@/common/http/errors';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { GuardiansService } from '@/modules/people/guardians';
 import { StudentsService } from '@/modules/people/students';
 import { PeopleEditRepo } from './people-edit.repo';

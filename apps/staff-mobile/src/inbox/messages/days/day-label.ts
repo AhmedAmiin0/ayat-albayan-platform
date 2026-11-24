@@ -1,4 +1,4 @@
-import { chatDayKey, type ClockCycle } from '@ab/shared';
+import { chatDayKey, type ClockCycle } from '@ab/time';
 import { chatDayLabel, chatRowTime } from '@ab/mobile-kit';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 

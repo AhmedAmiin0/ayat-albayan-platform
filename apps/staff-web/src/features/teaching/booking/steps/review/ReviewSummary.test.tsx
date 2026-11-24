@@ -1,4 +1,5 @@
-import { counted, type BookingTeacherOption } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';

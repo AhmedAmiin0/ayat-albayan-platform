@@ -5,7 +5,7 @@ import { AuditModule } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { AuthModule } from '@/common/auth/auth.module';
 import { DB, DbModule } from '@/common/db/db.module';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { StudentsModule } from './students.module';
 
 const results: Record<string, FakeResult[]> = {};

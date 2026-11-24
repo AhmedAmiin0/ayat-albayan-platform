@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { EVOLUTION_SEND_ERROR, EvolutionNumbersRepo } from './evolution-numbers.repo';
 
 // Review fix 4: the auto-disable guard is evolution_enabled_at (set only when the number is
