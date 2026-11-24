@@ -1,4 +1,4 @@
-import { academyWhatsappUrl } from '@ab/shared';
+import { academyWhatsappUrl } from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 

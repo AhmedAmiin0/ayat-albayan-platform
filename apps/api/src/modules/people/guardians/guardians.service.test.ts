@@ -1,6 +1,6 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from './fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { GuardiansService } from './guardians.service';
 
 const G = { id: 'g1', name: 'ام جود', phone_e164: '+966501234567' };

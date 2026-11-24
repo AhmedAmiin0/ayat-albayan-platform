@@ -1,5 +1,6 @@
 import type { PickState } from '@ab/client-core';
-import { clockOf, wallParts, type Conflict } from '@ab/shared';
+import { wallParts, type Conflict } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import type { ReactNode } from 'react';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { Button } from '@ab/web-kit/components/ui/form/button';

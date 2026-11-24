@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { MEETING_ID } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import { invitesOf, MeetingInviteesRepo } from './meeting-invitees.repo';
 

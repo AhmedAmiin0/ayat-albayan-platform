@@ -1,5 +1,5 @@
-import { weekdayOf } from '@ab/shared';
-import type { LessonView } from '@ab/shared';
+import { weekdayOf } from '@ab/time';
+import type { LessonView } from '@ab/schedule';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
