@@ -1,4 +1,4 @@
-import { SETTING_KEYS } from '@ab/shared';
+import { SETTING_KEYS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { decodeAll } from '@/common/configuration/config-store/store/config-decode';
 import { compareEffective, configParity } from './config-parity';

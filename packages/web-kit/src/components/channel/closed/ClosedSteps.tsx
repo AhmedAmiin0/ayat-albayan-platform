@@ -20,10 +20,6 @@ const MARK_TONE: Readonly<Record<StepState, string>> = {
   pending: 'bg-sunk text-ink-2',
 };
 
-/**
- * What is left before the chat opens (FamChatWebClosed): subscribe, the teacher, the chat; the
- * current step carries «الخطوة الحالية», a done one «تم.» under its name.
- */
 export function ClosedSteps({ steps }: { steps: readonly ClosedStep[] }) {
   return (
     <ol className="grid divide-y divide-rule text-start">

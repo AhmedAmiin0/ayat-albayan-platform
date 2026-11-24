@@ -4,7 +4,7 @@ import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
-// apps/api/src/modules/roles: «الأدوار والصلاحيات», all behind roles.manage.
+// All behind roles.manage.
 export type { RoleView, StaffUserView } from '@ab/catalog';
 
 export const ROLES_KEY = ['roles'] as const;
@@ -33,8 +33,7 @@ export function roleName(role: Pick<RoleView, 'name_ar' | 'name_en'>): string {
   return locale === 'en' ? (role.name_en ?? role.name_ar) : role.name_ar;
 }
 
-/** «الإدارة», «معلم/ة», … for a base role. */
 export const baseRoleLabel = (role: RoleView['base_role']): string => t.activity.roles[role];
 
-/** «استعادة الافتراضي»: a system teacher / sales / assistant role back to its default grants. */
+/** Resets a system teacher, sales or assistant role to its default grants. */
 export const resetRole = (id: string) => apiSend<RoleView>('POST', `/roles/${id}/reset`);

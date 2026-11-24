@@ -5,7 +5,7 @@ import { NoCommissionNote, UsedBeforeField } from '@/features/finance/subscripti
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** `usedBefore`: «حلقات مستخدمة من الباقة», only with «بدأ الاشتراك سابقًا» (0 otherwise). */
+/** `usedBefore` is lessons already used, only when started before (0 otherwise). */
 export type StartValue = { startsOn: string; alreadyStarted: boolean; usedBefore: number };
 
 type Props = {
@@ -20,15 +20,10 @@ type Props = {
   error?: string | null;
 };
 
-/** «12 نوفمبر 2026 · أول تاريخ مسموح: 2 نوفمبر 2026»: the day, then the input's min. */
 const startHint = (day: string, min: string): string =>
   `${dateLabel(day)} · ${t.datePicker.earliest.replace('{date}', dateLabel(min))}`;
 
-/**
- * The package's first day (owner 2026-10-12, docs/16 row 24): without subscriptions.set_start_date only
- * «تبدأ الباقة اليوم»; with it a day from today on, or up to a year back with «بدأ الاشتراك سابقًا», then
- * the lessons already used (owner 2026-10-28); unticking it puts them back to 0.
- */
+/** Without subscriptions.set_start_date only today (docs/16 row 24); back-dating up to a year. */
 export function SalesStartField({ canSet, today, value, usedMax, onChange, error }: Props) {
   if (!canSet) return <p className="text-sm text-ink-2">{t.salesMoney.startsOnDefault.replace('{date}', dateLabel(today))}</p>;
   const min = value.alreadyStarted ? daysBefore(today, SALES_START_BACK_DAYS) : today;

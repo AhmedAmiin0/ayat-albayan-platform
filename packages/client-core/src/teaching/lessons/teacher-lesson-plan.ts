@@ -5,12 +5,11 @@ import {
   isOpenLesson,
   type JoinWindowConfig,
   type LessonView,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { reportSendState } from '../reports/index.js';
 import { teacherCanAct, teacherCanConfirm, teacherConfirmed } from './teacher-actions.js';
 
-// docs/48 «Cross-screen model»: one pure lesson model for the teacher's «اليوم» and «جدولي» on
-// web and mobile. Every answer is derived from the lesson and the clock (useNow), never fetched.
+// One pure lesson model (docs/48): every answer derives from the lesson and the clock.
 
 /** The teacher's live screens refetch her lessons and pending reports every 30 s (docs/48). */
 export const TEACHER_REFRESH_MS = 30_000;
@@ -95,7 +94,7 @@ export function joinPhase(
 export const wayIn = (o: { platform: boolean; ownLink: string | null | undefined }): WayIn =>
   o.platform || !o.ownLink ? 'room' : 'link';
 
-/** «اقترح موعدًا آخر»: the API rule (409 on a closed lesson or proposal_pending). */
+/** Mirrors the API rule: 409 on a closed lesson or a pending proposal. */
 type ProposeLesson = Pick<LessonView, 'status' | 'pending_proposal'>;
 export const teacherCanPropose = (lesson: ProposeLesson): boolean =>
   isOpenLesson(lesson.status) && !lesson.pending_proposal;

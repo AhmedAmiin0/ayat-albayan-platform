@@ -24,9 +24,9 @@ type Props = {
   packages: SalesMoneySubscriptionView[];
   onClose: () => void;
   onSaved: (payment: SalesPaymentView) => void;
-  /** Right after «اشتراك جديد»: «احجز أيام الحلقات الآن» for the new package's student. */
+  /** Books the course days for the new package's student. */
   onBookCourse?: (() => void) | undefined;
-  /** The chat's phone for a child not hers (chatBinding, sales.renew_any): the transfer only, never «إلغاء الباقة». */
+  /** The chat's phone for a child not hers (sales.renew_any): transfer only, never cancel. */
   bindOf?: ((studentId: string) => Bind) | undefined;
 };
 
@@ -36,11 +36,7 @@ const formFor = (s: SalesMoneySubscriptionView | undefined, day: string): Transf
   note: '',
 });
 
-/**
- * Step 2 «سجّل التحويل البنكي» (R-ASST-04): «المرفقات» optional (up to five), the amount starts at what is
- * due; a smaller amount says the package stays unpaid (owner 2026-10-28) but still saves. A package she
- * made by mistake (nothing paid) is cancelled from here instead («إلغاء الباقة», owner 2026-10-28).
- */
+/** A smaller amount leaves the package unpaid but still saves (R-ASST-04). */
 export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCourse, bindOf }: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();

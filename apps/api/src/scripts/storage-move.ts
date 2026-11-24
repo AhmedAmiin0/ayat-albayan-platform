@@ -30,7 +30,7 @@ async function savedStorage(db: Db): Promise<StorageEnv> {
   return storageEnv(loadEnv());
 }
 
-/** The move only makes sense once new files go to MinIO and «اختبار الاتصال» passes. */
+/** The move only makes sense once new files go to MinIO and its connection test passes. */
 async function requireMinio(env: StorageEnv): Promise<MinioEnv> {
   if (env.driver !== 'minio' || !env.minio) throw new Error(NOT_MINIO);
   await new StorageProbe().run({ config: env.minio });

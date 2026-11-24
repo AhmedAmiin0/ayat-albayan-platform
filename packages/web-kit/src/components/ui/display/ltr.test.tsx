@@ -6,7 +6,7 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { isolateLtr } from './ltr';
 
-const CODES = t.common.phoneErrors.missing_country_code; // «… مثلًا +966 أو +20»
+const CODES = t.common.phoneErrors.missing_country_code;
 
 describe('isolateLtr (docs/07 §6 phone error, §14.4)', () => {
   it('wraps every country code in its own <bdi dir=ltr>, text unchanged', () => {

@@ -1,5 +1,6 @@
 import { lessonMinutes, liveRoom, type WeekLesson } from '@ab/client-core';
-import { firstName, type ClockOptions } from '@ab/shared';
+import { firstName } from '@ab/schedule';
+import type { ClockOptions } from '@ab/time';
 import { View } from 'react-native';
 import { t, useTheme } from '@ab/mobile-kit';
 import { RowText } from '@/ui';
@@ -14,10 +15,6 @@ interface ScheduleRowProps {
   now: Date;
 }
 
-/**
- * One lesson of the week: the time, the teacher and length (opening «خيارات الحلقة»), «جارية
- * الآن» while its room is live (canvas RoomXLivePush), its chip, «ادخل» when open.
- */
 export function ScheduleRow({ entry, clock, now }: ScheduleRowProps) {
   const { student, lesson } = entry;
   const { color } = useTheme();

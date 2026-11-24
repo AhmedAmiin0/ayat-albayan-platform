@@ -10,7 +10,6 @@ const col = createColumnHelper<DataTableFeatures, ExpenseView>();
 type Options = {
   /** Category key → its label (the categories table, else the seeded names). */
   label: (key: string) => string;
-  /** The «البند» filter: the labels of the month's rows. */
   categories: FilterOption[];
   onAction: (e: ExpenseView, action: ExpenseAction) => void;
 };

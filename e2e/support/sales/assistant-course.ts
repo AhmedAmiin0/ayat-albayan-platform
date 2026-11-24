@@ -3,16 +3,10 @@ import { ar, expect } from '../core/fixtures';
 import { withSql } from '../core/schedule';
 import { fillLessonRow } from '../teaching/lesson-rows';
 
-// «أيام الحلقات» in journey 7: right after «اشتراك جديد» the assistant books the weekly course of
-// the subscription she sold: the plan's days a week (the weekly plan = 1), each with its time from
-// a date and a time input; the course stops after the plan's lessons (ends_on on every rule).
+// Journey 7: the course stops after the plan's lessons (ends_on on every rule).
 
 const B = ar.booking;
 
-/**
- * From the open transfer step: «احجز أيام الحلقات الآن» → «أبرار» → next Sunday 16:00 Riyadh → review (the
- * course end) → «احجز» → «ارجع للمحادثة», back on the transfer step.
- */
 export async function bookCourseDays(page: Page, transfer: Locator): Promise<void> {
   await transfer.getByRole('button', { name: B.bookCourseDays }).click();
   const dialog = page.getByRole('dialog', { name: B.courseDays });

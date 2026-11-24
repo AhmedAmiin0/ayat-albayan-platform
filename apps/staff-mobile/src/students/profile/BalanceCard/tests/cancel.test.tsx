@@ -4,7 +4,7 @@ import { balanceOf, page, subscription, SUB_ID } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { BalanceCard } from '@/students/profile/BalanceCard/BalanceCard';
 
-// «إلغاء الباقة» on the profile's balance card (owner 2026-10-28): nothing paid only; a 409 reads in Arabic.
+// Package cancel only while nothing is paid.
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

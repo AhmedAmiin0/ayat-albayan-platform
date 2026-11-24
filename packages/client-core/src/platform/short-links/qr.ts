@@ -1,8 +1,6 @@
 import { encode } from 'uqr';
 
-// «رمز QR» of a short link (boards LinkXWebDetail, LinkXStaffDetail): the module matrix from uqr
-// (MIT, no dependencies, pure TS) and one SVG path of the dark modules, so the web (<svg>) and
-// mobile (react-native-svg) draw the same code with a single <path>.
+// One SVG path of the dark modules so web and mobile draw the same code.
 
 export type QrEcc = 'L' | 'M' | 'Q' | 'H';
 

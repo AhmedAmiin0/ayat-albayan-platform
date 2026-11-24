@@ -6,7 +6,7 @@ import {
   type IntegrationConfigItem,
   type IntegrationPlainKey,
   type IntegrationSecretKey,
-} from '@ab/shared';
+} from '@ab/catalog';
 import { Body, Controller, Delete, Get, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -36,11 +36,7 @@ const SERVER_SECRET_CHECKS: Partial<Record<IntegrationSecretKey, z.ZodType<strin
 const secretCheck = (key: IntegrationSecretKey): z.ZodType<string> =>
   SERVER_SECRET_CHECKS[key] ?? integrationSecretCheck(key);
 
-/**
- * «التكاملات» on /admin/settings (owner, 2026-10-12): the integration keys an admin may keep in the
- * database instead of the server env. Secrets go to Vault and are write-only: no response, log or
- * audit row ever carries a secret value (audit rows hold key names only).
- */
+/** Integration keys kept in the DB; secrets go to Vault, never in a response, log or audit. */
 @ApiTags('settings')
 @ApiBearerAuth()
 @Permissions('settings.read')

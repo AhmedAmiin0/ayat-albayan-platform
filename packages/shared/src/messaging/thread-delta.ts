@@ -1,8 +1,8 @@
 import type { MessageView, ThreadView } from './chat/views.js';
 
 /**
- * GET /threads/:phone?after=<ISO>&pending=<id,…> (owner 2026-10-27, «delta refresh»): what changed in
- * an open chat since the newest row the client holds, in ~2 reads instead of a whole page (~10).
+ * GET /threads/:phone?after=<ISO>&pending=<id,…>: what changed in an
+ * open chat since the newest row the client holds, in ~2 reads instead of a whole page (~10).
  */
 export interface ThreadDelta {
   /** Rows created after `after`, oldest → newest; at most `limit`. */

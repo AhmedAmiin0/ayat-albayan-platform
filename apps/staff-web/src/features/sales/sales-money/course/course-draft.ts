@@ -11,9 +11,7 @@ import { dateLabel } from '@/features/teaching/schedule';
 import { studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «أيام الحلقات» (owner 2026-10-18, R-ASST-01): the booking wizard's draft for the course of a
-// subscription she sold. Student, package, length, zone, program and teacher preference come from
-// GET /sales/booking/course; she picks the teacher and one time per day. Pure.
+// Course booking draft (R-ASST-01): fixed facts come from GET /sales/booking/course; pure.
 
 /**
  * The wizard's starting draft; null while she can't book it herself (blocked, or no day count). The
@@ -51,16 +49,13 @@ const holdOf = (view: SalesCourseView): { hold?: true } => (view.hold ? { hold: 
 export const courseHint = (view: SalesCourseView): BookHint | null =>
   view.student.teacher_id ? { teacherId: view.student.teacher_id, startsAt: null } : null;
 
-/** «الباقة ومدة الحلقة من الاشتراك: 8 حلقات في الشهر · 45 دقيقة». */
 export function courseFixedText(sub: CourseSubscription): string {
   const name = sub.package ? t.enums.packageSize[sub.package] : counted(t.schedule.lessonCount, sub.lessons_total);
   return t.booking.courseFixed.replace('{package}', name).replace('{minutes}', String(sub.duration));
 }
 
-/** «أيام الحلقات — سهيلة · AB-0183» once the view names the child. */
 export const courseTitle = (view: SalesCourseView | undefined): string =>
   view ? `${t.booking.courseDays} — ${studentLabel(view.student)}` : t.booking.courseDays;
 
-/** «يبدأ الاشتراك في 3 أكتوبر 2026». */
 export const subscriptionStartsText = (sub: Pick<CourseSubscription, 'starts_on'>): string =>
   t.booking.subscriptionStarts.replace('{date}', dateLabel(sub.starts_on));

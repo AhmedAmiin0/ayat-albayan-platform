@@ -5,9 +5,7 @@ import {
   type SavedReplyValues,
 } from './saved-reply-text/index.js';
 
-// Fill-in blanks of a saved reply (owner 2026-10-27): «[المبلغ]» in a reply is a blank the sender
-// fills when using it, before the text goes into the box (still editable there). The auto
-// placeholders {name} / {student} / {assistant} are slots too, prefilled with the known value.
+// A blank in a saved reply is filled before insertion; auto placeholders are prefilled slots.
 
 /** A slot of a reply: a «[label]» blank, or an auto placeholder. */
 export type ReplySlot =
@@ -15,7 +13,7 @@ export type ReplySlot =
       kind: 'blank';
       /** The `values` key: «[label]», or «[]n» for the n-th empty «[ ]». */
       key: string;
-      /** Trimmed; '' for an empty «[ ]» (the apps show «قيمة n»). */
+      /** Trimmed; '' for an empty blank (the apps number it). */
       label: string;
       /** 1, 2… for the empty ones in order; null for a labelled blank. */
       n: number | null;
@@ -65,7 +63,7 @@ export function replySlots(body: string): ReplySlot[] {
   return slots;
 }
 
-/** True when picking the reply needs the «أكمل الرد» form: a blank, or an auto placeholder with no value. */
+/** True when a blank or an auto placeholder without a value needs the completion form. */
 export function replyNeedsInput(body: string, known: SavedReplyValues): boolean {
   return replySlots(body).some((s) => s.kind === 'blank' || !known[s.key]?.trim());
 }

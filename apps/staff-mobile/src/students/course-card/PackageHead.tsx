@@ -1,13 +1,10 @@
-import { subscriptionStatusStyle, type CourseCardPackage } from '@ab/shared';
+import type { CourseCardPackage } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
 import { AppText, StatusChip, t, type, useTheme } from '@ab/mobile-kit';
 import { useViewerTz } from '@/core/lib/clock';
 import { packageLines } from './card-text';
 
-/**
- * The card's headline (owner 2026-11-17, board CourseXActions): «بقيت 3 حلقات» with the package's
- * status chip, then «12 حلقة · 9 من 12 حلقة · دُفع 360 من 360 ر.س».
- */
 export function PackageHead({ pkg }: { pkg: CourseCardPackage }) {
   const { color } = useTheme();
   const lines = packageLines(pkg, useViewerTz());

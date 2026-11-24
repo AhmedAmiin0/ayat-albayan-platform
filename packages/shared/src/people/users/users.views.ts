@@ -26,7 +26,7 @@ export interface UserView {
   linked: LinkedRecord | null;
   /** A teacher's sign-in username (docs/30); null / absent = none. */
   username?: string | null;
-  /** A test account (docs/56): the «تجريبي» chip; absent from an older API = real. */
+  /** A test account (docs/56); absent from an older API means real. */
   is_test?: boolean;
   /** A staff member's photo, a short-lived signed URL; null = initials (students and guardians always null). */
   avatar_url?: string | null;

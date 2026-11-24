@@ -1,4 +1,4 @@
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { ranksAbove } from './later-status.js';
 
 // docs/44 K1 on a store that a sync also writes (mobile SQLite): a realtime event is a visual patch

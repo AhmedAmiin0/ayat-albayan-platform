@@ -8,10 +8,7 @@ import { inboxBase, useInboxMode } from '@/features/messaging/inbox';
 import { callerName, callGlyph, callTone } from '@/features/messaging/calls/entries/call-text';
 import { useClock } from '@ab/web-kit/lib/clock';
 
-/**
- * One call of «المكالمات»: name, the direction glyph and word, the time and the talk time; opens the
- * chat. `now` is the log's one ticking clock (CallsLog).
- */
+/** `now` is the log's one ticking clock. */
 export function CallsLogRow({ call, now }: { call: CallView; now: Date }) {
   const mode = useInboxMode();
   const kind = callEntryKind(call);

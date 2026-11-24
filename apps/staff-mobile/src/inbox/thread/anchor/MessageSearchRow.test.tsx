@@ -4,8 +4,6 @@ import { t } from '@ab/mobile-kit';
 import { MessageSearchRow } from './MessageSearchRow';
 import { takeSearchRequest } from './search-request';
 
-// docs/37 NEW 2: the student's details opened from a chat (`?phone=`) offer «بحث في الرسائل».
-
 const mockParams = jest.fn((): { phone?: string } => ({}));
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams(),

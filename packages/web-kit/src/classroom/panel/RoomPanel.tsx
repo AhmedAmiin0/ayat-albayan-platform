@@ -13,9 +13,8 @@ export interface RoomPanelProps {
   tab: PanelTab;
   onTab: (tab: PanelTab) => void;
   onClose: () => void;
-  /** The family's «المحادثة» (none: the people only). */
+  /** The family's chat; none shows the people only. */
   chat: RoomChatSlot | null;
-  /** The «المشاركون» list. */
   people: ReactNode;
   count: number;
 }
@@ -60,11 +59,6 @@ function Body({ tab, chat, people }: RoomPanelProps) {
   return <div className={CHAT_BODY}>{chat.body}</div>;
 }
 
-/**
- * The room's «المحادثة» and «المشاركون»: a 360px panel beside the stage on wide screens (board
- * FamRoomWebLive, it fades in), a bottom sheet over the call on phones (FamRoomPhoneChat /
- * FamRoomPhonePeople, the Dialog's sheet: it rises, Esc and the scrim close it).
- */
 export function RoomPanel(props: RoomPanelProps) {
   const wide = useWideRoom();
   if (!wide) {

@@ -17,9 +17,7 @@ export interface DashboardPanelProps {
   /** Her «now» and today on her calendar (me.tz: the one zone of the home). */
   at: { now: Date; today: string };
   onDone: (message: string) => void;
-  /** Opens a lesson in the home's drawer (the «اليوم» rows). */
   onOpen: (lessonId: string) => void;
-  /** «تخصيص»: the hero, the ended fold and the row density. */
   prefs: Pick<HomePrefs, 'hero' | 'ended' | 'density'>;
 }
 

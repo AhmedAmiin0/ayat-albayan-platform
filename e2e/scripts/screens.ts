@@ -60,7 +60,7 @@ async function resolveRoute(run: Run, opts: { route: string; page: Page }): Prom
   const match = /^(student|teacher):first$/.exec(opts.route);
   if (!match) return opts.route;
   await opts.page.goto(`${run.base}/admin/${match[1]}s`);
-  await settle(opts.page); // the first body row is «جاري التحميل…» until the list arrives
+  await settle(opts.page); // The first body row is the loading row until the list arrives.
   await opts.page.getByRole('row').nth(1).click();
   await opts.page.waitForURL(new RegExp(`/admin/${match[1]}s/[^/]+$`));
   return new URL(opts.page.url()).pathname;

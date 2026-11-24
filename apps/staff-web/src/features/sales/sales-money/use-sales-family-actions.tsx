@@ -25,28 +25,14 @@ type Choice = 'course' | 'trial';
 type LeadThread = ThreadView & { lead_id: string };
 
 export interface SalesFamilyActions {
-  /** The one visible action: «تسجيل طالب جديد» on a lead, «جدّد الاشتراك» / «اشتراك جديد» on a family of hers. */
   primary: ReactNode;
-  /** The «المزيد» entries, in order; empty = no menu. */
+  /** In order; empty means no menu. */
   items: ReactNode[];
   /** Every dialog (register, check, money, course), rendered outside the menu (they portal). */
   dialogs: ReactNode;
 }
 
-/**
- * The sales chat's header actions (R-ASST-01/04, W3), split into one visible action and the rest.
- * Family (GET /sales/money/family, her students only): «جدّد الاشتراك» is the visible action while one
- * of them is `renew_due` (owner 2026-10-26: one tap, prefilled from `renewal`; several due → the step
- * picks among them), «اشتراك جديد» then moves to the menu; «سجّل تحويلًا بنكيًا» while a package is owed. No
- * child is named on any action (owner 2026-10-29): ONE «أيام الحلقات» (hasCourse) and ONE «موعد تجريبي جديد»
- * (canPickTrialDate, with the trial dates' history in its dialog), with several children ChildChoiceDialog
- * picks one first. The payment method (a Stripe link in a Stripe build) is chosen inside «اشتراك جديد».
- * «تحقق من التسجيل» (students.check_registration) always goes in the menu; «ربط بطالب موجود» (leads.link_family) on a
- * lead chat with no family (canLinkFamily), its done text a toast here. `compact` (phones):
- * the visible action is an icon button. Outside sales mode everything is empty. Every dialog's open
- * state lives here, so SalesChatFrame keeps them open across 900px (m13; round 2 B: the lead's
- * «تسجيل طالب جديد», which keeps the lead thread it was opened on, and the registration check).
- */
+/** No child is named on any action; every dialog's state lives here so it survives 900px (m13). */
 export function useSalesFamilyActions({ thread, compact = false }: { thread: ThreadView; compact?: boolean }): SalesFamilyActions {
   const mode = useInboxMode();
   const sales = mode === 'sales' && !!thread.guardian_id;
@@ -69,10 +55,9 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   };
   if (mode !== 'sales') return { primary: null, items: [], dialogs: null };
   const students = sales ? (family.data?.students ?? []) : [];
-  // sales.renew_any (docs/16 row 38) also lists children not hers (`mine: false`): money and «أيام الحلقات»
-  // (owner 2026-11-01); the rest stays hers.
+  // sales.renew_any (docs/16 row 38) lists children not hers for money and course days only.
   const own = students.filter((s) => s.mine !== false);
-  // «موعد تجريبي جديد» (owner 2026-10-25): her students without a running subscription only.
+  // A new trial date only for her students without a running subscription.
   const choices: Record<Choice, { title: string; list: SalesFamilyStudent[]; open: (s: SalesFamilyStudent) => void }> = {
     course: { title: t.booking.courseDays, list: students.filter(hasCourse), open: (s) => setCourse(s.id) },
     trial: { title: t.trialDate.action, list: own.filter((s) => canPickTrialDate(s.status)), open: (s) => setTrialFor({ id: s.id, name: s.name, code: s.code }) },
@@ -83,8 +68,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
     chosen?.open(s);
   };
   const checkItem = check ? [<RegistrationCheckTrigger key="check" onClick={() => setChecking(true)} />] : [];
-  // One shape for the lead and the family alike: booking a lead makes it a family on the next poll,
-  // and a moved slot would re-mount the open «تسجيل طالب جديد» (its «تم الحجز» lost, journey 7).
+  // Same shape for lead and family, else the open registration dialog re-mounts (journey 7).
   const dialogs = (
     <>
       {registering && <SalesRegisterDialog thread={registering} onClose={() => setRegistering(null)} />}

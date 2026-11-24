@@ -13,8 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: jest.fn(),
 }));
 
-// «أرسل عبر واتساب» in the mobile bubble (owner 2026-11-06, docs/19): only under a staff text the
-// 24 h window stopped; app-send FIRST (a short pending window), then wa.me; no undo anywhere.
+// docs/19: only under a staff text the 24 h window stopped; app-send first, then wa.me; no undo.
 
 const held = message({
   id: 'm-held',

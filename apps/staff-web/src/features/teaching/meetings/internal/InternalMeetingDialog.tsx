@@ -15,17 +15,14 @@ import { createBody } from '@/features/teaching/meetings/scheduled/schedule-form
 
 interface Props {
   onClose: () => void;
-  /** «ادخل الاجتماع»: defaults to a full page load of /meeting/<id>, like «ادخل الحلقة». */
+  /** Defaults to a full page load of /meeting/<id>, like joining a lesson. */
   onEnter?: (meetingId: string) => void;
 }
 
 const L = t.meetings.internal;
 const goTo = (id: string) => window.location.assign(`/meeting/${id}`);
 
-/**
- * «اجتماع داخلي» (POST /meetings, no time: open now): an optional title and optional invitees, then
- * the link with «انسخ الرابط», one result per invitee and «ادخل الاجتماع». No lesson, no teacher.
- */
+/** No time means open now; no lesson, no teacher. */
 export function InternalMeetingDialog({ onClose, onEnter = goTo }: Props) {
   const [title, setTitle] = useState('');
   const [invitees, setInvitees] = useState<PickedInvitee[]>([]);

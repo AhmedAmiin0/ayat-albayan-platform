@@ -7,9 +7,7 @@ import {
 import type { SlotUploadResult, UploadFile } from '../../core/http/index.js';
 import type { LessonFilesApi } from './lesson-files-api.js';
 
-// «أضف ملفًا للحلقة»: check the picked file (type, 25 MiB), ask for a slot, upload, register.
-// The picker (web <input type=file>, the app's pickFile adapter) and the slot upload are the
-// app's; this is the order and the error words' keys.
+// Checks type and 25 MiB, then slot, upload, register; the picker and upload are the app's.
 
 /** A picked file, whatever picked it. */
 export interface PickedFile {
@@ -34,7 +32,7 @@ export function pickProblem(file: Pick<PickedFile, 'mime' | 'size'>): UploadProb
   return PROBLEM_OF[parsed.error.issues[0]?.message ?? ''] ?? 'type';
 }
 
-/** «صفحة الواجب.pdf» → «صفحة الواجب»: the name the file keeps on the lesson. */
+/** The name the file keeps on the lesson drops its extension. */
 export const titleOf = (name: string): string =>
   (name.replace(/\.[^./]+$/, '').trim() || name).slice(0, 120);
 
@@ -51,7 +49,7 @@ export interface UploadInput {
   visible: boolean;
 }
 
-/** Slot → upload → register; throws on any refusal (the caller shows «لم يُرفع الملف»). */
+/** Slot, upload, register; throws on any refusal. */
 export async function uploadLessonFile(
   deps: UploadDeps,
   input: UploadInput,

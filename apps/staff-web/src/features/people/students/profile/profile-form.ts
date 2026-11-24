@@ -19,7 +19,7 @@ export type ProfileValues = {
   riwaya: string;
   meeting_link_override: string;
   notes: string;
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); false = «ولي الأمر». */
+  /** False means the number belongs to the guardian (docs/30 §1). */
   contact_is_self: boolean;
 };
 

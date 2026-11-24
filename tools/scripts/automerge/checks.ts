@@ -6,9 +6,13 @@ export const REQUIRED: readonly string[] = ['check', 'guards'];
 const OK = new Set(['success', 'skipped', 'neutral']);
 
 const pending = (r: CheckRun): boolean => r.status !== 'completed';
-const failed = (r: CheckRun): boolean => !OK.has(r.conclusion ?? '');
 const passed = (runs: readonly CheckRun[], name: string): boolean =>
   runs.some((r) => r.name === name && r.conclusion === 'success');
+/** A run cancelled by a newer one (a `concurrency` group) is moot once the same check passed. */
+const superseded = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
+  r.conclusion === 'cancelled' && passed(runs, r.name);
+const failed = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
+  !OK.has(r.conclusion ?? '') && !superseded(r, runs);
 const names = (runs: readonly CheckRun[]): string => runs.map((r) => r.name).join(', ');
 const failures = (runs: readonly CheckRun[]): string =>
   runs.map((r) => `${r.name} ${r.conclusion ?? ''}`).join(', ');
@@ -21,7 +25,7 @@ const RULES: readonly Rule[] = [
     return hits.length > 0 ? `pending: ${names(hits)}` : null;
   },
   ({ checks }) => {
-    const hits = checks.filter(failed);
+    const hits = checks.filter((r) => failed(r, checks));
     return hits.length > 0 ? `not green: ${failures(hits)}` : null;
   },
   ({ statuses }) => {

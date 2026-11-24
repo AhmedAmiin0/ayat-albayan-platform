@@ -2,8 +2,7 @@ import type { APIRequestContext } from '@playwright/test';
 import type { RoleView } from '@ab/catalog';
 import { API, call } from './assistant-api';
 
-// Helpers of the sales options specs (docs/16 rows 23–26): the system sales role's grants through
-// the admin's «الأدوار والصلاحيات» API, and the Riyadh day. Real API and database.
+// Sales options specs (docs/16 rows 23-26) via the roles API; real API and database.
 
 /** Today in Riyadh (UTC+3, no DST), YYYY-MM-DD, shifted by `days`. */
 export const riyadhDay = (days = 0): string => new Date(Date.now() + 3 * 3_600_000 + days * 86_400_000).toISOString().slice(0, 10);
@@ -27,7 +26,6 @@ export async function revokeFromSales(request: APIRequestContext, input: { admin
   if (!res.ok()) throw new Error(`revoke ${res.status()} ${await res.text()}`);
 }
 
-/** «استعادة الافتراضي» on the sales role (POST /roles/:id/reset). */
 export async function resetSales(request: APIRequestContext, admin: string): Promise<RoleView> {
   const role = await salesRole(request, admin);
   const res = await call<RoleView>(request, { token: admin, method: 'POST', path: `/roles/${role.id}/reset` });

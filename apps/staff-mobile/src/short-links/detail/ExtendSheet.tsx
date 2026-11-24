@@ -14,7 +14,7 @@ interface ExtendSheetProps {
 
 const D = () => t.shortLinks.detail;
 
-/** «تمديد الرابط» (board LinkXStaffDetail): a new lifetime; an expired link runs again until it. */
+/** An expired link runs again until the new lifetime ends. */
 export function ExtendSheet({ link, onClose }: ExtendSheetProps) {
   const [expiry, setExpiry] = useState<LinkExpiry>({ kind: 'days', days: SHORT_LINK_DEFAULT_DAYS });
   const patch = usePatchLink(link.code, onClose);

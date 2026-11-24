@@ -1,4 +1,4 @@
-import type { AssistantTermsView } from '@ab/shared';
+import type { AssistantTermsView } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { termsFormOf, termStartMins, termsToInput, type TermsForm } from '../../index.js';
 

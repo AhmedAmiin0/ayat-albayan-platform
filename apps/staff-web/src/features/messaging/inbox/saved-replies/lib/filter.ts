@@ -13,10 +13,7 @@ export function matchReplies(replies: readonly SavedReply[], query: string): Sav
   return [...filterReplies(replies, { scope: 'shared', query }), ...filterReplies(replies, { scope: 'mine', query })];
 }
 
-/**
- * The search typed after a «/» that starts the box or a new line and runs to the end of the text
- * («/سع» → «سع»); null when there is none (a «/» inside a sentence is just a slash).
- */
+/** Only a slash at the start of the box or a line counts; null otherwise. */
 export function slashQuery(text: string): string | null {
   const match = /(?:^|\n)\/([^\n/]*)$/.exec(text);
   return match ? (match[1] ?? '') : null;

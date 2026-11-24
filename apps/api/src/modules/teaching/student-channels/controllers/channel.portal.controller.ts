@@ -17,7 +17,7 @@ import { pageFor } from './channel-page';
 
 const UUID = new ParseUUIDPipe();
 
-/** The portal's «المحادثة مع المعلم/ة» (docs/31 §2): the guardian or the student, for their own student only. */
+/** The family portal chat (docs/31 §2): the guardian or the student, for their own student only. */
 @ApiTags('student-channels')
 @ApiBearerAuth()
 @Permissions('self.portal')

@@ -15,7 +15,7 @@ const p = t.assistantPortal.earnings;
 function lineText(l: AssistantStatementLineView): string {
   if (l.kind === 'salary') return p.line.salary;
   if (l.kind === 'commission') {
-    // «عمولة تجديد {student}» (owner 2026-10-26): a renewal earns a share of the normal commission.
+    // A renewal earns a share of the normal commission.
     const text = l.commission_kind === 'renewal' ? p.line.commissionRenewal : p.line.commission;
     return text.replace('{student}', l.student?.name ?? '');
   }

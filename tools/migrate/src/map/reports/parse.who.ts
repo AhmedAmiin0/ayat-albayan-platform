@@ -20,7 +20,7 @@ function studentOf(f: SourceRow['fields'], o: { ix: StudentIndex; teacher: strin
   const name = reportNames(f)[0] ?? null;
   const phone = phoneCell(f['phone']);
   const byPhone = phone.ok ? findStudent(o.ix, { phone: phone.e164, name }) : null;
-  // A2: «معرّف الطالب» is empty on old rows — they have a typed name and teacher only.
+  // A2: the student id is empty on old rows, which have only a typed name and teacher.
   return byPhone?.ok ? byPhone : findStudent(o.ix, { name, teacher: o.teacher });
 }
 

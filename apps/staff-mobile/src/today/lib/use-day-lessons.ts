@@ -1,4 +1,5 @@
-import { RIYADH_TZ, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { RIYADH_TZ } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 import { localDate } from './timeline';

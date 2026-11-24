@@ -10,11 +10,7 @@ export interface CorrectLessonChoiceProps {
   disabled?: boolean;
 }
 
-/**
- * «لم تنعقد الحلقة؟» with «ألغاها المعلم/ة» | «اعتذر الطالب» (owner 2026-11-02): the admin's and
- * sales' lesson drawers, on a lesson held automatically or ended still open; the caller records
- * the pick.
- */
+/** On a lesson held automatically or ended still open; the caller records the pick. */
 export function CorrectLessonChoice(props: CorrectLessonChoiceProps) {
   const { onPick, autoHeld, disabled = false } = props;
   return (

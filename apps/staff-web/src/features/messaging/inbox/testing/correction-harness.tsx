@@ -1,4 +1,3 @@
-// «تعديل» tests (test-only): the open chat's log and its text box, as a given staff member.
 import type { MessageView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -43,7 +42,6 @@ export const editBar = () => screen.queryByRole('group', { name: t.inbox.correct
 export const box = (): HTMLTextAreaElement =>
   screen.getByRole('textbox', { name: t.inbox.composer.messageLabel });
 
-/** Opens the bubble's menu and picks «تعديل». */
 export function pickEdit(): void {
   openMenu();
   fireEvent.click(editButton());

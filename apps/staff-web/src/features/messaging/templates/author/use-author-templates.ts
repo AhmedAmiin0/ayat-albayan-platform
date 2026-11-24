@@ -7,7 +7,6 @@ import { authoredTemplatesQuery, createAuthoredTemplate } from '@/features/messa
 /** The author's list (the chat allow-list and their own), every status. */
 export const useAuthoredTemplates = () => useQuery(authoredTemplatesQuery);
 
-/** «إرسال إلى ميتا»: the new template, then both lists read again. */
 export function useCreateAuthored(onCreated: (tpl: AuthorTemplate) => void) {
   const queryClient = useQueryClient();
   return useMutation({

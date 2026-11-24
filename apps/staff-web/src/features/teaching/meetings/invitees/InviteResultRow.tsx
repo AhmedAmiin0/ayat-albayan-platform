@@ -7,7 +7,6 @@ import { copyPayload, inviteStatusText, notSentHint } from './invite-status';
 
 const R = t.meetingInvites.results;
 
-/** One recipient: the name, how it went and, when a personal link came back, «انسخ الرابط والدعوة». */
 export function InviteResultRow({ result }: { result: MeetingInviteResult }) {
   const [copied, setCopied] = useState(false);
   const payload = copyPayload(result);

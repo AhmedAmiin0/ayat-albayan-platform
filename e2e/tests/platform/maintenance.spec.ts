@@ -1,8 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { PUBLIC_SETTINGS, stubSwitch, switchAnswer } from '../../support/platform/maintenance';
 
-// «تحت الصيانة»: the clients' cover only, no API change. The switch is stubbed
-// per page (GET /settings/public); the real setting is never flipped.
+// Maintenance is a client cover only; the switch is stubbed per page, never flipped for real.
 const M = ar.maintenance;
 
 test.describe('maintenance cover (staff web)', () => {

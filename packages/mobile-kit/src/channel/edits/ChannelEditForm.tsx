@@ -17,7 +17,7 @@ interface ChannelEditFormProps {
   onCancel: () => void;
 }
 
-/** «تعديل الرسالة»: the text prefilled, up to CHANNEL_BODY_MAX; the API trims and checks again. */
+/** Prefilled up to CHANNEL_BODY_MAX; the API trims and checks again. */
 export function ChannelEditForm({
   initial,
   busy,

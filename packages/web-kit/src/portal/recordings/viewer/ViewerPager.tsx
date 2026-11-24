@@ -11,7 +11,7 @@ interface Props {
   onGo: (file: PortalLessonFile) => void;
 }
 
-/** «‹ 1 من 2 ›»: the lesson's other pictures and PDFs, one step each way (none past the ends). */
+/** One step each way, none past the ends. */
 export function ViewerPager({ page, onGo }: Props) {
   const { prev, next } = page;
   const count = V.pageOf.replace('{n}', String(page.number)).replace('{total}', String(page.total));

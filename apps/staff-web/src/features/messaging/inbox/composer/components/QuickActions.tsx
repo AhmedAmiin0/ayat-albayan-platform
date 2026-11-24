@@ -18,13 +18,7 @@ export interface QuickActionsProps {
 
 const linkClass = buttonVariants({ variant: 'secondary', className: 'justify-self-start' });
 
-/**
- * What the admin does next from the thread: «حجز حلقة تجريبية» or «اشترك» (the Phase 2 wizard with
- * this lead and a trial or a regular package, R-LEAD-06, R-SUB-01; the booked panel then offers the
- * subscription), «ربط بطالب موجود» (leads.link_family: this number becomes an existing family's second number;
- * the lead panel only shows on a chat with no family, i.e. canLinkFamily), change the status, or move the
- * number to job applicants (R-LEAD-04).
- */
+/** Next steps from the thread (R-LEAD-04, R-LEAD-06, R-SUB-01); linking needs a familyless chat. */
 export function QuickActions({ lead, onDone }: QuickActionsProps) {
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);
@@ -42,7 +36,7 @@ export function QuickActions({ lead, onDone }: QuickActionsProps) {
     onError: () => onDone(t.common.error, 'error'),
   });
   const open = lead.status !== 'converted' && lead.status !== 'lost';
-  // A converted lead on this number has no family here yet («مش مشترك»): it can still subscribe.
+  // A converted lead on this number has no family here yet, so it can still subscribe.
   const subscribe = lead.status !== 'lost';
   const book = { leadId: lead.id, phone: lead.phone_e164, name: lead.name ?? undefined };
 

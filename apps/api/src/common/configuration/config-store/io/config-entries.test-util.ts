@@ -1,6 +1,6 @@
 // HTTP test harness for /config/entries and /admin/config/parity (test-only). Real controllers, guards,
 // service, mapper and ownership; ConfigStore and the audit are fakes.
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -15,7 +15,6 @@ import { ConfigStore } from '@/common/configuration/config-store/store/config-st
 export const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
   teacher: { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' },
-  // Custom roles on a non-admin base: «القيم» editors, one of them also holding numbers.manage.
   editor: { id: 'e0000000-0000-4000-8000-000000000003', email: null, role: 'sales' },
   numbers: { id: 'n0000000-0000-4000-8000-000000000004', email: null, role: 'sales' },
 };

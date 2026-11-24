@@ -22,7 +22,6 @@ export interface SettingPhoneRowProps {
   onOpen: (key: SettingKey) => void;
 }
 
-/** The row's small second line: saving, a newer value (conflict), moved, or «يحذف بيانات»; else none. */
 export function secondLine(key: SettingKey, s: RowStatus): string | null {
   if (s.state === 'saving') return v.saving;
   if (s.state === 'conflict') return v.conflict.phoneLine.replace('{name}', conflictBy(s.conflict));
@@ -30,17 +29,11 @@ export function secondLine(key: SettingKey, s: RowStatus): string | null {
   return VALUE_CONFIRM[key] === 'typed' ? v.tags.deletes : null;
 }
 
-/** The value button's name: «عدّل «الاسم»: القيمة», or «الاسم: القيمة» where nothing can be changed. */
 export function phoneRowName(input: { label: string; text: string; editable: boolean }): string {
   return input.editable ? `${v.sheet.edit.replace('{name}', input.label)}: ${input.text}` : `${input.label}: ${input.text}`;
 }
 
-/**
- * The phone row (docs/26b §2 «Phone»): الاسم | القيمة, the value cell one 44px button (value +
- * chevron) that opens the bottom sheet; a tap anywhere on the row opens it too (the button stays
- * the one control for keyboards and screen readers). A second line only for «جارٍ الحفظ…»,
- * «قيمة أحدث من …» (a conflict), «يحذف بيانات» or «تُدار من صفحة أخرى».
- */
+/** The value cell is the one 44px control for keyboards; tapping the row opens the sheet too. */
 export function SettingPhoneRow({ settingKey, group, groupName, onOpen }: SettingPhoneRowProps) {
   const api = useValues();
   const ids = useRowIds();

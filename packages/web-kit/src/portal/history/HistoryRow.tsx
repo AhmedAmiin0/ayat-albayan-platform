@@ -12,18 +12,18 @@ interface Props {
   row: PortalHistoryRow;
   student: PortalStudent;
   onOpenReport: (report: OpenReport) => void;
-  /** The lesson's own page (the family web): «ملفات الحلقة» beside the report. */
+  /** The lesson's own page on the family web. */
   onOpenLesson?: (lessonId: string) => void;
 }
 
-/** «جديد» beside a report not opened in this browser yet. */
+/** Marks a report not opened in this browser yet. */
 const NewMark = () => (
   <span className="rounded-sm bg-act-soft px-1.5 py-0.5 text-xs font-semibold text-act">
     {t.portal.newReport}
   </span>
 );
 
-/** An attended lesson's report (with «جديد» until opened here); the recording rides with it. */
+/** Marked new until opened here; the recording rides with it. */
 function ReportAction({ row, onOpenReport, onOpenLesson }: Omit<Props, 'student'>) {
   const seen = useSeenReports();
   const reportId = row.report_id;
@@ -48,7 +48,7 @@ function ReportAction({ row, onOpenReport, onOpenLesson }: Omit<Props, 'student'
   );
 }
 
-/** An absence: «غياب بعذر» when excused, and the family's reason when one was recorded. */
+/** Excused absences say so, with the family's reason when recorded. */
 function AbsenceLines({ row }: { row: PortalHistoryRow }) {
   return (
     <>

@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-// The Evolution driver's config checks (docs/19 «Evolution driver»), shared by «التكاملات», the
-// numbers form and the API's env schema. SSRF guard: the base is https to a public name, http to
-// the VPS itself, or http to an internal docker host the admin listed (EVOLUTION_INTERNAL_HOSTS).
+// SSRF guard (docs/19): https to a public name, http only to the VPS or a listed internal host.
 
 /** Hosts an `http:` Evolution base may always name: the VPS itself. */
 const LOCAL_HOSTS: ReadonlySet<string> = new Set(['localhost', '127.0.0.1', '[::1]']);

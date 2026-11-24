@@ -11,20 +11,16 @@ interface ProposalAnswerProps {
   busy: boolean;
   /** The last failed answer, if any. */
   error: unknown;
-  /** The family's request only: the note they read with a «ارفض». */
+  /** The family's request only: the note they read with a decline. */
   note: { value: string; onChange: (value: string) => void };
   onApprove: () => void;
   onReject: () => void;
-  /** «اختر موعدًا آخر» (a family's request): the move form on the week they asked for. */
+  /** A family's request opens the move form on the week they asked for. */
   onPickOther: () => void;
 }
 
 const P = t.lessons.proposal;
 
-/**
- * «وافق على الموعد» / «ارفض» (canvas LessonXWebStaff); a family's request adds the reply they
- * read, «اختر موعدًا آخر» (the move form on the requested week) and «ارفض الطلب».
- */
 export function ProposalAnswer(props: ProposalAnswerProps) {
   const { words, busy, error, note, onApprove, onReject, onPickOther } = props;
   return (

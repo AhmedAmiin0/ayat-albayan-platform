@@ -6,10 +6,10 @@ import { GROUP_IDS, groupLabel, isOwnedGroup, type ValuesGroupId } from './lib/v
 const v = t.settingsValues;
 
 export interface GroupNavProps {
-  /** The group in view; null while «الكل» (a search or filter) is shown. */
+  /** Null while the all-results view (a search or filter) is shown. */
   current: ValuesGroupId | null;
   counts: Partial<Record<ValuesGroupId, number>>;
-  /** «الكل» and its result count, only while searching or filtering. */
+  /** Only present while searching or filtering. */
   allCount?: number | undefined;
   onPick: (id: ValuesGroupId) => void;
   /** Phones: a strip of 44px chips that scrolls sideways; desktop: the side list. */
@@ -36,7 +36,7 @@ function Item({ id, on, count, onPick, phone }: { id: ValuesGroupId; on: boolean
   );
 }
 
-/** The group list (docs/26b §2): one group per view; «تُدار من صفحة أخرى» under its own heading. */
+/** One group per view (docs/26b §2); module-owned groups under their own heading. */
 export function GroupNav({ current, counts, allCount, onPick, phone }: GroupNavProps) {
   const box = useRef<HTMLElement>(null);
   useEffect(() => {

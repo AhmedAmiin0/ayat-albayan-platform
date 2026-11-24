@@ -9,12 +9,7 @@ import { CELL, LINK, TH } from './overview-table';
 
 const h = t.communicationsHub;
 
-/**
- * «ماذا يُرسل الآن» on «نظرة عامة» (docs/23 §2d): per audience, how many notifications send now and how
- * many do not, from the rows' own state (GET /admin/notifications, the cache «الإشعارات» reads). Each
- * row opens «الإشعارات» on its audience, where the reasons are spelled out. With WhatsApp messaging
- * off the counted rows reach people in the app only, and a line under the table says so.
- */
+/** With WhatsApp messaging off the counted rows reach people in the app only (docs/23 §2d). */
 export function OverviewWhat({ messagingOn }: { messagingOn: boolean }) {
   const list = useCatalogue();
   return (

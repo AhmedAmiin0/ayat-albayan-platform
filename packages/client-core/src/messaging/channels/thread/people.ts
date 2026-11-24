@@ -1,12 +1,11 @@
 import type { ChannelMessageView, ChannelParticipantView } from '@ab/shared';
 
-/** The most names the header line shows before «أنت». */
 const MAX_NAMES = 4;
 
 /** The header's people: the others by name (the avatar takes the first), then the whole line. */
 interface HeaderPeople {
   others: string[];
-  /** The others, then «أنت» when the viewer is in the chat; empty while nobody else is known. */
+  /** Empty while nobody else is known; the viewer is listed last. */
   line: string[];
   /** The first teacher among the others (the API lists them first): the family's avatar. */
   teacher: string | null;
@@ -45,10 +44,7 @@ const firstTeacher = (participants: readonly ChannelParticipantView[]): string |
 const isIn = (participants: readonly ChannelParticipantView[]): boolean =>
   participants.length === 0 || participants.some((p) => p.me);
 
-/**
- * The chat's people for the header (the ChatX boards): the API's members in its order (teacher
- * first), else the loaded messages' senders; at most four, then «أنت» last when she is in it.
- */
+/** Members in API order (teacher first), else the loaded senders; at most four, then the viewer. */
 export function headerPeople({ participants, messages, you }: PeopleSource): HeaderPeople {
   const all = participants.length > 0 ? membersOf(participants) : speakers(messages);
   const others = all.slice(0, MAX_NAMES);

@@ -1,10 +1,7 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { withSql } from '../../support/core/schedule';
 
-// «فريق المبيعات» (R-ASST-02, R-ASST-03, R-ASST-05): the admin sets an assistant's
-// terms (salary + 10 % commission), a student the assistant brought pays their first package in
-// full → the commission lands in the ledger, the month's statement carries salary and commission
-// per currency (EGP and SAR, never added), and goes draft → approved → paid with a receipt-less pay.
+// Sales team (R-ASST-02/03/05): statements per currency (EGP and SAR never added).
 
 const EMAIL = 'e2e-assistant-admin@e2e.local';
 const NAME = 'مسؤولة مبيعات الاختبار';
@@ -50,7 +47,6 @@ test.describe('assistants — terms → commission → monthly statement (R-ASST
     const assistantId = await seedAssistant();
     const admin = await asRole('admin');
 
-    // «فريق المبيعات» is in the money section of the nav and lists the assistant without terms.
     await admin.goto('/admin/assistants');
     const row = admin.getByRole('row').filter({ hasText: NAME });
     await expect(row).toContainText(ar.assistants.notSet);
@@ -82,7 +78,7 @@ test.describe('assistants — terms → commission → monthly statement (R-ASST
 
     // The month's statement: salary in EGP, commission in SAR, side by side, never added together.
     await admin.getByRole('button', { name: ar.assistants.statements.generate }).click();
-    // The row with «التفاصيل» is the statements table's (the ledger above has none) and stays the same row through every status.
+    // Only the statements table has a details button, so this stays the same row across statuses.
     const statement = admin.getByRole('row').filter({ has: admin.getByRole('button', { name: ar.assistants.statements.details }) });
     await expect(statement.getByText(ar.enums.payoutStatus.draft)).toBeVisible();
     await expect(statement).toContainText(/3,?000\s*ج\.م/);

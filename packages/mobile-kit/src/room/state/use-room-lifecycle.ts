@@ -20,7 +20,7 @@ function usePermissionCheck({ platform, dispatch, onChecked }: Omit<LifecycleInp
       onChecked(answer);
       dispatch({ type: 'checked', answer });
     });
-    // «افتح الإعدادات» → allowed there → back: the blocked notice goes (only the preview listens).
+    // Returning from settings with permission granted clears the blocked notice (preview only).
     const back = AppState.addEventListener('change', (state) => {
       if (state !== 'active') return;
       void platform.media.check().then((answer) => {
@@ -46,8 +46,7 @@ export function useRoomLifecycle({ client, platform, dispatch, onChecked }: Life
     let was = client.snapshot().status;
     return client.subscribe(() => {
       const status = client.snapshot().status;
-      // Closed under us («إنهاء», the max-duration job's DeleteRoom, a removal): the call audio
-      // ends with the room. Only on the change, so a rejoin's events (still «ended») keep it.
+      // Audio stops only on the change to closed, so a rejoin's still-ended events keep it.
       if (status !== was && closedBy(status)) void platform.audio.stop();
       was = status;
       dispatch({ type: 'status', status });

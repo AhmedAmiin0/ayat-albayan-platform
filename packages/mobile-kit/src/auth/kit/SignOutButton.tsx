@@ -4,7 +4,7 @@ import { t } from '../../lib/i18n/i18n';
 import { signOutDevice } from '../../lib/session/sign-out';
 import { Button } from '../../ui/primitives/Button';
 
-/** «تسجيل الخروج»: on success the auth gate unmounts the signed-in tree and shows /login. */
+/** On success the auth gate unmounts the signed-in tree and shows /login. */
 export function SignOutButton() {
   const [leaving, setLeaving] = useState(false);
   const logout = () => {

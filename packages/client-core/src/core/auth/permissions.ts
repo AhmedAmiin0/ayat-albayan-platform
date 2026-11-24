@@ -1,4 +1,4 @@
-import { isPermission, type Permission } from '@ab/shared';
+import { isPermission, type Permission } from '@ab/catalog';
 
 export type Can = (permission: Permission) => boolean;
 

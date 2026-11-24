@@ -1,16 +1,9 @@
-import {
-  calendarDaysBetween,
-  localDateIn,
-  notificationKind,
-  type AnyPushKind,
-  type NotificationItem,
-} from '@ab/shared';
+import { notificationKind, type NotificationItem } from '@ab/shared';
+import type { AnyPushKind } from '@ab/catalog';
+import { calendarDaysBetween, localDateIn } from '@ab/time';
 import { z } from 'zod';
 
-// «الإشعارات» of the family app (canvas Alerts): where a bell row opens (its report, the child's
-// lessons, the package, the teacher chat or the week) and the rows under «اليوم» / «أمس» / «هذا
-// الأسبوع» / «أقدم». A row's `data` is untrusted (NotificationItem): every id is parsed before it
-// becomes a target.
+// A notification row's `data` is untrusted, so every id is parsed before it becomes a target.
 
 export type AlertTarget =
   | { screen: 'report'; studentId: string; reportId: string }
@@ -40,7 +33,7 @@ const toStudent =
     return parsed.success ? { screen, studentId: parsed.data.studentId } : { screen: 'schedule' };
   };
 
-/** «بدأت الحلقة»: that lesson's way in; without a lesson id, the child's page. */
+/** Without a lesson id the alert opens the child's page. */
 const toLive: Reader = (data) => {
   const parsed = liveData.safeParse(data);
   return parsed.success ? { screen: 'live', ...parsed.data } : toStudent('child')(data);

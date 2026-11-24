@@ -5,12 +5,7 @@ import { LinkActions } from '@/features/sales/sales/schedule/LinkActions';
 
 const L = t.studentLists;
 
-/**
- * «رابط الحلقة الثابت» in the teacher's drawer (owner 2026-10-12; since 2026-10-26 the schedule shows
- * the lesson's link too, LessonMeetingLink): the URL as an LTR island, «انسخ الرابط» and «افتح الرابط»
- * (LinkActions). Only an http(s) URL is shown, anything else reads «لا يوجد رابط ثابت». When the
- * teacher's lessons go out with the platform classroom (SalesTeacherView.platform_classroom) a line says families get that link.
- */
+/** Only an http(s) URL is shown; for a platform-classroom teacher, families get that link. */
 export function TeacherMeetingLink({ link, platform }: { link: string | null; platform: boolean }) {
   const url = safeHttpUrl(link);
   return (

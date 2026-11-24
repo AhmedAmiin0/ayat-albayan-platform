@@ -4,10 +4,7 @@ import { AccountChip } from './AccountChip';
 import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 
-/**
- * The foot of the «القائمة» sheet (< 900px): the same controls as the sidebar foot (the
- * «حسابي» link with the photo and email, theme, clock format, language, logout), so the top bar keeps one button only.
- */
+/** Same controls as the sidebar foot, so the top bar keeps one button only. */
 export function MenuFoot({ email }: { email?: string | null }) {
   return (
     <div className="mt-5 grid gap-3 border-t border-rule pt-4">

@@ -6,9 +6,7 @@ import { subscriptionStatus, tasksFor } from '../../support/finance/money';
 import { guardianPhoneOf, riyadhToday, seedNearEmpty, uniqueName } from '../../support/finance/money-extra';
 import { addDays, resetAbrar, seedFamily, withSql } from '../../support/core/schedule';
 
-// Subscriptions (R-SUB-01/02): a new package through the calculator dialog (the quote preview is
-// the stored price), pause / resume, and the last lesson of a PAID package → «غير مدفوع» + the
-// future lesson flag + the subscription_unpaid admin task. Journey 3 owns payment → active → renewal.
+// Subscriptions (R-SUB-01/02); the last lesson of a paid package raises subscription_unpaid.
 
 const SAR = ar.pricing.currencies.SAR;
 const row = (page: Page, student: string) => page.getByRole('row').filter({ hasText: student });
@@ -68,8 +66,7 @@ test.describe('subscriptions (R-SUB-01/02)', () => {
     await expect(line).toContainText(ar.enums.subscriptionStatus.unpaid);
     await expect(line).toContainText(ar.subscriptions.progress.left.few.replace('{n}', '8'));
 
-    // «إيقاف مؤقت» is the course pause (docs/11 §7b): from today → paused; «استئناف» → back to what the
-    // money says (nothing paid yet: unpaid).
+    // The course pause (docs/11 §7b); resuming returns to what the money says (unpaid here).
     await line.getByRole('button', { name: ar.coursePause.action }).click();
     await page.getByRole('dialog').getByRole('button', { name: ar.coursePause.confirm }).click();
     await expect(line).toContainText(ar.enums.subscriptionStatus.paused);
@@ -98,7 +95,7 @@ test.describe('subscriptions (R-SUB-01/02)', () => {
     await expect(chip()).toBeVisible();
     await expect(chip()).not.toContainText(ar.subscriptions.unpaidFlag);
 
-    // Today's started lesson is completed (the teacher's «حضر» goes through this route).
+    // The teacher's attendance button goes through this route.
     const res = await page.request.post(`${API}/lessons/${seed.todayLessonId}/status`, {
       headers: await bearer(page),
       data: { event: 'complete' },

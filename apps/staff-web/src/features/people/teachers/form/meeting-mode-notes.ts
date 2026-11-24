@@ -3,7 +3,6 @@ import type { IntegrationConfigItem, TemplateStatus } from '@ab/catalog';
 export const JOIN_TEMPLATE = 'lesson_join_link';
 const LIVEKIT_KEYS = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'] as const;
 
-/** One note under «طريقة حضور الحلقات», in display order. */
 export type MeetingModeNote = 'livekitUnset' | 'templateNotApproved' | 'templatePending' | 'templatePaused' | 'noLink';
 
 export interface NotesInput {

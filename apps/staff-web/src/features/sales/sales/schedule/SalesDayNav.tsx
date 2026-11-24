@@ -15,11 +15,7 @@ export interface SalesDayNavProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/**
- * «اليوم السابق | اليوم | اليوم التالي» and the day shown (the admin schedule's words). academy day
- * (docs/34 b): GET /sales/schedule pages by Riyadh days, so the note says so while the times inside
- * read in the viewer's zone (a row on another day for the viewer names it, ScheduleLessonItem).
- */
+/** Pages by Riyadh days (docs/34 b) while the times inside read in the viewer's zone. */
 export function SalesDayNav({ date, today, onDate }: SalesDayNavProps) {
   const step = (n: number) => {
     const next = addDays(date, n);

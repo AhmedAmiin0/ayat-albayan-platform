@@ -1,5 +1,6 @@
 import { cardRoom, type CardRoom } from '@ab/client-core';
-import type { PortalLesson, PortalStudent, RoomJoinResult } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { useState } from 'react';
 import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
 import { Dot } from '@ab/web-kit/components/ui/surface/pill';
@@ -16,15 +17,12 @@ interface Props {
   lesson: PortalLesson;
   student: PortalStudent;
   now: Date;
-  /** Its join window is open now: the live mark and «ادخل الحلقة». */
   open: boolean;
-  /** «الرئيسية»: the live countdown, and the hint until the window opens. */
   full?: boolean;
 }
 
 type Shown = Pick<Props, 'lesson' | 'now' | 'open'> & { full: boolean };
 
-/** Before anyone is inside: the countdown («الرئيسية») and «الدخول متاح الآن» once it opens. */
 function ClockLines({ lesson, now, open, full }: Shown) {
   return (
     <>
@@ -38,16 +36,10 @@ function ClockLines({ lesson, now, open, full }: Shown) {
   );
 }
 
-/** «ادخل الآن» while the room is live, «ادخل الحلقة» before. */
 const joinLabel = (kind: CardRoom['kind']): string | undefined =>
   kind === 'live' ? t.portal.app.live.join : undefined;
 
-/**
- * The next lesson's lines: when (family and viewer clocks) with its status, the teacher, the
- * countdown («الرئيسية»; its digits change in place, never animate), «الدخول متاح الآن» popping in
- * once the window opens, and «ادخل الحلقة»; the live room (since when, who is inside, «ادخل
- * الآن») or «انتهت الحلقة» once it was ended for everyone. Once admitted, the room covers the page.
- */
+/** The countdown digits change in place and never animate; once admitted, the room covers it. */
 export function NextLessonDetails({ lesson, student, now, open, full = false }: Props) {
   const [room, setRoom] = useState<RoomJoinResult | null>(null);
   const chip = useLessonStatusText().chip(lesson.status);

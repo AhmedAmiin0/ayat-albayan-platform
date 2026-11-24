@@ -10,7 +10,7 @@ interface RoomControlsState {
   micOn: boolean;
   camOn: boolean;
   output: AudioOutput | null;
-  /** «المحادثة» and its unread count; null = no chat control in this room. */
+  /** Null means no chat control in this room. */
   chatUnread: number | null;
 }
 
@@ -27,10 +27,7 @@ interface RoomControlsProps {
   actions: RoomControlsActions;
 }
 
-/**
- * The in-room row, the calls' round buttons (docs/35 §3, canvas RoomXChat): كتم, الكاميرا, the
- * audio output, المحادثة, غادر. «بدّل الكاميرا» sits on one's own tile.
- */
+/** docs/35 §3: switch camera sits on one's own tile. */
 export function RoomControls({ state, actions }: RoomControlsProps) {
   return (
     <View

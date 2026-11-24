@@ -13,11 +13,7 @@ function within(work: Promise<void>, ms: number): Promise<void> {
   return Promise.race([work, timeout]).finally(() => clearTimeout(timer));
 }
 
-/**
- * «تسجيل الخروج»: this device's push token off the profile first (the DELETE needs the session),
- * then this app off the OS push service (an offline sign-out never ends the server session), then
- * sign out. The auth gate clears both caches and shows /login (use-auth-gate).
- */
+/** Push token off the profile first (DELETE needs the session), then off the OS, then sign out. */
 export async function signOutDevice(): Promise<void> {
   await within(unregisterPush(), UNREGISTER_TIMEOUT_MS);
   await within(silencePush(), UNREGISTER_TIMEOUT_MS);

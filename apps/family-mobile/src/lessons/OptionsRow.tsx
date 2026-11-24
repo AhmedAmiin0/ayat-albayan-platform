@@ -1,4 +1,5 @@
-import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { ClockOptions } from '@ab/time';
 import { useState, type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
@@ -15,11 +16,7 @@ interface OptionsRowProps {
   children: ReactNode;
 }
 
-/**
- * A lesson row of «الحلقات القادمة» or the week (owner 2026-11-17): its words open «خيارات
- * الحلقة» («خيارات الحلقة: غدًا 6:30 م») like the next lesson's button; the result is said under
- * them. A lesson without options is plain text.
- */
+/** A lesson without options is plain text; otherwise its words open the lesson options. */
 export function OptionsRow({ lesson, student, clock, now, children }: OptionsRowProps) {
   const { color } = useTheme();
   const [notice, setNotice] = useState<string | null>(null);

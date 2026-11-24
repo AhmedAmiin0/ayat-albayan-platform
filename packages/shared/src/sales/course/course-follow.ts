@@ -2,9 +2,7 @@ import type { Duration } from '@ab/catalog';
 import type { DayTime } from '@ab/schedule';
 import { addLocalDays, weekdayOfDate, zonedInstant } from '@ab/time';
 
-// A booked course of the assistant: its weekdays and times, so a renewal can
-// continue on them («تابِع بنفس الأيام») and a running course can change them («تغيير أيام الحلقات»).
-// Pure, Intl only.
+// A booked course's weekdays and times, so renewal can continue them or a change edit them; pure.
 
 /**
  * One assistant course (the rules sharing a subscription_id, migration 470): its latest set of
@@ -35,7 +33,7 @@ export interface BookedCourse {
    * course booked ahead whose pending change starts later keeps its old days before startsOn.
    */
   opensOn: string;
-  /** Each weekday (0 = الأحد) with its "HH:MM", in weekday order. */
+  /** Each weekday (0 = Sunday) with its "HH:MM", in weekday order. */
   days: DayTime[];
   /** The lessons the course books: lessons_total − lessons_used_before (courseLessonCount). */
   lessonsTotal: number;

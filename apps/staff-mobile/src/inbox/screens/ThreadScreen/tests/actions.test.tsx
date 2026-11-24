@@ -31,7 +31,6 @@ async function open(rows = [inbound, delivered, failed]) {
   await screen.findByText(inbound.body ?? '');
 }
 
-/** As WhatsApp: a tap on «! لم تُرسل» (or a held row's clock) opens the one sheet; nothing sits in the bubble. */
 async function sheetOf(testID = 'ticks-failed') {
   await fireEvent.press(await screen.findByTestId(testID));
   return within(screen.getByTestId('failed-sheet'));

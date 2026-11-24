@@ -1,4 +1,4 @@
-import { payoutBreakdownSchema, type PayoutView } from '@ab/shared';
+import { payoutBreakdownSchema, type PayoutView } from '@ab/money';
 import { parseStoredJson } from '@/common/db/stored-json';
 import type { PayoutRow } from './payouts.repo';
 

@@ -4,7 +4,6 @@ import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { parseInboxSearch } from '@/features/messaging/inbox/shared/search';
 import { TeacherPageGate } from '@/features/teaching/teacher';
 
-/** /teacher/inbox «المحادثات»: the families I teach and my own chat with the academy (R-TCH-03, R-MSG-05). */
 export const Route = createFileRoute('/teacher/inbox')({
   validateSearch: parseInboxSearch,
   component: TeacherInboxRoute,

@@ -5,7 +5,7 @@ import {
   type AssistantCommissionType,
   type AssistantTermsInput,
   type AssistantTermsView,
-} from '@ab/shared';
+} from '@ab/money';
 
 // The assistant terms editor of both apps (docs/27 E5): the same state, the shared schema and the start-day rule.
 // Each app passes its own "today" (YYYY-MM-DD, Riyadh); the app modules keep their old default.

@@ -72,7 +72,6 @@ test('pick the package → the API’s price → a day on the date dialog → «
   expect(sent('/subscriptions')).toEqual([
     ['POST', '/subscriptions', { studentId: CHILD, pricing, startsOn: '2026-10-03', notes: null, clientRequestId: expect.any(String) }],
   ]);
-  // The chat refetches, so its badge now says «مشترك».
   expect(client.getQueryState(threadKey(PHONE))?.isInvalidated).toBe(true);
 });
 

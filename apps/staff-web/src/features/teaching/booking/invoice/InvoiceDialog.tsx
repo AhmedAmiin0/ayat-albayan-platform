@@ -10,7 +10,6 @@ import { invoiceDownload } from './api.invoice';
 import type { InvoiceView } from '@/features/teaching/booking/draft/contract';
 import { canShow } from './invoice-file';
 
-/** «الفاتورة · <student> · <date>»: the title names whose invoice and when it was saved. */
 function title(invoice: InvoiceView, clock: Clock): string {
   const who = invoice.students.map((s) => s.name).join(t.common.listSeparator);
   return [t.booking.invoice.label, who, fullTime(invoice.created_at, clock)].filter(Boolean).join(' · ');
@@ -43,7 +42,6 @@ export function InvoiceDialog({ invoice, onClose }: { invoice: InvoiceView; onCl
   );
 }
 
-/** «افتح الفاتورة»: opens the invoice in a dialog. */
 export function InvoiceButton({ invoice }: { invoice: InvoiceView }) {
   const [open, setOpen] = useState(false);
   return (

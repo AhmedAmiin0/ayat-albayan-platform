@@ -1,14 +1,9 @@
 import { livePackages, salesRenewal, type SalesRenewal } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { PackagesService } from '@/modules/finance/subscriptions';
-import type { FamilyStudentRow } from './sales-family.repo';
-import { SalesMoneySettings } from '@/modules/sales/sales-money/sales-money.settings';
+import { type FamilyStudentRow, SalesMoneySettings } from '@/modules/sales/sales-money/shared';
 
-/**
- * «جدّد الاشتراك» from the chat (owner 2026-10-26): for each of her students, whether a renewal is due (the
- * admin's renewal-alert threshold, settings.renewal_alert_remaining) and the calculator inputs it opens with
- * (salesRenewal over the student's packages: renewalPricing of the last priced one, never a cancelled one, whitelisted).
- */
+/** Per student: whether a renewal is due and the calculator inputs, never a cancelled package. */
 @Injectable()
 export class SalesRenewals {
   constructor(

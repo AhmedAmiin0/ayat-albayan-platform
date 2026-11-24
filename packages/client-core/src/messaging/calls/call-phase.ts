@@ -17,10 +17,9 @@ export interface CallSession {
   /** Date.now() when the user tapped (outbound) or accepted (inbound). */
   startedAt: number;
   muted: boolean;
-  /** «مكبر الصوت»: the call plays through the loudspeaker instead of the earpiece. */
   speaker: boolean;
   minimised: boolean;
-  /** Set once the server stopped listing the call (it ended), for the short «انتهت المكالمة». */
+  /** Set once the server stopped listing the call, for the short ended notice. */
   ended: boolean;
 }
 
@@ -80,7 +79,6 @@ export interface CallDerived {
 const outboundWaiting = (session: CallSession | null, phase: CallPhase | null): boolean =>
   session?.direction === 'outbound' && phase !== null && isUnanswered(phase);
 
-/** Calls are off for this user while a call of theirs is live (not the short «انتهت»). */
 const liveWhileOff = (session: CallSession | null, enabled: boolean | undefined): boolean => enabled === false && session !== null && !session.ended;
 
 export function deriveCall(

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import type { Tx } from './core/rls';
 
-// Helpers for the automatic chat lists spec (migration 20261025000710, docs/22 «القوائم التلقائية»).
+// Helpers for the automatic chat lists spec (migration 20261025000710, docs/22).
 
 const MIGRATION = fileURLToPath(new URL('../../packages/db/supabase/migrations/20261025000710_chat_list_auto_rules.sql', import.meta.url));
 

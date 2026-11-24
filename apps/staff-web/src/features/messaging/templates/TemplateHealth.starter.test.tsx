@@ -10,8 +10,6 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «متاح للمعلمين والمبيعات» (the restricted allow-list) (owner 2026-10-12, docs/16): the line of each template and the admin's switch.
-
 const BOOKING = template();
 const WELCOME = template({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', sales_starter: true, status: 'missing' });
 const toggleOf = (name: string) => screen.getByRole('checkbox', { name: t.templates.salesStarterFor.replace('{name}', name) });

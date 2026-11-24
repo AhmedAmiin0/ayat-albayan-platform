@@ -2,7 +2,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AppearanceSection } from '@/features/platform/settings/sections/AppearanceSection';
 import { ModuleHead } from './ModuleHead';
 
-/** /admin/settings/appearance «المظهر» (docs/26b §3): the light/dark theme of this browser, unchanged. */
+/** docs/26b §3: the theme applies to this browser only. */
 export function AppearancePage() {
   return (
     <>

@@ -24,7 +24,7 @@ test('«افتح الرابط» opens the page marked as from the app (?from=<pl
   await show();
   await fireEvent.press(screen.getByRole('button', { name: t.studentLists.openLink }));
   expect(openURL).toHaveBeenCalledWith(`${link.url}?from=${Platform.OS}`);
-  // What «إرسال في المحادثة» / «نسخ» give the family stays unmarked (PaymentLinkScreen.test: the box gets it).
+  // The text sent to the family stays unmarked; only the in-app open is marked as from the app.
   expect(linkMessage(link)).toContain(link.url);
   expect(linkMessage(link)).not.toContain('from=');
 });

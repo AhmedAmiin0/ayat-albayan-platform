@@ -22,7 +22,7 @@ export function dayInZone(instant: number, zone: string): number {
   return Date.parse(localDateIn(instant, zone));
 }
 
-/** 0 = الأحد … 6 = السبت (same as the DB / JS getDay) of a local day. */
+/** 0 = Sunday ... 6 = Saturday (same as the DB and JS getDay) of a local day. */
 export function weekdayOfDay(day: number): number {
   return weekdayOfDate(isoDay(day));
 }

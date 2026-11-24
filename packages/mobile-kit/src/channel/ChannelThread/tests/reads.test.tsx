@@ -6,8 +6,7 @@ import { freshQueryClient, renderWithQuery } from '../../../testing/query';
 import { ChannelThread } from '../ChannelThread';
 import { channelMessage, channelPage } from '../../testing/channel-fixtures';
 
-// Owner: a long press on the ticks shows who read it and when; «n غير مقروءة» at the first
-// unread; the read mark only while the thread is seen (focused and the app in the foreground).
+// Read marks only while the thread is seen (focused and the app in the foreground).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('../../../lib/http/api', () => ({

@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { LessonDetailsSheet } from '@/calendar';
 import { TeacherSheetActions } from './TeacherSheetActions';
 
@@ -12,11 +12,7 @@ interface TeacherLessonSheetProps {
   onReport: (lessonId: string) => void;
 }
 
-/**
- * «تفاصيل الحلقة» for the teacher (docs/48): LessonDetailsSheet role='teacher' with her actions
- * (TeacherSheetActions) and ONE report button, DetailsStudents' own, routed by onReport. A landed
- * «سأحضر» or cancel closes the sheet and the screen says it once.
- */
+/** One report button; a landed confirm or cancel closes the sheet and the screen says it once. */
 export function TeacherLessonSheet(p: TeacherLessonSheetProps) {
   const { lesson, onClose, onNotice, onReport } = p;
   const done = (text: string) => {

@@ -47,7 +47,7 @@ describe('«روابط الدفع» under «مدفوعاتي»', () => {
     expect(within(table).getByText('سهيلة')).toBeTruthy();
     expect(within(table).getAllByText(P.status.open)).toHaveLength(1);
     expect(within(table).getByText(P.status.paid)).toBeTruthy();
-    // An open link past its expiry reads «منتهي» (effectiveLinkStatus).
+    // An open link past its expiry reads as expired (effectiveLinkStatus).
     expect(within(table).getByText(P.status.expired)).toBeTruthy();
     expect(within(table).getByText(P.kind.renewal)).toBeTruthy();
     expect(within(table).getAllByRole('button', { name: new RegExp(P.cancel) })).toHaveLength(1);

@@ -12,7 +12,6 @@ interface Tick {
   label: string;
 }
 
-/** Each tick: its glyph, colour and words («قيد الإرسال», «أُرسلت», «قرأها الجميع»). */
 const TICKS: Readonly<Record<ChannelTicks, Tick>> = {
   queued: { glyph: 'clock', tone: 'text-tick', label: c.pending },
   sent: { glyph: 'check', tone: 'text-tick', label: c.sent },
@@ -25,10 +24,7 @@ interface Props {
   time: string;
 }
 
-/**
- * The bubble's last line: «تم التعديل · 6:31 م» (the message's own time), «جارٍ الإرسال…» while on
- * its way, then my ticks; the ✓ to blue ✓✓ change crossfades on the quick duration.
- */
+/** The tick change crossfades on the quick duration. */
 export function BubbleMeta({ message: m, time }: Props) {
   const ticks = ticksOf(m);
   const tick = ticks ? TICKS[ticks] : null;

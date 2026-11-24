@@ -6,11 +6,7 @@ import { HubLink } from './HubLink';
 
 const H = t.settingsHub;
 
-/**
- * The hub search's results (states.html#hub): one link per hit, to the group or tab that holds it,
- * with where it lives and, for a setting, its key in small LTR text. The count (or «لا توجد…»)
- * sits in a polite live region.
- */
+/** The count sits in a polite live region. */
 export function HubResults({ hits }: { hits: readonly HubHit[] }) {
   return (
     <section aria-label={H.results} className="grid gap-2">

@@ -6,13 +6,7 @@ import { timeEditInfo, timeEditMode } from './edit-time.contract';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
-/**
- * Under the time in the drawer (R-SCH-11): «كان: …» and «السبب: …» once it was edited (the
- * «اتعدّل الوقت» tag sits with the status), and «عدّل الوقت» whenever the API allows it
- * (`time_edit_mode`; never for a teacher or a closed lesson) with what it keeps: the same lesson,
- * report and payments. «غيّر الميعاد» below is the other one: it closes this lesson and books a new one.
- * The button fills its column (docs/07 «الأزرار»: never shrink-wrapped).
- */
+/** Shown only when the API allows (`time_edit_mode`), never for a teacher or a closed lesson. */
 export function EditTimeLink({ lesson, onEdit }: { lesson: LessonView; onEdit?: (() => void) | undefined }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const info = timeEditInfo(lesson);

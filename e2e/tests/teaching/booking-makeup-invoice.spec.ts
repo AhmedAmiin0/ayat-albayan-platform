@@ -13,7 +13,7 @@ const digits = (plus = 0) => `9665${String(Date.now() + plus).slice(-8)}`;
 const next = (p: Page) => p.getByRole('button', { name: ar.booking.next }).click();
 const book = (p: Page) => p.getByRole('button', { name: ar.booking.submit }).click();
 const authToken = (p: Page) => p.evaluate(() => JSON.parse(localStorage.getItem(Object.keys(localStorage).find((k) => k.endsWith('-auth-token')) ?? '') ?? '{}').access_token as string);
-/** «أبرار» free on Sundays 16:00–18:00 only, a clean «Meta» log: the first slot is known. */
+/** Teacher free Sundays 16:00-18:00 only and a clean stub log, so the first slot is known. */
 async function reset(): Promise<string> {
   const id = await resetAbrar();
   await Promise.all([stubReset(), setAvailability(id, [[0, '16:00', '18:00']])]);
@@ -46,7 +46,6 @@ async function pickSunday(admin: Page, pkg = false): Promise<void> {
   await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
   await next(admin);
 }
-/** A lead's wizard: the new student → teacher «أبرار» → package → the Sunday slot → on. */
 async function toSlot(admin: Page, student: string, pkg = false): Promise<void> {
   await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
   await next(admin);
@@ -117,7 +116,7 @@ test.describe('booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06)', ()
     await expect(admin.getByRole('radio', { name: /أبرار/ })).toBeChecked();
     await next(admin);
     await pickSunday(admin);
-    // The invoice is required for a makeup too: «من المحادثة» lists the two photos, the old one is disabled.
+    // The invoice is required for a makeup too; the old photo is disabled.
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeDisabled();
     await admin.getByRole('button', { name: ar.booking.invoice.fromChat }).click();
     const dialog = admin.getByRole('dialog', { name: ar.booking.invoice.chatTitle });

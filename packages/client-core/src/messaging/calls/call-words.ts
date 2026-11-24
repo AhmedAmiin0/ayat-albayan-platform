@@ -14,7 +14,7 @@ export interface CallsText {
   errors: Record<string, string> & { no_permission: string; call_failed: string; media_failed: string };
 }
 
-/** The API's `code` → its sentence (t.calls.errors); anything else is «تعذّر إجراء المكالمة». */
+/** An unknown API `code` falls back to the generic call failure text. */
 export function callErrorText(error: unknown, text: CallsText): string {
   const body = error instanceof ApiError ? error.body : null;
   const code = typeof body === 'object' && body !== null && 'code' in body ? String(body.code) : '';
@@ -41,12 +41,10 @@ export function callPhaseText(phase: CallPhase, text: CallsText): string {
   }
 }
 
-/** The line under the name: «جارٍ الاتصال…» → «يرنّ…» → «2:14», then «انتهت المكالمة». */
 export function callStatusText(phase: CallPhase, input: { row: ActiveCallView | undefined; now: number; text: CallsText }): string {
   return phase === 'active' ? formatCallDuration(talkedSeconds(input.row, input.now)) : callPhaseText(phase, input.text);
 }
 
-/** «مكالمة صوتية صادرة · 2:14», «مكالمة واردة · 0:40», «مكالمة فائتة», «لم يُرَدّ», «مكالمة جارية». */
 export function callEntryText(call: CallView, text: CallsText): string {
   const kind = callEntryKind(call);
   const word = text.entry[kind];

@@ -45,11 +45,7 @@ async function saveCourseDraft(body: BookingRequest): Promise<BookingResult | nu
 export const createBooking = (body: BookingRequest, mode: BookingMode = 'admin', hold = false) =>
   hold ? saveCourseDraft(body) : apiSend<BookingResult>('POST', bookingBase(mode), body);
 
-/**
- * POST /booking/check — the whole series' clashes for the slot step, before «احجز» (R-SCH-04),
- * including the weeks after a coming DST change. Keyed by the body minus its idempotency key,
- * invoice and meeting link.
- */
+/** Whole-series clashes (R-SCH-04) incl. after DST; keyed without idempotency key and invoice. */
 export const bookingCheckQuery = (body: BookingRequest, mode: BookingMode = 'admin') => {
   const key: Partial<BookingRequest> = { ...body };
   delete key.clientRequestId;
@@ -62,12 +58,7 @@ export const bookingCheckQuery = (body: BookingRequest, mode: BookingMode = 'adm
   });
 };
 
-/**
- * /admin/book URL state: from a student profile, or from a lead row (R-LEAD-06). `pkg` = the
- * lead's package: none = a trial, a size = «اشترك» from the chat (R-SUB-01). `teacherId` +
- * `startsAt` = a free gap on the calendar: the wizard preselects that teacher and start.
- * `kind` + `missedLessonId` = «حجز تعويضي» from a missed lesson's drawer (R-SCH-10).
- */
+/** `pkg` none is a trial (R-SUB-01); `teacherId` + `startsAt` preselect a gap; makeup R-SCH-10. */
 export type BookSearch = {
   studentId?: string;
   leadId?: string;

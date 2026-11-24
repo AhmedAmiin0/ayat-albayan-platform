@@ -8,7 +8,7 @@ export interface ChatAnchor {
   msg: string | undefined;
   /** Moves the open chat to a hit, or (undefined) back to the live chat; no history entry. */
   anchor: (id: string | undefined) => void;
-  /** Opens another chat at a hit (the list's «الرسائل»), keeping the list's search. */
+  /** Keeps the list's search when opening another chat at a hit. */
   open: (to: { phone: string; msg: string }) => void;
 }
 

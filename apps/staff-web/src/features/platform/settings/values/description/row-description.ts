@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import type { DescribeTarget } from './describe-target';
 import { shownDescription } from './description';
-import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller';
+import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller.types';
 import type { RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
 
 /** A settings row's dialog target: its key, label and registry hint key. */
@@ -19,7 +19,6 @@ export function rowDescription(api: ValuesApi, target: DescribeTarget, fallback?
   return shownDescription({ entry: api.entry(target.key), hintKey: target.hintKey, locale, bundle: t }) ?? fallback;
 }
 
-/** «اقرأ الوصف وعدّله» in the row's «⋯» menu. */
 export const describeItem = (api: ValuesApi, target: DescribeTarget): RowMenuItem => ({
   id: 'describe',
   label: t.settingsValues.describe.menu,

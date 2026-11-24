@@ -1,6 +1,6 @@
-import { parseAmount } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 
-/** What the save adds: nothing while «مبلغ مخصص» is off, else the typed `customPrice`. */
+/** Nothing while the custom amount is off. */
 interface CustomPriceBody {
   customPrice?: number;
 }

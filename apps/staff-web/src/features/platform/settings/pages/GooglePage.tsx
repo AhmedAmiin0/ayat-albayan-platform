@@ -4,11 +4,7 @@ import { GoogleSection } from '@/features/platform/google-sync/GoogleSection';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ModuleHead } from './ModuleHead';
 
-/**
- * /admin/settings/google «مزامنة Google» (docs/26b §3): today's Google cards (connection, switches,
- * Drive, the two mappings and the sync log) on their own page, as they were. Back from Google's
- * consent screen the section shows the note and clears `?google=` (use-oauth-return).
- */
+/** docs/26b §3. */
 export function GooglePage() {
   const [note, setNote] = useState<string | null>(null);
   return (

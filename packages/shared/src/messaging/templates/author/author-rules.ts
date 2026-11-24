@@ -5,7 +5,7 @@ import type { AuthorCategory } from './template-edit.js';
 import { isCodeBound } from './code-bound.js';
 import { editRoute } from './edit-limits.js';
 
-// Sales authoring (owner 2026-11-14): templates.author lets a role write its own templates for the
+// Sales authoring: templates.author lets a role write its own templates for the
 // allow-list. It never lifts the allow-list and never opens the templates.manage routes.
 
 export const AUTHOR_PERMISSION = 'templates.author' satisfies Permission;
@@ -13,7 +13,7 @@ export const AUTHOR_PERMISSION = 'templates.author' satisfies Permission;
 /** New templates one user may create in a rolling day. */
 export const AUTHOR_DAILY_LIMIT = 5;
 
-/** May this user open «القوالب» as an author (list the allow-list, create, edit their own)? */
+/** May this user open templates as an author (list the allow-list, create, edit their own)? */
 export const authorsTemplates = (who: TemplateSender | null | undefined): boolean =>
   (who?.permissions ?? []).includes(AUTHOR_PERMISSION);
 
@@ -26,7 +26,7 @@ const writtenBy = (t: AuthorEditable, userId: string | undefined): boolean =>
   userId !== undefined && userId !== '' && t.created_by === userId;
 
 /**
- * May this author edit this template? Only their own (owner 2026-11-14): written by them, on the
+ * May this author edit this template? Only their own: written by them, on the
  * allow-list, on the chat line, not code-bound, not a PDF or own-button one, and in a status Meta
  * lets one edit (not while pending review).
  */

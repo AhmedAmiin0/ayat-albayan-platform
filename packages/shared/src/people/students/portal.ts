@@ -8,7 +8,7 @@ import { portalLessonFamilySchema } from './family/portal-actions.js';
 // only: no teacher phone or email, no note or internal reason, no other family. Money only on the
 // package of a guardian or an adult student (portal-package.ts). Parsed at the client boundary.
 
-/** How many days «الحلقات القادمة» looks ahead. */
+/** How many days the upcoming lessons list looks ahead. */
 export const PORTAL_LESSON_DAYS = 14;
 
 export const portalStudentSchema = z.object({
@@ -17,7 +17,7 @@ export const portalStudentSchema = z.object({
   name: z.string(),
   /** The family's clock for this student (students.tz). */
   tz: z.string(),
-  /** An adult student who is their own contact (docs/30): «حسابي» instead of «أبنائي». */
+  /** An adult student who is their own contact (docs/30). */
   contact_is_self: z.boolean(),
 });
 export type PortalStudent = z.infer<typeof portalStudentSchema>;
@@ -32,7 +32,7 @@ export const portalHomeSchema = z.object({
   renew_url: z.string().nullable(),
   /** The login's own language (profiles.locale): the app switches to it. null: never chosen. */
   locale: z.enum(LOCALES).nullable().optional(),
-  /** A guardian login's own name and WhatsApp (E.164) for «حسابي»; null for a student login. */
+  /** A guardian login's own name and WhatsApp (E.164); null for a student login. */
   guardian: z.object({ name: z.string(), phone: z.string() }).nullable().optional(),
 });
 export type PortalHome = z.infer<typeof portalHomeSchema>;
@@ -69,17 +69,14 @@ export const portalLessonSchema = z.object({
   /** Only for `external`, and only while the window is open. */
   meeting_url: z.string().nullable(),
   window: joinWindowSchema,
-  /** «خيارات الحلقة»; absent from an older API. */
+  /** Absent from an older API. */
   family: portalLessonFamilySchema.optional(),
-  /** Who is in the room now / «انتهت الحلقة» (lessonRoomStateSchema). Absent: an older API. */
+  /** Who is in the room now, or ended; absent from an older API. */
   room: lessonRoomStateSchema.nullable().optional(),
 });
 export type PortalLesson = z.infer<typeof portalLessonSchema>;
 
-/**
- * «ما المطلوب للحلقة القادمة» (docs/50 §2): the newest SENT report's homework and next plan; never a
- * draft. null without a sent report.
- */
+/** docs/50 §2: the newest sent report's homework and plan, never a draft; null without one. */
 export const portalPrepareSchema = z.object({
   homework: z.string().nullable(),
   next_plan: z.string().nullable(),
@@ -92,10 +89,7 @@ export type PortalPrepare = z.infer<typeof portalPrepareSchema>;
 export const portalMonthSchema = z.object({ attended: z.number(), absent: z.number() });
 export type PortalMonth = z.infer<typeof portalMonthSchema>;
 
-/**
- * GET /portal/students/:id/lessons: the next PORTAL_LESSON_DAYS days by start, plus the «ما المطلوب»
- * card and this month's counts (optional: an older API leaves them out).
- */
+/** The next PORTAL_LESSON_DAYS days by start; counts are optional for an older API. */
 export const portalLessonsSchema = z.object({
   lessons: z.array(portalLessonSchema),
   prepare: portalPrepareSchema.nullable().optional(),

@@ -30,12 +30,7 @@ function Notice({ text, alert }: { text: string; alert?: boolean }) {
   );
 }
 
-/**
- * /m/:token «اجتماع داخلي» for anyone with the link: the meeting's title, a name, then the room
- * as a guest (the lesson guest page, with the meeting's join). Ended or unknown: one line, no form.
- * A scheduled one not open yet says when it starts and when the room opens (the guest's own clock);
- * joining too early answers 403 join_not_open_yet with opens_at, which the join page reads out.
- */
+/** Joining too early answers 403 join_not_open_yet with opens_at, which the join page reads out. */
 export function MeetingGuestPage({ token, make }: { token: string; make?: () => RoomClient }) {
   const clock = useClock();
   const tz = useViewerTz();

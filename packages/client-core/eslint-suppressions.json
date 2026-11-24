@@ -100,7 +100,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 11
+      "count": 9
     }
   },
   "src/messaging/calls/call-peer.test.ts": {
@@ -145,7 +145,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 10
+      "count": 9
     }
   },
   "src/messaging/calls/call-words.ts": {
@@ -156,7 +156,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/calls/calls-api.test.ts": {
@@ -198,7 +198,7 @@
   },
   "src/messaging/channels/channels.ts": {
     "max-len": {
-      "count": 10
+      "count": 8
     }
   },
   "src/messaging/channels/teacher-pick.ts": {
@@ -206,7 +206,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/inbox/inbox-live.ts": {
@@ -263,12 +263,12 @@
       "count": 1
     },
     "max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/messaging/inbox/reactions.ts": {
     "max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/messaging/inbox/template-button.ts": {
@@ -354,7 +354,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/teaching/booking/course-actions.ts": {
@@ -367,7 +367,7 @@
       "count": 2
     },
     "max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/teaching/booking/invoice.ts": {
@@ -376,11 +376,6 @@
     }
   },
   "src/teaching/booking/picks.ts": {
-    "max-len": {
-      "count": 2
-    }
-  },
-  "src/teaching/reports/entry-values.ts": {
     "max-len": {
       "count": 1
     }
@@ -416,7 +411,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 3
+      "count": 2
     }
   }
 }

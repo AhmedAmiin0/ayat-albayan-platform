@@ -8,7 +8,7 @@ const P = t.paymentLinks.pay;
 
 type Props = { token: string; link: PublicPaymentLink; payable: boolean };
 
-/** The greeting, the amount and the lessons; «ادفع الآن» while payable: a navigation to the API's checkout. */
+/** Pay now while payable is a navigation to the API's checkout. */
 export function PayDetails({ token, link, payable }: Props) {
   return (
     <div className="grid gap-3 rounded-lg border border-rule bg-card p-5">

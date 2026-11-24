@@ -1,19 +1,24 @@
 import {
-  EVOLUTION_HOOK_INTERNAL, EVOLUTION_INTERNAL_DEFAULT, evolutionBase, evolutionHookUrl,
-  type EvolutionConfig, type EvolutionHookOrigin, evolutionBaseAllowed, evolutionInternalHosts,
-  evolutionInternalList, type WaLine,
+  EVOLUTION_HOOK_INTERNAL,
+  evolutionHookUrl,
+  type EvolutionConfig,
+  type EvolutionHookOrigin,
 } from '@ab/shared';
+import {
+  EVOLUTION_INTERNAL_DEFAULT,
+  evolutionBase,
+  evolutionBaseAllowed,
+  evolutionInternalHosts,
+  evolutionInternalList,
+  type WaLine,
+} from '@ab/catalog';
 import { z } from 'zod';
 import { numbersOverlay, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import type { Env } from '@/config/env/env';
 import { blankIsUnset, optionalSecret } from '@/config/env/env.blank';
 import type { EvolutionLineEnv, WhatsappEnv } from './env.whatsapp';
 
-/**
- * The Evolution driver (docs/19 «Evolution driver»): a NUMBER sends through a self-hosted
- * Evolution API instance. The base and the global key are shared («التكاملات»); the instance name
- * (the row's phone_number_id), its token (Vault) and its engine (baileys | cloud) are the number's.
- */
+/** Evolution driver (docs/19): base and global key shared; instance, token, engine per number. */
 export const EVOLUTION_SHAPE = {
   /** https, or http on localhost / a listed internal host (SSRF guard, @ab/catalog). No default. */
   EVOLUTION_API_BASE: z.preprocess(blankIsUnset, evolutionBase.optional()),
@@ -39,10 +44,7 @@ export function evolutionLine(line: WaLine): EvolutionLineEnv | null {
   return isEvolution(env) ? env : null;
 }
 
-/**
- * NAMES of what an Evolution line lacks: the shared base, else the number's own config (its
- * token or engine, set in «الأرقام»: the default number did not build a client).
- */
+/** Names of what an Evolution line lacks: the shared base, else the number's token or engine. */
 export function evolutionGaps(env: Env, line: WaLine): string[] {
   if (evolutionBaseOf(env) === null) return ['EVOLUTION_API_BASE'];
   return evolutionLine(line) ? [] : ['evolution_token'];

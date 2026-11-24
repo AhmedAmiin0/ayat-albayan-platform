@@ -10,13 +10,9 @@ interface Props {
   onCancel: () => void;
 }
 
-/** Who wrote it: the name (mine too: «ردًّا على أنت» reads wrong), else the role's word. */
+/** Mine uses my name too, since replying to "you" reads wrong. */
 const writer = (m: ChannelMessageView): string => m.sender_name || c.roles[m.sender_role];
 
-/**
- * «ردًّا على أ. فاطمة» above the composer (FamChatWebVoice, S7): the brand edge, the first words
- * or the file's kind, and ✕ «إلغاء الرد». It slides up into place (fade-up) when a reply starts.
- */
 export function ReplyBar({ to, onCancel }: Props) {
   const words = to.body || c.kinds[to.kind];
   return (

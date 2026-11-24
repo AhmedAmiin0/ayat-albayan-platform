@@ -14,7 +14,7 @@ export interface ReplyOptionsProps {
   active: number;
   onActive: (index: number) => void;
   onPick: (index: number) => void;
-  /** «إدارة» in «ردودي»: each row's own edit / delete, outside its option. */
+  /** Row edit and delete sit outside the option itself. */
   manage?: { onEdit: (reply: SavedReply) => void; onDelete: (reply: SavedReply) => void } | undefined;
 }
 

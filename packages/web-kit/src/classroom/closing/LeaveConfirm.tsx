@@ -10,11 +10,7 @@ interface Props {
 
 const A = t.mobileRoom.leaveAsk;
 
-/**
- * «تغادر الحلقة؟» (boards FamRoomWebLeave / FamRoomPhoneLeave, the app's LeaveSheet): a card in
- * the middle on wide screens that pops in, a bottom sheet that rises on phones; Esc and the scrim
- * keep one in the room.
- */
+/** Esc and the scrim keep one in the room. */
 export function LeaveConfirm({ onLeave, onStay }: Props) {
   return (
     <Dialog

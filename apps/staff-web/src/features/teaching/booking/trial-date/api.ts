@@ -7,8 +7,7 @@ import { STUDENTS_KEY } from '@/features/people/students/api';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { bookingBase } from '@/features/teaching/booking/mode';
 
-// «موعد تجريبي جديد» routes (owner 2026-10-25, R-SCH-06, R-ASST-01) under the booking base of each
-// mode: /booking (admin) or /sales/booking (the assistant, her students only).
+// Admin or sales base routes (R-SCH-06, R-ASST-01); sales covers her students only.
 
 /** Under LESSONS_KEY: every lesson write (a booking, a move, a cancel) refreshes the history too. */
 export const TRIAL_DATES_KEY = [...LESSONS_KEY, 'trial-dates'] as const;

@@ -5,7 +5,7 @@ import type { DashboardResponse } from '@ab/money';
 
 type Finance = DashboardResponse['finance'];
 
-/** «1 ر.س = 13.2 EGP» per converted currency: which rate the totals used (R-RPT-02). */
+/** Lists which rate the converted totals used (R-RPT-02). */
 export function rateLines(f: Pick<Finance, 'currency' | 'fx_rates'>): string[] {
   return Object.entries(f.fx_rates)
     .filter(([code]) => code !== f.currency)

@@ -14,7 +14,7 @@ interface TeacherDirectory {
 
 let current: TeacherDirectory = { names: {}, aliases: {} };
 
-/** Alias keys are stored normalized, so lookups match any أ/ا, ة/ه, ى/ي spelling. */
+/** Alias keys are stored normalized, so lookups match any Arabic letter variant. */
 export function setTeacherDirectory(d: TeacherDirectory): void {
   const aliases = Object.fromEntries(
     Object.entries(d.aliases).map(([k, v]) => [normalizeArabic(k).trim(), v]),

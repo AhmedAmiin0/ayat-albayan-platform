@@ -10,8 +10,6 @@ import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog
 import { guardian, heldLesson, LESSON_ID, PHONE } from './rating.fakes';
 import { RatingRepo } from './rating.repo';
 
-// POST /threads/:phone/rating «إرسال تقييم الحلقة»: real controller, guard and service; DB mocked.
-
 const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 const TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
 const verify: TokenVerifier = async (token) => (token === 'admin' ? ADMIN : TEACHER);

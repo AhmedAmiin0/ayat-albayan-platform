@@ -2,7 +2,7 @@ import { t } from '../../lib/i18n/i18n';
 import { Button } from '../../ui/primitives/Button';
 import type { useChannel } from '../channel-api';
 
-/** «الرسائل الأقدم» at the top of the thread while older pages exist; nothing once all are in. */
+/** Shown while older pages exist; nothing once all are in. */
 export function OlderButton({ query }: { query: ReturnType<typeof useChannel> }) {
   if (!query.hasNextPage) return null;
   return (

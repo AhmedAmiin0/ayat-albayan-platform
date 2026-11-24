@@ -6,9 +6,7 @@ import {
   addMessage, familyOf, hitPhones, messageHit, searchChats, seedChat,
 } from '../../support/messaging/message-search-ui';
 
-// WhatsApp-style message search (docs/37): the chats list's «الرسائل» section,
-// the folded match, the jump to a message 300 rows back in ONE anchored request, and the teacher's
-// scope. Seeded straight into the DB (no send); example numbers and names only.
+// Message search (docs/37): jump 300 rows back in ONE anchored request; seeded in the DB.
 
 const S = ar.inbox.chatSearch;
 

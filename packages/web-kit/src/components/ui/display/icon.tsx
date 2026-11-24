@@ -1,9 +1,7 @@
 import type { SVGProps } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 
-// Line icons from the reference sprite (docs/design/ink-and-gold.html): 20px grid, 1.6 stroke.
-// Directional icons are picked for RTL: «السابق» uses chevron-right, «التالي» chevron-left, and
-// logout is drawn RTL-native; MIRROR flips them in an LTR page. `reply` is drawn for LTR.
+// Directional icons are drawn for RTL and MIRROR flips them in LTR; `reply` is drawn for LTR.
 const PATHS = {
   search: 'M14.5 9a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0ZM13.2 13.2l3.6 3.6',
   plus: 'M10 4.5v11M4.5 10h11',
@@ -12,7 +10,7 @@ const PATHS = {
   menu: 'M3.5 5.5h13M3.5 10h13M3.5 14.5h13',
   'chevron-left': 'M12.5 5 7.5 10l5 5',
   'chevron-right': 'm7.5 5 5 5-5 5',
-  /** Not directional: «تصغير» of the call screen (docs/28). */
+  /** Not directional: minimize on the call screen (docs/28). */
   'chevron-down': 'm5 7.5 5 5 5-5',
   x: 'm5.5 5.5 9 9M14.5 5.5l-9 9',
   check: 'm4.5 10.5 3.5 3.5 7.5-8',
@@ -51,7 +49,7 @@ const PATHS = {
   person: 'M13 6.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM4 16.5c1.1-2.9 3.3-4.3 6-4.3s4.9 1.4 6 4.3',
   template: 'M5.5 3.5h9v13h-9v-13ZM8 7.5h4M8 10.5h4M8 13.5h2',
   paperclip: 'm15.5 9.5-5.6 5.6a3.5 3.5 0 0 1-5-5l6.3-6.3a2.3 2.3 0 0 1 3.3 3.3l-6.3 6.3a1.2 1.2 0 0 1-1.7-1.7L12 6.2',
-  /** «الردود السريعة»: a bolt (a saved reply in one tap). */
+  /** Saved replies: a bolt, one tap. */
   bolt: 'M11 3 4.5 11.5H10l-1 5.5 6.5-8.5H10l1-5.5Z',
   // The password toggle: an open eye while the text is hidden, struck through once it shows.
   eye: 'M2.5 10S5.3 4.5 10 4.5s7.5 5.5 7.5 5.5-2.8 5.5-7.5 5.5S2.5 10 2.5 10ZM12.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z',

@@ -18,11 +18,7 @@ interface RequestAnswerProps {
 
 const P = () => t.lessons.proposal;
 
-/**
- * «وافق على الموعد» (the asked time), «اختر موعدًا آخر» (a free slot of the same teacher, the
- * same reschedule) or «ارفض الطلب» with a note the family reads. A clash that appeared since the
- * family asked is a 409 with «اختر موعدًا آخر»; booking over it stays on the web.
- */
+/** A clash since the family asked answers 409; booking over it stays on the web. */
 export function RequestAnswer({ request, onDone, slotsPath }: RequestAnswerProps) {
   const [mode, setMode] = useState<Mode>('answer');
   const [startsAt, setStartsAt] = useState<string | null>(null);
@@ -77,7 +73,6 @@ interface AnswerButtonsProps {
   onMode: (mode: Mode) => void;
 }
 
-/** The answer's buttons for each step; «تراجع» back to the three answers. */
 function AnswerButtons({ mode, busy, picked, onApprove, onReject, onMode }: AnswerButtonsProps) {
   const back = <Button variant="ghost" label={t.portal.actions.back} onPress={() => onMode('answer')} />;
   const steps: Record<Mode, ReactElement> = {
@@ -111,7 +106,6 @@ interface OtherSlotProps {
   onPick: (startsAt: string) => void;
 }
 
-/** «اختر موعدًا آخر»: a free slot of the same teacher, on the staff clock. */
 function OtherSlot({ request, slotsPath, value, onPick }: OtherSlotProps) {
   const { teacher, students } = request;
   const lesson = { id: request.lesson_id, starts_at: request.starts_at, teacher, students };

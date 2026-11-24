@@ -8,7 +8,6 @@ const L = t.studentLists;
 
 type CopyState = 'idle' | 'copied' | 'failed';
 
-/** «انسخ الرابط» on the sales pages: navigator.clipboard, and whether it worked. */
 function useCopy(): [CopyState, (text: string) => Promise<void>] {
   const [state, setState] = useState<CopyState>('idle');
   const copy = async (text: string) => {
@@ -23,10 +22,7 @@ function useCopy(): [CopyState, (text: string) => Promise<void>] {
   return [state, copy];
 }
 
-/**
- * One ButtonRow (docs/07 «الأزرار»): «انسخ الرابط» (navigator.clipboard, with a status line) | «افتح الرابط»
- * (new tab) for a safe http(s) URL, equal width with their icons, then the status line.
- */
+/** Copy and open only for a safe http(s) URL (docs/07). */
 export function LinkActions({ url }: { url: string }) {
   const [copy, onCopy] = useCopy();
   return (

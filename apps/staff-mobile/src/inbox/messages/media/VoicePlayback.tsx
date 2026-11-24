@@ -24,11 +24,7 @@ interface VoicePlaybackProps {
 /** How long a fetched note may take to load before the bubble says it failed. */
 export const LOAD_MS = 15_000;
 
-/**
- * A fetched voice note (expo-audio 57): it plays as soon as it is LOADED (the tap that fetched it was
- * the «تشغيل»), pausing any other note (playback.ts). The URL is pinned on mount, so a refetched signed
- * URL never restarts it; the player is released on unmount (useAudioPlayer).
- */
+/** The URL is pinned on mount so a refetched signed URL never restarts playback. */
 export function VoicePlayback({ id, url, kind, onFail, onLongPress }: VoicePlaybackProps) {
   const [source] = useState(url);
   const player = useAudioPlayer(source);

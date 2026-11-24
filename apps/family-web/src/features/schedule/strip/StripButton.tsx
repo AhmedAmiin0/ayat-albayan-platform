@@ -1,5 +1,5 @@
 import { dayTile, type StripDay } from '@ab/client-core';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { followSelected } from '@ab/web-kit/lib/motion/slide-indicator';
 import { cn } from '@ab/web-kit/lib/utils';
@@ -14,7 +14,6 @@ const BUTTON = cn(
   'aria-[current=date]:font-bold aria-[current=date]:text-lapis',
 );
 
-/** «الأحد 16 نوفمبر: حلقتان» for the screen reader. */
 const labelOf = (d: StripDay): string =>
   S.dayLabel
     .replace('{date}', longDay(d.day))

@@ -5,7 +5,6 @@ import type { IconName } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { showsPhone, type InboxMode } from '@/features/messaging/inbox';
 
-/** «مكالمة صوتية صادرة · 2:14», «مكالمة واردة · 0:40», «مكالمة فائتة», «لم يُرَدّ», «مكالمة جارية». */
 export const callEntryText = (call: CallView): string => entryText(call, t.calls);
 
 /** The glyph WhatsApp puts beside a call: an arrow out for ours, in for theirs. */

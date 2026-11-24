@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 
 export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Accessible name; name the row it acts on: «رسالة واتساب لأم إيمان», «إجراءات سهيلة محمد». */
+  /** Accessible name; name the row it acts on. */
   label: string;
 }
 

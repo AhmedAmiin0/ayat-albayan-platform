@@ -42,7 +42,7 @@ export const studentCreateSchema = z.object({
   teacher_gender_pref: z.enum(GENDERS).nullish(),
   meeting_link_override: z.url().nullish(),
   notes: optionalText,
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30, a docs/13 deviation): wording only; the DB default is false. */
+  /** Wording only (docs/30, a docs/13 deviation); the DB default is false. */
   contact_is_self: z.boolean().optional(),
 });
 /**

@@ -3,7 +3,6 @@ import { FeedbackPage } from '@/features/teaching/feedback/FeedbackPage';
 import { FEEDBACK_LIST_KEYS } from '@/features/teaching/feedback/search';
 import { parseServerListSearch } from '@/lib/list/server-list-search';
 
-/** /admin/feedback?page&sort&dir&f_<key> «رأيك يهمّنا» — what the students said, with each teacher's average. */
 export const Route = createFileRoute('/admin/(ops)/feedback')({
   validateSearch: (s: Record<string, unknown>) => parseServerListSearch(s, FEEDBACK_LIST_KEYS),
   component: FeedbackRoute,

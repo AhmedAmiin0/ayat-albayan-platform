@@ -5,7 +5,6 @@ import type { PresenceClock } from '@/core/lib/presence';
 import { roleText } from '@/users/shared/format';
 import type { StaffLine } from './staff-order';
 
-/** One staff member: name and role, then «متصل الآن» (dot) / «آخر ظهور …» / «لم يظهر بعد». */
 export function StaffPresenceRow({ line, clock }: { line: StaffLine; clock: PresenceClock }) {
   const { color } = useTheme();
   const { row, online } = line;

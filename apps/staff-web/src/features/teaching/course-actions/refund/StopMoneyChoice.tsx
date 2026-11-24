@@ -16,7 +16,7 @@ import type { StopMoneyView } from './use-stop-money';
 
 type Fmt = (n: number) => string;
 
-/** «مبلغ مخصص»: 0 up to the allowed maximum (the net paid, or the price). */
+/** 0 up to the allowed maximum (the net paid, or the price). */
 function CustomAmount({ view, max }: { view: StopMoneyView; max: string }) {
   const words = t.courseActions.stop;
   return (
@@ -33,7 +33,7 @@ function CustomAmount({ view, max }: { view: StopMoneyView; max: string }) {
   );
 }
 
-/** «إلغاء مع استرداد»: paid, attended × price × rate, then the refund amount to choose. */
+/** Refund is paid minus attended times price times rate. */
 function RefundPart({ view, calc, fmt }: { view: StopMoneyView; calc: StopRefund; fmt: Fmt }) {
   const words = t.courseActions.stop;
   const custom = view.state.refundChoice === 'custom';
@@ -63,7 +63,6 @@ interface OweProps {
   fmt: Fmt;
 }
 
-/** «إلغاء فقط»: what the family still owes. */
 function OwePart({ view, preview, fmt }: OweProps) {
   const words = t.courseActions.stop;
   const custom = view.state.oweChoice === 'custom';
@@ -89,11 +88,7 @@ interface Props {
 
 const MODES = ['cancel', 'refund'] as const;
 
-/**
- * The stop sheet's money (owner 2026-11-06, «make me choose what I need»): «إلغاء فقط» /
- * «إلغاء مع استرداد», the option with its computed amount, a custom amount, then ONE line: the
- * refund and what remains owed. The commission is never a choice (a stop never touches it).
- */
+/** The commission is never a choice: a stop never touches it. */
 export function StopMoneyChoice({ preview, view, money }: Props) {
   const words = t.courseActions.stop;
   const fmt = (n: number) => moneyText(n, preview.currency);

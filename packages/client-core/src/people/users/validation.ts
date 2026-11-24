@@ -1,4 +1,5 @@
-import { DEFAULT_PASSWORD_MIN, needsExistingRecord, normalizePhone, passwordProblem } from '@ab/shared';
+import { DEFAULT_PASSWORD_MIN, needsExistingRecord, passwordProblem } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import type { CreateForm } from './create-form.js';
 import type { EditForm } from './edit-form.js';
 
@@ -13,7 +14,7 @@ export type FormErrors = Partial<Record<FieldKey, string>>;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** The create / edit checks of «المستخدمون», with the messages of the app's language (read on every call). */
+/** Messages are read on every call so they follow the app's current language. */
 export function userChecks(text: () => UserCheckText) {
   const V = () => text().validation;
   const emailError = (v: string): string | undefined => (EMAIL.test(v.trim()) && v.trim().length <= 254 ? undefined : V().email);

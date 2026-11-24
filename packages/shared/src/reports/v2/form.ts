@@ -5,9 +5,7 @@ import { suggestOverall } from './rules.js';
 import { reportV2SubmitSchema, type ReportV2DraftBody, type ReportV2SubmitBody, type V2Problem } from './schema.js';
 import { suggestHomework, suggestNextPlan, type SuggestWords } from './suggest.js';
 
-// The v2 «تقرير الحلقة» form state shared by web and mobile (docs/design/report-form): the same
-// fields, defaults and checks on both. overall / homework / nextPlan are null until the teacher
-// changes them; until then the form shows (and sends) the suggestion.
+// v2 report form shared by web and mobile; null fields send the suggestion until changed.
 
 export interface V2Values {
   attendance: Attendance | null;

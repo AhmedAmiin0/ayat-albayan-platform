@@ -75,7 +75,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/auth/reset/reset-checks.ts": {
@@ -204,7 +204,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/switch-exhaustiveness-check": {
       "count": 1
@@ -247,14 +247,9 @@
       "count": 1
     }
   },
-  "src/classroom/kick/ParticipantsSheet.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/kick/use-kick.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -262,14 +257,9 @@
   },
   "src/classroom/mute/use-mute.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/classroom/recordings/RecIndicator.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -280,7 +270,7 @@
   },
   "src/classroom/recordings/RecordingsPanel.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/classroom/room/components/ClassroomRoom/tests/boardRequest.test.tsx": {
@@ -387,11 +377,6 @@
       "count": 2
     }
   },
-  "src/classroom/room/livekit/livekit-moderated.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
     "max-lines-per-function": {
       "count": 1
@@ -454,11 +439,6 @@
   },
   "src/classroom/room/livekit/window-hint.ts": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/classroom/share/RequestButton.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -467,14 +447,9 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/classroom/share/stop-revoked.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -494,7 +469,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -513,7 +488,7 @@
   },
   "src/classroom/stage/use-maximize.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -572,11 +547,6 @@
   },
   "src/components/ui/display/mark.tsx": {
     "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/components/ui/display/skeleton.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -592,7 +562,7 @@
   },
   "src/components/ui/form/button.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/components/ui/form/field.tsx": {
@@ -623,7 +593,7 @@
   },
   "src/components/ui/form/segmented-control.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/ui/form/select.tsx": {
@@ -770,14 +740,9 @@
       "count": 1
     }
   },
-  "src/lib/clock-options.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/lib/clock-text.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/lib/clock.ts": {
@@ -968,7 +933,7 @@
   },
   "src/testing/test-setup.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1

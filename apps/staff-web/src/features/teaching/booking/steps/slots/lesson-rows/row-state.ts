@@ -30,10 +30,7 @@ export function rowErrors(rows: readonly LessonRow[], at: RowsAt): Map<number, s
   return errors;
 }
 
-/**
- * The picks the draft keeps: none while a row has an error or only half its date / time (so
- * «التالي» stays shut and no day is dropped silently), else every filled row's instant.
- */
+/** None while a row is incomplete or invalid, so next stays shut and no day is dropped silently. */
 export function rowPicks(rows: readonly LessonRow[], at: RowsAt): string[] {
   const blocked = rowErrors(rows, at).size > 0 || partialRows(rows).length > 0;
   return blocked ? [] : picksFromRows(rows, at.tz);

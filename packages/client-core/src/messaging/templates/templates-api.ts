@@ -3,9 +3,7 @@ import type { ApiClient } from '../../core/http/index.js';
 import { pathKey } from '../../core/keys/index.js';
 import { templateListSchema, templateViewSchema, type AuthorTemplate } from './template-view.js';
 
-// «القوالب» (owner 2026-11-14): the routes both apps use. An author (templates.author, sales by
-// default) lists, writes and edits through /authored; the admin (templates.manage) edits any
-// template through /:key/content and lists them all. Plain TanStack Query options (no React).
+// Authors use /authored; the admin (templates.manage) edits any template via /:key/content.
 
 const ALL = '/messaging/templates';
 const AUTHORED = `${ALL}/authored`;
@@ -49,7 +47,6 @@ export interface TemplateSends {
   createAuthored: Send<TemplateAuthorInput>;
   /** An author's edit of an allow-list template the code does not send. */
   editAuthored: Send<TemplateEditCall>;
-  /** The admin's «تعديل» of any template. */
   editContent: Send<TemplateEditCall>;
 }
 

@@ -6,11 +6,7 @@ import type { RowIds } from './editor-props';
 
 const v = t.settingsValues;
 
-/**
- * Under the editor, in a polite live region that is always in the accessibility tree: the
- * validation line (linked by aria-describedby), a failed save with «أعد المحاولة», or «تُدار من
- * صفحة أخرى» when the API refused the key as owned by a module page.
- */
+/** Always in the a11y tree: validation, a failed save with retry, or owned by a module page. */
 export function RowMessage({ settingKey, ids }: { settingKey: SettingKey; ids: RowIds }) {
   const api = useValues();
   const error = api.error(settingKey);

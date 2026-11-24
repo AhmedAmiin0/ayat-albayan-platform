@@ -1,5 +1,6 @@
 import { apiErrorCode } from '@ab/client-core';
-import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
+import { studentStatusStyle } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ApiError, t, FilterPills, ErrorLine } from '@ab/mobile-kit';
@@ -41,14 +42,7 @@ interface StatusChangerProps {
   chatPhone?: string | undefined;
 }
 
-/**
- * One tap sets the status (PATCH /students/:id), shown at once everywhere it is cached; a failure
- * puts the old status back and says so here (R-MOB-03). If the status moved meanwhile (409
- * `status_changed`), nothing is written and the refetched current status is shown (R-STU-05).
- * «موقوف مؤقتًا» / «متوقف» open the pause / the stop of the current package instead (owner
- * 2026-11-17); without a package «متوقف» is set at once, as before. While the package is not
- * known yet «متوقف» waits for it (never mistaken for «no package»); a failed read says so.
- */
+/** A failure restores the old status (R-MOB-03); a 409 status_changed writes nothing (R-STU-05). */
 export function StatusChanger({ student, chatPhone }: StatusChangerProps) {
   const change = useOptimisticStatus<StudentStatus, StudentStatusChange>(STATUS);
   const [notice, setNotice] = useState<string | null>(null);

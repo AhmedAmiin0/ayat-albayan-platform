@@ -29,7 +29,6 @@ interface LinkDetailScreenProps {
 
 const D = () => t.shortLinks.detail;
 
-/** «المالك: الزهراء · أُنشئ الثلاثاء 17 نوفمبر، 9:00 ص». */
 function useOwnerLine(link: ShortLinkDetail): string {
   const tz = useViewerTz();
   const cycle = useClockCycle();

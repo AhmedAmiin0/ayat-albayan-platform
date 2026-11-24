@@ -1,4 +1,5 @@
-import { iceUrls, type CallIceServer } from '@ab/shared';
+import type { CallIceServer } from '@ab/shared';
+import { iceUrls } from '@ab/catalog';
 import { createHmac } from 'node:crypto';
 import { z } from 'zod';
 import type { Env } from './env';

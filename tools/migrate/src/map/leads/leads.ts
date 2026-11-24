@@ -1,6 +1,4 @@
-// leads ← CRM contacts + tags first, «كل المحادثات» fills gaps (docs/06, R-MIG-01, R-LEAD-01/04).
-// A guardian's or teacher's phone, or a job applicant's, gets no lead. Job-seeker wording in a
-// contact's first messages is flagged for review only (never moved to job_applicants).
+// Leads from CRM contacts first, sheets fill gaps (docs/06, R-MIG-01, R-LEAD-01/04).
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { text } from '../../sources/crm/rows.ts';

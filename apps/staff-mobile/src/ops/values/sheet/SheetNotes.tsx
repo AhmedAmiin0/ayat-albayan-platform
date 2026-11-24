@@ -21,11 +21,11 @@ interface SheetNotesProps {
   editable: boolean;
   canWrite: boolean;
   meta: SettingMeta | undefined;
-  /** «أعد القيمة الافتراضية»: puts the default into the draft (an editable, changed value only). */
+  /** Only for an editable, changed value. */
   onReset: () => void;
 }
 
-/** «آخر تعديل: …» (with who, when GET /config/meta names them). */
+/** Includes who and when if GET /config/meta names them. */
 function changedLine(meta: SettingMeta, cycle: ClockCycle, tz: string): string {
   const at = formatAt(meta.updatedAt, cycle, tz);
   const c = t.config;
@@ -38,7 +38,6 @@ function readOnlyWhy(key: SettingKey, canWrite: boolean): string | undefined {
   return canWrite ? t.mobileValues.editOnWeb : undefined;
 }
 
-/** The tag of a value «احفظ» asks about first: «يحذف بيانات» or «يُسأل قبل الحفظ». */
 function tagOf(key: SettingKey): string | undefined {
   const kind = VALUE_CONFIRM[key];
   if (!kind) return undefined;
@@ -68,7 +67,6 @@ export function SheetNotes({ valueKey, saved, editable, canWrite, meta, onReset 
   );
 }
 
-/** A save's answer: «تُدار من صفحة أخرى» as a note, a failure as an alert. */
 export function SheetNotice({ notice }: { notice: string | null }) {
   if (notice === null) return null;
   return notice === t.mobileValues.owned ? <Note>{notice}</Note> : <ErrorLine message={notice} />;

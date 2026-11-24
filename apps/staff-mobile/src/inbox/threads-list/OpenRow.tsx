@@ -10,12 +10,11 @@ import { VoiceSlot } from '@/inbox/composer/voice/VoiceSlot';
 import { voiceSupported } from '@/inbox/composer/voice/voice-support';
 
 interface OpenRowProps extends PillProps {
-  /** A saved reply's file waits in its chip: «أرسل», never the microphone. */
+  /** A staged file means the round button sends, never records. */
   staged: boolean;
   onSend: () => void;
-  /** The text or a staged file is on its way: one «أرسل» at a time. */
+  /** One send at a time. */
   sending: boolean;
-  /** Nothing to send yet (edit mode with only «تصحيح:» in the box). */
   blocked?: boolean;
 }
 
@@ -50,12 +49,7 @@ function Row({ p, voice }: { p: OpenRowProps; voice: Voice }) {
   );
 }
 
-/**
- * The open window's row (owner 2026-10-27: «remove every thing in the chat bar except for the tag and
- * the clips icons»): [pill: text · «عرض سعر» · paperclip] then the round microphone / «أرسل», in
- * reading order, so it mirrors with the phone (the round button on the right in English, on the left
- * in Arabic). Voice notes: staff only, where the APK records; a teacher's pill is [emoji · text · قالب].
- */
+/** Row order follows reading order so it mirrors; voice notes only for staff where APK records. */
 export function OpenRow(p: OpenRowProps) {
   const [records] = useState(voiceSupported);
   if (!p.staff || !records) return <Row p={p} voice={{ ui: null, inCall: false }} />;

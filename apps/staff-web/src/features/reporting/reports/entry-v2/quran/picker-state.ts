@@ -6,7 +6,7 @@ export interface PickTarget {
   index: number;
   /** Where it opens: the part's range, else right after the last saved one, else nothing picked. */
   start: SurahRange | null;
-  /** The last saved ayah when it opened from the history («يبدأ تلقائيًا بعد آخر حفظ»). */
+  /** The last saved ayah when it opened from the history, so the range starts after it. */
   after: number | null;
 }
 

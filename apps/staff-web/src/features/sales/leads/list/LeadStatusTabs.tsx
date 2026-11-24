@@ -6,9 +6,7 @@ import { cn } from '@ab/web-kit/lib/utils';
 
 type Tab = LeadStatus | 'all';
 
-// Funnel order (LEAD_STATUSES), grouped الكل / the funnel / مردّش + عميل ضايع (docs/07 §9).
-// TODO(R-LEAD-02): per-status counts like page numbers once the API returns them (the list
-// endpoint only gives `total` for the current filter).
+// Funnel order (LEAD_STATUSES) grouped as in docs/07 §9.
 const TABS: TabOption<Tab>[] = [
   { value: 'all', label: t.leads.filterAll },
   ...LEAD_STATUSES.map((s) => ({

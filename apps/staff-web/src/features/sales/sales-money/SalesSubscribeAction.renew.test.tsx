@@ -34,7 +34,6 @@ function open(students: ReturnType<typeof student>[]) {
 
 const PREMIUM = { pkg: 'premium', count: 10, duration: 60, discount: 10, country: 'AE' } as const;
 
-/** The header's «المزيد» (W3): the secondary sales actions live in it. */
 const openMore = async () => fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
 const subscribeDialog = (name: string) => within(screen.getByRole('dialog', { name }));
 

@@ -5,7 +5,6 @@ import { CourseContinue } from './CourseContinue';
 import { CourseTeacherStep } from './CourseTeacherStep';
 import type { KnownTeacher } from '@/sales-course/hooks/use-known-teacher';
 
-/** «تغيير أيام الحلقات» offered beside the wizard: the student's course (view.current) and how to open it. */
 export interface CourseChangeEntry {
   course: BookedCourse;
   open: () => void;
@@ -26,11 +25,6 @@ interface CourseOpeningProps {
   transfer?: (() => void) | undefined;
 }
 
-/**
- * The wizard's first step: «تابِع بنفس الأيام» / «اختر أيامًا أخرى» on a renewal, else the teacher list;
- * above it, when the student already has a course, whether it runs or starts later, its days (not
- * twice) and «تغيير أيام الحلقات» as the secondary beside the step's own primary (owner 2026-10-18).
- */
 export function CourseOpening(props: CourseOpeningProps) {
   const { view, step, opensOn, known, change, transfer } = props;
   const previous = view.previous ?? null;

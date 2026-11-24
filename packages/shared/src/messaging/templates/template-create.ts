@@ -3,10 +3,7 @@ import { WA_LINES } from '@ab/catalog';
 import { TEMPLATE_KEY_PATTERN } from '../schemas.js';
 import { BODY_SLOTS } from './templates.js';
 
-// «قالب جديد» (owner 2026-10-31: «add ability to create and sync templates from the admin»): what
-// an admin types for a brand-new registry row. The API checks Meta's body rules
-// (template-review.ts) and that the name is free; sending it to Meta stays the separate, explicit
-// «إرسال إلى ميتا».
+// The API checks Meta's body rules and a free name; sending to Meta stays a separate explicit step.
 
 /**
  * Meta's limits for a template's parts (characters), and the buttons WhatsApp shows under a bubble.

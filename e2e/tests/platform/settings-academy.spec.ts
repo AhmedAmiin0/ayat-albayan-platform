@@ -4,12 +4,7 @@ import { fillStable } from '../../support/core/fill';
 import { setSetting } from '../../support/core/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';
 
-// «القيم» /admin/settings/values (R-SCH-07, R-SUB-02, R-REP-02, docs/26b §2): each row saves on its
-// own with its row «حفظ» (PATCH /config/entries/:key with the row's version, 26-P3); a value out of
-// bounds is refused inline and nothing is written. The follow-up hours (R-LEAD-05) are the «متابعة العميل» row of
-// «التواصل» › «الإشعارات» (/admin/settings/communications?tab=catalogue, docs/23b): a non-ascending
-// list is refused in the row before any PATCH. Everything written is put back.
-// The spec reads only roles and labels, never request URLs, so the save route can change under it.
+// Values (R-SCH-07, R-SUB-02, R-REP-02, docs/26b §2) save per row with version; reads no URLs.
 
 const KEYS = ['booking_horizon_weeks', 'renewal_alert_remaining', 'report_teacher_edit_hours', 'follow_up_hours'];
 const v = ar.settingsValues;
@@ -27,8 +22,7 @@ test.describe('settings — «القيم» rows and the follow-up hours', () => 
 
   test('each row saves alone; out of bounds is refused inline; the values survive a reload', async ({ asRole }) => {
     const admin = await asRole('admin');
-    // Desktop: the row's own box and «حفظ: الاسم». Phones (Pixel 7): the row's value button opens a
-    // bottom sheet named by the label, with the box and «احفظ»; the sheet closes once the save lands.
+    // Phones edit in a bottom sheet that closes once the save lands.
     const phone = test.info().project.name === 'mobile';
     const sheet = (label: string) => admin.getByRole('dialog', { name: label, exact: true });
     const open = async (label: string) => {
@@ -51,7 +45,7 @@ test.describe('settings — «القيم» rows and the follow-up hours', () => 
     const horizon = ar.settings.bookingHorizonWeeks;
     const box = await open(horizon);
     await expect(field(box, horizon)).toHaveValue('5');
-    // Out of bounds (1–12): the line under the box, «حفظ» does nothing, nothing is written.
+    // Out of bounds (1-12): the error shows and nothing is written.
     await fillStable(field(box, horizon), '40');
     await expect(box.getByText(v.invalidRange.replace('{min}', '1').replace('{max}', '12'))).toBeVisible();
     if (phone) await saveRow(box, horizon).click();

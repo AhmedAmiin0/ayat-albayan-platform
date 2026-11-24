@@ -3,11 +3,9 @@ import { View } from 'react-native';
 import { t, AppText, Button, NuqtaGlyph, type, useTheme } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 
-/** After POST …/course/change 201: «تغيّرت أيام الحلقات», the course's new last day, and the way out. */
 interface CourseChangeDoneProps {
   result: CourseChangeResult;
   onDone: () => void;
-  /** The target's lines («المعلم الجديد: …», owner 2026-11-17). */
   lines?: readonly string[] | undefined;
 }
 

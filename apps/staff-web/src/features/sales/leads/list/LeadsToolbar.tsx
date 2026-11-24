@@ -11,15 +11,10 @@ export interface LeadsToolbarProps {
   search: LeadSearch;
   /** A filter patch; the inbox resets to page 1 and drops blank values. */
   onFilter: (patch: Record<string, unknown>) => void;
-  /** The leads the filters leave: «عرض النتائج (14)». */
   total?: number | undefined;
 }
 
-/**
- * The shared table toolbar (owner, 2026-10-05): the name / phone search (GET /leads q, applied after
- * a pause or Enter), «تصفية» with the source, «مسؤول المبيعات» and the order, and their chips.
- * The status stays the fihris beside the list (R-LEAD-02, docs/07 §9).
- */
+/** Search applies after a pause or Enter; status stays the side index (R-LEAD-02, docs/07 §9). */
 export function LeadsToolbar({ search, onFilter, total }: LeadsToolbarProps) {
   const people = useQuery(salesPeopleQuery);
   const list = Array.isArray(people.data) ? people.data : [];

@@ -11,7 +11,6 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 const s = t.googleSync.log;
-/** «مخطط: » before the LTR «POST calendar/…» island (the template ends with «{method} {target}»). */
 const PLANNED_LEAD = s.planned.split('{method}')[0] ?? '';
 
 interface Props {
@@ -37,7 +36,7 @@ function Detail({ item }: { item: GoogleSyncItemView }) {
   );
 }
 
-/** One sync item as a card that reads on a 390px phone; «إعادة المحاولة» on failed / gone / skipped. */
+/** Must read on a 390px phone. */
 export function SyncLogRow({ item, onRetried, onChanged }: Props) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const retry = useMutation({

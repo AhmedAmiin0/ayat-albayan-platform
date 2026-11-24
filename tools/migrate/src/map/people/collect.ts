@@ -1,8 +1,4 @@
-// collectPeople: every people row merged into one Person per child (docs/06 steps 1–5). Pure.
-// Sources in order: HUB «الطلاب» (master), «ردود التسجيل», confirmed bookings, then HEART
-// «subscription» (collect.heart.ts). Rows merge on the student natural key; a registration or
-// booking row carrying the AB code of a «الطلاب» child on the same phone is that child (the code
-// is the identity, the master tab's spelling wins). Merge rules and issues: collect.merge.ts.
+// docs/06 steps 1-5: rows merge on the natural key; an AB code on the same phone is the identity.
 import type { SourceBundle } from '../../entities/contract.ts';
 import { keyId } from '../../keys.ts';
 import type { RowIssue } from '../../types.ts';
@@ -38,7 +34,7 @@ function sourceRows(bundle: SourceBundle) {
 
 const codeId = (p: { phone: string; legacy: number | null }) => `${p.phone}|${p.legacy}`;
 
-/** The «الطلاب» child this row's AB code names on the same phone, when the spelling differs. */
+/** The master child this row's AB code names on the same phone, when the spelling differs. */
 function byCode(row: PersonRow, masters: ReadonlyMap<string, Person>): Person | undefined {
   if (row.kind === 'student' || row.legacy === null) return undefined;
   const master = masters.get(codeId(row));

@@ -15,17 +15,14 @@ function PackageOf({ me, id }: { me: PortalHome; id: string }) {
   return <PackageBody student={student} />;
 }
 
-/**
- * «الباقة» pushed above the tabs (from the home card or a bell row), `package/[id]`. A child's own
- * login never reads it (anti-goal, docs/50 §4).
- */
+/** A child's own login never reads the package (anti-goal, docs/50 §4). */
 export function PackageScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const me = usePortalMe();
   const refresh = useRefreshPortal();
   const student = studentOf(me.data, id);
   const money = Boolean(me.data && student && seesMoney(portalViewer(me.data.kind, student)));
-  // No «الباقة» heading for a login that never sees money (a child's, through a stale link).
+  // No package heading for a login that never sees money (a child's, through a stale link).
   const title =
     money && student ? `${t.portal.packageTab} · ${student.name}` : (student?.name ?? '');
   return (

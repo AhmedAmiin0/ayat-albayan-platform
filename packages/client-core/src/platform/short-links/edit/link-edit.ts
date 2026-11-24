@@ -8,12 +8,11 @@ import {
 } from '../link-form.js';
 import { issueErrors, type LinkFieldErrors } from '../link-form-errors.js';
 
-// «تعديل» and «تمديد» of a link (board LinkXWebDetail): the PATCH body from the fields the screen
-// shows. A field left out stays as it is on the server; a given user list replaces the old one.
+// A field left out stays as is on the server; a given user list replaces the old one.
 
 export interface LinkEdit {
   title?: string;
-  /** Digits as typed; empty = «بلا حد». */
+  /** Digits as typed; empty means no limit. */
   maxUsers?: string;
   people?: LinkPick[];
   phones?: string[];

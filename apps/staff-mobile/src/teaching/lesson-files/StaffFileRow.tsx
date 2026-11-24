@@ -9,7 +9,7 @@ import { fileLine, fileTitle } from './file-words';
 
 const F = t.lessonFiles;
 
-/** One file staff added: name and size, «يراه الطالب وولي الأمر», open, remove (asked first). */
+/** Removal asks first. */
 export function StaffFileRow({ file }: { file: LessonFileView }) {
   const visible = useFileVisibility();
   const open = useOpenFile();

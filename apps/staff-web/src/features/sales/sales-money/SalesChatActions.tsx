@@ -9,7 +9,7 @@ export interface SalesChatActionsProps {
   compact?: boolean;
 }
 
-/** The visible action and «المزيد» (W3), without the dialogs (SalesChatFrame keeps those still). */
+/** Dialogs stay in SalesChatFrame, not here. */
 export function SalesChatButtons({ primary, items }: { primary: ReactNode; items: ReactNode[] }) {
   if (!primary && items.length === 0) return null;
   return (
@@ -20,12 +20,7 @@ export function SalesChatButtons({ primary, items }: { primary: ReactNode; items
   );
 }
 
-/**
- * The header actions of a sales chat (R-ASST-01, R-ASST-04, W3): ONE visible secondary action
- * («تسجيل طالب جديد» on a lead, «اشتراك جديد» on a family with her students), then «المزيد» with
- * «تحقق من التسجيل» (docs/16 row 23), the renewals, the transfer and the course days. The dialogs sit
- * outside the menu (they portal, and the menu keeps its entries mounted). Nothing outside sales mode.
- */
+/** One visible secondary action, the rest in the more menu (R-ASST-01/04, docs/16 row 23). */
 export function SalesChatActions({ thread, compact = false }: SalesChatActionsProps) {
   const { primary, items, dialogs } = useSalesFamilyActions({ thread, compact });
   return (

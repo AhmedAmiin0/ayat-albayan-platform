@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
-import type { ValuesApi } from './hooks/use-values-controller';
+import type { ValuesApi } from './hooks/use-values-controller.types';
 
-/** «القيم»'s state for every row (edits, saves, permissions), so rows take only their key. */
+/** Shared state for every row (edits, saves, permissions), so rows take only their key. */
 export const ValuesContext = createContext<ValuesApi | null>(null);
 
 export function useValues(): ValuesApi {

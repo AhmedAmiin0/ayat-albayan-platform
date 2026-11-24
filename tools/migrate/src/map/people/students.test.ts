@@ -25,7 +25,7 @@ describe('students', () => {
       name_normalized: 'ليان',
       age: 9,
       gender: 'female',
-      status: 'new', // «طالب حالي» alone is no subscription (docs/06 «Student status»)
+      status: 'new', // A "current student" mark alone is no subscription (docs/06).
       level: 'مبتدئ',
       tz: 'Asia/Riyadh',
       code_seq: 12,

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { canRetryCode, isRetryableWaError, isWaWindowClosed } from './wa.js';
 
-// Owner 2026-11-03: the 24 h window refusal is never retried; only a template reopens it.
+// The 24 h window refusal is never retried; only a template reopens it.
 
 describe('isWaWindowClosed', () => {
   it('131047 and 470 are the window; others are not', () => {

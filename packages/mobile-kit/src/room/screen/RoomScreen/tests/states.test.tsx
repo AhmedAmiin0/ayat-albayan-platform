@@ -50,7 +50,7 @@ test('alone in the room: «بانتظار البقية…»; reconnecting shows 
 });
 
 test.each([
-  // The server closed it (DeleteRoom): «انتهت الحلقة»; a rejoin learns whether it is final (410).
+  // DeleteRoom: a rejoin learns whether it is final (410).
   ['ended', t.classroom.closedHint, true],
   ['dropped', R.dropped, true],
   ['duplicate', R.duplicate, true],

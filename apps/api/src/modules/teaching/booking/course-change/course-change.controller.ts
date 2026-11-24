@@ -15,10 +15,7 @@ import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseChange } from './course-change.service';
 import { CourseChangeViews } from './course-change.view';
 
-/**
- * The admin's «تغيير أيام الحلقات» of an assistant course (owner 2026-10-18): the same CourseChange
- * as the assistant's POST /sales/booking/course/change, any student, override with a reason allowed.
- */
+/** Same CourseChange as the assistant's route; any student; override with a reason allowed. */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('lessons.write')

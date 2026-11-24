@@ -1,4 +1,4 @@
-import { teacherCancelSchema } from '@ab/shared';
+import { teacherCancelSchema } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Field, ErrorLine } from '@ab/mobile-kit';
@@ -21,12 +21,7 @@ function problemOf(missing: boolean, failure: unknown): string | null {
   return failure ? teacherActionError(failure) : null;
 }
 
-/**
- * «إلغاء الحلقة» by the teacher (docs/46 D3): this lesson only, the reason required (zod:
- * teacherCancelSchema), then «تأكيد الإلغاء». Its own mutation to POST
- * /teachers/me/lessons/:id/cancel,
- * never the admin's cancel. The family and the admins are told the reason by the API.
- */
+/** Required reason (docs/46 D3) on its own endpoint; the API tells the family and the admins. */
 export function TeacherCancelForm({ lessonId, onClose, onDone }: TeacherCancelFormProps) {
   const [reason, setReason] = useState('');
   const [tried, setTried] = useState(false);

@@ -12,11 +12,7 @@ export interface AssistantTermsView {
   assistant_id: string;
   commission: { type: AssistantCommissionType; value: number; currency: string | null; starts_on: string } | null;
   salary: { amount: number; currency: string; starts_on: string } | null;
-  /**
-   * The share of the commission earned on each renewal now:
-   * settings.renewal_commission_percent, 0 while «عمولة التجديد» is off (renewalShareNow); the
-   * screens then say it is paused.
-   */
+  /** Renewal commission share now; 0 while renewal commission is off (renewalShareNow). */
   renewal_share_percent: number;
 }
 
@@ -66,7 +62,7 @@ export interface AssistantStatementLineView {
   currency: string;
   /** commission lines: the student; adjustment lines: the reason. */
   student: { code: string; name: string } | null;
-  /** commission lines: «عمولة» or «عمولة تجديد»; null on the other lines. */
+  /** Commission lines: commission or renewal commission; null on the other lines. */
   commission_kind: AssistantCommissionKind | null;
   reason: string | null;
 }
@@ -107,9 +103,9 @@ export interface MyEarnings {
   terms: AssistantTermsView | null;
   /** This month so far, as the next statement would be (planStatement), per currency. */
   this_month: Record<string, CurrencyTotals>;
-  /** All earned commissions, per currency (kept for app builds older than «محفظتي»). */
+  /** All earned commissions per currency, kept for older app builds. */
   commissions_total: Record<string, number>;
-  /** «محفظتي» per currency (walletTotals): owed, paid, earned this month. Commissions only. */
+  /** The wallet per currency (walletTotals): owed, paid, earned this month; commissions only. */
   wallet: Record<string, WalletTotals>;
   statements: AssistantStatementView[];
 }

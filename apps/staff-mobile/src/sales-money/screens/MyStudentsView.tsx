@@ -1,4 +1,4 @@
-import type { MyStudentRow } from '@ab/shared';
+import type { MyStudentRow } from '@ab/money';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { t, useTabBarInset } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
@@ -8,7 +8,6 @@ import { MyStudentItem } from '@/sales-money/components/MyStudentItem';
 
 const renderRow = ({ item }: ListRenderItemInfo<MyStudentRow>) => <MyStudentItem student={item} />;
 
-/** «طلابي» (web MyStudents): the students I brought, newest first; GET /sales/me/students only. */
 export function MyStudentsView() {
   const list = useMyStudents();
   const inset = useTabBarInset();

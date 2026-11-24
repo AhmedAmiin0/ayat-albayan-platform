@@ -3,7 +3,7 @@ import {
   splitSettingsPatch,
   type SettingsPatchBody,
   type SettingsPatchSplit,
-} from '@ab/shared';
+} from '@ab/settings';
 import { BadRequestException } from '@nestjs/common';
 
 /** The alias split plus the followUpHours the caller may write through the follow-up rule (23-P4). */

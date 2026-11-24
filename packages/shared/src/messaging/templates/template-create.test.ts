@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { templateCreateSchema } from './template-create.js';
 
-// «قالب جديد» (owner 2026-10-31): what the API accepts for a brand-new template.
+// What the API accepts for a brand-new template.
 
 const base = { key: 'welcome_back', line: 'chat', category: 'utility', body: 'Hello {{1}}, see you soon.' };
 const ok = (over: object) => templateCreateSchema.safeParse({ ...base, ...over }).success;

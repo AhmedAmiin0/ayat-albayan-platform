@@ -10,11 +10,7 @@ const sibling = (s: FamilyStudentRow): FamilySibling => ({
   status: s.status,
 });
 
-/**
- * «العائلة» of «تفاصيل الطالب» (owner 2026-11-02): the guardian's name only for a viewer who
- * sees the family's phone (`showsGuardian`: inbox.read, as chatPhone), whether the student is
- * their own contact, and the guardian's other students (name, code, status), as stored.
- */
+/** The guardian's name only for viewers who see the family phone (inbox.read). */
 export function toStudentFamily(
   row: DetailsStudentRow,
   showsGuardian: boolean,

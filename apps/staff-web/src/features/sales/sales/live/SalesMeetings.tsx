@@ -4,10 +4,7 @@ import { InternalMeetingButton } from '@/features/teaching/meetings/internal/Int
 import { InternalMeetingsList } from '@/features/teaching/meetings/internal/InternalMeetingsList';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * /sales/meetings «الاجتماعات» (owner 2026-10-12: back for sales): «اجتماع داخلي» now or «اجتماع
- * مجدول» with invitations, then the meetings I created or am invited to.
- */
+/** Instant or scheduled meetings with invitations, then the ones I created or am invited to. */
 export function SalesMeetings() {
   return (
     <>

@@ -1,7 +1,7 @@
 import { username as usernameSchema } from '@ab/shared';
 import { ApiError } from '../../core/http/index.js';
 
-// A teacher's «اسم المستخدم» in the admin teacher form, web and mobile (docs/30 §1, §7).
+// A teacher's username in the admin teacher form (docs/30 §1, §7).
 
 /** The app's `t.familyAuth.teacherUsername`. */
 export interface TeacherUsernameText {

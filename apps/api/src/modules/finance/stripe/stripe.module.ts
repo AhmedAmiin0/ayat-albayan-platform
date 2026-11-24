@@ -1,5 +1,5 @@
 import { type DynamicModule, Module } from '@nestjs/common';
-import { SalesMoneyModule } from '@/modules/sales/sales-money';
+import { SalesMoneySharedModule, SalesTeacherAssignModule } from '@/modules/sales/sales-money';
 import { PaymentsModule } from '@/modules/finance/payments';
 import { SubscriptionsModule } from '@/modules/finance/subscriptions';
 import { STRIPE_FACTORY, StripeClients, stripeFactory } from './gate/stripe-clients';
@@ -24,23 +24,17 @@ import { StripeWebhookController } from './webhook/stripe-webhook.controller';
 import { StripeWebhookService, WebhookHandlers } from './webhook/stripe-webhook.service';
 import { WebhookDeps } from './webhook/webhook-deps';
 
-/**
- * Stripe payment links, with FEATURE_STRIPE (test or live) (owner 2026-10-28, go live 2026-11-01;
- * docs/30). register() reads FEATURE_STRIPE once, when AppModule is loaded: anything but 'test' or
- * 'live' gives an empty module (no controller, no provider, the webhook route not mounted: every
- * Stripe URL is 404). With it, GET /stripe/feature is mounted, and every other
- * route but the signed webhook is still 404 until an admin turns «الدفع الإلكتروني» on in
- * «التكاملات» (STRIPE_ENABLED, StripeEnabledGuard). The keys are integration keys too
- * (StripeClients). The money logic is the platform's own (SubscriptionCreator, PaymentsService,
- * the commission triggers).
- */
+/** Without FEATURE_STRIPE test or live the module is empty: every Stripe URL is 404 (docs/30). */
 @Module({})
 export class StripeTestModule {
   static register(env: NodeJS.ProcessEnv = process.env): DynamicModule {
     if (!stripeFeatureOn(env)) return { module: StripeTestModule };
     return {
       module: StripeTestModule,
-      imports: [SubscriptionsModule, PaymentsModule, SalesMoneyModule],
+      imports: [
+        ...[SubscriptionsModule, PaymentsModule],
+        ...[SalesMoneySharedModule, SalesTeacherAssignModule],
+      ],
       controllers: [
         StripeFeatureController,
         PaymentLinksController,

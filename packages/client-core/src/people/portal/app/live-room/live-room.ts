@@ -1,15 +1,8 @@
-import {
-  counted,
-  type LessonRoomState,
-  type PluralForm,
-  type RoomPresence,
-  type RoomPresenceRole,
-} from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
+import type { LessonRoomState, RoomPresence, RoomPresenceRole } from '@ab/schedule';
 import { roomLiveMinutes } from '../../../../teaching/lesson-room/index.js';
 
-// «الحلقة جارية الآن» on the family's lesson card and schedule row (canvas RoomXLiveHome,
-// RoomXLivePush): from the lesson's `room` (LiveKit participant_joined / left),
-// how long it has run and who is inside. A lesson ended for everyone is never live.
+// Live state comes from LiveKit participant events; a lesson ended for everyone is never live.
 
 export interface LiveRoom {
   /** Whole minutes since the first of those inside arrived. */
@@ -47,21 +40,15 @@ export function cardRoom(lesson: { room?: LessonRoomState | null }, now: Date): 
 
 /** Each app's `t.portal.app.live` (the same keys in ar.json / en.json). */
 export interface LiveRoomWords {
-  /** «بدأت الآن». */
   justNow: string;
-  /** «بدأت منذ {n} دقائق», one per Arabic count form. */
+  /** One string per Arabic plural form. */
   since: Readonly<Record<PluralForm, string>>;
-  /** «المعلم/ة في الغرفة الآن». */
   teacherIn: string;
-  /** «في الغرفة الآن». */
   othersIn: string;
-  /** How a person is named by role: «{name}», «{name} (مساعد حلقة)». */
   roles: Readonly<Record<RoomPresenceRole, string>>;
-  /** A person the portal names by role only (privacy): «المعلم/ة», «ضيف». */
+  /** People the portal names by role only, for privacy. */
   unnamed: Readonly<Record<RoomPresenceRole, string>>;
-  /** The schedule row: «جارية الآن». */
   row: string;
-  /** The schedule row with the teacher in: «جارية الآن · المعلم/ة في الغرفة». */
   rowTeacher: string;
 }
 
@@ -69,7 +56,6 @@ export interface LiveRoomText {
   since: string;
   /** Over the names: the teacher is in, or only others. */
   title: string;
-  /** «فاطمة · مريم (مساعد حلقة)». */
   who: string;
   /** Each person's avatar name, in order: their name, else their role word. */
   faces: string[];

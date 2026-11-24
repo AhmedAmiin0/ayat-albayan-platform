@@ -22,6 +22,9 @@ describe('Result', () => {
   it('toResult catches a throw into an Err', async () => {
     await expect(toResult(async () => 'v')).resolves.toEqual({ ok: true, value: 'v' });
     const boom = new Error('boom');
-    await expect(toResult(async () => Promise.reject(boom))).resolves.toEqual({ ok: false, error: boom });
+    await expect(toResult(async () => Promise.reject(boom))).resolves.toEqual({
+      ok: false,
+      error: boom,
+    });
   });
 });

@@ -24,7 +24,7 @@ interface ThreadBodyProps {
 /** Where the thread is mounted: a screen of its own, or a sheet over another one. */
 export type ThreadFrame = 'screen' | 'sheet';
 
-/** «للاطلاع فقط», and for a monitor of a closed channel why nobody writes yet. */
+/** For a monitor of a closed channel it also says why nobody writes yet. */
 const readOnlyText = (page: ChannelPage | undefined): string =>
   page?.open === false
     ? `${t.studentChannel.readOnly} ${t.studentChannel.closedMonitor}`
@@ -32,10 +32,6 @@ const readOnlyText = (page: ChannelPage | undefined): string =>
 
 type Held = { message: ChannelMessageView; offers: MenuOffers } | null;
 
-/**
- * An open thread: the list, the composer for a writer («للاطلاع فقط» for a monitor), the message
- * menu, the quote being answered and «من قرأ الرسالة».
- */
 export function ThreadBody({ refs, query, mode, first, frame = 'screen' }: ThreadBodyProps) {
   const [held, setHeld] = useState<Held>(null);
   const [replyTo, setReplyTo] = useState<ChannelMessageView | null>(null);

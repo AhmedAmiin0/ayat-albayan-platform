@@ -1,11 +1,7 @@
 import type { CancelBy } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «لم تنعقد؟» (owner 2026-11-02): a lesson not held after all was cancelled by its teacher
- * («ألغاها المعلم/ة», not counted) or the student excused himself («اعتذر الطالب», late-cancel
- * rule).
- */
+/** Teacher cancels are not counted; a student excuse follows the late-cancel rule. */
 export const CORRECT_BY = ['teacher', 'student'] as const satisfies readonly CancelBy[];
 export type CorrectBy = (typeof CORRECT_BY)[number];
 

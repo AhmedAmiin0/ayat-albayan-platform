@@ -1,4 +1,4 @@
-import type { ClockCycle } from '@ab/shared';
+import type { ClockCycle } from '@ab/time';
 import { ApiError, t } from '@ab/mobile-kit';
 import { rescheduleFailure } from '@/teaching';
 

@@ -20,20 +20,16 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { SalesChatReceipts } from './chat/sales-chat-receipts.service';
-import { SalesMoney } from './sales-money.service';
-import { SalesPackageCancel } from './sales-package-cancel';
-import { SalesMoneySettings } from './sales-money.settings';
-import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+import { SalesChatReceipts } from './chat';
+import { SalesPackageCancel } from './package-cancel';
 import { SalesPaymentAmount } from './payment-edit';
+import { SalesMoney } from './sales-money.service';
+import { SalesMoneySettings } from './shared';
+import { SalesTeacherAssign } from './teacher';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { z } from 'zod';
 
-/**
- * «اشتراك جديد» from a sales chat (owner 2026-10-12, R-ASST-01, docs/16 row 16): the price of the package
- * she is creating (she tells the family how much to transfer), then the package itself, priced by the API
- * from the catalog like the admin's. 403 not_your_student for a student she does not own.
- */
+/** New package from a sales chat (R-ASST-01, docs/16 row 16), priced by the API from the catalog */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('self.sales_money')
@@ -45,7 +41,6 @@ export class SalesSubscribeController {
     private readonly teachers: SalesTeacherAssign,
   ) {}
 
-  /** «المعلم/ة»'s choices (owner 2026-10-29): the active teachers, names only. */
   @Get('teachers')
   teacherOptions(): Promise<SalesTeacherOption[]> {
     return this.teachers.options();
@@ -57,11 +52,7 @@ export class SalesSubscribeController {
     return this.money.quote(parseOrThrow(salesQuoteSchema, body), user);
   }
 
-  /**
-   * «المعلم/ة» (teacherId, owner 2026-10-29) is saved to students.teacher_id once the package exists (the
-   * ownership was checked by subscribe; a replay assigns again, a no-op): the student channel opens when
-   * the student is subscribed and has that teacher.
-   */
+  /** The teacher is saved once the package exists; a replay assigns again as a no-op. */
   @Post()
   async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
     const input = parseOrThrow(salesSubscriptionCreateSchema, body);
@@ -71,7 +62,6 @@ export class SalesSubscribeController {
     return view;
   }
 
-  /** «إلغاء الباقة» of her student's package (owner 2026-10-28): the admin's rules, her whitelisted view. */
   @Post(':id/cancel')
   @HttpCode(200)
   cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
@@ -79,12 +69,7 @@ export class SalesSubscribeController {
   }
 }
 
-/**
- * «سجّل التحويل البنكي» (owner 2026-10-12, R-ASST-04): the family's bank transfer with its receipt, recorded
- * by her and counted at once (a trial student becomes «مشترك»). No delete, no refund;
- * «تعديل المبلغ» only with subscriptions.edit_terms (owner 2026-11-03, admin-granted); the admin
- * corrects the rest.
- */
+/** Bank transfer recorded by her counts at once (R-ASST-04); no delete or refund. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('self.sales_money')
@@ -110,7 +95,6 @@ export class SalesPaymentsController {
     return this.money.uploadUrl(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
   }
 
-  /** «اختر صورة الإيصال من المحادثة»: the chosen chat image / PDF copied server-side into receipts. */
   @Post('receipt-from-chat')
   @HttpCode(200)
   async receiptFromChat(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesReceiptCopied> {
@@ -118,7 +102,7 @@ export class SalesPaymentsController {
     return this.receipts.copy(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
   }
 
-  /** «تعديل المبلغ»: subscriptions.edit_terms (owner 2026-11-03), never payments.write. */
+  /** Needs subscriptions.edit_terms, never payments.write. */
   @Patch(':id/amount')
   @Permissions('subscriptions.edit_terms')
   editAmount(

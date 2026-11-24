@@ -44,7 +44,7 @@ export const notificationsQuerySchema = z.object({
 });
 export type NotificationsQuery = z.infer<typeof notificationsQuerySchema>;
 
-/** No ids = every unread row of the caller («تحديد الكل كمقروء»). */
+/** No ids means every unread row of the caller. */
 export const notificationsReadSchema = z.strictObject({
   ids: z.array(z.uuid()).min(1).max(100).optional(),
 });

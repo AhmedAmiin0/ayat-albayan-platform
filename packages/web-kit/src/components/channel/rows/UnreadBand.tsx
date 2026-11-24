@@ -1,9 +1,6 @@
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/**
- * «4 غير مقروءة» over the first message unread when the chat opened (FamChatWebThread): edge to
- * edge on the brand wash; it stays where it was while the reader reads on.
- */
+/** It stays where it was while the reader reads on. */
 export function UnreadBand({ count }: { count: number }) {
   return (
     <li

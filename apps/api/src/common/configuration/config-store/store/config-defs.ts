@@ -1,4 +1,10 @@
-import { GOOGLE_SEED_DEFS, SEED_ENTRIES, SETTINGS_REGISTRY, type SeedEntry, type SettingDef } from '@ab/shared';
+import {
+  GOOGLE_SEED_DEFS,
+  SEED_ENTRIES,
+  SETTINGS_REGISTRY,
+  type SeedEntry,
+  type SettingDef,
+} from '@ab/settings';
 
 /** Every key the store knows (SEED_ENTRIES): the registry ∪ the google-sync rows, each with its code entry. */
 export const CONFIG_DEFS: Readonly<Record<string, SettingDef>> = Object.freeze({ ...SETTINGS_REGISTRY, ...GOOGLE_SEED_DEFS });

@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
 import { fillSlots } from '../reports/index.js';
 import type { AlertParts, ChangeText } from './alert-parts.js';
 
@@ -11,7 +11,6 @@ export interface AlertWords {
   soon: string;
   confirm: string;
   report: Readonly<Record<Report, string>>;
-  /** today.inMinutes: «بعد {n} دقائق». */
   inMinutes: Readonly<Record<PluralForm, string>>;
   cancelledTeacher: string;
   cancelledAdmin: string;
@@ -43,6 +42,5 @@ const LINES: Record<AlertParts['text'], Line> = {
   movedAway: change('movedAway'),
 };
 
-/** «حلقة سهيلة بعد 9 دقائق», «ألغت الإدارة حلقة جود (16:00)» … */
 export const alertLine = (parts: AlertParts, words: AlertWords): string =>
   LINES[parts.text](parts, words);

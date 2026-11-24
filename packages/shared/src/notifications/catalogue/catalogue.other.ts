@@ -38,7 +38,7 @@ export const PUSH_ENTRIES = [
     alsoTo: ['guardian', 'staff'],
     pushKind: 'channel_message',
   },
-  // «محفظتي»: a commission earned, to the assistant who brought the student; the bell only.
+  // A commission earned, to the assistant who brought the student; the bell only.
   { ...STAFF, channels: ['bell'], key: 'commission_earned', audience: 'staff', pushKind: 'commission_earned' },
   // A payment came in → the admins and the student's assistant.
   { ...STAFF, key: 'payment_received', audience: 'staff', pushKind: 'payment_received' },

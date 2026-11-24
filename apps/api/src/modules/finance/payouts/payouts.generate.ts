@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { monthStart, payoutStatuses, type PayoutGenerateResult } from '@ab/shared';
+import { monthStart, payoutStatuses, type PayoutGenerateResult } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { toPayoutView } from './payouts.mapper';

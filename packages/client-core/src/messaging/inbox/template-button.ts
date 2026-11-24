@@ -10,7 +10,7 @@ export interface TemplateButtonWords {
   callNumber: string;
 }
 
-/** Meta's label, else the kind's own («فتح الرابط»): a button is never blank. */
+/** Meta's label, else the kind's own: a button is never blank. */
 export const templateButtonLabel = (b: TemplateDisplayButton, words: TemplateButtonWords): string =>
   b.text.trim() || words.button[b.type];
 

@@ -39,7 +39,6 @@ const slotsUrl = (from: string, to: string) =>
 test('the free slots of the same teacher, the lesson’s week from now, its length and students; busy ones hidden', async () => {
   await openSheet();
   expect(mockApiFetch).toHaveBeenCalledWith(slotsUrl('2026-10-01T13:20:00.000Z', '2026-10-02T21:00:00.000Z'));
-  // This week is the earliest: no going back; «الأسبوع القادم» asks the next Saturday → Saturday.
   expect(screen.getByRole('button', { name: t.schedule.prevWeek })).toBeDisabled();
   await fireEvent.press(screen.getByRole('button', { name: t.schedule.nextWeek }));
   expect(mockApiFetch).toHaveBeenLastCalledWith(slotsUrl('2026-10-02T21:00:00.000Z', '2026-10-09T21:00:00.000Z'));
@@ -50,7 +49,6 @@ test('the free slots of the same teacher, the lesson’s week from now, its leng
   expect(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر' })).toBeTruthy();
   expect(screen.getByRole('radio', { name: '18:00' })).toBeTruthy();
   expect(screen.queryByRole('radio', { name: '19:00' })).toBeNull();
-  // Nothing picked yet: «غيّر الموعد» waits.
   expect(screen.getByRole('button', { name: t.lessons.rescheduleSubmit })).toBeDisabled();
   expect(screen.getByText(t.lessons.newTimeHint)).toBeTruthy();
 });
@@ -66,7 +64,7 @@ test('«هذه الحلقة فقط»: Sunday 17:00 sends scope one; the guardian
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/reschedule', { scope: 'one', startsAt: SUN_17 });
   expect(await screen.findByText(t.lessons.rescheduled)).toBeTruthy();
   expect(screen.getByText(t.reschedule.newWhen.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيتك'))).toBeTruthy();
-  // Confirmation required (the default, owner 2026-11-03): the moved lesson is «يحتاج تأكيد».
+  // Confirmation is required by default, so the moved lesson needs confirmation.
   expect(screen.getByText(t.enums.lessonStatus.scheduled)).toBeTruthy();
   expect(screen.queryByText(t.lessons.noConfirm.scheduled)).toBeNull();
   expect(screen.getByText(t.reschedule.guardianNote)).toBeTruthy();

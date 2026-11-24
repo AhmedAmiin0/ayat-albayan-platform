@@ -24,7 +24,6 @@ export interface ChangeReviewProps {
   body: CourseChangeBody;
   /** Its zone (the family's wall clock), current days and teacher's zone (a clash on their clock). */
   course: Pick<BookedCourse, 'tz' | 'days' | 'teacherTz'>;
-  /** «اختر موعدًا آخر»: back to the slot grid. */
   onChangeSlot: () => void;
   onDone: (message: string) => void;
 }
@@ -52,7 +51,7 @@ function ChangeSummary({ body, course, check }: SummaryProps) {
   );
 }
 
-/** A failed save that is not a clash (course_changed, no_change…) names its refusal; also after «احفظ رغم التعارض». */
+/** A failed save that is not a clash names its refusal, also after saving over a clash. */
 function SaveRefusal({ error }: { error: Error | null }) {
   const text = useChangeErrorText();
   if (!error || conflictsOf(error)) return null;
@@ -70,12 +69,7 @@ const OVERRIDE = {
   reason: t.booking.courseChange.overrideReason,
 };
 
-/**
- * «تغيير أيام الحلقات», step 2 (owner 2026-10-18): POST …/change/check, then the current and the new
- * days, what is left («تبقى 5 حلقات»), the new last lesson and the first new one, and «احفظ الأيام
- * الجديدة». A clash lists it with «اختر موعدًا آخر»; only the admin may save over it, with a reason
- * (R-SCH-04). A failed save that is not a clash (course_changed, no_change…) names its refusal.
- */
+/** Only the admin may save over a clash, with a reason (R-SCH-04). */
 export function ChangeReview({ body, course, onChangeSlot, onDone }: ChangeReviewProps) {
   const mode = useBookingMode();
   const queryClient = useQueryClient();

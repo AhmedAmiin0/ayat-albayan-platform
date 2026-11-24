@@ -1,5 +1,5 @@
 import type { PersonLook } from '@ab/client-core';
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, ltr, shape, type, useTheme, AppText, Avatar, Note, PhoneIcon } from '@ab/mobile-kit';
@@ -8,16 +8,13 @@ interface PersonRowProps {
   look: PersonLook;
   /** The avatar's colour seed (the person's id). */
   id?: string | null | undefined;
-  /** Lines under the name: a send chip, «دخل بحسابه · …». */
   children?: ReactNode;
-  /** At the inline-end: «إزالة», a checkbox. */
   trailing?: ReactNode;
 }
 
 const titleOf = (look: PersonLook): string =>
   look.phone === null ? (look.name ?? '') : ltr(formatPhone(look.phone));
 
-/** «يطابق: سارة محمود» for a verified phone, «رقم غير مسجّل» for a number with no person. */
 function noteOf(look: PersonLook): string | null {
   if (look.unregistered) return t.shortLinks.form.unregistered;
   return look.matched ? t.shortLinks.detail.matches.replace('{name}', look.name ?? '') : null;

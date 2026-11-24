@@ -5,11 +5,10 @@ import { ContactIsSelfPills } from './ContactIsSelfPills';
 
 interface ContactIsSelfCardProps {
   studentId: string;
-  /** GET /students/:id's contact_is_self; absent (an older API) = «ولي الأمر». */
+  /** Absent from an older API means the guardian. */
   value: boolean | undefined;
 }
 
-/** The student file's «رقم الواتساب لـ» (docs/30 §1): one tap saves PATCH /students/:id { contact_is_self }. */
 export function ContactIsSelfCard({ studentId, value }: ContactIsSelfCardProps) {
   const { color } = useTheme();
   const client = useQueryClient();

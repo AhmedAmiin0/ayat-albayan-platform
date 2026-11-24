@@ -5,7 +5,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { teacherOptionsQuery } from '@/features/people/students/api';
 
-/** «المعلم/المعلمه» as the registration form asks it: the academy's teachers and an empty first option. */
 export function TeacherField({ value, onChange }: { value: string; onChange: (id: string) => void }) {
   const { data: teachers = [] } = useQuery(teacherOptionsQuery);
   return (

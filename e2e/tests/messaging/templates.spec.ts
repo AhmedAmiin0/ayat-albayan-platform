@@ -7,9 +7,7 @@ import {
 } from '../../support/messaging/template-registry';
 import { stubReset, stubTemplateStatus } from '../../support/core/wa-stub';
 
-// Template registry on «التواصل» › «القوالب» (/admin/settings/communications?tab=templates; R-MSG-01, T2/T3): the health check reads «Meta» (the
-// wa-stub), a paused template needs attention, a missing one and the document-header report_ready
-// are submitted only after the confirm dialog (report_ready via the Resumable Upload API).
+// Templates (R-MSG-01, T2/T3): missing ones are submitted only after the confirm dialog.
 
 const t = ar.templates;
 const status = ar.enums.templateStatus;

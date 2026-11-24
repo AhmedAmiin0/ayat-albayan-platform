@@ -17,10 +17,7 @@ import { useSalesCourse } from '@/sales-course';
 import { useSalesFamily } from '@/sales-subscribe/lib/family';
 import { SalesSubscribeForm } from '@/sales-subscribe/components/SalesSubscribeForm';
 
-/**
- * The chat's number; a child to preselect (any zone the link carries is ignored: the academy's day rules);
- * `renew` '1' = «جدّد الاشتراك»: a child due for one opens on its last package (several due: none picked yet).
- */
+/** A zone in the link is ignored (academy day rules); `renew` '1' opens the last package. */
 type Params = { phone?: string; studentId?: string; renew?: string };
 
 /** The picked child (one of hers), else the route's, else the only one, else none yet (''). */
@@ -29,14 +26,7 @@ function childOf(students: readonly SalesFamilyStudent[], ids: { picked: string 
   return students.some((s) => s.id === id) ? id : '';
 }
 
-/**
- * /inbox/sales-subscribe?phone=… (R-ASST-01, owner 2026-10-12): «اشتراك جديد» from a family's chat by
- * the salesperson, for one of HER students only (GET /sales/money/family), the child picked here (owner
- * 2026-10-29: no names on the chat's pills). Priced and saved through the sales endpoints; then the
- * package's weekly days and its transfer, or a payment link (a Stripe build). The resolved child
- * (picked, preselected or the only one) also offers «أيام الحلقات» while its package may be booked
- * (GET /sales/booking/course: blocked null; owner 2026-11-06: a link sale left unbooked).
- */
+/** A new package for one of her students only (R-ASST-01), then its days and payment. */
 export function SalesSubscribeScreen() {
   const params = useLocalSearchParams<Params>();
   const phone = params.phone ?? '';
@@ -48,9 +38,9 @@ export function SalesSubscribeScreen() {
   const [picked, setPicked] = useState<string>();
   const studentId = childOf(students, { picked, route: params.studentId });
   const child = students.find((s) => s.id === studentId);
-  // «جدّد الاشتراك» only while the picked child is due (owner 2026-10-29: one pill; a sibling not due is a new package).
+  // Renewal only while the picked child is due; a sibling not due gets a new package.
   const renewing = renew && (child ? child.renew_due : true);
-  // «أيام الحلقات» for a child listed through sales.renew_any (`mine: false`) too (owner 2026-11-01).
+  // Lesson days are offered for a child listed through sales.renew_any too.
   const bookable = useSalesCourse(studentId).data?.blocked === null;
   const wizard = inTree(base, { pathname: '/inbox/sales-course', params: { studentId } });
   const courseDays = bookable ? () => router.push(wizard) : undefined;

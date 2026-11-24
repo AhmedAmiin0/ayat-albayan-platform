@@ -9,7 +9,7 @@ export interface MoneyProps {
   numberClassName?: string;
 }
 
-/** «1,061 ر.س»: the number is an LTR island, the Arabic symbol follows it (docs/07 §14.4). */
+/** The number is an LTR island with the symbol after it (docs/07 §14.4). */
 export function Money({ amount, currency, numberClassName }: MoneyProps) {
   return (
     <span className="whitespace-nowrap">

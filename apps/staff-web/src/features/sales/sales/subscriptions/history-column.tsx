@@ -7,7 +7,7 @@ import type { SalesSubscriptionView } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, SalesSubscriptionView>();
 
-/** «السجل» on a confirmed subscription: opens its history (GET /sales/subscriptions/:id/history). */
+/** Opens its history (GET /sales/subscriptions/:id/history). */
 export function historyColumn(
   onOpen: (id: string) => void,
 ): DataTableColumn<SalesSubscriptionView> {

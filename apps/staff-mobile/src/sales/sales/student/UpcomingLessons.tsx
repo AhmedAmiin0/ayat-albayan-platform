@@ -1,4 +1,5 @@
-import { wallParts, type SalesStudentLesson } from '@ab/shared';
+import type { SalesStudentLesson } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
 import { useViewerTz } from '@/core/lib/clock';
 import { Fragment, useState } from 'react';
 import { View } from 'react-native';
@@ -10,14 +11,10 @@ import { SalesLessonSheet } from '@/sales/sales/components/SalesLessonSheet';
 import { SmallHeading } from '@/sales/sales/components/SmallHeading';
 import { fill } from '@/sales/sales/lib/sales-text';
 
-/** The owner's «no long pages»: the next few, the rest behind «عرض الكل». */
+/** No long pages: the next few, the rest behind show all. */
 const UPCOMING_SHOWN = 5;
 
-/**
- * «الحلقات القادمة»: the sales schedule's rows under their Riyadh day; a tap opens the same «تفاصيل الحلقة»
- * (with «تغيير الموعد» / «إلغاء الحلقة» when that sheet allows them for her students; no link, and this
- * student's name stays plain there).
- */
+/** No link, and this student's name stays plain in the lesson details. */
 export function UpcomingLessons({ lessons, studentId }: { lessons: readonly SalesStudentLesson[]; studentId: string }) {
   const [all, setAll] = useState(false);
   const details = useLessonDetails(lessons);

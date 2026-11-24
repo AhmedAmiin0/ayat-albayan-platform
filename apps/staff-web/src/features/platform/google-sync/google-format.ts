@@ -21,10 +21,8 @@ export function formatAt(iso: string, clock: Clock & { tz: string }): string {
 
 const LIST = new Intl.ListFormat(intlLocale(locale), { style: 'long', type: 'conjunction' });
 
-/** «أ، ب و ج» / «A, B and C» in the page's language. */
 export const listOf = (names: readonly string[]): string => LIST.format(names);
 
-/** «{n} عناصر…» → the template with every {key} replaced. */
 export function fill(template: string, vars: Record<string, string | number>): string {
   return template.replace(/\{(\w+)\}/g, (whole, key: string) => (key in vars ? String(vars[key]) : whole));
 }

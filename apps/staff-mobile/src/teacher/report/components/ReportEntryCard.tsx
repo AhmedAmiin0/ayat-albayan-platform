@@ -1,14 +1,13 @@
 import {
   AFTER_FIELDS,
-  ATTENDANCES,
   DONE_FIELDS,
-  PROGRAMS,
   REPORT_RUBRICS,
   textRequired,
   type ReportFormEntry,
   type ReportFormResponse,
   type TextKey,
 } from '@ab/shared';
+import { ATTENDANCES, PROGRAMS } from '@ab/catalog';
 import type { RefObject } from 'react';
 import type { ScrollView } from 'react-native';
 import { View } from 'react-native';
@@ -29,18 +28,12 @@ const programs = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 interface ReportEntryCardProps {
   form: ReportFormResponse;
   entry: ReportFormEntry;
-  /** The teacher's zone for «اتحفظت 17:42» and the edit window. */
   tz: string;
   /** The form's ScrollView: a failed send scrolls to the first invalid question. */
   scroll?: RefObject<ScrollView | null>;
 }
 
-/**
- * One student's «تقرير الحلقة» (R-REP-01/02), the Google Form's sections in its order: بيانات الحلقة
- * (identity, البرنامج *, الحضور *, then the link), محتوى الحلقة, التقييم التفصيلي (six rows +
- * التقدير العام), الملاحظات والواجب, attachments. Labels and options verbatim (t.reports,
- * t.enums); autosaved while a draft.
- */
+/** The Google Form's sections in order (R-REP-01/02); labels verbatim; autosaved while a draft. */
 export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProps) {
   const s = useReportEntry(entry.report, entry.student.program);
   const { report, values } = s;

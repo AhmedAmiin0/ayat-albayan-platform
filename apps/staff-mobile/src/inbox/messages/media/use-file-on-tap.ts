@@ -34,7 +34,6 @@ export function useFileOnTap(phone: string, messageId: string) {
       (e: unknown) => live.current && setState({ step: 'problem', problem: mediaProblem(e) }),
     );
   }, [busy, fetchFile]);
-  /** The player could not play the fetched file: «اضغط لإعادة المحاولة». */
   const fail = useCallback(() => setState({ step: 'problem', problem: 'failed' }), []);
   return { state, open, fail };
 }

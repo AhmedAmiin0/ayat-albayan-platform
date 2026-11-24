@@ -2,25 +2,15 @@ import type { StudentStatus } from '@ab/catalog';
 import { parseStatusList } from '../schemas/student-filters.js';
 import { isNotSubscribed, NOT_SUBSCRIBED_STATUSES, PACKAGE_ENDED_STATUSES } from './status-flow/index.js';
 
-// «مشترك / تجريبي»: a teacher's students split by status, the same rules on the
-// web, the mobile app and the API mappers (sales «المعلمون», admin teachers and students lists).
+// A teacher's students split by status with one rule for web, mobile and the API mappers.
 
-/**
- * The quick switch: subscribed (active), «تجريبي» (not subscribed yet: new, trial, pending_subscription),
- * or every status (pending_renewal, expired and paused included).
- */
+/** Subscribed, not subscribed yet (new, trial, pending_subscription), or every status. */
 export const STUDENT_LIST_KINDS = ['active', 'trial', 'all'] as const;
 export type StudentListKind = (typeof STUDENT_LIST_KINDS)[number];
 
 export type StudentKindCounts = Record<StudentListKind, number>;
 
-/**
- * A teacher's CURRENT students: not subscribed yet (new, trial,
- * pending_subscription), subscribed, and the package ended (pending_renewal, expired: lessons keep
- * running until renewal). Teacher loads, the admin teacher panel's default view and the «needs a
- * teacher» note read this. A package-ended status is never «مشترك» in the switch below (it shows
- * under «الكل») and never «تجريبي».
- */
+/** Current includes package-ended students, whose lessons run until renewal. */
 export const CURRENT_STUDENT_STATUSES = [
   ...NOT_SUBSCRIBED_STATUSES,
   'active',
@@ -32,7 +22,6 @@ export function isCurrentStudent(status: StudentStatus | null | undefined): bool
   return CURRENT_STUDENT_STATUSES.some((s) => s === status);
 }
 
-/** «مشترك n · تجريبي n · الكل n» of a list of students. */
 export function countByKind(list: readonly { status: StudentStatus }[]): StudentKindCounts {
   return {
     active: list.filter((s) => s.status === 'active').length,
@@ -41,22 +30,18 @@ export function countByKind(list: readonly { status: StudentStatus }[]): Student
   };
 }
 
-/** The students of one kind, in the list's order («الكل» = the list as it is). */
+/** The students of one kind, in the list's order ('all' is the list as it is). */
 export function splitByStatus<T extends { status: StudentStatus }>(list: readonly T[], kind: StudentListKind): T[] {
   if (kind === 'all') return [...list];
   return list.filter((s) => (kind === 'trial' ? isNotSubscribed(s.status) : s.status === kind));
 }
 
-/** The statuses of one kind (the API filter): «تجريبي» = new, trial, pending_subscription. */
+/** The statuses of one kind for the API filter. */
 export function statusesOfKind(kind: Exclude<StudentListKind, 'all'>): StudentStatus[] {
   return kind === 'trial' ? [...NOT_SUBSCRIBED_STATUSES] : ['active'];
 }
 
-/**
- * The `status` URL param («active», «new,trial,pending_subscription» …) as the switch shows it: none =
- * «الكل», exactly active = «مشترك», exactly the three not-subscribed statuses = «تجريبي», any other
- * combination = null (no segment selected).
- */
+/** Maps the `status` URL param to a segment; any other combination is null (none selected). */
 export function kindOfStatusParam(status: string | undefined): StudentListKind | null {
   const list = parseStatusList(status) ?? [];
   if (list.length === 0) return 'all';
@@ -65,7 +50,7 @@ export function kindOfStatusParam(status: string | undefined): StudentListKind |
   return null;
 }
 
-/** The `status` URL param a segment writes («الكل» = no param). */
+/** The `status` URL param a segment writes ('all' writes none). */
 export const statusParamOfKind = (kind: StudentListKind): string | undefined =>
   kind === 'all' ? undefined : statusesOfKind(kind).join(',');
 

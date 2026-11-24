@@ -27,11 +27,7 @@ export function usePermissions(): Can {
   return permissionsView(useQuery(meQuery()).data).can;
 }
 
-/**
- * Is /auth/me loaded (the persisted copy or a live answer) for a signed-in gate? Fetches it while it is
- * missing. Signed out (or still booting) needs none. The root layout keeps «جارٍ الاتصال» up until true.
- * It also sets the viewer's zone from /auth/me `tz` (docs/34) before the trees mount.
- */
+/** Fetches /auth/me while missing; sets the viewer's zone from its `tz` (docs/34) before mount. */
 export function useMeReady(signedIn: boolean): boolean {
   const me = useQuery({ ...meQuery(), enabled: signedIn });
   const zoned = useMeZone(me.data, signedIn);
@@ -72,17 +68,14 @@ export function useSendsAllTemplates(): boolean {
   return sendsAllTemplates({ role: roleOf(me.data), permissions: permissionsOf(me.data) });
 }
 
-/**
- * «حذف من المنصة» (admin, sales) and «إظهار» (the admin) on WhatsApp bubbles; false until /auth/me
- * answers.
- */
+/** Hide (admin, sales) and unhide (admin) on WhatsApp bubbles; false until /auth/me answers. */
 export function useHideRights(): { hide: boolean; unhide: boolean } {
   const me = useQuery(meQuery());
   const who = { role: roleOf(me.data), permissions: permissionsOf(me.data) };
   return { hide: canHideMessages(who), unhide: canUnhideMessages(who) };
 }
 
-/** The signed-in staff member as «تعديل» reads them (canCorrect); null until /auth/me answers. */
+/** Null until /auth/me answers. */
 export function useMeActor(): CorrectionActor | null {
   const me = useQuery(meQuery());
   const id: unknown = meLoaded(me.data) ? Reflect.get(me.data, 'id') : null;
@@ -91,7 +84,7 @@ export function useMeActor(): CorrectionActor | null {
 
 const testFlagSchema = z.object({ is_test: z.literal(true) });
 
-/** /auth/me `is_test` (docs/56): the «تجريبي» chip; false until it answers and on an older API. */
+/** /auth/me `is_test` (docs/56); false until it answers and on an older API. */
 export function useIsTestAccount(): boolean {
   const me = useQuery(meQuery());
   return testFlagSchema.safeParse(me.data).success;

@@ -2,7 +2,6 @@ import type { CourseLessonFact } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { planExtend, type ExtendRuleRow } from './course-extend.plan';
 
-// «مدّ الجدول» (owner 2026-11-17): the package's lessons with no date go after the planned end.
 const MON: ExtendRuleRow = {
   id: 'ra',
   status: 'active',

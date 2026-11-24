@@ -64,7 +64,6 @@ export const retryGoogleItem = (id: string) => apiSend<GoogleSyncItemView>('POST
 
 export const reconcileGoogle = () => apiSend<{ queued: number }>('POST', `${BASE}/reconcile`);
 
-/** GET /admin/google/teachers/:id/calendar-owner: «تقويم المعلم» (script / platform) and its counts. */
 export const teacherCalendarQuery = (teacherId: string) =>
   queryOptions({
     queryKey: ['google', 'teacher-calendar', teacherId],

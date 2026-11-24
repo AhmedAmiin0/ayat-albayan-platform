@@ -3,9 +3,7 @@ import { addDays, lessonsOf, queuedFor, resetAbrar, riyadh, seedFamily, seedLess
 import { riyadhDay } from '../../support/teaching/schedule-extra';
 import { openMyLesson } from '../../support/teaching/my-calendar';
 
-// A teacher's «اقترح موعدًا آخر» the admin answers «ارفض الاقتراح» (R-SCH-08): the proposal is
-// `rejected` and decided, the lesson stays exactly where it was, the guardian hears nothing and the
-// teacher's card is back to «اقترح موعدًا آخر». (proposals.spec covers the propose form and approve.)
+// A rejected proposal (R-SCH-08) leaves the lesson unchanged and the guardian uninformed.
 
 const MINUTE = 60_000;
 const NOTE = 'مش هقدر في الميعاد ده';

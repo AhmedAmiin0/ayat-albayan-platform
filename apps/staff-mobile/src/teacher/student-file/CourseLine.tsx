@@ -10,10 +10,7 @@ interface CourseLineProps {
   tz: string;
 }
 
-/**
- * The course she teaches (docs/47): start, end and «الحلقات x من y» wrapping at 390pt, then the
- * ink-3 hint that the count includes every teacher's lessons. No course: one note.
- */
+/** The count includes every teacher's lessons (docs/47). */
 export function CourseLine({ course, tz }: CourseLineProps) {
   const { color } = useTheme();
   if (!course) return <Note>{t.teacherFile.noCourse}</Note>;

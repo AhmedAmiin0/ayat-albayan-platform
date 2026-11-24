@@ -12,10 +12,7 @@ interface ChatButtonProps {
   onPress: () => void;
 }
 
-/**
- * «المحادثة» with the student channel's unread count on its corner (canvas RoomXChat): a green
- * badge ringed in the room's cover colour; the count is in the spoken name too.
- */
+/** The unread count is in the spoken name too. */
 export function ChatButton({ unread, onPress }: ChatButtonProps) {
   const { color } = useTheme();
   const spoken = unread > 0 ? t.portal.app.child.chatUnread.replace('{n}', String(unread)) : C.chat;

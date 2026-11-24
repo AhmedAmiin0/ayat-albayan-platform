@@ -3,9 +3,7 @@ import { dayTimesKeeping, inWeekOrder } from '@ab/shared';
 import { courseEndsOn, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/schedule';
 import type { BookingDraft } from './draft';
 
-// The picked slots of the booking wizard (owner 2026-10-18: «اختر موعدًا لكل يوم»). A package picks
-// one slot per weekday of the family's zone, each at its own time: `startsAt` is the earliest pick,
-// `extra` the others. A trial or a makeup is exactly one lesson: only `startsAt`. Pure.
+// A package picks one slot per weekday in the family's zone; a trial or makeup is one lesson.
 
 type PickFields = Pick<BookingDraft, 'startsAt' | 'extra' | 'kind'>;
 type ZonedPicks = PickFields & Pick<BookingDraft, 'tz'>;
@@ -27,14 +25,11 @@ export function pickPatch(d: ZonedPicks, slot: string): Pick<BookingDraft, 'star
   return withPicks(togglePick({ picks: draftPicks(d), slot, tz: d.tz }));
 }
 
-/**
- * The rule fields the picks fix in the family zone (byday, first day and time, the other days' times);
- * a pick still equal to a prefilled one («تابِع بنفس الأيام») keeps that day's own time (dayTimesKeeping).
- */
+/** A pick equal to a prefilled one keeps that day's own time (dayTimesKeeping). */
 export const pickedRule = (d: RulePicks): PickedRule | null =>
   dayTimesKeeping(draftPicks(d), d.tz, d.course?.prefilled ?? []);
 
-/** The weekdays booked (0 = الأحد), sorted. */
+/** Sorted weekdays, 0 is Sunday. */
 export const days = (d: ZonedPicks): number[] => pickedRule(d)?.byday ?? [];
 
 export interface DayPick {

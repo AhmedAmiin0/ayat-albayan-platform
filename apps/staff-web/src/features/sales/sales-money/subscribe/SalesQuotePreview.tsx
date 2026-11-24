@@ -9,10 +9,7 @@ import { useSalesQuote } from './use-sales-quote';
 
 type Props = { studentId: string; pricing: SubscriptionPricing; bind?: Bind | undefined };
 
-/**
- * «المبلغ المطلوب تحويله»: POST /sales/subscriptions/quote, the price the create will store, in the
- * family's currency. The admin's QuotePreview without the fx details; shown, never typed.
- */
+/** The price the create will store, in the family's currency; shown, never typed. */
 export function SalesQuotePreview({ studentId, pricing, bind }: Props) {
   const quote = useSalesQuote({ studentId, pricing, bind });
 

@@ -4,8 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { clearAllDrafts, draftGeneration, getDraft, setDraft } from './draft-store';
 import { settleTextSend, type Sent } from './use-text-send';
 
-// «تعديل» (owner 2026-11-07): the API answers a correction with «تصحيح: » + the text; that is the
-// send itself, never «the first message replayed» (docs/44 M1).
+// docs/44 M1: a correction's answer has the prefix plus text and is not a replayed first message.
 const PHONE = '+966501234567';
 const sent = (over: Partial<Sent> = {}): Sent => ({
   phone: PHONE,

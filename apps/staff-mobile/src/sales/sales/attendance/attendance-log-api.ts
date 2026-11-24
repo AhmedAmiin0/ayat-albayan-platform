@@ -9,7 +9,7 @@ import { openStudentReportPdf } from '@/sales/sales/student/student-api';
 export const attendancePath = (base: TreeBase, id: string): string =>
   base === '/sales' ? `/sales/students/${id}/attendance` : `/students/${id}/attendance`;
 
-/** «سجل الحضور» of one month (null: the current Riyadh month); the last month stays on screen while the next loads. */
+/** Null month means the current Riyadh month; the last month stays while the next loads. */
 export function useAttendanceLog(base: TreeBase, id: string, month: string | null) {
   const path = attendancePath(base, id);
   const url = month ? `${path}?month=${month}` : path;
@@ -21,10 +21,7 @@ export function useAttendanceLog(base: TreeBase, id: string, month: string | nul
   });
 }
 
-/**
- * A row's sent report: the PDF as «التقارير» opens it (sales), the admin's sent report view otherwise
- * (`to`: useStudentHref, the chat group's copy of the route when the log runs in one).
- */
+/** A sales user gets the report PDF, otherwise the admin's sent report view. */
 export function openAttendanceReport(base: TreeBase, ids: { studentId: string; reportId: string }, to: (href: Href) => Href): Promise<void> {
   if (base === '/sales') return openStudentReportPdf(ids.studentId, ids.reportId);
   router.push(to(`/students/reports/view/${ids.reportId}`));

@@ -30,10 +30,7 @@ export const VALUE_UNITS: Partial<Record<SettingKey, ValueUnit>> = {
   follow_up_slots_to_days: 'days',
 };
 
-/**
- * The unit word beside a number (the box, a list), counted for that number when there is one:
- * «5 أسابيع», «12 أسبوعًا»; the bare word («أسبوع») for 1, 2 or no number yet.
- */
+/** Counted for the number when there is one; the bare word for 1, 2 or no number yet. */
 export function unitWord(key: SettingKey, n?: number): string | undefined {
   const unit = VALUE_UNITS[key];
   if (!unit) return undefined;
@@ -43,7 +40,7 @@ export function unitWord(key: SettingKey, n?: number): string | undefined {
   return forms[form].split('{n}').join('').trim();
 }
 
-/** A count with its unit, in the right Arabic form («ساعتان», «5 أسابيع»); a bare number without one. */
+/** A count with its unit in the right Arabic plural form; a bare number without one. */
 export function countText(key: SettingKey, n: number): string {
   const unit = VALUE_UNITS[key];
   return unit ? counted(t.settingsValues.units[unit], n) : String(n);

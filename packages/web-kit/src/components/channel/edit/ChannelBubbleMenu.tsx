@@ -15,10 +15,7 @@ interface Props {
   onPick: (what: MenuPick) => void;
 }
 
-/**
- * «خيارات الرسالة» beside a bubble (as the inbox's): shown on hover and keyboard focus, always on
- * touch screens; only what is offered now. Esc and a pick put focus back on ⋯.
- */
+/** Shown on hover and focus, always on touch; Esc and a pick return focus to the trigger. */
 export function ChannelBubbleMenu({ offers, mine, onPick }: Props) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);

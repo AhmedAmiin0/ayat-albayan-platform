@@ -1,9 +1,6 @@
 import { signPair, verifyPair } from '@/common/http/pair-token';
 
-// The teacher's join link of ONE lesson (owner 2026-11-06, teacher_lesson_v3 «ادخل الحلقة»):
-// base64url(lessonId | teacherId | exp).signature, 71 characters (common/http/pair-token.ts),
-// signed with FEEDBACK_TOKEN_SECRET under its own context: a report or feedback token never
-// verifies here, and this one never verifies there. Stateless: GET /join/:token reads the lesson.
+// Teacher join link of one lesson: own signing context so report or feedback tokens never verify.
 
 const CONTEXT = 'teacher-join|';
 /** The join link outlives the lesson's end by two hours (a late or overrunning lesson). */

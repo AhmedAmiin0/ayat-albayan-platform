@@ -5,13 +5,11 @@ import { monthTitle } from './month-text';
 
 export interface MonthNavProps {
   month: string;
-  /** The shown month holds today: «هذا الشهر» is idle. */
   current: boolean;
   onStep: (by: number) => void;
   onToday: () => void;
 }
 
-/** ‹ الشهر السابق · هذا الشهر · الشهر التالي › and the month's name (as MyWeek's week row). */
 export function MonthNav({ month, current, onStep, onToday }: MonthNavProps) {
   return (
     <div role="group" aria-label={t.teacherSchedule.month} className="mb-4 flex flex-wrap items-center gap-2">

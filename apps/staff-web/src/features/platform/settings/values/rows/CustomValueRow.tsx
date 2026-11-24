@@ -28,10 +28,7 @@ export function customPreview(entry: CustomConfigView): string {
   return text.length > 80 ? `${text.slice(0, 80)}…` : text;
 }
 
-/**
- * One «قيم مخصصة» row (docs/26b §2): the description as its name, the value, when it was changed,
- * and the «⋯» menu (edit, delete with its dialog, the key). Read-only: no menu.
- */
+/** Read-only rows get no menu. */
 export function CustomValueRow({ entry, canWrite, onEdit, onDelete, announce, groupName, phone }: CustomValueRowProps) {
   const clock = useClock();
   const labelId = useId();

@@ -6,11 +6,7 @@ import { Note } from '@/more';
 import { SmallHeading as SectionLabel } from '@/sales/sales/components/SmallHeading';
 import { slotLines, slotMeta, weeklyLine } from './schedule-text';
 
-/**
- * «الجدول» (owner 2026-10-27: «As an assistant i want to see the student schedule»): each weekly slot
- * in one short line (Riyadh, the phone's 12 / 24 h) with the student's own clock (students.tz) when it differs; the
- * next lessons are in «الدورة والباقة» (owner 2026-11-17). No link: the API never sends one here. An old cache without it shows nothing.
- */
+/** Riyadh time plus the student's clock when it differs; the API never sends a link here. */
 export function ScheduleSection({ schedule }: { schedule: SalesStudentSchedule | undefined }) {
   const { color } = useTheme();
   const cycle = useClockCycle();

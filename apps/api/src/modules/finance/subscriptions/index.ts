@@ -10,7 +10,7 @@ export { causeOf, MoneyWrites } from './money/money-writes';
 export { PackagesService, type StudentState } from './money/packages.service';
 export { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
 export { SubscriptionCancel } from './cancel/subscription-cancel.service';
-export { SubscriptionCreator } from './subscription-creator';
+export { SubscriptionCreator } from './shared/subscription-creator';
 export { assertUsedBefore } from './used-before';
 export { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 export {
@@ -25,8 +25,8 @@ export {
   type SubListQuery,
   type SubRow,
   SubscriptionsRepo,
-} from './subscriptions.repo';
-export { SubscriptionsService } from './subscriptions.service';
+} from './shared/subscriptions.repo';
+export { SubscriptionsService } from './shared/subscriptions.service';
 export { StudentTrialStatus } from './trial/student-trial-status';
 export {
   type ChangedLessonRow,

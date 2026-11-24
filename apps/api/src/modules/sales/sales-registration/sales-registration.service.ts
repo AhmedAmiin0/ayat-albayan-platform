@@ -7,13 +7,7 @@ import { SalesRegistrationRepo } from './sales-registration.repo';
 /** Checks per user per 10 minutes (WindowCounter's default window): plenty for a chat, too few to walk the roll. */
 export const REGISTRATION_CHECKS_PER_WINDOW = 60;
 
-/**
- * «التحقق من التسجيل»: is this family / child already a student? Anti-enumeration of THIS route: a name
- * needs 3 letters or digits (schema; wildcards and punctuation do not count), the answer lists at most 10
- * children and only name, code, status and teacher, and each user has REGISTRATION_CHECKS_PER_WINDOW checks
- * per window (429 too_many_requests). Sales already see every student's name / code / status / teacher in
- * «الطلاب» (self.sales_academy, code-only), so revoking the key removes the phone lookup and the button only.
- */
+/** Anti-enumeration: 3+ letters, at most 10 children, few fields, rate-limited per user. */
 @Injectable()
 export class SalesRegistrationService {
   private readonly limit = new WindowCounter(REGISTRATION_CHECKS_PER_WINDOW);

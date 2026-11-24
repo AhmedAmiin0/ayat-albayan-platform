@@ -16,10 +16,6 @@ interface TickGlyphProps {
   word: BubbleWord | null;
 }
 
-/**
- * The ticks' image and, for failed / by hand, their word («لم تُرسل», «يدويًا»; a send that may
- * have gone «لم يتأكد الإرسال بعد»).
- */
 export function TickGlyph({ kind, ink, word }: TickGlyphProps) {
   const { color } = useTheme();
   return (
@@ -48,7 +44,7 @@ export function TickGlyph({ kind, ink, word }: TickGlyphProps) {
             fontFamily: type.ui[600],
             fontSize: type.size['2xs'],
             lineHeight: type.lineHeight(type.size['2xs']),
-            // Text needs AA, unlike the glyph: «يدويًا» in the muted ink, «لم تُرسل» in saffron.
+            // Text needs AA, unlike the glyph: manual in the muted ink, unsent in saffron.
             color: word === 'manual' ? color.ink3 : ink,
           }}
         >

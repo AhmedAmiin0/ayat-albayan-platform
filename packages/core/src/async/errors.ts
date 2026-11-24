@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /** The error's message, else the thrown value as text (a string, a code, …). */
 export function errorMessage(e: unknown): string {
   return e instanceof Error ? e.message : String(e);
@@ -19,8 +21,10 @@ export class CodedError<C extends string = string> extends Error {
   }
 }
 
+const coded = z.object({ code: z.string() });
+
 /** The code of a CodedError (or of any error-like object with a string `code`), else null. */
 export function errorCode(e: unknown): string | null {
-  if (typeof e !== 'object' || e === null || !('code' in e)) return null;
-  return typeof e.code === 'string' ? e.code : null;
+  const parsed = coded.safeParse(e);
+  return parsed.success ? parsed.data.code : null;
 }

@@ -36,7 +36,7 @@ const intentsSchema = z.array(
   z.object({ paid_payment_id: z.string(), stripe_payment_intent: z.string() }),
 );
 
-/** «إلغاء مع استرداد»'s reads (service role; the route checks subscriptions.stop + .refund). */
+/** Service-role reads; the route checks subscriptions.stop and subscriptions.refund. */
 @Injectable()
 export class StopRefundRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

@@ -15,10 +15,7 @@ const quietBars = (
   </div>
 );
 
-/**
- * A panel's read in one of four states: a skeleton, an error line with «إعادة المحاولة», an
- * empty state, or the data (kept while a background re-read runs or fails).
- */
+/** The data is kept while a background re-read runs or fails. */
 export function QueryState<T>(props: QueryStateProps<T>) {
   const { query, children, rows, quiet, isEmpty } = props;
   const skeleton = quiet ? quietBars : <ListSkeleton rows={rows} />;

@@ -9,12 +9,11 @@ const CALL_NOTICE_MS = 6000;
 
 interface CallNoticeProps {
   text: string;
-  /** «افتح الإعدادات»: the microphone was refused for good, only the app's settings can allow it. */
+  /** The microphone was refused for good; only the app's settings can allow it. */
   action: NoticeAction | null;
   onDismiss: () => void;
 }
 
-/** A call's short notice (a refused microphone, a failed call, «أُرسل طلب الإذن») over the bottom of the screen. */
 export function CallNotice({ text, action, onDismiss }: CallNoticeProps) {
   const { color } = useTheme();
   const insets = useSafeAreaInsets();

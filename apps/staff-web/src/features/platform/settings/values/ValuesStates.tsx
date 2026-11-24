@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const v = t.settingsValues;
 
-/** A search or filter that finds nothing (docs/07 §10): the words, and «امسح البحث» back to the group. */
+/** A search or filter with no match (docs/07 §10): the words and a clear-search button. */
 export function ValuesEmpty({ onClear }: { onClear: () => void }) {
   return (
     <EmptyState
@@ -21,12 +21,12 @@ export function ValuesEmpty({ onClear }: { onClear: () => void }) {
   );
 }
 
-/** A group with no rows (an empty «قيم مخصصة»): one sentence, not a table of headers only. */
+/** An empty group shows one sentence, not a table of headers only. */
 export function GroupEmpty() {
   return <EmptyState title={v.groupEmpty} />;
 }
 
-/** The settings (or the custom values) could not load: an inline alert and «أعد المحاولة»; nothing is editable. */
+/** Settings could not load: an inline alert and retry; nothing is editable. */
 export function ValuesLoadError({ onRetry, message = v.loadError }: { onRetry: () => void; message?: string }) {
   return (
     <div role="alert" className="flex flex-wrap items-center gap-3 rounded-md bg-danger-soft px-3 py-2.5 text-sm text-ink">

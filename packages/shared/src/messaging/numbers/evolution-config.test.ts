@@ -5,7 +5,7 @@ import {
 } from './evolution-config.js';
 import { evolutionSynced, evolutionSyncFailed, evolutionSyncOf } from './evolution-sync.js';
 
-// Owner 2026-11-06: every Evolution option of a number, validated with zod, safe by default.
+// Every Evolution option of a number, validated with zod, safe by default.
 
 describe('evolutionConfigSchema', () => {
   it('defaults: groups ignored, no full sync, no auto read, 3 s gap, 60 a day, 3 errors', () => {

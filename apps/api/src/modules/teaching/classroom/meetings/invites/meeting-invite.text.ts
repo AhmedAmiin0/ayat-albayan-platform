@@ -9,7 +9,7 @@ import { INVITE_DEDUP_PREFIX } from './meeting-invitees.repo';
 /** The instant a meeting's invitations are about: its start as ISO (a '+00:00' row reads the same), or «instant». */
 export const whenKey = (startsAt: string | null): string => (startsAt ? new Date(startsAt).toISOString() : 'instant');
 
-/** «الأحد 4 أكتوبر 17:00» in the reader's tz, or «الآن» for an instant meeting. */
+/** Formatted in the reader's tz, or "now" for an instant meeting. */
 export const whenText = (startsAt: string | null, tz: string): string =>
   startsAt ? lessonWhenText(new Date(startsAt), tz) : ar.meetingInvites.message.now;
 
@@ -32,7 +32,7 @@ export const inviteSubject = (meetingId: string, startsAt: string | null): strin
 export const inviteDedupKey = (v: { meetingId: string; phone: string; startsAt: string | null }): string =>
   `${INVITE_DEDUP_PREFIX}${v.meetingId}:${v.phone}:${whenKey(v.startsAt)}`;
 
-/** «أعد الإرسال»: the client's request id makes a double tap one message. */
+/** The client's request id makes a double tap one message. */
 export const resendDedupKey = (v: { meetingId: string; phone: string; startsAt: string | null }, requestId: string): string =>
   `${inviteDedupKey(v)}:resend:${requestId}`;
 

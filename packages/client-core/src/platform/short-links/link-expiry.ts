@@ -1,19 +1,12 @@
-import {
-  addDaysIn,
-  calendarDaysBetween,
-  counted,
-  localDateIn,
-  SETTING_DEFAULTS,
-  type PluralForm,
-  type ShortLinkRow,
-} from '@ab/shared';
+import type { ShortLinkRow } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
+import { SETTING_DEFAULTS } from '@ab/settings';
+import { addDaysIn, calendarDaysBetween, localDateIn } from '@ab/time';
 import { fillSlots } from '../../teaching/reports/index.js';
 
-// When a link ends, in the list's and the detail's words: «بعد 3 أيام», «غدًا», «اليوم» while
-// it runs, «انتهى الثلاثاء 10 نوفمبر · يُحذف 10 ديسمبر» once it ended (deleted with its visits
-// short_link_purge_days after its expiry, docs/19 «Cron»). Calendar days in the viewer's zone.
+// An ended link is deleted with its visits short_link_purge_days after expiry (docs/19 Cron).
 
-/** «القيم» → short_link_purge_days as seeded (30). */
+/** Mirrors the seeded short_link_purge_days setting (30). */
 export const SHORT_LINK_PURGE_DAYS = SETTING_DEFAULTS.short_link_purge_days;
 
 export interface ExpiryClock {
@@ -82,11 +75,10 @@ const LINES: Readonly<Record<ExpiryKind, ExpiryLine>> = {
 
 export interface ExpiryTextOptions {
   words: ExpiryWords;
-  /** «الثلاثاء 10 نوفمبر»: the app's date format in the viewer's zone. */
+  /** Formats in the viewer's zone. */
   date: (iso: string) => string;
 }
 
-/** «بعد 3 أيام», «غدًا», «انتهى الثلاثاء 10 نوفمبر · يُحذف 10 ديسمبر», «أُوقف · يُحذف …». */
 export function expiryText(parts: ExpiryParts, opts: ExpiryTextOptions): string {
   return LINES[parts.kind](parts, opts.words, opts.date);
 }

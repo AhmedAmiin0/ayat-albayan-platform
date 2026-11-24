@@ -22,7 +22,7 @@ interface EditLinkDialogProps {
 
 type Edit = ReturnType<typeof editOf>;
 
-/** «تعديل»: the title, the limit and the listed users (a given list replaces the old one). */
+/** A given user list replaces the old one. */
 export function EditLinkDialog({ link, onClose, onSaved }: EditLinkDialogProps) {
   const formId = useId();
   const [edit, setEdit] = useState<Edit>(() => editOf(link));

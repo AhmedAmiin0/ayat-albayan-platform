@@ -7,7 +7,7 @@ const S = t.studentChannel.seat;
 
 interface TakeSeatButtonProps {
   seat: ChannelSeatApi;
-  /** «تولَّ المحادثة» for a free seat, «انقل المحادثة إليك» to take over my own student's. */
+  /** A free seat is taken; my own student's is transferred to me. */
   label: string;
   /** The takeover's why, as the button's tooltip. */
   hint?: string;

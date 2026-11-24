@@ -1,4 +1,4 @@
-/** Who last changed one settings row, and when (GET /config/meta, the «آخر تعديل» notes). */
+/** Who last changed one settings row, and when (GET /config/meta). */
 export interface SettingMeta {
   updatedAt: string;
   updatedBy: string | null;

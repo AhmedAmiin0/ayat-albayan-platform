@@ -3,7 +3,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
 import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
 
-/** The tile's corner «إخراج من الحلقة» (named for the person); the confirm dialog follows. */
 export function KickButton({ tile, onAsk }: { tile: TileView; onAsk: (tile: TileView) => void }) {
   return (
     <IconButton

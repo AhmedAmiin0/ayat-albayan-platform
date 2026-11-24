@@ -15,11 +15,7 @@ export interface FreeTextFieldProps {
 
 const c = t.inbox.composer;
 
-/**
- * «نص الرسالة» (owner 2026-11-14: «a template that carries your text»): a multi-line box for a
- * template's free-text variable, with a live count of what will be sent (normalised: one line,
- * single spaces, Meta 132018) against the room the body leaves; past it, the sent text is cut.
- */
+/** Counts the normalised text (one line, single spaces, Meta 132018); any excess is cut. */
 export function FreeTextField({ body, slot, value, error, onChange }: FreeTextFieldProps) {
   const max = freeTextRoom(body, slot);
   const count = normaliseTemplateParam(value).length;

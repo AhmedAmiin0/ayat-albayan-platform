@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 
-/** «جديد»: a report this phone has not opened (docs/50 §6): a word in a chip, not colour alone. */
+/** docs/50 §6: a word in a chip, not colour alone. */
 export function NewMark() {
   const { color } = useTheme();
   return (

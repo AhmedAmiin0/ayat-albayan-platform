@@ -9,10 +9,7 @@ interface Props {
   onClick: () => void;
 }
 
-/**
- * «المحادثة» with its unread count (the app's ChatButton): the badge pops in again each time the
- * count changes (a new message arrived), and the count is part of the button's name.
- */
+/** The badge pops in again on each count change; the count is part of the button's name. */
 export function ChatButton({ unread, on, round, onClick }: Props) {
   const word = t.mobileRoom.controls.chat;
   const name = unread > 0 ? t.portal.app.child.chatUnread.replace('{n}', String(unread)) : word;

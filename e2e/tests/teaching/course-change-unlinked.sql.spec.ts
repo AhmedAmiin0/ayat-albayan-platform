@@ -4,9 +4,7 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 import { assistant, code, one, student } from '../../support/sales/assistant';
 import { day, importedCourse, rule, teacher } from '../../support/teaching/course-stop';
 
-// change_course v2 (PR #464 review B2, migration 991): «تغيير المعلم» / «تغيير موعد الحلقات» of a
-// student whose rule has no subscription_id (imported, handover, admin booking) ends that rule and
-// books the new one; a rule it cannot attribute is course_unattributed. Rolled back.
+// change_course v2 (migration 991) on a rule without subscription_id; unattributable fails.
 
 /** The change_course payload the API builds (course-change.payload.ts), reduced to the checks. */
 interface Course {

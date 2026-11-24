@@ -1,4 +1,5 @@
-import { clipText, type AnyPushKind } from '@ab/shared';
+import { clipText } from '@ab/shared';
+import type { AnyPushKind } from '@ab/catalog';
 import { pushText, type PushText } from '@/common/push/expo/expo-push';
 
 // What a device shows on its lock screen (owner 2026-10-25): no more personal data than the alert
@@ -10,7 +11,6 @@ const PHONE = /\+?[\d٠-٩۰-۹](?:[\d٠-٩۰-۹\s.()-]{5,}[\d٠-٩۰-۹])/g;
 const AMOUNT =
   /(?:[$€£]|\b(?:USD|EGP|SAR|AED|KWD)\b)\s?[\d٠-٩][\d٠-٩.,]*|[\d٠-٩][\d٠-٩.,]*\s?(?:[$€£]|\b(?:USD|EGP|SAR|AED|KWD)\b|ج\.م|جنيه|ريال|ر\.س|دولار|درهم)/giu;
 const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
-/** Single-person name slots: their first name only (each name of a joinNames list «سهيلة ومريم»). */
 const NAME_SLOTS: ReadonlySet<string> = new Set(['name', 'student', 'teacher']);
 /** A sum slot is masked whole, whatever its currency (AMOUNT knows a few codes only). */
 const MONEY_SLOTS: ReadonlySet<string> = new Set(['amount']);
@@ -30,10 +30,7 @@ export function redact(text: string): string {
   return text.replace(EMAIL, '•••').replace(AMOUNT, '•••').replace(PHONE, maskPhone);
 }
 
-/**
- * Compound first names («عبد الرحمن», «أبو بكر»), a title («أ. هدى») and a chat's role words
- * («ولي الأمر», «مسؤول المتابعة»): the first word alone means nothing.
- */
+/** Compound first names, titles and role words where the first word alone means nothing. */
 const NAME_PREFIXES: ReadonlySet<string> = new Set([
   'عبد', 'أبو', 'ابو', 'أبي', 'أم', 'ام', 'أ.', 'ولي', 'مسؤول',
 ]);
@@ -43,7 +40,6 @@ function firstName(value: string): string {
   return second !== undefined && NAME_PREFIXES.has(first) ? `${first} ${second}` : first;
 }
 
-/** A joinNames list («سهيلة أحمد وعلي حسن» → «سهيلة وعلي»); a lone name is a list of one. */
 const firstNames = (value: string) => value.split(/،| و/).map(firstName).join(' و');
 
 const clip = (text: string) => clipText(text, PREVIEW_MAX);

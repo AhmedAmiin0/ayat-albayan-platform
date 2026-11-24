@@ -18,18 +18,14 @@ import { panelView } from './teacher-students-view';
 /** The default view: her current students, not subscribed yet, subscribed and package ended (lessons keep running). */
 export const CURRENT: readonly StudentStatus[] = CURRENT_STUDENT_STATUSES;
 
-/** «١٢ مشترك · ٣ تجريبي · ٥ متوقف»: every status she has students in, in enum order. */
+/** In enum order. */
 export function statusSummary(counts: StatusCounts): string {
   return STUDENT_STATUSES.filter((s) => counts[s] > 0)
     .map((s) => `${counts[s]} ${t.enums.studentStatus[s]}`)
     .join(' · ');
 }
 
-/**
- * «طلاب المعلم/ة» (R-TCH-03): the students list API with teacher fixed to her, status chips
- * (default: her current students, or every status), counts per status, and a link to the full list.
- * Columns sort and filter server-side (R-NFR-08); the state is local (a tab of the profile).
- */
+/** Sorting and filtering are server-side (R-TCH-03, R-NFR-08); the state is local. */
 export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
   const [statuses, setStatuses] = useState<readonly StudentStatus[]>(CURRENT);
   const [page, setPage] = useState(1);

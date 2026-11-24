@@ -1,12 +1,12 @@
+import { toCents } from '@ab/core';
 import {
   countsForMoney,
   dueOf,
   livePackages,
-  toCents,
   type BalanceView,
   type FamilyBalanceView,
   type StudentBalanceView,
-} from '@ab/shared';
+} from '@ab/money';
 
 /**
  * What a family may read of a student's packages (docs/50 §5): the BalanceCard lesson counts over

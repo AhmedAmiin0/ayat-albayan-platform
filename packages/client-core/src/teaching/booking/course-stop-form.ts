@@ -1,8 +1,6 @@
 import type { StopMoney } from './course-stop-money.js';
 
-// «تأكيد الإلغاء»'s checks (owner 2026-11-17) for web and mobile: the reason is required (said
-// once «تأكيد الإلغاء» was pressed, never before), and «مبلغ مخصص» says its problem early: an
-// amount out of range as soon as it is typed, an empty one once the confirm was pressed.
+// The reason error shows only after confirm; a custom amount out of range shows as typed.
 
 export type StopMoneyProblem = NonNullable<StopMoney['problem']> | 'amount_required';
 
@@ -11,14 +9,12 @@ export interface StopFormInput {
   /** The custom amount typed (`StopMoneyState.text`). */
   text: string;
   reason: string;
-  /** «تأكيد الإلغاء» was pressed once. */
   tried: boolean;
 }
 
 export interface StopFormCheck {
   /** The money line's `t.courseActions.errors` key, or null. */
   money: StopMoneyProblem | null;
-  /** «هذه الخانة مطلوبة» under the reason. */
   reason: boolean;
   /** The confirm may not run. */
   blocked: boolean;
@@ -39,7 +35,6 @@ const moneyProblem = (input: StopFormInput): StopMoneyProblem | null => {
   return money.problem;
 };
 
-/** What the sheet says now and whether «تأكيد الإلغاء» may run. */
 export function stopFormCheck(input: StopFormInput): StopFormCheck {
   const short = input.reason.trim().length < REASON_MIN;
   const valid = input.money?.valid === true;

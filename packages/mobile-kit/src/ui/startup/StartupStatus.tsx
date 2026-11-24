@@ -29,7 +29,6 @@ interface StartupStatusProps {
   font: (family: string) => string | undefined;
 }
 
-/** «جارٍ الاتصال» with the gold dots (the live region), then from 10 s the hint and «إعادة المحاولة». */
 export function StartupStatus({ stage, still, onRetry, font }: StartupStatusProps) {
   const { color } = useTheme();
   const c = t.mobile.connection;

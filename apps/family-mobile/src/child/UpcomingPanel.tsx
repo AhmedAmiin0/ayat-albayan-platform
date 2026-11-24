@@ -27,7 +27,6 @@ function Upcoming({ lessons, student, own }: UpcomingProps & { lessons: PortalLe
   );
 }
 
-/** «القادمة» (canvas Child): the next lesson with its join, «استعد للحلقة», the later lessons. */
 export function UpcomingPanel({ student, own }: UpcomingProps) {
   const lessons = useChildLessons(student.id);
   return (

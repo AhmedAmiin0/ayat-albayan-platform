@@ -6,9 +6,9 @@ import type { MuteSource } from '@ab/shared';
  */
 export interface RoomHost {
   mute: (input: { identity: string; source: MuteSource }) => Promise<void>;
-  /** «كتم الجميع»: these microphones; rejects with the first refusal. */
+  /** Rejects with the first refusal. */
   muteAll: (identities: readonly string[]) => Promise<void>;
   remove: (identity: string) => Promise<void>;
-  /** «إنهاء الحلقة للجميع»: DeleteRoom; every later join answers 410 lesson_ended. */
+  /** DeleteRoom: every later join answers 410 lesson_ended. */
   end: () => Promise<unknown>;
 }

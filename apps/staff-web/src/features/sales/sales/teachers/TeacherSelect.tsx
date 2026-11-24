@@ -10,7 +10,6 @@ export interface TeacherSelectProps {
   onChange: (id: string) => void;
 }
 
-/** «المعلم/ة: كل المعلمين | …» for the read-only schedule (the admin filter's words). */
 export function TeacherSelect({ teachers, value, onChange }: TeacherSelectProps) {
   return (
     <Select aria-label={t.schedule.teacherFilter} className="sm:w-60" value={value} onChange={(e) => onChange(e.target.value)}>

@@ -14,19 +14,13 @@ export interface ThreadListProps {
   threads: ThreadView[];
   /** A filter patch; the page resets to 1 and blank values drop (parseInboxSearch). */
   onFilter: (patch: Record<string, unknown>) => void;
-  /** The conversations the filters leave: «عرض النتائج (14)». */
   total?: number | undefined;
 }
 
-/**
- * The shared table toolbar (search by name / phone, «تصفية» with the order and the lead status, their
- * chips) with the الكل | غير مقروءة tabs at the end of its row, then the conversations.
- */
 export function ThreadList({ search, threads, onFilter, total }: ThreadListProps) {
   const options = { search, mode: useInboxMode(), onFilter };
   return (
     <>
-      {/* compact: search, the icon «تصفية» and الكل/غير مقروءة on one row in the 300–400px list column. */}
       <TableToolbar
         compact
         search={

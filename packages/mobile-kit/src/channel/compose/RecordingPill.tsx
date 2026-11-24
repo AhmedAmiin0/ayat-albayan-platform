@@ -7,10 +7,7 @@ import { type, useTheme } from '../../theme';
 import { IconButton } from '../../ui/primitives/IconButton';
 import { Ltr } from '../../ui/primitives/Ltr';
 
-/**
- * The pill while a voice note records (ChatXVoice, the staff inbox's recording bar): the red dot,
- * its clock, then ✕ to drop it; «أرسل» beside the pill stops and sends it.
- */
+/** Sending beside the pill stops and sends the recording. */
 export function RecordingPill({ ms, onCancel }: { ms: number; onCancel: () => void }) {
   const { color } = useTheme();
   return (

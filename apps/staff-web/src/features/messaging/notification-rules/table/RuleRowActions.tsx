@@ -6,11 +6,7 @@ import type { RuleRowState } from './use-rule-row';
 
 const r = t.notificationRules;
 
-/**
- * Under a dirty row: «لم يُحفظ: …» (what changed, «… بدلًا من …»), then «حفظ» / «تراجع» («حفظ» is
- * aria-disabled while the draft does not parse); a refused save in words. Not a live region: the
- * section's one always-mounted polite region (RulesSection) announces a failure, so it is never missed.
- */
+/** Not a live region: RulesSection's always-mounted polite region announces failures. */
 export function RuleRowActions({ row, name }: { row: RuleRowState; name: string }) {
   const invalid = !row.result.ok;
   const summary = row.result.ok ? row.result.changes.join(t.common.listSeparator) : row.result.error;

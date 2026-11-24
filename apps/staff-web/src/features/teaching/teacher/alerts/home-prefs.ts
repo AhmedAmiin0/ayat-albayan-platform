@@ -1,8 +1,7 @@
 import { DEFAULT_HOME_PREFS, HOME_PREFS_KEY, type HomePrefs, parseHomePrefs } from '@ab/client-core';
 import { useSyncExternalStore } from 'react';
 
-// «تخصيص» of the teacher's «اليوم» (owner 2026-11-14), saved in this browser only (a server copy
-// is a later option). Blocked storage (private mode) keeps the defaults for this page view.
+// Saved in this browser only; blocked storage keeps the defaults for this page view.
 
 let prefs: HomePrefs | null = null;
 const listeners = new Set<() => void>();

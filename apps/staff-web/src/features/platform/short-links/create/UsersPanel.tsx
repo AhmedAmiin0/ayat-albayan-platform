@@ -19,10 +19,6 @@ interface UsersPanelProps {
   errors: LinkFieldErrors;
 }
 
-/**
- * «المحددون» (board LinkXWebCreate): the people and numbers the link is for, a search over the
- * platform's users and a free WhatsApp number for anyone else.
- */
 export function UsersPanel({ users, onChange, errors }: UsersPanelProps) {
   const { people, phones } = users;
   const error = errorText(errors, 'people') ?? errorText(errors, 'phones');

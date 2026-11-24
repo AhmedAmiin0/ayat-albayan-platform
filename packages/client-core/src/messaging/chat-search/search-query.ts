@@ -40,14 +40,12 @@ export function chatSearchPages(
   };
 }
 
-/** What both apps' «بحث» provider hands its bar, header and bubbles. */
 export interface ChatSearchControls {
   state: ChatSearchState;
   /** The settled words: the bubbles mark them; '' while closed or not asked yet. */
   q: string;
   hits: readonly ChatSearchHit[];
   total: number;
-  /** The first page is on its way (the bar says so instead of «لا توجد نتائج»). */
   searching: boolean;
   failed: boolean;
   open: () => void;

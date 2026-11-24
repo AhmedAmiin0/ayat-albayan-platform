@@ -35,7 +35,7 @@ export type PrepareOptions = {
   endsOn?: string | null;
   /** The subscription it books: every rule's package and subscription_id (CourseLabel). */
   course?: CourseLabel;
-  /** Lessons the check ignores: the upcoming trial a «موعد تجريبي جديد» moves (TrialDates). */
+  /** The upcoming trial being moved. */
   excludeLessonIds?: readonly string[];
 };
 type Series = { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] };

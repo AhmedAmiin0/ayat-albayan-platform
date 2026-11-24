@@ -22,10 +22,10 @@ async function sendFor(method: 'PUT' | 'POST', path: string, body?: EvolutionCon
 export const putEvolutionConfig = (input: { id: string; config: EvolutionConfig }) =>
   sendFor('PUT', `${base(input.id)}/config`, input.config);
 
-/** POST …/evolution/sync («مزامنة الآن»): pushes the saved options again. */
+/** Pushes the saved options to Evolution again. */
 export const pushEvolutionSync = (id: string) => sendFor('POST', `${base(id)}/sync`);
 
-/** GET …/evolution/sync («تحقق»): reads Evolution back only, writes nothing. */
+/** Reads Evolution back only and writes nothing. */
 export const readEvolutionSync = async (id: string) =>
   viewOf(await apiFetch(`${base(id)}/sync`));
 

@@ -1,4 +1,4 @@
-import type { Conflict, SlotView, SlotsResponse } from '@ab/shared';
+import type { Conflict, SlotView, SlotsResponse } from '@ab/schedule';
 
 // GET /booking/slots rows for the reschedule tests. «Now» is Thursday 1 Oct 2026 16:20 Riyadh.
 

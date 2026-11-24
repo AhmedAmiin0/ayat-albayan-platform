@@ -18,11 +18,7 @@ interface SalesReceiptFieldProps {
   onChange: (value: ReceiptChoice[]) => void;
 }
 
-/**
- * «المرفقات», optional, up to 5 (R-ASST-04, owner 2026-10-12): files the family sent in the chat
- * (each copied under the package at once) and photos from the camera / gallery like the admin's
- * payment form (uploaded on save). Each one is added to the list and can be removed.
- */
+/** R-ASST-04: optional, up to 5; chat files are copied at once, photos upload on save. */
 export function SalesReceiptField({ target, value, onChange }: SalesReceiptFieldProps) {
   const [browsing, setBrowsing] = useState(false);
   const copy = useCopyChatReceipt();

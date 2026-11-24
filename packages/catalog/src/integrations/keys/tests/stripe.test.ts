@@ -8,7 +8,7 @@ import {
 } from '../../checks.js';
 import { INTEGRATION_GROUPS, integrationDef, integrationEnum } from '../keys.js';
 
-// Stripe in «التكاملات» (docs/30): one switch, two Vault secrets, the cap.
+// Stripe (docs/30): one switch, two Vault secrets, the cap.
 const issue = (key: 'STRIPE_API_KEY' | 'STRIPE_WEBHOOK_SECRET', value: string) =>
   integrationSecretCheck(key).safeParse(value).error?.issues[0]?.message ?? null;
 

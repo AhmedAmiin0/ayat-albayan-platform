@@ -5,10 +5,7 @@ import { crmWebhookProblem, useCrmWebhook } from '@/features/platform/integratio
 
 const s = t.integrations.crmWebhook;
 
-/**
- * Under the CRM group of «التكاملات» (docs/19 «crm driver»): one click registers the CRM's
- * delivery-ticks webhook with the notifications line's key; its secret never reaches this page.
- */
+/** docs/19 crm driver: the webhook secret never reaches this page. */
 export function CrmWebhookButton({ onNote }: { onNote: (message: string) => void }) {
   const link = useCrmWebhook();
   return (

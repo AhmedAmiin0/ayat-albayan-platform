@@ -3,14 +3,11 @@ import { resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../suppo
 import { stubReset } from '../../support/core/wa-stub';
 import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 
-// Teacher mode (R-TCH-03, R-MSG-05, owner 2026-10-02: "login as a teacher and see only my chats,
-// my calendar, my reports"): «أبرار» sees the chat of the family she teaches, never another
-// teacher's; that thread answers 403 not_your_thread (enforced by the API, not only hidden); her
-// week has only her lessons; she replies from the academy number and the admin reads «أرسلها: أبرار».
+// Teacher mode (R-TCH-03, R-MSG-05): other threads give 403 not_your_thread from the API.
 
 const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name);
 
-/** Today's Riyadh date: a lesson on it is always inside «جدولي»'s current week. */
+/** A lesson on today's Riyadh date is always inside the schedule's current week. */
 const riyadhToday = () => new Date(Date.now() + 3 * 3_600_000).toISOString().slice(0, 10);
 
 /** A second, login-less teacher for the other family. */
@@ -69,7 +66,7 @@ test.describe('teacher mode (R-TCH-03, R-MSG-05)', () => {
         expect(sent.status).toBe(200);
       }
 
-      // «المحادثات»: only the family she teaches (the API scopes GET /threads).
+      // The API scopes GET /threads to the families she teaches.
       const teacher = await asRole('teacher');
       await teacher.goto('/teacher/inbox');
       const mineRow = teacher.getByRole('link', { name: openThread(`أم ريم ${tag}`) });
@@ -93,7 +90,6 @@ test.describe('teacher mode (R-TCH-03, R-MSG-05)', () => {
         select sent_by_teacher_id from public.messages where body = ${reply}`);
       expect(sentBy).toEqual([{ sent_by_teacher_id: abrar }]);
 
-      // «جدولي»: her lesson, never the other teacher's.
       await teacher.goto('/teacher/calendar');
       await expect(teacher.getByText(`ريم ${tag}`).first()).toBeVisible();
       await expect(teacher.getByText(`هالة ${tag}`)).toHaveCount(0);

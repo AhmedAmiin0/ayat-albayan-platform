@@ -70,7 +70,6 @@ function EditableRow({ rule, ...props }: RuleRowProps & { rule: NotificationRule
   return <RowView {...props} row={row} />;
 }
 
-/** One desktop row of «الإشعارات» (from 640px): five columns, and the unsaved line under it when dirty. */
 export function RuleRow(props: RuleRowProps) {
   const rule = editableRule(props.entry, useRules().canManage);
   return rule ? <EditableRow {...props} rule={rule} /> : <RowView {...props} row={null} />;

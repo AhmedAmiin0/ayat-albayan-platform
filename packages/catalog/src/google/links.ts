@@ -1,5 +1,4 @@
-// The Drive and Sheets links the old script writes into its sheets (docs/24 §1): the attendance
-// row's «تقرير PDF», the summary row's «مجلد الطالب» and «سجل الحضور». Ids only, never a name.
+// Links the old script writes into its sheets (docs/24 §1): ids only, never a name.
 
 export const driveFileLink = (fileId: string): string => `https://drive.google.com/file/d/${fileId}/view`;
 export const driveFolderLink = (folderId: string): string => `https://drive.google.com/drive/folders/${folderId}`;

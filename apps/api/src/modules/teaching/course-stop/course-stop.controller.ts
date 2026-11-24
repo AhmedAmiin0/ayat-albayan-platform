@@ -12,12 +12,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseStop } from './course-stop.service';
 
-/**
- * «إلغاء الاشتراك» (owner 2026-10-30): subscriptions.stop (system admin and sales by default,
- * migration 990), ANY student; teachers and families never. 404 subscription_not_found; 409
- * already_cancelled / has_future_lessons; 400 a missing reason. The unused-package «إلغاء الباقة»
- * stays POST /subscriptions/:id/cancel.
- */
+/** subscriptions.stop (migration 990); 404, 409 already_cancelled or has_future_lessons, 400. */
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('subscriptions.stop')

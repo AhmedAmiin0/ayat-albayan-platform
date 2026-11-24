@@ -8,11 +8,9 @@ import { hhmmIn } from '../../zone/index.js';
 export { CAIRO_TZ, RIYADH_TZ };
 
 export interface RunningHead {
-  /** «الخميس 1 أكتوبر 2026» (Riyadh calendar day). */
+  /** Riyadh calendar day. */
   gregorian: string;
-  /** «20 ربيع الآخر 1448 هـ». */
   hijri: string;
-  /** «15:20» (24 h) or «3:20 م» (12 h). */
   riyadhTime: string;
   cairoTime: string;
 }
@@ -22,7 +20,6 @@ export interface RunningHead {
 // line is ''. date-fns has no Hijri calendar, so this one stays a plain Intl format.
 const hijris = new Map<Locale, Intl.DateTimeFormat | null>();
 
-/** «20 ربيع الآخر 1448 هـ» / «20 Rabiʻ II 1448 AH». */
 function hijriLine(date: Date, locale: Locale): string {
   if (!hijris.has(locale)) {
     const tag = locale === 'ar' ? 'ar-SA' : 'en-GB';
@@ -48,7 +45,7 @@ export const clockTime = (date: Date, timeZone: string): string => hhmmIn(date, 
 
 const GREGORIAN = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' } as const;
 
-/** Weekday, day, month, year joined by spaces (Intl puts «، » after the weekday). */
+/** Joined by spaces since Intl puts a comma after the weekday. */
 function gregorianLine(date: Date, locale: Locale): string {
   const parts = dateTextParts(date, { tz: RIYADH_TZ, locale }, GREGORIAN);
   const part = (type: Intl.DateTimeFormatPartTypes) =>

@@ -20,11 +20,7 @@ export interface GuardianEditDialogProps {
   onDone: (notice: string) => void;
 }
 
-/**
- * «تعديل ولي الأمر» (research-forms item 10): the name, «رقم الواتساب (مع كود الدولة)», the
- * country, «عرفت عننا منين؟» and notes, saved with PATCH /guardians/:id (admin only). Above them the family's
- * second number, when it has one, with «إزالة الرقم الثاني» (GuardianPhones).
- */
+/** Admin only, saved with PATCH /guardians/:id. */
 export function GuardianEditDialog({ guardianId, onClose, onDone }: GuardianEditDialogProps) {
   const guardian = useQuery(guardianDetailQuery(guardianId));
   return (

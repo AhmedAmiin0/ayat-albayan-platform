@@ -6,7 +6,7 @@ const BELL: readonly Permission[] = ['notifications.push'];
 const INBOX: readonly Permission[] = ['notifications.push', 'inbox.read'];
 /** The Google sync's own alerts (docs/24): for who may read the settings, i.e. admins. */
 const SETTINGS: readonly Permission[] = ['notifications.push', 'settings.read'];
-/** «محفظتي»'s own news: for who may read their own earnings (the salesperson). */
+/** Wallet news, for whoever may read their own earnings. */
 const EARNINGS: readonly Permission[] = ['notifications.push', 'self.sales_earnings'];
 /** The family app's own kinds (docs/50 §5.6): a guardian or student login, never staff. */
 const FAMILY: readonly Permission[] = ['notifications.push', 'self.portal'];

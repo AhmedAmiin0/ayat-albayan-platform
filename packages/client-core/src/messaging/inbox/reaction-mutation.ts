@@ -1,8 +1,7 @@
 import type { MessageView, ReactionResult } from '@ab/shared';
 import { patchMessage, withOurs } from './reactions.js';
 
-// «تفاعل» (owner 2026-10-27): the one mutation web and mobile run (useMutation(reactionMutation(…))),
-// written without React so client-core stays framework-free. The app supplies the request and its cache.
+// Written without React so client-core stays framework-free.
 
 export interface ReactInput {
   message: MessageView;

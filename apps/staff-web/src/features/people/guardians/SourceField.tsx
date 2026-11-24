@@ -8,10 +8,7 @@ export interface SourceFieldProps {
   onChange: (value: LeadSource | '') => void;
 }
 
-/**
- * «عرفت عننا منين؟» with the registration form's four options in its order; «أخرى» is offered
- * only while an existing row already has it (CRM / migrated rows). Optional.
- */
+/** The "other" option is offered only while an existing row already has it. */
 export function SourceField({ value, onChange }: SourceFieldProps) {
   return (
     <Field label={t.guardians.source}>

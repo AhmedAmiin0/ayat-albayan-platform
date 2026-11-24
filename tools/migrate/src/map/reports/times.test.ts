@@ -44,7 +44,7 @@ describe('bookingSlots', () => {
     ]);
     expect(s.get(at('2026-09-08'))).toEqual({ time: '17:00', duration: 45 });
     expect(s.get(at('2026-09-12'))).toBeDefined();
-    expect(s.get(at('2026-09-15'))).toBeUndefined(); // after «حتى»
+    expect(s.get(at('2026-09-15'))).toBeUndefined(); // after the until date
     expect(s.get(at('2026-09-09'))).toBeUndefined(); // not a booked weekday
   });
 

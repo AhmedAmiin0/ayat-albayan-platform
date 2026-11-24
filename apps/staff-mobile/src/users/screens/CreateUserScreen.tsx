@@ -3,7 +3,7 @@ import { t, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { CreateUserForm } from '@/users/create/CreateUserForm';
 import { backToUsers } from '@/users/shared/nav';
 
-/** «مستخدم جديد» pushed from «المستخدمون» (shown there with users.write; the API checks it too). */
+/** Shown with users.write; the API checks it too. */
 export function CreateUserScreen() {
   return (
     <Screen>

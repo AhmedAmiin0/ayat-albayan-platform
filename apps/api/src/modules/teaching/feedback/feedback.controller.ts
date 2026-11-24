@@ -29,10 +29,7 @@ const filterThenPage = (query: unknown): [FeedbackQuery, PageQuery] => [
   parseOrThrow(pageQuerySchema, query),
 ];
 
-/**
- * «رأيك يهمّنا», the staff side: the admin asks a family for it and reads every answer; a teacher
- * reads their own (the static `teachers/me/…` wins over `teachers/:id` in Fastify's router).
- */
+/** The static teachers/me route wins over teachers/:id in Fastify's router. */
 @ApiTags('feedback')
 @ApiBearerAuth()
 @Permissions('feedback.read')
@@ -43,7 +40,7 @@ export class FeedbackController {
     private readonly reads: FeedbackReadService,
   ) {}
 
-  /** «ابعت طلب الرأي»: 409 template_not_approved / lesson_not_eligible / already_submitted; 503 not_configured. */
+  /** 409 template_not_approved, lesson_not_eligible or already_submitted; 503 not_configured. */
   @Post('lessons/:id/feedback-request')
   @HttpCode(200)
   @Permissions('feedback.write')

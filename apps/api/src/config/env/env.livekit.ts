@@ -1,4 +1,4 @@
-import { livekitUrl } from '@ab/shared';
+import { livekitUrl } from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset, optionalSecret } from './env.blank';
@@ -31,10 +31,7 @@ const hostOf = (raw: string | undefined): string | null => {
   return url ? new URL(url).host.toLowerCase() : null;
 };
 
-/**
- * T1: a DB LIVEKIT_URL («التكاملات») must name the host the server's env names; once env pins it,
- * a DB value elsewhere is dropped from the overlay (it would get every join and server token).
- */
+/** Once env pins LIVEKIT_URL, a DB value naming another host is dropped from the overlay. */
 export function livekitHostPinned(dbValue: string, envValue = process.env.LIVEKIT_URL): boolean {
   const pinned = hostOf(envValue);
   return pinned === null || hostOf(dbValue) === pinned;
