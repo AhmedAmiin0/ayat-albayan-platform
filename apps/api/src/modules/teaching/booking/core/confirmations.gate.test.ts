@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
 import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';

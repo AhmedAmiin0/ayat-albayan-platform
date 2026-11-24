@@ -1,4 +1,4 @@
-import { SUBSCRIPTION_STATUSES } from '@ab/shared';
+import { SUBSCRIPTION_STATUSES } from '@ab/catalog';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

@@ -1,15 +1,8 @@
 import type { BookingRequest } from '@ab/shared';
 import type { BookingMode } from '@ab/client-core';
-import {
-  courseDraftSavedSchema,
-  PACKAGE_SIZES,
-  type BookingResult,
-  type BookingTeacherOption,
-  type Conflict,
-  type Gender,
-  type PackageSize,
-  type Program,
-} from '@ab/shared';
+import { courseDraftSavedSchema } from '@ab/shared';
+import { PACKAGE_SIZES, type Gender, type PackageSize, type Program } from '@ab/catalog';
+import type { BookingResult, BookingTeacherOption, Conflict } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { BOOKING_KINDS, type BookingKind } from './draft/contract';

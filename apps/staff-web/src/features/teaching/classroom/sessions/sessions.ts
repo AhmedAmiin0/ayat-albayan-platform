@@ -1,4 +1,10 @@
-import { DEFAULT_JOIN_WINDOW, isOpenLesson, joinWindow, type JoinWindowConfig, type LessonView } from '@ab/shared';
+import {
+  DEFAULT_JOIN_WINDOW,
+  isOpenLesson,
+  joinWindow,
+  type JoinWindowConfig,
+  type LessonView,
+} from '@ab/schedule';
 import type { SessionGroup } from '@ab/client-core';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { lessonStatusText, type LessonStatusChip } from '@ab/web-kit/lib/settings/lesson-status-text';

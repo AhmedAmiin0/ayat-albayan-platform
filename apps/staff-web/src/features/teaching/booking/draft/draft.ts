@@ -1,14 +1,8 @@
 import type { BookingRequest } from '@ab/shared';
-import {
-  ACADEMY_TZ,
-  type BookingTeacherOption,
-  courseBodyPackage,
-  type Duration,
-  type Gender,
-  type PackageSize,
-  type Program,
-  zonedPartsIn,
-} from '@ab/shared';
+import { courseBodyPackage } from '@ab/shared';
+import type { Duration, Gender, PackageSize, Program } from '@ab/catalog';
+import type { BookingTeacherOption } from '@ab/schedule';
+import { ACADEMY_TZ, zonedPartsIn } from '@ab/time';
 import type { BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
 import { pickedRule } from './draft.days';

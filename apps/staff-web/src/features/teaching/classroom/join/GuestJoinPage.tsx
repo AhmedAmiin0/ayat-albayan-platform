@@ -1,4 +1,5 @@
-import { guestJoinSchema, type ClockCycle, type RoomJoinResult } from '@ab/shared';
+import { guestJoinSchema, type RoomJoinResult } from '@ab/schedule';
+import type { ClockCycle } from '@ab/time';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type SubmitEvent } from 'react';
 import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';

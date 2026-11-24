@@ -1,5 +1,6 @@
 import type { BookingMode } from '@ab/client-core';
-import type { BookingRequest, Conflict, TrialDateResult, TrialHistory } from '@ab/shared';
+import type { BookingRequest, TrialDateResult, TrialHistory } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { STUDENTS_KEY } from '@/features/people/students/api';

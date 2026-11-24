@@ -1,4 +1,5 @@
-import { isOpenLesson, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { isOpenLesson } from '@ab/schedule';
 import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';

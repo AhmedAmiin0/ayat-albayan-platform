@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { guardianOwnerIds, ownershipOf, studentOwnerIds } from './sales-ownership';
 
 describe('guardianOwnerIds (who owns a family, docs/21 §6)', () => {

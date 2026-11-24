@@ -1,4 +1,6 @@
-import { formatPhone, studentStatusStyle, type SalesStudentView } from '@ab/shared';
+import type { SalesStudentView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import { studentStatusStyle } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

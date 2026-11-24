@@ -1,4 +1,5 @@
-import { normalizePhone, type Gender } from '@ab/shared';
+import type { Gender } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { leadByPhoneQuery, type InboxLead } from '@/features/messaging/inbox/api/api';

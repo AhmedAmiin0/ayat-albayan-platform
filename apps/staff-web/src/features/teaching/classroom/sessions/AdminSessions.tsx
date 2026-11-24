@@ -1,4 +1,5 @@
-import { dateText, type LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { dateText } from '@ab/time';
 import { SESSION_GROUPS, type SessionGroup } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';

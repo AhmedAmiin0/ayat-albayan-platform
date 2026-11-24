@@ -1,4 +1,5 @@
-import type { BookingResult, StudentRef, TrialDateResult } from '@ab/shared';
+import type { StudentRef, TrialDateResult } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { useFocusOnChange } from '@ab/web-kit/components/ui/overlay/use-focus-on-change';

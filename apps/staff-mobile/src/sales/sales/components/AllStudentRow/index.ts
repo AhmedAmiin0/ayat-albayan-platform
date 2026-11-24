@@ -1,0 +1,1 @@
+export { AllStudentRow } from './AllStudentRow';

@@ -1,4 +1,4 @@
-import type { AssistantCommissionStatus, MyStudentRow } from '@ab/shared';
+import type { AssistantCommissionStatus, MyStudentRow } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';

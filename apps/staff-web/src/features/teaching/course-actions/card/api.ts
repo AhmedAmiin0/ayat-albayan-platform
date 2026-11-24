@@ -8,7 +8,8 @@ import {
   readLessonAt,
   type CardTree,
 } from '@ab/client-core';
-import type { CourseCardLesson, CourseExtendResult, LessonView } from '@ab/shared';
+import type { CourseCardLesson, CourseExtendResult } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { queryOptions, useMutation } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';

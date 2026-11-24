@@ -1,4 +1,5 @@
-import { counted, type TrialHistory } from '@ab/shared';
+import type { TrialHistory } from '@ab/shared';
+import { counted } from '@ab/core';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

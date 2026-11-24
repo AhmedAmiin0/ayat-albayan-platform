@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { subscriptionListQuery } from '@/modules/finance/subscriptions/subscriptions.dto';
 import { listSelect } from './subscriptions.list-query';
 import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';

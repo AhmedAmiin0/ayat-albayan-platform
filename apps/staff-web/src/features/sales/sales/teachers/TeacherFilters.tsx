@@ -1,4 +1,4 @@
-import { GENDERS, type Gender, type Program } from '@ab/shared';
+import { GENDERS, type Gender, type Program } from '@ab/catalog';
 import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -1,5 +1,6 @@
 import { courseMoveErrorCode } from '@ab/client-core';
-import { wallParts, type BookingTeacherOption, type ProfileCourseView } from '@ab/shared';
+import type { ProfileCourseView } from '@ab/shared';
+import { wallParts, type BookingTeacherOption } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { IDS } from '@/modules/teaching/booking/booking.fakes';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { MakeupCandidates } from './makeup-candidates.service';

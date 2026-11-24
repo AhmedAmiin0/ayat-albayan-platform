@@ -1,5 +1,5 @@
 import type { LessonRow } from '@ab/client-core';
-import { addCalendarDays, localDateIn, otherZoneClock, wallToUtc } from '@ab/shared';
+import { addCalendarDays, localDateIn, otherZoneClock, wallToUtc } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Clock } from '@ab/web-kit/lib/clock';
 

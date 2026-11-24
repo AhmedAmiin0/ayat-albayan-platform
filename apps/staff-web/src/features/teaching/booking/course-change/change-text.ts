@@ -1,4 +1,5 @@
-import { inWeekOrder, type CourseChangeRequest, type DayTime } from '@ab/shared';
+import { inWeekOrder } from '@ab/shared';
+import type { CourseChangeRequest, DayTime } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { dayAtText } from '@/features/teaching/booking/steps/slots/DayTimesList';
 import type { Clock } from '@ab/web-kit/lib/clock';

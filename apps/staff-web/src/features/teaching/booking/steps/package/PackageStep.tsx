@@ -1,4 +1,4 @@
-import { DURATIONS, type PackageSize } from '@ab/shared';
+import { DURATIONS, type PackageSize } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { RequiredMark } from '@ab/web-kit/components/ui/form/label';

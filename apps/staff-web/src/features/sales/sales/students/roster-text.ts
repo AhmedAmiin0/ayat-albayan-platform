@@ -1,13 +1,12 @@
 import {
-  localDateIn,
-  localizedName,
   packageSummaryText,
-  RIYADH_TZ,
   rosterAttendanceText,
   rosterScheduleText,
   type PackageWords,
   type SalesStudentView,
 } from '@ab/shared';
+import { localizedName } from '@ab/core';
+import { localDateIn, RIYADH_TZ } from '@ab/time';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { hhmmText } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

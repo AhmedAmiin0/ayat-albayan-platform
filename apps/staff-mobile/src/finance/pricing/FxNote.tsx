@@ -1,4 +1,4 @@
-import { FX_ATTRIBUTION_URL } from '@ab/shared';
+import { FX_ATTRIBUTION_URL } from '@ab/money';
 import { Linking, Pressable, View } from 'react-native';
 import { t, type, useTheme, AppText, ltr } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

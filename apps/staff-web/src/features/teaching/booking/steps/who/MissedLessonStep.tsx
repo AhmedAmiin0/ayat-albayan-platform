@@ -1,4 +1,4 @@
-import { DURATIONS, type LessonStatus } from '@ab/shared';
+import { DURATIONS, type LessonStatus } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

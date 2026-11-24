@@ -1,4 +1,4 @@
-import type { BookingTeacherOption } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import type { BookSearch } from './api';
 import type { BookingKind } from './draft/contract';
 import { withPicks } from './draft/draft.days';

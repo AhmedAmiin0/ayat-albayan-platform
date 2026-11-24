@@ -1,4 +1,4 @@
-import type { BookingTeacherOption } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -1,4 +1,5 @@
-import type { BookingTeacherOption, ProfileCourseView } from '@ab/shared';
+import type { ProfileCourseView } from '@ab/shared';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { useState } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import {

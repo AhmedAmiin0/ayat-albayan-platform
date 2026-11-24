@@ -1,13 +1,12 @@
+import type { Duration, PackageSize } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
 import {
   DEFAULT_DURATION,
-  normalizePhone,
   PRICING_DURATIONS,
   siteCountry,
   STUDENTS_MAX,
-  type Duration,
   type PackageId,
-  type PackageSize,
-} from '@ab/shared';
+} from '@ab/money';
 import { OTHER, type Selection } from '@/features/finance/pricing/api';
 
 // Wizard package → pricing catalog (docs/08). The client never prices: this only picks which

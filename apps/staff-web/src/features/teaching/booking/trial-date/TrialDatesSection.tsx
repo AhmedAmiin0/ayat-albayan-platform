@@ -1,4 +1,5 @@
-import { canPickTrialDate, type Gender } from '@ab/shared';
+import { canPickTrialDate } from '@ab/shared';
+import type { Gender } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { usePermissions } from '@ab/web-kit/auth/use-permissions';

@@ -1,4 +1,4 @@
-import type { PayoutView } from '@ab/shared';
+import type { PayoutView } from '@ab/money';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';

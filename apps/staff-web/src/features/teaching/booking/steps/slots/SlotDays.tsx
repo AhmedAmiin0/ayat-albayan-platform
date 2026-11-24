@@ -1,4 +1,5 @@
-import { counted, pickProgress } from '@ab/shared';
+import { counted } from '@ab/core';
+import { pickProgress } from '@ab/schedule';
 import { useId } from 'react';
 import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

@@ -1,4 +1,5 @@
-import { isOpenLesson, joinWindow, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { isOpenLesson, joinWindow } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';

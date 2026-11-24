@@ -1,4 +1,5 @@
-import { dateText, lessonWhenAt, type AttendanceTableRow, type AttendanceTotalKind } from '@ab/shared';
+import { lessonWhenAt, type AttendanceTableRow, type AttendanceTotalKind } from '@ab/shared';
+import { dateText } from '@ab/time';
 import type { Clock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';

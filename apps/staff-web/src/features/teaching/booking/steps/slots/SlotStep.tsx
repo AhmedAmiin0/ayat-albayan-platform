@@ -1,4 +1,5 @@
-import { lessonWhenAt, sameClockAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import { sameClockAt } from '@ab/time';
 import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
 import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';

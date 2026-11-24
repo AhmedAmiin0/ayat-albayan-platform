@@ -1,4 +1,5 @@
-import { GENDERS, PROGRAMS, type BookingTeacherOption, type Gender, type Program } from '@ab/shared';
+import { GENDERS, PROGRAMS, type Gender, type Program } from '@ab/catalog';
+import type { BookingTeacherOption } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';

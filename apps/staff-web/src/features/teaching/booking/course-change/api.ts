@@ -1,10 +1,6 @@
 import type { BookingMode } from '@ab/client-core';
-import type {
-  CourseChangeCheck,
-  CourseChangeRequest,
-  CourseChangeResult,
-  CourseChangeView,
-} from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult, CourseChangeView } from '@ab/shared';
+import type { CourseChangeRequest } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { createContext, useContext } from 'react';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';

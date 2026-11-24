@@ -1,4 +1,5 @@
-import { lessonWhenAt, type TeacherMe } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 
 // Test data (not a test): five students (one paused) and three lessons for the board tests.

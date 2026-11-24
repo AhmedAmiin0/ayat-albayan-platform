@@ -1,14 +1,6 @@
-import {
-  GENDERS,
-  normalizePhone,
-  registrationStatus,
-  type BookingRequest,
-  type Gender,
-  type LeadQualification,
-  type LeadSource,
-  type PackageSize,
-  type Program,
-} from '@ab/shared';
+import { registrationStatus, type BookingRequest, type LeadQualification } from '@ab/shared';
+import { GENDERS, type Gender, type LeadSource, type PackageSize, type Program } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { parseAge } from '@/features/people/students/create/create-student';
 

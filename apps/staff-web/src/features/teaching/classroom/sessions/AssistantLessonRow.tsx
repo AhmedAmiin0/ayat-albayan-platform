@@ -1,4 +1,5 @@
-import { clockOf, type AssistantLessonView } from '@ab/shared';
+import type { AssistantLessonView } from '@ab/schedule';
+import { clockOf } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { useClock } from '@ab/web-kit/lib/clock';

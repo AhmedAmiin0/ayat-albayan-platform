@@ -1,5 +1,6 @@
 import { bookingPicksFrom } from '@ab/client-core';
-import { courseEndsOn, dayTimesKeeping, inWeekOrder, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/shared';
+import { dayTimesKeeping, inWeekOrder } from '@ab/shared';
+import { courseEndsOn, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/schedule';
 import type { BookingDraft } from './draft';
 
 // A package picks one slot per weekday in the family's zone; a trial or makeup is one lesson.
