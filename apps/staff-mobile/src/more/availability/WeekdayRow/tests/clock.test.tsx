@@ -11,6 +11,6 @@ test('«المزيد › مواعيدي»: 24 h on a 24 h phone, then 12 h with 
   await render(<WeekdayRow day={day} />);
   expect(screen.getByText('⁦16:00 – 18:30⁩')).toBeTruthy();
   await act(async () => setClockPref('12'));
-  // Arabic 12 h reads right to left, so the range is an RTL island: «4:00 م – 6:30 م».
+  // Arabic 12 h reads right to left, so the range is an RTL island.
   expect(screen.getByText('⁧4:00 م – 6:30 م⁩')).toBeTruthy();
 });

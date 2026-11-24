@@ -8,7 +8,7 @@ const clockPills = (): readonly FilterPill<ClockPref>[] => [
   { value: '24', label: t.clock.h24 },
 ];
 
-/** «تنسيق الوقت»: تلقائي (حسب الجهاز) / 12 ساعة / 24 ساعة, saved on the device; applies at once. */
+/** Saved on the device and applied at once. */
 export function ClockFormatPicker() {
   const [pref, choose] = useClockPref();
   return (

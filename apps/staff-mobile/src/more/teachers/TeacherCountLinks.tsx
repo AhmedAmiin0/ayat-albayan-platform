@@ -12,11 +12,7 @@ interface TeacherCountLinksProps {
   name: string;
 }
 
-/**
- * «مشترك n · تجريبي n» of a teacher row, each count its own 44pt button: it opens the teacher's file
- * on that list (`?status=active|trial`). Beside the row's own button, never inside it, so a screen
- * reader reaches both.
- */
+/** Each count is a sibling button, never inside the row's, so a screen reader reaches both. */
 export function TeacherCountLinks({ teacher, name }: TeacherCountLinksProps) {
   const { color } = useTheme();
   const items: { kind: Exclude<StudentListKind, 'all'>; n: number; label: string }[] = [

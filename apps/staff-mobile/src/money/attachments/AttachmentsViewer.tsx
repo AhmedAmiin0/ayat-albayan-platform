@@ -8,11 +8,10 @@ import { usePaymentAttachments } from '@/money/shared/queries';
 interface AttachmentsViewerProps {
   /** The API path to GET: /payments/:id/attachments, or /sales/me/payments/:id/attachments. */
   path: string;
-  /** Said after the button's label so a list of them reads apart («عرض المرفقات · هدى»). */
+  /** Read after the button label so a list of them stays distinguishable. */
   name: string;
 }
 
-/** The opened list: a spinner, the failure, «لا توجد مرفقات», or each file. */
 function AttachmentsBody({ path, open }: { path: string; open: boolean }) {
   const { color } = useTheme();
   const files = usePaymentAttachments(path, open);
@@ -38,10 +37,7 @@ function AttachmentsBody({ path, open }: { path: string; open: boolean }) {
   );
 }
 
-/**
- * «عرض المرفقات» of a payment (owner 2026-10-12): the signed URLs are asked only once opened. Bank
- * payments may carry several files; an older one lists its receipt first («الإيصال»).
- */
+/** Signed URLs are requested only once opened; older payments list their receipt first. */
 export function AttachmentsViewer({ path, name }: AttachmentsViewerProps) {
   const [open, setOpen] = useState(false);
   const label = open ? t.mobileMoney.hideAttachments : t.payments.viewAttachments;

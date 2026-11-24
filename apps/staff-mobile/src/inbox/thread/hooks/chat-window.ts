@@ -13,11 +13,7 @@ export function sendState(thread: SendThread | null | undefined, now: Date): Cha
   };
 }
 
-/**
- * May a staff send go in this chat now (owner 2026-11-01, «do the same as the messages»): the text
- * rule (staffMaySend), read from the chat's cached thread as the Composer does; an unknown chat
- * reads no. For screens opened over the chat that fill its box (draft-store), e.g. «رابط دفع».
- */
+/** Applies the text rule from the cached thread as the Composer does; an unknown chat reads no. */
 export function chatMaySend(client: QueryClient, phone: string, now: Date): boolean {
   const data = client.getQueryData<ThreadCache>(threadKey(phone));
   return staffMaySend(sendState(data?.pages[0]?.thread, now), true);

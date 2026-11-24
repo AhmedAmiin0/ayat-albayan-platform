@@ -17,7 +17,7 @@ const PAGE_SIZE = 25;
 interface ThreadListParams {
   search: string;
   unread: boolean;
-  /** A chat list's id «القوائم» (docs/22): only its chats. Unknown id → an empty page. */
+  /** docs/22: an unknown id returns an empty page. */
   list?: string;
   /** One lead stage (GET /threads?status=, admin and sales): only its chats. */
   status?: LeadStatus;
@@ -64,11 +64,7 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
   return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, pulling });
 }
 
-/**
- * The rows the list shows: «بانتظار ردّك» swaps in the waiting chats of the loaded pages, over the query
- * result (its tracked fields: isRefetching for the pull). `seeking`: none waiting yet and more pages,
- * so it pages on by itself (an empty list never reaches its end) and holds the empty title back.
- */
+/** While none are waiting and more pages exist it pages on by itself and holds the empty title. */
 export function useChoiceRows(list: ReturnType<typeof useThreadList>, waiting: boolean) {
   const items = useMemo(() => (waiting ? waitingForReply(list.items) : []), [waiting, list.items]);
   const seeking = waiting && items.length === 0 && list.hasNextPage;
