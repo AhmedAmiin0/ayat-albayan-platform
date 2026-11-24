@@ -20,10 +20,10 @@ interface DatePickerFieldProps {
   range: DayRange;
   onChange: (day: string) => void;
   error?: string | undefined;
-  /** «اليوم 1 · التاريخ»: several on one screen need their own. */
+  /** Several on one screen need their own. */
   testID?: string;
   required?: boolean;
-  /** Under the field: «أول تاريخ مسموح: …» (the default) or the caller's own line; null = none. */
+  /** Defaults to the earliest allowed date; null means none. */
   note?: string | null;
 }
 

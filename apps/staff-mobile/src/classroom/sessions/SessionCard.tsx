@@ -7,7 +7,7 @@ import { lessonClock, studentNames, viewerDayHint } from '@/today';
 import { SessionActions } from './SessionActions';
 import { LessonStatusChip } from '@/core/ui/feedback/LessonStatusChip';
 
-/** The card's chip: «بدأت» / «انتهت» by the room, otherwise the lesson's own status. */
+/** Started or ended by the room, otherwise the lesson's own status. */
 function Chip({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   if (group === 'now') return <StatusChip tone="ok" glyph="fill" label={t.classroom.admin.live} size="sm" />;
   if (group === 'ended') return <StatusChip tone="neutral" glyph="struck" label={t.classroom.admin.ended} size="sm" />;

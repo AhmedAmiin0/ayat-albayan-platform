@@ -24,7 +24,6 @@ const CACHE_KEYS = [
   /^[^/]+\/[^/]+\/vite\.config\.ts$/,
   /^packages\/config\/vite\.js$/,
   /^([^/]+\/[^/]+\/)?tsconfig[^/]*\.json$/,
-  /^packages\/config\/tsconfig\//,
 ];
 
 /** GET /repos/{repo}/actions/artifacts?name=… (only the fields the decision reads). */

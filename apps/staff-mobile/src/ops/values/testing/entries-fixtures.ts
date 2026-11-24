@@ -1,4 +1,4 @@
-import { settingDef, type ConfigEntry, type SettingKey } from '@ab/shared';
+import { settingDef, type ConfigEntry, type SettingKey } from '@ab/settings';
 import { settings } from '@/ops/shared/fixtures';
 import { meta } from './values-fixtures';
 

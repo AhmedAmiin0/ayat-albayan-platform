@@ -1,4 +1,4 @@
-import type { GoogleSyncSettings } from '@ab/shared';
+import type { GoogleSyncSettings } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 
 /** The chip after the module-owned groups: «مزامنة Google», read from GET /admin/google/status. */

@@ -1,4 +1,4 @@
-import { DESCRIPTION_MAX } from '@ab/shared';
+import { DESCRIPTION_MAX } from '@ab/settings';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { t } from '@ab/mobile-kit';

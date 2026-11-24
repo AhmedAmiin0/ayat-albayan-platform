@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { ApiError, t } from '@ab/mobile-kit';
 import { canDescribe, checkDescription, counterText, describeError, descriptionOf } from './description-text';
 import { entryOf } from '@/ops/values/testing/entries-fixtures';

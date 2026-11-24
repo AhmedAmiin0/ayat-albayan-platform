@@ -1,4 +1,4 @@
-import type { SubscriptionView } from '@ab/shared';
+import type { SubscriptionView } from '@ab/money';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, FilterPills, FormLabel } from '@ab/mobile-kit';
 import { packageFrom, paidOf } from '@/core/lib/money/format';

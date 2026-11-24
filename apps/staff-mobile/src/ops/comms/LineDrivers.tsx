@@ -1,4 +1,4 @@
-import { WA_LINES, type WaLine, type WaProvider } from '@ab/shared';
+import { WA_LINES, type WaLine, type WaProvider } from '@ab/catalog';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { usePermissions, t, Section } from '@ab/mobile-kit';

@@ -1,4 +1,6 @@
-import { counted, type BookedCourse, type CourseChangeRequest } from '@ab/shared';
+import type { BookedCourse } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { CourseChangeRequest } from '@ab/schedule';
 import { View } from 'react-native';
 import { type BookFailure, ConflictNotice } from '@/booking';
 import { t, AppText, Button, type, useTheme, ErrorLine, whenText } from '@ab/mobile-kit';

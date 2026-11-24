@@ -36,7 +36,6 @@ test('a push that changes a cache key file runs everything (develop writes the c
     'packages/config/vite.js',
     'tsconfig.base.json',
     'apps/api/tsconfig.json',
-    'packages/config/tsconfig/base.json',
     'apps/staff-mobile/babel.config.cjs',
     'apps/family-mobile/jest.config.cjs',
     'packages/mobile-kit/jest.base.cjs',

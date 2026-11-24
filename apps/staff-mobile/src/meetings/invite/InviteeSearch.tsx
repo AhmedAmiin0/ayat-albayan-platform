@@ -1,4 +1,4 @@
-import type { MeetingInviteeKind } from '@ab/shared';
+import type { MeetingInviteeKind } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button } from '@ab/mobile-kit';

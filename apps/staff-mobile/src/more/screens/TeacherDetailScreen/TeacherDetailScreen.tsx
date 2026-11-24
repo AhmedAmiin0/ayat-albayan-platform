@@ -1,4 +1,5 @@
-import { teacherName, teacherStatusStyle } from '@ab/shared';
+import { teacherStatusStyle } from '@ab/money';
+import { teacherName } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
