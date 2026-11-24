@@ -1,5 +1,6 @@
-import type { TimeEditMode } from '@ab/shared';
-import { DURATIONS, type LessonView } from '@ab/shared';
+import type { TimeEditMode } from '@ab/schedule';
+import { DURATIONS } from '@ab/catalog';
+import type { LessonView } from '@ab/schedule';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Field, FilterPills, FormLabel } from '@ab/mobile-kit';
 import { LessonSlotPicker } from '@/teaching/reschedule/LessonSlotPicker';

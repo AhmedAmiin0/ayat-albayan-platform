@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import type { LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.store';
 import { RulesRepo } from './rules.repo';
 

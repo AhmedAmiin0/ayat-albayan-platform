@@ -1,4 +1,4 @@
-import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } from '@ab/shared';
+import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';

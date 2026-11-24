@@ -1,4 +1,5 @@
-import { zonedWhenText, type ClockCycle, type SalesTeacherFilter, type SalesTeacherView } from '@ab/shared';
+import type { SalesTeacherFilter, SalesTeacherView } from '@ab/shared';
+import { zonedWhenText, type ClockCycle } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 

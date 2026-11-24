@@ -1,9 +1,12 @@
 # Third-party licenses
 
-`heuristic-evaluation`, `design-qa-checklist`, `critique-brand-consistency`: Copyright (c) MC Dean
-(github.com/Owl-Listener/designer-skills). `supabase`, `supabase-postgres-best-practices`: Copyright (c)
-Supabase (github.com/supabase/agent-skills). `animate`: Copyright (c) 2026 Emil Kowalski
-(github.com/emilkowalski/skills). All are released under the MIT License:
+`heuristic-evaluation`, `design-qa-checklist`, `critique-brand-consistency` and the other skills README.md
+lists from designer-skills: Copyright (c) 2026 MC Dean (github.com/Owl-Listener/designer-skills). The
+skills README.md lists from inclusive-design-skills: Copyright (c) 2026 MC Dean
+(github.com/Owl-Listener/inclusive-design-skills). `supabase`, `supabase-postgres-best-practices`:
+Copyright (c) Supabase (github.com/supabase/agent-skills). `animate`: Copyright (c) 2026 Emil Kowalski
+(github.com/emilkowalski/skills). `turborepo`, `add`: Copyright (c) Vercel, Inc.
+(github.com/vercel/turborepo). All are released under the MIT License:
 
 MIT License
 

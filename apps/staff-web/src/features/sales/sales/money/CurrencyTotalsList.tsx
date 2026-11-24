@@ -1,4 +1,4 @@
-import type { CurrencyTotals } from '@ab/shared';
+import type { CurrencyTotals } from '@ab/money';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

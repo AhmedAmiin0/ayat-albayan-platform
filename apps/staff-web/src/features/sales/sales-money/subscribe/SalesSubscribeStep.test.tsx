@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

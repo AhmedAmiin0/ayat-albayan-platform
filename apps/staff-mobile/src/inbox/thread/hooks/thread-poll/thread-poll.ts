@@ -1,0 +1,82 @@
+import { chatLiveKey, deltaSearch, freshRow, fullReadInterval, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead } from '@ab/client-core';
+import type { ThreadDelta, ThreadDetail } from '@ab/shared';
+import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
+import { apiFetch, useScreenFocused } from '@ab/mobile-kit';
+import { useInboxLive, useLiveWatch } from '@/inbox/thread/live/inbox-live';
+import { noteDelta } from '@/inbox/thread/live/delta-news';
+import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
+
+/** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
+export const threadPollKey = (phone: string) => ['thread-poll', phone];
+export const threadDeltaKey = (phone: string) => ['thread-delta', phone];
+
+/** A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent row twice. */
+const busy = (client: QueryClient, phone: string) =>
+  client.isMutating({ mutationKey: sendKey(phone) }) + client.isFetching({ queryKey: threadKey(phone) }) > 0;
+
+/** Polls that run on their own timer while on screen; no fetch on open (the thread query just read the page). */
+const POLL = { initialData: 0, staleTime: Infinity, gcTime: 0, meta: { noPersist: true } } as const;
+
+/** The chat's cache changed after `at` (a delta or a send landed while a read was out). */
+const movedSince = (client: QueryClient, phone: string, at: number) =>
+  (client.getQueryState(threadKey(phone))?.dataUpdatedAt ?? 0) > at;
+
+/**
+ * A page poll's answer folded in (docs/43 AU12): when the cache moved after it was asked, a cached
+ * tick further along stays (failed / sent by hand / a retry always come through); otherwise the
+ * full read is the newest truth and replaces every tick (docs/43 43-1).
+ */
+const foldPage = (fresh: ThreadDetail, moved: boolean) => (old: ThreadCache | undefined) =>
+  moved ? mergeNewest(old, laterTicks(old, fresh)) : mergeNewest(old, fresh, freshRow);
+
+/**
+ * An open chat shows new messages and ticks (owner 2026-10-27) while its screen is focused and the app
+ * is active (TanStack skips an interval tick in the background, focusManager):
+ *   every INBOX_REFRESH_MS  a delta, GET /threads/:phone?after=…&pending=… (~2 reads), merged by mergeDelta;
+ *   every THREAD_FULL_MS    the newest page (GET /threads/:phone), folded in by mergeNewest; the loaded
+ *                           older pages are not re-read.
+ * Too many new rows for one answer (a gap) re-read the whole thread instead.
+ * Realtime (docs/12 §15) runs the delta sooner on an event (docs/43 AU5, refreshOpenChat); while it is
+ * connected the delta slows to INBOX_FALLBACK_MS (the one safety net for a socket that died quietly) and
+ * the page to THREAD_FULL_LIVE_MS; a change under another screen re-reads it on return.
+ */
+export function useThreadPoll(phone: string, loaded: boolean) {
+  const client = useQueryClient();
+  const onScreen = useScreenFocused() && loaded;
+  const live = useInboxLive();
+  useLiveWatch(chatLiveKey(phone), onScreen);
+  const queryKey = threadKey(phone);
+  useQuery({
+    queryKey: threadDeltaKey(phone),
+    queryFn: async ({ signal }) => {
+      const search = deltaSearch(client.getQueryData<ThreadCache>(queryKey), Date.now());
+      if (!search) return Date.now();
+      const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
+      const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
+      noteDelta(phone, client.getQueryData<ThreadCache>(queryKey), delta);
+      // The cache moved meanwhile (a full read, the page poll): this answer may be older than it.
+      if (busy(client, phone) || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();
+      if (needsFullRead(delta)) void client.invalidateQueries({ queryKey });
+      else client.setQueryData<ThreadCache>(queryKey, (old) => mergeDelta(old, delta));
+      return Date.now();
+    },
+    ...POLL,
+    enabled: onScreen,
+    refetchInterval: onScreen ? liveInterval(live, INBOX_REFRESH_MS) : false,
+  });
+  useQuery({
+    queryKey: threadPollKey(phone),
+    queryFn: async ({ signal }) => {
+      const asked = Date.now();
+      const fresh = await apiFetch<ThreadDetail>(threadPath(phone), { signal });
+      if (busy(client, phone)) return Date.now();
+      const fold = foldPage(fresh, movedSince(client, phone, asked));
+      if (leavesGap(client.getQueryData<ThreadCache>(queryKey), fresh)) void client.invalidateQueries({ queryKey });
+      else client.setQueryData<ThreadCache>(queryKey, fold);
+      return Date.now();
+    },
+    ...POLL,
+    enabled: onScreen,
+    refetchInterval: onScreen ? fullReadInterval(live) : false,
+  });
+}
