@@ -679,6 +679,10 @@
   "desktop": 7485,
   "mobile": 8030
  },
+ "tests/screens/ui-screens.spec.ts": {
+  "desktop": 0,
+  "mobile": 0
+ },
  "tests/teaching/apply-lesson-changes-v3.sql.spec.ts": {
   "desktop": 78,
   "mobile": 2
