@@ -68,8 +68,7 @@ test.each([
   mockApiFetch.mockImplementation(() => new Promise((r) => (answer = r)));
   await renderWithQuery(<MessageFile message={pdfDoc(fields)} phone={PHONE} />);
   expect(screen.getAllByText(name)).toHaveLength(1);
-  // The meta line says «PDF» (beside the badge) until page 1 answers, never «ملف»;
-  // then «12 صفحة · PDF · 1.2 ميغابايت».
+  // The meta line never says a generic file before page 1 answers.
   expect(screen.queryByText(t.inbox.media.document)).toBeNull();
   expect(screen.getAllByText(t.inbox.pdf.type)).toHaveLength(2);
   await act(async () => answer(pdfPage(1)));

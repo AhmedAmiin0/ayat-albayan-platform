@@ -23,10 +23,7 @@ function FavouriteButton({ message, onClose }: StickerFavouriteProps) {
   );
 }
 
-/**
- * «أضف إلى المفضلة» / «أزل من المفضلة» in a sticker bubble's long-press menu (owner 2026-11-01):
- * kept per staff member; the sticker then heads the panel's «المفضلة». Never in teacher mode.
- */
+/** Kept per staff member; never in teacher mode. */
 export function StickerFavourite({ message, onClose }: StickerFavouriteProps) {
   const teacher = useThreadMode().kind === 'teacher';
   if (teacher || message.hidden || !isStickerMessage(message)) return null;

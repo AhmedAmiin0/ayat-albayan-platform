@@ -10,12 +10,7 @@ import { chatSendError } from '@/inbox/thread/send/send-error';
 /** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
 const RESEND_TEXT = ar.inbox.resend.text;
 
-/**
- * «اطلب إعادة الإرسال» confirmed (owner 2026-10-27): the exact text, then «أرسل» through the chat's
- * normal text send. The clientRequestId is the bubble's (ResendAsk), the same for every opening, and
- * no second tap while it goes: a double tap, a retry after a lost answer or asking again sends it
- * once (the API answers a known id with the first row). The composer's own text is never touched.
- */
+/** One clientRequestId per bubble, so double taps and retries send once. */
 export function ResendSheet({ phone, id, onClose }: { phone: string; id: string; onClose: () => void }) {
   const { color } = useTheme();
   const { say } = useChatActions();

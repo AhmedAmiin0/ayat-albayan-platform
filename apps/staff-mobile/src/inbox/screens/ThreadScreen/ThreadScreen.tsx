@@ -52,20 +52,7 @@ function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; 
     : kindLabel(thread);
 }
 
-/**
- * One WhatsApp conversation (R-MOB-02, R-MSG-05): GET /threads/:phone oldest → newest with each
- * of our rows' status word, «رسايل أقدم» to page back, pull to refresh, and the composer. Offline
- * it shows the saved thread and when it was fetched (R-MOB-03). Opened from a lead or a push.
- * Over the messages: whether the family is subscribed, and the button to subscribe (R-SUB-01).
- * A teacher (R-TCH-03) gets no subscription panel, and her own chat with the academy is read-only.
- * A salesperson (self.sales, docs/16) gets no panel: on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا»
- * (SalesChatMoney, R-ASST-01/04); her header's «⋮» has «تسجيل طالب جديد» first on a lead's chat (owner
- * 2026-10-30) and «تحقق من التسجيل» for this number (students.check_registration). Admin and assistant
- * headers get «القوائم» with inbox.lists (docs/22: the chat's lists; never a teacher's).
- * Room to read (owner 2026-10-18), the same in every tree: a full screen above the tabs (its tree's
- * chat group, owner 2026-10-24: a hidden tab bar still took the bottom touches, react-native-screens#4132),
- * a one-line header, the family's sales actions in one row of pills, and a one-row composer.
- */
+/** R-MOB-02, R-MSG-05, R-MOB-03: teachers get no subscription panel and a read-only own chat. */
 export function ThreadScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -85,7 +72,7 @@ export function ThreadScreen() {
   const students = useHeaderStudents(mode.kind === 'admin' ? (query.data?.pages[0]?.people?.students ?? []) : []);
   const back = () => backWithin(inTree(base, threadBase(mode)));
   return (
-    // «رد» / «إعادة توجيه» (owner 2026-10-25): its state is this chat's; another chat starts clean.
+    // Reply and forward state belongs to this chat; another chat starts clean.
     <ChatActionsProvider key={phone} phone={phone} thread={thread}>
       <Screen chat>
         <ChatHeader
