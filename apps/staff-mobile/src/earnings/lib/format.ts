@@ -4,10 +4,10 @@ import { clockIn } from '@/core/lib/clock';
 import { t, ltr } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
 
-/** Teacher money is EGP. */
+/** An amount in EGP: teacher money is EGP. */
 export const egp = (amount: number): string => `${ltr(formatAmount(amount))} ${t.earnings.currency}`;
 
-/** On the viewer's clock (docs/34). */
+/** The day and time on the viewer's clock (docs/34). */
 export const sessionWhen = (iso: string, cycle: ClockCycle, tz: string): string =>
   `${instantDay(iso, tz)} · ${clockIn(new Date(iso), tz, cycle)}`;
 

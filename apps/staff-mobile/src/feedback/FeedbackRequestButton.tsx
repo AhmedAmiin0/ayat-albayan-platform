@@ -34,11 +34,11 @@ function RequestFor({ lessonId, studentId, name, many, approved }: RequestForPro
 }
 
 /**
- * «ابعت طلب الرأي» on a finished (مكتملة / متأخرة) lesson: one outlined full-width button per student
- * (docs/07 §6: never a shrink-wrapped row), an explicit
- * admin send of the WhatsApp «رأيك يهمّنا» link to that student's guardian (not to one who missed
- * the lesson). Off, with the reason, until WhatsApp approved the template; «اتبعت» once queued; the
- * API's refusals (already answered) show in words.
+ * The feedback-request button on a finished (completed / late) lesson: one outlined full-width
+ * button per student (docs/07 §6: never a shrink-wrapped row), an explicit admin send of the
+ * WhatsApp feedback link to that student's guardian (not to one who missed the lesson). Off, with
+ * the reason, until WhatsApp approved the template; a sent note once queued; the API's refusals
+ * (already answered) show in words.
  */
 export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
   const students = askable(lesson);

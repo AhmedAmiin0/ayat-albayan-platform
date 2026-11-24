@@ -11,7 +11,10 @@ import { PayForm } from '@/earnings/components/PayForm';
 import type { SessionFilter } from '@ab/client-core';
 import { useEarningsBalance } from '@/earnings/hooks/queries';
 
-/** Admin pays the ticked sessions, or everything outstanding. */
+/**
+ * A teacher's earnings (admin: More > teachers > teacher): the balance, the sessions with ticks,
+ * the payments, and the payment form for the ticked sessions (or everything outstanding).
+ */
 export function TeacherEarningsScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const scope = { teacherId: id };

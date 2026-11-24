@@ -7,7 +7,11 @@ import { requestId } from '@/core/lib/http/request-id';
 import type { PayInput } from '@/earnings/lib/pay-draft';
 import { uploadTeacherReceipt } from './upload-receipt';
 
-/** Receipt uploads once; one clientRequestId resent so a lost reply returns the payment. */
+/**
+ * Records a teacher payment: the receipt goes up first (once, a retry after a failed POST does not
+ * upload it again), then the payment with this form's clientRequestId, re-sent until the API
+ * answers: a retry after a lost reply returns the payment already recorded (rule 8).
+ */
 export function usePayTeacher(teacherId: string) {
   const client = useQueryClient();
   const [receiptOnce] = useState(() => uploadOnce<string>());
