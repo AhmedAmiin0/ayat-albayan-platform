@@ -1,4 +1,5 @@
-import type { TemplateLineSync, WaLine } from '@ab/shared';
+import type { TemplateLineSync } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';

@@ -1,4 +1,5 @@
-import { livePackages, salesRenewal, type SalesRenewal } from '@ab/shared';
+import { salesRenewal, type SalesRenewal } from '@ab/shared';
+import { livePackages } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { PackagesService } from '@/modules/finance/subscriptions';
 import { type FamilyStudentRow, SalesMoneySettings } from '@/modules/sales/sales-money/shared';

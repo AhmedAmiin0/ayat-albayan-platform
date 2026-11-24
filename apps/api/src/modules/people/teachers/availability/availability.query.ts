@@ -1,4 +1,5 @@
-import { DAY_MS, freeSlots, type TimeRange } from '@ab/shared';
+import { freeSlots, type TimeRange } from '@ab/schedule';
+import { DAY_MS } from '@ab/time';
 import { Injectable } from '@nestjs/common';
 import { AvailabilityRepo } from './availability.repo';
 export type FreeSlotsQuery = {

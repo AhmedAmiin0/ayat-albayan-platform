@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import type { Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { ownershipOf, type SalesOwnership } from '@/modules/sales/sales/sales-ownership';

@@ -1,4 +1,4 @@
-import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
+import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { pickSend, ThreadMessagesRepo, ThreadsRepo } from '@/modules/messaging/inbox';

@@ -1,4 +1,6 @@
-import { canEditReport, editUntil, SETTING_DEFAULTS, type LessonStudentView } from '@ab/shared';
+import { canEditReport, editUntil } from '@ab/shared';
+import type { LessonStudentView } from '@ab/schedule';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './lesson-row';
 

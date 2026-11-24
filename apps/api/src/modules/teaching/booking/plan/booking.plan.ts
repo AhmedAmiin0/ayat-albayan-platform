@@ -1,4 +1,10 @@
-import { DAY_MS, dayInZone, dayWallToUtc, offsetMs, ruleOccurrences, type Occurrence, type OccurrenceTiming, type UtcWindow } from '@ab/shared';
+import {
+  ruleOccurrences,
+  type Occurrence,
+  type OccurrenceTiming,
+  type UtcWindow,
+} from '@ab/schedule';
+import { DAY_MS, dayInZone, dayWallToUtc, offsetMs } from '@ab/time';
 import type { BookingRequest } from '@ab/shared';
 export type PlanRule = Pick<
   BookingRequest,

@@ -1,4 +1,5 @@
-import { followUpKey, type LessonStatus } from '@ab/shared';
+import { followUpKey } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { dropReason, staleReason, type StaleInput, type StaleLead } from './send-stale';
 

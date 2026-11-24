@@ -4,10 +4,9 @@ import {
   followUpKeyCycle,
   isLessonTimed,
   messageExpired,
-  type LeadStatus,
-  type LessonStatus,
   type TemplateKey,
 } from '@ab/shared';
+import type { LeadStatus, LessonStatus } from '@ab/catalog';
 import { REMINDER_KEYS } from '@/modules/messaging/reminders/reminders.repo';
 import { isStaffAlert, staffStale, type StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reachable';
 

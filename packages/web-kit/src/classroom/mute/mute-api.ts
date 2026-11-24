@@ -1,5 +1,5 @@
 import { lessonMutePath } from '@ab/client-core';
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 import { apiSend } from '@ab/web-kit/lib/http/api';
 import {
   recordingSourceOf,

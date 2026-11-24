@@ -1,4 +1,5 @@
-import type { BookingRequest, Conflict } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 

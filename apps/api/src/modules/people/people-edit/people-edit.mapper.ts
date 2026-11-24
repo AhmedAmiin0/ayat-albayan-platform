@@ -1,5 +1,6 @@
 import type { Json, TablesInsert } from '@ab/db';
-import { normalizeArabic, type PeopleEditView } from '@ab/shared';
+import type { PeopleEditView } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import type { GuardianRow, ViewRow } from './people-edit.repo';
 
 type Family = NonNullable<ViewRow['guardian']>;

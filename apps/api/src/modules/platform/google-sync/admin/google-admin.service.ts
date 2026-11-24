@@ -1,4 +1,4 @@
-import type { GoogleDriveInput, GoogleSettingsInput } from '@ab/shared';
+import type { GoogleDriveInput, GoogleSettingsInput } from '@ab/catalog';
 import { ConflictException, Injectable } from '@nestjs/common';
 import type { Json } from '@ab/db';
 import { classify } from '@/modules/platform/google-sync/http/backoff';

@@ -1,5 +1,6 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import { normalizeArabic, type StudentUpdate } from '@ab/shared';
+import type { StudentUpdate } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { orSafe } from '@/modules/people/guardians/http';
 import type { StudentCreateRequest } from './students.dto';
 

@@ -1,4 +1,4 @@
-import { looksLikeFamilyToken } from '@ab/shared';
+import { looksLikeFamilyToken } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { signPair } from '@/common/http/pair-token';
 import {

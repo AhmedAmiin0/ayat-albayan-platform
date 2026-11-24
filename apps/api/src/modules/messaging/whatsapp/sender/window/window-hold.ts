@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import {
   MessageDispatch,

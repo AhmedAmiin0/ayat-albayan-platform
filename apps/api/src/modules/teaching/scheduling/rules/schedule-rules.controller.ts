@@ -1,4 +1,4 @@
-import { ruleExtendRequestSchema } from '@ab/shared';
+import { ruleExtendRequestSchema } from '@ab/schedule';
 import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

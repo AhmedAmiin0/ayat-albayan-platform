@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Logger } from '@nestjs/common';
 import { connectionsOpened } from '@/common/infra/http/connections';
 import type { SendOutcome } from '@/modules/messaging/whatsapp/sender/message.job';

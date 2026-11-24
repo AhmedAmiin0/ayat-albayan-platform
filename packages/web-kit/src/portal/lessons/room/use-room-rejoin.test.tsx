@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { act, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ClassroomRoomProps } from '@ab/web-kit/classroom/room/components/ClassroomRoom';

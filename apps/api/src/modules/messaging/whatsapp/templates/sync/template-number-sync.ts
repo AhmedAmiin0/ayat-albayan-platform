@@ -1,4 +1,5 @@
-import type { TemplateNumberSyncView, WaProvider } from '@ab/shared';
+import type { TemplateNumberSyncView } from '@ab/shared';
+import type { WaProvider } from '@ab/catalog';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { WhatsappEnv } from '@/config/env/env';
 import { readError, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';

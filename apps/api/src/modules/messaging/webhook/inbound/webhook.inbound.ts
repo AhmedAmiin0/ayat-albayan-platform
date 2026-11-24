@@ -5,9 +5,9 @@ import {
   ratingOfIntent,
   ratingOfText,
   type LessonRating,
-  type PushKind,
   type QuickReplyIntent,
 } from '@ab/shared';
+import type { PushKind } from '@ab/catalog';
 import { ar } from '@/common/infra/i18n/server-text';
 import { z } from 'zod';
 import type { PushEvent } from '@/common/push/push.service';

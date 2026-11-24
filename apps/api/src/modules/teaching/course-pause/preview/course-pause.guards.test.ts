@@ -1,4 +1,4 @@
-import { addDays, riyadhToday } from '@ab/shared';
+import { addDays, riyadhToday } from '@ab/time';
 import { describe, expect, it, vi } from 'vitest';
 import { assertPauseDates, assertStudent } from './course-pause.guards';
 

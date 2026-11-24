@@ -1,4 +1,4 @@
-import type { SubscriptionView } from '@ab/shared';
+import type { SubscriptionView } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { toCardPackage } from './course-card.mapper';
 

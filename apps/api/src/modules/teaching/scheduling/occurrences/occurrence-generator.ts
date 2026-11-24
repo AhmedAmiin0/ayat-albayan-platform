@@ -1,8 +1,8 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import { horizonWindow, ruleOccurrences } from '@ab/shared';
+import { horizonWindow, ruleOccurrences } from '@ab/schedule';
 import { LessonWriter, type GeneratedLesson } from './lesson-writer';
 import { resolveMeetingLink } from '@/modules/teaching/scheduling/meeting-link';
 import { ruleStudents, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';

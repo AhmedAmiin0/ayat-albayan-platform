@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import type { DueMessage } from './sender.due';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';

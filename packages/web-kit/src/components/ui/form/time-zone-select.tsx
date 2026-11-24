@@ -1,4 +1,4 @@
-import { tzChoices, tzOptionLabel } from '@ab/shared';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import type { ComponentProps } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Select } from './select';

@@ -1,4 +1,4 @@
-import { riyadhToday } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { Injectable, Logger } from '@nestjs/common';
 import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';

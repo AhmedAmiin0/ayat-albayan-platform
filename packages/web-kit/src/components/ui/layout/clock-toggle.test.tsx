@@ -1,4 +1,4 @@
-import { CLOCK_STORAGE_KEY } from '@ab/shared';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { clockCycle, setClockPref } from '@ab/web-kit/lib/clock';

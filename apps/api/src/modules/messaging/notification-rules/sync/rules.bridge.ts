@@ -1,4 +1,5 @@
-import { RULE_SETTING_KEYS, notificationEntry, resolveRule, type AcademySettings, type RuleSettings } from '@ab/shared';
+import { RULE_SETTING_KEYS, notificationEntry, resolveRule, type RuleSettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { SettingsRulesPort } from '@/common/settings/settings-rules.port';
 import type { AuthUser } from '@/common/auth/verify-token';

@@ -1,11 +1,11 @@
+import type { FamilyRequestView } from '@ab/shared';
 import {
   proposalApproveSchema,
   proposalRejectSchema,
-  type FamilyRequestView,
   type LessonView,
   type ProposalApprove,
   type ProposalReject,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

@@ -3,7 +3,7 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
 import { AvailabilityRepo } from './availability.repo';
-import { allDayRows } from '@ab/shared';
+import { allDayRows } from '@ab/schedule';
 
 const ROW = { id: 'a1', weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: 'Africa/Cairo' };
 const setup = (on: boolean) => {

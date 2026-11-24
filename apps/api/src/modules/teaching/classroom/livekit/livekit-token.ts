@@ -1,5 +1,5 @@
 import { createHmac, randomBytes } from 'node:crypto';
-import { participantMeta, type JoinRole } from '@ab/shared';
+import { participantMeta, type JoinRole } from '@ab/schedule';
 import type { LivekitEnv } from '@/config/env/env';
 
 // LiveKit join tokens are plain HS256 JWTs (tools/livekit/token-server.mjs is the reference), so

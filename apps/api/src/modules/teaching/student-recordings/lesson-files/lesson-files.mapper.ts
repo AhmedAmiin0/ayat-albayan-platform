@@ -1,14 +1,16 @@
 import {
-  durationSeconds,
   lessonFileMediaOf,
-  mediaOfPath,
   portalLessonFileSchema,
-  STUDENT_RECORDING_STATUSES,
   type LessonAssetRecording,
   type LessonFileView,
   type PortalLessonFile,
-  type StudentRecordingStatus,
 } from '@ab/shared';
+import {
+  durationSeconds,
+  mediaOfPath,
+  STUDENT_RECORDING_STATUSES,
+  type StudentRecordingStatus,
+} from '@ab/schedule';
 import { uploadName } from '@/common/storage/storage.paths';
 import type { AssetRecordingRow, AssetReportRow, AssetStudent } from './lesson-assets.repo';
 import type { LessonFileRow } from './lesson-files.repo';

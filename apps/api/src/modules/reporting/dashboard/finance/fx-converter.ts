@@ -1,4 +1,4 @@
-import type { FxRate } from '@ab/shared';
+import type { FxRate } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { FxService } from '@/modules/finance/fx/fx.service';
 import { errorCode } from '@/common/http/errors';

@@ -1,5 +1,7 @@
-import { bookingKindOf, registrationStatus, type BookingKind, type BookingRequest, type Conflict, type LeadStatus, type PackageSize } from '@ab/shared';
-import type { Occurrence } from '@ab/shared';
+import { registrationStatus, type BookingRequest } from '@ab/shared';
+import type { LeadStatus, PackageSize } from '@ab/catalog';
+import { bookingKindOf, type BookingKind, type Conflict } from '@ab/schedule';
+import type { Occurrence } from '@ab/schedule';
 import {
   leadTarget,
   lessonRows,

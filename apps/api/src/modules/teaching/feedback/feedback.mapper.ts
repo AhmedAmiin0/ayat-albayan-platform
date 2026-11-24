@@ -1,11 +1,11 @@
 import type {
   FeedbackFormView,
-  FeedbackRating,
   FeedbackRowView,
   FeedbackSubmit,
   TeacherFeedbackRowView,
   TeacherFeedbackSummary,
 } from '@ab/shared';
+import type { FeedbackRating } from '@ab/catalog';
 import type { Answer, PublicContext } from './feedback.repo';
 import type { AverageRow, FeedbackListRow } from './read/feedback.read.repo';
 

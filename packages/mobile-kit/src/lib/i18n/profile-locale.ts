@@ -1,5 +1,5 @@
 import { meLocaleSend } from '@ab/client-core';
-import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/shared';
+import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 import { accessToken } from '../http/access-token';

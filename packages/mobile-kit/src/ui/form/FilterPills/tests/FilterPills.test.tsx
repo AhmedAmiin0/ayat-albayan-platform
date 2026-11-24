@@ -1,4 +1,4 @@
-import { leadStatusStyle } from '@ab/shared';
+import { leadStatusStyle } from '@ab/money';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '../../../../lib/i18n/i18n';
 import { palette } from '../../../../theme';

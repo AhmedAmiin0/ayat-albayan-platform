@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { closingOf } from '@ab/web-kit/classroom/closing/closing-kinds';
 import { RoomClosing, type RejoinState } from '@ab/web-kit/classroom/closing/RoomClosing';
 import { DeviceCheck } from '@ab/web-kit/classroom/entry/DeviceCheck';

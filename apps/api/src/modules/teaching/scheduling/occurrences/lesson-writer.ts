@@ -1,4 +1,4 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';

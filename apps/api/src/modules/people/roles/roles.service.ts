@@ -1,4 +1,4 @@
-import type { RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/shared';
+import type { RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { PermissionCache } from '@/common/auth/permission.cache';

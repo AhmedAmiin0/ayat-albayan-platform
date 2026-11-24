@@ -1,4 +1,4 @@
-import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/shared';
+import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/schedule';
 import { BadGatewayException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

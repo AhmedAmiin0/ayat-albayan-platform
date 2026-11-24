@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { JOIN_ROLES, type JoinRole } from '@ab/shared';
+import { JOIN_ROLES, type JoinRole } from '@ab/schedule';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { hashLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 

@@ -1,4 +1,5 @@
-import { meetingModeOf, reminderDue, usesPlatform, type JoinWindowConfig } from '@ab/shared';
+import { reminderDue } from '@ab/shared';
+import { meetingModeOf, usesPlatform, type JoinWindowConfig } from '@ab/schedule';
 import { linkExpiry } from '@/modules/teaching/classroom/join/join-link.token';
 import { isOpen, type ReminderLesson } from './reminders.plan';
 

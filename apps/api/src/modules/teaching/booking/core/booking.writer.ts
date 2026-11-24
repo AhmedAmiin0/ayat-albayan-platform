@@ -1,4 +1,5 @@
-import type { BookingRequest, BookingResult } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import type { BookingResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { BookingFollowUps } from './booking.follow-ups';
 import { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';

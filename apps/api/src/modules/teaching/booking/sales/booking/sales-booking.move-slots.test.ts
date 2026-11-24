@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { errorCode } from '@/common/http/errors';

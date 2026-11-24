@@ -1,4 +1,5 @@
-import { ACCOUNT_CODE_TEMPLATE, isHiddenPayload, type NumberPurpose, waIdToE164 } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE, isHiddenPayload, waIdToE164 } from '@ab/shared';
+import type { NumberPurpose } from '@ab/catalog';
 import { Injectable } from '@nestjs/common';
 import { orderedAt } from '@/modules/messaging/webhook/inbound/webhook.inbound';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';

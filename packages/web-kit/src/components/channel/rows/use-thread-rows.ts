@@ -1,5 +1,6 @@
 import { channelRows, threadMessages, unreadBand, type ChannelRow } from '@ab/client-core';
-import { atOrAfter, chatDayKey, type ChannelMessageView, type ChannelPage } from '@ab/shared';
+import { atOrAfter, type ChannelMessageView, type ChannelPage } from '@ab/shared';
+import { chatDayKey } from '@ab/time';
 import { useState } from 'react';
 import { dayChipText } from './day-text';
 

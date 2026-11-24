@@ -1,5 +1,6 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import { normalizePhone, searchDigits, type GuardianCreate, type GuardianUpdate } from '@ab/shared';
+import type { GuardianCreate, GuardianUpdate } from '@ab/shared';
+import { normalizePhone, searchDigits } from '@ab/core';
 import { orSafe } from './http';
 
 /** Country inferred from the E.164 number when the admin left it empty (R-STU-02). */

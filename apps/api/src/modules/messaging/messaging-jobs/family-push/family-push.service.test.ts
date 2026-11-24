@@ -1,4 +1,4 @@
-import { joinWindowConfig } from '@ab/shared';
+import { joinWindowConfig } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { fakeExpo, fakePushDb, flushPushes, pushService } from '@/common/push/push.fakes';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';

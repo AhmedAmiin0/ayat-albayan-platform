@@ -2,13 +2,11 @@ import type { TablesInsert } from '@ab/db';
 import {
   BODY_SLOTS,
   RESTRICTED_TEMPLATE_DEFAULTS,
-  TEMPLATE_CATEGORIES,
   TEMPLATE_KEY_PATTERN,
-  type TemplateCategory,
   type TemplateSkip,
   type TemplateSkipReason,
-  type WaLine,
 } from '@ab/shared';
+import { TEMPLATE_CATEGORIES, type TemplateCategory, type WaLine } from '@ab/catalog';
 import { components, metaButtons, ourStatus, type Component } from './template-sync';
 import { metaDisplay } from './template-display';
 import { wabaNames } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';

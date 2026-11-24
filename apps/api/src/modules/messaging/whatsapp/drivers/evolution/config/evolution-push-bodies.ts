@@ -1,4 +1,5 @@
-import type { EvolutionConfig, EvolutionMode } from '@ab/shared';
+import type { EvolutionConfig } from '@ab/shared';
+import type { EvolutionMode } from '@ab/catalog';
 import { z } from 'zod';
 
 // What the API pushes to Evolution API v2 for one number (owner 2026-11-06, docs/19 «Evolution

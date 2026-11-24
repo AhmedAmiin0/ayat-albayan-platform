@@ -1,4 +1,5 @@
-import type { AcademySettings, LessonTimeEdit } from '@ab/shared';
+import type { LessonTimeEdit } from '@ab/schedule';
+import type { AcademySettings } from '@ab/settings';
 import { vi } from 'vitest';
 import type { TimeEditChange } from '@/modules/teaching/scheduling/change-set';
 import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';

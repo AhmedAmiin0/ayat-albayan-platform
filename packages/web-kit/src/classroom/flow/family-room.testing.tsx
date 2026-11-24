@@ -1,5 +1,5 @@
 // Test helper (test-only): the family variant of the room over a fake client.
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import { ClassroomRoom, type ClassroomRoomProps } from '@ab/web-kit/classroom/room/components/ClassroomRoom';

@@ -1,4 +1,4 @@
-import { googleDriveSchema, googleSettingsSchema, type GoogleStatusView } from '@ab/shared';
+import { googleDriveSchema, googleSettingsSchema, type GoogleStatusView } from '@ab/catalog';
 import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

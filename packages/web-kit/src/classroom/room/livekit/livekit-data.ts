@@ -1,4 +1,4 @@
-import { roleOfMeta } from '@ab/shared';
+import { roleOfMeta } from '@ab/schedule';
 import { RoomEvent, type Room } from 'livekit-client';
 import type { DataPacketIn, DataSendOptions } from '@ab/web-kit/classroom/room/components/room-types';
 

@@ -1,5 +1,6 @@
 // Test-only fakes for the booking module: one in-memory academy, every DB touch a vi.fn.
-import { bookingRequestSchema, type AcademySettings, type BookingRequest } from '@ab/shared';
+import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { vi } from 'vitest';
 import type { BusyRepo } from '@/modules/teaching/scheduling/conflicts/busy.repo';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';

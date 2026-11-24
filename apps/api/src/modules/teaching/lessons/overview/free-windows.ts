@@ -1,4 +1,13 @@
-import { DURATIONS, MINUTE_MS, expandRow, type TimeRange, type WeeklyRow, mergeIntervals, subtractIntervals, type Interval } from '@ab/shared';
+import { DURATIONS } from '@ab/catalog';
+import {
+  expandRow,
+  type TimeRange,
+  type WeeklyRow,
+  mergeIntervals,
+  subtractIntervals,
+  type Interval,
+} from '@ab/schedule';
+import { MINUTE_MS } from '@ab/time';
 /** The shortest lesson: a shorter gap can never be booked, so it is not shown as free. */
 const MIN_GAP = Math.min(...DURATIONS) * MINUTE_MS;
 

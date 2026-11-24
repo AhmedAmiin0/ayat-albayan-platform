@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { enforcesOwnership } from './sales-ownership-rule';

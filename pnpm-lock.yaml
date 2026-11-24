@@ -934,12 +934,27 @@ importers:
 
   packages/mobile-kit:
     dependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../catalog
       '@ab/client-core':
         specifier: workspace:*
         version: link:../client-core
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../core
       '@ab/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@ab/money':
+        specifier: workspace:*
+        version: link:../money
+      '@ab/schedule':
+        specifier: workspace:*
+        version: link:../schedule
+      '@ab/settings':
+        specifier: workspace:*
+        version: link:../settings
       '@ab/shared':
         specifier: workspace:*
         version: link:../shared
@@ -1231,15 +1246,33 @@ importers:
 
   packages/web-kit:
     dependencies:
+      '@ab/catalog':
+        specifier: workspace:*
+        version: link:../catalog
       '@ab/client-core':
         specifier: workspace:*
         version: link:../client-core
+      '@ab/core':
+        specifier: workspace:*
+        version: link:../core
       '@ab/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@ab/money':
+        specifier: workspace:*
+        version: link:../money
+      '@ab/schedule':
+        specifier: workspace:*
+        version: link:../schedule
+      '@ab/settings':
+        specifier: workspace:*
+        version: link:../settings
       '@ab/shared':
         specifier: workspace:*
         version: link:../shared
+      '@ab/time':
+        specifier: workspace:*
+        version: link:../time
       '@fontsource/noto-sans-arabic':
         specifier: ^5.3.0
         version: 5.3.0

@@ -1,5 +1,6 @@
 import { cardRoom } from '@ab/client-core';
-import type { PortalLesson, PortalStudent, RoomJoinResult } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { useState } from 'react';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { t } from '@ab/web-kit/lib/i18n/i18n';

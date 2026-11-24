@@ -1,4 +1,10 @@
-import { DURATIONS, type PackageSize, type PaymentKind, type PaymentMethod, type PayoutStatus } from '@ab/shared';
+import {
+  DURATIONS,
+  type PackageSize,
+  type PaymentKind,
+  type PaymentMethod,
+  type PayoutStatus,
+} from '@ab/catalog';
 import type { Json } from '@ab/db';
 import { ar } from '@/common/infra/i18n/server-text';
 import { riyadhStamp, safeText, type Cell } from './csv';

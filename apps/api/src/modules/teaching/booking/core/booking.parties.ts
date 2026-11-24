@@ -1,4 +1,5 @@
-import { normalizeArabic, type BookingRequest } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import { normalizeArabic } from '@ab/core';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { detectDuplicates } from '@/modules/people/students/duplicate-detector';
 import { domainError } from '@/modules/teaching/booking/booking.errors';

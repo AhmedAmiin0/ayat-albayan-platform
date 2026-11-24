@@ -1,4 +1,9 @@
-import { DEFAULT_MEETING_DURATION, MEETING_MAX_AHEAD_DAYS, plannedEnd, scheduleProblem } from '@ab/shared';
+import {
+  DEFAULT_MEETING_DURATION,
+  MEETING_MAX_AHEAD_DAYS,
+  plannedEnd,
+  scheduleProblem,
+} from '@ab/schedule';
 import { BadRequestException } from '@nestjs/common';
 
 // R-MEET-01: a scheduled meeting starts in the future, at most 90 days ahead, and lasts 15..240

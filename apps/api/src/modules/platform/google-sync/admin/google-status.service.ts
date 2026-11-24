@@ -1,4 +1,4 @@
-import { GOOGLE_SCOPES, type GoogleStatusView } from '@ab/shared';
+import { GOOGLE_SCOPES, type GoogleStatusView } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { googleRedirectUri, loadEnv } from '@/config/env/env';
 import { readDiscovery } from '@/modules/platform/google-sync/map/discovery';

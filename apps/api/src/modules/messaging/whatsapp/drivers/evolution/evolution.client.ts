@@ -1,4 +1,4 @@
-import type { EvolutionMode } from '@ab/shared';
+import type { EvolutionMode } from '@ab/catalog';
 import { recipientAllowed, type EvolutionLineEnv } from '@/config/env/env';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { documentHeader } from '@/modules/messaging/whatsapp/messages/wa-components';

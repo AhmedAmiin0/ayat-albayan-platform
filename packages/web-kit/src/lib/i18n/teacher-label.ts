@@ -1,4 +1,4 @@
-import { teacherName } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { locale } from './locale';
 
 /** A teacher's name in the UI language (English name when the English UI has one). */

@@ -1,5 +1,11 @@
-import { OCCUPYING_LESSON_STATUSES, type LessonView, type OverviewTeacher, type ScheduleOverview, type Span } from '@ab/shared';
-import type { Interval } from '@ab/shared';
+import {
+  OCCUPYING_LESSON_STATUSES,
+  type LessonView,
+  type OverviewTeacher,
+  type ScheduleOverview,
+  type Span,
+} from '@ab/schedule';
+import type { Interval } from '@ab/schedule';
 import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { teacherSpans } from './free-windows';
 import type { OverviewCarryRow, OverviewSlotRow, OverviewTeacherRow, OverviewTimeOffRow } from './overview.repo';

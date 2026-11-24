@@ -5,7 +5,7 @@ import {
   engineTimeZone,
   zonedFieldsIn,
   type DateFields,
-} from '@ab/shared';
+} from '@ab/time';
 import { locale } from './i18n/locale';
 import type { Clock } from './clock';
 

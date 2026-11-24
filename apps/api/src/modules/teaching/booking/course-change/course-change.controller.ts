@@ -1,11 +1,5 @@
-import {
-  courseChangeCheckSchema,
-  courseChangeQuerySchema,
-  courseChangeSchema,
-  type CourseChangeCheck,
-  type CourseChangeResult,
-  type CourseChangeView,
-} from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult, CourseChangeView } from '@ab/shared';
+import { courseChangeCheckSchema, courseChangeQuerySchema, courseChangeSchema } from '@ab/schedule';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

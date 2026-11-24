@@ -5,9 +5,9 @@ import {
   lessonWhenText,
   localDayStart,
   reminderDue,
-  RIYADH_TZ,
-  type LessonStatus,
 } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { RIYADH_TZ } from '@ab/time';
 import type { PushEvent } from '@/common/push/push.service';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { StaffOnRecord } from './staff-reachable';

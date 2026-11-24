@@ -1,5 +1,6 @@
 import type { TablesUpdate } from '@ab/db';
-import { quickReplyIntent, type TemplateButton, type TemplateStatus } from '@ab/shared';
+import { quickReplyIntent, type TemplateButton } from '@ab/shared';
+import type { TemplateStatus } from '@ab/catalog';
 import { z } from 'zod';
 import { templateButtons } from '@/modules/messaging/whatsapp/messages/wa-json';
 import { metaDisplay } from './template-display';

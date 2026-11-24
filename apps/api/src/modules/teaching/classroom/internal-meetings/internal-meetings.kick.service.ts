@@ -1,4 +1,4 @@
-import { canRemove, meetingRoomName } from '@ab/shared';
+import { canRemove, meetingRoomName } from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

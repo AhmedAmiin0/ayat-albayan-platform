@@ -8,8 +8,8 @@ import {
   type PortalPackageView,
   type PortalReports,
   type PortalRoomLink,
-  type RoomJoinResult,
 } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { Controller, Get, HttpCode, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';

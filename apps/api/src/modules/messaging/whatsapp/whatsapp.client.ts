@@ -1,4 +1,4 @@
-import { WA_ERROR } from '@ab/shared';
+import { WA_ERROR } from '@ab/catalog';
 import { recipientAllowed, type GraphEnv } from '@/config/env/env';
 import { z } from 'zod';
 import type { Http } from '@/common/infra/http/http.types';

@@ -1,4 +1,4 @@
-import type { JoinLinkUrl } from '@ab/shared';
+import type { JoinLinkUrl } from '@ab/schedule';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

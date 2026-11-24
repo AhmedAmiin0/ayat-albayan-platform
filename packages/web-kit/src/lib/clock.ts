@@ -1,3 +1,4 @@
+import type { Locale } from '@ab/core';
 import {
   CLOCK_STORAGE_KEY,
   engineHourCycle,
@@ -6,8 +7,7 @@ import {
   uses24FromHourCycle,
   type ClockCycle,
   type ClockPref,
-  type Locale,
-} from '@ab/shared';
+} from '@ab/time';
 import { useMemo, useSyncExternalStore } from 'react';
 import { locale } from './i18n/locale';
 

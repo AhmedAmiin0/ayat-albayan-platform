@@ -1,4 +1,4 @@
-import { onMessagingLine, type WaLine } from '@ab/shared';
+import { onMessagingLine, type WaLine } from '@ab/catalog';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reachable';

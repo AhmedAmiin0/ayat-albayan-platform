@@ -1,4 +1,4 @@
-import type { WaProvider } from '@ab/shared';
+import type { WaProvider } from '@ab/catalog';
 import { isGraphEnv, type WhatsappEnv } from '@/config/env/env';
 import { CrmWhatsappClient } from './drivers/crm/crm.client';
 import { EvolutionWhatsappClient } from './drivers/evolution/evolution.client';

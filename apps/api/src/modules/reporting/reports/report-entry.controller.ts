@@ -7,7 +7,7 @@ import { pageQuerySchema, parseOrThrow } from '@/common/http/http';
 import { ReportHistoryService } from '@/modules/reporting/reports/history/report-history.service';
 import { ReportsService } from '@/modules/reporting/reports/shared/reports.service';
 import { TeacherReportsService } from '@/modules/reporting/reports/teacher/teacher-reports.service';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 /** docs/11 §4 R1, R5, R11: the static teachers/me segment wins over teachers/:id. */
 @ApiTags('reports')

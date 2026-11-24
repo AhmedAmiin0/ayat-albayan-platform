@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { INVOICE_MIMES, PLAYABLE_MAX_BYTES, PLAYABLE_MIMES } from '@ab/shared';
+import { PLAYABLE_MAX_BYTES, PLAYABLE_MIMES } from '@ab/shared';
+import { INVOICE_MIMES } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 

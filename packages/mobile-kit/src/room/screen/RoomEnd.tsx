@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { AlertIcon, RemoveIcon } from '../live/room-icons';
 import type { ClosedWhy, RoomPhase } from '../model/room-phase';

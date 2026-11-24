@@ -1,4 +1,13 @@
-import { addLocalDays, courseDaysPerWeek, type BookedCourse, courseLessonCount, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import {
+  courseDaysPerWeek,
+  type BookedCourse,
+  courseLessonCount,
+  type BookingRequest,
+  type CourseSubscription,
+  type SalesCourseView,
+} from '@ab/shared';
+import { wallParts } from '@ab/schedule';
+import { addLocalDays } from '@ab/time';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';

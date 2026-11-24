@@ -1,4 +1,6 @@
-import { gradeStyle, REPORT_RUBRICS, type Grade } from '@ab/shared';
+import { REPORT_RUBRICS } from '@ab/shared';
+import type { Grade } from '@ab/catalog';
+import { gradeStyle } from '@ab/money';
 import type { ReportPdfModel } from '@/modules/reporting/report-pdf/render/pdf-model';
 import { AR, EMPTY, esc } from '@/modules/reporting/report-pdf/render/pdf-text';
 

@@ -1,4 +1,4 @@
-import { avatarTones } from '@ab/shared';
+import { avatarTones } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import css from './avatar-tones.css?raw';
 

@@ -1,4 +1,4 @@
-import { CHAT_TOPIC, type RoomJoinResult } from '@ab/shared';
+import { CHAT_TOPIC, type RoomJoinResult } from '@ab/schedule';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { fakeClient } from './fake-client';

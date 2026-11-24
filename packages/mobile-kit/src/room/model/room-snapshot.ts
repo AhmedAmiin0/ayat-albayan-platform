@@ -1,4 +1,4 @@
-import { roleOfMeta } from '@ab/shared';
+import { roleOfMeta } from '@ab/schedule';
 import type { RoomSnapshot, RoomStatus, RoomTile } from './room-types';
 
 // The few LiveKit shapes the grid reads, structurally (livekit-client is loaded lazily, docs/35):

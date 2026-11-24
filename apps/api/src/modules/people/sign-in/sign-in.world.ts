@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { Provisioner } from './accounts/provision';
 import { StudentLogins } from './accounts/student-login';
 import { CodeIssuer } from './codes/code-issuer';

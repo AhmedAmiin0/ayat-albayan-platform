@@ -1,4 +1,6 @@
-import { isWaLine, normalizePhone, type LineCheckView, type LineHealthView } from '@ab/shared';
+import type { LineCheckView, LineHealthView } from '@ab/shared';
+import { isWaLine } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { lineNumbers, loadEnv } from '@/config/env/env';

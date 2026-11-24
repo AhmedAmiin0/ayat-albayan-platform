@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
 import { applyStrings, type FlatStrings } from '@ab/i18n';
 
 // Dynamic translations at boot: GET /i18n/:locale/overrides (public, ETag) is merged into `t`

@@ -1,4 +1,5 @@
-import { mayInvitePhones, systemPermissionsOf, type MeetingInviteeView } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
+import { mayInvitePhones, type MeetingInviteeView } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { assertCanSend, TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';

@@ -1,4 +1,5 @@
-import { isWaPaymentHold, WA_ERROR, type WaLine } from '@ab/shared';
+import { isWaPaymentHold } from '@ab/shared';
+import { WA_ERROR, type WaLine } from '@ab/catalog';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 import type { FailurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';

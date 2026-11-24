@@ -1,4 +1,4 @@
-import { systemPermissionsOf, type Permission } from '@ab/shared';
+import { systemPermissionsOf, type Permission } from '@ab/catalog';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';

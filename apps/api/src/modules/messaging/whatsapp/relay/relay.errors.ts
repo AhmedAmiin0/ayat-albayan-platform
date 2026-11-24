@@ -1,4 +1,5 @@
-import { isWaAuthFailure, WA_ERROR } from '@ab/shared';
+import { isWaAuthFailure } from '@ab/shared';
+import { WA_ERROR } from '@ab/catalog';
 import { HttpException } from '@nestjs/common';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 

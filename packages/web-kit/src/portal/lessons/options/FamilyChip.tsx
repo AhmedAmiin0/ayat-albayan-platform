@@ -1,5 +1,6 @@
 import { requestChip, type RequestChip } from '@ab/client-core';
-import type { PortalLesson, Tone } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
+import type { Tone } from '@ab/money';
 import { StatusMark } from '@ab/web-kit/components/ui/surface/status-mark';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';

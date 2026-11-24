@@ -1,4 +1,4 @@
-import type { GoogleDiscoveryView, GoogleFound } from '@ab/shared';
+import type { GoogleDiscoveryView, GoogleFound } from '@ab/catalog';
 import { z } from 'zod';
 import type { GoogleClient } from '@/modules/platform/google-sync/google-client.port';
 import { DRIVE, MIME } from '@/modules/platform/google-sync/google-format';

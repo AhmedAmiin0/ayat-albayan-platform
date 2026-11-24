@@ -1,4 +1,4 @@
-import { looksLikeFamilyToken, roomNameOfStudent } from '@ab/shared';
+import { looksLikeFamilyToken, roomNameOfStudent } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClassroomRepo, type JoinLinkRow } from '@/modules/teaching/classroom/classroom.repo';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';

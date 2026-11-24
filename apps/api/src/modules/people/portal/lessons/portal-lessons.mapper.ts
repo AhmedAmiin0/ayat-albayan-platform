@@ -1,12 +1,11 @@
+import type { PortalLesson, PortalWayIn } from '@ab/shared';
 import {
   isOpenLesson,
   joinWindow,
   meetingModeOf,
   usesPlatform,
   type JoinWindowConfig,
-  type PortalLesson,
-  type PortalWayIn,
-} from '@ab/shared';
+} from '@ab/schedule';
 import type { PortalLessonRow } from './portal-lessons.repo';
 
 interface WayContext {

@@ -9,8 +9,8 @@ import {
   type SalesReceiptUpload,
   type SalesSubscriptionCreate,
   type SignedUpload,
-  type SubscriptionView,
 } from '@ab/shared';
+import type { SubscriptionView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict } from '@/common/http/errors';

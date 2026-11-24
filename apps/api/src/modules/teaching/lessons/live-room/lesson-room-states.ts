@@ -1,4 +1,4 @@
-import type { LessonRoomState } from '@ab/shared';
+import type { LessonRoomState } from '@ab/schedule';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { RoomInsideRepo } from './room-inside.repo';
 import { roomStateOf, type Named } from './room-state.mapper';

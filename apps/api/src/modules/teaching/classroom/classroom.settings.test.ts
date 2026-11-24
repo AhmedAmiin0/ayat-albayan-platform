@@ -1,4 +1,5 @@
-import { joinWindowConfig, SETTING_DEFAULTS } from '@ab/shared';
+import { joinWindowConfig } from '@ab/schedule';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ClassroomSettings } from './classroom.settings';

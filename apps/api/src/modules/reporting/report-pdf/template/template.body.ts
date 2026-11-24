@@ -1,4 +1,4 @@
-import { packageProgress } from '@ab/shared';
+import { packageProgress } from '@ab/money';
 import type { ReportPdfModel } from '@/modules/reporting/report-pdf/render/pdf-model';
 import { AR, esc, ltr, para, stamp } from '@/modules/reporting/report-pdf/render/pdf-text';
 import { ornament } from './template.header';

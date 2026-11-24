@@ -1,4 +1,5 @@
-import { LEAD_STATUSES, listSortShape, type LeadStatus, type ListSort } from '@ab/shared';
+import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
+import { listSortShape, type ListSort } from '@ab/core';
 import { z } from 'zod';
 import type { SortSpec } from '@/common/db/list-sort';
 import type { Db } from '@/common/db/db.module';

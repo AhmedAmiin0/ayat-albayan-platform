@@ -1,4 +1,4 @@
-import type { ProposalRequester } from '@ab/shared';
+import type { ProposalRequester } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
