@@ -42,7 +42,7 @@ export function useRoom(
   const [failure, setFailure] = useState<string | null>(null);
   const data = useRef(new Set<(packet: DataPacketIn) => void>());
   const moderated = useRef(new Set<(e: ModeratedEvent) => void>());
-  // A trial lesson has no text chat (owner, 2026-10-11): chat-topic data is neither delivered nor sent.
+  // A trial lesson has no text chat: chat-topic data is neither delivered nor sent.
   const chat = chatOpen(join);
 
   useEffect(() => {

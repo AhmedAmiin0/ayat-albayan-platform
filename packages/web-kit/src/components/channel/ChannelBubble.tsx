@@ -23,7 +23,7 @@ interface Props {
   arrived?: boolean;
 }
 
-/** Mine at the inline end (owner 2026-10-27, «like whatsapp»), the others' at the start. */
+/** Mine at the inline end (as in WhatsApp), the others' at the start. */
 const rowClass = (mine: boolean, arrived: boolean): string =>
   cn(
     'group flex scroll-my-24 items-start gap-1',

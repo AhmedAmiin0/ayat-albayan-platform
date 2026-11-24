@@ -2,7 +2,7 @@ import { Mark } from '@ab/web-kit/components/ui/display/mark';
 import type { LegalDocumentProps } from './LegalDocument.types';
 
 /**
- * A public legal page (privacy policy, account deletion; owner 2026-11-21): no app shell and no
+ * A public legal page (privacy policy, account deletion): no app shell and no
  * sign-in, the academy emblem on its green tile, one title, the «last updated» line, the sections,
  * then the footer links. A readable measure on wide screens, 16px gutters on a phone.
  */

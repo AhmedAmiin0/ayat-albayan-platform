@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 /**
- * The page a signed-out user was bounced from (owner 2026-11-14: the teacher's report link returns
- * to its lesson after sign-in). Same-origin relative paths only: starts with "/", not "//" or "/\",
+ * The page a signed-out user was bounced from, so the teacher's report link returns to
+ * its lesson after sign-in. Same-origin relative paths only: starts with "/", not "//" or "/\",
  * no backslash or whitespace (a browser drops tabs and newlines, so "/\t/x" would become "//x").
  */
 const SAFE_RETURN = /^\/(?![/\\])[^\\\s]*$/u;

@@ -12,8 +12,8 @@ interface Live {
 }
 
 /**
- * The thread's socket (owner 2026-10-29): Supabase Realtime on this channel's channel_messages (RLS decides
- * who is told); a new message re-reads the thread through the API. Never WhatsApp.
+ * The thread's socket: Supabase Realtime on this channel's channel_messages (RLS decides who is
+ * told); a new message re-reads the thread through the API. Never WhatsApp.
  */
 export function useChannelLive(ref: ChannelRef, { channelId, onLive }: Live): void {
   const client = useQueryClient();
