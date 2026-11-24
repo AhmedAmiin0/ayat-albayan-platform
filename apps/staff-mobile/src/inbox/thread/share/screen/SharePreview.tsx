@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { Image, View } from 'react-native';
 import { t, AppText, shape, type, useTheme } from '@ab/mobile-kit';
 import type { SharedFile, SharedItems } from '@/inbox/thread/share/read-share';

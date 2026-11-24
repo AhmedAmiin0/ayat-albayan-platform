@@ -1,10 +1,5 @@
-import type {
-  FeedbackKind,
-  FeedbackRecommend,
-  FeedbackRowView,
-  TeacherFeedbackSummary,
-  TeacherFeedbackView,
-} from '@ab/shared';
+import type { FeedbackRowView, TeacherFeedbackSummary, TeacherFeedbackView } from '@ab/shared';
+import type { FeedbackKind, FeedbackRecommend } from '@ab/catalog';
 
 // «رأيك يهمّنا» (student feedback): the contract is packages/shared/src/schemas/feedback.ts.
 export type { FeedbackKind, FeedbackRecommend, FeedbackRowView, TeacherFeedbackSummary, TeacherFeedbackView };

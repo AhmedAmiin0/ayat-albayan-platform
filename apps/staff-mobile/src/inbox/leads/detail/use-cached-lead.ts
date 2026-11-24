@@ -6,7 +6,8 @@ import {
 } from '@tanstack/react-query';
 import { flattenPages } from '@/core/lib/query/paging';
 import { pathKey } from '@ab/mobile-kit';
-import type { LeadView, Page } from '@ab/shared';
+import type { LeadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 /** The lead with this id in any cached inbox list, freshest list first; undefined if none has it. */
 export function findCachedLead(client: QueryClient, id: string): LeadView | undefined {

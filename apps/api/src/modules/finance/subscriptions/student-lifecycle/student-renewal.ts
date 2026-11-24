@@ -3,11 +3,19 @@ import { Injectable } from '@nestjs/common';
 import { PackagesService, type StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { manualWins, packageEnded, renewalTarget, subscriptionEnded, type EndPackage } from './student-renewal.plan';
 import { StudentStatusRepo } from './student-status.repo';
+import type { StudentTz } from './student-status.types';
 import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
 
 /** What triggered the evaluation: a payment create (its id), the periodic sweep, or any other write / lesson change. */
 export type RenewalCause = { via: 'payment'; paymentId: string } | { via: 'sweep' } | { via: 'event' };
-type RenewalInput = { studentId: string; state: StudentState; actorId: string | null; now: Date; cause: RenewalCause };
+type RenewalInput = {
+  studentId: string;
+  student: StudentTz;
+  state: StudentState;
+  actorId: string | null;
+  now: Date;
+  cause: RenewalCause;
+};
 
 /** The packages as subscriptionEnded reads them (stored row + balance + payments). */
 function endPackages(state: StudentState): EndPackage[] {
@@ -37,8 +45,7 @@ export class StudentRenewal {
   ) {}
 
   async apply(input: RenewalInput): Promise<StudentStatus | null> {
-    const student = await this.statuses.student(input.studentId);
-    if (!student) return null;
+    const { student } = input;
     const today = localDay(input.now.toISOString(), student.tz);
     const pkgs = endPackages(input.state);
     const to = renewalTarget(student.status, subscriptionEnded(pkgs, today));
@@ -47,6 +54,11 @@ export class StudentRenewal {
     const move = { studentId: input.studentId, from: student.status, to };
     const moved = await this.statuses.move(move, { actorId: input.actorId, after: viaOf(move, input.cause) });
     return moved ? to : null;
+  }
+
+  /** The status and tz of many students in one read (the alerts evaluate them in batch). */
+  async students(studentIds: readonly string[]): Promise<Map<string, StudentTz>> {
+    return this.statuses.students(studentIds);
   }
 
   /** The student's subscription has ended today in its tz (StudentDeactivation's target). */

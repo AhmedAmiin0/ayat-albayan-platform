@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { TemplatesRepo } from './templates.repo';
 
