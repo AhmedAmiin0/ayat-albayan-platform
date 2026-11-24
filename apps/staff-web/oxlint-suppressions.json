@@ -7008,9 +7008,6 @@
     }
   },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     },
@@ -7018,10 +7015,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 16
-    },
-    "ab/module-boundaries": {
-      "count": 2
+      "count": 12
     },
     "typescript/no-confusing-void-expression": {
       "count": 1

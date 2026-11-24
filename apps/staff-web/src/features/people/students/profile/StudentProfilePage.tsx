@@ -1,10 +1,10 @@
-import { formatPhone, isPackageEnded, secondPhoneOf, studentStatusStyle } from '@ab/shared';
+import { isPackageEnded } from '@ab/shared';
+import { studentStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
 import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { PageHead } from '@ab/web-kit/components/ui/layout/page';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
 import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
@@ -23,6 +23,7 @@ import { SiblingMerge } from '@/features/people/students/duplicates/SiblingMerge
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
+import { StudentMeta } from './student-meta';
 import { StudentFamily } from '@/features/people/students/family/StudentFamily';
 import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
 import { PeopleEditActions, RemovedStudent } from '@/features/people/students/people-edit';
@@ -52,30 +53,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     const notFound = error instanceof ApiError && error.status === 404;
     return <FormAlert>{notFound ? t.common.notFound : t.common.error}</FormAlert>;
   }
-  // The second number was linked from a lead chat and is removed from the guardian edit.
-  const second = secondPhoneOf(student.guardian.phones);
   const chatPhone = student.guardian.phone_e164;
-  const meta = [
-    [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
-    [t.students.guardian, (
-      <Link key="g" to="/admin/inbox" search={{ page: 1, phone: student.guardian.phone_e164 }} className="text-lapis underline underline-offset-4">
-        {student.guardian.name}
-      </Link>
-    )],
-    [t.students.guardianPhone, <Ltr key="p">{formatPhone(student.guardian.phone_e164)}</Ltr>],
-    ...(second ? [[t.guardians.secondPhone, <Ltr key="p2">{formatPhone(second)}</Ltr>] as const] : []),
-    [
-      t.students.effectiveLink,
-      student.meeting_link ? (
-        <a key="l" href={student.meeting_link} target="_blank" rel="noreferrer" dir="ltr"
-          className="block truncate py-3 text-lapis underline underline-offset-4 sm:py-0">
-          {student.meeting_link.replace(/^https?:\/\//, '')}
-        </a>
-      ) : (
-        <span key="l">—</span>
-      ),
-    ],
-  ] as const;
   const book = (
     <Link to="/admin/book" search={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
       {t.booking.open}
@@ -107,14 +85,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
         />
       </PageHead>
       <PeopleEditActions studentId={student.id} onRemoved={setRemoved} />
-      <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
-        {meta.map(([term, value]) => (
-          <div key={term} className="flex min-w-0 items-baseline gap-2">
-            <dt className="shrink-0 text-xs text-ink-3">{term}</dt>
-            <dd className="min-w-0 truncate text-ink-2">{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <StudentMeta student={student} />
       <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
       <TrialDatesSection student={student} />
       <CourseCardPanel studentId={student.id} chatPhone={chatPhone} />

@@ -8,7 +8,7 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { PendingConfirm } from '@/features/platform/settings/values/hooks/use-values-controller';
+import type { PendingConfirm } from '@/features/platform/settings/values/hooks/use-values-controller.types';
 
 const v = t.settingsValues;
 const c = v.confirm;
