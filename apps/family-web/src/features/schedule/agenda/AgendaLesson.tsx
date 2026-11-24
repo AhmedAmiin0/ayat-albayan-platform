@@ -14,21 +14,17 @@ import { LessonOptionsBar } from '@ab/web-kit/portal/lessons/options/LessonOptio
 import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
 import { FamilyChip } from '@ab/web-kit/portal/lessons/options/FamilyChip';
 
-/** The join button lights up by itself at the window (canvas Schedule «ادخل»). */
+/** The join button lights up by itself when the window opens. */
 const TICK_MS = 1_000;
 const L = t.portal.app.lesson;
 
 interface AgendaLessonProps {
   entry: WeekLesson;
-  /** A guardian answers for the lesson («سأحضر» …); a student only reads it. */
+  /** Only a guardian answers for the lesson; a student only reads it. */
   guardian: boolean;
 }
 
-/**
- * One lesson of the day on the viewer's clock: its time, the teacher and the length, its state;
- * «ادخل الحلقة» once the window opens (the room opens over the page, a Meet lesson its link); and
- * for a guardian «سأحضر» · «اطلب موعدًا آخر» · «أعتذر عن الحلقة».
- */
+/** Times are on the viewer's clock; only a guardian gets the attendance answer actions. */
 export function AgendaLesson({ entry, guardian }: AgendaLessonProps) {
   const { lesson, student } = entry;
   const now = useNow(TICK_MS);

@@ -1,9 +1,7 @@
 import { lessonEndResultSchema, type LessonEndResult, type MuteSource } from '@ab/schedule';
 import type { ApiClient } from '../../core/http/index.js';
 
-// The lesson room's host controls for web and both apps (owner 2026-11-16): «إنهاء الحلقة للجميع»,
-// per-participant «كتم الميكروفون» / «إيقاف الكاميرا» / «إخراج», and «كتم الجميع» (the per-person
-// mute for every guest microphone that is on, as the web host does). The API decides who may.
+// Room host controls for web and both apps; the API decides who may act.
 
 const enc = encodeURIComponent;
 const lessonPath = (lessonId: string) => `/lessons/${enc(lessonId)}`;
@@ -27,7 +25,7 @@ export interface RoomTargetInput {
 export interface LessonRoomSends {
   end: (lessonId: string) => Promise<LessonEndResult>;
   mute: (input: RoomTargetInput & { source: MuteSource }) => Promise<void>;
-  /** «كتم الجميع»: every identity's microphone; rejects with the first refusal. */
+  /** Rejects with the first refusal. */
   muteAll: (input: { lessonId: string; identities: readonly string[] }) => Promise<void>;
   remove: (input: RoomTargetInput) => Promise<void>;
 }

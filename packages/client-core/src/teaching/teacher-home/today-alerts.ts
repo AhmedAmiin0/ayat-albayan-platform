@@ -6,8 +6,7 @@ import { reportStage, teacherCanConfirm, type ReportStage } from '../lessons/ind
 import type { AlertKind } from './home-prefs.js';
 import { lessonChange, type LessonChange } from './lesson-changes.js';
 
-// «تنبيهات اليوم» (owner 2026-11-14): HER actionable items for today, derived from the lessons and
-// the bell rows the home already reads. Pure: web and mobile list the same alerts from one clock.
+// Pure, so web and mobile list the same alerts from one clock.
 
 const SOON_MS = 15 * 60_000;
 
@@ -25,7 +24,6 @@ export interface AlertInput {
   bell: readonly NotificationItem[];
   now: Date;
   tz: string;
-  /** The kinds she switched on («تخصيص»). */
   shown: Readonly<Record<AlertKind, boolean>>;
 }
 
@@ -102,7 +100,7 @@ const bellAlerts = (i: AlertInput, day: string): TodayAlert[] =>
     .filter((n) => n.read_at === null && BELL_SHOWN[n.kind] && onDay(n.created_at, i, day))
     .map((item) => ({ kind: 'bell', key: `bell:${item.id}`, item }));
 
-/** A move inside today says it once, on the new lesson («… نُقلت من 13:00»). */
+/** A move inside today is mentioned once, on the new lesson. */
 const movedWithinDay = (a: TodayAlert, today: readonly LessonView[]) =>
   a.kind === 'changed' && today.some((l) => l.rescheduled_from_id === a.lesson.id);
 

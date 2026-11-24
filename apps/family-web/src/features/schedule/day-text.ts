@@ -14,10 +14,8 @@ export const dayDate = (day: string): Date => new Date(`${day}T12:00:00Z`);
 /** The calendar options a day is read with. */
 export const dayClock = UTC;
 
-/** «الأحد 16 نوفمبر». */
 export const longDay = (day: string): string => dateText(dayDate(day), UTC, LONG);
 
-/** «15 – 21 نوفمبر»: the week's first and last day. */
 export const rangeOf = (range: { from: string; to: string }): string =>
   dateRangeText({ from: dayDate(range.from), to: dayDate(range.to) }, UTC, DAY_MONTH);
 

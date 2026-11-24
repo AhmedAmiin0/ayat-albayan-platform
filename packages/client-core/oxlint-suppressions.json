@@ -192,7 +192,7 @@
   },
   "src/messaging/channels/channels.ts": {
     "stylistic/max-len": {
-      "count": 10
+      "count": 8
     }
   },
   "src/messaging/channels/teacher-pick.ts": {
@@ -343,7 +343,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/teaching/booking/course-actions.ts": {
@@ -353,7 +353,7 @@
   },
   "src/teaching/booking/course-pause.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -365,11 +365,6 @@
     }
   },
   "src/teaching/booking/picks.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/teaching/reports/entry-values.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -397,7 +392,7 @@
   },
   "src/teaching/reports/v2-text.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 1
