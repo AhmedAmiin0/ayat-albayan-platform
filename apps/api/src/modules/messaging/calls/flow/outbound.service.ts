@@ -52,10 +52,7 @@ export class OutboundCalls {
     return this.view(await this.hungUpMeanwhile(row, line), userId);
   }
 
-  /**
-   * «إنهاء» may have ended the row while the connect was in flight (no wacid yet, so nothing was
-   * terminated): now that WhatsApp named the call, terminate it once (terminate is never billed).
-   */
+  /** A hang-up before WhatsApp names the call: terminate once (terminate is never billed). */
   private async hungUpMeanwhile(row: CallRow, line: CallingLine): Promise<CallRow> {
     const now = (await this.kit.queries.get(row.id)) ?? row;
     if (now.status === 'ended' && now.wa_call_id) {
@@ -64,7 +61,7 @@ export class OutboundCalls {
     return now;
   }
 
-  /** «إنهاء» by the person in the call (either direction): terminate on WhatsApp, then end the row. */
+  /** Either direction: terminate on WhatsApp, then end the row. */
   async end(actor: CallActor, id: string): Promise<ActiveCallView> {
     await this.gate.assertOn();
     const row = await this.kit.queries.get(id);

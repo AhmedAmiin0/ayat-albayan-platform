@@ -1,13 +1,12 @@
 import {
   credentialsOf,
-  nativeRoomPlatform,
   RoomNotice,
   RoomScreen,
+  useNativeRoom,
   type BackSource,
   type RoomTarget,
 } from '@ab/mobile-kit/room';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useState } from 'react';
 import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { portalSend, useChildLessons } from '@/portal';
@@ -36,12 +35,16 @@ function usePresence({ studentId, lessonId }: RoomLink) {
 
 /** The room screen for one checked link: the device's LiveKit, the channel, the browser. */
 function FamilyRoom({ link }: { link: Required<RoomLink> }) {
-  const [platform] = useState(nativeRoomPlatform);
+  const native = useNativeRoom();
   const chat = useFamilyRoomChat(link.studentId);
   const presence = usePresence(link);
   const navigation = useNavigation();
   const backSource: BackSource = (listener) => navigation.addListener('beforeRemove', listener);
   const browser = openInBrowser(link);
+  const platform = native.data;
+  if (native.isPending) {
+    return <RoomNotice testID="room-loading" message={t.mobileRoom.connecting} busy />;
+  }
   if (!platform) {
     const again = { label: t.mobileRoom.openInBrowser, onPress: () => void browser().then(back) };
     const message = t.mobileRoom.sdkFailed;

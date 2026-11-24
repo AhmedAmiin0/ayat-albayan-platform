@@ -7,11 +7,9 @@ interface StudentIdentityProps {
   student: PortalStudent;
   /** A line under the code (the last report). */
   children?: ReactNode;
-  /** In place of the name: «أنا» on a guardian's own row. */
   name?: string;
 }
 
-/** A child's avatar, name and code (the «اختر الطالب» cards). */
 export function StudentIdentity({ student, children, name }: StudentIdentityProps) {
   const { color } = useTheme();
   return (

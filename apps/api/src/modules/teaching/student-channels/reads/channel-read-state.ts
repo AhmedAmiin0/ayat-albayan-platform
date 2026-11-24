@@ -29,10 +29,7 @@ export interface PageReads {
 const mineOf = (rows: readonly ChannelMessageRow[], me: string): ChannelMessageRow[] =>
   rows.filter((r) => r.sender_profile_id === me && !r.deleted_at);
 
-/**
- * Read state against the chat's current members (ChannelMembers) and their channel_reads marks:
- * ✓✓ on my messages, «معلومات الرسالة» (who read one message, who not yet), and a page's people.
- */
+/** Read state against the chat's current members and their channel_reads marks. */
 @Injectable()
 export class ChannelReadState {
   constructor(

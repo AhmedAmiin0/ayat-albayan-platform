@@ -33,11 +33,7 @@ interface Props {
   answers: readonly AppSendAnswer[];
 }
 
-/**
- * Staff's answer about a «أرسل عبر واتساب» (docs/19) in the bubble's line: «أرسلتها» while pending
- * and «نعم، أرسلتها» after an unconfirmed one record the manual send (sent-manually: the
- * platform stops for good). A row handed to WhatsApp is never put back to automatic sending.
- */
+/** docs/19: recording the manual send stops the platform for good; never back to automatic. */
 export function AppSendAnswers({ message: m, phone, answers }: Props) {
   const sent = useMessageAction(phone, 'sent-manually');
   return (

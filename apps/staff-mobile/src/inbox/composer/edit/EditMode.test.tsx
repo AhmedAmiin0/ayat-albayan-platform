@@ -5,7 +5,7 @@ import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { setComposerText } from '@/inbox/composer/draft-store';
 
-// «تعديل» (owner 2026-11-07): the menu starts edit mode; «أرسل» sends a correction of it.
+// The edit menu starts edit mode; send delivers a correction of that message.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

@@ -15,11 +15,7 @@ export interface CallEntryProps {
   canCall: boolean;
 }
 
-/**
- * A call in the chat log, at its own time among the messages (docs/28 §5), on the side of whoever
- * called, like WhatsApp: the glyph, «مكالمة صوتية صادرة · 2:14» / «مكالمة فائتة» (red) and the time.
- * Tapping it calls back while calls are on and the user may call.
- */
+/** Shown on the caller's side at its own time (docs/28 §5); a tap calls back when allowed. */
 export function CallEntry({ call, canCall }: CallEntryProps) {
   const ui = useCalls();
   const name = callerName(call, useInboxMode());

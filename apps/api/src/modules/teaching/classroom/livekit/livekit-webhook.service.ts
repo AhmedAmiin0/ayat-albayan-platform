@@ -12,14 +12,7 @@ interface WebhookPost {
   authorization: string | undefined;
 }
 
-/**
- * POST /livekit/webhook: LiveKit's events. 401 (nothing changes) unless signed by our API secret
- * over these bytes. An egress ending marks the recording done or failed (and records again if
- * people are still in the room); a participant joining or leaving a lesson room is who is
- * inside now (RoomPresenceService, «بدأت الحلقة» when the teacher comes in); a participant leaving
- * an emptied room stops its recording. Every
- * other event, and an egress we never started, is acknowledged and ignored so LiveKit does not retry.
- */
+/** 401 unless signed by our API secret; other events are acknowledged so LiveKit won't retry. */
 @Injectable()
 export class LivekitWebhookService {
   constructor(

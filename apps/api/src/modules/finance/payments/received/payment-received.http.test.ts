@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { PushService } from '@/common/push/push.service';
 import { PAYMENT_ID, paymentRow, REQUEST_ID, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/money.fakes';
 import { ADMIN, moneyApp, resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { PAY, salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { PAY, salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
 const BODY = {
   subscriptionId: SUB_ID,

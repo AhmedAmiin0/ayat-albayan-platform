@@ -48,7 +48,6 @@ test('a move shows at once in the screen and the inbox, then PATCHes', async () 
   await fireEvent.press(screen.getByRole('button', { name: word.contacted }));
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/leads/a1/status', { status: 'contacted' });
   await waitFor(() => expect(statusInList(client)).toBe('contacted'));
-  // From اتواصلنا the changer now offers that status's moves, and جديد is gone.
   expect(screen.getByRole('button', { name: word.trial_booked })).toBeTruthy();
   expect(screen.queryByRole('button', { name: word.new })).toBeNull();
 });

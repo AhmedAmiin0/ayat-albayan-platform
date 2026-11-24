@@ -7,9 +7,6 @@ import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query'
 import { student } from '@/portal/portal.fixtures';
 import { PickChildScreen } from './PickChildScreen';
 
-// «اختر الطالب» (owner 2026-11-16): a card per child; a press saves the pick under this profile
-// and goes home.
-
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), push: jest.fn(), dismissTo: jest.fn() },
 }));
@@ -66,7 +63,6 @@ test("a press saves the child under this profile and goes to the child's home", 
   );
 });
 
-// After the press above, g1 works as يوسف: «حسابي» pushes the picker over the tabs.
 test('switching: «رجوع» back to «حسابي» and no hint', async () => {
   await show(true);
   expect(await screen.findByRole('button', { name: t.common.back })).toBeTruthy();

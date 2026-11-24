@@ -1,4 +1,4 @@
-import type { GoogleStatusView } from '@ab/shared';
+import type { GoogleStatusView } from '@ab/catalog';
 
 /** A connected account, sync on, live, two pending (test fixture for the Google card). */
 export const googleLive: GoogleStatusView = {

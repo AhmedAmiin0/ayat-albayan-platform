@@ -6,7 +6,7 @@ interface MonthPickerProps {
   onChange: (month: string) => void;
 }
 
-/** «سبتمبر 2026» between two 44pt arrows (no date-picker dependency); it stops at this month. */
+/** No date-picker dependency; it stops at the current month. */
 export function MonthPicker({ month, onChange }: MonthPickerProps) {
   return (
     <MonthHeader

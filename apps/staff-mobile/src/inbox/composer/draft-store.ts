@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 
-// The reply box's unsent text per chat (owner 2026-10-26 «عرض سعر»): lifted out of Composer so the
-// quote sheet's «عدّل قبل الإرسال» can fill it. Kept when she leaves the chat, as WhatsApp's draft
-// (review 2026-10-29 #4): the chats list shows «مسوّدة: …» on its row; a sign-out forgets every chat
-// (clearComposerDrafts). In memory only (JS, OTA): a killed app starts clean.
+// Unsent text per chat, kept on leaving the chat and cleared on sign-out; memory only.
 
 const drafts = new Map<string, string>();
 const listeners = new Set<() => void>();
@@ -36,7 +33,7 @@ function subscribe(listener: () => void): () => void {
   return () => listeners.delete(listener);
 }
 
-/** The chat's unsent text, '' without one (a chats-list row reads it for «مسوّدة: …»). */
+/** Empty string when the chat has no draft. */
 export function useComposerDraft(phone: string): string {
   return useSyncExternalStore(subscribe, () => getComposerText(phone));
 }

@@ -20,11 +20,7 @@ const MAY_EDIT = {
   author: (tpl: AuthorTemplate, me: string) => authorMayEdit(tpl, me),
 } as const;
 
-/**
- * «القوالب» (owner 2026-11-14) under «المزيد», for sales and the admin: the list with each status,
- * «قالب جديد», and «تعديل» where allowed. `base` = this tree's route (/more/templates,
- * /sales/more/templates).
- */
+/** For sales and admin; `base` is this tree's route prefix. */
 export function TemplatesScreen({ base }: { base: string }) {
   const mode = useTemplateMode();
   const me = useMeId(true);

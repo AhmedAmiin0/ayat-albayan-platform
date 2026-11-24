@@ -11,7 +11,6 @@ interface CallsLogRowProps {
   onOpen: () => void;
 }
 
-/** One call of the log (WhatsApp's «المكالمات»): who, the direction arrow and its words, the time. */
 export function CallsLogRow({ call, showsPhone, onOpen }: CallsLogRowProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

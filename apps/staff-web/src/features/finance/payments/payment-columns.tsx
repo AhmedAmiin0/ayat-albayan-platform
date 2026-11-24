@@ -13,16 +13,12 @@ import { amountEditable } from './amount/amount-check';
 const col = createColumnHelper<DataTableFeatures, PaymentView>();
 
 export type PaymentAction = 'receipt' | 'attachments' | 'amount' | 'edit' | 'delete';
-/** canWrite: payments.write, which PATCH /payments/:id needs («تعديل المبلغ» only with it). */
+/** Amount edits need payments.write, which PATCH /payments/:id requires. */
 type Handlers = { onAction: (p: PaymentView, action: PaymentAction) => void; canWrite: boolean };
 
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
-/**
- * Payments list (R-PAY-01): student, amount (a refund in red, the amount sent in another currency),
- * method, date, who, actions («عرض المرفقات» for a bank payment or one with a receipt). Server sort (R-NFR-08) on amount, method and date; the student is
- * filtered by the bar's picker, «سجّلها» is a name read after the page (neither sorts server-side).
- */
+/** Server sort (R-PAY-01, R-NFR-08) on amount, method and date only. */
 export function paymentColumns({ onAction, canWrite }: Handlers) {
   return col.columns([
     col.accessor('student', {

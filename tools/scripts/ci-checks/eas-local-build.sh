@@ -16,7 +16,8 @@ envdir="$RUNNER_TEMP/eas-env"
 mkdir -p "$envdir" && chmod 700 "$envdir"
 npx --yes "$EAS_CLI" env:pull --environment "$environment" --path "$envdir/.env" --non-interactive > /dev/null
 names=()
-while IFS= read -r line; do
+# env:pull ends the file without a newline: `read` fails on that last line but still fills it.
+while IFS= read -r line || [ -n "$line" ]; do
   [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]] || continue
   name=${BASH_REMATCH[1]} value=${BASH_REMATCH[2]}
   value=${value#\"} value=${value%\"}
@@ -33,7 +34,7 @@ if [ "$APP/$PROFILE" = family/production ]; then
   test "${EXPO_PUBLIC_API_URL:-}" = https://api.ayatalbayan.com \
     || { echo "::error::EXPO_PUBLIC_API_URL of EAS environment production is not the production API"; exit 1; }
   { test -s "${GOOGLE_SERVICES_JSON:-}" && jq -e .project_info.project_id "$GOOGLE_SERVICES_JSON" > /dev/null; } \
-    || { echo "::error::GOOGLE_SERVICES_JSON was not pulled as a Firebase file: give it plain text or sensitive visibility (a secret one is unreadable outside Expo's servers)"; exit 1; }
+    || { echo "::error::GOOGLE_SERVICES_JSON was not pulled as a Firebase file: EAS environment production must hold it as a file variable with plain text or sensitive visibility"; exit 1; }
   echo "Checked: production API and the Firebase file from EAS environment production"
 fi
 

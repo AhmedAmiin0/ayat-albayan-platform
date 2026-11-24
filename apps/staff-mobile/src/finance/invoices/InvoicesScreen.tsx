@@ -11,10 +11,7 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 const keyOf = (i: InvoiceView) => i.id;
 const renderRow = ({ item }: { item: InvoiceView }) => <InvoiceRow invoice={item} />;
 
-/**
- * «الفواتير» (admin; web /admin/invoices), read-only: each booking invoice with its students and
- * whether a payment was recorded from it. Recording one stays on the web for now.
- */
+/** Read-only; recording a payment from an invoice stays on the web for now. */
 export function InvoicesScreen() {
   const list = useInvoices();
   return (

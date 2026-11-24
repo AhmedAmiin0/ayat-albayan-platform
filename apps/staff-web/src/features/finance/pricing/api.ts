@@ -15,7 +15,7 @@ import { apiFetch } from '@ab/web-kit/lib/http/api';
 // every number on the calculator comes from these responses.
 export type { CatalogResponse, FxRate, QuoteResponse } from '@ab/money';
 
-/** «دولة تانية (بالدولار)»: no country is sent, so the API quotes in USD. */
+/** No country is sent, so the API quotes in USD. */
 export const OTHER = 'other' as const;
 
 /** What the staff member picked on the calculator. */
@@ -23,7 +23,7 @@ export interface Selection {
   country: SiteCountry | typeof OTHER;
   duration: PricingDuration;
   pkg: PackageId | 'custom';
-  /** Lessons for «عدد مخصوص» (1–60); kept when another package is picked. */
+  /** Custom count 1 to 60; kept when another package is picked. */
   count: number;
   students: number;
   /** Percent 0–100: a pill or the free field. */

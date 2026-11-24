@@ -7,7 +7,7 @@ import { AT_NEWEST, MessageList, OLDER_THRESHOLD } from '@/inbox/messages/compon
 import { cachedThread, detail, inbound, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
-// Owner 2026-10-27 «do like WhatsApp»: no «رسائل أقدم» button; reaching the top loads the next page.
+// No older-messages button: reaching the top loads the next page.
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),

@@ -18,14 +18,13 @@ const col = createColumnHelper<DataTableFeatures, PayoutView>();
 export type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
 type Handlers = {
   onAction: (p: PayoutView, action: PayoutAction) => void;
-  /** The «المعلم/ة» filter: the month's teachers. */
   teachers: FilterOption[];
 };
 
-/** «الحالة» filter (also the teacher's own statements). */
+/** Also used by the teacher's own statements. */
 export const payoutStatusOptions: FilterOption[] = PAYOUT_STATUSES.map((s) => ({ value: s, label: t.enums.payoutStatus[s] }));
 
-/** «45 دقيقة: 10 × 70 = 700» per duration line (the breakdown generate stored). */
+/** The breakdown stored at generate time. */
 export function breakdownLines(p: PayoutView): string[] {
   return p.breakdown.lines.map(
     (l) =>
@@ -36,10 +35,7 @@ export function breakdownLines(p: PayoutView): string[] {
   );
 }
 
-/**
- * Payouts of one month (R-PAY-02, E3): draft → اعتماد → اتدفعت; approved and paid are frozen.
- * Client sort + filter (the month is loaded whole); the breakdown lines neither sort nor filter.
- */
+/** Approved and paid payouts are frozen (R-PAY-02); client sort and filter on the whole month. */
 export function payoutColumns({ onAction, teachers }: Handlers) {
   return col.columns([
     col.accessor((p) => teacherLabel(p.teacher), {

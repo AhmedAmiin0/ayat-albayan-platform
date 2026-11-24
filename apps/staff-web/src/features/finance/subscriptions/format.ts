@@ -16,7 +16,7 @@ import type { SubscriptionView } from './api';
 
 export { currencySymbol, moneyText };
 
-/** docs/07 §6 package line: «فاضل حلقتين», tone act at the R-SUB-02 threshold. */
+/** Package line (docs/07 §6), in the act tone at the R-SUB-02 threshold. */
 export function progressOf(b: Pick<BalanceView, 'lessons_used' | 'lessons_total'>, threshold?: number): PackageProgress {
   const opts = threshold === undefined ? {} : { threshold };
   return packageProgress(b.lessons_used, b.lessons_total, { forms: t.subscriptions.progress, ...opts });
@@ -30,20 +30,16 @@ export function studentProgress(view: Pick<StudentBalanceView, 'packages'>): Pac
 
 const [LRI, PDI] = [String.fromCodePoint(0x2066), String.fromCodePoint(0x2069)];
 
-/** «يوسف أحمد · AB-0210»: names repeat in the academy, the code (an LTR isolate) tells them apart. */
+/** Names repeat in the academy, so the LTR code tells them apart. */
 export function studentLabel(s: { name: string; code: string }): string {
   return `${s.name} · ${LRI}${s.code}${PDI}`;
 }
 
-/** «4 حلقات في الشهر», or a custom count «10 حلقات». */
 export function packageName(s: Pick<SubscriptionView, 'package' | 'lessons_total'>): string {
   return s.package === null ? counted(t.pricing.customSessions, s.lessons_total) : t.enums.packageSize[s.package];
 }
 
-/**
- * «باقة سهيلة قربت تخلص». The stored title is the balance when the task was raised; it is kept
- * for the record only, never shown: the live balance is on the package row above.
- */
+/** The stored title is the balance at raise time, kept for the record only; never shown. */
 export function taskText(task: AdminTaskView): string {
   return t.dashboard.task[task.kind]
     .replace('{student}', task.student?.name ?? '')

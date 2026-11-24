@@ -20,18 +20,7 @@ type Outcome = 'expired' | 'kept' | 'failed';
 
 const errorText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
-/**
- * Transition 6 (owner 2026-10-15, docs/11 §7, R-STU-05): a student still «بانتظار التجديد»
- * settings.subscription_expiry_days days after it became so, with no positive payment since,
- * becomes «انتهى الاشتراك» (expired). Since = its newest status_change to pending_renewal. None
- * (e.g. set before the audit existed): the clock starts on first sight, an audited compare-and-set
- * row pending_renewal → pending_renewal (via expiry_clock_started), and it expires N days after
- * that. Compare-and-set pending_renewal → expired, audited with no actor (via
- * subscription_expired), so it is idempotent and a status set by hand meanwhile wins. Sends
- * nothing. A renewal payment later moves expired → active (StudentActivation / StudentRenewal).
- * ponytail: in-process daily timer on the single API instance, like HorizonJob; pg_cron when it
- * scales.
- */
+/** Transition 6 (docs/11 §7, R-STU-05): pending_renewal expires after the setting's days. */
 @BackgroundJob({ name: 'student-expiry' })
 @Injectable()
 export class StudentExpiryJob extends TickerJob {

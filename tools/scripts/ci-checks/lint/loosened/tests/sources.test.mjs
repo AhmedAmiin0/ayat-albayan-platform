@@ -8,7 +8,7 @@ test('sourcePaths: the shared config, every package config and the root lint fil
     'packages/config/eslint-flow.js',
     'packages/config/eslint-flow.config.test.js',
     'packages/config/oxlint/rules.js',
-    'packages/config/tsconfig/base.json',
+    'tsconfig.base.json',
     'apps/api/lint.blocks.mjs',
     'apps/api/eslint.config.js',
     'apps/api/src/a.js',

@@ -8,11 +8,7 @@ import { ChannelBellRepo } from './channel-bell.repo';
 import { previewOf } from './preview';
 import { senderName } from './sender-name';
 
-/**
- * An edit or a delete for everyone reaches the bell too: the recipients' rows of the message
- * show the new text, or «تم حذف هذه الرسالة», never the old text. A push already shown on a
- * lock screen cannot be recalled. Never throws (the change is done; a failure logs).
- */
+/** Bell rows show the new text or a deleted note; a shown push cannot be recalled; never throws. */
 @Injectable()
 export class ChannelBell {
   private readonly log = new Logger(ChannelBell.name);

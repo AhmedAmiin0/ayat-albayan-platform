@@ -1,4 +1,6 @@
-import { counted, type Glyph, type SendGateView, type Tone } from '@ab/shared';
+import type { SendGateView } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { Glyph, Tone } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 
 // The server's send gate (GET /messages/gate) in words for the overview: the same words the inbox

@@ -1,7 +1,8 @@
+import type * as WebRtcModule from '@livekit/react-native-webrtc';
 import { PermissionsAndroid, Platform } from 'react-native';
 import type { MicAnswer, RtcDeps } from './media';
 
-type WebRtc = typeof import('@livekit/react-native-webrtc');
+type WebRtc = typeof WebRtcModule;
 
 /** RECORD_AUDIO at call time (the manifest declares it, docs/28 PR 2); iOS prompts on getUserMedia. */
 async function askMic(): Promise<MicAnswer> {
@@ -11,27 +12,24 @@ async function askMic(): Promise<MicAnswer> {
   return result === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN ? 'blocked' : 'denied';
 }
 
-/** The native module, loaded on first use: a binary without it (an old APK) gets null, never a crash at boot. */
-function load(): WebRtc | null {
-  try {
-    // oxlint-disable-next-line typescript/no-require-imports -- loaded lazily: an APK without the module gets null
-    return require('@livekit/react-native-webrtc') as WebRtc;
-  } catch {
-    return null;
-  }
-}
-
 /**
- * The device's WebRTC (LiveKit's react-native-webrtc fork, docs/35; a native module), or null
- * where it is missing (the calls then say «هذا الجهاز لا يدعم المكالمات»). The family's audio plays by itself
- * once its track arrives; the shapes match media.ts structurally.
+ * Imported on first use, never at boot: on a binary without the module (an old APK) the import
+ * rejects and the calls get null instead of a crash.
  */
-export function nativeRtc(): RtcDeps | null {
-  const rtc = load();
-  if (!rtc) return null;
-  return {
-    createPeer: (config) => new rtc.RTCPeerConnection(config),
-    askMic,
-    getMic: async () => rtc.mediaDevices.getUserMedia({ audio: true, video: false }),
-  };
+let cached: Promise<WebRtc | null> | undefined;
+const load = (): Promise<WebRtc | null> => {
+  cached ??= import('@livekit/react-native-webrtc').catch(() => null);
+  return cached;
+};
+
+const depsOf = (rtc: WebRtc): RtcDeps => ({
+  createPeer: (config) => new rtc.RTCPeerConnection(config),
+  askMic,
+  getMic: async () => rtc.mediaDevices.getUserMedia({ audio: true, video: false }),
+});
+
+/** Null where the native module is missing, docs/35; the shapes match media.ts structurally. */
+export async function nativeRtc(): Promise<RtcDeps | null> {
+  const rtc = await load();
+  return rtc ? depsOf(rtc) : null;
 }

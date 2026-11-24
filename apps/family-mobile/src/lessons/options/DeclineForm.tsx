@@ -6,17 +6,13 @@ import { AppText, Button, ButtonRow, MoveReason, t, type, useTheme } from '@ab/m
 
 interface DeclineFormProps {
   lesson: PortalLesson;
-  /** «الاعتذار عن حلقة الغد». */
   title: string;
   busy: boolean;
   onDecline: (reason: string) => void;
   onBack: () => void;
 }
 
-/**
- * «الاعتذار عن الحلقة» (canvas LessonXDecline): what it does to the package (the late cancel
- * rule's preview), the optional reason, then «تأكيد الاعتذار» or «تراجع».
- */
+/** Shows the late-cancel rule's effect on the package before confirming. */
 export function DeclineForm({ lesson, title, busy, onDecline, onBack }: DeclineFormProps) {
   const { color } = useTheme();
   const [reason, setReason] = useState('');

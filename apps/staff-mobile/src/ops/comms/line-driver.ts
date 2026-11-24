@@ -1,4 +1,9 @@
-import { WA_LINE_PROVIDERS, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
+import {
+  WA_LINE_PROVIDERS,
+  type IntegrationConfigItem,
+  type WaLine,
+  type WaProvider,
+} from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 
 // The per-line driver switch on the phone (docs/19), the same key the web's «التكاملات» saves.
