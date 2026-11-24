@@ -7,15 +7,11 @@ import type { StudentRef } from '@ab/shared';
 
 export interface StudentFamilyProps {
   siblings: StudentRef[];
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1). */
+  /** docs/30 §1. */
   contactIsSelf: boolean;
 }
 
-/**
- * «العائلة» on the student file (owner 2026-11-02), one compact line under the meta: «الطالب هو
- * صاحب رقم المحادثة» when they are, then the brothers and sisters (status, name, code), each a link
- * to that student's file. Nothing when there is neither.
- */
+/** Shows nothing when neither applies. */
 export function StudentFamily({ siblings, contactIsSelf }: StudentFamilyProps) {
   const f = t.students.family;
   if (siblings.length === 0 && !contactIsSelf) return null;

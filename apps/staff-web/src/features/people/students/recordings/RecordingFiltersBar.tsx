@@ -20,7 +20,6 @@ export interface RecordingFiltersBarProps {
 const unset = (v: string | undefined) => (v === '' ? undefined : v);
 
 const S = t.studentRecordings.status;
-/** «كل الحالات», then each state («جاهز», «فشل التسجيل», …). */
 const STATUS_OPTIONS = [
   { value: '', label: F.statusAll },
   ...STUDENT_RECORDING_STATUSES.map((s) => ({ value: s, label: S[s] })),
@@ -28,11 +27,7 @@ const STATUS_OPTIONS = [
 const asStatus = (v: string | undefined): StudentRecordingStatus | undefined =>
   STUDENT_RECORDING_STATUSES.find((s) => s === v);
 
-/**
- * The shared table toolbar over the list: «من تاريخ» / «إلى تاريخ», the state and the teacher in
- * the «تصفية» panel, the set ones as removable chips. The teacher select shows only when there is
- * a choice.
- */
+/** The teacher select shows only when there is a choice. */
 export function RecordingFiltersBar({ value, onChange, teachers }: RecordingFiltersBarProps) {
   const set = (patch: StudentRecordingFilters) => onChange({ ...value, ...patch });
   const teacherName = teachers.find((x) => x.id === value.teacherId)?.name;

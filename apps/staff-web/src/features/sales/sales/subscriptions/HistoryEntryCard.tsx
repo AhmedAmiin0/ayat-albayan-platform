@@ -15,7 +15,7 @@ const fill = (text: string, values: Record<string, string>): string =>
 interface HistoryEntryCardProps {
   entry: SalesHistoryEntry;
   current: boolean;
-  /** «تعديل عدد الحلقات المستخدمة» on the student's current package (SubscriptionHistory). */
+  /** Edits the used-lesson count on the student's current package. */
   action?: ReactNode;
 }
 

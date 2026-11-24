@@ -14,7 +14,7 @@ import { useAccountSave } from '@/features/people/account/use-account-save';
 
 const M = t.account.email;
 
-/** «البريد الحالي: x@y.z», the address an LTR island inside the sentence (docs/07 §14.4). */
+/** The address is an LTR island inside the sentence (docs/07 §14.4). */
 function CurrentEmail({ email }: { email: string }) {
   const [before, after = ''] = M.current.split('{email}');
   return (

@@ -6,7 +6,7 @@ import { StudentProfileForm } from './StudentProfileForm';
 import { toProfileValues, toStudentPatch } from './profile-form';
 import type { StudentProfile } from '@ab/shared';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1, a docs/13 deviation) on the profile edit.
+// docs/30 §1, a docs/13 deviation.
 
 const api = vi.hoisted(() => ({ updateStudent: vi.fn() }));
 vi.mock('@/features/people/students/api', async (importOriginal) => ({

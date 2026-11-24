@@ -12,11 +12,7 @@ import { useAttach } from './use-attach';
 
 const E = t.peopleEdit;
 
-/**
- * «ربط بولي أمر آخر» (owner 2026-11-02): pick a family by name, number or a child's code, or type a
- * new guardian's number, then confirm. POST /people/students/:id/guardian moves the student only:
- * packages, lessons and payments stay with the student, the old family stays.
- */
+/** Moves the student only: packages, lessons and payments stay with it, the old family stays. */
 export function AttachDialog({ view, onClose, onDone }: PeopleDialogProps) {
   const a = useAttach(view, onDone);
   const canMove = roleActions(view).canMove;

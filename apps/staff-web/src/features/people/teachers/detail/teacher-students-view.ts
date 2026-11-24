@@ -11,10 +11,6 @@ export interface PanelState {
   columns: FilterSearch;
 }
 
-/**
- * The profile tab's state → GET /students params: teacher fixed to her, the status chips, the
- * «الباقة» / «حلقة أسبوعية» column selects as the list's own filters, code / name as column text.
- */
 export function panelView({ teacherId, statuses, sort, columns }: PanelState): StudentListView {
   const { package: pkg, weekly, ...text } = columns;
   return {

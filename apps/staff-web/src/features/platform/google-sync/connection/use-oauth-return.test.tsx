@@ -13,7 +13,6 @@ function Probe() {
   return <p>{note ? `${note.tone}: ${note.message}` : 'none'}</p>;
 }
 
-/** «مزامنة Google» under a real router on the browser history (what the app does). */
 async function renderAt(url: string) {
   window.history.replaceState(null, '', url);
   const root = createRootRoute({ component: Outlet });

@@ -1,4 +1,5 @@
-import { bookingRequestSchema, counted } from '@ab/shared';
+import { bookingRequestSchema } from '@ab/shared';
+import { counted } from '@ab/core';
 import { maryam, SUN_17, THU_18, TUE_17 } from '@/booking/testing/fixtures';
 import { t } from '@ab/mobile-kit';
 import { courseBlock, courseEnd, courseRequest } from './course-body';

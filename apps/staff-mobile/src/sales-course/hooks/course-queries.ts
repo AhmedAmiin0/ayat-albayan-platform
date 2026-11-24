@@ -1,5 +1,6 @@
 import { courseDraftSavedSchema } from '@ab/shared';
-import type { BookingRequest, BookingResult, Conflict, SalesCourseView } from '@ab/shared';
+import type { BookingRequest, SalesCourseView } from '@ab/shared';
+import type { BookingResult, Conflict } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 

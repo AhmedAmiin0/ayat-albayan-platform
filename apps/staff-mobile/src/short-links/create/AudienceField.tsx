@@ -1,5 +1,6 @@
 import { listedCount, maxUsersOf, type LinkForm } from '@ab/client-core';
-import { counted, SHORT_LINK_AUDIENCES, type ShortLinkAudience } from '@ab/shared';
+import { SHORT_LINK_AUDIENCES, type ShortLinkAudience } from '@ab/shared';
+import { counted } from '@ab/core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, ErrorLine, FilterPills, InsetGroup, ListRow, Note } from '@ab/mobile-kit';

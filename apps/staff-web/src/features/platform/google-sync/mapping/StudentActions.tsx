@@ -11,7 +11,6 @@ interface Props {
   on: { send: (body: GoogleStudentMapInput) => void; unmap: () => void; toggle: () => void };
 }
 
-/** Not confirmed: «تأكيد» (the suggestion), «مجلد جديد», «ربط يدوي». Confirmed: «إلغاء التأكيد». */
 export function StudentActions({ row, busy, manual, on }: Props) {
   if (row.confirmed_at) {
     return (

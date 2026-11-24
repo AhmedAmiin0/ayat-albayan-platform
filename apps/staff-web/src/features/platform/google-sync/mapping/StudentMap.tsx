@@ -9,7 +9,7 @@ import { StudentRow } from './StudentRow';
 
 const s = t.googleSync.students;
 
-/** «الطلاب والمجلدات»: search (debounced, server side), then per student confirm / new folder / manual link. */
+/** Search is debounced and server side. */
 export function StudentMap({ onNote }: { onNote: (message: string) => void }) {
   const [text, setText] = useState('');
   const q = useDebounced(text.trim(), 300);

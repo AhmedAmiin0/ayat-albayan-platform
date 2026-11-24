@@ -1,4 +1,4 @@
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { apiFetch } from '@ab/mobile-kit';

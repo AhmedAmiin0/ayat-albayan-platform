@@ -2,7 +2,7 @@ import type { TemplateStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { crmCanSubmit, crmOnly } from './crm-submit';
 
-// docs/39: the crm row's «إرسال إلى ميتا» shows exactly when the API would submit it via the CRM.
+// docs/39: the crm row's submit button shows exactly when the API would submit via the CRM.
 
 interface Over {
   header_format?: 'document' | null;

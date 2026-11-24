@@ -12,7 +12,7 @@ import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
-/** Raw `<input type="date">` values (whole days, «إلى» included) + reason, as typed. */
+/** Whole days with the end day included, as typed. */
 export type TimeOffDraft = { from: string; to: string; reason: string };
 export const emptyTimeOffDraft: TimeOffDraft = { from: '', to: '', reason: '' };
 
@@ -29,7 +29,7 @@ const dayStart = (date: string, at: { days: number; tz: string }) => {
   return wallInstant(later, hhmmIn(start, at.tz), at.tz).toISOString();
 };
 
-/** Draft → POST body (UTC ISO, rule 6; the end is the day after «إلى») or the Arabic error. R-TCH-02. */
+/** The end is the day after the last day (UTC ISO, rule 6, R-TCH-02). */
 export function toTimeOffBody(
   draft: TimeOffDraft,
   tz = viewerZone(),
@@ -49,10 +49,7 @@ export function toTimeOffBody(
 const DAYS = { weekday: 'long', day: 'numeric', month: 'long' } as const;
 const atMidnight = (d: Date, tz: string) => hhmmIn(d, tz) === '00:00';
 
-/**
- * UTC instants → the span in the viewer's zone. Whole days read as days and the end is exclusive
- * (10th 00:00 → 13th 00:00 = «السبت، 10 – الاثنين، 12 أكتوبر»); anything else keeps its times.
- */
+/** Whole days read as days with an exclusive end; anything else keeps its times. */
 export function formatTimeOff(startIso: string, endIso: string, clock: Clock): string {
   const start = new Date(startIso);
   const end = new Date(endIso);

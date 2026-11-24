@@ -6,10 +6,7 @@ import { setCrmStatus, templateErrorText, templatesQuery, type CrmTemplateStatus
 import { templateName } from '@/features/messaging/templates/template-cells';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';
 
-/**
- * A crm line's template status by hand (docs/19): «معتمد في نظام CRM» / «غير متاح في نظام CRM». The saved
- * row replaces its old one; every outcome is one toast. `busyKey` = the row being saved.
- */
+/** Set by hand on a crm line (docs/19); `busyKey` is the row being saved. */
 export function useCrmStatus(onNotice: (notice: Notice) => void) {
   const queryClient = useQueryClient();
   const save = useMutation({

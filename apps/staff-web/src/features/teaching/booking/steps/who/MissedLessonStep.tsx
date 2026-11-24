@@ -17,7 +17,7 @@ import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text
 
 export interface MissedLessonStepProps {
   draft: Pick<BookingDraft, 'students' | 'missed' | 'tz' | 'teacher'>;
-  /** From the lesson drawer's «حجز تعويضي»: picked once the candidates load. */
+  /** Picked once the candidates load. */
   preselectId?: string | undefined;
   onChange: (patch: Partial<Pick<BookingDraft, 'missed' | 'durationMin' | 'teacher' | 'startsAt'>>) => void;
 }
@@ -38,10 +38,7 @@ function MissedStatus({ status }: { status: LessonStatus }) {
   return <StatusChip {...useLessonStatusText().chip(status)} size="sm" />;
 }
 
-/**
- * «اختار الحلقة اللي الطالب فاتته» (R-SCH-10): the student's missed, chargeable lessons of the last
- * 60 days that have no makeup yet. The pick fixes the length and preselects the teacher (editable).
- */
+/** Missed chargeable lessons of the last 60 days without a makeup (R-SCH-10); sets length. */
 export function MissedLessonStep({ draft, preselectId, onChange }: MissedLessonStepProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const studentId = draft.students[0]?.id ?? '';

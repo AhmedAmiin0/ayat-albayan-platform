@@ -1,4 +1,5 @@
-import { parseAmount, type SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesMoneySubscriptionView } from '@ab/shared';
+import { parseAmount } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import type { Attachment } from '@/payments/receipts/attachments';
 import { paidAtFor } from '@/core/lib/money/paid-day';

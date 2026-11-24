@@ -52,7 +52,7 @@ export function weeklyHours(grid: Grid): number {
 
 const plural = new Intl.PluralRules(intlLocale(locale));
 
-/** «27 ساعة متاحة في الأسبوع» with Arabic number agreement; '' for an empty week. */
+/** Uses Arabic number agreement; '' for an empty week. */
 export function weeklyHoursLabel(hours: number): string {
   if (hours <= 0) return '';
   const n = Math.round(hours * 10) / 10;
@@ -62,7 +62,7 @@ export function weeklyHoursLabel(hours: number): string {
   return text.replace('{n}', String(n));
 }
 
-/** Weekday (0 = الأحد) and minute of the day at `now` in `tz`: today's row and the now-marker. */
+/** Weekday 0 is Sunday. */
 export function wallClock(now: Date, tz: string): { weekday: Weekday | undefined; minute: number } {
   const { hour, minute } = zonedFieldsIn(now, tz);
   const index = weekdayIn(now, tz);

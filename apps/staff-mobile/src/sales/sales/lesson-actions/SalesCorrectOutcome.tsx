@@ -1,4 +1,4 @@
-import type { CorrectTo } from '@ab/shared';
+import type { CorrectTo } from '@ab/schedule';
 import { Note } from '@/more';
 import { t } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';

@@ -1,4 +1,6 @@
-import { counted, courseLessonCount, type BookingRequest, type Conflict, type SalesCourseView } from '@ab/shared';
+import { courseLessonCount, type BookingRequest, type SalesCourseView } from '@ab/shared';
+import { counted } from '@ab/core';
+import type { Conflict } from '@ab/schedule';
 import { View } from 'react-native';
 import { type BookFailure, ConflictNotice } from '@/booking';
 import { SummaryList } from '@/booking/trial/components/ConfirmStep';

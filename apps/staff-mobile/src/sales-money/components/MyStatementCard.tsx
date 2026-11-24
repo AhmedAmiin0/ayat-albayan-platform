@@ -1,4 +1,4 @@
-import { payoutStatusStyle, type AssistantStatementView } from '@ab/shared';
+import { payoutStatusStyle, type AssistantStatementView } from '@ab/money';
 import { View } from 'react-native';
 import { t, StatusChip } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

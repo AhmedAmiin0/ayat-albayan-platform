@@ -15,10 +15,7 @@ export interface RoleResetButtonProps {
   onError: (error: unknown) => void;
 }
 
-/**
- * «استعادة الافتراضي» on an editable system role (teacher / sales / assistant): asks first, like
- * «حذف الدور», then POST /roles/:id/reset and the roles list is refreshed.
- */
+/** Asks first, then POST /roles/:id/reset and the roles list refreshes. */
 export function RoleResetButton({ role, onReset, onError }: RoleResetButtonProps) {
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);

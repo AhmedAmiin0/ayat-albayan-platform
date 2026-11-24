@@ -12,11 +12,7 @@ import { SavedRepliesTable } from './SavedRepliesTable';
 
 const S = t.savedReplies;
 
-/**
- * «الردود السريعة» (owner 2026-10-25): the SHARED replies everyone with the chats inserts, in one
- * compact table (no scope column: every row is shared) with reorder, edit and delete; «رد جديد» opens the editor. Without
- * saved_replies.manage the table is read-only. Personal replies are managed from the chat's «ردودي».
- */
+/** Read-only without saved_replies.manage; personal replies are managed from the chat. */
 export function SavedRepliesTab() {
   const replies = useQuery(savedRepliesQuery);
   const manage = usePermissions().can('saved_replies.manage');

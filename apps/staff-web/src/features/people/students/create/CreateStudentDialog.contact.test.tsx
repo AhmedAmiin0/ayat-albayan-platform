@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CreateStudentDialog } from './CreateStudentDialog';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1) on «إضافة طالب».
+// docs/30 §1.
 
 const api = vi.hoisted(() => ({ createStudent: vi.fn(), mergeStudents: vi.fn() }));
 vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));

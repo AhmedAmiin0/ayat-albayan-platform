@@ -3,8 +3,6 @@ import { days } from './draft.days';
 import type { BookingDraft, StepKey } from './draft';
 import { isNewStudent, newStudentReady } from '@/features/teaching/booking/steps/who/new-student';
 
-// Which steps the booking wizard walks, and when «التالي» may leave each. Pure.
-
 // The package (and lesson length) comes before the slot: the repeat days depend on it. A trial
 // has no invoice; a makeup picks the missed lesson instead of a package.
 const FLOWS: Record<BookingKind, readonly StepKey[]> = {
@@ -34,7 +32,6 @@ function slotReady(d: BookingDraft): boolean {
   return !d.course || days(d).length === d.course.perWeek;
 }
 
-/** Whether «التالي» may leave `step`. */
 export function stepReady(d: BookingDraft, step: StepKey): boolean {
   switch (step) {
     case 'students':

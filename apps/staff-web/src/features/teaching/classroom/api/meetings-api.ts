@@ -9,13 +9,13 @@ import type {
 import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 
-/** POST /lessons/:id/room/open «افتح الحلقة الآن» (admin or the lesson's teacher). */
+/** Admin or the lesson's teacher. */
 export const openRoom = (lessonId: string) => apiSend<RoomOpenResult>('POST', `/lessons/${lessonId}/room/open`);
 
-/** POST /lessons/instant «حلقة فورية» (admin): 409 conflict unless override.reason. */
+/** Admin only: 409 conflict unless override.reason. */
 export const startInstant = (body: InstantLessonRequest) => apiSend<InstantLessonResult>('POST', '/lessons/instant', body);
 
-/** POST /students/:id/join-link «رابط دخول الطالب» (admin): creates or rotates the link. */
+/** Admin only: creates or rotates the link. */
 export const issueStudentLink = (studentId: string) => apiSend<StudentJoinLinkUrl>('POST', `/students/${studentId}/join-link`);
 
 /** Plain fetch for the student's public page: never the staff session token. */

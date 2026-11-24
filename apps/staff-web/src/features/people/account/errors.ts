@@ -1,7 +1,7 @@
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** The inputs of the «حسابي» forms an API error can point at; `form` is the form-level alert. */
+/** `form` is the form-level alert. */
 export type AccountField = 'full_name' | 'phone_e164' | 'email' | 'current_password' | 'new_password' | 'confirm' | 'avatar' | 'form';
 export type AccountErrors = Partial<Record<AccountField, string>>;
 
@@ -25,7 +25,7 @@ const FIELD_OF: Record<string, AccountField | undefined> = {
   name_too_long: 'full_name',
 };
 
-/** The reasons of the shared phone normaliser: all read as «رقم الهاتف غير صحيح». */
+/** All shared phone normaliser reasons read as one invalid-phone message. */
 const PHONE_REASONS = new Set(['empty', 'not_a_number', 'invalid_length', 'missing_country_code']);
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;

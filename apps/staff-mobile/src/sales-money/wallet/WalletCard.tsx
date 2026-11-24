@@ -1,4 +1,4 @@
-import type { WalletTotals } from '@ab/shared';
+import type { WalletTotals } from '@ab/money';
 import { View } from 'react-native';
 import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { MoneyCard } from '@/sales-money/components/MoneyCard';

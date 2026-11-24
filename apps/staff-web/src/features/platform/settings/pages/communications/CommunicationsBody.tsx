@@ -13,7 +13,6 @@ import { SafetyTab } from './tabs/SafetyTab';
 import { SavedRepliesTab } from './tabs/SavedRepliesTab';
 import { TemplatesTab } from './tabs/TemplatesTab';
 
-/** The id prefix of «التواصل»'s tabs and panel (tabIds). */
 export const COMMUNICATIONS_TABS_ID = 'communications';
 
 interface BodyProps {
@@ -41,11 +40,7 @@ function TabBody({ tab, audience, settings, drafts, onNote }: TabBodyProps) {
   return <OverviewTab settings={settings} />;
 }
 
-/**
- * «التواصل» once the settings are in: the tab in view, its one toast, and the «الإشعارات» row
- * drafts, held here so they outlive a tab switch (S3); the guard names them. The timing values
- * «مواعيد الرسائل» had are edited in «القيم» › «الرسائل» now (docs/26b §6a 1.16, 1.19).
- */
+/** Row drafts are held here so they outlive a tab switch (docs/26b §6a 1.16, 1.19). */
 export function CommunicationsBody({ tab, audience, settings, renderGuard }: BodyProps) {
   const [note, setNote] = useState<string | null>(null);
   const drafts = useRuleDrafts();

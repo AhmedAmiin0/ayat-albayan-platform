@@ -1,8 +1,7 @@
 import type { TemplateStatus } from '@ab/catalog';
 import type { Glyph, Tone } from '@ab/money';
 
-// «قيد المراجعة / معتمد / مرفوض» (owner 2026-11-14): what an author needs of Meta's status; any
-// other (never sent, missing, paused, disabled) reads «غير متاح».
+// Any status other than pending, approved or rejected reads as unavailable.
 
 export type AuthorStatus = 'pending' | 'approved' | 'rejected' | 'other';
 

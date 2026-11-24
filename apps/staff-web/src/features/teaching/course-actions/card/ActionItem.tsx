@@ -5,11 +5,9 @@ interface ActionItemProps {
   /** What the action does (the board's line under it). */
   hint: string;
   onClick: () => void;
-  /** «إلغاء الاشتراك»: the quiet danger look. */
   danger?: boolean;
 }
 
-/** One action of «الدورة والباقة» (owner 2026-11-17): the button and what it does under it. */
 export function ActionItem({ label, hint, onClick, danger = false }: ActionItemProps) {
   return (
     <div className="grid justify-items-start gap-1">

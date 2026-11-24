@@ -8,8 +8,6 @@ import {
   type StaffRole,
 } from '@ab/catalog';
 
-// The role dialog's state and its pure edits: one checkbox per permission, «تحديد الكل» per area.
-
 export interface RoleForm {
   name_ar: string;
   name_en: string;
@@ -43,7 +41,7 @@ export function groupState(permissions: readonly Permission[], keys: readonly Pe
   return held === keys.length ? 'all' : 'some';
 }
 
-/** «تحديد الكل»: selects the whole area, or clears it when it is already all selected. */
+/** Selects the whole area, or clears it when already fully selected. */
 export function toggleGroup(form: RoleForm, keys: readonly Permission[]): RoleForm {
   const set = new Set(form.permissions);
   const all = groupState(form.permissions, keys) === 'all';
@@ -65,7 +63,7 @@ export function roleBody(form: RoleForm, input: { creating: boolean; fixedGrants
   return { ok: true, body: input.fixedGrants ? { name_ar, name_en } : { name_ar, name_en, permissions: form.permissions } };
 }
 
-/** A system teacher / sales / assistant role: editable, with «استعادة الافتراضي»; else null. */
+/** Only system teacher, sales or assistant roles are resettable; else null. */
 export function resettableRole(role: RoleView | null): RoleView | null {
   return role?.is_system === true && isEditableSystemRole(role.key) ? role : null;
 }

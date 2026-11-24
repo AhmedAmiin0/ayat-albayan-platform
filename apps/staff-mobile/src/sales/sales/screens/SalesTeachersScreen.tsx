@@ -1,4 +1,10 @@
-import { filterSalesTeachers, NO_TEACHER_FILTER, PROGRAMS, type SalesTeacherView, teacherPrograms } from '@ab/shared';
+import {
+  filterSalesTeachers,
+  NO_TEACHER_FILTER,
+  type SalesTeacherView,
+  teacherPrograms,
+} from '@ab/shared';
+import { PROGRAMS } from '@ab/catalog';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';

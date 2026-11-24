@@ -1,12 +1,12 @@
-import {
-  type AssistantLessonView,
-  riyadhToday,
-  type SalesScheduleDay,
-  type SalesSubscriptionKind,
-  type SalesSubscriptionView,
-  type SalesSubscriptionHistory,
-  type SalesTeacherView,
+import type {
+  SalesScheduleDay,
+  SalesSubscriptionKind,
+  SalesSubscriptionView,
+  SalesSubscriptionHistory,
+  SalesTeacherView,
 } from '@ab/shared';
+import type { AssistantLessonView } from '@ab/schedule';
+import { riyadhToday } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 

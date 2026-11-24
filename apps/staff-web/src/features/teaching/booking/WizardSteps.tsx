@@ -3,10 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import type { StepKey } from './draft/draft';
 
-/**
- * «خطوة 2 من 5» and the step names of this booking type; done steps get a filled nuqta, the current one half.
- * On a phone only the current step keeps its name on screen (six names wrap to two rows); a screen reader hears all.
- */
+/** On a phone only the current step keeps its name on screen; a screen reader hears all. */
 export function WizardSteps({ steps, step }: { steps: readonly StepKey[]; step: StepKey }) {
   const current = steps.indexOf(step);
   return (

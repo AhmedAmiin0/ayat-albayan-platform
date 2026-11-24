@@ -44,7 +44,7 @@ export function filterParams(f: StudentsFilters): [string, string][] {
 
 export const activeFilterCount = (f: StudentsFilters): number => filterParams(f).length;
 
-/** Sets one filter; '' (the «الكل» option) removes it. */
+/** '' removes the filter. */
 export function setFilter(f: StudentsFilters, key: FilterKey, value: string): StudentsFilters {
   return parseStudentFilters({ ...f, [key]: value });
 }

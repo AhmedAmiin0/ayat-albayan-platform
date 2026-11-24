@@ -1,4 +1,4 @@
-import { GRANTABLE_PERMISSIONS, selfPermissionsOf } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS, selfPermissionsOf } from '@ab/catalog';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';

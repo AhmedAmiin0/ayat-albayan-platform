@@ -1,4 +1,4 @@
-import type { SlotView } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
 import { screen } from '@testing-library/react-native';
 import { MON_19, slot } from '@/booking/testing/fixtures';
 import { t } from '@ab/mobile-kit';
