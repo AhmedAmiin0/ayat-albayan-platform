@@ -19,7 +19,6 @@ export function rowDescription(api: ValuesApi, target: DescribeTarget, fallback?
   return shownDescription({ entry: api.entry(target.key), hintKey: target.hintKey, locale, bundle: t }) ?? fallback;
 }
 
-/** «اقرأ الوصف وعدّله» in the row's «⋯» menu. */
 export const describeItem = (api: ValuesApi, target: DescribeTarget): RowMenuItem => ({
   id: 'describe',
   label: t.settingsValues.describe.menu,

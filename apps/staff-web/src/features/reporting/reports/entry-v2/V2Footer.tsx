@@ -12,10 +12,6 @@ export interface V2FooterProps {
   tz: string;
 }
 
-/**
- * What stops the send, the sent state with «تعديل التقرير», then «أرسل التقرير إلى الأسرة» (an
- * edit: «حفظ التعديل»; disabled with a spinner while pending) / «احفظ مسودة» and the hint.
- */
 export function V2Footer({ s, block, tz }: V2FooterProps) {
   const { report, mode } = s;
   const draft = report.status === 'draft';

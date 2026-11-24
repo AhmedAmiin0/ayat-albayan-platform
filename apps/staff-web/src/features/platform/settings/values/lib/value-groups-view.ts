@@ -8,12 +8,10 @@ import {
 } from '@ab/settings';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «القيم»'s group list (docs/26b §2): the editable groups, «قيم مخصصة», then under «تُدار من صفحة
-// أخرى» the module-owned views. «الكل» is not a group: it is only the result of a search or filter.
+// Group list (docs/26b §2); "All" is not a group, only the result of a search or filter.
 
 export type ValuesGroupId = ValueGroupId | 'custom' | OwnedValueGroupId;
 
-/** The views under «تُدار من صفحة أخرى» (read-only rows). */
 export const OWNED_GROUP_IDS: readonly OwnedValueGroupId[] = ['notifications', 'sending', 'google'];
 
 /** Every group in list order. */
@@ -55,7 +53,7 @@ const NEW_LABEL: Partial<Record<ValuesGroupId, string>> = {
 /** The group's name (today's section words where they exist). */
 export const groupLabel = (id: ValuesGroupId): string => SECTION_LABEL[id] ?? NEW_LABEL[id] ?? id;
 
-/** The settings rows of a group (none for «قيم مخصصة» and Google, which are not settings rows). */
+/** None for custom values and Google, which are not settings rows. */
 export function groupKeys(id: ValuesGroupId): readonly SettingKey[] {
   if (id === 'custom' || id === 'google') return [];
   if (id === 'notifications' || id === 'sending') return OWNED_VALUE_GROUPS[id];
@@ -73,7 +71,6 @@ export const OWNER_PAGE: Record<OwnedValueGroupId, { to: string; search?: Record
   google: { to: '/admin/settings/google', label: t.settingsValues.editFrom.google },
 };
 
-/** Which group a settings key is listed in (the «الكل» results name it under each label). */
 export function groupOfKey(key: SettingKey): ValuesGroupId | undefined {
   return GROUP_IDS.find((id) => groupKeys(id).includes(key));
 }

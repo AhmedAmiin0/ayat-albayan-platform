@@ -5,11 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const l = t.settingsValues.leave;
 
-/**
- * Leaving «القيم» with unsaved rows asks first (docs/26b §2 «One save model»): in-app navigation
- * through the router's blocker, a reload or a closed tab through beforeunload. Switching the group
- * or searching stays on the page (only the search changes), so it never asks: edits are kept.
- */
+/** Unsaved rows ask before leaving (docs/26b §2); switching group or searching keeps edits. */
 export function LeaveGuard({ names }: { names: readonly string[] }) {
   const dirty = names.length > 0;
   const blocker = useBlocker({

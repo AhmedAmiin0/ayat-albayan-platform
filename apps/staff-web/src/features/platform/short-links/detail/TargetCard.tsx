@@ -7,7 +7,7 @@ import { SendChip } from '@/features/platform/short-links/shared/LinkChips';
 
 const D = t.shortLinks.detail;
 
-/** «الإرسال عبر واتساب»: one chip per send state that has users («أُرسل 9», «فشل 1»). */
+/** One chip per send state that has users. */
 function SendSummary({ link }: { link: ShortLinkDetail }) {
   const counts = sendCounts(link.userList);
   const shown = SHORT_LINK_SEND_STATUSES.filter((s) => counts[s] > 0);
@@ -24,7 +24,6 @@ function SendSummary({ link }: { link: ShortLinkDetail }) {
   );
 }
 
-/** «الرابط الأصلي» with «نسخ», and the WhatsApp sends when the link has users. */
 export function TargetCard({ link }: { link: ShortLinkDetail }) {
   return (
     <section className="grid content-start gap-4 rounded-md border border-rule p-4">

@@ -10,7 +10,6 @@ import { downloadQrPng } from './qr-png';
 
 const D = t.shortLinks.detail;
 
-/** «رمز QR» (board LinkXWebDetail): the code of the short URL, the URL, PNG and copy. */
 export function QrCard({ link }: { link: Pick<ShortLinkDetail, 'code' | 'shortUrl'> }) {
   const svg = useRef<SVGSVGElement>(null);
   const matrix = qrMatrix(link.shortUrl);

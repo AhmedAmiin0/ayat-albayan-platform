@@ -24,7 +24,6 @@ describe('«القيم» editors by type', () => {
     const input = within(row).getByLabelText(t.settings.bookingHorizonWeeks);
     const bounds = within(row).getByText(v.bounds.replace('{min}', '1').replace('{max}', '12'));
     expect(input.getAttribute('aria-describedby')).toContain(bounds.id);
-    // 5 → «أسابيع» (the counted form), and no spin arrows over the digits.
     expect(within(row).getByText(v.units.weeks.few.replace('{n}', '').trim())).toBeTruthy();
     expect(input.className).toContain('[&::-webkit-inner-spin-button]:appearance-none');
   });

@@ -24,14 +24,10 @@ export interface DescriptionEditorProps {
   /** The Arabic text the field starts from. */
   start: string;
   onClose: () => void;
-  /** After a save or a restore: the polite announcement («تم حفظ الوصف»). */
   onDone: (message: string) => void;
 }
 
-/**
- * «تعديل الوصف» (states.html): the Arabic description in a textarea (≤ 500 characters, a live count
- * linked by aria-describedby), «احفظ الوصف» + «إلغاء», and «أعد الوصف الأصلي» once it was edited.
- */
+/** Arabic description editor, at most 500 characters with a live count; restore once edited. */
 export function DescriptionEditor({ target, entry, start, onClose, onDone }: DescriptionEditorProps) {
   const formId = useId();
   const [text, setText] = useState(start);

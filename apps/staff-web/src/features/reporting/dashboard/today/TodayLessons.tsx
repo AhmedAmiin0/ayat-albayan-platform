@@ -26,7 +26,7 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
     <li
       className={cn(
         'grid items-start gap-x-3 gap-y-2 border-b border-rule py-3.5 last:border-b-0',
-        // «12:30 م» is wider than «12:30»: the time column grows in 12 h.
+        // The 12 h time is wider, so the time column grows.
         clock.cycle === '12' ? 'grid-cols-[6.5rem_minmax(0,1fr)] @xl:grid-cols-[6.5rem_minmax(0,1fr)_auto]' : 'grid-cols-[4.5rem_minmax(0,1fr)] @xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]',
       )}
     >
@@ -55,10 +55,6 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
   );
 }
 
-/**
- * «حلقات اليوم» on the dashboard: time, students, teacher, status, a live dot while the room is
- * open, and «ادخل الحلقة» / «افتح الحلقة الآن» (the classroom's own staff button).
- */
 export function TodayLessons({ lessons, className }: { lessons: LessonView[] | undefined; className?: string }) {
   const now = useNow();
   const win = useJoinWindow();

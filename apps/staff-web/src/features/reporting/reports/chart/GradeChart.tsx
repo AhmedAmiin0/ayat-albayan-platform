@@ -7,12 +7,7 @@ import { chartPoints, segments, SERIES_KEYS, yOf, type SeriesKey } from './chart
 import { gradeWord, seriesLabel, shortDate } from './chart-labels';
 import { ChartPoints } from './ChartPoints';
 
-/**
- * «التقدم في التقييم» (R-REP-05, issue D2): one grade at a time (the overall grade, or a rubric
- * picked above the chart) over the student's reports. Single series → no legend; the selector
- * names it. Line + 8px dots in the action green on hairline grid rows labelled with the grade
- * words; every value also sits in the hidden table and the list below (tooltips never gate).
- */
+/** One grade series at a time (R-REP-05); every value is also in the hidden table and list. */
 export function GradeChart({ series, tz }: { series: readonly GradePoint[]; tz: string }) {
   const [key, setKey] = useState<SeriesKey>('overall');
   const points = chartPoints(series, key);

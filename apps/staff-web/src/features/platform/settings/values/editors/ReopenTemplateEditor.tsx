@@ -11,16 +11,12 @@ import { TextEditor } from './TextEditor';
 const choiceSchema = z.enum(['template', 'wait']);
 const CHOICES = choiceSchema.options;
 
-/** The value a picked choice stores: the default starter template, or «بدون قالب». */
 const VALUE_OF: Record<ReopenChoice, string> = {
   template: z.string().parse(settingDef('chat_reopen_template').default),
   wait: REOPEN_NO_TEMPLATE,
 };
 
-/**
- * `chat_reopen_template` (owner 2026-11-06, «give him a choice»): a select of «قالب ترحيب» (then
- * the template's name, today's text box) or «بدون قالب: انتظار رد العائلة» (REOPEN_NO_TEMPLATE).
- */
+/** A choice between a welcome template or no template, waiting for the family's reply. */
 export function ReopenTemplateEditor(props: EditorProps) {
   const api = useValues();
   const field = SETTING_FIELD_OF[props.settingKey];

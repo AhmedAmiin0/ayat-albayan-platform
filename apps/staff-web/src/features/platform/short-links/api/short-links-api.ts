@@ -1,8 +1,7 @@
 import { shortLinkQueries, shortLinkSends } from '@ab/client-core';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
-// «الروابط المختصرة» (docs/19 «Managed links»): the reads and writes live in @ab/client-core, the
-// same as the phone's; this module binds them to the web's API client.
+// Managed links (docs/19): reads and writes live in @ab/client-core, bound here to the web client.
 
 export { SHORT_LINKS_KEY } from '@ab/client-core';
 

@@ -5212,11 +5212,6 @@
       "count": 2
     }
   },
-  "src/features/platform/settings/SaveBar.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/platform/settings/boundaries.test.ts": {
     "no-nested-ternary": {
       "count": 1
@@ -5527,11 +5522,6 @@
       "count": 6
     }
   },
-  "src/features/platform/settings/registry-form/RowNotes.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/platform/settings/registry-form/ShapeRow.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -5615,15 +5605,10 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "typescript/no-confusing-void-expression": {
       "count": 2
-    }
-  },
-  "src/features/platform/settings/sections/AppearanceSection.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/platform/settings/sections/SectionFields.tsx": {
@@ -5668,7 +5653,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/platform/settings/values/ValuesPage.test.tsx": {
@@ -5686,17 +5671,12 @@
   },
   "src/features/platform/settings/values/ValuesStates.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/platform/settings/values/ValuesTable.tsx": {
     "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/features/platform/settings/values/ValuesToolbar.tsx": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/features/platform/settings/values/ValuesView.confirm.test.tsx": {
@@ -5711,7 +5691,7 @@
   },
   "src/features/platform/settings/values/ValuesView.describe.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-type-assertion": {
       "count": 1
@@ -5748,12 +5728,12 @@
   },
   "src/features/platform/settings/values/cells/ActionCell.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/platform/settings/values/cells/InfoCells.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/platform/settings/values/cells/NameCell.tsx": {
@@ -5761,12 +5741,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/features/platform/settings/values/cells/key-item.tsx": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/features/platform/settings/values/conflicts/conflict-text.ts": {
@@ -5776,7 +5751,7 @@
   },
   "src/features/platform/settings/values/description/DescriptionDialog.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/platform/settings/values/description/DescriptionEditor.tsx": {
@@ -5787,11 +5762,6 @@
       "count": 3
     },
     "typescript/no-confusing-void-expression": {
-      "count": 1
-    }
-  },
-  "src/features/platform/settings/values/description/describe-target.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -5823,12 +5793,12 @@
   },
   "src/features/platform/settings/values/description/use-description-save.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/features/platform/settings/values/description/use-sheet-description.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/platform/settings/values/editors/NumberEditor.tsx": {
@@ -5841,7 +5811,7 @@
   },
   "src/features/platform/settings/values/editors/ShapeEditor.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -5892,7 +5862,7 @@
   },
   "src/features/platform/settings/values/hooks/use-row-saves.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -5942,7 +5912,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -5977,11 +5947,6 @@
       "count": 1
     }
   },
-  "src/features/platform/settings/values/lib/value-units.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/platform/settings/values/rows/CustomValueRow.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -5989,12 +5954,7 @@
   },
   "src/features/platform/settings/values/rows/GoogleValueRow.tsx": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/features/platform/settings/values/rows/SettingPhoneRow.tsx": {
-    "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/platform/settings/values/rows/SettingValueRow.tsx": {
@@ -6016,11 +5976,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/platform/settings/values/rows/row-classes.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -6058,7 +6013,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -6073,9 +6028,6 @@
     }
   },
   "src/features/platform/settings/values/values-search.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -6099,7 +6051,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 5
@@ -6117,19 +6069,11 @@
     }
   },
   "src/features/platform/translations/ValuesLink.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
-    }
-  },
-  "src/features/platform/translations/registry-hints.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/platform/translations/translation-edit.ts": {
@@ -6149,7 +6093,7 @@
   },
   "src/features/reporting/activity/ActivityPage.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/reporting/activity/activity-format.ts": {
@@ -6239,7 +6183,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/reporting/dashboard/funnel/SourceTable.tsx": {
@@ -6323,9 +6267,6 @@
     }
   },
   "src/features/reporting/dashboard/work/RecentInbox.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 3
     }
@@ -6489,9 +6430,6 @@
   "src/features/reporting/reports/entry-v2/quran/SegmentCard.tsx": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/reporting/reports/entry-v2/quran/SegmentPart.tsx": {
@@ -6506,7 +6444,7 @@
   },
   "src/features/reporting/reports/entry-v2/quran/SurahPicker.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/reporting/reports/entry-v2/quran/picker-state.test.ts": {
