@@ -1,14 +1,11 @@
 import { settingDef, type SettingDef, type SettingKey, type SettingType } from '@ab/settings';
 import { z } from 'zod';
 
-// «القيم» on both apps (docs/36 f5): one classifier picks what kind of value a setting holds; each
-// app keeps its own words for each kind in a VALUE_TEXT table (web units and tz cities, phone
-// i18n option labels).
+// One shared classifier picks a setting's value kind (docs/36 f5); each app keeps its own words.
 
 /** What a stored value is, for the words that show it. */
 export type ValueKind = 'shape' | 'flag' | 'empty' | 'number' | 'list' | 'choice' | 'zone' | 'text';
 
-/** An app's words per kind: the table, the default column, «المحفوظ: …». */
 export type ValueTextTable = Record<ValueKind, (key: SettingKey, value: unknown) => string>;
 
 const objectValue = z.record(z.string(), z.unknown());

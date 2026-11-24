@@ -6,8 +6,7 @@ import type {
 } from '@ab/shared';
 import { localDateIn } from '@ab/time';
 
-// «حضرها» / «غاب عنها» (docs/50 §5.1): the pages of past lessons as one list, grouped by month on
-// the family's clock. An excused absence is still «غاب عنها».
+// Past lessons by month on the family's clock; an excused absence counts as absent (docs/50 §5.1).
 
 /** Which list a past lesson's outcome belongs to. */
 const HISTORY_LIST_OF: Readonly<Record<PortalOutcome, PortalHistoryStatus>> = {

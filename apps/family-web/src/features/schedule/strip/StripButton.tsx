@@ -14,7 +14,6 @@ const BUTTON = cn(
   'aria-[current=date]:font-bold aria-[current=date]:text-lapis',
 );
 
-/** «الأحد 16 نوفمبر: حلقتان» for the screen reader. */
 const labelOf = (d: StripDay): string =>
   S.dayLabel
     .replace('{date}', longDay(d.day))

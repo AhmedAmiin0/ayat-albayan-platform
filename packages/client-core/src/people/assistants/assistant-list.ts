@@ -1,8 +1,6 @@
 import type { PayoutStatus } from '@ab/catalog';
 import type { AssistantTermsView } from '@ab/money';
 
-// The «المساعدون» screens of web and mobile (apps/api assistant-pay).
-
 /** One assistant of the list: GET /assistant-pay/terms reshaped to the profile and its terms. */
 export interface AssistantRow {
   id: string;

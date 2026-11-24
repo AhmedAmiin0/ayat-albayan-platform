@@ -1,9 +1,7 @@
 import { COURSE_PAUSE_REASON } from '@ab/shared';
 import { isOpenLesson, type LessonView } from '@ab/schedule';
 
-// «تنبيهات اليوم»: today's lessons cancelled or moved, with who and why (docs/47 move lines). Only
-// what the teacher may read: her own reason, a pause, a move reason on her own lessons. An admin's
-// other cancel text can be a series-end or course-stop note (money): it never shows.
+// Only what the teacher may read; an admin's other cancel text can carry money, so it never shows.
 
 export type ChangeWho = 'teacher' | 'admin' | 'moved';
 

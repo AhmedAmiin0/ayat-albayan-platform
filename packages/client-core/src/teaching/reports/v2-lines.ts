@@ -104,7 +104,7 @@ const CONTENT_LINES: Record<Program, (c: ReportContent, text: ReportV2Text) => R
   islamic_studies: islamicLines,
 };
 
-/** «ملاحظة للأسرة»: the quick notes then the teacher's words. */
+/** Quick notes come before the teacher's words. */
 function noteLine(r: LinesReport, text: ReportV2Text): ReportLine {
   const quick = (r.content?.quick ?? []).map((q) => text.v2.quick[q]);
   const parts = [...quick, ...(r.notes ? [r.notes] : [])];

@@ -8,7 +8,7 @@ export interface NewTeacherForm {
   gender: 'male' | 'female';
 }
 
-/** What «مستخدم جديد» edits (web dialog, mobile screen); `linked` is the picked existing record. */
+/** `linked` is the picked existing record. */
 export interface CreateForm {
   email: string;
   full_name: string;
@@ -22,7 +22,7 @@ export interface CreateForm {
   newTeacher: NewTeacherForm;
 }
 
-/** A role and record already picked (the student file's «إنشاء حساب»). */
+/** A role and record already picked, as when creating an account from the student file. */
 export interface Prefill {
   role: UserRole;
   linked?: LinkCandidate;

@@ -16,15 +16,11 @@ const paramsSchema = z.object({
   rec: z.string().min(1).optional(),
 });
 
-/** «سارة · الخميس 13 نوفمبر 6:30 م» on the student's clock. */
+/** Formatted on the student's clock. */
 const whoWhen = (view: ReportPageView, clock: ClockOptions): string =>
   `${view.student.name} · ${lessonWhenAt(new Date(view.lesson.starts_at), { ...clock, tz: view.tz })}`;
 
-/**
- * «تقرير الحلقة» (docs/50 §6, canvas Report), pushed above the tabs: the content, homework and the
- * next plan, the PDF and the recording when visible. Opening it marked it seen (openReport).
- * When the content cannot be read, the PDF still opens by the portal's signed link.
- */
+/** Opening it marks it seen (docs/50 §6); unreadable content still opens the PDF by signed link. */
 export function ReportScreen() {
   const params = paramsSchema.parse(useLocalSearchParams());
   const page = useReportPage(params.id);

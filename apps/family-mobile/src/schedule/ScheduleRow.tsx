@@ -15,10 +15,6 @@ interface ScheduleRowProps {
   now: Date;
 }
 
-/**
- * One lesson of the week: the time, the teacher and length (opening «خيارات الحلقة»), «جارية
- * الآن» while its room is live (canvas RoomXLivePush), its chip, «ادخل» when open.
- */
 export function ScheduleRow({ entry, clock, now }: ScheduleRowProps) {
   const { student, lesson } = entry;
   const { color } = useTheme();

@@ -2,8 +2,6 @@ import { isFamilyEmail, type PortalStudent } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import type { OwnProfile } from './own-profile.js';
 
-// «بياناتي» on the profile page, shared by the family app and the family web.
-
 export interface ProfileFact {
   label: string;
   value: string;

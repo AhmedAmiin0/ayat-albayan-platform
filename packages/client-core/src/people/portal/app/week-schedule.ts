@@ -3,9 +3,7 @@ import { addDaysIn, localDateIn, startOfWeekIn } from '@ab/time';
 import { lessonOptions } from '../actions/lesson-options.js';
 import { isAhead } from '../lesson-window.js';
 
-// «الجدول» (docs/50 §6, the canvas's Schedule): one academy week (السبت → الجمعة) of the lessons
-// still ahead of the student in view (a student's own, a guardian's picked child), on the viewer's
-// clock.
+// One academy week, Saturday to Friday (docs/50 §6), of lessons still ahead, on the viewer's clock.
 
 /** One lesson with the child it belongs to. */
 export interface WeekLesson {
@@ -82,14 +80,13 @@ export function weekStrip(input: WeekInput, now: Date): StripDay[] {
   }));
 }
 
-/** «ملخص الأسبوع»: its lessons, those still awaiting the family's «سأحضر», and the teachers. */
 export interface WeekSummary {
   lessons: number;
   awaiting: number;
   teachers: PortalTeacher[];
 }
 
-/** A lesson awaits the family while «سأحضر» is still among its options (lessonOptions). */
+/** A lesson awaits the family while confirm is still among its options (lessonOptions). */
 const awaits = (now: Date) => (entry: WeekLesson): boolean =>
   lessonOptions(entry.lesson, now).includes('confirm');
 
