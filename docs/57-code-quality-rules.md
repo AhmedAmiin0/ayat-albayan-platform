@@ -733,11 +733,14 @@ their *logic* belongs in cc, their pieces in the kits).
 
 ## 9. Enforcement
 
-All checks follow the repo's pattern: a rule or guard that fails only on **new** violations, with a
-baseline that may only shrink (`eslint-suppressions.json` per package for lint rules, oxlint parity in
-`oxlint-suppressions.json`, or a JSON list under `refactor/guards/` pruned by ci `baselines`).
+A rule's CI check turns on only when the code already passes it (docs/59-no-suppressions.md). No check
+enters with a baseline: no `eslint --suppress-all` or `--suppress-rule`, no new entry in an
+`eslint-suppressions.json` or `oxlint-suppressions.json`, no new list under `refactor/guards/`. The
+column «Existing sites» below is the work the lane does first: it fixes every site, in numbered PRs when
+there are many, and the last PR turns the rule on at zero. A named file in that column is the list the
+lane works through, never a baseline committed to the repo.
 
-| Rule | Check | Where it runs | Baseline | Oxlint parity | False positives / exceptions |
+| Rule | Check | Where it runs | Existing sites | Oxlint parity | False positives / exceptions |
 |---|---|---|---|---|---|
 | R1 | `ab/types-in-types-file`: in `.ts` files with runtime code, no exported `interface`/`type` except `z.infer` of a schema in the same file; in `.tsx` no type declarations at all | lint (verify job) | eslint-suppressions (≈ 1,900 files) | custom JS plugin rule in `packages/config/oxlint/ab-plugin.js` | `z.infer` types; non-exported one-liners (allowed); Nest provider tokens |
 | R1 | `guard:types-dup`: an exported type name declared in two workspaces | guards job | `refactor/guards/types-dup.json` | n/a | same name, different meaning (allow-list) |
@@ -762,9 +765,10 @@ baseline that may only shrink (`eslint-suppressions.json` per package for lint r
 | R16 | `ab/no-client-now`: `Date.now()`/`new Date()` with no argument banned in app and kit code except in `*.timer.ts`/animation hooks; endpoints deciding by time return `server_now` (contract test) | lint + api tests | eslint-suppressions | `no-restricted-syntax` | countdown/animation timers, telemetry timestamps |
 
 New ESLint rules live in `packages/config/eslint-*.js` with their rule tests (pattern of
-`eslint-zod-inputs.test.js`); each lands **in one PR with its baseline** generated in a cloud session
-(`eslint . --suppress-all` for that rule only) and its oxlint twin, so CI stays green and only new code
-is held to it. Total new suppressions are reported in the PR; `guard:lint` keeps every total shrinking.
+`eslint-zod-inputs.test.js`) and their oxlint twin. The rule turns on in the PR that fixes its last
+site, so CI stays green with no suppression; the earlier PRs of the lane fix sites only. `guard:lint`
+fails on any new suppression, per file and per rule, and the guards job annotates a PR that loosens a
+lint config («lint rules loosened»); such a PR merges only with the owner's go.
 
 ## 10. Lanes
 
