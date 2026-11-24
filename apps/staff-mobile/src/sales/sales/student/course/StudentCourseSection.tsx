@@ -11,16 +11,11 @@ interface StudentCourseSectionProps {
   subscriptionId: string | null;
   /** Hers, or any with sales.renew_any: hers to book or move (the API's own check). */
   acts: boolean;
-  /** «الجدول»: its next lessons with the assistant's lesson sheet (absent in an old cache). */
+  /** Absent in an old cache. */
   schedule: SalesStudentSchedule | undefined;
 }
 
-/**
- * The weekly course on «تفاصيل الطالب» (owner 2026-11-06): a paid package with no course yet (a
- * link sale stops at the link) offers «أيام الحلقات», the course wizard; then «الدورة والباقة»
- * (owner 2026-11-17): the course, its next lessons and the actions; «تغيير المعلم» / «تغيير موعد
- * الحلقات» / «مدّ الجدول» only once a course exists. «إلغاء الاشتراك» as before.
- */
+/** A paid package with no course yet offers the course wizard; moves need a course. */
 export function StudentCourseSection(props: StudentCourseSectionProps) {
   const { studentId, subscriptionId, acts } = props;
   const base = useTreeBase();

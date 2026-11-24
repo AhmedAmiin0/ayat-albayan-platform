@@ -10,11 +10,7 @@ interface SalesCorrectOutcomeProps {
   targets: readonly CorrectTo[];
 }
 
-/**
- * Sales' «تصحيح حالة الحلقة» (owner 2026-11-03, POST /sales/lessons/:id/correct { to }). The sales
- * row carries no auto flag, so a held / absent lesson offers it: one recorded by hand or with a
- * report answers 409 not_auto_held, said in words.
- */
+/** The sales row has no auto flag, so a hand-recorded lesson answers 409 not_auto_held. */
 export function SalesCorrectOutcome({ lessonId, targets }: SalesCorrectOutcomeProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

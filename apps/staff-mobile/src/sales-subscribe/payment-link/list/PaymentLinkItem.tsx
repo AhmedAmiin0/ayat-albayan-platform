@@ -14,11 +14,11 @@ const pl = t.paymentLinks;
 interface PaymentLinkItemProps {
   link: PaymentLinkView;
   now: Date;
-  /** No «إلغاء الرابط» (/pay-done: a payment may still be on its way from Stripe). */
+  /** No link cancel here: a payment may still be on its way from Stripe. */
   readOnly?: boolean;
 }
 
-/** «يوسف · 250 ر.س · ينتهي 1 نوفمبر 2026» with its status (an open link past its expiry reads expired). */
+/** An open link past its expiry reads as expired. */
 export function PaymentLinkItem({ link, now, readOnly = false }: PaymentLinkItemProps) {
   const tz = useViewerTz();
   const status = effectiveLinkStatus(link, now);

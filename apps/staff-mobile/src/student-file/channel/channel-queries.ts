@@ -3,10 +3,9 @@ import type { TeacherChannelRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { TEACHER_CHANNELS_KEY, useScreenFocused, apiFetch } from '@ab/mobile-kit';
 
-// «رسائل الطلاب» (docs/31 §2): the teacher's list polls while shown (CHANNEL_REFRESH_MS). The
-// thread itself is the shared kit's (@ab/mobile-kit ChannelScreen).
+// The teacher's student-message list polls while shown (docs/31 §2).
 
-/** `enabled` false: not a teacher (the in-room «المحادثة» of an admin reads no list). */
+/** `enabled` false when not a teacher, so an admin's in-room chat reads no list. */
 export function useTeacherChannels(enabled = true) {
   const focused = useScreenFocused();
   return useQuery({

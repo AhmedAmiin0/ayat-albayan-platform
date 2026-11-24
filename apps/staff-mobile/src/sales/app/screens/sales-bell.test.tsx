@@ -7,7 +7,6 @@ import { t } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// The bell in the sales home («المحادثات») and the assistant home («حلقاتي»), as on the admin's Today.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));

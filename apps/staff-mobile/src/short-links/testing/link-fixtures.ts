@@ -71,7 +71,6 @@ export const people: ShortLinkPerson[] = [
   { id: TEACHER, name: 'حسن إبراهيم', role: 'teacher', phone: null },
 ];
 
-/** Signed in with every key and an id («روابطي», «أنت»). */
 export function clientWithMe() {
   const client = createTestQueryClient();
   client.setQueryData(pathKey('/auth/me'), { ...fullAccessMe(), id: ME });

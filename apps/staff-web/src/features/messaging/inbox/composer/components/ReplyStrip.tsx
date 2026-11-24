@@ -6,11 +6,6 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { quoteSender, quoteText } from '@/features/messaging/inbox/messages/lib/quote';
 
-/**
- * «الرد على رسالة» above the message box (owner 2026-10-25): one compact line (44px, the phone's
- * reading height stays) with who wrote it, its first line and ✕. Nothing without a target.
- * After ✕ the focus goes back to the box (`returnFocus`).
- */
 export function ReplyStrip({ returnFocus }: { returnFocus: RefObject<HTMLElement | null> }) {
   const { target, chat, cancelReply } = useChatActions();
   if (!target) return null;

@@ -6,7 +6,7 @@ import { InviteResultRow } from './InviteResultRow';
 
 const R = t.meetingInvites.results;
 
-/** «نتيجة الدعوات» after a create: one row per recipient; the personal links show only this once. */
+/** The personal links show only this once. */
 export function InviteResults({ results }: { results: readonly MeetingInviteResult[] }) {
   const { color } = useTheme();
   if (results.length === 0) return null;

@@ -6,7 +6,7 @@ import {
 } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 
-// The per-line driver switch on the phone (docs/19), the same key the web's «التكاملات» saves.
+// docs/19: the same key the web's integrations page saves.
 
 const LINE_DRIVER_KEY = { notifications: 'WA_PROVIDER', chat: 'WA_CHAT_PROVIDER' } as const satisfies Record<WaLine, string>;
 
@@ -23,7 +23,6 @@ export function lineDriver(items: readonly Pick<IntegrationConfigItem, 'key' | '
   return isProvider(value) ? value : 'meta';
 }
 
-/** «Meta مباشرة» / «Kapso» / «نظام CRM» (the web select's words). */
 export const driverName = (p: WaProvider): string => t.integrations.options[p];
 
 /** PUT /settings/integrations body: only this line's key (the API audits it like the web's save). */

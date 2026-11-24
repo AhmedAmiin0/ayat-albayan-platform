@@ -13,7 +13,6 @@ export interface ConfigTextFieldProps {
   numeric?: boolean;
 }
 
-/** One typed option of «إعدادات Evolution» with its hint and error. */
 export function ConfigTextField(props: ConfigTextFieldProps) {
   const { label, value, onChange, hint, error, ltr = false, numeric = false } = props;
   return (

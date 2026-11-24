@@ -36,7 +36,6 @@ test('rows with name + status chip, the API total as the count; tap opens the te
   await renderWithQuery(<TeachersScreen />);
   expect(await screen.findByText('أ. فاطمة الزهراء')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers?page=1&pageSize=25');
-  // Owner 2026-10-28: the total on the title's line, «المعلمين · 31», no separate count line.
   expect(screen.getByRole('header', { name: `${t.nav.teachers} · 31` })).toBeTruthy();
   expect(screen.getByText(t.enums.teacherStatus.active)).toBeTruthy();
   expect(screen.getByText(t.enums.teacherStatus.inactive)).toBeTruthy();

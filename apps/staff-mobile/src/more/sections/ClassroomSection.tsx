@@ -2,10 +2,7 @@ import type { Permission } from '@ab/catalog';
 import { router } from 'expo-router';
 import { t, ListRow, InsetGroup, Section } from '@ab/mobile-kit';
 
-/**
- * «الحلقات والاجتماعات»: the live lessons board and the meetings (web parity). Every staff login
- * holding meetings.read sees the meetings, a salesperson included (owner 2026-10-12).
- */
+/** Every staff login with meetings.read sees the meetings, sales included. */
 export function ClassroomSection({ can = () => true }: { can?: (permission: Permission) => boolean }) {
   return (
     <Section title={t.mobileClassroom.section}>

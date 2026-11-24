@@ -19,22 +19,17 @@ export interface BubbleMenuProps {
   onClose: () => void;
   offers: BubbleOffers;
   tools: Pick<BubbleTools, 'copy' | 'download'>;
-  /** Opens the «حذف من المنصة» confirm. */
   onHide?: () => void;
 }
 
-/** «تنزيل الملف — خطة الحفظ.pdf», or the file's kind when it has no name. */
+/** Falls back to the file's kind when it has no name. */
 const downloadLabel = (m: MessageView): string =>
   t.inbox.download.label.replace('{name}', m.media_name ?? t.inbox.media[mediaKind(m.media_mime)]);
 
 const item =
   'flex min-h-11 w-full items-center gap-2 rounded-sm px-3 text-start text-sm text-ink hover:bg-sunk aria-disabled:cursor-not-allowed aria-disabled:opacity-45 sm:min-h-9';
 
-/**
- * The bubble's small menu (right-click, or the «خيارات الرسالة» button), in WhatsApp's order: «رد»,
- * «نسخ» (a message with text), «إعادة توجيه», «تنزيل» (a file this viewer may open; owner 2026-10-26).
- * Plain buttons like MoreMenu (no ARIA menu roles); the first takes focus, Esc closes (BubbleActions).
- */
+/** Plain buttons like MoreMenu, no ARIA menu roles; the first takes focus and Esc closes. */
 export function BubbleMenu(props: BubbleMenuProps) {
   const { message: m, outbound, onClose, offers, tools, onHide } = props;
   const actions = useChatActions();
@@ -69,7 +64,7 @@ export function BubbleMenu(props: BubbleMenuProps) {
           {t.inbox.reply.action}
         </button>
       )}
-      {/* Touch screens have no tooltip: the reason «رد» is off, in words. */}
+      {/* Touch screens have no tooltip, so the reason reply is off is shown in words. */}
       {offers.reply && blocked && <p className="max-w-64 px-3 pb-1 text-2xs text-ink-3">{blocked}</p>}
       {offers.copy && (
         <button type="button" aria-label={t.inbox.copy.label} onClick={pick(() => tools.copy(m))} className={item}>

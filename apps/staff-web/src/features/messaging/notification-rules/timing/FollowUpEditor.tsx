@@ -16,10 +16,7 @@ export interface FollowUpEditorProps {
 
 const tm = t.notificationRules.timing;
 
-/**
- * «متابعة العميل بموعدين مقترحين» (docs/26b §6a 1.15, 1.17–1.18): up to five follow-ups in hours,
- * ascending, then the window of the suggested times (hours from now, days ahead).
- */
+/** Up to five ascending follow-ups in hours (docs/26b §6a 1.15, 1.17-1.18). */
 export function FollowUpEditor({ draft, onChange, disabled, describedBy, invalid }: FollowUpEditorProps) {
   const setHour = (i: number, value: string) => onChange({ ...draft, hours: draft.hours.map((h, j) => (j === i ? value : h)) });
   const remove = (i: number) => onChange({ ...draft, hours: draft.hours.filter((_, j) => j !== i) });

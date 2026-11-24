@@ -7,9 +7,7 @@ import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.tes
 import { AUTO_ASSIGN_OFF, CREATE, FAMILY_PHONE, NONE, PAY } from './sales-money.fakes';
 import { salesDefaults } from './sales-money.fakes';
 
-// Owner 2026-11-02 (docs/16 row 39): «اشتراط التعيين» OFF (the default) or auto-assign OFF =
-// the system sales role (no sales.renew_any) acts on ANY student. STUDENT_ID is salesA's; salesB
-// owns nothing.
+// docs/16 row 39: rule off or auto-assign off lets the sales role act on any student.
 const WRITES: InjectArgs[] = [
   {
     method: 'POST',

@@ -10,7 +10,6 @@ import { type ShareResult, sendSharedFiles } from './send-shared';
 
 export type FailedShare = Extract<ShareResult, { ok: false }>;
 
-/** The send under way: «جارٍ إرسال {n} من {m}». */
 export interface ShareStep {
   done: number;
   total: number;
@@ -22,7 +21,6 @@ interface ShareOutcome {
   failed: FailedShare[];
 }
 
-/** «جارٍ إرسال {n} من {m}». */
 export const sendingText = (step: ShareStep): string =>
   t.inbox.share.sending.replace('{n}', String(step.done)).replace('{m}', String(step.total));
 

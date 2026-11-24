@@ -11,8 +11,7 @@ import type { SalesOwnershipRule } from '@/modules/sales/sales/rule/sales-owners
 import type { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 import { SalesBookingOptions } from './sales-booking.service';
 
-// Owner 2026-10-28 (docs/16 row 37): she may move ANY lesson, so the slot grid of «تغيير الموعد»
-// (`lessonId`) reads that lesson's students whoever's they are; every other grid keeps her scope.
+// docs/16 row 37: the move grid reads that lesson's students; other grids keep her scope.
 const MINE = 'c0000000-0000-4000-8000-000000000001';
 const OTHER = 'c0000000-0000-4000-8000-000000000002';
 const LESSON = 'd0000000-0000-4000-8000-000000000001';

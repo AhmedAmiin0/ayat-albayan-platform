@@ -4,7 +4,7 @@ import { subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SubscriptionItem } from '@/money/subscriptions/SubscriptionItem/SubscriptionItem';
 
-// Owner 2026-10-28 («Why is this unpaid»): 80 of 81 stays «غير مدفوعة»; the row says what is left.
+// A part-paid package stays unpaid, and the row says what is left.
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 test('80 of 81: «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1» under the unpaid chip', async () => {

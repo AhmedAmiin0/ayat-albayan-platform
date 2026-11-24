@@ -22,12 +22,7 @@ const KINDS = (): { value: SalesSubscriptionKind; label: string }[] => [
   { value: 'confirmed', label: t.sales.subscriptions.confirmed },
 ];
 
-/**
- * «الاشتراكات» of the salesperson (web /sales/subscriptions): my subscriptions in two separate lists,
- * «في الانتظار» and «مؤكدة», never mixed; only the selected kind is fetched. No price, no payment.
- * A confirmed row opens its history. Cached rows stay on screen offline (R-MOB-03). The list screens' one
- * compact top (owner 2026-10-28): the kind's total on the title's line, the pills, the rows in one inset card.
- */
+/** Pending and confirmed are never mixed; only the selected kind is fetched (R-MOB-03). */
 export function SalesSubscriptionsScreen() {
   const { color } = useTheme();
   const [kind, setKind] = useState<SalesSubscriptionKind>('pending');

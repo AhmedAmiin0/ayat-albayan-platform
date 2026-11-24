@@ -11,22 +11,20 @@ import { copyText, saveUrl } from './save-file';
 type Said = { text: string; tone: 'info' | 'error' };
 
 export interface BubbleTools {
-  /** «نسخ»: the message's exact text on the clipboard, then «نُسِخ». */
   copy: (m: MessageView) => void;
-  /** «تنزيل»: a fresh signed URL (same rules as opening it), saved under the file's name. */
+  /** A fresh signed URL each time, under the same rules as opening it. */
   download: (m: MessageView) => void;
   /** The toast while there is something to say (portalled: the bubble's actions fade out). */
   toast: ReactNode;
 }
 
-/** As MessageMedia: 403 «غير مسموح», 410 gone from WhatsApp, 409 crm_no_media the CRM holds it. */
+/** Mirrors MessageMedia: 403 forbidden, 410 gone from WhatsApp, 409 crm_no_media. */
 function downloadError(e: unknown): string {
   if (e instanceof ApiError && e.status === 403) return t.inbox.mediaNotAllowed;
   if (e instanceof ApiError && e.status === 410) return t.inbox.mediaExpired;
   return errorCode(e) === 'crm_no_media' ? t.inbox.mediaInCrm : t.inbox.download.failed;
 }
 
-/** «نسخ» and «تنزيل» of the bubble menu and the file's own button (owner 2026-10-26). */
 export function useBubbleTools(): BubbleTools {
   const [said, say] = useState<Said | null>(null);
   const done = () => say(null);

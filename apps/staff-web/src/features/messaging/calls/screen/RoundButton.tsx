@@ -4,10 +4,8 @@ import { cn } from '@ab/web-kit/lib/utils';
 export interface RoundButtonProps {
   label: string;
   icon: IconName;
-  /** end / decline = red, accept = green, plain = the quiet glass button (كتم). */
   tone: 'end' | 'accept' | 'plain';
   onClick: () => void;
-  /** A toggle (كتم): its state for assistive technology. */
   pressed?: boolean;
 }
 

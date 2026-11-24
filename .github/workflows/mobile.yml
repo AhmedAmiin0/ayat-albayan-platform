@@ -80,7 +80,7 @@ jobs:
   build:
     if: ${{ inputs.action == 'build-android-apk' || inputs.action == 'both' }}
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.builder == 'github' && 90 || 60 }}
+    timeout-minutes: ${{ inputs.builder == 'github' && 120 || 60 }}
     environment: mobile
     outputs:
       # A runner build has no expo.dev page: the release links its artifact instead.
@@ -159,6 +159,16 @@ jobs:
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
           java -version
+      # The app template caps the Gradle daemon at 512 MB of metaspace: the release lint ran out and the
+      # daemon hung until the job timed out. GRADLE_USER_HOME's gradle.properties overrides the project's.
+      - name: Gradle memory for the runner build
+        if: ${{ inputs.builder == 'github' }}
+        run: |
+          mkdir -p ~/.gradle
+          {
+            echo 'org.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=2g -Dfile.encoding=UTF-8'
+            echo 'kotlin.daemon.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g'
+          } >> ~/.gradle/gradle.properties
       # Pulls the profile's EAS environment (values never printed), checks the family store build's API and
       # Firebase file, builds with the remote keystore, then writes the sha256 and versionCode to the summary.
       - name: Runner build (eas build --local, the profile's EAS environment and remote keystore)

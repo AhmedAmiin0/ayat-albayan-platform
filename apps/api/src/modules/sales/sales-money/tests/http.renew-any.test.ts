@@ -7,9 +7,7 @@ import { resetMocks, type InjectArgs, type Mocks } from '@/modules/finance/subsc
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { CREATE, FAMILY_PHONE, MSG, NONE, PAY, salesDefaults } from './sales-money.fakes';
 
-// «تجديد اشتراك أي طالب» (docs/16 row 38; owner 2026-11-01: «renew to any one without
-// checking if it was the creator»). STUDENT_ID is salesA's (salesDefaults): for salesB it is
-// another assistant's student.
+// docs/16 row 38: renew any student; STUDENT_ID belongs to salesA, not salesB.
 const OTHER_PHONE = '+966552220000';
 const withRenewAny: PermissionResolver = async (user) => [...(await systemResolver(user)), ...(user.role === 'sales' ? ['sales.renew_any' as const] : [])];
 const at = (phone?: string) => (phone ? `&phone=${encodeURIComponent(phone)}` : '');

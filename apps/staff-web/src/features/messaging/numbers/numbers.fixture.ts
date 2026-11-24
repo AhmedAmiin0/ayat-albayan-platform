@@ -6,7 +6,7 @@ import {
   type ParityView,
 } from '@ab/shared';
 
-// Test fixtures for «الأرقام» (not app code). Fake ids and a 555 phone only.
+// Fake ids and a 555 phone only.
 
 const AT = '2026-10-22T08:00:00Z';
 

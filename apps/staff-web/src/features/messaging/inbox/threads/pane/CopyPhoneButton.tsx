@@ -5,7 +5,6 @@ import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { copyText } from '@/features/messaging/inbox/messages/lib/save-file';
 
-/** «نسخ الرقم» beside the chat's name (owner 2026-10-26): the number in E.164, then «نُسِخ». */
 export function CopyPhoneButton({ phone }: { phone: string }) {
   const [said, say] = useState<boolean | null>(null);
   const done = () => say(null);

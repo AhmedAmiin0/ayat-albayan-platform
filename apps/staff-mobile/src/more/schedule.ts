@@ -10,7 +10,7 @@ export interface WeekdaySlots {
   slots: AvailabilityRow[];
 }
 
-/** Days that have slots, الأحد → السبت, each day's slots by start time. */
+/** Only days with slots, Sunday to Saturday, each sorted by start. */
 export function groupByWeekday(rows: readonly AvailabilityRow[]): WeekdaySlots[] {
   const days: WeekdaySlots[] = [];
   for (let weekday = 0; weekday <= 6; weekday++) {
@@ -22,7 +22,7 @@ export function groupByWeekday(rows: readonly AvailabilityRow[]): WeekdaySlots[]
   return days;
 }
 
-/** «الأحد» … «السبت» (ar.json enums.weekday, keys "0"–"6" in order). */
+/** Relies on ar.json enums.weekday keys 0 to 6 in order. */
 export function weekdayName(weekday: number): string {
   return Object.values(t.enums.weekday)[weekday] ?? '';
 }
@@ -32,14 +32,14 @@ export function gridTz(rows: readonly AvailabilityRow[], teacherTz: string): str
   return rows[0]?.tz ?? teacherTz;
 }
 
-/** «الرياض» / «القاهرة» for the academy's two zones; any other IANA id as an isolated LTR island. */
+/** Any IANA id other than the academy's two zones shows as an isolated LTR island. */
 export function tzLabel(tz: string): string {
   if (tz === RIYADH_TZ) return t.runningHead.riyadh;
   if (tz === CAIRO_TZ) return t.runningHead.cairo;
   return ltr(tz);
 }
 
-/** «16:00 – 18:00» / «4:00 م – 6:00 م», already isolated (render it as plain text). */
+/** Already isolated, so render as plain text. */
 export function slotRange(slot: Pick<AvailabilityRow, 'start_time' | 'end_time'>, cycle: ClockCycle): string {
   return rangeOf(hhmm(slot.start_time, cycle), hhmm(slot.end_time, cycle), cycle);
 }

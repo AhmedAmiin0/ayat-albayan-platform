@@ -2,11 +2,7 @@ import type { Href } from 'expo-router';
 import { inTree, type TreeBase, useTreeBase } from '@/core/nav/tree-base';
 import { threadHref } from '@/inbox';
 
-/**
- * Where the salesperson's pages live in each tree. Admins and teachers holding the sales double role
- * reach them under «المزيد» › «المبيعات» (/more/sales/…); the sales tree (base role sales) has the
- * schedule as a tab and the rest under its own «المزيد» (/sales/more/…).
- */
+/** Double-role users reach these under /more/sales; the sales tree under /sales/more. */
 export function salesHrefs(base: TreeBase) {
   const more = base === '/sales' ? '/sales/more' : '/more/sales';
   return {
