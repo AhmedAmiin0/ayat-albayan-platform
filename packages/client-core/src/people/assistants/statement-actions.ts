@@ -1,9 +1,7 @@
 import type { PayoutStatus } from '@ab/catalog';
 import type { AssistantStatementView } from '@ab/money';
 
-// A statement's buttons in both apps (docs/36 f6): one ordered rule list per status instead of
-// an if-chain. Approving, reopening and un-paying are the approver's (assistantpay.approve, as
-// the API); paying is the writer's. «التفاصيل» always shows.
+// Statement buttons per status (docs/36 f6); approve, reopen and unpay need assistantpay.approve.
 
 export type StatementAction = 'details' | 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
 export interface StatementCan {
@@ -21,7 +19,6 @@ const approver = (f: Facts): boolean => f.approve;
 const writer = (f: Facts): boolean => f.write;
 const hasReceipt = (f: Facts): boolean => f.receipt;
 
-/** draft → «اعتماد»; approved → «دُفعت» / «إعادة فتح»; paid → «الإيصال» / «إلغاء الدفع». */
 const STATEMENT_ACTIONS = {
   draft: [['approve', approver], ['details', always]],
   approved: [['pay', writer], ['reopen', approver], ['details', always]],

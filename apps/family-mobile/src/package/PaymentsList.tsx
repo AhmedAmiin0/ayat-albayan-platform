@@ -9,7 +9,7 @@ const KIND_WORD: Record<PortalPayment['kind'], () => string> = {
   refund: () => t.portal.app.package.refund,
 };
 
-/** «سجل المدفوعات» (canvas Package): the amount, the day and paid / refunded, newest first. */
+/** Payments are listed newest first. */
 export function PaymentsList({ payments, tz }: { payments: readonly PortalPayment[]; tz: string }) {
   const { color } = useTheme();
   if (payments.length === 0) return null;
