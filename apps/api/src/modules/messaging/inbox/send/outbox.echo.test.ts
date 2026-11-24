@@ -5,8 +5,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { Outbox } from './outbox';
 
-// Follow-up to #694 (item 1): a send carries what the STORED row holds, so a correction hidden
-// with «حذف من المنصة» (its view shows no body) is still compared on its own text.
+// A send compares the stored row, so a hidden correction is still compared on its text.
 const KEY = 'admin:+966500000001:req-1';
 const STORED = messageRow({
   id: 'm1', status: 'sent', body: 'تصحيح: الخامسة', corrects_id: 'o1',

@@ -51,7 +51,7 @@ describe('RemindersQueries', () => {
     });
     expect(await new RemindersRepo(db).dropCancelled(new Date('2026-10-04T13:00:00Z'))).toBe(2);
     expect(callsOf(log, 'messages', 0)).toContainEqual(['gt', ['expires_at', '2026-10-04T13:00:00.000Z']]);
-    // The classroom links (job-made or «ابعت لينك الحلقة») of a cancelled lesson go too.
+    // Classroom links of a cancelled lesson are dropped too.
     expect(callsOf(log, 'messages', 0)).toContainEqual(['in', ['template_key', [...REMINDER_KEYS]]]);
     expect(REMINDER_KEYS).toContain('lesson_join_link');
     expect(callsOf(log, 'messages', 1)).toEqual([

@@ -66,7 +66,7 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     .useValue(external)
     .overrideProvider(KAPSO_HISTORY)
     .useValue(kapso)
-    // «أرسل عبر واتساب» attach (docs/19): no tapped row here, every external message is stored.
+    // No tapped row here, so every external message is stored (docs/19).
     .overrideProvider(ManualEchoRepo)
     .useValue({ candidates: async () => [], attach: async () => false })
     .overrideProvider(CrmInboundRepo)

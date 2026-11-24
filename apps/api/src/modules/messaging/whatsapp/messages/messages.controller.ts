@@ -26,10 +26,7 @@ export class MessagesController {
     private readonly appSends: AppSend,
   ) {}
 
-  /**
-   * G: is sending on (env, WhatsApp config, kill switch) and how many rows wait in the queue.
-   * Read only, so a teacher's composer (teacher mode) shows the same «الإرسال متوقف» note.
-   */
+  /** Read only, so a teacher's composer shows the same sending-stopped note. */
   @Get('gate')
   @Permissions('messages.read')
   gate(): Promise<SendGateView> {
@@ -51,11 +48,7 @@ export class MessagesController {
     return this.audited({ change: await this.messages.sentManually(id), action: 'message_sent_manually', user });
   }
 
-  /**
-   * «أرسل عبر واتساب» (docs/19): a staff text held after the window or failed for it is never sent
-   * by the platform for 10 minutes (app_send_until); the app's echo then confirms it. Idempotent:
-   * a second tap extends the window. 409 not_app_send (with the row's status) otherwise.
-   */
+  /** docs/19: held from platform sends for 10 minutes; idempotent; 409 not_app_send otherwise. */
   @Post(':id/app-send')
   @HttpCode(200)
   async appSend(@ZodParam('id', messageId) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
