@@ -4,11 +4,10 @@ import { eventBody } from './event-format';
 import { EVENT } from '@/modules/platform/google-sync/google-format';
 import { eventLesson, item, TEACHER_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 
-// The per-teacher calendar handover (docs/24 «نقل تقويم معلم إلى المنصة»). FakeGoogle only.
+// docs/24: per-teacher calendar handover; FakeGoogle only.
 
 /** An imported lesson whose teacher's calendar_owner is 'platform'. */
 const handedOver = (lesson = {}) => lessonSource({ origin: false, managed: true }, lesson);
-/** The old script's event: no tag, «حلقة — <name>», its sheet line. */
 function scriptEvent(startsAt = eventLesson().startsAt) {
   const body = eventBody(eventLesson({ startsAt }), 'teacher');
   const description = `المعلم/ة: Teacher A\n\n${EVENT.scriptFooter} — عدّل في الشيت مش هنا.`;

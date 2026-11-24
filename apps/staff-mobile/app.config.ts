@@ -5,7 +5,7 @@ const STRIPE_TEST = 'stripetest';
 
 type Plugins = NonNullable<ExpoConfig['plugins']>;
 
-/** The test app is no share target (docs/38): one «آيات» in the share sheet, the normal app. */
+/** The test app is no share target (docs/38), so the share sheet shows only the normal app. */
 const noShareTarget = (plugins: Plugins = []): Plugins =>
   plugins.map((p) => (Array.isArray(p) && p[0] === 'expo-sharing' ? ['expo-sharing', { android: { enabled: false } }] : p));
 

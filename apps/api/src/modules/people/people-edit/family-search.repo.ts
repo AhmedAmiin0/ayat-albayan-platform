@@ -43,7 +43,7 @@ const KINDS: readonly [Search, (term: string) => boolean][] = [
 ];
 const searchOf = (term: string): Search => KINDS.find(([, test]) => test(term))?.[0] ?? byName;
 
-/** «ربط بولي أمر آخر»: the guardian picker, by name, number or a child's code; ten at most. */
+/** By name, number or a child's code; ten at most. */
 @Injectable()
 export class FamilySearchRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

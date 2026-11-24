@@ -7,10 +7,7 @@ import { ReportHistoryQueries } from '@/modules/reporting/reports/history/report
 import { toTeacherReportView } from './teacher-reports.mapper';
 import { TeacherReportsQueries } from './teacher-reports.queries';
 
-/**
- * GET /teachers/me/reports (teacher mode «التقارير», R-REP-02, R-TCH-03): my submitted reports,
- * newest first unless sorted, filterable (R-NFR-08), with the edit window. Drafts and missing reports stay in pending-reports.
- */
+/** R-REP-02, R-TCH-03, R-NFR-08: drafts and missing reports stay in pending-reports. */
 @Injectable()
 export class TeacherReportsService {
   constructor(

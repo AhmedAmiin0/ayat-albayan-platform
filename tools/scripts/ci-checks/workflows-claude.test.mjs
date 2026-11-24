@@ -15,6 +15,8 @@ test('claude-code-review: PRs only, skips forks and drafts, writes only comments
   assert.match(job.if, /head\.repo\.full_name == github\.repository/);
   assert.match(job.if, /!github\.event\.pull_request\.draft/);
   assert.equal(job.environment, undefined);
+  assert.match(job.if, /!startsWith\(github\.head_ref, 'chore\/comments-'\)/);
+  assert.deepEqual(w.on.pull_request['paths-ignore'], ['docs/**', '**/*.md']);
   assert.deepEqual(job.permissions, {
     contents: 'read', 'pull-requests': 'write', issues: 'read', 'id-token': 'write',
   });

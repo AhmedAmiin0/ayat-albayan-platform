@@ -1,10 +1,7 @@
 import type { Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
-// docs/46 A7: a teacher login linked on «المستخدمون» without a phone takes the teacher record's
-// number, unless another profile or a guardian row holds it («Shared numbers»: the family keeps its
-// code sign-in; the teacher still signs in through her record). The backfill script applies the
-// same rule.
+// docs/46 A7: a teacher login without a phone takes the record's number unless someone holds it.
 
 /** The number is free for this login: nobody else's profile and no guardian row has it. */
 export const phoneIsFree = (holders: { profiles: number; guardians: number }): boolean =>

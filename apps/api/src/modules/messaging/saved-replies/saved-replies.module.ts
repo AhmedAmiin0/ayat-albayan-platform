@@ -5,7 +5,7 @@ import { SavedRepliesRepo } from './saved-replies.repo';
 import { SavedRepliesService } from './saved-replies.service';
 import { SavedReplySettings } from './saved-replies.settings';
 
-/** «الردود السريعة» saved replies (owner 2026-10-25). StorageModule and SettingsModule are global. */
+/** StorageModule and SettingsModule are global. */
 @Module({
   controllers: [SavedRepliesController],
   providers: [SavedRepliesRepo, SavedRepliesService, SavedReplyFiles, SavedReplySettings],
