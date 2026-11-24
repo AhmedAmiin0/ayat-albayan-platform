@@ -2,7 +2,6 @@ import type { TemplateView, ThreadTemplate } from '@ab/shared';
 import type { ReopenPick, ReopenStamp } from '@/modules/messaging/whatsapp';
 import { messagingWindowOpen, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
-/** A thread template send that may be «إعادة فتح المحادثة» (owner 2026-11-14). */
 interface ReopenAsk {
   phone: string;
   actorId: string;
@@ -24,13 +23,7 @@ const stampOf = (pick: ReopenPick, ask: ReopenAsk): Promise<ReopenStamp> => {
   return pick.stamp({ phone: ask.phone, line: ask.template.line, now: ask.now, by });
 };
 
-/**
- * The reopen stamp of a template sent into a closed window (ReopenPick: the `reopen:` dedup key
- * the window hold reads, and its 24 h expiry), or null for a plain template send. Picked
- * («إعادة فتح المحادثة»): its refusals reach the caller. A chat-line template sent the plain way
- * (review of #727, M3) takes the key too, so a held text never queues a second template; when
- * none can be had (one live, tries used), it goes as a plain template, as before.
- */
+/** The reopen dedup key with its 24 h expiry, or null for a plain template send. */
 export async function reopenStamp(
   pick: ReopenPick | undefined,
   ask: ReopenAsk,

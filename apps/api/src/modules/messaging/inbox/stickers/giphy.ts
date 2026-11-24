@@ -39,7 +39,7 @@ const listSchema = z.object({ data: z.array(z.unknown()) }).transform((page) =>
 );
 const oneSchema = z.object({ data: gifSchema });
 
-/** Every GIPHY failure is one answer: 502 giphy_failed (the app says «أعد المحاولة»). */
+/** Every GIPHY failure is one answer: 502 giphy_failed. */
 const giphyFailed = (): Error => waHttpError('giphy_failed', HttpStatus.BAD_GATEWAY);
 
 /** The panel's tile: the small animated preview (200 px wide, fewer frames when GIPHY has it). */
@@ -56,7 +56,7 @@ export function mp4Of(gif: GiphyGif): string {
   return mp4;
 }
 
-/** One client per call: the key is read per request (an admin may change it in «التكاملات»). */
+/** One client per call since an admin may change the key in integrations. */
 export class Giphy {
   private readonly http: Http;
 

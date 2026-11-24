@@ -5,7 +5,7 @@ import { LinesCheck } from './lines.check';
 import { LINES_RECORDED as R, stubEnvs } from '@/modules/messaging/whatsapp/whatsapp.lines.fakes';
 import { WhatsappModule } from '@/modules/messaging/whatsapp/whatsapp.module';
 
-// docs/19: «افحص الخطوط» and the boot log show each line's driver and NAME what a kapso line lacks.
+// docs/19: the check and boot log name each line's driver and what a kapso line lacks.
 
 const KAPSO_BASE = 'http://127.0.0.1:4010/kapso';
 const IDS = { WA_PHONE_NUMBER_ID: 'n-phone', WA_WABA_ID: 'n-waba', WA_APP_ID: 'app-notifications' };
