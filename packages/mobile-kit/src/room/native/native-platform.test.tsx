@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { nativeRoomPlatform } from './native-platform';
 
 let mockNative: unknown = null;
-jest.mock('./livekit-native', () => ({ liveKitNative: () => mockNative }));
+jest.mock('./livekit-native', () => ({ liveKitNative: async () => mockNative }));
 
-test('no LiveKit in the binary: no platform (the route offers the browser)', () => {
+test('no LiveKit in the binary: no platform (the route offers the browser)', async () => {
   mockNative = null;
-  expect(nativeRoomPlatform()).toBeNull();
+  await expect(nativeRoomPlatform()).resolves.toBeNull();
 });
 
 test("the video tiles use the SDK's VideoTrack, the preview the fork's RTCView (mirrored)", async () => {
@@ -23,7 +23,7 @@ test("the video tiles use the SDK's VideoTrack, the preview the fork's RTCView (
     },
     lk: {},
   };
-  const p = nativeRoomPlatform();
+  const p = await nativeRoomPlatform();
   if (!p) throw new Error('no platform');
   await render(
     <>

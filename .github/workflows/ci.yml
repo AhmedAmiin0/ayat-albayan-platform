@@ -356,7 +356,9 @@ jobs:
       - run: pnpm guard:cycles
       - run: pnpm guard:packages
       - run: pnpm guard:tsconfig
+      - run: pnpm guard:escapes
       - run: pnpm guard:comments
+      - run: pnpm guard:escapes
       - run: pnpm guard:units
       - run: pnpm guard:move-only
       # On a PR: every suppressions file per file and per rule against the base branch's (docs/59), and the

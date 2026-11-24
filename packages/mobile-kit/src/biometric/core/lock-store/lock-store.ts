@@ -32,7 +32,7 @@ export class BioLockStore {
   boot = async (): Promise<void> => {
     const [on, kind] = await Promise.all([
       this.deps.flags.enabled(),
-      enrolledKind(this.deps.native),
+      this.deps.native.then(enrolledKind),
     ]);
     this.set({ kind });
     this.send({ type: 'loaded', enabled: on });
@@ -44,11 +44,12 @@ export class BioLockStore {
     if (this.snap.lock.phase !== 'locked') return 'busy';
     this.send({ type: 'prompt' });
     const { reason, cancel } = this.deps.text();
-    const raw = await authenticate(this.deps.native, { reason, cancel });
+    const native = await this.deps.native;
+    const raw = await authenticate(native, { reason, cancel });
     // «unavailable» can be passing (a busy sensor): removed only when the device says so again.
-    const gone = raw === 'removed' && (await enrolledKind(this.deps.native)) === null;
+    const gone = raw === 'removed' && (await enrolledKind(native)) === null;
     const result: BioOutcome = gone || raw === 'success' ? raw : 'fail';
-    feel(this.deps.native, result === 'success');
+    feel(native, result === 'success');
     this.outcome[result]();
     return result;
   };
@@ -63,9 +64,10 @@ export class BioLockStore {
   /** «تفعيل» and the settings switch: one biometric confirmation first, then the flag. */
   enable = async (): Promise<boolean> => {
     const { enableReason, cancel } = this.deps.text();
-    const result = await authenticate(this.deps.native, { reason: enableReason, cancel });
+    const native = await this.deps.native;
+    const result = await authenticate(native, { reason: enableReason, cancel });
     const ok = result === 'success';
-    feel(this.deps.native, ok);
+    feel(native, ok);
     if (ok) await this.deps.flags.setEnabled(true);
     this.set({
       offer: false,
@@ -95,7 +97,7 @@ export class BioLockStore {
     const [declined, on, kind] = await Promise.all([
       this.deps.flags.declined(),
       this.deps.flags.enabled(),
-      enrolledKind(this.deps.native),
+      this.deps.native.then(enrolledKind),
     ]);
     this.set({ kind, offer: !declined && !on && kind !== null });
   };

@@ -13,7 +13,7 @@ jest.mock('expo-router', () => ({ router: { push: (...a: unknown[]) => mockPush(
 let mockNative: unknown = {};
 jest.mock('@ab/mobile-kit/room', () => ({
   ...jest.requireActual('@ab/mobile-kit/room'),
-  liveKitNative: () => mockNative,
+  liveKitNative: async () => mockNative,
 }));
 
 const ID = '0a5c2b1e-6c3e-4d61-9a43-1b2f9b8e7d10';
