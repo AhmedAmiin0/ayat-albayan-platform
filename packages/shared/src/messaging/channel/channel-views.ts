@@ -70,7 +70,7 @@ export interface ChannelPage {
   /** A monitor's view: no composer, read only. */
   read_only: boolean;
   /**
-   * Subscribed AND a teacher assigned (channelOpen, owner 2026-10-29). Closed: a participant gets
+   * Subscribed AND a teacher assigned (channelOpen). Closed: a participant gets
    * no messages and no composer, only the closed line of `closed_reason`; a monitor still reads.
    */
   open: boolean;

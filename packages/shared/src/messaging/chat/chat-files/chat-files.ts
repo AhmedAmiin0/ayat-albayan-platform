@@ -2,13 +2,13 @@ import { counted, type PluralForm } from '@ab/core';
 import type { SignedDownload } from '../../../reports/index.js';
 import { baseMime } from '../../../schemas/chat-media.js';
 
-// Files staff send from the chat (owner 2026-10-19 #2): by link, inside the 24 h window.
+// Files staff send from the chat: by link, inside the 24 h window.
 
 /** Meta's `image` message takes JPEG/PNG only (no WebP/HEIC); PDFs go as a `document`. */
 export const CHAT_SEND_MIMES = ['image/jpeg', 'image/png', 'application/pdf'] as const;
 export type ChatSendMime = (typeof CHAT_SEND_MIMES)[number];
 /**
- * A voice note recorded in the app (owner 2026-10-27): AAC in MP4, as Android records it; the API
+ * A voice note recorded in the app: AAC in MP4, as Android records it; the API
  * turns it into a WhatsApp voice note (ogg/opus). The chat's own send only: saved replies and the
  * web's attach keep CHAT_SEND_MIMES.
  */
@@ -28,7 +28,7 @@ export const waMediaKind = (mime: string | null): WaMediaKind =>
 
 /**
  * Meta's session media types by mime (images JPEG/PNG only; WhatsApp's own audio and video formats;
- * a WebP is WhatsApp's sticker, owner 2026-11-01).
+ * a WebP is WhatsApp's sticker).
  */
 const SEND_KINDS: Record<string, Exclude<WaSendKind, 'document'>> = {
   'image/jpeg': 'image',

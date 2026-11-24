@@ -1,4 +1,4 @@
-import { asciiDigits } from '@ab/shared';
+import { asciiDigits } from '@ab/core';
 
 /** The WhatsApp sign-in code's length (docs/30 §1). */
 export const CODE_LENGTH = 6;

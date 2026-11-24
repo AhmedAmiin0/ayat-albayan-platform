@@ -12,8 +12,11 @@
   },
   "dependencies": {
     "@ab/client-core": "workspace:*",
+    "@ab/core": "workspace:*",
     "@ab/i18n": "workspace:*",
+    "@ab/schedule": "workspace:*",
     "@ab/shared": "workspace:*",
+    "@ab/time": "workspace:*",
     "@ab/web-kit": "workspace:*",
     "@tanstack/react-query": "^5.104.0",
     "@tanstack/react-router": "^1.170.41",

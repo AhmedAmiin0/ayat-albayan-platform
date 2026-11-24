@@ -35,7 +35,6 @@ export class MyService {
     return (await this.queries.payments(user.id)).map(toMyPayment);
   }
 
-  /** «عمولاتي» (owner 2026-10-29): one page of my own commissions, newest first, each with its wallet state. */
   async commissions(user: AuthUser, q: PageQuery): Promise<Page<MyCommissionRow>> {
     const { rows, total } = await this.queries.commissionPage(user.id, q);
     return { items: rows.map(toMyCommission), total, page: q.page, pageSize: q.pageSize };

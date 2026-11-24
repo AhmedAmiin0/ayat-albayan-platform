@@ -84,7 +84,7 @@ const schema = z.object({
   EXPO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
   ...WEB_PUSH_SHAPE,
   ...CALLS_SHAPE, ...GOOGLE_SHAPE,
-  /** HMAC key of the «رأيك يهمّنا» links (>= 32 chars, Vault). Unset = 503 not_configured, every public link refused. */
+  /** HMAC key of feedback links (>= 32 chars); unset means 503 and every public link is refused. */
   FEEDBACK_TOKEN_SECRET: z.preprocess(blankIsUnset, z.string().min(32).optional()),
   ...LOGIN_CODE_SHAPE, ...LIVEKIT_SHAPE,
   GIPHY_API_KEY: optionalSecret,

@@ -8,8 +8,7 @@ import { resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
-// «تعديل المبلغ» by the assistant (owner 2026-11-02): subscriptions.edit_terms (owner
-// 2026-11-03), never payments.write.
+// The assistant's amount edit needs subscriptions.edit_terms, never payments.write.
 const URL = `/sales/payments/${PAYMENT_ID}/amount`;
 const withEdit: PermissionResolver = async (user) => [
   ...(await systemResolver(user)),

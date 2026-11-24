@@ -1,7 +1,5 @@
-import {
-  QUICK_REPLY_INTENTS, TEMPLATE_BUTTON_KINDS, TEMPLATE_CATEGORIES, TEMPLATE_HEADER_KINDS,
-  TEMPLATE_STATUSES, WA_LINES,
-} from '@ab/shared';
+import { QUICK_REPLY_INTENTS, TEMPLATE_BUTTON_KINDS, TEMPLATE_HEADER_KINDS } from '@ab/shared';
+import { TEMPLATE_CATEGORIES, TEMPLATE_STATUSES, WA_LINES } from '@ab/catalog';
 import { z } from 'zod';
 
 // A template as «القوالب» reads it (the API's TemplateView, the fields both apps draw), parsed at

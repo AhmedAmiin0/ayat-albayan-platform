@@ -42,11 +42,6 @@
       "count": 3
     }
   },
-  "src/messaging/channel/channel-open.test.ts": {
-    "max-len": {
-      "count": 1
-    }
-  },
   "src/messaging/chat/chat-files/chat-files.ts": {
     "@typescript-eslint/consistent-type-definitions": {
       "count": 1
@@ -180,7 +175,7 @@
   },
   "src/messaging/numbers/views.ts": {
     "max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/messaging/replies/quick-reply.ts": {
@@ -277,7 +272,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 5
     }
   },
   "src/messaging/templates/i18n.test.ts": {
@@ -287,11 +282,6 @@
   },
   "src/messaging/templates/lesson-params.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/messaging/templates/manages-templates.test.ts": {
-    "max-len": {
       "count": 1
     }
   },
@@ -307,12 +297,12 @@
   },
   "src/messaging/templates/restricted-templates.ts": {
     "max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/messaging/templates/template-block/template-block.ts": {
     "max-len": {
-      "count": 9
+      "count": 7
     },
     "no-nested-ternary": {
       "count": 1
@@ -325,7 +315,7 @@
   },
   "src/messaging/templates/template-sync-views.ts": {
     "max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/templates/template-views.ts": {
@@ -343,7 +333,7 @@
   },
   "src/messaging/thread-delta.ts": {
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/messaging/wa.ts": {

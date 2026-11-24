@@ -1,4 +1,4 @@
-import type { MessageStatus } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { type ChatPages, ranksAbove } from './later-status.js';
 
 // docs/43 §2 (the owner's pending tick): the chat merges its statuses (delta, page poll) while a

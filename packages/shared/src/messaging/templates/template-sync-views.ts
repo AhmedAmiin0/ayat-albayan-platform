@@ -1,8 +1,8 @@
 import type { WaLine, WaProvider } from '@ab/catalog';
 import type { TemplateView } from './template-views.js';
 
-// The template registry per number (owner 2026-10-18: «more controls over templates and which number
-// it goes to and more options to sync it with meta for each number»). Ids only, never a token.
+// The template registry per number: which number each template goes from and its Meta sync per
+// number. Ids only, never a token.
 
 /** One WhatsApp line as the registry knows it from env: no Graph call. */
 export interface TemplateLineFacts {

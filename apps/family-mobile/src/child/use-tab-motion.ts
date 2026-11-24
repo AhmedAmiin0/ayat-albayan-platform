@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Animated } from 'react-native';
-import { motion } from '@ab/shared';
+import { motion } from '@ab/catalog';
 import { useA11yPref } from '@ab/mobile-kit';
 
 /** How far a panel slides in (pt). */

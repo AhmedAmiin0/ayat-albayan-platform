@@ -1,12 +1,7 @@
 import { dayWord, lessonMinutes, type DayWord } from '@ab/client-core';
-import {
-  clockOf,
-  dateText,
-  teacherName,
-  type ClockOptions,
-  type PortalLesson,
-  type PortalTeacher,
-} from '@ab/shared';
+import type { PortalLesson, PortalTeacher } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
+import { clockOf, dateText, type ClockOptions } from '@ab/time';
 import { locale, t } from '@ab/mobile-kit';
 import type { OptionsTitle } from './options/OptionsMenu';
 

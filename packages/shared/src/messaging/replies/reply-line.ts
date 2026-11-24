@@ -12,8 +12,8 @@ export interface ReplyLineInput {
 }
 
 /**
- * The line a staff session text leaves from (docs/12 §13.3 rule 2; owner 2026-10-11: normal chats
- * use the chat number). Meta allows a session text only on a line whose own 24 h window is open:
+ * The line a staff session text leaves from (docs/12 §13.3 rule 2: normal chats use the
+ * chat number). Meta allows a session text only on a line whose own 24 h window is open:
  * 1. 'chat' when the chat line is configured and its window is open;
  * 2. else 'notifications' when the notifications window is open;
  * 3. else 'chat' when the chat window is the only open one but the chat line cannot send (the

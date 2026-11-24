@@ -81,7 +81,7 @@ export function subscribeKind(sub: BadgeStudent['subscription']): 'renew' | 'new
   return subscriptionBadge([{ subscription: sub }]) === 'expired' ? 'renew' : 'new';
 }
 
-/** The chat list's avatar ring (owner 2026-11-06): green subscribed, gray when a renewal is due. */
+/** The chat list's avatar ring: green subscribed, gray when a renewal is due. */
 export type FamilyRing = 'subscribed' | 'renewal';
 
 /** Packages counting down to a renewal alert (alertFor: paused, trial, cancelled raise none). */

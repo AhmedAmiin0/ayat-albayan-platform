@@ -28,12 +28,7 @@ export function frozenLines(statements: readonly Pick<StatementRow, 'status' | '
   );
 }
 
-/**
- * «محفظتي»'s lines: the frozen statements' lines, then what no frozen statement holds yet: the earned
- * commissions (no statement or a draft) and the reversals (negative). A voided commission is never a row
- * here: inside a frozen statement its line counts, in a draft (a reopened one too) nothing does. The admin's
- * other adjustments (bonus, deduction) are statement matters, not commissions.
- */
+/** Frozen statement lines, then unfrozen commissions and reversals; voided ones never show. */
 function walletLines(i: { frozen: readonly WalletLine[]; commissions: readonly MyCommission[]; adjustments: readonly MyAdjustment[] }): WalletLine[] {
   const open = (r: StatementState & { amount: number; currency: string }) => ({ amount: r.amount, currency: r.currency, statement: r.statement });
   return [
@@ -43,11 +38,7 @@ function walletLines(i: { frozen: readonly WalletLine[]; commissions: readonly M
   ];
 }
 
-/**
- * The assistant's own money page: the terms (read-only), what this month's statement would hold so far
- * (the frozen statement's totals once the month has one, else planStatement over what no frozen
- * statement holds yet), all earned commissions, «محفظتي» (walletTotals) and the statements already approved or paid.
- */
+/** The assistant's money page: terms, this month's statement so far, commissions and wallet. */
 export function buildEarnings(i: {
   now: string;
   tz: string;

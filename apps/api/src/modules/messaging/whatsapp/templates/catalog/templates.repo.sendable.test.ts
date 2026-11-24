@@ -52,7 +52,7 @@ describe('TemplatesRepo.sendable (docs/42 42-3)', () => {
     crm.on = true;
     const keys = async (now: number) => (await repo.sendable(now)).map((r) => r.key);
     expect(await keys(0)).toEqual(['teacher_new_student', 'teacher_lesson_v2']);
-    crm.on = false; // «التكاملات»: the line moved off the crm driver
+    crm.on = false;
     expect(await keys(1)).toEqual(['teacher_lesson_v2']);
     expect(trips).toEqual([T]);
   });

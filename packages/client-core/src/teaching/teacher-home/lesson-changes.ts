@@ -1,4 +1,5 @@
-import { COURSE_PAUSE_REASON, isOpenLesson, type LessonView } from '@ab/shared';
+import { COURSE_PAUSE_REASON } from '@ab/shared';
+import { isOpenLesson, type LessonView } from '@ab/schedule';
 
 // «تنبيهات اليوم»: today's lessons cancelled or moved, with who and why (docs/47 move lines). Only
 // what the teacher may read: her own reason, a pause, a move reason on her own lessons. An admin's

@@ -1,4 +1,5 @@
-import { addCalendarDays, wallInstant, wallParts, weekdayOfDate } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
+import { addCalendarDays, wallInstant, weekdayOfDate } from '@ab/time';
 
 // A weekly course picked as one date + one time per lesson day (owner 2026-11-07: «date input
 // and a time input»), shared by web and mobile. A row's date is the first lesson on that

@@ -1,5 +1,6 @@
 import { cardRoom, type CardRoom } from '@ab/client-core';
-import type { PortalLesson, PortalStudent, RoomJoinResult } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { useState } from 'react';
 import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
 import { Dot } from '@ab/web-kit/components/ui/surface/pill';

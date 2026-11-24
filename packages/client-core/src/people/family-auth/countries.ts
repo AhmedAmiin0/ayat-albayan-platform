@@ -1,4 +1,4 @@
-import { CountryListSchema, type CountryData, flagOf, type Locale } from '@ab/shared';
+import { CountryListSchema, type CountryData, flagOf, type Locale } from '@ab/core';
 import data from '@ab/shared/data/countries.json' with { type: 'json' };
 
 export interface Country extends CountryData {

@@ -1,5 +1,6 @@
 import { scheduleWeek, weekSchedule } from '@ab/client-core';
-import { calendarDayText, type PortalStudent } from '@ab/shared';
+import type { PortalStudent } from '@ab/shared';
+import { calendarDayText } from '@ab/time';
 import { useState } from 'react';
 import { locale, useNow } from '@ab/mobile-kit';
 import { ownPage, useChildrenLessons, useFamilyClock, useFamilyPick, usePortalMe } from '@/portal';

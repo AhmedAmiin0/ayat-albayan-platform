@@ -1,10 +1,10 @@
-import {
-  localDateIn,
-  type PortalHistory,
-  type PortalHistoryRow,
-  type PortalHistoryStatus,
-  type PortalOutcome,
+import type {
+  PortalHistory,
+  PortalHistoryRow,
+  PortalHistoryStatus,
+  PortalOutcome,
 } from '@ab/shared';
+import { localDateIn } from '@ab/time';
 
 // «حضرها» / «غاب عنها» (docs/50 §5.1): the pages of past lessons as one list, grouped by month on
 // the family's clock. An excused absence is still «غاب عنها».

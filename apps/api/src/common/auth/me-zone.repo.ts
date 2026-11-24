@@ -15,10 +15,7 @@ const tzOf = async (read: TzRead): Promise<string | null> => {
 /** profiles.locale is free text in the DB: only a language the apps speak counts. */
 const localeRow = z.object({ locale: z.enum(LOCALES) });
 
-/**
- * The signed-in person's zone and language for GET /auth/me and GET /portal/me (docs/34 §2; owner
- * 2026-11-16: the language comes from the API), and «اللغة»'s write (PATCH /me/locale).
- */
+/** The signed-in person's zone and language for the me endpoints and locale write (docs/34 §2). */
 @Injectable()
 export class MeZoneRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

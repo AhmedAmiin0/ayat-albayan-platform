@@ -1,14 +1,14 @@
 import type { Permission } from '@ab/catalog';
 import type { TemplateView } from './template-views.js';
 
-// Owner 2026-10-12 («all roles except the ones allowed to have all templates»): every role without
+// Every role without
 // templates.manage or templates.send_all (teachers in teacher mode, sales, the classroom assistant, a
 // custom role) lists and sends only the restricted allow-list: the message_templates rows flagged
 // `sales_starter` (the column kept its name; it now means «allowed for restricted roles», docs/16).
 
 /**
  * Flagged by the chat line's import (template-import.ts); any other import comes unflagged. trial_reschedule
- * (owner 2026-10-18: «one more template to reschedule the meeting») is seeded by migration 460.
+ * (reschedules the trial meeting) is seeded by migration 460.
  */
 export const RESTRICTED_TEMPLATE_DEFAULTS = [
   'free_trial_invite',
@@ -25,8 +25,7 @@ export const OWN_BUTTON_TEMPLATES: readonly string[] = ['lesson_feedback_request
 export const ALL_TEMPLATES_PERMISSIONS = ['templates.manage', 'templates.send_all'] as const satisfies readonly Permission[];
 
 /**
- * Owner 2026-10-15 («only allowed templates should be listed to the assistants») and 2026-10-18 («dont show
- * all these templates to sales/teacher»): a role based on sales, the classroom assistant or teacher lists
+ * A role based on sales, the classroom assistant or teacher lists
  * and sends only the allow-list, whatever it was granted.
  */
 export const ALLOW_LIST_ONLY_ROLES: readonly string[] = ['sales', 'assistant', 'teacher'];
@@ -46,7 +45,7 @@ export function sendsAllTemplates(who: TemplateSender | null | undefined): boole
 
 /**
  * May this user manage the registry (sync, submit, move, the allow-list, the lines check)? templates.manage,
- * never a role based on sales, the classroom assistant or teacher, whatever it holds (owner 2026-10-18).
+ * never a role based on sales, the classroom assistant or teacher, whatever it holds.
  */
 export function managesTemplates(who: TemplateSender | null | undefined): boolean {
   if (!who || (who.role && ALLOW_LIST_ONLY_ROLES.includes(who.role))) return false;

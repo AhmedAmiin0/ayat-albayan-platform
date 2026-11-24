@@ -3,7 +3,7 @@ import { localDate } from '../../lesson/timing.day-before.js';
 
 // The reopen template goes only when staff send in a closed chat, never on open; the text is held.
 
-// The template is the `chat_reopen_template` setting (default welcome_greeting, owner 2026-11-03).
+// The template is the `chat_reopen_template` setting (default welcome_greeting).
 
 /** The day the dedupe counts in. */
 export const REOPEN_TZ = 'Asia/Riyadh';
@@ -30,7 +30,7 @@ export function reopenDedupKey(phone: string, now: Date, attempt = 1): string {
   return attempt > 1 ? `${day}:${attempt}` : day;
 }
 
-// Owner 2026-11-03 («chat messages are not being sent after 24h»): a staff text to a family whose
+// A staff text to a family whose
 // chat window is closed is never sent as free text. The sender sends one reopen template (the
 // `chat_reopen_template` setting, an approved chat-line starter with no variables) and holds the
 // text until the family answers on the chat line; after HOLD_DAYS it fails, never sent late.
@@ -80,7 +80,7 @@ const HOLD_FAILURES: ReadonlySet<string> = new Set([
 export const isHoldFailure = (code: string | null | undefined): boolean =>
   HOLD_FAILURES.has(code ?? '');
 
-// Owner 2026-11-14 («reopen the conversation like Kapso»): staff pick the template themselves.
+// Staff pick the template themselves.
 
 /** The reopen template live for a phone (pending or sent, not yet answered): the bar's tick. */
 export interface ReopenSent {
