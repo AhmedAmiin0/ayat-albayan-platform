@@ -23,7 +23,7 @@ import { SiblingMerge } from '@/features/people/students/duplicates/SiblingMerge
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
-import { StudentMeta } from './student-meta';
+import { StudentMeta } from './StudentMeta';
 import { StudentFamily } from '@/features/people/students/family/StudentFamily';
 import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
 import { PeopleEditActions, RemovedStudent } from '@/features/people/students/people-edit';
