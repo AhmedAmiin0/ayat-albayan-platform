@@ -13168,7 +13168,7 @@
       "count": 2
     }
   },
-  "src/modules/teaching/lessons/lessons.controller.test.ts": {
+  "src/modules/teaching/lessons/tests/lessons.controller.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -13186,12 +13186,12 @@
       "count": 3
     }
   },
-  "src/modules/teaching/lessons/lessons.mapper.report.test.ts": {
+  "src/modules/teaching/lessons/tests/lessons.mapper.report.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/lessons.mapper.time-edit.test.ts": {
+  "src/modules/teaching/lessons/tests/lessons.mapper.time-edit.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -13204,17 +13204,12 @@
       "count": 4
     }
   },
-  "src/modules/teaching/lessons/lessons.module.ts": {
-    "ab/module-boundaries": {
-      "count": 3
-    }
-  },
-  "src/modules/teaching/lessons/lessons.repo.seq.test.ts": {
+  "src/modules/teaching/lessons/tests/lessons.repo.seq.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/lessons.repo.test.ts": {
+  "src/modules/teaching/lessons/tests/lessons.repo.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
@@ -13236,7 +13231,7 @@
       "count": 4
     }
   },
-  "src/modules/teaching/lessons/lessons.settings.test.ts": {
+  "src/modules/teaching/lessons/tests/lessons.settings.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -13249,7 +13244,7 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/overview/free-windows.test.ts": {
+  "src/modules/teaching/lessons/overview/tests/free-windows.test.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
     },
@@ -13262,12 +13257,12 @@
       "count": 2
     }
   },
-  "src/modules/teaching/lessons/overview/overview.http.test.ts": {
+  "src/modules/teaching/lessons/overview/tests/overview.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/overview/overview.mapper.test.ts": {
+  "src/modules/teaching/lessons/overview/tests/overview.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -13280,12 +13275,12 @@
       "count": 4
     }
   },
-  "src/modules/teaching/lessons/overview/overview.photos.test.ts": {
+  "src/modules/teaching/lessons/overview/tests/overview.photos.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/overview/overview.repo.always.test.ts": {
+  "src/modules/teaching/lessons/overview/tests/overview.repo.always.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -13312,7 +13307,7 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/proposals/lesson-proposals.controller.test.ts": {
+  "src/modules/teaching/lessons/proposals/tests/lesson-proposals.controller.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -13333,7 +13328,7 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/proposals/lesson-proposals.service.test.ts": {
+  "src/modules/teaching/lessons/proposals/tests/lesson-proposals.service.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -13354,7 +13349,7 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/reschedule/reschedule-one.service.test.ts": {
+  "src/modules/teaching/lessons/reschedule/tests/reschedule-one.service.test.ts": {
     "stylistic/max-len": {
       "count": 6
     }
@@ -13373,12 +13368,12 @@
       "count": 2
     }
   },
-  "src/modules/teaching/lessons/reschedule/reschedule-rule.makeup.test.ts": {
+  "src/modules/teaching/lessons/reschedule/tests/reschedule-rule.makeup.test.ts": {
     "stylistic/max-len": {
       "count": 3
     }
   },
-  "src/modules/teaching/lessons/reschedule/reschedule-rule.service.test.ts": {
+  "src/modules/teaching/lessons/reschedule/tests/reschedule-rule.service.test.ts": {
     "complexity": {
       "count": 1
     },
@@ -13406,7 +13401,7 @@
       "count": 2
     }
   },
-  "src/modules/teaching/lessons/reschedule/reschedule.meeting-mode.test.ts": {
+  "src/modules/teaching/lessons/reschedule/tests/reschedule.meeting-mode.test.ts": {
     "stylistic/max-len": {
       "count": 5
     }
@@ -13419,7 +13414,7 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/reschedule/rule-plan.test.ts": {
+  "src/modules/teaching/lessons/reschedule/tests/rule-plan.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -13471,7 +13466,7 @@
       "count": 3
     }
   },
-  "src/modules/teaching/lessons/status/lesson-cancel.service.test.ts": {
+  "src/modules/teaching/lessons/status/tests/lesson-cancel.service.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -13487,12 +13482,12 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/status/lesson-status.group.test.ts": {
+  "src/modules/teaching/lessons/status/tests/lesson-status.group.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/status/lesson-status.service.test.ts": {
+  "src/modules/teaching/lessons/status/tests/lesson-status.service.test.ts": {
     "stylistic/max-len": {
       "count": 4
     }
@@ -13600,7 +13595,7 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/teacher-me/teacher-me.repo.test.ts": {
+  "src/modules/teaching/lessons/teacher-me/tests/teacher-me.repo.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -13662,12 +13657,12 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/time-edit/time-edit.plan.correct.test.ts": {
+  "src/modules/teaching/lessons/time-edit/tests/time-edit.plan.correct.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
-  "src/modules/teaching/lessons/time-edit/time-edit.plan.test.ts": {
+  "src/modules/teaching/lessons/time-edit/tests/time-edit.plan.test.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -13683,12 +13678,12 @@
       "count": 4
     }
   },
-  "src/modules/teaching/lessons/time-edit/time-edit.service.held.test.ts": {
+  "src/modules/teaching/lessons/time-edit/tests/time-edit.service.held.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/time-edit/time-edit.service.idempotency.test.ts": {
+  "src/modules/teaching/lessons/time-edit/tests/time-edit.service.idempotency.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
