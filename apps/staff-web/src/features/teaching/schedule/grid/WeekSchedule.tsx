@@ -1,5 +1,5 @@
-import { weekWindowIn, zonedPartsIn } from '@ab/shared';
-import type { LessonView, ScheduleOverview } from '@ab/shared';
+import { weekWindowIn, zonedPartsIn } from '@ab/time';
+import type { LessonView, ScheduleOverview } from '@ab/schedule';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';

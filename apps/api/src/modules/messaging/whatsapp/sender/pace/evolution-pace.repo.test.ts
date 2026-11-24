@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb } from '@/modules/people/guardians/fake-db';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { deferFilter, EvolutionPaceRepo } from './evolution-pace.repo';
 
 // Review fix 7 and final review 1: the paced row and its siblings leaving from THIS Evolution

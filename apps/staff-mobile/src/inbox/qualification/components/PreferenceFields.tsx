@@ -1,4 +1,5 @@
-import { GROUP_KINDS, tzChoices, type GroupKind } from '@ab/shared';
+import { GROUP_KINDS, type GroupKind } from '@ab/shared';
+import { tzChoices } from '@ab/time';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t, FilterPills, type FilterPill, ErrorLine, cityOf, FormLabel } from '@ab/mobile-kit';

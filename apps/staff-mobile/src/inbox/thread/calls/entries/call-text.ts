@@ -1,5 +1,6 @@
 import { callEntryText as entryText } from '@ab/client-core';
-import { formatPhone, type CallEntryKind, type CallView } from '@ab/shared';
+import type { CallEntryKind, CallView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { t } from '@ab/mobile-kit';
 import type { Palette } from '@ab/mobile-kit';
 

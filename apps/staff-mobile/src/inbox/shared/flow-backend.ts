@@ -1,4 +1,11 @@
-import { searchDigits, type ForwardResult, type MessageView, type ThreadForward, type ThreadLesson, type ThreadView } from '@ab/shared';
+import type {
+  ForwardResult,
+  MessageView,
+  ThreadForward,
+  ThreadLesson,
+  ThreadView,
+} from '@ab/shared';
+import { searchDigits } from '@ab/core';
 import { FakeBackend } from '@/test/fake-backend';
 import { family, child } from '@/inbox/subscription/people-fixtures';
 import {
@@ -91,16 +98,16 @@ export function inboxBackend() {
 
   const backend = new FakeBackend()
     .on('GET /threads', ({ query }) => {
-      const digits = searchDigits(query['search'] ?? '');
-      const text = (query['search'] ?? '').trim();
+      const digits = searchDigits(query.search ?? '');
+      const text = (query.search ?? '').trim();
       const items = rows
-        .filter((r) => (query['unread'] === 'true' ? r.unread_count > 0 : true))
+        .filter((r) => (query.unread === 'true' ? r.unread_count > 0 : true))
         .filter((r) => (digits ? r.phone_e164.includes(digits) : (r.display_name ?? '').includes(text)))
         .sort((a, b) => (b.last_message_at ?? '').localeCompare(a.last_message_at ?? ''));
       return { items, total: items.length, page: 1, pageSize: 25 };
     })
     .on('GET /threads/:phone', ({ params }) => {
-      const phone = params['phone'] ?? '';
+      const phone = params.phone ?? '';
       const row = byPhone(phone) ?? leadThread;
       const people = phone === GUARDIAN_PHONE ? family([child()]) : undefined;
       const lessons = phone === GUARDIAN_PHONE ? [LESSON] : [];
@@ -108,8 +115,8 @@ export function inboxBackend() {
     })
     .on('POST /threads/:phone/text', ({ params, body }) => {
       const { text, replyToMessageId } = body as { text: string; replyToMessageId?: string };
-      const id = `srv-${log[params['phone'] ?? '']?.length ?? 0}`;
-      return record(params['phone'] ?? '', message({ id, body: text, reply_to_message_id: replyToMessageId ?? null }));
+      const id = `srv-${log[params.phone ?? '']?.length ?? 0}`;
+      return record(params.phone ?? '', message({ id, body: text, reply_to_message_id: replyToMessageId ?? null }));
     })
     .on('POST /threads/forward', ({ body }) => {
       const { messageId, targets } = body as ThreadForward;
@@ -123,7 +130,7 @@ export function inboxBackend() {
       return { results };
     })
     .on('POST /threads/:phone/template', ({ params }) =>
-      record(params['phone'] ?? '', message({ id: 'srv-tpl', body: 'حلقة سهيلة النهاردة — 17:00', template_key: 'lesson_reminder_plain' })),
+      record(params.phone ?? '', message({ id: 'srv-tpl', body: 'حلقة سهيلة النهاردة — 17:00', template_key: 'lesson_reminder_plain' })),
     )
     .on('GET /messages/gate', () => ({ open: true, reason: null, queued: 0 }))
     .on('GET /messaging/templates', () => [plainReminder, meetReminder])

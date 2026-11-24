@@ -1,4 +1,5 @@
-import { PUBLIC_SETTING_DEFAULTS, type StudentAttendanceTable } from '@ab/shared';
+import type { StudentAttendanceTable } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';

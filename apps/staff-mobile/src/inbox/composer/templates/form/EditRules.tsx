@@ -1,4 +1,6 @@
-import { dateClockText, nextEditAt, type TemplateStatus } from '@ab/shared';
+import { nextEditAt } from '@ab/shared';
+import type { TemplateStatus } from '@ab/catalog';
+import { dateClockText } from '@ab/time';
 import { useViewerClock } from '@/core/lib/clock';
 import { locale, t, AppText, type, useTheme, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';

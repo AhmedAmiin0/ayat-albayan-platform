@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fakeDb, type FakeResult } from '@/modules/people/guardians/fake-db';
+import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { MAX_ROWS } from '@/common/db/read-all';
 import { StudentExpiryRepo } from './student-expiry.repo';
 

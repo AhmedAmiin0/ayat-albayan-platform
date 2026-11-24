@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { monthLabel } from '@/teacher/lib/payout-text';
 import { wholeText } from '@/finance/shared/format';
-import type { MonthFinance } from '@ab/shared';
+import type { MonthFinance } from '@ab/money';
 
 /**
  * One month: the margin on top, then revenue, teacher cost and expenses on their own lines (they wrap, never clip).

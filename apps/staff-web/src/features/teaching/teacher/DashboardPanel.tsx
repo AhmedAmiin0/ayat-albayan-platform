@@ -1,5 +1,5 @@
 import type { HomePrefs } from '@ab/client-core';
-import type { LessonView, TeacherMe } from '@ab/shared';
+import type { LessonView, TeacherMe } from '@ab/schedule';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { cn } from '@ab/web-kit/lib/utils';
 import { LoadRetry } from './LoadRetry';
