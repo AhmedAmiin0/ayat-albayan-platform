@@ -4,9 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { t } from '@ab/mobile-kit';
 import { ensureCameraPermission } from '@/payments';
 
-// The phone's file pickers (owner 2026-11-17: «المعرض» · «الكاميرا» · «مستند»): a photo from the
-// gallery or the camera (quality 0.8), or a PDF, audio or image document. The bytes are read with
-// fetch(uri).arrayBuffer() (no file-system module in the APK, as the chat's PDF).
+// Bytes are read with fetch(uri).arrayBuffer(), since the APK has no file-system module.
 
 export const PICK_SOURCES = ['gallery', 'camera', 'document'] as const;
 export type PickSource = (typeof PICK_SOURCES)[number];

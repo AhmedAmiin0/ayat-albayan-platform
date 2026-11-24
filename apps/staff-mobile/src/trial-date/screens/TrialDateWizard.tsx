@@ -22,16 +22,10 @@ interface TrialDateWizardProps {
   history: TrialHistory;
   title: string;
   program: Program;
-  /** Where «إغلاق» goes without a screen to go back to. */
   fallback: () => void;
 }
 
-/**
- * «موعد تجريبي جديد» (R-SCH-06/07): المعلم/ة (the last trial's, or another) → الموعد (the length,
- * then the booking's slot grid, the next 7 days, the upcoming trial not busy) → المراجعة (with the
- * optional meeting link, owner 2026-11-02) → POST …/trial-date with one
- * request id per wizard (rule 8). The history sits over the first step.
- */
+/** One request id per wizard (R-SCH-06/07, rule 8); the upcoming trial does not count as busy. */
 export function TrialDateWizard({ history, title, program, fallback }: TrialDateWizardProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

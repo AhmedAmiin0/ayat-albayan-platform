@@ -7,7 +7,7 @@ import { isOffline } from '@/core/lib/money/payment-errors';
 // What a failed POST /lessons/:id/reschedule means (docs/10 §3: clients switch on `code`).
 
 export type RescheduleFailure =
-  /** 409 conflict: one line per clash (booking's wording), then «اختار ميعاد تاني». */
+  /** One line per clash, in booking's wording. */
   | { kind: 'conflict'; lines: string[] }
   | { kind: 'error'; text: string };
 
@@ -19,11 +19,7 @@ function codeOf(error: unknown): string | undefined {
   return typeof code === 'string' ? code : undefined;
 }
 
-/**
- * Offline → «مش متأكدين الميعاد اتغير» (a retry after a landed move is refused, never doubled);
- * a clash → its lines; invalid_transition, no_rule, rule_not_active, date_in_past, no_occurrences…
- * → the lessons.error wording; anything else → the general error.
- */
+/** Offline is unsure: a retry after a landed move is refused, never doubled. */
 export function rescheduleFailure(
   error: unknown,
   cycle: ClockCycle,
@@ -36,7 +32,7 @@ export function rescheduleFailure(
   return { kind: 'error', text: (code && known[code]) || t.common.error };
 }
 
-/** A failed move in words on the screen's clock: re-worded when «تنسيق الوقت» or the zone moves. */
+/** Re-worded when the time format or zone changes. */
 export function useRescheduleFailure(move: { isError: boolean; error: unknown }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

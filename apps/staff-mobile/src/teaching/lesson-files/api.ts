@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 
-// «ملفات الحلقة» for staff: routes and schemas in @ab/client-core (the web binds the same ones).
+// Routes and schemas live in @ab/client-core, which the web binds too.
 
 const api = lessonFilesApi({ apiFetch, apiSend });
 
@@ -40,7 +40,7 @@ export const useOpenFile = () =>
     },
   });
 
-/** «أضف ملفًا للحلقة»: slot → upload → register. */
+/** Slot, then upload, then register. */
 export const useUploadFile = () =>
   useMutation({
     mutationFn: (input: UploadInput) => uploadLessonFile({ api, upload: uploadSigned }, input),

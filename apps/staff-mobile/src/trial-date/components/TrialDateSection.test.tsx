@@ -6,7 +6,6 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { historyOf, trialRow } from '@/trial-date/testing/fixtures';
 import { TrialDateSection } from './TrialDateSection';
 
-// The admin student file: «موعد تجريبي جديد» + «مواعيد الحلقة التجريبية» (R-STU-05).
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

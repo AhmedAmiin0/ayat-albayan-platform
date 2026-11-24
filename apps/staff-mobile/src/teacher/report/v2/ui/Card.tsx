@@ -4,11 +4,8 @@ import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface CardProps {
   title?: string;
-  /** Small ink-3 text at the title's end («15 آية · ص 562–563», «مقترح من التقييمات: جيد»). */
   aside?: string | null;
-  /** Adds «(اختياري)» after the title. */
   optional?: boolean;
-  /** wash: the «الحلقة القادمة» box (mint, no edge). */
   tone?: 'raised' | 'wash';
   children: ReactNode;
 }

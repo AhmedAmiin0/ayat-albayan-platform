@@ -7,8 +7,7 @@ import { historyOf, STUDENT, trialResult, trialRow, UPCOMING } from '@/trial-dat
 import { fakeTrialApi, fakeTrialSend } from '@/trial-date/testing/test-utils';
 import { TrialDateScreen } from './TrialDateScreen';
 
-// «تعديل الموعد التجريبي» by a salesperson (owner 2026-11-02): the upcoming trial moves with a new
-// length and her own meeting link; the clash check never carries the link.
+// The clash check never carries the meeting link.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
