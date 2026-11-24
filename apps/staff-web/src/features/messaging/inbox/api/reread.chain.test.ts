@@ -22,7 +22,6 @@ const focused = (on: boolean) => vi.spyOn(document, 'hasFocus').mockReturnValue(
 
 const deltas = vi.fn(async (): Promise<unknown> => 0);
 
-/** An open, shown chat with older pages, its delta query and observer («تحميل الأقدم»). */
 async function opened() {
   const client = new QueryClient();
   mockApiFetch.mockResolvedValueOnce(page(true, msg('a', 'sent')));

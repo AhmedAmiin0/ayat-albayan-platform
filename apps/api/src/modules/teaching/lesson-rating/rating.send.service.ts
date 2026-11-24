@@ -12,13 +12,7 @@ interface RatingSend {
   clientRequestId: string;
 }
 
-/**
- * POST /threads/:phone/rating «إرسال تقييم الحلقة»: the admin asks a guardian to rate their
- * children's latest lesson that took place — the way to reopen a closed chat with a question they
- * answer by one tap. An admin send (created_by = admin): the automatic-messages switch does not
- * hold it; the send gate still does. Its own dedup key per request id (rule 8), so it never
- * replays the job's automatic row for the same lesson.
- */
+/** Admin send skips the automatic-messages switch but not the send gate; own dedup key (rule 8). */
 @Injectable()
 export class RatingSendService {
   constructor(

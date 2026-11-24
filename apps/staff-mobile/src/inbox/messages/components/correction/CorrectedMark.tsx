@@ -2,11 +2,7 @@ import { Pressable } from 'react-native';
 import { t, AppText, type, useTheme } from '@ab/mobile-kit';
 import { useCorrection } from './correction-context';
 
-/**
- * «صُحِّحت» beside a corrected original's time (owner 2026-11-07): a tap goes to the correction,
- * as a quote's tap goes to its original. Nothing on any other bubble. Its name is its visible
- * text (WCAG 2.5.3); where it goes is the hint.
- */
+/** Its accessible name is its visible text (WCAG 2.5.3); the destination is the hint. */
 export function CorrectedMark() {
   const { color } = useTheme();
   const link = useCorrection();

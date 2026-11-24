@@ -14,14 +14,11 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
   lesson: L | null;
   role: DetailsRole;
   onClose: () => void;
-  /** The row's own actions for this role (تأكيد / إلغاء / عدّل الوقت / غيّر الميعاد / ادخل الحلقة…), under the details. */
+  /** The row's own actions for this role, under the details. */
   actions?: (lesson: L) => ReactNode;
-  /**
-   * The screen's sheets an action opens (غيّر الميعاد, عدّل الوقت): mounted inside this modal while it
-   * is open, so iOS presents them over it, and beside it (for the row's own buttons) while it is closed.
-   */
+  /** Mounted inside this modal while open so iOS presents them over it, beside it while closed. */
   sheets?: ReactNode;
-  /** «للاطلاع فقط» under the actions; sales' default, false on a lesson she may move or cancel (docs/16 row 37). */
+  /** Sales' default; false on a lesson she may move or cancel (docs/16 row 37). */
   readOnly?: boolean;
   /** Opened from this student's own file: their name stays plain (no second copy of that screen). */
   hereStudentId?: string | undefined;
@@ -29,13 +26,7 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
   onReport?: (lessonId: string) => void;
 }
 
-/**
- * «تفاصيل الحلقة» (owner 2026-10-26: tap a lesson in the schedule to see more): a page sheet over
- * the schedule, like «غيّر الميعاد», so a swipe down, the back button or «إغلاق» closes it and the
- * list stays put. Compact groups, most-read first: status and tags with the same actions the row
- * offers under them, then «الموعد», «الطلاب» and «بيانات الحلقة». Sales reads it with «للاطلاع
- * فقط» and only «ادخل الحلقة». A tap that navigates closes the sheet first.
- */
+/** A page sheet so the list stays put; a tap that navigates closes the sheet first. */
 export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetailsSheetProps<L>) {
   const { lesson, role, onClose, actions, sheets, readOnly = role === 'sales' } = props;
   const { hereStudentId, onReport } = props;
@@ -53,7 +44,7 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
           <ScrollView
             style={{ flex: 1, marginHorizontal: -16 }}
             contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32, gap: 10 }}
-            // «إلغاء» opens its reason field inside the sheet: a tap must land with the keyboard up.
+            // Cancel opens its reason field in the sheet, so a tap must land with the keyboard up.
             keyboardShouldPersistTaps="handled"
             automaticallyAdjustKeyboardInsets
           >
@@ -61,7 +52,7 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
               <>
                 <DetailsHead lesson={lesson} />
                 {/* The row's actions right under the status: in view without scrolling a group lesson. */}
-                {/* «ادخل الحلقة» closes this sheet before the room opens (Android's Modal). */}
+                {/* Joining closes this sheet before the room opens (Android's Modal). */}
                 {actions ? (
                   <SheetLeave value={onClose}>
                     <View style={{ gap: 8 }}>{actions(lesson)}</View>

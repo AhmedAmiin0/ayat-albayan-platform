@@ -19,18 +19,12 @@ export interface PillProps {
   /** Tried after the 24 h window (owner 2026-10-31): a plain, not highlighted, template icon. */
   quietTemplate?: boolean;
   onReplies: () => void;
-  /** «عرض سعر» (staff with pricing.read); absent → no price tag in the bar. */
+  /** Absent means no price tag in the bar. */
   onQuote?: (() => void) | undefined;
   onFileError: (message: string | null) => void;
 }
 
-/**
- * The pill's contents in reading order. Staff, as WhatsApp (owner 2026-10-29: «some typing options are
- * missing»): [emoji][text][«عرض سعر»][paperclip]; owner 2026-11-01: no camera in the bar (its tile
- * stays in the paperclip's sheet, as template and quick replies). Teacher: [emoji][text][قالب].
- * An emoji goes in at the caret through onText (the «/» check runs too). Staff's emoji panel also
- * has «GIF» and «ملصقات» (owner 2026-11-01): a pick is sent at once.
- */
+/** An emoji is inserted at the caret through onText so the slash check runs too. */
 export function PillContents(p: PillProps) {
   const { color } = useTheme();
   const [emoji, setEmoji] = useState(false);

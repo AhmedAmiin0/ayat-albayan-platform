@@ -6,8 +6,7 @@ import { LessonLivePush } from './lesson-live.push';
 import { RoomPresenceRepo } from './room-presence.repo';
 import { RoomPresenceService } from './room-presence.service';
 
-// The live lesson room (owner 2026-11-16): «إنهاء الحلقة للجميع», who is inside now (LiveKit's
-// participant webhooks) and «بدأت الحلقة». Listed here so ClassroomModule stays readable.
+// The live lesson room: end for everyone, current presence and the lesson-started push.
 
 export const LIVE_ROOM_CONTROLLERS = [LessonEndController];
 

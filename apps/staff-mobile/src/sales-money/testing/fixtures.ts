@@ -1,4 +1,4 @@
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
 
 // Test data shaped like GET /sales/me/* (the web's MyEarnings / MyStudents / MyPayments tests).
 
@@ -61,7 +61,6 @@ export const myPayment = (over: Partial<MyPaymentRow> = {}): MyPaymentRow => ({
   ...over,
 });
 
-/** A «عمولاتي» row as GET /sales/me/commissions answers it (staging's AB-1022 card payment). */
 export const myCommission = (over: Partial<MyCommissionRow> = {}): MyCommissionRow => ({
   id: 'c1',
   student: { code: 'AB-1022', name: 'lmkl' },
@@ -77,5 +76,4 @@ export const myCommission = (over: Partial<MyCommissionRow> = {}): MyCommissionR
   ...over,
 });
 
-/** One page of «عمولاتي». */
 export const commissionPage = (items: MyCommissionRow[], total = items.length, page = 1) => ({ items, total, page, pageSize: 20 });

@@ -12,13 +12,7 @@ interface MediaCardProps {
   onPick: (item: ThreadMediaItem, thumbnail: string | null) => void;
 }
 
-/**
- * One inbound image or PDF of the chat. An image asks the API for its signed URL as it mounts (the
- * API downloads it from WhatsApp the first time) and shows a spinner meanwhile; if that fails the
- * tile says so and a tap tries again. A PDF is a file tile with the receipt icon. One past
- * WhatsApp's ~30 days is disabled with a short «انتهت صلاحيته» badge at full contrast (the sheet
- * explains once what to do).
- */
+/** Images fetch a signed URL on mount; past WhatsApp's ~30 days the item is disabled. */
 export function MediaCard({ phone, item, onPick }: MediaCardProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

@@ -7,7 +7,7 @@ import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView, STUDENT_ID } from '@/sales-course/testing/fixtures';
 import { fakeNow } from '@/test/fake-now';
 
-// Hold mode (owner 2026-11-06): unpaid with an open payment link, «احجز» keeps a draft.
+// Unpaid with an open payment link, booking keeps a draft.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -26,7 +26,7 @@ jest.setTimeout(30_000);
 
 const BOOKING = booked(SUN_17);
 
-/** «احجز» once the series check enabled it (slow CI runners: a wider wait than pressEnabled's). */
+/** Uses a wider wait for slow CI runners. */
 async function submit() {
   await waitFor(() => expect(isDisabled(t.booking.submit)).toBe(false), { timeout: 10_000 });
   await press('button', t.booking.submit);

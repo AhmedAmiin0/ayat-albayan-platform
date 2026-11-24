@@ -19,14 +19,7 @@ const names = new Intl.ListFormat('ar', { type: 'conjunction' });
  */
 export const forMessages = <L extends ConfirmedLesson>(lesson: L, auto: boolean): L => (auto ? { ...lesson, meeting_link: null } : lesson);
 
-/**
- * One queued booking_confirmation* message per distinct guardian for a (re)booked lesson
- * (docs/10 §5.11, R-SCH-06, R-LES-02): template by the lesson's link host, {{1}} = that
- * guardian's students (Intl.ListFormat: «سارة ومريم»), {{2}} = start in the guardian's tz,
- * button = Meet code / Jitsi slug. dedup_key makes a retry queue nothing new (rule 8).
- * TODO(R-MSG-01): owner to confirm {{1}} is the student's name and that a reschedule reuses
- * the booking_confirmation templates.
- */
+/** One message per guardian (docs/10 §5.11, R-SCH-06, R-LES-02); dedup_key makes retries no-ops. */
 export function confirmationMessages(
   lesson: ConfirmedLesson,
   contacts: readonly Contact[],

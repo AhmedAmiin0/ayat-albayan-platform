@@ -15,7 +15,6 @@ import {
 } from '@/features/people/students/people-edit/api';
 import { usePeopleWrite } from '@/features/people/students/people-edit/use-people-write';
 
-/** The writes of «تحويل»: the state here, the logic in @ab/client-core (convertModel). */
 export function useConvert(view: PeopleEditView, onDone: PeopleDone): ConvertModel {
   const [pending, setPending] = useState<Conversion | null>(null);
   const done = convertDone(view, onDone, t.peopleEdit);

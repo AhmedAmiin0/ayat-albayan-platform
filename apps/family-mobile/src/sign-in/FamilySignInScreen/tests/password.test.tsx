@@ -3,8 +3,7 @@ import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
 import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
 
-// docs/50 §4: the student code + password one tap from WhatsApp («أول دخول؟» / «نسيت» as before);
-// while WhatsApp codes are off the screen opens on it, with one quiet line and no WhatsApp.
+// docs/50 §4: student code and password one tap from WhatsApp; while codes are off it opens there.
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

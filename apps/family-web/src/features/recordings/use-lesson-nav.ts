@@ -1,10 +1,7 @@
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
 
-/**
- * The lesson and recordings pages' ways out: «العودة» goes back, or home when the page was the
- * first one (a pasted link), never out of the app; a report opens on its own page.
- */
+/** Back goes home when the page was the first one, never out of the app. */
 export function useLessonNav(studentId: string) {
   const router = useRouter();
   const navigate = useNavigate();

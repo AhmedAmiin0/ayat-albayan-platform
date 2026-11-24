@@ -7,11 +7,10 @@ import { UpcomingList } from './UpcomingList';
 
 interface CardBoxProps {
   card: CourseCardView | undefined;
-  /** The assistant's own «الحلقات القادمة»; absent = the card's list once a course is booked. */
+  /** Absent means the card's own list once a course is booked. */
   upcoming?: ReactNode;
 }
 
-/** The card's raised box: the card's lines, then «الحلقات القادمة». Nothing before either. */
 export function CardBox({ card, upcoming }: CardBoxProps) {
   const { color } = useTheme();
   const booked = card?.course != null;

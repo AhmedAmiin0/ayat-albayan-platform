@@ -1,4 +1,4 @@
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { booked, maryam, SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { dayLine } from '@/booking/shared/picks';

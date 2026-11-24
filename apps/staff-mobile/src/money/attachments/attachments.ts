@@ -1,10 +1,10 @@
-import type { PaymentAttachmentView } from '@ab/shared';
+import type { PaymentAttachmentView } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { isPdfName } from './receipt-file';
 
 export interface AttachmentRow {
   view: PaymentAttachmentView;
-  /** «الإيصال» for the legacy receipt, else «مرفق n» counting only the new files (web AttachmentsDialog). */
+  /** Counting only new files, as the web AttachmentsDialog. */
   label: string;
   /** Opened outside the app; an image shows inline. */
   pdf: boolean;
@@ -15,7 +15,7 @@ export function isPdfAttachment(a: Pick<PaymentAttachmentView, 'mime' | 'url'>):
   return a.mime === null ? isPdfName(a.url) : a.mime === 'application/pdf';
 }
 
-/** The payment's «المرفقات» as the viewer lists them, in the API's order. */
+/** Keeps the API's order. */
 export function attachmentRows(list: readonly PaymentAttachmentView[]): AttachmentRow[] {
   let n = 0;
   return list.map((view) => {

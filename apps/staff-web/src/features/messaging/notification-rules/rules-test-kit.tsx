@@ -15,8 +15,7 @@ import { NUMBERS } from '@/features/messaging/numbers/numbers.fixture';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RulesSection } from './RulesSection';
 
-// Shared by the «الإشعارات» tests (not app code). Each test file mocks @/lib/api, the router's Link
-// and @/features/auth/use-permissions. Fake ids only.
+// Each test file mocks @/lib/api, the router's Link and use-permissions; fake ids only.
 
 const TIMINGS: Partial<Record<string, AnyRuleTiming>> = {
   lesson_reminder: { minutes_before: 60 },
@@ -51,7 +50,6 @@ export function overview(patch: Partial<Record<string, Partial<NotificationEntry
   return { entries, lines: [], mode: 'legacy', reach: { guardian: 12, teacher: 3, lead: 25 } };
 }
 
-/** «الإشعارات» with every GET it makes answered. */
 export function renderRules(input: {
   apiFetch: Mock;
   data?: NotificationsOverview;

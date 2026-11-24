@@ -1,4 +1,4 @@
-import { SEED_ENTRIES, type ConfigEntry, type ConfigEntriesResponse } from '@ab/shared';
+import { SEED_ENTRIES, type ConfigEntry, type ConfigEntriesResponse } from '@ab/settings';
 import type { QueryClient } from '@tanstack/react-query';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 

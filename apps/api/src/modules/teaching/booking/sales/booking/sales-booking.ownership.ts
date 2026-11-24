@@ -23,16 +23,13 @@ export class SalesBookingScope {
     return this.rule.scope(user);
   }
 
-  /**
-   * The slot grid may leave out a lesson (excludeLessonId, «موعد تجريبي جديد»: the trial it moves) only
-   * when every student of that lesson is one of the grid's students, which the caller checked are hers.
-   */
+  /** Only when every student of that lesson is one of the grid's (already checked hers). */
   async ownLesson(lessonId: string, studentIds: readonly string[]): Promise<boolean> {
     const students = await this.lessons.lessonStudents(lessonId);
     return students.length > 0 && students.every((id) => studentIds.includes(id));
   }
 
-  /** The grid names exactly this lesson's students (sales' «تغيير الموعد» of ANY lesson, owner 2026-10-28). */
+  /** docs/16 row 37: sales may reschedule any lesson. */
   async isLessonOf(lessonId: string, studentIds: readonly string[]): Promise<boolean> {
     const students = await this.lessons.lessonStudents(lessonId);
     return students.length > 0 && students.length === studentIds.length && studentIds.every((id) => students.includes(id));

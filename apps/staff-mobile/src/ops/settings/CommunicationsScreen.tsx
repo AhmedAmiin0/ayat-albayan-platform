@@ -9,19 +9,14 @@ import { SubScreenHeader } from '@/ops/shared/SubScreenHeader';
 
 export type CommsTab = 'overview' | 'notifications' | 'numbers';
 
-/** The tabs: نظرة عامة · الإشعارات · الأرقام (read at render: admins' overrides apply). */
+/** Read at render so admins' label overrides apply. */
 export const commsTabs = (): { value: CommsTab; label: string }[] => [
   { value: 'overview', label: t.settingsPages.communicationsTabs.overview },
   { value: 'notifications', label: t.settingsValues.groups.notifications },
   { value: 'numbers', label: t.settingsPages.communicationsTabs.numbers },
 ];
 
-/**
- * «التواصل» on the phone (docs/23 §2d, docs/26b §4): one tab at a time — the overview (send state
- * read-only, numbers with health, «ماذا يُرسل الآن»), the catalogue's switches and «الأرقام».
- * Numbers, credentials and templates are edited on the web. A row of the overview opens
- * «الإشعارات» on its audience.
- */
+/** docs/23 §2d, docs/26b §4: numbers, credentials and templates are edited on the web. */
 export function CommunicationsScreen() {
   const [tab, setTab] = useState<CommsTab>('overview');
   const [audience, setAudience] = useState<NotificationAudience | undefined>(undefined);

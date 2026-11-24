@@ -24,7 +24,7 @@ export abstract class CourseMoveRoutes {
     private readonly schemas: MoveSchemas,
   ) {}
 
-  /** `?subscriptionId=` (absent = the current package): the course and «من تاريخ»'s default. */
+  /** Absent means the current package. */
   @Get('change')
   view(
     @Param('id', ParseUUIDPipe) id: string,

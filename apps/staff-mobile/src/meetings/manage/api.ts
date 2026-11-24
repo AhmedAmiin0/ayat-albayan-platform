@@ -1,4 +1,4 @@
-import type { MeetingCreated, MeetingView } from '@ab/shared';
+import type { MeetingCreated, MeetingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { openRoom } from '@/classroom';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';

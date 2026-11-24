@@ -25,28 +25,19 @@ export interface InboxPageProps {
   search: InboxSearch;
   /** `replace`: a chat's anchor moves without a history entry (docs/37). */
   onSearch: (next: InboxSearch, how?: { replace: boolean }) => void;
-  /** Extra items in the list column's head row, before «محادثة جديدة» (sales: the running lessons chip). */
   head?: ReactNode;
 }
 
-/**
- * /admin/inbox (R-LEAD-02): every WhatsApp conversation, newest first, beside the open thread.
- * /teacher/inbox (teacher mode): the same page over the teacher's own families only (API-scoped).
- * Admin and sales also start a chat by number («محادثة جديدة» → NewThread's first template).
- * Under 900px the list and the thread are separate screens (the thread has «رجوع»).
- * The page title (ONE cartouche and the count) heads the list column, not the page: the nav tab
- * above already names the screen, so the chat keeps that row.
- */
+/** Teacher mode shows only the teacher's own families, scoped by the API (R-LEAD-02). */
 export function InboxPage({ search, onSearch, head }: InboxPageProps) {
-  // «القوائم» (docs/22): with inbox.lists outside teacher mode; an unknown list shows «الكل».
+  // Lists need inbox.lists outside teacher mode; an unknown list shows all (docs/22).
   const lists = useListsAccess();
   const all = useQuery({ ...chatListsQuery, enabled: lists });
-  // Lists that failed to load leave no chip to go back with: «الكل».
+  // Lists that failed to load fall back to all chats.
   const list = lists ? activeList(search.list, all.isError ? [] : all.data) : undefined;
   const shown = parseInboxSearch({ ...search, list });
   useInboxLive(); // a realtime connect / drop re-reads the poll interval (docs/12 §15)
-  const threads = useThreads(shown); // ticks never behind the open chat's (docs/43 43-1)
-  // «المكالمات» (docs/28) replaces the chats list only while calls are on.
+  const threads = useThreads(shown); // Calls log (docs/28) replaces chats only while calls are on.
   const callsLog = useCallsEnabled() && !!shown.calls;
   const { phone, msg, ...listSearch } = shown;
   const filter = (patch: Record<string, unknown>) =>

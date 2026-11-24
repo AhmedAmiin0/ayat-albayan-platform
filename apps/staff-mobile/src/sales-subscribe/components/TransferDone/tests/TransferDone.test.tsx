@@ -22,7 +22,7 @@ test('«احجز أيام الحلقات الآن» opens the course wizard for 
   expect(screen.getByText(t.salesMoney.becameSubscribed)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.booking.bookCourseDays }));
   expect(mockPush).toHaveBeenCalledWith({ pathname: '/sales/inbox/sales-course', params: { studentId: KID } });
-  // «مدفوعاتي» is a tab's screen: the chat group pops back to her tabs (no second tab host).
+  // A tab's screen, so the chat group pops back to her tabs instead of a second tab host.
   await fireEvent.press(screen.getByRole('button', { name: t.salesMoney.openMyPayments }));
   expect(mockDismissTo).toHaveBeenCalledWith('/sales/more/earnings?view=payments');
   await fireEvent.press(screen.getByRole('button', { name: t.salesMoney.done }));

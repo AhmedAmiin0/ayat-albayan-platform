@@ -3,7 +3,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { studentOwnerIds } from '@/modules/sales/sales';
 
-/** The reads of «تم استلام دفعة»: who is told (service role; never a write). */
+/** Reads for the payment-received notice, service role only, never a write. */
 @Injectable()
 export class PaymentReceivedRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

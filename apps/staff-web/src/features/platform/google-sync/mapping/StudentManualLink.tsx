@@ -14,7 +14,7 @@ interface Props {
   onCancel: () => void;
 }
 
-/** «ربط يدوي»: paste the student's Drive folder link (+ the attendance sheet link); ids only are sent. */
+/** Only ids are sent. */
 export function StudentManualLink({ busy, onSubmit, onCancel }: Props) {
   const [folder, setFolder] = useState('');
   const [sheet, setSheet] = useState('');

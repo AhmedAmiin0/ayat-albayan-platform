@@ -17,7 +17,7 @@ function Row({ term, children }: { term: string; children: ReactNode }) {
   );
 }
 
-/** «بانتظار تأكيدك»: a pill while any lesson waits for the guardian, else a plain 0. */
+/** A pill while any lesson waits for the guardian, else a plain 0. */
 const Awaiting = ({ n }: { n: number }) => (n > 0 ? <Pill tone="act">{n}</Pill> : <>{n}</>);
 
 interface WeekSummaryProps {
@@ -26,7 +26,6 @@ interface WeekSummaryProps {
   guardian: boolean;
 }
 
-/** «ملخص الأسبوع»: the week's lessons, what awaits the guardian, and the teacher(s). */
 export function WeekSummary({ summary, guardian }: WeekSummaryProps) {
   const teachers = summary.teachers.map((x) => teacherLabel(x)).join(' · ');
   return (

@@ -18,7 +18,7 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 
-// owner 2026-11-17: «موقوف مؤقتًا» / «متوقف» go through the pause / the stop, never a bare PATCH.
+// Paused and stopped go through the pause and the stop, never a bare PATCH.
 const serve = async (p: string) => {
   if (p.includes('/trial-dates')) return historyOf([]);
   if (p === '/students/s1') return profile;

@@ -15,21 +15,12 @@ import { SheetLines } from './SheetLines';
 
 interface CourseStopFormProps {
   sub: SubRef;
-  /** «تم» after the stop: what was done («أُلغي…», with the refund), said where it opened. */
   onDone: (text: string) => void;
   onClose: () => void;
-  /** The guardian's phone: the done block's «افتح المحادثة». */
   chatPhone?: string | undefined;
 }
 
-/**
- * «إلغاء الاشتراك» (owner 2026-10-30): what happens (the lessons cancelled with their dates, the
- * schedule ends, payments and history kept, the student «متوقف»), who is told, the required
- * reason, then «تأكيد الإلغاء» (danger) beside «رجوع» with one clientRequestId per sheet (rule
- * 8). A package already cancelled shows when and why instead. The money is the person's choice
- * (owner 2026-11-06); the reason's and the custom amount's errors are client-core's (2026-11-17).
- * Then the done block in the same sheet (StopDoneView).
- */
+/** Required reason and one clientRequestId per sheet (rule 8); the money is the user's choice. */
 export function CourseStopForm({ sub, onDone, onClose, chatPhone }: CourseStopFormProps) {
   const [reason, setReason] = useState('');
   const [tried, setTried] = useState(false);

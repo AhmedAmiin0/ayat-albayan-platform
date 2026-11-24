@@ -10,9 +10,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «الدفع الإلكتروني» (docs/30): the form refuses a malformed Stripe key before anything leaves
-// (integrationSecretCheck); a sandbox or live key is sent (the API alone decides whether it
-// runs with FEATURE_STRIPE=live), and a save asks GET /stripe/feature again.
+// docs/30: malformed Stripe keys are refused client-side; the API alone decides live mode.
 const s = t.integrations;
 const FEATURE = { queryKey: stripeFeatureQuery.queryKey };
 
@@ -23,7 +21,6 @@ async function renderPanel() {
   return vi.spyOn(client, 'invalidateQueries');
 }
 
-/** Types into a secret's field: its row (for the error) and its «حفظ القيمة». */
 function typeSecret(key: 'STRIPE_API_KEY' | 'STRIPE_WEBHOOK_SECRET', value: string) {
   const input = screen.getByLabelText(s.keys[key].label);
   fireEvent.change(input, { target: { value } });

@@ -13,7 +13,7 @@ import { keyItem } from './key-item';
 
 const v = t.settingsValues;
 
-/** «حفظ: الاسم»: the visible word first, then the row (an aria-label, so every browser reads it alike). */
+/** The visible word first, then the row name, as an aria-label so every browser reads it alike. */
 export const rowActionName = (word: string, name: string): string => `${word}: ${name}`;
 
 /** The «⋯» items: the description, the default, the value the last save replaced (same checks and confirmation), the key. */
@@ -33,10 +33,7 @@ export function rowMenuItems(api: ValuesApi, key: SettingKey): RowMenuItem[] {
   return items;
 }
 
-/**
- * «إجراء» of an editable settings row: «جارٍ الحفظ…» while saving; «حفظ» + «تراجع» while dirty
- * («حفظ» is aria-disabled while the value is invalid); otherwise the «⋯» menu. Nothing when read-only.
- */
+/** Saving state, save and undo while dirty (save aria-disabled when invalid), else the row menu. */
 export function ActionCell({ settingKey }: { settingKey: SettingKey }) {
   const api = useValues();
   const name = settingText(settingKey).label;

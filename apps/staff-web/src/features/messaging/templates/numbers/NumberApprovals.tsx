@@ -10,10 +10,6 @@ const chipOf = (state: NumberApprovalState) =>
     ? { tone: 'neutral' as const, glyph: 'hollow' as const, word: s.notSynced }
     : { ...templateStatusStyle[state], word: t.enums.templateStatus[state] };
 
-/**
- * One chip per number the template may go out from (the template status chip styles; «لم يُزامَن بعد»
- * when that number has no synced row), led by «معتمد جزئيًا» when only some of them approved it.
- */
 export function NumberApprovals({
   rows,
   name,

@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { StickerRepo, StickerRow } from './sticker.repo';
 import { StickersService } from './stickers.service';
 
-// «أضف إلى المفضلة» / «أزل من المفضلة» on a sticker bubble (owner 2026-11-01).
 const ME = 'a0000000-0000-4000-8000-000000000001';
 const sticker: StickerRow = {
   id: 'b1111111-1111-4111-8111-111111111111',

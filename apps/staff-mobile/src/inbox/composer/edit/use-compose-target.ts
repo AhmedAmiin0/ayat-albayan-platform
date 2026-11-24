@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { type Dispatch, type RefObject, type SetStateAction, useEffect, useRef, useState } from 'react';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 
-/** What the box's next text answers («رد») or corrects («تعديل»): one of them at most. */
+/** At most one of reply or correction applies. */
 interface ComposeTarget {
   reply: MessageView | null;
   setReply: Dispatch<SetStateAction<MessageView | null>>;
@@ -13,10 +13,7 @@ interface ComposeTarget {
   editSent: (session: string) => void;
 }
 
-/**
- * The box's own draft from before «تعديل», and the edit SESSION: one per tap on «تعديل», so a
- * correction sent from an earlier tap never ends a newer one (#694 follow-up item 4).
- */
+/** One session per edit tap, so a correction from an earlier tap never ends a newer one. */
 type Saved = { session: string; text: string } | null;
 
 let sessions = 0;
@@ -59,13 +56,7 @@ const editOf = (edit: Edit, phone: string) =>
     ? { editing: edit.m, editSession: edit.session }
     : { editing: null, editSession: null };
 
-/**
- * One open chat's «رد» and «تعديل» (owner 2026-11-07), as WhatsApp: picking a reply ends an edit,
- * starting an edit drops the reply and puts the original's text in the box. An edit keeps the
- * box's draft from before it: ✕, a picked reply, leaving the chat or its sent correction (into a
- * still empty box) brings it back (review of #694). An updater (a send that settles its own
- * reply) never ends an edit.
- */
+/** Reply and edit exclude each other; an edit restores the prior draft when it ends. */
 export function useComposeTarget(phone: string): ComposeTarget {
   const [reply, setReplyNow] = useState<MessageView | null>(null);
   const [edit, setEdit] = useState<Edit>(null);

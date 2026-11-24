@@ -1,11 +1,11 @@
 import type { ReportV2Draft, ReportV2Submit, ReportView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import type { ReportCaller } from '@/modules/reporting/reports/report-access';
+import type { ReportCaller } from '@/modules/reporting/reports/shared/report-access';
 import { conflict } from '@/common/http/errors';
-import { ReportGate } from '@/modules/reporting/reports/submit/report-gate';
+import { ReportGate } from '@/modules/reporting/reports/shared/report-gate';
 import { assertForm, ReportSubmitService } from '@/modules/reporting/reports/submit/report-submit.service';
 import { reportView } from '@/modules/reporting/reports/report.mapper';
-import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
+import { ReportsQueries } from '@/modules/reporting/reports/shared/reports.queries';
 import { contentJson, v2DraftColumns, v2SubmitColumns } from './report-v2.mapper';
 
 type DraftInput = { id: string; form: Partial<ReportV2Draft>; user: ReportCaller };

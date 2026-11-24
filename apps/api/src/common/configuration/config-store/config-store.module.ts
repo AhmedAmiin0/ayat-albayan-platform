@@ -10,11 +10,7 @@ import { ConfigStoreRepo } from './store/config-store.repo';
 import { ConfigStore } from './store/config-store.service';
 import { SETTINGS_CACHE_MS } from './config-store.types';
 
-/**
- * The settings store (docs/26 §2e): rows + cache + revision (ConfigStore), the boot seeder, «القيم»
- * (/config/entries) and the read-path parity check. Global: SettingsService (the same token as
- * before, a facade) writes through it. It imports no consumer module.
- */
+/** Global so SettingsService writes through it (docs/26 §2e); imports no consumer module. */
 @Global()
 @Module({
   controllers: [ConfigEntriesController, ConfigParityController],

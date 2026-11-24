@@ -57,13 +57,7 @@ import { TrialDateDeps, TrialDates } from './trial-date/trial-date.service';
 import { SalesTrialDates } from './sales/course/sales-trial-date.service';
 import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
 
-/**
- * Booking wizard: teacher filter, slot grid with conflict reasons, POST /booking in one transaction,
- * makeup candidates and the invoice upload (R-SCH-10, R-PAY-03; InboundMedia comes from the global
- * WhatsappModule, StorageService from the global StorageModule), and «حلقة فورية» (POST /lessons/instant).
- * SubscriptionsModule brings StudentTrialStatus (a trial booking: new → trial, owner 2026-10-15).
- * R-SCH-04, R-SCH-06, R-LEAD-06. Owner: Phase 2 builder B2 (docs/10-phase2-contracts.md §1).
- */
+/** R-SCH-04/06/10, R-PAY-03, R-LEAD-06; contracts in docs/10-phase2-contracts.md §1. */
 @Module({
   imports: [
     TeachersModule,

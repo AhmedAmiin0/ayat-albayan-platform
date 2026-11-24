@@ -15,11 +15,7 @@ import type { FetchLike } from '@/modules/messaging/whatsapp/drivers/meta/graph'
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// The notifications line as the relay needs it, read per call like LiveWhatsappClient (an admin's
-// change in «التكاملات» applies to the next request): the CRM account the script's Bearer is
-// checked against (WACRM_API_BASE + WACRM_API_KEY, kept after the switch), the line's CURRENT
-// driver with the same allow-list (docs/19 «CRM → Meta»: crm, or meta / kapso through Graph), and
-// the number module mode stamps on its rows.
+// Read per call so integrations changes apply next request; same allow-list (docs/19).
 
 /** Sends a body in the CRM's shape (the script's) on the line's driver. */
 export interface RelaySender {

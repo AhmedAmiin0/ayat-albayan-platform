@@ -35,9 +35,9 @@ export interface MessageLogProps {
   fill?: 'shell' | 'xl' | 'phone';
   /** May this user call from this chat: its call entries (docs/28) then call back when tapped. */
   canCall?: boolean;
-  /** The family's next open lessons (ThreadDetail.lessons): the reply notes' «تأكيد الحلقة» / «تغيير الموعد»; none = no actions. */
+  /** The family's next open lessons for the reply notes' actions; none means no actions. */
   lessons?: readonly ThreadLesson[];
-  /** The window around a search hit (docs/37): never pinned, «الأحدث» always shown. */
+  /** The window around a search hit (docs/37) is never pinned and always offers the newest. */
   anchor?: LogAnchor | undefined;
 }
 
@@ -56,12 +56,7 @@ function Day({ label }: { label: string }) {
   );
 }
 
-/**
- * The thread as a live log (role=log: new messages are announced). Opens at the newest message and
- * stays pinned there as messages arrive, unless the reader scrolled up: then «الانتقال إلى أحدث رسالة»
- * counts what came in below. Her own send (the id her composer recorded) always snaps to the bottom; «رسائل أقدم» pages back.
- * A separator before each day's first message, at every width (the bubbles show the clock only).
- */
+/** Stays pinned to the newest unless scrolled up; her own send always snaps to the bottom. */
 export function MessageLog({ lessons, ...props }: MessageLogProps) {
   // The chat's WhatsApp calls (docs/28), at their time among the messages; nothing asked while calls are off.
   const log = useCallsEnabled() ? <WithThreadCalls phone={props.phone}>{(calls) => <LogView {...props} calls={calls} />}</WithThreadCalls> : <LogView {...props} />;
@@ -90,8 +85,7 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
     pinned.current = true;
     setAwayAt(null);
   };
-  // A ticking clock, not new Date() (the compiler keeps one render's time), never older than the
-  // newest row: one that lands in the minute after midnight opens «اليوم», not yesterday.
+  // A ticking clock never older than the newest row, so a just-after-midnight row reads as today.
   const stamps = [messages.at(-1)?.created_at, ...(calls ?? []).map((c) => c.started_at)];
   const now = logNow(useNow(), stamps);
   const from = hasMore ? (messages[0]?.created_at ?? null) : null;
@@ -99,7 +93,7 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
   const items: LogItem[] = withDays(messages, now, calls && { list: calls, from, to });
   const seen = awayAt === null ? -1 : messages.findIndex((m) => m.id === awayAt);
   const unseen = seen < 0 ? 0 : messages.length - 1 - seen;
-  const corrected = correctionsOf(messages); // «صُحِّحت» on an original: its newest correction
+  const corrected = correctionsOf(messages);
 
   return (
     <div

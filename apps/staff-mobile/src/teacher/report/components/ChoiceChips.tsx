@@ -2,7 +2,7 @@ import { Pressable, View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface ChoiceChipsProps<V extends string> {
-  /** The question, verbatim from the Google Form («الحضور», «التلاوة والنطق» …). */
+  /** The question text is verbatim from the original Google Form. */
   label: string;
   items: readonly { value: V; label: string }[];
   value: V | null;
@@ -16,10 +16,7 @@ interface ChoiceChipsProps<V extends string> {
   register?: (node: View | null) => void;
 }
 
-/**
- * One multiple-choice question of «تقرير الحلقة» as wrapping radio chips (44pt): every option in
- * view at once, the chosen one in lapis. Disabled once the report can no longer be edited.
- */
+/** Disabled once the report can no longer be edited. */
 export function ChoiceChips<V extends string>(p: ChoiceChipsProps<V>) {
   const { color } = useTheme();
   return (

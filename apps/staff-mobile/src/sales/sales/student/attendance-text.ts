@@ -1,8 +1,8 @@
-import type { AttendanceKind, SalesStudentDetails, StatusStyle } from '@ab/shared';
+import type { AttendanceKind, SalesStudentDetails } from '@ab/shared';
+import type { StatusStyle } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { fill } from '@/sales/sales/lib/sales-text';
 
-/** The chip of each day: «حضر» full and green, «غاب» struck red, the rest neutral; «لم يُسجَّل» waits on someone. */
 export const ATTENDANCE_STYLE: Record<AttendanceKind, StatusStyle> = {
   present: { tone: 'ok', glyph: 'fill' },
   absent: { tone: 'bad', glyph: 'struck' },
@@ -13,7 +13,7 @@ export const ATTENDANCE_STYLE: Record<AttendanceKind, StatusStyle> = {
 
 type Totals = SalesStudentDetails['attendance']['totals'];
 
-/** «حضر 8 · غاب 1 · اعتذر 0 · أُلغيت 2», then «لم يُسجَّل الحضور: 1» only when some day waits on it. */
+/** The unrecorded-attendance line shows only when some day waits on it. */
 export function totalsLines(totals: Totals): string[] {
   const s = t.sales.student;
   const counts = Object.fromEntries(Object.entries(totals).map(([k, n]) => [k, String(n)]));

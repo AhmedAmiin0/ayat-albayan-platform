@@ -10,10 +10,7 @@ type Props = {
   shown?: boolean | undefined;
 };
 
-/**
- * «حلقات مستخدمة من الباقة» (owner 2026-10-28): lessons the student took before the platform, with a
- * package that already started. Counted as used; the course books the rest. − / + only, never typed.
- */
+/** Lessons used before the platform count as used; steppers only, never typed. */
 export function UsedBeforeField({ value, max, onChange, shown = true }: Props) {
   if (!shown) return null;
   return (

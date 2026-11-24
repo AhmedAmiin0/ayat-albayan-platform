@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
-import { LinkCaller } from '@/modules/reporting/reports/report-access';
-import { ReportsQueries } from '@/modules/reporting/reports/reports.queries';
-import { ReportsSettings } from '@/modules/reporting/reports/reports.settings';
-import { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from './teacher-link.config';
+import { LinkCaller } from '@/modules/reporting/reports/shared/report-access';
+import { ReportsQueries } from '@/modules/reporting/reports/shared/reports.queries';
+import { ReportsSettings } from '@/modules/reporting/reports/shared/reports.settings';
+import { TEACHER_LINK_CONFIG, type TeacherLinkConfig } from '@/modules/reporting/reports/shared/teacher-link.config';
 import { TeacherLinkRepo } from './teacher-link.repo';
 import {
   teacherLinkExpiry,

@@ -8,7 +8,6 @@ const A = t.account.avatar;
 export interface AvatarActionsProps {
   /** Which request runs, if any: every button waits for it. */
   pending: 'upload' | 'remove' | null;
-  /** A picked file waits for «رفع الصورة». */
   previewing: boolean;
   hasPhoto: boolean;
   onPick: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -17,10 +16,7 @@ export interface AvatarActionsProps {
   onRemove: () => void;
 }
 
-/**
- * The photo's buttons (R-ACC-05): «اختيار صورة» (PhotoPick); with a preview «رفع الصورة» (the
- * screen's one filled button) and «إلغاء»; with a saved photo: remove.
- */
+/** R-ACC-05: upload is the screen's one filled button. */
 export function AvatarActions(p: AvatarActionsProps) {
   const busy = p.pending !== null;
   return (

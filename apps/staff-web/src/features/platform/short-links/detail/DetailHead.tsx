@@ -17,7 +17,6 @@ interface DetailHeadProps {
   pending: boolean;
 }
 
-/** The title with its state, and «تمديد», «أعد الإرسال لمن فشل», «تعديل», «إيقاف الرابط». */
 export function DetailHead({ link, onDialog, onResend, pending }: DetailHeadProps) {
   const live = link.status !== 'revoked';
   const failed = sendCounts(link.userList).failed;

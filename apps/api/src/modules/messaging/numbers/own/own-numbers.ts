@@ -65,7 +65,7 @@ export class OwnNumbers {
     if (this.cached) this.cached = { ...this.cached, at: Number.NEGATIVE_INFINITY };
   }
 
-  /** «رسائل بين أرقام الأكاديمية»: inbound rows from our own numbers in the last 7 days (hidden everywhere). */
+  /** Inbound rows from our own numbers in the last 7 days (hidden everywhere). */
   async weekInbound(now = new Date()): Promise<number> {
     const phones = await this.phones(now.getTime());
     if (phones.size === 0) return 0;

@@ -19,7 +19,7 @@ export interface ReportTextFieldProps {
   maxLength?: number;
 }
 
-/** A free-text question of the report (التسميع، الواجب، …): grows with the text, 4000 chars max. */
+/** At most 4000 characters. */
 export function ReportTextField(p: ReportTextFieldProps) {
   const { label, value, onChange, disabled, required, invalid, register } = p;
   const { color } = useTheme();

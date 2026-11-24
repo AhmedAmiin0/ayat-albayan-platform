@@ -22,7 +22,7 @@ export async function targetOf(params: Record<string, string | undefined>): Prom
   return { id, identity };
 }
 
-/** {allow}: «سماح» / «إيقاف مشاركة» a guest's screen share in a lesson room. 204; 403 cannot_grant_share, 404, 503, 502. */
+/** 204; 403 cannot_grant_share, 404, 503, 502. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.moderate')
@@ -37,7 +37,7 @@ export class LessonShareController {
   }
 }
 
-/** The same for «اجتماع داخلي»: any staff login with a role in it (the service then requires teacher, admin or assistant). */
+/** The same for internal meetings; the service requires teacher, admin or assistant. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.write')

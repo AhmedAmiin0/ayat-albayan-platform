@@ -2,9 +2,7 @@ import type { LessonStatus } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { dropReason } from './send-stale';
 
-// «موعد تجريبي جديد» (owner 2026-10-25): the moved trial keeps its row as `rescheduled`; whatever was
-// queued for it (the guardian's confirmation, the reminders, the teacher's new-student alert) is
-// dropped at send time, while the new lesson's own confirmation goes out.
+// Rows queued for a moved trial are dropped at send time; the new lesson's go out.
 
 const NOW = new Date('2026-10-25T08:00:00Z');
 const OLD_START = '2026-10-26T15:00:00Z';

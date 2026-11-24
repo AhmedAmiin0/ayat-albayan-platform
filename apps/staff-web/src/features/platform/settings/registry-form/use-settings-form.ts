@@ -10,11 +10,11 @@ import { afterSave, changedKeys, invalidKeys, movedKeys, refreshed, type FormPai
 
 export interface SettingsFormState {
   form: SettingsForm;
-  /** The last saved values (what «معدَّل» compares against). */
+  /** The last saved values, which the dirty mark compares against. */
   initial: SettingsForm;
   dirty: (key: SettingKey) => boolean;
   atDefault: (key: SettingKey) => boolean;
-  /** Back to the setting's default (unsaved until «حفظ»). */
+  /** Back to the setting's default, unsaved until the admin saves. */
   reset: (key: SettingKey) => void;
   errors: SettingsErrors;
   set: (patch: SettingsForm) => void;
@@ -33,12 +33,7 @@ export interface SettingsFormOptions {
   onSaved: (result: { moved: SettingKey[] }) => void;
 }
 
-/**
- * The settings form of one page (today «مواعيد الرسائل» on «التواصل»). «حفظ» sends only the keys
- * the admin changed among the page's own, so a value saved elsewhere (on «القيم», by another admin)
- * is never overwritten from a stale copy; the keys not being edited follow fresh settings. After a
- * save the settings, «آخر تعديل» and the public config are refetched (never written from the answer).
- */
+/** Save sends only the page's changed keys, so values saved elsewhere are never overwritten. */
 export function useSettingsForm(settings: AcademySettings, options: SettingsFormOptions): SettingsFormState {
   const keys = options.keys ?? FORM_KEYS;
   const queryClient = useQueryClient();

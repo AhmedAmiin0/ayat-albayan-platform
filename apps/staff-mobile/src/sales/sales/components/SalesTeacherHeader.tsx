@@ -16,10 +16,6 @@ interface SalesTeacherHeaderProps {
   onKind: (kind: StudentListKind) => void;
 }
 
-/**
- * The top of a sales teacher's page, scrolling with the list: counts, «في حلقة الآن», the read-only
- * schedule (in this tree), «رابط الحلقة الثابت» and the «مشترك · تجريبي · الكل» switch («الكل» = paused too).
- */
 export function SalesTeacherHeader({ teacher, kind, onKind }: SalesTeacherHeaderProps) {
   const href = useSalesHrefs();
   const tz = useViewerTz();

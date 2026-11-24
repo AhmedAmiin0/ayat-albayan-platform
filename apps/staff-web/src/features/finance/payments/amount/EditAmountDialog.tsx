@@ -12,11 +12,7 @@ interface Props {
   onDone: () => void;
 }
 
-/**
- * «تعديل المبلغ» (owner 2026-11-02): one amount box (the current amount said above it), then a
- * confirm with old → new before the write; cancelling the confirm comes back to the box. The same
- * amount is refused in the box, never sent.
- */
+/** Confirm old to new before the write; the same amount is refused in the box, never sent. */
 export function EditAmountDialog({ payment, save, onClose, onDone }: Props) {
   const [typed, setTyped] = useState(payment.amount);
   const [confirming, setConfirming] = useState(false);

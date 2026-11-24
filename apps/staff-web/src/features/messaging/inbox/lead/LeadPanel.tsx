@@ -15,18 +15,11 @@ export type LeadNotice = Pick<ToastProps, 'message' | 'tone'>;
 
 export interface LeadPanelProps {
   phone: string;
-  /**
-   * Where the panel's toasts go. ThreadPane passes its own: after «تسجيل الطالب» the thread
-   * becomes the guardian's and this panel unmounts, so its own toast would vanish with it.
-   */
+  /** After registering, this panel unmounts as the thread becomes the guardian's. */
   onNotice?: (notice: LeadNotice) => void;
 }
 
-/**
- * The lead beside the thread (R-LEAD-02/03/05/06), kept short: next actions, the automatic
- * follow-up, the student's key facts, then «تسجيل الطالب» / «تعديل البيانات» in dialogs.
- * Guardians and teachers have no lead panel.
- */
+/** Guardians and teachers have no lead panel (R-LEAD-02/03/05/06). */
 export function LeadPanel({ phone, onNotice }: LeadPanelProps) {
   const lead = useQuery(leadByPhoneQuery(phone));
   const [notice, setNotice] = useState<LeadNotice | null>(null);

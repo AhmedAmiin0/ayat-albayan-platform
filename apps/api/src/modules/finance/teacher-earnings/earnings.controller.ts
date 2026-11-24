@@ -36,7 +36,7 @@ export class TeacherEarningsController {
     private readonly corrections: CorrectionsRepo,
   ) {}
 
-  /** «مستحقات المعلمين»: earned / paid / owed per teacher (static segment, before `:teacherId`). */
+  /** Static segment, declared before `:teacherId`. */
   @Get('summary')
   async summary(): Promise<TeacherEarningsSummaryView> {
     return toSummaryView(await this.corrections.summary());

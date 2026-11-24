@@ -6,11 +6,7 @@ interface CustomAmountPillProps {
   onChange: (on: boolean) => void;
 }
 
-/**
- * «مبلغ مخصص» (owner 2026-11-01) under the discount pills, in their look (checked = the green
- * wash): on shows the caller's amount field; off hides it and the calculator price is used. The
- * payment link's amount and the package price (owner 2026-11-02) both use it.
- */
+/** Off falls back to the calculator price; used for the payment link and the package price. */
 export function CustomAmountPill({ on, onChange }: CustomAmountPillProps) {
   const { color } = useTheme();
   return (

@@ -14,11 +14,11 @@ import { useGreeting } from '@/today/lib/use-greeting';
 
 interface TodayHeaderProps {
   now: Date;
-  /** Whose bell: the admin's always, the salesperson's only with notifications.push (as «المحادثات»). */
+  /** The salesperson's bell only with notifications.push. */
   tree: 'admin' | 'sales' | 'teacher';
-  /** «آخر تحديث 16:20» while offline with the saved day on screen. */
+  /** Shown while offline with the saved day on screen. */
   stale?: string | undefined;
-  /** The line under the greeting in place of «… · بتوقيت الرياض» (the teacher's own, docs/48). */
+  /** Replaces the Riyadh date line with the teacher's own (docs/48). */
   dateLine?: string;
 }
 
@@ -29,13 +29,7 @@ const BELL_ALWAYS: Record<TodayHeaderProps['tree'], boolean> = {
   sales: false,
 };
 
-/**
- * The calm header (docs/29 §1): the greeting by the Riyadh clock (morning / afternoon / evening / night)
- * with the first name once the profile loads (owner 2026-10-28: «صباح الخير يا أحمد») is the header
- * line itself, in the display font at h4 (no «اليوم» title: the tab already says it, owner 2026-10-28),
- * the date line without the year under it, and the bell as a 44pt raised circle at the end side when
- * the tree shows one.
- */
+/** Greeting by the Riyadh clock (docs/29 §1); no title, since the tab names the screen. */
 export function TodayHeader({ now, tree, stale, dateLine: own }: TodayHeaderProps) {
   const { color } = useTheme();
   const bell = useHolds('notifications.push') || BELL_ALWAYS[tree];

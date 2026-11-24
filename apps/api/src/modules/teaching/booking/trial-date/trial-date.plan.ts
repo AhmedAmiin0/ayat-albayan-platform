@@ -3,10 +3,7 @@ import type { ChangeSet, QueuedMessage } from '@/modules/teaching/scheduling/cha
 import type { BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 import type { MessageDraft } from '@/modules/teaching/booking/core/booking.messages';
 
-// The write of «موعد تجريبي جديد» (owner 2026-10-25), planned from the booking planner's payload:
-// with no upcoming trial it IS that booking (create_booking); with one, the same lesson, link,
-// override reason and confirmation become a move of that trial (apply_lesson_changes): the old row
-// `rescheduled`, the new one on the same rule with rescheduled_from_id. Pure.
+// Pure: no upcoming trial means a booking; else a move of that trial via apply_lesson_changes.
 
 /** pick_trial_date's argument (migration 20261025000660). */
 export type TrialPick = {

@@ -11,9 +11,7 @@ import { t, ltr, locale } from '@ab/mobile-kit';
 import { localDate } from '@/today/lib/timeline';
 import type { TodayLesson } from '@/today/lib/today-lesson';
 
-// Card lines for a lesson (R-SCH-01, docs/34: the viewer's clock on the spine, the student's own
-// clock beside it when it differs at that instant). Western digits, 12 or 24 h (the viewer's
-// «تنسيق الوقت»), wall-clock from the UTC instants the API returns.
+// Viewer's clock first, student's clock when it differs (R-SCH-01, docs/34), from UTC instants.
 
 const MINUTE = 60_000;
 const durations: Record<string, string | undefined> = t.enums.duration;
@@ -25,11 +23,7 @@ export function lessonClock(iso: string, tz: string, cycle: ClockCycle): string 
   return clockIn(new Date(iso), tz, cycle);
 }
 
-/**
- * «السبت» when `iso` falls on another day for the viewer (`tz`) than on the academy's
- * calendar, else null. The `?date` screens (GET /lessons/day, /sales/schedule) page by Riyadh
- * days (docs/34 b): a Cairo viewer's 00:30 Riyadh lesson on «الأحد» is Saturday 23:30 for them.
- */
+/** Riyadh-paged screens (docs/34 b) can put a lesson on another viewer day; null when the same. */
 export function viewerDayHint(iso: string, tz: string): string | null {
   const at = new Date(iso);
   const date = localDate(at, tz);
@@ -37,21 +31,17 @@ export function viewerDayHint(iso: string, tz: string): string | null {
   return weekdays[String(weekdayOf(date))] ?? null;
 }
 
-/** «الخميس 1 أكتوبر»: the running head's date without the year (the «اليوم» header line). */
 export function shortDate(now: Date): string {
   return formatRunningHead(now, locale).gregorian.split(' ').slice(0, -1).join(' ');
 }
 
-/** «45 دقيقة» from the lesson's own span; nothing for a length outside the duration enum. */
+/** Nothing for a length outside the duration enum. */
 export function durationLabel(lesson: TodayLesson): string | undefined {
   const min = Math.round((Date.parse(lesson.ends_at) - Date.parse(lesson.starts_at)) / MINUTE);
   return durations[String(min)];
 }
 
-/**
- * «18:00 بتوقيت مسقط» once per student zone whose clock differs from the viewer's `tz` at the
- * start; an unlabelled zone shows its id.
- */
+/** Once per student zone whose clock differs from the viewer's; an unlabelled zone shows its id. */
 export function studentTimes(lesson: TodayLesson, cycle: ClockCycle, tz: string): string[] {
   const start = new Date(lesson.starts_at);
   return [...new Set(lesson.students.map((s) => s.tz))].flatMap((zone) => {
@@ -62,7 +52,6 @@ export function studentTimes(lesson: TodayLesson, cycle: ClockCycle, tz: string)
   });
 }
 
-/** «مع أبرار · 45 دقيقة · 18:00 بتوقيت مسقط». */
 export function lessonSubtitle(lesson: TodayLesson, cycle: ClockCycle, tz: string): string {
   const teacher = t.today.withTeacher.replace('{teacher}', teacherName(lesson.teacher, locale));
   return [teacher, durationLabel(lesson), ...studentTimes(lesson, cycle, tz)]
@@ -70,15 +59,11 @@ export function lessonSubtitle(lesson: TodayLesson, cycle: ClockCycle, tz: strin
     .join(' · ');
 }
 
-/** «جودى خالد، يوسف أحمد» for the compact past row. */
 export function studentNames(lesson: TodayLesson): string {
   return lesson.students.map((s) => s.name).join(t.common.listSeparator);
 }
 
-/**
- * «تجريبية · أ. سلمى · 30 دقيقة»: a Today (and sales) row's second line (docs/29 §4). The kind leads so a
- * one-line cut takes the teacher's name or the length, never «تجريبية» / «تعويضية».
- */
+/** The kind leads (docs/29 §4), so a one-line cut never drops the trial or makeup tag. */
 export function rowSubtitle(lesson: TodayLesson): string {
   const teacher = t.today.teacherTitled.replace('{teacher}', teacherName(lesson.teacher, locale));
   const kind = lesson.makeup

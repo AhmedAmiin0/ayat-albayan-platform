@@ -15,9 +15,7 @@ import { SalesCourseRepo } from './sales-course.repo';
 
 const NO_DRAFTS = { held: async () => false, get: async () => null };
 
-// The assistant's course over HTTP (owner 2026-10-18): «اشتراط التعيين» and auto-assign ON
-// here, so the ownership rule enforces (docs/16 row 39): every 403 not_your_student below is
-// the course's check.
+// Ownership rule on here (docs/16 row 39): every 403 not_your_student is the course check.
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';
 const C = 'c1000000-0000-4000-8000-00000000000c';

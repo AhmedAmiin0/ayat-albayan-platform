@@ -1,4 +1,4 @@
-import { CURRENCY_ISOS } from '@ab/shared';
+import { CURRENCY_ISOS } from '@ab/money';
 import { t } from '@ab/mobile-kit';
 import { choicesOf, confirmOf, draftOf, editorOf, parseDraft, sameValue } from './value-draft';
 import { outcomeOf } from '@/ops/values/hooks/use-save-value';

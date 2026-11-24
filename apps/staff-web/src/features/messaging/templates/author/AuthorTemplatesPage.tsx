@@ -23,11 +23,7 @@ function ListState({ list }: { list: ListShape }) {
   return list.data?.length ? null : <p className="text-sm text-ink-3">{S.empty}</p>;
 }
 
-/**
- * «القوالب» for sales (owner 2026-11-14, templates.author): the chat allow-list and their own
- * templates with Meta's status, «قالب جديد» (straight to Meta), «تعديل» where allowed. One column
- * of cards: it reads the same at 390px.
- */
+/** One column of cards so it reads the same at 390px. */
 export function AuthorTemplatesPage() {
   const list = useAuthoredTemplates();
   const me = useQuery(meQuery).data?.id;

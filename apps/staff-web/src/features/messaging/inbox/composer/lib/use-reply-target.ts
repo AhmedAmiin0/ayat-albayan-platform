@@ -1,11 +1,7 @@
 import { useEffect, useState, type RefObject } from 'react';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 
-/**
- * The composer's side of «رد»: the id its next send answers (undefined when none), and the focus on
- * its box whenever a new target is picked. `done(id)` after a send clears that target only (a newer
- * one picked meanwhile stays); a failed send keeps it.
- */
+/** `done(id)` clears only that target, so a newer one stays; a failed send keeps it. */
 export function useReplyTarget(box: RefObject<HTMLElement | null>) {
   const { target, cancelReply } = useChatActions();
   const id = target?.id;
@@ -15,11 +11,7 @@ export function useReplyTarget(box: RefObject<HTMLElement | null>) {
   return { replyTo: id, done: cancelReply };
 }
 
-/**
- * The composer's side of «تعديل» (owner 2026-11-07): the id its next send corrects, its edit
- * session, and the focus on its box (the caret after the original's text) whenever one is picked.
- * `done(session)` ends that very edit only (#694 follow-up item 4).
- */
+/** `done(session)` ends that very edit only. */
 export function useEditTarget(box: RefObject<HTMLTextAreaElement | null>) {
   const { editing, editSession, cancelEdit } = useChatActions();
   const id = editing?.id;

@@ -7,8 +7,7 @@ import { scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsap
 import { graphHttpError } from './template.mapper';
 import { readError } from './template-env';
 
-// docs/39: a CRM key without templates:read / templates:write. The CRM answers 403 naming the
-// scope; «مزامنة» and «إرسال إلى ميتا» say which one (crm_scope_missing), and no row is touched.
+// docs/39: a 403 naming the missing scope reports crm_scope_missing and touches no row.
 
 const queries = {
   all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []),

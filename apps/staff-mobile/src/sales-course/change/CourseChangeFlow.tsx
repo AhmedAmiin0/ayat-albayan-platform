@@ -15,7 +15,6 @@ interface CourseChangeFlowProps {
   student: Pick<SalesCourseView['student'], 'id' | 'name' | 'code'>;
   /** The course to change (view.current: running today, else the next one booked ahead). */
   course: BookedCourse;
-  /** «رجوع» from the days: back to the course screen. */
   onLeave: () => void;
   /** After the change: out of the screen. */
   onDone: () => void;
@@ -23,15 +22,7 @@ interface CourseChangeFlowProps {
   target?: ChangeTarget | undefined;
 }
 
-/**
- * «تغيير أيام الحلقات» (owner 2026-10-18): exactly the plan's days a week, prefilled with the course's
- * own from changePrefillFrom (the later of changeOpensOn and startsOn), each day a date and a time
- * from that same day on (LessonTimesStep, its slot data with the course's lessons not busy against
- * themselves; a pick rolled a week on past that week is left to the review's check) → the review with the remaining lessons and the clashes (unchanged
- * days: the check's own no_change) → «احفظ الأيام الجديدة». Trade-off: the window has no paging, so a
- * pending change's old days before its startsOn cannot be picked here (web pages back to them). The
- * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).
- */
+/** No paging, so a pending change's old days before startsOn cannot be picked; rule 8 id. */
 export function CourseChangeFlow({ student, course, onLeave, onDone, target }: CourseChangeFlowProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

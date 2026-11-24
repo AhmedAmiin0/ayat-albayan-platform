@@ -1,4 +1,4 @@
-import type { MeetingCreateResult } from '@ab/shared';
+import type { MeetingCreateResult } from '@ab/schedule';
 import { View } from 'react-native';
 import { useViewerTz } from '@/core/lib/clock';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';
@@ -9,7 +9,6 @@ import { useEnterMeeting } from '@/meetings/manage/use-enter-meeting';
 
 const L = t.meetings.internal;
 
-/** After a create: the meeting's link to share, each invitee's outcome, then ONE ButtonRow «ادخل الاجتماع» (instant only) | «إغلاق». */
 export function CreateMeetingDone({ made, instant, onClose }: { made: MeetingCreateResult; instant: boolean; onClose: () => void }) {
   const enter = useEnterMeeting(useViewerTz());
   return (

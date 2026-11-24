@@ -7,10 +7,7 @@ import { GROUP_IDS, groupLabel, groupOfKey, isOwnedGroup, OWNER_PAGE, resolveGro
 import { useValues } from '@/features/platform/settings/values/values-context';
 import { showsAll, type ValuesSearch } from '@/features/platform/settings/values/values-search';
 
-/**
- * What «القيم» shows for the URL's search: one group, or «الكل» (the search/filter results from
- * every group). The custom values and the Google status are read here (Google only when shown).
- */
+/** One group, or all search/filter results; Google status is read only when shown. */
 export function useValuesView(search: ValuesSearch) {
   const api = useValues();
   const group = resolveGroup(search.group);
@@ -27,7 +24,6 @@ export function useValuesView(search: ValuesSearch) {
     all,
     google,
     rows,
-    /** «قيم مخصصة» in view: its list failed to load, or is still loading. */
     customFailed: group === 'custom' && !all && custom.isError,
     customLoading: group === 'custom' && !all && custom.isPending,
     retryCustom: () => void custom.refetch(),
@@ -39,7 +35,7 @@ export function useValuesView(search: ValuesSearch) {
       public: allRows(entries, { ...query, q: '', filter: 'public' }).length,
     },
     dirty,
-    /** «N قيم لم تُحفظ» opens the group of the first unsaved row. */
+    /** The unsaved-count link opens the group of the first unsaved row. */
     firstDirtyGroup: (first && groupOfKey(first)) ?? group,
   };
 }

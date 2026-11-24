@@ -7,10 +7,7 @@ interface CorrectActionProps {
   onClose: () => void;
 }
 
-/**
- * «تعديل» in the long-press menu (owner 2026-11-07): WhatsApp cannot edit a sent message, so the
- * box takes its text for a correction (a new reply to it). Off, as «رد», while no text can go out.
- */
+/** WhatsApp cannot edit a sent message, so the text goes as a new correction reply. */
 export function CorrectAction({ message, onClose }: CorrectActionProps) {
   const { canSend, startEdit } = useChatActions();
   return (

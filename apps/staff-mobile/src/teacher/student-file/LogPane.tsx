@@ -69,11 +69,7 @@ interface LogPaneProps {
   tz: string;
 }
 
-/**
- * «الحلقات» of the teacher's student file (docs/47): her next 14 days with the student (cancelled
- * and moved ones with their reasons), then «سجل الحضور» a month at a time (docs/46 C5), each row
- * with its outcome, the cancel or move reason and the report action. Dates in her zone.
- */
+/** Next 14 days, then the month log (docs/46 C5, docs/47); dates in her zone. */
 export function LogPane({ id, upcoming, tz }: LogPaneProps) {
   const cycle = useClockCycle();
   const now = useNow();

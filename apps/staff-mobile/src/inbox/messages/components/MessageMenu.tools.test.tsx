@@ -8,7 +8,7 @@ import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
 import { MessageBubble } from './MessageBubble';
 import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
-// «نسخ النص» and «تنزيل» in the long-press menu (owner 2026-10-26), JS only: no clipboard module.
+// Copy and download are JS only: no clipboard module.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

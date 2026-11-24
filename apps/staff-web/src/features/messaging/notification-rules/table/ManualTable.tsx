@@ -7,10 +7,7 @@ const c = t.notificationCatalogue;
 const head = 'border-b border-rule-strong px-2 py-1.5 text-start text-xs font-semibold text-ink-3';
 const cell = 'border-b border-rule px-2 py-2.5 text-start align-top text-xs text-ink-2';
 
-/**
- * «يدوي»: the messages a person sends (listed, never switched), each with where it is sent from;
- * the channel and template status from 640px. The caption says once why there is no switch.
- */
+/** Manual messages are listed, never switched. */
 export function ManualTable({ rows, caption }: { rows: readonly NotificationEntryView[]; caption: string }) {
   return (
     <div className="grid gap-2">

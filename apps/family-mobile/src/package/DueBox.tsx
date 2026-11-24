@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { amountText } from './package-text';
 
-/** «المبلغ المستحق» on the act wash (shown only when something is owed). */
+/** Shown only when something is owed. */
 export function DueBox({ due }: { due: PortalAmount }) {
   const { color } = useTheme();
   return (

@@ -16,11 +16,7 @@ interface CancelLessonProps {
   onClose: () => void;
 }
 
-/**
- * «إلغاء الحلقة» (R-SCH-07, docs/10 route 9): this lesson or the rest of its series, who cancelled
- * (a student's cancellation is an excuse), and the reason the API requires. No preset «مين»: it
- * decides the status and whether the lesson counts, so the admin picks it.
- */
+/** No preset canceller (R-SCH-07, docs/10 route 9): it decides the status and whether it counts. */
 export function CancelLesson({ lesson, onSubmit, onClose }: CancelLessonProps) {
   const [scope, setScope] = useState<Scope>('one');
   const [by, setBy] = useState<CancelBy | ''>('');
@@ -32,7 +28,7 @@ export function CancelLesson({ lesson, onSubmit, onClose }: CancelLessonProps) {
   };
   return (
     <View style={{ gap: 10 }}>
-      {/* A lesson outside a series has no «كل اللي بعدها» (the API answers 400 no_rule). */}
+      {/* A lesson outside a series cannot cancel later ones (the API answers 400 no_rule). */}
       {lesson.rule_id ? (
         <View style={{ gap: 6 }}>
           <SectionLabel>{t.lessons.scopeLabel}</SectionLabel>

@@ -14,7 +14,6 @@ interface Props {
   onNote: (message: string) => void;
 }
 
-/** One teacher: the confirmed calendar (or the suggestion preselected), a picker and «تأكيد». */
 export function TeacherRow({ row, calendars, onNote }: Props) {
   const queryClient = useQueryClient();
   const initial = row.confirmed_at ? (row.calendar_id ?? NONE) : (row.suggestion?.id ?? '');

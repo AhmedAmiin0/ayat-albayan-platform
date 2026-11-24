@@ -23,10 +23,7 @@ export interface NewAuthorTemplateDialogProps {
   onClose: () => void;
 }
 
-/**
- * «قالب جديد» for sales (owner 2026-11-14): checked with the API's schema first, then straight to
- * Meta on the chat number; it joins the send list once approved.
- */
+/** Validated with the API's schema first; it joins the send list once approved. */
 export function NewAuthorTemplateDialog({ onCreated, onClose }: NewAuthorTemplateDialogProps) {
   const formId = useId();
   const [draft, setDraft] = useState<AuthorDraft>(emptyAuthorDraft);

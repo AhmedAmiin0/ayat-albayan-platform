@@ -8,7 +8,6 @@ import { TopicField } from './TopicField';
 
 const islamicOf = (c: ReportContent): IslamicContent => c.islamic ?? islamicContentSchema.parse({});
 
-/** Islamic studies: «المجال», the topic, what was memorized (optional) and the two graded rows. */
 export function IslamicSection({ s }: { s: ReportEntryV2State }) {
   const v2 = t.reports.v2;
   const i = islamicOf(s.values.content);

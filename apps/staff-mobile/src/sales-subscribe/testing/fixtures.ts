@@ -1,12 +1,12 @@
-import {
-  DEFAULT_RENEWAL_PRICING,
-  type SalesChatReceipt,
-  type SalesFamilyStudent,
-  type SalesFamilyView,
-  type SalesMoneySubscriptionView,
-  type SalesPaymentView,
-  type SalesQuoteView,
+import type {
+  SalesChatReceipt,
+  SalesFamilyStudent,
+  SalesFamilyView,
+  SalesMoneySubscriptionView,
+  SalesPaymentView,
+  SalesQuoteView,
 } from '@ab/shared';
+import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
 import { thread } from '@/inbox/shared/thread-fixtures';
 
 // Invented answers of the salesperson's money endpoints (no real people).

@@ -1,16 +1,12 @@
 import { localDateIn, type LessonStatus } from '@ab/shared';
 import type { TodayLesson } from './today-lesson';
 
-// «اليوم» (R-MOB-02, docs/29): which lessons show and the summary card's counts, each column also
-// its filter. Pure, so the screen only lays it out.
+// Which lessons show and the summary counts (R-MOB-02, docs/29); pure.
 
 export const TODAY_FILTERS = ['all', 'scheduled', 'completed'] as const;
 export type TodayFilter = (typeof TODAY_FILTERS)[number];
 
-/**
- * Closed rows the contract hides unless «إظهار الملغية…» is on (docs/10 §5.1). Mobile has no such
- * toggle yet, so a cancelled lesson leaves the timeline the moment it is cancelled.
- */
+/** Mobile has no show-cancelled toggle (docs/10 §5.1), so a cancelled lesson leaves at once. */
 const CLOSED: readonly LessonStatus[] = [
   'rescheduled',
   'cancelled_by_teacher',

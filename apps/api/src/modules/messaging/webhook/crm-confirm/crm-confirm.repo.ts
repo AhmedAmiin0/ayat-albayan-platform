@@ -5,8 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { stampDelivered } from '@/modules/messaging/whatsapp';
 import { UNCERTAIN_CODES, type TemplateNames, type UncertainRow } from './crm-match';
 
-// The reads and the one compare-and-set write of the crm confirm (docs/19 «Confirming an uncertain
-// send»), in the shape of the «أرسل عبر واتساب» attach (manual-echo.repo.ts).
+// The crm confirm's compare-and-set write (docs/19), shaped like manual-echo.repo.ts.
 
 /** Postgres unique_violation: the wamid is already on another row (a concurrent store). */
 const UNIQUE = '23505';

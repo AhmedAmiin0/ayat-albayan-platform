@@ -9,10 +9,7 @@ interface CopySheetProps {
   onClose: () => void;
 }
 
-/**
- * «نسخ النص» / «نسخ الرقم» as a sheet (owner 2026-10-26; core/lib/clipboard is not wired here yet): the exact text, selectable.
- * Nothing on the sheet handles a long press, so the OS selection handles copy all of it or a part.
- */
+/** The clipboard module is not wired here yet, so the OS text selection does the copying. */
 export function CopySheet({ request, onClose }: CopySheetProps) {
   const { color } = useTheme();
   return (

@@ -14,10 +14,13 @@ export interface BioFlags {
 }
 
 /** Never throws: a keystore error reads as «off» and a failed write is dropped. */
-export function bioFlags(native: BioNative): BioFlags {
-  const store = native.store;
-  const read = async (key: string) => (await store?.getItemAsync(key).catch(() => null)) === YES;
+export function bioFlags(native: Promise<BioNative>): BioFlags {
+  const read = async (key: string) => {
+    const { store } = await native;
+    return (await store?.getItemAsync(key).catch(() => null)) === YES;
+  };
   const write = async (key: string, on: boolean) => {
+    const { store } = await native;
     const done = on ? store?.setItemAsync(key, YES) : store?.deleteItemAsync(key);
     await done?.catch(() => undefined);
   };

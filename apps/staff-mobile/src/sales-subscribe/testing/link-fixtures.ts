@@ -1,7 +1,7 @@
 import type { PaymentLinkQuoteView, PaymentLinkView } from '@ab/shared';
 import { KID, salesQuote } from './fixtures';
 
-// Invented answers of the «رابط دفع» endpoints (docs/30; no real people, no real link).
+// Invented payment-link endpoint answers (docs/30); no real people or links.
 
 export const linkQuote = (fields: Partial<PaymentLinkQuoteView> = {}): PaymentLinkQuoteView => ({
   quote: salesQuote,

@@ -14,16 +14,15 @@ export interface LocaleTextFieldProps {
   onChange: (value: string) => void;
   /** The bundled text, shown under the field. */
   original: string;
-  /** Slots the draft dropped (blocks «حفظ»). */
+  /** Slots the draft dropped; they block saving. */
   missing?: string[] | undefined;
   /** Shown when the key has an override in this locale. */
   onRestore?: (() => void) | undefined;
   disabled?: boolean;
-  /** The Arabic of a registry hint key: read-only here, with the link to «القيم». */
+  /** The Arabic of a registry hint key is read-only here, with a link to the values page. */
   onValues?: RegistryHint | undefined;
 }
 
-/** One language of the editor: the text, its original, and «استعادة الأصل» when overridden. */
 export function LocaleTextField(p: LocaleTextFieldProps) {
   const label = p.locale === 'ar' ? t.translations.arabic : t.translations.english;
   const locked = p.onValues !== undefined;

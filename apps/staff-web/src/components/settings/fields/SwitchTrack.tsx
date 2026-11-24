@@ -1,6 +1,4 @@
-// The drawn switch shared by CheckField (settings pages) and «القيم»: a real checkbox (role, name,
-// keyboard) laid invisibly over a track and knob. The input carries `switchInputClass` (`peer`) and
-// comes right before <SwitchTrack />, so the track follows its checked, focus and disabled states.
+// A real invisible checkbox over the track; it must come right before the track for `peer` styles.
 
 /** The invisible checkbox: it covers its whole wrapper, which is the hit area. */
 export const switchInputClass = 'peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed';

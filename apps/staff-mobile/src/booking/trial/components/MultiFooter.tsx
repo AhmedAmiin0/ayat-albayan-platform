@@ -9,10 +9,7 @@ interface MultiFooterProps {
   tz: string;
 }
 
-/**
- * Under a package's slots: the picked days (each removable), how many are still missing or one too
- * many («اخترت 1 من 2 — بقي يوم واحد»), and «التالي» once they are enough.
- */
+/** Next opens once enough days are picked. */
 export function MultiFooter({ multi, tz }: MultiFooterProps) {
   const { color } = useTheme();
   const { picks, need } = multi;

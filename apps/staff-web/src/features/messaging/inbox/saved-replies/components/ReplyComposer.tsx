@@ -35,11 +35,7 @@ function focusBox(id: string): void {
 /** True when a pick replaces the whole box content (its «/» token, or nothing typed). */
 const replacesBox = (text: string): boolean => slashQuery(text) !== null || !text.trim();
 
-/**
- * The message box with «الردود السريعة» (owner 2026-10-25), inside the 24 h window only: the button or
- * «/» opens the picker; a pick FILLS the box (placeholders resolved, still editable) and stages its
- * file as a chip. Nothing leaves before «أرسل»: then the text, then the file through the chat's own send.
- */
+/** Only inside the 24 h window; a pick fills the box and nothing leaves before send. */
 export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) {
   const phone = thread.phone_e164;
   const boxId = useId();
@@ -78,7 +74,7 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
     above,
     onKey: (e: Parameters<typeof picker.keys.onKey>[0]) => picker.bySlash && picker.keys.onKey(e),
     boxProps: { id: boxId, 'aria-controls': picker.bySlash ? listId : undefined, 'aria-activedescendant': active },
-    // The file staged at «أرسل» follows that text only if it is still the one staged (not a later pick's).
+    // The staged file follows that text only if it is still the one staged.
     onSubmit: () => {
       const at = getStaged(phone)?.requestId;
       if (!at) return undefined;

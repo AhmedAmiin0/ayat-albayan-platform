@@ -6,7 +6,6 @@ import { MessageFile } from '@/inbox/messages/components/MessageFile/MessageFile
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 
-// «تنزيل» on the file chip (owner 2026-10-26).
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

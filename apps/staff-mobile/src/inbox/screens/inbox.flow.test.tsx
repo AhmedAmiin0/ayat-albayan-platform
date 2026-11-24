@@ -15,7 +15,7 @@ test('list → lead thread → reply → back: no row tags, the reply is sent on
   const { backend } = inboxBackend();
   const app = await renderApp({ url: '/inbox', backend });
   const row = within(await screen.findByRole('button', { name: /هدى سالم/ }));
-  // No tags (owner 2026-11-06): no lead status, source or «ولي أمر» on the rows.
+  // No lead tags on chat rows.
   expect(row.queryByText(t.enums.leadStatus.new)).toBeNull();
   expect(row.queryByText(t.enums.leadSource.facebook_ad)).toBeNull();
   const other = within(screen.getByRole('button', { name: /أم يوسف/ }));

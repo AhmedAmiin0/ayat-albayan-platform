@@ -6,7 +6,7 @@ import { deleteError, useDeleteRecording } from './recording-actions';
 
 const D = t.mobileStudentFile.recordings.delete;
 
-/** Admin only: «حذف التسجيل» (danger, full width) asks once more, then removes the file (the row stays as «محذوف»). */
+/** Admin only; asks once more, then removes the file while the row stays as deleted. */
 export function RecordingDelete({ id, studentId }: { id: string; studentId: string }) {
   const [asking, setAsking] = useState(false);
   const remove = useDeleteRecording(studentId);

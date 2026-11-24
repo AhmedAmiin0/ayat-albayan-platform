@@ -18,7 +18,8 @@ interface BioText {
 }
 
 export interface BioLockDeps {
-  native: BioNative;
+  /** The modules, imported on first use: every native step waits for them. */
+  native: Promise<BioNative>;
   flags: BioFlags;
   /** The OS prompt's words, read when it opens (the i18n bundle). */
   text: () => BioText;

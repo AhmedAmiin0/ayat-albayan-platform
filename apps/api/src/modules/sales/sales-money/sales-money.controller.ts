@@ -20,12 +20,12 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { SalesChatReceipts } from './chat/sales-chat-receipts.service';
-import { SalesMoney } from './sales-money.service';
-import { SalesPackageCancel } from './sales-package-cancel';
-import { SalesMoneySettings } from './sales-money.settings';
-import { SalesTeacherAssign } from './teacher/sales-teacher-assign';
+import { SalesChatReceipts } from './chat';
+import { SalesPackageCancel } from './package-cancel';
 import { SalesPaymentAmount } from './payment-edit';
+import { SalesMoney } from './sales-money.service';
+import { SalesMoneySettings } from './shared';
+import { SalesTeacherAssign } from './teacher';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { z } from 'zod';
 

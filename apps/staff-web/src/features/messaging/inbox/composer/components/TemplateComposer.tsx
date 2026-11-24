@@ -25,7 +25,7 @@ export interface TemplateComposerProps {
   context: PrefillContext;
   /** A teacher's thread: only teacher templates, and only there. */
   teacher: boolean;
-  /** «إعادة فتح المحادثة»: only these, `initial` picked and filled; sent with reopen: true. */
+  /** Reopening the chat offers only these, `initial` picked and filled; sent with reopen: true. */
   reopen?: ReopenPick;
 }
 
@@ -33,19 +33,13 @@ export interface TemplateComposerProps {
 export interface ReopenPick {
   list: TemplateView[];
   initial: TemplateView | null;
-  /** «أرسِل الآن داخل قالب» (2026-11-14): the draft in the free-text slot, over the prefill. */
+  /** The draft fills the free-text slot, overriding the prefill. */
   values?: ParamValues;
   /** The sent template's key. */
   onSent: (key: string) => void;
 }
 
-/**
- * Any approved template for this person, from the thread (H4): the only way to write after the
- * 24 h window. A restricted role (teacher, sales, any role without templates.send_all) gets only the
- * admin's allow-list (owner 2026-10-12: the API lists no other), with «المتغير n» fields. Names are
- * prefilled, a lesson time comes from the lesson picked (rule 6), and the preview is what they
- * read. The lesson is sent too, so a «تمام» reply links to it.
- */
+/** The only way to write after the 24 h window; restricted roles get the admin's allow-list. */
 export function TemplateComposer({ phone, context, teacher, reopen }: TemplateComposerProps) {
   const queryClient = useQueryClient();
   const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });

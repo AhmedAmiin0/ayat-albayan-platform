@@ -20,14 +20,7 @@ const ask = (on: boolean) =>
     ? { title: s.autoDisable, description: s.autoDisableConfirm, yes: s.autoDisableYes }
     : { title: s.autoEnable, description: s.autoEnableConfirm, yes: s.autoEnableYes };
 
-/**
- * settings.auto_messages_enabled (migration 162, docs/09 cut-over): the jobs' lesson reminders,
- * follow-ups and renewal reminders. OFF (the default) until the old Apps Script reminders stop;
- * the admin's own sends, booking confirmations and report_ready are not affected. The send gate
- * (MessagingSwitch) still decides whether anything leaves at all. Switched on while the cut-over
- * (crm_cutover_done) is not ticked, it reads as the admin's turn with «اتأكد إن تذكيرات … وقفت».
- * Both ways ask first and say who is reached or what stops (docs/23a §E H4).
- */
+/** OFF by default until the old Apps Script reminders stop (migration 162, docs/09 cut-over). */
 export function AutoMessagesSwitch({ settings }: { settings: AcademySettings }) {
   const on = settings.auto_messages_enabled;
   // On before the cut-over is ticked: families may get the Apps Script reminder too (the admin's turn).

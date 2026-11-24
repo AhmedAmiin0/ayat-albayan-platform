@@ -1,4 +1,4 @@
-import type { SubscriptionView } from '@ab/shared';
+import type { SubscriptionView } from '@ab/money';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, FilterPills, FormLabel } from '@ab/mobile-kit';
 import { packageFrom, paidOf } from '@/core/lib/money/format';
@@ -10,7 +10,6 @@ interface PackagePickerProps {
   onChange: (subscriptionId: string) => void;
 }
 
-/** «الاشتراك»: which package the money is for, and how much of its price is already paid. */
 export function PackagePicker({ packages, value, onChange }: PackagePickerProps) {
   const { color } = useTheme();
   const line = (weight: 500 | 600, ink: string) => ({

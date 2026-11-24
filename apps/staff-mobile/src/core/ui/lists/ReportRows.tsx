@@ -6,12 +6,10 @@ import { router } from 'expo-router';
 import { t, Button, ListRow, StatusChip, useNow } from '@ab/mobile-kit';
 import { useClockCycle, whenIn } from '@/core/lib/clock';
 
-// The rows of «التقارير». A row opens the lesson's report form (to write, edit or read it) or a
-// student's history; the API decides what may still change (can_edit).
+// The API decides what may still change (can_edit).
 
 export const reportFormHref = (lessonId: string) => `/teacher/reports/${lessonId}`;
 
-/** A started lesson still missing its sent report: «اكتب التقرير», or «تعديل التقرير» for a draft. */
 export const PendingReportRow = memo(function PendingReportRow({ row, tz }: { row: PendingReportView; tz: string }) {
   const cycle = useClockCycle();
   return (
@@ -54,7 +52,6 @@ export const SubmittedReportRow = memo(function SubmittedReportRow({ row, tz }: 
   );
 });
 
-/** One of my students: their «سجل التقارير». */
 export const StudentHistoryRow = memo(function StudentHistoryRow({ student }: { student: { id: string; code: string; name: string } }) {
   return (
     <ListRow
@@ -66,7 +63,7 @@ export const StudentHistoryRow = memo(function StudentHistoryRow({ student }: { 
   );
 });
 
-/** «الحلقة 12 · ممتاز»: the lesson number, then the overall grade or, without grades, the attendance. */
+/** The lesson number, then the overall grade or, without grades, the attendance. */
 function summaryLine(r: ReportSummaryView): string {
   const no = r.lesson_no === null ? null : t.reports.lessonNoShort.replace('{n}', String(r.lesson_no));
   const grade = r.grade_overall ? t.enums.grade[r.grade_overall] : r.attendance ? t.enums.attendance[r.attendance] : null;
@@ -76,13 +73,13 @@ function summaryLine(r: ReportSummaryView): string {
 interface ReportHistoryRowProps {
   row: ReportSummaryView;
   tz: string;
-  /** «تحميل PDF», shown once the PDF is ready. */
+  /** Shown once the PDF is ready. */
   onPdf: () => void;
   /** Opens the report (the teacher's own lesson, the admin); without it the row is a history line. */
   onPress?: () => void;
 }
 
-/** One sent report of a student's «سجل التقارير» (teacher, admin, and sales' «تفاصيل الطالب» read-only). */
+/** Read-only for sales. */
 export const ReportHistoryRow = memo(function ReportHistoryRow({ row, tz, onPdf, onPress }: ReportHistoryRowProps) {
   const cycle = useClockCycle();
   return (

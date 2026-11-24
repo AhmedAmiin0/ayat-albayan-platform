@@ -1,4 +1,5 @@
-import { teacherName, type SalesCourseView } from '@ab/shared';
+import type { SalesCourseView } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { TeacherStep } from '@/booking/trial/components/TeacherStep';
@@ -7,7 +8,6 @@ import { t, locale, Button } from '@ab/mobile-kit';
 interface CourseTeacherStepProps {
   student: SalesCourseView['student'];
   onPick: (teacher: { id: string; name: string }) => void;
-  /** «سجّل التحويل البنكي»: the days later, the transfer now (from «احفظ الاشتراك»). */
   transfer?: (() => void) | undefined;
 }
 

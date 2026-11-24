@@ -76,7 +76,7 @@ export class SalesBookingOptionsController {
   ): Promise<SlotsResponse> {
     return this.options.slots(query, user);
   }
-  /** «وقت آخر»: the same scope as her slots, over the server's next 14 days. */
+  /** Same scope as her slots, over the server's next 14 days. */
   @Get('outside-slots')
   outsideSlots(
     @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,

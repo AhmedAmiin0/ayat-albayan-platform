@@ -3,13 +3,7 @@ import { Animated, KeyboardAvoidingView, Modal, PanResponder, Platform, Pressabl
 import { t, shape, useTheme, useA11yPref } from '@ab/mobile-kit';
 import { dragClaims, dragCloses, dragOffset } from './sheet-drag';
 
-/**
- * A short sheet over the composer (owner 2026-10-26, as WhatsApp): about half the screen, the chat
- * dimmed behind it. A tap on the dim, the system back or a drag down on the handle closes it. With
- * Reduce Motion it appears and goes without sliding. RN core only (no native module: OTA). `tall`
- * (the «عرض سعر» sheet, a form): most of the screen. `name` (the «أكمل الرد» form) overrides the
- * sheet's test id and the dim's spoken label.
- */
+/** RN core only (no native module, OTA); Reduce Motion skips the slide. */
 export function ReplySheetFrame(props: { onClose: () => void; children: ReactNode; tall?: boolean; name?: { testID: string; close: string } }) {
   const { onClose, children, tall = false, name } = props;
   const { color } = useTheme();

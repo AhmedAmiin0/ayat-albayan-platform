@@ -14,7 +14,6 @@ interface FormMode {
   locked: boolean;
   /** One send at a time: a second tap while the request is pending does nothing. */
   guard: SendGuard;
-  /** «تعديل التقرير»: the same report opens again for an edit. */
   startEdit: () => void;
   /** A send succeeded: back to the read-only view. */
   sent: () => void;

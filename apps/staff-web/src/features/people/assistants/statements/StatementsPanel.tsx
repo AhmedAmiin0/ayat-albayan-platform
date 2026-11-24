@@ -27,7 +27,7 @@ type Props = {
 
 const STATUSES = PAYOUT_STATUSES.map((value) => ({ value, label: t.enums.payoutStatus[value] }));
 
-/** «الكشوف الشهرية» (R-ASST-03): a month's statements per assistant: generate, approve, pay with receipt, reopen, un-pay. */
+/** R-ASST-03. */
 export function StatementsPanel({ assistants, assistantId = '', can }: Props) {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<StatementFilter>({ assistantId, month: currentMonth(), status: '' });

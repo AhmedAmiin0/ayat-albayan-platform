@@ -6,7 +6,7 @@ import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 
 export interface ThreadFilterOptions {
   search: InboxSearch;
-  /** Teacher mode has neither «غير المقروءة أولًا» (her unread is counted apart) nor lead statuses. */
+  /** Teacher mode has no unread-first order (her unread is counted apart) nor lead statuses. */
   mode: InboxMode;
   /** A filter patch; the page resets to 1 and unknown values drop (parseInboxSearch). */
   onFilter: (patch: Record<string, unknown>) => void;
@@ -34,5 +34,5 @@ export function threadFilterChips({ search, mode, onFilter }: ThreadFilterOption
   ];
 }
 
-/** «مسح الكل»: the order and the status (the search text and the unread tab stay). */
+/** Clears the order and status; the search text and unread tab stay. */
 export const CLEAR_THREAD_FILTERS = { sort: undefined, f_status: undefined };

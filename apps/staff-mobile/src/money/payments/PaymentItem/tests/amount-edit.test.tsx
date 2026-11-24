@@ -1,11 +1,11 @@
-import type { PaymentView } from '@ab/shared';
+import type { PaymentView } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey, money } from '@ab/mobile-kit';
 import { payment } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { PaymentItem } from '@/money/payments/PaymentItem/PaymentItem';
 
-// «تعديل المبلغ» on «كل المدفوعات» (owner 2026-11-02): PATCH /payments/:id { amount } only.
+// Only the amount is patched.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

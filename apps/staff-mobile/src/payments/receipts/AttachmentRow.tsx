@@ -4,14 +4,12 @@ import type { Attachment } from './attachments';
 
 interface AttachmentRowProps {
   item: Attachment;
-  /** 1-based, for «مرفق n». */
+  /** 1-based. */
   n: number;
-  /** The group's words: «مرفق {n}», «احذف المرفق». */
   text: { attachmentN: string; attachmentRemove: string };
   onRemove: () => void;
 }
 
-/** One chosen attachment: a photo's thumbnail (a dot for a chat file), «مرفق n», «احذف المرفق». */
 export function AttachmentRow({ item, n, text, onRemove }: AttachmentRowProps) {
   const { color } = useTheme();
   const name = text.attachmentN.replace('{n}', String(n));

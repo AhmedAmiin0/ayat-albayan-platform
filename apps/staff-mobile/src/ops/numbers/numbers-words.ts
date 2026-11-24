@@ -1,8 +1,11 @@
-import { formatPhone, type ClockCycle, type Glyph, type NumberView, type ParityView, type Tone } from '@ab/shared';
+import type { NumberView, ParityView } from '@ab/shared';
+import { formatPhone } from '@ab/core';
+import type { Glyph, Tone } from '@ab/money';
+import type { ClockCycle } from '@ab/time';
 import { t, ltr } from '@ab/mobile-kit';
 import { formatAt } from '@/ops/activity/activity-format';
 
-// «الأرقام» in words on the phone (same ar.json keys as the web's numbers page).
+// Same ar.json keys as the web's numbers page.
 
 const n = () => t.numbers;
 
@@ -12,33 +15,27 @@ interface ChipWords {
   label: string;
 }
 
-/** «المصدر الآن: الأرقام». */
 export function sourceLine(parity: Pick<ParityView, 'source'>): string {
   return n().source.current.replace('{{source}}', n().source[parity.source]);
 }
 
-/** «الإعداد مطابق» or «توجد فروق: 2». */
 export function parityLine(parity: Pick<ParityView, 'differences'>): string {
   const count = parity.differences.length;
   return count === 0 ? n().mobile.parityOk : n().mobile.parityDiff.replace('{{count}}', String(count));
 }
 
-/**
- * «دور الإشعارات · ⁦+1 555 000 1111⁩», «… · لم يُفحص بعد» before the first check, or the role alone
- * once a check answered without a number (its health chip says why).
- */
+/** Before the first check it says so; after a check without a number only the role shows. */
 export function numberSubtitle(view: Pick<NumberView, 'purpose' | 'display_phone_e164' | 'checked_at'>): string {
   const role = n().purpose[view.purpose];
   if (view.display_phone_e164) return `${role} · ${ltr(formatPhone(view.display_phone_e164))}`;
   return view.checked_at ? role : `${role} · ${n().chips.notChecked}`;
 }
 
-/** «المزوّد: Evolution»: the number's driver, read-only (changed on the web's «الأرقام»). */
+/** Read-only; the driver is changed on the web. */
 export function driverLine(view: Pick<NumberView, 'provider'>): string {
   return `${n().fields.provider}: ${n().provider[view.provider]}`;
 }
 
-/** «مفعّل» ok / «متوقف» neutral struck, then «الافتراضي لدوره» when it is. */
 export function stateChips(view: Pick<NumberView, 'enabled' | 'is_default'>): ChipWords[] {
   const chips: ChipWords[] = [
     view.enabled
@@ -49,7 +46,7 @@ export function stateChips(view: Pick<NumberView, 'enabled' | 'is_default'>): Ch
   return chips;
 }
 
-/** «سليم» / «فشل آخر فحص»; null before the first check. */
+/** Null before the first check. */
 export function healthChip(view: Pick<NumberView, 'health'>): ChipWords | null {
   if (!view.health) return null;
   return view.health.ok
@@ -57,7 +54,7 @@ export function healthChip(view: Pick<NumberView, 'health'>): ChipWords | null {
     : { tone: 'bad', glyph: 'struck', label: n().health.failed };
 }
 
-/** «آخر فحص: …» in the viewer's `tz`, or null. */
+/** In the viewer's `tz`; null when never checked. */
 export function checkedLine(view: Pick<NumberView, 'checked_at'>, cycle: ClockCycle, tz: string): string | null {
   if (!view.checked_at) return null;
   return n().chips.checkedAt.replace('{{at}}', formatAt(view.checked_at, cycle, tz));

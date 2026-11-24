@@ -55,7 +55,7 @@ interface CorrectionCommit {
   actorId: string;
 }
 
-/** «تصحيح الحالة»: the change, audited status_change with after.reason outcome_correction. */
+/** Status correction: audited status_change with after.reason outcome_correction. */
 export function correctionCommit(input: CorrectionCommit, ctx: ChangeContext): Commit {
   const { lesson, to, actorId } = input;
   const change = BUILD[to](lesson, ctx);

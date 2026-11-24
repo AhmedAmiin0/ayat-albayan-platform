@@ -20,15 +20,11 @@ export interface ReopenDialogProps {
   /** A teacher's own chat number: the teacher's templates. */
   teacher: boolean;
   onClose: () => void;
-  /** «أرسِل الآن داخل قالب» (owner 2026-11-14): academy_message picked, {{1}} = this draft. */
+  /** academy_message is picked and its {{1}} is this draft. */
   carry?: { text: string; onSent: () => void } | undefined;
 }
 
-/**
- * «إعادة فتح المحادثة» (owner 2026-11-14, like Kapso): the templates this user may send from the
- * chat line, the academy's `chat_reopen_template` picked and its variables filled from the chat
- * (still editable), the WhatsApp preview, then send. The API keeps it as this window's reopen.
- */
+/** The API keeps the sent template as this window's reopen. */
 export function ReopenDialog({ thread, context, teacher, onClose, carry }: ReopenDialogProps) {
   const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });
   const allowed = allowedTemplates(templates.data, teacher);
