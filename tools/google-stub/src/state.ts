@@ -1,18 +1,11 @@
 // The google-stub's in-memory Google (docs/24 §5): calendars and their events, Drive files and
 // one-tab sheets. Fake ids and names only; reset between specs through /__stub/reset.
 import type { IncomingMessage } from 'node:http';
+import type { z } from 'zod';
+import type { EventBody } from './bodies.schemas.ts';
 
 export type Cell = string | number | boolean | null;
-export interface StubEvent {
-  id: string;
-  status: string;
-  summary: string;
-  description: string;
-  location: string;
-  start: unknown;
-  end: unknown;
-  extendedProperties?: { private?: Record<string, string> };
-}
+export type StubEvent = EventBody & { id: string; status: string };
 export interface StubFile {
   id: string;
   name: string;
@@ -110,9 +103,13 @@ export async function readBody(req: IncomingMessage): Promise<Buffer> {
   return Buffer.concat(chunks);
 }
 
-export async function readJson<T>(req: IncomingMessage): Promise<T> {
+/** The body parsed with `schema`; bad JSON or a bad shape throws (the stub answers 400). */
+export async function readJson<S extends z.ZodType>(
+  req: IncomingMessage,
+  schema: S,
+): Promise<z.infer<S>> {
   const raw = (await readBody(req)).toString('utf8');
-  return (raw ? JSON.parse(raw) : {}) as T;
+  return schema.parse(raw ? JSON.parse(raw) : {});
 }
 
 export const notFound = (): Reply => [

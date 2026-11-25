@@ -8,10 +8,5 @@
     "ab/no-shape-checks": {
       "count": 1
     }
-  },
-  "src/stub.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 9
-    }
   }
 }

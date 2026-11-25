@@ -11,6 +11,7 @@ import {
   type StubFile,
   type StubState,
 } from './state.ts';
+import { fileMeta, newFileBody, type FileMeta } from './bodies.schemas.ts';
 
 const unquote = (s: string) => s.replace(/\\'/g, "'").replace(/\\\\/g, '\\');
 const clause = (q: string, re: RegExp) => {
@@ -42,10 +43,7 @@ function search(s: StubState, q: string): StubFile[] {
 }
 
 /** multipart/related: the JSON metadata part and the media part's size. */
-function multipart(
-  body: Buffer,
-  type: string,
-): { meta: Partial<StubFile> & { parents?: string[] }; size: number } {
+function multipart(body: Buffer, type: string): { meta: FileMeta; size: number } {
   const boundary = /boundary=([^;]+)/.exec(type)?.[1] ?? '';
   const text = body.toString('latin1');
   const parts = text.split(`--${boundary}`).filter((p) => p.trim() && p.trim() !== '--');
@@ -56,7 +54,7 @@ function multipart(
   ).toString('utf8');
   const media = parts[1] ?? '';
   return {
-    meta: JSON.parse(json || '{}') as Partial<StubFile>,
+    meta: fileMeta.parse(JSON.parse(json || '{}')),
     size: Math.max(0, media.length - media.indexOf('\r\n\r\n') - 6),
   };
 }
@@ -86,12 +84,7 @@ export const driveRoutes: Route[] = [
     'POST',
     /^\/drive\/v3\/files$/,
     async (req, { s }) => {
-      const b = await readJson<{
-        name: string;
-        mimeType: string;
-        parents?: string[];
-        appProperties?: Record<string, string>;
-      }>(req);
+      const b = await readJson(req, newFileBody);
       return [
         200,
         add(s, {
