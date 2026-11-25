@@ -16,7 +16,10 @@ export interface FeedbackTableProps {
 
 /** The feedback rows, sorted and filtered on the server (the list is paged). */
 export function FeedbackTable({ rows, showTeacher, teachers, sort, filters }: FeedbackTableProps) {
-  const columns = useMemo(() => feedbackColumns({ showTeacher, teachers: teachers ?? [] }), [showTeacher, teachers]);
+  const columns = useMemo(
+    () => feedbackColumns({ showTeacher, teachers: teachers ?? [] }),
+    [showTeacher, teachers],
+  );
   return (
     <DataTable
       stacked

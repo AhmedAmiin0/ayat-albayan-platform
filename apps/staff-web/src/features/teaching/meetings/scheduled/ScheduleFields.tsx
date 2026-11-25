@@ -32,7 +32,12 @@ export function ScheduleFields({ value, onChange, tz }: Props) {
         </Field>
         <Field label={L.time}>
           {(p) => (
-            <Select {...p} dir={clockDir(clock)} value={value.time} onChange={(e) => set({ time: e.target.value })}>
+            <Select
+              {...p}
+              dir={clockDir(clock)}
+              value={value.time}
+              onChange={(e) => set({ time: e.target.value })}
+            >
               <ClockOptions times={quarterTimes(value.time)} />
             </Select>
           )}
@@ -40,9 +45,15 @@ export function ScheduleFields({ value, onChange, tz }: Props) {
       </div>
       <Field label={L.duration}>
         {(p) => (
-          <Select {...p} value={String(value.durationMin)} onChange={(e) => set({ durationMin: Number(e.target.value) })}>
+          <Select
+            {...p}
+            value={String(value.durationMin)}
+            onChange={(e) => set({ durationMin: Number(e.target.value) })}
+          >
             {DURATION_OPTIONS.map((n) => (
-              <option key={n} value={n}>{L.minutes.replace('{n}', String(n))}</option>
+              <option key={n} value={n}>
+                {L.minutes.replace('{n}', String(n))}
+              </option>
             ))}
           </Select>
         )}

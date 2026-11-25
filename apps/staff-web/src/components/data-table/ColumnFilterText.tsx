@@ -13,7 +13,13 @@ export interface ColumnFilterTextProps {
 }
 
 /** Debounced 300ms; our own echo never replaces the draft, and blur sends a pending draft. */
-export function ColumnFilterText({ ariaLabel, value, onChange, placeholder, className }: ColumnFilterTextProps) {
+export function ColumnFilterText({
+  ariaLabel,
+  value,
+  onChange,
+  placeholder,
+  className,
+}: ColumnFilterTextProps) {
   const [draft, setDraft] = useState(value);
   const [seen, setSeen] = useState(value);
   const [sent, setSent] = useState(value);

@@ -16,7 +16,14 @@ function ActionButton({ message: m, note }: { message: MessageView; note: ReplyN
   const a = t.inbox.replyAction;
   if (action.kind === 'confirm') {
     if (!actions.rights.confirm) return null;
-    return <ReplyConfirmButton phone={actions.phone} lessonId={action.lesson.id} route={actions.rights.confirm} label={fill(a.confirmLabel, note.when)} />;
+    return (
+      <ReplyConfirmButton
+        phone={actions.phone}
+        lessonId={action.lesson.id}
+        route={actions.rights.confirm}
+        label={fill(a.confirmLabel, note.when)}
+      />
+    );
   }
   const label = fill(a.rescheduleLabel, note.when);
   return (
@@ -32,7 +39,13 @@ export function ReplyNoteLine({ message: m }: { message: MessageView }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const now = useNow();
   const lesson = replyLesson(m, { lessons: actions.lessons, now });
-  const note = replyNote(m, { lesson, rights: actions.rights, now, moved: actions.moved.includes(m.id), clock });
+  const note = replyNote(m, {
+    lesson,
+    rights: actions.rights,
+    now,
+    moved: actions.moved.includes(m.id),
+    clock,
+  });
   if (!note) return null;
   return (
     <div className="mt-1 flex flex-wrap items-center gap-2">

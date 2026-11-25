@@ -6,7 +6,13 @@ import type { RuleRowState } from '@/features/messaging/notification-rules/table
 
 const r = t.notificationRules;
 
-export function ChannelsPart({ entry, row }: { entry: NotificationEntryView; row: RuleRowState | null }) {
+export function ChannelsPart({
+  entry,
+  row,
+}: {
+  entry: NotificationEntryView;
+  row: RuleRowState | null;
+}) {
   const name = t.notificationCatalogue.entries[entry.key].name;
   if (!row || row.rule.optional_channels.length === 0) {
     return <span className="text-xs text-ink-2">{channelWords(row ? row.draft.channels : (entry.rule?.channels ?? entry.channels))}</span>;
@@ -33,7 +39,13 @@ export function ChannelsPart({ entry, row }: { entry: NotificationEntryView; row
               ariaLabel={fillText(r.channelToggle, { channel: word, name })}
               checked={row.draft.channels.includes(ch)}
               disabled={row.saving}
-              onChange={(on) => row.set({ channels: on ? [...row.draft.channels, ch] : row.draft.channels.filter((x) => x !== ch) })}
+              onChange={(on) =>
+                row.set({
+                  channels: on
+                    ? [...row.draft.channels, ch]
+                    : row.draft.channels.filter((x) => x !== ch),
+                })
+              }
             />
           );
         })}

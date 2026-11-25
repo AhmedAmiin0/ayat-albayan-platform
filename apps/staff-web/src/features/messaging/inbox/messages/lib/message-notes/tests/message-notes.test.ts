@@ -23,9 +23,19 @@ describe('outbound notes (R-MSG-05)', () => {
 
   it('queued: a template waiting on Meta wins over the scheduled time', () => {
     const later = out({ status: 'queued', scheduled_for: '2026-10-01T15:00:00Z' });
-    expect(outboundNotes(later, { waitingTemplate: true, now: NOW, clock: C24 })).toEqual([t.messages.waitingTemplate]);
-    expect(outboundNotes(later, { waitingTemplate: false, now: NOW, clock: C24 })[0]).toMatch(/^ستُرسل /);
-    expect(outboundNotes(out({ status: 'queued', scheduled_for: '2026-10-01T11:00:00Z' }), { waitingTemplate: false, now: NOW, clock: C24 })).toEqual([]);
+    expect(outboundNotes(later, { waitingTemplate: true, now: NOW, clock: C24 })).toEqual([
+      t.messages.waitingTemplate,
+    ]);
+    expect(outboundNotes(later, { waitingTemplate: false, now: NOW, clock: C24 })[0]).toMatch(
+      /^ستُرسل /,
+    );
+    expect(
+      outboundNotes(out({ status: 'queued', scheduled_for: '2026-10-01T11:00:00Z' }), {
+        waitingTemplate: false,
+        now: NOW,
+        clock: C24,
+      }),
+    ).toEqual([]);
   });
 
   it('queued after a failed try: tries so far, the error and the next try', () => {
@@ -45,8 +55,15 @@ describe('outbound notes (R-MSG-05)', () => {
   });
 
   it('claimed by the sender right now: «تُرسل الآن», not the lease as «المحاولة الجاية»', () => {
-    const row = out({ status: 'queued', attempts: 1, error_code: 'sending', next_attempt_at: '2026-10-01T12:02:00Z' });
-    expect(outboundNotes(row, { waitingTemplate: false, now: NOW, clock: C24 })).toEqual([t.messages.sendingNow]);
+    const row = out({
+      status: 'queued',
+      attempts: 1,
+      error_code: 'sending',
+      next_attempt_at: '2026-10-01T12:02:00Z',
+    });
+    expect(outboundNotes(row, { waitingTemplate: false, now: NOW, clock: C24 })).toEqual([
+      t.messages.sendingNow,
+    ]);
   });
 
   it('a hand-off has no error line: the «بعتّها؟» question stands in for it', () => {

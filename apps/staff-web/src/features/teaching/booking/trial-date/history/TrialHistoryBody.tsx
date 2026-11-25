@@ -5,7 +5,13 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TrialHistoryTable } from './TrialHistoryTable';
 
-export function TrialHistoryTitle({ history, id }: { history: TrialHistory | undefined; id?: string }) {
+export function TrialHistoryTitle({
+  history,
+  id,
+}: {
+  history: TrialHistory | undefined;
+  id?: string;
+}) {
   return (
     <h2 id={id} className="flex flex-wrap items-baseline gap-x-2 text-sm font-semibold">
       <span>{t.trialDate.historyTitle}</span>

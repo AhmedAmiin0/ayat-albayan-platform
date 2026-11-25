@@ -49,8 +49,12 @@ describe('move → the new number’s re-sync', () => {
 
   it('an ok re-sync says «نُقل», refetches the registry (imported rows show) and the lines (its result shows)', async () => {
     await move(lineSync({ meta_count: 4, synced: 2, imported: ['imported_one'] }));
-    expect((await screen.findByRole('status')).textContent).toContain(t.templates.moved.replace('{line}', t.enums.waLine.notifications));
+    expect((await screen.findByRole('status')).textContent).toContain(
+      t.templates.moved.replace('{line}', t.enums.waLine.notifications),
+    );
     expect(await screen.findAllByText('imported_one')).not.toHaveLength(0);
-    await waitFor(() => expect(notificationsBlock()?.textContent).toContain(t.templates.perNumber.metaCount));
+    await waitFor(() =>
+      expect(notificationsBlock()?.textContent).toContain(t.templates.perNumber.metaCount),
+    );
   });
 });

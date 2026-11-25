@@ -7,7 +7,13 @@ import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** Shown only when the API allows (`time_edit_mode`), never for a teacher or a closed lesson. */
-export function EditTimeLink({ lesson, onEdit }: { lesson: LessonView; onEdit?: (() => void) | undefined }) {
+export function EditTimeLink({
+  lesson,
+  onEdit,
+}: {
+  lesson: LessonView;
+  onEdit?: (() => void) | undefined;
+}) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const info = timeEditInfo(lesson);
   return (

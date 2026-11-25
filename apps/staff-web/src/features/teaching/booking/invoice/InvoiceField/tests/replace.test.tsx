@@ -31,13 +31,16 @@ function renderField(initial: InvoiceDraft | null) {
     return <InvoiceField value={value} requestId="req-1" chatPhone={PHONE} onChange={(v) => (seen.push(v), setValue(v))} />;
   }
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <Host />
     </QueryClientProvider>,
   );
   return seen;
 }
-const choose = (f: File) => fireEvent.change(screen.getByLabelText(t.booking.invoice.replace), { target: { files: [f] } });
+const choose = (f: File) =>
+  fireEvent.change(screen.getByLabelText(t.booking.invoice.replace), { target: { files: [f] } });
 
 describe('InvoiceField: replacing and removing (R-PAY-03)', () => {
   beforeEach(() => {

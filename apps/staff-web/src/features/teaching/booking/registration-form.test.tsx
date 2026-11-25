@@ -9,9 +9,14 @@ import { LeadStudentStep } from './steps/who/LeadStudentStep';
 import { PackageStep } from './steps/package/PackageStep';
 
 // The wizard's titles, options and required marks match the original registration form.
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => ({ total: 0, currency: 'SAR', fx: null })) }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch: vi.fn(async () => ({ total: 0, currency: 'SAR', fx: null })),
+}));
 
-const wrap = (ui: React.ReactNode) => <QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>;
+const wrap = (ui: React.ReactNode) => (
+  <QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>
+);
 
 describe('registration form wording', () => {
   it('«الباقة المطلوبة *» offers the form’s paid options, in its order, with its wording (the trial moved to «نوع الحجز»)', () => {

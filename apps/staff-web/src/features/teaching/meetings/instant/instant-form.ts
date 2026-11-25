@@ -30,7 +30,10 @@ export function draftProblem(draft: InstantDraft, clashed: boolean): DraftProble
 }
 
 /** The POST /lessons/instant body; one request id per dialog so a double click starts one lesson. */
-export function instantBody(draft: InstantDraft, opts: { clashed: boolean; requestId: string }): InstantLessonRequest {
+export function instantBody(
+  draft: InstantDraft,
+  opts: { clashed: boolean; requestId: string },
+): InstantLessonRequest {
   return {
     studentIds: draft.students.map((s) => s.id),
     teacherId: draft.teacherId,
@@ -41,6 +44,9 @@ export function instantBody(draft: InstantDraft, opts: { clashed: boolean; reque
 }
 
 /** Adds a student once; picking the same one again removes them (a toggle). */
-export function toggleStudent(list: readonly MeetingStudent[], s: MeetingStudent): MeetingStudent[] {
+export function toggleStudent(
+  list: readonly MeetingStudent[],
+  s: MeetingStudent,
+): MeetingStudent[] {
   return list.some((x) => x.id === s.id) ? list.filter((x) => x.id !== s.id) : [...list, s];
 }

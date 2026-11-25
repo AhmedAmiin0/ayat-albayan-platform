@@ -24,7 +24,10 @@ interface ViewProps extends RuleRowProps {
 }
 
 /** May this user edit this row here? (notifications.manage, a v2 rule that is editable, not locked). */
-export function editableRule(entry: NotificationEntryView, canManage: boolean): NotificationRuleView | null {
+export function editableRule(
+  entry: NotificationEntryView,
+  canManage: boolean,
+): NotificationRuleView | null {
   const rule = entry.rule;
   return rule && canManage && rule.editable && !entry.locked ? rule : null;
 }

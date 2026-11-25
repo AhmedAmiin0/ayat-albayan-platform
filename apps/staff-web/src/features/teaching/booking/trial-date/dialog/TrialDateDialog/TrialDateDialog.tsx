@@ -47,7 +47,8 @@ export function TrialDateDialog({ student, mode, facts, onClose }: TrialDateDial
   const history = useQuery(trialHistoryQuery(student.id, mode));
   const [start, setStart] = useState<Start | null>(null);
   const data = history.data;
-  if (!start && data?.allowed) setStart({ draft: trialDateDraft({ student, history: data, facts }), hint: trialHint(data) });
+  if (!start && data?.allowed)
+    setStart({ draft: trialDateDraft({ student, history: data, facts }), hint: trialHint(data) });
   const blocked = !start && data && !data.allowed;
   return (
     <Dialog title={t.trialDate.title.replace('{name}', student.name)} onClose={onClose} wide>
@@ -64,7 +65,13 @@ export function TrialDateDialog({ student, mode, facts, onClose }: TrialDateDial
         {start && (
           <BookingModeContext.Provider value={mode}>
             <ChatReturnContext.Provider value={onClose}>
-              <BookingWizard initial={start.draft} primary={null} siblings={[]} onOpenStudent={noop} hint={start.hint} />
+              <BookingWizard
+                initial={start.draft}
+                primary={null}
+                siblings={[]}
+                onOpenStudent={noop}
+                hint={start.hint}
+              />
             </ChatReturnContext.Provider>
           </BookingModeContext.Provider>
         )}

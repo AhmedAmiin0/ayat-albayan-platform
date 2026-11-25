@@ -8,8 +8,20 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  Link: ({ to, search, children, className }: { to: string; search: { month: string }; children: string; className?: string }) => (
-    <a href={`${to}?month=${search.month}`} className={className}>{children}</a>
+  Link: ({
+    to,
+    search,
+    children,
+    className,
+  }: {
+    to: string;
+    search: { month: string };
+    children: string;
+    className?: string;
+  }) => (
+    <a href={`${to}?month=${search.month}`} className={className}>
+      {children}
+    </a>
   ),
 }));
 

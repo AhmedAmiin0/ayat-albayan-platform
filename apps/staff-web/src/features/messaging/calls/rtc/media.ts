@@ -15,7 +15,8 @@ export function browserRtc(): RtcDeps | null {
   if (typeof RTCPeerConnection === 'undefined' || !md?.getUserMedia) return null;
   return {
     createPeer: (config) => new RTCPeerConnection(config),
-    getMic: () => md.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: false }),
+    getMic: () =>
+      md.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: false }),
   };
 }
 

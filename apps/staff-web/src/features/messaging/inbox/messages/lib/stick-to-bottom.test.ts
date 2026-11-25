@@ -7,11 +7,15 @@ describe('isNearBottom (the log stays pinned to the newest message)', () => {
   });
 
   it('within the threshold still counts as the bottom', () => {
-    expect(isNearBottom({ scrollTop: 600 - NEAR_BOTTOM_PX, scrollHeight: 1000, clientHeight: 400 })).toBe(true);
+    expect(
+      isNearBottom({ scrollTop: 600 - NEAR_BOTTOM_PX, scrollHeight: 1000, clientHeight: 400 }),
+    ).toBe(true);
   });
 
   it('scrolled up past the threshold: the reader is reading older messages', () => {
-    expect(isNearBottom({ scrollTop: 600 - NEAR_BOTTOM_PX - 1, scrollHeight: 1000, clientHeight: 400 })).toBe(false);
+    expect(
+      isNearBottom({ scrollTop: 600 - NEAR_BOTTOM_PX - 1, scrollHeight: 1000, clientHeight: 400 }),
+    ).toBe(false);
     expect(isNearBottom({ scrollTop: 0, scrollHeight: 1000, clientHeight: 400 })).toBe(false);
   });
 

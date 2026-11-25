@@ -36,6 +36,7 @@ export const sendErrorCode = (error: unknown): string =>
 export const rereadsAfter = (error: unknown): boolean =>
   [SEND_UNCONFIRMED, SEND_REPLAYED, 'session_closed'].includes(sendErrorCode(error));
 
-export const sendErrorCodeText = (code: string): string => ERRORS[code] ?? t.inbox.error.send_failed;
+export const sendErrorCodeText = (code: string): string =>
+  ERRORS[code] ?? t.inbox.error.send_failed;
 
 export const sendErrorText = (error: unknown): string => sendErrorCodeText(sendErrorCode(error));

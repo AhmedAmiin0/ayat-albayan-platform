@@ -14,7 +14,13 @@ vi.mock('@ab/web-kit/components/ui/layout/theme-toggle', () => ({ ThemeToggle: (
 
 // The profile query fails here and the foot still shows the email.
 const render = (ui: ReactElement) =>
-  rtlRender(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{ui}</QueryClientProvider>);
+  rtlRender(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      {ui}
+    </QueryClientProvider>,
+  );
 
 describe('SideFoot', () => {
   it('stays pinned to the bottom of the sidebar on its own background (short viewports)', () => {

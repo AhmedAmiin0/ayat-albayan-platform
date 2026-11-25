@@ -43,7 +43,14 @@ export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: Replie
       {!picker.bySlash && <PanelHead picker={picker} listId={listId} />}
       {list.length ? (
         <ReplyOptions
-          {...{ id: listId, replies: list, query: picker.query, active: keys.active, onActive: keys.setActive, onPick: picker.pick }}
+          {...{
+            id: listId,
+            replies: list,
+            query: picker.query,
+            active: keys.active,
+            onActive: keys.setActive,
+            onPick: picker.pick,
+          }}
           manage={managing ? { onEdit, onDelete } : undefined}
         />
       ) : (

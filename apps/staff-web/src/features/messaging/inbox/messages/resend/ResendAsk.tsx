@@ -17,7 +17,13 @@ export function ResendAsk({ message }: { message: MessageView }) {
       <Button type="button" variant="secondary" size="sm" className="mt-2" onClick={() => setOpen(true)}>
         {t.inbox.resend.action}
       </Button>
-      {open && <ResendDialog phone={chat.phone} clientRequestId={clientRequestId} onClose={() => setOpen(false)} />}
+      {open && (
+        <ResendDialog
+          phone={chat.phone}
+          clientRequestId={clientRequestId}
+          onClose={() => setOpen(false)}
+        />
+      )}
     </>
   );
 }

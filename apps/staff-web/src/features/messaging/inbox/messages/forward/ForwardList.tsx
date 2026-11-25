@@ -16,7 +16,17 @@ export interface ForwardListProps {
 }
 
 /** One chat: its whole 44px row toggles the checkbox; where a text cannot go a hint (the server decides). */
-function Row({ thread: th, checked, disabled, onToggle }: { thread: ThreadView; checked: boolean; disabled: boolean; onToggle: () => void }) {
+function Row({
+  thread: th,
+  checked,
+  disabled,
+  onToggle,
+}: {
+  thread: ThreadView;
+  checked: boolean;
+  disabled: boolean;
+  onToggle: () => void;
+}) {
   const hintId = useId();
   const phone = showsPhone(useInboxMode());
   const may = useMaySend(th);
@@ -55,7 +65,15 @@ export function ForwardList({ threads, picked, full, onToggle }: ForwardListProp
     <ul className="grid gap-0.5">
       {threads.map((th) => {
         const checked = picked.has(th.phone_e164);
-        return <Row key={th.phone_e164} thread={th} checked={checked} disabled={full && !checked} onToggle={() => onToggle(th)} />;
+        return (
+          <Row
+            key={th.phone_e164}
+            thread={th}
+            checked={checked}
+            disabled={full && !checked}
+            onToggle={() => onToggle(th)}
+          />
+        );
       })}
     </ul>
   );

@@ -9,7 +9,13 @@ import { cancelMeeting, meetingErrorText } from '@/features/teaching/meetings/in
 const L = t.meetingInvites.list;
 
 /** Creator or admin; the invitees' links stop working. */
-export function CancelMeetingDialog({ meetingId, onClose }: { meetingId: string; onClose: () => void }) {
+export function CancelMeetingDialog({
+  meetingId,
+  onClose,
+}: {
+  meetingId: string;
+  onClose: () => void;
+}) {
   const queryClient = useQueryClient();
   const cancel = useMutation({
     mutationFn: cancelMeeting,

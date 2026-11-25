@@ -56,7 +56,9 @@ describe('TableToolbar', () => {
   });
 
   it('applied state: «تصفية» is tinted green with a count badge only while a filter is set', () => {
-    const { rerender } = render(<TableToolbar fields={<p>حقول</p>} chips={[]} onClearAll={vi.fn()} />);
+    const { rerender } = render(
+      <TableToolbar fields={<p>حقول</p>} chips={[]} onClearAll={vi.fn()} />,
+    );
     const button = screen.getByRole('button', { name: t.table.filter });
     expect(button.getAttribute('data-applied')).toBeNull();
     expect(button.className).not.toContain('border-lapis');
@@ -68,29 +70,43 @@ describe('TableToolbar', () => {
   });
 
   it('announces the applied filters politely, and that none are left once cleared', () => {
-    const { rerender } = render(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />);
+    const { rerender } = render(
+      <TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />,
+    );
     const live = liveSummary();
     expect(live.getAttribute('aria-live')).toBe('polite');
     expect(live.textContent).toContain(t.table.activeCount.replace('{n}', '1'));
     expect(live.textContent).toContain('14');
-    rerender(<TableToolbar fields={<p>حقول</p>} chips={[]} resultCount={20} onClearAll={vi.fn()} />);
+    rerender(
+      <TableToolbar fields={<p>حقول</p>} chips={[]} resultCount={20} onClearAll={vi.fn()} />,
+    );
     expect(liveSummary().textContent).toBe(t.table.noFilters);
   });
 
   it('exactly one live region while the panel is open: a change inside is announced once', () => {
-    render(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />);
+    render(
+      <TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />,
+    );
     expect(document.querySelectorAll('[aria-live]')).toHaveLength(1);
     openFilters();
     expect(document.querySelectorAll('[aria-live]')).toHaveLength(1);
     expect(screen.getByRole('dialog').textContent).toContain(t.table.activeCount.replace('{n}', '1')); // the visible footer note
   });
 
-  it('the panel\'s primary button names the rows the filters leave', () => {
-    const { rerender } = render(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />);
+  it("the panel's primary button names the rows the filters leave", () => {
+    const { rerender } = render(
+      <TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />,
+    );
     openFilters();
-    expect(screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '14') })).toBeTruthy();
-    rerender(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={3} onClearAll={vi.fn()} />);
-    expect(screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '3') })).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '14') }),
+    ).toBeTruthy();
+    rerender(
+      <TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={3} onClearAll={vi.fn()} />,
+    );
+    expect(
+      screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '3') }),
+    ).toBeTruthy();
     closeFilters();
     expect(screen.queryByRole('dialog')).toBeNull();
   });

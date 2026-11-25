@@ -8,7 +8,13 @@ const head = 'border-b border-rule-strong px-2 py-1.5 text-start text-xs font-se
 const cell = 'border-b border-rule px-2 py-2.5 text-start align-top text-xs text-ink-2';
 
 /** Manual messages are listed, never switched. */
-export function ManualTable({ rows, caption }: { rows: readonly NotificationEntryView[]; caption: string }) {
+export function ManualTable({
+  rows,
+  caption,
+}: {
+  rows: readonly NotificationEntryView[];
+  caption: string;
+}) {
   return (
     <div className="grid gap-2">
       <p className="text-xs text-ink-2">{r.manualIntro}</p>

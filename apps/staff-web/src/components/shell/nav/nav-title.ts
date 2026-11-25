@@ -8,7 +8,11 @@ export interface NavTitleItem {
  * The phone/tablet top bar's page title (one compact bar): the label of the nav
  * item whose path is the longest prefix of `pathname`; the section home (`home`) otherwise.
  */
-export function titleFor(pathname: string | undefined, items: readonly NavTitleItem[], home: string): string {
+export function titleFor(
+  pathname: string | undefined,
+  items: readonly NavTitleItem[],
+  home: string,
+): string {
   if (!pathname) return home;
   let best: NavTitleItem | undefined;
   for (const item of items) {

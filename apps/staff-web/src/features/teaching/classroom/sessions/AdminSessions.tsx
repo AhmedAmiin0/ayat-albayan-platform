@@ -48,7 +48,15 @@ function Group({ group, lessons }: { group: SessionGroup; lessons: LessonView[] 
 }
 
 /** Previous / today / next and the day itself: one compact row. */
-function DaySwitcher({ offset, onOffset, day }: { offset: number; onOffset: (n: number) => void; day: string }) {
+function DaySwitcher({
+  offset,
+  onOffset,
+  day,
+}: {
+  offset: number;
+  onOffset: (n: number) => void;
+  day: string;
+}) {
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2">
       <Button type="button" variant="secondary" size="sm" aria-label={t.schedule.prevDay} onClick={() => onOffset(offset - 1)}>
@@ -79,7 +87,8 @@ export function AdminSessions({ actions }: { actions?: ReactNode }) {
   let body: ReactNode = <ListSkeleton />;
   if (lessons.isError) body = <FormAlert>{t.common.error}</FormAlert>;
   else if (lessons.isSuccess && none) body = <EmptyState title={t.classroom.admin.empty} />;
-  else if (lessons.isSuccess) body = SESSION_GROUPS.map((g) => <Group key={g} group={g} lessons={groups[g]} />);
+  else if (lessons.isSuccess)
+    body = SESSION_GROUPS.map((g) => <Group key={g} group={g} lessons={groups[g]} />);
   return (
     <section aria-label={t.classroom.admin.title} className="flex flex-1 flex-col">
       <PageHead>

@@ -20,12 +20,16 @@ export function CrmNameDialog({ template: tpl, busy, onSave, onClose }: CrmNameD
   const formId = useId();
   const [name, setName] = useState(tpl.crm_name ?? '');
   const [language, setLanguage] = useState(tpl.crm_language ?? '');
-  const [invalid, setInvalid] = useState<{ name: boolean; language: boolean }>({ name: false, language: false });
+  const [invalid, setInvalid] = useState<{ name: boolean; language: boolean }>({
+    name: false,
+    language: false,
+  });
   const fallback = crmTemplateName({ ...tpl, crm_name: null });
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const parsed = templateCrmNameSchema.safeParse({ crm_name: name, crm_language: language });
-    const bad = (field: string) => !parsed.success && parsed.error.issues.some((i) => i.path[0] === field);
+    const bad = (field: string) =>
+      !parsed.success && parsed.error.issues.some((i) => i.path[0] === field);
     setInvalid({ name: bad('crm_name'), language: bad('crm_language') });
     if (parsed.success) onSave({ key: tpl.key, ...parsed.data });
   };

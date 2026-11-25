@@ -28,7 +28,12 @@ function renderWeek(search: ScheduleSearch = {}) {
   );
   const onSearch = vi.fn();
   render(
-    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true)}>
+    <QueryClientProvider
+      client={setConfirmationRequired(
+        new QueryClient({ defaultOptions: { queries: { retry: false } } }),
+        true,
+      )}
+    >
       <WeekSchedule search={search} onSearch={onSearch} />
     </QueryClientProvider>,
   );

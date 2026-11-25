@@ -10,7 +10,10 @@ export interface PanelRoutes {
   parity?: ParityView;
 }
 
-export function renderPanel(apiFetch: Mock, routes: PanelRoutes = {}): { client: QueryClient; onSaved: Mock } {
+export function renderPanel(
+  apiFetch: Mock,
+  routes: PanelRoutes = {},
+): { client: QueryClient; onSaved: Mock } {
   routeFetch(apiFetch, [
     ['/admin/numbers', routes.numbers ?? NUMBERS],
     ['/admin/communications/parity', routes.parity ?? PARITY_SAME],
@@ -21,4 +24,5 @@ export function renderPanel(apiFetch: Mock, routes: PanelRoutes = {}): { client:
 }
 
 /** How many times a path was fetched (a refetch after a write counts). */
-export const fetchCount = (apiFetch: Mock, path: string): number => apiFetch.mock.calls.filter(([p]) => p === path).length;
+export const fetchCount = (apiFetch: Mock, path: string): number =>
+  apiFetch.mock.calls.filter(([p]) => p === path).length;

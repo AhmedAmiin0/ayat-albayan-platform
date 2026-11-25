@@ -11,18 +11,28 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
   useRouter: () => undefined,
-  Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
-    <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
-  ),
+  Link: ({
+    to,
+    search,
+    children,
+  }: {
+    to: string;
+    search: Record<string, string>;
+    children: ReactNode;
+  }) => <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>,
 }));
 
 const recently = () => new Date(Date.now() - 2 * 86_400_000).toISOString();
 const BOOKED = { lesson_id: 'm-1', starts_at: '2026-10-05T14:00:00.000Z' };
 
 function renderDrawer(l: LessonView) {
-  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/invoices?') ? [] : { url: 'https://signed/inv' }));
+  apiFetch.mockImplementation(async (path: string) =>
+    path.startsWith('/invoices?') ? [] : { url: 'https://signed/inv' },
+  );
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <LessonDrawer lesson={l} onClose={vi.fn()} onDone={vi.fn()} />
     </QueryClientProvider>,
   );

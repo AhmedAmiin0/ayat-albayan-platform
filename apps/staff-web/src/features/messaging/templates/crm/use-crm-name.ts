@@ -16,7 +16,9 @@ export function useCrmName(onNotice: (notice: Notice) => void) {
   const save = useMutation({
     mutationFn: setCrmName,
     onSuccess: (saved: TemplateView) => {
-      queryClient.setQueryData(templatesQuery.queryKey, (old) => old?.map((r) => (r.key === saved.key ? saved : r)));
+      queryClient.setQueryData(templatesQuery.queryKey, (old) =>
+        old?.map((r) => (r.key === saved.key ? saved : r)),
+      );
       setEditing(null);
       onNotice({ message: t.templates.crmName.saved.replace('{name}', templateName(saved.key)) });
     },

@@ -2,9 +2,25 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { startRingtone } from './ringtone';
 
 function fakeAudio(state: AudioContextState) {
-  const node = () => ({ connect: vi.fn(() => ({ connect: vi.fn() })), start: vi.fn(), stop: vi.fn(), frequency: { value: 0 } });
-  const gain = () => ({ connect: vi.fn(() => ({ connect: vi.fn() })), gain: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() } });
-  const ctx = { state, currentTime: 0, destination: {}, resume: vi.fn(async () => undefined), close: vi.fn(async () => undefined), createOscillator: node, createGain: gain };
+  const node = () => ({
+    connect: vi.fn(() => ({ connect: vi.fn() })),
+    start: vi.fn(),
+    stop: vi.fn(),
+    frequency: { value: 0 },
+  });
+  const gain = () => ({
+    connect: vi.fn(() => ({ connect: vi.fn() })),
+    gain: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+  });
+  const ctx = {
+    state,
+    currentTime: 0,
+    destination: {},
+    resume: vi.fn(async () => undefined),
+    close: vi.fn(async () => undefined),
+    createOscillator: node,
+    createGain: gain,
+  };
   // A constructor that hands out the fake context (`new` on a function returning an object yields it).
   const Ctor = function () {
     return ctx;

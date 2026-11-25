@@ -72,7 +72,12 @@ describe('webhookState', () => {
     ['none', { app_id: null, subscribed_apps: [] }],
     ['unknown', { app_id: null, subscribed_apps: null }],
   ] as const)('%s', (state, view) => {
-    expect(webhookState({ app_id: view.app_id, subscribed_apps: view.subscribed_apps ? [...view.subscribed_apps] : null })).toBe(state);
+    expect(
+      webhookState({
+        app_id: view.app_id,
+        subscribed_apps: view.subscribed_apps ? [...view.subscribed_apps] : null,
+      }),
+    ).toBe(state);
   });
   it('a kapso line (docs/19): always kapso (neutral, never «app id not set»); its subscribed apps are not asked', () => {
     for (const subscribed_apps of [[app('kapso-app')], [], null]) {

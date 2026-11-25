@@ -50,7 +50,13 @@ export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
   return (
     <div className="grid gap-2 border-t border-rule pt-3">
       {students.map((s) => (
-        <OneButton key={s.id} lessonId={lesson.id} student={s} named={lesson.students.length > 1} approved={approved} />
+        <OneButton
+          key={s.id}
+          lessonId={lesson.id}
+          student={s}
+          named={lesson.students.length > 1}
+          approved={approved}
+        />
       ))}
       {!approved && templates.isSuccess && (
         <p className="text-xs text-ink-3">

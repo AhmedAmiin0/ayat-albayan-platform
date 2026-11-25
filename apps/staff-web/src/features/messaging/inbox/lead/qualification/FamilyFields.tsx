@@ -7,9 +7,14 @@ import { cn } from '@ab/web-kit/lib/utils';
 import type { QualFieldsProps } from './QualificationFields';
 import type { QualTextField } from './qualification-form';
 
-const choice = <T extends string>(list: readonly T[], value: string): T | '' => list.find((x) => x === value) ?? '';
+const choice = <T extends string>(list: readonly T[], value: string): T | '' =>
+  list.find((x) => x === value) ?? '';
 
-function TextField({ name, label, ...props }: QualFieldsProps & { name: QualTextField; label: string }) {
+function TextField({
+  name,
+  label,
+  ...props
+}: QualFieldsProps & { name: QualTextField; label: string }) {
   const ltr = name === 'alt_phone';
   return (
     <Field label={label} error={props.errors[name]}>
@@ -36,7 +41,11 @@ export function FamilyFields(props: QualFieldsProps) {
       <div className="@[26rem]:col-span-2">
         <Field label={t.leads.filledBy}>
           {(p) => (
-            <Select {...p} value={form.filled_by} onChange={(e) => onChange({ filled_by: choice(FILLED_BY, e.target.value) })}>
+            <Select
+              {...p}
+              value={form.filled_by}
+              onChange={(e) => onChange({ filled_by: choice(FILLED_BY, e.target.value) })}
+            >
               <option value="">—</option>
               {FILLED_BY.map((v) => (
                 <option key={v} value={v}>
@@ -61,7 +70,11 @@ export function RequestFields({ form, errors, onChange }: QualFieldsProps) {
     <div className="grid gap-3">
       <Field label={t.leads.groupKind}>
         {(p) => (
-          <Select {...p} value={form.group_kind} onChange={(e) => onChange({ group_kind: choice(GROUP_KINDS, e.target.value) })}>
+          <Select
+            {...p}
+            value={form.group_kind}
+            onChange={(e) => onChange({ group_kind: choice(GROUP_KINDS, e.target.value) })}
+          >
             <option value="">—</option>
             {GROUP_KINDS.map((v) => (
               <option key={v} value={v}>

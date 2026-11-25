@@ -37,7 +37,11 @@ export function subscribeMemberQueue(listener: () => void): () => void {
 export const memberQueueSnapshot = () => wanted;
 
 /** The chat's lists as the checklist shows them: the cached membership, with every in-flight box's intent on top. */
-export function overlayIntents(cached: Iterable<string>, phone: string, intents: ReadonlyMap<string, boolean>): Set<string> {
+export function overlayIntents(
+  cached: Iterable<string>,
+  phone: string,
+  intents: ReadonlyMap<string, boolean>,
+): Set<string> {
   const ids = new Set(cached);
   const prefix = keyOf(phone, '');
   for (const [key, on] of intents) {

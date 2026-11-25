@@ -17,6 +17,11 @@ export function callTone(kind: CallEntryKind): string {
 }
 
 /** Who a call was with, as the inbox names a chat: a teacher never sees the number. */
-export function callerName(call: Pick<CallView, 'display_name' | 'phone_e164'>, mode: InboxMode): string {
-  return call.display_name ?? (showsPhone(mode) ? formatPhone(call.phone_e164) : t.inbox.unknownNumber);
+export function callerName(
+  call: Pick<CallView, 'display_name' | 'phone_e164'>,
+  mode: InboxMode,
+): string {
+  return (
+    call.display_name ?? (showsPhone(mode) ? formatPhone(call.phone_e164) : t.inbox.unknownNumber)
+  );
 }

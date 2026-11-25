@@ -34,8 +34,14 @@ describe('ThreadHeader: one row of name and actions, one row of chips (W3)', () 
 
   it('a sales lead: «نسخ الرقم», then exactly one visible action «تسجيل طالب جديد», and «المزيد» holding «تحقق من التسجيل»', () => {
     const header = renderHeader({ mode: 'sales' });
-    expect(visibleButtons(header)).toEqual([t.inbox.copy.phone, t.inbox.registerNew, t.common.more]);
-    expect(within(header).getByRole('button', { name: t.inbox.registerNew }).className).toContain('bg-secondary');
+    expect(visibleButtons(header)).toEqual([
+      t.inbox.copy.phone,
+      t.inbox.registerNew,
+      t.common.more,
+    ]);
+    expect(within(header).getByRole('button', { name: t.inbox.registerNew }).className).toContain(
+      'bg-secondary',
+    );
     expect(within(header).queryByRole('button', { name: t.registrationCheck.action })).toBeNull();
     fireEvent.click(within(header).getByRole('button', { name: t.common.more }));
     expect(within(header).getByRole('button', { name: t.registrationCheck.action })).toBeTruthy();

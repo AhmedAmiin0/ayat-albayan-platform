@@ -39,8 +39,17 @@ export const T_FATMA = overviewTeacher({
   time_off: [{ id: 'off-1', starts_at: '2026-10-04T21:00:00.000Z', ends_at: '2026-10-05T21:00:00.000Z', reason: 'سفر' }],
 });
 
-export const T_NOUR = overviewTeacher({ id: 't-nour', display_name_ar: 'نور', gender: 'male', programs: ['arabic'], tz: 'Asia/Riyadh' });
+export const T_NOUR = overviewTeacher({
+  id: 't-nour',
+  display_name_ar: 'نور',
+  gender: 'male',
+  programs: ['arabic'],
+  tz: 'Asia/Riyadh',
+});
 
-export function overview(lessons: LessonView[], teachers = [T_ABRAR, T_FATMA, T_NOUR]): ScheduleOverview {
+export function overview(
+  lessons: LessonView[],
+  teachers = [T_ABRAR, T_FATMA, T_NOUR],
+): ScheduleOverview {
   return { from: '2026-10-02T21:00:00.000Z', to: '2026-10-09T21:00:00.000Z', teachers, lessons };
 }

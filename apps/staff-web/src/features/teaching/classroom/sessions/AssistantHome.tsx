@@ -7,7 +7,8 @@ import { assistantLessonsQuery, localDay } from '@ab/web-kit/classroom/api/api';
 import { AssistantLessonRow } from './AssistantLessonRow';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 
-const isOpen = (l: AssistantLessonView): boolean => (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
+const isOpen = (l: AssistantLessonView): boolean =>
+  (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
 
 export function AssistantHome() {
   const now = useNow(3_600_000);

@@ -62,7 +62,10 @@ export const detail = (messages: MessageView[], patch: Partial<ThreadView> = {})
 });
 
 /** `sub` patches an 8-lesson package with 3 left and unpaid. */
-export function pupil(patch: Partial<ThreadStudentView> = {}, sub?: Partial<ThreadSubscriptionView> | null): ThreadStudentView {
+export function pupil(
+  patch: Partial<ThreadStudentView> = {},
+  sub?: Partial<ThreadSubscriptionView> | null,
+): ThreadStudentView {
   const package8: ThreadSubscriptionView = {
     id: 'sub-1',
     status: 'unpaid',

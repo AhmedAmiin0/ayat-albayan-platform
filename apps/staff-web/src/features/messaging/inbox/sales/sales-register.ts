@@ -9,7 +9,10 @@ export const canRegisterFrom = (th: ThreadView): th is ThreadView & { lead_id: s
 /** What the thread already knows prefills step 1: the number, the WhatsApp name and the lead's source. */
 export function draftFromThread(th: ThreadView & { lead_id: string }): BookingDraft {
   const name = th.lead_name ?? th.display_name ?? undefined;
-  const draft = draftFromLead({ leadId: th.lead_id, phone: th.phone_e164, ...(name ? { name } : {}) }, null);
+  const draft = draftFromLead(
+    { leadId: th.lead_id, phone: th.phone_e164, ...(name ? { name } : {}) },
+    null,
+  );
   if (!draft.newStudent || !th.lead_source) return draft;
   return { ...draft, newStudent: { ...draft.newStudent, source: th.lead_source } };
 }

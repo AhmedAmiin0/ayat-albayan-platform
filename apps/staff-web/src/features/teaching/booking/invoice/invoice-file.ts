@@ -13,7 +13,10 @@ export function invoiceMime(file: File): string {
 }
 
 /** Client-side check before the upload, against settings.upload_max_mb (the API and the bucket check again). */
-export function invoiceProblem(file: File | null, maxBytes = INVOICE_MAX_BYTES): InvoiceProblem | null {
+export function invoiceProblem(
+  file: File | null,
+  maxBytes = INVOICE_MAX_BYTES,
+): InvoiceProblem | null {
   if (!file) return null;
   if (!(INVOICE_MIMES as readonly string[]).includes(invoiceMime(file))) return 'invoice_type';
   return file.size > maxBytes ? 'invoice_too_large' : null;

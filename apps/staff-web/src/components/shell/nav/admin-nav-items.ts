@@ -32,14 +32,56 @@ export const ADMIN_NAV_GROUPS = [
     { key: 'finance', to: '/admin/finance', label: t.finance.summaryTitle, icon: 'grid', permission: 'dashboard.read' },
   ],
   [
-    { key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe', permission: 'pricing.read' },
-    { key: 'settings', to: '/admin/settings', label: t.settings.title, icon: 'sliders', permission: 'settings.read' },
-    { key: 'translations', to: '/admin/translations', label: t.translations.nav, icon: 'template', permission: 'translations.manage' },
-    { key: 'activity', to: '/admin/activity', label: t.nav.activity, icon: 'clock', permission: 'activity.read' },
-    { key: 'roles', to: '/admin/roles', label: t.nav.roles, icon: 'users', permission: 'roles.manage' },
-    { key: 'users', to: '/admin/users', label: t.users.nav, icon: 'users', permission: 'users.read' },
+    {
+      key: 'pricing',
+      to: '/admin/pricing',
+      label: t.pricing.title,
+      icon: 'globe',
+      permission: 'pricing.read',
+    },
+    {
+      key: 'settings',
+      to: '/admin/settings',
+      label: t.settings.title,
+      icon: 'sliders',
+      permission: 'settings.read',
+    },
+    {
+      key: 'translations',
+      to: '/admin/translations',
+      label: t.translations.nav,
+      icon: 'template',
+      permission: 'translations.manage',
+    },
+    {
+      key: 'activity',
+      to: '/admin/activity',
+      label: t.nav.activity,
+      icon: 'clock',
+      permission: 'activity.read',
+    },
+    {
+      key: 'roles',
+      to: '/admin/roles',
+      label: t.nav.roles,
+      icon: 'users',
+      permission: 'roles.manage',
+    },
+    {
+      key: 'users',
+      to: '/admin/users',
+      label: t.users.nav,
+      icon: 'users',
+      permission: 'users.read',
+    },
   ],
-] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName; permission: Permission }[])[];
+] as const satisfies readonly (readonly {
+  key: string;
+  to: string;
+  label: string;
+  icon: IconName;
+  permission: Permission;
+}[])[];
 
 export const MONEY_GROUP = 'payments';
 
@@ -50,5 +92,7 @@ export type NavKey = (typeof ADMIN_NAV_ITEMS)[number]['key'];
 
 /** The groups with only the items `can` allows; empty groups dropped (sidebar and sheet alike). */
 export function visibleGroups(can: (permission: Permission) => boolean) {
-  return ADMIN_NAV_GROUPS.map((group) => group.filter((item) => can(item.permission))).filter((group) => group.length > 0);
+  return ADMIN_NAV_GROUPS.map((group) => group.filter((item) => can(item.permission))).filter(
+    (group) => group.length > 0,
+  );
 }

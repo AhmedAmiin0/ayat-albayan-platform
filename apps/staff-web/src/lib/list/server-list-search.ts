@@ -23,7 +23,10 @@ export interface ServerListKeys {
 }
 
 /** Route `validateSearch`: page > 1 only, allowlisted sort and filter keys, defaults out of the URL. */
-export function parseServerListSearch(search: Record<string, unknown>, keys: ServerListKeys): ServerListSearch {
+export function parseServerListSearch(
+  search: Record<string, unknown>,
+  keys: ServerListKeys,
+): ServerListSearch {
   const page = Number(search['page']);
   const out: ServerListSearch = { ...parseSortSearch(search, keys.sort) };
   if (Number.isInteger(page) && page > 1) out.page = page;
@@ -37,7 +40,10 @@ export interface ServerListState {
   filters: FilterSearch;
 }
 
-export function serverListState(search: Record<string, unknown>, keys: ServerListKeys): ServerListState {
+export function serverListState(
+  search: Record<string, unknown>,
+  keys: ServerListKeys,
+): ServerListState {
   const page = Number(search['page']);
   return {
     page: Number.isInteger(page) && page > 1 ? page : 1,

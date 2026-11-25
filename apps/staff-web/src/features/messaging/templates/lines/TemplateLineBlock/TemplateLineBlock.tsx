@@ -62,7 +62,10 @@ function LastSync({ at }: { at: string | undefined }) {
 }
 
 /** The newer of two syncs by checked_at (a move's re-sync on the server beats an older session result). */
-export function newerSync(a: TemplateLineSync | null, b: TemplateLineSync | null): TemplateLineSync | null {
+export function newerSync(
+  a: TemplateLineSync | null,
+  b: TemplateLineSync | null,
+): TemplateLineSync | null {
   if (!a || !b) return a ?? b;
   return Date.parse(a.checked_at) >= Date.parse(b.checked_at) ? a : b;
 }

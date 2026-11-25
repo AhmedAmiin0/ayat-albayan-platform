@@ -7,8 +7,11 @@ import { FixedTopBarLayout } from './FixedTopBarLayout';
 const path = vi.hoisted(() => ({ current: '/sales/inbox' }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
-  useRouterState: ({ select }: { select: (s: { resolvedLocation: { pathname: string } }) => string }) =>
-    select({ resolvedLocation: { pathname: path.current } }),
+  useRouterState: ({
+    select,
+  }: {
+    select: (s: { resolvedLocation: { pathname: string } }) => string;
+  }) => select({ resolvedLocation: { pathname: path.current } }),
   useNavigate: () => vi.fn(),
 }));
 vi.mock('@ab/web-kit/auth/me/me', async () => ({
@@ -57,7 +60,9 @@ describe('FixedTopBarLayout', () => {
     expect(row?.className.split(' ')).toContain('min-[1340px]:hidden');
     expect(row?.className.split(' ')).not.toContain('shell:hidden');
     const bell = screen.getByRole('button', { name: t.bell.open });
-    expect((riyadh[0]?.compareDocumentPosition(bell) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      (riyadh[0]?.compareDocumentPosition(bell) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     // The inline copy drops the running head's 54px row height.
     expect(header().querySelector('.min-h-\\[54px\\]')).toBeNull();
   });

@@ -22,7 +22,14 @@ export interface SubmitTemplateDialogProps {
  * The explicit confirm before a template goes to Meta for review (T3): the admin sees the exact
  * text, footer, variables and buttons that will be submitted, and the number (WABA) it goes to. Never automatic.
  */
-export function SubmitTemplateDialog({ template: tpl, phone, facts, busy, onConfirm, onClose }: SubmitTemplateDialogProps) {
+export function SubmitTemplateDialog({
+  template: tpl,
+  phone,
+  facts,
+  busy,
+  onConfirm,
+  onClose,
+}: SubmitTemplateDialogProps) {
   const name = templateName(tpl.key);
   return (
     <Dialog

@@ -19,7 +19,11 @@ describe('trialDateDraft (owner 2026-10-25, R-SCH-06)', () => {
 
   it('without an upcoming trial books a new lesson', () => {
     const h = history({ upcoming_id: null, items: [row({ outcome: 'absent' })] });
-    expect(trialDateDraft({ student, history: h }).trialDate).toEqual({ upcomingId: null, upcomingAt: null, count: 1 });
+    expect(trialDateDraft({ student, history: h }).trialDate).toEqual({
+      upcomingId: null,
+      upcomingAt: null,
+      count: 1,
+    });
     expect(upcomingRow(h)).toBeNull();
   });
 

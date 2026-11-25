@@ -19,7 +19,13 @@ function legacyText(entry: NotificationEntryView): string | null {
 }
 
 /** renewal_due is shown by reference to the values page. */
-export function TimingPart({ entry, row }: { entry: NotificationEntryView; row: RuleRowState | null }) {
+export function TimingPart({
+  entry,
+  row,
+}: {
+  entry: NotificationEntryView;
+  row: RuleRowState | null;
+}) {
   const clock = useClock();
   if (entry.key === 'renewal_due') {
     return (
@@ -40,7 +46,14 @@ export function TimingPart({ entry, row }: { entry: NotificationEntryView; row: 
   if (entry.key === 'lesson_join_link') return <span className="text-xs text-ink-2">{tm.withReminder}</span>;
   if (row?.draft.timing) {
     const error = row.result.ok ? null : row.result.error;
-    return <TimingEditor draft={row.draft.timing} onChange={(timing) => row.set({ timing })} disabled={row.saving} error={error} />;
+    return (
+      <TimingEditor
+        draft={row.draft.timing}
+        onChange={(timing) => row.set({ timing })}
+        disabled={row.saving}
+        error={error}
+      />
+    );
   }
   const text = entry.rule ? timingText(entry.key, entry.rule.timing, clock) : null;
   const shown = text ?? legacyText(entry);

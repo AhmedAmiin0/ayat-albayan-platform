@@ -65,7 +65,11 @@ export function CheckboxFilterField({ label, checked, onChange }: CheckboxFilter
 }
 
 /** The chip of one page filter when it is set (`text` = what the chip shows); none when unset. */
-export function chipIfSet(chip: Omit<FilterChip, 'value'> & { value: string | undefined; text?: string | undefined }): FilterChip[] {
+export function chipIfSet(
+  chip: Omit<FilterChip, 'value'> & { value: string | undefined; text?: string | undefined },
+): FilterChip[] {
   if (!chip.value) return [];
-  return [{ id: chip.id, label: chip.label, value: chip.text ?? chip.value, onRemove: chip.onRemove }];
+  return [
+    { id: chip.id, label: chip.label, value: chip.text ?? chip.value, onRemove: chip.onRemove },
+  ];
 }

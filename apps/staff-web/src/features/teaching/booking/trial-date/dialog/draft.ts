@@ -21,7 +21,9 @@ export interface TrialDraftInput {
 
 /** The upcoming trial a new date would move (history.upcoming_id), else null. */
 export const upcomingRow = (history: TrialHistory) =>
-  history.upcoming_id ? (history.items.find((r) => r.lesson_id === history.upcoming_id) ?? null) : null;
+  history.upcoming_id
+    ? (history.items.find((r) => r.lesson_id === history.upcoming_id) ?? null)
+    : null;
 
 /** The wizard's starting draft: a trial for this one student; the API moves the upcoming trial. */
 export function trialDateDraft({ student, history, facts = {} }: TrialDraftInput): BookingDraft {
@@ -32,7 +34,11 @@ export function trialDateDraft({ student, history, facts = {} }: TrialDraftInput
     program: facts.program ?? history.program ?? 'quran',
     genderPref: facts.genderPref ?? history.teacher_gender_pref ?? null,
     durationMin: trialLength(history), // the last trial's length (shared with mobile), changeable
-    trialDate: { upcomingId: history.upcoming_id, upcomingAt: upcomingRow(history)?.starts_at ?? null, count: history.count },
+    trialDate: {
+      upcomingId: history.upcoming_id,
+      upcomingAt: upcomingRow(history)?.starts_at ?? null,
+      count: history.count,
+    },
   };
 }
 

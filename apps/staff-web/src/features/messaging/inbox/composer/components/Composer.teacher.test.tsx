@@ -22,7 +22,9 @@ function show(role: 'admin' | 'teacher') {
     return [];
   });
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <Composer thread={THREAD as never} context={{}} />
     </QueryClientProvider>,
   );

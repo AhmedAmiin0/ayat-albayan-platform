@@ -29,7 +29,11 @@ export const registerDrafts = {
  * occurrence, a week after what the review showed) with the other picks, back on the slot step at most,
  * and `droppedPast` says so (the dialog shows one line about it).
  */
-export function resumable(saved: RegisterDraft | undefined, leadId: string | null, now: Date): Resumed | undefined {
+export function resumable(
+  saved: RegisterDraft | undefined,
+  leadId: string | null,
+  now: Date,
+): Resumed | undefined {
   if (saved?.draft.leadId !== leadId) return undefined;
   const at = saved.draft.startsAt;
   if (!at || Date.parse(at) > now.getTime()) return saved;

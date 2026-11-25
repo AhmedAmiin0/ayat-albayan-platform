@@ -10,7 +10,8 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 const r = t.notificationRules;
 
 /** Same queued count as GET /messages/gate. */
-export const queuedWords = (n: number): string => (n === 0 ? r.strip.queued.zero : counted(r.strip.queued, n));
+export const queuedWords = (n: number): string =>
+  n === 0 ? r.strip.queued.zero : counted(r.strip.queued, n);
 
 /** Every row's send state depends on the sending and automatic-messages switches (docs/26b §3). */
 export function RulesStateStrip({ settings }: { settings: AcademySettings }) {

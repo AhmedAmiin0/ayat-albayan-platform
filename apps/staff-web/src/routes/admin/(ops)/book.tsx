@@ -15,7 +15,9 @@ function BookRoute() {
   return (
     <BookingPage
       search={search}
-      onOpenStudent={(studentId, kind) => void navigate({ search: (prev) => searchForStudent(prev, studentId, kind) })}
+      onOpenStudent={(studentId, kind) =>
+        void navigate({ search: (prev) => searchForStudent(prev, studentId, kind) })
+      }
     />
   );
 }

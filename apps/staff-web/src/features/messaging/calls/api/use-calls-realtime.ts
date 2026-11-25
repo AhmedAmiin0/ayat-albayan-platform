@@ -12,6 +12,9 @@ export function useCallsRealtime(enabled: boolean): void {
   const client = useQueryClient();
   useEffect(() => {
     if (!enabled) return;
-    return subscribeCalls(supabase, () => void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: isCallsData }));
+    return subscribeCalls(
+      supabase,
+      () => void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: isCallsData }),
+    );
   }, [enabled, client]);
 }
