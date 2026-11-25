@@ -4,33 +4,17 @@
 // characters.
 import { randomUUID } from 'node:crypto';
 import { stubLines } from './lines.ts';
-import {
-  defaultChatTemplates,
-  defaultTemplates,
-  ERR,
-  onWaba,
-  type Json,
-  type StubTemplate,
-} from './providers/meta.ts';
-import type { Reply, StubOptions, StubState } from './state.ts';
-
-/** createStub's and /__stub/reset's templates: the given (or default) ones and the starter. */
-export function initialTemplates(opts: StubOptions): StubTemplate[] {
-  const chat = stubLines(opts)[1];
-  return [
-    ...(opts.templates ?? defaultTemplates()),
-    ...(chat ? defaultChatTemplates(chat.wabaId) : []),
-  ];
-}
+import { ERR, onWaba, type Json, type StubTemplate } from './providers/meta.ts';
+import type { Reply, StubState } from './state.ts';
 
 const MEDIA_HEADERS = new Set(['DOCUMENT', 'IMAGE', 'VIDEO']);
 
 const example = (c: Json, field: string): unknown => (c.example as Json | undefined)?.[field];
+const firstRow = (rows: unknown): unknown => (Array.isArray(rows) ? rows[0] : undefined);
 
 function headerError(s: StubState, c: Json): Json | null {
   if (!MEDIA_HEADERS.has(String(c.format ?? ''))) return null;
-  const handles = example(c, 'header_handle');
-  const h: unknown = Array.isArray(handles) ? handles[0] : undefined;
+  const h = firstRow(example(c, 'header_handle'));
   if (typeof h !== 'string')
     return ERR.invalid(
       'component of type HEADER is missing expected field(s) (example.header_handle)',
@@ -38,21 +22,18 @@ function headerError(s: StubState, c: Json): Json | null {
   return s.handles.has(h) ? null : ERR.invalid(`header_handle ${h} is not an uploaded file`);
 }
 
+const filled = (values: unknown, vars: number): boolean =>
+  Array.isArray(values) &&
+  values.length === vars &&
+  values.every((v) => typeof v === 'string' && v.trim());
+
 function bodyError(c: Json): Json | null {
   const text = String(c.text ?? '').trim();
   if (/^\{\{\d+\}\}|\{\{\d+\}\}$/.test(text))
     return ERR.invalid("Variables can't be at the start or end of the template.");
   const vars = new Set(text.match(/\{\{\d+\}\}/g) ?? []).size;
-  if (!vars) return null;
-  const rows = example(c, 'body_text');
-  const values: unknown = Array.isArray(rows) ? rows[0] : undefined;
-  const ok =
-    Array.isArray(values) &&
-    values.length === vars &&
-    values.every((v) => typeof v === 'string' && v.trim());
-  return ok
-    ? null
-    : ERR.invalid(`component of type BODY needs example.body_text with ${vars} values`);
+  if (!vars || filled(firstRow(example(c, 'body_text')), vars)) return null;
+  return ERR.invalid(`component of type BODY needs example.body_text with ${vars} values`);
 }
 
 /** Meta's button limits: at most 10, a QUICK_REPLY text 1..25 characters (lesson_rating has 3). */
@@ -91,32 +72,36 @@ const componentsOf = (body: Json): Json[] =>
 const ownWaba = (s: StubState, wabaId: string): string | undefined =>
   stubLines(s.opts).some((l) => l.wabaId === wabaId) ? wabaId : undefined;
 
+type Draft = Pick<StubTemplate, 'name' | 'language' | 'category' | 'components'>;
+
+const draftOf = (body: Json): Draft => ({
+  name: String(body.name ?? ''),
+  language: String(body.language ?? 'ar'),
+  category: String(body.category ?? 'UTILITY').toUpperCase(),
+  components: componentsOf(body),
+});
+
+function createRefusal(s: StubState, d: Draft, wabaId: string): Reply | null {
+  if (!/^[a-z0-9_]{1,512}$/.test(d.name)) return [400, ERR.badName(d.name)];
+  const same = (t: StubTemplate) =>
+    t.name === d.name && t.language === d.language && onWaba(t, wabaId);
+  if (s.templates.some(same)) return [400, ERR.duplicate(d.name)];
+  const invalid = componentsError(s, d.components);
+  return invalid ? [400, invalid] : null;
+}
+
 export function createTemplate(s: StubState, input: { body: Json; wabaId: string }): Reply {
-  const { body } = input;
-  const name = String(body.name ?? '');
-  const language = String(body.language ?? 'ar');
+  const d = draftOf(input.body);
+  const refused = createRefusal(s, d, input.wabaId);
+  if (refused) return refused;
   const wabaId = ownWaba(s, input.wabaId);
-  if (!/^[a-z0-9_]{1,512}$/.test(name)) return [400, ERR.badName(name)];
-  if (
-    s.templates.some((t) => t.name === name && t.language === language && onWaba(t, input.wabaId))
-  )
-    return [400, ERR.duplicate(name)];
-  const components = componentsOf(body);
-  const invalid = componentsError(s, components);
-  if (invalid) return [400, invalid];
-  const category = String(body.category ?? 'UTILITY').toUpperCase();
   const t: StubTemplate = {
-    id: randomUUID(),
-    name,
-    language,
-    category,
-    status: 'PENDING',
-    quality: 'UNKNOWN',
-    components,
+    ...{ id: randomUUID(), name: d.name, language: d.language, category: d.category },
+    ...{ status: 'PENDING', quality: 'UNKNOWN', components: d.components },
     ...(wabaId ? { wabaId } : {}),
   };
   s.templates.push(t);
-  return [200, { id: t.id, status: t.status, category }];
+  return [200, { id: t.id, status: t.status, category: d.category }];
 }
 
 /** POST /{template id}: Meta's edit of a rejected / paused template; it goes back to review. */
@@ -133,6 +118,13 @@ export function editTemplate(s: StubState, id: string, body: Json): Reply {
   return [200, { success: true }];
 }
 
+function applyReview(t: StubTemplate, body: Json): StubTemplate {
+  t.status = String(body.status ?? t.status);
+  t.quality = String(body.quality ?? t.quality);
+  if (typeof body.rejected_reason === 'string') t.rejectedReason = body.rejected_reason;
+  return t;
+}
+
 /**
  * POST /__stub/templates/{name}: Meta's review result. `waba` picks the template on that WABA (the
  * same name may exist on both numbers); `rejected_reason` is what GET message_templates answers.
@@ -142,9 +134,6 @@ export function reviewTemplate(s: StubState, input: { name: string; body: Json }
   const waba = typeof body.waba === 'string' ? body.waba : undefined;
   const named = s.templates.filter((x) => x.name === name && (!waba || onWaba(x, waba)));
   const t = named.find((x) => x.wabaId === waba) ?? named[0];
-  if (!t) return [404, { error: `no template ${name}${waba ? ` on ${waba}` : ''}` }];
-  t.status = String(body.status ?? t.status);
-  t.quality = String(body.quality ?? t.quality);
-  if (typeof body.rejected_reason === 'string') t.rejectedReason = body.rejected_reason;
-  return [200, t];
+  const where = waba ? ` on ${waba}` : '';
+  return t ? [200, applyReview(t, body)] : [404, { error: `no template ${name}${where}` }];
 }

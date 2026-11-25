@@ -10,6 +10,23 @@ import { V } from './graph.ts';
 
 const ACTIONS = ['connect', 'pre_accept', 'accept', 'reject', 'terminate'];
 
+/** connect starts a call, so the stub mints its wacid; every other action names its call. */
+const callIdOf = (action: string, body: Json): string =>
+  action === 'connect' ? `wacid.stub-${randomUUID()}` : String(body.call_id ?? '');
+
+const answerOf = (action: string, id: string): Json =>
+  action === 'connect'
+    ? { messaging_product: 'whatsapp', calls: [{ id }] }
+    : { messaging_product: 'whatsapp', success: true };
+
+const callLog = (m: RegExpExecArray, body: Json, call: { action: string; id: string }): Json => ({
+  phoneNumberId: m[1] ?? '',
+  action: call.action,
+  callId: call.id,
+  to: body.to ?? null,
+  ref: body.biz_opaque_callback_data ?? null,
+});
+
 const callsRoute: Route = [
   'POST',
   new RegExp(`^${V}/([^/]+)/calls$`),
@@ -17,21 +34,10 @@ const callsRoute: Route = [
     const body = await readJson(req);
     const action = String(body.action ?? '');
     if (!ACTIONS.includes(action)) return [400, metaError(100, 'Invalid parameter', 'action')];
-    const id = action === 'connect' ? `wacid.stub-${randomUUID()}` : String(body.call_id ?? '');
+    const id = callIdOf(action, body);
     if (!id) return [400, metaError(100, 'Invalid parameter', 'call_id is required')];
-    s.calls.push({
-      phoneNumberId: m[1] ?? '',
-      action,
-      callId: id,
-      to: body.to ?? null,
-      ref: body.biz_opaque_callback_data ?? null,
-    });
-    return [
-      200,
-      action === 'connect'
-        ? { messaging_product: 'whatsapp', calls: [{ id }] }
-        : { messaging_product: 'whatsapp', success: true },
-    ];
+    s.calls.push(callLog(m, body, { action, id }));
+    return [200, answerOf(action, id)];
   },
 ];
 
@@ -72,17 +78,30 @@ export interface CallSpec {
   phoneNumberId?: string;
 }
 
+interface Side {
+  peer: (peer: string) => Json;
+  sdpType: string;
+}
+const INBOUND: Side = { peer: (peer) => ({ from: peer }), sdpType: 'offer' };
+const OUTBOUND: Side = { peer: (peer) => ({ to: peer }), sdpType: 'answer' };
+
+/** The family calls us (USER_INITIATED) with an offer; any other direction is our call. */
+const sideOf = (direction: string): Side => (direction === 'USER_INITIATED' ? INBOUND : OUTBOUND);
+
+/** The optional parts of a call item, in Meta's key order; each is left out when not given. */
+const OPTIONAL: ((spec: CallSpec, side: Side) => Json)[] = [
+  (spec, side) => side.peer(spec.peer),
+  (spec, side) => (spec.sdp ? { session: { sdp_type: side.sdpType, sdp: spec.sdp } } : {}),
+  (spec) => (spec.status ? { status: spec.status } : {}),
+  (spec) => (spec.duration === undefined ? {} : { duration: spec.duration }),
+  (spec) => (spec.ref ? { biz_opaque_callback_data: spec.ref } : {}),
+];
+
 function callPart(spec: CallSpec, timestamp: string): Json {
   const direction = spec.direction ?? 'USER_INITIATED';
-  const inbound = direction === 'USER_INITIATED';
-  return {
-    ...{ id: spec.callId, event: spec.event, direction, timestamp },
-    ...(inbound ? { from: spec.peer } : { to: spec.peer }),
-    ...(spec.sdp ? { session: { sdp_type: inbound ? 'offer' : 'answer', sdp: spec.sdp } } : {}),
-    ...(spec.status ? { status: spec.status } : {}),
-    ...(spec.duration === undefined ? {} : { duration: spec.duration }),
-    ...(spec.ref ? { biz_opaque_callback_data: spec.ref } : {}),
-  };
+  const head: Json = { id: spec.callId, event: spec.event, direction, timestamp };
+  const side = sideOf(direction);
+  return OPTIONAL.reduce((item, part) => ({ ...item, ...part(spec, side) }), head);
 }
 
 export function callValue(spec: CallSpec): Json {
