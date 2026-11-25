@@ -10,7 +10,12 @@ export const googleSettingsSchema = z
   .object({
     enabled: z.boolean().optional(),
     mode: z.enum(GOOGLE_SYNC_MODES).optional(),
-    window_days: z.number().int().min(GOOGLE_WINDOW_DAYS.min).max(GOOGLE_WINDOW_DAYS.max).optional(),
+    window_days: z
+      .number()
+      .int()
+      .min(GOOGLE_WINDOW_DAYS.min)
+      .max(GOOGLE_WINDOW_DAYS.max)
+      .optional(),
   })
   .strict();
 export type GoogleSettingsInput = z.infer<typeof googleSettingsSchema>;
@@ -27,9 +32,13 @@ export const googleStudentMapSchema = z
 export type GoogleStudentMapInput = z.infer<typeof googleStudentMapSchema>;
 
 /** PUT /admin/google/drive: confirm the root folder and the summary sheet found by discovery. */
-export const googleDriveSchema = z.object({ root_folder_id: fileId, summary_sheet_id: fileId.nullable() }).strict();
+export const googleDriveSchema = z
+  .object({ root_folder_id: fileId, summary_sheet_id: fileId.nullable() })
+  .strict();
 export type GoogleDriveInput = z.infer<typeof googleDriveSchema>;
 
 /** PUT /admin/google/teachers/:id/calendar-owner: who builds the teacher's calendar. */
-export const teacherCalendarOwnerSchema = z.object({ owner: z.enum(TEACHER_CALENDAR_OWNERS) }).strict();
+export const teacherCalendarOwnerSchema = z
+  .object({ owner: z.enum(TEACHER_CALENDAR_OWNERS) })
+  .strict();
 export type TeacherCalendarOwnerInput = z.infer<typeof teacherCalendarOwnerSchema>;
