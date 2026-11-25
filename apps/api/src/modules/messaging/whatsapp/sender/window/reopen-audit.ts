@@ -6,7 +6,7 @@ const last4 = (phone: string): string => `…${phone.slice(-4)}`;
 const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
- * The starter template a send queued after the window (owner 2026-11-07: only a send queues it),
+ * The starter template a send queued after the window (only a send queues it),
  * audited as `thread_reopen_template` under the staff member who pressed send (the row's
  * created_by), as the old on-open path audited it. Never throws: the template is queued, so a
  * lost audit line never fails the held message.

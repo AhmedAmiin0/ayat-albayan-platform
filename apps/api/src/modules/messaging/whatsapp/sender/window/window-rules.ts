@@ -10,7 +10,7 @@ import {
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 
-// The 24 h window's pure rules (owner 2026-11-03): which refusal is the window, which row the
+// The 24 h window's pure rules: which refusal is the window, which row the
 // window holds, which template may reopen it, and which held rows the family has answered.
 
 /** How long a text waits for the family's reply, from when it was written. */
@@ -60,7 +60,7 @@ const needsNoValue = (t: TemplateView): boolean =>
   t.params.length === 0 && !t.buttons.some((b) => b.type === 'url' && b.url.includes(URL_PARAM));
 
 /**
- * The `chat_reopen_template` rule (owner 2026-11-03): an approved template of the chat line that
+ * The `chat_reopen_template` rule: an approved template of the chat line that
  * a restricted role may send (sales_starter, never a PDF or own-button one), with no variables.
  * Anything else (unset, unknown, pending, another line, variables) reopens nothing.
  */

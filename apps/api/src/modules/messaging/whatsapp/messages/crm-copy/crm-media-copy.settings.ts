@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';
 
-/** The copy-all switch (owner 2026-10-27) and the CRM storage host it copies from (crm-history). */
+/** The copy-all switch and the CRM storage host it copies from (crm-history). */
 const KEYS = ['crm_media_copy_all', 'crm_media_host'] as const satisfies readonly SettingKey[];
 type CrmMediaCopySettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

@@ -25,7 +25,7 @@ export class MessageViews {
     private readonly templates: TemplatesRepo,
     private readonly storage: StorageService,
     private readonly names: TemplateNames,
-    /** A row sent through the CRM shows the CRM template's own text (owner 2026-11-07). */
+    /** A row sent through the CRM shows the CRM template's own text. */
     @Optional() @Inject(CrmSentText) private readonly crmSent?: CrmSentText,
   ) {}
 
@@ -59,7 +59,7 @@ export class MessageViews {
 }
 
 /**
- * The header, footer and buttons WhatsApp drew around the body (owner 2026-10-28), from the
+ * The header, footer and buttons WhatsApp drew around the body, from the
  * registry
  * row of its key (cached: one read per key, never one per row). Only when the body is the
  * template's

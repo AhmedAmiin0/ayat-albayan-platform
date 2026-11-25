@@ -6,7 +6,7 @@ import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message
 import { MessagesRepo } from '@/modules/messaging/whatsapp/messages/messages.repo';
 import { MessagesService } from '@/modules/messaging/whatsapp/messages/messages.service';
 
-// Owner 2026-11-06: a staff retry of a held text that failed (reopen_*) starts its 7-day hold
+// A staff retry of a held text that failed (reopen_*) starts its 7-day hold
 // again from the retry, held at once (never tried as free text), not from the old created_at.
 
 function serviceOf(errorCode: string) {

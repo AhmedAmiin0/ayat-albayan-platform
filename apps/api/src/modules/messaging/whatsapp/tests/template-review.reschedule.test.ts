@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { bodyExamples, templateProblem } from '@/modules/messaging/whatsapp/template-review';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// The reschedule starter (owner 2026-10-18), exactly as migration 460 seeds it: Meta's rules accept it.
+// The reschedule starter, exactly as migration 460 seeds it: Meta's rules accept it.
 const BODY = 'السلام عليكم {{1}}،\nنودّ إعادة جدولة موعد الحلقة التجريبية.\nما الوقت الذي يناسبكم؟';
 
 describe('trial_reschedule passes the submit checks', () => {

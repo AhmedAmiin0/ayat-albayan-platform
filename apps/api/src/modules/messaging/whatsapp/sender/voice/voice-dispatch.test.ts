@@ -4,7 +4,7 @@ import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { WaError, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { refusedNow, sendVoiceById, type VoiceAt } from './voice-dispatch';
 
-// 2026-11-14: the ogg by uploaded media id; a refused upload or send → the m4a once, by link.
+// The ogg by uploaded media id; a refused upload or send → the m4a once, by link.
 
 const OGG_PATH = 'out/u1/r1/voice.ogg';
 const M4A_PATH = 'out/u1/r1/voice.m4a';

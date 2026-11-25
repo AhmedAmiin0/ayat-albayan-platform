@@ -2,7 +2,7 @@ import type { Json } from '@ab/db';
 import type { TemplateButtonKind, TemplateDisplay, TemplateDisplayButton, TemplateHeader, TemplateHeaderKind } from '@ab/shared';
 import type { Component } from './template-sync';
 
-// message_templates.display from Meta's components (owner 2026-10-28): what the guardian SEES, so the
+// message_templates.display from Meta's components: what the guardian SEES, so the
 // chat draws the template like WhatsApp. Every button is kept, the ones the sender cannot model too.
 
 const HEADERS: Record<string, TemplateHeaderKind> = {

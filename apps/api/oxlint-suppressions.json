@@ -4927,12 +4927,12 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/messaging/whatsapp/direct/tests/code-send.line.test.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/direct/tests/code-send.test.ts": {
@@ -5028,11 +5028,6 @@
     }
   },
   "src/modules/messaging/whatsapp/drivers/meta/graph.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/drivers/meta/meta-reaction.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -5140,7 +5135,7 @@
   },
   "src/modules/messaging/whatsapp/live-client.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copier.ts": {
@@ -5158,7 +5153,7 @@
   },
   "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.job.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.repo.ts": {
@@ -5192,7 +5187,7 @@
   },
   "src/modules/messaging/whatsapp/messages/crm-copy/tests/crm-media-copy.job.test.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/messages/crm-copy/tests/crm-media-copy.outage.test.ts": {
@@ -5284,12 +5279,7 @@
   },
   "src/modules/messaging/whatsapp/messages/inbound-media/tests/inbound-media.numbers.test.ts": {
     "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/inbound-media/tests/inbound-media.repo.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 3
     }
   },
   "src/modules/messaging/whatsapp/messages/inbound-media/tests/inbound-media.service.test.ts": {
@@ -5304,7 +5294,7 @@
   },
   "src/modules/messaging/whatsapp/messages/inbound-media/wa-media.retention.job.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/messages/message.mapper.ts": {
@@ -5362,11 +5352,6 @@
     },
     "typescript/no-deprecated": {
       "count": 3
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/tests/message.views.block.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/messages/tests/wa-components.media.test.ts": {
@@ -5448,11 +5433,6 @@
   "src/modules/messaging/whatsapp/numbers/route.repo.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/modules/messaging/whatsapp/numbers/tests/media-client.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/numbers/tests/number-clients.test.ts": {
@@ -5548,7 +5528,7 @@
   },
   "src/modules/messaging/whatsapp/sender/sender.due.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -5595,7 +5575,7 @@
   },
   "src/modules/messaging/whatsapp/sender/tests/message.dispatch.reaction.test.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/sender/tests/message.dispatch.voice.test.ts": {
@@ -5663,11 +5643,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/sender/tests/send-plan.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/sender/tests/sender-timing.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -5704,11 +5679,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/templates/catalog/template-manager.guard.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/whatsapp/templates/catalog/template.mapper.ts": {
     "stylistic/max-len": {
       "count": 8
@@ -5716,7 +5686,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
@@ -5755,7 +5725,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/tests/template.registry.lines.test.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/tests/template.registry.sync.test.ts": {
@@ -5776,7 +5746,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/tests/templates.restricted.http.test.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/tests/templates.starter.http.test.ts": {
@@ -5797,7 +5767,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-import.ts": {
@@ -5805,7 +5775,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 10
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -5813,7 +5783,7 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/template-line-sync.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-move.ts": {
@@ -5910,7 +5880,7 @@
   },
   "src/modules/messaging/whatsapp/templates/sync/tests/templates.lines.http.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/tests/templates.numbers.http.test.ts": {
@@ -5930,22 +5900,12 @@
   },
   "src/modules/messaging/whatsapp/tests/meta-callers.test-util.ts": {
     "stylistic/max-len": {
-      "count": 6
-    }
-  },
-  "src/modules/messaging/whatsapp/tests/restricted-templates.migration.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 5
     }
   },
   "src/modules/messaging/whatsapp/tests/settings-readers.app.test.ts": {
     "stylistic/max-len": {
       "count": 6
-    }
-  },
-  "src/modules/messaging/whatsapp/tests/template-review.reschedule.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/tests/template-review.test.ts": {
@@ -5988,19 +5948,9 @@
       "count": 3
     }
   },
-  "src/modules/messaging/whatsapp/tests/whatsapp.sales.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/whatsapp/tests/whatsapp.settings.test.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/modules/messaging/whatsapp/tests/whatsapp.teacher.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/tests/whatsapp.upload.test.ts": {

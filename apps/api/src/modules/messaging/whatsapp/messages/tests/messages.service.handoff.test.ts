@@ -5,7 +5,7 @@ import { MessagesService } from '@/modules/messaging/whatsapp/messages/messages.
 import type { MessagesRepo } from '@/modules/messaging/whatsapp/messages/messages.repo';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
-// M3 hand-off of a file staff sent from the chat (owner 2026-10-19 #2): wa.me cannot carry it.
+// M3 hand-off of a file staff sent from the chat: wa.me cannot carry it.
 
 const ID = 'b0000000-0000-4000-8000-000000000009';
 

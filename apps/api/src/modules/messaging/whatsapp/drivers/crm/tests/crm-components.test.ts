@@ -4,7 +4,7 @@ import { crmTemplates } from '@/modules/messaging/whatsapp/drivers/crm/crm-templ
 import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// The CRM's own template text kept as Meta components (owner 2026-11-07). No network.
+// The CRM's own template text kept as Meta components. No network.
 
 const parse = (raw: unknown) => crmComponents(crmTextSchema.parse(raw));
 const REMINDER = {

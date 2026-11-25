@@ -4,7 +4,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { FOOTER, sentViews } from '@/modules/messaging/whatsapp/messages/crm-sent/tests/crm-sent.fakes';
 
-// URL buttons of a CRM template, filled from what the driver sent (owner 2026-11-07).
+// URL buttons of a CRM template, filled from what the driver sent.
 
 const FAMILY = templateRow({
   key: 'lesson_reminder_meet',

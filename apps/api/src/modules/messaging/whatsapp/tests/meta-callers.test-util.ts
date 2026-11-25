@@ -16,7 +16,7 @@ const WHITELIST = new Set([
   'modules/messaging/whatsapp/drivers/meta/meta-upload.ts',
   'modules/messaging/whatsapp/messages/inbound-media/inbound-media.service.ts',
   'modules/messaging/whatsapp/drivers/kapso/kapso.ts',
-  // Kapso's own conversation record (owner 2026-10-26): its Platform API, beside the Meta proxy.
+  // Kapso's own conversation record: its Platform API, beside the Meta proxy.
   'modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts',
   'modules/messaging/whatsapp/lines/lines.check.ts',
   // The switch preflight (docs/19): one read-only GET of subscribed apps.
@@ -53,7 +53,7 @@ const WHITELIST = new Set([
   // WhatsApp voice calls (docs/28): the one Kapso calling client, one request per method, never a retry.
   'modules/messaging/calls/kapso/kapso-calls.ts',
   'modules/messaging/whatsapp/whatsapp.types.ts',
-  // Kapso's message history (owner report 2026-10-26): read-only GETs that store messages sent outside the app.
+  // Kapso's message history: read-only GETs that store messages sent outside the app.
   'modules/messaging/webhook/external/kapso-history.ts',
 ]);
 

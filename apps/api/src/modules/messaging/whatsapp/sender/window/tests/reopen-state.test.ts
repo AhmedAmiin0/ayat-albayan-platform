@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { nextReopenKey, orphaned, reopenLive, reopenRequested } from '@/modules/messaging/whatsapp/sender/window/reopen-state';
 import { NOW, PHONE, reopenOf } from '@/modules/messaging/whatsapp/sender/window/window.fakes';
 
-// Which reopen template rows count (merge-gate review 2026-11-05). Pure.
+// Which reopen template rows count (merge-gate review). Pure.
 
 const DAY = `reopen:${PHONE}:2026-11-03`;
 

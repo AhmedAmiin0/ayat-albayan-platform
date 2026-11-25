@@ -12,7 +12,7 @@ import { crmJson, type CrmConn } from './crm-http';
 // from Meta first) as MetaTemplate[], and POST templates with the CRM dashboard's TemplatePayload.
 
 /**
- * ponytail: one page of 100 (crmJson keeps `data` only; the academy has ~12). Page on
+ * One page of 100 (crmJson keeps `data` only; the academy has ~12). Page on
  * meta.next_cursor past that.
  */
 const LIST_PATH = 'templates?sync=1&limit=100';
