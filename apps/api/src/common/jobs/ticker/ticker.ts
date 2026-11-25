@@ -47,17 +47,23 @@ export class Ticker {
   start(timing: TickerTiming = this.opts): void {
     const method = this.opts.timer ?? 'tick';
     const fire = () => void this[method]();
-    const every = () => this.every(fire, timing.everyMs);
-    const first = () => {
-      fire();
-      every();
-    };
-    const fromFirst = (timing.intervalFrom ?? this.opts.intervalFrom) === 'first';
-    if (!fromFirst) every();
-    this.timers.push(setTimeout(fromFirst ? first : fire, timing.firstMs).unref());
+    this.timers.push(setTimeout(this.firstRun(fire, timing), timing.firstMs).unref());
     // Interval jobs only: a one-shot boot job has no interval to be late against.
     const { everyMs, firstMs } = timing;
     if (everyMs !== undefined) this.beats.register({ name: this.opts.name, firstMs, everyMs });
+  }
+
+  /** The first timer's callback; an interval from boot starts now, one from the first run then. */
+  private firstRun(fire: () => void, timing: TickerTiming): () => void {
+    const every = () => this.every(fire, timing.everyMs);
+    if ((timing.intervalFrom ?? this.opts.intervalFrom) !== 'first') {
+      every();
+      return fire;
+    }
+    return () => {
+      fire();
+      every();
+    };
   }
 
   private every(fire: () => void, everyMs: number | undefined): void {

@@ -83,7 +83,8 @@ export class GoogleSyncJob extends TickerJob {
       void this.reconcile();
       this.planReconcile();
     };
-    this.daily = this.ticker.stopping ? null : setTimeout(next, msUntilReconcile(new Date())).unref();
+    const wait = msUntilReconcile(new Date());
+    this.daily = this.ticker.stopping ? null : setTimeout(next, wait).unref();
   }
 
   /** Passes until one was not full or was stopped (a lost grant); a failed pass is logged. */
