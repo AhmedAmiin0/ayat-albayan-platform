@@ -6,6 +6,7 @@ import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-cl
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
 import { setLoginNotice } from '../../auth/login-notice';
+import { measuredStorage } from '../log/boot';
 import { supabase } from '../http/supabase';
 
 // R-MOB-03: reads survive a restart or a dead connection (the last good answer stays on screen).
@@ -47,7 +48,7 @@ for (const queryKey of RESUME_OWNED) queryClient.setQueryDefaults(queryKey, NO_F
 export const PERSIST_THROTTLE_MS = 5_000;
 
 export const persister = createAsyncStoragePersister({
-  storage: AsyncStorage,
+  storage: measuredStorage(AsyncStorage),
   key: 'ab-query-cache',
   throttleTime: PERSIST_THROTTLE_MS,
 });
