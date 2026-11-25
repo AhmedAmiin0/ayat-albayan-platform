@@ -2,10 +2,12 @@ import { existsSync, readFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import type { FoldArgs } from './args/index.ts';
 import type { FolderPlan } from '../plan/plan.types.ts';
+import type { FloatingUnit } from '../scan/scan.types.ts';
 import { ghIn, openPrDirs, readOpenPrs } from '../plan/open-prs.ts';
 import { planFolders } from '../plan/plan.ts';
 import { pathRefs } from '../plan/refs.ts';
 import { folderLines, summaryLines, treeLines } from '../plan/report.ts';
+import { componentUnitsIn, holdsComponent } from '../scan/components.ts';
 import { trackedFiles } from '../scan/tree.ts';
 import { applyPlans } from '../write/apply.ts';
 import { parseFoldArgs } from './args/index.ts';
@@ -24,8 +26,12 @@ function plansOf(args: FoldArgs, io: FoldIo): FolderPlan[] {
   const prDirs = args.skipOpenPrs
     ? openPrDirs(readOpenPrs(ghIn(io.root)))
     : new Map<string, number[]>();
-  const refs = pathRefs(paths, readIn(io.root));
-  return planFolders({ paths, refs, prDirs, ...(only.length > 0 ? { only } : {}) });
+  const read = readIn(io.root);
+  const refs = pathRefs(paths, read);
+  const scan = (dir: string, names: readonly string[]): FloatingUnit[] =>
+    componentUnitsIn(dir, names, (path) => holdsComponent(read(path), path));
+  const scanned = args.components ? { scan } : {};
+  return planFolders({ paths, refs, prDirs, ...scanned, ...(only.length > 0 ? { only } : {}) });
 }
 
 function dryRun(plans: FolderPlan[], args: FoldArgs, io: FoldIo): void {
@@ -43,7 +49,7 @@ function write(plans: FolderPlan[], io: FoldIo): void {
   done.json.forEach((f) => io.log(`  baseline keys: ${f}`));
 }
 
-/** `pnpm units:fold -- --dry-run | --write --paths <dir...> [--skip-open-prs]` */
+/** `pnpm units:fold -- --dry-run | --write --paths <dir...> [--skip-open-prs] [--components]` */
 export function runFold(argv: readonly string[], io: FoldIo): void {
   const args = parseFoldArgs(argv);
   const plans = plansOf(args, io);

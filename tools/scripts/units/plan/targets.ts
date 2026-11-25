@@ -9,7 +9,7 @@ const TESTS_MIN = 2;
 const OWN_TEST = /^(?:test|spec)\.[cm]?[jt]sx?$/;
 
 const HOMES: Record<UnitAction, (u: FloatingUnit) => string> = {
-  fold: (u) => posix.join(u.dir, u.name),
+  fold: (u) => posix.join(u.dir, u.rename ?? u.name),
   tests: (u) => u.dir,
 };
 
@@ -27,14 +27,25 @@ function testMoves(from: string, to: string, tracked: ReadonlySet<string>): Move
   return tracked.has(snap(from)) ? [...moves, { from: snap(from), to: snap(to) }] : moves;
 }
 
+/** `fields.types.ts` → `Fields.types.ts` when the unit is renamed. */
+const renamedFile = (unit: FloatingUnit, name: string): string =>
+  unit.rename !== undefined && (name === `${unit.name}.tsx` || name.startsWith(`${unit.name}.`))
+    ? unit.rename + name.slice(unit.name.length)
+    : name;
+
 /** Where each file of the unit goes; files already in place are left out. */
 export function planUnit(unit: FloatingUnit, tracked: ReadonlySet<string>): UnitPlan {
   const home = HOMES[unit.action](unit);
   const testsHome = unit.tests.length >= TESTS_MIN ? posix.join(home, TESTS_DIR) : home;
   const moves = unit.files.flatMap((name) => {
     const from = posix.join(unit.dir, name);
-    if (!isTest(name)) return home === unit.dir ? [] : [{ from, to: posix.join(home, name) }];
-    return testMoves(from, posix.join(testsHome, testName(unit.name, name)), tracked);
+    const to = renamedFile(unit, name);
+    if (!isTest(name)) return home === unit.dir ? [] : [{ from, to: posix.join(home, to) }];
+    return testMoves(
+      from,
+      posix.join(testsHome, renamedFile(unit, testName(unit.name, name))),
+      tracked,
+    );
   });
   return { unit, home, moves: moves.filter((m) => m.from !== m.to) };
 }
