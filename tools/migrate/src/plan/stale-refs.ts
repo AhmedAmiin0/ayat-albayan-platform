@@ -27,16 +27,14 @@ export async function findStale(o: {
   tableOf: TableOf;
 }): Promise<Stale> {
   const byTable = new Map<string, Map<string, string[]>>();
-  for (const item of o.plan.items) {
-    if (item.action !== 'create') continue;
-    for (const nk of Object.values(item.record.refs)) {
-      const id = o.existing.get(keyId(nk))?.targetId;
-      const table = o.tableOf(nk.entity);
-      if (!id || table.includes('.')) continue;
-      const ids = byTable.get(table) ?? new Map<string, string[]>();
-      ids.set(id, [...(ids.get(id) ?? []), keyId(nk)]);
-      byTable.set(table, ids);
-    }
+  const creates = o.plan.items.filter((item) => item.action === 'create');
+  for (const nk of creates.flatMap((item) => Object.values(item.record.refs))) {
+    const id = o.existing.get(keyId(nk))?.targetId;
+    const table = o.tableOf(nk.entity);
+    if (!id || table.includes('.')) continue;
+    const ids = byTable.get(table) ?? new Map<string, string[]>();
+    ids.set(id, [...(ids.get(id) ?? []), keyId(nk)]);
+    byTable.set(table, ids);
   }
   const missing = new Set<string>();
   for (const [table, ids] of byTable) {
@@ -45,7 +43,8 @@ export async function findStale(o: {
       params: [[...ids.keys()]],
     });
     const found = new Set(rows.map((r) => r.id));
-    for (const [id, keys] of ids) if (!found.has(id)) keys.forEach((k) => missing.add(k));
+    const lost = [...ids].filter(([id]) => !found.has(id)).flatMap(([, keys]) => keys);
+    for (const k of lost) missing.add(k);
   }
   const required = new Set<string>();
   if (missing.size === 0) return { missing, required };
