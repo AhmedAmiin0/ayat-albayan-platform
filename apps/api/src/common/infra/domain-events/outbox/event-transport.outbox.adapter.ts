@@ -6,15 +6,16 @@ import { runHandler } from '@/common/infra/domain-events/event-handlers';
 import type { EventHandlers } from '@/common/infra/domain-events/event-handlers.types';
 import type { DrainSummary, EventTransport } from '@/common/infra/domain-events/event-transport.port';
 import { MAX_ATTEMPTS, retryDelayMs, settleFailure } from './outbox-retry';
-import type { OutboxRow } from './outbox.schemas';
-import type { OutboxStore, OutboxTransportOptions, Settled, SettleState } from './outbox.types';
+import { z } from 'zod';
+import { drainCounterSchema, settleStateSchema, type OutboxRow } from './outbox.schemas';
+import type { OutboxStore, OutboxTransportOptions, Settled } from './outbox.types';
 
 const EMPTY: DrainSummary = { claimed: 0, done: 0, retried: 0, parked: 0 };
-const COUNTER: Record<SettleState, keyof DrainSummary> = {
+const COUNTER = z.record(settleStateSchema, drainCounterSchema).readonly().decode({
   done: 'done',
   retry: 'retried',
   parked: 'parked',
-};
+});
 const DEFAULTS: Required<OutboxTransportOptions> = {
   retry: { maxAttempts: MAX_ATTEMPTS, delayMs: retryDelayMs },
   now: () => new Date(),
