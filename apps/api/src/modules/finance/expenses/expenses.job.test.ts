@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ExpensesJob, nextMonthStart } from './expenses.job';
 import type { ExpensesRepo } from './expenses.repo';
@@ -27,5 +27,48 @@ describe('ExpensesJob («تكرار شهري»)', () => {
     await new ExpensesJob(q as unknown as ExpensesRepo, readerOf(ExpensesSettings)).runOnce(at);
     await new ExpensesJob(q as unknown as ExpensesRepo, readerOf(ExpensesSettings, { academy_timezone: 'Africa/Cairo' })).runOnce(at);
     expect(q.createRecurringDrafts.mock.calls).toEqual([['2026-12-01'], ['2026-11-01']]);
+  });
+});
+
+describe('ExpensesJob timers', () => {
+  const HOUR = 3_600_000;
+  afterEach(() => vi.useRealTimers());
+
+  function slowJob() {
+    let finish = (): void => undefined;
+    const drafts = vi.fn(
+      () =>
+        new Promise<number>((resolve) => {
+          finish = () => resolve(1);
+        }),
+    );
+    const repo = { createRecurringDrafts: drafts } as unknown as ExpensesRepo;
+    const job = new ExpensesJob(repo, readerOf(ExpensesSettings));
+    return { job, drafts, finish: () => finish() };
+  }
+
+  it('runs ten minutes after boot, then every six hours, and never after destroy', async () => {
+    vi.useFakeTimers();
+    const { job, drafts, finish } = slowJob();
+    job.onApplicationBootstrap();
+    await vi.advanceTimersByTimeAsync(10 * 60_000);
+    expect(drafts).toHaveBeenCalledTimes(1);
+    finish();
+    await vi.advanceTimersByTimeAsync(6 * HOUR);
+    expect(drafts).toHaveBeenCalledTimes(2);
+    finish();
+    await job.onModuleDestroy();
+    await vi.advanceTimersByTimeAsync(12 * HOUR);
+    expect(drafts).toHaveBeenCalledTimes(2);
+  });
+
+  it('a tick while a run is still going joins it instead of starting another', async () => {
+    vi.useFakeTimers();
+    const { job, drafts, finish } = slowJob();
+    job.onApplicationBootstrap();
+    await vi.advanceTimersByTimeAsync(10 * 60_000 + 6 * HOUR);
+    expect(drafts).toHaveBeenCalledTimes(1);
+    finish();
+    await job.onModuleDestroy();
   });
 });
