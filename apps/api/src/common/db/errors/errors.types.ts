@@ -15,6 +15,8 @@ export interface PgErrorMap {
 }
 
 export type DbResult<T> = { data: T; error: null } | { data: null; error: PostgrestError };
+/** The data of a response once its error is ruled out. */
+export type DataOf<R> = R extends { error: null; data: infer D } ? D : never;
 export interface DbStatus {
   error: PostgrestError | null;
 }
