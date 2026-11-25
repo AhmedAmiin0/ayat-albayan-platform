@@ -3,15 +3,14 @@ import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls'
 import { USERS } from '../../support/core/users';
 import { assistant, student } from '../../support/sales/assistant';
 
-// Migrations 20261029000971–972: the student channel opens once the student is
-// subscribed (past the trial) AND has an assigned teacher; before that neither the teacher nor the family
-// reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The family side is
-// the guardian's login and the student's own login, a child's too (migration
+// Migrations 20261029000971–972: the student channel opens once the student is subscribed
+// (past the trial) AND has an assigned teacher; before that neither the teacher nor the family
+// reads a message (RLS, also what Realtime checks per subscriber); monitors always read. The
+// family side is the guardian's login and the student's own login, a child's too (migration
 // 20261116000100_child_chat); the assistant writes too (20261116000200), and only the one
-// assistant in the chat's seat reads it (20261117090200, owner 2026-11-16 «… but only 1»). The
-// family reads only while settings.family_chat_enabled is on (20261117090400), so the seed turns
-// it on.
-// Rolled back; the e2e stack has no Realtime service, so the publication step is not exercised here.
+// assistant in the chat's seat reads it (20261117090200). The family reads only while
+// settings.family_chat_enabled is on (20261117090400), so the seed turns it on.
+// Rolled back; the e2e stack has no Realtime service, so the publication step is not run here.
 
 async function login(tx: Tx, input: { tag: string; role: 'guardian' | 'student' }): Promise<string> {
   const [u] = await tx<{ id: string }[]>`insert into auth.users (id, email)

@@ -5,7 +5,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { removeDashboardExpense, seedDashboard } from '../../support/finance/money-dashboard';
 import { resetAbrar } from '../../support/core/schedule';
 
-// Owner, 2026-10-05: "fix the overflow in the dashboard". The admin frame is viewport-high and its
+// The dashboard never overflows sideways. The admin frame is viewport-high and its
 // work page scrolls inside `[data-page-scroll]` (PageFrame), so sideways overflow shows up THERE,
 // not on the document (responsive.spec.ts measures the document). Wide tables must scroll in their
 // own box; nothing may widen the page. Runs once (desktop project), sizing its own viewport.

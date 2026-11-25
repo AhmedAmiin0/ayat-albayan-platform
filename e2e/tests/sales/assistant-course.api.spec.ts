@@ -6,10 +6,11 @@ import { call, family, makeAssistant, type Assistant } from '../../support/sales
 import { setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 
-// Owner 2026-10-18 «the assistant books the course of a subscription she sold», through the REAL API and
-// database: an 8-lesson (2 a week) unpaid subscription of her student, booked as Sun 17:00 + Tue 19:30
-// (one rule per time). Exactly 8 lessons, created by her, no invoice; the plan's day count, her own student
-// (even with auto-assign OFF), no invoice / link / override, no overlapping course, no clash.
+// The assistant books the course of a subscription she sold, through the REAL API and database:
+// an 8-lesson (2 a week) unpaid subscription of her student, booked as Sun 17:00 + Tue 19:30
+// (one rule per time). Exactly 8 lessons, created by her, no invoice; the plan's day count, her
+// own student (even with auto-assign OFF), no invoice / link / override, no overlapping course,
+// no clash.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');
