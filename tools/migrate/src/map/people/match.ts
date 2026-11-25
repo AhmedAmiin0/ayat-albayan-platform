@@ -19,8 +19,7 @@ export function studentIndex(students: readonly Desired[] | undefined): StudentI
   return { all: students ?? [], byPhone };
 }
 
-type Found =
-  { ok: true; student: Desired } | { ok: false; reason: 'not_found' | 'ambiguous' };
+type Found = { ok: true; student: Desired } | { ok: false; reason: 'not_found' | 'ambiguous' };
 
 interface StudentQuery {
   phone?: string | null;

@@ -30,10 +30,7 @@ function partsIn(instant: number, tz: string): number {
     formatters.set(tz, f);
   }
   const p = Object.fromEntries(f.formatToParts(new Date(instant)).map((x) => [x.type, x.value]));
-  return (
-    utcOf(`${p.year}-${p.month}-${p.day}`) +
-    (Number(p.hour) * 60 + Number(p.minute)) * 60_000
-  );
+  return utcOf(`${p.year}-${p.month}-${p.day}`) + (Number(p.hour) * 60 + Number(p.minute)) * 60_000;
 }
 
 /** Minutes `tz` is ahead of UTC at `instant`. */

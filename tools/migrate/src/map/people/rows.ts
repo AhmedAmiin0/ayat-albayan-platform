@@ -123,8 +123,7 @@ export function personRows(row: SourceRow, kind: Kind): PeopleRowsResult {
     issues.push(issue({ code: 'unknown_teacher', severity: 'warn', field: 'teacher', detail }));
   }
   const claims = claimsOf(text(f.status));
-  const legacy =
-    legacyCode(f.legacy_code) ?? (kind === 'booking' ? legacyCode(f.notes) : null);
+  const legacy = legacyCode(f.legacy_code) ?? (kind === 'booking' ? legacyCode(f.notes) : null);
   const rows = names.map((name, i) => ({
     ref: row.ref,
     key: keys.student({ guardianPhone: phone.e164, name }),

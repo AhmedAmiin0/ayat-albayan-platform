@@ -37,8 +37,7 @@ describe('booking rules from --from', () => {
     const plan = (action: 'create' | 'skip') => ({
       items: r.by('schedule_rules').map((d) => ({ ...d, action, targetId: null })),
     });
-    const starts = (p: ReturnType<typeof plan>) =>
-      p.items.map((i) => i.record.columns.starts_on);
+    const starts = (p: ReturnType<typeof plan>) => p.items.map((i) => i.record.columns.starts_on);
     expect(starts(clampRuleStarts(plan('create'), '2026-10-28'))).toEqual([
       '2026-10-28',
       '2026-11-03',

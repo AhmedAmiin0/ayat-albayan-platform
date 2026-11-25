@@ -54,10 +54,7 @@ function booked(r: SourceRow, o: { ix: StudentIndex; today: string }): Booked | 
 /** studentKey|YYYY-MM-DD → booked slot (exact-date rows first, then weekly; first row wins). */
 export function bookingSlots(bundle: SourceBundle, ix: StudentIndex): Map<string, Slot> {
   const out = new Map<string, Slot>();
-  const rows = [
-    ...(bundle.sheets.hub_bookings ?? []),
-    ...(bundle.sheets.book_bookings ?? []),
-  ];
+  const rows = [...(bundle.sheets.hub_bookings ?? []), ...(bundle.sheets.book_bookings ?? [])];
   const all = rows.flatMap((r) => booked(r, { ix, today: bundle.today }) ?? []);
   const put = (b: Booked, dates: readonly string[]) => {
     for (const s of b.students)

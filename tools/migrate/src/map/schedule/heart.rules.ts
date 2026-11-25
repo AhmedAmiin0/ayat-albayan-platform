@@ -59,8 +59,7 @@ function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
       detail: found.reason,
     });
   const students = [found.student.key];
-  const total =
-    (num(sub.fields.lessons_used) ?? 0) + (num(sub.fields.lessons_remaining) ?? 0);
+  const total = (num(sub.fields.lessons_used) ?? 0) + (num(sub.fields.lessons_remaining) ?? 0);
   return [...times].map(([time, byday]) => ({
     ref: row.ref,
     key: keys.scheduleRule({

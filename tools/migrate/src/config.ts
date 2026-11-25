@@ -83,10 +83,7 @@ export function resolveTarget(input: ResolveTargetInput): TargetConfig {
         name: 'production',
         databaseUrl: need(env, 'PRODUCTION_DATABASE_URL'),
         ssl: true,
-        storage: storageFrom(
-          env.PRODUCTION_SUPABASE_URL,
-          env.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY,
-        ),
+        storage: storageFrom(env.PRODUCTION_SUPABASE_URL, env.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY),
       };
     }
     default:

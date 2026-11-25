@@ -26,9 +26,6 @@
     }
   },
   "src/config.ts": {
-    "max-lines-per-function": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
