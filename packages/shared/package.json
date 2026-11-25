@@ -3,21 +3,15 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./testing": {
-      "types": "./dist/testing/index.d.ts",
-      "default": "./dist/testing/index.js"
-    },
+    ".": "./src/index.ts",
+    "./testing": "./src/testing/index.ts",
     "./i18n/ar.json": "./i18n/ar.json",
     "./i18n/en.json": "./i18n/en.json",
     "./data/countries.json": "./data/countries.json"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "dev": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "build": "tsgo --noEmit",
+    "dev": "tsgo --noEmit --watch",
     "typecheck": "tsgo --noEmit",
     "test": "vitest run"
   },

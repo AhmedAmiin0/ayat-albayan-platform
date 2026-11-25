@@ -1,12 +1,1 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "erasableSyntaxOnly": true,
-    // fetch, Headers and Response only: the web-standard globals both browsers and React Native provide.
-    "lib": ["ES2023", "DOM"],
-    "types": []
-  },
-  "include": ["src"]
-}
+{ "extends": "../../tsconfig.web.json" }

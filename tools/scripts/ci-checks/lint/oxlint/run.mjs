@@ -1,8 +1,8 @@
 // `pnpm lint` (`pnpm lint:prune` adds --prune): Oxlint with every rule of every package
 // (oxlint.config.ts, type-aware, warnings denied) over the folders that hold a lint.blocks.mjs.
 // Writes its JSON report to oxlint-report.json, prints the time, then holds the report to the
-// oxlint-suppressions.json baselines (gate.mjs). Type-aware rules read the workspace packages'
-// built types: `pnpm lint` builds them first.
+// oxlint-suppressions.json baselines (gate.mjs). Type-aware rules read the packages' TypeScript
+// source through each package's tsconfig.json.
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';

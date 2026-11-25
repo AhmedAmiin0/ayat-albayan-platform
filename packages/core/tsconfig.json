@@ -1,10 +1,1 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "erasableSyntaxOnly": true,
-    "types": []
-  },
-  "include": ["src"]
-}
+{ "extends": "../../tsconfig.node.json" }

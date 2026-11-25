@@ -3,14 +3,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
+    ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "dev": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "build": "tsgo --noEmit",
+    "dev": "tsgo --noEmit --watch",
     "typecheck": "tsgo --noEmit",
     "test": "vitest run"
   },

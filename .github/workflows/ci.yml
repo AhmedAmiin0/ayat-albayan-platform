@@ -166,8 +166,8 @@ jobs:
   # (rharkor/caching-for-turbo: a local cache server, one cache entry per task hash, no token or outside service),
   # shared by every job and run, so a task a change did not touch is replayed instead of re-run.
   # Lint: Oxlint only (docs/31b), type-aware through tsgolint. Typecheck: tsgo (TypeScript 7,
-  # @typescript/native-preview); e2e typechecks against @ab/shared only (e2e/turbo.json), so it builds
-  # neither api nor web.
+  # @typescript/native-preview); a package's build is its own type check of its TypeScript source (docs/64),
+  # and e2e typechecks against @ab/shared only (e2e/turbo.json), so it builds neither api nor web.
   verify:
     name: verify (${{ matrix.name }})
     needs: changes
@@ -178,7 +178,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Every package in one Oxlint run (docs/31b): `pnpm lint` builds the workspace packages' types first.
+          # Every package in one Oxlint run (docs/31b), typed from each package's TypeScript source.
           - { name: lint, task: lint }
           # Every typecheck and both Metro bundles (only the two Expo apps have a bundle task) in one turbo graph;
           # a red row's log names the failing task. Metro bundle of each mobile app (docs/32 x0, critic correction

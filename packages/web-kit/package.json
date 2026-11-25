@@ -35,6 +35,8 @@
     }
   },
   "scripts": {
+    "build": "tsgo --noEmit",
+    "dev": "tsgo --noEmit --watch",
     "typecheck": "tsgo --noEmit",
     "test": "vitest run"
   },

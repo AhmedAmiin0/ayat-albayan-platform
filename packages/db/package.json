@@ -2,11 +2,15 @@
   "name": "@ab/db",
   "private": true,
   "type": "module",
-  "exports": { ".": "./src/index.ts" },
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
+    "build": "tsgo --noEmit",
+    "dev": "tsgo --noEmit --watch",
+    "typecheck": "tsgo --noEmit",
     "gen:types": "supabase gen types typescript --local > src/types.ts && oxfmt src/types.ts",
-    "reset": "supabase db reset",
-    "typecheck": "tsgo --noEmit"
+    "reset": "supabase db reset"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",

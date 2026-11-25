@@ -58,12 +58,12 @@ test('include, files and exclude entries that leave the folder fail', () => {
   ]);
 });
 
-const NOT_BASE = 'is not its own folder or the root tsconfig.base.json';
+const NOT_BASE = 'is not its own folder, the root tsconfig.base.json or a kind config';
 
 test('extends: the root tsconfig.base.json passes from any depth', () => {
   assert.deepEqual(check({ extends: '../../tsconfig.base.json' }), []);
   assert.deepEqual(check({ extends: '../tsconfig.base.json' }, 'e2e/tsconfig.json'), []);
-  assert.deepEqual(check({ extends: './tsconfig.base.json' }, 'tsconfig.json'), []);
+  assert.deepEqual(check({ extends: '../../tsconfig.base.json' }, 'tools/x/tsconfig.json'), []);
 });
 
 test('extends: a file outside the folder or any package fails, presets included', () => {
@@ -125,11 +125,13 @@ test('paths: any other value in the root base fails', () => {
 });
 
 test('paths: every other tsconfig fails, even with the same alias or none', () => {
-  const where = ['apps/api/tsconfig.json', 'packages/web-kit/tsconfig.json', 'tsconfig.json'];
+  const where = ['apps/api/tsconfig.json', 'e2e/tsconfig.json', 'tools/x/tsconfig.json'];
   where.forEach((path) => {
     assert.deepEqual(check({ compilerOptions: { paths: ALIAS } }, path), [PATHS]);
     assert.deepEqual(check({ compilerOptions: { paths: {} } }, path), [PATHS]);
   });
+  const kit = check({ compilerOptions: { paths: ALIAS } }, 'packages/web-kit/tsconfig.json');
+  assert.equal(kit.includes(PATHS), true);
   const nested = 'apps/api/tsconfig.base.json';
   assert.deepEqual(check({ compilerOptions: { paths: ALIAS } }, nested), [PATHS]);
 });

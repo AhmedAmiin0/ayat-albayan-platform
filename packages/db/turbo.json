@@ -2,7 +2,11 @@
   "$schema": "https://turborepo.dev/schema.json",
   "extends": ["//"],
   "tasks": {
-    "build": { "inputs": ["src/**", "package.json", "tsconfig*.json"] },
-    "typecheck": { "inputs": ["src/**", "package.json", "tsconfig*.json"] }
+    "build": {
+      "inputs": ["src/**", "package.json", "tsconfig.json"]
+    },
+    "typecheck": {
+      "inputs": ["src/**", "package.json", "tsconfig.json"]
+    }
   }
 }
