@@ -1,10 +1,7 @@
 import { bareUrl, qrMatrix, qrPath, qrSide } from '@ab/client-core';
 import type { ShortLinkDetail } from '@ab/shared';
 import { useRef } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Ltr, Button, t } from '@ab/web-kit';
 import { CopyButton } from '@/features/platform/short-links/shared/CopyButton';
 import { downloadQrPng } from './qr-png';
 

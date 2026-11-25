@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Tabs } from '@ab/web-kit/components/ui/layout/tabs';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Tabs, t } from '@ab/web-kit';
 import { InviteeChips } from './InviteeChips';
 import { addInvitee, isFull, removeInvitee, type PickedInvitee } from './invitee-list';
 import { InviteeSearch } from './InviteeSearch';

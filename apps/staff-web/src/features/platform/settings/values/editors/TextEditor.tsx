@@ -1,7 +1,6 @@
 import { normalizePhone } from '@ab/core';
 import { SETTING_FIELD_OF, settingDef } from '@ab/settings';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Input, t } from '@ab/web-kit';
 import { str } from '@/features/platform/settings/registry-form/settings-form';
 import { boundsText } from '@/features/platform/settings/values/lib/value-format';
 import { useValues } from '@/features/platform/settings/values/values-context';

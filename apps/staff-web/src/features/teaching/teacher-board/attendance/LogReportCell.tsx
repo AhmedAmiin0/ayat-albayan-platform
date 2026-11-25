@@ -2,8 +2,7 @@ import { logReportAction, type LogReportAction } from '@ab/client-core';
 import type { AttendanceTableRow } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { reportFormHref, ReportLink, RowWindow } from '@/features/reporting/reports';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { t, useNow } from '@ab/web-kit';
 import { LessonDisclosure } from './LessonDisclosure';
 
 type Row = Pick<AttendanceTableRow, 'lesson_id' | 'status' | 'starts_at' | 'report' | 'report_id'>;

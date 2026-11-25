@@ -1,12 +1,8 @@
 import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner } from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
+import { FormAlert, RadioChips, useClock, useViewerTz, t } from '@ab/web-kit';
 import { meQuery } from '@/features/people/auth';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { putTeacherCalendarOwner, teacherCalendarQuery } from '@/features/platform/google-sync/google-api';
 import { fill, formatAt } from '@/features/platform/google-sync/google-format';
 

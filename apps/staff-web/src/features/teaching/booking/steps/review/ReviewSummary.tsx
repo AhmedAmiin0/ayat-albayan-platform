@@ -1,16 +1,12 @@
 import { joinNames } from '@ab/shared';
 import { counted } from '@ab/core';
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { t, locale, teacherLabel, useClock, useViewerTz } from '@ab/web-kit';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceThumb } from '@/features/teaching/booking/invoice/InvoiceThumb';
 import { PackagePrice } from '@/features/teaching/booking/steps/package/PackageStep';
 import { ReviewDays } from './ReviewDays';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (

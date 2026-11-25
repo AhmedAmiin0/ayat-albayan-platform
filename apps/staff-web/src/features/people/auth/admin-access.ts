@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/catalog';
-import { canDo, type Me } from '@ab/web-kit/auth/me';
+import { canDo, type Me } from '@ab/web-kit';
 
 // The base role still gates /admin; inside, a custom role reaches only its permitted pages.
 export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permission])[] = [

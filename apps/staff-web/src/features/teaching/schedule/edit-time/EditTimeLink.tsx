@@ -1,10 +1,7 @@
 import type { LessonView } from '@ab/schedule';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t, useClock, useViewerTz } from '@ab/web-kit';
 import { wasText } from './edit-time-text';
 import { timeEditInfo, timeEditMode } from './edit-time.contract';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** Shown only when the API allows (`time_edit_mode`), never for a teacher or a closed lesson. */
 export function EditTimeLink({ lesson, onEdit }: { lesson: LessonView; onEdit?: (() => void) | undefined }) {

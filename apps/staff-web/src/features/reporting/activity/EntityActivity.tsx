@@ -1,12 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, Pager, t, useClock, useViewerTz } from '@ab/web-kit';
 import { activityQuery, type ActivityScope } from './activity.api';
 import { actionLabel, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface EntityActivityProps extends ActivityScope {
   /** Hide the section while nothing is logged (the student profile); a tab shows the empty text. */

@@ -1,5 +1,5 @@
 import { formatAmount, parseAmount, receiptShortfall } from '@ab/money';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Null when not short; it never blocks the save. */
 export function shortfallText(input: { amount: number; due: number; currencyLabel: string }): string | null {

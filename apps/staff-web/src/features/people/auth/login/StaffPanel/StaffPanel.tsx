@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { PhoneSignIn } from '@ab/web-kit/auth/login/PhoneSignIn';
-import { ResetFlow } from '@ab/web-kit/auth/reset/ResetFlow';
-import { authApi } from '@ab/web-kit/auth/login/auth-api';
-import { CodesGate, useCodesOpen } from '@ab/web-kit/auth/login/CodesGate';
-import { LinkRow } from '@ab/web-kit/auth/login/LinkRow';
-import { PasswordForm } from '@ab/web-kit/auth/login/PasswordForm';
-import { StatusNote } from '@ab/web-kit/auth/login/StatusNote';
+import {
+  Button,
+  t,
+  PhoneSignIn,
+  ResetFlow,
+  authApi,
+  CodesGate,
+  useCodesOpen,
+  LinkRow,
+  PasswordForm,
+  StatusNote,
+} from '@ab/web-kit';
 
 type View = 'password' | 'code' | 'forgot';
 

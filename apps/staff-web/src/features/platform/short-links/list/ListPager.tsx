@@ -1,6 +1,5 @@
 import { fillSlots } from '@ab/client-core';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 
 const L = t.shortLinks.list;
 

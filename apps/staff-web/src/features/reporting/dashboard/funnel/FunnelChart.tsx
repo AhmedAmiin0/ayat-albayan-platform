@@ -1,5 +1,5 @@
 import type { LeadStatus } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';
 import { percent } from '@/features/reporting/dashboard/shared/format';
 import { funnelSteps, type FunnelStage } from './funnel';

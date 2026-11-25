@@ -1,9 +1,5 @@
 import type { SalesTeacherView } from '@ab/shared';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Avatar, StatusChip, t, teacherLabel, cn } from '@ab/web-kit';
 import { programList } from './teacher-view';
 
 export interface TeacherListItemProps {

@@ -1,8 +1,6 @@
 import { Link } from '@tanstack/react-router';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Ltr, NuqtaGlyph, t } from '@ab/web-kit';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { amount, currencyLabel } from '@/features/reporting/dashboard/shared/format';
 import { workItem, workLink } from './PendingReportsList';
 import { packageText } from '@/features/reporting/dashboard/work/work-text';

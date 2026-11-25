@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { canDo, meQuery } from '@ab/web-kit/auth/me';
+import { canDo, meQuery } from '@ab/web-kit';
 import { firstSalesRoute } from '@/features/sales/sales/first-sales-route';
 
 /** /sales lands on the first nav page the held role opens (the chats by default; features/sales/first-sales-route). */

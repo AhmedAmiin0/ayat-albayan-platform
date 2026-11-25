@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import type { ReactElement } from 'react';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/testing';
 
 /**
  * Renders `ui` with a fresh query client (no retries), for the sales page tests; `confirmation`:

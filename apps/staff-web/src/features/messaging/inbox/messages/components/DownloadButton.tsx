@@ -1,7 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Button, t } from '@ab/web-kit';
 import { useBubbleTools } from '@/features/messaging/inbox/messages/lib/use-bubble-tools';
 
 export function DownloadButton({ message: m, name }: { message: MessageView; name: string }) {

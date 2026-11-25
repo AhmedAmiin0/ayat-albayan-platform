@@ -1,7 +1,7 @@
 import type { QuotedPrice } from '@ab/client-core';
 import { parseAmount } from '@ab/money';
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Off sends the default body. */
 export interface CustomPriceBody { customPrice?: number }

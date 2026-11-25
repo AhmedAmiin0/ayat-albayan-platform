@@ -21,7 +21,7 @@ afterEach(() => {
 
 describe('ReplyFromNote', () => {
   it('an open chat window says the reply leaves from the chat line', async () => {
-    const { t } = await import('@ab/web-kit/lib/i18n/i18n');
+    const { t } = await import('@ab/web-kit');
     render(<ReplyFromNote thread={thread({ session_open: true, reply_line: 'chat' })} />);
     expect(screen.getByText(t.inbox.line.replyFrom.replace('{line}', t.enums.waLine.chat)).tagName).toBe('P');
   });

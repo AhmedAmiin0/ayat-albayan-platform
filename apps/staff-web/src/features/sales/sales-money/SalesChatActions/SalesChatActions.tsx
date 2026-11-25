@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { MoreMenu } from '@ab/web-kit/components/ui/overlay/more-menu';
+import { MoreMenu } from '@ab/web-kit';
 import { useSalesFamilyActions } from '@/features/sales/sales-money/use-sales-family-actions';
 
 export interface SalesChatActionsProps {

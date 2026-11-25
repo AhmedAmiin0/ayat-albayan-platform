@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Cartouche, FormAlert, PageHead, ListSkeleton, t, cn } from '@ab/web-kit';
 import { catalogQuery, INITIAL_SELECTION, quoteQuery, type Selection } from '@/features/finance/pricing/api';
 import { CalcSteps } from '@/features/finance/pricing/calculator/CalcSteps';
 import { quoteSummary } from '@/features/finance/pricing/format';

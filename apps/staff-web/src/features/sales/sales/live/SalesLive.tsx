@@ -1,12 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { Button, Cartouche, EmptyState, FormAlert, PageHead, ListSkeleton, t } from '@ab/web-kit';
 import { AssistantLessonRow } from '@/features/teaching/classroom/sessions/AssistantLessonRow';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
 /** Every lesson running now (start <= now < end); POST /lessons/:id/room/join lets her in. */

@@ -1,8 +1,7 @@
 import { formatPhone } from '@ab/core';
 import { secondPhoneOf } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 import type { StudentMetaProps } from './StudentMeta.types';
 
 const LINK = 'text-lapis underline underline-offset-4';

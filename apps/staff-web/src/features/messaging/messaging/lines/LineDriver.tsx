@@ -1,7 +1,6 @@
 import type { LineCheckView } from '@ab/shared';
 import { isIntegrationKey } from '@ab/catalog';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 import { integrationText, optionText } from '@/features/platform/integrations/integrations-form';
 
 /** An unknown key name stays an LTR island that wraps at phone width (no horizontal page scroll). */

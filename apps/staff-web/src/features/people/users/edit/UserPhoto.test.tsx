@@ -1,7 +1,7 @@
 import { avatarTone } from '@ab/catalog';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { DETAIL, granted, renderWithClient } from '@/features/people/users/users-test-kit';
 import { UserPhoto } from './UserPhoto';
 

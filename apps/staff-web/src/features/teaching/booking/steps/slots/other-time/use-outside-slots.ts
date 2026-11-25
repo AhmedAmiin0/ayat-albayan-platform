@@ -1,6 +1,6 @@
 import { outsideSlotsResponseSchema } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { lessonKeys } from '@/features/teaching/schedule';
 import { bookingBase, useBookingMode } from '@/features/teaching/booking/mode';
 import type { OutsideParams } from './OtherTime';

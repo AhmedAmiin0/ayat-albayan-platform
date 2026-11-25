@@ -1,5 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { approvalWord, channelWords } from '@/features/messaging/notification-rules/rule-text';
 
 const r = t.notificationRules;

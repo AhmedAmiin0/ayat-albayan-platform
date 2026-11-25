@@ -1,8 +1,5 @@
 import { GENDERS } from '@ab/catalog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, Select, t } from '@ab/web-kit';
 import { FamilyFields } from './FamilyFields';
 import type { QualErrors, QualForm, QualTextField } from './qualification-form';
 

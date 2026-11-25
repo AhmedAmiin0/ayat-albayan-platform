@@ -4,8 +4,7 @@ import { counted } from '@ab/core';
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
 import { z } from 'zod';
 import { teacherKeys } from '@/features/people/keys';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { apiFetch, t } from '@ab/web-kit';
 
 // Facts joined by id from GET /teachers/me/students?kind= without widening TeacherMe (docs/48).
 

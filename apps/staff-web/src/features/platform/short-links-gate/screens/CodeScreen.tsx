@@ -1,9 +1,5 @@
 import { formatPhone } from '@ab/core';
-import { CodeBoxes } from '@ab/web-kit/auth/code/CodeBoxes';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { CodeBoxes, Ltr, Button, FormAlert, t } from '@ab/web-kit';
 import { LinkCard } from '@/features/platform/short-links-gate/parts/LinkCard';
 import type { Gate } from '@/features/platform/short-links-gate/use-gate';
 import type { GatePhone } from '@/features/platform/short-links-gate/use-gate-phone';

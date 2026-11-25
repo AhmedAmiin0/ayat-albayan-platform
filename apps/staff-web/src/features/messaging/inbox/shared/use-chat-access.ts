@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { canDo, meQuery } from '@ab/web-kit/auth/me';
+import { canDo, meQuery } from '@ab/web-kit';
 import type { InboxMode } from './mode';
 
 export interface ChatAccess {

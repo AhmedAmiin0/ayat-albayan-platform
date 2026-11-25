@@ -7,7 +7,7 @@ import { JOUD, lesson, SUHAILA } from './lesson/lesson-fixture';
 import { LessonDetails } from './lesson/LessonDetails';
 import { studentNames } from './lesson/lessons';
 import { ProposalsPanel } from './reschedule/proposals/ProposalsPanel';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { locale } from '@ab/web-kit';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;

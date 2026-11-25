@@ -1,14 +1,17 @@
 import { normalizePhone } from '@ab/core';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input, controlClass } from '@ab/web-kit/components/ui/form/input';
-import { RequiredLegend } from '@ab/web-kit/components/ui/form/label';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  Button,
+  Field,
+  FormAlert,
+  Input,
+  controlClass,
+  RequiredLegend,
+  RadioChips,
+  t,
+  cn,
+} from '@ab/web-kit';
 import { publicProblem, submitFeedback, type PublicProblem } from '@/features/teaching/feedback/api';
 import { RatingScale } from './RatingScale';
 import { KindLine } from './KindLine';

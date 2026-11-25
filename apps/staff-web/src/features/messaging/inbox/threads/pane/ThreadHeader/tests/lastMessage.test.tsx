@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ThreadHeader } from '@/features/messaging/inbox/threads/pane/ThreadHeader/ThreadHeader';
 
 const apiFetch = vi.hoisted(() => vi.fn());

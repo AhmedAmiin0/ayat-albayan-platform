@@ -1,5 +1,5 @@
 import { SESSION_WINDOW_MS } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { InboxMode } from '@/features/messaging/inbox/shared/mode';
 
 // WhatsApp's 24 h customer-service window in words (docs/12 §3.5): open with the time left, or

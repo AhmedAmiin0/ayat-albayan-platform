@@ -13,7 +13,7 @@ import type {
 } from '@ab/shared';
 import { moneyText } from '@/features/finance/subscriptions';
 import { dateLabel, dayIn } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // Shared lines from @ab/client-core with the app's words; instants in the viewer's zone; pure.
 

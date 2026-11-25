@@ -1,11 +1,6 @@
 import { dateText, nextDstTransition } from '@ab/time';
 import { useId, useMemo } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Label } from '@ab/web-kit/components/ui/form/label';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { TimeZoneSelect, tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { Icon, Label, Ltr, TimeZoneSelect, tzCity, t, locale } from '@ab/web-kit';
 
 type Props = { tz: string; onTz: (tz: string) => void };
 

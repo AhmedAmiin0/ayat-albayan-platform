@@ -1,6 +1,5 @@
 import type { NumberView, TemplateView } from '@ab/shared';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Select, t } from '@ab/web-kit';
 import { approvalRows } from '@/features/messaging/templates/numbers/number-approvals';
 import { NumberApprovals } from '@/features/messaging/templates/numbers/NumberApprovals';
 import { Label, templateName } from '@/features/messaging/templates/template-cells';

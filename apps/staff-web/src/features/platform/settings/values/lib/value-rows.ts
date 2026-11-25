@@ -7,7 +7,7 @@ import {
 } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
 import { matchesSetting, matchesText } from '@/components/settings/search/settings-search';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { isModified } from '@/features/platform/settings/registry-form/row-form';
 import { GROUP_IDS, groupKeys, isOwnedGroup, type ValuesGroupId } from './value-groups-view';
 import type { ValuesFilter } from '@/features/platform/settings/values/values-search';

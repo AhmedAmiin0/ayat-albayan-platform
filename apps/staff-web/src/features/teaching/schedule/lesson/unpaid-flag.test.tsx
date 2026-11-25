@@ -2,11 +2,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { JOUD, lesson, SUHAILA } from './lesson-fixture';
 import { LessonChip } from './LessonChip';
 import { LessonDetails } from './LessonDetails';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/testing';
 
 // R-SUB-02: the API sets students[].unpaid on upcoming lessons; every lesson surface says so.
 const FLAG = t.subscriptions.unpaidFlag;

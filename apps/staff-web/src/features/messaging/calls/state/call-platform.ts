@@ -1,5 +1,5 @@
 import type { CallPlatform, PeerMaker } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { callApi } from '@/features/messaging/calls/api/calls-api';
 import { createCallPeer } from '@/features/messaging/calls/rtc/call-peer';
 import type { RtcDeps } from '@/features/messaging/calls/rtc/media';

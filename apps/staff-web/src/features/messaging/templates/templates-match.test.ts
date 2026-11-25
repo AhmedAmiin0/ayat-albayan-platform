@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { templatesMatch } from './templates-match';
 
 describe('templatesMatch (the settings search over «قوالب واتساب»)', () => {

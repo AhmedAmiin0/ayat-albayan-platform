@@ -1,6 +1,6 @@
 import { mayInvitePhones } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
-import { meQuery } from '@ab/web-kit/auth/me';
+import { meQuery } from '@ab/web-kit';
 
 /** Phone invites are for admin and sales only; hidden until /auth/me answers. */
 export function useMayInvitePhones(): boolean {

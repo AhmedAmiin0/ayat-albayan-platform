@@ -1,9 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, Dialog, t } from '@ab/web-kit';
 import { sendText } from '@/features/messaging/inbox/api/api';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { showAnswer } from '@/features/messaging/inbox/api/send-cache';

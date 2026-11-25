@@ -1,9 +1,6 @@
 import { EVOLUTION_HOOK_ORIGINS } from '@ab/shared';
 import { CheckField } from '@/components/settings/fields/CheckField';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, Select, t } from '@ab/web-kit';
 import { ConfigFieldset } from './ConfigFieldset';
 import type { SectionProps } from './config-draft';
 import { WebhookEvents } from './WebhookEvents';

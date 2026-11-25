@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { SegmentedControl, type SegmentOption } from '@ab/web-kit/components/ui/form/segmented-control';
+import { SegmentedControl, type SegmentOption } from '@ab/web-kit';
 
 export interface SegmentStepProps<V extends string> {
   /** Shown above the group and names it for assistive tech. */

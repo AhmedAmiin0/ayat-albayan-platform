@@ -1,6 +1,6 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActionsProvider';
 import { FLASH_MS } from '@/features/messaging/inbox/messages/lib/jump-to-message';
 import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';

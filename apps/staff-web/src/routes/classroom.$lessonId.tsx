@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { requireRole } from '@ab/web-kit/auth/me';
+import { requireRole } from '@ab/web-kit';
 import { StaffClassroomPage } from '@/features/teaching/classroom/join/StaffClassroomPage';
 
 /** /classroom/:lessonId: the online room for admin, sales, the lesson teacher and the assigned assistant. */

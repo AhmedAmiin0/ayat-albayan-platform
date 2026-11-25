@@ -6,7 +6,7 @@ import {
   type SettingKey,
   type ValueGroupId,
 } from '@ab/settings';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // Group list (docs/26b §2); "All" is not a group, only the result of a search or filter.
 

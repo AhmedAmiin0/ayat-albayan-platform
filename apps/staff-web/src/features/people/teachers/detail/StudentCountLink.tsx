@@ -1,7 +1,6 @@
 import { statusParamOfKind } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { t, teacherLabel } from '@ab/web-kit';
 import type { TeacherListRow } from '@ab/shared';
 
 export interface StudentCountLinkProps {

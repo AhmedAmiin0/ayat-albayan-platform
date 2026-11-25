@@ -1,6 +1,6 @@
 import { placeholderToken, SAVED_REPLY_PLACEHOLDERS, type SavedReplyPlaceholder } from '@ab/shared';
 import type { RefObject } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 export interface PlaceholderChipsProps {
   /** The reply's text box: the token goes where its caret is. */

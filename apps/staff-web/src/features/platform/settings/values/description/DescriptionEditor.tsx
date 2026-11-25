@@ -1,14 +1,16 @@
 import { DESCRIPTION_MAX, type ConfigEntry } from '@ab/settings';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { controlClass } from '@ab/web-kit/components/ui/form/input';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  Button,
+  Dialog,
+  Field,
+  FormAlert,
+  controlClass,
+  ApiError,
+  t,
+  locale,
+  cn,
+} from '@ab/web-kit';
 import type { DescribeTarget } from './describe-target';
 import { useDescriptionSave } from './use-description-save';
 

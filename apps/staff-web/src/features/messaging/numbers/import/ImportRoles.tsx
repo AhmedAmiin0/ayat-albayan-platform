@@ -1,6 +1,5 @@
 import type { ImportBlock, ImportFieldView, ImportRoleView } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 
 const im = t.numbers.import;
 

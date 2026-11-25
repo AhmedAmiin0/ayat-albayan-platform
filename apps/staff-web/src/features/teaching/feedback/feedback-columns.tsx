@@ -1,9 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures, FilterOption } from '@/components/data-table/DataTable';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, NuqtaGlyph, StatusChip, t } from '@ab/web-kit';
 import { feedbackDate } from './format';
 import { kindOptions, quickRatingOptions, ratingOptions, recommendOptions } from './filter-options';
 import type { FeedbackListRow } from '@ab/shared';

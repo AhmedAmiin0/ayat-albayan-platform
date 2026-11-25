@@ -1,12 +1,8 @@
 import { cancelOffered, owesMore, subscriptionStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { Button, FormAlert, StatusChip, Toast, t } from '@ab/web-kit';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cancelSubscription, studentBalanceQuery } from '@/features/finance/subscriptions/api';
 import { CancelPackageDialog } from '@/features/finance/subscriptions/cancel/CancelPackageDialog';
 import { BalanceDetails } from '@/features/finance/subscriptions/balance/BalanceDetails';

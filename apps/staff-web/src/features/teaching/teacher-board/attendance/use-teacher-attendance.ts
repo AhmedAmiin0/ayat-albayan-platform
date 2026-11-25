@@ -2,7 +2,7 @@ import { attendanceTableSchema, teacherLessonPaths } from '@ab/client-core';
 import type { StudentAttendanceTable } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { lessonKeys } from '@/features/teaching/schedule';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 
 const readLog = async (url: string): Promise<StudentAttendanceTable> =>
   attendanceTableSchema.parse(await apiFetch(url));

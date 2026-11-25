@@ -1,6 +1,5 @@
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 
 const ERRORS: Record<string, string | undefined> = t.inbox.error;
 

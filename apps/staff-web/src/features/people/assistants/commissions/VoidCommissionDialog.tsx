@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ASSISTANTS_KEY, voidCommission, type AssistantCommissionView } from '@/features/people/assistants/api';
 import { errorText } from '@/features/people/assistants/status';
 

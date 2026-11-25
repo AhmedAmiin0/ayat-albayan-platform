@@ -1,5 +1,5 @@
 import { WA_LINES } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { TemplateLineBlock } from './TemplateLineBlock';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';
 import type { TemplateLines as Lines } from './use-template-lines';

@@ -1,4 +1,4 @@
-import { LessonPage } from '@ab/web-kit/portal/recordings/LessonPage';
+import { LessonPage } from '@ab/web-kit';
 import { StudentOf } from './StudentOf';
 import { useLessonNav } from './use-lesson-nav';
 

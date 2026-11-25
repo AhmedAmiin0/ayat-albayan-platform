@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { PortalShell } from '@/components/shell/nav/SectionShells';
 import { FamilyMoved, leaveForFamilyHost } from '@/features/people/auth';
-import { requireRole } from '@ab/web-kit/auth/me';
+import { requireRole } from '@ab/web-kit';
 
 // The family portal (docs/31): PortalShell renders the page itself at /portal (no child routes).
 // Once the family host is live (VITE_FAMILY_ORIGIN, docs/51 §3) a family is sent there instead.

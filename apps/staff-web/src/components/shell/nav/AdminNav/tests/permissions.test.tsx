@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { pagePermission } from '@/features/people/auth/admin-access';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { AdminNav, visibleGroups } from '@/components/shell/nav/AdminNav/AdminNav';
 
 vi.mock('@tanstack/react-router', () => ({

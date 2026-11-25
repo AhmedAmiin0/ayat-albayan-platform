@@ -1,6 +1,5 @@
 import type { CourseExtendPreview } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { t, useViewerTz } from '@ab/web-kit';
 import { extendLines } from './card-text';
 
 /** Loading until the preview arrives. */

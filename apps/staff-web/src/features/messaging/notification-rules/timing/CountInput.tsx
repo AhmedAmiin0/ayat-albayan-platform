@@ -1,6 +1,5 @@
 import { useId } from 'react';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Input, cn } from '@ab/web-kit';
 
 // The browser's spin arrows sit over the digits of a narrow box: hidden (the keyboard still steps).
 const NO_SPIN = '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';

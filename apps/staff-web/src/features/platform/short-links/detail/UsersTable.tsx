@@ -1,8 +1,7 @@
 import { fillSlots, userLook, visitOf } from '@ab/client-core';
 import type { ShortLinkDetail, ShortLinkUser } from '@ab/shared';
 import { counted } from '@ab/core';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { SendChip } from '@/features/platform/short-links/shared/LinkChips';
 import { PersonLine } from '@/features/platform/short-links/shared/PersonLine';
 import { useLinkDates } from '@/features/platform/short-links/shared/use-link-dates';

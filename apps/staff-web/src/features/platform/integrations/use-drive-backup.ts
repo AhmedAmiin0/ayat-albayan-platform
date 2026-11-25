@@ -2,7 +2,7 @@ import { counted } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { usePermissions } from '@/features/people/auth';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { fetchStorageBackup } from './integrations-api';
 import { driveBackupKeys } from '@/features/platform/keys';
 

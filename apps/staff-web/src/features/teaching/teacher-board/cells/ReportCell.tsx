@@ -1,6 +1,5 @@
 import { reportStatusStyle } from '@ab/money';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t } from '@ab/web-kit';
 import type { BoardRow } from '@/features/teaching/teacher-board/board-rows';
 
 /** The newest report on a started lesson, from the lesson embed's status. */

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ABRAR, FATMA, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { WeekAgenda } from './WeekAgenda';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/testing';
 
 const DAY = '2026-10-04';
 const row = (teacher: typeof ABRAR) => ({ id: teacher.id, teacher, name: teacher.display_name_ar, days: new Map([[DAY, [lesson()]]]) });

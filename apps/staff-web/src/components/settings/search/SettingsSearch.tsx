@@ -1,6 +1,5 @@
 import { useId } from 'react';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Input, t } from '@ab/web-kit';
 
 /** A search box over every setting (label, hint or key); an empty box shows everything. */
 export function SettingsSearch({ value, onChange }: { value: string; onChange: (v: string) => void }) {

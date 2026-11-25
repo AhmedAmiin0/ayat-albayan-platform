@@ -1,9 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { meQuery, type Me } from '@ab/web-kit/auth/me';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, meQuery, type Me, t } from '@ab/web-kit';
 import { InternalMeetingDialog } from './InternalMeetingDialog';
 
 const apiSend = vi.hoisted(() => vi.fn());

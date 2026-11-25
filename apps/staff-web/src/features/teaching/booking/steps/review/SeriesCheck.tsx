@@ -1,17 +1,13 @@
 import type { BookingRequest } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { FormAlert, NuqtaGlyph, t, useClock, useViewerTz } from '@ab/web-kit';
 import { lessonErrorText } from '@/features/teaching/schedule';
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { bookingCheckQuery } from '@/features/teaching/booking/api';
 import { takenTexts } from './course-taken';
 import { days, toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { trialDateCheckQuery } from '@/features/teaching/booking/trial-date/api';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** How many clashes are listed under the count. */
 const SHOWN = 4;

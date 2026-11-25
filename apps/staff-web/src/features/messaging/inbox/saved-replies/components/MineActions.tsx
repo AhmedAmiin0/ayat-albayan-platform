@@ -1,8 +1,5 @@
 import type { SavedReply } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, IconButton, t } from '@ab/web-kit';
 
 const S = t.savedReplies;
 

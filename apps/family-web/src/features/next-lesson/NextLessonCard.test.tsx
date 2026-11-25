@@ -1,8 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalApi } from '@ab/web-kit/portal/portal.api-fixture';
-import { kid, lesson } from '@ab/web-kit/portal/portal.fixtures';
+import { t } from '@ab/web-kit';
+import { portalApi, kid, lesson } from '@ab/web-kit/testing';
 import { renderAt } from '@/test/render-at';
 import { NextLessonCard } from './NextLessonCard';
 

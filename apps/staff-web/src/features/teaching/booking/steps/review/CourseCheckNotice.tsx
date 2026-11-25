@@ -1,8 +1,6 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import { lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import type { SeriesCheckResult } from './SeriesCheck';
 

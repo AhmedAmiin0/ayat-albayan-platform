@@ -1,8 +1,6 @@
 import { EVOLUTION_PROXY_PROTOCOLS } from '@ab/shared';
 import { CheckField } from '@/components/settings/fields/CheckField';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Select, t } from '@ab/web-kit';
 import { NumberSecretRow } from '@/features/messaging/numbers/form/NumberSecretRow';
 import { ConfigFieldset } from './ConfigFieldset';
 import { ConfigTextField } from './ConfigTextField';

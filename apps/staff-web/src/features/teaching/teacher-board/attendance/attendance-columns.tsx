@@ -1,7 +1,7 @@
 import { lessonWhenAt, type AttendanceTableRow } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { rowNote, type NoteClock } from './attendance-text';
 import { AttendanceStatus } from './AttendanceStatus';
 import { LogReportCell } from './LogReportCell';

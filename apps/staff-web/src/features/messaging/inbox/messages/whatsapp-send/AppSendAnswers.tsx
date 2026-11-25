@@ -1,8 +1,7 @@
 import { APP_SEND_ANSWER_KEYS, type AppSendAnswer } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { markSentManually } from '@/features/messaging/inbox/api/api';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { showAnswer } from '@/features/messaging/inbox/api/send-cache';

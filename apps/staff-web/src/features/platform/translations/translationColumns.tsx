@@ -2,7 +2,7 @@ import type { Locale } from '@ab/core';
 import type { TranslationKeyRow } from '@ab/i18n';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { registryHintOf } from './registry-hints';
 import { effectiveText, overrideOf } from './translation-edit';
 import { ValuesLink } from './ValuesLink';

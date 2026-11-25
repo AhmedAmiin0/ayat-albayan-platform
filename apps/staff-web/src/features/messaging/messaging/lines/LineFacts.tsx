@@ -1,8 +1,5 @@
 import type { LineCheckView } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Ltr, NuqtaGlyph, t, cn } from '@ab/web-kit';
 import { lineTone, type LineField } from './line-status';
 
 type Label = keyof typeof t.templates.settings.lines;

@@ -1,9 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { MoreMenu } from '@ab/web-kit/components/ui/overlay/more-menu';
+import { Button, FormAlert, MoreMenu, t } from '@ab/web-kit';
 import { classroomErrorText, copyStudentLink } from '@/features/teaching/classroom';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** Room mode only (docs/48); the result shows under the head because the menu closes on pick. */
 export function CopyStudentLink({ lessonId }: { lessonId: string }) {

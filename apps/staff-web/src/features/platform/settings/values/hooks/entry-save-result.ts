@@ -1,5 +1,5 @@
 import type { ConfigEntryConflict } from '@ab/settings';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 import { serverMessage } from './save-result';
 
 // How a refused PATCH reads (docs/26 §2f): 409 conflict or owned_by_module, 428, else failed save.

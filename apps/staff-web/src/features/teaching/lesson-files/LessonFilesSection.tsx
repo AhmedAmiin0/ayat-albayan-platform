@@ -1,5 +1,5 @@
 import type { LessonAssets } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { LessonFileItem } from './LessonFileItem';
 import { RecordingItem } from './RecordingItem';
 import { ReportPdfItem } from './ReportPdfItem';

@@ -1,6 +1,6 @@
 import { familyChatViaSales } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /**
  * A trial student's family is reached through sales, not the teacher: the

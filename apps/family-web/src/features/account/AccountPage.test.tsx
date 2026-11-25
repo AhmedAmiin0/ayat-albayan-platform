@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, kid, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
+import { t } from '@ab/web-kit';
+import { home, kid, soonLesson } from '@ab/web-kit/testing';
 import { renderAt } from '@/test/render-at';
 import { AccountPage } from './AccountPage';
 
@@ -9,7 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const pick = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@/features/shell', async () => {
-  const fixtures = await import('@ab/web-kit/portal/portal.fixtures');
+  const fixtures = await import('@ab/web-kit/testing');
   return {
     usePickChild: () => pick,
     useFamilyPick: () => ({ state: 'one', student: fixtures.kid() }),

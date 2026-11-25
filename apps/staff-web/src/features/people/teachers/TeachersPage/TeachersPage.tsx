@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import {
+  Button,
+  Cartouche,
+  EmptyState,
+  Icon,
+  PageHead,
+  Pager,
+  t,
+  FormAlert,
+  ListSkeleton,
+} from '@ab/web-kit';
 import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list/list-url';
 import { teachersPageQuery } from '@/features/people/teachers/api';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { teacherColumns } from '@/features/people/teachers/teacher-columns';
 import { TeacherDialog } from '@/features/people/teachers/form/TeacherDialog';
 import type { Teacher, TeacherListRow } from '@ab/shared';

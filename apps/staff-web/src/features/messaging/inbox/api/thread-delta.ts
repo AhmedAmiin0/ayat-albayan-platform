@@ -6,7 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { inboxPollMs, threadPath } from './api';
 import { useTicksInLists } from './list-ticks';
 import { threadQuery } from './thread-query';

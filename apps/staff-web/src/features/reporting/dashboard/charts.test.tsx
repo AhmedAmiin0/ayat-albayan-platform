@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { SUMMARY } from './dashboard-fixture';
 import { ExpensesByCategory } from './finance/ExpensesByCategory';
 import { FinanceByMonth } from './finance/FinanceByMonth';
@@ -8,7 +8,7 @@ import { FunnelChart } from './funnel/FunnelChart';
 import { LessonsByStatus } from './today/LessonsByStatus';
 import { SourceTable } from './funnel/SourceTable';
 import { loadLabel, TeacherLoad } from './today/TeacherLoad';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/testing';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 

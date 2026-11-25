@@ -1,9 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, kid, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
-import { portalApi } from '@ab/web-kit/portal/portal.api-fixture';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
+import { t } from '@ab/web-kit';
+import { home, kid, soonLesson, portalApi, renderPortal } from '@ab/web-kit/testing';
 import { PortalHome } from '@/features/people/portal/PortalHome/PortalHome';
 
 const apiFetch = vi.hoisted(() => vi.fn());

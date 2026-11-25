@@ -7,7 +7,7 @@ import { catalogueMatch } from '@/features/messaging/notification-catalogue/cata
 import { numbersMatch } from '@/features/messaging/numbers/numbers-section';
 import { appearanceMatch } from '@/features/platform/settings/sections/AppearanceSection';
 import { templatesMatch } from '@/features/messaging/templates/templates-match';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { HUB_PATHS } from './hub-paths';
 
 // The hub search (docs/26b §1, states.html#hub): every setting by label, description or key, and

@@ -9,8 +9,7 @@ import {
 } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { apiFetch, apiSend, t } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { ChatUploadError } from '@/features/messaging/inbox/api/api.files';
 

@@ -1,5 +1,5 @@
 import { ARABIC_SKILLS, arabicContentSchema, type ArabicContent, type ReportContent } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { GradeChips } from '@/features/reporting/reports/entry-v2/GradeChips';
 import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
 import { CARD } from '@/features/reporting/reports/entry-v2/v2-classes';

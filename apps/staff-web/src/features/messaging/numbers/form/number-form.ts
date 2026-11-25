@@ -6,7 +6,7 @@ import {
   type NumberView,
 } from '@ab/shared';
 import type { EvolutionMode, NumberPurpose, WaProvider } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** The add / edit dialog's fields as typed (ids trimmed on submit; empty optional ids are null). */
 export interface NumberDraft {

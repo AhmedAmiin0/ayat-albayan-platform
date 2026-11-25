@@ -1,5 +1,4 @@
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { cn } from '@ab/web-kit/lib/utils';
+import { NuqtaGlyph, cn } from '@ab/web-kit';
 
 type StudentNoteProps = { text: string | null; className?: string };
 

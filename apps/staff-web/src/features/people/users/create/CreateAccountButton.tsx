@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, usePermissions, t } from '@ab/web-kit';
 import { candidatesQuery } from '@/features/people/users/api';
 import { CreateUserDialog } from './CreateUserDialog';
 

@@ -3,10 +3,7 @@ import {
 } from '@ab/client-core';
 import { useId } from 'react';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, SegmentedControl, Select, t } from '@ab/web-kit';
 import {
   isFiltered, type LinkListSearch,
 } from '@/features/platform/short-links/shared/link-routes';

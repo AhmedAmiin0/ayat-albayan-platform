@@ -6,7 +6,7 @@ import type {
 } from '@ab/shared';
 import type { AssistantLessonView } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 // The salesperson's assistant side (docs/16) and a subscription's history. Read-only, no money.

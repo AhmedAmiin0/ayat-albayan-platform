@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** The frame of a switch that reaches families (sending, automatic messages, the CRM cut-over). */
 export function DangerFrame({ children }: { children: ReactNode }) {

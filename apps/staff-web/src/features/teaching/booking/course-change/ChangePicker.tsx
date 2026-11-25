@@ -1,15 +1,12 @@
 import type { CourseChangeView } from '@ab/shared';
 import { counted } from '@ab/core';
 import { pickProgress, togglePick } from '@ab/schedule';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t, useClock, useViewerTz } from '@ab/web-kit';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { DayTimesList } from '@/features/teaching/booking/steps/slots/DayTimesList';
 import { dayPicks, withPicks } from '@/features/teaching/booking/draft/draft.days';
 import { picksReady } from './change-body';
 import { currentDaysText } from './change-text';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface ChangePickerProps {
   view: CourseChangeView;

@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { PhoneNumberField } from '@ab/web-kit/auth/phone/PhoneNumberField';
-import { usePhoneEntry } from '@ab/web-kit/auth/phone/use-phone-entry';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { PhoneNumberField, usePhoneEntry, Icon, Button, t } from '@ab/web-kit';
 
 const F = t.shortLinks.form;
 

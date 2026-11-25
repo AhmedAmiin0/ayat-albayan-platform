@@ -1,7 +1,7 @@
 import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { setCrmStatus, templateErrorText, templatesQuery, type CrmTemplateStatus } from '@/features/messaging/templates/api';
 import { templateName } from '@/features/messaging/templates/template-cells';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';

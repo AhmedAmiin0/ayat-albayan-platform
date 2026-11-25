@@ -1,8 +1,7 @@
 import { teacherCreateSchema, type TeacherCreate } from '@ab/shared';
 import type { Gender, Program, TeacherStatus } from '@ab/catalog';
 import type { TeacherMeetingMode } from '@ab/schedule';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import type { Teacher } from '@ab/shared';
 
 /** Rate column per lesson duration (EGP). R-TCH-01. */

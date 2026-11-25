@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 // Shaped like the toolbar's filter chips (ActiveFilterChips): a hairline pill, 32px from 640px with a
 // fine pointer, the 44px touch floor on phones and coarse pointers. The chosen one wears the mint

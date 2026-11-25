@@ -1,8 +1,7 @@
 import { EMPTY_STUDENT, type CreateStudentValues } from '@/features/people/students/create/create-student';
-import type { Clock } from '@ab/web-kit/lib/clock';
+import type { Clock } from '@ab/web-kit';
 import { clockRange } from '@ab/time';
-import { hhmmText } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { hhmmText, t } from '@ab/web-kit';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { qualForm } from './qualification/qualification-form';
 

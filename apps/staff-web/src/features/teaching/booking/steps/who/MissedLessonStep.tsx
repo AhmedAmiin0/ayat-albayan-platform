@@ -1,19 +1,21 @@
 import { DURATIONS, type LessonStatus } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  FormAlert,
+  RequiredMark,
+  StatusChip,
+  t,
+  teacherLabel,
+  cn,
+  useClock,
+  useViewerTz,
+  useLessonStatusText,
+} from '@ab/web-kit';
 import { makeupCandidatesQuery } from '@/features/teaching/booking/invoice/api.invoice';
 import type { MakeupCandidate } from '@/features/teaching/booking/draft/contract';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 export interface MissedLessonStepProps {
   draft: Pick<BookingDraft, 'students' | 'missed' | 'tz' | 'teacher'>;

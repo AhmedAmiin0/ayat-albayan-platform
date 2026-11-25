@@ -4,8 +4,7 @@ import { addDays, riyadhToday } from '@ab/time';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { CoursePauseSheet } from './CoursePauseSheet';
 
 const apiFetch = vi.hoisted(() => vi.fn());

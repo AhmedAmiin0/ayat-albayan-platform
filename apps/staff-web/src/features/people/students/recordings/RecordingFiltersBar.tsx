@@ -2,7 +2,7 @@ import type { StudentRecordingFilters } from '@ab/schedule';
 import { STUDENT_RECORDING_STATUSES, type StudentRecordingStatus } from '@ab/schedule';
 import { DateFilterField, SelectFilterField, chipIfSet } from '@/components/table-toolbar/fields';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const F = t.studentRecordings.filters;
 

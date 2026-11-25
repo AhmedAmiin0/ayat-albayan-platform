@@ -2,10 +2,8 @@ import { isChatViewMime, isPdfMime, isPlayableMime, type MessageView } from '@ab
 import type { ThreadFile } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, ApiError, t } from '@ab/web-kit';
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadFileQuery } from '@/features/messaging/inbox/api/api';
 import { mediaKind } from '@/features/messaging/inbox/format';
 import { DownloadButton } from '@/features/messaging/inbox/messages/components/DownloadButton';

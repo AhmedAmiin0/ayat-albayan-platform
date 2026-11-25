@@ -13,7 +13,7 @@ import {
   usedBeforeStateSchema,
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { moneyKeys } from '@/features/finance/keys';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 

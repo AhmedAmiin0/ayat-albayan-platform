@@ -1,8 +1,7 @@
 import type { ThreadView } from '@ab/shared';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SegmentedControl, t } from '@ab/web-kit';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { ThreadFilterFields } from './ThreadFilterFields';

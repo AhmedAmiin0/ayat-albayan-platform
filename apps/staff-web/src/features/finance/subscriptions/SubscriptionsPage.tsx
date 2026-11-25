@@ -2,19 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import {
+  Button,
+  Cartouche,
+  EmptyState,
+  FormAlert,
+  Icon,
+  PageHead,
+  Pager,
+  Toast,
+  ListSkeleton,
+  t,
+} from '@ab/web-kit';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { usePermissions } from '@/features/people/auth';
 import { CoursePauseDialogs, type CoursePauseTarget } from '@/features/teaching/course-pause';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { toFilterSearch, toSortSearch } from '@/lib/list/list-search';
 import { cancelSubscription, subscriptionsQuery, type SubscriptionView } from './api';
 import { CancelPackageDialog } from './cancel/CancelPackageDialog';

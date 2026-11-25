@@ -1,17 +1,11 @@
 import type { ThreadPeople } from '@ab/shared';
 import { studentStatusStyle } from '@ab/money';
 import { Link } from '@tanstack/react-router';
-import { railXl } from '@ab/web-kit/components/ui/layout/rail';
-import { cn } from '@ab/web-kit/lib/utils';
+import { railXl, cn, Button, Ltr, StatusChip, Toast, t } from '@ab/web-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { leadKeys } from '@/features/sales/keys';
 import { SearchFromProfile } from '@/features/messaging/inbox/search';

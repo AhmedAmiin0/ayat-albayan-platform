@@ -1,7 +1,7 @@
 import type { FamilyPhone } from '@ab/shared';
 import type { LeadSource } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { guardianKeys } from '@/features/people/keys';
 
 // apps/api/src/modules/guardians (R-STU-02, R-STU-04): GET / PATCH /guardians/:id, admin only.

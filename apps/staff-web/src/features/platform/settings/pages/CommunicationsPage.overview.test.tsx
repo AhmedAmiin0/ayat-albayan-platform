@@ -3,7 +3,7 @@ import { formatPhone } from '@ab/core';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { renderCommunications } from './communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());

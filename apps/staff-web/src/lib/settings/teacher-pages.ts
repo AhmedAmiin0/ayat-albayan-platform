@@ -1,6 +1,6 @@
 import { teacherPageOn, withPublicDefaults, type TeacherPage } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
-import { publicConfigQuery, usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
+import { publicConfigQuery, usePublicConfig } from '@ab/web-kit';
 
 // Teacher page switches affect the UI only; admin, sales and assistant screens never read them.
 

@@ -1,7 +1,7 @@
 import { formatPhone } from '@ab/core';
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import {
   GATE, json, OPEN_VIEW, PHONE, type Routes, showGate, stubApi, TARGET,
 } from '@/features/platform/short-links-gate/gate.test-kit';

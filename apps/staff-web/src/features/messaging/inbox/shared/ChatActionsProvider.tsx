@@ -1,7 +1,6 @@
 import { canReact, type MessageView, type ThreadView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Toast, t } from '@ab/web-kit';
 import { ChatActionsContext, type ChatActions } from './chat-actions';
 import { useMaySend } from './may-send';
 import { usePicks } from './use-picks';

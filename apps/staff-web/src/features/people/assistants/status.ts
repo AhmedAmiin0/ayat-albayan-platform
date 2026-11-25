@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { apiErrorText } from '@/features/finance/subscriptions';
 
 /** Earned is settled money (fill); voided is struck, in the danger tone: @ab/shared since docs/27 E6. */

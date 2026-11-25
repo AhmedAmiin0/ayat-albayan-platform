@@ -1,14 +1,7 @@
 import { listedCount } from '@ab/client-core';
 import { SHORT_LINK_AUDIENCES, type ShortLinkAudience } from '@ab/shared';
 import { useId } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Button, Field, FormAlert, Input, RadioChips, Dialog, t } from '@ab/web-kit';
 import { errorText } from '@/features/platform/short-links/shared/link-errors';
 import { ExpiryField } from './ExpiryField';
 import { MaxUsersField } from './MaxUsersField';

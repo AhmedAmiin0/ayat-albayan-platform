@@ -1,6 +1,5 @@
 import type { SubscriptionBadge } from '@ab/shared';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t } from '@ab/web-kit';
 import { badgeStyle } from './subscription';
 
 export function SubscriptionChip({ badge, size }: { badge: SubscriptionBadge; size?: 'sm' }) {

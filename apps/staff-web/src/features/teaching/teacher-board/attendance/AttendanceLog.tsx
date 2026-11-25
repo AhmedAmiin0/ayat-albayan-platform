@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ListSkeleton, Field, FormAlert, Select, useClock, t } from '@ab/web-kit';
 import { attendanceColumns } from './attendance-columns';
 import { monthLabel, totalsLine } from './attendance-text';
 import { useTeacherAttendance } from './use-teacher-attendance';

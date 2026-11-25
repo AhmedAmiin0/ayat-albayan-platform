@@ -1,6 +1,6 @@
 import type { NotificationsOverview, NumberView } from '@ab/shared';
 import { createContext, useContext } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { NO_DRAFTS, type RuleDrafts } from './rule-drafts';
 
 export interface RulesApi {

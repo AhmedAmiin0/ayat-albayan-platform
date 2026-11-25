@@ -1,17 +1,10 @@
 import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Button, Dialog, Field, FormAlert, Input, Select, t, useUploadMaxBytes } from '@ab/web-kit';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 import { errorText } from '@/features/people/assistants/status';
 import { usePayStatement } from './use-pay-statement';

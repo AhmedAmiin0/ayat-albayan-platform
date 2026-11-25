@@ -12,7 +12,7 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { NUMBERS } from '@/features/messaging/numbers/numbers.fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { RulesSection } from './RulesSection';
 
 // Each test file mocks @/lib/api, the router's Link and use-permissions; fake ids only.

@@ -23,4 +23,4 @@ export const page = (items: NotificationItem[], unread = items.filter((i) => !i.
   unread,
 });
 
-export { renderWithClient } from '@ab/web-kit/testing/query-render';
+export { renderWithClient } from '@ab/web-kit';

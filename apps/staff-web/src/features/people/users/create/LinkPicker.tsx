@@ -1,12 +1,8 @@
 import type { LinkCandidate, LinkKind } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { Button, Field, Input, Ltr, t } from '@ab/web-kit';
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { candidatesQuery } from '@/features/people/users/api';
 
 const L = t.users.link;

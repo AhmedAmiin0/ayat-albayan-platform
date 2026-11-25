@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ROW_DONE } from '@/features/teaching/feedback/feedback-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
 import type { ServerListSearch } from '@/lib/list/server-list-search';
 import { MyFeedback } from './MyFeedback';

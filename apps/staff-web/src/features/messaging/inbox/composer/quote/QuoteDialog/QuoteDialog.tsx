@@ -1,12 +1,8 @@
 import type { ThreadView } from '@ab/shared';
 import { useState } from 'react';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { FormAlert, Dialog, Toast, t, cn } from '@ab/web-kit';
 import { CalcSteps } from '@/features/finance/pricing';
 import { CustomAmountToggle, CustomPriceField } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 import { fillComposer } from '@/features/messaging/inbox/saved-replies/lib/filter';
 import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';

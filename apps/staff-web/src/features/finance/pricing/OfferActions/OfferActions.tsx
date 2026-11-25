@@ -1,10 +1,7 @@
 import { offerText, type Quote } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, Toast, t } from '@ab/web-kit';
 import { waLink } from '@/features/finance/pricing/format';
 
 type Outcome = 'copied' | 'failed' | null;

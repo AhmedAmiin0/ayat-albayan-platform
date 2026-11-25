@@ -1,8 +1,5 @@
 import { roleActions, toGuardianHint } from '@ab/client-core';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, Dialog, t } from '@ab/web-kit';
 import { DialogActions } from '@/features/people/students/people-edit/DialogActions';
 import type { PeopleDialogProps } from '@/features/people/students/people-edit/dialog-props';
 import { ConvertRow } from './ConvertRow';

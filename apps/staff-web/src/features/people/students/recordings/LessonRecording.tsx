@@ -1,7 +1,6 @@
 import type { StudentRecordingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ListSkeleton, t } from '@ab/web-kit';
 import { studentRecordingsQuery } from './recordings-api';
 import { StudentRecordingRow } from './StudentRecordingRow';
 

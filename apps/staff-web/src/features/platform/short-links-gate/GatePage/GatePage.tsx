@@ -1,7 +1,6 @@
 import type { GateScreen } from '@ab/client-core';
 import type { ReactNode } from 'react';
-import { BrandLockup } from '@ab/web-kit/components/shell/BrandLockup';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
+import { BrandLockup, LanguageSwitch } from '@ab/web-kit';
 import { StatusCard } from '@/features/platform/short-links-gate/parts/StatusCard';
 import { CodeScreen } from '@/features/platform/short-links-gate/screens/CodeScreen';
 import { PhoneScreen } from '@/features/platform/short-links-gate/screens/PhoneScreen';

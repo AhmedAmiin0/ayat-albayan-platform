@@ -1,5 +1,4 @@
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { FormAlert, t } from '@ab/web-kit';
 import type { OtherTimeStatusProps } from './OtherTime';
 
 /** A failed read, the loading line, or an empty fortnight. */

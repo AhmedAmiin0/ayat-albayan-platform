@@ -1,7 +1,6 @@
 import { lessonAt, type LessonRow as Row } from '@ab/client-core';
 import type { SlotsResponse } from '@ab/schedule';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useClock, useViewerTz } from '@ab/web-kit';
 import { LessonRowFields } from './LessonRowFields';
 import { RowNotice } from './RowNotice';
 import { rowCheck } from './row-state';

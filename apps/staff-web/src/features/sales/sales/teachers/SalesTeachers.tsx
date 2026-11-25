@@ -1,15 +1,17 @@
 import { PROGRAMS } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import {
+  Button,
+  Cartouche,
+  EmptyState,
+  FormAlert,
+  PageHead,
+  ListSkeleton,
+  Drawer,
+  t,
+  teacherLabel,
+} from '@ab/web-kit';
 import { salesTeachersQuery } from '@/features/sales/sales/academy-api';
 import { TeacherDetail } from './TeacherDetail';
 import { TeacherFilters } from './TeacherFilters';

@@ -1,8 +1,6 @@
 import { SETTING_FIELD_OF, settingDef, type SettingKey } from '@ab/settings';
 import { useId } from 'react';
-import { controlClass, Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { controlClass, Input, t, cn } from '@ab/web-kit';
 import { shapeId, str, type SettingsForm } from '@/features/platform/settings/registry-form/settings-form';
 
 export interface ShapeFieldsProps {

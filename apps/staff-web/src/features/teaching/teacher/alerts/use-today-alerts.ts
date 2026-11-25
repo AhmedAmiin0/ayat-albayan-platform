@@ -4,8 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { usePermissions } from '@/features/people/auth';
 import { notificationsQuery } from '@/features/messaging/notifications';
 import { studentNames } from '@/features/teaching/schedule';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock, t } from '@ab/web-kit';
 import { useHomePrefs } from './home-prefs';
 
 export interface AlertRowView {

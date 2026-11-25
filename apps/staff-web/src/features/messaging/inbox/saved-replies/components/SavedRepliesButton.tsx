@@ -1,8 +1,5 @@
 import { useId, useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, IconButton, t, cn } from '@ab/web-kit';
 
 export interface SavedRepliesButtonProps {
   /** Outside the 24 h window: shown but locked, with why. */

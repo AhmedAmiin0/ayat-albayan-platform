@@ -1,9 +1,6 @@
 import { useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Label } from '@ab/web-kit/components/ui/form/label';
+import { Button, Input, Label, t } from '@ab/web-kit';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { rangeError } from './search';
 import type { DayRange } from './search';
 

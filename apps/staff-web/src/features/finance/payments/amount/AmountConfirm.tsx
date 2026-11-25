@@ -1,6 +1,6 @@
 import type { UseMutationResult } from '@tanstack/react-query';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import type { AmountTarget } from './amount-check';
 

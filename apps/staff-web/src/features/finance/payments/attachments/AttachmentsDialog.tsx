@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Dialog, FormAlert, t } from '@ab/web-kit';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { attachmentsQuery } from '@/features/finance/payments/api';
 import { attachmentLabels } from './attachments';
 

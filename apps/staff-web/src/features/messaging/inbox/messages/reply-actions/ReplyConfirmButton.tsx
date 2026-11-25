@@ -1,11 +1,9 @@
 import { replyConfirmPath, type ConfirmRoute } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, apiSend, t } from '@ab/web-kit';
 import { salesKeys } from '@/features/sales/keys';
 import { confirmErrorText } from '@/features/sales/sales';
 import { lessonKeys } from '@/features/teaching/schedule';
-import { apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 

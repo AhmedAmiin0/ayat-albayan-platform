@@ -1,8 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useEffect, useRef } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, t, cn } from '@ab/web-kit';
 import { mediaKind } from '@/features/messaging/inbox/format';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import type { BubbleOffers } from '@/features/messaging/inbox/messages/lib/bubble-offers';

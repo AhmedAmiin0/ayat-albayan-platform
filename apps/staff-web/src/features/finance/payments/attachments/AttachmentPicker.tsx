@@ -1,7 +1,6 @@
 import { RECEIPT_MIMES } from '@ab/money';
 import { useId } from 'react';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { cn } from '@ab/web-kit/lib/utils';
+import { buttonVariants, cn } from '@ab/web-kit';
 
 type Props = { label: string; onPick: (files: File[]) => void; invalid?: boolean };
 

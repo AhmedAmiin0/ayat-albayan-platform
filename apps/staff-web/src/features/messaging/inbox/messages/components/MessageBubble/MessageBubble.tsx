@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn, useClock } from '@ab/web-kit';
 import { BubbleActions, useHasBubbleActions } from '@/features/messaging/inbox/messages/components/BubbleActions';
 import { DeliveryTicks } from '@/features/messaging/inbox/messages/components/DeliveryTicks';
 import { ReactionPill } from '@/features/messaging/inbox/messages/reactions/ReactionPill';
@@ -12,7 +12,6 @@ import { MessageActions } from '@/features/messaging/inbox/messages/components/M
 import { Content, SenderLine } from '@/features/messaging/inbox/messages/components/MessageContent';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '@/features/messaging/inbox/messages/lib/message-notes';
-import { useClock } from '@ab/web-kit/lib/clock';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 import { stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
 import { hasWhatsAppLine, WhatsAppSendLine } from '@/features/messaging/inbox/messages/whatsapp-send';

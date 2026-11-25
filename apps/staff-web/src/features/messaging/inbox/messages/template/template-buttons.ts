@@ -1,5 +1,5 @@
 import type { TemplateButtonKind } from '@ab/shared';
-import type { IconName } from '@ab/web-kit/components/ui/display/icon';
+import type { IconName } from '@ab/web-kit';
 
 /** A template button's leading icon by type, as WhatsApp draws them. */
 export const BUTTON_ICON: Record<TemplateButtonKind, IconName> = {

@@ -3,14 +3,10 @@ import { zonedPartsIn } from '@ab/time';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, buttonVariants, NuqtaGlyph, t, useClock, useViewerTz } from '@ab/web-kit';
 import { LESSONS_KEY } from '@/features/teaching/schedule/api';
 import { whenWithLength } from './edit-time-text';
 import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { focusOnMount } from '@/lib/dom/mount-refs';
 
 /** Mentions the guardian message only when one was queued. */

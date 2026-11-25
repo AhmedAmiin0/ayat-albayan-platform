@@ -5,8 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { myLessonsQuery } from '@/features/teaching/teacher/api';
 import { useFollowingDay } from '@/lib/time/use-following-day';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useNow, useViewerTz } from '@ab/web-kit';
 
 /** Cancelled and moved-away lessons stay off the month, as on the phone (one count per lesson). */
 const shown = (data: readonly LessonView[] | undefined) =>

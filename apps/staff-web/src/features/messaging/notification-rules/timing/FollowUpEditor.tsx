@@ -1,5 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { fillText } from '@/features/messaging/notification-rules/rule-text';
 import { MAX_FOLLOW_UPS, type TimingDraft } from '@/features/messaging/notification-rules/rule-timing';
 import { CountInput } from './CountInput';

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { signOut } from '@ab/web-kit/auth/sign-in';
+import { signOut } from '@ab/web-kit';
 
 /** This browser's push and the session go, then the sign-in page. */
 export function useSignOut() {

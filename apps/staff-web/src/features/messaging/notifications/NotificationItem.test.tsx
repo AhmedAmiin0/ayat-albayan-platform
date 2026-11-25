@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { NotificationItem } from './NotificationItem';
 import { ITEM, READ_ITEM, renderWithClient, STUDENT_ID } from './notifications-test-kit';
 

@@ -1,9 +1,6 @@
 import { presenceLine, type StaffPresenceRow } from '@ab/shared';
-import { viewerZone } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { PresenceStatus } from '@ab/web-kit/components/channel/presence/PresenceStatus';
-import type { WithOnline } from '@ab/web-kit/components/channel/presence/presence-pick';
+import { viewerZone, t, PresenceStatus } from '@ab/web-kit';
+import type { Clock, WithOnline } from '@ab/web-kit';
 
 interface Props {
   /** Already in presence order (online first, then the newest last seen). */

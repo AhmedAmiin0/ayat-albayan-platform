@@ -2,10 +2,7 @@ import { chatBinding, type PaymentLinkView } from '@ab/shared';
 import { DISCOUNTS } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
+import { Button, Dialog, FormAlert, SegmentedControl, t } from '@ab/web-kit';
 import {
   CustomAmountToggle,
   CustomPriceField,
@@ -15,7 +12,6 @@ import {
   usePricingBody,
 } from '@/features/finance/subscriptions';
 import { useStripeFeature } from '@/features/sales/payment-links';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { createSalesSubscription, refreshAfterSalesWrite } from '@/features/sales/sales-money/api';
 import { ChildPicker } from './ChildPicker';
 import { linkStepErrorText, salesErrorText } from '@/features/sales/sales-money/errors';

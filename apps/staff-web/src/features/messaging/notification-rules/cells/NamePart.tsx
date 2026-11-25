@@ -1,5 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { tagsOf } from '@/features/messaging/notification-catalogue/catalogue-text';
 
 export function NamePart({ entry }: { entry: Pick<NotificationEntryView, 'key' | 'automatic' | 'essential' | 'locked'> }) {

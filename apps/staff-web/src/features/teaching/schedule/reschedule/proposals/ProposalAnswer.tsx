@@ -1,9 +1,5 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, ButtonRow, t, MoveReason } from '@ab/web-kit';
 import { lessonErrorText } from '@/features/teaching/schedule/api';
-import { MoveReason } from '@ab/web-kit/schedule/MoveReason';
 import type { ProposalWords } from './proposal-words';
 
 interface ProposalAnswerProps {

@@ -1,6 +1,6 @@
 import { seatState, type SeatState } from '@ab/client-core';
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { SeatChatButton } from './SeatChatButton';
 import { TakeSeatButton } from './TakeSeatButton';
 import { useChannelSeat, type ChannelSeatApi } from './use-channel-seat';

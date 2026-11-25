@@ -1,8 +1,5 @@
 import type { ConfigEntry } from '@ab/settings';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { Button, Dialog, t, locale } from '@ab/web-kit';
 import type { DescribeTarget } from './describe-target';
 import { canEditDescription, editorStart, shownDescription, type DescribeRights } from './description';
 import { DescriptionEditor } from './DescriptionEditor';

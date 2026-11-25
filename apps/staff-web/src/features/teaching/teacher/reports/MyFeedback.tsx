@@ -1,14 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { Cartouche, FormAlert, PageHead, Pager, ListSkeleton, t } from '@ab/web-kit';
 import { FEEDBACK_PAGE_SIZE, myFeedbackQuery } from '@/features/teaching/feedback/api';
 import { FeedbackTable } from '@/features/teaching/feedback/FeedbackTable';
 import { MY_FEEDBACK_LIST_KEYS } from '@/features/teaching/feedback/search';
 import { TeacherAverages } from '@/features/teaching/feedback/TeacherAverages';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { serverListProps, serverListState, type ServerListPatch, type ServerListSearch } from '@/lib/list/server-list-search';
 
 export interface MyFeedbackProps {

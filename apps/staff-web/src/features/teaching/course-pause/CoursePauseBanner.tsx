@@ -2,9 +2,8 @@ import { coursePauseBanner } from '@ab/client-core';
 import type { CoursePauseView } from '@ab/shared';
 import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t } from '@ab/web-kit';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ChangeUntilDialog } from './ChangeUntilDialog';
 import { ResumeCourseDialog } from './ResumeCourseDialog';
 

@@ -2,7 +2,7 @@ import type { Permission } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { unreadCountQuery, useInboxLive } from '@/features/messaging/inbox';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 export function unreadTitle(n: number): string {
   return n > 0 ? `(${n}) ${t.app.name}` : t.app.name;

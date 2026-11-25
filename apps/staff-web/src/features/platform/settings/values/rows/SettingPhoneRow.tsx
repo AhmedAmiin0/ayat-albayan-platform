@@ -1,7 +1,6 @@
 import { VALUE_CONFIRM, type SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 import { rowValue } from '@/features/platform/settings/registry-form/row-form';
 import { NameCell } from '@/features/platform/settings/values/cells/NameCell';
 import { conflictBy } from '@/features/platform/settings/values/conflicts/conflict-text';

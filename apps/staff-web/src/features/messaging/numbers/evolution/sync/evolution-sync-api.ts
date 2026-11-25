@@ -1,7 +1,6 @@
 import { evolutionSyncSchema, type EvolutionConfig, type EvolutionSyncView } from '@ab/shared';
 import { z } from 'zod';
-import { ApiError, apiFetch } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, apiFetch, t } from '@ab/web-kit';
 
 // An Evolution number's options (numbers.manage, docs/19 «Evolution driver»): every answer is the
 // sync view (each part pushed to Evolution, read back), parsed before it is shown.

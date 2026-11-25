@@ -3,17 +3,21 @@ import type { LessonView, ScheduleOverview } from '@ab/schedule';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  buttonVariants,
+  Cartouche,
+  EmptyState,
+  FormAlert,
+  PageHead,
+  Toast,
+  ListSkeleton,
+  t,
+  useNow,
+  useViewerTz,
+  cn,
+  currentWeekStart,
+  HeadActions,
+} from '@ab/web-kit';
 import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
 import { overviewQuery, proposalsQuery } from '@/features/teaching/schedule/api';
 import { DayBoard } from '@/features/teaching/schedule/grid/DayBoard';
@@ -26,9 +30,7 @@ import { ScheduleFilters } from '@/features/teaching/schedule/filters/ScheduleFi
 import { ScheduleNav } from '@/features/teaching/schedule/ScheduleNav';
 import { SyncScheduleButton } from '@/features/teaching/schedule/SyncScheduleButton';
 import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
-import { currentWeekStart } from '@ab/web-kit/schedule/slots';
 import { WeekGrid } from '@/features/teaching/schedule/grid/WeekGrid';
-import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
 
 export interface WeekScheduleProps {
   search: ScheduleSearch;

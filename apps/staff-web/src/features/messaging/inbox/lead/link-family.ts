@@ -1,8 +1,7 @@
 import type { LeadFamilyLinked } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { apiSend, t } from '@ab/web-kit';
 import { SALES_MONEY_KEY } from '@/features/sales/sales-money';
 
 export const linkFamily = ({ leadId, code }: { leadId: string; code: string }) =>

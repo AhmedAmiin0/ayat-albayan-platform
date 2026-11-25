@@ -22,9 +22,8 @@ import type {
 import type { BookingTeacherOption } from '@ab/schedule';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, apiFetch, apiSend } from '@ab/web-kit';
 import { useState } from 'react';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
 // The student profile's course actions: apps/api course-stop and
 // booking/profile. Paths and the key come from @ab/client-core (the same as mobile).

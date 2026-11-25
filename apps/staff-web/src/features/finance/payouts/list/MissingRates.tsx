@@ -1,8 +1,6 @@
 import type { PayoutGenerateResult } from '@ab/money';
 import { Link } from '@tanstack/react-router';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { FormAlert, t, teacherLabel } from '@ab/web-kit';
 
 export function durationsText(durations: readonly number[]): string {
   return durations.join(t.payouts.durationsJoiner);

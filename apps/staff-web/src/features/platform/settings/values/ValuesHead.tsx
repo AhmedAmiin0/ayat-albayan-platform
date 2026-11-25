@@ -1,10 +1,5 @@
 import { counted } from '@ab/core';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Cartouche, Icon, NuqtaGlyph, PageHead, t } from '@ab/web-kit';
 import { Tag } from './cells/NameCell';
 
 const v = t.settingsValues;

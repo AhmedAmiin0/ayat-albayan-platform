@@ -1,8 +1,7 @@
 import type { OutsideSlot } from '@ab/shared';
 import { clockOf } from '@ab/time';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { byLocalDay, zoneLabel } from '@ab/web-kit/schedule/slots';
-import { dayIn } from '@ab/web-kit/schedule/tz';
+import type { Clock } from '@ab/web-kit';
+import { byLocalDay, zoneLabel, dayIn } from '@ab/web-kit';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import type { OutsideParams } from './OtherTime';
 

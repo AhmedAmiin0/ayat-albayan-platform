@@ -1,14 +1,10 @@
 import type { BookingResult } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { refreshBooked } from '@/features/teaching/booking/steps/review/refresh-booked';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Button, Field, FormAlert, Input, t } from '@ab/web-kit';
 import { conflictsOf, errorCode, lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/people/students/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { createBooking } from '@/features/teaching/booking/api';
 import { CourseCheckNotice } from '@/features/teaching/booking/steps/review/CourseCheckNotice';
 import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';

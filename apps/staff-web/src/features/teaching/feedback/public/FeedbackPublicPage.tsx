@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Logo } from '@ab/web-kit/components/ui/display/mark';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { LanguageSwitch, Button, Cartouche, FormAlert, Logo, t } from '@ab/web-kit';
 import { publicFeedbackQuery, publicProblem, type PublicProblem } from '@/features/teaching/feedback/api';
 import { FeedbackForm } from './FeedbackForm';
 import { ThankYou } from './ThankYou';

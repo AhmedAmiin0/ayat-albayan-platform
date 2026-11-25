@@ -1,9 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { notificationsQuery } from '@ab/web-kit/push/notifications-api';
+import { Button, ListSkeleton, t, useNow, notificationsQuery } from '@ab/web-kit';
 import { NotificationItem } from './NotificationItem';
 
 /**

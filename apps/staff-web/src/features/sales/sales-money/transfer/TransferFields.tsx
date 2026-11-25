@@ -1,7 +1,5 @@
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Field, Input, t } from '@ab/web-kit';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { TransferForm } from './use-sales-payment';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import type { ReactNode } from 'react';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { BoardRow } from '@/features/teaching/teacher-board/board-rows';
 import type { FactsById } from '@/features/teaching/teacher-board/student-facts';
 import { CountsCell } from './CountsCell';

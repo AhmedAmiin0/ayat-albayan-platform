@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { isRedirect } from '@tanstack/react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
+import { home, kid } from '@ab/web-kit/testing';
 import { requireFamily, requirePicker } from './guard';
 
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));

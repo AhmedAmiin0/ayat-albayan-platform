@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Skeleton, Button, t } from '@ab/web-kit';
 import type { ChildSummaryRead } from './use-child-summary';
 
 type Shown = 'loading' | 'failed' | 'ready';

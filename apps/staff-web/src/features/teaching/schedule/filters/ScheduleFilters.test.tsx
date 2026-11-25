@@ -1,12 +1,12 @@
 import { counted } from '@ab/core';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { clearAllFilters, closeFilters, openFilters } from '@/test/open-filters';
 import { T_ABRAR, T_FATMA, T_NOUR } from '@/features/teaching/schedule/overview-fixture';
 import { ScheduleFilters } from './ScheduleFilters';
 import type { ScheduleSearch } from './search';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/testing';
 
 const ALL = [T_ABRAR, T_FATMA, T_NOUR];
 const chip = (label: string, value: string) =>

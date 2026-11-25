@@ -10,7 +10,7 @@ import {
 } from '@ab/shared';
 import { pdfPageRetryable } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 

@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/catalog';
-import type { IconName } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { IconName } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 
 // The one list of admin pages (docs/07 §7), shared by sidebar and sheet; only existing routes.
 export const ADMIN_NAV_GROUPS = [

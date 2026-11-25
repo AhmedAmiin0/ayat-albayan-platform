@@ -2,8 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router';
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { type Me, meQuery } from '@ab/web-kit/auth/me';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { type Me, meQuery, t } from '@ab/web-kit';
 import { routeTree } from './routeTree.gen';
 
 // The family-host move (docs/51 §3, VITE_FAMILY_ORIGIN) signs a family out of this host and

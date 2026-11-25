@@ -1,6 +1,6 @@
 import type { StaffPhotoView } from '@ab/shared';
 import { uploadPhoto } from '@/features/people/account';
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { apiSend } from '@ab/web-kit';
 
 /** Whose photo an admin edits: a teacher (teachers.write) or a staff login (users.write). */
 export type StaffPhotoKind = 'teachers' | 'users';

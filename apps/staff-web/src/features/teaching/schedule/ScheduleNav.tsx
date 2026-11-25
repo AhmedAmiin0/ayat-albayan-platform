@@ -1,10 +1,6 @@
 import { addDays, weekdayOf, weekStart } from '@ab/time';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, SegmentedControl, t, dayMonthLabel } from '@ab/web-kit';
 import type { ScheduleSearch } from './filters/search';
-import { dayMonthLabel } from '@ab/web-kit/schedule/tz';
 
 export interface ScheduleNavProps {
   search: ScheduleSearch;

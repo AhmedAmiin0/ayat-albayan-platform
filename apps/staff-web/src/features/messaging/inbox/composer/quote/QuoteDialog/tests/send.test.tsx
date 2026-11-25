@@ -3,7 +3,7 @@ import ar from '@ab/shared/i18n/ar.json';
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
@@ -107,7 +107,7 @@ it('outside the 24 h window: send and edit are disabled with the closed note; co
 });
 
 it('a 409 session_closed refetches the thread so the sheet locks send and edit', async () => {
-  const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
+  const { ApiError } = await import('@ab/web-kit');
   apiSend.mockRejectedValue(new ApiError(409, { code: 'session_closed' }));
   const client = renderWithClient(
     <QuoteDialog

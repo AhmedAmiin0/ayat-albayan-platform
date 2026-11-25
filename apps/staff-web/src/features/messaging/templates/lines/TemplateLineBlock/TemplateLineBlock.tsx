@@ -1,10 +1,7 @@
 import type { TemplateLineSync, TemplateLineView } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { Button, Ltr, useClock, t } from '@ab/web-kit';
 import { fullTime } from '@/features/messaging/inbox/format';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { optionText } from '@/features/platform/integrations/integrations-form';
 import { CrmTemplateCheck } from '@/features/messaging/templates/crm/CrmTemplateCheck';
 import { LineSyncResult } from '@/features/messaging/templates/lines/LineSyncResult';

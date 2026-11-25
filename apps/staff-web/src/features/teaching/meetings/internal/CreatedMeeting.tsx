@@ -1,5 +1,5 @@
 import type { MeetingCreateResult } from '@ab/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { InviteResults } from '@/features/teaching/meetings/invitees/InviteResults';
 import { MeetingLinkBox } from '@/features/teaching/meetings/rows/MeetingLinkBox';
 

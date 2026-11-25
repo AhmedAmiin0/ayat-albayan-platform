@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouterState } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { RunningHead } from '@ab/web-kit/components/ui/layout/running-head';
-import { meQuery } from '@ab/web-kit/auth/me';
-import { cn } from '@ab/web-kit/lib/utils';
+import { RunningHead, meQuery, cn } from '@ab/web-kit';
 import { INBOX_PAGE_TOPBAR, isInboxPath, WIDE_PAGE_TOPBAR } from './inbox-route';
 import { MenuBar } from '@/components/shell/header/MenuBar';
 import { PageFrame } from './PageFrame';

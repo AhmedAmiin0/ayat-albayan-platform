@@ -8,7 +8,7 @@ import type { LeadStatus } from '@ab/catalog';
 import { leadStatusStyle, subscriptionStatusStyle, type StatusStyle } from '@ab/money';
 import { moneyText, progressOf } from '@/features/finance/subscriptions';
 import { partPaidText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // The family's subscription in the chat (R-SUB-01): the chip, each student's package line and
 // which subscribe button the admin gets. The rules live in @ab/shared so mobile says the same.

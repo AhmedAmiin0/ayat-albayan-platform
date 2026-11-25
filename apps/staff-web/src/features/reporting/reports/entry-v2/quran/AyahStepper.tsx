@@ -1,7 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { controlClass } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Button, controlClass, t, cn } from '@ab/web-kit';
 
 export interface AyahStepperProps {
   label: string;

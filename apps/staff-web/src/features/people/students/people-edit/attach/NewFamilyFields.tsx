@@ -1,8 +1,5 @@
 import type { NewFamilyForm } from '@ab/client-core';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Field, TimeZoneSelect, t } from '@ab/web-kit';
 import { TextField } from '@/features/people/students/people-edit/TextField';
 
 const E = t.peopleEdit;

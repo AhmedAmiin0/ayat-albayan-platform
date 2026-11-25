@@ -2,7 +2,7 @@ import { canPickTrialDate } from '@ab/shared';
 import type { Gender } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { usePermissions } from '@ab/web-kit';
 import { trialHistoryQuery } from './api';
 import { TrialDateButton } from './TrialDateButton';
 import { TrialDateDialog } from './dialog/TrialDateDialog';

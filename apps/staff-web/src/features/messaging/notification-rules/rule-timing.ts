@@ -1,6 +1,6 @@
 import { DAY_BEFORE_HOURS, type AnyRuleTiming, type TimedNotificationKey } from '@ab/shared';
 import { westernDigits } from '@ab/money';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // A row's timing as the editor holds it (strings, so a half-typed number stays on screen), and the
 // way back to the contract's timing (RULE_TIMING_SCHEMAS bounds, checked here with words in MSA).

@@ -1,5 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { RuleCheck } from '@/features/messaging/notification-rules/table/RuleCheck';
 import { availableChannels, channelWords, fillText } from '@/features/messaging/notification-rules/rule-text';
 import type { RuleRowState } from '@/features/messaging/notification-rules/table/use-rule-row';

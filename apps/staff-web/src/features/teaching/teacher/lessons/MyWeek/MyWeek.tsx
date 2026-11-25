@@ -3,23 +3,25 @@ import type { LessonView } from '@ab/schedule';
 import { addDays, weekWindowIn, zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
+import {
+  Button,
+  Cartouche,
+  EmptyState,
+  Icon,
+  PageHead,
+  Toast,
+  ListSkeleton,
+  Drawer,
+  currentWeekStart,
+  t,
+  useNow,
+  useViewerTz,
+  cn,
+} from '@ab/web-kit';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
-import { currentWeekStart } from '@ab/web-kit/schedule/slots';
 import { dayMonthLabel } from '@/features/teaching/schedule';
 import { WeekGrid } from '@/features/teaching/schedule/grid/WeekGrid';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useFollowingDay } from '@/lib/time/use-following-day';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { cn } from '@ab/web-kit/lib/utils';
 import { myLessonsQuery, teacherMeQuery } from '@/features/teaching/teacher/api';
 import { LoadRetry } from '@/features/teaching/teacher/LoadRetry';
 import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard';

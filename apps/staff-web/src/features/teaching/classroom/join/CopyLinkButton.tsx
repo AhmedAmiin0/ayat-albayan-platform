@@ -1,10 +1,6 @@
 import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { useMutation } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { copyJoinLinkUrl } from '@ab/web-kit/classroom/api/api';
-import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
+import { Button, FormAlert, t, copyJoinLinkUrl, classroomErrorText } from '@ab/web-kit';
 
 /** A fresh guest link, copied to the clipboard when allowed; the URL either way. */
 export async function copyStudentLink(lessonId: string): Promise<string> {

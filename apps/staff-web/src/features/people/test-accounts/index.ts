@@ -1,3 +1,2 @@
-export { MeTestChip } from '@ab/web-kit/auth/MeTestChip';
-export { TestChip } from '@ab/web-kit/auth/TestChip';
+export { MeTestChip, TestChip } from '@ab/web-kit';
 export { TestFlagSwitch, type TestFlagSwitchProps } from './TestFlagSwitch';

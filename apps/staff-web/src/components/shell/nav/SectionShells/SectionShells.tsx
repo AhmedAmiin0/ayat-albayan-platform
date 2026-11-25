@@ -4,12 +4,11 @@ import { ADMIN_NAV_ITEMS } from '@/components/shell/nav/admin-nav-items';
 import { AdminNav } from '@/components/shell/nav/AdminNav';
 import { AppShell } from '@/components/shell/layout/AppShell';
 import { CallProvider, useInboxRealtime } from '@/features/messaging/inbox';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { usePermissions, t } from '@ab/web-kit';
 import { PortalHome } from '@/features/people/portal';
 import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/sales/SalesNav';
 import { useSalesUnread } from '@/features/sales/sales/use-sales-unread';
 import { TEACHER_NAV_ITEMS, TeacherNav } from '@/features/teaching/teacher/TeacherNav';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { NavSkeleton } from '@/components/shell/nav/NavSkeleton';
 import { useNavCounts } from '@/components/shell/nav/use-nav-counts';
 

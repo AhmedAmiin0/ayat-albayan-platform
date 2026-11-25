@@ -1,6 +1,6 @@
 import { QUOTE_BODY_MAX, quoteSnippet, type MessageQuote, type MessageView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** The message being answered, shaped like the API's reply_to (the body cut to QUOTE_BODY_MAX). */
 export const quoteOf = (m: MessageView): MessageQuote => ({

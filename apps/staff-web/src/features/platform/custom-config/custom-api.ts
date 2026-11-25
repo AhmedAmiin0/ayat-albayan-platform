@@ -1,6 +1,6 @@
 import type { CustomConfigUpsert, CustomConfigView } from '@ab/settings';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 /** GET /config/custom (admin): the free-form entries. */

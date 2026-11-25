@@ -1,6 +1,6 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { blockerText, channelsText, numberParts, stateChip, tagsOf, whenText } from './catalogue-text';
 
 const c = t.notificationCatalogue;

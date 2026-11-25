@@ -1,7 +1,6 @@
 import { APP_SEND_ANSWERS, type AppSendLine as Line, appSendLineOf } from '@ab/client-core';
 import { canSendViaWhatsApp, type MessageView } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { AppSendAnswers } from '@/features/messaging/inbox/messages/whatsapp-send/AppSendAnswers';
 import { useWhatsAppSend, useWhatsAppSendState } from '@/features/messaging/inbox/messages/whatsapp-send/use-whatsapp-send';
 import { appSendError } from '@/features/messaging/inbox/messages/whatsapp-send/whatsapp-send.api';

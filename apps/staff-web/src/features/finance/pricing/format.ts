@@ -1,7 +1,7 @@
 import { counted } from '@ab/core';
 import { formatAmount, type Quote } from '@ab/money';
 import { formatDate } from '@/features/sales/leads';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { FxRate } from './api';
 
 // Display text for a quote. Wording from ar.json (the site's copy, Western digits).

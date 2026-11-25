@@ -1,6 +1,6 @@
 import { isTimedKey, NOTIFICATION_CHANNELS, type NotificationChannel, type NotificationRuleView, type RulePatchInput } from '@ab/shared';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { Clock } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 import { channelWords, fillText, timingText } from './rule-text';
 import { parseTiming, sameTiming, timingDraft, type TimingDraft } from './rule-timing';
 

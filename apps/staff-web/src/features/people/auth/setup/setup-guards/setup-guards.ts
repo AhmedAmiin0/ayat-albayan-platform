@@ -1,8 +1,7 @@
 import { needsSetup } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
-import { requireRole, type Me } from '@ab/web-kit/auth/me';
-import { returnSearchOf } from '@ab/web-kit/auth/return-to';
+import { requireRole, type Me, returnSearchOf } from '@ab/web-kit';
 
 /**
  * /teacher/*: a teacher whose code-made login is set up (docs/46 A4), else /account-setup. `back`

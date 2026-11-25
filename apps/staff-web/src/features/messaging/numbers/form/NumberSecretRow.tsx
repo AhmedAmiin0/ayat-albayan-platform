@@ -1,11 +1,7 @@
 import type { NumberSecretName, NumberView } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog, Button, FormAlert, Input, t } from '@ab/web-kit';
 import { SettingRow } from '@/components/settings/fields/SettingRow';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { numberErrorText } from './number-errors';
 import { clearNumberSecret, putNumberSecret } from '@/features/messaging/numbers/numbers-api';
 import { SecretChip } from './SecretChip';

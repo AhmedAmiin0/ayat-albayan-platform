@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { StudentProfilePage } from '@/features/people/students/profile/StudentProfilePage';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { respond, STUDENT_ID } from './wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -1,5 +1,5 @@
 import { NOTIFICATION_AUDIENCES, type AudienceTab, type NotificationEntryView } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // One audience per tab (docs/26b §3); the manual tab appears only when there are manual rows.
 

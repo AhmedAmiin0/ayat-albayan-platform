@@ -1,6 +1,6 @@
 import { Outlet, useChildMatches, useRouterState } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
+import { Cartouche } from '@ab/web-kit';
 import { usePresenceSelf } from '@/features/platform/presence';
 import { RouteFade } from './RouteFade';
 import { AdminLayout } from './AdminLayout';

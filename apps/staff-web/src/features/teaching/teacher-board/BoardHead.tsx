@@ -1,6 +1,5 @@
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SegmentedControl, t } from '@ab/web-kit';
 import { BOARD_SEGMENTS, SEGMENT_LABEL, type BoardSegment } from './board-segments';
 
 export interface BoardHeadProps {

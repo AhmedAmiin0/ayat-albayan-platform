@@ -1,6 +1,6 @@
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { useSubscriptionFilters, type SubscriptionFiltersOptions } from './use-subscription-filters';
 
 function Fields(props: SubscriptionFiltersOptions) {

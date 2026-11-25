@@ -2,7 +2,7 @@ import { trackSelf } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useSyncExternalStore } from 'react';
 import { meQuery } from '@/features/people/auth';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { supabase } from '@ab/web-kit';
 import { presenceSelfQuery } from './api';
 
 function onVisibility(listener: () => void): () => void {

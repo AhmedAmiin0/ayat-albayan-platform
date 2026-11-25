@@ -1,8 +1,6 @@
 import type { RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { apiFetch, apiSend, t, locale } from '@ab/web-kit';
 import { roleKeys } from '@/features/people/keys';
 
 // All behind roles.manage.

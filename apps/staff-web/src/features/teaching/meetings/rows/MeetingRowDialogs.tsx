@@ -1,5 +1,5 @@
 import type { MeetingView } from '@ab/schedule';
-import { RecordingsPanel } from '@ab/web-kit/classroom/recordings/RecordingsPanel';
+import { RecordingsPanel } from '@ab/web-kit';
 import { CancelMeetingDialog } from './CancelMeetingDialog';
 import { MeetingInviteesDialog } from '@/features/teaching/meetings/invitees/MeetingInviteesDialog';
 import { RescheduleDialog } from '@/features/teaching/meetings/scheduled/RescheduleDialog';

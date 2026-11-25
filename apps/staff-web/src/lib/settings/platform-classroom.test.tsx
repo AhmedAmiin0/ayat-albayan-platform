@@ -2,7 +2,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { expect, it } from 'vitest';
-import { publicConfigQuery, usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
+import { publicConfigQuery, usePlatformClassroom } from '@ab/web-kit';
 
 function Probe({ flag }: { flag: boolean | undefined }) {
   return <p data-testid="probe">{String(usePlatformClassroom(flag))}</p>;

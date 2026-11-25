@@ -2,7 +2,7 @@ import { GRANTABLE_PERMISSIONS, type RoleView } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { RolesPage } from '@/features/people/roles/RolesPage/RolesPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -72,7 +72,7 @@ describe('RolesPage «استعادة الافتراضي»', () => {
 
   it('shows the API refusal', async () => {
     const dialog = await openRole('المبيعات');
-    const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
+    const { ApiError } = await import('@ab/web-kit');
     apiSend.mockRejectedValue(new ApiError(400, { code: 'not_system_role' }));
     fireEvent.click(dialog.getByRole('button', { name: P.reset }));
     fireEvent.click(dialog.getByRole('button', { name: P.resetConfirm }));

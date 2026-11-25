@@ -1,9 +1,7 @@
 import { fillSlots, rangeLabel, rangeMeta } from '@ab/client-core';
 import type { ReportSegment } from '@ab/shared';
 import type { Grade } from '@ab/catalog';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { Button, t, locale } from '@ab/web-kit';
 import { GradeChips } from '@/features/reporting/reports/entry-v2/GradeChips';
 
 export interface SegmentPartProps {

@@ -1,7 +1,7 @@
 import type { IntegrationGroup } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { Section } from '@/components/settings/Section';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { integrationsQuery } from './integrations-api';
 import { integrationsMatch } from './integrations-form';
 import { INTEGRATIONS_SECTION } from './integrations-section';

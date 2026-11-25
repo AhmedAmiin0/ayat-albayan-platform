@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { integrationsQuery } from '@/features/platform/integrations/integrations-api';
 import { templatesQuery } from '@/features/messaging/templates/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { joinStatus, livekitConfigured, meetingModeNotes, type MeetingModeNote } from './meeting-mode-notes';
 
 const NOTE = 'rounded-md bg-sunk px-3 py-2 text-sm text-ink-2';

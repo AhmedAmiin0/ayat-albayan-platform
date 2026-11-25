@@ -1,11 +1,7 @@
 import { OPEN_LESSON_STATUSES, type AssistantLessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { assistantLessonsQuery, localDay } from '@ab/web-kit/classroom/api/api';
+import { EmptyState, FormAlert, t, assistantLessonsQuery, localDay, useNow } from '@ab/web-kit';
 import { AssistantLessonRow } from './AssistantLessonRow';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
 
 const isOpen = (l: AssistantLessonView): boolean => (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
 

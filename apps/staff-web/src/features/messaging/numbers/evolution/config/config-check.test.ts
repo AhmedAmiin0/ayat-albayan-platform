@@ -1,6 +1,6 @@
 import { EVOLUTION_DEFAULT_EVENTS, evolutionConfigSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { checkConfig } from './config-check';
 import { draftOfConfig, patchSection } from './config-draft';
 

@@ -6,8 +6,8 @@ import {
 } from '@ab/client-core';
 import { counted } from '@ab/core';
 import type { LessonView } from '@ab/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { LessonStatusChip } from '@ab/web-kit/lib/settings/lesson-status-text';
+import { t } from '@ab/web-kit';
+import type { LessonStatusChip } from '@ab/web-kit';
 
 // docs/48 «State word lookup»: the teacher's own word for a lesson, on every row, chip and hero.
 // Each word is a nuqta glyph AND the ar.json word (docs/07: never colour alone).

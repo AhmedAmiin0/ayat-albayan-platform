@@ -1,11 +1,9 @@
 import { RATING_TEMPLATE, type MessageView, type TemplateView, type ThreadView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import { errorCode } from '@/features/teaching/schedule';
 import { templatesQuery } from '@/features/messaging/templates/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sendRating } from '@/features/messaging/inbox/api/api';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';

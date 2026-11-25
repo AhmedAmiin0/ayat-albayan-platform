@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { useEffect, useState } from 'react';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip } from '@ab/web-kit';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { windowText } from './window-state';
 

@@ -1,8 +1,7 @@
 import { intlLocale } from '@ab/core';
 import { dateText } from '@ab/time';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import type { Clock } from '@ab/web-kit';
+import { dateAndClock, viewerZone, locale } from '@ab/web-kit';
 
 // Display helpers for the inbox. DB times are UTC; these render in the viewer's zone (rule 6).
 // `nu-latn` (in intlLocale): Western digits everywhere (docs/07 §2 Numerals), either language.

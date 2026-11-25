@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { PARITY_DIFF, PARITY_SAME } from '@/features/messaging/numbers/numbers.fixture';
 import { ParityList } from './ParityList';
 

@@ -1,9 +1,7 @@
 import type { PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { EmptyState, buttonVariants, t } from '@ab/web-kit';
 import { WithHome } from '@/features/shell';
 
 interface Props {
