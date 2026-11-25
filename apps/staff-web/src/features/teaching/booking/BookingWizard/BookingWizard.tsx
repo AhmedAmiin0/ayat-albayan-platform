@@ -48,9 +48,21 @@ function BackButton({ first, exit, onBack }: BackProps) {
 
 /** R-SCH-06, R-LEAD-06, R-SCH-10: one filled primary per step; every step change moves focus. */
 export function BookingWizard(props: BookingWizardProps) {
-  const { initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId, exit, onProgress } = props;
+  const {
+    initial,
+    primary,
+    siblings,
+    onOpenStudent,
+    hint = null,
+    onChoice,
+    missedLessonId,
+    exit,
+    onProgress,
+  } = props;
   const [draft, setDraft] = useState(initial);
-  const [step, setStep] = useState<StepKey>(() => props.initialStep ?? stepsOf(initial)[0] ?? 'students');
+  const [step, setStep] = useState<StepKey>(
+    () => props.initialStep ?? stepsOf(initial)[0] ?? 'students',
+  );
   const [booked, setBooked] = useState<BookingResult | null>(null);
   const [trialDone, setTrialDone] = useState<TrialDateResult | null>(null);
   useEffect(() => {

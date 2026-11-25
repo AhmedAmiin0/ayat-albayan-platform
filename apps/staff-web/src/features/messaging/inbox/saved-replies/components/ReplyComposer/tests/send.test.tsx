@@ -58,7 +58,9 @@ describe('ReplyComposer: a reply\'s attachment', () => {
     expect(paths()).toEqual([`POST /threads/${enc}/text`, `POST /saved-replies/${PRICES.id}/stage`, `POST /threads/${enc}/file`]);
     const stageId = (apiSend.mock.calls[1]?.[2] as { clientRequestId: string }).clientRequestId;
     expect(apiSend.mock.calls[2]?.[2]).toEqual({ clientRequestId: stageId, ...STAGED });
-    expect((apiSend.mock.calls[0]?.[2] as { clientRequestId: string }).clientRequestId).not.toBe(stageId);
+    expect((apiSend.mock.calls[0]?.[2] as { clientRequestId: string }).clientRequestId).not.toBe(
+      stageId,
+    );
     await waitFor(() => expect(screen.queryByText('الأسعار.pdf')).toBeNull());
   });
 

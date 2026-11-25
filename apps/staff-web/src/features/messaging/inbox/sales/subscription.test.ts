@@ -40,8 +40,12 @@ describe('the package line', () => {
   it('names the package, then the lessons left across every package', () => {
     const sub = pupil().subscription;
     if (!sub) throw new Error('fixture');
-    expect(packageLine(sub)).toBe(`${t.enums.packageSize['8']} — ${t.subscriptions.progress.left.few.replace('{n}', '3')}`);
-    expect(packageLine({ ...sub, package_size: null, lessons_used: 10 })).toBe(t.subscriptions.progress.over.two);
+    expect(packageLine(sub)).toBe(
+      `${t.enums.packageSize['8']} — ${t.subscriptions.progress.left.few.replace('{n}', '3')}`,
+    );
+    expect(packageLine({ ...sub, package_size: null, lessons_used: 10 })).toBe(
+      t.subscriptions.progress.over.two,
+    );
   });
 
   it('an expired package shows its name only: no «بقيت 4 حلقات» under «انتهت الباقة»', () => {

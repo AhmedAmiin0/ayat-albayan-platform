@@ -13,7 +13,8 @@ import { trialDateCheckQuery } from '@/features/teaching/booking/trial-date/api'
 const SHOWN = 4;
 
 /** Whether the series can be checked: a course only once exactly its days a week are picked. */
-export const seriesReady = (d: BookingDraft): boolean => !d.course || days(d).length === d.course.perWeek;
+export const seriesReady = (d: BookingDraft): boolean =>
+  !d.course || days(d).length === d.course.perWeek;
 
 /**
  * POST {base}/check (a new trial date: {base}/trial-date/check) for this draft (one cached query, shared by the slot and review steps).
@@ -24,14 +25,20 @@ export function useSeriesCheck(draft: BookingDraft, enabled = true) {
   const body = seriesReady(draft) ? toBookingRequest(draft) : null;
   // A new trial date is checked by its own route: the trial it moves never clashes with it.
   const query = draft.trialDate ? trialDateCheckQuery : bookingCheckQuery;
-  return { body, check: useQuery({ ...query(body ?? emptyBody, mode), enabled: enabled && body !== null }) };
+  return {
+    body,
+    check: useQuery({ ...query(body ?? emptyBody, mode), enabled: enabled && body !== null }),
+  };
 }
 
 export type SeriesCheckResult = ReturnType<typeof useSeriesCheck>;
 
 /** Checked, no error and no clash over the whole series. */
 export const isSeriesClean = ({ body, check }: SeriesCheckResult): boolean =>
-  body !== null && !check.isError && Array.isArray(check.data?.conflicts) && check.data.conflicts.length === 0;
+  body !== null &&
+  !check.isError &&
+  Array.isArray(check.data?.conflicts) &&
+  check.data.conflicts.length === 0;
 
 /** The assistant's course leaves the slot step and books only over a clean check (no override). */
 export function useCourseClean(draft: BookingDraft): boolean {
@@ -43,7 +50,8 @@ export function SeriesCheck({ draft }: { draft: BookingDraft }) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const { body, check } = useSeriesCheck(draft);
   if (!body) return null;
-  if (check.isError) return draft.course ? <FormAlert>{lessonErrorText(check.error)}</FormAlert> : null;
+  if (check.isError)
+    return draft.course ? <FormAlert>{lessonErrorText(check.error)}</FormAlert> : null;
   if (!check.data) return <p className="text-xs text-ink-3">{t.booking.seriesChecking}</p>;
   const conflicts = Array.isArray(check.data.conflicts) ? check.data.conflicts : [];
   if (conflicts.length === 0) {

@@ -11,9 +11,20 @@ import { cn } from '@ab/web-kit';
 export const tableBoxClass =
   'relative flex h-0 min-h-[320px] flex-auto flex-col overflow-auto overscroll-contain rounded-md border border-rule max-sm:h-auto max-sm:min-h-0 max-sm:flex-none max-sm:overflow-visible';
 
-export function TableBox({ children, center, className }: { children: ReactNode; center?: boolean; className?: string }) {
+export function TableBox({
+  children,
+  center,
+  className,
+}: {
+  children: ReactNode;
+  center?: boolean;
+  className?: string;
+}) {
   return (
-    <div data-table-box className={cn(tableBoxClass, center && 'items-center justify-center p-4', className)}>
+    <div
+      data-table-box
+      className={cn(tableBoxClass, center && 'items-center justify-center p-4', className)}
+    >
       {children}
     </div>
   );

@@ -96,7 +96,11 @@ export function ConflictNotice(p: ConflictNoticeProps) {
       {more > 0 && <p className="text-xs text-ink-2">{t.booking.conflictMore.replace('{n}', String(more))}</p>}
       <div className="grid gap-3 border-t border-rule pt-3">
         {onOverride && (
-          <Field label={labels.reason} hint={t.booking.overrideHint} error={missing ? t.common.required : undefined}>
+          <Field
+            label={labels.reason}
+            hint={t.booking.overrideHint}
+            error={missing ? t.common.required : undefined}
+          >
             {(f) => (
               <Input
                 {...f}

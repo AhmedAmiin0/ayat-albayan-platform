@@ -14,7 +14,9 @@ const WEEKDAY: Record<string, string | undefined> = t.enums.weekday;
 export function leadSummary(lead: InboxLead, clock: Clock): SummaryRow[] {
   const q = qualForm(lead.qualification);
   const tz = q.tz || lead.tz || '';
-  const days = q.available_days.map((d) => WEEKDAY[String(d)] ?? String(d)).join(t.common.listSeparator);
+  const days = q.available_days
+    .map((d) => WEEKDAY[String(d)] ?? String(d))
+    .join(t.common.listSeparator);
   const [from, to] = [q.preferred_from, q.preferred_to].map((v) => (v ? hhmmText(v, clock) : ''));
   const hours = from && to ? clockRange(from, to, clock) : from || to || '';
   const rows: SummaryRow[] = [

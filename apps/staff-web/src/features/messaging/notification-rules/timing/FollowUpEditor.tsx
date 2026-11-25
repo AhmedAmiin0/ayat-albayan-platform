@@ -16,9 +16,17 @@ export interface FollowUpEditorProps {
 const tm = t.notificationRules.timing;
 
 /** Up to five ascending follow-ups in hours (docs/26b §6a 1.15, 1.17-1.18). */
-export function FollowUpEditor({ draft, onChange, disabled, describedBy, invalid }: FollowUpEditorProps) {
-  const setHour = (i: number, value: string) => onChange({ ...draft, hours: draft.hours.map((h, j) => (j === i ? value : h)) });
-  const remove = (i: number) => onChange({ ...draft, hours: draft.hours.filter((_, j) => j !== i) });
+export function FollowUpEditor({
+  draft,
+  onChange,
+  disabled,
+  describedBy,
+  invalid,
+}: FollowUpEditorProps) {
+  const setHour = (i: number, value: string) =>
+    onChange({ ...draft, hours: draft.hours.map((h, j) => (j === i ? value : h)) });
+  const remove = (i: number) =>
+    onChange({ ...draft, hours: draft.hours.filter((_, j) => j !== i) });
   const last = Number(draft.hours.at(-1) ?? 0);
   return (
     <span className="grid gap-1.5">
@@ -48,7 +56,15 @@ export function FollowUpEditor({ draft, onChange, disabled, describedBy, invalid
             size="sm"
             variant="ghost"
             disabled={disabled}
-            onClick={() => onChange({ ...draft, hours: [...draft.hours, String(Math.min(720, (Number.isFinite(last) ? last : 0) + 24))] })}
+            onClick={() =>
+              onChange({
+                ...draft,
+                hours: [
+                  ...draft.hours,
+                  String(Math.min(720, (Number.isFinite(last) ? last : 0) + 24)),
+                ],
+              })
+            }
           >
             {tm.followUpAdd}
           </Button>

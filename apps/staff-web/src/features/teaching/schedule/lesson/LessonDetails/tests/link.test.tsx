@@ -12,7 +12,11 @@ import { LessonDetails } from '@/features/teaching/schedule/lesson/LessonDetails
  */
 function details(platform: boolean | undefined, auto = false) {
   const client = new QueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: auto,
+  });
   render(
     <QueryClientProvider client={client}>
       <LessonDetails lesson={lesson({ platform_classroom: platform })} />

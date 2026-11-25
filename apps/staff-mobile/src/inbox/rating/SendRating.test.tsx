@@ -5,6 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { meetReminder, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import * as ownSend from '@/inbox/thread/anchor/own-send';
 import { SendRating } from './SendRating';
+import { threadKeys } from '@/core/lib/keys';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -86,9 +87,9 @@ test('a queued send says it waits for the send gate and refetches the threads', 
   await ask();
   await confirm();
   expect(await screen.findByText(t.inbox.rating.queued)).toBeTruthy();
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', guardian.phone_e164] });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: threadKeys.chat(guardian.phone_e164) });
   // the chats list too: only marked stale when none is on screen (docs/43 AU2)
-  expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['threads', 'list'] }));
+  expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: threadKeys.lists }));
 });
 
 test('a row Meta refused (201, failed) is shown as an error and may be asked again with a new id', async () => {

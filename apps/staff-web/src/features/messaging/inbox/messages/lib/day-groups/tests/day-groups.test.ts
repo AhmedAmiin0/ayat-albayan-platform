@@ -17,7 +17,9 @@ describe('date separators in the chat log', () => {
   });
 
   it('yesterday across a month boundary', () => {
-    expect(dayLabel(new Date(2026, 8, 30, 12, 0), new Date(2026, 9, 1, 8, 0))).toBe(t.inbox.dayYesterday);
+    expect(dayLabel(new Date(2026, 8, 30, 12, 0), new Date(2026, 9, 1, 8, 0))).toBe(
+      t.inbox.dayYesterday,
+    );
   });
 
   it('one separator before the first message of each day, in order', () => {

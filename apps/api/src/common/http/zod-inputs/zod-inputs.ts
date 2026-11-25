@@ -1,6 +1,7 @@
-import { Body, Param, Query, type HttpException, type PipeTransform } from '@nestjs/common';
+import { Body, Param, Query, type PipeTransform } from '@nestjs/common';
 import { z } from 'zod';
 import { parseOrThrow, sentOnly } from '@/common/http/http';
+import type { ParamFailure } from './zod-inputs.types';
 
 // docs/36 Z-1: a Nest input is parsed by its zod schema before the handler runs (400 = the one
 // `validation_failed` envelope). Built on @Body/@Query/@Param + a pipe, so Swagger and pipe order
@@ -11,10 +12,14 @@ import { parseOrThrow, sentOnly } from '@/common/http/http';
  * a bad `:id` won over a bad body. Nest resolves params with Promise.all; waiting one event-loop
  * turn keeps that order whatever the compile target does to async timing.
  */
+const SCHEMAS = new WeakMap<object, z.ZodType>();
+
 const afterOtherParams = (): Promise<void> => new Promise((resolve) => setImmediate(resolve));
 
-class ZodPipe<S extends z.ZodType> implements PipeTransform<unknown, Promise<z.output<S>>> {
-  constructor(private readonly schema: S) {}
+export class ZodPipe<S extends z.ZodType> implements PipeTransform<unknown, Promise<z.output<S>>> {
+  constructor(private readonly schema: S) {
+    SCHEMAS.set(this, schema);
+  }
 
   async transform(value: unknown): Promise<z.output<S>> {
     await afterOtherParams();
@@ -27,7 +32,9 @@ class SentOnlyPipe<S extends z.ZodType<object>> implements PipeTransform<
   unknown,
   Promise<Partial<z.output<S>>>
 > {
-  constructor(private readonly schema: S) {}
+  constructor(private readonly schema: S) {
+    SCHEMAS.set(this, schema);
+  }
 
   async transform(value: unknown): Promise<Partial<z.output<S>>> {
     await afterOtherParams();
@@ -58,9 +65,6 @@ export function ZodQuery(schema: z.ZodType): ParameterDecorator {
   return Query(new ZodPipe(schema));
 }
 
-/** The route's own error for a bad param (404 list_not_found, 400 invalid_phone…). */
-type ParamFailure = () => HttpException;
-
 const failingWith =
   (fail: ParamFailure) =>
   <S extends z.ZodType>(schema: S, value: unknown): z.output<S> => {
@@ -74,13 +78,17 @@ const failingWith =
  * included: two turns keep a bad body (or a bad ParseUUIDPipe id) winning over a bad param.
  * Two ZodParams of one handler: the LAST parameter fails first (Nest resolves it first).
  */
-class ZodParamPipe<S extends z.ZodType> implements PipeTransform<unknown, Promise<z.output<S>>> {
+export class ZodParamPipe<S extends z.ZodType> implements PipeTransform<
+  unknown,
+  Promise<z.output<S>>
+> {
   private readonly parse: typeof parseOrThrow;
 
   constructor(
     private readonly schema: S,
     fail?: ParamFailure,
   ) {
+    SCHEMAS.set(this, schema);
     this.parse = fail === undefined ? parseOrThrow : failingWith(fail);
   }
 
@@ -102,4 +110,9 @@ export function ZodParam(name: string, schema: z.ZodType, fail?: ParamFailure): 
 /** `@ZodParams(schema) ids` replaces `@Param() raw` + check: every `:param` as one object. */
 export function ZodParams(schema: z.ZodType<object>): ParameterDecorator {
   return Param(new ZodParamPipe(schema));
+}
+
+/** The schema a zod input pipe parses with (the contract snapshot); undefined for other pipes. */
+export function declaredSchema(pipe: PipeTransform): z.ZodType | undefined {
+  return SCHEMAS.get(pipe);
 }

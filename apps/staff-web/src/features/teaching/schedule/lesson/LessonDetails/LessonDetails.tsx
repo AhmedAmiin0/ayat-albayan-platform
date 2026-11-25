@@ -23,7 +23,13 @@ import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
 import { TeacherConfirmedTag } from '@/features/teaching/schedule/lesson/TeacherConfirmedTag';
 
 /** Times in the viewer's zone plus differing clocks; job-found clashes shown (R-SCH-04). */
-export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEditTime?: () => void }) {
+export function LessonDetails({
+  lesson,
+  onEditTime,
+}: {
+  lesson: LessonView;
+  onEditTime?: () => void;
+}) {
   const clock = useClock();
   const tz = useViewerTz();
   const at = new Date(lesson.starts_at);
@@ -88,7 +94,9 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
             <span className="text-ink-3">{t.lessons.noLink}</span>
           )}
         </DetailRow>
-        {lesson.override_reason && <DetailRow label={t.booking.overrideReason}>{lesson.override_reason}</DetailRow>}
+        {lesson.override_reason && (
+          <DetailRow label={t.booking.overrideReason}>{lesson.override_reason}</DetailRow>
+        )}
         {lesson.conflicts.length > 0 && (
           <DetailRow label={t.schedule.needsReview}>
             <span className="block text-danger">{t.schedule.generatedConflict}</span>
@@ -97,7 +105,9 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
             ))}
           </DetailRow>
         )}
-        {lesson.cancel_reason && <DetailRow label={t.lessons.reason}>{lesson.cancel_reason}</DetailRow>}
+        {lesson.cancel_reason && (
+          <DetailRow label={t.lessons.reason}>{lesson.cancel_reason}</DetailRow>
+        )}
       </dl>
     </>
   );

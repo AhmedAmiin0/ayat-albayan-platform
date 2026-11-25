@@ -8,7 +8,13 @@ import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
  * theirs left): theirs and ours, «👍 2» when both chose it; the tooltip and the screen reader name
  * who reacted (the chat's name, our staff member). Nothing without one.
  */
-export function ReactionPill({ message: m, outbound }: { message: MessageView; outbound: boolean }) {
+export function ReactionPill({
+  message: m,
+  outbound,
+}: {
+  message: MessageView;
+  outbound: boolean;
+}) {
   const { chat } = useChatActions();
   const items = reactionPill(m.reactions);
   if (items.length === 0) return null;

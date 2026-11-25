@@ -17,7 +17,12 @@ export function TeacherAvailability({ me }: { me: TeacherMe }) {
   if (!rows.data) return <ListSkeleton />;
   return (
     <div className="grid gap-7">
-      <AvailabilityGrid key={me.id} teacherId={me.id} tz={gridTz(rows.data, me.tz)} rows={rows.data} />
+      <AvailabilityGrid
+        key={me.id}
+        teacherId={me.id}
+        tz={gridTz(rows.data, me.tz)}
+        rows={rows.data}
+      />
       <TimeOffList teacherId={me.id} />
     </div>
   );

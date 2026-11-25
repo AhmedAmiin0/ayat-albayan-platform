@@ -87,7 +87,12 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
       <div className="mb-3">
         <ScheduleNav search={search} today={today} onSearch={patch} />
       </div>
-      <ScheduleFilters search={search} teachers={all} onSearch={patch} resultCount={overview.data ? shown.length : undefined} />
+      <ScheduleFilters
+        search={search}
+        teachers={all}
+        onSearch={patch}
+        resultCount={overview.data ? shown.length : undefined}
+      />
       <Body
         query={overview}
         rows={boardRows(teachers, shown, tz)}
@@ -112,7 +117,11 @@ function Body({ query, rows, view, onOpen }: BodyProps) {
   if (query.isError) return <FormAlert>{t.schedule.loadError}</FormAlert>;
   if (!query.data) return <ListSkeleton />;
   if (rows.length === 0) {
-    return <EmptyState title={query.data.teachers.length === 0 ? t.teachers.empty : t.booking.noTeachers} />;
+    return (
+      <EmptyState
+        title={query.data.teachers.length === 0 ? t.teachers.empty : t.booking.noTeachers}
+      />
+    );
   }
   return (
     <div aria-busy={query.isPlaceholderData || undefined} className={cn(query.isPlaceholderData && 'opacity-60')}>

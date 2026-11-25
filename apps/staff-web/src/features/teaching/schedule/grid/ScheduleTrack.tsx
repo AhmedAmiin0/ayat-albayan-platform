@@ -14,7 +14,15 @@ const place = (range: Range): CSSProperties | null => {
   return box && { insetInlineStart: `${box.start}%`, width: `${box.width}%` };
 };
 
-function Marks({ ranges, className, style }: { ranges: readonly Range[]; className: string; style?: CSSProperties }) {
+function Marks({
+  ranges,
+  className,
+  style,
+}: {
+  ranges: readonly Range[];
+  className: string;
+  style?: CSSProperties;
+}) {
   return ranges.map((range, i) => {
     const at = place(range);
     return at && <span key={`${i}-${range.start}-${range.end}`} className={cn('absolute', className)} style={{ ...style, ...at }} />;

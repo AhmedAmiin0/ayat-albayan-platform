@@ -25,8 +25,20 @@ const callerOf = (row: ActiveCallView, showsPhone: boolean): string =>
 function SessionView({ s }: { s: CallSessionApi }) {
   const { store, session, phase } = s;
   if (!session || !phase) return null;
-  if (session.minimised) return <CallBar session={session} row={s.row} phase={phase} onExpand={() => store.setMinimised(false)} />;
-  const actions = { hangup: () => store.hangup(), toggleMute: () => store.toggleMute(), minimise: () => store.setMinimised(true) };
+  if (session.minimised)
+    return (
+      <CallBar
+        session={session}
+        row={s.row}
+        phase={phase}
+        onExpand={() => store.setMinimised(false)}
+      />
+    );
+  const actions = {
+    hangup: () => store.hangup(),
+    toggleMute: () => store.toggleMute(),
+    minimise: () => store.setMinimised(true),
+  };
   return <CallScreen session={session} row={s.row} phase={phase} actions={actions} />;
 }
 

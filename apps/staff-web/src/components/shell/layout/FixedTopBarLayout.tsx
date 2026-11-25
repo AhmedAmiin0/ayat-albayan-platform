@@ -34,7 +34,9 @@ export function FixedTopBarLayout({ topNav, bar, wide = false, children }: Fixed
       <div className={cn('shrink-0', full && 'min-[1340px]:hidden')}>
         <RunningHead />
       </div>
-      <PageFrame pageClassName={inbox ? INBOX_PAGE_TOPBAR : wide ? WIDE_PAGE_TOPBAR : undefined}>{children}</PageFrame>
+      <PageFrame pageClassName={inbox ? INBOX_PAGE_TOPBAR : wide ? WIDE_PAGE_TOPBAR : undefined}>
+        {children}
+      </PageFrame>
     </div>
   );
 }

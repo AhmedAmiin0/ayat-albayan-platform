@@ -54,5 +54,9 @@ export function dayPicks(d: ZonedPicks): DayPick[] {
 export function courseEnd(d: RulePicks): string | null {
   const rule = pickedRule(d);
   if (!rule || !d.course) return null;
-  return courseEndsOn({ groups: timeGroups(rule), startsOn: rule.startsOn, lessonsTotal: d.course.lessonsTotal });
+  return courseEndsOn({
+    groups: timeGroups(rule),
+    startsOn: rule.startsOn,
+    lessonsTotal: d.course.lessonsTotal,
+  });
 }

@@ -30,6 +30,7 @@ describe('AdminNav — dynamic roles', () => {
   });
 
   it('gives every item the same permission the /admin route guard checks for its page', () => {
-    for (const item of visibleGroups(() => true).flat()) expect([item.to, item.permission]).toEqual([item.to, pagePermission(item.to)]);
+    for (const item of visibleGroups(() => true).flat())
+      expect([item.to, item.permission]).toEqual([item.to, pagePermission(item.to)]);
   });
 });

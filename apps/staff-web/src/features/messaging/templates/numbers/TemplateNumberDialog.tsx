@@ -18,7 +18,13 @@ export interface TemplateNumberDialogProps {
 }
 
 /** Unapproved on that WABA, the message goes from the next number (docs/23c decision 3). */
-export function TemplateNumberDialog({ pick, numbers, busy, onConfirm, onClose }: TemplateNumberDialogProps) {
+export function TemplateNumberDialog({
+  pick,
+  numbers,
+  busy,
+  onConfirm,
+  onClose,
+}: TemplateNumberDialogProps) {
   const name = templateName(pick.template.key);
   const number = pick.numberId === null ? undefined : numbers?.find((n) => n.id === pick.numberId);
   const text = number

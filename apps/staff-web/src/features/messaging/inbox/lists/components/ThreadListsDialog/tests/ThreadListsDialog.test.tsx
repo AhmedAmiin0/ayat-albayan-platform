@@ -16,7 +16,9 @@ const box = (n: string) => screen.findByRole<HTMLInputElement>('checkbox', { nam
 
 function show(lists = [PAY, TRIAL]) {
   routeFetch(apiFetch, [['/chat-lists', lists]]);
-  renderWithClient(<ThreadListsDialog phone={PHONE} lists={[{ id: PAY.id, name: PAY.name }]} onClose={vi.fn()} />);
+  renderWithClient(
+    <ThreadListsDialog phone={PHONE} lists={[{ id: PAY.id, name: PAY.name }]} onClose={vi.fn()} />,
+  );
 }
 
 afterEach(() => {

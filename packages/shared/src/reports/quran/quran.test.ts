@@ -7,7 +7,7 @@ import {
   juzOf,
   juzPages,
   nextAyah,
-  pageOf,
+  mushafPageOf,
   rangeInfo,
   searchSurahs,
   surahName,
@@ -55,7 +55,7 @@ describe('pages and ajzāʾ', () => {
     { surah: 78, ayah: 1, page: 582, juz: 30 },
     { surah: 114, ayah: 6, page: 604, juz: 30 },
   ])('surah $surah ayah $ayah is on page $page, juz $juz', ({ surah, ayah, page, juz }) => {
-    expect(pageOf({ surah, ayah })).toBe(page);
+    expect(mushafPageOf({ surah, ayah })).toBe(page);
     expect(juzOf({ surah, ayah })).toBe(juz);
   });
 

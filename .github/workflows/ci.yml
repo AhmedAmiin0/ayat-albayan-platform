@@ -253,6 +253,16 @@ jobs:
           exit "$status"
         env:
           JEST_CACHE_DIR: ${{ matrix.jcache && format('{0}/node_modules/.jest-cache', github.workspace) || '' }}
+      # The size of each Metro bundle, so a contracts PR can compare it with develop's (docs/62 §1 «Mobile
+      # bundle»). A bundle task the turbo cache replayed wrote no dist/: the summary says so.
+      - name: Mobile bundle size
+        if: matrix.name == 'typecheck + bundles'
+        run: |
+          for app in staff-mobile family-mobile; do
+            dir="apps/$app/dist/bundle"
+            if [ -d "$dir" ]; then size=$(du -sb "$dir" | cut -f1); else size="replayed from the turbo cache"; fi
+            echo "bundle $app: $size" | tee -a "$GITHUB_STEP_SUMMARY"
+          done
       # Saved only when vitest (or jest) wrote new transforms (not when turbo replayed the task), also after a red test (the
       # transforms are still right), and only when nothing was restored, i.e. a new lockfile or config (~50 MB per
       # shard): one entry per key prefix instead of a new one per develop run, so the Actions cache keeps room for turbo.

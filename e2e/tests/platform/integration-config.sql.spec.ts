@@ -72,7 +72,7 @@ test.describe('integration config (migration 310)', () => {
       const read = await asService(tx, () => tx<{ key: string; value: string }[]>`select * from public.integration_secrets_read()`);
       expect(read.filter((r) => r.key === 'WA_APP_SECRET').map((r) => r.value)).toEqual(['e2e-fake-secret-2']);
       const status = await asService(tx, () => tx<Record<string, unknown>[]>`select * from public.integration_secrets_status()`);
-      const row = status.find((r) => r['key'] === 'WA_APP_SECRET');
+      const row = status.find((r) => r.key === 'WA_APP_SECRET');
       expect(Object.keys(row ?? {}).sort()).toEqual(['key', 'updated_at']);
       const cleared = await asService(tx, () => tx<{ c: boolean }[]>`select public.integration_secret_clear('WA_APP_SECRET') as c`);
       expect(cleared[0]?.c).toBe(true);

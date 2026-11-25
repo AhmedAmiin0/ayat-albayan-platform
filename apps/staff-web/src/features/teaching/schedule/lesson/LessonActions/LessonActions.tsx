@@ -39,7 +39,9 @@ export interface LessonActionsProps {
 function eventsNow(lesson: LessonView, at: { now: number; teacher: boolean }): StatusRouteEvent[] {
   const started = Date.parse(lesson.starts_at) <= at.now;
   const early = (e: StatusRouteEvent) => e === 'excuse' && !at.teacher;
-  return STATUS_ROUTE_EVENTS.filter((e) => lesson.allowed_events.includes(e) && (started || early(e)));
+  return STATUS_ROUTE_EVENTS.filter(
+    (e) => lesson.allowed_events.includes(e) && (started || early(e)),
+  );
 }
 
 /** Next steps from `allowed_events` (R-SCH-03/07/08); one primary, which steps down when needed. */
@@ -50,8 +52,14 @@ export function LessonActions(props: LessonActionsProps) {
     await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
     onDone(message);
   };
-  const confirm = useMutation({ mutationFn: confirmLesson, onSuccess: () => done(t.lessons.confirmed) });
-  const status = useMutation({ mutationFn: setLessonStatus, onSuccess: () => done(t.lessons.statusSaved) });
+  const confirm = useMutation({
+    mutationFn: confirmLesson,
+    onSuccess: () => done(t.lessons.confirmed),
+  });
+  const status = useMutation({
+    mutationFn: setLessonStatus,
+    onSuccess: () => done(t.lessons.statusSaved),
+  });
   const busy = confirm.isPending || status.isPending;
   const error = confirm.error ?? status.error;
   // The live clock (docs/48): the outcomes appear by themselves at the start minute.
@@ -63,7 +71,8 @@ export function LessonActions(props: LessonActionsProps) {
   const confirmable =
     required && props.teacher !== true && lesson.allowed_events.includes('confirm');
   // One filled button: join (live clock) or a pending proposal's accept leads.
-  const stepDown = (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
+  const stepDown =
+    (isOpenLesson(lesson.status) && canJoinNow(lesson, live, win)) || props.proposalLeads === true;
 
   return (
     <div className="grid gap-3">

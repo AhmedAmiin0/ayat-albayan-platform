@@ -29,7 +29,9 @@ describe('a renewal’s prefilled day that is no longer free (owner 2026-10-18)'
 
   it('a day she already moved to another time, or a course not prefilled, says nothing', () => {
     expect(takenDays(draft(SUN_LATER, [WED]), [clash(SUN_LATER)])).toEqual([]);
-    expect(takenDays({ ...draft(SUN, [WED]), course: { ...course, prefilled: [] } }, [clash(SUN)])).toEqual([]);
+    expect(
+      takenDays({ ...draft(SUN, [WED]), course: { ...course, prefilled: [] } }, [clash(SUN)]),
+    ).toEqual([]);
     expect(takenDays({ ...draft(SUN, [WED]), course: null }, [clash(SUN)])).toEqual([]);
   });
 });

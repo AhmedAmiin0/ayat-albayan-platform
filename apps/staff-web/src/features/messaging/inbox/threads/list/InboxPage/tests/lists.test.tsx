@@ -19,7 +19,12 @@ const LISTS = [
   { id: '0c000000-0000-4000-8000-000000000002', name: 'تجريبي', count: 0 },
 ];
 
-function show(input: { search: InboxSearch; mode?: InboxMode; permissions?: string[]; items?: unknown[] }) {
+function show(input: {
+  search: InboxSearch;
+  mode?: InboxMode;
+  permissions?: string[];
+  items?: unknown[];
+}) {
   const mode = input.mode ?? 'sales';
   const items = input.items ?? [thread()];
   routeFetch(apiFetch, [

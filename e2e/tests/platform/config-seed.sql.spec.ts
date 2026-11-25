@@ -37,7 +37,7 @@ test.describe('config seeder (26-P2, real payload)', () => {
       const before = (await all(tx)).filter((r) => r.key !== 'messaging_enabled');
       const gateBefore = await gateRows(tx);
       const first = await runConfigSeed(tx);
-      expect(first['failed']).toEqual([]);
+      expect(first.failed).toEqual([]);
       const keys = (await all(tx)).map((r) => r.key);
       for (const e of SEED_ENTRIES) expect(keys, e.key).toContain(e.key);
       // Existing rows (false, JSON null, real values) keep value, version and updated_at.

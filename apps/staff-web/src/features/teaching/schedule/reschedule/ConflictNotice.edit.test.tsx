@@ -4,8 +4,16 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { ConflictNotice } from './ConflictNotice';
 
-const clash: Conflict = { kind: 'student_busy', startsAt: '2026-10-04T14:00:00Z', endsAt: '2026-10-04T14:45:00Z', studentId: 's-1' };
-const labels = { override: t.lessons.timeEdit.overrideEdit, reason: t.lessons.timeEdit.overrideReasonEdit };
+const clash: Conflict = {
+  kind: 'student_busy',
+  startsAt: '2026-10-04T14:00:00Z',
+  endsAt: '2026-10-04T14:45:00Z',
+  studentId: 's-1',
+};
+const labels = {
+  override: t.lessons.timeEdit.overrideEdit,
+  reason: t.lessons.timeEdit.overrideReasonEdit,
+};
 
 describe('ConflictNotice inside an edit (R-SCH-11)', () => {
   it('speaks the edit, names the busy student, starts with the form reason and stacks its controls', () => {
@@ -23,7 +31,14 @@ describe('ConflictNotice inside an edit (R-SCH-11)', () => {
   });
 
   it('«اختر موعدًا آخر» is the strong button, the override an outlined secondary in the same ButtonRow', () => {
-    render(<ConflictNotice conflicts={[clash]} labels={labels} onChangeSlot={vi.fn()} onOverride={vi.fn()} />);
+    render(
+      <ConflictNotice
+        conflicts={[clash]}
+        labels={labels}
+        onChangeSlot={vi.fn()}
+        onOverride={vi.fn()}
+      />,
+    );
     const strong = screen.getByRole('button', { name: t.booking.changeSlot });
     const quiet = screen.getByRole('button', { name: labels.override });
     expect(strong.className).toContain('bg-primary');

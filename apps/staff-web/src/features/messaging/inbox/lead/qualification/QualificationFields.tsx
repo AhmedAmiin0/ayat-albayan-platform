@@ -23,7 +23,9 @@ const TEXT: { key: QualTextField; label: string }[] = [
 export function QualificationFields({ form, errors, onChange }: QualFieldsProps) {
   const text = (key: QualTextField, label: string) => (
     <Field key={key} label={label} error={errors[key]}>
-      {(p) => <Input {...p} value={form[key]} onChange={(e) => onChange({ [key]: e.target.value })} />}
+      {(p) => (
+        <Input {...p} value={form[key]} onChange={(e) => onChange({ [key]: e.target.value })} />
+      )}
     </Field>
   );
 

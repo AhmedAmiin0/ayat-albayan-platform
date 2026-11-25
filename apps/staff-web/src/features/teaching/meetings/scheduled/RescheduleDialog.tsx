@@ -30,7 +30,11 @@ export function RescheduleDialog({ meeting, tz, onClose }: Props) {
   const submit = () => {
     const problem = scheduleIssue(value, { now: new Date(), tz });
     setIssue(problem && L.errors[problem]);
-    if (!problem) save.mutate({ id: meeting.id, body: { startsAt: startsAtOf(value, tz), durationMin: value.durationMin } });
+    if (!problem)
+      save.mutate({
+        id: meeting.id,
+        body: { startsAt: startsAtOf(value, tz), durationMin: value.durationMin },
+      });
   };
   const actions = (
     <>
@@ -41,7 +45,12 @@ export function RescheduleDialog({ meeting, tz, onClose }: Props) {
     </>
   );
   return (
-    <Dialog title={L.list.reschedule} description={meeting.title} onClose={onClose} actions={actions}>
+    <Dialog
+      title={L.list.reschedule}
+      description={meeting.title}
+      onClose={onClose}
+      actions={actions}
+    >
       <div className="grid gap-4">
         <ScheduleFields value={value} onChange={setValue} tz={tz} />
         {issue && <FormAlert>{issue}</FormAlert>}

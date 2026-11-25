@@ -1,6 +1,6 @@
 import type { ChannelSeat } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import { ApiError } from '../../core/http';
 import { channelSeatKey, channelSeats, seatError, seatErrorText, seatState } from './channel-seat';
 
 // One assistant seat per chat, the one who brought the student first: the seat both apps read
@@ -17,7 +17,7 @@ const apiSend = vi.fn(async (_method: string, _path: string): Promise<unknown> =
   ...HELD,
   mine: true,
 }));
-const seats = channelSeats({ apiFetch, apiSend } as unknown as ApiClient);
+const seats = channelSeats({ apiFetch, apiSend });
 
 describe('channelSeats', () => {
   it('reads one seat per student under its own key, parsed', async () => {

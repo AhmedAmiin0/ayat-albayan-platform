@@ -20,7 +20,8 @@ function open() {
   const onDone = vi.fn();
   renderWithClient(<CoursePauseSheet studentId="s1" onClose={vi.fn()} onDone={onDone} />);
   const dialog = within(screen.getByRole('dialog', { name: words.title }));
-  const set = (label: string, value: string) => fireEvent.change(dialog.getByLabelText(label), { target: { value } });
+  const set = (label: string, value: string) =>
+    fireEvent.change(dialog.getByLabelText(label), { target: { value } });
   const confirm = () => dialog.getByRole<HTMLButtonElement>('button', { name: words.confirm });
   return { dialog, set, confirm, onDone };
 }

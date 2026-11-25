@@ -52,17 +52,35 @@ export interface EntryProps extends Pick<BookingWizardProps, 'onOpenStudent' | '
 }
 
 /** The lead path, once the lead's qualification is in; without it step 1 starts from the URL. */
-export function LeadBooking({ search, onOpenStudent, hint, onChoice }: EntryProps & { search: BookSearch }) {
+export function LeadBooking({
+  search,
+  onOpenStudent,
+  hint,
+  onChoice,
+}: EntryProps & { search: BookSearch }) {
   const lead = useQuery({ ...leadByPhoneQuery(search.phone ?? ''), enabled: !!search.phone });
   if (lead.isPending && !!search.phone) return <p className="text-ink-3">{t.common.loading}</p>;
   const found = lead.data && lead.data.id === search.leadId ? lead.data : null;
   return (
-    <BookingWizard initial={draftFromLead(search, found)} primary={null} siblings={[]} onOpenStudent={onOpenStudent} hint={hint} onChoice={onChoice} />
+    <BookingWizard
+      initial={draftFromLead(search, found)}
+      primary={null}
+      siblings={[]}
+      onOpenStudent={onOpenStudent}
+      hint={hint}
+      onChoice={onChoice}
+    />
   );
 }
 
 /** The wizard for one student, once their profile (tz, program, siblings) and guardian are in. */
-export function StudentBooking({ search, studentId, onOpenStudent, hint, onChoice }: EntryProps & { search: BookSearch; studentId: string }) {
+export function StudentBooking({
+  search,
+  studentId,
+  onOpenStudent,
+  hint,
+  onChoice,
+}: EntryProps & { search: BookSearch; studentId: string }) {
   const student = useQuery(studentQuery(studentId));
   const guardianId = student.data?.guardian_id;
   const guardian = useQuery({ ...guardianQuery(guardianId ?? ''), enabled: !!guardianId });

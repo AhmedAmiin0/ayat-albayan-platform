@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { PAYMENT_METHODS } from '@ab/catalog';
-import { listSortShape, optionalText } from '@ab/core';
+import { listSortShape, optionalText, pageQuery } from '@ab/core';
 import { EARNING_STATUSES } from './earnings';
 import { EARNING_SORT_KEYS, TEACHER_PAYMENT_SORT_KEYS } from '../list-sorts';
 import { moneyAmount, pastInstant, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../schemas';
@@ -26,15 +26,10 @@ export const teacherReceiptUploadSchema = z.object({
   size: z.int().min(1).max(RECEIPT_MAX_BYTES, { message: 'receipt_too_large' }),
 });
 
-const pageShape = {
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(25),
-};
-
 /** GET .../sessions: `unpaid` = earned + partially_paid; `sort`/`dir` (R-NFR-08). */
 export const earningsListQuery = z.object({
   status: z.enum([...EARNING_STATUSES, 'unpaid']).optional(),
-  ...pageShape,
+  ...pageQuery({ size: 25 }),
   ...listSortShape(EARNING_SORT_KEYS),
 });
 
@@ -43,7 +38,7 @@ export const teacherPaymentListQuery = z.object({
   method: z.enum(PAYMENT_METHODS).optional(),
   voided: z.enum(['true', 'false']).optional(),
   note: z.string().trim().min(1).max(100).optional(),
-  ...pageShape,
+  ...pageQuery({ size: 25 }),
   ...listSortShape(TEACHER_PAYMENT_SORT_KEYS),
 });
 

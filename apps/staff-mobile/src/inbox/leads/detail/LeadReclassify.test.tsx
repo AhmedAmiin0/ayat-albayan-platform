@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { LeadReclassify } from './LeadReclassify';
+import { leadKeys } from '@/core/lib/keys';
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -44,7 +45,7 @@ test('confirm: POST reclassify, pop back, refetch every lead list', async () => 
   await fireEvent.press(screen.getByRole('button', { name: t.leads.reclassifyAsApplicant }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/a1/reclassify');
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads'] });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: leadKeys.all });
 });
 
 test('a failed move stays on the screen with the error', async () => {

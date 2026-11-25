@@ -32,7 +32,9 @@ export function TeacherMessagesPage({ studentId, onPick }: Props) {
       </PageHead>
       {list.isPending && <ListSkeleton />}
       {list.isError && <FormAlert>{t.studentChannel.loadFailed}</FormAlert>}
-      {list.data?.length === 0 && <EmptyState title={t.studentChannel.listEmpty}>{t.studentChannel.listEmptyHint}</EmptyState>}
+      {list.data?.length === 0 && (
+        <EmptyState title={t.studentChannel.listEmpty}>{t.studentChannel.listEmptyHint}</EmptyState>
+      )}
       {rows.length > 0 && (
         <div className="grid gap-4 shell:grid-cols-[280px_1fr]">
           <div className={picked ? 'max-shell:hidden' : undefined}>

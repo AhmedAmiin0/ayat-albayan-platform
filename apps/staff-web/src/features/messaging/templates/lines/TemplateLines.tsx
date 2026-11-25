@@ -17,7 +17,13 @@ export function TemplateLines({ lines, onNotice }: TemplateLinesProps) {
       <p className="mb-2 max-w-[70ch] text-xs text-ink-2">{p.intro}</p>
       <div className="grid gap-3 sm:grid-cols-2">
         {WA_LINES.map((line) => (
-          <TemplateLineBlock key={line} line={line} facts={lines.factsOf(line)} phone={lines.phones[line]} onNotice={onNotice} />
+          <TemplateLineBlock
+            key={line}
+            line={line}
+            facts={lines.factsOf(line)}
+            phone={lines.phones[line]}
+            onNotice={onNotice}
+          />
         ))}
       </div>
     </div>

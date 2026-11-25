@@ -11,11 +11,21 @@ import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/L
 import { configWrapper } from '@ab/web-kit/testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+  apiSend: vi.fn(),
+}));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
-    <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
-  ),
+  Link: ({
+    to,
+    search,
+    children,
+  }: {
+    to: string;
+    search: Record<string, string>;
+    children: ReactNode;
+  }) => <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>,
   // ReportLink (shown once the lesson is past) asks for the router; none is mounted here.
   useRouter: () => undefined,
 }));
@@ -33,9 +43,17 @@ const INVOICE: InvoiceView = {
 };
 
 function renderDrawer(l: LessonView, invoices: InvoiceView[] = []) {
-  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/invoices?') ? invoices : path === '/messaging/templates' ? [] : { url: 'https://signed/inv' }));
+  apiFetch.mockImplementation(async (path: string) =>
+    path.startsWith('/invoices?')
+      ? invoices
+      : path === '/messaging/templates'
+        ? []
+        : { url: 'https://signed/inv' },
+  );
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <LessonDrawer lesson={l} onClose={vi.fn()} onDone={vi.fn()} />
     </QueryClientProvider>,
   );
@@ -87,7 +105,9 @@ describe('rescheduling a makeup (R-SCH-10)', () => {
       path.startsWith('/invoices?') ? [] : { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [] },
     );
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <LessonDrawer lesson={makeup(lesson())} onClose={vi.fn()} onDone={vi.fn()} />
       </QueryClientProvider>,
     );

@@ -49,8 +49,15 @@ export function CoursePauseSheet({ studentId, onClose, onDone }: CoursePauseShee
       }
     >
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
-        <PauseFields studentId={studentId} today={today} draft={draft} onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))} />
-        {start.isError && <FormAlert>{t.coursePause.errors[coursePauseErrorCode(start.error)]}</FormAlert>}
+        <PauseFields
+          studentId={studentId}
+          today={today}
+          draft={draft}
+          onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))}
+        />
+        {start.isError && (
+          <FormAlert>{t.coursePause.errors[coursePauseErrorCode(start.error)]}</FormAlert>
+        )}
       </form>
     </Dialog>
   );

@@ -26,7 +26,9 @@ export function ScheduleNav({ search, today, onSearch }: ScheduleNavProps) {
   const day = search.day ?? today;
   const week = search.week ?? thisWeek;
   const step = (n: number) =>
-    isDay ? onSearch({ day: orDefault(addDays(day, n), today) }) : onSearch({ week: orDefault(addDays(week, 7 * n), thisWeek) });
+    isDay
+      ? onSearch({ day: orDefault(addDays(day, n), today) })
+      : onSearch({ week: orDefault(addDays(week, 7 * n), thisWeek) });
   const show = (view: View) =>
     view === 'day'
       ? onSearch({ view: 'day', day: week === thisWeek ? undefined : week, week: undefined })

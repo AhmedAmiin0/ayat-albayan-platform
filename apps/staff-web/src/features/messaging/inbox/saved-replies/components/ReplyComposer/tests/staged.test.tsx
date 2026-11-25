@@ -58,7 +58,9 @@ describe('ReplyComposer: which file is staged', () => {
 
   it('a file staged while a text is in flight waits for its own send', async () => {
     let finish: (v: unknown) => void = () => undefined;
-    apiSend.mockImplementation((_m: string, path: string) => new Promise((resolve) => (finish = resolve)).then(() => message({ id: path })));
+    apiSend.mockImplementation((_m: string, path: string) =>
+      new Promise((resolve) => (finish = resolve)).then(() => message({ id: path })),
+    );
     show();
     await pick('الأسعار');
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.send }));

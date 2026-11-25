@@ -16,7 +16,12 @@ export interface DataTableToolbarProps {
   resultCount?: number | undefined;
 }
 
-export function DataTableToolbar({ controls, filters, options = {}, resultCount }: DataTableToolbarProps) {
+export function DataTableToolbar({
+  controls,
+  filters,
+  options = {},
+  resultCount,
+}: DataTableToolbarProps) {
   const { search, panel } = splitControls(controls, options.search !== undefined);
   const { extra } = options;
   const chips = [...(extra?.chips ?? []), ...controlChips(panel)];

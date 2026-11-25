@@ -62,11 +62,18 @@ export interface Change {
 
 /** What differs from the lesson as stored (instants and minutes, not the clock text). */
 export function changeOf(old: { startsAt: string; durationMin: number }, c: TimeChoice): Change {
-  return { start: startsAtOf(c) !== new Date(old.startsAt).toISOString(), duration: c.durationMin !== old.durationMin };
+  return {
+    start: startsAtOf(c) !== new Date(old.startsAt).toISOString(),
+    duration: c.durationMin !== old.durationMin,
+  };
 }
 
 /** Only a move to a later future start notifies; the API queues it unless `notify: false`. */
-export function willNotify(mode: TimeEditMode, change: Change, c: TimeChoice & { now: Date }): boolean {
+export function willNotify(
+  mode: TimeEditMode,
+  change: Change,
+  c: TimeChoice & { now: Date },
+): boolean {
   return mode === 'move' && change.start && startOf(c) > c.now;
 }
 

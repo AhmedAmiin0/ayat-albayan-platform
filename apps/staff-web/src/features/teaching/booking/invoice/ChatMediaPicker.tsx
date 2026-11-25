@@ -34,8 +34,13 @@ export function ChatMediaPicker({ phone, onPick, onClose }: ChatMediaPickerProps
 }
 
 /** The card's name for a screen reader. */
-export function mediaCardLabel(item: Pick<ThreadMediaItem, 'mime' | 'created_at'>, clock: Clock): string {
-  const label = isImage(item.mime) ? t.booking.invoice.chatImageCard : t.booking.invoice.chatPdfCard;
+export function mediaCardLabel(
+  item: Pick<ThreadMediaItem, 'mime' | 'created_at'>,
+  clock: Clock,
+): string {
+  const label = isImage(item.mime)
+    ? t.booking.invoice.chatImageCard
+    : t.booking.invoice.chatPdfCard;
   return label.replace('{time}', fullTime(item.created_at, clock));
 }
 

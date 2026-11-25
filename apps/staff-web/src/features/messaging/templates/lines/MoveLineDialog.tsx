@@ -15,7 +15,13 @@ export interface MoveLineDialogProps {
 }
 
 /** A number without server credentials cannot be re-checked on Meta, so no confirm is offered. */
-export function MoveLineDialog({ template: tpl, target, busy, onConfirm, onClose }: MoveLineDialogProps) {
+export function MoveLineDialog({
+  template: tpl,
+  target,
+  busy,
+  onConfirm,
+  onClose,
+}: MoveLineDialogProps) {
   const noTarget = target?.configured === false;
   const from = t.enums.waLine[tpl.line];
   const to = t.enums.waLine[otherLine(tpl.line)];

@@ -3,7 +3,13 @@ import { Button, Ltr, t } from '@ab/web-kit';
 import { templateName } from '@/features/messaging/templates/template-cells';
 
 /** A crm or meta line's row (docs/19): the WABA name it goes as (crm_name, else the default) and its edit button. */
-export function CrmNameButton({ tpl, onEdit }: { tpl: TemplateView; onEdit: (tpl: TemplateView) => void }) {
+export function CrmNameButton({
+  tpl,
+  onEdit,
+}: {
+  tpl: TemplateView;
+  onEdit: (tpl: TemplateView) => void;
+}) {
   const s = t.templates.crmName;
   const [before, after = ''] = s.current.split('{crm}');
   return (

@@ -44,7 +44,10 @@ export function SenderLine({ message: m }: { message: MessageView }) {
  * anything else (a location, a contact card…) did arrive and only cannot be shown here.
  */
 export function emptyText(m: Pick<MessageView, 'interactive_payload'>): string {
-  const reacted = reactionText(m.interactive_payload, { reacted: t.inbox.reacted, removed: t.inbox.reactionRemoved });
+  const reacted = reactionText(m.interactive_payload, {
+    reacted: t.inbox.reacted,
+    removed: t.inbox.reactionRemoved,
+  });
   if (reacted) return reacted;
   if (isUnavailableMessage(m.interactive_payload)) return t.inbox.unavailable;
   return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;

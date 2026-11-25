@@ -14,7 +14,15 @@ const chip = (label: string, value: string) =>
 
 function renderFilters(search: ScheduleSearch = {}, resultCount?: number) {
   const onSearch = vi.fn();
-  render(<ScheduleFilters search={search} teachers={ALL} onSearch={onSearch} resultCount={resultCount} />, { wrapper: configWrapper() });
+  render(
+    <ScheduleFilters
+      search={search}
+      teachers={ALL}
+      onSearch={onSearch}
+      resultCount={resultCount}
+    />,
+    { wrapper: configWrapper() },
+  );
   return onSearch;
 }
 
@@ -68,7 +76,13 @@ describe('ScheduleFilters on the shared toolbar', () => {
   it('«مسح الكل» drops all five filters and leaves the week alone', () => {
     const onSearch = renderFilters({ week: '2026-10-10', program: 'quran', closed: true });
     clearAllFilters();
-    expect(onSearch).toHaveBeenLastCalledWith({ teachers: undefined, program: undefined, gender: undefined, status: undefined, closed: undefined });
+    expect(onSearch).toHaveBeenLastCalledWith({
+      teachers: undefined,
+      program: undefined,
+      gender: undefined,
+      status: undefined,
+      closed: undefined,
+    });
   });
 
   it('«عرض النتائج (N)» counts the lessons shown, and is plain while the week loads', () => {

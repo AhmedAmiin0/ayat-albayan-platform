@@ -32,7 +32,9 @@ describe('template health — line and sales starters', () => {
     ]);
     renderWithClient(<TemplateHealth headingId="h" />);
     await screen.findByText(t.templates.names.booking_confirmation_plain);
-    expect(rowOf(t.templates.names.booking_confirmation_plain).getByText(t.enums.waLine.notifications)).toBeTruthy();
+    expect(
+      rowOf(t.templates.names.booking_confirmation_plain).getByText(t.enums.waLine.notifications),
+    ).toBeTruthy();
     expect(rowOf('academy_welcome').getByText(t.enums.waLine.chat)).toBeTruthy();
     expect(rowOf('academy_welcome').getByRole('button', { name: t.templates.submit })).toBeTruthy();
     expect(screen.getByText(t.templates.salesStarterIntro)).toBeTruthy();
@@ -54,6 +56,10 @@ describe('template health — line and sales starters', () => {
       expect(apiSend).toHaveBeenCalledWith('PATCH', '/messaging/templates/booking_confirmation_plain/starter', { sales_starter: true }),
     );
     expect((await screen.findByRole('status')).textContent).toContain(t.templates.starterOn);
-    await waitFor(() => expect((toggleOf(t.templates.names.booking_confirmation_plain) as HTMLInputElement).checked).toBe(true));
+    await waitFor(() =>
+      expect(
+        (toggleOf(t.templates.names.booking_confirmation_plain) as HTMLInputElement).checked,
+      ).toBe(true),
+    );
   });
 });

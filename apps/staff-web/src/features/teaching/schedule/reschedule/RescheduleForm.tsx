@@ -49,7 +49,12 @@ export function RescheduleForm({ lesson, onBack, onDone, near }: RescheduleFormP
   return (
     <section aria-label={t.lessons.rescheduleTitle} className="grid gap-4">
       <h3 className="font-display text-h4 font-bold">{t.lessons.rescheduleTitle}</h3>
-      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null && !isMakeup(lesson)} label={t.lessons.scopeLabelMove} />
+      <ScopeRadios
+        value={scope}
+        onChange={setScope}
+        ruleAllowed={lesson.rule_id !== null && !isMakeup(lesson)}
+        label={t.lessons.scopeLabelMove}
+      />
       <div className="grid gap-1.5">
         <p className="text-xs font-semibold text-ink-2">{t.lessons.newTime}</p>
         <SlotPicker
@@ -74,7 +79,11 @@ export function RescheduleForm({ lesson, onBack, onDone, near }: RescheduleFormP
         <p className="text-xs text-ink-3">{t.lessons.newTimeHint}</p>
       )}
       {scope === 'rule' && startsAt && (
-        <ByDayPicker fixed={ruleFromSlot(startsAt, tz).weekday} value={[...new Set([ruleFromSlot(startsAt, tz).weekday, ...byday])]} onChange={setByday} />
+        <ByDayPicker
+          fixed={ruleFromSlot(startsAt, tz).weekday}
+          value={[...new Set([ruleFromSlot(startsAt, tz).weekday, ...byday])]}
+          onChange={setByday}
+        />
       )}
       {scope === 'one' && <MoveReason value={reason} onChange={setReason} />}
       {conflicts ? (

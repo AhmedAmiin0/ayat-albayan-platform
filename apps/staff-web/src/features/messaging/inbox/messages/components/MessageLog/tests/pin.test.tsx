@@ -29,7 +29,13 @@ afterAll(() => {
 const A = message({ id: 'a', body: 'الأولى', created_at: '2026-10-03T09:00:00Z' });
 const B = message({ id: 'b', body: 'الثانية', created_at: '2026-10-05T09:00:00Z' });
 const C = message({ id: 'c', body: 'الثالثة', created_at: '2026-10-05T10:00:00Z' });
-const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const base = {
+  phone: PHONE,
+  hasMore: false,
+  loadingOlder: false,
+  onOlder: vi.fn(),
+  waitingKeys: new Set<string>(),
+};
 
 const box = () => {
   const el = screen.getByRole('log', { name: t.messages.log }).parentElement;

@@ -54,7 +54,7 @@ function lastStartAtOrBefore(starts: readonly number[], position: number): numbe
 }
 
 /** Mushaf page (1–604) of an ayah. */
-export const pageOf = (ref: AyahRef): number =>
+export const mushafPageOf = (ref: AyahRef): number =>
   lastStartAtOrBefore(PAGE_STARTS, globalAyah(ref)) + 1;
 
 /** Juz (1–30) of an ayah. */
@@ -81,8 +81,8 @@ export function rangeInfo(range: { surah: number; from: number; to: number }): R
   const first = { surah: range.surah, ayah: range.from };
   return {
     ayahs: range.to - range.from + 1,
-    firstPage: pageOf(first),
-    lastPage: pageOf({ surah: range.surah, ayah: range.to }),
+    firstPage: mushafPageOf(first),
+    lastPage: mushafPageOf({ surah: range.surah, ayah: range.to }),
     juz: juzOf(first),
   };
 }

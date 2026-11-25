@@ -20,7 +20,7 @@ test.describe('course pause resume (docs/11 §7b)', () => {
       expect(await groupOf(tx, s.group)).toEqual([]);
       // The first-paused resumes first: the lessons come back with it alone (handed over), the other stays out.
       const back = await resume(tx, { pause_id: first.id, actor: s.actor, on: s.today });
-      expect((back['rejoined'] as string[]).length).toBe(2);
+      expect((back.rejoined as string[]).length).toBe(2);
       expect((await groupOf(tx, s.group)).map((g) => [g.day, [...g.students].sort()])).toEqual([
         [2, [s.student]],
         [4, [s.student]],
@@ -49,7 +49,7 @@ test.describe('course pause resume (docs/11 §7b)', () => {
       await tx`update public.schedule_rules set starts_on = ${day(s.today, -6)} where id = ${s.solo}`;
       const out = await resume(tx, { pause_id: id, actor: null });
       // The pause lasted 12 days (extended_days); the course was paused for 4 of them (days −6 … −3).
-      expect([out['resumed'], out['days']]).toEqual([true, 12]);
+      expect([out.resumed, out.days]).toEqual([true, 12]);
       expect(await statuses(tx, s)).toMatchObject({ renews: day(s.today, 34), ends: day(s.today, 34), rule: 'active' });
       const [row] = await tx<{ d: number }[]>`select extended_days as d from public.course_pauses where id = ${id}`;
       expect(row?.d).toBe(12);

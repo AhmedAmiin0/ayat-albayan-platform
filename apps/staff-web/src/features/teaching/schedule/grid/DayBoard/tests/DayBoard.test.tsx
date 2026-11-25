@@ -9,10 +9,25 @@ import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search
 import { WeekSchedule } from '@/features/teaching/schedule/grid/WeekSchedule';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+}));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children, className }: { to: string; search?: Record<string, string>; children: ReactNode; className?: string }) => (
-    <a href={search ? `${to}?${new URLSearchParams(search)}` : to} className={className}>{children}</a>
+  Link: ({
+    to,
+    search,
+    children,
+    className,
+  }: {
+    to: string;
+    search?: Record<string, string>;
+    children: ReactNode;
+    className?: string;
+  }) => (
+    <a href={search ? `${to}?${new URLSearchParams(search)}` : to} className={className}>
+      {children}
+    </a>
   ),
 }));
 
@@ -22,7 +37,9 @@ function renderDay(search: ScheduleSearch) {
   apiFetch.mockImplementation((path: string) => Promise.resolve(path.startsWith('/lessons/overview') ? overview([TRIAL]) : []));
   const onSearch = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <WeekSchedule search={{ view: 'day', ...search }} onSearch={onSearch} />
     </QueryClientProvider>,
   );

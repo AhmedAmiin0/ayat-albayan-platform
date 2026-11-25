@@ -21,8 +21,12 @@ const sent = message({ id: 'c0000000-0000-4000-8000-0000000000a1', direction: 'o
 
 function setup(delta: unknown) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  apiFetch.mockImplementation(async (path: string) => (path === PATH ? detail([first, sent], { session_open: true }) : delta));
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  apiFetch.mockImplementation(async (path: string) =>
+    path === PATH ? detail([first, sent], { session_open: true }) : delta,
+  );
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   const hook = renderHook(() => useLiveThread(PHONE), { wrapper });
   return { client, hook };
 }
@@ -43,11 +47,13 @@ describe('useLiveThread: the open chat polls a delta between full reads', () => 
     const q = new URLSearchParams(deltaCalls()[0]?.split('?')[1]);
     expect(q.get('after')).toBe(new Date(sent.created_at).toISOString());
     expect(q.get('pending')).toBe(sent.id);
-    await waitFor(() => expect(hook.result.current.data?.pages[0]?.messages.map((m) => [m.id, m.status])).toEqual([
-      ['m1', 'delivered'],
-      [sent.id, 'sent'],
-      ['m2', 'delivered'],
-    ]));
+    await waitFor(() =>
+      expect(hook.result.current.data?.pages[0]?.messages.map((m) => [m.id, m.status])).toEqual([
+        ['m1', 'delivered'],
+        [sent.id, 'sent'],
+        ['m2', 'delivered'],
+      ]),
+    );
     // The full read ran once (on open); everything after was a delta.
     expect(apiFetch.mock.calls.filter(([p]) => p === PATH)).toHaveLength(1);
   });
@@ -55,7 +61,9 @@ describe('useLiveThread: the open chat polls a delta between full reads', () => 
   it('a delta with a gap re-reads the whole thread instead of merging', async () => {
     vi.spyOn(document, 'hasFocus').mockReturnValue(true);
     setup({ messages: [], has_more: true, pending: [] });
-    await waitFor(() => expect(apiFetch.mock.calls.filter(([p]) => p === PATH).length).toBeGreaterThan(1));
+    await waitFor(() =>
+      expect(apiFetch.mock.calls.filter(([p]) => p === PATH).length).toBeGreaterThan(1),
+    );
   });
 
   it('a window without focus sends no delta (a background window never stamps rows read)', async () => {

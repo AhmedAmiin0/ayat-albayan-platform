@@ -34,7 +34,12 @@ function FreeText(props: Omit<TemplateParamFieldsProps, 'template'> & FreeSlot) 
  * {{1}}…{{3}} by their names, the meeting-link suffix, then the message as the guardian reads it.
  * A lesson time is read-only: it comes from the lesson picked above (rule 6).
  */
-export function TemplateParamFields({ template: tpl, values, missing, onChange }: TemplateParamFieldsProps) {
+export function TemplateParamFields({
+  template: tpl,
+  values,
+  missing,
+  onChange,
+}: TemplateParamFieldsProps) {
   const url = urlButton(tpl);
   // A template whose variable is the staff's own free text.
   const free = freeTextField(tpl);
@@ -47,20 +52,31 @@ export function TemplateParamFields({ template: tpl, values, missing, onChange }
     <>
       <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
         {free && <FreeText {...{ tpl, values, missing, onChange }} slot={free} />}
-        {paramFields(tpl).filter(({ slot }) => slot !== free).map(({ slot, label, fromLesson }) => (
-          <Field key={slot} label={label} error={missing.includes(slot) ? (fromLesson ? c.pickLesson : required(label)) : undefined}>
-            {(p) => (
-              <Input
-                {...p}
-                readOnly={fromLesson}
-                value={values[slot] ?? ''}
-                onChange={(e) => onChange({ ...values, [slot]: e.target.value })}
-              />
-            )}
-          </Field>
-        ))}
+        {paramFields(tpl)
+          .filter(({ slot }) => slot !== free)
+          .map(({ slot, label, fromLesson }) => (
+            <Field
+              key={slot}
+              label={label}
+              error={
+                missing.includes(slot) ? (fromLesson ? c.pickLesson : required(label)) : undefined
+              }
+            >
+              {(p) => (
+                <Input
+                  {...p}
+                  readOnly={fromLesson}
+                  value={values[slot] ?? ''}
+                  onChange={(e) => onChange({ ...values, [slot]: e.target.value })}
+                />
+              )}
+            </Field>
+          ))}
         {url && (
-          <Field label={c.button} error={missing.includes('button') ? required(c.button) : undefined}>
+          <Field
+            label={c.button}
+            error={missing.includes('button') ? required(c.button) : undefined}
+          >
             {(p) => (
               <>
                 <Input {...p} dir="ltr" value={values.button ?? ''} onChange={(e) => onChange({ ...values, button: e.target.value })} />

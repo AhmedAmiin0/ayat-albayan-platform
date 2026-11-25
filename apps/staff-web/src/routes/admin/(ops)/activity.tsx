@@ -13,5 +13,7 @@ export const Route = createFileRoute('/admin/(ops)/activity')({
 function ActivityRoute() {
   const search = parseListUrl(Route.useSearch(), KEYS);
   const navigate = Route.useNavigate();
-  return <ActivityPage search={search} onSearch={(next) => void navigate({ search: toListUrl(next) })} />;
+  return (
+    <ActivityPage search={search} onSearch={(next) => void navigate({ search: toListUrl(next) })} />
+  );
 }

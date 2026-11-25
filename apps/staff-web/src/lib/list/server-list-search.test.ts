@@ -37,7 +37,11 @@ describe('serverListProps', () => {
     props.filters.onChange('kind', '');
     expect(onSearch).toHaveBeenLastCalledWith({ f_kind: undefined, page: undefined });
     props.filters.onClear?.(['kind', 'name']);
-    expect(onSearch).toHaveBeenLastCalledWith({ f_kind: undefined, f_name: undefined, page: undefined });
+    expect(onSearch).toHaveBeenLastCalledWith({
+      f_kind: undefined,
+      f_name: undefined,
+      page: undefined,
+    });
   });
 
   it('reads the URL state back and pages without touching the rest', () => {

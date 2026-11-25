@@ -12,5 +12,8 @@ export const webCalls: CallPlatform = {
 };
 
 /** Returns null when the browser has no WebRTC, so calls are unsupported. */
-export const peerMaker = (rtc: RtcDeps | null, play: (stream: MediaStream) => void): PeerMaker | null =>
+export const peerMaker = (
+  rtc: RtcDeps | null,
+  play: (stream: MediaStream) => void,
+): PeerMaker | null =>
   rtc ? (iceServers) => createCallPeer({ deps: rtc, iceServers, play }) : null;

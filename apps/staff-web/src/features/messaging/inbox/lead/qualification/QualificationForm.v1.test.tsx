@@ -13,9 +13,22 @@ describe('«بيانات الطالب»: the first registration form\'s question
   it('asks them with the form\'s wording, in its order, and saves them', async () => {
     renderWithClient(<QualificationForm lead={lead()} onDone={vi.fn()} />);
     const labels = [...document.querySelectorAll('label')].map((l) => l.textContent);
-    const order = [t.leads.studentName, t.leads.country, t.leads.city, t.leads.filledBy, t.guardians.name, t.leads.altPhone, t.leads.level, t.leads.tz, t.leads.groupKind, t.leads.notes];
+    const order = [
+      t.leads.studentName,
+      t.leads.country,
+      t.leads.city,
+      t.leads.filledBy,
+      t.guardians.name,
+      t.leads.altPhone,
+      t.leads.level,
+      t.leads.tz,
+      t.leads.groupKind,
+      t.leads.notes,
+    ];
     expect(order.filter((l) => !labels.includes(l))).toEqual([]);
-    expect(order.map((l) => labels.indexOf(l))).toEqual([...order.map((l) => labels.indexOf(l))].sort((a, b) => a - b));
+    expect(order.map((l) => labels.indexOf(l))).toEqual(
+      [...order.map((l) => labels.indexOf(l))].sort((a, b) => a - b),
+    );
     fireEvent.change(screen.getByLabelText(t.leads.city), { target: { value: 'جدة' } });
     fireEvent.change(screen.getByLabelText(t.leads.filledBy), { target: { value: 'student' } });
     expect(screen.getByRole('option', { name: t.leads.filledByOption.guardian })).toBeTruthy();

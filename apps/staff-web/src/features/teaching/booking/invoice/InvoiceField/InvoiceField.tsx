@@ -89,7 +89,9 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
           </span>
         )}
       </div>
-      {value && <InvoiceChosen value={value} uploading={upload.isPending} onRemove={() => settle(null)} />}
+      {value && (
+        <InvoiceChosen value={value} uploading={upload.isPending} onRemove={() => settle(null)} />
+      )}
       {error && (
         <p role="alert" className="text-xs text-danger">
           {error}

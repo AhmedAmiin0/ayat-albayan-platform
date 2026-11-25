@@ -7,10 +7,25 @@ import { t } from '@ab/web-kit';
 import { respond, STUDENT_ID } from './wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+}));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children, className }: { to: string; search: Record<string, string>; children: ReactNode; className?: string }) => (
-    <a href={`${to}?${new URLSearchParams(search)}`} className={className}>{children}</a>
+  Link: ({
+    to,
+    search,
+    children,
+    className,
+  }: {
+    to: string;
+    search: Record<string, string>;
+    children: ReactNode;
+    className?: string;
+  }) => (
+    <a href={`${to}?${new URLSearchParams(search)}`} className={className}>
+      {children}
+    </a>
   ),
 }));
 

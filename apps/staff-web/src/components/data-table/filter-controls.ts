@@ -25,7 +25,12 @@ export function filterControls<T extends RowData>(
     const { column } = header;
     const filter = column.columnDef.meta?.filter;
     if (!filter || header.isPlaceholder) return [];
-    const base = { id: column.id, label: headerText(header), filter, search: column.columnDef.meta?.search };
+    const base = {
+      id: column.id,
+      label: headerText(header),
+      filter,
+      search: column.columnDef.meta?.search,
+    };
     if (filters) {
       const key = column.columnDef.meta?.filterKey ?? column.id;
       const onChange = (value: string) => filters.onChange(key, value);

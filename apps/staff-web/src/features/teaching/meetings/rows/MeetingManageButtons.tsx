@@ -4,7 +4,13 @@ import type { RowDialog } from './MeetingRowDialogs';
 
 const M = t.meetingInvites.list;
 
-export function MeetingManageButtons({ meeting, onOpen }: { meeting: MeetingView; onOpen: (dialog: RowDialog) => void }) {
+export function MeetingManageButtons({
+  meeting,
+  onOpen,
+}: {
+  meeting: MeetingView;
+  onOpen: (dialog: RowDialog) => void;
+}) {
   if (!meeting.can_manage) return null;
   const live = meeting.state === 'open' && !meeting.cancelled_at && meeting.starts_at !== null;
   return (

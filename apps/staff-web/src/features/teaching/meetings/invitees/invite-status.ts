@@ -10,7 +10,11 @@ const BY_STATUS: Record<MeetingInviteStatus, string> = {
   cancelled: R.cancelled,
 };
 
-type Outcome = { channel: MeetingInviteChannel; status: MeetingInviteStatus; error_code?: string | null };
+type Outcome = {
+  channel: MeetingInviteChannel;
+  status: MeetingInviteStatus;
+  error_code?: string | null;
+};
 /** The creator may not send WhatsApp (owner policy 2026-10-13): the invitation is a link to copy. */
 const linkOnly = (i: Outcome) => i.error_code === 'chat_not_allowed';
 
@@ -24,8 +28,10 @@ export function inviteStatusText(i: Outcome): string {
 export const notSentHint = (i: Outcome): string | null => (i.status !== 'window_closed' ? null : linkOnly(i) ? R.linkOnlyHint : R.windowClosedHint);
 
 /** The text a copy puts on the clipboard: the invitation (it already carries the link), else the link. */
-export const copyPayload = (i: { link: string | null; invitation_text: string | null }): string | null =>
-  i.link === null ? null : (i.invitation_text ?? i.link);
+export const copyPayload = (i: {
+  link: string | null;
+  invitation_text: string | null;
+}): string | null => (i.link === null ? null : (i.invitation_text ?? i.link));
 
 type Row = { kind: MeetingInviteeKind; display_name: string; status: MeetingInviteStatus };
 

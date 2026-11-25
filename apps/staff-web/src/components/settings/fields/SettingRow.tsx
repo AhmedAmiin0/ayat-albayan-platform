@@ -22,7 +22,15 @@ export interface SettingRowProps extends RowExtras {
  * One setting as a row: the label and a one-line hint at the inline-start, the
  * control at the inline-end; on phones the control drops under the words.
  */
-export function SettingRow({ label, hint, error, extra, actions, danger, children }: SettingRowProps) {
+export function SettingRow({
+  label,
+  hint,
+  error,
+  extra,
+  actions,
+  danger,
+  children,
+}: SettingRowProps) {
   const id = useId();
   const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ');
   return (

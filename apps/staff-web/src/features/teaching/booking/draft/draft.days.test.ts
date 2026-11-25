@@ -55,7 +55,12 @@ describe('picks of a package (one slot per weekday, each with its time)', () => 
   });
 
   it('lists each day with its time in the family zone, Saturday first', () => {
-    expect(dayPicks(ready({ startsAt: SAT_10, extra: [SUN_17, TUE_1930] })).map((p) => [p.weekday, p.time])).toEqual([
+    expect(
+      dayPicks(ready({ startsAt: SAT_10, extra: [SUN_17, TUE_1930] })).map((p) => [
+        p.weekday,
+        p.time,
+      ]),
+    ).toEqual([
       [6, '10:00'],
       [0, '17:00'],
       [2, '19:30'],

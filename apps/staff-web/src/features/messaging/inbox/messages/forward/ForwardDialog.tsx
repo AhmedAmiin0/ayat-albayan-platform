@@ -69,7 +69,11 @@ export function ForwardDialog({ message, from, onClose, onDone }: ForwardDialogP
           <Button variant="ghost" onClick={onClose}>
             {t.inbox.forward.close}
           </Button>
-          <Button disabled={picked.size === 0 || send.isPending} aria-busy={send.isPending || undefined} onClick={submit}>
+          <Button
+            disabled={picked.size === 0 || send.isPending}
+            aria-busy={send.isPending || undefined}
+            onClick={submit}
+          >
             {send.isPending ? t.inbox.forward.sending : t.inbox.forward.send}
           </Button>
         </>
@@ -77,7 +81,12 @@ export function ForwardDialog({ message, from, onClose, onDone }: ForwardDialogP
     >
       <div className="grid gap-3">
         {send.isError && <FormAlert>{t.inbox.forward.error}</FormAlert>}
-        <SearchInput aria-label={t.inbox.forward.search} placeholder={t.inbox.forward.search} value={q} onChange={(e) => setQ(e.target.value)} />
+        <SearchInput
+          aria-label={t.inbox.forward.search}
+          placeholder={t.inbox.forward.search}
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
         {list.isPending ? (
           <p className="text-sm text-ink-3">{t.inbox.forward.loading}</p>
         ) : list.isError ? (

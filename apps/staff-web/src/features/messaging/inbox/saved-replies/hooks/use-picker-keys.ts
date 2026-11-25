@@ -35,7 +35,11 @@ const isPickerKey = (e: KeyboardEvent<HTMLElement>, key: string): key is PickerK
   Object.hasOwn(KEYS, key) && !(key === 'Enter' && e.shiftKey);
 
 /** The picker's keyboard, shared by its search box and the composer while «/» has it open. */
-export function usePickerKeys(input: { count: number; onPick: (index: number) => void; onClose: () => void }): PickerKeys {
+export function usePickerKeys(input: {
+  count: number;
+  onPick: (index: number) => void;
+  onClose: () => void;
+}): PickerKeys {
   const [raw, setActive] = useState(0);
   const active = input.count ? Math.min(raw, input.count - 1) : 0;
   const onKey = (e: KeyboardEvent<HTMLElement>): boolean => {

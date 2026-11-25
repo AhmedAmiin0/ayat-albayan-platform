@@ -63,7 +63,9 @@ export interface BookingDraft {
   force: boolean;
 }
 
-export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: BookingKind } = {}): BookingDraft {
+export function emptyDraft(
+  o: { leadId?: string | null; trial?: boolean; kind?: BookingKind } = {},
+): BookingDraft {
   const kind = o.kind ?? (o.trial ? 'trial' : 'package');
   return {
     kind,
@@ -94,7 +96,10 @@ export const isOutside = (d: Pick<BookingDraft, 'outsideHours' | 'kind'>): boole
   d.outsideHours === true && d.kind !== 'package';
 
 /** The rule fields a picked first slot fixes, in the family's zone. */
-export function ruleFromSlot(startsAt: string, tz: string): { startsOn: string; startTimeLocal: string; weekday: number } {
+export function ruleFromSlot(
+  startsAt: string,
+  tz: string,
+): { startsOn: string; startTimeLocal: string; weekday: number } {
   const p = zonedPartsIn(new Date(startsAt), tz);
   return { startsOn: p.date, startTimeLocal: p.time, weekday: p.weekday };
 }
@@ -135,5 +140,10 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingReq
     return { ...base, studentIds: d.students.map((s) => s.id), ...(d.leadId && d.kind !== 'makeup' ? { leadId: d.leadId } : {}) };
   }
   if (!d.leadId || !d.newStudent) return null;
-  return { ...base, leadId: d.leadId, ...leadParts(d.newStudent, d), ...(d.force ? { force: true } : {}) };
+  return {
+    ...base,
+    leadId: d.leadId,
+    ...leadParts(d.newStudent, d),
+    ...(d.force ? { force: true } : {}),
+  };
 }

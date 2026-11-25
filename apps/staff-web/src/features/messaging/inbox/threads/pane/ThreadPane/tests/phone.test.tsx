@@ -36,7 +36,11 @@ function renderThread(page: ThreadDetail) {
 describe('ThreadPane on phones (< 640px): the side panel is a full-screen sheet', () => {
   beforeEach(() => {
     // A phone is also below the shell breakpoint (900px), where the chat goes full-screen.
-    const query = (media: string) => ({ matches: PHONE_QUERIES.includes(media), addEventListener: vi.fn(), removeEventListener: vi.fn() });
+    const query = (media: string) => ({
+      matches: PHONE_QUERIES.includes(media),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    });
     vi.stubGlobal('matchMedia', vi.fn(query));
   });
   afterEach(() => {

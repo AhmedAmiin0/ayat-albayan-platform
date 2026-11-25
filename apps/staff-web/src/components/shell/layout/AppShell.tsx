@@ -31,8 +31,20 @@ export function AppShell({ title, home, nav, topNav, titles = [], wide, homePage
   const isHome = useChildMatches().length === 0;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const bar = { home, title: isHome ? title : titleFor(pathname, titles, title) };
-  const content = <RouteFade>{isHome ? (homePage ?? <Cartouche>{title}</Cartouche>) : <Outlet />}</RouteFade>;
-  if (nav) return <AdminLayout nav={nav} title={bar.title}>{content}</AdminLayout>;
-  if (topNav) return <FixedTopBarLayout topNav={topNav} bar={bar} wide={wide}>{content}</FixedTopBarLayout>;
+  const content = (
+    <RouteFade>{isHome ? (homePage ?? <Cartouche>{title}</Cartouche>) : <Outlet />}</RouteFade>
+  );
+  if (nav)
+    return (
+      <AdminLayout nav={nav} title={bar.title}>
+        {content}
+      </AdminLayout>
+    );
+  if (topNav)
+    return (
+      <FixedTopBarLayout topNav={topNav} bar={bar} wide={wide}>
+        {content}
+      </FixedTopBarLayout>
+    );
   return <TopBarLayout bar={bar}>{content}</TopBarLayout>;
 }

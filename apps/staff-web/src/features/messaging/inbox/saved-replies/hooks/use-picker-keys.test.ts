@@ -5,7 +5,10 @@ import { usePickerKeys } from './use-picker-keys';
 
 function key(name: string, shiftKey = false) {
   const preventDefault = vi.fn();
-  return { event: { key: name, shiftKey, preventDefault } as unknown as KeyboardEvent<HTMLElement>, preventDefault };
+  return {
+    event: { key: name, shiftKey, preventDefault } as unknown as KeyboardEvent<HTMLElement>,
+    preventDefault,
+  };
 }
 
 function setup(count: number) {

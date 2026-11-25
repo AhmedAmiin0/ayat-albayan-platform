@@ -20,7 +20,9 @@ const weekday: Record<string, string> = t.enums.weekday;
 export function ByDayPicker({ fixed, value, onChange, pkg }: ByDayPickerProps) {
   const note = pkg ? packageDaysNote(pkg, value.length) : null;
   const toggle = (day: number) =>
-    onChange(value.includes(day) ? value.filter((d) => d !== day) : [...value, day].sort((a, b) => a - b));
+    onChange(
+      value.includes(day) ? value.filter((d) => d !== day) : [...value, day].sort((a, b) => a - b),
+    );
   return (
     <fieldset className="grid gap-2">
       <legend className="mb-1 text-sm font-semibold">

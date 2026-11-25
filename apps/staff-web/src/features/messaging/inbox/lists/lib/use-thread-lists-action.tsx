@@ -11,7 +11,10 @@ export interface ThreadListsAction {
   dialog: ReactNode;
 }
 
-export function useThreadListsAction(phone: string, lists: readonly ChatListRef[] | undefined): ThreadListsAction {
+export function useThreadListsAction(
+  phone: string,
+  lists: readonly ChatListRef[] | undefined,
+): ThreadListsAction {
   const access = useListsAccess();
   const [open, setOpen] = useState(false);
   if (!access) return { item: null, dialog: null };
@@ -20,6 +23,8 @@ export function useThreadListsAction(phone: string, lists: readonly ChatListRef[
       {t.inbox.lists.title}
     </Button>
   );
-  const dialog = open && <ThreadListsDialog phone={phone} lists={lists ?? []} onClose={() => setOpen(false)} />;
+  const dialog = open && (
+    <ThreadListsDialog phone={phone} lists={lists ?? []} onClose={() => setOpen(false)} />
+  );
   return { item, dialog };
 }

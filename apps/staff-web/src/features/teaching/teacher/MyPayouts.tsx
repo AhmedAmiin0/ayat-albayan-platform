@@ -81,7 +81,16 @@ export function MyPayouts() {
       {list.isPending && <ListSkeleton />}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.data?.length === 0 && <EmptyState title={t.payouts.mineEmpty} />}
-      {list.data && list.data.length > 0 && <DataTable stacked clientSort clientFilter columns={COLUMNS} data={list.data} getRowId={(r) => r.id} />}
+      {list.data && list.data.length > 0 && (
+        <DataTable
+          stacked
+          clientSort
+          clientFilter
+          columns={COLUMNS}
+          data={list.data}
+          getRowId={(r) => r.id}
+        />
+      )}
     </>
   );
 }

@@ -28,8 +28,18 @@ export function MyFeedback({ search, onSearch }: MyFeedbackProps) {
       {average && <TeacherAverages items={[{ key: 'me', avg: average.avg_rating, n: average.n, yesPct: average.recommend_yes_pct }]} />}
       {mine.data && (
         <>
-          <FeedbackTable rows={mine.data.items} showTeacher={false} sort={table.sort} filters={table.filters} />
-          <Pager page={state.page} total={mine.data.total} pageSize={FEEDBACK_PAGE_SIZE} onPage={table.onPage} />
+          <FeedbackTable
+            rows={mine.data.items}
+            showTeacher={false}
+            sort={table.sort}
+            filters={table.filters}
+          />
+          <Pager
+            page={state.page}
+            total={mine.data.total}
+            pageSize={FEEDBACK_PAGE_SIZE}
+            onPage={table.onPage}
+          />
         </>
       )}
     </>

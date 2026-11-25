@@ -10,7 +10,10 @@ const ICON = { asc: 'arrow-up', desc: 'arrow-down', none: 'arrows-up-down' } as 
 type SortState = { dir: SortDir | false; toggle: () => void };
 
 /** How a column sorts here: server (`sort` prop + `meta.sortKey`), client (TanStack), or not at all. */
-function sortStateOf<T extends RowData>(header: Header<DataTableFeatures, T>, sort?: DataTableSort): SortState | null {
+function sortStateOf<T extends RowData>(
+  header: Header<DataTableFeatures, T>,
+  sort?: DataTableSort,
+): SortState | null {
   const column = header.column;
   if (sort) {
     const key = column.columnDef.meta?.sortKey;

@@ -3,7 +3,8 @@ import type { LessonTimeEditView, LessonView, TimeEditMode } from '@ab/schedule'
 // R-SCH-11: the wire contract lives in @ab/shared; the form imports it from there.
 
 /** What the admin may do to this lesson's time; null for a teacher or a closed lesson. */
-export const timeEditMode = (lesson: LessonView): TimeEditMode | null => lesson.time_edit_mode ?? null;
+export const timeEditMode = (lesson: LessonView): TimeEditMode | null =>
+  lesson.time_edit_mode ?? null;
 
 /** Who changed the time and from what, once it was edited. */
 export const timeEditInfo = (lesson: Pick<LessonView, 'time_edit'>): LessonTimeEditView | null => lesson.time_edit ?? null;

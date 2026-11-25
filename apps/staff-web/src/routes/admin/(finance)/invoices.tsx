@@ -11,5 +11,10 @@ export const Route = createFileRoute('/admin/(finance)/invoices')({
 function InvoicesRoute() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <InvoicesPage search={search} onSearch={(patch) => void navigate({ search: parseInvoicesSearch({ ...search, ...patch }) })} />;
+  return (
+    <InvoicesPage
+      search={search}
+      onSearch={(patch) => void navigate({ search: parseInvoicesSearch({ ...search, ...patch }) })}
+    />
+  );
 }

@@ -4,6 +4,7 @@ export * from './async';
 export * from './locale';
 export * from './money';
 export * from './phone';
+export * from './routes';
 export * from './schemas';
 export * from './text';
 export * from './error-report';

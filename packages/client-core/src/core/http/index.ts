@@ -2,10 +2,14 @@ export { ApiError, readJson } from './api-error';
 export { apiErrorCode, pdfPageRetryable } from './api-error-code';
 export {
   createApiClient,
+  parseResponse,
   type ApiClient,
   type ApiClientOptions,
+  type SchemaInit,
   type SendMethod,
+  type SendOptions,
 } from './api-client';
+export { call, type CallInput, type CallableRoute } from './call';
 export { CLIENT_HEADER } from './client-header';
 export { markSending, noAnswer, type StallStage, withDeadline } from './deadline';
 export { isNoAnswer } from './no-answer';

@@ -7,7 +7,11 @@ export function CopyPhoneButton({ phone }: { phone: string }) {
   const done = () => say(null);
   return (
     <>
-      <IconButton label={t.inbox.copy.phone} title={t.inbox.copy.phone} onClick={() => void copyText(phone).then(say)}>
+      <IconButton
+        label={t.inbox.copy.phone}
+        title={t.inbox.copy.phone}
+        onClick={() => void copyText(phone).then(say)}
+      >
         <Icon name="copy" />
       </IconButton>
       {said !== null && (

@@ -33,7 +33,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const anchorOf = (msg: unknown, phone: string | undefined): { msg?: string } =>
   phone && typeof msg === 'string' && UUID.test(msg) ? { msg } : {};
 
-const pick = <T extends string>(all: readonly T[], v: unknown): T | undefined => all.find((x) => x === v);
+const pick = <T extends string>(all: readonly T[], v: unknown): T | undefined =>
+  all.find((x) => x === v);
 
 /** `course`: a student id (uuid) only, else nothing. */
 const courseSchema = z.object({ course: z.uuid().optional().catch(undefined) });

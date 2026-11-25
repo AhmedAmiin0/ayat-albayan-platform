@@ -5,7 +5,7 @@
 import { randomUUID } from 'node:crypto';
 import { stubLines } from './lines.ts';
 import { ERR, onWaba, type Json, type StubTemplate } from './providers/meta.ts';
-import type { Reply, StubState } from './state.ts';
+import { textOr, type Reply, type StubState } from './state.ts';
 
 const MEDIA_HEADERS = new Set(['DOCUMENT', 'IMAGE', 'VIDEO']);
 
@@ -13,7 +13,7 @@ const example = (c: Json, field: string): unknown => (c.example as Json | undefi
 const firstRow = (rows: unknown): unknown => (Array.isArray(rows) ? rows[0] : undefined);
 
 function headerError(s: StubState, c: Json): Json | null {
-  if (!MEDIA_HEADERS.has(String(c.format ?? ''))) return null;
+  if (!MEDIA_HEADERS.has(textOr(c.format, ''))) return null;
   const h = firstRow(example(c, 'header_handle'));
   if (typeof h !== 'string')
     return ERR.invalid(
@@ -28,7 +28,7 @@ const filled = (values: unknown, vars: number): boolean =>
   values.every((v) => typeof v === 'string' && v.trim());
 
 function bodyError(c: Json): Json | null {
-  const text = String(c.text ?? '').trim();
+  const text = textOr(c.text, '').trim();
   if (/^\{\{\d+\}\}|\{\{\d+\}\}$/.test(text))
     return ERR.invalid("Variables can't be at the start or end of the template.");
   const vars = new Set(text.match(/\{\{\d+\}\}/g) ?? []).size;
@@ -41,11 +41,9 @@ function buttonsError(c: Json): Json | null {
   const buttons = Array.isArray(c.buttons) ? (c.buttons as Json[]) : [];
   if (buttons.length > 10) return ERR.invalid('a template can have at most 10 buttons');
   const bad = buttons.find(
-    (b) => b.type === 'QUICK_REPLY' && !/^.{1,25}$/u.test(String(b.text ?? '')),
+    (b) => b.type === 'QUICK_REPLY' && !/^.{1,25}$/u.test(textOr(b.text, '')),
   );
-  return bad
-    ? ERR.invalid(`button text "${String(bad.text ?? '')}" must be 1-25 characters`)
-    : null;
+  return bad ? ERR.invalid(`button text "${textOr(bad.text, '')}" must be 1-25 characters`) : null;
 }
 
 function componentError(s: StubState, c: Json): Json | null {
@@ -75,9 +73,9 @@ const ownWaba = (s: StubState, wabaId: string): string | undefined =>
 type Draft = Pick<StubTemplate, 'name' | 'language' | 'category' | 'components'>;
 
 const draftOf = (body: Json): Draft => ({
-  name: String(body.name ?? ''),
-  language: String(body.language ?? 'ar'),
-  category: String(body.category ?? 'UTILITY').toUpperCase(),
+  name: textOr(body.name, ''),
+  language: textOr(body.language, 'ar'),
+  category: textOr(body.category, 'UTILITY').toUpperCase(),
   components: componentsOf(body),
 });
 
@@ -119,8 +117,8 @@ export function editTemplate(s: StubState, id: string, body: Json): Reply {
 }
 
 function applyReview(t: StubTemplate, body: Json): StubTemplate {
-  t.status = String(body.status ?? t.status);
-  t.quality = String(body.quality ?? t.quality);
+  t.status = textOr(body.status, t.status);
+  t.quality = textOr(body.quality, t.quality);
   if (typeof body.rejected_reason === 'string') t.rejectedReason = body.rejected_reason;
   return t;
 }

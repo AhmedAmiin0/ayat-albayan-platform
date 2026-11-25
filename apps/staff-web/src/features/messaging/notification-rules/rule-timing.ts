@@ -54,9 +54,11 @@ const MINUTES = { min: 5, max: 720 };
 
 function followUp(d: Extract<TimingDraft, { kind: 'follow_up_slots' }>): TimingResult {
   const hours = d.hours.map((h) => boundedInt(h, { min: 1, max: 720 }));
-  if (hours.length === 0 || hours.length > MAX_FOLLOW_UPS || hours.some((h) => h === null)) return { ok: false, error: e().hours };
+  if (hours.length === 0 || hours.length > MAX_FOLLOW_UPS || hours.some((h) => h === null))
+    return { ok: false, error: e().hours };
   const list = hours.filter((h): h is number => h !== null);
-  if (list.some((h, i) => i > 0 && h <= (list[i - 1] ?? 0))) return { ok: false, error: e().ascending };
+  if (list.some((h, i) => i > 0 && h <= (list[i - 1] ?? 0)))
+    return { ok: false, error: e().ascending };
   const from = boundedInt(d.from, { min: 1, max: 168 });
   if (from === null) return { ok: false, error: e().slotsFrom };
   const to = boundedInt(d.to, { min: 1, max: 30 });
@@ -69,7 +71,9 @@ export function parseTiming(d: TimingDraft): TimingResult {
   switch (d.kind) {
     case 'lesson_reminder': {
       const minutes = boundedInt(d.minutes, MINUTES);
-      return minutes === null ? { ok: false, error: e().minutes } : { ok: true, value: { minutes_before: minutes } };
+      return minutes === null
+        ? { ok: false, error: e().minutes }
+        : { ok: true, value: { minutes_before: minutes } };
     }
     case 'lesson_reminder_24h': {
       const at = DAY_BEFORE_HOURS.find((h) => h === d.at) ?? null;
@@ -78,7 +82,9 @@ export function parseTiming(d: TimingDraft): TimingResult {
     case 'teacher_lesson_reminder': {
       if (d.same) return { ok: true, value: { minutes_before: null } };
       const minutes = boundedInt(d.minutes, MINUTES);
-      return minutes === null ? { ok: false, error: e().minutes } : { ok: true, value: { minutes_before: minutes } };
+      return minutes === null
+        ? { ok: false, error: e().minutes }
+        : { ok: true, value: { minutes_before: minutes } };
     }
     case 'follow_up_slots':
       return followUp(d);

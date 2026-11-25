@@ -18,11 +18,24 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const PEOPLE: ThreadPeople = {
   guardian: { id: 'g-1', name: 'أم سهيلة' },
   lead: null,
-  students: [pupil({ status: 'expired' }, null), pupil({ id: 's-2', name: 'جود', code: 'AB-0184', teacher_name: null, status: 'trial' }, null)],
+  students: [
+    pupil({ status: 'expired' }, null),
+    pupil({ id: 's-2', name: 'جود', code: 'AB-0184', teacher_name: null, status: 'trial' }, null),
+  ],
 };
-const LESSON: ThreadLesson = { id: 'l-1', starts_at: '2026-10-20T16:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
+const LESSON: ThreadLesson = {
+  id: 'l-1',
+  starts_at: '2026-10-20T16:00:00Z',
+  meeting_link: null,
+  student_names: ['سهيلة'],
+  tz: 'Asia/Riyadh',
+};
 
-function renderLine(students: unknown[], people: ThreadPeople = PEOPLE, lessons: ThreadLesson[] = [LESSON]) {
+function renderLine(
+  students: unknown[],
+  people: ThreadPeople = PEOPLE,
+  lessons: ThreadLesson[] = [LESSON],
+) {
   routeFetch(apiFetch, [['/sales/money/family', { students }]]);
   renderWithClient(
     <p data-testid="line">

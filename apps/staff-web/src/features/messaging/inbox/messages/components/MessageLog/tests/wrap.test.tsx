@@ -8,7 +8,13 @@ import { MessageLog } from '@/features/messaging/inbox/messages/components/Messa
 // `break-words` does not shrink a grid track's min-content, so one long token widened every row.
 // jsdom has no layout, so this pins the three classes that keep the log inside the chat.
 const LINK = `https://docs.google.com/forms/d/${'x'.repeat(240)}/viewform`;
-const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const base = {
+  phone: PHONE,
+  hasMore: false,
+  loadingOlder: false,
+  onOlder: vi.fn(),
+  waitingKeys: new Set<string>(),
+};
 
 describe('MessageLog: a long unbroken link wraps inside its bubble', () => {
   it('the column is minmax(0,1fr), the bubble may shrink, and the text breaks anywhere', () => {

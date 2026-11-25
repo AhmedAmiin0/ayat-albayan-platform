@@ -12,13 +12,25 @@ export function useCrmStatus(onNotice: (notice: Notice) => void) {
   const save = useMutation({
     mutationFn: setCrmStatus,
     onSuccess: (saved: TemplateView) => {
-      queryClient.setQueryData(templatesQuery.queryKey, (old) => old?.map((r) => (r.key === saved.key ? saved : r)));
-      const status = saved.status === 'approved' ? t.enums.templateStatus.approved : t.templates.crmStatus.missingChip;
-      onNotice({ message: t.templates.crmStatus.saved.replace('{name}', templateName(saved.key)).replace('{status}', status) });
+      queryClient.setQueryData(templatesQuery.queryKey, (old) =>
+        old?.map((r) => (r.key === saved.key ? saved : r)),
+      );
+      const status =
+        saved.status === 'approved'
+          ? t.enums.templateStatus.approved
+          : t.templates.crmStatus.missingChip;
+      onNotice({
+        message: t.templates.crmStatus.saved
+          .replace('{name}', templateName(saved.key))
+          .replace('{status}', status),
+      });
     },
     onError: (e) => onNotice({ message: templateErrorText(e), tone: 'error' }),
   });
   const { mutate } = save;
-  const onSet = useCallback((tpl: TemplateView, status: CrmTemplateStatus) => mutate({ key: tpl.key, status }), [mutate]);
+  const onSet = useCallback(
+    (tpl: TemplateView, status: CrmTemplateStatus) => mutate({ key: tpl.key, status }),
+    [mutate],
+  );
   return { busyKey: save.isPending ? (save.variables?.key ?? null) : null, onSet };
 }

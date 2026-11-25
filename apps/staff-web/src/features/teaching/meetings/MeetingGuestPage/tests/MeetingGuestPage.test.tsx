@@ -15,7 +15,9 @@ const TOKEN = 'tok-43';
 function open() {
   const client = fakeClient();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <MeetingGuestPage token={TOKEN} make={() => client} />
     </QueryClientProvider>,
   );

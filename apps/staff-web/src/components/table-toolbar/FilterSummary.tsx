@@ -24,10 +24,20 @@ export interface FilterSummaryProps {
 }
 
 /** Always mounted so clearing filters is announced too; screen-reader only unless `visible`. */
-export function FilterSummary({ count, resultCount, visible = false, live = true }: FilterSummaryProps) {
-  const liveProps = live ? ({ 'data-filter-summary': '', 'aria-live': 'polite', 'aria-atomic': true } as const) : {};
+export function FilterSummary({
+  count,
+  resultCount,
+  visible = false,
+  live = true,
+}: FilterSummaryProps) {
+  const liveProps = live
+    ? ({ 'data-filter-summary': '', 'aria-live': 'polite', 'aria-atomic': true } as const)
+    : {};
   return (
-    <p {...liveProps} className={cn(visible && count > 0 ? 'text-xs text-ink-3 tabular-nums' : 'sr-only')}>
+    <p
+      {...liveProps}
+      className={cn(visible && count > 0 ? 'text-xs text-ink-3 tabular-nums' : 'sr-only')}
+    >
       {filterSummary(count, resultCount)}
     </p>
   );

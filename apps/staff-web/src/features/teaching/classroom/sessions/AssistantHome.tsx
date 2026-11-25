@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { EmptyState, FormAlert, t, assistantLessonsQuery, localDay, useNow } from '@ab/web-kit';
 import { AssistantLessonRow } from './AssistantLessonRow';
 
-const isOpen = (l: AssistantLessonView): boolean => (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
+const isOpen = (l: AssistantLessonView): boolean =>
+  (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
 
 export function AssistantHome() {
   const now = useNow(3_600_000);

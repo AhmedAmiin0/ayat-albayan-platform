@@ -25,7 +25,9 @@ function renderDrawer() {
   const onDone = vi.fn();
   const onClose = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <LessonDrawer lesson={L} onClose={onClose} onDone={onDone} />
     </QueryClientProvider>,
   );

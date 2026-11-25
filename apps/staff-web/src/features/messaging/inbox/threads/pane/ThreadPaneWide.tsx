@@ -19,9 +19,20 @@ export interface ThreadPaneWideProps {
  * ThreadPane from 640px: the header, then the log with the reply box pinned under it, and the side
  * panel (when `aside`) in one scrolling column below 1280px, beside the chat from it.
  */
-export function ThreadPaneWide({ labelledBy, header, log, reply, aside, side, toast }: ThreadPaneWideProps) {
+export function ThreadPaneWide({
+  labelledBy,
+  header,
+  log,
+  reply,
+  aside,
+  side,
+  toast,
+}: ThreadPaneWideProps) {
   return (
-    <section aria-labelledby={labelledBy} className="min-w-0 shell:flex shell:h-full shell:min-h-0 shell:flex-col">
+    <section
+      aria-labelledby={labelledBy}
+      className="min-w-0 shell:flex shell:h-full shell:min-h-0 shell:flex-col"
+    >
       {header}
       <div
         className={cn(

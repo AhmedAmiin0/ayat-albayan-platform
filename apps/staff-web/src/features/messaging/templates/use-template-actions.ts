@@ -16,7 +16,9 @@ export function useTemplateActions() {
   const [moving, setMoving] = useState<TemplateView | null>(null);
   const fail = (e: unknown) => setNotice({ message: templateErrorText(e), tone: 'error' });
   const replaceRow = (saved: TemplateView) =>
-    queryClient.setQueryData(templatesQuery.queryKey, (old) => old?.map((r) => (r.key === saved.key ? saved : r)));
+    queryClient.setQueryData(templatesQuery.queryKey, (old) =>
+      old?.map((r) => (r.key === saved.key ? saved : r)),
+    );
 
   const submit = useMutation({
     mutationFn: submitTemplate,

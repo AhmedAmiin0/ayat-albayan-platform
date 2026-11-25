@@ -45,7 +45,13 @@ export function InviteeViewRow({ meetingId, invitee, mayInvitePhones }: Props) {
             className="ms-auto"
             aria-label={`${R.resend} ${name}`}
             disabled={resend.isPending}
-            onClick={() => resend.mutate({ meetingId, inviteeId: invitee.id, clientRequestId: requestId.current })}
+            onClick={() =>
+              resend.mutate({
+                meetingId,
+                inviteeId: invitee.id,
+                clientRequestId: requestId.current,
+              })
+            }
           >
             {R.resend}
           </Button>

@@ -21,7 +21,10 @@ const unavailable = message({
 
 function show(m: MessageView, opts: { enabled?: boolean; open?: boolean } = {}) {
   renderWithClient(
-    <ChatActionsProvider thread={thread({ session_open: opts.open ?? true })} enabled={opts.enabled ?? true}>
+    <ChatActionsProvider
+      thread={thread({ session_open: opts.open ?? true })}
+      enabled={opts.enabled ?? true}
+    >
       <ResendAsk message={m} />
     </ChatActionsProvider>,
   );
@@ -71,7 +74,9 @@ describe('ResendAsk', () => {
     expect(await screen.findByText(t.inbox.error.send_failed)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.inbox.resend.send }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
-    const ids = apiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+    const ids = apiSend.mock.calls.map(
+      (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+    );
     expect(ids[0]).toBe(ids[1]);
   });
 });

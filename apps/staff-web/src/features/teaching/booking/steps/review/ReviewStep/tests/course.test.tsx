@@ -25,13 +25,24 @@ const CLASH = { kind: 'teacher_busy', startsAt: SLOT, endsAt: SLOT };
 function Review({ draft, onChangeSlot }: { draft: BookingDraft; onChangeSlot: () => void }) {
   const [link, setLink] = useState('');
   const d = { ...draft, meetingLink: link };
-  return <ReviewStep draft={d} onMeetingLink={setLink} onChangeSlot={onChangeSlot} onInvoice={vi.fn()} onBooked={vi.fn()} onPatch={vi.fn()} />;
+  return (
+    <ReviewStep
+      draft={d}
+      onMeetingLink={setLink}
+      onChangeSlot={onChangeSlot}
+      onInvoice={vi.fn()}
+      onBooked={vi.fn()}
+      onPatch={vi.fn()}
+    />
+  );
 }
 
 function renderReview(draft: BookingDraft, mode: BookingMode) {
   const onChangeSlot = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <BookingModeContext.Provider value={mode}>
         <Review draft={draft} onChangeSlot={onChangeSlot} />
       </BookingModeContext.Provider>

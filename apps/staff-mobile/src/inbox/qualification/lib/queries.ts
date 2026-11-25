@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey, t } from '@ab/mobile-kit';
 import { patchCached } from '@/core/lib/query/paging';
 import { isOffline } from '@/core/lib/money/payment-errors';
+import { leadKeys } from '@/core/lib/keys';
 
 /**
  * GET /leads returns every column (apps/api LeadRow); the profile reads these beyond the list row.
@@ -29,7 +30,7 @@ export type LeadProfile = LeadView & {
  */
 export function useFreshLead(phone: string) {
   return useQuery({
-    queryKey: [...pathKey('/leads'), 'by-phone', phone],
+    queryKey: leadKeys.byPhone(phone),
     queryFn: async () => {
       const query = toQueryString({ q: phone, page: 1, pageSize: 5 });
       const page = await apiFetch<Page<LeadProfile>>(`/leads${query}`);
@@ -58,7 +59,9 @@ export function useLeadPatch<B>(route: 'qualification' | 'follow-up') {
     mutationFn: ({ id, body }: LeadPatchInput<B>) =>
       apiSend<LeadProfile>('PATCH', `/leads/${id}/${route}`, body),
     onSuccess: (row) => {
-      client.setQueriesData({ queryKey: pathKey('/leads') }, (old: unknown) => patchCached(old, { ...row }));
+      client.setQueriesData({ queryKey: pathKey('/leads') }, (old: unknown) =>
+        patchCached(old, { ...row }),
+      );
     },
   });
 }

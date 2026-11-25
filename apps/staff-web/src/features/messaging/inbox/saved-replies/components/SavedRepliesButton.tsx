@@ -9,7 +9,11 @@ export interface SavedRepliesButtonProps {
 }
 
 /** Locked after the window but focusable (aria-disabled) so its reason is read. */
-export function SavedRepliesButton({ locked = false, pressed = false, onClick }: SavedRepliesButtonProps) {
+export function SavedRepliesButton({
+  locked = false,
+  pressed = false,
+  onClick,
+}: SavedRepliesButtonProps) {
   const hintId = useId();
   const [hint, setHint] = useState(false);
   return (

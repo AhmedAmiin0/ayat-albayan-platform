@@ -19,36 +19,58 @@ interface FakeDb {
   commits: number[];
 }
 
+/** Runs `read` inside a promise, so a throw rejects like the real async driver's would. */
+const settle = <T>(read: () => T): Promise<T> => new Promise((resolve) => resolve(read()));
+
+function fakeTx(o: FakeDbOptions, w: Pick<FakeDb, 'log' | 'items'>): TargetTx {
+  let n = 0;
+  return {
+    insert: (s) =>
+      settle(() => {
+        if (s.table === o.failOn) throw new Error('boom');
+        w.log.push(`insert ${s.table} ${JSON.stringify(s.columns)}`);
+        return s.returning === null ? null : `${s.table}-${++n}`;
+      }),
+    update: (s) =>
+      settle(() => {
+        w.log.push(`update ${s.table} ${s.id} ${JSON.stringify(s.columns)}`);
+      }),
+    recordItem: (i) =>
+      settle(() => {
+        w.items.push(i);
+      }),
+    exec: (q) =>
+      settle(() => {
+        w.log.push(`exec ${q.text}`);
+      }),
+  };
+}
+
 export function fakeDb(o: FakeDbOptions = {}): FakeDb {
   const log: string[] = [];
   const items: ImportItemWrite[] = [];
   const runs: FakeDb['runs'] = [];
   const commits: number[] = [];
-  let n = 0;
-  const tx: TargetTx = {
-    insert: async (s) => {
-      if (s.table === o.failOn) throw new Error('boom');
-      log.push(`insert ${s.table} ${JSON.stringify(s.columns)}`);
-      return s.returning === null ? null : `${s.table}-${++n}`;
-    },
-    update: async (s) => void log.push(`update ${s.table} ${s.id} ${JSON.stringify(s.columns)}`),
-    recordItem: async (i) => void items.push(i),
-    exec: async (q) => void log.push(`exec ${q.text}`),
-  };
+  const tx = fakeTx(o, { log, items });
   const rows = (text: string, params: readonly Param[]) => o.select?.(text, params) ?? [];
   const db: TargetDb = {
     name: 'local',
-    loadImportItems: async () => new Map(),
-    findByColumn: async (q) => {
-      const found = rows(`find ${q.table}.${q.column}`, [q.values]) as {
-        id: string;
-        value: string;
-      }[];
-      return new Map(found.filter((r) => q.values.includes(r.value)).map((r) => [r.value, r.id]));
-    },
-    lockApply: async () => undefined,
-    startRun: async () => 'run-1',
-    finishRun: async (r) => void runs.push({ ok: r.ok, error: r.error }),
+    loadImportItems: () => settle(() => new Map()),
+    findByColumn: (q) =>
+      settle(() => {
+        const found = rows(`find ${q.table}.${q.column}`, [q.values]) as {
+          id: string;
+          value: string;
+        }[];
+        const hits = found.filter((r) => q.values.includes(r.value));
+        return new Map(hits.map((r) => [r.value, r.id]));
+      }),
+    lockApply: () => settle(() => undefined),
+    startRun: () => settle(() => 'run-1'),
+    finishRun: (r) =>
+      settle(() => {
+        runs.push({ ok: r.ok, error: r.error });
+      }),
     transaction: async (fn) => {
       const mark = { log: log.length, items: items.length };
       try {
@@ -61,9 +83,9 @@ export function fakeDb(o: FakeDbOptions = {}): FakeDb {
         throw err;
       }
     },
-    select: async <T extends object>(q: { text: string; params: Param[] }) =>
-      rows(q.text, q.params) as T[],
-    close: async () => undefined,
+    select: <T extends object>(q: { text: string; params: Param[] }) =>
+      settle(() => rows(q.text, q.params) as T[]),
+    close: () => settle(() => undefined),
   };
   return { db, log, items, runs, commits };
 }

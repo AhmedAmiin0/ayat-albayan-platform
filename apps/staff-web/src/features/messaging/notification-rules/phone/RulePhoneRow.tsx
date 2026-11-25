@@ -16,7 +16,13 @@ function switchWord(entry: NotificationEntryView): string {
 }
 
 /** Phone layout below 640px (docs/26b §3); the whole row opens the sheet. */
-export function RulePhoneRow({ entry, onOpen }: { entry: NotificationEntryView; onOpen: (key: string) => void }) {
+export function RulePhoneRow({
+  entry,
+  onOpen,
+}: {
+  entry: NotificationEntryView;
+  onOpen: (key: string) => void;
+}) {
   const canEdit = editableRule(entry, useRules().canManage) !== null;
   const name = t.notificationCatalogue.entries[entry.key].name;
   const reason = shortReasonText(entry);

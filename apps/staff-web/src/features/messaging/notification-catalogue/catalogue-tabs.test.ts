@@ -10,8 +10,20 @@ const c = t.notificationCatalogue;
 describe('«ماذا يُرسل ومتى» audience tabs', () => {
   it('guardian, teacher, lead, staff, then «يدوي»; the counts add up to every row', () => {
     const tabs = audienceTabs(ENTRIES);
-    expect(tabs.map((tab) => tab.value)).toEqual(['guardian', 'teacher', 'lead', 'staff', 'manual']);
-    expect(tabs.map((tab) => tab.label)).toEqual([c.audience.guardian, c.audience.teacher, c.audience.lead, c.audience.staff, c.states.manual]);
+    expect(tabs.map((tab) => tab.value)).toEqual([
+      'guardian',
+      'teacher',
+      'lead',
+      'staff',
+      'manual',
+    ]);
+    expect(tabs.map((tab) => tab.label)).toEqual([
+      c.audience.guardian,
+      c.audience.teacher,
+      c.audience.lead,
+      c.audience.staff,
+      c.states.manual,
+    ]);
     // A row that reaches others too (a schedule change, a chat message) counts under each tab.
     const extra = ENTRIES.reduce((n, e) => n + (e.also_to?.length ?? 0), 0);
     expect(tabs.reduce((n, tab) => n + tab.count, 0)).toBe(ENTRIES.length + extra);

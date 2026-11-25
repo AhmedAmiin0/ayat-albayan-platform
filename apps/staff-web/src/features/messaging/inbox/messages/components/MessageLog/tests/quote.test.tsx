@@ -21,10 +21,34 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-const ORIGINAL = message({ id: 'orig', body: 'متى الحلقة؟\nوشكرًا', created_at: '2026-10-05T09:00:00Z' });
-const quote = { id: 'orig', direction: 'inbound' as const, body: ORIGINAL.body, media_mime: null, template_key: null, sender_name: null };
-const ANSWER = message({ id: 'ans', direction: 'outbound', status: 'sent', body: 'الخامسة', reply_to: quote, created_at: '2026-10-05T09:05:00Z' });
-const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const ORIGINAL = message({
+  id: 'orig',
+  body: 'متى الحلقة؟\nوشكرًا',
+  created_at: '2026-10-05T09:00:00Z',
+});
+const quote = {
+  id: 'orig',
+  direction: 'inbound' as const,
+  body: ORIGINAL.body,
+  media_mime: null,
+  template_key: null,
+  sender_name: null,
+};
+const ANSWER = message({
+  id: 'ans',
+  direction: 'outbound',
+  status: 'sent',
+  body: 'الخامسة',
+  reply_to: quote,
+  created_at: '2026-10-05T09:05:00Z',
+});
+const base = {
+  phone: PHONE,
+  hasMore: false,
+  loadingOlder: false,
+  onOlder: vi.fn(),
+  waitingKeys: new Set<string>(),
+};
 
 function renderLog(messages = [ORIGINAL, ANSWER]) {
   renderWithClient(

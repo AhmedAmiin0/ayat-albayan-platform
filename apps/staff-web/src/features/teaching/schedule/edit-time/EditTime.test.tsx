@@ -29,7 +29,11 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     apiFetch.mockResolvedValue([]);
     render(
       <QueryClientProvider client={new QueryClient()}>
-        <LessonDrawer lesson={lesson({ time_edit_mode: null })} onClose={vi.fn()} onDone={vi.fn()} />
+        <LessonDrawer
+          lesson={lesson({ time_edit_mode: null })}
+          onClose={vi.fn()}
+          onDone={vi.fn()}
+        />
       </QueryClientProvider>,
     );
     expect(screen.queryByRole('button', { name: t.lessons.editTime })).toBeNull();
@@ -39,11 +43,21 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
 
   it('shows «عُدّل الوقت · كان …» once edited, in the drawer and as a tag', () => {
     const edited = lesson({
-      time_edit: { at: '2026-10-03T08:00:00.000Z', reason: 'طلب ولي الأمر', was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' } },
+      time_edit: {
+        at: '2026-10-03T08:00:00.000Z',
+        reason: 'طلب ولي الأمر',
+        was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' },
+      },
     });
-    render(<QueryClientProvider client={new QueryClient()}><LessonDetails lesson={edited} /></QueryClientProvider>);
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <LessonDetails lesson={edited} />
+      </QueryClientProvider>,
+    );
     expect(screen.getByText(/كان: .* 16:00/)).toBeTruthy();
-    expect(screen.getByText(t.lessons.timeEdit.reasonLine.replace('{reason}', 'طلب ولي الأمر'))).toBeTruthy();
+    expect(
+      screen.getByText(t.lessons.timeEdit.reasonLine.replace('{reason}', 'طلب ولي الأمر')),
+    ).toBeTruthy();
     expect(screen.getAllByText(t.lessons.timeEdit.tag)).toHaveLength(1); // the tag chip; the note starts with the same words
     expect(screen.queryByRole('button', { name: t.lessons.editTime })).toBeNull(); // no handler: read-only
   });

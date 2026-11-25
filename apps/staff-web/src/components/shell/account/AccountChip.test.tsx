@@ -26,7 +26,13 @@ const PROFILE: AccountProfile = {
 };
 
 const shown = (ui: ReactElement) =>
-  render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{ui}</QueryClientProvider>);
+  render(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      {ui}
+    </QueryClientProvider>,
+  );
 const accountLink = () => screen.getByRole('link', { name: new RegExp(t.account.nav) });
 
 beforeEach(() => {

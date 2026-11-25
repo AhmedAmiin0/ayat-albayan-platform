@@ -48,7 +48,9 @@ export function BubbleMenu(props: BubbleMenuProps) {
         outbound ? 'right-0' : 'left-0',
       )}
     >
-      {offers.react && <ReactionRow message={m} onReact={(e) => pick(() => actions.react(m, e))()} />}
+      {offers.react && (
+        <ReactionRow message={m} onReact={(e) => pick(() => actions.react(m, e))()} />
+      )}
       {offers.reply && (
         <button
           type="button"

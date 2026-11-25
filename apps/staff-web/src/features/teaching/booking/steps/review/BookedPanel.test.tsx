@@ -22,9 +22,15 @@ const INVOICE = {
   students: [],
 };
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
-    <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
-  ),
+  Link: ({
+    to,
+    search,
+    children,
+  }: {
+    to: string;
+    search: Record<string, string>;
+    children: ReactNode;
+  }) => <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>,
 }));
 
 const RESULT: BookingResult = {
@@ -38,7 +44,9 @@ const RESULT: BookingResult = {
 
 function renderPanel(props: Partial<BookedPanelProps>) {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <BookedPanel result={RESULT} teacherId="t-1" tz="Asia/Riyadh" {...props} />
     </QueryClientProvider>,
   );

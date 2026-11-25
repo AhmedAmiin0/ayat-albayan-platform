@@ -27,5 +27,11 @@ export function CourseCheckNotice({ draft, series, onChangeSlot }: CourseCheckNo
   if (!check.data) return <p className="text-xs text-ink-3">{t.booking.seriesChecking}</p>;
   const conflicts = Array.isArray(check.data.conflicts) ? check.data.conflicts : [];
   if (conflicts.length === 0) return null;
-  return <ConflictNotice conflicts={conflicts} teacherTz={draft.teacher?.tz} onChangeSlot={onChangeSlot} />;
+  return (
+    <ConflictNotice
+      conflicts={conflicts}
+      teacherTz={draft.teacher?.tz}
+      onChangeSlot={onChangeSlot}
+    />
+  );
 }

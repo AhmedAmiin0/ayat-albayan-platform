@@ -24,7 +24,11 @@ afterEach(() => vi.useRealTimers());
 /** `over`: the lesson; `auto`: settings.meeting_link_auto (the lesson's own teacher wins). */
 function card(over: Parameters<typeof lesson>[0], auto = false) {
   const client = new QueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: auto,
+  });
   render(
     <QueryClientProvider client={client}>
       <TeacherLessonCard lesson={lesson(over)} tz="Africa/Cairo" fallbackLink={MINE} onDone={vi.fn()} />

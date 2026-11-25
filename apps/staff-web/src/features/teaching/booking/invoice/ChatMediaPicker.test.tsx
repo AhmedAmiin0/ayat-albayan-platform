@@ -24,7 +24,9 @@ function renderPicker(items: ThreadMediaItem[]) {
   const onPick = vi.fn();
   const onClose = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <ChatMediaPicker phone={PHONE} onPick={onPick} onClose={onClose} />
     </QueryClientProvider>,
   );
@@ -68,7 +70,9 @@ describe('ChatMediaPicker «من المحادثة» (R-MSG-06)', () => {
   it('a failed list shows an alert', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <ChatMediaPicker phone={PHONE} onPick={vi.fn()} onClose={vi.fn()} />
       </QueryClientProvider>,
     );

@@ -11,7 +11,11 @@ function Probe({ flag }: { flag: boolean | undefined }) {
 /** `auto`: settings.meeting_link_auto as GET /settings/public answered it. */
 function probe(flag: boolean | undefined, auto: boolean): string | null {
   const client = new QueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: auto,
+  });
   const { unmount } = render(
     <QueryClientProvider client={client}>
       <Probe flag={flag} />

@@ -48,7 +48,8 @@ export async function uploadReplyFile(input: { file: File; mime: ChatSendMime })
   return signed.path;
 }
 
-export const refreshReplies = (queryClient: QueryClient) => queryClient.invalidateQueries({ queryKey: SAVED_REPLIES_KEY });
+export const refreshReplies = (queryClient: QueryClient) =>
+  queryClient.invalidateQueries({ queryKey: SAVED_REPLIES_KEY });
 
 const FILE_ERRORS: Record<string, string | undefined> = t.inbox.error;
 

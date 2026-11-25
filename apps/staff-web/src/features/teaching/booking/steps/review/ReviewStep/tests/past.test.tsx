@@ -20,9 +20,18 @@ describe('the review when the first lesson already passed (review M3)', () => {
     const onChangeSlot = vi.fn();
     const onPatch = vi.fn();
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <BookingModeContext.Provider value="sales">
-          <ReviewStep draft={DRAFT} onMeetingLink={vi.fn()} onChangeSlot={onChangeSlot} onInvoice={vi.fn()} onBooked={vi.fn()} onPatch={onPatch} />
+          <ReviewStep
+            draft={DRAFT}
+            onMeetingLink={vi.fn()}
+            onChangeSlot={onChangeSlot}
+            onInvoice={vi.fn()}
+            onBooked={vi.fn()}
+            onPatch={onPatch}
+          />
         </BookingModeContext.Provider>
       </QueryClientProvider>,
     );
@@ -32,6 +41,8 @@ describe('the review when the first lesson already passed (review M3)', () => {
     expect(onChangeSlot).toHaveBeenCalledTimes(1);
     // The past start and its extra picks go first, so next needs a new slot.
     expect(onPatch).toHaveBeenCalledWith({ startsAt: null, extra: [] });
-    expect(onPatch.mock.invocationCallOrder[0] ?? 0).toBeLessThan(onChangeSlot.mock.invocationCallOrder[0] ?? 0);
+    expect(onPatch.mock.invocationCallOrder[0] ?? 0).toBeLessThan(
+      onChangeSlot.mock.invocationCallOrder[0] ?? 0,
+    );
   });
 });

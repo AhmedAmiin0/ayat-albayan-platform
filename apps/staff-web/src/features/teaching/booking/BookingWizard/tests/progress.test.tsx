@@ -15,8 +15,16 @@ const filled = initial.newStudent ? { ...initial, newStudent: { ...initial.newSt
 function renderWizard(extra: Partial<BookingWizardProps> = {}) {
   apiFetch.mockImplementation(respond);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <BookingWizard initial={filled} primary={null} siblings={[]} onOpenStudent={vi.fn()} {...extra} />
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <BookingWizard
+        initial={filled}
+        primary={null}
+        siblings={[]}
+        onOpenStudent={vi.fn()}
+        {...extra}
+      />
     </QueryClientProvider>,
   );
 }

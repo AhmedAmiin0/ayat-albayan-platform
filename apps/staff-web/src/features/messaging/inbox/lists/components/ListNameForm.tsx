@@ -23,9 +23,19 @@ export function ListNameForm({ id, initial = '', error, onSubmit }: ListNameForm
   };
   return (
     <form id={id} onSubmit={submit} noValidate>
-      <Field label={t.inbox.lists.name} required error={missing ? t.common.required : (error ?? undefined)}>
+      <Field
+        label={t.inbox.lists.name}
+        required
+        error={missing ? t.common.required : (error ?? undefined)}
+      >
         {(p) => (
-          <Input {...p} value={name} maxLength={CHAT_LIST_NAME_MAX} autoComplete="off" onChange={(e) => setName(e.target.value)} />
+          <Input
+            {...p}
+            value={name}
+            maxLength={CHAT_LIST_NAME_MAX}
+            autoComplete="off"
+            onChange={(e) => setName(e.target.value)}
+          />
         )}
       </Field>
     </form>

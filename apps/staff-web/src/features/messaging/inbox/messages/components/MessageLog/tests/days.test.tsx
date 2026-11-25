@@ -9,9 +9,19 @@ import { MessageLog } from '@/features/messaging/inbox/messages/components/Messa
 const C24 = { cycle: '24', locale } as const;
 
 // Day separators at every width; each bubble shows the clock only, the full date in its tooltip (W10).
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch: vi.fn(),
+  apiSend: vi.fn(),
+}));
 
-const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const base = {
+  phone: PHONE,
+  hasMore: false,
+  loadingOlder: false,
+  onOlder: vi.fn(),
+  waitingKeys: new Set<string>(),
+};
 const NOW = new Date(2026, 9, 19, 15, 0);
 const at = (day: number, hour: number) => new Date(2026, 9, day, hour, 5).toISOString();
 const Y = message({ id: 'y', body: 'من الأمس', created_at: at(18, 9) });

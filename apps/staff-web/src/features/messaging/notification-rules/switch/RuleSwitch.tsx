@@ -18,7 +18,13 @@ export function askFor(entry: Pick<NotificationEntryView, 'audience' | 'essentia
 }
 
 /** The switch saves at once after its confirmation. */
-export function RuleSwitch({ entry, row }: { entry: NotificationEntryView; row: RuleRowState | null }) {
+export function RuleSwitch({
+  entry,
+  row,
+}: {
+  entry: NotificationEntryView;
+  row: RuleRowState | null;
+}) {
   const api = useRules();
   const [asking, setAsking] = useState<Asking>(null);
   const name = t.notificationCatalogue.entries[entry.key].name;
@@ -36,7 +42,12 @@ export function RuleSwitch({ entry, row }: { entry: NotificationEntryView; row: 
   const failed = row.failure !== null && row.failure !== 'confirmation_required';
   return (
     <>
-      <RuleSwitchInput checked={row.rule.enabled} label={fillText(r.switchName, { name })} disabled={row.saving} onChange={change} />
+      <RuleSwitchInput
+        checked={row.rule.enabled}
+        label={fillText(r.switchName, { name })}
+        disabled={row.saving}
+        onChange={change}
+      />
       {asking === 'family-on' && (
         <ConfirmSwitchDialog
           title={fillText(r.familyOn.title, { name })}

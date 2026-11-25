@@ -39,12 +39,20 @@ async function openHero() {
 }
 
 /** `auto`: settings.meeting_link_auto in GET /settings/public (the per-teacher flag wins, so it is ignored). */
-function renderDash(me: TeacherMe | Error = ME, auto = false, lessons: LessonView[] = [TODAY, MONDAY]) {
+function renderDash(
+  me: TeacherMe | Error = ME,
+  auto = false,
+  lessons: LessonView[] = [TODAY, MONDAY],
+) {
   apiFetch.mockImplementation((path: string) => {
-    if (path === '/teachers/me') return me instanceof Error ? Promise.reject(me) : Promise.resolve(me);
+    if (path === '/teachers/me')
+      return me instanceof Error ? Promise.reject(me) : Promise.resolve(me);
     // An academy that still requires lesson confirmation (the confirm button is asserted below).
     const config = {
-      ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto, lesson_confirmation_required: true,
+      ...PUBLIC_SETTING_DEFAULTS,
+      custom: {},
+      meeting_link_auto: auto,
+      lesson_confirmation_required: true,
     };
     if (path === '/settings/public') return Promise.resolve(config);
     if (path.startsWith('/teachers/me/lessons')) return Promise.resolve(lessons);

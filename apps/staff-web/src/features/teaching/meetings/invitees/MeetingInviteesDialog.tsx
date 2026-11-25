@@ -28,7 +28,12 @@ export function MeetingInviteesDialog({ meetingId, title, onClose }: Props) {
       {invitees.isSuccess && invitees.data.length === 0 && <p className="text-sm text-ink-3">{L.noInvitees}</p>}
       <ul>
         {(invitees.data ?? []).map((i) => (
-          <InviteeViewRow key={i.id} meetingId={meetingId} invitee={i} mayInvitePhones={mayInvitePhones} />
+          <InviteeViewRow
+            key={i.id}
+            meetingId={meetingId}
+            invitee={i}
+            mayInvitePhones={mayInvitePhones}
+          />
         ))}
       </ul>
     </Dialog>

@@ -18,7 +18,9 @@ function renderBooking(search: BookSearch) {
   apiFetch.mockImplementation(respond);
   routeSend(apiSend, []);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <BookingPage search={search} onOpenStudent={vi.fn()} />
     </QueryClientProvider>,
   );

@@ -20,7 +20,11 @@ const payout = (over: Partial<PayoutView>): PayoutView => ({
   status: 'paid',
   approved_at: '2026-10-01T09:00:00Z',
   paid_at: '2026-10-02T09:00:00Z',
-  breakdown: { lines: [{ duration: 45, lessons: 10, rate: 70, amount: 700 }], lesson_ids: [], statuses: [] },
+  breakdown: {
+    lines: [{ duration: 45, lessons: 10, rate: 70, amount: 700 }],
+    lesson_ids: [],
+    statuses: [],
+  },
   ...over,
 });
 

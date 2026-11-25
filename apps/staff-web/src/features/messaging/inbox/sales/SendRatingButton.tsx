@@ -48,7 +48,9 @@ export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e
         variant="secondary"
         className="justify-self-start"
         disabled={!approved || send.isPending}
-        onClick={() => send.mutate({ phone: thread.phone_e164, clientRequestId: requestId.current })}
+        onClick={() =>
+          send.mutate({ phone: thread.phone_e164, clientRequestId: requestId.current })
+        }
       >
         {send.isPending ? r.sending : r.send}
       </Button>

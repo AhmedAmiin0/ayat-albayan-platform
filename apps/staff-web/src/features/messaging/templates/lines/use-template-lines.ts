@@ -31,5 +31,8 @@ export function useTemplateLines(): TemplateLines {
   const check = useQuery(linesCheckQuery);
   const lines = facts.data;
   const phones = useMemo(() => phonesOf(check.data), [check.data]);
-  return useMemo(() => ({ lines, phones, factsOf: (line: WaLine) => lines?.find((l) => l.line === line) }), [lines, phones]);
+  return useMemo(
+    () => ({ lines, phones, factsOf: (line: WaLine) => lines?.find((l) => l.line === line) }),
+    [lines, phones],
+  );
 }

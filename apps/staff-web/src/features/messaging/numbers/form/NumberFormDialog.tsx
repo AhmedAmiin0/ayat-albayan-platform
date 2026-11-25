@@ -12,7 +12,10 @@ import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mut
 const s = t.numbers;
 
 /** POST for a new number, PATCH with only the changed fields for an edit (nothing changed: just close). */
-const saveNumber = async (input: { view?: NumberView; draft: ReturnType<typeof draftOf> }): Promise<unknown> => {
+const saveNumber = async (input: {
+  view?: NumberView;
+  draft: ReturnType<typeof draftOf>;
+}): Promise<unknown> => {
   if (!input.view) return createNumber(createBody(input.draft));
   const body = updateBody(input.view, input.draft);
   return Object.keys(body).length === 0 ? null : updateNumber({ id: input.view.id, body });
@@ -46,7 +49,11 @@ export function NumberFormDialog({ view, onClose }: { view?: NumberView; onClose
       <form id={formId} noValidate onSubmit={submit} className="grid gap-4">
         {Object.keys(errors).length > 0 && <FormAlert>{s.form.invalid}</FormAlert>}
         {save.isError && <FormAlert>{numberErrorText(save.error)}</FormAlert>}
-        <NumberFormFields draft={draft} errors={shown} onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))} />
+        <NumberFormFields
+          draft={draft}
+          errors={shown}
+          onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))}
+        />
       </form>
     </Dialog>
   );

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { pageQuery } from '@ab/core';
 
 /** A recording row's life: under way, ready, failed, or removed (file gone, row kept). */
 export const STUDENT_RECORDING_STATUSES = ['recording', 'done', 'failed', 'deleted'] as const;
@@ -43,8 +44,7 @@ const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
  * state.
  */
 export const studentRecordingsQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(10),
+  ...pageQuery({ size: 10 }),
   from: day.optional(),
   to: day.optional(),
   teacherId: z.string().uuid().optional(),

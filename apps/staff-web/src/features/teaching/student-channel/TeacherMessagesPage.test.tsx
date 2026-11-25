@@ -13,7 +13,9 @@ const c = t.studentChannel;
 const ROWS = [{ student_id: 's1', student_name: 'سلمى', student_code: 'AB-0201', unread: 2, last_message: { body: 'متى الحلقة؟', sender_role: 'guardian', created_at: '2026-10-27T10:00:00.000Z' } }];
 const show = (studentId: string | null, onPick = vi.fn()) => {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <TeacherMessagesPage studentId={studentId} onPick={onPick} />
     </QueryClientProvider>,
   );

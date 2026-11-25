@@ -30,14 +30,24 @@ export interface BookedPanelProps {
 /** The first lesson and its week in the viewer's zone, as the calendar uses. */
 function firstLesson(result: BookingResult, viewer: string) {
   const first = result.lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
-  return { first, week: first ? weekStart(zonedPartsIn(new Date(first.starts_at), viewer).date) : undefined };
+  return {
+    first,
+    week: first ? weekStart(zonedPartsIn(new Date(first.starts_at), viewer).date) : undefined,
+  };
 }
 
 /**
  * After POST /booking: what was created, the queued WhatsApp confirmation, the subscription for a
  * regular package, and the way to the week (or back to the chat).
  */
-export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPhone }: BookedPanelProps) {
+export function BookedPanel({
+  result,
+  teacherId,
+  tz,
+  kind,
+  subscribeFor,
+  chatPhone,
+}: BookedPanelProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const sales = useBookingMode() === 'sales';
   const backToChat = useChatReturn();

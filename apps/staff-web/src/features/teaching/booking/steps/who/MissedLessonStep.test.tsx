@@ -23,7 +23,9 @@ function renderStep(items: MakeupCandidate[], extra: { preselectId?: string } = 
   apiFetch.mockResolvedValue(items);
   const onChange = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <MissedLessonStep draft={draft} onChange={onChange} {...extra} />
     </QueryClientProvider>,
   );
@@ -79,7 +81,9 @@ describe('MissedLessonStep (R-SCH-10)', () => {
   it('a failed list shows an alert', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <MissedLessonStep draft={draft} onChange={vi.fn()} />
       </QueryClientProvider>,
     );

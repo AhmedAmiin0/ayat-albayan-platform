@@ -27,11 +27,15 @@ export const channelsText = (entry: Pick<NotificationEntryView, 'channels'>): st
   entry.channels.map((ch) => c().channels[ch]).join(t.common.listSeparator);
 
 /** The tags beside the name: automatic, essential, locked. */
-export function tagsOf(entry: Pick<NotificationEntryView, 'automatic' | 'essential' | 'locked'>): string[] {
+export function tagsOf(
+  entry: Pick<NotificationEntryView, 'automatic' | 'essential' | 'locked'>,
+): string[] {
   const tags = c().tags;
-  return [entry.automatic && tags.automatic, entry.essential && tags.essential, entry.locked && tags.locked].filter(
-    (x): x is string => typeof x === 'string',
-  );
+  return [
+    entry.automatic && tags.automatic,
+    entry.essential && tags.essential,
+    entry.locked && tags.locked,
+  ].filter((x): x is string => typeof x === 'string');
 }
 
 /** One sending number: its role in words and, when a check kept it, the phone (E.164). */

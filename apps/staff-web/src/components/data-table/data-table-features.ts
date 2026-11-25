@@ -62,7 +62,12 @@ export interface DataTableFilters {
 }
 
 /** Table options for the sort/filter mode: local sorting/filtering only in client mode, one column at a time. */
-export function sortFilterOptions(p: { sort?: unknown; clientSort?: boolean; filters?: unknown; clientFilter?: boolean }) {
+export function sortFilterOptions(p: {
+  sort?: unknown;
+  clientSort?: boolean;
+  filters?: unknown;
+  clientFilter?: boolean;
+}) {
   return {
     enableSorting: Boolean(p.clientSort) && !p.sort,
     enableColumnFilters: Boolean(p.clientFilter) && !p.filters,
@@ -74,11 +79,18 @@ export function sortFilterOptions(p: { sort?: unknown; clientSort?: boolean; fil
 type DataRow<T extends RowData> = Row<DataTableFeatures, T>;
 
 /** Ascending only (the table reverses for desc): Arabic collation, numbers numerically. */
-export const collatorSortFn = <T extends RowData>(a: DataRow<T>, b: DataRow<T>, id: string): number =>
-  compareValues(a.getValue(id), b.getValue(id));
+export const collatorSortFn = <T extends RowData>(
+  a: DataRow<T>,
+  b: DataRow<T>,
+  id: string,
+): number => compareValues(a.getValue(id), b.getValue(id));
 
 /** Text filters match «contains» (Arabic-normalised), select filters the exact value. */
-export const metaFilterFn = <T extends RowData>(row: DataRow<T>, id: string, value: unknown): boolean => {
+export const metaFilterFn = <T extends RowData>(
+  row: DataRow<T>,
+  id: string,
+  value: unknown,
+): boolean => {
   const kind = row.table.getColumn(id)?.columnDef.meta?.filter?.kind;
   return matchesFilter(row.getValue(id), typeof value === 'string' ? value : '', kind);
 };

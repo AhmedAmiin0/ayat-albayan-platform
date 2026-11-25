@@ -13,7 +13,10 @@ const im = t.numbers.import;
 export function ImportButton() {
   const [preview, setPreview] = useState<ImportResult | null>(null);
   const dry = useMutation({ mutationFn: () => importNumbers(true), onSuccess: setPreview });
-  const apply = useNumbersMutation(() => importNumbers(false), { onDone: () => setPreview(null), note: im.done });
+  const apply = useNumbersMutation(() => importNumbers(false), {
+    onDone: () => setPreview(null),
+    note: im.done,
+  });
   const close = () => {
     setPreview(null);
     apply.reset();
@@ -34,9 +37,13 @@ export function ImportButton() {
           onClose={close}
           actions={
             <>
-              <Button variant="ghost" onClick={close}>{t.numbers.actions.cancel}</Button>
+              <Button variant="ghost" onClick={close}>
+                {t.numbers.actions.cancel}
+              </Button>
               {preview.changed && (
-                <Button disabled={apply.isPending} onClick={() => apply.mutate()}>{im.confirm}</Button>
+                <Button disabled={apply.isPending} onClick={() => apply.mutate()}>
+                  {im.confirm}
+                </Button>
               )}
             </>
           }

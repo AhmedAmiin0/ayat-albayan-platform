@@ -25,7 +25,10 @@ const TIMINGS: Partial<Record<string, AnyRuleTiming>> = {
 };
 
 /** The v2 rule of a catalogue row as the API would send it (every automatic row editable). */
-export function ruleOf(entry: NotificationEntryView, patch: Partial<NotificationRuleView> = {}): NotificationRuleView {
+export function ruleOf(
+  entry: NotificationEntryView,
+  patch: Partial<NotificationRuleView> = {},
+): NotificationRuleView {
   return {
     key: entry.key,
     enabled: notificationEntry(entry.key).rowSwitch?.isOn(SETTING_DEFAULTS) ?? true,
@@ -41,10 +44,20 @@ export function ruleOf(entry: NotificationEntryView, patch: Partial<Notification
 }
 
 /** GET /admin/notifications v2 with sending off, every template approved; `patch` edits rows by key. */
-export function overview(patch: Partial<Record<string, Partial<NotificationEntryView>>> = {}): NotificationsOverview {
-  const base = catalogueViews({ settings: SETTING_DEFAULTS, gateReason: 'switch_off', templates: new Map() });
+export function overview(
+  patch: Partial<Record<string, Partial<NotificationEntryView>>> = {},
+): NotificationsOverview {
+  const base = catalogueViews({
+    settings: SETTING_DEFAULTS,
+    gateReason: 'switch_off',
+    templates: new Map(),
+  });
   const entries = base.map((e) => {
-    const withRule: NotificationEntryView = { ...e, approval: e.templates.length > 0 ? 'all' : null, rule: ruleOf(e) };
+    const withRule: NotificationEntryView = {
+      ...e,
+      approval: e.templates.length > 0 ? 'all' : null,
+      rule: ruleOf(e),
+    };
     return { ...withRule, ...patch[e.key] };
   });
   return { entries, lines: [], mode: 'legacy', reach: { guardian: 12, teacher: 3, lead: 25 } };
@@ -64,7 +77,9 @@ export function renderRules(input: {
     ['/settings', SETTING_DEFAULTS],
     ['/messages/gate', { open: false, reason: 'switch_off', queued: input.queued ?? 0 }],
   ]);
-  return renderWithClient(<RulesSection onSaved={input.onSaved ?? (() => undefined)} audience={input.audience} />);
+  return renderWithClient(
+    <RulesSection onSaved={input.onSaved ?? (() => undefined)} audience={input.audience} />,
+  );
 }
 
 /** The table row of one notification, once the list is in. */

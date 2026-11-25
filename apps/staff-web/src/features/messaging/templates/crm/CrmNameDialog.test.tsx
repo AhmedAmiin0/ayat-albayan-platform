@@ -23,9 +23,11 @@ describe('CrmNameDialog', () => {
     expect(onSave).toHaveBeenCalledWith({ key: 'teacher_new_student', crm_name: null, crm_language: null });
   });
 
-  it('a name outside Meta\'s rules is refused in the form, never sent', () => {
+  it("a name outside Meta's rules is refused in the form, never sent", () => {
     const onSave = vi.fn();
-    render(<CrmNameDialog template={templateView({})} busy={false} onSave={onSave} onClose={vi.fn()} />);
+    render(
+      <CrmNameDialog template={templateView({})} busy={false} onSave={onSave} onClose={vi.fn()} />,
+    );
     fireEvent.change(field(s.name), { target: { value: 'Report Session' } });
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     expect(onSave).not.toHaveBeenCalled();
@@ -40,9 +42,15 @@ describe('CrmNameDialog', () => {
     fireEvent.change(field(s.name), { target: { value: 'report_session' } });
     fireEvent.change(field(s.language), { target: { value: 'ar' } });
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
-    expect(onSave).toHaveBeenCalledWith({ key: 'report_ready', crm_name: 'report_session', crm_language: 'ar' });
+    expect(onSave).toHaveBeenCalledWith({
+      key: 'report_ready',
+      crm_name: 'report_session',
+      crm_language: 'ar',
+    });
     unmount();
-    render(<CrmNameDialog template={templateView({})} busy={false} onSave={vi.fn()} onClose={vi.fn()} />);
+    render(
+      <CrmNameDialog template={templateView({})} busy={false} onSave={vi.fn()} onClose={vi.fn()} />,
+    );
     expect(screen.queryByText(s.reportNote)).toBeNull();
   });
 });

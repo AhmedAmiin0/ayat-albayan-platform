@@ -38,7 +38,14 @@ function PackageValue({ draft, students }: { draft: BookingDraft; students: numb
       {draft.kind === 'package' && (
         <>
           {' · '}
-          <PackagePrice input={{ pkg: draft.pkg, durationMin: draft.durationMin, country: draft.country, students }} />
+          <PackagePrice
+            input={{
+              pkg: draft.pkg,
+              durationMin: draft.durationMin,
+              country: draft.country,
+              students,
+            }}
+          />
         </>
       )}
     </>
@@ -55,7 +62,11 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
     <dl>
       <Row label={t.booking.kind.label}>{t.booking.kind[kind]}</Row>
       <Row label={t.schedule.students}>{joinNames(names, locale)}</Row>
-      {missed && <Row label={t.booking.makeup.missedLabel}>{pickedText(missed.startsAt, draft.tz, clock)}</Row>}
+      {missed && (
+        <Row label={t.booking.makeup.missedLabel}>
+          {pickedText(missed.startsAt, draft.tz, clock)}
+        </Row>
+      )}
       <Row label={t.students.teacher}>{draft.teacher && teacherLabel(draft.teacher)}</Row>
       <Row label={kind === 'makeup' ? t.booking.makeup.timeLabel : t.booking.startsOn}>
         {draft.startsAt && (kind === 'makeup' ? pickedText(draft.startsAt, draft.tz, clock) : t.booking.firstLesson.replace('{when}', pickedText(draft.startsAt, draft.tz, clock)))}

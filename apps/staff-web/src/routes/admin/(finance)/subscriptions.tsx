@@ -14,8 +14,12 @@ function SubscriptionsRoute() {
   return (
     <SubscriptionsPage
       search={search}
-      onSearch={(patch) => void navigate({ search: parseSubscriptionsSearch({ ...search, ...patch }) })}
-      onOpenStudent={(studentId) => void navigate({ to: '/admin/students/$studentId', params: { studentId } })}
+      onSearch={(patch) =>
+        void navigate({ search: parseSubscriptionsSearch({ ...search, ...patch }) })
+      }
+      onOpenStudent={(studentId) =>
+        void navigate({ to: '/admin/students/$studentId', params: { studentId } })
+      }
     />
   );
 }

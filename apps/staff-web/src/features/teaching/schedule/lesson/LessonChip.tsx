@@ -46,7 +46,13 @@ export interface LessonChipProps<L extends ChipLesson> {
 }
 
 /** A day's chips under each other (the week grid's cell, the phone agenda's teacher row). */
-export function LessonChipList({ lessons, onOpen }: { lessons: readonly LessonView[]; onOpen: (lesson: LessonView) => void }) {
+export function LessonChipList({
+  lessons,
+  onOpen,
+}: {
+  lessons: readonly LessonView[];
+  onOpen: (lesson: LessonView) => void;
+}) {
   return (
     <ul className="grid gap-1">
       {lessons.map((lesson) => (
@@ -59,7 +65,11 @@ export function LessonChipList({ lessons, onOpen }: { lessons: readonly LessonVi
 }
 
 /** Shape carries state, colour only confirms; flags clashes (R-SCH-04) and unpaid (R-SUB-02). */
-export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher = true }: LessonChipProps<L>) {
+export function LessonChip<L extends ChipLesson>({
+  lesson,
+  onOpen,
+  hideTeacher = true,
+}: LessonChipProps<L>) {
   const style = useLessonStatusText().chip(lesson.status);
   const viewer = useViewerTz();
   const tz = lesson.students[0]?.tz ?? viewer;

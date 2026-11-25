@@ -18,7 +18,9 @@ const VIEW = { title: 'لقاء الأسر', state: 'open', starts_at: '2026-10-
 
 function open() {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <MeetingGuestPage token="tok-9" make={() => fakeClient()} />
     </QueryClientProvider>,
   );

@@ -29,8 +29,15 @@ function open(mode: InboxMode, permissions = ALL) {
     ['/sales/money/family', { students: [] }],
     ['/teachers/me', { id: 't-1' }],
   ]);
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
-  const me: Me = { id: 'u-1', email: null, role: mode === 'teacher' ? 'teacher' : mode === 'admin' ? 'admin' : 'sales', permissions };
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+  const me: Me = {
+    id: 'u-1',
+    email: null,
+    role: mode === 'teacher' ? 'teacher' : mode === 'admin' ? 'admin' : 'sales',
+    permissions,
+  };
   client.setQueryData(meQuery.queryKey, me);
   render(
     <QueryClientProvider client={client}>

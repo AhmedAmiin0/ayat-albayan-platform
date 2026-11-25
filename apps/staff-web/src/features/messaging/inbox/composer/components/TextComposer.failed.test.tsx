@@ -8,9 +8,15 @@ import { clearOwnSends, lastOwnSend } from '@/features/messaging/inbox/composer/
 import { TextComposer } from './TextComposer';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch: vi.fn(),
+  apiSend,
+}));
 
-const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+const client = new QueryClient({
+  defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+});
 const show = () =>
   render(
     <QueryClientProvider client={client}>
@@ -20,7 +26,8 @@ const show = () =>
 const box = () => screen.getByRole<HTMLTextAreaElement>('textbox', { name: t.inbox.composer.messageLabel });
 const button = () => screen.getByRole<HTMLButtonElement>('button', { name: t.inbox.composer.send });
 const type = (text: string) => fireEvent.change(box(), { target: { value: text } });
-const sentId = (call: number) => (apiSend.mock.calls[call]?.[2] as { clientRequestId: string }).clientRequestId;
+const sentId = (call: number) =>
+  (apiSend.mock.calls[call]?.[2] as { clientRequestId: string }).clientRequestId;
 const sendAndWait = async (calls: number) => {
   fireEvent.click(button());
   await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(calls));

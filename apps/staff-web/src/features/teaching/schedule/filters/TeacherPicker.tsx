@@ -22,7 +22,8 @@ export function pickedLabel(teachers: TeacherPickerProps['teachers'], value: rea
  * screen reader for free, no dependency. Unticking everyone means everyone.
  */
 export function TeacherPicker({ teachers, value, onChange, inline = false }: TeacherPickerProps) {
-  const toggle = (id: string, on: boolean) => onChange(on ? [...value, id] : value.filter((x) => x !== id));
+  const toggle = (id: string, on: boolean) =>
+    onChange(on ? [...value, id] : value.filter((x) => x !== id));
   return (
     <div className="grid min-w-0 gap-1.5 sm:w-auto">
       <span className="text-xs font-semibold text-ink-2">{t.schedule.teacherFilter}</span>

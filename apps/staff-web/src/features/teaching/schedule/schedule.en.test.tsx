@@ -25,7 +25,11 @@ const ARABIC = /[؀-ۿ]/;
 
 describe('schedule screens in English', () => {
   it('the drawer reads the lesson time in English', () => {
-    render(<QueryClientProvider client={new QueryClient()}><LessonDetails lesson={lesson()} /></QueryClientProvider>);
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <LessonDetails lesson={lesson()} />
+      </QueryClientProvider>,
+    );
     expect(screen.getByText(`Sunday 4 October 17:00 ${en.schedule.viewerTime}`)).toBeTruthy();
   });
 

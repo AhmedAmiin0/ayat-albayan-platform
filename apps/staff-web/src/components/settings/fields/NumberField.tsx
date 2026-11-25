@@ -12,7 +12,16 @@ export interface NumberFieldProps extends RowExtras {
 }
 
 /** A count (hours, weeks, lessons, minutes): LTR digits, never a time of day (rule 6). */
-export function NumberField({ label, value, onChange, hint, error, list, disabled, ...row }: NumberFieldProps) {
+export function NumberField({
+  label,
+  value,
+  onChange,
+  hint,
+  error,
+  list,
+  disabled,
+  ...row
+}: NumberFieldProps) {
   return (
     <SettingRow label={label} hint={hint} error={error} {...row}>
       {(p) => (

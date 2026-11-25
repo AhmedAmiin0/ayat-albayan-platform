@@ -26,7 +26,10 @@ export function EditListDialog({ list, onClose, onDeleted }: EditListDialogProps
       onClose();
     },
   });
-  if (confirming) return <DeleteListDialog list={list} onClose={() => setConfirming(false)} onDeleted={onDeleted} />;
+  if (confirming)
+    return (
+      <DeleteListDialog list={list} onClose={() => setConfirming(false)} onDeleted={onDeleted} />
+    );
   const actions = (
     <>
       <Button type="button" variant="danger-quiet" className="sm:me-auto" onClick={() => setConfirming(true)}>

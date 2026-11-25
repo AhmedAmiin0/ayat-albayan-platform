@@ -12,7 +12,10 @@ export interface ForwardSummary {
 const ltr = (text: string): string => `\u2066${text}\u2069`;
 
 /** The toast after a forward; `names` maps each picked number to the name the picker showed. */
-export function forwardSummary(res: ForwardResponse, names: ReadonlyMap<string, string | null>): ForwardSummary {
+export function forwardSummary(
+  res: ForwardResponse,
+  names: ReadonlyMap<string, string | null>,
+): ForwardSummary {
   const sent = res.results.filter((r) => r.sent).length;
   const skipped = res.results.flatMap((r) =>
     r.sent ? [] : [`${names.get(r.phone) ?? ltr(formatPhone(r.phone))}: ${t.inbox.forward.skip[r.reason]}`],

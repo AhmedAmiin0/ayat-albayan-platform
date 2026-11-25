@@ -21,7 +21,9 @@ describe('LeadStudentStep: whose WhatsApp number', () => {
   });
 
   it('POST /booking sends contact_is_self only for «الطالب نفسه»', () => {
-    expect(leadParts({ ...BASE, contactIsSelf: true }, FAMILY).newStudent).toMatchObject({ contact_is_self: true });
+    expect(leadParts({ ...BASE, contactIsSelf: true }, FAMILY).newStudent).toMatchObject({
+      contact_is_self: true,
+    });
     expect(leadParts(BASE, FAMILY).newStudent).not.toHaveProperty('contact_is_self');
   });
 });

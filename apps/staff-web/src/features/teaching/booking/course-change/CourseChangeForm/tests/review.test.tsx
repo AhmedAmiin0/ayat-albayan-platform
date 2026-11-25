@@ -95,7 +95,11 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
     fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.submit }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.booking.courseChange.done));
     const [body] = changeBodies(apiSend);
-    expect(body).toMatchObject({ byday: [1, 3], startsAt: MON, clientRequestId: expect.any(String) });
+    expect(body).toMatchObject({
+      byday: [1, 3],
+      startsAt: MON,
+      clientRequestId: expect.any(String),
+    });
     expect(apiSend).toHaveBeenCalledWith('POST', '/sales/booking/course/change', body);
   });
 

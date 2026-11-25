@@ -23,7 +23,12 @@ describe('ClassroomActions buttons fill the drawer width', () => {
         <ClassroomActions lesson={L} />
       </QueryClientProvider>,
     );
-    const names = [t.classroom.enter, t.classroom.openNow, t.classroom.copyLink, t.classroom.sendLink];
+    const names = [
+      t.classroom.enter,
+      t.classroom.openNow,
+      t.classroom.copyLink,
+      t.classroom.sendLink,
+    ];
     for (const name of names) {
       const b = screen.getByRole('button', { name });
       expect(b.className).not.toContain('justify-self-start');

@@ -11,7 +11,7 @@ export const NOTIF_PN = 'e2e-phone';
 export const CHAT_PN = 'e2e-chat-phone';
 const LINE_PN: Record<WaLine, string> = { notifications: NOTIF_PN, chat: CHAT_PN };
 /** E2E_LINES=single (playwright.config.ts): no chat line configured, so two-line specs skip. */
-export const SINGLE_LINE = process.env['E2E_LINES'] === 'single';
+export const SINGLE_LINE = process.env.E2E_LINES === 'single';
 
 interface LineInbound {
   from: string;

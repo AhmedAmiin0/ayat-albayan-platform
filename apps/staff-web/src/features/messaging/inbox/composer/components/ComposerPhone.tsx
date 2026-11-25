@@ -66,7 +66,14 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
 }
 
 /** Opening a closed chat sends nothing: the starter template goes with the first send. */
-export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
+export function ComposerPhone({
+  thread,
+  context,
+  gateNote,
+  mode,
+  onMode,
+  teacher,
+}: ComposerPhoneProps) {
   const open = thread.session_open;
   const inbox = useInboxMode();
   // On a Kapso chat line staff try every send after the window.

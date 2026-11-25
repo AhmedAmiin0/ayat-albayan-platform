@@ -18,8 +18,15 @@ const file = (type: string, name = 'inv', size = 10) => new File([new Uint8Array
 function renderField(over: { value?: InvoiceDraft | null; chatPhone?: string | null } = {}) {
   const onChange = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <InvoiceField value={over.value ?? null} requestId="req-1" chatPhone={over.chatPhone ?? null} onChange={onChange} />
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <InvoiceField
+        value={over.value ?? null}
+        requestId="req-1"
+        chatPhone={over.chatPhone ?? null}
+        onChange={onChange}
+      />
     </QueryClientProvider>,
   );
   return onChange;

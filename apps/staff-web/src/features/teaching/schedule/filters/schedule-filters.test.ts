@@ -5,7 +5,8 @@ import { CLEAR_SCHEDULE_FILTERS, scheduleChips } from './schedule-filters';
 import type { ScheduleSearch } from './search';
 
 const teachers = [T_ABRAR, T_FATMA, T_NOUR];
-const build = (search: ScheduleSearch, onSearch = vi.fn()) => scheduleChips({ search, teachers, onSearch });
+const build = (search: ScheduleSearch, onSearch = vi.fn()) =>
+  scheduleChips({ search, teachers, onSearch });
 
 describe('scheduleChips', () => {
   it('no chip for the week / day navigation, only for filters', () => {

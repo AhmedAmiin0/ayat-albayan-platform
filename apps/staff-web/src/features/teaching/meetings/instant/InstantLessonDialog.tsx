@@ -53,14 +53,31 @@ export function InstantLessonDialog({ onClose, onStarted }: Props) {
     </>
   );
   return (
-    <Dialog title={t.meetings.dialogTitle} description={t.meetings.dialogHint} onClose={onClose} actions={actions}>
+    <Dialog
+      title={t.meetings.dialogTitle}
+      description={t.meetings.dialogHint}
+      onClose={onClose}
+      actions={actions}
+    >
       <div className="grid gap-5">
-        <MeetingStudentPicker picked={draft.students} onPicked={(students) => setDraft({ ...draft, students })} />
+        <MeetingStudentPicker
+          picked={draft.students}
+          onPicked={(students) => setDraft({ ...draft, students })}
+        />
         {tried && problem === 'students' && <FormAlert>{t.meetings.noStudents}</FormAlert>}
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label={t.meetings.teacher} required {...(tried && problem === 'teacher' && { error: t.meetings.noTeacher })}>
+          <Field
+            label={t.meetings.teacher}
+            required
+            {...(tried && problem === 'teacher' && { error: t.meetings.noTeacher })}
+          >
             {(p) => (
-              <Select {...p} value={draft.teacherId} disabled={!program} onChange={(e) => setDraft({ ...draft, teacherId: e.target.value })}>
+              <Select
+                {...p}
+                value={draft.teacherId}
+                disabled={!program}
+                onChange={(e) => setDraft({ ...draft, teacherId: e.target.value })}
+              >
                 <option value="">{t.meetings.pickTeacher}</option>
                 {(teachers.data ?? []).map((x) => (
                   <option key={x.id} value={x.id}>{teacherLabel(x)}</option>
@@ -70,9 +87,17 @@ export function InstantLessonDialog({ onClose, onStarted }: Props) {
           </Field>
           <Field label={t.meetings.duration} required>
             {(p) => (
-              <Select {...p} value={String(draft.durationMin)} onChange={(e) => setDraft({ ...draft, durationMin: Number(e.target.value) as Duration })}>
+              <Select
+                {...p}
+                value={String(draft.durationMin)}
+                onChange={(e) =>
+                  setDraft({ ...draft, durationMin: Number(e.target.value) as Duration })
+                }
+              >
                 {DURATIONS.map((d) => (
-                  <option key={d} value={d}>{durations[String(d)] ?? d}</option>
+                  <option key={d} value={d}>
+                    {durations[String(d)] ?? d}
+                  </option>
                 ))}
               </Select>
             )}
@@ -86,8 +111,18 @@ export function InstantLessonDialog({ onClose, onStarted }: Props) {
                 <li key={`${c.kind}-${c.startsAt}-${c.lessonId ?? ''}`}>{conflictText(c, clock)}</li>
               ))}
             </ul>
-            <Field label={t.meetings.overrideReason} required {...(tried && problem === 'reason' && { error: t.common.required })}>
-              {(p) => <Input {...p} value={draft.reason} onChange={(e) => setDraft({ ...draft, reason: e.target.value })} />}
+            <Field
+              label={t.meetings.overrideReason}
+              required
+              {...(tried && problem === 'reason' && { error: t.common.required })}
+            >
+              {(p) => (
+                <Input
+                  {...p}
+                  value={draft.reason}
+                  onChange={(e) => setDraft({ ...draft, reason: e.target.value })}
+                />
+              )}
             </Field>
           </div>
         )}

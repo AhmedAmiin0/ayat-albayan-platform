@@ -28,7 +28,15 @@ function Label({ kind, forbidden = false }: { kind: string; forbidden?: boolean 
 }
 
 /** `fileName`: a sent file's name (media_name), the PDF link's text. */
-function Loaded({ file, kind, fileName }: { file: ThreadFile; kind: string; fileName: string | null }) {
+function Loaded({
+  file,
+  kind,
+  fileName,
+}: {
+  file: ThreadFile;
+  kind: string;
+  fileName: string | null;
+}) {
   const name = t.inbox.openMedia.replace('{kind}', kind);
   if (isPlayableMime(file.mime)) return <MediaPlayer file={file} kind={kind} />;
   if (!inlineImage(file.mime)) {
@@ -68,7 +76,8 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   }
   if (file.isPending) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
   // 403 media_forbidden (a role that may not open files): the label, as in teacher mode.
-  if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} forbidden />;
+  if (file.error instanceof ApiError && file.error.status === 403)
+    return <Label kind={kind} forbidden />;
   return (
     <p role="status" className="text-xs font-semibold text-ink-2">
       {fileErrorText(file.error)}

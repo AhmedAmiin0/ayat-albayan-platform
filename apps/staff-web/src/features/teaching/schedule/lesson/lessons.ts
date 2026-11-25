@@ -55,7 +55,10 @@ export function teacherRows(lessons: readonly LessonView[], tz: string): Teacher
 }
 
 /** Lessons on one local day of `tz`, by start time. */
-export function lessonsOnDay(lessons: readonly LessonView[], day: { date: string; tz: string }): LessonView[] {
+export function lessonsOnDay(
+  lessons: readonly LessonView[],
+  day: { date: string; tz: string },
+): LessonView[] {
   return lessons
     .filter((l) => zonedPartsIn(new Date(l.starts_at), day.tz).date === day.date)
     .toSorted((a, b) => a.starts_at.localeCompare(b.starts_at));

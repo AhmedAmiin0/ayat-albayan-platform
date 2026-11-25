@@ -49,7 +49,9 @@ export function FeedbackPublicPage({ token }: { token: string }) {
           </div>
         )}
         {closing && <ThankYou kind={closing} />}
-        {query.data && !closing && <FeedbackForm token={token} form={query.data} onDone={setOutcome} />}
+        {query.data && !closing && (
+          <FeedbackForm token={token} form={query.data} onDone={setOutcome} />
+        )}
       </div>
     </main>
   );
