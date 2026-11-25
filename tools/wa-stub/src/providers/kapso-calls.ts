@@ -38,7 +38,7 @@ const callsRoute: Route = [
 const permissionRoute: Route = [
   'GET',
   new RegExp(`^${V}/([^/]+)/call_permissions$`),
-  async (_req, _m, s) => {
+  (_req, _m, s) => {
     const granted = s.opts.kapso?.callPermission !== false;
     return [
       200,

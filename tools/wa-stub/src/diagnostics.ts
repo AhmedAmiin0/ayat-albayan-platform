@@ -46,7 +46,7 @@ export const diagnosticRoutes: Route[] = [
   [
     'GET',
     new RegExp(`^${V}/([^/]+)/subscribed_apps$`),
-    async (_r, m, s) => subscribedApps(s, m[1] ?? ''),
+    (_r, m, s) => subscribedApps(s, m[1] ?? ''),
   ],
 ];
 
