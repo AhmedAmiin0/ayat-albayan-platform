@@ -2,7 +2,7 @@
 import type { AcademySettings } from '@ab/settings';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { bookingRoot } from '@/modules/teaching/booking/booking-root.fakes';
 import { bootWith, ROLE_ADMIN, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth.fakes';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -106,7 +106,7 @@ export async function profileApp(
   settings: Partial<AcademySettings> = { sales_auto_assign: false },
 ) {
   const m = mocks();
-  const builder = Test.createTestingModule({ imports: [AppModule] })
+  const builder = Test.createTestingModule({ imports: [bookingRoot()] })
     .overrideProvider(SettingsService)
     .useValue(fakeSettings(settings))
     .overrideProvider(SalesRepo)

@@ -2,7 +2,9 @@ import { Controller, Get } from '@nestjs/common';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { StudentsModule } from '@/modules/people/students';
+import { HealthModule } from '@/modules/platform/health';
 import { PERMISSION_RESOLVER, TOKEN_VERIFIER, type TokenVerifier } from './auth.guard';
 import { Permissions } from './decorators';
 import { MeZoneRepo } from './me-zone.repo';
@@ -41,7 +43,8 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
 
   beforeAll(async () => {
     process.env['SUPABASE_URL'] ??= 'http://127.0.0.1:54321';
-    const mod = await Test.createTestingModule({ imports: [AppModule], controllers: [ProbeController] })
+    const imports = [featureRoot(HealthModule, StudentsModule)];
+    const mod = await Test.createTestingModule({ imports, controllers: [ProbeController] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(fakeVerify)
       .overrideProvider(MeZoneRepo).useValue({

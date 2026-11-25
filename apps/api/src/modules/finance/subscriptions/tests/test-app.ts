@@ -1,9 +1,8 @@
 // HTTP test harness for the money controllers (test-only, excluded from the build). Real
 // controllers, guards and services; every DB / storage / pricing facing class is a mock.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
-import type { Type } from '@nestjs/common';
+import type { DynamicModule, Type } from '@nestjs/common';
 import { Test, type TestingModuleBuilder } from '@nestjs/testing';
-import { AppModule } from '@/app.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -38,6 +37,7 @@ import { StudentActivation } from '@/modules/finance/subscriptions/student-lifec
 import { StudentStatusRepo } from '@/modules/finance/subscriptions/student-lifecycle/student-status.repo';
 import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
+import { moneyRoot } from './money-root';
 import { mocks } from './test-app.fakes';
 
 export { ENFORCED_SETTINGS, resetMocks, type Mocks } from './test-app.fakes';
@@ -60,15 +60,20 @@ type More = (b: TestingModuleBuilder) => TestingModuleBuilder;
 const same: More = (b) => b;
 
 /**
- * Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key;
- * `more`: a module's own overrides on top (the Stripe module's queries and client).
+ * Boots the money modules with the mocks; `call` defaults to the admin token. `resolver`: e.g. a
+ * role minus one key; `more`: a module's own overrides on top (the Stripe module's queries and
+ * client).
  */
 export function moneyApp(resolver: PermissionResolver = systemResolver, more: More = same) {
-  return moneyAppOf(AppModule, resolver, more);
+  return moneyAppOf(moneyRoot(), resolver, more);
 }
 
 /** The same harness on a smaller root module (a feature's own test app, e.g. salesMoneyApp). */
-export async function moneyAppOf(root: Type, resolver = systemResolver, more: More = same) {
+export async function moneyAppOf(
+  root: Type | DynamicModule,
+  resolver = systemResolver,
+  more: More = same,
+) {
   const m = mocks();
   const builder = Test.createTestingModule({ imports: [root] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)

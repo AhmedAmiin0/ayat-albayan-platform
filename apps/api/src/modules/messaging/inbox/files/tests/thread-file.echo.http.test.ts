@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { InboxModule } from '@/modules/messaging/inbox/inbox.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { StorageService } from '@/common/storage/storage.service';
 import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
@@ -37,7 +38,7 @@ describe('W6 bubble files: echoes of the WhatsApp Business app', () => {
   const call = (token: string, url = URL) => app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [messagingRoot(InboxModule)] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(InboundMediaRepo).useValue(queries)
       .overrideProvider(TeacherThreadsRepo).useValue(teachers)

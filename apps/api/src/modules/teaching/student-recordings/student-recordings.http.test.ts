@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { StudentRecordingsModule } from './student-recordings.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -33,7 +34,9 @@ describe('student recordings routes', () => {
   const list = `/students/${STUDENT}/recordings`;
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({
+      imports: [messagingRoot(StudentRecordingsModule)],
+    })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TeachersRepo).useValue(teachersFake())

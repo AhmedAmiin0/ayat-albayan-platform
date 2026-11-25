@@ -1,7 +1,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { bookingRoot } from '@/modules/teaching/booking/booking-root.fakes';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -67,7 +67,7 @@ describe('/sales/booking course routes with sales.renew_any', () => {
   const grid = (token: string, extra = '') => call({ url: `${GRID}&studentIds=${S1}${extra}`, token });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)

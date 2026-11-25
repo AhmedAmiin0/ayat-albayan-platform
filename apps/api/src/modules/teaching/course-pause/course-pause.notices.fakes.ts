@@ -4,7 +4,9 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { EventsModule } from '@/common/infra/domain-events';
+import { messagingRoot } from '@/common/infra/test-root';
+import { CoursePauseModule } from './course-pause.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
 import { PushService } from '@/common/push/push.service';
@@ -12,7 +14,7 @@ import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { SubscriptionAlertsService } from '@/modules/finance/subscriptions';
 import { NotificationPolicy, type RulesReader } from '@/modules/messaging/notification-rules';
-import { ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
+import { ScheduleNoticesModule, ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
 import { pauseMocks, resetPauseMocks, verify } from './course-pause.fakes';
 import { CoursePauseLessonsBack } from './course-pause.lessons-back';
 import { CoursePauseRepo } from './course-pause.repo';
@@ -40,7 +42,9 @@ function noticeMocks() {
 export async function pauseNoticesApp() {
   const m = { ...pauseMocks(), notices: noticeMocks(), push: { notifyProfiles: vi.fn() } };
   const policy = new NotificationPolicy(rules as unknown as RulesReader);
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({
+    imports: [messagingRoot(CoursePauseModule, ScheduleNoticesModule, EventsModule)],
+  })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(CoursePauseRepo).useValue(m.queries)

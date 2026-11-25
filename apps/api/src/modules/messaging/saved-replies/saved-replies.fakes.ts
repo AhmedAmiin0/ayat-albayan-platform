@@ -3,7 +3,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { SavedRepliesModule } from './saved-replies.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -102,7 +103,7 @@ function storageMock() {
 export async function repliesApp(input: { rows?: SavedReplyRow[]; resolve?: PermissionResolver } = {}) {
   const replies = memoryReplies(input.rows ?? []);
   const storage = storageMock();
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [featureRoot(SavedRepliesModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(input.resolve ?? systemResolver)
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SavedRepliesRepo).useValue(replies)
