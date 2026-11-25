@@ -106,7 +106,11 @@ export function pdfPageCount(bytes: Uint8Array, run: PdfRun = spawnPoppler): Pro
 }
 
 /** The JPEGs of `range` in page order; PdfToolError('failed') when pdftoppm fails, hangs or writes none. */
-export function renderPdfPages(bytes: Uint8Array, range: PageRange, run: PdfRun = spawnPoppler): Promise<PdfPageImage[]> {
+export function renderPdfPages(
+  bytes: Uint8Array,
+  range: PageRange,
+  run: PdfRun = spawnPoppler,
+): Promise<PdfPageImage[]> {
   return withPdf(bytes, async (pdf, dir) => {
     const r = await run('pdftoppm', pdftoppmArgs({ pdf, outRoot: join(dir, 'p'), range }));
     if (r.code !== 0) throw new PdfToolError('failed');
@@ -116,6 +120,11 @@ export function renderPdfPages(bytes: Uint8Array, range: PageRange, run: PdfRun 
     });
     if (!files.length) throw new PdfToolError('failed');
     files.sort((a, b) => a.page - b.page);
-    return Promise.all(files.map(async (f) => ({ page: f.page, jpg: new Uint8Array(await readFile(join(dir, f.name))) })));
+    return Promise.all(
+      files.map(async (f) => ({
+        page: f.page,
+        jpg: new Uint8Array(await readFile(join(dir, f.name))),
+      })),
+    );
   });
 }

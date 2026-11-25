@@ -33,7 +33,11 @@ export class TeacherThreadsService {
     private readonly messages: ThreadMessagesRepo,
   ) {}
 
-  async list(f: ThreadListFilter, scope: TeacherScope, now = new Date()): Promise<Page<ThreadView>> {
+  async list(
+    f: ThreadListFilter,
+    scope: TeacherScope,
+    now = new Date(),
+  ): Promise<Page<ThreadView>> {
     const empty = { items: [], total: 0, page: f.page, pageSize: f.pageSize };
     const all = [...scope.phones];
     if (all.length === 0) return empty; // .in() with no phones is a PostgREST error
@@ -43,7 +47,12 @@ export class TeacherThreadsService {
     // the scope goes in the URL (.in); a teacher has tens of families, fine until hundreds.
     const { items: rows, total } = await this.queries.list(teacherListFilter(f, phones));
     const items = await this.queries.unsupported(rows);
-    return { items: items.map((r) => forTeacher(toThreadView(r, now), unread)), total, page: f.page, pageSize: f.pageSize };
+    return {
+      items: items.map((r) => forTeacher(toThreadView(r, now), unread)),
+      total,
+      page: f.page,
+      pageSize: f.pageSize,
+    };
   }
 
   /** One page, oldest → newest; 403 not_your_thread outside the scope. */
@@ -51,7 +60,8 @@ export class TeacherThreadsService {
   async detail(q: ThreadPageQuery, scope: TeacherScope, now = new Date()): Promise<ThreadDetail> {
     assertPhone(scope, q.phone);
     const first = isFirstPage(q);
-    if (first) await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
+    if (first)
+      await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
     const page = Promise.all([this.queries.thread(q.phone), this.messages.messages(q)]);
     const [row, rows] = await page;
     const view = row ? forTeacher(toThreadView(row, now), NO_READS) : null;

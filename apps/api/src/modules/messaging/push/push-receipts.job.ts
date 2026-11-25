@@ -45,7 +45,10 @@ export class PushReceiptsJob extends TickerJob {
     const summary: ReceiptsSummary = { rows: 0, settled: 0, pruned: 0 };
     try {
       const to = new Date(now.getTime() - RECEIPT_DELAY_MS);
-      const rows = await this.queries.unchecked({ from: new Date(now.getTime() - RECEIPT_TTL_MS), to });
+      const rows = await this.queries.unchecked({
+        from: new Date(now.getTime() - RECEIPT_TTL_MS),
+        to,
+      });
       summary.rows = rows.length;
       if (rows.length === 0) return summary;
       const receipts = await this.transport(rows.flatMap((r) => r.ticket_ids));
@@ -64,7 +67,10 @@ export class PushReceiptsJob extends TickerJob {
   }
 
   /** Records what Expo answered for one row; its dead tokens, or null when no receipt is in yet. */
-  private async settle(row: TicketRow, receipts: Readonly<Record<string, ExpoReceipt>>): Promise<string[] | null> {
+  private async settle(
+    row: TicketRow,
+    receipts: Readonly<Record<string, ExpoReceipt>>,
+  ): Promise<string[] | null> {
     const outcome = readReceipts(row.ticket_ids, receipts, row.ticket_tokens);
     if (outcome.pending.length === row.ticket_ids.length) return null;
     await this.queries.settle(row.id, {

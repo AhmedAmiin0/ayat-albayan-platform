@@ -37,12 +37,20 @@ describe('W6 bubble files: audio, video and sent files (docs/21 §4)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [messagingRoot(InboxModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaRepo).useValue(queries)
-      .overrideProvider(TeacherThreadsRepo).useValue(teachers)
-      .overrideProvider(WHATSAPP_CLIENT).useValue(client)
-      .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })
-      .overrideProvider(StorageService).useValue(storage)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(InboundMediaRepo)
+      .useValue(queries)
+      .overrideProvider(TeacherThreadsRepo)
+      .useValue(teachers)
+      .overrideProvider(WHATSAPP_CLIENT)
+      .useValue(client)
+      .overrideProvider(WHATSAPP_LINES)
+      .useValue({ notifications: client, chat: client })
+      .overrideProvider(StorageService)
+      .useValue(storage)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

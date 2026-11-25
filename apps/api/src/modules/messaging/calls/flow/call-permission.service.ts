@@ -49,14 +49,24 @@ export class CallPermissions {
   }
 
   /** 409 with the state when it is not `request` (granted, needs_template, limited). */
-  async request(actor: CallActor, input: { phone: string; clientRequestId: string }, now = new Date()): Promise<Sent> {
+  async request(
+    actor: CallActor,
+    input: { phone: string; clientRequestId: string },
+    now = new Date(),
+  ): Promise<Sent> {
     const state = await this.state(actor, input.phone, now);
     if (state.state !== 'request') throw conflict(`permission_${state.state}`);
     const line = this.gate.line();
     if (line.calls) return this.calls.send({ actor, input, line, via: state.via ?? 'interactive' });
     const pick = await this.pick(input.phone, now);
     if (!fromCallingNumber(pick, line)) throw conflict('permission_needs_template');
-    const send = { phone: input.phone, input, actorId: actor.user.id, scope: actor.teacher, sales: actor.sales };
+    const send = {
+      phone: input.phone,
+      input,
+      actorId: actor.user.id,
+      scope: actor.teacher,
+      sales: actor.sales,
+    };
     const thread = await this.kit.threads.thread(input.phone);
     return this.outbox.send({
       ...outboundBase(send, thread),

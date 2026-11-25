@@ -44,7 +44,12 @@ export class WacrmWebhookController {
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers('x-wacrm-signature') signature?: string): Promise<void> {
     const now = new Date();
-    const verdict = verifyWacrmSignature({ rawBody: req.rawBody, header: signature, secret: this.config.wacrmSecret, now });
+    const verdict = verifyWacrmSignature({
+      rawBody: req.rawBody,
+      header: signature,
+      secret: this.config.wacrmSecret,
+      now,
+    });
     if (verdict !== 'ok') {
       // Debug only, like the other webhook routes: a public URL gets probed. The verdict, never a value.
       this.log.debug(`wacrm webhook refused (401): ${signature === undefined ? 'no signature' : verdict}`);

@@ -41,7 +41,9 @@ describe('Graph message bodies (docs/12 §3.2)', () => {
 
   it('quick replies carry the payloads by button index', () => {
     const payloads = ['confirm:l1', 'reschedule:l1'];
-    const body = templateMessage({ to: TO, template: REMINDER_24H, params, payloads }) as { template: { components: unknown[] } };
+    const body = templateMessage({ to: TO, template: REMINDER_24H, params, payloads }) as {
+      template: { components: unknown[] };
+    };
     expect(body.template.components.slice(1)).toEqual([
       { type: 'button', sub_type: 'quick_reply', index: '0', parameters: [{ type: 'payload', payload: 'confirm:l1' }] },
       { type: 'button', sub_type: 'quick_reply', index: '1', parameters: [{ type: 'payload', payload: 'reschedule:l1' }] },
@@ -69,7 +71,9 @@ describe('Graph message bodies (docs/12 §3.2)', () => {
   ])('refuses $name as 132000 before calling Meta', ({ template, p }) => {
     const send = () => templateMessage({ to: TO, template, params: p, documentUrl: null });
     expect(send).toThrow(WaError);
-    expect(() => send()).toThrow(expect.objectContaining({ info: expect.objectContaining({ code: 132000 }) }));
+    expect(() => send()).toThrow(
+      expect.objectContaining({ info: expect.objectContaining({ code: 132000 }) }),
+    );
   });
 
   it('counts {{n}} in the body (Meta text after the sync), 0 without variables', () => {

@@ -32,9 +32,18 @@ describe('POST /threads/:phone/file-upload-url and /file (owner 2026-10-19 #2)',
     });
     vi.spyOn(storage, 'info').mockResolvedValue({ size: 2048, contentType: 'image/png' });
     vi.spyOn(storage, 'head').mockResolvedValue(PNG);
-    vi.spyOn(storage, 'signedUpload').mockResolvedValue({ bucket: 'wa-media', path: PATH, token: 't', signed_url: 'http://up' });
-    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, last_notifications_inbound_at: FRESH }));
-    t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', template_key: null, template_params: null }));
+    vi.spyOn(storage, 'signedUpload').mockResolvedValue({
+      bucket: 'wa-media',
+      path: PATH,
+      token: 't',
+      signed_url: 'http://up',
+    });
+    t.queries.thread.mockResolvedValue(
+      threadRow({ last_inbound_at: FRESH, last_notifications_inbound_at: FRESH }),
+    );
+    t.queries.enqueue.mockImplementation(async (row: object) =>
+      messageRow({ ...row, id: 'm9', template_key: null, template_params: null }),
+    );
     t.queries.get.mockResolvedValue(null);
     t.teacher.teacher.mockImplementation(async (id: string) => (id === TEACHER.id ? { id: 'tch-1', display_name_ar: 'أبرار', phone_e164: null } : null));
     t.teacher.phones.mockResolvedValue([PHONE]);

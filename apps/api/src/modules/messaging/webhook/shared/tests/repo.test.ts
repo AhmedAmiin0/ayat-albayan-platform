@@ -10,8 +10,15 @@ const UNTIL = new Date('2026-10-03T13:00:00.999Z');
 describe('WebhookQueries: which lesson a reply is about (docs/12 §3.5)', () => {
   it('the reply window comes from settings.quick_reply_window_hours (48 h by default)', async () => {
     const { db } = chainDb();
-    expect(await new WebhookRepo(db, readerOf(WebhookSettings)).replyWindowMs()).toBe(48 * 3_600_000);
-    expect(await new WebhookRepo(db, readerOf(WebhookSettings, { quick_reply_window_hours: 6 })).replyWindowMs()).toBe(6 * 3_600_000);
+    expect(await new WebhookRepo(db, readerOf(WebhookSettings)).replyWindowMs()).toBe(
+      48 * 3_600_000,
+    );
+    expect(
+      await new WebhookRepo(
+        db,
+        readerOf(WebhookSettings, { quick_reply_window_hours: 6 }),
+      ).replyWindowMs(),
+    ).toBe(6 * 3_600_000);
   });
 
   it('the 48 h fallback reads only messages that went out to this phone, with an open lesson', async () => {
@@ -68,7 +75,13 @@ describe('WebhookQueries.identify: a family’s second number is that family (ow
   });
 
   it('nobody → guardian null', async () => {
-    const { db } = chainDb({ guardian_phones: [{ data: null }], teachers: [{ data: null }], leads: [{ data: null }] });
-    expect((await new WebhookRepo(db, readerOf(WebhookSettings)).identify('+966559990000')).guardian).toBeNull();
+    const { db } = chainDb({
+      guardian_phones: [{ data: null }],
+      teachers: [{ data: null }],
+      leads: [{ data: null }],
+    });
+    expect(
+      (await new WebhookRepo(db, readerOf(WebhookSettings)).identify('+966559990000')).guardian,
+    ).toBeNull();
   });
 });

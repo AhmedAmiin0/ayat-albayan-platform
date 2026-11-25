@@ -9,8 +9,15 @@ import { numberWindows, pickNumber, pickSend, type ThreadWindow } from '@/module
 
 const NOW = new Date('2026-10-24T10:00:00Z');
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000).toISOString();
-const closed = threadRow({ last_inbound_at: hoursAgo(30), last_notifications_inbound_at: hoursAgo(30) });
-const at = (numberId: string | null, line: ThreadWindow['line'], h: number): ThreadWindow => ({ numberId, line, lastInboundAt: hoursAgo(h) });
+const closed = threadRow({
+  last_inbound_at: hoursAgo(30),
+  last_notifications_inbound_at: hoursAgo(30),
+});
+const at = (numberId: string | null, line: ThreadWindow['line'], h: number): ThreadWindow => ({
+  numberId,
+  line,
+  lastInboundAt: hoursAgo(h),
+});
 const moduleMode = (numbers = NUMBERS) => setNumbersOverlay({ values: {}, numberIds: {}, numbers });
 
 afterEach(() => {
@@ -26,8 +33,14 @@ describe('pickNumber', () => {
 
   it('unstamped history (number_id null) maps to its line\'s default number', () => {
     const rows = [at(null, 'chat', 3), at(null, 'notifications', 5)];
-    expect(numberWindows(rows, NUMBERS).map((w) => w.numberId)).toEqual([CHAT_DEFAULT.id, NOTIF_DEFAULT.id]);
-    expect(pickNumber({ rows, numbers: NUMBERS, now: NOW })).toEqual({ number_id: 'num-chat', line: 'chat' });
+    expect(numberWindows(rows, NUMBERS).map((w) => w.numberId)).toEqual([
+      CHAT_DEFAULT.id,
+      NOTIF_DEFAULT.id,
+    ]);
+    expect(pickNumber({ rows, numbers: NUMBERS, now: NOW })).toEqual({
+      number_id: 'num-chat',
+      line: 'chat',
+    });
   });
 
   it('review: an inbound on a second number never opens a window on the default', () => {

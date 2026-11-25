@@ -28,7 +28,11 @@ export class RulesSettingsBridge extends SettingsRulesPort {
     try {
       const { rows } = await this.reader.snapshot();
       const values = moduleLegacyValues({ rows, settings: ruleSettingsOf(settings) });
-      const only = Object.fromEntries(Object.entries(values).filter(([k]) => (RULE_SETTING_KEYS as readonly string[]).includes(k)));
+      const only = Object.fromEntries(
+        Object.entries(values).filter(([k]) =>
+          (RULE_SETTING_KEYS as readonly string[]).includes(k),
+        ),
+      );
       return { ...settings, ...only };
     } catch (e) {
       this.log.warn(`settings overlay skipped (rules unread): ${e instanceof Error ? e.message : String(e)}`);

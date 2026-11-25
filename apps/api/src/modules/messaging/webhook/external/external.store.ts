@@ -49,14 +49,24 @@ export class ExternalStore {
     if (!read) return 'skipped';
     const { msg, phone } = read;
     if ((await this.queries.existing([msg.waMessageId])).size > 0) return 'known';
-    const numberId = from.numberId ?? (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null);
+    const numberId =
+      from.numberId ??
+      (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null);
     // Skip while our own send is unrecorded, as its status may be this message (catch-up retries).
     if (await this.queries.inFlight(phone)) return 'skipped';
     const origin = { line: from.line, numberId };
-    if (await this.manual.attach({ msg, phone, from: origin, event })) return this.attached(phone, msg.at);
+    if (await this.manual.attach({ msg, phone, from: origin, event }))
+      return this.attached(phone, msg.at);
     const who = await this.webhook.identify(phone);
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
-    const row = externalRow({ msg, phone, who, from: { line: from.line, numberId }, at, ...(event ? { event } : {}) });
+    const row = externalRow({
+      msg,
+      phone,
+      who,
+      from: { line: from.line, numberId },
+      at,
+      ...(event ? { event } : {}),
+    });
     if (!(await this.queries.insert(row))) return 'known';
     // An edit, revoke or reaction is no reply (a marker, migration 992): unread stays as it is.
     const marker = isHiddenPayload(row.interactive_payload);

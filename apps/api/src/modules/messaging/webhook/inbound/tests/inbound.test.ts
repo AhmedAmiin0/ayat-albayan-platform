@@ -33,8 +33,16 @@ describe('payloadLesson', () => {
 
 describe('inboundRow', () => {
   it('stores an inbound row as delivered and unread, linked by phone', () => {
-    const m = event({ replyTo: 'wamid.OUT1', type: 'image', body: null, mediaId: 'media-1', mediaMime: 'image/jpeg' });
-    expect(inboundRow({ m, phone: PHONE, who: guardian, leadId: null, lessonId: LESSON_ID })).toEqual({
+    const m = event({
+      replyTo: 'wamid.OUT1',
+      type: 'image',
+      body: null,
+      mediaId: 'media-1',
+      mediaMime: 'image/jpeg',
+    });
+    expect(
+      inboundRow({ m, phone: PHONE, who: guardian, leadId: null, lessonId: LESSON_ID }),
+    ).toEqual({
       direction: 'inbound',
       status: 'delivered',
       phone_e164: PHONE,
@@ -80,12 +88,24 @@ describe('inboundPush', () => {
   });
 
   it('is new_message for a known number, one per phone per 10 minutes', () => {
-    const push = inboundPush({ m: event({ name: null }), phone: PHONE, who: guardian, newLeadId: null, intent: null });
+    const push = inboundPush({
+      m: event({ name: null }),
+      phone: PHONE,
+      who: guardian,
+      newLeadId: null,
+      intent: null,
+    });
     const bucket = Math.floor(AT.getTime() / PUSH_BUCKET_MS);
     expect(push.kind).toBe('new_message');
     expect(push.event).toMatchObject({ subject: `${PHONE}:${bucket}`, vars: { name: 'أم سهيلة' } });
     const later = event({ at: new Date(AT.getTime() + PUSH_BUCKET_MS) });
-    const next = inboundPush({ m: later, phone: PHONE, who: guardian, newLeadId: null, intent: null });
+    const next = inboundPush({
+      m: later,
+      phone: PHONE,
+      who: guardian,
+      newLeadId: null,
+      intent: null,
+    });
     expect(next.event.subject).not.toBe(push.event.subject);
   });
 
@@ -93,12 +113,24 @@ describe('inboundPush', () => {
     const push = inboundPush({ m: event(), phone: PHONE, who: guardian, newLeadId: null, intent: 'reschedule' });
     expect(push.event.subject).toBe(`${PHONE}:reschedule:wamid.IN1`);
     expect(push.event.title).toBe('طلب تغيير موعد من أم سهيلة');
-    const plain = inboundPush({ m: event(), phone: PHONE, who: guardian, newLeadId: null, intent: null });
+    const plain = inboundPush({
+      m: event(),
+      phone: PHONE,
+      who: guardian,
+      newLeadId: null,
+      intent: null,
+    });
     expect(plain.event.title).toBeUndefined();
   });
 
   it('names an unknown sender by profile name, else the phone', () => {
-    const push = inboundPush({ m: event({ name: null }), phone: PHONE, who: nobody(), newLeadId: null, intent: null });
+    const push = inboundPush({
+      m: event({ name: null }),
+      phone: PHONE,
+      who: nobody(),
+      newLeadId: null,
+      intent: null,
+    });
     expect(push.event.vars['name']).toBe(PHONE);
   });
 });

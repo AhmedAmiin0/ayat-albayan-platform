@@ -25,10 +25,20 @@ export interface LineSyncDeps extends CopiesDeps {
   log: Warn;
 }
 
-const empty = (facts: TemplateLineFacts, now: Date) => ({ ...facts, checked_at: now.toISOString(), meta_count: 0, synced: 0, imported: [], skipped: [] });
+const empty = (facts: TemplateLineFacts, now: Date) => ({
+  ...facts,
+  checked_at: now.toISOString(),
+  meta_count: 0,
+  synced: 0,
+  imported: [],
+  skipped: [],
+});
 
 /** The line's Meta list, or its failure as the line's error (never thrown: the other line still syncs). */
-async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[] | { error: string; message?: string }> {
+async function readList(
+  deps: LineSyncDeps,
+  line: WaLine,
+): Promise<MetaTemplate[] | { error: string; message?: string }> {
   try {
     return await deps.lines[line].getTemplates();
   } catch (e) {
@@ -85,7 +95,11 @@ async function crmFound(deps: LineSyncDeps, read: LineRead) {
  * sent under, nothing imported and nothing marked missing because of the CRM. A CRM without
  * /templates answers crm_managed (readError) and no row is touched.
  */
-export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Promise<TemplateLineSync> {
+export async function syncLine(
+  deps: LineSyncDeps,
+  line: WaLine,
+  now: Date,
+): Promise<TemplateLineSync> {
   const facts = lineFacts(line, deps.lines[line]);
   const elsewhere = NO_LIST[facts.provider];
   if (elsewhere) return { ...empty(facts, now), ok: false, error: elsewhere };
@@ -97,7 +111,14 @@ export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Pro
   const { rows, synced } = await updateRows(deps, read, crm ? crmSyncPatch : wabaSyncPatch);
   // A crm line imports nothing: the CRM account's other templates are not the platform's to send.
   const found = crm ? await crmFound(deps, read) : await importNew(deps, read, rows);
-  return { ...facts, ok: true, checked_at: now.toISOString(), meta_count: list.length, synced, ...found };
+  return {
+    ...facts,
+    ok: true,
+    checked_at: now.toISOString(),
+    meta_count: list.length,
+    synced,
+    ...found,
+  };
 }
 
 /**

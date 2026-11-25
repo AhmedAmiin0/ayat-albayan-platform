@@ -82,7 +82,8 @@ export class FollowUpsJob extends TickerJob {
       const approved = leads.length > 0 && (await this.queries.approved());
       let starts: Promise<Date[]> | null = null;
       const lazyStarts = () => (starts ??= this.slots.freeStarts(now, win));
-      for (const lead of leads) summary[await this.process({ lead, hours, approved, now, starts: lazyStarts })] += 1;
+      for (const lead of leads)
+        summary[await this.process({ lead, hours, approved, now, starts: lazyStarts })] += 1;
     } catch (e) {
       this.log.error(`follow-ups run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
@@ -130,9 +131,15 @@ export class FollowUpsJob extends TickerJob {
   }
 
   /** Writes next_follow_up_at / follow_up_note only when they changed, then reports `outcome`. */
-  private async note(t: Tick, s: { due: Date | null; note: FollowUpNote | null; outcome: Outcome }): Promise<Outcome> {
+  private async note(
+    t: Tick,
+    s: { due: Date | null; note: FollowUpNote | null; outcome: Outcome },
+  ): Promise<Outcome> {
     if (!sameInstant(t.lead.next_follow_up_at, s.due) || t.lead.follow_up_note !== s.note) {
-      await this.queries.sync(t.lead.id, { next_follow_up_at: s.due?.toISOString() ?? null, follow_up_note: s.note });
+      await this.queries.sync(t.lead.id, {
+        next_follow_up_at: s.due?.toISOString() ?? null,
+        follow_up_note: s.note,
+      });
     }
     return s.outcome;
   }

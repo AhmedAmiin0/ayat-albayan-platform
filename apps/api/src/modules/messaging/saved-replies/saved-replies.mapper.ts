@@ -17,7 +17,8 @@ export interface SavedReplyRow {
 export const REPLY_COLUMNS =
   'id, owner_profile_id, title, body, attachment_path, attachment_mime, attachment_name, attachment_size, position, updated_at' as const;
 
-const sendMime = (mime: string | null): ChatSendMime | null => CHAT_SEND_MIMES.find((m) => m === mime) ?? null;
+const sendMime = (mime: string | null): ChatSendMime | null =>
+  CHAT_SEND_MIMES.find((m) => m === mime) ?? null;
 
 function attachmentOf(row: SavedReplyRow): SavedReplyAttachment | null {
   const mime = sendMime(row.attachment_mime);

@@ -46,14 +46,24 @@ export function messagingNumbers(
 /** An overlay number as routing sees it: sendable = enabled with a working config of its own. */
 export function routable(n: OverlayNumber & { purpose: WaLine }): RoutableNumber {
   const { id, purpose, enabled, is_default, fallback_rank, created_at } = n;
-  return { id, purpose, enabled, is_default, fallback_rank, created_at, sendable: enabled && n.env !== null };
+  return {
+    id,
+    purpose,
+    enabled,
+    is_default,
+    fallback_rank,
+    created_at,
+    sendable: enabled && n.env !== null,
+  };
 }
 
 /**
  * Template key → the number of the FIRST non-manual catalogue entry whose templates list it (its
  * stored notification_rules row's number_id; null when the row or its number is unset).
  */
-export function ruleNumbers(numberOf: (entryKey: string) => string | null): Map<string, string | null> {
+export function ruleNumbers(
+  numberOf: (entryKey: string) => string | null,
+): Map<string, string | null> {
   const out = new Map<string, string | null>();
   for (const entry of NOTIFICATION_CATALOGUE) {
     if (entry.manual) continue;
@@ -100,7 +110,10 @@ export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 
 }
 
 /** The row's number now; null = none can send it (it stays queued, untouched). Sessions never fall back. */
-export function routeOf(pass: RoutePass, at: { row: DueMessage; template: TemplateRow | null }): NumberRoute | null {
+export function routeOf(
+  pass: RoutePass,
+  at: { row: DueMessage; template: TemplateRow | null },
+): NumberRoute | null {
   const { row, template } = at;
   let id: string | null;
   if (row.template_key) {

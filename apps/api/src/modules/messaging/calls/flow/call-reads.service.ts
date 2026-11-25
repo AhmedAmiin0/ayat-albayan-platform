@@ -30,7 +30,13 @@ export class CallReads {
   async config(user: AuthUser): Promise<CallConfigView> {
     const enabled = await this.gate.enabled();
     const canCall = can(user, 'inbox.send');
-    return { enabled, available: callingLine() !== null, canCall, iceServers: enabled && canCall ? iceServers(loadEnv(), { userId: user.id, now: new Date() }) : [] };
+    return {
+      enabled,
+      available: callingLine() !== null,
+      canCall,
+      iceServers:
+        enabled && canCall ? iceServers(loadEnv(), { userId: user.id, now: new Date() }) : [],
+    };
   }
 
   /** The incoming-call screen and the caller's own call: SDPs to the parties only (calls.mapper.ts). */
@@ -42,7 +48,10 @@ export class CallReads {
   }
 
   /** The calls log (newest first), or one chat's calls for its log; a teacher sees their families' only. */
-  async list(actor: CallActor, q: { phone?: string | undefined; limit: number }): Promise<CallView[]> {
+  async list(
+    actor: CallActor,
+    q: { phone?: string | undefined; limit: number },
+  ): Promise<CallView[]> {
     await this.gate.assertOn();
     if (q.phone && !maySee(actor, q.phone)) return [];
     const rows = await this.kit.queries.list({ ...q, phones: phonesOf(actor) });

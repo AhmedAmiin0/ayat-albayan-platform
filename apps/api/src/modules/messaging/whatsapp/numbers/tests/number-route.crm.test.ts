@@ -12,7 +12,10 @@ import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const CRM_ENV = { provider: 'crm' as const, base: 'http://127.0.0.1:4010/crm/api/v1', apiKey: 'fake-crm-key' };
 const crmNumber = overlayNum({ env: CRM_ENV });
-const crmPass = (approvals: Record<string, Record<string, string>>) => ({ ...routePass({ numbers: [crmNumber], approvals }), crm: new Set([N1]) });
+const crmPass = (approvals: Record<string, Record<string, string>>) => ({
+  ...routePass({ numbers: [crmNumber], approvals }),
+  crm: new Set([N1]),
+});
 
 describe('approvedOn: a crm number', () => {
   it('a stale per-number «approved» from its meta days does not override «missing» set by hand', () => {

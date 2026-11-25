@@ -16,7 +16,9 @@ describe('CrmMediaCopier: failures, retries and rows it never touches', () => {
     expect(outcomes.map((o) => ('outcomes' in o ? o.outcomes : o.state))).toEqual([['retry'], ['retry'], ['failed']]);
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
     expect(fetch).toHaveBeenCalledTimes(MAX_ATTEMPTS);
-    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 0, failed: 1, skipped: 0, remaining: 0 } }));
+    expect(w.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: { copied: 0, failed: 1, skipped: 0, remaining: 0 } }),
+    );
     expect(w.storage.upload).not.toHaveBeenCalled();
   });
 
@@ -25,7 +27,9 @@ describe('CrmMediaCopier: failures, retries and rows it never touches', () => {
     const w = copyWorld(crmRows(1));
     expect(await w.job.runOnce()).toMatchObject({ outcomes: ['skipped'] });
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
-    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 0, failed: 0, skipped: 1, remaining: 0 } }));
+    expect(w.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: { copied: 0, failed: 0, skipped: 1, remaining: 0 } }),
+    );
   });
 
   it('never touches a row with a Meta media id, another host, another number or a body that is more than the link', async () => {
@@ -41,8 +45,17 @@ describe('CrmMediaCopier: failures, retries and rows it never touches', () => {
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
     // Directly, too: a media-id row is skipped without a fetch, an upload or a path write.
     expect(await w.copier.copy('meta', CRM_HOST)).toBe('skipped');
-    expect([fetch, w.storage.upload, w.inbound.setPath, w.client.getMedia].map((f) => f.mock.calls.length)).toEqual([0, 0, 0, 0]);
-    expect([...w.rows.values()].map((m) => m.body)).toEqual([crmLink('a.ogg'), crmLink('b.ogg', 'other.example'), crmLink('c.ogg'), `${crmLink('d.ogg')} hi`]);
+    expect(
+      [fetch, w.storage.upload, w.inbound.setPath, w.client.getMedia].map(
+        (f) => f.mock.calls.length,
+      ),
+    ).toEqual([0, 0, 0, 0]);
+    expect([...w.rows.values()].map((m) => m.body)).toEqual([
+      crmLink('a.ogg'),
+      crmLink('b.ogg', 'other.example'),
+      crmLink('c.ogg'),
+      `${crmLink('d.ogg')} hi`,
+    ]);
   });
 
   it('a row gone meanwhile (404) is skipped with no failure row (the foreign key); a storage failure is a retry', async () => {

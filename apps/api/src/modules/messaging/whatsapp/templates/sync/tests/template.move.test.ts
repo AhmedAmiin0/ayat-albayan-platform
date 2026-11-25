@@ -22,7 +22,10 @@ const queries = {
   lineSyncs: vi.fn(async () => new Map(synced)),
 };
 const synced = new Map<string, unknown>();
-const client = () => ({ configured: vi.fn(() => true), getTemplates: vi.fn(async (): Promise<MetaTemplate[]> => []) });
+const client = () => ({
+  configured: vi.fn(() => true),
+  getTemplates: vi.fn(async (): Promise<MetaTemplate[]> => []),
+});
 let lines = { notifications: client(), chat: client() };
 const audit = { record: vi.fn() };
 const registry = () => templateServices(queries, lines, audit);

@@ -6,7 +6,9 @@ import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 // A body that fails its schema is WaError (code null, status 200): graph-errors.ts `shape`;
 // on the send (graphSend) it is also `uncertain` (docs/36 h8b).
 
-export const sentSchema = z.object({ messages: z.array(z.object({ id: z.string().min(1) })).min(1) });
+export const sentSchema = z.object({
+  messages: z.array(z.object({ id: z.string().min(1) })).min(1),
+});
 
 const metaTemplateSchema = z.object({
   id: z.string(),

@@ -6,8 +6,15 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 // An imported CRM file's body is only its storage link; the bubble is a photo /
 // voice note with no caption, never the raw link. The stored row is not edited.
 
-const crm = { direction: 'inbound', media_id: null, media_path: null, template_key: null, template_params: null } as const;
-const view = (over: Parameters<typeof messageRow>[0]) => toMessageView({ row: messageRow({ ...crm, ...over }), template: null });
+const crm = {
+  direction: 'inbound',
+  media_id: null,
+  media_path: null,
+  template_key: null,
+  template_params: null,
+} as const;
+const view = (over: Parameters<typeof messageRow>[0]) =>
+  toMessageView({ row: messageRow({ ...crm, ...over }), template: null });
 
 describe('toMessageView — files imported from the old CRM', () => {
   it('a photo or voice note: no body, the mime kept, no click-to-chat text', () => {

@@ -11,16 +11,33 @@ import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // docs/23c decision 8: the claim stamps the chosen number and line = its role; a broken token pauses that number.
 
-const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
+const queries = {
+  claim: vi.fn(),
+  sent: vi.fn(),
+  failure: vi.fn(),
+  expire: vi.fn(),
+  staffAtSend: vi.fn(),
+};
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const route = { numberId: N2, line: 'chat' as const };
 
 function run(over: Partial<SendJob> = {}) {
-  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  const w = new MessageWorker(
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+    push as unknown as PushService,
+  );
   w.wait = vi.fn(async () => undefined);
-  return w.process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true, route, ...over });
+  return w.process({
+    row: dueMessage(),
+    template: templateRow(),
+    now: NOW,
+    autoOn: true,
+    route,
+    ...over,
+  });
 }
 
 describe('MessageWorker — a routed row (module mode)', () => {

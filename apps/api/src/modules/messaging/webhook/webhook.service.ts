@@ -74,12 +74,20 @@ export class WebhookService {
     // When the controller stops waiting (within), so an item knows whether Meta can still re-send it.
     const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;
-    for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
-    for (const s of batch.statuses) failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
+    for (const m of batch.messages)
+      failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
+    for (const s of batch.statuses)
+      failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
     for (const e of batch.echoes) failed += await this.safely('echo', () => this.statuses.echo(e));
-    for (const c of batch.calls ?? []) failed += await this.safely(c.waCallId, () => this.calls?.handle(c) ?? Promise.resolve());
-    for (const p of batch.permissions ?? []) failed += await this.safely('call_permission', () => this.calls?.permissionReply(p) ?? Promise.resolve());
-    if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
+    for (const c of batch.calls ?? [])
+      failed += await this.safely(c.waCallId, () => this.calls?.handle(c) ?? Promise.resolve());
+    for (const p of batch.permissions ?? [])
+      failed += await this.safely(
+        'call_permission',
+        () => this.calls?.permissionReply(p) ?? Promise.resolve(),
+      );
+    if (failed > 0)
+      throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }
 
   /**

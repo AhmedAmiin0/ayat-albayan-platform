@@ -37,7 +37,11 @@ export class ExternalStatus {
       if (!number) return false;
       const message = await this.kapso.message(number.env, e.waMessageId);
       if (!message) return false;
-      const from = { line: e.line ?? number.line, numberId: e.numberId ?? number.numberId, phoneNumberId: e.phoneNumberId };
+      const from = {
+        line: e.line ?? number.line,
+        numberId: e.numberId ?? number.numberId,
+        phoneNumberId: e.phoneNumberId,
+      };
       return (await this.store.store({ message, from, event: e })) !== 'skipped';
     } catch (err) {
       this.log.warn(`external message ${e.waMessageId} not stored (the catch-up job retries): ${reason(err)}`);

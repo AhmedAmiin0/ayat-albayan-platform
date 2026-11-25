@@ -12,8 +12,21 @@ describe('forTeacher (teacher mode thread)', () => {
     const view = toThreadView(threadRow({ unread_count: 5, guardian_id: 'g1' }), NOW, { tag: { badge: 'subscribed', unpaid: true } });
     expect(view).toMatchObject({ subscribed: true, badge: 'subscribed', unpaid: true });
     expect(forTeacher(view, new Map([[PHONE, 2]]))).toMatchObject({
-      ...{ lead_id: null, lead_name: null, lead_status: null, lead_source: null, badge: null, unpaid: false },
-      ...{ subscribed: false, unread_count: 2, display_name: 'أم ياسمين', phone_e164: PHONE, guardian_id: 'g1' },
+      ...{
+        lead_id: null,
+        lead_name: null,
+        lead_status: null,
+        lead_source: null,
+        badge: null,
+        unpaid: false,
+      },
+      ...{
+        subscribed: false,
+        unread_count: 2,
+        display_name: 'أم ياسمين',
+        phone_e164: PHONE,
+        guardian_id: 'g1',
+      },
     });
     expect(forTeacher(view, new Map()).unread_count).toBe(0);
   });

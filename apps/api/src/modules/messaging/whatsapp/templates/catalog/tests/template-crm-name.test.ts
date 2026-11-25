@@ -6,15 +6,32 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver»: the CRM name / language of a template, by hand, audited, only on a crm line.
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), upsertApprovals: vi.fn() };
+const queries = {
+  all: vi.fn(),
+  get: vi.fn(),
+  update: vi.fn(),
+  insert: vi.fn(),
+  approvals: vi.fn(async () => []),
+  upsertApprovals: vi.fn(),
+};
 const audit = { record: vi.fn() };
 const lines = { notifications: new CrmWhatsappClient(CRM_ENV), chat: new CrmWhatsappClient(null) };
 const registry = () => templateServices(queries, lines, audit);
-const rejected = (p: Promise<unknown>) => p.then(() => null, (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()]);
+const rejected = (p: Promise<unknown>) =>
+  p.then(
+    () => null,
+    (e: { getStatus: () => number; getResponse: () => unknown }) => [
+      e.getStatus(),
+      e.getResponse(),
+    ],
+  );
 
 beforeEach(() => {
   vi.resetAllMocks();
-  queries.update.mockImplementation(async (key: string, patch: object) => ({ ...templateRow({ key }), ...patch }));
+  queries.update.mockImplementation(async (key: string, patch: object) => ({
+    ...templateRow({ key }),
+    ...patch,
+  }));
 });
 afterEach(() => vi.unstubAllEnvs());
 

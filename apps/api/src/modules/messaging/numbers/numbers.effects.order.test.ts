@@ -25,7 +25,11 @@ function copy(redis: ReturnType<typeof fakeRedis>, source: () => string) {
   const svc = new SettingsService(db, 30_000, store);
   (svc as unknown as { shared: SharedCache }).shared = cache;
   const bridge = new ConfigCacheBridge(store, cache);
-  const config = new NumbersConfig(new NumbersSettings(svc), {} as NumbersRepo, {} as NumbersSecrets);
+  const config = new NumbersConfig(
+    new NumbersSettings(svc),
+    {} as NumbersRepo,
+    {} as NumbersSecrets,
+  );
   const seen: string[] = [];
   vi.spyOn(config, 'reload').mockImplementation(async () => (seen.push(await config.source()), true));
   const audit = {} as AuditService;

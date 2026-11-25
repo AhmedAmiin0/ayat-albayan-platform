@@ -35,12 +35,20 @@ export class QuickReplies {
    * A rating tap (lesson_rating, migration 195) takes only the first two: its payload, or the
    * lesson_rating message it answers.
    */
-  async lessonFor(input: { m: InboundEvent; phone: string; who: Contact; rating?: boolean }): Promise<string | null> {
+  async lessonFor(input: {
+    m: InboundEvent;
+    phone: string;
+    who: Contact;
+    rating?: boolean;
+  }): Promise<string | null> {
     const { m, phone, who, rating = false } = input;
     if (!who.guardian) return null;
     const fromPayload = payloadLesson(m);
     if (fromPayload) {
-      const theirs = await this.queries.guardianLesson({ lessonId: fromPayload, guardianId: who.guardian.id });
+      const theirs = await this.queries.guardianLesson({
+        lessonId: fromPayload,
+        guardianId: who.guardian.id,
+      });
       return theirs ? fromPayload : null;
     }
     const answered = await this.answeredLesson({ m, phone, rating });
@@ -52,7 +60,11 @@ export class QuickReplies {
   }
 
   /** The lesson of the outbound message this replies to (same phone; a rating: only lesson_rating). */
-  private async answeredLesson(input: { m: InboundEvent; phone: string; rating: boolean }): Promise<string | null> {
+  private async answeredLesson(input: {
+    m: InboundEvent;
+    phone: string;
+    rating: boolean;
+  }): Promise<string | null> {
     if (!input.m.replyTo) return null;
     const answered = await this.queries.outboundByWaId(input.m.replyTo);
     if (!answered?.lesson_id || answered.phone_e164 !== input.phone) return null;

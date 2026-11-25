@@ -8,7 +8,10 @@ import type { RulesTable } from './rules.table';
 function copy(redis: ReturnType<typeof fakeRedis>) {
   const rows = vi.fn(async () => []);
   const settings = new RulesSourceSettings(fakeSettings({}), 30_000);
-  return { r: new DbRulesReader({ rows } as unknown as RulesTable, settings, redis.copy().cache), rows };
+  return {
+    r: new DbRulesReader({ rows } as unknown as RulesTable, settings, redis.copy().cache),
+    rows,
+  };
 }
 
 describe('DbRulesReader with Redis (two API copies)', () => {

@@ -8,7 +8,9 @@ import { familyTagsOf, threadPeople } from '@/modules/messaging/inbox/people/thr
 function deps(results: Parameters<typeof fakeDb>[0]) {
   const { db, calls, argsOf } = fakeDb(results);
   const empty = (id: string) => ({ student_id: id, remaining: 0, current: null, packages: [] });
-  const packages = { studentBalance: vi.fn(async (id: string) => empty(id)) } as unknown as PackagesService;
+  const packages = {
+    studentBalance: vi.fn(async (id: string) => empty(id)),
+  } as unknown as PackagesService;
   const balances = { forStudents: vi.fn(async () => []) } as unknown as BalanceRepo;
   return { deps: { db, packages, balances }, calls, argsOf, packages, balances };
 }
@@ -32,7 +34,11 @@ describe('threadPeople (R-SUB-01)', () => {
   });
 
   it('no thread row → nobody', async () => {
-    expect(await threadPeople(deps({}).deps, null)).toEqual({ guardian: null, lead: null, students: [] });
+    expect(await threadPeople(deps({}).deps, null)).toEqual({
+      guardian: null,
+      lead: null,
+      students: [],
+    });
   });
 });
 

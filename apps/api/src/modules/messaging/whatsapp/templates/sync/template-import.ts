@@ -26,7 +26,8 @@ interface ImportPlan {
   skipped: TemplateSkip[];
 }
 
-const isCategory = (c: string): c is TemplateCategory => (TEMPLATE_CATEGORIES as readonly string[]).includes(c);
+const isCategory = (c: string): c is TemplateCategory =>
+  (TEMPLATE_CATEGORIES as readonly string[]).includes(c);
 
 /** The highest numbered {{n}}; null when a variable is named ({{first_name}}): we send by position. */
 function varCount(body: string): number | null {

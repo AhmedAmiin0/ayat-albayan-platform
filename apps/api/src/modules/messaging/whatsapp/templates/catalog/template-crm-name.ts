@@ -4,7 +4,11 @@ import type { CrmStatusDeps } from './template-crm-status';
 import { REGISTRY_ENTITY_ID, toTemplateView } from './template.mapper';
 
 /** WABA name and language every driver sends (docs/19, migration 680); null is the default. */
-export async function setCrmName(deps: CrmStatusDeps, input: TemplateCrmNameInput & { key: string }, actorId: string): Promise<TemplateView> {
+export async function setCrmName(
+  deps: CrmStatusDeps,
+  input: TemplateCrmNameInput & { key: string },
+  actorId: string,
+): Promise<TemplateView> {
   const { key, crm_name, crm_language } = input;
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });

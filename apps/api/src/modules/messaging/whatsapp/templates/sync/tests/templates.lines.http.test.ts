@@ -65,9 +65,18 @@ describe('templates per number (HTTP)', () => {
   });
 
   it('PATCH line moves the template (audited) and answers its new line’s sync', async () => {
-    t.templates.get.mockResolvedValue(templateRow({ key: 'trial_reschedule', meta_name: 'trial_reschedule', line: 'chat' }));
-    t.templates.update.mockImplementation(async (key: string, patch: object) => ({ ...templateRow({ key }), ...patch }));
-    const res = await t.call({ method: 'PATCH', url: '/messaging/templates/trial_reschedule/line', body: { line: 'notifications' } });
+    t.templates.get.mockResolvedValue(
+      templateRow({ key: 'trial_reschedule', meta_name: 'trial_reschedule', line: 'chat' }),
+    );
+    t.templates.update.mockImplementation(async (key: string, patch: object) => ({
+      ...templateRow({ key }),
+      ...patch,
+    }));
+    const res = await t.call({
+      method: 'PATCH',
+      url: '/messaging/templates/trial_reschedule/line',
+      body: { line: 'notifications' },
+    });
     expect([res.statusCode, res.json().sync.line]).toEqual([200, 'notifications']);
     expect(t.templates.update).toHaveBeenCalledWith('trial_reschedule', expect.objectContaining({ line: 'notifications', status: 'not_submitted' }));
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'template_line_set' }));
