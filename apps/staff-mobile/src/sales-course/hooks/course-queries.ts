@@ -3,13 +3,14 @@ import type { BookingRequest, SalesCourseView } from '@ab/shared';
 import type { BookingResult, Conflict } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
+import { salesCourseKeys } from '@/core/lib/keys';
 
 const COURSE = '/sales/booking/course';
 
 /** GET /sales/booking/course?studentId=: the student, the plan and why she may not book it. */
 export function useSalesCourse(studentId: string) {
   return useQuery({
-    queryKey: [...pathKey(COURSE), { studentId }],
+    queryKey: salesCourseKeys.course(studentId),
     queryFn: () => apiFetch<SalesCourseView>(`${COURSE}${toQueryString({ studentId })}`),
     enabled: studentId !== '',
   });
@@ -20,7 +21,7 @@ export function useCourseCheck(body: BookingRequest | null) {
   const key: Partial<BookingRequest> = { ...body };
   delete key.clientRequestId;
   return useQuery({
-    queryKey: ['sales', 'booking', 'check', JSON.stringify(key)],
+    queryKey: salesCourseKeys.check(JSON.stringify(key)),
     queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', '/sales/booking/check', body),
     enabled: body !== null,
     retry: false,
@@ -44,7 +45,7 @@ export function useBookCourse(hold = false) {
     mutationFn: (body: BookingRequest): Promise<BookingResult | null> =>
       hold ? saveDraft(body) : apiSend<BookingResult>('POST', '/sales/booking', body),
     onSuccess: () => {
-      void client.invalidateQueries({ queryKey: ['lessons'] });
+      void client.invalidateQueries({ queryKey: pathKey('/lessons') });
       void client.invalidateQueries({ queryKey: pathKey(COURSE) });
     },
   });
