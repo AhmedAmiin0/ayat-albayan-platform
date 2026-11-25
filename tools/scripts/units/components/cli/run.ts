@@ -6,7 +6,7 @@ import { repoContext } from './context.ts';
 import { parseExcludes, targetsOf } from './discover.ts';
 import { planAll } from './plan.ts';
 import { reportLines } from './report.ts';
-import { writeFiles } from './write.ts';
+import { formatFiles, writeFiles } from './write.ts';
 import { trackedFiles } from '../../scan/tree.ts';
 import { groupBy } from '../model/group.ts';
 
@@ -14,6 +14,8 @@ export interface ComponentsIo {
   root: string;
   cwd: string;
   log: (line: string) => void;
+  /** Formats written files; oxlint class-A fixes and oxfmt unless a test passes its own. */
+  format?: (root: string, paths: string[]) => void;
 }
 
 const ORDER: Step[] = ['types', 'helpers', 'hook'];
@@ -37,5 +39,8 @@ export function runComponents(argv: readonly string[], io: ComponentsIo): void {
   const { rows, files } = planAll(targetsOf(paths, only), steps, ctx);
   if (args.json) io.log(JSON.stringify({ rows }, null, 2));
   else reportLines(rows).forEach((l) => io.log(l));
-  if (args.write) io.log(`components: ${writeFiles(io.root, files).length} files written`);
+  if (args.write)
+    io.log(
+      `components: ${writeFiles(io.root, files, io.format ?? formatFiles).length} files written`,
+    );
 }

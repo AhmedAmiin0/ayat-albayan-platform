@@ -24,16 +24,25 @@ const fixClassA = (root: string, paths: string[]): void => {
   }
 };
 
-/** Writes the planned files, stages them, formats them and applies the class-A fixes. */
-export function writeFiles(root: string, files: ReadonlyMap<string, string>): string[] {
+/** Writes the planned files, formats them and stages them. */
+/** oxlint's class-A fixes, then oxfmt, on the files the codemod wrote. */
+export function formatFiles(root: string, paths: string[]): void {
+  fixClassA(root, paths);
+  run(root, 'pnpm', ['exec', 'oxfmt', ...paths]);
+}
+
+export function writeFiles(
+  root: string,
+  files: ReadonlyMap<string, string>,
+  format: (root: string, paths: string[]) => void,
+): string[] {
   const paths = [...files.keys()].toSorted();
   for (const path of paths) {
     mkdirSync(posix.dirname(posix.join(root, path)), { recursive: true });
     writeFileSync(posix.join(root, path), files.get(path) ?? '');
   }
   if (paths.length === 0) return paths;
-  fixClassA(root, paths);
-  run(root, 'pnpm', ['exec', 'oxfmt', ...paths]);
+  format(root, paths);
   run(root, 'git', ['add', '--', ...paths]);
   return paths;
 }
