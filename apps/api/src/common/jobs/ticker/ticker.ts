@@ -9,6 +9,8 @@ interface TickerTiming {
   firstMs: number;
   /** Absent: one run after boot, no interval (e.g. the template boot check). */
   everyMs?: number;
+  /** 'first': the interval starts at the first run, so no interval tick comes before it. */
+  intervalFrom?: 'boot' | 'first';
 }
 
 interface TickerOptions extends TickerTiming {
@@ -45,11 +47,22 @@ export class Ticker {
   start(timing: TickerTiming = this.opts): void {
     const method = this.opts.timer ?? 'tick';
     const fire = () => void this[method]();
-    const every = timing.everyMs === undefined ? [] : [setInterval(fire, timing.everyMs).unref()];
-    this.timers.push(setTimeout(fire, timing.firstMs).unref(), ...every);
+    const every = () => this.every(fire, timing.everyMs);
+    const first = () => {
+      fire();
+      every();
+    };
+    const fromFirst = (timing.intervalFrom ?? this.opts.intervalFrom) === 'first';
+    if (!fromFirst) every();
+    this.timers.push(setTimeout(fromFirst ? first : fire, timing.firstMs).unref());
     // Interval jobs only: a one-shot boot job has no interval to be late against.
     const { everyMs, firstMs } = timing;
     if (everyMs !== undefined) this.beats.register({ name: this.opts.name, firstMs, everyMs });
+  }
+
+  private every(fire: () => void, everyMs: number | undefined): void {
+    if (everyMs === undefined || this.stopped) return;
+    this.timers.push(setInterval(fire, everyMs).unref());
   }
 
   /** Stops the timers and new runs; settles once the run in flight ends (BE-14). */
