@@ -1,14 +1,6 @@
 {
   "src/control.ts": {
-    "complexity": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
-      "count": 1
-    }
-  },
-  "src/lines.ts": {
-    "complexity": {
       "count": 1
     }
   },
@@ -26,9 +18,6 @@
     }
   },
   "src/send.ts": {
-    "complexity": {
-      "count": 2
-    },
     "typescript/no-base-to-string": {
       "count": 2
     }
@@ -137,16 +126,6 @@
     },
     "typescript/restrict-template-expressions": {
       "count": 1
-    }
-  },
-  "src/uploads.ts": {
-    "complexity": {
-      "count": 2
-    }
-  },
-  "src/webhook.ts": {
-    "complexity": {
-      "count": 2
     }
   }
 }
