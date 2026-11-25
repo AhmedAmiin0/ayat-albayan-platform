@@ -35,11 +35,3 @@ export function applySort<K extends string, T extends Orderable<T>>(query: T, so
   if (picked.column === fallback.column && !picked.referencedTable) return ordered;
   return ordered.order(fallback.column, { ascending: fallback.ascending });
 }
-
-/**
- * `%term%` for `.ilike(column, …)`, with LIKE wildcards (and `\`, `,`) escaped so they match
- * literally. Not for `.or('a.ilike.*x*')` strings: those use guardians/http `orSafe`.
- */
-export function ilikeContains(value: string): string {
-  return `%${value.trim().replace(/[\\%_,]/g, (c) => `\\${c}`)}%`;
-}

@@ -6,7 +6,8 @@ import type {
   TeacherPaymentListQuery,
 } from '@ab/money';
 import type { Db } from '@/common/db/db.module';
-import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import { ilikeContains } from '@/common/db/or-filter';
+import { applySort, type SortSpec } from '@/common/db/list-sort';
 import { pgError } from '@/common/db/errors';
 import { lessonNames } from './earnings.names';
 import type {

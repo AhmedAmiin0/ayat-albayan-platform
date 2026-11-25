@@ -1,7 +1,7 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { StudentUpdate } from '@ab/shared';
 import { normalizeArabic } from '@ab/core';
-import { orSafe } from '@/modules/people/guardians/http';
+import { orFilterTerm } from '@/common/db/or-filter';
 import type { StudentCreateRequest } from './students.dto';
 
 type Student = Tables<'students'>;
@@ -77,8 +77,8 @@ export function toProfile(row: StudentProfileRow): StudentProfile {
 
 /** Name is Arabic-normalised so spelling variants match. */
 export function studentNameOrCodeFilter(term: string): string | null {
-  const name = orSafe(normalizeArabic(term));
-  const code = orSafe(term);
+  const name = orFilterTerm(normalizeArabic(term));
+  const code = orFilterTerm(term);
   return name ? `name_normalized.ilike.*${name}*,code.ilike.*${code}*` : null;
 }
 

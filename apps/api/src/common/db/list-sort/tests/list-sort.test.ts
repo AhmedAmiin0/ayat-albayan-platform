@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applySort, ilikeContains, type Orderable, type SortSpec } from '@/common/db/list-sort/list-sort';
+import { applySort, type Orderable, type SortSpec } from '@/common/db/list-sort/list-sort';
 
 /** Records every `.order()` call, like a supabase builder would chain them. */
 class FakeQuery implements Orderable<FakeQuery> {
@@ -54,15 +54,5 @@ describe('applySort (R-NFR-08)', () => {
   it('an unknown key (cast past the schema) falls back', () => {
     const q = applySort(new FakeQuery(), { sort: 'password' as Key }, spec);
     expect(q.calls).toEqual([['created_at', { ascending: false }]]);
-  });
-});
-
-describe('ilikeContains', () => {
-  it('wraps the trimmed term in %', () => {
-    expect(ilikeContains('  سهيلة ')).toBe('%سهيلة%');
-  });
-
-  it('escapes LIKE wildcards, backslash and comma', () => {
-    expect(ilikeContains('50%_a,b\\c')).toBe('%50\\%\\_a\\,b\\\\c%');
   });
 });

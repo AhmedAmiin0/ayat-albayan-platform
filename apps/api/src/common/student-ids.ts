@@ -1,5 +1,5 @@
 import type { PostgrestError } from '@supabase/supabase-js';
-import { orSafe } from '@/modules/people/guardians/http';
+import { orFilterTerm } from '@/common/db/or-filter';
 import { pgError } from '@/common/db/errors';
 import type { Db } from './db/db.module';
 
@@ -8,7 +8,7 @@ export const STUDENT_MATCH_LIMIT = 200;
 
 /** null means no usable term (no filter); [] means nobody matches (an empty page). */
 export async function studentIdsMatching(db: Db, term: string): Promise<string[] | null> {
-  const safe = orSafe(term);
+  const safe = orFilterTerm(term);
   if (!safe) return null;
   const res: { data: { id: string }[] | null; error: PostgrestError | null } = await db
     .from('students')

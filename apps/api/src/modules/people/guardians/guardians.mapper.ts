@@ -1,7 +1,7 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
 import type { GuardianCreate, GuardianUpdate } from '@ab/shared';
 import { normalizePhone, searchDigits } from '@ab/core';
-import { orSafe } from './http';
+import { orFilterTerm } from '@/common/db/or-filter';
 
 /** Country inferred from the E.164 number when the admin left it empty (R-STU-02). */
 export function inferCountry(e164: string): string | null {
@@ -23,6 +23,6 @@ export function toGuardianPatch(dto: GuardianUpdate): TablesUpdate<'guardians'> 
 export function guardianSearchFilter(term: string): string | null {
   const digits = searchDigits(term);
   if (digits) return `phone_e164.ilike.*${digits}*`;
-  const safe = orSafe(term);
+  const safe = orFilterTerm(term);
   return safe ? `name.ilike.*${safe}*` : null;
 }

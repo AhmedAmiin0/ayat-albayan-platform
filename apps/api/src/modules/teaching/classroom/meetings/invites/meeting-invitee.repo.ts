@@ -2,7 +2,7 @@ import { NOT_SUBSCRIBED_STATUSES } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { familyOfPhone } from '@/common/db/family-of-phone';
-import { orSafe } from '@/modules/people/guardians/http';
+import { orFilterTerm } from '@/common/db/or-filter';
 import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
 import { maybe, pgError, rows } from '@/common/db/errors';
 
@@ -47,7 +47,7 @@ export class MeetingInviteeRepo {
   async staff(input: { ids?: readonly string[]; q?: string }): Promise<StaffPick[]> {
     let query = this.db.from('profiles').select('id, full_name, role, tz').in('role', [...STAFF_ROLES]).is('disabled_at', null);
     if (input.ids) query = query.in('id', [...input.ids]);
-    const name = input.q ? orSafe(input.q) : '';
+    const name = input.q ? orFilterTerm(input.q) : '';
     if (name) query = query.ilike('full_name', `%${name}%`);
     const { data, error } = await query.order('full_name').limit(input.ids ? input.ids.length : PICK_LIMIT);
     if (error) throw pgError(error);

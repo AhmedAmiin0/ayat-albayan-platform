@@ -3,7 +3,8 @@ import type { FeedbackAverage, FeedbackQuery, FeedbackSortKey } from '@ab/shared
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import { ilikeContains } from '@/common/db/or-filter';
+import { applySort, type SortSpec } from '@/common/db/list-sort';
 import { studentIdsMatching } from '@/common/student-ids';
 import type { PageQuery } from '@/common/http/http';
 import { pgError } from '@/common/db/errors';

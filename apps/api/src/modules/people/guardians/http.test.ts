@@ -3,7 +3,7 @@ import { BadRequestException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
-import { blankToNull, blanksToNull, listQuerySchema, orSafe, pageRange } from './http';
+import { blankToNull, blanksToNull, listQuerySchema, pageRange } from './http';
 
 const createBody = blanksToNull(guardianCreateSchema);
 
@@ -69,15 +69,5 @@ describe('listQuerySchema + pageRange (R-NFR-08)', () => {
 
   it('caps pageSize at 100', () => {
     expect(listQuerySchema.safeParse({ pageSize: '500' }).success).toBe(false);
-  });
-});
-
-describe('orSafe', () => {
-  it('strips characters that break a PostgREST or() filter', () => {
-    expect(orSafe('a,b(c)*%:"\\')).toBe('a b c');
-  });
-
-  it('keeps _: it matches itself, so names like um_ahmad still match', () => {
-    expect(orSafe('um_ahmad')).toBe('um_ahmad');
   });
 });

@@ -2,7 +2,6 @@ export {
   type PageQuery,
   pageQueryShape,
   pageRange,
-  searchTerm,
   throwIfDbError,
 } from './http';
 export { LeadsModule } from './leads.module';
