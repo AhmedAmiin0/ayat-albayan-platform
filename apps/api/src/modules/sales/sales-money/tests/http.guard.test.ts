@@ -56,7 +56,6 @@ describe('/sales money routes: self.sales_money, and only for her own students w
 
   it('her family view never lists a child she does not own', async () => {
     m.family.studentsOfPhone.mockResolvedValue([{ id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'trial' }]);
-    m.subs.list.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 20 });
     const res = await call({ method: 'GET', url: '/sales/money/family?phone=%2B966551110000', token: 'salesB' });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ students: [] });
