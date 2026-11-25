@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import { Logger } from '@nestjs/common';
 import { jobBeats } from '@/common/jobs/beats/beat-book';
 import type { BeatSink } from '@/common/jobs/beats/beat-book';
@@ -19,8 +20,6 @@ interface TickerOptions extends TickerTiming {
   /** Where each pass is recorded (the process's heartbeats; a fake in tests). */
   beats?: BeatSink;
 }
-
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
  * In-process interval with single flight: a tick while the previous run is still going joins it
@@ -96,7 +95,7 @@ export class Ticker {
   }
 
   private failed(e: unknown): void {
-    this.log.error(`run aborted: ${messageOf(e)}`);
+    this.log.error(`run aborted: ${errorMessage(e)}`);
     this.beats.fail(this.opts.name, e);
   }
 

@@ -1,9 +1,9 @@
+import { errorMessage } from '@ab/core';
 import type { TablesInsert } from '@ab/db';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
  * The starter template a send queued after the window (only a send queues it),
@@ -28,7 +28,7 @@ export class ReopenAudit {
         after: { phone: row.phone_e164, template_key: row.template_key ?? null, status: 'queued' },
       });
     } catch (e) {
-      this.log.warn(`reopen audit failed for ${last4(row.phone_e164)}: ${messageOf(e)}`);
+      this.log.warn(`reopen audit failed for ${last4(row.phone_e164)}: ${errorMessage(e)}`);
     }
   }
 }

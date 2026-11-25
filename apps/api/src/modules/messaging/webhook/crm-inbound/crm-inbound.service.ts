@@ -1,3 +1,4 @@
+import { errorTextOf } from '@ab/core';
 import { waIdToE164 } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { CrmLineEnv } from '@/config/env/env';
@@ -41,9 +42,6 @@ const WITH_FILE: ReadonlySet<string> = new Set([
 export const retryAfterMs = (n: number): number =>
   Math.min(FIRST_RETRY_MS * 2 ** Math.min(n, 20), MAX_RETRY_MS);
 
-const messageOf = (e: unknown): string =>
-  (e instanceof Error ? e.message : String(e)).slice(0, 200);
-
 /** The CRM's copy of this message (its file link), null when the CRM no longer lists it. */
 async function fileOf(lookup: CrmLookup, row: CrmQueueRow): Promise<CrmMessage | null> {
   if (!WITH_FILE.has(row.content_type)) return null;
@@ -79,7 +77,7 @@ export class CrmInbound {
       await this.repo.done(row.wa_message_id);
       return handed;
     } catch (e) {
-      await this.later(row, { now, error: messageOf(e) });
+      await this.later(row, { now, error: errorTextOf(e, 200) });
       return false;
     }
   }
@@ -114,7 +112,7 @@ export class CrmInbound {
     try {
       await this.repo.retry({ waMessageId: row.wa_message_id, attempts, nextAt, error: at.error });
     } catch (e) {
-      this.log.error(`crm inbound retry write failed: ${messageOf(e)}`);
+      this.log.error(`crm inbound retry write failed: ${errorTextOf(e, 200)}`);
     }
   }
 }

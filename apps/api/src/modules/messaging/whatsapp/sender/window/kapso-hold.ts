@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import type { WaLine } from '@ab/catalog';
 import { Injectable, Logger } from '@nestjs/common';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
@@ -20,7 +21,6 @@ interface KapsoHoldAt {
 
 const isKapso = (env: WhatsappEnv | null | undefined): env is KapsoLineEnv =>
   env?.provider === 'kapso';
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 const numberEnv = (id: string): WhatsappEnv | null =>
   overlayNumbers()?.find((n) => n.id === id)?.env ?? null;
 
@@ -56,8 +56,8 @@ export class KapsoHold {
       await reopenKapsoConversation(input);
       return null;
     } catch (e) {
-      this.log.warn(`Kapso reopen failed for …${at.phone.slice(-4)}: ${messageOf(e)}`);
-      return kapsoFailText(messageOf(e));
+      this.log.warn(`Kapso reopen failed for …${at.phone.slice(-4)}: ${errorMessage(e)}`);
+      return kapsoFailText(errorMessage(e));
     }
   }
 }
