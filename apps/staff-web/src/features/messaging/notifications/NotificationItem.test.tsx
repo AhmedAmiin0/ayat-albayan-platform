@@ -10,7 +10,12 @@ const role = vi.hoisted(() => ({ current: 'admin' }));
 const me = vi.hoisted(() => () => ({ role: role.current }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
-vi.mock('@ab/web-kit/auth/me/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: me, initialData: me, staleTime: Infinity } }));
+vi.mock('@ab/web-kit/auth/me/me', async () => {
+  const { pathKey } = await import('@ab/client-core');
+  return {
+    meQuery: { queryKey: pathKey('/auth/me'), queryFn: me, initialData: me, staleTime: Infinity },
+  };
+});
 
 const row = (item = ITEM, onPick = vi.fn()) =>
   renderWithClient(
@@ -41,7 +46,9 @@ describe('NotificationItem', () => {
     const onPick = vi.fn();
     row(ITEM, onPick);
     fireEvent.click(screen.getByRole('button'));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', { ids: [ITEM.id] }));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', { ids: [ITEM.id] }),
+    );
     expect(navigate).toHaveBeenCalledWith({ href: `/admin/students/${STUDENT_ID}` });
     expect(onPick).toHaveBeenCalled();
   });

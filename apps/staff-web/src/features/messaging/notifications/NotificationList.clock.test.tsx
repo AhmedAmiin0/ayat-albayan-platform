@@ -5,9 +5,16 @@ import { ITEM, page, READ_ITEM, renderWithClient } from './notifications-test-ki
 import { NotificationList } from './NotificationList';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend: vi.fn(),
+}));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
-vi.mock('@ab/web-kit/auth/me/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: () => ({ role: 'admin' }) } }));
+vi.mock('@ab/web-kit/auth/me/me', async () => {
+  const { pathKey } = await import('@ab/client-core');
+  return { meQuery: { queryKey: pathKey('/auth/me'), queryFn: () => ({ role: 'admin' }) } };
+});
 
 const C24 = { cycle: '24', locale: 'ar' } as const;
 const START = new Date('2026-10-12T09:05:00Z');
@@ -16,13 +23,15 @@ const START = new Date('2026-10-12T09:05:00Z');
 const minuteTimers = (spy: { mock: { calls: unknown[][] } }) =>
   spy.mock.calls.filter((c) => c[1] === 60_000).length;
 
-beforeEach(() => vi.useFakeTimers({ now: START, toFake: ['Date', 'setInterval', 'clearInterval'] }));
+beforeEach(() =>
+  vi.useFakeTimers({ now: START, toFake: ['Date', 'setInterval', 'clearInterval'] }),
+);
 afterEach(() => {
   vi.useRealTimers();
   apiFetch.mockReset();
 });
 
-it('the bell rows (compiled) age with the panel\'s one clock (one timer), no remount', async () => {
+it("the bell rows (compiled) age with the panel's one clock (one timer), no remount", async () => {
   const timers = vi.spyOn(globalThis, 'setInterval');
   apiFetch.mockResolvedValue(page([ITEM, { ...READ_ITEM, created_at: ITEM.created_at }]));
   renderWithClient(<NotificationList onPick={vi.fn()} />);

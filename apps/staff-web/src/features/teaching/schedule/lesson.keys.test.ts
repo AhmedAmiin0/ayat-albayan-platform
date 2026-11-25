@@ -13,6 +13,15 @@ describe('lesson keys', () => {
       'q',
     ]);
     expect(lessonKeys.proposals()).toEqual(['lessons', 'proposals']);
+    expect(lessonKeys.mine('from=a')).toEqual(['lessons', 'mine', 'from=a']);
+    expect(lessonKeys.attendance('s1', null)).toEqual(['lessons', 'attendance', 's1', 'current']);
+    expect(lessonKeys.attendance('s1', '2026-11')).toEqual([
+      'lessons',
+      'attendance',
+      's1',
+      '2026-11',
+    ]);
+    expect(lessonKeys.teacherStudent('s1')).toEqual(['lessons', 'teacher-student', 's1']);
     expect(lessonKeys.trialHistory('admin', 's1')).toEqual([
       'lessons',
       'trial-dates',
@@ -28,6 +37,9 @@ describe('lesson keys', () => {
       lessonKeys.outsideSlots('admin', 'q'),
       lessonKeys.proposals(),
       lessonKeys.trialHistory('admin', 's1'),
+      lessonKeys.mine('q'),
+      lessonKeys.attendance('s1', null),
+      lessonKeys.teacherStudent('s1'),
     ];
     expect(await staleAfter(reads, lessonKeys.all)).toEqual(reads);
   });

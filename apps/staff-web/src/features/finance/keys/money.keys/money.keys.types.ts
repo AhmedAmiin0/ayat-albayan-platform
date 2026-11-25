@@ -13,6 +13,7 @@ export interface MoneyKeys {
   payments: One<{ page: number; filters: unknown; sort: unknown }>;
   receipt: One<string>;
   payouts: One<string>;
+  myPayouts: () => QueryKeyParts;
   earningsSummary: () => QueryKeyParts;
   subscriptions: One<unknown>;
   studentSubscriptions: One<string>;
