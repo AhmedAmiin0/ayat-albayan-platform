@@ -1,12 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http';
 import { lessonEndPath, lessonMutePath, lessonRemovePath, lessonRoomSends } from './lesson-room';
 
 const make = (answer: (path: string) => Promise<unknown>) => {
   const apiSend = vi.fn((_m: string, path: string) => answer(path));
   return {
     apiSend,
-    sends: lessonRoomSends({ apiFetch: vi.fn(), apiSend } as unknown as ApiClient),
+    sends: lessonRoomSends({ apiFetch: vi.fn(), apiSend }),
   };
 };
 
