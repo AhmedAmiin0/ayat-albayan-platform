@@ -1,7 +1,6 @@
 // The db-unwrap codemod (docs/62 part 1 §3.1): moves apps/api off the two dbError copies onto
 // common/db/errors. Deterministic (sorted files, span edits only); a second run finds nothing.
 // Usage: node tools/scripts/imports/db-unwrap/db-unwrap.mjs [--write]   (dry run without it)
-import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -23,26 +22,21 @@ const isName = (id) => {
   return kinds.includes(parent.getKind()) && parent.getNameNode() === id;
 };
 
-function importEdits(sf, found, ctx) {
+/** The dbError import, replaced in place by what the file still needs from it and the helpers. */
+function importEdits(found, ctx) {
   const specs = found.decl.getNamedImports();
-  const dbSpec = specs.find((n) => n.getName() === 'dbError');
-  const keep = ctx.unmapped.length > 0;
+  const keep = ctx.unmapped.length > 0 ? ['dbError'] : [];
   const people = found.people ? ['peopleErrors'] : [];
-  const names = [...(keep ? ['dbError'] : []), ...people];
-  const rest = specs.filter((n) => n !== dbSpec).map((n) => n.getText());
-  const all = [...rest, ...names].sort((a, b) => a.localeCompare(b));
-  const clause = `import { ${all.join(', ')} } from '${found.decl.getModuleSpecifierValue()}';`;
-  const source = {
-    start: found.decl.getStart(),
-    end: found.decl.getEnd(),
-    value: all.length ? clause : '',
-  };
+  const swap = (n) => (n.getName() === 'dbError' ? [...keep, ...people] : [n.getText()]);
+  const names = specs.flatMap(swap);
+  const source = found.decl.getModuleSpecifierValue();
   const helpers = [...ctx.used].filter((n) => n !== 'peopleErrors').sort();
-  const add = `\nimport { ${helpers.join(', ')} } from '${ERRORS_SOURCE}';`;
-  const last = sf.getImportDeclarations().at(-1);
-  return helpers.length
-    ? [source, { start: last.getEnd(), end: last.getEnd(), value: add }]
-    : [source];
+  const lines = [
+    ...(names.length ? [`import { ${names.join(', ')} } from '${source}';`] : []),
+    ...(helpers.length ? [`import { ${helpers.join(', ')} } from '${ERRORS_SOURCE}';`] : []),
+  ];
+  const end = found.decl.getEnd() + (lines.length ? 0 : 1);
+  return [{ start: found.decl.getStart(), end, value: lines.join('\n') }];
 }
 
 /** `text` moved onto common/db/errors, with the dbError references it could not map. */
@@ -78,7 +72,7 @@ export function rewriteText(project, { file, text }) {
     .filter((id) => !id.getFirstAncestorByKind(SyntaxKind.ImportDeclaration))
     .map((id) => `${file}:${id.getStartLineNumber()}: ${id.getParent().getText().slice(0, 60)}`);
   if (found.people) ctx.used.add('peopleErrors');
-  const edits = [...sites, ...calls, ...importEdits(sf, found, ctx)];
+  const edits = [...sites, ...calls, ...importEdits(found, ctx)];
   project.removeSourceFile(sf);
   return {
     text: applyEdits(text, edits),
@@ -113,8 +107,6 @@ export function run(root, { write }) {
     total.changed.push(file);
     if (write) writeFileSync(posix.join(root, file), out.text);
   }
-  if (write && total.changed.length)
-    execFileSync('npx', ['oxfmt', ...total.changed], { cwd: root });
   return total;
 }
 

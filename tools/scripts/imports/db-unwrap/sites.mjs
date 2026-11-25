@@ -10,6 +10,21 @@ const lastCallName = (call) =>
     ? call.getExpression().getName()
     : null;
 
+/** Calls that only retype a result, so the call before them sets its shape. */
+const TYPE_ONLY = new Set(['overrideTypes', 'returns']);
+
+const receiverCall = (call) => {
+  const callee = call.getExpression();
+  const target =
+    callee.getKind() === SyntaxKind.PropertyAccessExpression ? callee.getExpression() : null;
+  return target?.getKind() === SyntaxKind.CallExpression ? target : null;
+};
+
+function endingCall(call) {
+  const before = TYPE_ONLY.has(lastCallName(call)) ? receiverCall(call) : null;
+  return before === null ? call : endingCall(before);
+}
+
 const callsIn = (expr) =>
   [expr, ...expr.getDescendantsOfKind(SyntaxKind.CallExpression)]
     .filter((n) => n.getKind() === SyntaxKind.CallExpression)
@@ -18,8 +33,8 @@ const callsIn = (expr) =>
 /** The helper for a read whose data is kept, or null when its shape is not provable. */
 export function readHelper(awaited) {
   if (awaited.getKind() !== SyntaxKind.CallExpression) return null;
-  const ending = ENDINGS[lastCallName(awaited)];
-  if (ending !== undefined) return ending;
+  const last = lastCallName(endingCall(awaited));
+  if (Object.hasOwn(ENDINGS, last)) return ENDINGS[last];
   const names = callsIn(awaited);
   const list = names.includes('from') && names.includes('select') && !names.includes('rpc');
   return list && !/\bhead\s*:/.test(awaited.getText()) ? 'rows' : null;
