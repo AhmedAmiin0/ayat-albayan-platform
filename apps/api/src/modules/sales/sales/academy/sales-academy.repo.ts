@@ -53,10 +53,8 @@ export class SalesAcademyRepo {
     return data.map((t) => ({ ...t, avatar_url: photos.get(t.id) ?? null }));
   }
 
-  /**
-   * One page by name, with the guardian's name and phone (the row opens that family's chat);
-   * `search` is a name (Arabic-normalised) or a code, like the admin's list.
-   */
+  // One page by name, with the guardian's name and phone (the row opens that family's chat);
+  // `search` is a name (Arabic-normalised) or a code, like the admin's list.
   async students(q: SalesStudentsQuery): Promise<{ rows: SalesStudentRow[]; total: number }> {
     let query = this.db
       .from('students')
