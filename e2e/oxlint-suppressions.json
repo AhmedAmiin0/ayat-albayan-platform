@@ -123,9 +123,6 @@
     "no-restricted-properties": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 3
-    },
     "typescript/no-unsafe-argument": {
       "count": 1
     }
@@ -253,7 +250,7 @@
   },
   "support/sales/assistant.ts": {
     "stylistic/max-len": {
-      "count": 13
+      "count": 6
     }
   },
   "support/sales/sales-money.ts": {
@@ -317,11 +314,6 @@
       "count": 4
     }
   },
-  "tests/finance/change-course.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
   "tests/finance/course-pause-resume.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -332,7 +324,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "tests/finance/exports.spec.ts": {
@@ -340,7 +332,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 1
     },
     "typescript/restrict-template-expressions": {
       "count": 2
@@ -423,11 +415,6 @@
   "tests/messaging/numbers-routing.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "tests/messaging/push-device-claim.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 11
     }
   },
   "tests/messaging/send-gate-boot.api.spec.ts": {
@@ -523,7 +510,7 @@
   },
   "tests/platform/config-expand.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "tests/platform/config-parity.api.spec.ts": {
@@ -642,11 +629,6 @@
   "tests/sales/assistant-course.api.spec.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "tests/sales/assistant-portal.spec.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "tests/sales/assistant-reopen.sql.spec.ts": {

@@ -104,7 +104,8 @@ test.describe('settings expand (migration 630)', () => {
         version::text as version from public.settings where key in ('zz_e2e_false', 'zz_e2e_new') order by key`;
       expect(after.map((r) => [r.key, r.is_null])).toEqual([['zz_e2e_false', false], ['zz_e2e_new', true]]);
       expect(Number(after[0]?.version)).toBeGreaterThan(v0);
-      expect(out).toEqual({ zz_e2e_false: Number(after[0]?.version), zz_e2e_new: Number(after[1]?.version) });
+      expect(out).toEqual(
+        { zz_e2e_false: Number(after[0]?.version), zz_e2e_new: Number(after[1]?.version) });
       expect(Number(await rev(tx))).toBeGreaterThan(Number(r0));
     });
   });
