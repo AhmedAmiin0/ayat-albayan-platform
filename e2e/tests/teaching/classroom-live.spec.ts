@@ -43,7 +43,9 @@ test('staff via the shared link: connected, the pen, strokes, board share, scree
   const stage = teacher.getByRole('button', { name: C.stage.minimize });
   await expect(stage).toBeVisible();
   const view = teacher.viewportSize();
-  await expect.poll(async () => (await stage.boundingBox())?.width).toBeGreaterThanOrEqual((view?.width ?? 0) - 2);
+  await expect
+    .poll(async () => (await stage.boundingBox())?.width)
+    .toBeGreaterThanOrEqual((view?.width ?? 0) - 2);
   await shot(teacher, 'teacher-maximised');
   await stage.click();
   await expect(teacher.getByRole('button', { name: C.stage.maximize })).toBeVisible();

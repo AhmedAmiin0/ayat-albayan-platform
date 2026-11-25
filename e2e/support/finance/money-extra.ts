@@ -26,7 +26,11 @@ interface NearEmpty extends PackageSeed {
  * A paid weekly package (4 lessons) with 3 used and today's started lesson still scheduled:
  * completing it leaves 0. A later lesson tomorrow 12:00 Riyadh is booked for the flag.
  */
-export async function seedNearEmpty(input: { teacherId: string; guardian: string; student: string }): Promise<NearEmpty> {
+export async function seedNearEmpty(input: {
+  teacherId: string;
+  guardian: string;
+  student: string;
+}): Promise<NearEmpty> {
   const seed = await seedPackageStudent({ ...input, paid: true });
   const today = riyadhToday();
   for (const days of [-5, -4]) {

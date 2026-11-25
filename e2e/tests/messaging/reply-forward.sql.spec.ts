@@ -29,8 +29,12 @@ test.describe('messages reply / forward links (migration 690)', () => {
   test("an inbound reply is linked to our message of the same chat, never another chat's", async () => {
     await rolledBack(async (tx) => {
       const ours = await outbound(tx, A);
-      expect((await inboundReply(tx, { phone: A, wamid: ours.wamid }))?.reply_to_message_id).toBe(ours.id);
-      expect((await inboundReply(tx, { phone: B, wamid: ours.wamid }))?.reply_to_message_id).toBeNull();
+      expect((await inboundReply(tx, { phone: A, wamid: ours.wamid }))?.reply_to_message_id).toBe(
+        ours.id,
+      );
+      expect(
+        (await inboundReply(tx, { phone: B, wamid: ours.wamid }))?.reply_to_message_id,
+      ).toBeNull();
     });
   });
 
@@ -44,7 +48,8 @@ test.describe('messages reply / forward links (migration 690)', () => {
       await tx`delete from public.messages where id = ${ours.id}`;
       const rows = await tx<Row[]>`select id, reply_to_message_id, forwarded_from_id from public.messages where id in (${reply?.id ?? ''}, ${copy?.id ?? ''})`;
       expect(rows).toHaveLength(2);
-      for (const r of rows) expect([r.reply_to_message_id, r.forwarded_from_id]).toEqual([null, null]);
+      for (const r of rows)
+        expect([r.reply_to_message_id, r.forwarded_from_id]).toEqual([null, null]);
     });
   });
 });

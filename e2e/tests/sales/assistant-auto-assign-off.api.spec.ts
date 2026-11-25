@@ -43,7 +43,10 @@ test.describe.serial('sales auto-assign OFF: registration without the ownership 
     const lead = await leadOf(need(c).id, phone);
     const res = await call<BookingResult>(request, { token: me.token, method: 'POST', path: '/sales/booking', body: trialBody({ teacherId: teacher, leadId: lead, phone, name: 'سارة', time: '17:00' }) });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
-    expect(await facts(need(res.body.student_ids[0]), lead)).toEqual({ broughtBy: me.id, assignedTo: need(c).id });
+    expect(await facts(need(res.body.student_ids[0]), lead)).toEqual({
+      broughtBy: me.id,
+      assignedTo: need(c).id,
+    });
   });
 
   test('A registers a student from an unassigned lead (the normal case while OFF): 201, credited to A, still unassigned', async ({ request }) => {
@@ -52,7 +55,10 @@ test.describe.serial('sales auto-assign OFF: registration without the ownership 
     const lead = await seedLead({ phone });
     const res = await call<BookingResult>(request, { token: me.token, method: 'POST', path: '/sales/booking', body: trialBody({ teacherId: teacher, leadId: lead, phone, name: 'ريم', time: '18:00' }) });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
-    expect(await facts(need(res.body.student_ids[0]), lead)).toEqual({ broughtBy: me.id, assignedTo: null });
+    expect(await facts(need(res.body.student_ids[0]), lead)).toEqual({
+      broughtBy: me.id,
+      assignedTo: null,
+    });
   });
 
   test('the wizard reads may name a student brought by C: teachers and slots answer 200 to A', async ({ request }) => {

@@ -25,7 +25,11 @@ async function seed(tx: Tx) {
   for (const teacher of [mine.id, other]) {
     const lesson = await pastLesson(tx, { teacher, minutes: 45, status: 'completed', daysAgo: 3 });
     lessons.push(lesson);
-    await pay(tx, { teacher, amount: 10, items: [{ earning_id: await earningId(tx, lesson), amount: 10 }] });
+    await pay(tx, {
+      teacher,
+      amount: 10,
+      items: [{ earning_id: await earningId(tx, lesson), amount: 10 }],
+    });
   }
   return { mine, other, lessons };
 }

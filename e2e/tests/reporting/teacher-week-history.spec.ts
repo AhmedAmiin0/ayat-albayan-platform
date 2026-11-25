@@ -29,15 +29,22 @@ async function seedAll(teacherId: string, tag: string) {
   const history = await student(tag, 'جنى');
   const coming = await student(tag, 'لين');
   const slot = (days: number) => riyadh(addDays(riyadhToday, days), '12:00');
-  const lesson = (studentId: string, startsAt: Date) => seedLesson({ teacherId, studentId, startsAt, minutes: 45 });
+  const lesson = (studentId: string, startsAt: Date) =>
+    seedLesson({ teacherId, studentId, startsAt, minutes: 45 });
   const days = [startedToday(), slot(2)];
   const weekLessons = [
     await lesson(week.id, days[0] ?? new Date()),
     await lesson(coming.id, slot(2)),
   ];
   const missing = await lesson(waiting.id, new Date(Date.now() - 2 * DAY));
-  const past = [await lesson(history.id, new Date(Date.now() - 3 * DAY)), await lesson(history.id, new Date(Date.now() - 5 * DAY))];
-  await withSql((sql) => sql`update public.students set teacher_id = ${teacherId} where id in ${sql([history.id, waiting.id])}`);
+  const past = [
+    await lesson(history.id, new Date(Date.now() - 3 * DAY)),
+    await lesson(history.id, new Date(Date.now() - 5 * DAY)),
+  ];
+  await withSql(
+    (sql) =>
+      sql`update public.students set teacher_id = ${teacherId} where id in ${sql([history.id, waiting.id])}`,
+  );
   return { week, waiting, history, coming, days, weekLessons, missing, past };
 }
 

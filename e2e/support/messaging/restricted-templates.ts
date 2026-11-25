@@ -51,7 +51,11 @@ export async function listedKeys(token: string): Promise<string[]> {
 }
 
 /** POST /threads/:phone/template as one user; the status and error code. */
-export async function sendAs(input: { token: string; phone: string; key: string }): Promise<{ status: number; code?: string }> {
+export async function sendAs(input: {
+  token: string;
+  phone: string;
+  key: string;
+}): Promise<{ status: number; code?: string }> {
   const res = await fetch(`${API}/threads/${encodeURIComponent(input.phone)}/template`, {
     method: 'POST',
     headers: { authorization: `Bearer ${input.token}`, 'content-type': 'application/json' },

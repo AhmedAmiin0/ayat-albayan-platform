@@ -10,7 +10,16 @@ import { expectInMyPayments, registerWithTrial, renewFromChat, saveSubscription,
 import { chatRenew, expectRenewVisible } from '../../support/messaging/chat-more';
 import { bookCourseDays, courseOf } from '../../support/sales/assistant-course';
 import {
-  apiAs, checkRegistration, childAndTrial, expectQuietStub, expectStatus, fromChatMore, leadIdOf, newestPackage, openChat, shot,
+  apiAs,
+  checkRegistration,
+  childAndTrial,
+  expectQuietStub,
+  expectStatus,
+  fromChatMore,
+  leadIdOf,
+  newestPackage,
+  openChat,
+  shot,
 } from '../../support/sales/assistant-journey';
 
 // Journey 7 (docs/16, docs/18); expiry is set by the admin since e2e has no job hook.
@@ -91,7 +100,9 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       const pkg = await newestPackage(ids.studentId);
       expect(pkg.lessons_total).toBe(4);
       const course = await courseOf(ids.studentId);
-      expect(course).toEqual([{ ends_on: expect.any(String), lessons: 4, created_by: assistantId }]);
+      expect(course).toEqual([
+        { ends_on: expect.any(String), lessons: 4, created_by: assistantId },
+      ]);
       await fromChatMore(page, ar.salesMoney.recordTransfer);
       const done = await saveTransfer(page, pkg.currency);
       await shot(page, info, '05-subscribed');

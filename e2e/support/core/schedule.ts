@@ -53,7 +53,10 @@ export async function resetAbrar(): Promise<string> {
 }
 
 /** Riyadh time rows: [weekday (0 = Sunday), "HH:MM", "HH:MM"]. */
-export async function setAvailability(teacherId: string, rows: [number, string, string][]): Promise<void> {
+export async function setAvailability(
+  teacherId: string,
+  rows: [number, string, string][],
+): Promise<void> {
   await withSql(async (sql) => {
     for (const [weekday, start, end] of rows) {
       await sql`insert into public.teacher_availability (teacher_id, weekday, start_time, end_time, tz)
@@ -132,8 +135,13 @@ export async function lessonsOf(studentId: string): Promise<{ starts_at: Date; s
 }
 
 /** The rule a booking made for a student: its idempotency key, its link and its in-transaction audit. */
-export async function ruleOf(studentId: string): Promise<{ client_request_id: string | null; meeting_link: string | null; audits: number }[]> {
-  return withSql((sql) => sql<{ client_request_id: string | null; meeting_link: string | null; audits: number }[]>`
+export async function ruleOf(
+  studentId: string,
+): Promise<{ client_request_id: string | null; meeting_link: string | null; audits: number }[]> {
+  return withSql(
+    (sql) => sql<
+      { client_request_id: string | null; meeting_link: string | null; audits: number }[]
+    >`
     select r.client_request_id, r.meeting_link,
       (select count(*)::int from public.audit_log a where a.entity_id = r.id and a.action = 'book') as audits
     from public.schedule_rules r join public.schedule_rule_students rs on rs.rule_id = r.id

@@ -19,7 +19,13 @@ export async function countedLessons(subscriptionId: string): Promise<number> {
   return row?.n ?? 0;
 }
 
-type CourseRuleFacts = { start: string; byday: number[]; ends_on: string; status: string; created_by: string | null };
+type CourseRuleFacts = {
+  start: string;
+  byday: number[];
+  ends_on: string;
+  status: string;
+  created_by: string | null;
+};
 
 /** The rules of a course, oldest first. */
 export async function courseRules(subscriptionId: string): Promise<CourseRuleFacts[]> {
@@ -29,8 +35,11 @@ export async function courseRules(subscriptionId: string): Promise<CourseRuleFac
 }
 
 /** The audit rows naming the course (its subscription). */
-export async function courseAudit(subscriptionId: string): Promise<{ action: string; actor_id: string | null; by: string | null }[]> {
-  return withSql((sql) => sql<{ action: string; actor_id: string | null; by: string | null }[]>`
+export async function courseAudit(
+  subscriptionId: string,
+): Promise<{ action: string; actor_id: string | null; by: string | null }[]> {
+  return withSql(
+    (sql) => sql<{ action: string; actor_id: string | null; by: string | null }[]>`
     select action, actor_id, after ->> 'by' as by from public.audit_log
     where (entity = 'subscriptions' and entity_id = ${subscriptionId}) or after ->> 'subscription_id' = ${subscriptionId}::text
     order by at`);

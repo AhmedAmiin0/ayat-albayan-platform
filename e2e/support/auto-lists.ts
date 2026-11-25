@@ -35,15 +35,25 @@ export async function guardian(tx: Tx, phone: string): Promise<string> {
   return g.id;
 }
 
-export async function student(tx: Tx, input: { guardian: string; status: string }): Promise<string> {
-  const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, status)
+export async function student(
+  tx: Tx,
+  input: { guardian: string; status: string },
+): Promise<string> {
+  const [s] = await tx<
+    { id: string }[]
+  >`insert into public.students (guardian_id, name, name_normalized, status)
     values (${input.guardian}, 'طالب تلقائي', 'طالب تلقائي', ${input.status}::public.student_status) returning id`;
   if (!s) throw new Error('no student');
   return s.id;
 }
 
-export async function teacher(tx: Tx, input: { phone: string | null; status: string }): Promise<string> {
-  const [row] = await tx<{ id: string }[]>`insert into public.teachers (display_name_ar, gender, phone_e164, status)
+export async function teacher(
+  tx: Tx,
+  input: { phone: string | null; status: string },
+): Promise<string> {
+  const [row] = await tx<
+    { id: string }[]
+  >`insert into public.teachers (display_name_ar, gender, phone_e164, status)
     values ('معلم تلقائي', 'male', ${input.phone}, ${input.status}::public.teacher_status) returning id`;
   if (!row) throw new Error('no teacher');
   return row.id;

@@ -45,7 +45,12 @@ export async function closeCodes(): Promise<void> {
 }
 
 /** A guardian with one child: the guardian's phone and the child's AB- code. */
-export async function family(): Promise<{ phone: string; code: string; guardianId: string; studentId: string }> {
+export async function family(): Promise<{
+  phone: string;
+  code: string;
+  guardianId: string;
+  studentId: string;
+}> {
   const f = await seedFamily(`أسرة ${Date.now() % 10_000}`, ['طالب الدخول']);
   const [studentId = ''] = f.studentIds;
   return withSql(async (sql) => {
@@ -61,12 +66,20 @@ export async function codeSentTo(phone: string, after = 0): Promise<string> {
   const digits = phone.replace(/\D/g, '');
   let code = '';
   await expect
-    .poll(async () => {
-      const sent = (await stubSent()).filter((m) => m.template === TEMPLATE && m.to.replace(/\D/g, '') === digits).slice(after);
-      const body = sent.at(-1)?.body as { template?: { components?: { type: string; parameters?: { text?: string }[] }[] } } | undefined;
-      code = body?.template?.components?.find((c) => c.type === 'body')?.parameters?.[0]?.text ?? '';
-      return code;
-    }, { timeout: 30_000 })
+    .poll(
+      async () => {
+        const sent = (await stubSent())
+          .filter((m) => m.template === TEMPLATE && m.to.replace(/\D/g, '') === digits)
+          .slice(after);
+        const body = sent.at(-1)?.body as
+          | { template?: { components?: { type: string; parameters?: { text?: string }[] }[] } }
+          | undefined;
+        code =
+          body?.template?.components?.find((c) => c.type === 'body')?.parameters?.[0]?.text ?? '';
+        return code;
+      },
+      { timeout: 30_000 },
+    )
     .toMatch(/^\d{6}$/);
   return code;
 }

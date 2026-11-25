@@ -31,8 +31,11 @@ export async function bookCourseDays(page: Page, transfer: Locator): Promise<voi
 }
 
 /** The student's course rules (not the trial): their end day and lessons, credited to `createdBy`. */
-export async function courseOf(studentId: string): Promise<{ ends_on: string | null; lessons: number; created_by: string | null }[]> {
-  return withSql((sql) => sql<{ ends_on: string | null; lessons: number; created_by: string | null }[]>`
+export async function courseOf(
+  studentId: string,
+): Promise<{ ends_on: string | null; lessons: number; created_by: string | null }[]> {
+  return withSql(
+    (sql) => sql<{ ends_on: string | null; lessons: number; created_by: string | null }[]>`
     select to_char(r.ends_on, 'YYYY-MM-DD') as ends_on, r.created_by,
       (select count(*)::int from public.lessons l where l.rule_id = r.id) as lessons
     from public.schedule_rules r join public.schedule_rule_students rs on rs.rule_id = r.id

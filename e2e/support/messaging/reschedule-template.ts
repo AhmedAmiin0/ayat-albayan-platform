@@ -21,7 +21,11 @@ export async function seedReschedule(): Promise<void> {
 }
 
 /** The registry row's line, status and Meta id. */
-export async function rescheduleRow(): Promise<{ line: string; status: string; meta_id: string | null }> {
+export async function rescheduleRow(): Promise<{
+  line: string;
+  status: string;
+  meta_id: string | null;
+}> {
   return withSql(async (sql) => {
     const [row] = await sql<{ line: string; status: string; meta_id: string | null }[]>`
       select line, status, meta_id from public.message_templates where key = ${RESCHEDULE}`;
@@ -30,7 +34,10 @@ export async function rescheduleRow(): Promise<{ line: string; status: string; m
   });
 }
 
-async function adminCall(token: string, input: { method: string; path: string; body?: unknown }): Promise<Response> {
+async function adminCall(
+  token: string,
+  input: { method: string; path: string; body?: unknown },
+): Promise<Response> {
   return fetch(`${API}${input.path}`, {
     method: input.method,
     // No content-type without a body: Fastify refuses an empty JSON body.

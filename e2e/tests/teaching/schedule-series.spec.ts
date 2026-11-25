@@ -17,7 +17,13 @@ test.describe('reschedule a whole series (R-SCH-07)', () => {
     const sunday = addDays(nextWeekSaturday(), 1);
     const tuesday = addDays(sunday, 2);
     const first = riyadh(sunday, '16:00');
-    const rule = await seedWeeklyRule({ teacherId, studentIds: [studentId], firstStart: first, weeks: 3, minutes: 45 });
+    const rule = await seedWeeklyRule({
+      teacherId,
+      studentIds: [studentId],
+      firstStart: first,
+      weeks: 3,
+      minutes: 45,
+    });
 
     const page = await asRole('admin');
     const drawer = await openLessonDrawer(page, { week: weekOf(first), teacherId, name });
@@ -41,7 +47,8 @@ test.describe('reschedule a whole series (R-SCH-07)', () => {
     expect(old.map((l) => l.starts_at.toISOString())).toEqual(rule.lessonIds.map((_, i) => riyadh(addDays(sunday, 7 * i), '16:00').toISOString()));
     expect(fresh.length).toBeGreaterThanOrEqual(3);
     expect(fresh[0]?.starts_at.toISOString()).toBe(riyadh(tuesday, '17:00').toISOString());
-    for (const l of fresh) expect([l.starts_at.getUTCDay(), l.starts_at.getUTCHours()]).toEqual([2, 14]);
+    for (const l of fresh)
+      expect([l.starts_at.getUTCDay(), l.starts_at.getUTCHours()]).toEqual([2, 14]);
 
     // The week now shows the Tuesday lesson, and the guardian got one confirmation, not one per lesson.
     await page.goto(`/admin/schedule?week=${weekOf(first)}&teacher=${teacherId}`);

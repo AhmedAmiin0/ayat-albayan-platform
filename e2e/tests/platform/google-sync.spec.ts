@@ -41,8 +41,17 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
 
     // Sync on in dry run: a platform lesson becomes a planned item and nothing reaches the stub.
     await googleApi(admin, { method: 'PUT', path: '/settings', body: { enabled: true } });
-    const lessonId = await seedLesson({ teacherId, studentId, startsAt: new Date(Date.now() + 26 * 3_600_000), minutes: 45 });
-    await expect.poll(async () => (await itemsOf(lessonId)).map((i) => `${i.kind}:${i.state}:${i.skip_reason}`), WAIT)
+    const lessonId = await seedLesson({
+      teacherId,
+      studentId,
+      startsAt: new Date(Date.now() + 26 * 3_600_000),
+      minutes: 45,
+    });
+    await expect
+      .poll(
+        async () => (await itemsOf(lessonId)).map((i) => `${i.kind}:${i.state}:${i.skip_reason}`),
+        WAIT,
+      )
       .toEqual(['teacher_event:skipped:dry_run', 'main_event:skipped:dry_run']);
     expect((await itemsOf(lessonId))[0]?.planned).toMatchObject({ method: 'POST', target: `calendar:${STUB_TEACHER_CAL}` });
     expect(Object.values((await stubState()).calendars).flat()).toEqual([]);
@@ -68,11 +77,20 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     expect(mainEv?.description).toContain('رقم الطالب: +966');
 
     // Cancel in the platform: both of OUR events are deleted.
-    await withSql((sql) => sql`update public.lessons set status = 'cancelled_by_admin' where id = ${lessonId}`);
-    await expect.poll(async () => Object.values((await stubState()).calendars).flat().length, WAIT).toBe(0);
+    await withSql(
+      (sql) => sql`update public.lessons set status = 'cancelled_by_admin' where id = ${lessonId}`,
+    );
+    await expect
+      .poll(async () => Object.values((await stubState()).calendars).flat().length, WAIT)
+      .toBe(0);
 
     // A report yields a PDF in a new student folder, the 13-column row and the summary row.
-    const lesson2 = await seedLesson({ teacherId, studentId, startsAt: new Date(Date.now() - 2 * 3_600_000), minutes: 45 });
+    const lesson2 = await seedLesson({
+      teacherId,
+      studentId,
+      startsAt: new Date(Date.now() - 2 * 3_600_000),
+      minutes: 45,
+    });
     await readyReport({ lessonId: lesson2, studentId, teacherId });
     await expect.poll(async () => (await stubState()).files.filter((f) => f.name.endsWith('.pdf')).map((f) => f.name.startsWith('طالب Google — ')), WAIT).toEqual([true]);
     const after = await stubState();

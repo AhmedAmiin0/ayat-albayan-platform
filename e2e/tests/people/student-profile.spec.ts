@@ -46,7 +46,9 @@ test.describe('student profile (R-STU-05)', () => {
         level: 'يقرأ بتهجّي', memorized: 'جزء عمّ', goal: 'الحفظ مع التجويد', riwaya: 'حفص',
         tz: 'Africa/Cairo', notes: 'ملاحظة من الإدارة', meeting_link_override: null,
       });
-      await expect(page.getByText(ar.enums.studentStatus.active, { exact: true }).first()).toBeVisible();
+      await expect(
+        page.getByText(ar.enums.studentStatus.active, { exact: true }).first(),
+      ).toBeVisible();
       expect(await statusAudits(studentId)).toEqual(['active']);
       // No override: the teacher's link is the one the guardian gets.
       await expect(link(TEACHER_LINK)).toBeVisible();

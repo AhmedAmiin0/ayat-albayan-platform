@@ -9,7 +9,11 @@ const day = (ms: number) => iso(ms).slice(0, 10);
 /** The change point: the course's second week (BASE + 7 days). */
 export const CHANGE = BASE + 7 * DAY;
 
-type Course = DaySeed & { sub: string; rules: string[]; lessons: { id: string; rule_id: string; starts_at: string }[] };
+type Course = DaySeed & {
+  sub: string;
+  rules: string[];
+  lessons: { id: string; rule_id: string; starts_at: string }[];
+};
 
 /** One child, an 8-lesson subscription and its course: 17:00 on BASE's weekday + 19:30 two days later, two weeks each. */
 export async function seedCourse(tx: Tx): Promise<Course> {
@@ -38,13 +42,32 @@ type NewRuleInput = { at: number; time: string; first: string | null; sub: strin
 
 function newRule(c: Course, o: NewRuleInput & { id: string }) {
   const lessons = [o.at, o.at + 7 * DAY].map((at) => ({
-    id: randomUUID(), rule_id: o.id, teacher_id: c.teacher, starts_at: iso(at), ends_at: iso(at + 45 * MIN),
-    meeting_link: null, override_reason: null, rescheduled_from_id: null, student_ids: c.students,
+    id: randomUUID(),
+    rule_id: o.id,
+    teacher_id: c.teacher,
+    starts_at: iso(at),
+    ends_at: iso(at + 45 * MIN),
+    meeting_link: null,
+    override_reason: null,
+    rescheduled_from_id: null,
+    student_ids: c.students,
   }));
   return {
-    id: o.id, teacher_id: c.teacher, duration_min: 45, start_time_local: o.time, tz: 'Asia/Riyadh',
-    byday: [new Date(o.at).getUTCDay()], starts_on: day(o.from), ends_on: day(o.from + 14 * DAY), meeting_link: null,
-    package: '8', created_from_lead_id: null, subscription_id: o.sub, first_rule_id: o.first, student_ids: c.students, lessons,
+    id: o.id,
+    teacher_id: c.teacher,
+    duration_min: 45,
+    start_time_local: o.time,
+    tz: 'Asia/Riyadh',
+    byday: [new Date(o.at).getUTCDay()],
+    starts_on: day(o.from),
+    ends_on: day(o.from + 14 * DAY),
+    meeting_link: null,
+    package: '8',
+    created_from_lead_id: null,
+    subscription_id: o.sub,
+    first_rule_id: o.first,
+    student_ids: c.students,
+    lessons,
   };
 }
 
@@ -87,8 +110,13 @@ export function changeOf(c: Course, o: ChangeOptions) {
 type Move = { id: string; from_status: string; to_status: string; chargeable: boolean };
 type ChangeResult = { rule_ids: string[]; ends_on: string | null };
 
-export async function change(tx: Tx, payload: ReturnType<typeof changeOf> & { changes?: Move[] }): Promise<ChangeResult> {
-  const [row] = await tx<{ r: ChangeResult }[]>`select public.change_course(${tx.json(payload)}) as r`;
+export async function change(
+  tx: Tx,
+  payload: ReturnType<typeof changeOf> & { changes?: Move[] },
+): Promise<ChangeResult> {
+  const [row] = await tx<
+    { r: ChangeResult }[]
+  >`select public.change_course(${tx.json(payload)}) as r`;
   if (!row) throw new Error('change_course returned nothing');
   return row.r;
 }

@@ -63,7 +63,13 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
 
     // It leaves from the chat number (the chat WABA's own template), stamped chat.
-    await expect.poll(async () => (await sentVia(CHAT_PN)).filter((m) => m.to === digits && m.template === KEY).length, WAIT).toBe(1);
+    await expect
+      .poll(
+        async () =>
+          (await sentVia(CHAT_PN)).filter((m) => m.to === digits && m.template === KEY).length,
+        WAIT,
+      )
+      .toBe(1);
     expect((await sentVia(NOTIF_PN)).filter((m) => m.to === digits)).toHaveLength(0);
     await expect.poll(async () => (await messagesWithLine(`+${digits}`)).find((m) => m.template_key === KEY), WAIT).toEqual(
       expect.objectContaining({ line: 'chat', status: 'sent' }),

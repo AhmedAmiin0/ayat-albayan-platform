@@ -50,8 +50,22 @@ export function movePayload(s: TrialSeed, newId: string = randomUUID()) {
     teacher_id: s.teacher,
     change: {
       actor: s.actor,
-      changes: [{ id: s.lesson, from_status: 'scheduled', to_status: 'rescheduled', chargeable: false }],
-      lessons: [{ id: newId, rule_id: s.rule, teacher_id: s.teacher, starts_at: iso(at), ends_at: iso(at + 30 * MIN), meeting_link: null, override_reason: null, rescheduled_from_id: s.lesson, student_ids: [s.student] }],
+      changes: [
+        { id: s.lesson, from_status: 'scheduled', to_status: 'rescheduled', chargeable: false },
+      ],
+      lessons: [
+        {
+          id: newId,
+          rule_id: s.rule,
+          teacher_id: s.teacher,
+          starts_at: iso(at),
+          ends_at: iso(at + 30 * MIN),
+          meeting_link: null,
+          override_reason: null,
+          rescheduled_from_id: s.lesson,
+          student_ids: [s.student],
+        },
+      ],
       messages: [],
       audit: { entity: 'lessons', entity_id: s.lesson, action: 'trial_new_date', before: {}, after: {} },
     },
@@ -72,7 +86,14 @@ export function bookPayload(s: TrialSeed) {
       lead: null,
       new_guardian: null,
       new_student: null,
-      lessons: [{ starts_at: iso(at), ends_at: iso(at + 30 * MIN), meeting_link: null, override_reason: null }],
+      lessons: [
+        {
+          starts_at: iso(at),
+          ends_at: iso(at + 30 * MIN),
+          meeting_link: null,
+          override_reason: null,
+        },
+      ],
       messages: [],
       makeup_of: null,
       invoice: null,

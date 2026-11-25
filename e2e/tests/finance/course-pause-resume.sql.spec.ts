@@ -12,19 +12,30 @@ test.describe('course pause resume (docs/11 §7b)', () => {
       const s = await seedPause(tx);
       // The first leaves the group lessons (days 2 and 4); the second is then alone: they are cancelled.
       const first = (await start(tx, pauseOf(s, 0, 5))) as { id: string; left: string[] };
-      const second = (await start(tx, { ...pauseOf(s, 0, 5), student_id: s.other })) as { id: string; cancelled: string[] };
+      const second = (await start(tx, { ...pauseOf(s, 0, 5), student_id: s.other })) as {
+        id: string;
+        cancelled: string[];
+      };
       expect([first.left.length, second.cancelled.length]).toEqual([2, 2]);
       expect(await groupOf(tx, s.group)).toEqual([]);
       // The first-paused resumes first: the lessons come back with it alone (handed over), the other stays out.
       const back = await resume(tx, { pause_id: first.id, actor: s.actor, on: s.today });
       expect((back['rejoined'] as string[]).length).toBe(2);
-      expect((await groupOf(tx, s.group)).map((g) => [g.day, [...g.students].sort()])).toEqual([[2, [s.student]], [4, [s.student]]]);
-      const [kinds] = await tx<{ k: string[] }[]>`select array_agg(kind order by kind) as k from public.course_pause_lessons where pause_id = ${second.id}`;
+      expect((await groupOf(tx, s.group)).map((g) => [g.day, [...g.students].sort()])).toEqual([
+        [2, [s.student]],
+        [4, [s.student]],
+      ]);
+      const [kinds] = await tx<
+        { k: string[] }[]
+      >`select array_agg(kind order by kind) as k from public.course_pause_lessons where pause_id = ${second.id}`;
       expect(kinds?.k).toEqual(['left', 'left']);
       // The second resumes: both on every group lesson again.
       await resume(tx, { pause_id: second.id, actor: s.actor, on: s.today });
       const both = [s.student, s.other].sort();
-      expect((await groupOf(tx, s.group)).map((g) => [g.day, [...g.students].sort()])).toEqual([[2, both], [4, both]]);
+      expect((await groupOf(tx, s.group)).map((g) => [g.day, [...g.students].sort()])).toEqual([
+        [2, both],
+        [4, both],
+      ]);
     });
   });
 

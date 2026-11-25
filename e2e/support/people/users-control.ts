@@ -26,7 +26,10 @@ export async function openUser(page: Page, term: string, name = term): Promise<L
 }
 
 /** Fills the create dialog's identity fields. */
-export async function fillIdentity(dialog: Locator, input: { name: string; email: string }): Promise<void> {
+export async function fillIdentity(
+  dialog: Locator,
+  input: { name: string; email: string },
+): Promise<void> {
   await dialog.getByLabel(ar.users.form.fullName).fill(input.name);
   await dialog.getByLabel(ar.users.form.email).fill(input.email);
 }
@@ -51,7 +54,10 @@ export async function takeIssued(page: Page, title: string): Promise<string> {
 }
 
 /** Submits the login form in a fresh browser context; the page is returned open. */
-export async function signInAs(browser: Browser, creds: { email: string; password: string }): Promise<Page> {
+export async function signInAs(
+  browser: Browser,
+  creds: { email: string; password: string },
+): Promise<Page> {
   const ctx = await browser.newContext({ locale: AR_LOCALE });
   const page = await ctx.newPage();
   await page.goto('/login');

@@ -64,11 +64,21 @@ export interface Expected {
   via?: string;
 }
 
-export async function expectStatus(page: Page, who: Family & { studentId: string }, want: Expected): Promise<void> {
+export async function expectStatus(
+  page: Page,
+  who: Family & { studentId: string },
+  want: Expected,
+): Promise<void> {
   await expect.poll(() => studentStatusOf(who.studentId), { timeout: 20_000 }).toBe(want.to);
   const row = await lastStatusRow(who.studentId);
   if (want.from === null) expect(row).toBeUndefined();
-  else expect(row).toMatchObject({ from: want.from, to: want.to, reason: want.reason, ...(want.via ? { via: want.via } : {}) });
+  else
+    expect(row).toMatchObject({
+      from: want.from,
+      to: want.to,
+      reason: want.reason,
+      ...(want.via ? { via: want.via } : {}),
+    });
   await page.bringToFront(); // the admin's page may hold focus; an open chat polls only while focused (W13)
   await openChat(page, who.phone);
   await checkRegistration(page, statusLine(want.to));
@@ -109,7 +119,9 @@ export async function leadIdOf(phone: string): Promise<string> {
 }
 
 /** The registered child and its newest lesson (the booked trial). */
-export async function childAndTrial(name: string): Promise<{ studentId: string; lessonId: string }> {
+export async function childAndTrial(
+  name: string,
+): Promise<{ studentId: string; lessonId: string }> {
   const [row] = await withSql(
     (sql) => sql<{ student_id: string; lesson_id: string }[]>`
     select s.id as student_id, l.id as lesson_id from public.students s
@@ -121,7 +133,9 @@ export async function childAndTrial(name: string): Promise<{ studentId: string; 
 }
 
 /** The student's newest package: its id, size and currency. */
-export async function newestPackage(studentId: string): Promise<{ id: string; lessons_total: number; currency: string }> {
+export async function newestPackage(
+  studentId: string,
+): Promise<{ id: string; lessons_total: number; currency: string }> {
   const [row] = await withSql(
     (sql) => sql<{ id: string; lessons_total: number; currency: string }[]>`
     select id, lessons_total, currency from public.subscriptions
