@@ -1,5 +1,5 @@
-import { createHmac } from 'node:crypto';
-import { safeEqual } from './webhook.signature';
+import { safeEqual } from '@/common/crypto/safe-equal';
+import { hmacSha256Hex } from '@/common/crypto/hmac';
 
 // Kapso webhook authentication (docs/19). Fails closed: no KAPSO_WEBHOOK_SECRET → every request is
 // refused. Only the Kapso secret is tried here; the Meta route never tries it (and vice versa).
@@ -26,7 +26,7 @@ const single = (v: string | string[] | undefined): string | undefined => (typeof
  */
 export function verifyKapsoSignature({ rawBody, headers, secret }: KapsoSignedRequest): boolean {
   if (!rawBody || !secret || secret.trim() === '') return false;
-  const hex = createHmac('sha256', secret).update(rawBody).digest('hex');
+  const hex = hmacSha256Hex(secret, [rawBody]);
   const kapso = single(headers['x-webhook-signature']);
   const hub = single(headers['x-hub-signature-256']);
   return (kapso !== undefined && safeEqual(kapso, hex)) || (hub !== undefined && safeEqual(hub, `sha256=${hex}`));

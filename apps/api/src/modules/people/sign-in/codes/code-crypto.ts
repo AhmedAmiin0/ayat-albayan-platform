@@ -1,6 +1,7 @@
 import { LOGIN_CODE_LENGTH } from '@ab/shared';
-import { createHmac, randomInt, timingSafeEqual } from 'node:crypto';
+import { createHmac, randomInt } from 'node:crypto';
 import type { CodePurpose, Subject } from '@/modules/people/sign-in/sign-in.ports';
+import { safeEqual } from '@/common/crypto/safe-equal';
 
 /** A 6-digit code from the CSPRNG (leading zeros kept). Never logged, never stored in clear. */
 export function newCode(pick: (max: number) => number = randomInt): string {
@@ -19,8 +20,7 @@ export function hashCode(pepper: string, input: { purpose: CodePurpose; subject:
 /** Constant-time compare of two hex hashes (different lengths are simply unequal). */
 export function sameHash(a: string, b: string): boolean {
   const x = Buffer.from(a, 'hex');
-  const y = Buffer.from(b, 'hex');
-  return x.length === y.length && x.length > 0 && timingSafeEqual(x, y);
+  return x.length > 0 && safeEqual(x, Buffer.from(b, 'hex'));
 }
 
 /** When a code issued now stops working. */

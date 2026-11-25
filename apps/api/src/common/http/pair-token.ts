@@ -1,4 +1,5 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHmac } from 'node:crypto';
+import { safeEqual } from '@/common/crypto/safe-equal';
 
 // A signed pair of uuids with an expiry: base64url(a | b | exp).signature. Binary body (16 + 16 + 4
 // bytes) and a 128-bit signature keep it at 71 characters: Fastify refuses a path parameter over
@@ -61,9 +62,7 @@ function split(token: string): { body: string; sig: string } | null {
 
 /** Constant time; different lengths are a mismatch without comparing. */
 function signedBy(key: PairKey, t: { body: string; sig: string }): boolean {
-  const given = Buffer.from(t.sig);
-  const expected = Buffer.from(mac(key, t.body));
-  return given.length === expected.length && timingSafeEqual(given, expected);
+  return safeEqual(t.sig, mac(key, t.body));
 }
 
 /**

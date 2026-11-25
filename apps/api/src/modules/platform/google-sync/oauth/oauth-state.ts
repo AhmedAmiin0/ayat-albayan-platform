@@ -1,4 +1,5 @@
-import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, randomBytes } from 'node:crypto';
+import { safeEqual } from '@/common/crypto/safe-equal';
 
 // The OAuth `state` (CSRF): base64url({ u: admin id, n: nonce, e: expiry }) + '.' + HMAC-SHA256.
 // The HMAC key is derived from the server's service key (never sent anywhere); the nonce's sha256
@@ -30,9 +31,7 @@ export function newState(input: { userId: string; key: Buffer; now: number }): {
 export function readState(input: { state: string; key: Buffer; now: number }): StatePayload | null {
   const [body, mac, extra] = input.state.split('.');
   if (!body || !mac || extra !== undefined) return null;
-  const want = Buffer.from(sign(body, input.key));
-  const got = Buffer.from(mac);
-  if (want.length !== got.length || !timingSafeEqual(want, got)) return null;
+  if (!safeEqual(sign(body, input.key), mac)) return null;
   try {
     const p = JSON.parse(Buffer.from(body, 'base64url').toString('utf8')) as Partial<StatePayload>;
     if (typeof p.u !== 'string' || typeof p.n !== 'string' || typeof p.e !== 'number') return null;

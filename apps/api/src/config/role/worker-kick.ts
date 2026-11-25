@@ -1,10 +1,11 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHmac } from 'node:crypto';
 import { Logger } from '@nestjs/common';
 import { createHttp } from '@/common/infra/http/http';
 import type { HttpFailure } from '@/common/infra/http/failure';
 import { loadEnv } from '@/config/env/env';
 import { appRole, peerUrls, workerUrl } from './app-role';
 import { kickQueryOf, type KickOptions } from './kick-options';
+import { safeEqual } from '@/common/crypto/safe-equal';
 
 /** The longest a request waits: the kick's 202, or with `wait` (Outbox.send) the worker's pass. */
 const KICK_TIMEOUT_MS = 30_000;
@@ -19,9 +20,7 @@ export const internalToken = (): string =>
     .digest('base64url');
 
 export function validInternalToken(given: string | undefined): boolean {
-  const want = Buffer.from(internalToken());
-  const got = Buffer.from(given ?? '');
-  return got.length === want.length && timingSafeEqual(got, want);
+  return safeEqual(given ?? '', internalToken());
 }
 
 /** The peer route: an API copy's own config reload (jobs.controller), served on API copies too. */

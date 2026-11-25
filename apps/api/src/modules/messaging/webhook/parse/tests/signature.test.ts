@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { safeEqual, verifyChallenge, verifySignature } from '@/modules/messaging/webhook/parse/webhook.signature';
+import { verifyChallenge, verifySignature } from '@/modules/messaging/webhook/parse/webhook.signature';
 
 const secret = 'stub-app-secret';
 const body = Buffer.from('{"object":"whatsapp_business_account","entry":[]}');
@@ -60,13 +60,5 @@ describe('verifyChallenge', () => {
     expect(verifyChallenge({ ...ok, mode: 'unsubscribe' }, 'local-verify')).toBeNull();
     expect(verifyChallenge({ mode: 'subscribe', token: 'local-verify' }, 'local-verify')).toBeNull();
     expect(verifyChallenge(ok, undefined)).toBeNull();
-  });
-});
-
-describe('safeEqual', () => {
-  it('compares by value and handles different lengths', () => {
-    expect(safeEqual('abc', 'abc')).toBe(true);
-    expect(safeEqual('abc', 'abd')).toBe(false);
-    expect(safeEqual('abc', 'abcd')).toBe(false);
   });
 });
