@@ -1,9 +1,11 @@
-// HTTP test harness for the calls routes (test-only, excluded from the build): the real AppModule with
-// its guards and controllers; wa_calls in memory, the Kapso calls API and the setting faked. No hosted call.
+// HTTP test harness for the calls routes (test-only, excluded from the build): its test root
+// with its guards and controllers; wa_calls in memory, the Kapso calls API and the setting faked.
+// No hosted call.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { CallsModule } from './calls.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -37,7 +39,7 @@ export async function callsApp(input: { on: boolean }) {
     teacher: vi.fn(async () => ({ id: 'tch1', display_name_ar: 'معلمة', phone_e164: '+201009999999' })),
     phones: vi.fn(async () => [FAMILY]),
   };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(CallsModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(CallsRepo).useValue(queries)
     .overrideProvider(CALLS_API).useValue(api)

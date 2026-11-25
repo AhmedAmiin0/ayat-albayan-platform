@@ -65,7 +65,7 @@ async function seedMonth(teacherId: string, month: string) {
   return { a: await lesson('10', 45), b: await lesson('11', 45), absent: await lesson('12', 60), last: await lesson('13', 60) };
 }
 
-type PayoutRow = { status: string; lessons_count: number; amount: number };
+interface PayoutRow { status: string; lessons_count: number; amount: number }
 
 async function payoutOf(teacherId: string, month: string): Promise<PayoutRow | undefined> {
   return withSql(async (sql) => {

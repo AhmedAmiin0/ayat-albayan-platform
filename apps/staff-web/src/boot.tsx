@@ -1,6 +1,12 @@
 import { createRouter } from '@tanstack/react-router';
-import { returnSearchOf, signOut, renderApp, notFoundState, routeStates, t } from '@ab/web-kit';
+import { returnSearchOf } from '@ab/web-kit/auth/return-to';
+import { signOut } from '@ab/web-kit/auth/sign-in';
+import { renderApp } from '@ab/web-kit/boot/render-app';
+import { notFoundState, routeStates } from '@ab/web-kit/boot/route-states';
+import { onSessionEnd } from '@ab/web-kit/lib/session/session-end';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { rememberUntilSessionEnd } from '@/features/messaging/inbox';
+import { forgetAllKept } from '@/features/teaching/booking';
 import { createQueryClient, queryErrorHandler, ROUTER_DEFAULTS } from '@/lib/query';
 import { routeTree } from './routeTree.gen';
 
@@ -30,6 +36,7 @@ declare module '@tanstack/react-router' {
 
 // The inbox's unsent replies and drafts go when the session ends (sign-out, another tab).
 rememberUntilSessionEnd();
+onSessionEnd(forgetAllKept);
 // Maintenance never covers a lesson room, and sign-in stays open so an admin can get in.
 const maintenance = {
   staff: true,

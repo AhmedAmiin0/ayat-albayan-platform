@@ -28,13 +28,13 @@ export async function pastLesson(
   return l.id;
 }
 
-export type EarningRow = {
+export interface EarningRow {
   minutes: number;
   rate: string;
   amount: string;
   paid_amount: string;
   status: string;
-};
+}
 
 export const earningOf = async (tx: Tx, lesson: string): Promise<EarningRow | undefined> => {
   const [e] = await tx<EarningRow[]>`select minutes, rate, amount, paid_amount, status

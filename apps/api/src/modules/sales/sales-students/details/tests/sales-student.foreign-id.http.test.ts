@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { SalesStudentModule } from '@/modules/sales/sales-students/details/sales-student.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -23,7 +24,7 @@ async function pdfApp() {
   const reports = { get: vi.fn() };
   const files = { pdfName: vi.fn() };
   const storage = { signedDownload: vi.fn() };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [featureRoot(SalesStudentModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ReportsQueries).useValue(reports)

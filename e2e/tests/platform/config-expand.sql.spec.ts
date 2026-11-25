@@ -5,8 +5,8 @@ import { USERS } from '../../support/core/users';
 // Migration 630 (docs/26 §2a, 26-P1 «Expand») against the real database, every test rolled back. Only
 // throwaway zz_e2e_* keys are written: never a messaging or gate key.
 
-type Row = { key: string; value: unknown; version: string; updated_at: Date };
-type Err = { code?: string; detail?: string };
+interface Row { key: string; value: unknown; version: string; updated_at: Date }
+interface Err { code?: string; detail?: string }
 const fail = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then((): Err => ({}), (e: Err) => e);
 // ::text::jsonb: a bare ::jsonb makes postgres.js serialise the string again (a JSON string, not an array).
 const json = (v: unknown) => JSON.stringify(v);

@@ -2,7 +2,8 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { PublicConfigModule } from './public-config.module';
 import { PERMISSION_RESOLVER, systemResolver } from '@/common/auth/auth.guard';
 import { CustomConfigService } from '@/common/configuration/custom-config/custom-config.service';
 import { fakeConfigStore } from '@/common/configuration/config-store/config-store.fakes';
@@ -23,7 +24,7 @@ describe('GET /settings/public (no login)', () => {
   const get = () => app.inject({ method: 'GET', url: '/settings/public' });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(PublicConfigModule)] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(SettingsService).useValue(settings)
       .overrideProvider(CustomConfigService).useValue(custom)

@@ -1,7 +1,9 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { SignInModule } from '@/modules/people/sign-in';
+import { ShortLinksAdminModule } from './short-links-admin.module';
 import { AuditService } from '@/common/audit/audit.service';
 import {
   PERMISSION_RESOLVER,
@@ -57,7 +59,7 @@ const fakes = () => ({
   system: { row: vi.fn() },
 });
 
-/** AppModule with every short-link repo, the send, the audit and the rate limit as vi.fn. */
+/** The short-links test root with every repo, the send, the audit and the rate limit as vi.fn. */
 export async function linksApp() {
   const f = fakes();
   const overrides: readonly (readonly [unknown, unknown])[] = [
@@ -77,7 +79,7 @@ export async function linksApp() {
   const mod = await overrides
     .reduce(
       (b, [token, value]) => b.overrideProvider(token).useValue(value),
-      Test.createTestingModule({ imports: [AppModule] }),
+      Test.createTestingModule({ imports: [messagingRoot(ShortLinksAdminModule, SignInModule)] }),
     )
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

@@ -19,7 +19,7 @@ async function teacher(tx: Tx, link: string | null = OLD): Promise<string> {
   return row.id;
 }
 
-type Lesson = { teacherId: string; inDays: number; status?: string; link: string | null };
+interface Lesson { teacherId: string; inDays: number; status?: string; link: string | null }
 async function lesson(tx: Tx, l: Lesson): Promise<string> {
   const starts = new Date(Date.now() + l.inDays * DAY);
   const ends = new Date(starts.getTime() + 45 * 60_000);

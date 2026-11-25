@@ -1,7 +1,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -35,7 +35,7 @@ describe('TeachersController — meeting_mode', () => {
     app.inject({ method, url, payload: opts.body, headers: { authorization: `Bearer ${opts.token ?? 'admin'}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule, TeachersModule] })
+    const mod = await Test.createTestingModule({ imports: [messagingRoot(TeachersModule)] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(TeachersRepo).useValue(teachers)

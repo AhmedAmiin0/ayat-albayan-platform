@@ -2,7 +2,10 @@
 import type { PortalGuardian, PortalStudent } from '@ab/shared';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { StudentChannelsModule } from '@/modules/teaching/student-channels';
+import { StudentRecordingsModule } from '@/modules/teaching/student-recordings';
+import { PortalModule } from './portal.module';
 import { bootWith } from '@/common/auth/auth.fakes';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -94,7 +97,9 @@ export async function portalApp() {
   const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${ref.seconds}` })) };
   const chat = { e164: vi.fn(async (): Promise<string | null> => '+966500000000') };
   const guardian = { ownOf: vi.fn(async (): Promise<PortalGuardian | null> => GUARDIAN) };
-  const builder = Test.createTestingModule({ imports: [AppModule] })
+  const builder = Test.createTestingModule({
+    imports: [messagingRoot(PortalModule, StudentRecordingsModule, StudentChannelsModule)],
+  })
     .overrideProvider(PortalScopeRepo).useValue(scope)
     .overrideProvider(PortalLessonsRepo).useValue(lessons)
     .overrideProvider(PortalReportsRepo).useValue(reports)
