@@ -81,7 +81,11 @@ export class ThreadReads {
   async detail(q: ThreadPageQuery, user: AuthUser): Promise<ThreadDetail> {
     const mine = await this.salesScope(user);
     const scope = mine ? null : await this.scopes.of(user);
-    if (scope) return this.reactable(await this.quoted(await this.teacher.detail(q, scope), q.phone), q.phone !== scope.ownPhone);
+    if (scope)
+      return this.reactable(
+        await this.quoted(await this.teacher.detail(q, scope), q.phone),
+        q.phone !== scope.ownPhone,
+      );
     const detail = mine ? await this.salesService().detail(q) : await this.admin.detail(q);
     // The quoted bubbles and the chat's lists are independent reads: in parallel.
     const [quoted, listed] = await Promise.all([
@@ -94,7 +98,8 @@ export class ThreadReads {
   /** A teacher never reacts on their own chat. */
   private async reactable(detail: ThreadDetail, may: boolean): Promise<ThreadDetail> {
     if (!detail.thread || !this.rows) return detail;
-    const reactable = may && (await threadReactable(this.rows, detail.thread.phone_e164, new Date()));
+    const reactable =
+      may && (await threadReactable(this.rows, detail.thread.phone_e164, new Date()));
     return { ...detail, thread: { ...detail.thread, reactable } };
   }
 
@@ -115,7 +120,9 @@ export class ThreadReads {
   }
 
   private async quoted(detail: ThreadDetail, phone: string): Promise<ThreadDetail> {
-    return this.quotes ? { ...detail, messages: await this.quotes.attach(detail.messages, phone) } : detail;
+    return this.quotes
+      ? { ...detail, messages: await this.quotes.attach(detail.messages, phone) }
+      : detail;
   }
 
   private salesService(): SalesThreadsService {
@@ -124,4 +131,7 @@ export class ThreadReads {
   }
 }
 
-const splitAt = (all: MessageView[], n: number) => ({ messages: all.slice(0, n), pending: all.slice(n) });
+const splitAt = (all: MessageView[], n: number) => ({
+  messages: all.slice(0, n),
+  pending: all.slice(n),
+});

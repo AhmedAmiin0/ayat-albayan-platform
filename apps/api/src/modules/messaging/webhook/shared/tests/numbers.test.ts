@@ -65,7 +65,11 @@ describe('parseWebhook in module mode', () => {
   });
 
   it('legacy (overlay null / absent): no numberId key at all', () => {
-    const batch = parseWebhook(body(PHONE_NUMBER_ID), { now: NOW, numbers: { notifications: PHONE_NUMBER_ID }, overlay: null });
+    const batch = parseWebhook(body(PHONE_NUMBER_ID), {
+      now: NOW,
+      numbers: { notifications: PHONE_NUMBER_ID },
+      overlay: null,
+    });
     expect(batch.messages[0]).not.toHaveProperty('numberId');
     expect(batch.messages[0]?.line).toBeNull();
   });

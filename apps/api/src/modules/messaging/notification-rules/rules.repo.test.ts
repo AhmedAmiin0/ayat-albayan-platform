@@ -22,16 +22,32 @@ describe('RulesQueries.reach and classroom', () => {
   const health = { all: vi.fn(async () => []) } as unknown as LineHealthStore;
 
   it('three head counts: guardians, active teachers with a phone, leads', async () => {
-    const f = fakeDb({ guardians: [{ count: 7 }], teachers: [{ count: 2 }], leads: [{ count: 11 }] });
-    await expect(new RulesRepo(f.db, health, () => true).reach()).resolves.toEqual({ guardian: 7, teacher: 2, lead: 11 });
+    const f = fakeDb({
+      guardians: [{ count: 7 }],
+      teachers: [{ count: 2 }],
+      leads: [{ count: 11 }],
+    });
+    await expect(new RulesRepo(f.db, health, () => true).reach()).resolves.toEqual({
+      guardian: 7,
+      teacher: 2,
+      lead: 11,
+    });
     expect(f.argsOf('guardians', 'select')).toEqual(['id', { count: 'exact', head: true }]);
     expect(f.argsOf('teachers', 'eq')).toEqual(['status', 'active']);
     expect(f.argsOf('teachers', 'not')).toEqual(['phone_e164', 'is', null]);
   });
 
   it('a failed count reads 0 and never fails the list', async () => {
-    const f = fakeDb({ guardians: [{ error: { message: 'boom' } }], teachers: [{ count: null }], leads: [{ count: 3 }] });
-    await expect(new RulesRepo(f.db, health, () => true).reach()).resolves.toEqual({ guardian: 0, teacher: 0, lead: 3 });
+    const f = fakeDb({
+      guardians: [{ error: { message: 'boom' } }],
+      teachers: [{ count: null }],
+      leads: [{ count: 3 }],
+    });
+    await expect(new RulesRepo(f.db, health, () => true).reach()).resolves.toEqual({
+      guardian: 0,
+      teacher: 0,
+      lead: 3,
+    });
   });
 
   it('classroom() asks the injected check each time', () => {

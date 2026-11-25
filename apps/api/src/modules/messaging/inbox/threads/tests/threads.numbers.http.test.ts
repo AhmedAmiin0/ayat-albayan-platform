@@ -26,7 +26,9 @@ describe('inbox replies per number (module mode)', () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: NUMBERS });
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', template_key: null, template_params: null }));
     t.queries.get.mockResolvedValue(null);
-    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: OLD, last_notifications_inbound_at: OLD }));
+    t.queries.thread.mockResolvedValue(
+      threadRow({ last_inbound_at: OLD, last_notifications_inbound_at: OLD }),
+    );
   });
   const enqueued = () => t.queries.enqueue.mock.calls[0]?.[0] as Record<string, unknown>;
 
@@ -57,7 +59,9 @@ describe('inbox replies per number (module mode)', () => {
 
   it('legacy: the windows are never read and no number_id is queued', async () => {
     setNumbersOverlay(null);
-    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, last_notifications_inbound_at: FRESH }));
+    t.queries.thread.mockResolvedValue(
+      threadRow({ last_inbound_at: FRESH, last_notifications_inbound_at: FRESH }),
+    );
     expect((await t.call(TEXT)).statusCode).toBe(201);
     expect(t.queries.numberWindows).not.toHaveBeenCalled();
     expect(enqueued()).not.toHaveProperty('number_id');

@@ -32,9 +32,21 @@ describe('RulesSettingsBridge.overlay (docs/26b m1/m3)', () => {
 
   it('module mode: the 8 keys from the rules; every other key unchanged', async () => {
     const out = await bridge().b.overlay(module);
-    expect(out).toMatchObject({ reminder_minutes_before: 30, follow_up_slots_from_hours: 5, follow_up_slots_to_days: 9 });
-    const others = Object.keys(module).filter((k) => !['reminder_minutes_before', 'follow_up_slots_from_hours', 'follow_up_slots_to_days'].includes(k));
-    for (const k of others) expect([k, out[k as keyof AcademySettings]]).toEqual([k, module[k as keyof AcademySettings]]);
+    expect(out).toMatchObject({
+      reminder_minutes_before: 30,
+      follow_up_slots_from_hours: 5,
+      follow_up_slots_to_days: 9,
+    });
+    const others = Object.keys(module).filter(
+      (k) =>
+        ![
+          'reminder_minutes_before',
+          'follow_up_slots_from_hours',
+          'follow_up_slots_to_days',
+        ].includes(k),
+    );
+    for (const k of others)
+      expect([k, out[k as keyof AcademySettings]]).toEqual([k, module[k as keyof AcademySettings]]);
   });
 
   it('legacy mode: unchanged and no rules read', async () => {

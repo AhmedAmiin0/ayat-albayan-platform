@@ -30,7 +30,13 @@ const toLesson = (row: LessonRow, tz: string): ThreadLesson => ({
 /** What the lessons are looked up by: a thread, or a number with no message yet (KnownNumber). */
 export type LessonsOf = Pick<ThreadView, 'guardian_id' | 'guardian_tz' | 'teacher_id'>;
 
-type ReadBy = { select: string; column: string; id: string; now: Date; teacherId?: string | undefined };
+type ReadBy = {
+  select: string;
+  column: string;
+  id: string;
+  now: Date;
+  teacherId?: string | undefined;
+};
 
 async function read(db: Db, by: ReadBy): Promise<LessonRow[]> {
   let query = db.from('lessons').select(by.select).eq(by.column, by.id);

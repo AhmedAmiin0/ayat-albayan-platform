@@ -14,15 +14,33 @@ const TEACHER = 'a0000000-0000-4000-8000-000000000001';
 const PHONE = '+966500000001';
 const NOW = new Date('2026-10-02T08:00:00Z');
 const dispatch = { send: vi.fn(), ready: vi.fn(() => true), multi: false };
-const queries = { claim: vi.fn(async () => 1), sent: vi.fn(async () => true), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
+const queries = {
+  claim: vi.fn(async () => 1),
+  sent: vi.fn(async () => true),
+  failure: vi.fn(),
+  expire: vi.fn(),
+  staffAtSend: vi.fn(),
+};
 const teacherRow = (over: Partial<DueMessage> = {}) =>
   dueMessage({ phone_e164: PHONE, template_key: 'teacher_lesson_reminder', dedup_key: `teacher_lesson_reminder:l1:${TEACHER}`, ...over });
 
 function run(row: DueMessage, teachers: FakeResult) {
   const { db, calls } = fakeDb({ teachers: [teachers] });
   queries.staffAtSend.mockImplementation((r: DueMessage) => staffAtSend(db, r));
-  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, {} as PushService);
-  return { calls, outcome: w.process({ row, template: templateRow({ key: row.template_key ?? '' }), now: NOW, autoOn: true }) };
+  const w = new MessageWorker(
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+    {} as PushService,
+  );
+  return {
+    calls,
+    outcome: w.process({
+      row,
+      template: templateRow({ key: row.template_key ?? '' }),
+      now: NOW,
+      autoOn: true,
+    }),
+  };
 }
 
 describe('staff WhatsApp checked at send time', () => {

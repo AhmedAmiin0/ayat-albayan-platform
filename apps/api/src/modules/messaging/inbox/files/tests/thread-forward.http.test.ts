@@ -77,8 +77,15 @@ describe('POST /threads/forward «إعادة توجيه» (owner 2026-10-25)', (
 
   it('a salesperson forwards under her own dedup space and id', async () => {
     await t.call(forward({ targets: [OPEN], token: 'sales' }));
-    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ dedup_key: `sales:${SALES.id}:${OPEN}:${REQ}`, forwarded_from_id: SRC }));
-    expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: expect.objectContaining({ sales_id: SALES.id }) }));
+    expect(t.queries.enqueue).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dedup_key: `sales:${SALES.id}:${OPEN}:${REQ}`,
+        forwarded_from_id: SRC,
+      }),
+    );
+    expect(t.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: expect.objectContaining({ sales_id: SALES.id }) }),
+    );
   });
 
   it('a teacher: a target outside their families is skipped as not_your_thread, theirs gets it', async () => {

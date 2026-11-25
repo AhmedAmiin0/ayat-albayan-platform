@@ -23,12 +23,15 @@ export type PeopleOf = Pick<ThreadRow, 'guardian_id' | 'guardian_name' | 'lead_i
 
 export async function threadPeople(deps: PeopleDeps, row: PeopleOf | null): Promise<ThreadPeople> {
   const guardian = row?.guardian_id ? { id: row.guardian_id, name: row.guardian_name ?? '' } : null;
-  const lead = row?.lead_id && row.lead_status ? { id: row.lead_id, status: row.lead_status } : null;
+  const lead =
+    row?.lead_id && row.lead_status ? { id: row.lead_id, status: row.lead_status } : null;
   if (!guardian) return { guardian, lead, students: [] };
   const { data, error } = await deps.db.from('students').select(STUDENTS).eq('guardian_id', guardian.id).order('created_at');
   if (error) throw dbError(error);
   // one S6 balance read per child (a family has a handful); batch if families grow.
-  const students = await Promise.all(data.map(async (s) => toThreadStudent(s, await deps.packages.studentBalance(s.id))));
+  const students = await Promise.all(
+    data.map(async (s) => toThreadStudent(s, await deps.packages.studentBalance(s.id))),
+  );
   return { guardian, lead, students };
 }
 

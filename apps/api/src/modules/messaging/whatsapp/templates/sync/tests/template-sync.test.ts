@@ -5,7 +5,9 @@ import { RECORDED, REMINDER_24H, templateRow } from '@/modules/messaging/whatsap
 import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
-const recorded = RECORDED.templates.body.data.map((t) => toMetaTemplate({ ...t, components: [...t.components] }));
+const recorded = RECORDED.templates.body.data.map((t) =>
+  toMetaTemplate({ ...t, components: [...t.components] }),
+);
 
 function meta(over: Partial<MetaTemplate>): MetaTemplate {
   return { id: 'meta-1', name: 'x', language: 'ar', status: 'APPROVED', category: 'UTILITY', quality: 'GREEN', components: [], rejectedReason: null, ...over };

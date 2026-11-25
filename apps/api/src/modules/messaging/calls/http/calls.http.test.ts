@@ -15,7 +15,12 @@ describe('calls routes (docs/28 §4)', () => {
   it('off: /calls/config says so, every other route is 404 calls_disabled and nothing reaches Kapso', async () => {
     app = await callsApp({ on: false });
     const config = await app.call({ method: 'GET', url: '/calls/config' });
-    expect(config.json()).toEqual({ enabled: false, available: true, canCall: true, iceServers: [] });
+    expect(config.json()).toEqual({
+      enabled: false,
+      available: true,
+      canCall: true,
+      iceServers: [],
+    });
     for (const req of [
       { method: 'GET' as const, url: '/calls/active' },
       { method: 'GET' as const, url: '/calls' },

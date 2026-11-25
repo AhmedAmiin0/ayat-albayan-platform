@@ -6,7 +6,10 @@ const BASE = { SUPABASE_URL: 'http://localhost:54321', SUPABASE_SERVICE_ROLE_KEY
 
 describe('senderTiming: the outbound tick', () => {
   it('unset keeps the production cadence (30 s, first run 30 s after boot)', () => {
-    expect(senderTiming(undefined)).toEqual({ firstMs: SENDER_FIRST_RUN_MS, everyMs: SENDER_POLL_MS });
+    expect(senderTiming(undefined)).toEqual({
+      firstMs: SENDER_FIRST_RUN_MS,
+      everyMs: SENDER_POLL_MS,
+    });
     expect(SENDER_POLL_MS).toBe(30_000);
   });
 

@@ -7,7 +7,13 @@ import { NOW, reactionHarness, request, target } from '@/modules/messaging/inbox
 
 const SALES = { salesId: 'a1' } as never;
 const refused = async (p: Promise<unknown>) =>
-  p.then(() => null, (e: unknown) => [(e as { getStatus(): number }).getStatus(), (e as { getResponse(): { code: string } }).getResponse().code]);
+  p.then(
+    () => null,
+    (e: unknown) => [
+      (e as { getStatus(): number }).getStatus(),
+      (e as { getResponse(): { code: string } }).getResponse().code,
+    ],
+  );
 
 describe('ThreadReactionService — sales and link templates', () => {
   it.each(['lesson_feedback_request', 'lesson_join_link'])('a salesperson reacting to %s: 404, nothing written or sent', async (key) => {

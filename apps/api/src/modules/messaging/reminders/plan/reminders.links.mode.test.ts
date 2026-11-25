@@ -17,8 +17,11 @@ const platform = sampleLesson({ id: 'lesson-p', teacher: teacher('t-p', 'platfor
 const fixed = sampleLesson({ id: 'lesson-s', teacher: teacher('t-s', 'static') });
 const academy = sampleLesson({ id: 'lesson-a', teacher: teacher('t-a', null) });
 
-const links = (ctx: RoomContext) => Object.fromEntries(sentLinks([platform, fixed, academy], ctx).map((l) => [l.id, l.meeting_link]));
-const familyLessons = (ctx: RoomContext) => [...new Set(joinCandidates([platform, fixed, academy], ctx, DUE).map((c) => c.lessonId))];
+const links = (ctx: RoomContext) =>
+  Object.fromEntries(sentLinks([platform, fixed, academy], ctx).map((l) => [l.id, l.meeting_link]));
+const familyLessons = (ctx: RoomContext) => [
+  ...new Set(joinCandidates([platform, fixed, academy], ctx, DUE).map((c) => c.lessonId)),
+];
 
 describe('per-teacher meeting mode', () => {
   it('academy OFF: the platform teacher gets our classroom, the static and default teachers their fixed link', () => {

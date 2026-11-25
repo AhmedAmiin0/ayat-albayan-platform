@@ -52,6 +52,11 @@ const DAY_BEFORE_AT_HOURS = 48;
  * reminder at the lesson's own time is 23–25 h ahead), widened to 48 h only while the day-before
  * reminder is on with a fixed send_at_local hour.
  */
-export function lookaheadHours(lookahead: number, rules: Pick<ReminderRules, 'dayBefore' | 'dayBeforeAt'>): number {
-  return rules.dayBefore && rules.dayBeforeAt !== null ? Math.max(lookahead, DAY_BEFORE_AT_HOURS) : lookahead;
+export function lookaheadHours(
+  lookahead: number,
+  rules: Pick<ReminderRules, 'dayBefore' | 'dayBeforeAt'>,
+): number {
+  return rules.dayBefore && rules.dayBeforeAt !== null
+    ? Math.max(lookahead, DAY_BEFORE_AT_HOURS)
+    : lookahead;
 }

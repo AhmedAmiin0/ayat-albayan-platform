@@ -58,8 +58,13 @@ export class WebhookController {
    */
   @Post()
   @HttpCode(200)
-  async receive(@Req() req: RawRequest, @Headers('x-hub-signature-256') signature?: string): Promise<void> {
-    if (!verifySignature({ rawBody: req.rawBody, header: signature, secrets: this.config.appSecrets })) {
+  async receive(
+    @Req() req: RawRequest,
+    @Headers('x-hub-signature-256') signature?: string,
+  ): Promise<void> {
+    if (
+      !verifySignature({ rawBody: req.rawBody, header: signature, secrets: this.config.appSecrets })
+    ) {
       throw new UnauthorizedException();
     }
     await within(this.webhook.handle(req.body), RESPONSE_BUDGET_MS);

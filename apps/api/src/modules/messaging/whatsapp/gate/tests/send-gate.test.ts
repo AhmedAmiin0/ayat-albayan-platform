@@ -17,14 +17,20 @@ describe('SendGate — WhatsApp configured AND the admin kill switch (no env fus
 
   it('configured: the admin’s settings.messaging_enabled alone decides', async () => {
     stubWhatsapp();
-    const { gate } = fakeGate([rows({ messaging_enabled: false }), rows({ messaging_enabled: true })]);
+    const { gate } = fakeGate([
+      rows({ messaging_enabled: false }),
+      rows({ messaging_enabled: true }),
+    ]);
     await expect(gate.open()).resolves.toBe(false);
     await expect(gate.open()).resolves.toBe(true);
   });
 
   it('a leftover MESSAGING_ENABLED in the server env changes nothing, either way', async () => {
     stubWhatsapp();
-    const { gate } = fakeGate([rows({ messaging_enabled: false }), rows({ messaging_enabled: true })]);
+    const { gate } = fakeGate([
+      rows({ messaging_enabled: false }),
+      rows({ messaging_enabled: true }),
+    ]);
     vi.stubEnv('MESSAGING_ENABLED', 'true');
     await expect(gate.open()).resolves.toBe(false);
     vi.stubEnv('MESSAGING_ENABLED', 'false');
@@ -35,13 +41,19 @@ describe('SendGate — WhatsApp configured AND the admin kill switch (no env fus
     vi.stubEnv('WA_API_BASE', '');
     await expect(fakeGate([]).gate.state()).resolves.toEqual({ open: false, reason: 'not_configured' });
     stubWhatsapp();
-    const { gate } = fakeGate([rows({ messaging_enabled: false }), rows({ messaging_enabled: true })]);
+    const { gate } = fakeGate([
+      rows({ messaging_enabled: false }),
+      rows({ messaging_enabled: true }),
+    ]);
     await expect(gate.state()).resolves.toEqual({ open: false, reason: 'switch_off' });
     await expect(gate.state()).resolves.toEqual({ open: true, reason: null });
   });
 
   it('automaticOn is the admin’s settings.auto_messages_enabled (OFF when missing), independent of the gate', async () => {
-    const { gate } = fakeGate([rows({}), rows({ auto_messages_enabled: true, messaging_enabled: false })]);
+    const { gate } = fakeGate([
+      rows({}),
+      rows({ auto_messages_enabled: true, messaging_enabled: false }),
+    ]);
     await expect(gate.automaticOn()).resolves.toBe(false);
     await expect(gate.automaticOn()).resolves.toBe(true);
   });

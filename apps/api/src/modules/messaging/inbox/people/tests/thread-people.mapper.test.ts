@@ -13,7 +13,13 @@ const STUDENT: PeopleStudentRow = {
   teacher: { display_name_ar: 'أبرار' },
 };
 
-const unit = (input: { id: string; student?: string; used: number; total: number; last: boolean }): BalanceRow => ({
+const unit = (input: {
+  id: string;
+  student?: string;
+  used: number;
+  total: number;
+  last: boolean;
+}): BalanceRow => ({
   subscription_id: input.id,
   student_id: input.student ?? STUDENT_ID,
   lessons_total: input.total,
@@ -26,21 +32,49 @@ const unit = (input: { id: string; student?: string; used: number; total: number
 
 /** The real S6 chain: rows + v_subscription_balance + payments → StudentBalanceView. */
 function s6(subs: SubRow[], ctx: { balances: BalanceRow[]; paid: Record<string, number> }) {
-  const maps = { balances: new Map(ctx.balances.map((b) => [b.subscription_id, b])), paid: new Map(Object.entries(ctx.paid)) };
-  return toStudentBalance(STUDENT_ID, subs.map((s) => toSubscriptionView(s, maps)));
+  const maps = {
+    balances: new Map(ctx.balances.map((b) => [b.subscription_id, b])),
+    paid: new Map(Object.entries(ctx.paid)),
+  };
+  return toStudentBalance(
+    STUDENT_ID,
+    subs.map((s) => toSubscriptionView(s, maps)),
+  );
 }
 
 describe('toThreadStudent (R-SUB-01): the chat’s student card', () => {
   it('no package yet → subscription null; a missing code reads as empty', () => {
-    const v = toThreadStudent({ ...STUDENT, code: null, teacher: null }, s6([], { balances: [], paid: {} }));
-    expect(v).toEqual({ id: STUDENT_ID, name: 'سهيلة', code: '', teacher_name: null, status: 'active', subscription: null });
+    const v = toThreadStudent(
+      { ...STUDENT, code: null, teacher: null },
+      s6([], { balances: [], paid: {} }),
+    );
+    expect(v).toEqual({
+      id: STUDENT_ID,
+      name: 'سهيلة',
+      code: '',
+      teacher_name: null,
+      status: 'active',
+      subscription: null,
+    });
   });
 
   it('early renewal: lessons across both packages (FIFO), money of the newest', () => {
     const old = subRow({ id: 'old', status: 'active' });
-    const renewal = subRow({ id: 'new', package: '8', lessons_total: 8, price: 290.5, starts_on: '2026-10-20' });
-    const balances = [unit({ id: 'old', used: 2, total: 4, last: false }), unit({ id: 'new', used: 0, total: 8, last: true })];
-    const v = toThreadStudent(STUDENT, s6([old, renewal], { balances, paid: { old: 145, new: 100.2 } }));
+    const renewal = subRow({
+      id: 'new',
+      package: '8',
+      lessons_total: 8,
+      price: 290.5,
+      starts_on: '2026-10-20',
+    });
+    const balances = [
+      unit({ id: 'old', used: 2, total: 4, last: false }),
+      unit({ id: 'new', used: 0, total: 8, last: true }),
+    ];
+    const v = toThreadStudent(
+      STUDENT,
+      s6([old, renewal], { balances, paid: { old: 145, new: 100.2 } }),
+    );
     expect(v.teacher_name).toBe('أبرار');
     expect(v.subscription).toEqual({
       ...{ id: 'new', status: 'unpaid', package_size: '8', lessons_total: 12, lessons_used: 2, lessons_remaining: 10 },

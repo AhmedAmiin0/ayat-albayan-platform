@@ -31,7 +31,10 @@ import { RulesWriter } from './store/rules.writer';
   imports: [ActivityModule],
   controllers: [RulesController, RulesAliasController],
   providers: [
-    { provide: RULES_CLASSROOM, useFactory: (): ClassroomOn => () => livekitEnv(loadEnv()) !== null },
+    {
+      provide: RULES_CLASSROOM,
+      useFactory: (): ClassroomOn => () => livekitEnv(loadEnv()) !== null,
+    },
     NotificationRulesSettings,
     RulesSourceSettings,
     RulesRepo,

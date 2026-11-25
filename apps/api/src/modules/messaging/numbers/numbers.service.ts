@@ -11,7 +11,8 @@ import { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
 /** What the audit keeps of a number: no health, no secret (secrets are not on the row anyway). */
 function audited(row: NumberRow | null): Json {
   if (!row) return null;
-  const { id, label, purpose, provider, phone_number_id, waba_id, app_id, enabled, is_default } = row;
+  const { id, label, purpose, provider, phone_number_id, waba_id, app_id, enabled, is_default } =
+    row;
   return { id, label, purpose, provider, phone_number_id, waba_id, app_id, enabled, is_default };
 }
 
@@ -61,7 +62,10 @@ export class NumbersService {
     const { is_default: isDefault, ...rest } = body;
     if (isDefault === true && !(rest.enabled ?? before.enabled)) throw new ConflictException({ message: 'not_enabled' });
     assertKapsoCalls({ ...before, ...rest });
-    const patch = { ...numberPatch(before, rest), ...(isDefault === false ? { is_default: false as const } : {}) };
+    const patch = {
+      ...numberPatch(before, rest),
+      ...(isDefault === false ? { is_default: false as const } : {}),
+    };
     let wrote = Object.keys(patch).length > 0;
     if (wrote && !(await this.queries.update(id, { patch, actorId }))) missing();
     try {
@@ -90,14 +94,20 @@ export class NumbersService {
     await this.effects.after({ actorId, entity: 'wa_numbers', entityId: id, action: 'delete', before: audited(before) });
   }
 
-  async setSecret(target: { id: string; name: NumberSecretName; value: string }, actorId: string): Promise<NumberView> {
+  async setSecret(
+    target: { id: string; name: NumberSecretName; value: string },
+    actorId: string,
+  ): Promise<NumberView> {
     if (!(await this.queries.byId(target.id))) missing();
     await this.secrets.set({ id: target.id, name: target.name }, target.value);
     await this.effects.after({ actorId, entity: 'wa_numbers', entityId: target.id, action: 'secret_set', after: { name: target.name } });
     return this.view(target.id);
   }
 
-  async clearSecret(target: { id: string; name: NumberSecretName }, actorId: string): Promise<NumberView> {
+  async clearSecret(
+    target: { id: string; name: NumberSecretName },
+    actorId: string,
+  ): Promise<NumberView> {
     if (!(await this.queries.byId(target.id))) missing();
     const cleared = await this.secrets.clear(target);
     await this.effects.after({ actorId, entity: 'wa_numbers', entityId: target.id, action: 'secret_clear', after: { name: target.name, cleared } });

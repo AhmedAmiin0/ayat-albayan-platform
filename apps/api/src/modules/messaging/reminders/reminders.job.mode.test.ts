@@ -24,11 +24,23 @@ describe('RemindersJob — per-teacher meeting mode', () => {
     it(`academy ${auto ? 'ON' : 'OFF'}: the platform lesson goes out with the classroom, the static one with its fixed link`, async () => {
       const { job, queries, queued } = fakeJob({ settings: { meeting_link_auto: auto }, approved: ['lesson_join_link'], lessons });
       await job.runOnce(NOW);
-      const keys = (id: string) => queued.filter((r) => r.lesson_id === id).map((r) => r.template_key);
-      expect(keys('lesson-p')).toEqual(['lesson_reminder_plain', 'lesson_reminder_plain', 'teacher_lesson_reminder']);
-      expect(keys('lesson-s')).toEqual(['lesson_reminder', 'lesson_reminder', 'teacher_lesson_reminder']);
-      const teacherRow = (id: string) => queued.find((r) => r.lesson_id === id && r.template_key === 'teacher_lesson_reminder');
-      expect(teacherRow('lesson-p')?.template_params['2']).toContain('https://app.example/classroom/lesson-p');
+      const keys = (id: string) =>
+        queued.filter((r) => r.lesson_id === id).map((r) => r.template_key);
+      expect(keys('lesson-p')).toEqual([
+        'lesson_reminder_plain',
+        'lesson_reminder_plain',
+        'teacher_lesson_reminder',
+      ]);
+      expect(keys('lesson-s')).toEqual([
+        'lesson_reminder',
+        'lesson_reminder',
+        'teacher_lesson_reminder',
+      ]);
+      const teacherRow = (id: string) =>
+        queued.find((r) => r.lesson_id === id && r.template_key === 'teacher_lesson_reminder');
+      expect(teacherRow('lesson-p')?.template_params['2']).toContain(
+        'https://app.example/classroom/lesson-p',
+      );
       expect(JSON.stringify(teacherRow('lesson-s')?.template_params)).toContain('meet.jit.si');
       const families = queries.roomLinks.mock.calls[0]?.[0] ?? [];
       expect([...new Set(families.map((c) => c.lessonId))]).toEqual(['lesson-p']);

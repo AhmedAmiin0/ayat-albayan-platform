@@ -49,6 +49,8 @@ describe('toVoiceOgg (owner 2026-10-27: a real WhatsApp voice note)', () => {
 
   it('ffmpeg exits 0 but writes nothing (or an empty file): null', async () => {
     await expect(toVoiceOgg(M4A, async () => undefined)).resolves.toBeNull();
-    await expect(toVoiceOgg(M4A, (args) => writeFile(outputOf(args), new Uint8Array()))).resolves.toBeNull();
+    await expect(
+      toVoiceOgg(M4A, (args) => writeFile(outputOf(args), new Uint8Array())),
+    ).resolves.toBeNull();
   });
 });

@@ -35,9 +35,13 @@ function memoryReplies(rows: SavedReplyRow[] = []) {
   const table = rows;
   return {
     table,
-    visibleTo: vi.fn(async (id: string) => table.filter((r) => r.owner_profile_id === null || r.owner_profile_id === id)),
+    visibleTo: vi.fn(async (id: string) =>
+      table.filter((r) => r.owner_profile_id === null || r.owner_profile_id === id),
+    ),
     one: vi.fn(async (id: string) => table.find((r) => r.id === id) ?? null),
-    listOf: vi.fn(async (owner: string | null) => table.filter((r) => r.owner_profile_id === owner)),
+    listOf: vi.fn(async (owner: string | null) =>
+      table.filter((r) => r.owner_profile_id === owner),
+    ),
     insert: vi.fn(async (row: ReplyInsert) => {
       const made: SavedReplyRow = {
         id: replyId(++seq + 100),
@@ -100,7 +104,9 @@ function storageMock() {
   };
 }
 
-export async function repliesApp(input: { rows?: SavedReplyRow[]; resolve?: PermissionResolver } = {}) {
+export async function repliesApp(
+  input: { rows?: SavedReplyRow[]; resolve?: PermissionResolver } = {},
+) {
   const replies = memoryReplies(input.rows ?? []);
   const storage = storageMock();
   const mod = await Test.createTestingModule({ imports: [featureRoot(SavedRepliesModule)] })

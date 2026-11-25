@@ -39,7 +39,11 @@ interface SubmitDeps {
  * by the driver (Kapso: hsm_id). A crm line's document row, or one the CRM knows by another
  * name: 409 crm_managed before anything else.
  */
-export async function submitTemplate(deps: SubmitDeps, key: string, actorId: string): Promise<TemplateView> {
+export async function submitTemplate(
+  deps: SubmitDeps,
+  key: string,
+  actorId: string,
+): Promise<TemplateView> {
   requireSync();
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
@@ -54,11 +58,18 @@ export async function submitTemplate(deps: SubmitDeps, key: string, actorId: str
   // Kapso has no sample upload (docs/19): WA_APP_ID cannot help there, only switching the line to meta.
   const noSamples = lineProvider(loadEnv(), row.line) === 'kapso' ? 'needs_meta_driver' : 'needs_app_id';
   if (document && !client.canUploadSamples()) throw waHttpError(noSamples, 409, { line: row.line });
-  const headerHandle = document ? await fromMeta(() => client.uploadSample(SAMPLE_REPORT)) : undefined;
+  const headerHandle = document
+    ? await fromMeta(() => client.uploadSample(SAMPLE_REPORT))
+    : undefined;
   const res = await fromMeta(() => client.submitTemplate(row, { headerHandle }));
   const status = ourStatus(res.status);
   const meta_id = res.metaId || row.meta_id;
-  const updated = await deps.queries.update(key, { status, meta_id, submitted_at: new Date().toISOString(), last_error: null });
+  const updated = await deps.queries.update(key, {
+    status,
+    meta_id,
+    submitted_at: new Date().toISOString(),
+    last_error: null,
+  });
   await deps.audit.record({
     actorId,
     entity: 'message_templates',

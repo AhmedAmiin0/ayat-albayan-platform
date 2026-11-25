@@ -26,7 +26,9 @@ export const ROLE_KEYS: Record<WaLine, Record<ImportField, IntegrationKey>> = {
 };
 
 /** Every per-line key module mode owns (blank = unset when a role has no default number). */
-export const LINE_KEYS: readonly IntegrationKey[] = WA_LINES.flatMap((role) => Object.values(ROLE_KEYS[role]));
+export const LINE_KEYS: readonly IntegrationKey[] = WA_LINES.flatMap((role) =>
+  Object.values(ROLE_KEYS[role]),
+);
 
 /** What module mode needs of a role's default enabled number. */
 export interface DefaultNumber {
@@ -55,7 +57,10 @@ function roleValues(n: DefaultNumber): Record<string, string> {
  * The numbers overlay of module mode: every line key, blank unless the role's default number sets it.
  * Each value is checked against its key's env schema; a bad one is blanked and `onBad` gets its KEY.
  */
-export function moduleOverlay(defaults: readonly DefaultNumber[], onBad: (key: string) => void): NumbersOverlay {
+export function moduleOverlay(
+  defaults: readonly DefaultNumber[],
+  onBad: (key: string) => void,
+): NumbersOverlay {
   const blank = Object.fromEntries(LINE_KEYS.map((key) => [key, '']));
   const raw = Object.assign({}, ...defaults.map(roleValues)) as Record<string, string>;
   const values = { ...blank, ...validOverlay(raw, onBad) };

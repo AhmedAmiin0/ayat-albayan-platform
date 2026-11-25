@@ -24,7 +24,11 @@ export function canonical(value: unknown): string {
 type RulesInput = Pick<RulesSnapshot, 'rows' | 'settings'>;
 
 const resolved = (key: LegacyMappedKey, input: RulesInput, mode: 'legacy' | 'module') =>
-  resolveRule(notificationEntry(key), { mode, row: input.rows.get(key) ?? null, settings: input.settings });
+  resolveRule(notificationEntry(key), {
+    mode,
+    row: input.rows.get(key) ?? null,
+    settings: input.settings,
+  });
 
 /** Every mapped part where the rule (module path) and the legacy keys (legacy path) disagree. */
 export function ruleDifferences(input: RulesInput): RuleParityDiff[] {

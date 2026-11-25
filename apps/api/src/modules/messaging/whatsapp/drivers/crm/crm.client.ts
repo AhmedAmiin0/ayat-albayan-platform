@@ -55,7 +55,9 @@ export class CrmWhatsappClient implements WhatsappClient {
   private readonly allowed: readonly string[] | null;
 
   constructor(env: CrmLineEnv | null, opts: CrmClientOpts = {}) {
-    this.conn = env ? { env, fetch: opts.fetch ?? crmFetch, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS } : null;
+    this.conn = env
+      ? { env, fetch: opts.fetch ?? crmFetch, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS }
+      : null;
     this.allowed = opts.allowed ?? null;
   }
 

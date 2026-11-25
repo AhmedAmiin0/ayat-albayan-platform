@@ -27,9 +27,14 @@ export function gateApp() {
   let app: NestFastifyApplication | undefined;
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(WhatsappGateModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SettingsService).useValue(settings)
-      .overrideProvider(AuditService).useValue(audit)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(SettingsService)
+      .useValue(settings)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

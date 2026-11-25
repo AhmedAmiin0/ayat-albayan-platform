@@ -13,13 +13,24 @@ function setup(facts: { canCall: boolean; canRequest: boolean }) {
   api.permission.mockResolvedValue({ ...facts, expiresAt: facts.canCall ? '2026-11-02T10:00:00.000Z' : null });
   const t = fakeKit({ api });
   const outbox = { send: vi.fn(async () => ({ view: { id: 'm1' }, replayed: false })) };
-  return { ...t, outbox, perms: new CallPermissions(t.kit, outbox as unknown as Outbox, { gate: fakeGate() } as unknown as CallsNumberPermission) };
+  return {
+    ...t,
+    outbox,
+    perms: new CallPermissions(
+      t.kit,
+      outbox as unknown as Outbox,
+      { gate: fakeGate() } as unknown as CallsNumberPermission,
+    ),
+  };
 }
 
 describe('CallPermissions.state (Kapso call_permissions)', () => {
   it('granted, with its expiry', async () => {
-    await expect(setup({ canCall: true, canRequest: false }).perms.state(ADMIN_ACTOR, FAMILY)).resolves.toEqual({
-      state: 'granted', expires_at: '2026-11-02T10:00:00.000Z',
+    await expect(
+      setup({ canCall: true, canRequest: false }).perms.state(ADMIN_ACTOR, FAMILY),
+    ).resolves.toEqual({
+      state: 'granted',
+      expires_at: '2026-11-02T10:00:00.000Z',
     });
   });
 
@@ -53,7 +64,12 @@ describe('«اطلب إذن الاتصال» goes through the outbox gate', () =
   });
 
   it('refuses (409) when the permission is already there or only a template could ask', async () => {
-    await expect(setup({ canCall: true, canRequest: true }).perms.request(ADMIN_ACTOR, { phone: FAMILY, clientRequestId: REQ })).rejects.toMatchObject({
+    await expect(
+      setup({ canCall: true, canRequest: true }).perms.request(ADMIN_ACTOR, {
+        phone: FAMILY,
+        clientRequestId: REQ,
+      }),
+    ).rejects.toMatchObject({
       response: { code: 'permission_granted' },
     });
     const { perms, outbox } = setup({ canCall: false, canRequest: true });

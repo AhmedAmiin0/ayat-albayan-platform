@@ -11,7 +11,8 @@ import { CallsKit } from './call-kit';
 import { CallsSweeper } from './calls.sweeper';
 
 /** Is this live row one the user is in (placed it, or took it)? */
-export const isPartyOf = (row: CallRow, userId: string): boolean => row.created_by === userId || row.accepted_by === userId;
+export const isPartyOf = (row: CallRow, userId: string): boolean =>
+  row.created_by === userId || row.accepted_by === userId;
 
 /**
  * Staff → family (docs/28 §3.1). The row is written BEFORE Kapso hears of the call (its id is the
@@ -28,7 +29,10 @@ export class OutboundCalls {
     private readonly sweeper: CallsSweeper,
   ) {}
 
-  async start(actor: CallActor, input: { phone: string; sdp: string; clientRequestId: string }): Promise<ActiveCallView> {
+  async start(
+    actor: CallActor,
+    input: { phone: string; sdp: string; clientRequestId: string },
+  ): Promise<ActiveCallView> {
     const line = await this.allowed(actor, input.phone);
     const userId = actor.user.id;
     const again = await this.kit.queries.byRequest(userId, input.clientRequestId);
@@ -42,7 +46,11 @@ export class OutboundCalls {
     // A double tap raced us to the unique request key: answer with that first call.
     if (!row) return this.view(await this.mustGet(userId, input.clientRequestId), userId);
     try {
-      const { waCallId } = await this.kit.api.connect(line, { to: input.phone, sdp: input.sdp, ref: row.id });
+      const { waCallId } = await this.kit.api.connect(line, {
+        to: input.phone,
+        sdp: input.sdp,
+        ref: row.id,
+      });
       await this.kit.queries.setWaCallId(row.id, waCallId);
     } catch (e) {
       const code = logCallError(this.log, { what: 'connect', callId: row.id, error: e });
@@ -76,11 +84,26 @@ export class OutboundCalls {
   }
 
   /** The connecting row, linked to the chat's guardian / lead; null = that request id exists already. */
-  private async insert(input: { phone: string; sdp: string; clientRequestId: string; line: CallingLine; userId: string }): Promise<CallRow | null> {
+  private async insert(input: {
+    phone: string;
+    sdp: string;
+    clientRequestId: string;
+    line: CallingLine;
+    userId: string;
+  }): Promise<CallRow | null> {
     const thread = await this.kit.threads.thread(input.phone);
     const row = await this.kit.queries.insert({
-      ...{ phone_e164: input.phone, direction: 'outbound', status: 'connecting', offer_sdp: input.sdp },
-      ...{ number_id: input.line.numberId, guardian_id: thread?.guardian_id ?? null, lead_id: thread?.lead_id ?? null },
+      ...{
+        phone_e164: input.phone,
+        direction: 'outbound',
+        status: 'connecting',
+        offer_sdp: input.sdp,
+      },
+      ...{
+        number_id: input.line.numberId,
+        guardian_id: thread?.guardian_id ?? null,
+        lead_id: thread?.lead_id ?? null,
+      },
       ...{ created_by: input.userId, client_request_id: input.clientRequestId },
     });
     // The sweeper (on the worker) times the call out: it leaves its idle pace now.

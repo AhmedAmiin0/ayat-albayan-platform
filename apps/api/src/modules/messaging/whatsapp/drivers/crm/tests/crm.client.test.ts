@@ -46,8 +46,13 @@ describe('CrmWhatsappClient', () => {
   });
 
   it('401 / 403: a credential hold tagged crm (the line is held, rows stay queued)', async () => {
-    for (const [status, code] of [[401, 'unauthorized'], [403, 'forbidden']] as const) {
-      const info = await failure(client(scriptedFetch(crmFailure(status, code))).sendTemplate(send));
+    for (const [status, code] of [
+      [401, 'unauthorized'],
+      [403, 'forbidden'],
+    ] as const) {
+      const info = await failure(
+        client(scriptedFetch(crmFailure(status, code))).sendTemplate(send),
+      );
       expect(info).toMatchObject({ status, credential: 'crm', crmCode: code });
       expect(info.uncertain).toBeUndefined();
     }
@@ -78,10 +83,18 @@ describe('CrmWhatsappClient', () => {
     const gateway = async () => new Response('<html>bad gateway</html>', { status: 502 });
     expect(await failure(new CrmWhatsappClient(CRM_ENV, { fetch: gateway }).sendTemplate(send))).toMatchObject({ uncertain: true, crmCode: 'http_502' });
     const timeout = new DOMException('The operation was aborted due to timeout', 'TimeoutError');
-    expect(await failure(client(scriptedFetch(timeout)).sendTemplate(send))).toMatchObject({ status: 0, uncertain: true });
+    expect(await failure(client(scriptedFetch(timeout)).sendTemplate(send))).toMatchObject({
+      status: 0,
+      uncertain: true,
+    });
     const refused = new TypeError('fetch failed', { cause: { code: 'ECONNREFUSED' } });
-    expect(await failure(client(scriptedFetch(refused)).sendTemplate(send))).toMatchObject({ status: 0, uncertain: false });
-    expect(await failure(client(scriptedFetch({ status: 201, body: { data: {} } })).sendTemplate(send))).toMatchObject({ uncertain: true });
+    expect(await failure(client(scriptedFetch(refused)).sendTemplate(send))).toMatchObject({
+      status: 0,
+      uncertain: false,
+    });
+    expect(
+      await failure(client(scriptedFetch({ status: 201, body: { data: {} } })).sendTemplate(send)),
+    ).toMatchObject({ uncertain: true });
   });
 
   it('markRead is a no-op; samples and media are «not supported by the crm driver»', async () => {
@@ -117,7 +130,10 @@ describe('CrmWhatsappClient', () => {
     const f = scriptedFetch();
     const rejected = templateRow({ status: 'rejected', meta_id: 'mt-1' });
     expect(await failure(client(f).submitTemplate(rejected))).toMatchObject({ unsupported: 'crm' });
-    expect(await failure(new CrmWhatsappClient(null).getTemplates())).toMatchObject({ code: null, status: 0 });
+    expect(await failure(new CrmWhatsappClient(null).getTemplates())).toMatchObject({
+      code: null,
+      status: 0,
+    });
     expect(f.requests).toHaveLength(0);
   });
 });

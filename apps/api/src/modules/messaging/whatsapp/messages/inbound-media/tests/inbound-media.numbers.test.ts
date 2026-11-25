@@ -13,10 +13,18 @@ const row = (over: Partial<MediaMessage>): MediaMessage => ({
 const lineClient = () => ({ configured: vi.fn(() => true), getMedia: vi.fn().mockResolvedValue({ bytes: new Uint8Array([1]), mime: 'audio/ogg' }) });
 
 function setup(msg: MediaMessage) {
-  const queries = { message: vi.fn().mockResolvedValue(msg), setRefusal: vi.fn(), setPath: vi.fn().mockResolvedValue(undefined) };
+  const queries = {
+    message: vi.fn().mockResolvedValue(msg),
+    setRefusal: vi.fn(),
+    setPath: vi.fn().mockResolvedValue(undefined),
+  };
   const lines = { notifications: lineClient(), chat: lineClient() };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
-  const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines as unknown as WhatsappLines, storage as unknown as StorageService);
+  const media = new InboundMedia(
+    queries as unknown as InboundMediaRepo,
+    lines as unknown as WhatsappLines,
+    storage as unknown as StorageService,
+  );
   return { media, lines, storage, queries };
 }
 
@@ -24,8 +32,15 @@ describe('InboundMedia by number', () => {
   it('a crm-number row → 409 crm_no_media; neither line client is called, nothing stored', async () => {
     const { media, lines, storage } = setup(row({ number: { id: 'n-old', provider: 'crm', purpose: 'chat' } }));
     const e: unknown = await media.cache(await media.loadChat('m1')).catch((err: unknown) => err);
-    expect(e instanceof HttpException && [e.getStatus(), e.getResponse()]).toEqual([409, { code: 'crm_no_media', message: 'crm_no_media' }]);
-    expect([lines.notifications.getMedia, lines.chat.getMedia, storage.upload].map((f) => f.mock.calls.length)).toEqual([0, 0, 0]);
+    expect(e instanceof HttpException && [e.getStatus(), e.getResponse()]).toEqual([
+      409,
+      { code: 'crm_no_media', message: 'crm_no_media' },
+    ]);
+    expect(
+      [lines.notifications.getMedia, lines.chat.getMedia, storage.upload].map(
+        (f) => f.mock.calls.length,
+      ),
+    ).toEqual([0, 0, 0]);
   });
 
   it('a line-null row of a chat number (legacy) is fetched with the chat client, not notifications', async () => {

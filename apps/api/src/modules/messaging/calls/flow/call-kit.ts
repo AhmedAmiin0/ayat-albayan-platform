@@ -34,7 +34,11 @@ export class CallsKit {
     for (let attempt = 0; attempt < MAX_ATTEMPTS && current; attempt += 1) {
       const patch = nextCall(callState(current), event);
       if (!patch) return null;
-      const moved = await this.queries.move({ id: current.id, from: current.status as CallStatus, patch: { ...patch, ...extra } });
+      const moved = await this.queries.move({
+        id: current.id,
+        from: current.status as CallStatus,
+        patch: { ...patch, ...extra },
+      });
       if (moved) return moved;
       current = await this.queries.get(current.id);
     }

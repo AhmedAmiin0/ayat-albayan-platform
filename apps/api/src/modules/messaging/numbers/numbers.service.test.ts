@@ -8,14 +8,24 @@ import { NumbersService } from './numbers.service';
 
 function setup(row = numberRow()) {
   const queries = {
-    byId: vi.fn(async () => row), all: vi.fn(async () => [row]), insert: vi.fn(async () => row),
-    update: vi.fn(async () => row), makeDefault: vi.fn(async () => true), remove: vi.fn(async () => true),
+    byId: vi.fn(async () => row),
+    all: vi.fn(async () => [row]),
+    insert: vi.fn(async () => row),
+    update: vi.fn(async () => row),
+    makeDefault: vi.fn(async () => true),
+    remove: vi.fn(async () => true),
   };
-  const secrets = { status: vi.fn(async () => new Map()), set: vi.fn(async () => undefined), clear: vi.fn(async () => true) };
+  const secrets = {
+    status: vi.fn(async () => new Map()),
+    set: vi.fn(async () => undefined),
+    clear: vi.fn(async () => true),
+  };
   const effects = { after: vi.fn(async () => undefined) };
   const evolution = { failQueued: vi.fn(async () => 0) };
   const svc = new NumbersService(
-    queries as unknown as NumbersRepo, secrets as unknown as NumbersSecrets, effects as unknown as NumbersEffects,
+    queries as unknown as NumbersRepo,
+    secrets as unknown as NumbersSecrets,
+    effects as unknown as NumbersEffects,
     evolution as unknown as EvolutionNumbersRepo,
   );
   return { svc, queries, secrets, effects, evolution };

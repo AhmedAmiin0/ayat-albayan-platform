@@ -30,8 +30,17 @@ describe('webhook: lesson_rating taps', () => {
   it('the payload’s lesson (theirs) is rated; the inbound row stays, linked to the lesson', async () => {
     const s = asGuardian();
     await s.inbound.handle(tap());
-    expect(s.queries.guardianLesson).toHaveBeenCalledWith({ lessonId: LESSON_ID, guardianId: GUARDIAN_ID });
-    expect(s.ratings.record).toHaveBeenCalledWith({ lessonId: LESSON_ID, guardianId: GUARDIAN_ID, rating: 'good', waMessageId: 'wamid.IN1', at: AT });
+    expect(s.queries.guardianLesson).toHaveBeenCalledWith({
+      lessonId: LESSON_ID,
+      guardianId: GUARDIAN_ID,
+    });
+    expect(s.ratings.record).toHaveBeenCalledWith({
+      lessonId: LESSON_ID,
+      guardianId: GUARDIAN_ID,
+      rating: 'good',
+      waMessageId: 'wamid.IN1',
+      at: AT,
+    });
     expect(s.queries.stored).toHaveLength(1);
     expect(s.queries.stored[0]).toMatchObject({ direction: 'inbound', lesson_id: LESSON_ID, body: 'جيدة' });
     expect(s.lessons.confirm).not.toHaveBeenCalled();

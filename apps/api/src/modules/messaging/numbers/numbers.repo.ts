@@ -59,7 +59,10 @@ export class NumbersRepo {
     return data;
   }
 
-  async insert(input: { row: NumberCreate & { is_default?: boolean }; actorId: string }): Promise<NumberRow> {
+  async insert(input: {
+    row: NumberCreate & { is_default?: boolean };
+    actorId: string;
+  }): Promise<NumberRow> {
     const { data, error } = await this.db
       .from('wa_numbers')
       .insert({ ...input.row, updated_by: input.actorId })
@@ -70,7 +73,10 @@ export class NumbersRepo {
   }
 
   /** null = no such number. is_default true goes through makeDefault, not here. */
-  async update(id: string, input: { patch: NumberPatch; actorId: string }): Promise<NumberRow | null> {
+  async update(
+    id: string,
+    input: { patch: NumberPatch; actorId: string },
+  ): Promise<NumberRow | null> {
     const { data, error } = await this.db
       .from('wa_numbers')
       .update({ ...input.patch, updated_by: input.actorId })

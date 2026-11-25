@@ -20,7 +20,11 @@ interface MoveDeps extends LineSyncDeps {
 const FRESH = { status: 'not_submitted', meta_id: null, quality: null, last_error: null, submitted_at: null, last_checked_at: null } as const;
 
 /** PATCH /messaging/templates/:key/line (audited, template_line_set); the same line is a no-op. */
-export async function moveTemplate(deps: MoveDeps, input: { key: string; line: WaLine }, actorId: string): Promise<TemplateMoveView> {
+export async function moveTemplate(
+  deps: MoveDeps,
+  input: { key: string; line: WaLine },
+  actorId: string,
+): Promise<TemplateMoveView> {
   requireSync();
   const { key, line } = input;
   const row = await deps.queries.get(key);

@@ -58,7 +58,9 @@ export class PdfPreviewService {
     if (!(await this.storage.exists(ref))) {
       const range = pageRange(input.page, doc.pages);
       const key = `${msg.id}:${range.first}`;
-      await this.guard(key, () => this.renders.run(key, () => this.render({ id: msg.id, file, range })));
+      await this.guard(key, () =>
+        this.renders.run(key, () => this.render({ id: msg.id, file, range })),
+      );
     }
     return { ...(await this.storage.signedDownload(ref)), page: input.page, ...doc };
   }
@@ -73,7 +75,10 @@ export class PdfPreviewService {
   private probe(id: string, file: InboundFile): Promise<PdfDoc> {
     return inSlot(async () => {
       const bytes = await this.read(file);
-      const doc = { pages: bytes.byteLength > INVOICE_MAX_BYTES ? 0 : await pdfPageCount(bytes), bytes: bytes.byteLength };
+      const doc = {
+        pages: bytes.byteLength > INVOICE_MAX_BYTES ? 0 : await pdfPageCount(bytes),
+        bytes: bytes.byteLength,
+      };
       try {
         const page1 = { first: 1, last: 1 };
         if (doc.pages > 0) await this.upload(id, await renderPdfPages(bytes, page1));
@@ -86,7 +91,9 @@ export class PdfPreviewService {
   }
 
   private render(input: { id: string; file: InboundFile; range: PageRange }): Promise<void> {
-    return inSlot(async () => this.upload(input.id, await renderPdfPages(await this.read(input.file), input.range)));
+    return inSlot(async () =>
+      this.upload(input.id, await renderPdfPages(await this.read(input.file), input.range)),
+    );
   }
 
   /** Storage answers null on any error; the object was just resolved, so it is a blip (503), never 410. */

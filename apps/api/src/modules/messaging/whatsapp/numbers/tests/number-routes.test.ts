@@ -7,14 +7,24 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // One module-mode pass's routing input (docs/23c); a failed rules read fails the pass (nothing sends).
 
-const queries = () => ({ approvals: vi.fn(async () => new Map()), templates: vi.fn(async () => [templateRow()]) });
+const queries = () => ({
+  approvals: vi.fn(async () => new Map()),
+  templates: vi.fn(async () => [templateRow()]),
+});
 const reader = (snapshot: RulesReader['snapshot']) => ({ snapshot });
 const row = (number_id: string | null) => ({ key: 'booking_confirmation', enabled: true, channels: null, timing: null, number_id, updated_at: '', updated_by: null });
 
 describe('NumberRoutes.pass', () => {
-  it('the rule rows\' numbers, the numbers as routable and the templates', async () => {
-    const snap = { mode: 'module' as const, rows: new Map([['booking_confirmation', row(N2)]]), settings: {} as never };
-    const routes = new NumberRoutes(queries() as unknown as RouteRepo, reader(vi.fn(async () => snap)));
+  it("the rule rows' numbers, the numbers as routable and the templates", async () => {
+    const snap = {
+      mode: 'module' as const,
+      rows: new Map([['booking_confirmation', row(N2)]]),
+      settings: {} as never,
+    };
+    const routes = new NumberRoutes(
+      queries() as unknown as RouteRepo,
+      reader(vi.fn(async () => snap)),
+    );
     const { pass, templates } = await routes.pass(THREE);
     expect(pass.ruleNumbers.get('booking_confirmation_plain')).toBe(N2);
     expect(pass.numbers.map((n) => n.sendable)).toEqual([true, true, true]);
@@ -34,12 +44,19 @@ describe('NumberRoutes.pass', () => {
   it('rules unreadable → the pass throws (never a number the rule did not pick); no reader → no rule numbers', async () => {
     const failing = new NumberRoutes(queries() as unknown as RouteRepo, reader(vi.fn(async () => Promise.reject(new Error('db down')))));
     await expect(failing.pass(THREE)).rejects.toThrow('db down');
-    expect((await new NumberRoutes(queries() as unknown as RouteRepo).pass(THREE)).pass.ruleNumbers.size).toBe(0);
+    expect(
+      (await new NumberRoutes(queries() as unknown as RouteRepo).pass(THREE)).pass.ruleNumbers.size,
+    ).toBe(0);
   });
 
   it('names the crm numbers (their approval is the hand-set template status, docs/19)', async () => {
-    const crm = overlayNum({ id: N2, env: { provider: 'crm', base: 'http://127.0.0.1:4010/crm/api/v1', apiKey: 'fake-crm-key' } });
-    const { pass } = await new NumberRoutes(queries() as unknown as RouteRepo).pass([THREE[0], crm].filter((n) => n !== undefined));
+    const crm = overlayNum({
+      id: N2,
+      env: { provider: 'crm', base: 'http://127.0.0.1:4010/crm/api/v1', apiKey: 'fake-crm-key' },
+    });
+    const { pass } = await new NumberRoutes(queries() as unknown as RouteRepo).pass(
+      [THREE[0], crm].filter((n) => n !== undefined),
+    );
     expect([...(pass.crm ?? [])]).toEqual([N2]);
   });
 

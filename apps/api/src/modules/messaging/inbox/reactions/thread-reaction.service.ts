@@ -37,7 +37,10 @@ export class ThreadReactionService {
     private readonly messages: ThreadMessagesRepo,
   ) {}
 
-  async react(r: ReactionRequest, now = new Date()): Promise<{ result: ReactionResult; sent: Sent }> {
+  async react(
+    r: ReactionRequest,
+    now = new Date(),
+  ): Promise<{ result: ReactionResult; sent: Sent }> {
     if (r.scope) assertCanSend(r.scope, r.phone);
     const key = reactionKey(r);
     const target = await this.reactions.target(r.phone, r.messageId);
@@ -45,14 +48,20 @@ export class ThreadReactionService {
     // Sales never see a feedback request or a join link (migration 187, as forward): not found, nothing sent.
     if (r.sales && !visibleToSales(target)) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     const thread = await this.threads.thread(r.phone);
-    const from = await sendLine(thread, { now, windows: () => this.threads.numberWindows(r.phone) });
+    const from = await sendLine(thread, {
+      now,
+      windows: () => this.threads.numberWindows(r.phone),
+    });
     if (sendsOnCrm(from)) throw waHttpError('reaction_unsupported', HttpStatus.CONFLICT);
     // Meta only knows a wamid on the number that sent or received it.
     if (!sameNumber(target, from)) throw waHttpError('reaction_other_number', HttpStatus.CONFLICT);
     const { emoji } = r.input;
     const where = { targetId: target.id, phone: r.phone };
     if (!(await this.reactions.queued(key))) {
-      await this.reactions.setOurs({ ...where, ours: { emoji, by: r.actorId, at: now.toISOString() } });
+      await this.reactions.setOurs({
+        ...where,
+        ours: { emoji, by: r.actorId, at: now.toISOString() },
+      });
       await this.reactions.supersede(where);
     }
     const row = { ...outboundBase(r, thread), dedup_key: key, body: emoji ?? '', interactive_payload: reactionPayload(target, emoji), ...from };
@@ -60,7 +69,14 @@ export class ThreadReactionService {
       // Nothing queued: ours goes back at once. Queued but the read-back failed: the sender (and the
       // failed-send trigger) decides, so the inbox never disagrees with what WhatsApp got.
       if (!(await this.reactions.queued(key))) {
-        await this.reactions.setOurs({ ...where, ours: { emoji: target.our_reaction, by: target.our_reaction_by, at: target.our_reaction_at } });
+        await this.reactions.setOurs({
+          ...where,
+          ours: {
+            emoji: target.our_reaction,
+            by: target.our_reaction_by,
+            at: target.our_reaction_at,
+          },
+        });
       }
       throw e;
     });
